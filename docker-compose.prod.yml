@@ -1,0 +1,65 @@
+# Production Overrides for Docker Compose
+# This file optimizes for safety, performance, and reliability in production
+# Think of it as switching from training mode to opening day - everything must be rock solid
+#
+# How it works: Run with both files like this:
+# docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# The prod file adds:
+# - Resource limits (prevent one service from hogging all memory/CPU)
+# - Restart policies (automatic recovery from crashes)
+# - Security hardening
+# - Performance optimizations
+
+version: '3.8'
+
+services:
+  nginx:
+    # Resource limits - the front door can't use all the building's electricity
+    # Prevents one service from crashing the whole server
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+    # Restart policy: always comes back after crashes
+    # Like having a manager who picks up immediately if the host stand is abandoned
+    restart: always
+
+  app:
+    # Resource limits - the kitchen can't use all resources
+    # Allows other services to function even if the app is under heavy load
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+    # Don't mount source code volumes in production
+    # Code is baked into the Docker image (immutable and faster)
+    volumes: []
+
+    # Automatically restart the app if it crashes
+    restart: always
+
+  redis:
+    # Resource limits - the cache storage isn't unlimited
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+    # Always restart Redis if it fails
+    # Your cache is critical for performance
+    restart: always

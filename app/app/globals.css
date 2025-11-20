@@ -1,0 +1,158 @@
+/* Global Styles for the Application */
+/* These styles apply to the entire app - every page and component */
+
+/* ========================================================================
+Tailwind CSS Directives
+========================================================================
+These imports bring in Tailwind's base, component, and utility styles
+Think of them as:
+- @tailwind base: The foundation (reset browser defaults, set body styles)
+- @tailwind components: Pre-built components (buttons, cards, etc)
+- @tailwind utilities: The actual utility classes you use (bg-blue-500, p-4, etc)
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================================================
+Custom CSS Variables
+========================================================================
+Define colors and sizes once, reuse everywhere
+Usage: background-color: var(--primary-color);
+*/
+
+:root {
+  /* ======================================
+  Color Palette - Blues, Reds, and Grays
+  ====================================== */
+
+  /* Blues */
+  --color-blue-dark: #1a2a4e;
+  --color-blue-mid: #2d5a9e;
+  --color-blue-light: #4a7bba;
+
+  /* Reds */
+  --color-red-primary: #c1352d;
+  --color-red-accent: #e74c3c;
+
+  /* Whites */
+  --color-white: #ffffff;
+  --color-white-off: #f8f9fa;
+
+  /* Grayscale */
+  --color-gray-900: #1f1f1f;
+  --color-gray-700: #3a3a3a;
+  --color-gray-500: #6c757d;
+  --color-gray-300: #adb5bd;
+  --color-gray-100: #dee2e6;
+
+  /* Semantic Colors - Mapped from palette */
+  --primary-color: var(--color-blue-dark);
+  --secondary-color: var(--color-blue-mid);
+  --accent-color: var(--color-red-accent);
+  --text-color: var(--color-gray-900);
+  --bg-color: var(--color-white);
+  --border-color: var(--color-gray-100);
+
+  /* ======================================
+  Spacing System - 8px Units
+  ====================================== */
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+  --spacing-xl: 40px;
+
+  /* ======================================
+  Border Radius
+  ====================================== */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* ======================================
+  Transitions
+  ====================================== */
+  --transition-speed: 300ms;
+  --transition-timing: ease;
+}
+
+/* ========================================================================
+HTML and Body Defaults
+========================================================================
+Set up the foundation styles for the whole app
+*/
+
+html,
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* ========================================================================
+Links - Make Them Obvious
+========================================================================
+Style links so users know they can click them
+*/
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: opacity 200ms ease;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* ========================================================================
+Custom Component Classes
+========================================================================
+Define reusable component styles here (if not using Tailwind's @apply)
+*/
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ========================================================================
+Dark Mode (Optional)
+========================================================================
+Uncomment and customize for dark mode support
+*/
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #60a5fa;
+    --secondary-color: #cbd5e1;
+    --border-color: #374151;
+    --text-color: #f3f4f6;
+    --bg-color: #1f2937;
+  }
+} */
+
+/* ========================================================================
+Print Styles (Optional)
+========================================================================
+Make the app look good when printed
+*/
+
+@media print {
+  body {
+    background-color: white;
+    color: black;
+  }
+
+  /* Hide interactive elements when printing */
+  nav,
+  footer,
+  [role='navigation'] {
+    display: none;
+  }
+}

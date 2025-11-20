@@ -1,0 +1,81 @@
+{
+  // ========================================================================
+  // TypeScript Configuration for Next.js
+  // ========================================================================
+  // TypeScript is like a strict teacher for your JavaScript code.
+  // It catches mistakes BEFORE they reach production - preventing bugs
+  // that could embarrass you in front of users.
+  //
+  // This config is optimized for Next.js App Router, and includes
+  // path aliases (@/) so you can import cleaner:
+  // Instead of: import { thing } from '../../../lib/thing'
+  // You write:  import { thing } from '@/lib/thing'
+  //
+  // The @ prefix means "from the root of my project" - much cleaner!
+
+  "compilerOptions": {
+    // ====================================================================
+    // Compilation Target and Module System
+    // ====================================================================
+    // These settings control what JavaScript version we produce
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    // ====================================================================
+    // Output Structure
+    // ====================================================================
+    // Where TypeScript puts compiled files
+    "outDir": "./.next",
+    "rootDir": ".",
+
+    // ====================================================================
+    // Strict Type Checking
+    // ====================================================================
+    // These catch more errors before they reach production
+    // Like a strict teacher - better to fail in development than production
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // ====================================================================
+    // JSX and React
+    // ====================================================================
+    // Configure how TypeScript handles React components
+    "jsx": "preserve",
+    "jsxImportSource": "react",
+
+    // ====================================================================
+    // Path Aliases - Cleaner Imports
+    // ====================================================================
+    // Instead of: import { thing } from '../../../lib/thing'
+    // You can:     import { thing } from '@/lib/thing'
+    // The @ prefix means "from the root of my project"
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+
+    // ====================================================================
+    // Module Resolution
+    // ====================================================================
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+
+    // ====================================================================
+    // Incremental Compilation
+    // ====================================================================
+    // Speeds up rebuilds by only recompiling changed files
+    "incremental": true,
+    "tsBuildInfoFile": ".next/tsbuildinfo"
+  },
+  // Include and exclude patterns
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

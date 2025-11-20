@@ -1,0 +1,152 @@
+version: '3.8'
+
+# Docker Compose Orchestration - The Main Blueprint
+# This file defines how all four pieces of your application work together.
+# Think of it as the floor plan for a restaurant: where each room is, how they connect,
+# and what resources each one needs.
+
+# ============================================================================
+# Volumes - Persistent Storage
+# ============================================================================
+# Volumes are like storage units that survive even when containers restart.
+# When you tear down and rebuild containers, volume data persists.
+# This is crucial for databases and caches that need to remember data.
+
+volumes:
+  # Redis data - stores cache and session data
+  # Even if Redis restarts, we don't lose active sessions
+  redis_data:
+
+# ============================================================================
+# Networks - Private Communication Channel
+# ============================================================================
+# This creates an internal network where containers can talk to each other.
+# Think of it as an internal phone system in a building - employees can call
+# each other, but outsiders can't dial in directly. Only nginx exposes ports
+# to the outside world, acting as the receptionist.
+
+networks:
+  app_network:
+    driver: bridge
+
+# ============================================================================
+# Services - The Four Main Pieces
+# ============================================================================
+
+services:
+  # ==========================================================================
+  # Nginx - The Front Door and Traffic Manager
+  # ==========================================================================
+  # Nginx is the bouncer and receptionist. Every visitor enters here first.
+  # It handles:
+  # - SSL/HTTPS termination (the padlock in browsers)
+  # - Request routing (sending visitors to the right place)
+  # - Static file serving with caching
+  # - Load balancing if you scale up
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+
+    # Ports exposed to the outside world
+    # 80 = HTTP (regular web traffic, we redirect this to HTTPS)
+    # 443 = HTTPS (secure traffic, this is what actually serves the app)
+    ports:
+      - "80:80"
+      - "443:443"
+
+    # This service depends on the app being ready first
+    # Don't start serving customers until the kitchen is open
+    depends_on:
+      - app
+
+    networks:
+      - app_network
+
+    # Always restart if nginx crashes (it's the front door, must stay open)
+    restart: unless-stopped
+
+  # ==========================================================================
+  # App - Your Next.js Application
+  # ==========================================================================
+  # This is the heart of your application - the kitchen and dining room.
+  # Handles both:
+  # - Frontend rendering (React components, UI)
+  # - Backend API routes (business logic, data processing)
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: nextjs_app
+
+    # Environment variables the app needs to function
+    # These come from your .env file
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - REDIS_URL=redis://redis:6379
+      - SESSION_SECRET=${SESSION_SECRET}
+      - SESSION_MAX_AGE=${SESSION_MAX_AGE:-2592000}
+
+    # Port 3000 is where Next.js runs
+    # NOT exposed to outside world - only nginx can reach it
+    expose:
+      - "3000"
+
+    # Wait for Redis to be healthy before starting
+    # Don't open the restaurant until the order system is ready
+    depends_on:
+      - redis
+
+    networks:
+      - app_network
+
+    restart: unless-stopped
+
+  # ==========================================================================
+  # Redis - Fast Temporary Storage
+  # ==========================================================================
+  # Redis is your whiteboard and order ticket rail - fast, temporary storage.
+  # Perfect for:
+  # - Session data (who's logged in)
+  # - Caching API responses (avoid re-fetching the same data)
+  # - Rate limiting (track how many requests per user)
+  # - Temporary job queues
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+
+    # Alpine variant = smaller image, faster downloads
+    # Version 7 is stable and production-ready
+
+    # Redis configuration flags
+    # appendonly yes = save data to disk periodically (survives restarts)
+    command: redis-server --appendonly yes
+
+    # Mount the volume so data persists across restarts
+    volumes:
+      - redis_data:/data
+
+    # Port 6379 is Redis default
+    # NOT exposed to outside - only app container can access
+    expose:
+      - "6379"
+
+    networks:
+      - app_network
+
+    restart: unless-stopped
+
+    # Health check - make sure Redis is actually responding
+    # Like calling the kitchen to make sure they're ready
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3

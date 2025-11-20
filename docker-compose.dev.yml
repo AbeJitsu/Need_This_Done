@@ -1,0 +1,49 @@
+# Development Overrides for Docker Compose
+# This file adds development-specific features on top of docker-compose.yml
+# Think of it as special instructions for weekends when the restaurant is training staff
+#
+# How it works: Run with both files like this:
+# docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+#
+# The dev file overrides the base file, so you get:
+# - Instant code reload (change a file, refresh browser - no rebuild!)
+# - Exposed ports for debugging
+# - All dependencies installed (including dev tools)
+# - Extra logging and debugging tools
+
+version: '3.8'
+
+services:
+  app:
+    # Use the development Dockerfile instead of production
+    # Includes hot-reload, debugging tools, and all devDependencies
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev
+
+    # Mount your source code as a volume
+    # Changes to files instantly appear in the container (no rebuild needed)
+    # Like having a window between your editor and the running app
+    volumes:
+      - ./app:/app
+      - /app/node_modules  # Keep node_modules in container (don't sync it)
+
+    # Expose Next.js port for direct access (useful for debugging)
+    # You can access the app at localhost:3000 directly
+    ports:
+      - "3000:3000"
+
+    # Enable interactive mode for debugging
+    # Allows you to use Node debugger and read real-time logs
+    stdin_open: true
+    tty: true
+
+    # Pass environment for development
+    environment:
+      - NODE_ENV=development
+
+  redis:
+    # Expose Redis port for direct debugging if needed
+    # You can connect to Redis directly for testing
+    ports:
+      - "6379:6379"

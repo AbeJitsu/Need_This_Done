@@ -1,0 +1,9 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    // ESLint configuration for code quality
+    // This extends Next.js's recommended rules
+    // Catches common mistakes before they become bugs
+    // Like a spell checker for your code - prevents embarrassing typos
+  }
+}

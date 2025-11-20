@@ -1,0 +1,37 @@
+# Development Dockerfile for Next.js
+# Prioritizes fast iteration and debugging over small image size.
+# This is like having the kitchen stay open with all stations active,
+# versus production where we clean up and minimize everything.
+#
+# Differences from production:
+# - Includes ALL dependencies (devDependencies for linting, testing, etc)
+# - Mounts source code as a volume (changes appear instantly)
+# - Runs as root (easier debugging)
+# - Keeps build artifacts for faster rebuilds
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# npm install (not npm ci) because we want dev dependencies
+# Install all tools for development: testing, linting, debugging
+RUN npm install
+
+# Don't copy source code - it will be mounted as a volume
+# This means changes to your files appear instantly
+
+EXPOSE 3000
+
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Run Next.js in development mode
+# "next dev" includes:
+# - Hot module reloading (see changes instantly)
+# - Fast refresh (saves your scroll position, form inputs, etc)
+# - Better error messages
+# - Source maps for debugging
+CMD ["npm", "run", "dev"]
