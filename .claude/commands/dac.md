@@ -1,0 +1,55 @@
+---
+description: Draft a commit message
+allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*)
+---
+
+# Draft a Commit
+
+Look at the changes that are ready to save and write a commit message that's inviting, focused, considerate, supportive, and influential.
+
+## Your Task
+
+1. **Check what changed**
+   - Run `git status` to see which files were updated
+   - Run `git diff --staged` (or `git diff` if nothing is staged) to see the actual changes
+   - Run `git log --oneline -5` to see how recent messages were written
+
+2. **Draft the message following this structure:**
+
+### Summary Line (under 50 characters)
+- Start with an action word: "Add", "Fix", "Update", "Remove"
+- Be specific about what changed
+- Capitalize first word, no period at end
+
+### Body (explain what and why)
+- Write a brief paragraph explaining WHAT changed and WHY it matters
+- Include 2-4 bullet points highlighting key changes or benefits
+- End with a sentence about how this helps people
+
+## Tone Guidelines
+
+Make the message:
+- **Inviting**: Use "This lets us...", "Now we can..."
+- **Focused**: Be specific, avoid vague terms
+- **Considerate**: Think about who this helps
+- **Supportive**: Explain the reasoning and value
+- **Influential**: Connect to bigger goals when relevant
+
+## Example Format
+
+```
+Add search box to find books faster
+
+This adds a search feature at the top of every page so visitors can
+quickly find books by title, author, or topic without scrolling through
+all the categories.
+
+- Search box appears on every page for easy access
+- Results appear instantly as you type
+- Shows book covers and prices in search results
+
+This makes it easier for customers to find exactly what they want and
+helps them discover books they might have missed while browsing.
+```
+
+Present the draft commit message and ask if they'd like any adjustments.
