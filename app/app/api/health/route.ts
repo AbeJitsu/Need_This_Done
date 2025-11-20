@@ -47,8 +47,8 @@ export async function GET() {
     let supabaseStatus = 'down';
     try {
       const { data: _data, error } = await supabase
-        .from('information_schema.tables')
-        .select('table_name')
+        .from('health_check')
+        .select('status')
         .limit(1);
 
       supabaseStatus = error ? 'error' : 'up';
