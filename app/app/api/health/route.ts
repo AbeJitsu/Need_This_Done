@@ -46,7 +46,7 @@ export async function GET() {
 
     let supabaseStatus = 'down';
     try {
-      const { data, error } = await supabase
+      const { data: _data, error } = await supabase
         .from('information_schema.tables')
         .select('table_name')
         .limit(1);
