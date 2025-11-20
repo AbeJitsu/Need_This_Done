@@ -34,4 +34,4 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # - Fast refresh (saves your scroll position, form inputs, etc)
 # - Better error messages
 # - Source maps for debugging
-CMD ["npm", "run", "dev"]
+CMD ["npx", "next", "dev"]
