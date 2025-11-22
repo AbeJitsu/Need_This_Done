@@ -24,22 +24,103 @@ const config = {
 
   theme: {
     extend: {
-      // Add custom colors beyond Tailwind's defaults
-      // These sync with the CSS variables defined in globals.css
+      // ======================================================================
+      // Premium Color Palette - Synced with globals.css CSS variables
+      // ======================================================================
+      // Blues: Primary brand (20-25% of color usage)
+      // Greens: Success & growth (2-5% of color usage)
+      // Reds: Errors & critical (2-5% of color usage)
+      // Yellows: Warnings & attention (1-3% of color usage)
+      // Grays: Foundation & neutral (70-80% of interface)
+
       colors: {
-        // Blue palette
-        'primary': 'var(--color-blue-dark)',
-        'secondary': 'var(--color-blue-mid)',
-        'tertiary': 'var(--color-blue-light)',
+        // ====================================================================
+        // Blues - Primary Brand Identity
+        // ====================================================================
+        blue: {
+          50: 'var(--blue-50)',
+          100: 'var(--blue-100)',
+          200: 'var(--blue-200)',
+          300: 'var(--blue-300)',
+          400: 'var(--blue-400)',
+          500: 'var(--blue-500)',
+          600: 'var(--blue-600)',
+          700: 'var(--blue-700)',
+          800: 'var(--blue-800)',
+          900: 'var(--blue-900)',
+        },
 
-        // Red accents
-        'accent-red': 'var(--color-red-primary)',
-        'accent-red-light': 'var(--color-red-accent)',
+        // ====================================================================
+        // Greens - Success & Growth States
+        // ====================================================================
+        green: {
+          50: 'var(--green-50)',
+          100: 'var(--green-100)',
+          200: 'var(--green-200)',
+          300: 'var(--green-300)',
+          400: 'var(--green-400)',
+          500: 'var(--green-500)',
+          600: 'var(--green-600)',
+          700: 'var(--green-700)',
+          800: 'var(--green-800)',
+          900: 'var(--green-900)',
+        },
 
-        // Semantic colors
-        'text-primary': 'var(--text-color)',
-        'bg-primary': 'var(--bg-color)',
-        'border-primary': 'var(--border-color)',
+        // ====================================================================
+        // Reds - Errors & Critical Actions
+        // ====================================================================
+        red: {
+          50: 'var(--red-50)',
+          100: 'var(--red-100)',
+          200: 'var(--red-200)',
+          300: 'var(--red-300)',
+          400: 'var(--red-400)',
+          500: 'var(--red-500)',
+          600: 'var(--red-600)',
+          700: 'var(--red-700)',
+          800: 'var(--red-800)',
+          900: 'var(--red-900)',
+        },
+
+        // ====================================================================
+        // Yellows - Warnings & Attention
+        // ====================================================================
+        yellow: {
+          50: 'var(--yellow-50)',
+          100: 'var(--yellow-100)',
+          200: 'var(--yellow-200)',
+          300: 'var(--yellow-300)',
+          400: 'var(--yellow-400)',
+          500: 'var(--yellow-500)',
+          600: 'var(--yellow-600)',
+          700: 'var(--yellow-700)',
+          800: 'var(--yellow-800)',
+          900: 'var(--yellow-900)',
+        },
+
+        // ====================================================================
+        // Grayscale - Foundation & Neutral
+        // ====================================================================
+        gray: {
+          50: 'var(--gray-50)',
+          100: 'var(--gray-100)',
+          200: 'var(--gray-200)',
+          300: 'var(--gray-300)',
+          400: 'var(--gray-400)',
+          500: 'var(--gray-500)',
+          600: 'var(--gray-600)',
+          700: 'var(--gray-700)',
+          800: 'var(--gray-800)',
+          900: 'var(--gray-900)',
+        },
+
+        // ====================================================================
+        // Semantic Shortcuts
+        // ====================================================================
+        'primary': 'var(--color-primary)',
+        'success': 'var(--color-success)',
+        'danger': 'var(--color-danger)',
+        'warning': 'var(--color-warning)',
       },
 
       // Add custom spacing values

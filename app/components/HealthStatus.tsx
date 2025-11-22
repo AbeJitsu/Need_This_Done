@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react';
 
 // ============================================================================
-// HealthStatus Component
+// HealthStatus Component - Premium Semantic Status Display
 // ============================================================================
-// Displays the live status of all services (Redis, Supabase, App)
+// Displays live service health with semantic color meanings:
+// - Green: Service is up and operational
+// - Red: Service is down or critical error
+// - Yellow: Service has warnings or errors (degraded)
 // Fetches from /api/health endpoint and auto-refreshes every 30 seconds
-// Shows color-coded indicators for service health (green = up, red = down)
 
 interface HealthResponse {
   status: 'healthy' | 'unhealthy';
@@ -53,28 +55,53 @@ export default function HealthStatus() {
   // Effects: Fetch on Mount and Set Up Auto-Refresh
   // ========================================================================
   useEffect(() => {
-    // Fetch immediately on mount
     fetchHealth();
-
-    // Set up interval to refresh every 30 seconds
     const interval = setInterval(fetchHealth, 30000);
-
     return () => clearInterval(interval);
   }, []);
 
   // ========================================================================
-  // Helper: Get Status Indicator Color and Text
+  // Helper: Semantic Status Configuration
   // ========================================================================
-  const getStatusIndicator = (service: 'up' | 'down' | 'error') => {
+  // Each status type has specific colors, backgrounds, and text
+  const getStatusConfig = (service: 'up' | 'down' | 'error') => {
     switch (service) {
       case 'up':
-        return { icon: '🟢', text: 'Up', color: 'text-green-600' };
+        return {
+          bg: 'bg-green-50',
+          border: 'border-green-200',
+          badgeBg: 'bg-green-600',
+          badgeText: 'text-green-900',
+          statusText: 'text-green-700',
+          label: 'Operational',
+        };
       case 'down':
-        return { icon: '🔴', text: 'Down', color: 'text-red-600' };
+        return {
+          bg: 'bg-red-50',
+          border: 'border-red-200',
+          badgeBg: 'bg-red-600',
+          badgeText: 'text-red-900',
+          statusText: 'text-red-700',
+          label: 'Down',
+        };
       case 'error':
-        return { icon: '⚠️', text: 'Error', color: 'text-yellow-600' };
+        return {
+          bg: 'bg-yellow-50',
+          border: 'border-yellow-200',
+          badgeBg: 'bg-yellow-600',
+          badgeText: 'text-yellow-900',
+          statusText: 'text-yellow-700',
+          label: 'Error',
+        };
       default:
-        return { icon: '❓', text: 'Unknown', color: 'text-gray-600' };
+        return {
+          bg: 'bg-gray-50',
+          border: 'border-gray-200',
+          badgeBg: 'bg-gray-600',
+          badgeText: 'text-gray-900',
+          statusText: 'text-gray-700',
+          label: 'Unknown',
+        };
     }
   };
 
@@ -86,74 +113,115 @@ export default function HealthStatus() {
     return date.toLocaleTimeString();
   };
 
+  // ========================================================================
+  // Loading State
+  // ========================================================================
   if (loading) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-3">⏳ System Status</h2>
-        <p className="text-gray-800">Loading service status...</p>
+      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+          <h2 className="text-xl font-semibold text-gray-900">System Status</h2>
+        </div>
+        <p className="text-gray-600">Checking services...</p>
       </div>
     );
   }
 
+  // ========================================================================
+  // Error State
+  // ========================================================================
   if (!health) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-3">⚠️ System Status</h2>
-        <p className="text-gray-800">Unable to fetch service status</p>
+      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">System Status</h2>
+        <p className="text-gray-600">Unable to fetch service status</p>
       </div>
     );
   }
 
   // ========================================================================
-  // Render: Service Status Cards
+  // Render: Premium Service Status Display
   // ========================================================================
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">
-        {health.status === 'healthy' ? '✅ System Status' : '⚠️ System Status'}
-      </h2>
-
-      {/* Service Grid */}
-      <div className="grid md:grid-cols-3 gap-4 mb-4">
-        {/* Redis Status */}
-        <div className="border border-gray-200 rounded p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className={getStatusIndicator(health.services.redis).icon}></span>
-            <h3 className="font-semibold">Redis</h3>
-          </div>
-          <p className={`text-sm ${getStatusIndicator(health.services.redis).color}`}>
-            {getStatusIndicator(health.services.redis).text}
-          </p>
+    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+      {/* Header with Overall Status */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div
+            className={`w-3 h-3 rounded-full ${
+              health.status === 'healthy' ? 'bg-green-600' : 'bg-red-600'
+            }`}
+          />
+          <h2 className="text-xl font-semibold text-gray-900">System Status</h2>
         </div>
-
-        {/* Supabase Status */}
-        <div className="border border-gray-200 rounded p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className={getStatusIndicator(health.services.supabase).icon}></span>
-            <h3 className="font-semibold">Supabase</h3>
-          </div>
-          <p className={`text-sm ${getStatusIndicator(health.services.supabase).color}`}>
-            {getStatusIndicator(health.services.supabase).text}
-          </p>
-        </div>
-
-        {/* App Status */}
-        <div className="border border-gray-200 rounded p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className={getStatusIndicator(health.services.app).icon}></span>
-            <h3 className="font-semibold">App</h3>
-          </div>
-          <p className={`text-sm ${getStatusIndicator(health.services.app).color}`}>
-            {getStatusIndicator(health.services.app).text}
-          </p>
-        </div>
+        <span
+          className={`text-sm font-semibold px-3 py-1 rounded-full ${
+            health.status === 'healthy'
+              ? 'bg-green-100 text-green-700'
+              : 'bg-red-100 text-red-700'
+          }`}
+        >
+          {health.status === 'healthy' ? 'All Operational' : 'Issues Detected'}
+        </span>
       </div>
 
-      {/* Last Updated */}
-      <p className="text-xs text-gray-500">
-        Last updated: {lastUpdated ? formatTime(health.timestamp) : 'Never'}
-        <br />
-        (Refreshes every 30 seconds)
+      {/* Service Status Cards Grid */}
+      <div className="grid md:grid-cols-3 gap-4 mb-6">
+        {/* Redis Service */}
+        {renderServiceCard('Redis', health.services.redis, getStatusConfig)}
+
+        {/* Supabase Service */}
+        {renderServiceCard('Supabase', health.services.supabase, getStatusConfig)}
+
+        {/* App Service */}
+        {renderServiceCard('App', health.services.app, getStatusConfig)}
+      </div>
+
+      {/* Footer: Last Updated Info */}
+      <div className="pt-4 border-t border-gray-200">
+        <p className="text-xs text-gray-500">
+          Last checked: {lastUpdated ? formatTime(health.timestamp) : 'Never'}
+          <span className="mx-2">•</span>
+          Refreshes every 30 seconds
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Helper Component: Service Card
+// ============================================================================
+function renderServiceCard(
+  name: string,
+  status: 'up' | 'down' | 'error',
+  getStatusConfig: (s: 'up' | 'down' | 'error') => {
+    bg: string;
+    border: string;
+    badgeBg: string;
+    badgeText: string;
+    statusText: string;
+    label: string;
+  }
+) {
+  const config = getStatusConfig(status);
+
+  return (
+    <div
+      key={name}
+      className={`
+        p-4 rounded-lg border-2
+        ${config.bg} ${config.border}
+        transition-all duration-200
+      `}
+    >
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="font-semibold text-gray-900">{name}</h3>
+        <div className={`w-2 h-2 rounded-full ${config.badgeBg}`} />
+      </div>
+      <p className={`text-sm font-medium ${config.statusText}`}>
+        {config.label}
       </p>
     </div>
   );
