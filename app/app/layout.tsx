@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import DarkModeToggle from '@/components/DarkModeToggle';
 
 // ============================================================================
 // Root Layout Component
@@ -34,6 +35,7 @@ export default function RootLayout({
         {/* Optional: Add custom fonts, analytics, etc here */}
       </head>
       <body>
+        <DarkModeToggle />
         {/* Navigation could go here */}
         <main>{children}</main>
         {/* Footer could go here */}

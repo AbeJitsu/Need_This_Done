@@ -68,38 +68,38 @@ export default function HealthStatus() {
     switch (service) {
       case 'up':
         return {
-          bg: 'bg-green-50',
-          border: 'border-green-200',
+          bg: 'bg-green-50 dark:bg-green-900/20',
+          border: 'border-green-200 dark:border-green-800',
           badgeBg: 'bg-green-600',
-          badgeText: 'text-green-900',
-          statusText: 'text-green-700',
+          badgeText: 'text-green-900 dark:text-green-100',
+          statusText: 'text-green-700 dark:text-green-400',
           label: 'Operational',
         };
       case 'down':
         return {
-          bg: 'bg-red-50',
-          border: 'border-red-200',
+          bg: 'bg-red-50 dark:bg-red-900/20',
+          border: 'border-red-200 dark:border-red-800',
           badgeBg: 'bg-red-600',
-          badgeText: 'text-red-900',
-          statusText: 'text-red-700',
+          badgeText: 'text-red-900 dark:text-red-100',
+          statusText: 'text-red-700 dark:text-red-400',
           label: 'Down',
         };
       case 'error':
         return {
-          bg: 'bg-yellow-50',
-          border: 'border-yellow-200',
+          bg: 'bg-yellow-50 dark:bg-yellow-900/20',
+          border: 'border-yellow-200 dark:border-yellow-800',
           badgeBg: 'bg-yellow-600',
-          badgeText: 'text-yellow-900',
-          statusText: 'text-yellow-700',
+          badgeText: 'text-yellow-900 dark:text-yellow-100',
+          statusText: 'text-yellow-700 dark:text-yellow-400',
           label: 'Error',
         };
       default:
         return {
-          bg: 'bg-gray-50',
-          border: 'border-gray-200',
+          bg: 'bg-gray-50 dark:bg-gray-900/20',
+          border: 'border-gray-200 dark:border-gray-800',
           badgeBg: 'bg-gray-600',
-          badgeText: 'text-gray-900',
-          statusText: 'text-gray-700',
+          badgeText: 'text-gray-900 dark:text-gray-100',
+          statusText: 'text-gray-700 dark:text-gray-400',
           label: 'Unknown',
         };
     }
@@ -144,22 +144,22 @@ export default function HealthStatus() {
   // Render: Premium Service Status Display
   // ========================================================================
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
       {/* Header with Overall Status */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div
             className={`w-3 h-3 rounded-full ${
               health.status === 'healthy' ? 'bg-green-600' : 'bg-red-600'
             }`}
           />
-          <h2 className="text-xl font-semibold text-gray-900">System Status</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">System Status</h2>
         </div>
         <span
-          className={`text-sm font-semibold px-3 py-1 rounded-full ${
+          className={`text-xs font-semibold px-3 py-1 rounded-full ${
             health.status === 'healthy'
-              ? 'bg-green-100 text-green-700'
-              : 'bg-red-100 text-red-700'
+              ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+              : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
           }`}
         >
           {health.status === 'healthy' ? 'All Operational' : 'Issues Detected'}
@@ -167,7 +167,7 @@ export default function HealthStatus() {
       </div>
 
       {/* Service Status Cards Grid */}
-      <div className="grid md:grid-cols-3 gap-4 mb-6">
+      <div className="grid md:grid-cols-3 gap-3 mb-4">
         {/* Redis Service */}
         {renderServiceCard('Redis', health.services.redis, getStatusConfig)}
 
@@ -179,8 +179,8 @@ export default function HealthStatus() {
       </div>
 
       {/* Footer: Last Updated Info */}
-      <div className="pt-4 border-t border-gray-200">
-        <p className="text-xs text-gray-500">
+      <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+        <p className="text-xs text-gray-500 dark:text-gray-400">
           Last checked: {lastUpdated ? formatTime(health.timestamp) : 'Never'}
           <span className="mx-2">•</span>
           Refreshes every 30 seconds
@@ -211,16 +211,16 @@ function renderServiceCard(
     <div
       key={name}
       className={`
-        p-4 rounded-lg border-2
+        p-3 rounded-lg border-2
         ${config.bg} ${config.border}
         transition-all duration-200
       `}
     >
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="font-semibold text-gray-900">{name}</h3>
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{name}</h3>
         <div className={`w-2 h-2 rounded-full ${config.badgeBg}`} />
       </div>
-      <p className={`text-sm font-medium ${config.statusText}`}>
+      <p className={`text-xs font-medium ${config.statusText}`}>
         {config.label}
       </p>
     </div>

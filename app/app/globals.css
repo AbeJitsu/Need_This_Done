@@ -111,14 +111,14 @@ Usage: background-color: var(--primary-color);
   --color-primary-hover: var(--blue-700);
   --color-primary-active: var(--blue-800);
 
-  --color-success: var(--green-600);
-  --color-success-hover: var(--green-700);
+  --color-success: var(--green-700);
+  --color-success-hover: var(--green-800);
 
   --color-danger: var(--red-600);
   --color-danger-hover: var(--red-700);
 
-  --color-warning: var(--yellow-600);
-  --color-warning-hover: var(--yellow-700);
+  --color-warning: var(--yellow-800);
+  --color-warning-hover: var(--yellow-900);
 
   --text-primary: var(--gray-900);
   --text-secondary: var(--gray-600);
@@ -204,17 +204,16 @@ Define reusable component styles here (if not using Tailwind's @apply)
 }
 
 /* ========================================================================
-Dark Mode - Professional Dark Theme
+Dark Mode - Professional Dark Theme (Class-Based + System Preference)
 ========================================================================
-Automatically switches based on system preference (prefers-color-scheme)
-Maintains all color semantics in dark theme (blue primary, green success, etc)
+Switches based on .dark class (manual toggle via DarkModeToggle component)
+Also respects system preference as fallback when no manual choice is set
+Maintains all color semantics: blue primary, green success, etc
 */
 
+/* System preference fallback (only when user hasn't made explicit choice) */
 @media (prefers-color-scheme: dark) {
-  :root {
-    /* ====================================================================
-    Dark Mode Semantic Mappings - Same meanings, different tones
-    ==================================================================== */
+  html:not(.dark):not(.light) {
     --color-primary: var(--blue-400);
     --color-primary-hover: var(--blue-300);
     --color-primary-active: var(--blue-200);
@@ -228,33 +227,71 @@ Maintains all color semantics in dark theme (blue primary, green success, etc)
     --color-warning: var(--yellow-400);
     --color-warning-hover: var(--yellow-300);
 
-    /* Dark mode inverts text and background hierarchy */
-    --text-primary: #f3f4f6;      /* Light gray for primary text */
-    --text-secondary: #d1d5db;    /* Medium gray for secondary */
-    --text-tertiary: #9ca3af;     /* Dim gray for tertiary */
+    --text-primary: #f3f4f6;
+    --text-secondary: #d1d5db;
+    --text-tertiary: #9ca3af;
 
-    --bg-primary: #0f172a;        /* Very dark navy background */
-    --bg-secondary: #1e293b;      /* Dark slate for cards */
-    --bg-tertiary: #334155;       /* Medium dark for hover states */
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
 
-    --border-color: #475569;      /* Subtle dark borders */
-    --border-light: #334155;      /* Darker border for subtle accents */
+    --border-color: #475569;
+    --border-light: #334155;
   }
+}
 
-  html,
-  body {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-  }
+/* Class-based dark mode (manual toggle - overrides system preference) */
+.dark {
+  --color-primary: var(--blue-400);
+  --color-primary-hover: var(--blue-300);
+  --color-primary-active: var(--blue-200);
 
-  /* Adjust link colors for dark mode contrast */
-  a {
-    color: var(--blue-400);
-  }
+  --color-success: var(--green-400);
+  --color-success-hover: var(--green-300);
 
-  a:hover {
-    color: var(--blue-300);
-  }
+  --color-danger: var(--red-400);
+  --color-danger-hover: var(--red-300);
+
+  --color-warning: var(--yellow-400);
+  --color-warning-hover: var(--yellow-300);
+
+  --text-primary: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+
+  --border-color: #475569;
+  --border-light: #334155;
+}
+
+/* Light mode explicit class (for light theme button) */
+.light {
+  --color-primary: var(--blue-600);
+  --color-primary-hover: var(--blue-700);
+  --color-primary-active: var(--blue-800);
+
+  --color-success: var(--green-700);
+  --color-success-hover: var(--green-800);
+
+  --color-danger: var(--red-600);
+  --color-danger-hover: var(--red-700);
+
+  --color-warning: var(--yellow-800);
+  --color-warning-hover: var(--yellow-900);
+
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-600);
+  --text-tertiary: var(--gray-500);
+
+  --bg-primary: #ffffff;
+  --bg-secondary: var(--gray-50);
+  --bg-tertiary: var(--gray-100);
+
+  --border-color: var(--gray-200);
+  --border-light: var(--gray-100);
 }
 
 /* ========================================================================

@@ -5,6 +5,14 @@
 
 const config = {
   // ========================================================================
+  // Dark Mode - Class-Based Toggle Support
+  // ========================================================================
+  // Allows manual dark mode toggle via .dark class on html element
+  // Works with DarkModeToggle component for user control
+
+  darkMode: 'class',
+
+  // ========================================================================
   // Content - Which Files Use Tailwind?
   // ========================================================================
   // Tailwind scans these files for class names and only includes CSS for

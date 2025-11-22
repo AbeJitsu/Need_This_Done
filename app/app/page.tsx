@@ -1,56 +1,38 @@
 // ============================================================================
-// Home Page - Premium Full-Stack Template
+// Home Page - Premium, Minimal, Desktop-Optimized
 // ============================================================================
 // This is what visitors see when they go to your root URL (/)
-// This is your starting point - replace this with your actual UI
-//
-// Think of it as the front dining area of your restaurant
-// This is where people get their first impression
+// Optimized for desktop viewing - everything fits without scrolling
+// Includes dark mode support with manual toggle button
+// Focused content: features, health status, minimal footer links
 
 import HealthStatus from '@/components/HealthStatus';
 import FeatureCard from '@/components/FeatureCard';
-import Button from '@/components/Button';
 import { templateConfig } from '@/config/template.config';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-20">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8 md:py-12">
         {/* ===================================================================
-        Hero Section - Brand Identity & CTA
+        Intro Section - Description & Purpose
         =================================================================== */}
-        <div className="text-center mb-16">
-          {/* Main Heading - Responsive typography, dark gray for authority */}
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
-            {templateConfig.project.name}
-          </h1>
-
-          {/* Subtitle - Secondary text color, readable size */}
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+        <div className="text-center mb-8">
+          <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
             {templateConfig.project.description}
           </p>
-
-          {/* CTA Buttons - Primary blue action, secondary gray alternative */}
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Button variant="primary" size="lg" href="#get-started">
-              Get Started
-            </Button>
-            <Button variant="secondary" size="lg" href="#learn-more">
-              Learn More
-            </Button>
-          </div>
         </div>
 
         {/* ===================================================================
-        Feature Grid - Professional card layout with subtle accents
+        Feature Grid - 4 Cards, 2x2 Layout for Desktop Fit
         =================================================================== */}
-        <div className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
+        <div className="mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
             Why Choose Us
           </h2>
 
           {/* Premium Principle: Most cards grayscale, ONE primary accent */}
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             {/* First card features primary (blue) accent */}
             <FeatureCard
               icon="🚀"
@@ -80,83 +62,39 @@ export default function Home() {
               description="Runs identically on your laptop and in production. Consistency across all environments."
               variant="default"
             />
-
-            <FeatureCard
-              icon="📊"
-              title="Built-in Health Checks"
-              description="Real-time service monitoring with automatic status reporting. Know your system's health instantly."
-              variant="default"
-            />
-
-            <FeatureCard
-              icon="⚡"
-              title="Ready to Customize"
-              description="Fork this template and customize it with simple environment variables. No code changes needed."
-              variant="default"
-            />
           </div>
         </div>
 
         {/* ===================================================================
-        System Health Status - Real-time service monitoring
+        System Health Status - Real-time Service Monitoring
         =================================================================== */}
-        <div className="mb-16">
+        <div className="mb-8">
           <HealthStatus />
         </div>
 
         {/* ===================================================================
-        Secondary CTA Section - Premium card layout
+        Footer Links - Professional, Minimal
         =================================================================== */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-8 md:p-12 text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Build?</h2>
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Start your next project with a fully-configured, production-ready full-stack template.
-            Deploy in minutes, not days.
-          </p>
-
-          {/* Multiple button sizes: primary for main CTA, secondary/ghost for alternatives */}
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Button variant="primary" size="lg" href={templateConfig.project.repositoryUrl}>
-              View on GitHub
-            </Button>
-            <Button variant="ghost" size="lg" href="#docs">
-              Read Documentation
-            </Button>
-          </div>
-        </div>
-
-        {/* ===================================================================
-        Footer Links - Professional, minimal styling
-        =================================================================== */}
-        <div className="border-t border-gray-200 pt-8">
-          <div className="flex flex-wrap justify-center gap-6 text-sm mb-8">
-            <a href="/api/health" className="text-gray-600 hover:text-blue-600 transition">
-              Health Check API
-            </a>
-            <a href="#docs" className="text-gray-600 hover:text-blue-600 transition">
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+          <div className="flex flex-wrap justify-center gap-4 text-sm mb-4">
+            <a href="#docs" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
               Documentation
             </a>
-            <a href="#api" className="text-gray-600 hover:text-blue-600 transition">
+            <a href="#api" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
               API Reference
             </a>
-            <a href="#support" className="text-gray-600 hover:text-blue-600 transition">
+            <a href="#support" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
               Support
+            </a>
+            <a href={templateConfig.project.repositoryUrl} className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
+              GitHub
             </a>
           </div>
 
           {/* Copyright */}
-          <div className="text-center text-xs text-gray-500">
+          <div className="text-center text-xs text-gray-500 dark:text-gray-400">
             <p>
               Built with Next.js, Tailwind CSS, Redis, and Supabase
-              <span className="mx-2">•</span>
-              {templateConfig.project.repositoryUrl && (
-                <a
-                  href={templateConfig.project.repositoryUrl}
-                  className="text-blue-600 hover:text-blue-700"
-                >
-                  Open Source
-                </a>
-              )}
             </p>
           </div>
         </div>
