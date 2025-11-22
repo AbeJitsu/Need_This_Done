@@ -68,38 +68,38 @@ export default function HealthStatus() {
     switch (service) {
       case 'up':
         return {
-          bg: 'bg-green-50 dark:bg-green-900/20',
-          border: 'border-green-200 dark:border-green-800',
+          bg: 'bg-green-50 dark:bg-gray-800',
+          border: 'border-green-200 dark:border-gray-700',
           badgeBg: 'bg-green-600',
           badgeText: 'text-green-900 dark:text-green-100',
-          statusText: 'text-green-700 dark:text-green-400',
+          statusText: 'text-green-700 dark:text-green-300',
           label: 'Operational',
         };
       case 'down':
         return {
-          bg: 'bg-red-50 dark:bg-red-900/20',
-          border: 'border-red-200 dark:border-red-800',
+          bg: 'bg-red-50 dark:bg-gray-800',
+          border: 'border-red-200 dark:border-gray-700',
           badgeBg: 'bg-red-600',
           badgeText: 'text-red-900 dark:text-red-100',
-          statusText: 'text-red-700 dark:text-red-400',
+          statusText: 'text-red-700 dark:text-red-300',
           label: 'Down',
         };
       case 'error':
         return {
-          bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-          border: 'border-yellow-200 dark:border-yellow-800',
+          bg: 'bg-yellow-50 dark:bg-gray-800',
+          border: 'border-yellow-200 dark:border-gray-700',
           badgeBg: 'bg-yellow-600',
           badgeText: 'text-yellow-900 dark:text-yellow-100',
-          statusText: 'text-yellow-700 dark:text-yellow-400',
+          statusText: 'text-yellow-700 dark:text-yellow-300',
           label: 'Error',
         };
       default:
         return {
-          bg: 'bg-gray-50 dark:bg-gray-900/20',
-          border: 'border-gray-200 dark:border-gray-800',
+          bg: 'bg-gray-50 dark:bg-gray-800',
+          border: 'border-gray-200 dark:border-gray-700',
           badgeBg: 'bg-gray-600',
           badgeText: 'text-gray-900 dark:text-gray-100',
-          statusText: 'text-gray-700 dark:text-gray-400',
+          statusText: 'text-gray-700 dark:text-gray-300',
           label: 'Unknown',
         };
     }
@@ -158,8 +158,8 @@ export default function HealthStatus() {
         <span
           className={`text-xs font-semibold px-3 py-1 rounded-full ${
             health.status === 'healthy'
-              ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-              : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+              ? 'bg-green-100 dark:bg-gray-800 text-green-700 dark:text-green-300'
+              : 'bg-red-100 dark:bg-gray-800 text-red-700 dark:text-red-300'
           }`}
         >
           {health.status === 'healthy' ? 'All Operational' : 'Issues Detected'}

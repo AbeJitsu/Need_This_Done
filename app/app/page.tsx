@@ -27,10 +27,6 @@ export default function Home() {
         Feature Grid - 4 Cards, 2x2 Layout for Desktop Fit
         =================================================================== */}
         <div className="mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
-            Why Choose Us
-          </h2>
-
           {/* Premium Principle: Most cards grayscale, ONE primary accent */}
           <div className="grid md:grid-cols-2 gap-6">
             {/* First card features primary (blue) accent */}
@@ -73,25 +69,9 @@ export default function Home() {
         </div>
 
         {/* ===================================================================
-        Footer Links - Professional, Minimal
+        Footer - Tech Stack Info
         =================================================================== */}
         <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-          <div className="flex flex-wrap justify-center gap-4 text-sm mb-4">
-            <a href="#docs" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-              Documentation
-            </a>
-            <a href="#api" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-              API Reference
-            </a>
-            <a href="#support" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-              Support
-            </a>
-            <a href={templateConfig.project.repositoryUrl} className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
-              GitHub
-            </a>
-          </div>
-
-          {/* Copyright */}
           <div className="text-center text-xs text-gray-500 dark:text-gray-400">
             <p>
               Built with Next.js, Tailwind CSS, Redis, and Supabase
