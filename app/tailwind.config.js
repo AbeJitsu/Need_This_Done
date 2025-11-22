@@ -25,9 +25,21 @@ const config = {
   theme: {
     extend: {
       // Add custom colors beyond Tailwind's defaults
+      // These sync with the CSS variables defined in globals.css
       colors: {
-        // Example: brand-blue can be used in classes like bg-brand-blue
-        // 'brand-blue': '#0066cc',
+        // Blue palette
+        'primary': 'var(--color-blue-dark)',
+        'secondary': 'var(--color-blue-mid)',
+        'tertiary': 'var(--color-blue-light)',
+
+        // Red accents
+        'accent-red': 'var(--color-red-primary)',
+        'accent-red-light': 'var(--color-red-accent)',
+
+        // Semantic colors
+        'text-primary': 'var(--text-color)',
+        'bg-primary': 'var(--bg-color)',
+        'border-primary': 'var(--border-color)',
       },
 
       // Add custom spacing values
