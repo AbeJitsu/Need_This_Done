@@ -1,0 +1,31 @@
+# ============================================================================
+# Docker Test Container
+# ============================================================================
+# This Dockerfile creates a container that runs integration tests inside
+# the Docker network. Tests can connect to other services using Docker
+# service names (redis://redis:6379, http://app:3000, etc.)
+#
+# Usage:
+# - docker build -f Dockerfile.test -t integration-tests .
+# - docker run --network app_network integration-tests
+#
+# Or with docker-compose:
+# - docker-compose -f docker-compose.test.yml up test
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install ALL dependencies (including devDependencies)
+# Tests require vitest, testing-library, msw, etc.
+RUN npm install
+
+# Copy entire app directory (source code + tests)
+COPY . .
+
+# Default command: run integration tests
+# Environment variables are provided by docker-compose.test.yml
+CMD ["npm", "run", "test:integration:run"]
