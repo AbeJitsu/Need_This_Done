@@ -160,37 +160,41 @@ export default function SpeedDemo() {
                 p-3 rounded-lg border transition-all
                 ${
                   result.isFromCache
-                    ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
-                    : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
+                    ? 'bg-green-50 dark:bg-gray-800 border-green-300 dark:border-green-700'
+                    : 'bg-blue-50 dark:bg-gray-800 border-blue-300 dark:border-blue-700'
                 }
               `}
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-400">
+                    <span className={`text-xs font-semibold uppercase tracking-wide ${
+                      result.isFromCache
+                        ? 'text-green-900 dark:text-green-300'
+                        : 'text-blue-900 dark:text-blue-300'
+                    }`}>
                       {result.isFromCache ? '⚡ From Memory' : '📡 Fresh Fetch'}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">
+                  <p className="text-sm text-gray-900 dark:text-gray-100 italic">
                     "{result.data}"
                   </p>
                 </div>
                 <div className="text-right ml-4">
                   <p className={`text-lg font-bold ${
                     result.isFromCache
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-blue-600 dark:text-blue-400'
+                      ? 'text-green-900 dark:text-green-300'
+                      : 'text-blue-900 dark:text-blue-300'
                   }`}>
                     {result.time}ms
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-gray-700 dark:text-gray-300">
                     {result.timestamp}
                   </p>
                 </div>
               </div>
               {index === 0 && results.length > 1 && (
-                <p className="text-xs text-gray-600 dark:text-gray-400 border-t pt-2 border-current border-opacity-20">
+                <p className="text-xs text-gray-800 dark:text-gray-200 border-t pt-2 border-current border-opacity-30">
                   💡 Notice how it's faster after the first fetch
                 </p>
               )}

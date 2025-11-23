@@ -96,7 +96,7 @@ export default function FAQ() {
               onClick={() => toggleOpen(faq.id)}
               className="
                 w-full p-4
-                bg-gray-50 dark:bg-gray-700/50
+                bg-gray-50 dark:bg-gray-800
                 hover:bg-gray-100 dark:hover:bg-gray-700
                 text-left
                 font-medium text-gray-900 dark:text-gray-100

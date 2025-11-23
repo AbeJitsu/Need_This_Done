@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import DarkModeToggle from '@/components/DarkModeToggle';
+import { AuthProvider } from '@/context/AuthContext';
 
 // ============================================================================
 // Root Layout Component
@@ -35,10 +36,12 @@ export default function RootLayout({
         {/* Optional: Add custom fonts, analytics, etc here */}
       </head>
       <body>
-        <DarkModeToggle />
-        {/* Navigation could go here */}
-        <main>{children}</main>
-        {/* Footer could go here */}
+        <AuthProvider>
+          <DarkModeToggle />
+          {/* Navigation could go here */}
+          <main>{children}</main>
+          {/* Footer could go here */}
+        </AuthProvider>
       </body>
     </html>
   );

@@ -110,7 +110,7 @@ export default function WhatCanYouBuild() {
               ${
                 selectedProject.id === project.id
                   ? 'bg-blue-600 dark:bg-blue-500 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600'
               }
             `}
           >
@@ -131,7 +131,7 @@ export default function WhatCanYouBuild() {
           </p>
 
           {/* Time Estimate */}
-          <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+          <div className="p-3 bg-green-50 dark:bg-gray-800 border border-green-200 dark:border-green-700 rounded-lg">
             <p className="text-sm text-green-700 dark:text-green-300">
               <strong>⏱️ Setup Time:</strong> {selectedProject.timeEstimate}
             </p>
@@ -147,18 +147,18 @@ export default function WhatCanYouBuild() {
             {selectedProject.features.map((feature, index) => (
               <div
                 key={index}
-                className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+                className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
               >
-                <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                <span className="text-green-700 dark:text-green-300 font-bold">✓</span>
+                <span className="text-gray-900 dark:text-gray-100">{feature}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Why It Matters */}
-        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-          <p className="text-sm text-blue-700 dark:text-blue-300">
+        <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-lg">
+          <p className="text-sm text-blue-900 dark:text-blue-300">
             <strong>💡 Why This Matters:</strong> Every feature listed above is already connected and working.
             You don't need to figure out how to build user accounts, payment processing, or data security.
             You can start building your specific features immediately.
@@ -166,11 +166,11 @@ export default function WhatCanYouBuild() {
         </div>
 
         {/* Next Steps */}
-        <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-          <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p className="text-sm text-gray-700 dark:text-gray-100 mb-3">
             <strong>Next Steps:</strong>
           </p>
-          <ol className="text-sm text-gray-600 dark:text-gray-400 space-y-2 list-decimal list-inside">
+          <ol className="text-sm text-gray-600 dark:text-gray-300 space-y-2 list-decimal list-inside">
             <li>Clone this template</li>
             <li>Customize the features for your project</li>
             <li>Deploy it (takes 5 minutes)</li>

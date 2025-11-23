@@ -24,7 +24,7 @@ export default function HowItWorks() {
         <div className="flex items-center justify-between gap-4 mb-8">
           {/* Visitor Browser */}
           <div className="flex-1">
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-lg text-center">
+            <div className="p-4 bg-blue-50 dark:bg-gray-800 border-2 border-blue-200 dark:border-blue-800 rounded-lg text-center">
               <div className="text-2xl mb-2">🌐</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Visitor's Browser</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Chrome, Safari, Firefox</p>
@@ -36,7 +36,7 @@ export default function HowItWorks() {
 
           {/* Web Server */}
           <div className="flex-1">
-            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-200 dark:border-purple-800 rounded-lg text-center">
+            <div className="p-4 bg-purple-50 dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800 rounded-lg text-center">
               <div className="text-2xl mb-2">⚙️</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Web Server</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Runs your code</p>
@@ -48,7 +48,7 @@ export default function HowItWorks() {
 
           {/* Memory System */}
           <div className="flex-1">
-            <div className="p-4 bg-orange-50 dark:bg-orange-900/20 border-2 border-orange-200 dark:border-orange-800 rounded-lg text-center">
+            <div className="p-4 bg-orange-50 dark:bg-gray-800 border-2 border-orange-200 dark:border-orange-800 rounded-lg text-center">
               <div className="text-2xl mb-2">⚡</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Speed Memory</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Redis</p>
@@ -60,7 +60,7 @@ export default function HowItWorks() {
 
           {/* Database */}
           <div className="flex-1">
-            <div className="p-4 bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-lg text-center">
+            <div className="p-4 bg-green-50 dark:bg-gray-800 border-2 border-green-200 dark:border-green-800 rounded-lg text-center">
               <div className="text-2xl mb-2">💾</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Database</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Supabase</p>
@@ -71,23 +71,23 @@ export default function HowItWorks() {
         {/* Reverse arrows */}
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1 text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">Sends data</p>
+            <p className="text-xs text-gray-700 dark:text-gray-300">Sends data</p>
           </div>
           <div className="text-xl text-gray-400">←</div>
           <div className="flex-1 text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">Receives request</p>
+            <p className="text-xs text-gray-700 dark:text-gray-300">Receives request</p>
           </div>
           <div className="text-xl text-gray-400">←</div>
           <div className="flex-1 text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">Checks memory first</p>
+            <p className="text-xs text-gray-700 dark:text-gray-300">Checks memory first</p>
           </div>
           <div className="text-xl text-gray-400">←</div>
           <div className="flex-1 text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">Stores safely</p>
+            <p className="text-xs text-gray-700 dark:text-gray-300">Stores safely</p>
           </div>
           <div className="text-xl text-gray-400">←</div>
           <div className="flex-1 text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">Loads page</p>
+            <p className="text-xs text-gray-700 dark:text-gray-300">Loads page</p>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@ export default function HowItWorks() {
         ].map((item, index) => (
           <div key={index} className="text-center">
             {item.title ? (
-              <div className="p-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div className="p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <div className="text-xl mb-1">{item.icon}</div>
                 <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{item.title}</p>
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{item.desc}</p>
@@ -122,9 +122,9 @@ export default function HowItWorks() {
       {/* Explanation Boxes */}
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         {/* What Visitors Experience */}
-        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-          <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">What Visitors See</h3>
-          <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+        <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-lg">
+          <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">What Visitors See</h3>
+          <ul className="text-sm text-blue-900 dark:text-blue-300 space-y-1">
             <li>• Pages load instantly (or very fast)</li>
             <li>• Login works seamlessly</li>
             <li>• Data loads from their account</li>
@@ -133,9 +133,9 @@ export default function HowItWorks() {
         </div>
 
         {/* What You Build */}
-        <div className="p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
-          <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-2">What You Build</h3>
-          <ul className="text-sm text-purple-700 dark:text-purple-300 space-y-1">
+        <div className="p-4 bg-purple-50 dark:bg-gray-800 border border-purple-300 dark:border-purple-700 rounded-lg">
+          <h3 className="font-semibold text-purple-900 dark:text-purple-300 mb-2">What You Build</h3>
+          <ul className="text-sm text-purple-900 dark:text-purple-300 space-y-1">
             <li>• Your features and designs</li>
             <li>• Your business logic</li>
             <li>• Your rules and workflows</li>
@@ -145,8 +145,8 @@ export default function HowItWorks() {
       </div>
 
       {/* Key Concept */}
-      <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-        <p className="text-sm text-green-700 dark:text-green-300">
+      <div className="p-4 bg-green-50 dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg">
+        <p className="text-sm text-green-900 dark:text-green-300">
           <strong>💡 The Key Idea:</strong> The "boring" infrastructure (how data moves, how users log in, how pages serve fast) is already done.
           All these boxes are connected and working. You just build what makes your idea special.
         </p>

@@ -6,6 +6,11 @@
 // Includes dark mode support with manual toggle button
 // Focused content: features, health status, minimal footer links
 
+// Force dynamic rendering because this page uses client-side authentication context
+// Without this, Next.js would try to statically generate the page at build time,
+// which fails because useAuth() can only work on the client or at request time
+export const dynamic = 'force-dynamic';
+
 import HealthStatus from '@/components/HealthStatus';
 import FeatureCard from '@/components/FeatureCard';
 import SpeedDemo from '@/components/SpeedDemo';

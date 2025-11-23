@@ -115,7 +115,7 @@ export default function DatabaseDemo() {
 
       {/* Stats */}
       {savedItems.length > 0 && (
-        <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+        <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-semibold mb-1">
@@ -155,7 +155,7 @@ export default function DatabaseDemo() {
                 className="
                   p-3 rounded-lg
                   bg-blue-50 dark:bg-blue-900/20
-                  border border-blue-200 dark:border-blue-800
+                  border border-blue-300 dark:border-blue-700
                   flex items-start justify-between gap-4
                 "
               >
