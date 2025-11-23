@@ -168,14 +168,14 @@ export default function HealthStatus() {
 
       {/* Service Status Cards Grid */}
       <div className="grid md:grid-cols-3 gap-3 mb-4">
-        {/* Redis Service */}
-        {renderServiceCard('Redis', health.services.redis, getStatusConfig)}
+        {/* Speed System (Redis) - Makes pages load fast */}
+        {renderServiceCard('Speed System', health.services.redis, getStatusConfig)}
 
-        {/* Supabase Service */}
-        {renderServiceCard('Supabase', health.services.supabase, getStatusConfig)}
+        {/* Database (Supabase) - Stores data safely */}
+        {renderServiceCard('Database', health.services.supabase, getStatusConfig)}
 
-        {/* App Service */}
-        {renderServiceCard('App', health.services.app, getStatusConfig)}
+        {/* Your Website (App) - The code running now */}
+        {renderServiceCard('Your Website', health.services.app, getStatusConfig)}
       </div>
 
       {/* Footer: Last Updated Info */}

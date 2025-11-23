@@ -10,6 +10,8 @@ interface FeatureCardProps {
   icon: string;
   title: string;
   description: string;
+  benefit?: string;
+  metric?: string;
   variant?: 'default' | 'primary' | 'success';
 }
 
@@ -17,6 +19,8 @@ export default function FeatureCard({
   icon,
   title,
   description,
+  benefit,
+  metric,
   variant = 'default',
 }: FeatureCardProps) {
   // ========================================================================
@@ -58,6 +62,7 @@ export default function FeatureCard({
         ${styles.container}
         ${styles.hover}
         transition-all duration-300
+        flex flex-col h-full
       `}
     >
       {/* Icon - Color varies by variant */}
@@ -67,9 +72,23 @@ export default function FeatureCard({
       <h3 className={`text-xl font-semibold mb-2 ${styles.title}`}>{title}</h3>
 
       {/* Description - Medium gray for readability */}
-      <p className={`text-sm sm:text-base leading-relaxed ${styles.description}`}>
+      <p className={`text-sm sm:text-base leading-relaxed ${styles.description} mb-3`}>
         {description}
       </p>
+
+      {/* Benefit - Why it matters */}
+      {benefit && (
+        <p className={`text-xs sm:text-sm ${styles.description} mb-3 italic border-l-2 border-current pl-3`}>
+          💡 {benefit}
+        </p>
+      )}
+
+      {/* Metric - Proof with numbers */}
+      {metric && (
+        <div className={`text-xs font-semibold ${styles.icon} mt-auto pt-3 border-t border-current border-opacity-20`}>
+          ✓ {metric}
+        </div>
+      )}
     </div>
   );
 }

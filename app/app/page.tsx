@@ -8,6 +8,12 @@
 
 import HealthStatus from '@/components/HealthStatus';
 import FeatureCard from '@/components/FeatureCard';
+import SpeedDemo from '@/components/SpeedDemo';
+import AuthDemo from '@/components/AuthDemo';
+import DatabaseDemo from '@/components/DatabaseDemo';
+import WhatCanYouBuild from '@/components/WhatCanYouBuild';
+import HowItWorks from '@/components/HowItWorks';
+import FAQ from '@/components/FAQ';
 import { templateConfig } from '@/config/template.config';
 
 export default function Home() {
@@ -26,38 +32,20 @@ export default function Home() {
         {/* ===================================================================
         Feature Grid - 4 Cards, 2x2 Layout for Desktop Fit
         =================================================================== */}
+        {/* Plain language features with metrics to build trust */}
         <div className="mb-8">
-          {/* Premium Principle: Most cards grayscale, ONE primary accent */}
           <div className="grid md:grid-cols-2 gap-6">
-            {/* First card features primary (blue) accent */}
-            <FeatureCard
-              icon="🚀"
-              title="Lightning Fast"
-              description="Deploy and scale with production-ready infrastructure. Experience zero-to-hero in minutes."
-              variant="primary"
-            />
-
-            {/* Rest are default (grayscale) for professional balance */}
-            <FeatureCard
-              icon="🔒"
-              title="Secure by Default"
-              description="Enterprise-grade security, HTTPS, secure sessions, and production-ready headers built-in."
-              variant="default"
-            />
-
-            <FeatureCard
-              icon="📦"
-              title="Complete Stack"
-              description="Everything you need included: database, caching, auth, deployment. No surprises."
-              variant="default"
-            />
-
-            <FeatureCard
-              icon="🐳"
-              title="Fully Dockerized"
-              description="Runs identically on your laptop and in production. Consistency across all environments."
-              variant="default"
-            />
+            {templateConfig.features.map((feature, index) => (
+              <FeatureCard
+                key={index}
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+                benefit={feature.benefit}
+                metric={feature.metric}
+                variant={index === 0 ? 'primary' : 'default'}
+              />
+            ))}
           </div>
         </div>
 
@@ -69,12 +57,65 @@ export default function Home() {
         </div>
 
         {/* ===================================================================
-        Footer - Tech Stack Info
+        Interactive Demos - See Everything Working
+        =================================================================== */}
+        <div className="mb-8">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+              Watch It Work
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Everything below is working right now. Try it yourself—no account needed.
+            </p>
+          </div>
+
+          {/* Speed Demo */}
+          <div className="mb-8">
+            <SpeedDemo />
+          </div>
+
+          {/* Authentication Demo */}
+          <div className="mb-8">
+            <AuthDemo />
+          </div>
+
+          {/* Database Demo */}
+          <div className="mb-8">
+            <DatabaseDemo />
+          </div>
+        </div>
+
+        {/* ===================================================================
+        What You Can Build - Project Examples
+        =================================================================== */}
+        <div className="mb-8">
+          <WhatCanYouBuild />
+        </div>
+
+        {/* ===================================================================
+        How It Works - Visual Architecture
+        =================================================================== */}
+        <div className="mb-8">
+          <HowItWorks />
+        </div>
+
+        {/* ===================================================================
+        FAQ - Common Questions Answered
+        =================================================================== */}
+        <div className="mb-8">
+          <FAQ />
+        </div>
+
+        {/* ===================================================================
+        Footer - Benefits Summary
         =================================================================== */}
         <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
           <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-            <p>
-              Built with Next.js, Tailwind CSS, Redis, and Supabase
+            <p className="mb-2">
+              Instant pages • Secure storage • User accounts • Deploy anywhere
+            </p>
+            <p className="text-xs">
+              Built with industry-standard tools: Next.js, Tailwind CSS, Redis, Supabase, and Docker
             </p>
           </div>
         </div>
