@@ -87,6 +87,34 @@ const projects: ProjectExample[] = [
 export default function WhatCanYouBuild() {
   const [selectedProject, setSelectedProject] = useState<ProjectExample>(projects[0]);
 
+  // ========================================================================
+  // Handle Keyboard Navigation for Tabs
+  // ========================================================================
+  const handleTabKeyDown = (e: React.KeyboardEvent, currentIndex: number) => {
+    let nextIndex = currentIndex;
+
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      nextIndex = (currentIndex + 1) % projects.length;
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      nextIndex = (currentIndex - 1 + projects.length) % projects.length;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      nextIndex = projects.length - 1;
+    }
+
+    if (nextIndex !== currentIndex) {
+      setSelectedProject(projects[nextIndex]);
+      // Focus the button that was just activated
+      const buttons = document.querySelectorAll('[role="tab"]');
+      (buttons[nextIndex] as HTMLButtonElement)?.focus();
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
       {/* Header */}
@@ -100,11 +128,15 @@ export default function WhatCanYouBuild() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-        {projects.map((project) => (
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-2" role="tablist">
+        {projects.map((project, index) => (
           <button
             key={project.id}
+            role="tab"
+            {...{ 'aria-selected': selectedProject.id === project.id }}
+            {...{ 'aria-controls': `tabpanel-${project.id}` }}
             onClick={() => setSelectedProject(project)}
+            onKeyDown={(e) => handleTabKeyDown(e, index)}
             className={`
               px-4 py-2 rounded-lg whitespace-nowrap font-medium transition-all text-sm
               ${
@@ -114,17 +146,17 @@ export default function WhatCanYouBuild() {
               }
             `}
           >
-            {project.icon} {project.name}
+            <span role="img" aria-label={`${project.name} icon`}>{project.icon}</span> {project.name}
           </button>
         ))}
       </div>
 
       {/* Project Details */}
-      <div className="space-y-6">
+      <div id={`tabpanel-${selectedProject.id}`} role="tabpanel" className="space-y-6">
         {/* Project Header */}
         <div>
           <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-            {selectedProject.icon} {selectedProject.name}
+            <span role="img" aria-label={`${selectedProject.name} icon`}>{selectedProject.icon}</span> {selectedProject.name}
           </h3>
           <p className="text-gray-600 dark:text-gray-300 mb-4">
             {selectedProject.description}
@@ -133,7 +165,7 @@ export default function WhatCanYouBuild() {
           {/* Time Estimate */}
           <div className="p-3 bg-green-50 dark:bg-gray-800 border border-green-200 dark:border-green-700 rounded-lg">
             <p className="text-sm text-green-700 dark:text-green-300">
-              <strong>⏱️ Setup Time:</strong> {selectedProject.timeEstimate}
+              <strong><span role="img" aria-label="Timer">⏱️</span> Setup Time:</strong> {selectedProject.timeEstimate}
             </p>
           </div>
         </div>
@@ -149,7 +181,7 @@ export default function WhatCanYouBuild() {
                 key={index}
                 className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
               >
-                <span className="text-green-700 dark:text-green-300 font-bold">✓</span>
+                <span className="text-green-700 dark:text-green-300 font-bold" role="img" aria-label="Included">✓</span>
                 <span className="text-gray-900 dark:text-gray-100">{feature}</span>
               </div>
             ))}
@@ -159,7 +191,7 @@ export default function WhatCanYouBuild() {
         {/* Why It Matters */}
         <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-lg">
           <p className="text-sm text-blue-900 dark:text-blue-300">
-            <strong>💡 Why This Matters:</strong> Every feature listed above is already connected and working.
+            <strong><span role="img" aria-label="Tip">💡</span> Why This Matters:</strong> Every feature listed above is already connected and working.
             You don't need to figure out how to build user accounts, payment processing, or data security.
             You can start building your specific features immediately.
           </p>

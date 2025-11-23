@@ -25,7 +25,7 @@ const faqs: FAQItem[] = [
     id: 'cost',
     question: 'How much does it cost to run?',
     answer:
-      'Free tier: Perfect for testing and learning. You pay $0. Small project: ~$5-15/month. Popular project: $25-50/month. It scales with your actual usage, so you don\'t pay for capacity you don\'t use. Compare that to a developer building this from scratch: $50K+ in salary.',
+      'Free tier: Perfect for testing and learning. You pay $0. Small project: ~$5-15/month. Popular project: $25-50/month. It scales with your actual usage, so you don\'t pay for capacity you don\'t use. For comparison, building this infrastructure from scratch typically requires months of specialized development work, which represents a significant investment. With this template, that foundation is already handled.',
   },
   {
     id: 'users',
@@ -94,6 +94,8 @@ export default function FAQ() {
             {/* Question Button */}
             <button
               onClick={() => toggleOpen(faq.id)}
+              {...{ 'aria-expanded': openId === faq.id }}
+              aria-controls={`faq-answer-${faq.id}`}
               className="
                 w-full p-4
                 bg-gray-50 dark:bg-gray-800
@@ -111,6 +113,7 @@ export default function FAQ() {
                   transition-transform duration-200
                   ${openId === faq.id ? 'rotate-180' : ''}
                 `}
+                aria-hidden="true"
               >
                 ▼
               </span>
@@ -118,7 +121,7 @@ export default function FAQ() {
 
             {/* Answer */}
             {openId === faq.id && (
-              <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+              <div id={`faq-answer-${faq.id}`} className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
                 <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
                   {faq.answer}
                 </p>

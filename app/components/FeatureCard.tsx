@@ -66,7 +66,9 @@ export default function FeatureCard({
       `}
     >
       {/* Icon - Color varies by variant */}
-      <div className={`text-3xl mb-3 ${styles.icon}`}>{icon}</div>
+      <div className={`text-3xl mb-3 ${styles.icon}`} role="img" aria-label={`${title} icon`}>
+        {icon}
+      </div>
 
       {/* Title - Always dark gray for hierarchy */}
       <h3 className={`text-xl font-semibold mb-2 ${styles.title}`}>{title}</h3>
@@ -79,14 +81,14 @@ export default function FeatureCard({
       {/* Benefit - Why it matters */}
       {benefit && (
         <p className={`text-xs sm:text-sm ${styles.description} mb-3 italic border-l-2 border-current pl-3`}>
-          💡 {benefit}
+          <span role="img" aria-label="Tip">💡</span> {benefit}
         </p>
       )}
 
       {/* Metric - Proof with numbers */}
       {metric && (
         <div className={`text-xs font-semibold ${styles.icon} mt-auto pt-3 border-t border-current border-opacity-20`}>
-          ✓ {metric}
+          <span role="img" aria-label="Verified">✓</span> {metric}
         </div>
       )}
     </div>

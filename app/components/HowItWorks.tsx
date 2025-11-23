@@ -25,43 +25,43 @@ export default function HowItWorks() {
           {/* Visitor Browser */}
           <div className="flex-1">
             <div className="p-4 bg-blue-50 dark:bg-gray-800 border-2 border-blue-200 dark:border-blue-800 rounded-lg text-center">
-              <div className="text-2xl mb-2">🌐</div>
+              <div className="text-2xl mb-2" role="img" aria-label="Web browser">🌐</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Visitor's Browser</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Chrome, Safari, Firefox</p>
             </div>
           </div>
 
           {/* Arrow */}
-          <div className="text-2xl text-gray-400">→</div>
+          <div className="text-2xl text-gray-400" aria-hidden="true">→</div>
 
           {/* Web Server */}
           <div className="flex-1">
             <div className="p-4 bg-purple-50 dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800 rounded-lg text-center">
-              <div className="text-2xl mb-2">⚙️</div>
+              <div className="text-2xl mb-2" role="img" aria-label="Web server">⚙️</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Web Server</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Runs your code</p>
             </div>
           </div>
 
           {/* Arrow */}
-          <div className="text-2xl text-gray-400">→</div>
+          <div className="text-2xl text-gray-400" aria-hidden="true">→</div>
 
           {/* Memory System */}
           <div className="flex-1">
             <div className="p-4 bg-orange-50 dark:bg-gray-800 border-2 border-orange-200 dark:border-orange-800 rounded-lg text-center">
-              <div className="text-2xl mb-2">⚡</div>
+              <div className="text-2xl mb-2" role="img" aria-label="Speed memory cache">⚡</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Speed Memory</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Redis</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Redis (in-memory cache)</p>
             </div>
           </div>
 
           {/* Arrow */}
-          <div className="text-2xl text-gray-400">→</div>
+          <div className="text-2xl text-gray-400" aria-hidden="true">→</div>
 
           {/* Database */}
           <div className="flex-1">
             <div className="p-4 bg-green-50 dark:bg-gray-800 border-2 border-green-200 dark:border-green-800 rounded-lg text-center">
-              <div className="text-2xl mb-2">💾</div>
+              <div className="text-2xl mb-2" role="img" aria-label="Database">💾</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Database</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Supabase</p>
             </div>
@@ -95,25 +95,25 @@ export default function HowItWorks() {
       {/* Mobile Flow Diagram (stacked) */}
       <div className="md:hidden mb-8 space-y-3">
         {[
-          { icon: '🌐', title: 'Your Visitor', desc: 'Clicks on your website' },
-          { icon: '⬇️', title: '', desc: '' },
-          { icon: '⚙️', title: 'Web Server', desc: 'Runs your code' },
-          { icon: '⬇️', title: '', desc: '' },
-          { icon: '⚡', title: 'Speed Memory', desc: 'Checks if we remember this' },
-          { icon: '⬇️', title: '', desc: '' },
-          { icon: '💾', title: 'Database', desc: 'Gets fresh data if needed' },
-          { icon: '⬆️', title: '', desc: '' },
-          { icon: '🌐', title: 'Back to Browser', desc: 'Page loads instantly' },
+          { icon: '🌐', label: 'Web browser', title: 'Your Visitor', desc: 'Clicks on your website' },
+          { icon: '⬇️', label: 'Arrow down', title: '', desc: '' },
+          { icon: '⚙️', label: 'Web server', title: 'Web Server', desc: 'Runs your code' },
+          { icon: '⬇️', label: 'Arrow down', title: '', desc: '' },
+          { icon: '⚡', label: 'Speed memory cache', title: 'Speed Memory', desc: 'Checks if we remember this' },
+          { icon: '⬇️', label: 'Arrow down', title: '', desc: '' },
+          { icon: '💾', label: 'Database', title: 'Database', desc: 'Gets fresh data if needed' },
+          { icon: '⬆️', label: 'Arrow up', title: '', desc: '' },
+          { icon: '🌐', label: 'Web browser', title: 'Back to Browser', desc: 'Page loads instantly' },
         ].map((item, index) => (
           <div key={index} className="text-center">
             {item.title ? (
               <div className="p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <div className="text-xl mb-1">{item.icon}</div>
+                <div className="text-xl mb-1" role="img" aria-label={item.label}>{item.icon}</div>
                 <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{item.title}</p>
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{item.desc}</p>
               </div>
             ) : (
-              <p className="text-xl">{item.icon}</p>
+              <p className="text-xl" role="img" aria-label={item.label}>{item.icon}</p>
             )}
           </div>
         ))}
@@ -147,7 +147,7 @@ export default function HowItWorks() {
       {/* Key Concept */}
       <div className="p-4 bg-green-50 dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg">
         <p className="text-sm text-green-900 dark:text-green-300">
-          <strong>💡 The Key Idea:</strong> The "boring" infrastructure (how data moves, how users log in, how pages serve fast) is already done.
+          <strong><span role="img" aria-label="Tip">💡</span> The Key Idea:</strong> The "boring" infrastructure (how data moves, how users log in, how pages serve fast) is already done.
           All these boxes are connected and working. You just build what makes your idea special.
         </p>
       </div>

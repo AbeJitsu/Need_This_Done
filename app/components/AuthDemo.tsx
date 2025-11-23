@@ -47,7 +47,7 @@ export default function AuthDemo() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Authentication failed');
+        setError(data.error || "We couldn't sign you in. Please check your email and password.");
         setIsSubmitting(false);
         return;
       }
@@ -115,25 +115,27 @@ export default function AuthDemo() {
         <div className="space-y-4">
           {/* Error Message */}
           {error && (
-            <div className="p-4 bg-red-50 dark:bg-gray-800 border border-red-300 dark:border-red-700 rounded-lg">
+            <div role="alert" className="p-4 bg-red-50 dark:bg-gray-800 border border-red-300 dark:border-red-700 rounded-lg">
               <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
             </div>
           )}
 
           {/* Success Message */}
           {successMessage && (
-            <div className="p-4 bg-green-50 dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg">
+            <div role="alert" className="p-4 bg-green-50 dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg">
               <p className="text-sm text-green-700 dark:text-green-300">{successMessage}</p>
             </div>
           )}
 
           {/* Email Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="auth-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Email Address
             </label>
             <input
+              id="auth-email"
               type="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
@@ -152,11 +154,13 @@ export default function AuthDemo() {
 
           {/* Password Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="auth-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Password (min 6 characters)
             </label>
             <input
+              id="auth-password"
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"

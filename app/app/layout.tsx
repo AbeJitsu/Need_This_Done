@@ -37,9 +37,16 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
+          {/* Skip to main content link for keyboard users */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-0 focus:top-0 focus:bg-blue-600 focus:text-white focus:p-2 focus:z-50"
+          >
+            Skip to main content
+          </a>
           <DarkModeToggle />
           {/* Navigation could go here */}
-          <main>{children}</main>
+          <main id="main-content">{children}</main>
           {/* Footer could go here */}
         </AuthProvider>
       </body>

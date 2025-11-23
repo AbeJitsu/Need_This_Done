@@ -29,6 +29,9 @@ export default function Home() {
         Intro Section - Description & Purpose
         =================================================================== */}
         <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+            {templateConfig.project.name}
+          </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
             {templateConfig.project.description}
           </p>
