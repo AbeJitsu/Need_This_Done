@@ -145,11 +145,50 @@ export default function HowItWorks() {
       </div>
 
       {/* Key Concept */}
-      <div className="p-4 bg-green-50 dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg">
+      <div className="p-4 bg-green-50 dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg mb-6">
         <p className="text-sm text-green-900 dark:text-green-300">
           <strong><span role="img" aria-label="Tip">💡</span> The Key Idea:</strong> The "boring" infrastructure (how data moves, how users log in, how pages serve fast) is already done.
           All these boxes are connected and working. You just build what makes your idea special.
         </p>
+      </div>
+
+      {/* Security Layer Explanation */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">How Your Data Stays Safe</h3>
+        <div className="space-y-3">
+          {[
+            {
+              title: 'Browser ↔ Web Server',
+              icon: '🔒',
+              description: 'Locked tunnel (HTTPS). Data travels in a sealed envelope that only the server can open. Even if someone intercepts it, they see gibberish.',
+            },
+            {
+              title: 'Web Server ↔ Database',
+              icon: '🔐',
+              description: 'Private network connection. Servers talk directly through a secure path you control. No data exposed to the public internet.',
+            },
+            {
+              title: 'Passwords in Database',
+              icon: '🚫',
+              description: 'Permanently scrambled (hashed). Even if a hacker steals the entire database, they get gibberish. Passwords can\'t be un-scrambled.',
+            },
+            {
+              title: 'User Sessions',
+              icon: '🎫',
+              description: 'Secure tickets that expire. After login, you don\'t send the password again. You send a temporary proof of identity that becomes worthless after a time.',
+            },
+          ].map((item, index) => (
+            <div key={index} className="p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
+              <div className="flex gap-3">
+                <div className="text-xl flex-shrink-0">{item.icon}</div>
+                <div>
+                  <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{item.title}</p>
+                  <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">{item.description}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Footer */}

@@ -46,6 +46,24 @@ const faqs: FAQItem[] = [
       'Yes. Data is encrypted, backed up automatically, and protected with industry-standard security. No credit cards or passwords are stored by us - we use trusted, specialized services (Supabase) for that. Security is taken seriously.',
   },
   {
+    id: 'interception',
+    question: 'Could someone intercept my users\' passwords?',
+    answer:
+      'No. When your users log in, their password travels in a locked tunnel (HTTPS) that only your server can open. Even if someone is on the same WiFi network (like at a coffee shop), they can\'t see the password. It\'s like sending a letter in a locked box instead of a postcard.',
+  },
+  {
+    id: 'breach',
+    question: 'What if someone hacks your servers?',
+    answer:
+      'Even then, your users\' passwords are safe. Passwords are scrambled one-way (called "hashing") so they can\'t be un-scrambled, even by us. A hacker would get gibberish, not passwords. So even if they stole the entire database, they couldn\'t log in or access accounts.',
+  },
+  {
+    id: 'session',
+    question: 'How do you keep users logged in securely?',
+    answer:
+      'Instead of sending the password with every request, users get a secure "proof of login" (session). It\'s like a ticket stub at an event - it proves you checked in. Sessions expire automatically, so if someone steals it, it becomes worthless after a while. Your users\' passwords never travel more than once.',
+  },
+  {
     id: 'unique',
     question: 'Will my project look like everyone else\'s?',
     answer:

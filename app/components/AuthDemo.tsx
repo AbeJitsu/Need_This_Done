@@ -18,6 +18,7 @@ export default function AuthDemo() {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isSignUpMode, setIsSignUpMode] = useState(true);
+  const [showJourney, setShowJourney] = useState(false);
 
   // ========================================================================
   // Handle Authentication (Sign Up or Login)
@@ -101,12 +102,12 @@ export default function AuthDemo() {
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-          Real Authentication Working
+          Real Authentication: How Your Data Stays Safe
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300">
           {isAuthenticated
-            ? 'You have a real, secure account. Try signing out and back in.'
-            : 'Create an account or sign in to see real Supabase authentication in action.'}
+            ? 'Your account exists on real servers. Your password is scrambled and stored safely. Your session is protected. This is production-grade security.'
+            : 'Create an account or sign in to see how your data travels safely from your browser to secure servers.'}
         </p>
       </div>
 
@@ -236,6 +237,88 @@ export default function AuthDemo() {
               Your password is encrypted. Your session is protected.
             </p>
           </div>
+
+          {/* Journey Explainer - Collapsible */}
+          <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setShowJourney(!showJourney)}
+              className="w-full p-4 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center justify-between transition-colors"
+            >
+              <span className="font-semibold text-gray-900 dark:text-gray-100">
+                Why This Matters: See What Happens Behind the Scenes
+              </span>
+              <span className={`transition-transform ${showJourney ? 'rotate-180' : ''}`}>
+                ▼
+              </span>
+            </button>
+
+            {showJourney && (
+              <div className="p-4 space-y-4 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-600">
+                {/* Journey Steps */}
+                <div className="space-y-3">
+                  <div className="flex gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold">
+                      1
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Your browser creates a sealed envelope</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                        When you submit your email and password, your browser wraps them in a secure tunnel (called HTTPS). Think of it like a locked envelope—only the server can open it.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold">
+                      2
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Your password gets "scrambled" permanently</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                        The server receives it and immediately transforms your password into unreadable gibberish (called hashing). Even if a hacker breaks into our servers, they can't see your actual password—it's permanently scrambled.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold">
+                      3
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">You get a proof of identity (session)</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                        Instead of sending your password with every request, you get a ticket stub that says "this person is logged in." It's secure and expires, so if someone steals it later, it becomes worthless.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Threat Scenarios */}
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                  <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-3">Without this protection, here's what could happen:</p>
+                  <div className="space-y-2 text-xs">
+                    <div className="p-2 bg-red-50 dark:bg-gray-700 border border-red-200 dark:border-red-900 rounded text-red-800 dark:text-red-200">
+                      ⚠️ <strong>At the coffee shop:</strong> Someone on the same WiFi could intercept your password and take over your account
+                    </div>
+                    <div className="p-2 bg-red-50 dark:bg-gray-700 border border-red-200 dark:border-red-900 rounded text-red-800 dark:text-red-200">
+                      ⚠️ <strong>Data breach:</strong> If hackers got into our database, they'd see passwords and could hack your other accounts
+                    </div>
+                    <div className="p-2 bg-red-50 dark:bg-gray-700 border border-red-200 dark:border-red-900 rounded text-red-800 dark:text-red-200">
+                      ⚠️ <strong>Session hijacking:</strong> Someone could pretend to be you without ever knowing your password
+                    </div>
+                  </div>
+                </div>
+
+                {/* Summary */}
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4 bg-green-50 dark:bg-gray-700 -mx-4 -mb-4 px-4 py-4 rounded-b">
+                  <p className="text-xs text-green-900 dark:text-green-100">
+                    <strong>✓ With this system:</strong> Your password never travels as plain text. It can't be intercepted. It can't be stolen. Your data is safe even if our systems are breached. This is what your users deserve.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       ) : (
         /* Logged In State - Session Display */
@@ -280,10 +363,15 @@ export default function AuthDemo() {
 
           {/* What This Means */}
           <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-lg">
-            <p className="text-sm text-blue-900 dark:text-blue-300">
-              💡 <strong>Real authentication:</strong> Your account exists in Supabase. Your password is hashed. Your session is encrypted.
-              This is production-ready security. This is what your users get.
+            <p className="text-sm text-blue-900 dark:text-blue-300 mb-2">
+              💡 <strong>What Just Happened:</strong>
             </p>
+            <ul className="text-xs text-blue-900 dark:text-blue-300 space-y-1">
+              <li>✓ Your password was scrambled one-way (nobody can un-scramble it)</li>
+              <li>✓ It traveled in a locked envelope from your browser to the server</li>
+              <li>✓ You got a secure ticket that proves you're logged in</li>
+              <li>✓ Even the database stores only the scrambled version, not your real password</li>
+            </ul>
           </div>
 
           {/* Logout Button */}
@@ -309,9 +397,12 @@ export default function AuthDemo() {
 
       {/* Educational Footer */}
       <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+          <strong>Why this matters:</strong> Handling authentication securely is hard. This system does it right so your users' data is protected.
+        </p>
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          All authentication is handled by Supabase: password hashing, secure sessions, email confirmation,
-          and more. You get enterprise-grade security without building it yourself.
+          Supabase handles: password scrambling (hashing), secure tunnels (HTTPS), secure sessions, email verification, and automatic session expiration.
+          Your users are safe from eavesdropping, account hijacking, and data theft.
         </p>
       </div>
     </div>
