@@ -54,7 +54,7 @@ export async function GET() {
         isFromCache: true,
         cacheKey,
         ttl: cacheTTL,
-        message: '⚡ Lightning fast! Data loaded from Redis cache (~2ms)',
+        message: '⚡ Lightning fast! Data loaded from Redis cache',
       } as SpeedDemoResponse);
     }
 
