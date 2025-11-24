@@ -112,7 +112,7 @@ export async function GET() {
       isFromCache: false,
       cacheKey,
       ttl: cacheTTL,
-      message: `⏱️ Cache miss - fetched fresh data from database (~${Math.round(simulatedDelay)}ms). Cached for ${cacheTTL} seconds.`,
+      message: `📡 Cache miss - fetched fresh data from database. Cached for ${cacheTTL} seconds.`,
     } as SpeedDemoResponse);
   } catch (error) {
     console.error('Speed demo error:', error);
