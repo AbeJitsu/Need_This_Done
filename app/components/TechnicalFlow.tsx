@@ -60,9 +60,9 @@ export async function GET(request: Request) {
     },
     {
       number: 3,
-      title: 'Check Cache (Redis)',
-      description: 'Before querying the database, check Redis (in-memory cache). If the data is there, return it instantly.',
-      detail: 'Redis is like a whiteboard in your kitchen. You write data there temporarily so you can grab it super fast. Instead of going to the filing cabinet (database) every time, you check the whiteboard first.',
+      title: 'Check Quick Memory (Redis)',
+      description: 'Before querying storage, check Quick Memory (Redis). If the answer is there, return it instantly.',
+      detail: 'Quick Memory is like keeping your most-used items on the counter instead of in a storage unit. You check the counter first (2ms) before looking in storage (200ms). If it\'s not there, go get it and leave a copy on the counter for next time.',
       icon: '⚡',
       codeExample: `// Check Redis first (very fast)
 const cacheKey = 'user_data:123';
@@ -77,9 +77,9 @@ if (cached) {
     },
     {
       number: 4,
-      title: 'Query Database (Supabase)',
-      description: 'If not in cache, query Supabase. Get the fresh data, save it to Redis for next time, then return it.',
-      detail: 'Supabase is your database (filing cabinet). It permanently stores data. Since database queries are slower, we cache the result in Redis so future requests are instant.',
+      title: 'Query Permanent Storage (Supabase)',
+      description: 'If not in Quick Memory, query Permanent Storage. Get the data, save it to Quick Memory for next time, then return it.',
+      detail: 'Permanent Storage (Supabase) is where all your real data lives, safely organized and protected. Accessing it is slower than Quick Memory, so we copy frequently-used data to Quick Memory. That way, most future requests are instant.',
       icon: '💾',
       codeExample: `// Cache miss - fetch from database
 const { data, error } = await supabase
@@ -152,10 +152,10 @@ return NextResponse.json(data);`,
       {/* Header */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-          How It Actually Works (Technical)
+          Deep Dive: The Technical Details
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-          Here's the exact flow when a visitor interacts with your app. Click each step to see the code.
+          For developers who want to understand exactly how requests flow through the system. Click each step to see the code.
         </p>
       </div>
 
@@ -239,8 +239,8 @@ return NextResponse.json(data);`,
       {/* Key Takeaway */}
       <div className="p-4 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-gray-600 rounded-lg">
         <p className="text-sm text-blue-900 dark:text-blue-300">
-          <strong><span role="img" aria-label="Key point">🔑</span> The Pattern:</strong> Every request follows this pattern: Check cache first → Fetch if needed → Store for next time.
-          This makes pages feel instant while keeping your database from being overwhelmed.
+          <strong><span role="img" aria-label="Key point">🔑</span> The Pattern:</strong> Ask "Do I remember this?" → Check Quick Memory → Get from Permanent Storage if needed → Save for next time.
+          This makes pages feel instant while protecting your storage from getting overwhelmed.
         </p>
       </div>
 
@@ -259,7 +259,7 @@ return NextResponse.json(data);`,
       {/* Footer */}
       <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          This is what your API routes do behind the scenes. You don't need to understand every detail to use this template—but understanding the pattern helps you build faster features.
+          This is what happens behind the scenes in your API routes. You don't need to memorize every detail to build with this template—but this pattern appears everywhere in modern web apps. Understanding it means you can build faster, smarter features.
         </p>
       </div>
     </div>

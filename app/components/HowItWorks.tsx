@@ -19,95 +19,79 @@ export default function HowItWorks() {
           How It Works
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300">
-          Here's the simple flow from your visitor's browser to data storage and back.
+          When someone visits, your app checks recent answers first (lightning fast), then looks them up if needed.
         </p>
       </div>
 
       {/* Desktop Flow Diagram */}
       <div className="hidden md:block mb-8">
         <div className="flex items-center justify-between gap-4 mb-8">
-          {/* Visitor Browser */}
+          {/* Visitor */}
           <div className="flex-1">
             <div className="p-4 bg-blue-50 dark:bg-gray-800 border-2 border-blue-200 dark:border-blue-800 rounded-lg text-center">
-              <div className="text-2xl mb-2" role="img" aria-label="Web browser">🌐</div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Visitor's Browser</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Chrome, Safari, Firefox</p>
+              <div className="text-2xl mb-2" role="img" aria-label="Person visiting">👤</div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Your Visitor</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Asks for something</p>
             </div>
           </div>
 
           {/* Arrow */}
           <div className="text-2xl text-gray-400" aria-hidden="true">→</div>
 
-          {/* Web Server */}
+          {/* App */}
           <div className="flex-1">
             <div className="p-4 bg-purple-50 dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800 rounded-lg text-center">
-              <div className="text-2xl mb-2" role="img" aria-label="Web server">⚙️</div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Web Server</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Runs your code</p>
+              <div className="text-2xl mb-2" role="img" aria-label="Your app">🎯</div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Your App</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Processes the request</p>
             </div>
           </div>
 
           {/* Arrow */}
           <div className="text-2xl text-gray-400" aria-hidden="true">→</div>
 
-          {/* Memory System */}
+          {/* Quick Memory */}
           <div className="flex-1">
             <div className="p-4 bg-orange-50 dark:bg-gray-800 border-2 border-orange-200 dark:border-orange-800 rounded-lg text-center">
-              <div className="text-2xl mb-2" role="img" aria-label="Speed memory cache">⚡</div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Speed Memory</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Redis (in-memory cache)</p>
+              <div className="text-2xl mb-2" role="img" aria-label="Quick memory">⚡</div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Quick Memory</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Recent answers saved here</p>
             </div>
           </div>
 
           {/* Arrow */}
           <div className="text-2xl text-gray-400" aria-hidden="true">→</div>
 
-          {/* Database */}
+          {/* Storage */}
           <div className="flex-1">
             <div className="p-4 bg-green-50 dark:bg-gray-800 border-2 border-green-200 dark:border-green-800 rounded-lg text-center">
-              <div className="text-2xl mb-2" role="img" aria-label="Database">💾</div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Database</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Supabase</p>
+              <div className="text-2xl mb-2" role="img" aria-label="Permanent storage">💾</div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Permanent Storage</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">All your data kept safe</p>
             </div>
           </div>
         </div>
 
-        {/* Reverse arrows */}
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex-1 text-center">
-            <p className="text-xs text-gray-700 dark:text-gray-300">Sends data</p>
-          </div>
-          <div className="text-xl text-gray-400">←</div>
-          <div className="flex-1 text-center">
-            <p className="text-xs text-gray-700 dark:text-gray-300">Receives request</p>
-          </div>
-          <div className="text-xl text-gray-400">←</div>
-          <div className="flex-1 text-center">
-            <p className="text-xs text-gray-700 dark:text-gray-300">Checks memory first</p>
-          </div>
-          <div className="text-xl text-gray-400">←</div>
-          <div className="flex-1 text-center">
-            <p className="text-xs text-gray-700 dark:text-gray-300">Stores safely</p>
-          </div>
-          <div className="text-xl text-gray-400">←</div>
-          <div className="flex-1 text-center">
-            <p className="text-xs text-gray-700 dark:text-gray-300">Loads page</p>
-          </div>
+        {/* Simple explanation */}
+        <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-lg mt-4">
+          <p className="text-sm text-gray-700 dark:text-gray-300 text-center">
+            <strong>The Flow:</strong> Your visitor asks → Your app checks Quick Memory → Gets from Permanent Storage if needed → Sends answer back (usually in milliseconds)
+          </p>
         </div>
       </div>
 
       {/* Mobile Flow Diagram (stacked) */}
       <div className="md:hidden mb-8 space-y-3">
         {[
-          { icon: '🌐', label: 'Web browser', title: 'Your Visitor', desc: 'Clicks on your website' },
+          { icon: '👤', label: 'Person visiting', title: 'Your Visitor', desc: 'Asks for something' },
           { icon: '⬇️', label: 'Arrow down', title: '', desc: '' },
-          { icon: '⚙️', label: 'Web server', title: 'Web Server', desc: 'Runs your code' },
+          { icon: '🎯', label: 'Your app', title: 'Your App', desc: 'Processes the request' },
           { icon: '⬇️', label: 'Arrow down', title: '', desc: '' },
-          { icon: '⚡', label: 'Speed memory cache', title: 'Speed Memory', desc: 'Checks if we remember this' },
+          { icon: '⚡', label: 'Quick memory', title: 'Quick Memory', desc: 'Checks recent answers' },
           { icon: '⬇️', label: 'Arrow down', title: '', desc: '' },
-          { icon: '💾', label: 'Database', title: 'Database', desc: 'Gets fresh data if needed' },
+          { icon: '💾', label: 'Permanent storage', title: 'Permanent Storage', desc: 'Gets fresh data if needed' },
           { icon: '⬆️', label: 'Arrow up', title: '', desc: '' },
-          { icon: '🌐', label: 'Web browser', title: 'Back to Browser', desc: 'Page loads instantly' },
+          { icon: '👤', label: 'Person visiting', title: 'Answer Sent', desc: 'Page loads instantly' },
         ].map((item, index) => (
           <div key={index} className="text-center">
             {item.title ? (
@@ -127,23 +111,23 @@ export default function HowItWorks() {
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         {/* What Visitors Experience */}
         <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-lg">
-          <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">What Visitors See</h3>
+          <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">What Your Visitors Experience</h3>
           <ul className="text-sm text-blue-900 dark:text-blue-300 space-y-1">
-            <li>• Pages load instantly (or very fast)</li>
-            <li>• Login works seamlessly</li>
-            <li>• Data loads from their account</li>
-            <li>• No waiting, no errors</li>
+            <li>• Everything loads super fast</li>
+            <li>• Login is simple and safe</li>
+            <li>• Their information appears instantly</li>
+            <li>• Zero frustration, zero waiting</li>
           </ul>
         </div>
 
-        {/* What You Build */}
+        {/* What You Create */}
         <div className="p-4 bg-purple-50 dark:bg-gray-800 border border-purple-300 dark:border-purple-700 rounded-lg">
-          <h3 className="font-semibold text-purple-900 dark:text-purple-300 mb-2">What You Build</h3>
+          <h3 className="font-semibold text-purple-900 dark:text-purple-300 mb-2">What You Create</h3>
           <ul className="text-sm text-purple-900 dark:text-purple-300 space-y-1">
-            <li>• Your features and designs</li>
-            <li>• Your business logic</li>
-            <li>• Your rules and workflows</li>
-            <li>• Everything that makes you unique</li>
+            <li>• Your unique features</li>
+            <li>• How your app works</li>
+            <li>• Your special rules</li>
+            <li>• Everything that's uniquely yours</li>
           </ul>
         </div>
       </div>
@@ -151,8 +135,8 @@ export default function HowItWorks() {
       {/* Key Concept */}
       <div className="p-4 bg-green-50 dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg mb-6">
         <p className="text-sm text-green-900 dark:text-green-300">
-          <strong><span role="img" aria-label="Tip">💡</span> The Key Idea:</strong> The "boring" infrastructure (how data moves, how users log in, how pages serve fast) is already done.
-          All these boxes are connected and working. You just build what makes your idea special.
+          <strong><span role="img" aria-label="Tip">💡</span> The Key Idea:</strong> All the technical plumbing (how requests travel, how logins work, how your app stays fast) is already built and connected.
+          You focus on what matters: your features, your design, and what makes your app special.
         </p>
       </div>
 
@@ -162,24 +146,24 @@ export default function HowItWorks() {
         <div className="space-y-3">
           {[
             {
-              title: 'Browser ↔ Web Server',
+              title: 'Your Visitor ↔ Your App',
               icon: '🔒',
-              description: 'Locked tunnel (HTTPS). Data travels in a sealed envelope that only the server can open. Even if someone intercepts it, they see gibberish.',
+              description: 'Think of it like sealed mail. Data travels in locked envelopes. Even if someone intercepts it, they can\'t read it—it\'s just scrambled letters.',
             },
             {
-              title: 'Web Server ↔ Database',
+              title: 'Your App ↔ Permanent Storage',
               icon: '🔐',
-              description: 'Private network connection. Servers talk directly through a secure path you control. No data exposed to the public internet.',
+              description: 'Private hallway. Your servers talk directly to storage in a private pathway. No one on the internet can see or intercept it.',
             },
             {
-              title: 'Passwords in Database',
+              title: 'Passwords Stay Hidden',
               icon: '🚫',
-              description: 'Permanently scrambled (hashed). Even if a hacker steals the entire database, they get gibberish. Passwords can\'t be un-scrambled.',
+              description: 'Passwords are like fingerprints—converted into a unique pattern. Even if someone steals all the data, they get just the patterns. Passwords can never be revealed.',
             },
             {
-              title: 'User Sessions',
+              title: 'Login Tokens (Proof of Identity)',
               icon: '🎫',
-              description: 'Secure tickets that expire. After login, you don\'t send the password again. You send a temporary proof of identity that becomes worthless after a time.',
+              description: 'Like a temporary ID badge. After login, you get a badge that proves you\'re you. It expires automatically. You don\'t send your password repeatedly—just the badge.',
             },
           ].map((item, index) => (
             <div key={index} className="p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
@@ -232,10 +216,10 @@ export default function HowItWorks() {
             {/* Redis Explanation */}
             <div>
               <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
-                2. Redis: The Speed Memory
+                2. Quick Memory (Redis): Keep Recent Answers Ready
               </p>
               <p className="text-sm text-purple-900 dark:text-purple-200 mb-2">
-                When an API route gets a request, it checks Redis first:
+                Instead of going to the permanent storage every time, we keep frequently-requested answers on a fast "counter" so people don't wait:
               </p>
               <pre className="bg-gray-900 dark:bg-gray-950 text-gray-100 p-3 rounded text-xs overflow-x-auto mb-2">
                 <code>{`// Check cache first (fast - 2ms)
@@ -256,10 +240,10 @@ await redis.setEx('cache-key', 60, data);`}</code>
             {/* Database Explanation */}
             <div>
               <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
-                3. Supabase: Permanent Storage
+                3. Permanent Storage (Supabase): Long-Term Memory
               </p>
               <p className="text-sm text-purple-900 dark:text-purple-200 mb-2">
-                Supabase is your database. When Redis doesn't have data, the API route queries it:
+                This is where all your actual data lives, organized and protected. When Quick Memory doesn't have something, we fetch it here:
               </p>
               <pre className="bg-gray-900 dark:bg-gray-950 text-gray-100 p-3 rounded text-xs overflow-x-auto mb-2">
                 <code>{`// Query from database
@@ -271,24 +255,23 @@ const { data } = await supabase
 // This is slower (~200ms) but the data is fresh`}</code>
               </pre>
               <p className="text-xs text-purple-900 dark:text-purple-200">
-                Row-level security (RLS) ensures users can only access their own data.
+                Security is built-in: Each user automatically sees only their own data. Your mom's information stays separate from your information.
               </p>
             </div>
 
             {/* Request Lifecycle */}
             <div>
               <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
-                4. Complete Request Lifecycle
+                4. What Happens When Someone Requests Something
               </p>
               <ol className="text-xs text-purple-900 dark:text-purple-200 space-y-1 ml-4">
-                <li>1. Browser sends request to <code className="bg-purple-200 dark:bg-purple-800 px-1 rounded">/api/data</code></li>
-                <li>2. Next.js routes to your API route handler</li>
-                <li>3. Handler checks Redis: Is data cached?</li>
-                <li>4. If yes → Return immediately (2ms)</li>
-                <li>5. If no → Query Supabase database (200ms)</li>
-                <li>6. Store result in Redis with TTL</li>
-                <li>7. Return JSON to browser</li>
-                <li>8. Browser updates the page</li>
+                <li>1. Your visitor asks your app for something</li>
+                <li>2. Your app checks Quick Memory: "Do I remember this?"</li>
+                <li>3. If yes: Instant answer (2 milliseconds)</li>
+                <li>4. If no: Look it up in Permanent Storage (200 milliseconds)</li>
+                <li>5. Save the answer in Quick Memory for next time</li>
+                <li>6. Send the answer back to the visitor</li>
+                <li>7. Page loads and displays</li>
               </ol>
             </div>
 
@@ -308,8 +291,7 @@ const { data } = await supabase
       {/* Footer */}
       <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          This is the core flow: request comes in → check cache → fetch if needed → return fast.
-          The real system also includes security (HTTPS), backups, monitoring, and automatic scaling.
+          <strong>In a nutshell:</strong> When someone visits, your app asks itself "Do I remember this?" If yes, answer instantly. If no, look it up and remember it for next time. Everything is encrypted and protected so only the right person sees their information.
         </p>
       </div>
     </div>
