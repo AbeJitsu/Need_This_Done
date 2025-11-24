@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import Navigation from '@/components/Navigation';
 import DarkModeToggle from '@/components/DarkModeToggle';
 import { AuthProvider } from '@/context/AuthContext';
 
@@ -44,10 +45,17 @@ export default function RootLayout({
           >
             Skip to main content
           </a>
-          <DarkModeToggle />
-          {/* Navigation could go here */}
+
+          {/* Top-right corner: Dark mode toggle */}
+          <div className="fixed top-4 right-4 z-50">
+            <DarkModeToggle />
+          </div>
+
+          {/* Site-wide navigation */}
+          <Navigation />
+
+          {/* Page content */}
           <main id="main-content">{children}</main>
-          {/* Footer could go here */}
         </AuthProvider>
       </body>
     </html>
