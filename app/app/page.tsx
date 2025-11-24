@@ -33,35 +33,26 @@ export default function Home() {
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             {templateConfig.project.name}
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+          <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
             {templateConfig.project.description}
           </p>
-        </div>
-
-        {/* ===================================================================
-        Feature Grid - 4 Cards, 2x2 Layout for Desktop Fit
-        =================================================================== */}
-        {/* Plain language features with metrics to build trust */}
-        <div className="mb-8">
-          <div className="grid md:grid-cols-2 gap-6">
-            {templateConfig.features.map((feature, index) => (
-              <FeatureCard
-                key={index}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-                benefit={feature.benefit}
-                metric={feature.metric}
-                variant={index === 0 ? 'primary' : 'default'}
-              />
-            ))}
-          </div>
+          <p className="text-lg font-semibold text-blue-600 dark:text-blue-400">
+            Everything below is live and working right now. Try it yourself.
+          </p>
         </div>
 
         {/* ===================================================================
         System Health Status - Real-time Service Monitoring
         =================================================================== */}
         <div className="mb-8">
+          <div className="mb-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              Everything Is Running Right Now
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              These aren't demo lights—this is real monitoring showing your infrastructure is online and responding.
+            </p>
+          </div>
           <HealthStatus />
         </div>
 
@@ -70,11 +61,12 @@ export default function Home() {
         =================================================================== */}
         <div className="mb-8">
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-              See Your Foundation Working
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+              Don't Take Our Word For It—Try It
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Below is the infrastructure you have right now. All of this is built, tested, and running. Try the demos yourself—no account needed.
+            <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg">
+              Every button below connects to real systems. Click them. Type in them. See what happens.
+              This isn't a simulation—it's your actual infrastructure.
             </p>
           </div>
 
@@ -91,6 +83,29 @@ export default function Home() {
           {/* Database Demo */}
           <div className="mb-8">
             <DatabaseDemo />
+          </div>
+        </div>
+
+        {/* ===================================================================
+        Feature Grid - 4 Cards, 2x2 Layout for Desktop Fit
+        =================================================================== */}
+        {/* Plain language features with metrics to build trust */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+            Why This Matters
+          </h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            {templateConfig.features.map((feature, index) => (
+              <FeatureCard
+                key={index}
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+                benefit={feature.benefit}
+                metric={feature.metric}
+                variant={index === 0 ? 'primary' : 'default'}
+              />
+            ))}
           </div>
         </div>
 

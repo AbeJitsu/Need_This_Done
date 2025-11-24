@@ -142,7 +142,7 @@ export default function SpeedDemo() {
 
       {/* Results List */}
       <div className="space-y-3">
-        <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-semibold">
+        <p className="text-xs text-gray-600 dark:text-gray-200 uppercase tracking-wide font-semibold">
           Request History
         </p>
 
@@ -168,8 +168,8 @@ export default function SpeedDemo() {
                   <div className="flex items-center gap-2 mb-2">
                     <span className={`text-xs font-semibold uppercase tracking-wide ${
                       result.isFromCache
-                        ? 'text-orange-900 dark:text-orange-300'
-                        : 'text-green-900 dark:text-green-300'
+                        ? 'text-orange-900 dark:text-orange-100'
+                        : 'text-green-900 dark:text-green-100'
                     }`}>
                       {result.isFromCache ? '⚡ REDIS CACHE' : '📡 DATABASE'}
                     </span>
@@ -179,8 +179,8 @@ export default function SpeedDemo() {
                   </p>
                   <p className={`text-xs ${
                     result.isFromCache
-                      ? 'text-orange-800 dark:text-orange-200'
-                      : 'text-green-800 dark:text-green-200'
+                      ? 'text-orange-800 dark:text-orange-100'
+                      : 'text-green-800 dark:text-green-100'
                   }`}>
                     {result.message}
                   </p>
@@ -188,12 +188,12 @@ export default function SpeedDemo() {
                 <div className="text-right ml-4 flex-shrink-0">
                   <p className={`text-2xl font-bold tabular-nums ${
                     result.isFromCache
-                      ? 'text-orange-900 dark:text-orange-300'
-                      : 'text-green-900 dark:text-green-300'
+                      ? 'text-orange-900 dark:text-orange-100'
+                      : 'text-green-900 dark:text-green-100'
                   }`}>
                     {result.time}ms
                   </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                     {result.timestamp}
                   </p>
                 </div>
@@ -214,13 +214,13 @@ export default function SpeedDemo() {
           <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">
             What's Happening:
           </p>
-          <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+          <ul className="text-xs text-gray-600 dark:text-gray-200 space-y-1">
             <li>• <strong>First click:</strong> Fetches fresh data from "database" (~200-300ms)</li>
             <li>• <strong>Subsequent clicks (within 30 seconds):</strong> Returns cached data from Redis (~2ms)</li>
             <li>• <strong>After 30 seconds:</strong> Cache expires and fetches fresh again</li>
           </ul>
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-gray-500 dark:text-gray-200">
           This is the cache-first pattern used in production apps. 90% of requests hit the cache, making pages feel instant.
           The 10% that miss the cache trigger a database query and refresh the cache for future requests.
         </p>
