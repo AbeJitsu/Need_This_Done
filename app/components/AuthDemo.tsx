@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { signOut } from '@/lib/auth';
 
 // ============================================================================
 // Authentication Demo Component - Real Sign Up/Login
@@ -78,9 +79,8 @@ export default function AuthDemo() {
   const handleLogout = async () => {
     setIsSubmitting(true);
     try {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-      });
+      await signOut();
+      // onAuthStateChange listener automatically updates UI with logged-out state
     } catch (err) {
       console.error('Logout error:', err);
     } finally {
