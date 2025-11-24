@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { signOut } from '@/lib/auth';
+import { supabase } from '@/lib/supabase';
 
 // ============================================================================
 // Authentication Demo Component - Real Sign Up/Login
@@ -52,6 +53,19 @@ export default function AuthDemo() {
         setError(data.error || "We couldn't sign you in. Please check your email and password.");
         setIsSubmitting(false);
         return;
+      }
+
+      // ====================================================================
+      // Set Session on Client-Side Supabase Instance
+      // ====================================================================
+      // The login API returns session tokens, but we need to set them in the
+      // client-side Supabase instance so the auth context knows we're logged in.
+      // This triggers onAuthStateChange listener which updates the UI.
+      if (!isSignUpMode && data.session) {
+        await supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        });
       }
 
       setSuccessMessage(
@@ -178,33 +192,10 @@ export default function AuthDemo() {
             />
           </div>
 
-          {/* Mode Toggle */}
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setIsSignUpMode(true)}
-              disabled={isSubmitting}
-              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
-                isSignUpMode
-                  ? 'bg-blue-600 dark:bg-blue-500 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              Sign Up
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsSignUpMode(false)}
-              disabled={isSubmitting}
-              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
-                !isSignUpMode
-                  ? 'bg-blue-600 dark:bg-blue-500 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              Sign In
-            </button>
-          </div>
+          {/* Form Title */}
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6">
+            {isSignUpMode ? 'Create Your Account' : 'Welcome Back'}
+          </h3>
 
           {/* Submit Button */}
           <button
@@ -229,6 +220,18 @@ export default function AuthDemo() {
                 ? 'Create Account'
                 : 'Sign In'}
           </button>
+
+          {/* Switch Mode Link */}
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => setIsSignUpMode(!isSignUpMode)}
+              disabled={isSubmitting}
+              className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"
+            >
+              {isSignUpMode ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
+            </button>
+          </div>
 
           {/* Explanation */}
           <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-lg">
