@@ -120,11 +120,29 @@ export default function WhatCanYouBuild() {
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-          What Can You Build?
+          Your Foundation Is Ready
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300">
-          All the pieces work together. Pick a project below to see what's included.
+          Below are examples of what you can build. The infrastructure supporting all of them is already working.
         </p>
+      </div>
+
+      {/* What's Built Now */}
+      <div className="mb-6 p-4 bg-green-50 dark:bg-gray-800 border border-green-200 dark:border-green-700 rounded-lg">
+        <p className="text-sm font-semibold text-green-900 dark:text-green-300 mb-3">
+          ✓ What's Built and Working:
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs text-green-800 dark:text-green-200">
+          <div>• User Authentication</div>
+          <div>• Database (Supabase)</div>
+          <div>• Speed Cache (Redis)</div>
+          <div>• API Routes</div>
+          <div>• Docker Network</div>
+          <div>• Dark Mode</div>
+          <div>• Test Suite</div>
+          <div>• Health Monitoring</div>
+          <div>• Secure Communication</div>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -190,10 +208,12 @@ export default function WhatCanYouBuild() {
 
         {/* Why It Matters */}
         <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-lg">
-          <p className="text-sm text-blue-900 dark:text-blue-300">
-            <strong><span role="img" aria-label="Tip">💡</span> Why This Matters:</strong> Every feature listed above is already connected and working.
-            You don't need to figure out how to build user accounts, payment processing, or data security.
-            You can start building your specific features immediately.
+          <p className="text-sm text-blue-900 dark:text-blue-300 mb-2">
+            <strong><span role="img" aria-label="Tip">💡</span> This Example:</strong>
+          </p>
+          <p className="text-xs text-blue-900 dark:text-blue-300 leading-relaxed">
+            This shows what you'd build on top of the foundation. The boring infrastructure (user accounts, database, authentication, security)
+            is already done. You focus on what makes this specific project unique—the custom features and business logic only you would add.
           </p>
         </div>
 
@@ -213,11 +233,23 @@ export default function WhatCanYouBuild() {
 
       {/* Footer Note */}
       <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          These are just examples. With this foundation, you can build almost anything that involves
-          data storage, user accounts, and a web interface. The infrastructure is ready. You focus on
-          what makes your project unique.
-        </p>
+        <div className="space-y-3">
+          <div>
+            <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              The Split:
+            </p>
+            <div className="grid md:grid-cols-2 gap-3">
+              <div className="p-3 bg-green-50 dark:bg-gray-800 rounded border border-green-200 dark:border-green-700">
+                <p className="text-xs font-semibold text-green-900 dark:text-green-300 mb-1">✓ We Built</p>
+                <p className="text-xs text-green-800 dark:text-green-200">Infrastructure, auth, database, security, testing, deployment setup</p>
+              </div>
+              <div className="p-3 bg-orange-50 dark:bg-gray-800 rounded border border-orange-200 dark:border-orange-700">
+                <p className="text-xs font-semibold text-orange-900 dark:text-orange-300 mb-1">🏗️ You Build</p>
+                <p className="text-xs text-orange-800 dark:text-orange-200">Your features, your business logic, your design, what makes you unique</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -70,10 +70,10 @@ export default function Home() {
         <div className="mb-8">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-              Watch It Work
+              See Your Foundation Working
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Everything below is working right now. Try it yourself—no account needed.
+              Below is the infrastructure you have right now. All of this is built, tested, and running. Try the demos yourself—no account needed.
             </p>
           </div>
 

@@ -154,16 +154,16 @@ export default function DatabaseDemo() {
                 key={item.id}
                 className="
                   p-3 rounded-lg
-                  bg-blue-50 dark:bg-blue-900/20
-                  border border-blue-300 dark:border-blue-700
+                  bg-blue-50 dark:bg-gray-700
+                  border border-blue-200 dark:border-gray-600
                   flex items-start justify-between gap-4
                 "
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-900 dark:text-gray-100 break-words mb-1">
+                  <p className="text-sm text-gray-900 dark:text-gray-100 break-words mb-1 font-medium">
                     {item.content}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
                     Saved: {item.timestamp}
                   </p>
                 </div>

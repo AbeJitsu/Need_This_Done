@@ -42,7 +42,7 @@ const defaultConfig: TemplateConfig = {
   project: {
     name: process.env.NEXT_PUBLIC_PROJECT_NAME || 'Full-Stack Template',
     description: process.env.NEXT_PUBLIC_PROJECT_DESCRIPTION ||
-      'Everything you need to build a web app: instant pages, protected data, user accounts, and deployment. Focus on your idea, not infrastructure.',
+      'Your foundation is ready: user authentication, database, caching, Docker setup, and secure communication all working. Now you focus on building what makes your idea unique.',
     repositoryUrl: process.env.NEXT_PUBLIC_GITHUB_URL ||
       'https://github.com/yourusername/fullstack-template',
   },
