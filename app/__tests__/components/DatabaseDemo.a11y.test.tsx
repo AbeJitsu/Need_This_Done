@@ -3,7 +3,7 @@
 // ============================================================================
 // Ensures contrast and readability in both light and dark modes
 
-import { render } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import DatabaseDemo from '@/components/DatabaseDemo';
 import { testBothModes, hasContrastViolations } from '@/__tests__/setup/a11y-utils';
@@ -40,5 +40,30 @@ describe('DatabaseDemo Accessibility', () => {
     const saveButton = getByRole('button', { name: /save/i });
     expect(saveButton).toBeVisible();
     expect(saveButton).toHaveClass('focus:ring-2');
+  });
+
+  it('should have sufficient contrast in flow trace when data is present', async () => {
+    const { container, getByRole, getByPlaceholderText } = render(<DatabaseDemo />);
+
+    // Populate the component by entering text and saving
+    const input = getByPlaceholderText(/type something/i) as HTMLInputElement;
+    fireEvent.change(input, { target: { value: 'test data' } });
+
+    const saveButton = getByRole('button', { name: /save/i });
+    fireEvent.click(saveButton);
+
+    // Wait for flow trace to appear
+    await waitFor(
+      () => {
+        expect(container.textContent).toContain('What Just Happened');
+      },
+      { timeout: 2000 }
+    );
+
+    // Test both modes with populated flow trace
+    const results = await testBothModes(container, 'DatabaseDemo with flow trace');
+
+    expect(hasContrastViolations(results.light)).toBe(false);
+    expect(hasContrastViolations(results.dark)).toBe(false);
   });
 });

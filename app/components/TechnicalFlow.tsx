@@ -117,31 +117,31 @@ return NextResponse.json(data);`,
         bg: 'bg-blue-600 dark:bg-blue-500',
         border: 'border-blue-200 dark:border-blue-700',
         text: 'text-blue-900 dark:text-blue-300',
-        light: 'bg-blue-50 dark:bg-blue-900/20',
+        light: 'bg-blue-50 dark:bg-gray-700',
       },
       purple: {
         bg: 'bg-purple-600 dark:bg-purple-500',
         border: 'border-purple-200 dark:border-purple-700',
         text: 'text-purple-900 dark:text-purple-300',
-        light: 'bg-purple-50 dark:bg-purple-900/20',
+        light: 'bg-purple-50 dark:bg-gray-700',
       },
       orange: {
         bg: 'bg-orange-600 dark:bg-orange-500',
         border: 'border-orange-200 dark:border-orange-700',
         text: 'text-orange-900 dark:text-orange-300',
-        light: 'bg-orange-50 dark:bg-orange-900/20',
+        light: 'bg-orange-50 dark:bg-gray-700',
       },
       red: {
         bg: 'bg-red-600 dark:bg-red-500',
         border: 'border-red-200 dark:border-red-700',
         text: 'text-red-900 dark:text-red-300',
-        light: 'bg-red-50 dark:bg-red-900/20',
+        light: 'bg-red-50 dark:bg-gray-700',
       },
       green: {
         bg: 'bg-green-600 dark:bg-green-500',
         border: 'border-green-200 dark:border-green-700',
         text: 'text-green-900 dark:text-green-300',
-        light: 'bg-green-50 dark:bg-green-900/20',
+        light: 'bg-green-50 dark:bg-gray-700',
       },
     };
     return colorMap[color];
@@ -237,7 +237,7 @@ return NextResponse.json(data);`,
       </div>
 
       {/* Key Takeaway */}
-      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+      <div className="p-4 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-gray-600 rounded-lg">
         <p className="text-sm text-blue-900 dark:text-blue-300">
           <strong><span role="img" aria-label="Key point">🔑</span> The Pattern:</strong> Every request follows this pattern: Check cache first → Fetch if needed → Store for next time.
           This makes pages feel instant while keeping your database from being overwhelmed.
@@ -245,7 +245,7 @@ return NextResponse.json(data);`,
       </div>
 
       {/* Performance Explanation */}
-      <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
+      <div className="mt-6 p-4 bg-green-50 dark:bg-gray-700 border border-green-200 dark:border-gray-600 rounded-lg">
         <p className="text-sm font-semibold text-green-900 dark:text-green-300 mb-2">
           <span role="img" aria-label="Performance tip">⚡</span> Why This Is Fast:
         </p>

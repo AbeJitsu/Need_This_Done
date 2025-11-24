@@ -97,6 +97,83 @@ When visually testing dark mode:
 </div>
 ```
 
+## Testing Dynamic & Conditional Content
+
+### The Challenge
+
+Components that render content based on state or user interactions can hide contrast issues:
+
+```typescript
+// This only shows when data is loaded
+{isLoading ? <p>Loading...</p> : <div className="dark:bg-blue-900/20">...</div>}
+```
+
+Simple tests that render the component and immediately test it will miss violations in hidden content.
+
+### Solution: Test All States
+
+**1. Test initial/empty state:**
+```typescript
+it('should have no contrast issues in collapsed state', async () => {
+  const { container } = render(<MyComponent />);
+  const results = await testBothModes(container, 'MyComponent empty');
+  expect(hasContrastViolations(results.dark)).toBe(false);
+});
+```
+
+**2. Test expanded/populated states:**
+```typescript
+it('should have contrast when data is loaded', async () => {
+  const { container, getByRole } = render(<MyComponent />);
+
+  // Trigger the state change that reveals content
+  const button = getByRole('button');
+  fireEvent.click(button);
+
+  // Wait for content to appear
+  await waitFor(() => {
+    expect(container.textContent).toContain('Expected text');
+  });
+
+  // Now test for contrast issues
+  const results = await testBothModes(container, 'MyComponent expanded');
+  expect(hasContrastViolations(results.dark)).toBe(false);
+});
+```
+
+**3. Common content triggers to test:**
+- Click handlers that reveal sections
+- API calls that populate lists
+- Expandable accordions or details
+- Form submissions that show results
+- State changes that switch views
+
+### Example: DatabaseDemo Flow Trace
+
+The DatabaseDemo component shows a "What Just Happened" section only after data is saved. The test:
+1. Renders the component
+2. Enters text and saves (triggering the API call)
+3. Waits for the flow trace to appear
+4. Tests both light and dark modes for contrast
+
+```typescript
+it('should have contrast in flow trace when data is present', async () => {
+  const { container, getByRole, getByPlaceholderText } = render(<DatabaseDemo />);
+
+  // Populate data
+  const input = getByPlaceholderText(/type something/i);
+  fireEvent.change(input, { target: { value: 'test' } });
+  fireEvent.click(getByRole('button', { name: /save/i }));
+
+  // Wait for flow trace
+  await waitFor(() => expect(container.textContent).toContain('What Just Happened'));
+
+  // Test both modes
+  const results = await testBothModes(container, 'DatabaseDemo with flow trace');
+  expect(hasContrastViolations(results.dark)).toBe(false);
+});
+```
+
 ## Writing New Tests
 
 When you create a new component with dark mode support:

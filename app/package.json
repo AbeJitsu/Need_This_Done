@@ -14,7 +14,7 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:a11y": "vitest run __tests__/components/DatabaseDemo.a11y.test.tsx __tests__/components/AuthDemo.a11y.test.tsx",
+    "test:a11y": "vitest run __tests__/components/DatabaseDemo.a11y.test.tsx __tests__/components/AuthDemo.a11y.test.tsx __tests__/components/TechnicalFlow.a11y.test.tsx",
     "test:integration": "vitest --config vitest.integration.config.ts",
     "test:integration:run": "vitest run --config vitest.integration.config.ts",
     "test:all": "npm run test:run && npm run test:integration:run",
