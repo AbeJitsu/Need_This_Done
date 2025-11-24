@@ -34,7 +34,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Optional: Add custom fonts, analytics, etc here */}
+        {/* Dark mode prevention script - runs before React hydration to prevent flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const isDark = localStorage.getItem('darkMode') === 'true';
+                if (isDark) document.documentElement.classList.add('dark');
+              } catch (e) {}
+            `,
+          }}
+        />
       </head>
       <body>
         <AuthProvider>

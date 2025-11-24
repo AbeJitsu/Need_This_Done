@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 
+import Link from 'next/link';
 import HealthStatus from '@/components/HealthStatus';
 import { templateConfig } from '@/config/template.config';
 
@@ -50,7 +51,7 @@ export default function HomePage() {
             Interactive Demos
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
-            <a
+            <Link
               href="/demos/speed"
               className="group p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 transition-all"
             >
@@ -61,9 +62,9 @@ export default function HomePage() {
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 See caching in action with 10-20x performance improvements
               </p>
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/demos/database"
               className="group p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 transition-all"
             >
@@ -74,9 +75,9 @@ export default function HomePage() {
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 Save and retrieve real data with Supabase
               </p>
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/demos/auth"
               className="group p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 transition-all"
             >
@@ -87,7 +88,7 @@ export default function HomePage() {
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 Experience secure user authentication
               </p>
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -100,24 +101,24 @@ export default function HomePage() {
             Explore the features, understand how the system works, or check out the documentation.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <a
+            <Link
               href="/features"
               className="px-6 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
             >
               Features
-            </a>
-            <a
+            </Link>
+            <Link
               href="/how-it-works"
               className="px-6 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
             >
               How It Works
-            </a>
-            <a
+            </Link>
+            <Link
               href="/docs"
               className="px-6 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
             >
               Docs
-            </a>
+            </Link>
           </div>
         </div>
       </div>
