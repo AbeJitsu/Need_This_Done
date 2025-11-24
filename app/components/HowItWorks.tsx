@@ -200,7 +200,7 @@ export default function HowItWorks() {
         <button
           type="button"
           onClick={() => setExpandDeveloper(!expandDeveloper)}
-          className="w-full text-left p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full text-left p-4 bg-purple-50 dark:bg-gray-700 border border-purple-200 dark:border-purple-700 rounded-lg hover:bg-purple-100 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
         >
           <div className="flex items-center justify-between">
             <p className="font-semibold text-purple-900 dark:text-purple-300">
@@ -213,7 +213,7 @@ export default function HowItWorks() {
         </button>
 
         {expandDeveloper && (
-          <div className="mt-4 space-y-4 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg border border-purple-200 dark:border-purple-700">
+          <div className="mt-4 space-y-4 p-4 bg-purple-50 dark:bg-gray-700 rounded-lg border border-purple-200 dark:border-purple-700">
             {/* Next.js Explanation */}
             <div>
               <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
@@ -293,7 +293,7 @@ const { data } = await supabase
             </div>
 
             {/* Docker Note */}
-            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded">
+            <div className="p-3 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-blue-700 rounded">
               <p className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-1">
                 🐳 All Services in Docker
               </p>

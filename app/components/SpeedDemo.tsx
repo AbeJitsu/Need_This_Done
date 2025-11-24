@@ -103,17 +103,17 @@ export default function SpeedDemo() {
 
       {/* Error State */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-gray-700 border border-red-200 dark:border-red-800 rounded-lg">
           <p className="text-red-700 dark:text-red-300 text-sm">{error}</p>
         </div>
       )}
 
       {/* Results Summary */}
       {results.length > 0 && (
-        <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+        <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide mb-1">
+              <p className="text-gray-600 dark:text-gray-300 text-xs uppercase tracking-wide mb-1">
                 Total Requests
               </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -121,7 +121,7 @@ export default function SpeedDemo() {
               </p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide mb-1">
+              <p className="text-gray-600 dark:text-gray-300 text-xs uppercase tracking-wide mb-1">
                 Latest Speed
               </p>
               <p className={`text-2xl font-bold ${lastTime < 10 ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-gray-100'}`}>
@@ -129,10 +129,10 @@ export default function SpeedDemo() {
               </p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wide mb-1">
+              <p className="text-gray-600 dark:text-gray-300 text-xs uppercase tracking-wide mb-1">
                 Speedup
               </p>
-              <p className={`text-2xl font-bold ${speedup > 1 ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+              <p className={`text-2xl font-bold ${speedup > 1 ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-300'}`}>
                 {speedup > 1 ? `${speedup}×` : '—'}
               </p>
             </div>
@@ -158,8 +158,8 @@ export default function SpeedDemo() {
                 p-3 rounded-lg border transition-all
                 ${
                   result.isFromCache
-                    ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-300 dark:border-orange-700'
-                    : 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700'
+                    ? 'bg-orange-50 dark:bg-gray-700 border-orange-300 dark:border-orange-700'
+                    : 'bg-green-50 dark:bg-gray-700 border-green-300 dark:border-green-700'
                 }
               `}
             >

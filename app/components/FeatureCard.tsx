@@ -38,14 +38,14 @@ export default function FeatureCard({
       hover: 'hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-lg',
     },
     primary: {
-      container: 'border-blue-200 dark:border-blue-800 bg-blue-50/30 dark:bg-blue-900/20',
+      container: 'border-blue-200 dark:border-blue-800 bg-blue-50/30 dark:bg-gray-700',
       icon: 'text-blue-600 dark:text-blue-400',
       title: 'text-gray-900 dark:text-gray-100',
       description: 'text-gray-600 dark:text-gray-300',
       hover: 'hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg hover:shadow-blue-500/10 dark:hover:shadow-blue-500/20',
     },
     success: {
-      container: 'border-green-200 dark:border-green-800 bg-green-50/30 dark:bg-green-900/20',
+      container: 'border-green-200 dark:border-green-800 bg-green-50/30 dark:bg-gray-700',
       icon: 'text-green-600 dark:text-green-400',
       title: 'text-gray-900 dark:text-gray-100',
       description: 'text-gray-600 dark:text-gray-300',
