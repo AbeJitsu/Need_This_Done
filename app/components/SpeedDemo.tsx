@@ -215,8 +215,8 @@ export default function SpeedDemo() {
             What's Happening:
           </p>
           <ul className="text-xs text-gray-600 dark:text-gray-200 space-y-1">
-            <li>• <strong>First click:</strong> Fetches fresh data from "database" (~200-300ms)</li>
-            <li>• <strong>Subsequent clicks (within 30 seconds):</strong> Returns cached data from Redis (~2ms)</li>
+            <li>• <strong>First click:</strong> Fetches fresh data from "database"</li>
+            <li>• <strong>Subsequent clicks (within 30 seconds):</strong> Returns cached data from Redis (typically 10-20× faster)</li>
             <li>• <strong>After 30 seconds:</strong> Cache expires and fetches fresh again</li>
           </ul>
         </div>
