@@ -18,6 +18,7 @@ import AuthDemo from '@/components/AuthDemo';
 import DatabaseDemo from '@/components/DatabaseDemo';
 import WhatCanYouBuild from '@/components/WhatCanYouBuild';
 import HowItWorks from '@/components/HowItWorks';
+import TechnicalFlow from '@/components/TechnicalFlow';
 import FAQ from '@/components/FAQ';
 import { templateConfig } from '@/config/template.config';
 
@@ -105,6 +106,13 @@ export default function Home() {
         =================================================================== */}
         <div className="mb-8">
           <HowItWorks />
+        </div>
+
+        {/* ===================================================================
+        Technical Flow - For Developers
+        =================================================================== */}
+        <div className="mb-8">
+          <TechnicalFlow />
         </div>
 
         {/* ===================================================================

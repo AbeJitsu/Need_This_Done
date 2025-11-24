@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 // ============================================================================
 // How It Works Component - Simple Visual Diagram
 // ============================================================================
@@ -7,6 +9,8 @@
 // Shows how data moves from the user through the system.
 
 export default function HowItWorks() {
+  const [expandDeveloper, setExpandDeveloper] = useState(false);
+
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
       {/* Header */}
@@ -191,12 +195,121 @@ export default function HowItWorks() {
         </div>
       </div>
 
+      {/* For Developers Section */}
+      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <button
+          type="button"
+          onClick={() => setExpandDeveloper(!expandDeveloper)}
+          className="w-full text-left p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
+        >
+          <div className="flex items-center justify-between">
+            <p className="font-semibold text-purple-900 dark:text-purple-300">
+              For Developers: Technical Details
+            </p>
+            <span className={`text-lg transition-transform ${expandDeveloper ? 'rotate-180' : ''}`}>
+              ▼
+            </span>
+          </div>
+        </button>
+
+        {expandDeveloper && (
+          <div className="mt-4 space-y-4 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg border border-purple-200 dark:border-purple-700">
+            {/* Next.js Explanation */}
+            <div>
+              <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
+                1. Next.js: Frontend & Backend in One
+              </p>
+              <p className="text-sm text-purple-900 dark:text-purple-200 mb-2">
+                Your app runs on a single server. The <code className="bg-purple-200 dark:bg-purple-800 px-1 rounded text-xs">/app</code> directory contains:
+              </p>
+              <ul className="text-xs text-purple-900 dark:text-purple-200 space-y-1 ml-4">
+                <li>• <strong>Pages</strong> (like <code className="bg-purple-200 dark:bg-purple-800 px-1 rounded">page.tsx</code>): What visitors see in their browser</li>
+                <li>• <strong>API Routes</strong> (like <code className="bg-purple-200 dark:bg-purple-800 px-1 rounded">/api/demo/items/route.ts</code>): Server-side code that runs when clients make requests</li>
+                <li>• <strong>Middleware</strong>: Code that checks authentication before requests reach API routes</li>
+              </ul>
+            </div>
+
+            {/* Redis Explanation */}
+            <div>
+              <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
+                2. Redis: The Speed Memory
+              </p>
+              <p className="text-sm text-purple-900 dark:text-purple-200 mb-2">
+                When an API route gets a request, it checks Redis first:
+              </p>
+              <pre className="bg-gray-900 dark:bg-gray-950 text-gray-100 p-3 rounded text-xs overflow-x-auto mb-2">
+                <code>{`// Check cache first (fast - 2ms)
+const cached = await redis.get('cache-key');
+if (cached) return cached;
+
+// Not cached - query database (slow - 200ms)
+const data = await supabase.from('table').select();
+
+// Save for next time
+await redis.setEx('cache-key', 60, data);`}</code>
+              </pre>
+              <p className="text-xs text-purple-900 dark:text-purple-200">
+                This pattern means 90% of requests are instant because they hit the cache.
+              </p>
+            </div>
+
+            {/* Database Explanation */}
+            <div>
+              <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
+                3. Supabase: Permanent Storage
+              </p>
+              <p className="text-sm text-purple-900 dark:text-purple-200 mb-2">
+                Supabase is your database. When Redis doesn't have data, the API route queries it:
+              </p>
+              <pre className="bg-gray-900 dark:bg-gray-950 text-gray-100 p-3 rounded text-xs overflow-x-auto mb-2">
+                <code>{`// Query from database
+const { data } = await supabase
+  .from('users')
+  .select('*')
+  .eq('id', userId);
+
+// This is slower (~200ms) but the data is fresh`}</code>
+              </pre>
+              <p className="text-xs text-purple-900 dark:text-purple-200">
+                Row-level security (RLS) ensures users can only access their own data.
+              </p>
+            </div>
+
+            {/* Request Lifecycle */}
+            <div>
+              <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
+                4. Complete Request Lifecycle
+              </p>
+              <ol className="text-xs text-purple-900 dark:text-purple-200 space-y-1 ml-4">
+                <li>1. Browser sends request to <code className="bg-purple-200 dark:bg-purple-800 px-1 rounded">/api/data</code></li>
+                <li>2. Next.js routes to your API route handler</li>
+                <li>3. Handler checks Redis: Is data cached?</li>
+                <li>4. If yes → Return immediately (2ms)</li>
+                <li>5. If no → Query Supabase database (200ms)</li>
+                <li>6. Store result in Redis with TTL</li>
+                <li>7. Return JSON to browser</li>
+                <li>8. Browser updates the page</li>
+              </ol>
+            </div>
+
+            {/* Docker Note */}
+            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded">
+              <p className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-1">
+                🐳 All Services in Docker
+              </p>
+              <p className="text-xs text-blue-900 dark:text-blue-300">
+                Redis and Supabase run in Docker containers. The app, Redis, and database all communicate securely within a private Docker network.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Footer */}
       <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          This is a simplified view. The real system also includes security (HTTPS padlock), backups,
-          monitoring, and automatic scaling. But the core flow is exactly this: request comes in,
-          we find or fetch the data, and send it back fast.
+          This is the core flow: request comes in → check cache → fetch if needed → return fast.
+          The real system also includes security (HTTPS), backups, monitoring, and automatic scaling.
         </p>
       </div>
     </div>

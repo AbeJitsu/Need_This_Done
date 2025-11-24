@@ -3,16 +3,24 @@
 import { useState } from 'react';
 
 // ============================================================================
-// Speed Demo Component - Interactive Caching Demonstration
+// Speed Demo Component - Real Redis Caching Demonstration
 // ============================================================================
-// Shows visitors the real-world difference between first fetch (slow)
-// and subsequent fetches (from cache, fast). Demonstrates performance
-// instantly without requiring any setup.
+// Shows visitors the real-world difference between cached and uncached
+// responses using actual Redis caching. This is NOT a simulation—it's real.
+//
+// How it works:
+// 1. Click the button to fetch a quote
+// 2. First click: Data comes from simulated database (~300ms) and gets cached
+// 3. Within 30 seconds: Clicks return cached data from Redis (~2ms)
+// 4. After 30 seconds: Cache expires, fetches fresh data again
+//
+// This demonstrates the exact pattern used in production apps.
 
 interface FetchResult {
   time: number;
   isFromCache: boolean;
-  data: string;
+  quote: string;
+  message: string;
   timestamp: string;
 }
 
@@ -21,16 +29,8 @@ export default function SpeedDemo() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const quotes = [
-    "The best time to plant a tree was 20 years ago. The second best time is now.",
-    "Innovation distinguishes between a leader and a follower.",
-    "Life is what happens when you're busy making other plans.",
-    "The future belongs to those who believe in the beauty of their dreams.",
-    "It is during our darkest moments that we must focus to see the light.",
-  ];
-
   // ========================================================================
-  // Simulate API call with first-time slowness, then cached speed
+  // Fetch data from the real API with Redis caching
   // ========================================================================
   const handleFetchData = async () => {
     setLoading(true);
@@ -39,29 +39,26 @@ export default function SpeedDemo() {
     try {
       const startTime = performance.now();
 
-      // Check if this is likely a cached request (second or later click)
-      const isCached = results.length > 0;
-
-      // Simulate network delay
-      // First request: ~200-300ms (realistic API call)
-      // Subsequent requests: ~2-5ms (from cache/memory)
-      const delay = isCached ? Math.random() * 3 + 2 : Math.random() * 100 + 200;
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      // Make real API call to /api/demo/speed
+      // This endpoint uses Redis caching (30-second TTL)
+      const response = await fetch('/api/demo/speed', { method: 'GET' });
+      const data = await response.json();
 
       const endTime = performance.now();
       const elapsed = Math.round(endTime - startTime);
-      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
       const newResult: FetchResult = {
         time: elapsed,
-        isFromCache: isCached,
-        data: randomQuote,
+        isFromCache: data.isFromCache,
+        quote: data.quote,
+        message: data.message,
         timestamp: new Date().toLocaleTimeString(),
       };
 
       setResults((prev) => [newResult, ...prev]);
     } catch (err) {
       setError('Failed to fetch data');
+      console.error('Fetch error:', err);
     } finally {
       setLoading(false);
     }
@@ -77,10 +74,10 @@ export default function SpeedDemo() {
       {/* Header explaining what this demo does */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-          Watch Speed in Action
+          Watch Real Caching in Action
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300">
-          Click the button below. First click fetches fresh data. Next clicks show it from memory (100× faster).
+          Click the button. First click fetches fresh data from "database" (~300ms). Clicks within 30 seconds load from Redis cache (~2ms). After 30 seconds, cache expires and fetches fresh again.
         </p>
       </div>
 
@@ -98,9 +95,10 @@ export default function SpeedDemo() {
           rounded-lg
           transition-all duration-200
           active:scale-95
+          focus:outline-none focus:ring-2 focus:ring-blue-500
         "
       >
-        {loading ? 'Fetching...' : 'Get Random Quote'}
+        {loading ? 'Fetching...' : 'Fetch Quote (Watch Speed)'}
       </button>
 
       {/* Error State */}
@@ -150,7 +148,7 @@ export default function SpeedDemo() {
 
         {results.length === 0 ? (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-            <p>Click the button above to see speed in action</p>
+            <p>Click the button above to see caching in action</p>
           </div>
         ) : (
           results.map((result, index) => (
@@ -160,42 +158,49 @@ export default function SpeedDemo() {
                 p-3 rounded-lg border transition-all
                 ${
                   result.isFromCache
-                    ? 'bg-green-50 dark:bg-gray-800 border-green-300 dark:border-green-700'
-                    : 'bg-blue-50 dark:bg-gray-800 border-blue-300 dark:border-blue-700'
+                    ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-300 dark:border-orange-700'
+                    : 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700'
                 }
               `}
             >
-              <div className="flex items-start justify-between mb-2">
+              <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-2">
                     <span className={`text-xs font-semibold uppercase tracking-wide ${
                       result.isFromCache
-                        ? 'text-green-900 dark:text-green-300'
-                        : 'text-blue-900 dark:text-blue-300'
+                        ? 'text-orange-900 dark:text-orange-300'
+                        : 'text-green-900 dark:text-green-300'
                     }`}>
-                      {result.isFromCache ? '⚡ From Memory' : '📡 Fresh Fetch'}
+                      {result.isFromCache ? '⚡ REDIS CACHE' : '📡 DATABASE'}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-900 dark:text-gray-100 italic">
-                    "{result.data}"
+                  <p className="text-sm text-gray-900 dark:text-gray-100 italic mb-2">
+                    "{result.quote}"
+                  </p>
+                  <p className={`text-xs ${
+                    result.isFromCache
+                      ? 'text-orange-800 dark:text-orange-200'
+                      : 'text-green-800 dark:text-green-200'
+                  }`}>
+                    {result.message}
                   </p>
                 </div>
-                <div className="text-right ml-4">
-                  <p className={`text-lg font-bold ${
+                <div className="text-right ml-4 flex-shrink-0">
+                  <p className={`text-2xl font-bold tabular-nums ${
                     result.isFromCache
-                      ? 'text-green-900 dark:text-green-300'
-                      : 'text-blue-900 dark:text-blue-300'
+                      ? 'text-orange-900 dark:text-orange-300'
+                      : 'text-green-900 dark:text-green-300'
                   }`}>
                     {result.time}ms
                   </p>
-                  <p className="text-xs text-gray-700 dark:text-gray-300">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                     {result.timestamp}
                   </p>
                 </div>
               </div>
               {index === 0 && results.length > 1 && (
-                <p className="text-xs text-gray-800 dark:text-gray-200 border-t pt-2 border-current border-opacity-30">
-                  💡 Notice how it's faster after the first fetch
+                <p className="text-xs text-gray-700 dark:text-gray-300 border-t pt-2 border-gray-300 dark:border-gray-600">
+                  💡 Tip: Try clicking again within 30 seconds to see the cache hit
                 </p>
               )}
             </div>
@@ -204,10 +209,20 @@ export default function SpeedDemo() {
       </div>
 
       {/* Educational Footer */}
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 space-y-3">
+        <div>
+          <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            What's Happening:
+          </p>
+          <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+            <li>• <strong>First click:</strong> Fetches fresh data from "database" (~200-300ms)</li>
+            <li>• <strong>Subsequent clicks (within 30 seconds):</strong> Returns cached data from Redis (~2ms)</li>
+            <li>• <strong>After 30 seconds:</strong> Cache expires and fetches fresh again</li>
+          </ul>
+        </div>
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          This demonstrates real caching in action. Your website automatically remembers frequently-accessed data,
-          making it available almost instantly. This is how we achieve 100× performance improvements.
+          This is the cache-first pattern used in production apps. 90% of requests hit the cache, making pages feel instant.
+          The 10% that miss the cache trigger a database query and refresh the cache for future requests.
         </p>
       </div>
     </div>

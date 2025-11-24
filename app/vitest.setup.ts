@@ -1,6 +1,10 @@
 import '@testing-library/jest-dom'
 import { setupServer } from 'msw/node'
+import { toHaveNoViolations } from 'jest-axe'
 import { handlers } from './__tests__/setup/mocks'
+
+// Extend Vitest matchers with jest-axe
+expect.extend(toHaveNoViolations)
 
 // Mock environment variables
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
