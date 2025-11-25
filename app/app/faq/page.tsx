@@ -122,7 +122,7 @@ export default function FAQPage() {
         </div>
 
         {/* Contact Section */}
-        <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl p-8 border border-purple-200 dark:border-purple-800 text-center">
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:bg-gray-800 dark:from-transparent dark:to-transparent rounded-xl p-8 border border-purple-200 dark:border-purple-700 text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Still Have Questions?
           </h2>
