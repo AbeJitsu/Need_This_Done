@@ -23,6 +23,8 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isAdmin: boolean;
+  userRole: 'admin' | 'user' | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -68,10 +70,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  // ============================================================================
+  // Derive Admin Status and Role from User Metadata
+  // ============================================================================
+
+  const isAdmin = user?.user_metadata?.is_admin === true;
+  const userRole: 'admin' | 'user' | null = user
+    ? isAdmin
+      ? 'admin'
+      : 'user'
+    : null;
+
   const value: AuthContextType = {
     user,
     isLoading,
     isAuthenticated: user !== null,
+    isAdmin,
+    userRole,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

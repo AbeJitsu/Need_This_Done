@@ -92,3 +92,48 @@ export const onAuthStateChange = (callback: (user: any | null) => void) => {
   // Return unsubscribe function so callers can clean up
   return subscription?.unsubscribe;
 };
+
+// ============================================================================
+// Check if User is Admin
+// ============================================================================
+// Checks the user's metadata to see if they are marked as admin.
+// Admins have access to all projects and can manage others' work.
+export const isAdmin = async (): Promise<boolean> => {
+  try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return false;
+    }
+
+    // Check user_metadata for is_admin flag
+    const isAdminFlag = (user.user_metadata as any)?.is_admin === true;
+    return isAdminFlag;
+  } catch (err) {
+    console.error('Error checking admin status:', err);
+    return false;
+  }
+};
+
+// ============================================================================
+// Get User Role
+// ============================================================================
+// Returns the user's role: 'admin', 'user', or null if not authenticated.
+// Useful for conditional UI rendering and authorization checks.
+export const getUserRole = async (): Promise<
+  'admin' | 'user' | null
+> => {
+  try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return null;
+    }
+
+    const isAdminFlag = (user.user_metadata as any)?.is_admin === true;
+    return isAdminFlag ? 'admin' : 'user';
+  } catch (err) {
+    console.error('Error getting user role:', err);
+    return null;
+  }
+};
