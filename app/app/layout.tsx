@@ -20,8 +20,8 @@ import { AuthProvider } from '@/context/AuthContext';
 // Define metadata for SEO and browser tab
 // This appears in search results and the browser tab
 export const metadata: Metadata = {
-  title: 'Full-Stack Template',
-  description: 'A production-ready full-stack web application',
+  title: 'NeedThisDone - Get Your Projects Done Right',
+  description: 'Professional project services - submit your project, get it done right.',
   viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
 };

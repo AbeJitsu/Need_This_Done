@@ -1,73 +1,122 @@
-import FeatureCard from '@/components/FeatureCard';
+import Link from 'next/link';
+import { siteConfig, getServices } from '@/config/site.config';
+
+// ============================================================================
+// Services Page - What NeedThisDone Offers
+// ============================================================================
+// Lists the services available and explains what clients can expect.
 
 export const metadata = {
-  title: 'Features',
-  description: 'Explore the features of this full-stack template',
+  title: 'Services - NeedThisDone',
+  description: 'Explore the services we offer to help you get your projects done.',
 };
 
-export default function FeaturesPage() {
-  const features = [
-    {
-      icon: '⚡',
-      title: 'Lightning Fast',
-      description: 'Redis caching ensures 10-20x faster responses',
-      variant: 'primary' as const,
-      metric: 'Up to 10x faster',
-    },
-    {
-      icon: '🔒',
-      title: 'Secure Authentication',
-      description: 'Real authentication with Supabase and password hashing',
-      variant: 'primary' as const,
-      metric: 'Enterprise-grade',
-    },
-    {
-      icon: '💾',
-      title: 'Real Database',
-      description: 'Persistent data storage with Supabase',
-      variant: 'success' as const,
-      metric: '100% Reliable',
-    },
-    {
-      icon: '🌙',
-      title: 'Dark Mode',
-      description: 'Full dark mode support with smooth transitions',
-      variant: 'success' as const,
-      metric: 'User Friendly',
-    },
-    {
-      icon: '♿',
-      title: 'Accessible',
-      description: 'WCAG AA compliant for all users',
-      variant: 'success' as const,
-      metric: 'Inclusive Design',
-    },
-    {
-      icon: '📱',
-      title: 'Responsive',
-      description: 'Works perfectly on all devices and screen sizes',
-      variant: 'success' as const,
-      metric: 'Mobile First',
-    },
-  ];
+export default function ServicesPage() {
+  const services = getServices();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-12 text-center">
-          Features
-        </h1>
-        <div className="grid md:grid-cols-3 gap-6">
-          {features.map((feature) => (
-            <FeatureCard
-              key={feature.title}
-              icon={feature.icon}
-              title={feature.title}
-              description={feature.description}
-              variant={feature.variant}
-              metric={feature.metric}
-            />
+
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+            Our Services
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            We help you get things done. Here is what we can do for you.
+          </p>
+        </div>
+
+        {/* Services Grid */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className="bg-white dark:bg-gray-800 rounded-lg p-8 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
+            >
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                {service.title}
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                {service.description}
+              </p>
+              {service.details && (
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {service.details}
+                </p>
+              )}
+            </div>
           ))}
+        </div>
+
+        {/* What to Expect */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-8 border border-gray-200 dark:border-gray-700 mb-16">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
+            What You Can Expect
+          </h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="flex gap-4">
+              <div className="text-2xl">✓</div>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Clear Communication</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  We keep you informed every step of the way. No surprises.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="text-2xl">✓</div>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Quality Work</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  We take pride in delivering work you can rely on.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="text-2xl">✓</div>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Fair Pricing</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  Transparent quotes with no hidden fees.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="text-2xl">✓</div>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Timely Delivery</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  We respect your deadlines and deliver on time.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+            Ready to Get Started?
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
+            Learn more about our process or get in touch.
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Link
+              href="/how-it-works"
+              className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              How It Works
+            </Link>
+            <Link
+              href="/docs"
+              className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-semibold rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              FAQ
+            </Link>
+          </div>
         </div>
       </div>
     </div>

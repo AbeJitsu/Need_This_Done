@@ -12,12 +12,9 @@ import { usePathname } from 'next/navigation';
 
 const navigationLinks = [
   { href: '/', label: 'Home' },
-  { href: '/demos/speed', label: 'Speed Demo' },
-  { href: '/demos/database', label: 'Database' },
-  { href: '/demos/auth', label: 'Auth' },
-  { href: '/features', label: 'Features' },
+  { href: '/features', label: 'Services' },
   { href: '/how-it-works', label: 'How It Works' },
-  { href: '/docs', label: 'Docs' },
+  { href: '/docs', label: 'FAQ' },
 ];
 
 export default function Navigation() {
@@ -32,7 +29,7 @@ export default function Navigation() {
             href="/"
             className="flex-shrink-0 font-bold text-lg text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           >
-            Template
+            NeedThisDone
           </Link>
 
           {/* Navigation Links */}
