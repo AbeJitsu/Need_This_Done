@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS projects (
   -- Project details
   service TEXT,
   message TEXT NOT NULL,
+  attachments TEXT[],  -- Array of file paths in Supabase Storage
 
   -- Workflow
   status project_status DEFAULT 'submitted',
