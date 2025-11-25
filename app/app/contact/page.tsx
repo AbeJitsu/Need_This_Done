@@ -32,12 +32,20 @@ export default function ContactPage() {
     setSubmitStatus('idle');
 
     try {
-      // TODO: Wire to /api/inquiries endpoint
-      // For now, simulate success
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Submission failed');
+      }
+
       setSubmitStatus('success');
       setFormData({ name: '', email: '', company: '', service: '', message: '' });
     } catch (error) {
+      console.error('Form submission error:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
