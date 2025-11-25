@@ -343,7 +343,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.15)] dark:ring-1 dark:ring-gray-600 dark:hover:ring-gray-400 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.2)]"
+                className="w-full py-3 px-6 bg-purple-500 text-white font-semibold rounded-full hover:bg-purple-600 disabled:bg-purple-300 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.15)] dark:ring-1 dark:ring-gray-600 dark:hover:ring-gray-400 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.2)]"
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
@@ -359,14 +359,14 @@ export default function ContactPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/services"
-              className="text-purple-600 dark:text-purple-400 font-medium hover:underline"
+              className="text-blue-700 dark:text-blue-400 font-medium hover:underline"
             >
               View Our Services
             </Link>
             <span className="text-gray-400">|</span>
             <Link
               href="/faq"
-              className="text-green-600 dark:text-green-400 font-medium hover:underline"
+              className="text-green-700 dark:text-green-400 font-medium hover:underline"
             >
               Read the FAQ
             </Link>

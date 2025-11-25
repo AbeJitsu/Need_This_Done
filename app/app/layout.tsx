@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Poppins } from 'next/font/google';
+import { Inter, Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
 import DarkModeToggle from '@/components/DarkModeToggle';
@@ -17,6 +17,14 @@ const poppins = Poppins({
   subsets: ['latin'],
   weight: ['600', '700'],
   variable: '--font-poppins',
+  display: 'swap',
+});
+
+// Playfair Display - elegant serif for logo
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['700'],
+  variable: '--font-playfair',
   display: 'swap',
 });
 
@@ -48,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
+    <html lang="en" className={`${inter.variable} ${poppins.variable} ${playfair.variable}`}>
       <head>
         {/* Dark mode prevention script - runs before React hydration to prevent flash */}
         <script

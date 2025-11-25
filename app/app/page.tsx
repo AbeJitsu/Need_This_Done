@@ -111,16 +111,16 @@ export default function HomePage() {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 rounded-xl p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">
+        <div className="text-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Ready to Get Started?
           </h2>
-          <p className="text-white/90 mb-6">
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
             Have a task in mind? We would love to help.
           </p>
           <Link
             href="/contact"
-            className="inline-block px-8 py-3 bg-white text-red-600 font-semibold rounded-full hover:bg-red-50 border-2 border-red-100 transition-colors"
+            className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors"
           >
             Contact Us
           </Link>
