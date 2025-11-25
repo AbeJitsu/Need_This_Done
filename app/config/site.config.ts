@@ -44,25 +44,25 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   // Services
   // ========================================================================
-  // Core service offerings for busy professionals and everyday task help
+  // Core service offerings: website work, virtual assistance, and data tasks
   services: [
     {
-      title: 'Data & Spreadsheets',
-      description: 'From messy data to organized insights. We handle spreadsheets, data entry, format conversions, and cleanup so you can focus on what matters.',
-      details: 'Excel, Google Sheets, CSV transformations, and more.',
+      title: 'Website Services',
+      description: 'From new builds to updates and maintenance. We handle websites of any size on any platform—so you can focus on your business.',
+      details: 'Website builds & redesigns, content updates, e-commerce setup.',
+      color: 'green',
+    },
+    {
+      title: 'Virtual Assistant',
+      description: 'Let us handle the day-to-day tasks that eat up your time. Email, scheduling, research, bookings, and social media posting.',
+      details: 'Email management, calendar coordination, research & bookings.',
       color: 'purple',
     },
     {
-      title: 'Documents & Admin',
-      description: 'Professional document preparation, formatting, research, and administrative tasks that free up your valuable time.',
-      details: 'Reports, presentations, correspondence, and organization.',
+      title: 'Data & Documents',
+      description: 'From messy spreadsheets to polished reports. We organize, format, and prepare your documents so they look professional.',
+      details: 'Spreadsheets, data entry, reports, presentations, file organization.',
       color: 'blue',
-    },
-    {
-      title: 'Tech & Web Help',
-      description: 'From everyday computer questions to website builds and updates. Friendly, patient help with all things tech—no task too small.',
-      details: 'Software setup, troubleshooting, websites, and more.',
-      color: 'green',
     },
   ],
 
@@ -71,7 +71,7 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   metadata: {
     siteName: 'NeedThisDone',
-    siteDescription: 'Real people helping busy professionals get tasks done. Data, documents, admin work, tech help, and websites.',
+    siteDescription: 'Real people helping busy professionals get tasks done. Websites, virtual assistant tasks, data, and documents.',
     author: 'NeedThisDone',
   },
 };
