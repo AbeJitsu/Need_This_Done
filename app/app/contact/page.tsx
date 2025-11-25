@@ -59,7 +59,7 @@ export default function ContactPage() {
         </div>
 
         {/* Contact Form */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10 transition-all dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
           {submitStatus === 'success' ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
@@ -93,7 +93,7 @@ export default function ContactPage() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
                     placeholder="John Doe"
                   />
                 </div>
@@ -110,7 +110,7 @@ export default function ContactPage() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
                     placeholder="john@example.com"
                   />
                 </div>
@@ -128,7 +128,7 @@ export default function ContactPage() {
                     name="company"
                     value={formData.company}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
                     placeholder="Your Company"
                   />
                 </div>
@@ -143,7 +143,7 @@ export default function ContactPage() {
                     name="service"
                     value={formData.service}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
                   >
                     <option value="">Select a service...</option>
                     {services.map((service, index) => (
@@ -168,7 +168,7 @@ export default function ContactPage() {
                   rows={5}
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)] resize-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)] resize-none"
                   placeholder="Tell us about your project. What do you need done? Any specific requirements or timeline?"
                 />
               </div>
@@ -186,7 +186,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-all dark:ring-1 dark:ring-gray-600 dark:hover:ring-gray-400 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.2)]"
+                className="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.15)] dark:ring-1 dark:ring-gray-600 dark:hover:ring-gray-400 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.2)]"
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>

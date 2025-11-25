@@ -82,7 +82,7 @@ export default function HowItWorksPage() {
             return (
               <div
                 key={step.number}
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
+                className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]"
               >
                 <div className="flex items-start gap-6">
                   <div className={`flex-shrink-0 w-12 h-12 ${colors.bg} text-white rounded-full flex items-center justify-center text-xl font-bold`}>
@@ -111,7 +111,7 @@ export default function HowItWorksPage() {
         </div>
 
         {/* Timeline Note */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
           <h3 className="font-semibold text-blue-600 dark:text-blue-400 mb-2">
             Typical Timeline
           </h3>
@@ -132,7 +132,7 @@ export default function HowItWorksPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/faq"
-              className="px-6 py-3 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors"
+              className="px-6 py-3 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 hover:text-white transition-colors"
             >
               View FAQ
             </Link>

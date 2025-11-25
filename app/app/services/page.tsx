@@ -45,7 +45,7 @@ export default function ServicesPage() {
         </div>
 
         {/* What to Expect */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
             What You Can Expect
           </h2>
@@ -108,7 +108,7 @@ export default function ServicesPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/how-it-works"
-              className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-full hover:bg-purple-700 transition-colors"
+              className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-full hover:bg-purple-700 hover:text-white transition-colors"
             >
               How It Works
             </Link>

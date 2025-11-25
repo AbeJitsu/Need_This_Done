@@ -101,7 +101,7 @@ export default function FAQPage() {
             return (
               <div
                 key={index}
-                className={`bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 border-l-4 ${styles.border} ${styles.hover} transition-colors`}
+                className={`bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 border-l-4 ${styles.border} ${styles.hover} transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}
               >
                 <div className="flex items-start gap-4">
                   <div className={`flex-shrink-0 w-8 h-8 rounded-full ${styles.bg} flex items-center justify-center`}>
@@ -122,7 +122,7 @@ export default function FAQPage() {
         </div>
 
         {/* Contact Section */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:bg-gray-800 dark:from-transparent dark:to-transparent rounded-xl p-6 border border-blue-200 dark:border-blue-700 text-center">
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:bg-gray-800 dark:from-transparent dark:to-transparent rounded-xl p-6 border border-blue-200 dark:border-blue-700 text-center transition-all hover:border-blue-300 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-blue-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Still Have Questions?
           </h2>

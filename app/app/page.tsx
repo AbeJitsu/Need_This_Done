@@ -67,7 +67,7 @@ export default function HomePage() {
         </div>
 
         {/* How It Works Preview */}
-        <div className="mb-10 bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+        <div className="mb-10 bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
             Simple Process
           </h2>

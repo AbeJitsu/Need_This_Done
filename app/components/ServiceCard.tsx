@@ -1,5 +1,3 @@
-import React from 'react';
-
 // ============================================================================
 // ServiceCard Component
 // ============================================================================
@@ -52,7 +50,7 @@ export default function ServiceCard({
 
   return (
     <div
-      className={`p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 ${borderClass} hover:shadow-lg transition-all`}
+      className={`p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 ${borderClass} transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}
     >
       <h3 className={`font-semibold mb-2 text-lg ${titleColors[color]}`}>
         {title}
