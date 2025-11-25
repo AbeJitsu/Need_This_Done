@@ -13,11 +13,12 @@ export interface SiteConfig {
     url: string;
   };
 
-  // Services displayed on services page
+  // Services displayed across the site
   services: Array<{
     title: string;
-    description: string;
-    details?: string;
+    tagline: string;      // Brief one-liner for home page
+    description: string;  // Full description for services page
+    details?: string;     // Additional info for services page
     color: 'blue' | 'purple' | 'green';
   }>;
 
@@ -44,25 +45,28 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   // Services
   // ========================================================================
-  // Core service offerings: website work, virtual assistance, and data tasks
+  // Core service offerings - ordered to match pricing tier colors (purple, blue, green)
   services: [
     {
-      title: 'Website Services',
-      description: 'From new builds to updates and maintenance. We handle websites of any size on any platform—so you can focus on your business.',
-      details: 'Website builds & redesigns, content updates, e-commerce setup.',
-      color: 'green',
-    },
-    {
       title: 'Virtual Assistant',
+      tagline: 'Email, scheduling, research & social media',
       description: 'Let us handle the day-to-day tasks that eat up your time. Email, scheduling, research, bookings, and social media posting.',
       details: 'Email management, calendar coordination, research & bookings.',
       color: 'purple',
     },
     {
       title: 'Data & Documents',
+      tagline: 'Spreadsheets, reports & file organization',
       description: 'From messy spreadsheets to polished reports. We organize, format, and prepare your documents so they look professional.',
       details: 'Spreadsheets, data entry, reports, presentations, file organization.',
       color: 'blue',
+    },
+    {
+      title: 'Website Services',
+      tagline: 'Builds, updates & e-commerce',
+      description: 'From new builds to updates and maintenance. We handle websites of any size on any platform—so you can focus on your business.',
+      details: 'Website builds & redesigns, content updates, e-commerce setup.',
+      color: 'green',
     },
   ],
 

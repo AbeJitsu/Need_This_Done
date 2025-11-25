@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { siteConfig } from '@/config/site.config';
+import ServiceCard from '@/components/ServiceCard';
 
 // ============================================================================
 // Home Page - NeedThisDone Landing Page
@@ -51,37 +52,17 @@ export default function HomePage() {
             What We Offer
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {siteConfig.services.map((service, index) => {
-              // Color classes for each service
-              const colorClasses = {
-                blue: 'border-l-blue-500 hover:border-l-blue-600',
-                purple: 'border-l-purple-500 hover:border-l-purple-600',
-                green: 'border-l-green-500 hover:border-l-green-600',
-              };
-              const titleColors = {
-                blue: 'text-blue-600 dark:text-blue-400',
-                purple: 'text-purple-600 dark:text-purple-400',
-                green: 'text-green-600 dark:text-green-400',
-              };
-              return (
-                <div
-                  key={index}
-                  className={`p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 border-l-4 ${colorClasses[service.color]} transition-all hover:shadow-lg`}
-                >
-                  <h3 className={`font-semibold mb-2 text-lg ${titleColors[service.color]}`}>
-                    {service.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-2">
-                    {service.description}
-                  </p>
-                  {service.details && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {service.details}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
+            {siteConfig.services.map((service, index) => (
+              <ServiceCard
+                key={index}
+                title={service.title}
+                tagline={service.tagline}
+                description={service.description}
+                details={service.details}
+                color={service.color}
+                variant="compact"
+              />
+            ))}
           </div>
         </div>
 

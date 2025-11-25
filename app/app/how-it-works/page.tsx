@@ -111,11 +111,11 @@ export default function HowItWorksPage() {
         </div>
 
         {/* Timeline Note */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800 mb-10">
-          <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10">
+          <h3 className="font-semibold text-purple-600 dark:text-purple-400 mb-2">
             Typical Timeline
           </h3>
-          <p className="text-blue-700 dark:text-blue-300">
+          <p className="text-gray-600 dark:text-gray-300">
             Most projects are completed within 1-2 weeks, depending on scope.
             Larger projects may take longer - we will provide a clear timeline with your quote.
           </p>

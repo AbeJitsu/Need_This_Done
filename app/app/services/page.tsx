@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { siteConfig, getServices } from '@/config/site.config';
+import { getServices } from '@/config/site.config';
+import ServiceCard from '@/components/ServiceCard';
 
 // ============================================================================
 // Services Page - What NeedThisDone Offers
@@ -30,37 +31,17 @@ export default function ServicesPage() {
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-10">
-          {services.map((service, index) => {
-            // Color classes for each service
-            const colorClasses = {
-              blue: 'border-t-blue-500',
-              purple: 'border-t-purple-500',
-              green: 'border-t-green-500',
-            };
-            const titleColors = {
-              blue: 'text-blue-600 dark:text-blue-400',
-              purple: 'text-purple-600 dark:text-purple-400',
-              green: 'text-green-600 dark:text-green-400',
-            };
-            return (
-              <div
-                key={index}
-                className={`bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 border-t-4 ${colorClasses[service.color]} hover:shadow-lg transition-shadow`}
-              >
-                <h2 className={`text-xl font-bold mb-3 ${titleColors[service.color]}`}>
-                  {service.title}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {service.description}
-                </p>
-                {service.details && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {service.details}
-                  </p>
-                )}
-              </div>
-            );
-          })}
+          {services.map((service, index) => (
+            <ServiceCard
+              key={index}
+              title={service.title}
+              tagline={service.tagline}
+              description={service.description}
+              details={service.details}
+              color={service.color}
+              variant="full"
+            />
+          ))}
         </div>
 
         {/* What to Expect */}
