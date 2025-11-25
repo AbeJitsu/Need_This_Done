@@ -15,21 +15,18 @@ export const metadata = {
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Hero Section */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           {/* Yellow badge - creates warmth and urgency */}
-          <span className="inline-block bg-yellow-100 dark:bg-transparent text-yellow-800 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-500 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+          <span className="inline-block bg-yellow-100 dark:bg-transparent text-yellow-800 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-500 text-sm font-medium px-4 py-1.5 rounded-full mb-4">
             Fast 2-Day Response
           </span>
-          <h1 className="text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-            {siteConfig.project.name}
-          </h1>
-          <p className="text-2xl text-blue-600 dark:text-blue-400 font-medium mb-4">
+          <h1 className="text-5xl font-bold text-blue-600 dark:text-blue-400 mb-4">
             {siteConfig.project.tagline}
-          </p>
-          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto">
             {siteConfig.project.description}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
@@ -49,8 +46,8 @@ export default function HomePage() {
         </div>
 
         {/* Services Preview */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center">
+        <div className="mb-10">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
             What We Offer
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
@@ -89,8 +86,8 @@ export default function HomePage() {
         </div>
 
         {/* How It Works Preview */}
-        <div className="mb-16 bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center">
+        <div className="mb-10 bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
             Simple Process
           </h2>
           <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -122,7 +119,7 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-          <div className="text-center mt-8">
+          <div className="text-center mt-6">
             <Link
               href="/how-it-works"
               className="text-purple-600 dark:text-purple-400 font-medium hover:underline"
@@ -133,7 +130,7 @@ export default function HomePage() {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 rounded-xl p-8">
+        <div className="text-center bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 rounded-xl p-6">
           <h2 className="text-2xl font-bold text-white mb-4">
             Ready to Get Started?
           </h2>
