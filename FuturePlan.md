@@ -4,45 +4,40 @@
 
 - All pages: Home, Services, Pricing, FAQ, How It Works, Contact
 - Contact form with validation, loading states, success/error handling
+- **Contact form backend** - stores submissions in Supabase `projects` table
+- **File uploads** - users can attach up to 3 files (5MB each) to submissions
 - Navigation with all links
 - ServiceCard component
 - UI styling and hover effects (light + dark mode)
-- Authentication (Google OAuth + email/password)
+- Authentication foundation (Supabase auth configured)
 - Supabase foundation with demo patterns
 - Docker deployment setup
 
 ---
 
-## Next Steps: Make Contact Form Functional
+## Next Steps: Client Dashboard
 
-The contact form looks great but doesn't store data yet. These steps connect it to your database.
+Allow users to log in and view their submitted projects with status updates.
 
-### 1. Database Schema (30 min)
-**Copy from:** `/supabase/migrations/001_create_demo_items_table.sql`
+### 1. Add user_id to Projects Table
+```sql
+ALTER TABLE projects ADD COLUMN user_id UUID REFERENCES auth.users(id);
+CREATE INDEX projects_user_id_idx ON projects(user_id);
+```
 
-Create `/supabase/migrations/002_create_projects_table.sql`:
-- Fields: `id`, `user_id`, `name`, `email`, `company`, `service`, `message`, `status`, `created_at`, `updated_at`
-- Status enum: `'submitted'`, `'in_review'`, `'scheduled'`, `'in_progress'`, `'completed'`
-- Copy RLS policies from demo_items migration
-- Add indexes on `user_id` and `status`
+### 2. Create Login Page
+- `/app/login/page.tsx` - email/password + Google OAuth
 
-### 2. API Route (1 hour)
-**Copy from:** `/app/app/api/demo/items/route.ts`
+### 3. Create Client Dashboard
+- `/app/dashboard/page.tsx` - shows user's projects with status
+- Display attached files with download links
 
-Create `/app/app/api/projects/route.ts`:
-- POST handler to validate and insert into projects table
-- Match fields to contact form: name, email, company, service, message
-
-### 3. Wire Contact Form (30 min)
-**Modify:** `/app/app/contact/page.tsx`
-
-Update `handleSubmit` to POST to `/api/projects` instead of simulating success.
-
-**Result:** Contact form submissions are stored in database.
+### 4. API Route for User's Projects
+- `/app/api/projects/mine/route.ts` - GET projects by user_id
 
 ---
 
-## Email Notifications (3 hours)
+## Email Notifications
 
 **Prerequisites:**
 - Sign up for [Resend](https://resend.com) (free: 3,000 emails/month)
@@ -57,32 +52,7 @@ Update `handleSubmit` to POST to `/api/projects` instead of simulating success.
 
 ---
 
-## File Uploads (4 hours)
-
-**Prerequisites:**
-- Enable Storage in Supabase dashboard
-- Create "project-uploads" bucket with RLS policies
-
-**Build:**
-- Create `uploads` table (migration 003)
-- Create `/app/app/api/projects/upload/route.ts`
-- Add file input to contact form
-- Validate: PDF, JPG, PNG, DOCX (< 5MB)
-
----
-
-## Client Dashboard (4 hours)
-
-**Copy from:** DatabaseDemo list rendering + AuthContext
-
-**Build:**
-- Create `/app/app/dashboard/page.tsx`
-- Create `/app/app/api/projects/mine/route.ts` (GET by user_id)
-- Display user's projects with status badges
-
----
-
-## Admin Dashboard (4 hours)
+## Admin Dashboard
 
 **Build:**
 - Create `/app/app/admin/page.tsx` (protected route)
@@ -107,25 +77,22 @@ Update `handleSubmit` to POST to `/api/projects` instead of simulating success.
 
 ## Implementation Order
 
-| Priority | Feature | Time | Dependencies |
-|----------|---------|------|--------------|
-| 1 | Database schema | 30 min | None |
-| 2 | API route | 1 hour | Schema |
-| 3 | Wire contact form | 30 min | API route |
-| 4 | Email notifications | 3 hours | Resend |
-| 5 | File uploads | 4 hours | Supabase Storage |
-| 6 | Client dashboard | 4 hours | API routes |
-| 7 | Admin dashboard | 4 hours | API routes |
-
-**MVP (items 1-4):** ~5 hours for fully functional submissions with email alerts
+| Priority | Feature | Status |
+|----------|---------|--------|
+| 1 | Database schema | Done |
+| 2 | API route | Done |
+| 3 | Wire contact form | Done |
+| 4 | File uploads | Done |
+| 5 | Client dashboard | **Next** |
+| 6 | Email notifications | Pending |
+| 7 | Admin dashboard | Pending |
 
 ---
 
 ## Database Schema Reference
 
 ```sql
-projects (id, user_id, name, email, company, service, message, status, created_at, updated_at)
-uploads (id, project_id, file_url, file_name, file_type, file_size, uploaded_at)
+projects (id, user_id, name, email, company, service, message, attachments[], status, created_at, updated_at)
 messages (id, project_id, sender_id, content, created_at)
 payments (id, project_id, amount, status, stripe_id, created_at)
 ```
