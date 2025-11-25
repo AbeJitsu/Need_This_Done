@@ -107,6 +107,22 @@ const config = {
         },
 
         // ====================================================================
+        // Purples - Creativity & Premium
+        // ====================================================================
+        purple: {
+          50: 'var(--purple-50)',
+          100: 'var(--purple-100)',
+          200: 'var(--purple-200)',
+          300: 'var(--purple-300)',
+          400: 'var(--purple-400)',
+          500: 'var(--purple-500)',
+          600: 'var(--purple-600)',
+          700: 'var(--purple-700)',
+          800: 'var(--purple-800)',
+          900: 'var(--purple-900)',
+        },
+
+        // ====================================================================
         // Grayscale - Foundation & Neutral
         // ====================================================================
         gray: {
@@ -137,10 +153,9 @@ const config = {
         // 'gutter': '2rem',
       },
 
-      // Custom fonts
+      // Custom fonts - Inter for modern, trustworthy typography
       fontFamily: {
-        // Example: font-display uses this custom font
-        // 'display': ['Playfair Display', 'serif'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
     },
   },

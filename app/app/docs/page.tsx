@@ -65,7 +65,7 @@ export default function FAQPage() {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700"
+              className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 transition-colors"
             >
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                 {faq.question}
@@ -78,7 +78,7 @@ export default function FAQPage() {
         </div>
 
         {/* Contact Section */}
-        <div className="bg-blue-50 dark:bg-gray-800 rounded-lg p-8 border border-blue-200 dark:border-gray-700 text-center">
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl p-8 border border-purple-200 dark:border-purple-800 text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Still Have Questions?
           </h2>
@@ -88,13 +88,13 @@ export default function FAQPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/how-it-works"
-              className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-full hover:bg-purple-700 transition-colors"
             >
               Learn How It Works
             </Link>
             <Link
               href="/features"
-              className="px-6 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-semibold rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+              className="px-6 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-semibold rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
             >
               View Services
             </Link>

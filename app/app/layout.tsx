@@ -1,8 +1,16 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
 import DarkModeToggle from '@/components/DarkModeToggle';
 import { AuthProvider } from '@/context/AuthContext';
+
+// Inter font - modern, trustworthy, highly readable
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 // ============================================================================
 // Root Layout Component
@@ -32,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <head>
         {/* Dark mode prevention script - runs before React hydration to prevent flash */}
         <script

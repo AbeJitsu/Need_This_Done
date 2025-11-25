@@ -18,6 +18,7 @@ export interface SiteConfig {
     title: string;
     description: string;
     details?: string;
+    color: 'blue' | 'purple' | 'green';
   }>;
 
   // SEO and Metadata
@@ -49,16 +50,19 @@ const siteConfig: SiteConfig = {
       title: 'Project Consultation',
       description: 'Discuss your project needs and get expert guidance on the best approach.',
       details: 'We review your requirements and provide clear recommendations.',
+      color: 'purple',
     },
     {
       title: 'Custom Development',
       description: 'Get your technical projects built by experienced professionals.',
       details: 'From websites to applications, we handle the technical work.',
+      color: 'blue',
     },
     {
       title: 'Ongoing Support',
       description: 'Keep your projects running smoothly with reliable maintenance.',
       details: 'Updates, fixes, and improvements as you need them.',
+      color: 'green',
     },
   ],
 

@@ -30,34 +30,49 @@ export default function ServicesPage() {
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="bg-white dark:bg-gray-800 rounded-lg p-8 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
-            >
-              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-                {service.title}
-              </h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
-                {service.description}
-              </p>
-              {service.details && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {service.details}
+          {services.map((service, index) => {
+            // Color classes for each service
+            const colorClasses = {
+              blue: 'border-t-blue-500',
+              purple: 'border-t-purple-500',
+              green: 'border-t-green-500',
+            };
+            const titleColors = {
+              blue: 'text-blue-600 dark:text-blue-400',
+              purple: 'text-purple-600 dark:text-purple-400',
+              green: 'text-green-600 dark:text-green-400',
+            };
+            return (
+              <div
+                key={index}
+                className={`bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 border-t-4 ${colorClasses[service.color]} hover:shadow-lg transition-shadow`}
+              >
+                <h2 className={`text-xl font-bold mb-3 ${titleColors[service.color]}`}>
+                  {service.title}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  {service.description}
                 </p>
-              )}
-            </div>
-          ))}
+                {service.details && (
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {service.details}
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* What to Expect */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-8 border border-gray-200 dark:border-gray-700 mb-16">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 mb-16">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
             What You Can Expect
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex gap-4">
-              <div className="text-2xl">✓</div>
+              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+                <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Clear Communication</h3>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -66,7 +81,9 @@ export default function ServicesPage() {
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="text-2xl">✓</div>
+              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+                <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Quality Work</h3>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -75,7 +92,9 @@ export default function ServicesPage() {
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="text-2xl">✓</div>
+              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+                <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Fair Pricing</h3>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -84,7 +103,9 @@ export default function ServicesPage() {
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="text-2xl">✓</div>
+              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+                <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Timely Delivery</h3>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -106,13 +127,13 @@ export default function ServicesPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/how-it-works"
-              className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-full hover:bg-purple-700 transition-colors"
             >
               How It Works
             </Link>
             <Link
               href="/docs"
-              className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-semibold rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-semibold rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               FAQ
             </Link>

@@ -91,6 +91,20 @@ Usage: background-color: var(--primary-color);
   --yellow-900: #713f12;
 
   /* ======================================================================
+  PURPLES - Creativity & Premium (accent color for services)
+  ====================================================================== */
+  --purple-50: #faf5ff;
+  --purple-100: #f3e8ff;
+  --purple-200: #e9d5ff;
+  --purple-300: #d8b4fe;
+  --purple-400: #c084fc;
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
+  --purple-700: #7c3aed;
+  --purple-800: #6b21a8;
+  --purple-900: #581c87;
+
+  /* ======================================================================
   GRAYSCALE - Foundation & Neutral (70-80% of interface)
   ====================================================================== */
   --gray-50: #fafafa;
@@ -164,7 +178,7 @@ html,
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
 }
