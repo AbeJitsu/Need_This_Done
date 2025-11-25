@@ -95,6 +95,21 @@ export async function POST(request: Request) {
     }
 
     // ====================================================================
+    // Check for Authenticated User (Optional)
+    // ====================================================================
+    // If user is logged in, link the project to their account
+
+    let userId: string | null = null;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        userId = user.id;
+      }
+    } catch (err) {
+      // User not logged in - that's OK, continue as guest
+    }
+
+    // ====================================================================
     // Upload Files to Supabase Storage
     // ====================================================================
 
@@ -135,6 +150,7 @@ export async function POST(request: Request) {
         message: message.trim(),
         status: 'submitted',
         attachments: attachmentPaths.length > 0 ? attachmentPaths : null,
+        user_id: userId,
       })
       .select()
       .single();

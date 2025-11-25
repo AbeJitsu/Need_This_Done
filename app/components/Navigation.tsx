@@ -1,14 +1,18 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
+import { signOut } from '@/lib/auth';
 
 // ============================================================================
 // Navigation Component - Persistent Site Navigation
 // ============================================================================
-// Appears on every page. Shows current page and links to all 7 pages.
+// Appears on every page. Shows current page and links to all pages.
 // Uses Next.js Link for fast client-side navigation.
 // Active link is highlighted based on current URL.
+// Shows login link or user dropdown based on auth state.
 
 const navigationLinks = [
   { href: '/', label: 'Home' },
@@ -21,11 +25,38 @@ const navigationLinks = [
 
 export default function Navigation() {
   const pathname = usePathname();
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // ============================================================================
+  // Close Dropdown When Clicking Outside
+  // ============================================================================
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // ============================================================================
+  // Handle Logout
+  // ============================================================================
+
+  const handleLogout = async () => {
+    setShowDropdown(false);
+    await signOut();
+  };
 
   return (
     <nav className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-        <div className="flex items-center justify-between h-16 overflow-x-auto">
+        <div className="flex items-center justify-between h-16">
           {/* Logo / Home Link */}
           <Link
             href="/"
@@ -35,30 +66,94 @@ export default function Navigation() {
             Need This Done
           </Link>
 
-          {/* Navigation Links */}
-          <div className="flex gap-1 overflow-x-auto">
-            {navigationLinks.map((link) => {
-              const isActive =
-                pathname === link.href ||
-                (link.href !== '/' && pathname.startsWith(link.href));
+          {/* Navigation Links + Auth */}
+          <div className="flex items-center gap-4">
+            {/* Page Links */}
+            <div className="flex gap-1 overflow-x-auto">
+              {navigationLinks.map((link) => {
+                const isActive =
+                  pathname === link.href ||
+                  (link.href !== '/' && pathname.startsWith(link.href));
 
-              return (
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`
+                      px-3 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors
+                      ${
+                        isActive
+                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                      }
+                    `}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Auth Section */}
+            <div className="flex-shrink-0 border-l border-gray-200 dark:border-gray-700 pl-4">
+              {isLoading ? (
+                <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+              ) : isAuthenticated ? (
+                // Logged In - User Dropdown
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setShowDropdown(!showDropdown)}
+                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-md transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-semibold">
+                      {user?.email?.charAt(0).toUpperCase() || 'U'}
+                    </div>
+                    <span className="hidden sm:inline">Account</span>
+                  </button>
+
+                  {showDropdown && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
+                      <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Signed in as</p>
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                          {user?.email}
+                        </p>
+                      </div>
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setShowDropdown(false)}
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        Dashboard
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                // Logged Out - Login Link
                 <Link
-                  key={link.href}
-                  href={link.href}
+                  href="/login"
                   className={`
                     px-3 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors
                     ${
-                      isActive
+                      pathname === '/login'
                         ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
                         : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                     }
                   `}
                 >
-                  {link.label}
+                  Login
                 </Link>
-              );
-            })}
+              )}
+            </div>
           </div>
         </div>
       </div>
