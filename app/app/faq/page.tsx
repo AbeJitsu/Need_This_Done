@@ -14,7 +14,7 @@ export default function FAQPage() {
   const faqs = [
     {
       question: 'What types of tasks do you handle?',
-      answer: 'We help with all kinds of tasks—spreadsheets and data cleanup, document preparation, administrative work, computer help, and even website builds and updates. If you are not sure whether we can help, just ask! We are happy to discuss your needs.',
+      answer: 'We help with all kinds of tasks: spreadsheets and data cleanup, document preparation, administrative work, computer help, and even website builds and updates. If you are not sure whether we can help, just ask! We are happy to discuss your needs.',
     },
     {
       question: 'Do I need to be tech-savvy to work with you?',
@@ -56,10 +56,10 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Frequently Asked Questions
           </h1>
@@ -69,7 +69,7 @@ export default function FAQPage() {
         </div>
 
         {/* FAQ List */}
-        <div className="space-y-6 mb-16">
+        <div className="space-y-6 mb-10">
           {faqs.map((faq, index) => {
             // Cycle through colors: purple, blue, green
             const colors = ['purple', 'blue', 'green'] as const;
@@ -122,7 +122,7 @@ export default function FAQPage() {
         </div>
 
         {/* Contact Section */}
-        <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:bg-gray-800 dark:from-transparent dark:to-transparent rounded-xl p-8 border border-purple-200 dark:border-purple-700 text-center">
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:bg-gray-800 dark:from-transparent dark:to-transparent rounded-xl p-6 border border-blue-200 dark:border-blue-700 text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Still Have Questions?
           </h2>
@@ -132,7 +132,7 @@ export default function FAQPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/how-it-works"
-              className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-full hover:bg-purple-700 transition-colors"
+              className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors"
             >
               Learn How It Works
             </Link>

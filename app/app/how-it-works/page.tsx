@@ -71,12 +71,12 @@ export default function HowItWorksPage() {
         {/* Steps */}
         <div className="space-y-6 mb-10">
           {steps.map((step) => {
-            // Color progression: blue -> purple -> green -> blue
+            // Color progression: purple -> blue -> green -> repeat
             const stepColors = {
-              1: { bg: 'bg-blue-600', text: 'text-blue-600 dark:text-blue-400', bullet: 'text-blue-600 dark:text-blue-400' },
-              2: { bg: 'bg-purple-600', text: 'text-purple-600 dark:text-purple-400', bullet: 'text-purple-600 dark:text-purple-400' },
+              1: { bg: 'bg-purple-600', text: 'text-purple-600 dark:text-purple-400', bullet: 'text-purple-600 dark:text-purple-400' },
+              2: { bg: 'bg-blue-600', text: 'text-blue-600 dark:text-blue-400', bullet: 'text-blue-600 dark:text-blue-400' },
               3: { bg: 'bg-green-600', text: 'text-green-600 dark:text-green-400', bullet: 'text-green-600 dark:text-green-400' },
-              4: { bg: 'bg-blue-600', text: 'text-blue-600 dark:text-blue-400', bullet: 'text-blue-600 dark:text-blue-400' },
+              4: { bg: 'bg-purple-600', text: 'text-purple-600 dark:text-purple-400', bullet: 'text-purple-600 dark:text-purple-400' },
             };
             const colors = stepColors[step.number as keyof typeof stepColors];
             return (
@@ -111,11 +111,11 @@ export default function HowItWorksPage() {
         </div>
 
         {/* Timeline Note */}
-        <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-800 mb-10">
-          <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-2">
+        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800 mb-10">
+          <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
             Typical Timeline
           </h3>
-          <p className="text-purple-700 dark:text-purple-300">
+          <p className="text-blue-700 dark:text-blue-300">
             Most projects are completed within 1-2 weeks, depending on scope.
             Larger projects may take longer - we will provide a clear timeline with your quote.
           </p>

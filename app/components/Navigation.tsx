@@ -29,9 +29,10 @@ export default function Navigation() {
           {/* Logo / Home Link */}
           <Link
             href="/"
-            className="flex-shrink-0 font-bold text-lg text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="flex-shrink-0 font-semibold text-xl text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            style={{ fontFamily: 'var(--font-poppins)' }}
           >
-            NeedThisDone
+            Need This Done
           </Link>
 
           {/* Navigation Links */}
