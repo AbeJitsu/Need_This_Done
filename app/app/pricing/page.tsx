@@ -114,7 +114,7 @@ export default function PricingPage() {
                     <span className="text-4xl font-bold text-gray-900 dark:text-gray-100">
                       {tier.price}
                     </span>
-                    <span className="text-gray-500 dark:text-gray-400 text-sm ml-1">
+                    <span className="text-gray-600 dark:text-gray-300 text-sm ml-1">
                       {tier.period}
                     </span>
                   </div>

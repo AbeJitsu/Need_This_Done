@@ -97,7 +97,7 @@ export default function HowItWorksPage() {
                     </p>
                     <ul className="space-y-2">
                       {step.details.map((detail, index) => (
-                        <li key={index} className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                        <li key={index} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                           <span className={colors.bullet}>•</span>
                           {detail}
                         </li>
@@ -112,7 +112,7 @@ export default function HowItWorksPage() {
 
         {/* Timeline Note */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10">
-          <h3 className="font-semibold text-purple-600 dark:text-purple-400 mb-2">
+          <h3 className="font-semibold text-blue-600 dark:text-blue-400 mb-2">
             Typical Timeline
           </h3>
           <p className="text-gray-600 dark:text-gray-300">

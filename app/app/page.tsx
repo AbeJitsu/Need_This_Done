@@ -115,7 +115,7 @@ export default function HomePage() {
           <h2 className="text-2xl font-bold text-white mb-4">
             Ready to Get Started?
           </h2>
-          <p className="text-blue-100 mb-6">
+          <p className="text-white/90 mb-6">
             Have a task in mind? We would love to help.
           </p>
           <Link
