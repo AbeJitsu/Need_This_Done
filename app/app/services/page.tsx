@@ -8,7 +8,7 @@ import { siteConfig, getServices } from '@/config/site.config';
 
 export const metadata = {
   title: 'Services - NeedThisDone',
-  description: 'Explore the services we offer to help you get your projects done.',
+  description: 'We handle everyday tasks for busy professionals. Data, documents, admin work, and friendly tech help.',
 };
 
 export default function ServicesPage() {
@@ -21,10 +21,10 @@ export default function ServicesPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Our Services
+            How We Can Help
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            We help you get things done. Here is what we can do for you.
+            Too busy? Not sure where to start? We handle the tasks you don't have time for—so you can focus on what matters most.
           </p>
         </div>
 

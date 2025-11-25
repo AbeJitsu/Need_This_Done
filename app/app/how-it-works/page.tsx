@@ -7,37 +7,37 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'How It Works - NeedThisDone',
-  description: 'Learn about our simple process for getting your projects done.',
+  description: 'Our simple process for getting your tasks done. Tell us what you need, and we take it from there.',
 };
 
 export default function HowItWorksPage() {
   const steps = [
     {
       number: 1,
-      title: 'Submit Your Project',
-      description: 'Tell us what you need done. Be as detailed as possible - include files, examples, and any questions you have.',
+      title: 'Tell Us What You Need',
+      description: 'Describe your task in your own words. Include any files, examples, or questions—no tech speak required.',
       details: [
-        'Fill out our project request form',
+        'Fill out our simple contact form',
         'Attach any relevant files or documents',
-        'Describe your timeline and expectations',
+        'Let us know your timeline if you have one',
       ],
     },
     {
       number: 2,
       title: 'We Review & Respond',
-      description: 'We carefully review your request and get back to you within 2 business days with questions or a quote.',
+      description: 'We carefully review your request and get back to you within 2 business days with questions or a clear quote.',
       details: [
-        'We assess the scope of work',
+        'We assess what needs to be done',
         'We ask clarifying questions if needed',
-        'You receive a clear quote with timeline',
+        'You receive a straightforward quote',
       ],
     },
     {
       number: 3,
-      title: 'Project Begins',
-      description: 'Once you approve, we get to work. We keep you updated on progress throughout the project.',
+      title: 'We Get to Work',
+      description: 'Once you give the go-ahead, we start on your task. We keep you updated so you always know where things stand.',
       details: [
-        'Work begins on your project',
+        'Work begins on your task',
         'Regular updates on progress',
         'Open communication for questions',
       ],
@@ -45,11 +45,11 @@ export default function HowItWorksPage() {
     {
       number: 4,
       title: 'Review & Deliver',
-      description: 'You review the completed work. We make any needed adjustments until you are satisfied.',
+      description: 'You review the completed work. We make any needed adjustments until you are completely satisfied.',
       details: [
-        'You review the deliverables',
+        'You review what we have done',
         'We address any feedback',
-        'Final delivery and handoff',
+        'Final delivery—task complete!',
       ],
     },
   ];

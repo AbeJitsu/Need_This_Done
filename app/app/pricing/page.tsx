@@ -7,53 +7,53 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Pricing - NeedThisDone',
-  description: 'Transparent pricing for our services. No hidden fees.',
+  description: 'Simple, transparent pricing for everyday tasks. No hidden fees, no surprises.',
 };
 
 export default function PricingPage() {
   const pricingTiers = [
     {
-      name: 'Consultation',
-      price: '$150',
-      period: 'per session',
-      description: 'One-hour strategy session to discuss your project needs.',
+      name: 'Quick Task',
+      price: 'From $50',
+      period: 'per task',
+      description: 'Perfect for small, straightforward tasks that need quick attention.',
       features: [
-        'Project review and assessment',
-        'Expert recommendations',
-        'Clear action plan',
-        'Follow-up notes',
+        'Simple data entry or cleanup',
+        'Document formatting',
+        'Quick computer help',
+        'Fast turnaround',
       ],
       color: 'purple',
-      cta: 'Book Consultation',
+      cta: 'Get Started',
     },
     {
-      name: 'Standard Project',
-      price: 'From $500',
-      period: 'per project',
-      description: 'Small to medium projects with clear scope and deliverables.',
+      name: 'Standard Task',
+      price: 'From $150',
+      period: 'per task',
+      description: 'For tasks that need a bit more time and attention to detail.',
       features: [
-        'Clear project scope',
+        'Spreadsheet organization',
+        'Research and compilation',
         'Regular progress updates',
-        '2 revision rounds included',
-        'Final deliverables',
+        'Revisions included',
       ],
       color: 'blue',
       popular: true,
       cta: 'Get a Quote',
     },
     {
-      name: 'Ongoing Support',
-      price: '$200',
+      name: 'Ongoing Help',
+      price: 'From $200',
       period: 'per month',
-      description: 'Monthly retainer for continuous support and maintenance.',
+      description: 'Regular support for those who need consistent help with tasks.',
       features: [
-        'Priority support',
-        'Regular maintenance',
-        'Small updates included',
+        'Priority response time',
+        'Multiple tasks per month',
+        'Dedicated attention',
         'Monthly check-ins',
       ],
       color: 'green',
-      cta: 'Start Support',
+      cta: 'Learn More',
     },
   ];
 
@@ -147,21 +147,21 @@ export default function PricingPage() {
           })}
         </div>
 
-        {/* Custom Projects */}
+        {/* Custom Tasks */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 mb-16">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              Need Something Custom?
+              Not Sure What You Need?
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Every project is unique. If you have specific requirements or a larger scope in mind,
-              reach out and we will create a custom quote tailored to your needs.
+              Every task is different. Just tell us what you need help with and we will give you a clear,
+              honest quote. No pressure, no obligation—just straightforward pricing.
             </p>
             <Link
               href="/contact"
               className="inline-block px-8 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold rounded-full hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
             >
-              Request Custom Quote
+              Tell Us What You Need
             </Link>
           </div>
         </div>

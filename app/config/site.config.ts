@@ -36,32 +36,32 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   project: {
     name: 'NeedThisDone',
-    tagline: 'Get your projects done right',
-    description: 'A professional service platform for getting things done. Submit your project, get a quote, and let us handle the rest.',
+    tagline: 'Get your tasks done right',
+    description: 'We handle the tasks you don\'t have time for—real people getting everyday work done for busy professionals. Tell us what you need, and let us take care of the rest.',
     url: 'https://needthisdone.com',
   },
 
   // ========================================================================
   // Services
   // ========================================================================
-  // List of services offered - update with your actual services
+  // Core service offerings for busy professionals and everyday task help
   services: [
     {
-      title: 'Project Consultation',
-      description: 'Discuss your project needs and get expert guidance on the best approach.',
-      details: 'We review your requirements and provide clear recommendations.',
+      title: 'Data & Spreadsheets',
+      description: 'From messy data to organized insights. We handle spreadsheets, data entry, format conversions, and cleanup so you can focus on what matters.',
+      details: 'Excel, Google Sheets, CSV transformations, and more.',
       color: 'purple',
     },
     {
-      title: 'Custom Development',
-      description: 'Get your technical projects built by experienced professionals.',
-      details: 'From websites to applications, we handle the technical work.',
+      title: 'Documents & Admin',
+      description: 'Professional document preparation, formatting, research, and administrative tasks that free up your valuable time.',
+      details: 'Reports, presentations, correspondence, and organization.',
       color: 'blue',
     },
     {
-      title: 'Ongoing Support',
-      description: 'Keep your projects running smoothly with reliable maintenance.',
-      details: 'Updates, fixes, and improvements as you need them.',
+      title: 'Tech & Web Help',
+      description: 'From everyday computer questions to website builds and updates. Friendly, patient help with all things tech—no task too small.',
+      details: 'Software setup, troubleshooting, websites, and more.',
       color: 'green',
     },
   ],
@@ -71,7 +71,7 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   metadata: {
     siteName: 'NeedThisDone',
-    siteDescription: 'Professional project services - submit your project, get it done right.',
+    siteDescription: 'Real people helping busy professionals get tasks done. Data, documents, admin work, tech help, and websites.',
     author: 'NeedThisDone',
   },
 };

@@ -98,9 +98,9 @@ export default function HomePage() {
               <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
                 <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">1</span>
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Submit Your Project</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Tell Us What You Need</h3>
               <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Tell us what you need done. Include details, files, and any questions.
+                Describe your task, attach any files, and let us know your timeline.
               </p>
             </div>
             <div>
@@ -116,7 +116,7 @@ export default function HomePage() {
               <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                 <span className="text-2xl font-bold text-green-600 dark:text-green-400">3</span>
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Project Complete</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Task Complete</h3>
               <p className="text-gray-600 dark:text-gray-300 text-sm">
                 We handle the work and deliver results you can count on.
               </p>
@@ -138,7 +138,7 @@ export default function HomePage() {
             Ready to Get Started?
           </h2>
           <p className="text-blue-100 mb-6">
-            Have a project in mind? We would love to hear about it.
+            Have a task in mind? We would love to help.
           </p>
           <Link
             href="/contact"

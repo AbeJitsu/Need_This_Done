@@ -13,36 +13,44 @@ export const metadata = {
 export default function FAQPage() {
   const faqs = [
     {
-      question: 'What types of projects do you handle?',
-      answer: 'We handle a variety of projects including web development, technical consulting, and ongoing support. If you are not sure whether we can help, just ask - we are happy to discuss your needs.',
+      question: 'What types of tasks do you handle?',
+      answer: 'We help with all kinds of tasks—spreadsheets and data cleanup, document preparation, administrative work, computer help, and even website builds and updates. If you are not sure whether we can help, just ask! We are happy to discuss your needs.',
     },
     {
-      question: 'How long does a typical project take?',
-      answer: 'Most projects are completed within 1-2 weeks. Larger or more complex projects may take longer. We provide a clear timeline with every quote so you know what to expect.',
+      question: 'Do I need to be tech-savvy to work with you?',
+      answer: 'Not at all! We work with people of all technical backgrounds. Just describe what you need in your own words, and we will take it from there. No jargon required.',
+    },
+    {
+      question: 'How long does a typical task take?',
+      answer: 'Most tasks are completed within a few days to a week. Larger projects may take longer, but we always provide a clear timeline upfront so you know what to expect.',
     },
     {
       question: 'How much does it cost?',
-      answer: 'Pricing depends on the scope and complexity of your project. We provide transparent quotes with no hidden fees. Submit your project details and we will give you a clear estimate.',
+      answer: 'Pricing depends on the scope and complexity of your task. We provide transparent quotes with no hidden fees. Tell us what you need, and we will give you a clear estimate before any work begins.',
     },
     {
       question: 'How do I get started?',
-      answer: 'Simply reach out with your project details. We will review your request and get back to you within 2 business days with questions or a quote.',
+      answer: 'Simply reach out through our contact form and describe what you need help with. We will review your request and get back to you within 2 business days with questions or a quote.',
+    },
+    {
+      question: 'Can you help with one-time tasks or just ongoing work?',
+      answer: 'Both! Whether you have a single task that needs attention or want regular ongoing support, we are here to help. Many clients start with a one-time task and come back when something else comes up.',
     },
     {
       question: 'What if I need changes after delivery?',
-      answer: 'We want you to be satisfied with the work. We include reasonable revisions as part of every project. If you need changes, just let us know and we will address them.',
+      answer: 'We want you to be completely satisfied. We include reasonable revisions as part of every task. If something is not quite right, just let us know and we will make it right.',
     },
     {
       question: 'How do you handle communication?',
-      answer: 'We keep you updated throughout the project. You can expect regular progress updates and quick responses to your questions. Clear communication is a priority.',
+      answer: 'We keep you updated every step of the way. You can expect clear progress updates and quick responses to your questions. We believe good communication makes everything easier.',
     },
     {
       question: 'What payment methods do you accept?',
-      answer: 'We accept major credit cards and other common payment methods. Payment details are discussed when you approve the quote.',
+      answer: 'We accept major credit cards and other common payment methods. Payment details are discussed when you approve the quote—no surprises.',
     },
     {
-      question: 'Do you offer ongoing support?',
-      answer: 'Yes! We offer ongoing support and maintenance services. This is great for projects that need regular updates or for clients who want continued assistance.',
+      question: 'What if I have a question that is not listed here?',
+      answer: 'We would love to hear from you! Reach out through our contact page and we will be happy to answer any questions you have.',
     },
   ];
 
