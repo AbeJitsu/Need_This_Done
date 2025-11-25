@@ -80,10 +80,10 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Simple, Transparent Pricing
           </h1>
@@ -93,13 +93,13 @@ export default function PricingPage() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
           {pricingTiers.map((tier, index) => {
             const colors = colorClasses[tier.color as keyof typeof colorClasses];
             return (
               <div
                 key={index}
-                className={`relative bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 border-t-4 ${colors.border} ${tier.popular ? 'ring-2 ring-blue-500 dark:ring-blue-400' : ''}`}
+                className={`relative bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 border-t-4 ${colors.border} ${tier.popular ? 'ring-2 ring-blue-500 dark:ring-blue-400' : ''}`}
               >
                 {tier.popular && (
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
@@ -148,14 +148,14 @@ export default function PricingPage() {
         </div>
 
         {/* Custom Tasks */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 mb-16">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Not Sure What You Need?
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
               Every task is different. Just tell us what you need help with and we will give you a clear,
-              honest quote. No pressure, no obligation—just straightforward pricing.
+              honest quote. No pressure, no obligation. Just straightforward pricing.
             </p>
             <Link
               href="/contact"

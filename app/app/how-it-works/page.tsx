@@ -15,7 +15,7 @@ export default function HowItWorksPage() {
     {
       number: 1,
       title: 'Tell Us What You Need',
-      description: 'Describe your task in your own words. Include any files, examples, or questions—no tech speak required.',
+      description: 'Describe your task in your own words. Include any files, examples, or questions. No tech speak required.',
       details: [
         'Fill out our simple contact form',
         'Attach any relevant files or documents',
@@ -49,17 +49,17 @@ export default function HowItWorksPage() {
       details: [
         'You review what we have done',
         'We address any feedback',
-        'Final delivery—task complete!',
+        'Final delivery. Task complete!',
       ],
     },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             How It Works
           </h1>
@@ -69,7 +69,7 @@ export default function HowItWorksPage() {
         </div>
 
         {/* Steps */}
-        <div className="space-y-8 mb-16">
+        <div className="space-y-6 mb-10">
           {steps.map((step) => {
             // Color progression: blue -> purple -> green -> blue
             const stepColors = {
@@ -82,7 +82,7 @@ export default function HowItWorksPage() {
             return (
               <div
                 key={step.number}
-                className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700"
+                className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
               >
                 <div className="flex items-start gap-6">
                   <div className={`flex-shrink-0 w-12 h-12 ${colors.bg} text-white rounded-full flex items-center justify-center text-xl font-bold`}>
@@ -111,7 +111,7 @@ export default function HowItWorksPage() {
         </div>
 
         {/* Timeline Note */}
-        <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-800 mb-16">
+        <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-800 mb-10">
           <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-2">
             Typical Timeline
           </h3>

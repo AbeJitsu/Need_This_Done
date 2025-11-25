@@ -16,20 +16,20 @@ export default function ServicesPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             How We Can Help
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Too busy? Not sure where to start? We handle the tasks you don't have time for—so you can focus on what matters most.
+            Too busy? Not sure where to start? We handle the tasks you don't have time for, so you can focus on what matters most.
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
           {services.map((service, index) => {
             // Color classes for each service
             const colorClasses = {
@@ -45,7 +45,7 @@ export default function ServicesPage() {
             return (
               <div
                 key={index}
-                className={`bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 border-t-4 ${colorClasses[service.color]} hover:shadow-lg transition-shadow`}
+                className={`bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 border-t-4 ${colorClasses[service.color]} hover:shadow-lg transition-shadow`}
               >
                 <h2 className={`text-xl font-bold mb-3 ${titleColors[service.color]}`}>
                   {service.title}
@@ -64,7 +64,7 @@ export default function ServicesPage() {
         </div>
 
         {/* What to Expect */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 mb-16">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
             What You Can Expect
           </h2>
