@@ -5,6 +5,9 @@
 
 FROM nginx:alpine
 
+# Remove default nginx config that intercepts localhost requests
+RUN rm /etc/nginx/conf.d/default.conf
+
 # Copy our custom configuration into the container
 # :ro = read-only (container can't accidentally modify it)
 COPY nginx.conf /etc/nginx/nginx.conf:ro

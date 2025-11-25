@@ -11,8 +11,6 @@
 # - All dependencies installed (including dev tools)
 # - Extra logging and debugging tools
 
-version: '3.8'
-
 services:
   app:
     # Use the development Dockerfile instead of production
