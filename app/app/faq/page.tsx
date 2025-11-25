@@ -77,21 +77,24 @@ export default function FAQPage() {
             const colorClasses = {
               purple: {
                 border: 'border-l-purple-500',
-                text: 'text-purple-600 dark:text-purple-400',
-                bg: 'bg-purple-100 dark:bg-purple-900/30',
-                hover: 'hover:border-purple-400 dark:hover:border-purple-600',
+                text: 'text-purple-700 dark:text-purple-300',
+                bg: 'bg-purple-100 dark:bg-purple-700',
+                numText: 'text-purple-700 dark:text-white',
+                hover: 'hover:border-purple-400 dark:hover:border-purple-400',
               },
               blue: {
                 border: 'border-l-blue-500',
-                text: 'text-blue-600 dark:text-blue-400',
-                bg: 'bg-blue-100 dark:bg-blue-900/30',
-                hover: 'hover:border-blue-400 dark:hover:border-blue-600',
+                text: 'text-blue-700 dark:text-blue-300',
+                bg: 'bg-blue-100 dark:bg-blue-700',
+                numText: 'text-blue-700 dark:text-white',
+                hover: 'hover:border-blue-400 dark:hover:border-blue-400',
               },
               green: {
                 border: 'border-l-green-500',
-                text: 'text-green-600 dark:text-green-400',
-                bg: 'bg-green-100 dark:bg-green-900/30',
-                hover: 'hover:border-green-400 dark:hover:border-green-600',
+                text: 'text-green-700 dark:text-green-300',
+                bg: 'bg-green-100 dark:bg-green-700',
+                numText: 'text-green-700 dark:text-white',
+                hover: 'hover:border-green-400 dark:hover:border-green-400',
               },
             };
             const styles = colorClasses[color];
@@ -102,7 +105,7 @@ export default function FAQPage() {
               >
                 <div className="flex items-start gap-4">
                   <div className={`flex-shrink-0 w-8 h-8 rounded-full ${styles.bg} flex items-center justify-center`}>
-                    <span className={`text-sm font-bold ${styles.text}`}>{index + 1}</span>
+                    <span className={`text-sm font-bold ${styles.numText}`}>{index + 1}</span>
                   </div>
                   <div>
                     <h2 className={`text-lg font-semibold mb-2 ${styles.text}`}>
