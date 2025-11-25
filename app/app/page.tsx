@@ -95,8 +95,8 @@ export default function HomePage() {
           </h2>
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
-              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">1</span>
+              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">1</span>
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Submit Your Project</h3>
               <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -104,8 +104,8 @@ export default function HomePage() {
               </p>
             </div>
             <div>
-              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">2</span>
+              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">2</span>
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Get a Response</h3>
               <p className="text-gray-600 dark:text-gray-300 text-sm">
