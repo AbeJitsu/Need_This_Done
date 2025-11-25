@@ -69,14 +69,14 @@ export default function HowItWorksPage() {
         </div>
 
         {/* Steps */}
-        <div className="space-y-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
           {steps.map((step) => {
             // Color progression: purple -> blue -> green -> repeat
             const stepColors = {
               1: { bg: 'bg-purple-600', text: 'text-purple-600 dark:text-purple-400', bullet: 'text-purple-600 dark:text-purple-400' },
               2: { bg: 'bg-blue-600', text: 'text-blue-600 dark:text-blue-400', bullet: 'text-blue-600 dark:text-blue-400' },
               3: { bg: 'bg-green-600', text: 'text-green-600 dark:text-green-400', bullet: 'text-green-600 dark:text-green-400' },
-              4: { bg: 'bg-purple-600', text: 'text-purple-600 dark:text-purple-400', bullet: 'text-purple-600 dark:text-purple-400' },
+              4: { bg: 'bg-amber-500', text: 'text-amber-600 dark:text-amber-400', bullet: 'text-amber-600 dark:text-amber-400' },
             };
             const colors = stepColors[step.number as keyof typeof stepColors];
             return (
