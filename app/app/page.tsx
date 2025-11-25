@@ -19,6 +19,10 @@ export default function HomePage() {
 
         {/* Hero Section */}
         <div className="text-center mb-16">
+          {/* Yellow badge - creates warmth and urgency */}
+          <span className="inline-block bg-yellow-100 dark:bg-transparent text-yellow-800 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-500 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+            Fast 2-Day Response
+          </span>
           <h1 className="text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6">
             {siteConfig.project.name}
           </h1>
@@ -129,7 +133,7 @@ export default function HomePage() {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 dark:from-blue-800 dark:via-purple-800 dark:to-blue-800 rounded-xl p-8">
+        <div className="text-center bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 rounded-xl p-8">
           <h2 className="text-2xl font-bold text-white mb-4">
             Ready to Get Started?
           </h2>
@@ -138,7 +142,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/docs"
-            className="inline-block px-8 py-3 bg-white text-purple-600 font-semibold rounded-full hover:bg-purple-50 transition-colors"
+            className="inline-block px-8 py-3 bg-white text-red-600 font-semibold rounded-full hover:bg-red-50 border-2 border-red-100 transition-colors"
           >
             Contact Us
           </Link>
