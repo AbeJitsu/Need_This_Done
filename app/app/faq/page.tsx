@@ -70,19 +70,52 @@ export default function FAQPage() {
 
         {/* FAQ List */}
         <div className="space-y-6 mb-16">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 transition-colors"
-            >
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                {faq.question}
-              </h2>
-              <p className="text-gray-600 dark:text-gray-300">
-                {faq.answer}
-              </p>
-            </div>
-          ))}
+          {faqs.map((faq, index) => {
+            // Cycle through colors: purple, blue, green
+            const colors = ['purple', 'blue', 'green'] as const;
+            const color = colors[index % 3];
+            const colorClasses = {
+              purple: {
+                border: 'border-l-purple-500',
+                text: 'text-purple-600 dark:text-purple-400',
+                bg: 'bg-purple-100 dark:bg-purple-900/30',
+                hover: 'hover:border-purple-400 dark:hover:border-purple-600',
+              },
+              blue: {
+                border: 'border-l-blue-500',
+                text: 'text-blue-600 dark:text-blue-400',
+                bg: 'bg-blue-100 dark:bg-blue-900/30',
+                hover: 'hover:border-blue-400 dark:hover:border-blue-600',
+              },
+              green: {
+                border: 'border-l-green-500',
+                text: 'text-green-600 dark:text-green-400',
+                bg: 'bg-green-100 dark:bg-green-900/30',
+                hover: 'hover:border-green-400 dark:hover:border-green-600',
+              },
+            };
+            const styles = colorClasses[color];
+            return (
+              <div
+                key={index}
+                className={`bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 border-l-4 ${styles.border} ${styles.hover} transition-colors`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full ${styles.bg} flex items-center justify-center`}>
+                    <span className={`text-sm font-bold ${styles.text}`}>{index + 1}</span>
+                  </div>
+                  <div>
+                    <h2 className={`text-lg font-semibold mb-2 ${styles.text}`}>
+                      {faq.question}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Contact Section */}
