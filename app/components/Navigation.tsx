@@ -12,9 +12,11 @@ import { usePathname } from 'next/navigation';
 
 const navigationLinks = [
   { href: '/', label: 'Home' },
-  { href: '/features', label: 'Services' },
+  { href: '/services', label: 'Services' },
+  { href: '/pricing', label: 'Pricing' },
   { href: '/how-it-works', label: 'How It Works' },
-  { href: '/docs', label: 'FAQ' },
+  { href: '/faq', label: 'FAQ' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Navigation() {

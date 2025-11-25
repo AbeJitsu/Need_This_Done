@@ -131,13 +131,13 @@ export default function HowItWorksPage() {
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
-              href="/docs"
+              href="/faq"
               className="px-6 py-3 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors"
             >
               View FAQ
             </Link>
             <Link
-              href="/features"
+              href="/services"
               className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-semibold rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               Our Services

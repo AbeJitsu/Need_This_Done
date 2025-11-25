@@ -132,7 +132,7 @@ export default function ServicesPage() {
               How It Works
             </Link>
             <Link
-              href="/docs"
+              href="/faq"
               className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-semibold rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               FAQ

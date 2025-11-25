@@ -93,7 +93,7 @@ export default function FAQPage() {
               Learn How It Works
             </Link>
             <Link
-              href="/features"
+              href="/services"
               className="px-6 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-semibold rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
             >
               View Services
