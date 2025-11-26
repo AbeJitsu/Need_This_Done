@@ -120,7 +120,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/contact"
-            className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors"
+            className="inline-block px-8 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold rounded-full hover:bg-white hover:text-gray-900 dark:hover:bg-gray-900 dark:hover:text-white border border-transparent hover:border-gray-900 dark:hover:border-gray-100 transition-all"
           >
             Tell Us What You Need
           </Link>

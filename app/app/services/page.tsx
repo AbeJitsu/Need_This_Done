@@ -108,13 +108,13 @@ export default function ServicesPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/how-it-works"
-              className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-full hover:bg-purple-700 hover:text-white transition-colors"
+              className="px-6 py-3 bg-amber-500 text-white font-semibold rounded-full hover:bg-white hover:text-amber-600 border border-transparent hover:border-amber-500 transition-all"
             >
               How It Works
             </Link>
             <Link
               href="/faq"
-              className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-semibold rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="px-6 py-3 bg-teal-500 text-white font-semibold rounded-full hover:bg-white hover:text-teal-600 border border-transparent hover:border-teal-500 transition-all"
             >
               FAQ
             </Link>
