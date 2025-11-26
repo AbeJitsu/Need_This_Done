@@ -231,7 +231,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting || !email || (!isForgotPassword && !password)}
-              className="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-all"
+              className="w-full py-3 px-6 bg-blue-200 text-blue-700 font-semibold rounded-full border border-blue-300 dark:bg-blue-500 dark:text-gray-900 dark:border-blue-100 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-200 dark:hover:text-blue-800 dark:hover:border-blue-300 disabled:bg-blue-100 disabled:text-blue-400 disabled:border-blue-200 dark:disabled:bg-blue-300 dark:disabled:text-blue-900 dark:disabled:border-blue-100 disabled:cursor-not-allowed transition-all"
             >
               {isSubmitting
                 ? isForgotPassword

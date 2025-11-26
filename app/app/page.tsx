@@ -39,7 +39,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/services"
-              className="px-8 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-semibold rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="px-8 py-3 bg-gray-200 text-gray-700 font-semibold rounded-full border border-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-500 hover:bg-gray-600 hover:text-white hover:border-gray-600 dark:hover:bg-gray-200 dark:hover:text-gray-800 dark:hover:border-gray-300 transition-all"
             >
               View Services
             </Link>
@@ -120,7 +120,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/contact"
-            className="inline-block px-8 py-3 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 font-semibold rounded-full ring-1 ring-gray-700 dark:ring-gray-400 hover:bg-gray-100 hover:text-gray-800 hover:ring-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-100 dark:hover:ring-gray-500 transition-all"
+            className="inline-block px-8 py-3 bg-amber-100 text-amber-900 font-semibold rounded-full border border-amber-300 dark:bg-yellow-500 dark:text-gray-900 dark:border-yellow-100 hover:bg-amber-600 hover:text-white hover:border-amber-600 dark:hover:bg-yellow-200 dark:hover:text-yellow-900 dark:hover:border-yellow-300 transition-all"
           >
             Tell Us What You Need
           </Link>
