@@ -26,7 +26,15 @@ export default function FAQPage() {
     },
     {
       question: 'How much does it cost?',
-      answer: "Pricing depends on the scope and complexity of your task. We provide transparent quotes with no hidden fees. Tell us what you need, and we'll give you a clear estimate before any work begins.",
+      answer: (
+        <>
+          Pricing depends on the scope and complexity of your task. Check out our{' '}
+          <Link href="/pricing" className="text-blue-700 dark:text-blue-400 font-medium hover:underline">
+            pricing page
+          </Link>{' '}
+          for general ranges. We provide transparent quotes with no hidden fees—tell us what you need, and we'll give you a clear estimate before any work begins.
+        </>
+      ),
     },
     {
       question: 'How do I get started?',

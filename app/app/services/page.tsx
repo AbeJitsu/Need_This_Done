@@ -51,8 +51,8 @@ export default function ServicesPage() {
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
+                <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Clear Communication</h3>
@@ -62,8 +62,8 @@ export default function ServicesPage() {
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
+                <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Quality Work</h3>
@@ -73,8 +73,8 @@ export default function ServicesPage() {
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
+                <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Fair Pricing</h3>
@@ -84,8 +84,8 @@ export default function ServicesPage() {
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600 dark:text-green-400 font-bold">✓</span>
+              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
+                <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Timely Delivery</h3>
