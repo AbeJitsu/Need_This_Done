@@ -33,7 +33,7 @@ export default function HomePage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/how-it-works"
-              className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors"
+              className="px-8 py-3 bg-blue-200 text-blue-700 font-semibold rounded-full border border-blue-300 dark:bg-blue-800 dark:text-blue-200 dark:border-blue-400 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-200 dark:hover:text-blue-800 dark:hover:border-blue-300 transition-all"
             >
               See How It Works
             </Link>

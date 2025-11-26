@@ -343,7 +343,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 px-6 bg-purple-500 text-white font-semibold rounded-full hover:bg-purple-600 disabled:bg-purple-300 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.15)] dark:ring-1 dark:ring-gray-600 dark:hover:ring-gray-400 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.2)]"
+                className="w-full py-3 px-6 bg-purple-200 text-purple-700 font-semibold rounded-full border border-purple-300 dark:bg-purple-800 dark:text-purple-200 dark:border-purple-400 hover:bg-purple-600 hover:text-white hover:border-purple-600 dark:hover:bg-purple-200 dark:hover:text-purple-800 dark:hover:border-purple-300 disabled:bg-purple-100 disabled:text-purple-400 disabled:border-purple-200 dark:disabled:bg-purple-900 dark:disabled:text-purple-500 dark:disabled:border-purple-600 disabled:cursor-not-allowed transition-all"
               >
                 {isSubmitting ? 'Sending...' : 'Send My Request'}
               </button>

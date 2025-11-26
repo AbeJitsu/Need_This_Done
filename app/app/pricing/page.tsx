@@ -60,19 +60,19 @@ export default function PricingPage() {
   const colorClasses = {
     purple: {
       border: 'border-t-purple-500',
-      bg: 'bg-purple-600 hover:bg-purple-700',
+      bg: 'bg-purple-200 text-purple-700 border border-purple-300 dark:bg-purple-800 dark:text-purple-200 dark:border-purple-400 hover:bg-purple-600 hover:text-white hover:border-purple-600 dark:hover:bg-purple-200 dark:hover:text-purple-800 dark:hover:border-purple-300',
       text: 'text-purple-600 dark:text-purple-400',
       light: 'bg-purple-100 dark:bg-purple-900/30',
     },
     blue: {
       border: 'border-t-blue-500',
-      bg: 'bg-blue-600 hover:bg-blue-700',
+      bg: 'bg-blue-200 text-blue-700 border border-blue-300 dark:bg-blue-800 dark:text-blue-200 dark:border-blue-400 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-200 dark:hover:text-blue-800 dark:hover:border-blue-300',
       text: 'text-blue-600 dark:text-blue-400',
       light: 'bg-blue-100 dark:bg-blue-900/30',
     },
     green: {
       border: 'border-t-green-500',
-      bg: 'bg-green-600 hover:bg-green-700',
+      bg: 'bg-green-200 text-green-700 border border-green-300 dark:bg-green-800 dark:text-green-200 dark:border-green-400 hover:bg-green-600 hover:text-white hover:border-green-600 dark:hover:bg-green-200 dark:hover:text-green-800 dark:hover:border-green-300',
       text: 'text-green-600 dark:text-green-400',
       light: 'bg-green-100 dark:bg-green-900/30',
     },
@@ -138,7 +138,7 @@ export default function PricingPage() {
 
                 <Link
                   href="/contact"
-                  className={`block w-full text-center py-3 px-6 rounded-full font-semibold text-white ${colors.bg} transition-colors`}
+                  className={`block w-full text-center py-3 px-6 rounded-full font-semibold ${colors.bg} transition-all`}
                 >
                   {tier.cta}
                 </Link>
