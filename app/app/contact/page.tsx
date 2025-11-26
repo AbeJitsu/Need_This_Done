@@ -359,14 +359,13 @@ export default function ContactPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/services"
-              className="text-blue-700 dark:text-blue-400 font-medium hover:underline"
+              className="px-6 py-3 bg-amber-100 text-amber-900 font-semibold rounded-full border border-amber-300 hover:bg-amber-600 hover:text-white hover:border-amber-600 transition-all"
             >
               View Our Services
             </Link>
-            <span className="text-gray-400">|</span>
             <Link
               href="/faq"
-              className="text-green-700 dark:text-green-400 font-medium hover:underline"
+              className="px-6 py-3 bg-teal-100 text-teal-900 font-semibold rounded-full border border-teal-300 hover:bg-teal-600 hover:text-white hover:border-teal-600 transition-all"
             >
               Read the FAQ
             </Link>

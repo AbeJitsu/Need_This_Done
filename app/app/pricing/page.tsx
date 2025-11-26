@@ -159,7 +159,7 @@ export default function PricingPage() {
             </p>
             <Link
               href="/contact"
-              className="inline-block px-8 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold rounded-full hover:bg-white hover:text-gray-900 dark:hover:bg-gray-900 dark:hover:text-white border border-transparent hover:border-gray-900 dark:hover:border-gray-100 transition-all"
+              className="inline-block px-8 py-3 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 font-semibold rounded-full ring-1 ring-gray-700 dark:ring-gray-400 hover:bg-gray-100 hover:text-gray-800 hover:ring-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-100 dark:hover:ring-gray-500 transition-all"
             >
               Tell Us What You Need
             </Link>
