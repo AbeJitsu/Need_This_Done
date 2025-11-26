@@ -49,21 +49,21 @@ const siteConfig: SiteConfig = {
   services: [
     {
       title: 'Virtual Assistant',
-      tagline: 'Email, scheduling, research & social media',
+      tagline: 'Free up your time for what matters',
       description: 'Let us handle the day-to-day tasks that eat up your time. Email, scheduling, research, bookings, and social media posting.',
       details: 'Email management, calendar coordination, research & bookings.',
       color: 'purple',
     },
     {
       title: 'Data & Documents',
-      tagline: 'Spreadsheets, reports & file organization',
+      tagline: 'From messy data to polished documents',
       description: 'From messy spreadsheets to polished reports. We organize, format, and prepare your documents so they look professional.',
       details: 'Spreadsheets, data entry, reports, presentations, file organization.',
       color: 'blue',
     },
     {
       title: 'Website Services',
-      tagline: 'Builds, updates & e-commerce',
+      tagline: 'Websites that work while you focus on business',
       description: 'From new builds to updates and maintenance. We handle websites of any size on any platform—so you can focus on your business.',
       details: 'Website builds & redesigns, content updates, e-commerce setup.',
       color: 'green',

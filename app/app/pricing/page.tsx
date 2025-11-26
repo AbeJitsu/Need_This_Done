@@ -21,7 +21,7 @@ export default function PricingPage() {
         'Content updates & simple edits',
         'Data entry & quick formatting',
         'Document formatting',
-        'Fast turnaround',
+        'Get it done in days, not weeks',
       ],
       color: 'purple',
       cta: 'Get Started',
@@ -35,7 +35,7 @@ export default function PricingPage() {
         'Research projects',
         'Spreadsheet organization',
         'Multi-step tasks',
-        'Revisions included',
+        "Revisions included until you're happy",
       ],
       color: 'blue',
       popular: true,
@@ -50,7 +50,7 @@ export default function PricingPage() {
         'Website builds & redesigns',
         'E-commerce setup',
         'Larger multi-phase projects',
-        'Dedicated project management',
+        'A dedicated point of contact throughout',
       ],
       color: 'green',
       cta: 'Get a Quote',
@@ -154,7 +154,7 @@ export default function PricingPage() {
               Not Sure What You Need?
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Every task is different. Just tell us what you need help with and we will give you a clear,
+              Every task is different. Just tell us what you need help with and we'll give you a clear,
               honest quote. No pressure, no obligation. Just straightforward pricing.
             </p>
             <Link

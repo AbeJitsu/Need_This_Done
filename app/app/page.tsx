@@ -116,13 +116,13 @@ export default function HomePage() {
             Ready to Get Started?
           </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            Have a task in mind? We would love to help.
+            Have a task in mind? We'd love to help.
           </p>
           <Link
             href="/contact"
             className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors"
           >
-            Contact Us
+            Tell Us What You Need
           </Link>
         </div>
       </div>

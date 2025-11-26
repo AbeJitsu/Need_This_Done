@@ -64,7 +64,7 @@ export default function HowItWorksPage() {
             How It Works
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            A simple, straightforward process to get your project done right.
+            Here's how we work together to get your project done right.
           </p>
         </div>
 
@@ -117,17 +117,17 @@ export default function HowItWorksPage() {
           </h3>
           <p className="text-gray-600 dark:text-gray-300">
             Most projects are completed within 1-2 weeks, depending on scope.
-            Larger projects may take longer - we will provide a clear timeline with your quote.
+            Larger projects may take longer - we'll provide a clear timeline with your quote.
           </p>
         </div>
 
         {/* CTA */}
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Questions?
+            Ready to Get Started?
           </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            Check our FAQ or view our services to learn more.
+            Check out our FAQ or explore our services.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link

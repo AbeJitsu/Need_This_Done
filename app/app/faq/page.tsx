@@ -14,11 +14,11 @@ export default function FAQPage() {
   const faqs = [
     {
       question: 'What types of tasks do you handle?',
-      answer: 'We help with all kinds of tasks: spreadsheets and data cleanup, document preparation, administrative work, computer help, and even website builds and updates. If you are not sure whether we can help, just ask! We are happy to discuss your needs.',
+      answer: "We help with all kinds of tasks: spreadsheets and data cleanup, document preparation, administrative work, computer help, and even website builds and updates. If you're not sure whether we can help, just ask! We're happy to discuss your needs.",
     },
     {
       question: 'Do I need to be tech-savvy to work with you?',
-      answer: 'Not at all! We work with people of all technical backgrounds. Just describe what you need in your own words, and we will take it from there. No jargon required.',
+      answer: "Not at all! We work with people of all technical backgrounds. Just describe what you need in your own words, and we'll take it from there. No jargon required.",
     },
     {
       question: 'How long does a typical task take?',
@@ -26,19 +26,19 @@ export default function FAQPage() {
     },
     {
       question: 'How much does it cost?',
-      answer: 'Pricing depends on the scope and complexity of your task. We provide transparent quotes with no hidden fees. Tell us what you need, and we will give you a clear estimate before any work begins.',
+      answer: "Pricing depends on the scope and complexity of your task. We provide transparent quotes with no hidden fees. Tell us what you need, and we'll give you a clear estimate before any work begins.",
     },
     {
       question: 'How do I get started?',
-      answer: 'Simply reach out through our contact form and describe what you need help with. We will review your request and get back to you within 2 business days with questions or a quote.',
+      answer: "Simply reach out through our contact form and describe what you need help with. We'll review your request and get back to you within 2 business days with questions or a quote.",
     },
     {
       question: 'Can you help with one-time tasks or just ongoing work?',
-      answer: 'Both! Whether you have a single task that needs attention or want regular ongoing support, we are here to help. Many clients start with a one-time task and come back when something else comes up.',
+      answer: "Both! Whether you have a single task that needs attention or want regular ongoing support, we're here to help. Many clients start with a one-time task and come back when something else comes up.",
     },
     {
       question: 'What if I need changes after delivery?',
-      answer: 'We want you to be completely satisfied. We include reasonable revisions as part of every task. If something is not quite right, just let us know and we will make it right.',
+      answer: "We want you to be completely satisfied. We include reasonable revisions as part of every task. If something isn't quite right, just let us know and we'll make it right.",
     },
     {
       question: 'How do you handle communication?',
@@ -46,11 +46,11 @@ export default function FAQPage() {
     },
     {
       question: 'What payment methods do you accept?',
-      answer: 'We accept major credit cards and other common payment methods. Payment details are discussed when you approve the quote—no surprises.',
+      answer: "We accept major credit cards and other common payment methods. Payment details are discussed when you approve the quote - no surprises.",
     },
     {
       question: 'What if I have a question that is not listed here?',
-      answer: 'We would love to hear from you! Reach out through our contact page and we will be happy to answer any questions you have.',
+      answer: "We'd love to hear from you! Reach out through our contact page and we'll be happy to answer any questions you have.",
     },
   ];
 
@@ -64,7 +64,7 @@ export default function FAQPage() {
             Frequently Asked Questions
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Common questions about working with us.
+            Your questions, answered.
           </p>
         </div>
 
@@ -127,7 +127,7 @@ export default function FAQPage() {
             Still Have Questions?
           </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            We are here to help. Reach out and we will get back to you promptly.
+            We're here to help. Reach out and we'll get back to you promptly.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link

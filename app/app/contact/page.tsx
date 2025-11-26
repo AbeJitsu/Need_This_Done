@@ -146,7 +146,7 @@ export default function ContactPage() {
             Get In Touch
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Ready to start your project? Fill out the form below and we will get back to you within 2 business days.
+            Have a task in mind? Tell us about it and we'll get back to you within 2 business days.
           </p>
         </div>
 
@@ -161,7 +161,7 @@ export default function ContactPage() {
                 Message Sent!
               </h2>
               <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Thank you for reaching out. We will review your inquiry and get back to you within 2 business days.
+                Thank you for reaching out. We'll review your request and get back to you within 2 business days.
               </p>
               <button
                 onClick={() => setSubmitStatus('idle')}
@@ -334,7 +334,7 @@ export default function ContactPage() {
               {submitStatus === 'error' && (
                 <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
                   <p className="text-red-700 dark:text-red-300 text-sm">
-                    Something went wrong. Please try again or email us directly.
+                    Something went wrong. Please try again, or reach out to us another way - we're here to help.
                   </p>
                 </div>
               )}
@@ -345,7 +345,7 @@ export default function ContactPage() {
                 disabled={isSubmitting}
                 className="w-full py-3 px-6 bg-purple-500 text-white font-semibold rounded-full hover:bg-purple-600 disabled:bg-purple-300 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.15)] dark:ring-1 dark:ring-gray-600 dark:hover:ring-gray-400 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.2)]"
               >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+                {isSubmitting ? 'Sending...' : 'Send My Request'}
               </button>
             </form>
           )}
@@ -354,7 +354,7 @@ export default function ContactPage() {
         {/* Alternative Contact */}
         <div className="text-center">
           <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Prefer to learn more first?
+            Want to learn more first?
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link

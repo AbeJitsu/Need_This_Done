@@ -103,7 +103,7 @@ export default function ServicesPage() {
             Ready to Get Started?
           </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            Learn more about our process or get in touch.
+            See how we work, or let's get started.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
