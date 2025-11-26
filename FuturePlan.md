@@ -10,6 +10,8 @@
 - ServiceCard component
 - UI styling and hover effects (light + dark mode)
 - Authentication foundation (Supabase auth configured)
+- **Email/password login** - full implementation with password reset
+- **Google OAuth sign-in** - implemented with callback handler and UI button
 - Supabase foundation with demo patterns
 - Docker deployment setup
 
@@ -83,9 +85,19 @@ CREATE INDEX projects_user_id_idx ON projects(user_id);
 | 2 | API route | Done |
 | 3 | Wire contact form | Done |
 | 4 | File uploads | Done |
-| 5 | Client dashboard | **Next** |
-| 6 | Email notifications | Pending |
-| 7 | Admin dashboard | Pending |
+| 5 | Email/password authentication | Done |
+| 6 | Google OAuth sign-in | Done (verify branding in 30-60 min) |
+| 7 | Client dashboard | **Next** |
+| 8 | Email notifications | Pending |
+| 9 | Admin dashboard | Pending |
+
+### Google OAuth Branding Verification
+- **Status**: Configured in Google Cloud Console with "NeedThisDone.com" branding
+- **Expected**: OAuth consent screen should show "NeedThisDone.com" instead of Supabase URL
+- **Note**: Google caches consent screens for 5-30+ minutes. If still showing Supabase URL:
+  - Try different browser or device
+  - Wait additional 30-60 minutes for cache to clear
+  - Sign out of all Google accounts and retry
 
 ---
 
