@@ -1,3 +1,10 @@
+import {
+  AccentColor,
+  titleColors,
+  leftBorderColors,
+  topBorderColors,
+} from '@/lib/colors';
+
 // ============================================================================
 // ServiceCard Component
 // ============================================================================
@@ -10,28 +17,9 @@ interface ServiceCardProps {
   tagline: string;
   description: string;
   details?: string;
-  color: 'blue' | 'purple' | 'green';
+  color: AccentColor;
   variant?: 'compact' | 'full';
 }
-
-// Shared color classes used across the site for consistency
-const titleColors = {
-  blue: 'text-blue-600 dark:text-blue-400',
-  purple: 'text-purple-600 dark:text-purple-400',
-  green: 'text-green-600 dark:text-green-400',
-};
-
-const borderColors = {
-  blue: 'border-l-blue-500 hover:border-l-blue-600',
-  purple: 'border-l-purple-500 hover:border-l-purple-600',
-  green: 'border-l-green-500 hover:border-l-green-600',
-};
-
-const topBorderColors = {
-  blue: 'border-t-blue-500',
-  purple: 'border-t-purple-500',
-  green: 'border-t-green-500',
-};
 
 export default function ServiceCard({
   title,
@@ -45,7 +33,7 @@ export default function ServiceCard({
 
   // Compact uses left border, full uses top border
   const borderClass = isCompact
-    ? `border-l-4 ${borderColors[color]}`
+    ? `border-l-4 ${leftBorderColors[color]}`
     : `border-t-4 ${topBorderColors[color]}`;
 
   return (

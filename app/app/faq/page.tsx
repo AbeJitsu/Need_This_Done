@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { AccentColor, faqColors } from '@/lib/colors';
 
 // ============================================================================
 // FAQ Page - Common Questions
@@ -80,32 +81,9 @@ export default function FAQPage() {
         <div className="space-y-6 mb-10">
           {faqs.map((faq, index) => {
             // Cycle through colors: purple, blue, green
-            const colors = ['purple', 'blue', 'green'] as const;
+            const colors: AccentColor[] = ['purple', 'blue', 'green'];
             const color = colors[index % 3];
-            const colorClasses = {
-              purple: {
-                border: 'border-l-purple-500',
-                text: 'text-purple-700 dark:text-purple-300',
-                bg: 'bg-purple-100 dark:bg-purple-700',
-                numText: 'text-purple-700 dark:text-white',
-                hover: 'hover:border-purple-400 dark:hover:border-purple-400',
-              },
-              blue: {
-                border: 'border-l-blue-500',
-                text: 'text-blue-700 dark:text-blue-300',
-                bg: 'bg-blue-100 dark:bg-blue-700',
-                numText: 'text-blue-700 dark:text-white',
-                hover: 'hover:border-blue-400 dark:hover:border-blue-400',
-              },
-              green: {
-                border: 'border-l-green-500',
-                text: 'text-green-700 dark:text-green-300',
-                bg: 'bg-green-100 dark:bg-green-700',
-                numText: 'text-green-700 dark:text-white',
-                hover: 'hover:border-green-400 dark:hover:border-green-400',
-              },
-            };
-            const styles = colorClasses[color];
+            const styles = faqColors[color];
             return (
               <div
                 key={index}

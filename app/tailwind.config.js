@@ -157,6 +157,28 @@ const config = {
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
+
+      // ======================================================================
+      // Font Sizes - Scaled Up for Better Readability
+      // ======================================================================
+      // Body text (xs through 3xl): scaled up 10%
+      // Large headings (4xl and up): scaled up 7.5% to keep hero sections balanced
+      // Line heights adjusted proportionally to maintain comfortable reading
+      fontSize: {
+        'xs': ['0.825rem', { lineHeight: '1.1rem' }],
+        'sm': ['0.9625rem', { lineHeight: '1.375rem' }],
+        'base': ['1.1rem', { lineHeight: '1.65rem' }],
+        'lg': ['1.2375rem', { lineHeight: '1.925rem' }],
+        'xl': ['1.375rem', { lineHeight: '1.925rem' }],
+        '2xl': ['1.65rem', { lineHeight: '2.2rem' }],
+        '3xl': ['2.0625rem', { lineHeight: '2.475rem' }],
+        '4xl': ['2.42rem', { lineHeight: '2.69rem' }],
+        '5xl': ['3.225rem', { lineHeight: '1' }],
+        '6xl': ['4.03rem', { lineHeight: '1' }],
+        '7xl': ['4.84rem', { lineHeight: '1' }],
+        '8xl': ['6.45rem', { lineHeight: '1' }],
+        '9xl': ['8.6rem', { lineHeight: '1' }],
+      },
     },
   },
 
