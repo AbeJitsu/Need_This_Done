@@ -100,31 +100,31 @@ export const stepColors: Record<StepColor, {
 }> = {
   purple: {
     bg: 'bg-purple-600',
-    border: 'border-purple-300/50 dark:border-purple-400/30',
+    border: 'border-purple-300/30 dark:border-purple-400/10',
     text: 'text-purple-600 dark:text-purple-400',
     bullet: 'text-purple-600 dark:text-purple-400',
     numberText: 'text-white',
   },
   blue: {
     bg: 'bg-blue-600',
-    border: 'border-blue-300/50 dark:border-blue-400/30',
+    border: 'border-blue-300/30 dark:border-blue-400/10',
     text: 'text-blue-600 dark:text-blue-400',
     bullet: 'text-blue-600 dark:text-blue-400',
     numberText: 'text-white',
   },
   green: {
     bg: 'bg-green-600',
-    border: 'border-green-300/50 dark:border-green-400/30',
+    border: 'border-green-300/30 dark:border-green-400/10',
     text: 'text-green-600 dark:text-green-400',
     bullet: 'text-green-600 dark:text-green-400',
     numberText: 'text-white',
   },
   amber: {
-    bg: 'bg-amber-500 dark:bg-yellow-500',
-    border: 'border-amber-300/50 dark:border-yellow-400/30',
-    text: 'text-amber-600 dark:text-yellow-400',
-    bullet: 'text-amber-600 dark:text-yellow-400',
-    numberText: 'text-amber-900 dark:text-yellow-900',
+    bg: 'bg-amber-100 dark:bg-yellow-500',
+    border: 'border-amber-300/30 dark:border-yellow-400/10',
+    text: 'text-amber-900 dark:text-yellow-400',
+    bullet: 'text-amber-900 dark:text-yellow-400',
+    numberText: 'text-amber-900 dark:text-gray-900',
   },
 };
 
