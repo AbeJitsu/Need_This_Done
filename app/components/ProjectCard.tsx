@@ -24,7 +24,7 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({
-  id,
+  id: _id,
   name,
   email,
   service,

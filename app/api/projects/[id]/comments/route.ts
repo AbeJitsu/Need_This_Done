@@ -8,7 +8,7 @@ import { supabase } from '@/lib/supabase';
 // POST: Add a new comment to a project.
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

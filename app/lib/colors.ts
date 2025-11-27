@@ -6,6 +6,7 @@
 // in multiple files.
 
 export type AccentColor = 'purple' | 'blue' | 'green';
+export type StepColor = 'purple' | 'blue' | 'green' | 'amber';
 
 // ============================================================================
 // Title Colors - Used for headings and labels
@@ -83,4 +84,57 @@ export const faqColors: Record<AccentColor, {
     numText: 'text-green-700 dark:text-white',
     hover: 'hover:border-green-400 dark:hover:border-green-400',
   },
+};
+
+// ============================================================================
+// Step Colors - Numbered step cards (How It Works page)
+// ============================================================================
+// Includes amber for 4-step sequences
+// Note: Amber uses dark text for 5:1+ contrast ratio
+export const stepColors: Record<StepColor, {
+  bg: string;
+  border: string;
+  text: string;
+  bullet: string;
+  numberText: string;
+}> = {
+  purple: {
+    bg: 'bg-purple-600',
+    border: 'border-purple-300/50 dark:border-purple-400/30',
+    text: 'text-purple-600 dark:text-purple-400',
+    bullet: 'text-purple-600 dark:text-purple-400',
+    numberText: 'text-white',
+  },
+  blue: {
+    bg: 'bg-blue-600',
+    border: 'border-blue-300/50 dark:border-blue-400/30',
+    text: 'text-blue-600 dark:text-blue-400',
+    bullet: 'text-blue-600 dark:text-blue-400',
+    numberText: 'text-white',
+  },
+  green: {
+    bg: 'bg-green-600',
+    border: 'border-green-300/50 dark:border-green-400/30',
+    text: 'text-green-600 dark:text-green-400',
+    bullet: 'text-green-600 dark:text-green-400',
+    numberText: 'text-white',
+  },
+  amber: {
+    bg: 'bg-amber-500 dark:bg-yellow-500',
+    border: 'border-amber-300/50 dark:border-yellow-400/30',
+    text: 'text-amber-600 dark:text-yellow-400',
+    bullet: 'text-amber-600 dark:text-yellow-400',
+    numberText: 'text-amber-900 dark:text-yellow-900',
+  },
+};
+
+// ============================================================================
+// CTA Button Colors - Secondary navigation buttons (amber/teal)
+// ============================================================================
+// Used for secondary CTAs across pages (FAQ, How It Works, etc.)
+export type CtaColor = 'amber' | 'teal';
+
+export const ctaColors: Record<CtaColor, string> = {
+  amber: 'bg-amber-100 text-amber-900 border border-amber-300 dark:bg-yellow-500 dark:text-gray-900 dark:border-yellow-100 hover:bg-amber-600 hover:text-white hover:border-amber-600 dark:hover:bg-yellow-200 dark:hover:text-yellow-900 dark:hover:border-yellow-300',
+  teal: 'bg-teal-100 text-teal-900 border border-teal-300 dark:bg-teal-800 dark:text-teal-200 dark:border-teal-400 hover:bg-teal-600 hover:text-white hover:border-teal-600 dark:hover:bg-teal-200 dark:hover:text-teal-800 dark:hover:border-teal-300',
 };

@@ -36,7 +36,7 @@ export default function ProjectDetailModal({
   // State Management
   // ============================================================================
 
-  const { user, isAdmin } = useAuth();
+  const { user: _user, isAdmin } = useAuth();
   const [loading, setLoading] = useState(true);
   const [project, setProject] = useState<any>(null);
   const [comments, setComments] = useState<ProjectComment[]>([]);

@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import StepCard from '@/components/StepCard';
+import { StepColor, ctaColors } from '@/lib/colors';
 
 // ============================================================================
 // How It Works Page - The NeedThisDone Process
@@ -11,7 +13,13 @@ export const metadata = {
 };
 
 export default function HowItWorksPage() {
-  const steps = [
+  const steps: {
+    number: number;
+    title: string;
+    description: string;
+    details: string[];
+    color: StepColor;
+  }[] = [
     {
       number: 1,
       title: 'Tell Us What You Need',
@@ -21,6 +29,7 @@ export default function HowItWorksPage() {
         'Attach any relevant files or documents',
         'Let us know your timeline if you have one',
       ],
+      color: 'purple',
     },
     {
       number: 2,
@@ -31,6 +40,7 @@ export default function HowItWorksPage() {
         'We ask clarifying questions if needed',
         'You receive a straightforward quote',
       ],
+      color: 'blue',
     },
     {
       number: 3,
@@ -41,6 +51,7 @@ export default function HowItWorksPage() {
         'Regular updates on progress',
         'Open communication for questions',
       ],
+      color: 'green',
     },
     {
       number: 4,
@@ -51,15 +62,16 @@ export default function HowItWorksPage() {
         'We address any feedback',
         'Final delivery. Task complete!',
       ],
+      color: 'amber',
     },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             How It Works
           </h1>
@@ -69,45 +81,10 @@ export default function HowItWorksPage() {
         </div>
 
         {/* Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-          {steps.map((step) => {
-            // Color progression: purple -> blue -> green -> repeat
-            const stepColors = {
-              1: { bg: 'bg-purple-600', text: 'text-purple-600 dark:text-purple-400', bullet: 'text-purple-600 dark:text-purple-400' },
-              2: { bg: 'bg-blue-600', text: 'text-blue-600 dark:text-blue-400', bullet: 'text-blue-600 dark:text-blue-400' },
-              3: { bg: 'bg-green-600', text: 'text-green-600 dark:text-green-400', bullet: 'text-green-600 dark:text-green-400' },
-              4: { bg: 'bg-amber-500', text: 'text-amber-600 dark:text-amber-400', bullet: 'text-amber-600 dark:text-amber-400' },
-            };
-            const colors = stepColors[step.number as keyof typeof stepColors];
-            return (
-              <div
-                key={step.number}
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]"
-              >
-                <div className="flex items-start gap-6">
-                  <div className={`flex-shrink-0 w-12 h-12 ${colors.bg} text-white rounded-full flex items-center justify-center text-xl font-bold`}>
-                    {step.number}
-                  </div>
-                  <div className="flex-1">
-                    <h2 className={`text-xl font-bold mb-2 ${colors.text}`}>
-                      {step.title}
-                    </h2>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">
-                      {step.description}
-                    </p>
-                    <ul className="space-y-2">
-                      {step.details.map((detail, index) => (
-                        <li key={index} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                          <span className={colors.bullet}>•</span>
-                          {detail}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          {steps.map((step) => (
+            <StepCard key={step.number} {...step} />
+          ))}
         </div>
 
         {/* Timeline Note */}
@@ -132,13 +109,13 @@ export default function HowItWorksPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/faq"
-              className="px-6 py-3 bg-amber-100 text-amber-900 font-semibold rounded-full border border-amber-300 dark:bg-yellow-500 dark:text-gray-900 dark:border-yellow-100 hover:bg-amber-600 hover:text-white hover:border-amber-600 dark:hover:bg-yellow-200 dark:hover:text-yellow-900 dark:hover:border-yellow-300 transition-all"
+              className={`px-6 py-3 font-semibold rounded-full transition-all ${ctaColors.amber}`}
             >
               View FAQ
             </Link>
             <Link
               href="/services"
-              className="px-6 py-3 bg-teal-100 text-teal-900 font-semibold rounded-full border border-teal-300 dark:bg-teal-800 dark:text-teal-200 dark:border-teal-400 hover:bg-teal-600 hover:text-white hover:border-teal-600 dark:hover:bg-teal-200 dark:hover:text-teal-800 dark:hover:border-teal-300 transition-all"
+              className={`px-6 py-3 font-semibold rounded-full transition-all ${ctaColors.teal}`}
             >
               Our Services
             </Link>
