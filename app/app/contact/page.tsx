@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { getServices } from '@/config/site.config';
+import { buttonColors } from '@/lib/colors';
 
 // ============================================================================
 // Contact Page - Inquiry / Booking Form
@@ -343,7 +344,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 px-6 bg-purple-200 text-purple-700 font-semibold rounded-full border border-purple-300 dark:bg-purple-800 dark:text-purple-200 dark:border-purple-400 hover:bg-purple-600 hover:text-white hover:border-purple-600 dark:hover:bg-purple-200 dark:hover:text-purple-800 dark:hover:border-purple-300 disabled:bg-purple-100 disabled:text-purple-400 disabled:border-purple-200 dark:disabled:bg-purple-900 dark:disabled:text-purple-500 dark:disabled:border-purple-600 disabled:cursor-not-allowed transition-all"
+                className={`w-full py-3 px-6 font-semibold rounded-full transition-all ${buttonColors.purple} disabled:bg-purple-100 disabled:text-purple-400 disabled:border-purple-200 dark:disabled:bg-purple-300 dark:disabled:text-purple-900 dark:disabled:border-purple-100 disabled:cursor-not-allowed`}
               >
                 {isSubmitting ? 'Sending...' : 'Send My Request'}
               </button>

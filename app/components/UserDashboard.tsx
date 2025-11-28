@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { buttonColors } from '@/lib/colors';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
 
@@ -127,7 +128,7 @@ export default function UserDashboard() {
           </p>
           <Link
             href="/contact"
-            className="inline-block px-6 py-3 bg-purple-200 text-purple-700 font-semibold rounded-full border border-purple-300 dark:bg-purple-800 dark:text-purple-200 dark:border-purple-400 hover:bg-purple-600 hover:text-white hover:border-purple-600 dark:hover:bg-purple-200 dark:hover:text-purple-800 dark:hover:border-purple-300 transition-all"
+            className={`inline-block px-6 py-3 font-semibold rounded-full transition-all ${buttonColors.purple}`}
           >
             Submit a Project
           </Link>
@@ -169,7 +170,7 @@ export default function UserDashboard() {
           </p>
           <Link
             href="/contact"
-            className="inline-block px-6 py-3 bg-blue-200 text-blue-700 font-semibold rounded-full border border-blue-300 dark:bg-blue-800 dark:text-blue-200 dark:border-blue-400 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-200 dark:hover:text-blue-800 dark:hover:border-blue-300 transition-all"
+            className={`inline-block px-6 py-3 font-semibold rounded-full transition-all ${buttonColors.blue}`}
           >
             Submit New Project
           </Link>

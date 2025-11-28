@@ -50,6 +50,10 @@ const config = {
     'text-purple-900', 'text-blue-900', 'text-green-900',
     // Number text - dark mode
     'dark:text-white',
+    // Button hover states - dark mode (for buttonColors in colors.ts)
+    'dark:hover:bg-purple-200', 'dark:hover:bg-blue-200', 'dark:hover:bg-green-200',
+    'dark:hover:text-purple-800', 'dark:hover:text-blue-800', 'dark:hover:text-green-800',
+    'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300',
   ],
 
   // ========================================================================
