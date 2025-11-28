@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { getServices } from '@/config/site.config';
-import { buttonColors } from '@/lib/colors';
+import { buttonColors, ctaColors } from '@/lib/colors';
 
 // ============================================================================
 // Contact Page - Inquiry / Booking Form
@@ -360,13 +360,13 @@ export default function ContactPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/services"
-              className="px-6 py-3 bg-amber-100 text-amber-900 font-semibold rounded-full border border-amber-300 dark:bg-yellow-500 dark:text-gray-900 dark:border-yellow-100 hover:bg-amber-600 hover:text-white hover:border-amber-600 dark:hover:bg-yellow-200 dark:hover:text-yellow-900 dark:hover:border-yellow-300 transition-all"
+              className={`px-6 py-3 font-semibold rounded-full ${ctaColors.amber}`}
             >
               View Our Services
             </Link>
             <Link
               href="/faq"
-              className="px-6 py-3 bg-teal-100 text-teal-900 font-semibold rounded-full border border-teal-300 dark:bg-teal-800 dark:text-teal-200 dark:border-teal-400 hover:bg-teal-600 hover:text-white hover:border-teal-600 dark:hover:bg-teal-200 dark:hover:text-teal-800 dark:hover:border-teal-300 transition-all"
+              className={`px-6 py-3 font-semibold rounded-full ${ctaColors.teal}`}
             >
               Read the FAQ
             </Link>

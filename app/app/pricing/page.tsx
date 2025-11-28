@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import PricingCard from '@/components/PricingCard';
-import { AccentColor } from '@/lib/colors';
+import { AccentColor, ctaColors } from '@/lib/colors';
 
 // ============================================================================
 // Pricing Page - Service Pricing Tiers
@@ -101,7 +101,7 @@ export default function PricingPage() {
             </p>
             <Link
               href="/contact"
-              className="inline-block px-8 py-3 bg-amber-100 text-amber-900 font-semibold rounded-full border border-amber-300 dark:bg-yellow-500 dark:text-gray-900 dark:border-yellow-100 hover:bg-amber-600 hover:text-white hover:border-amber-600 dark:hover:bg-yellow-200 dark:hover:text-yellow-900 dark:hover:border-yellow-300 transition-all"
+              className={`inline-block px-8 py-3 font-semibold rounded-full ${ctaColors.amber}`}
             >
               Tell Us What You Need
             </Link>
