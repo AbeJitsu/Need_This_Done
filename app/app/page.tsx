@@ -60,8 +60,11 @@ export default function HomePage() {
         </div>
 
         {/* How It Works Preview */}
-        <div className="mb-10 bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
+        <Link
+          href="/how-it-works"
+          className="block mb-10 bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 transition-all hover:border-purple-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-purple-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)] group"
+        >
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
             Simple Process
           </h2>
           <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -93,15 +96,10 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-          <div className="text-center mt-6">
-            <Link
-              href="/how-it-works"
-              className="text-purple-600 dark:text-purple-400 font-medium hover:underline"
-            >
-              Learn more about our process
-            </Link>
-          </div>
-        </div>
+          <p className="text-center mt-6 text-purple-600 dark:text-purple-400 font-medium group-hover:underline">
+            Learn more about our process →
+          </p>
+        </Link>
 
         {/* CTA Section */}
         <div className="text-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
