@@ -31,7 +31,7 @@ const variantColors: Record<ButtonVariant, string> = {
   purple: 'bg-purple-200 text-purple-700 border-purple-300 dark:bg-purple-500 dark:text-gray-900 dark:border-purple-100 hover:bg-purple-700 hover:text-white hover:border-purple-700 dark:hover:bg-purple-200 dark:hover:text-purple-800 dark:hover:border-purple-300',
   blue: 'bg-blue-200 text-blue-700 border-blue-300 dark:bg-blue-500 dark:text-gray-900 dark:border-blue-100 hover:bg-blue-700 hover:text-white hover:border-blue-700 dark:hover:bg-blue-200 dark:hover:text-blue-800 dark:hover:border-blue-300',
   green: 'bg-green-200 text-green-700 border-green-300 dark:bg-green-500 dark:text-gray-900 dark:border-green-100 hover:bg-green-700 hover:text-white hover:border-green-700 dark:hover:bg-green-200 dark:hover:text-green-800 dark:hover:border-green-300',
-  amber: 'bg-yellow-100 text-purple-700 border-purple-300 dark:bg-yellow-500 dark:text-purple-900 dark:border-purple-400 hover:text-purple-900 hover:border-purple-500 dark:hover:border-purple-600',
+  amber: 'bg-yellow-100 text-yellow-900 border-yellow-300 dark:bg-yellow-100 dark:text-yellow-900 dark:border-yellow-500 hover:border-yellow-400 dark:hover:border-yellow-700',
   teal: 'bg-teal-100 text-teal-900 border-teal-300 dark:bg-teal-500 dark:text-gray-900 dark:border-teal-100 hover:bg-teal-700 hover:text-white hover:border-teal-700 dark:hover:bg-teal-200 dark:hover:text-teal-800 dark:hover:border-teal-300',
   gray: 'bg-gray-200 text-gray-700 border-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-500 hover:bg-gray-700 hover:text-white hover:border-gray-700 dark:hover:bg-gray-200 dark:hover:text-gray-800 dark:hover:border-gray-300',
 };

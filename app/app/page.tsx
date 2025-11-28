@@ -110,7 +110,7 @@ export default function HomePage() {
             Have a task in mind? We'd love to help.
           </p>
           <Button variant="amber" href="/contact">
-            Tell Us What You Need
+            Let's Get Started
           </Button>
         </div>
       </div>

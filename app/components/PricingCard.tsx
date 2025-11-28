@@ -43,11 +43,11 @@ export default function PricingCard({
         bg-white dark:bg-gray-800 rounded-xl p-6
         border border-gray-200 dark:border-gray-700
         border-t-4 ${topBorderColors[color]}
-        ${popular ? 'ring-2 ring-blue-500 dark:ring-blue-400' : ''}
-        transition-all hover:border-gray-400
-        hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)]
-        dark:hover:border-gray-500
-        dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]
+        hover:border-gray-300 dark:hover:border-gray-600
+        transition-all duration-200
+        hover:shadow-[0_0_6px_0px_rgba(0,0,0,0.08)]
+        dark:hover:shadow-[0_0_6px_0px_rgba(255,255,255,0.1)]
+        hover:-translate-y-0.5
       `}
     >
       {/* "Most Popular" badge */}

@@ -20,10 +20,11 @@ export const titleColors: Record<AccentColor, string> = {
 // ============================================================================
 // Border Colors - Top border accent for cards
 // ============================================================================
+// Includes hover states for consistent visual feedback on card hover
 export const topBorderColors: Record<AccentColor, string> = {
-  purple: 'border-t-purple-500',
-  blue: 'border-t-blue-500',
-  green: 'border-t-green-500',
+  purple: 'border-t-purple-500 hover:border-t-purple-600',
+  blue: 'border-t-blue-500 hover:border-t-blue-600',
+  green: 'border-t-green-500 hover:border-t-green-600',
 };
 
 // ============================================================================
@@ -77,10 +78,10 @@ export const faqColors: Record<AccentColor | 'amber', {
   },
   amber: {
     border: 'border-l-yellow-500',
-    text: 'text-yellow-900 dark:text-yellow-200',
-    bg: 'bg-yellow-100 dark:bg-yellow-700',
-    numText: 'text-yellow-900 dark:text-white',
-    hover: 'hover:border-yellow-400 dark:hover:border-yellow-400',
+    text: 'text-yellow-900 dark:text-yellow-900',
+    bg: 'bg-yellow-100 dark:bg-yellow-100',
+    numText: 'text-yellow-900 dark:text-yellow-900',
+    hover: 'hover:border-yellow-400 dark:hover:border-yellow-600',
   },
 };
 
@@ -118,11 +119,11 @@ export const stepColors: Record<StepColor, {
     numberText: 'text-green-900 dark:text-white',
   },
   amber: {
-    bg: 'bg-yellow-200 dark:bg-yellow-700',
-    border: 'border-yellow-300 dark:border-yellow-500',
-    text: 'text-yellow-900 dark:text-yellow-200',
-    bullet: 'text-yellow-900 dark:text-yellow-200',
-    numberText: 'text-yellow-900 dark:text-white',
+    bg: 'bg-yellow-100 dark:bg-yellow-100',
+    border: 'border-yellow-400 dark:border-yellow-600',
+    text: 'text-yellow-900 dark:text-yellow-100',
+    bullet: 'text-yellow-900 dark:text-yellow-100',
+    numberText: 'text-yellow-900 dark:text-yellow-900',
   },
 };
 

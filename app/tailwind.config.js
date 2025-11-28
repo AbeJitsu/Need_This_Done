@@ -45,7 +45,7 @@ const config = {
     // Title/bullet text - light mode (matches ring)
     'text-purple-700', 'text-blue-700', 'text-green-700', 'text-yellow-900',
     // Title/bullet text - dark mode (matches ring)
-    'dark:text-purple-200', 'dark:text-blue-200', 'dark:text-green-200', 'dark:text-yellow-200',
+    'dark:text-purple-200', 'dark:text-blue-200', 'dark:text-green-200', 'dark:text-yellow-200', 'dark:text-yellow-100',
     // Number text - light mode
     'text-purple-900', 'text-blue-900', 'text-green-900',
     // Number text - dark mode

@@ -101,7 +101,7 @@ export default function PricingPage() {
               honest quote. No pressure, no obligation. Just straightforward pricing.
             </p>
             <Button variant="amber" href="/contact">
-              Tell Us What You Need
+              Let's Talk
             </Button>
           </div>
         </div>
