@@ -113,8 +113,8 @@ export default function FAQPage() {
         {/* FAQ List */}
         <div className="space-y-6 mb-10">
           {faqs.map((faq, index) => {
-            // Cycle through colors: purple, blue, green, amber
-            const colors: StepColor[] = ['purple', 'blue', 'green', 'amber'];
+            // Cycle through colors: purple, blue, green, orange
+            const colors: StepColor[] = ['purple', 'blue', 'green', 'orange'];
             const color = colors[index % 4];
             const styles = faqColors[color];
             return (
@@ -147,7 +147,7 @@ export default function FAQPage() {
             We're here to help. Reach out and we'll get back to you promptly.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button variant="amber" href="/how-it-works" size="md">
+            <Button variant="orange" href="/how-it-works" size="md">
               Learn How It Works
             </Button>
             <Button variant="teal" href="/services" size="md">

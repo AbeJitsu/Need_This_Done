@@ -6,7 +6,7 @@
 // in multiple files.
 
 export type AccentColor = 'purple' | 'blue' | 'green';
-export type StepColor = 'purple' | 'blue' | 'green' | 'amber';
+export type StepColor = 'purple' | 'blue' | 'green' | 'orange';
 
 // ============================================================================
 // Title Colors - Used for headings and labels
@@ -48,7 +48,7 @@ export const lightBgColors: Record<AccentColor, string> = {
 // ============================================================================
 // FAQ Colors - Numbered badge styling for FAQ items
 // ============================================================================
-export const faqColors: Record<AccentColor | 'amber', {
+export const faqColors: Record<AccentColor | 'orange', {
   border: string;
   text: string;
   bg: string;
@@ -76,20 +76,20 @@ export const faqColors: Record<AccentColor | 'amber', {
     numText: 'text-green-700 dark:text-white',
     hover: 'hover:border-green-400 dark:hover:border-green-400',
   },
-  amber: {
-    border: 'border-l-yellow-500',
-    text: 'text-yellow-900 dark:text-yellow-900',
-    bg: 'bg-yellow-100 dark:bg-yellow-100',
-    numText: 'text-yellow-900 dark:text-yellow-900',
-    hover: 'hover:border-yellow-400 dark:hover:border-yellow-600',
+  orange: {
+    border: 'border-l-orange-500',
+    text: 'text-orange-700 dark:text-orange-200',
+    bg: 'bg-orange-200 dark:bg-orange-700',
+    numText: 'text-orange-900 dark:text-white',
+    hover: 'hover:border-orange-400 dark:hover:border-orange-400',
   },
 };
 
 // ============================================================================
 // Step Colors - Numbered step cards (How It Works page)
 // ============================================================================
-// Includes amber for 4-step sequences
-// Note: Amber uses dark text for 5:1+ contrast ratio
+// Includes orange for 4-step sequences
+// Note: Orange follows the same invert pattern as other colors
 export const stepColors: Record<StepColor, {
   bg: string;
   border: string;
@@ -98,32 +98,32 @@ export const stepColors: Record<StepColor, {
   numberText: string;
 }> = {
   purple: {
-    bg: 'bg-purple-200 dark:bg-purple-700',
-    border: 'border-purple-300 dark:border-purple-500',
-    text: 'text-purple-700 dark:text-purple-200',
-    bullet: 'text-purple-700 dark:text-purple-200',
-    numberText: 'text-purple-900 dark:text-white',
+    bg: 'bg-purple-200 dark:bg-purple-900/60',
+    border: 'border-purple-300 dark:border-purple-700',
+    text: 'text-purple-700 dark:text-purple-300',
+    bullet: 'text-purple-700 dark:text-purple-300',
+    numberText: 'text-purple-900 dark:text-purple-200',
   },
   blue: {
-    bg: 'bg-blue-200 dark:bg-blue-700',
-    border: 'border-blue-300 dark:border-blue-500',
-    text: 'text-blue-700 dark:text-blue-200',
-    bullet: 'text-blue-700 dark:text-blue-200',
-    numberText: 'text-blue-900 dark:text-white',
+    bg: 'bg-blue-200 dark:bg-blue-900/60',
+    border: 'border-blue-300 dark:border-blue-700',
+    text: 'text-blue-700 dark:text-blue-300',
+    bullet: 'text-blue-700 dark:text-blue-300',
+    numberText: 'text-blue-900 dark:text-blue-200',
   },
   green: {
-    bg: 'bg-green-200 dark:bg-green-700',
-    border: 'border-green-300 dark:border-green-500',
-    text: 'text-green-700 dark:text-green-200',
-    bullet: 'text-green-700 dark:text-green-200',
-    numberText: 'text-green-900 dark:text-white',
+    bg: 'bg-green-200 dark:bg-green-900/60',
+    border: 'border-green-300 dark:border-green-700',
+    text: 'text-green-700 dark:text-green-300',
+    bullet: 'text-green-700 dark:text-green-300',
+    numberText: 'text-green-900 dark:text-green-200',
   },
-  amber: {
-    bg: 'bg-yellow-100 dark:bg-yellow-100',
-    border: 'border-yellow-400 dark:border-yellow-600',
-    text: 'text-yellow-900 dark:text-yellow-100',
-    bullet: 'text-yellow-900 dark:text-yellow-100',
-    numberText: 'text-yellow-900 dark:text-yellow-900',
+  orange: {
+    bg: 'bg-orange-200 dark:bg-orange-900/60',
+    border: 'border-orange-300 dark:border-orange-700',
+    text: 'text-orange-700 dark:text-orange-300',
+    bullet: 'text-orange-700 dark:text-orange-300',
+    numberText: 'text-orange-900 dark:text-orange-200',
   },
 };
 

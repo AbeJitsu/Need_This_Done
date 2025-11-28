@@ -109,7 +109,7 @@ export default function HomePage() {
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             Have a task in mind? We'd love to help.
           </p>
-          <Button variant="amber" href="/contact">
+          <Button variant="orange" href="/contact">
             Let's Get Started
           </Button>
         </div>

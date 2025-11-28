@@ -358,7 +358,7 @@ export default function ContactPage() {
             Want to learn more first?
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button variant="amber" href="/services" size="md">
+            <Button variant="orange" href="/services" size="md">
               View Our Services
             </Button>
             <Button variant="teal" href="/faq" size="md">

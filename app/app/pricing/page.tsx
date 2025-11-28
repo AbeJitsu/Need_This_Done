@@ -100,7 +100,7 @@ export default function PricingPage() {
               Every task is different. Just tell us what you need help with and we'll give you a clear,
               honest quote. No pressure, no obligation. Just straightforward pricing.
             </p>
-            <Button variant="amber" href="/contact">
+            <Button variant="orange" href="/contact">
               Let's Talk
             </Button>
           </div>

@@ -62,7 +62,7 @@ export default function HowItWorksPage() {
         'We address any feedback',
         'Final delivery. Task complete!',
       ],
-      color: 'amber',
+      color: 'orange',
     },
   ];
 
@@ -107,7 +107,7 @@ export default function HowItWorksPage() {
             Check out our FAQ or explore our services.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button variant="amber" href="/faq" size="md">
+            <Button variant="orange" href="/faq" size="md">
               View FAQ
             </Button>
             <Button variant="teal" href="/services" size="md">
