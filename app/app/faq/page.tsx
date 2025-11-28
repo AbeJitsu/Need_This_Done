@@ -16,7 +16,15 @@ export default function FAQPage() {
   const faqs = [
     {
       question: 'What types of tasks do you handle?',
-      answer: "We help with all kinds of tasks: spreadsheets and data cleanup, document preparation, administrative work, computer help, and even website builds and updates. If you're not sure whether we can help, just ask! We're happy to discuss your needs.",
+      answer: (
+        <>
+          We help with all kinds of tasks: spreadsheets and data cleanup, document preparation, administrative work, computer help, and even website builds and updates. Check out our{' '}
+          <Link href="/services" className="text-blue-700 dark:text-blue-400 font-medium hover:underline">
+            services page
+          </Link>{' '}
+          to see what we specialize in. If you're not sure whether we can help, just ask! We're happy to discuss your needs.
+        </>
+      ),
     },
     {
       question: 'Do I need to be tech-savvy to work with you?',
@@ -24,7 +32,14 @@ export default function FAQPage() {
     },
     {
       question: 'How long does a typical task take?',
-      answer: 'Most tasks are completed within a few days to a week. Larger projects may take longer, but we always provide a clear timeline upfront so you know what to expect.',
+      answer: (
+        <>
+          Most tasks are completed within a few days to a week. Larger projects may take longer, but we always provide a clear timeline upfront so you know what to expect. Learn more about{' '}
+          <Link href="/how-it-works" className="text-blue-700 dark:text-blue-400 font-medium hover:underline">
+            how it works
+          </Link>.
+        </>
+      ),
     },
     {
       question: 'How much does it cost?',
@@ -40,7 +55,15 @@ export default function FAQPage() {
     },
     {
       question: 'How do I get started?',
-      answer: "Simply reach out through our contact form and describe what you need help with. We'll review your request and get back to you within 2 business days with questions or a quote.",
+      answer: (
+        <>
+          Simply reach out through our{' '}
+          <Link href="/contact" className="text-blue-700 dark:text-blue-400 font-medium hover:underline">
+            contact form
+          </Link>{' '}
+          and describe what you need help with. We'll review your request and get back to you within 2 business days with questions or a quote.
+        </>
+      ),
     },
     {
       question: 'Can you help with one-time tasks or just ongoing work?',
@@ -60,7 +83,15 @@ export default function FAQPage() {
     },
     {
       question: 'What if I have a question that is not listed here?',
-      answer: "We'd love to hear from you! Reach out through our contact page and we'll be happy to answer any questions you have.",
+      answer: (
+        <>
+          We'd love to hear from you! Reach out through our{' '}
+          <Link href="/contact" className="text-blue-700 dark:text-blue-400 font-medium hover:underline">
+            contact page
+          </Link>{' '}
+          and we'll be happy to answer any questions you have.
+        </>
+      ),
     },
   ];
 
