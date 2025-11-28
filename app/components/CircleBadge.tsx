@@ -31,7 +31,7 @@ export default function CircleBadge({
   const sizeClass = sizeClasses[size];
 
   return (
-    <div className={`flex-shrink-0 p-1.5 ${colors.ringBg} rounded-full`}>
+    <div className={`flex-shrink-0 p-px ${colors.ringBg} rounded-full`}>
       <div
         className={`${sizeClass} ${colors.bg} ${colors.numberText} rounded-full flex items-center justify-center font-bold`}
       >

@@ -32,18 +32,24 @@ const config = {
   // This ensures CircleBadge ring/background colors are always compiled.
 
   safelist: [
-    // CircleBadge ring backgrounds (outer glow)
-    'bg-purple-300',
-    'bg-blue-300',
-    'bg-green-300',
-    'bg-amber-700',
-    'bg-yellow-300',
-    // CircleBadge inner circle backgrounds
-    'bg-purple-600',
-    'bg-blue-600',
-    'bg-green-600',
-    'bg-amber-100',
-    'bg-yellow-500',
+    // CircleBadge padding (ring thickness)
+    'p-px',
+    // CircleBadge ring backgrounds - light mode (dark/muted rings)
+    'bg-purple-700', 'bg-blue-700', 'bg-green-700', 'bg-yellow-900',
+    // CircleBadge ring backgrounds - dark mode (soft pastel rings)
+    'dark:bg-purple-200', 'dark:bg-blue-200', 'dark:bg-green-200', 'dark:bg-yellow-200',
+    // CircleBadge inner circles - light mode (soft pastels)
+    'bg-purple-200', 'bg-blue-200', 'bg-green-200', 'bg-yellow-200',
+    // CircleBadge inner circles - dark mode (deep/muted)
+    'dark:bg-purple-700', 'dark:bg-blue-700', 'dark:bg-green-700', 'dark:bg-yellow-900',
+    // Title/bullet text - light mode (matches ring)
+    'text-purple-700', 'text-blue-700', 'text-green-700', 'text-yellow-900',
+    // Title/bullet text - dark mode (matches ring)
+    'dark:text-purple-200', 'dark:text-blue-200', 'dark:text-green-200', 'dark:text-yellow-200',
+    // Number text - light mode
+    'text-purple-900', 'text-blue-900', 'text-green-900',
+    // Number text - dark mode
+    'dark:text-white',
   ],
 
   // ========================================================================
