@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { StepColor, faqColors, ctaColors } from '@/lib/colors';
+import { StepColor, faqColors } from '@/lib/colors';
 import CircleBadge from '@/components/CircleBadge';
+import Button from '@/components/Button';
 
 // ============================================================================
 // FAQ Page - Common Questions
@@ -146,18 +147,12 @@ export default function FAQPage() {
             We're here to help. Reach out and we'll get back to you promptly.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              href="/how-it-works"
-              className={`px-6 py-3 font-semibold rounded-full transition-all ${ctaColors.amber}`}
-            >
+            <Button variant="amber" href="/how-it-works" size="md">
               Learn How It Works
-            </Link>
-            <Link
-              href="/services"
-              className={`px-6 py-3 font-semibold rounded-full transition-all ${ctaColors.teal}`}
-            >
+            </Button>
+            <Button variant="teal" href="/services" size="md">
               View Services
-            </Link>
+            </Button>
           </div>
         </div>
       </div>

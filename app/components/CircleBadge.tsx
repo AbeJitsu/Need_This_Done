@@ -30,13 +30,12 @@ export default function CircleBadge({
   const colors = stepColors[color];
   const sizeClass = sizeClasses[size];
 
+  // Softer styling with border-2 to match button aesthetic
   return (
-    <div className={`flex-shrink-0 p-px ${colors.ringBg} rounded-full`}>
-      <div
-        className={`${sizeClass} ${colors.bg} ${colors.numberText} rounded-full flex items-center justify-center font-bold`}
-      >
-        {number}
-      </div>
+    <div
+      className={`flex-shrink-0 ${sizeClass} ${colors.bg} border-2 ${colors.border} ${colors.numberText} rounded-full flex items-center justify-center font-bold`}
+    >
+      {number}
     </div>
   );
 }

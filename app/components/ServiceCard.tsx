@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import {
   AccentColor,
   titleColors,
@@ -19,6 +20,7 @@ interface ServiceCardProps {
   details?: string;
   color: AccentColor;
   variant?: 'compact' | 'full';
+  href?: string;
 }
 
 export default function ServiceCard({
@@ -28,6 +30,7 @@ export default function ServiceCard({
   details,
   color,
   variant = 'full',
+  href,
 }: ServiceCardProps) {
   const isCompact = variant === 'compact';
 
@@ -36,10 +39,8 @@ export default function ServiceCard({
     ? `border-l-4 ${leftBorderColors[color]}`
     : `border-t-4 ${topBorderColors[color]}`;
 
-  return (
-    <div
-      className={`p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 ${borderClass} transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}
-    >
+  const cardContent = (
+    <>
       <h3 className={`font-semibold mb-2 text-lg ${titleColors[color]}`}>
         {title}
       </h3>
@@ -59,6 +60,23 @@ export default function ServiceCard({
           )}
         </>
       )}
+    </>
+  );
+
+  const cardClasses = `p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 ${borderClass} transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`;
+
+  // Wrap in Link if href is provided
+  if (href) {
+    return (
+      <Link href={href} className={`block ${cardClasses}`}>
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <div className={cardClasses}>
+      {cardContent}
     </div>
   );
 }

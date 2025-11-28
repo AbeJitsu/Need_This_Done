@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import Link from 'next/link';
 import { getServices } from '@/config/site.config';
-import { buttonColors, ctaColors } from '@/lib/colors';
+import Button from '@/components/Button';
 
 // ============================================================================
 // Contact Page - Inquiry / Booking Form
@@ -341,13 +340,14 @@ export default function ContactPage() {
               )}
 
               {/* Submit Button */}
-              <button
+              <Button
+                variant="purple"
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full py-3 px-6 font-semibold rounded-full transition-all ${buttonColors.purple} disabled:bg-purple-100 disabled:text-purple-400 disabled:border-purple-200 dark:disabled:bg-purple-300 dark:disabled:text-purple-900 dark:disabled:border-purple-100 disabled:cursor-not-allowed`}
+                className="w-full"
               >
                 {isSubmitting ? 'Sending...' : 'Send My Request'}
-              </button>
+              </Button>
             </form>
           )}
         </div>
@@ -358,18 +358,12 @@ export default function ContactPage() {
             Want to learn more first?
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              href="/services"
-              className={`px-6 py-3 font-semibold rounded-full ${ctaColors.amber}`}
-            >
+            <Button variant="amber" href="/services" size="md">
               View Our Services
-            </Link>
-            <Link
-              href="/faq"
-              className={`px-6 py-3 font-semibold rounded-full ${ctaColors.teal}`}
-            >
+            </Button>
+            <Button variant="teal" href="/faq" size="md">
               Read the FAQ
-            </Link>
+            </Button>
           </div>
         </div>
       </div>

@@ -1,11 +1,10 @@
-import Link from 'next/link';
 import {
   AccentColor,
   titleColors,
   topBorderColors,
   lightBgColors,
-  buttonColors,
 } from '@/lib/colors';
+import Button from '@/components/Button';
 
 // ============================================================================
 // PricingCard Component
@@ -91,12 +90,11 @@ export default function PricingCard({
       </ul>
 
       {/* CTA Button - mt-auto pushes it to the bottom */}
-      <Link
-        href={href}
-        className={`mt-auto block w-full text-center py-3 px-6 rounded-full font-semibold ${buttonColors[color]} transition-all`}
-      >
-        {cta}
-      </Link>
+      <div className="mt-auto">
+        <Button variant={color} href={href} className="w-full">
+          {cta}
+        </Button>
+      </div>
     </div>
   );
 }

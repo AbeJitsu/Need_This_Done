@@ -1,6 +1,6 @@
-import Link from 'next/link';
 import StepCard from '@/components/StepCard';
-import { StepColor, ctaColors } from '@/lib/colors';
+import Button from '@/components/Button';
+import { StepColor } from '@/lib/colors';
 
 // ============================================================================
 // How It Works Page - The NeedThisDone Process
@@ -107,18 +107,12 @@ export default function HowItWorksPage() {
             Check out our FAQ or explore our services.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              href="/faq"
-              className={`px-6 py-3 font-semibold rounded-full transition-all ${ctaColors.amber}`}
-            >
+            <Button variant="amber" href="/faq" size="md">
               View FAQ
-            </Link>
-            <Link
-              href="/services"
-              className={`px-6 py-3 font-semibold rounded-full transition-all ${ctaColors.teal}`}
-            >
+            </Button>
+            <Button variant="teal" href="/services" size="md">
               Our Services
-            </Link>
+            </Button>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { siteConfig } from '@/config/site.config';
-import { buttonColors, ctaColors } from '@/lib/colors';
+import Button from '@/components/Button';
 import ServiceCard from '@/components/ServiceCard';
 import CircleBadge from '@/components/CircleBadge';
 
@@ -29,18 +29,12 @@ export default function HomePage() {
             {siteConfig.project.description}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              href="/how-it-works"
-              className={`px-8 py-3 font-semibold rounded-full transition-all ${buttonColors.blue}`}
-            >
+            <Button variant="blue" href="/how-it-works">
               See How It Works
-            </Link>
-            <Link
-              href="/services"
-              className={`px-8 py-3 font-semibold rounded-full transition-all ${buttonColors.purple}`}
-            >
+            </Button>
+            <Button variant="purple" href="/services">
               View Services
-            </Link>
+            </Button>
           </div>
         </div>
 
@@ -59,6 +53,7 @@ export default function HomePage() {
                 details={service.details}
                 color={service.color}
                 variant="compact"
+                href="/services"
               />
             ))}
           </div>
@@ -116,12 +111,9 @@ export default function HomePage() {
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             Have a task in mind? We'd love to help.
           </p>
-          <Link
-            href="/contact"
-            className={`inline-block px-8 py-3 font-semibold rounded-full ${ctaColors.amber}`}
-          >
+          <Button variant="amber" href="/contact">
             Tell Us What You Need
-          </Link>
+          </Button>
         </div>
       </div>
     </div>

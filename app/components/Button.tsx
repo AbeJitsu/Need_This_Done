@@ -1,92 +1,86 @@
+import Link from 'next/link';
+
 // ============================================================================
-// Button Component - Premium Semantic Variants
+// Button Component - Centralized Button Styling
 // ============================================================================
-// Reusable button with semantic color variants that match their purpose:
-// - primary: Main brand actions (blue)
-// - secondary: Less prominent actions (grayscale)
-// - success: Positive confirmations (green)
-// - danger: Destructive/critical actions (red)
-// - warning: Caution actions (yellow)
-// - ghost: Minimal, text-like buttons
+// A single source of truth for all button styling across the site.
+// Handles both link buttons (with href) and action buttons (with onClick).
+// Ensures consistent borders, colors, and hover states everywhere.
+
+type ButtonVariant = 'purple' | 'blue' | 'green' | 'amber' | 'teal' | 'gray';
+type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ButtonProps {
+  children: React.ReactNode;
+  variant: ButtonVariant;
+  size?: ButtonSize;
   href?: string;
   onClick?: () => void;
-  children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
+  className?: string;
+  type?: 'button' | 'submit';
 }
 
+// ============================================================================
+// Color Definitions - All button colors in one place
+// ============================================================================
+// Pattern: Light mode uses pastel bg with dark text, inverts on hover
+//          Dark mode uses bright bg with dark text, inverts on hover
+
+const variantColors: Record<ButtonVariant, string> = {
+  purple: 'bg-purple-200 text-purple-700 border-purple-300 dark:bg-purple-500 dark:text-gray-900 dark:border-purple-100 hover:bg-purple-700 hover:text-white hover:border-purple-700 dark:hover:bg-purple-200 dark:hover:text-purple-800 dark:hover:border-purple-300',
+  blue: 'bg-blue-200 text-blue-700 border-blue-300 dark:bg-blue-500 dark:text-gray-900 dark:border-blue-100 hover:bg-blue-700 hover:text-white hover:border-blue-700 dark:hover:bg-blue-200 dark:hover:text-blue-800 dark:hover:border-blue-300',
+  green: 'bg-green-200 text-green-700 border-green-300 dark:bg-green-500 dark:text-gray-900 dark:border-green-100 hover:bg-green-700 hover:text-white hover:border-green-700 dark:hover:bg-green-200 dark:hover:text-green-800 dark:hover:border-green-300',
+  amber: 'bg-yellow-100 text-blue-700 border-yellow-300 dark:bg-blue-500 dark:text-yellow-100 dark:border-blue-300 hover:bg-blue-700 hover:text-white hover:border-blue-700 dark:hover:bg-yellow-200 dark:hover:text-blue-800 dark:hover:border-yellow-300',
+  teal: 'bg-teal-100 text-teal-900 border-teal-300 dark:bg-teal-500 dark:text-gray-900 dark:border-teal-100 hover:bg-teal-700 hover:text-white hover:border-teal-700 dark:hover:bg-teal-200 dark:hover:text-teal-800 dark:hover:border-teal-300',
+  gray: 'bg-gray-200 text-gray-700 border-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-500 hover:bg-gray-700 hover:text-white hover:border-gray-700 dark:hover:bg-gray-200 dark:hover:text-gray-800 dark:hover:border-gray-300',
+};
+
+// ============================================================================
+// Size Classes - Consistent padding and font sizes
+// ============================================================================
+
+const sizeClasses: Record<ButtonSize, string> = {
+  sm: 'px-4 py-2 text-sm',
+  md: 'px-6 py-3',
+  lg: 'px-8 py-3',
+};
+
+// ============================================================================
+// Button Component
+// ============================================================================
+
 export default function Button({
+  children,
+  variant,
+  size = 'lg',
   href,
   onClick,
-  children,
-  variant = 'primary',
-  size = 'md',
   disabled = false,
+  className = '',
+  type = 'button',
 }: ButtonProps) {
-  // ========================================================================
-  // Semantic Color Variants - Each serves a specific purpose
-  // ========================================================================
-  const variantStyles = {
-    // Primary: Main brand actions - blue dominant
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-300',
+  const baseClasses = `inline-flex items-center justify-center font-semibold rounded-full border-2 transition-all ${sizeClasses[size]} ${variantColors[variant]}`;
+  const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : '';
+  const fullClasses = `${baseClasses} ${disabledClasses} ${className}`.trim();
 
-    // Secondary: Less prominent actions - grayscale
-    secondary:
-      'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 disabled:bg-gray-50 border border-gray-300',
-
-    // Success: Positive confirmations & approvals - green
-    success: 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800 disabled:bg-green-300',
-
-    // Danger: Destructive & critical actions - red
-    danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 disabled:bg-red-300',
-
-    // Warning: Caution actions - yellow (with dark text for contrast)
-    warning: 'bg-yellow-600 text-white hover:bg-yellow-700 active:bg-yellow-800 disabled:bg-yellow-300',
-
-    // Ghost: Minimal, text-like buttons - transparent with blue text
-    ghost: 'bg-transparent text-blue-600 hover:bg-blue-50 active:bg-blue-100 disabled:text-gray-400',
-  };
-
-  // ========================================================================
-  // Responsive Sizing
-  // ========================================================================
-  const sizeStyles = {
-    sm: 'px-4 py-2 text-sm',
-    md: 'px-6 py-2.5 text-base',
-    lg: 'px-8 py-3 text-lg',
-  };
-
-  // ========================================================================
-  // Base Styles - Consistent across all variants
-  // ========================================================================
-  const baseStyles = `
-    inline-flex items-center justify-center gap-2
-    rounded-lg font-semibold
-    transition-all duration-200
-    active:scale-95
-    disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100
-    focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
-    focus-visible:outline-blue-600
-    min-h-[44px] min-w-[44px]
-    ${variantStyles[variant]}
-    ${sizeStyles[size]}
-  `;
-
-  // Link variant
+  // Render as Link if href is provided and not disabled
   if (href && !disabled) {
     return (
-      <a href={href} className={baseStyles}>
+      <Link href={href} className={fullClasses}>
         {children}
-      </a>
+      </Link>
     );
   }
 
-  // Button variant
+  // Render as button for actions or disabled state
   return (
-    <button type="button" onClick={onClick} disabled={disabled} className={baseStyles}>
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={fullClasses}
+    >
       {children}
     </button>
   );

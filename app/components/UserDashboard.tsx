@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { buttonColors } from '@/lib/colors';
+import Button from './Button';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
 
@@ -126,12 +125,9 @@ export default function UserDashboard() {
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             Submit a project request to get started
           </p>
-          <Link
-            href="/contact"
-            className={`inline-block px-6 py-3 font-semibold rounded-full transition-all ${buttonColors.purple}`}
-          >
+          <Button variant="purple" href="/contact" size="md">
             Submit a Project
-          </Link>
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -168,12 +164,9 @@ export default function UserDashboard() {
           <p className="text-gray-600 dark:text-gray-400 mb-4">
             Need to submit another project?
           </p>
-          <Link
-            href="/contact"
-            className={`inline-block px-6 py-3 font-semibold rounded-full transition-all ${buttonColors.blue}`}
-          >
+          <Button variant="blue" href="/contact" size="md">
             Submit New Project
-          </Link>
+          </Button>
         </div>
       )}
 

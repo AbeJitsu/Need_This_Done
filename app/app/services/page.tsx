@@ -1,7 +1,6 @@
-import Link from 'next/link';
 import { getServices } from '@/config/site.config';
 import ServiceCard from '@/components/ServiceCard';
-import { ctaColors } from '@/lib/colors';
+import Button from '@/components/Button';
 
 // ============================================================================
 // Services Page - What NeedThisDone Offers
@@ -107,18 +106,12 @@ export default function ServicesPage() {
             See how we work, or let's get started.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              href="/how-it-works"
-              className={`px-6 py-3 font-semibold rounded-full ${ctaColors.amber}`}
-            >
+            <Button variant="amber" href="/how-it-works" size="md">
               How It Works
-            </Link>
-            <Link
-              href="/faq"
-              className={`px-6 py-3 font-semibold rounded-full ${ctaColors.teal}`}
-            >
+            </Button>
+            <Button variant="teal" href="/faq" size="md">
               FAQ
-            </Link>
+            </Button>
           </div>
         </div>
       </div>
