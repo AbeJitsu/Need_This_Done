@@ -26,6 +26,27 @@ const config = {
   ],
 
   // ========================================================================
+  // Safelist - Force Tailwind to Generate These Classes
+  // ========================================================================
+  // Classes in colors.ts are built dynamically and not scanned by JIT.
+  // This ensures CircleBadge ring/background colors are always compiled.
+
+  safelist: [
+    // CircleBadge ring backgrounds (outer glow)
+    'bg-purple-300',
+    'bg-blue-300',
+    'bg-green-300',
+    'bg-amber-700',
+    'bg-yellow-300',
+    // CircleBadge inner circle backgrounds
+    'bg-purple-600',
+    'bg-blue-600',
+    'bg-green-600',
+    'bg-amber-100',
+    'bg-yellow-500',
+  ],
+
+  // ========================================================================
   // Theme - Customization
   // ========================================================================
   // Customize colors, spacing, fonts, and more

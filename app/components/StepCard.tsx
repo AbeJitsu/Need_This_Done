@@ -1,4 +1,5 @@
 import { StepColor, stepColors } from '@/lib/colors';
+import CircleBadge from './CircleBadge';
 
 // ============================================================================
 // StepCard Component
@@ -27,9 +28,7 @@ export default function StepCard({
     <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
       <div className="flex items-start gap-6">
         {/* Step number badge */}
-        <div className={`flex-shrink-0 w-14 h-14 ${colors.bg} ${colors.numberText} border ${colors.border} rounded-full flex items-center justify-center text-xl font-bold`}>
-          {number}
-        </div>
+        <CircleBadge number={number} color={color} />
 
         {/* Content */}
         <div className="flex-1">
