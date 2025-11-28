@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { AccentColor, faqColors, ctaColors } from '@/lib/colors';
+import { StepColor, faqColors, ctaColors } from '@/lib/colors';
+import CircleBadge from '@/components/CircleBadge';
 
 // ============================================================================
 // FAQ Page - Common Questions
@@ -80,9 +81,9 @@ export default function FAQPage() {
         {/* FAQ List */}
         <div className="space-y-6 mb-10">
           {faqs.map((faq, index) => {
-            // Cycle through colors: purple, blue, green
-            const colors: AccentColor[] = ['purple', 'blue', 'green'];
-            const color = colors[index % 3];
+            // Cycle through colors: purple, blue, green, amber
+            const colors: StepColor[] = ['purple', 'blue', 'green', 'amber'];
+            const color = colors[index % 4];
             const styles = faqColors[color];
             return (
               <div
@@ -90,9 +91,7 @@ export default function FAQPage() {
                 className={`bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 border-l-4 ${styles.border} ${styles.hover} transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}
               >
                 <div className="flex items-start gap-4">
-                  <div className={`flex-shrink-0 w-8 h-8 rounded-full ${styles.bg} flex items-center justify-center`}>
-                    <span className={`text-sm font-bold ${styles.numText}`}>{index + 1}</span>
-                  </div>
+                  <CircleBadge number={index + 1} color={color} size="sm" />
                   <div>
                     <h2 className={`text-lg font-semibold mb-2 ${styles.text}`}>
                       {faq.question}

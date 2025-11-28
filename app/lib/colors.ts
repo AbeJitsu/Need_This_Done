@@ -56,7 +56,7 @@ export const buttonColors: Record<AccentColor, string> = {
 // ============================================================================
 // FAQ Colors - Numbered badge styling for FAQ items
 // ============================================================================
-export const faqColors: Record<AccentColor, {
+export const faqColors: Record<AccentColor | 'amber', {
   border: string;
   text: string;
   bg: string;
@@ -83,6 +83,13 @@ export const faqColors: Record<AccentColor, {
     bg: 'bg-green-100 dark:bg-green-700',
     numText: 'text-green-700 dark:text-white',
     hover: 'hover:border-green-400 dark:hover:border-green-400',
+  },
+  amber: {
+    border: 'border-l-yellow-500',
+    text: 'text-yellow-900 dark:text-yellow-200',
+    bg: 'bg-yellow-100 dark:bg-yellow-700',
+    numText: 'text-yellow-900 dark:text-white',
+    hover: 'hover:border-yellow-400 dark:hover:border-yellow-400',
   },
 };
 
