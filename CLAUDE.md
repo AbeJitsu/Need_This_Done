@@ -14,3 +14,15 @@ Use self-documenting code with section-level comments as our documentation. Comm
 ### Contrast Requirements
 
 - Minimum 5:1 contrast ratio for all text
+
+### Design System Context
+
+This project has an established design system (`app/lib/colors.ts`, `app/components/`).
+
+**When working on frontend:**
+- Reference `.claude/DESIGN_BRIEF.md` for brand identity and aesthetic direction
+- Use existing color utilities and component patterns
+- Support both light and dark modes with WCAG AA contrast
+- Add accessibility tests (`.a11y.test.tsx`) for new components
+
+**The frontend-design skill is enabled** to help guide aesthetic decisions for new features while maintaining consistency with existing patterns.
