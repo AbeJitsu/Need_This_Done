@@ -21,14 +21,14 @@ export default function HomePage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Hero Section */}
-        <div className="text-center mb-10">
-          <h1 className="text-5xl font-bold text-blue-600 dark:text-blue-400 mb-4">
+        <div className="text-center mb-16">
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-blue-600 dark:text-blue-400 mb-4 motion-safe:animate-fade-in motion-reduce:opacity-100">
             {siteConfig.project.tagline}
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto motion-safe:animate-fade-in-delay-100 motion-reduce:opacity-100">
             {siteConfig.project.description}
           </p>
-          <div className="flex flex-wrap gap-4 justify-center">
+          <div className="flex flex-wrap gap-4 justify-center motion-safe:animate-fade-in-delay-200 motion-reduce:opacity-100">
             <Button variant="blue" href="/how-it-works">
               See How It Works
             </Button>
@@ -43,7 +43,7 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
             What We Offer
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
             {siteConfig.services.map((service, index) => (
               <ServiceCard
                 key={index}
@@ -62,7 +62,7 @@ export default function HomePage() {
         {/* How It Works Preview */}
         <Link
           href="/how-it-works"
-          className="block mb-10 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all hover:border-gray-500 hover:shadow-lg dark:hover:border-gray-400 dark:hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] group"
+          className="block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 hover:border-purple-400 hover:shadow-xl hover:bg-purple-50/30 active:scale-98 dark:hover:border-purple-500 dark:hover:bg-purple-900/10 dark:hover:shadow-[0_0_24px_rgba(168,85,247,0.3)] group"
         >
           <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center transition-colors">
             Simple Process
@@ -102,7 +102,7 @@ export default function HomePage() {
         </Link>
 
         {/* CTA Section */}
-        <div className="text-center bg-white dark:bg-gray-800 border-2 border-gray-400 dark:border-gray-500 rounded-xl p-6">
+        <div className="text-center bg-white dark:bg-gray-800 border-2 border-gray-400 dark:border-gray-500 rounded-xl p-8 shadow-lg hover:shadow-xl hover:border-orange-400 dark:hover:border-orange-500 transition-all duration-300">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Ready to Get Started?
           </h2>

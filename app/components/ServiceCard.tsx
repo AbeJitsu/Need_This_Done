@@ -63,7 +63,7 @@ export default function ServiceCard({
     </>
   );
 
-  const cardClasses = `p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-400 dark:border-gray-500 ${borderClass} transition-all hover:border-gray-500 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-400 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`;
+  const cardClasses = `p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-400 dark:border-gray-500 ${borderClass} transition-all duration-300 hover:border-gray-500 hover:shadow-lg hover:-translate-y-1 active:scale-98 dark:hover:border-gray-400 dark:hover:shadow-[0_0_12px_0px_rgba(255,255,255,0.2)]`;
 
   // Wrap in Link if href is provided
   if (href) {

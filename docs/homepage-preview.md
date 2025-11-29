@@ -92,7 +92,7 @@ A comprehensive ASCII preview of the current homepage layout with content, color
 ║                    ┌──────────────────────┐                               ║
 ║                    │ Tell Us What You     │                               ║
 ║                    │ Need                 │                               ║
-║                    │ [Button: amber]      │                               ║
+║                    │ [Button: orange]     │                               ║
 ║                    └──────────────────────┘                               ║
 ║                                                                            ║
 ╚════════════════════════════════════════════════════════════════════════════╝
@@ -218,7 +218,7 @@ _________________________________________________________________
 | Element | Light Mode | Dark Mode | Tailwind Class |
 |---------|-----------|-----------|-----------------|
 | Container BG | white | #1f2937 (gray-800) | bg-white dark:bg-gray-800 |
-| Container Border | #e5e7eb (gray-200) | #374151 (gray-700) | border-gray-200 dark:border-gray-700 |
+| Container Border | #a8a29e (gray-400) | #78716c (gray-500) | border-gray-400 dark:border-gray-500 |
 | Title Text | #111827 (gray-900) | #f3f4f6 (gray-100) | text-gray-900 dark:text-gray-100 |
 | Hover Title Color | #a855f7 (purple-500) | #a855f7 (purple-500) | group-hover:text-purple-600 dark:group-hover:text-purple-400 |
 | Body Text | #4b5563 (gray-600) | #d1d5db (gray-300) | text-gray-600 dark:text-gray-300 |
@@ -257,19 +257,19 @@ _________________________________________________________________
 **Content:**
 - **H2:** "Ready to Get Started?"
 - **Subheading:** "Have a task in mind? We'd love to help."
-- **Button:** "Tell Us What You Need" → `/contact` [Amber button]
+- **Button:** "Tell Us What You Need" → `/contact` [Orange button]
 
 **Colors Used:**
 | Element | Light Mode | Dark Mode | Tailwind Class |
 |---------|-----------|-----------|-----------------|
 | Card Background | white | #1f2937 (gray-800) | bg-white dark:bg-gray-800 |
-| Card Border | #e5e7eb (gray-200) | #374151 (gray-700) | border-gray-200 dark:border-gray-700 |
+| Card Border | #a8a29e (gray-400) | #78716c (gray-500) | border-gray-400 dark:border-gray-500 |
 | Heading Text | #111827 (gray-900) | #f3f4f6 (gray-100) | text-gray-900 dark:text-gray-100 |
 | Subheading Text | #4b5563 (gray-600) | #d1d5db (gray-300) | text-gray-600 dark:text-gray-300 |
-| Amber Button | yellow-100 bg + purple text | yellow-100 bg + purple text | Button variant="amber" |
+| Orange Button | yellow-100 bg + purple text | yellow-100 bg + purple text | Button variant="orange" |
 
 **Components:**
-- Button component (variant: amber)
+- Button component (variant: orange)
 - Location: [Button component file](../app/components/Button.tsx)
 
 **Redesign Notes:**

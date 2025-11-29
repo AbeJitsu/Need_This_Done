@@ -52,6 +52,21 @@ const config = {
 
     // Hover border colors - dark mode
     'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300', 'dark:hover:border-orange-300', 'dark:hover:border-teal-300', 'dark:hover:border-gray-300',
+
+    // Animation classes
+    'animate-fade-in',
+    'animate-fade-in-delay-100',
+    'animate-fade-in-delay-200',
+    'motion-safe:animate-fade-in',
+    'motion-safe:animate-fade-in-delay-100',
+    'motion-safe:animate-fade-in-delay-200',
+    'motion-reduce:opacity-100',
+
+    // Transform classes
+    'hover:scale-105',
+    'hover:-translate-y-1',
+    'active:scale-95',
+    'active:scale-98',
   ],
 
   // ========================================================================
@@ -239,6 +254,23 @@ const config = {
         '7xl': ['4.84rem', { lineHeight: '1' }],
         '8xl': ['6.45rem', { lineHeight: '1' }],
         '9xl': ['8.6rem', { lineHeight: '1' }],
+      },
+
+      // ======================================================================
+      // Animations - Subtle Page Load Effects
+      // ======================================================================
+      // Fade-in animations for hero section with staggered delays
+      // Respects prefers-reduced-motion via motion-safe variants
+      animation: {
+        'fade-in': 'fadeIn 0.6s ease-out forwards',
+        'fade-in-delay-100': 'fadeIn 0.6s ease-out 100ms forwards',
+        'fade-in-delay-200': 'fadeIn 0.6s ease-out 200ms forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
     },
   },
