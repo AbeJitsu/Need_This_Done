@@ -1,4 +1,4 @@
-import { AccentVariant, accentColors, cardHoverColors } from '@/lib/colors';
+import { AccentVariant, cardHoverColors, titleTextColors } from '@/lib/colors';
 import CircleBadge from './CircleBadge';
 
 // ============================================================================
@@ -23,8 +23,6 @@ export default function StepCard({
   details,
   color,
 }: StepCardProps) {
-  const colors = accentColors[color];
-
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-xl p-8 border-2 border-gray-400 dark:border-gray-500 transition-all ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}>
       <div className="flex items-start gap-6">
@@ -33,16 +31,16 @@ export default function StepCard({
 
         {/* Content */}
         <div className="flex-1">
-          <h2 className={`text-xl font-bold mb-3 ${colors.text}`}>
+          <h2 className={`text-xl font-bold mb-3 ${titleTextColors[color]}`}>
             {title}
           </h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
+          <p className="text-gray-600 dark:text-gray-100 mb-4">
             {description}
           </p>
           <ul className="space-y-2">
             {details.map((detail, index) => (
-              <li key={index} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                <span className={colors.text}>•</span>
+              <li key={index} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-100">
+                <span className={titleTextColors[color]}>•</span>
                 {detail}
               </li>
             ))}

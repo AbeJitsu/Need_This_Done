@@ -27,6 +27,7 @@ export default function Navigation() {
   const pathname = usePathname();
   const { user, isAuthenticated, isLoading } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // ============================================================================
@@ -68,8 +69,8 @@ export default function Navigation() {
 
           {/* Navigation Links + Auth */}
           <div className="flex items-center gap-4">
-            {/* Page Links */}
-            <div className="flex gap-1 overflow-x-auto">
+            {/* Desktop Page Links - hidden on mobile */}
+            <div className="hidden md:flex gap-1">
               {navigationLinks.map((link) => {
                 const isActive =
                   pathname === link.href ||
@@ -93,6 +94,25 @@ export default function Navigation() {
                 );
               })}
             </div>
+
+            {/* Mobile Hamburger Button - hidden on desktop */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+              aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen ? "true" : "false"}
+            >
+              {mobileMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
 
             {/* Auth Section */}
             <div className="flex-shrink-0 border-l border-gray-200 dark:border-gray-700 pl-4">
@@ -157,6 +177,37 @@ export default function Navigation() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown - slides down when hamburger is clicked */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <div className="px-4 py-3 space-y-1">
+            {navigationLinks.map((link) => {
+              const isActive =
+                pathname === link.href ||
+                (link.href !== '/' && pathname.startsWith(link.href));
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`
+                    block px-3 py-2 text-base font-medium rounded-md transition-colors
+                    ${
+                      isActive
+                        ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
+                    }
+                  `}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

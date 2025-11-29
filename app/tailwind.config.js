@@ -69,6 +69,10 @@ const config = {
     'dark:hover:bg-purple-900/10', 'dark:hover:bg-blue-900/10', 'dark:hover:bg-green-900/10',
     'dark:hover:bg-orange-900/10', 'dark:hover:bg-teal-900/10', 'dark:hover:bg-gray-900/10',
 
+    // Body text colors - dark mode (100 shade for high contrast)
+    'dark:text-purple-100', 'dark:text-blue-100', 'dark:text-green-100',
+    'dark:text-orange-100', 'dark:text-teal-100', 'dark:text-gray-100',
+
     // Animation classes
     'animate-fade-in',
     'animate-fade-in-delay-100',

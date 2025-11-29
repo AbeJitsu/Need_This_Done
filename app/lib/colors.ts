@@ -11,7 +11,8 @@ export type AccentVariant = 'purple' | 'blue' | 'green' | 'orange' | 'teal' | 'g
 // ============================================================================
 // Accent Colors - Shared styling for Button and CircleBadge
 // ============================================================================
-// Same colors in both light/dark modes (no inversion)
+// Dark text on light background - works in both light and dark modes
+// Used by components with bg-100 backgrounds (Button, CircleBadge)
 // bg-100, text-700/800, border-500/400
 export const accentColors: Record<AccentVariant, {
   bg: string;
@@ -27,12 +28,27 @@ export const accentColors: Record<AccentVariant, {
 };
 
 // ============================================================================
-// Title Colors - Used for headings and labels
+// Title Colors - Used for headings and labels (generic)
 // ============================================================================
 export const titleColors: Record<AccentColor, string> = {
   purple: 'text-purple-600 dark:text-purple-400',
   blue: 'text-blue-600 dark:text-blue-400',
   green: 'text-green-600 dark:text-green-400',
+};
+
+// ============================================================================
+// Title Text Colors - For StepCard titles on dark backgrounds
+// ============================================================================
+// Light mode: dark text (700/800) for readability on white cards
+// Dark mode: light text (100) for readability on dark gray cards
+// Matches CircleBadge number colors for visual cohesion
+export const titleTextColors: Record<AccentVariant, string> = {
+  purple: 'text-purple-700 dark:text-purple-100',
+  blue: 'text-blue-700 dark:text-blue-100',
+  green: 'text-green-800 dark:text-green-100',
+  orange: 'text-orange-800 dark:text-orange-100',
+  teal: 'text-teal-800 dark:text-teal-100',
+  gray: 'text-gray-700 dark:text-gray-100',
 };
 
 // ============================================================================
@@ -85,6 +101,20 @@ export const cardHoverBgTints: Record<AccentVariant, string> = {
   orange: 'hover:bg-orange-50/30 dark:hover:bg-orange-900/10',
   teal: 'hover:bg-teal-50/30 dark:hover:bg-teal-900/10',
   gray: 'hover:bg-gray-50/30 dark:hover:bg-gray-900/10',
+};
+
+// ============================================================================
+// Body Text Colors - For card descriptions and bullet points
+// ============================================================================
+// Light mode: gray-600 for all (readable on white)
+// Dark mode: color-matched 100 shade for visual cohesion with CircleBadge
+export const bodyTextColors: Record<AccentVariant, string> = {
+  purple: 'text-gray-600 dark:text-purple-100',
+  blue: 'text-gray-600 dark:text-blue-100',
+  green: 'text-gray-600 dark:text-green-100',
+  orange: 'text-gray-600 dark:text-orange-100',
+  teal: 'text-gray-600 dark:text-teal-100',
+  gray: 'text-gray-600 dark:text-gray-100',
 };
 
 // ============================================================================
