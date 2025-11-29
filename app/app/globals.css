@@ -361,6 +361,39 @@ Make the app look good when printed
 }
 
 /* ========================================================================
+Staggered Fade-In Animations - Page Element Reveals
+========================================================================
+Used for pricing cards and other elements that animate on page load.
+Respects user motion preferences via motion-safe: prefix in Tailwind.
+*/
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-delay-100 {
+  animation: fadeIn 0.4s ease-out 100ms forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-delay-200 {
+  animation: fadeIn 0.4s ease-out 200ms forwards;
+  opacity: 0;
+}
+
+/* ========================================================================
 Motion Accessibility - Respect User Preferences
 ========================================================================
 Respects prefers-reduced-motion for users who prefer minimal animation
@@ -374,5 +407,12 @@ WCAG requirement for accessibility
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .animate-fade-in,
+  .animate-fade-in-delay-100,
+  .animate-fade-in-delay-200 {
+    animation: none;
+    opacity: 1;
   }
 }

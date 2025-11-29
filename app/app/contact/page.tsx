@@ -339,14 +339,15 @@ export default function ContactPage() {
               )}
 
               {/* Submit Button */}
-              <Button
-                variant="purple"
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full"
-              >
-                {isSubmitting ? 'Sending...' : 'Start the Conversation'}
-              </Button>
+              <div className="flex justify-center">
+                <Button
+                  variant="purple"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Sending...' : 'Start the Conversation'}
+                </Button>
+              </div>
             </form>
           )}
         </Card>

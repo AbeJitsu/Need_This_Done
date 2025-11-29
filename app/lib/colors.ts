@@ -79,6 +79,19 @@ export const lightBgColors: Record<AccentColor, string> = {
 };
 
 // ============================================================================
+// Checkmark Colors - High contrast icons for feature lists (5:1 ratio)
+// ============================================================================
+// Uses -100 bg with -700/-800 text in both modes for maximum contrast
+export const checkmarkColors: Record<AccentColor, {
+  bg: string;
+  icon: string;
+}> = {
+  purple: { bg: 'bg-purple-100', icon: 'text-purple-700' },
+  blue: { bg: 'bg-blue-100', icon: 'text-blue-700' },
+  green: { bg: 'bg-green-100', icon: 'text-green-800' },
+};
+
+// ============================================================================
 // Card Hover Colors - For Card component hover states
 // ============================================================================
 // Centralized hover border colors for cards with color accents
