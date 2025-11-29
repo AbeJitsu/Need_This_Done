@@ -63,6 +63,31 @@ export const lightBgColors: Record<AccentColor, string> = {
 };
 
 // ============================================================================
+// Card Hover Colors - For Card component hover states
+// ============================================================================
+// Centralized hover border colors for cards with color accents
+export const cardHoverColors: Record<AccentVariant, string> = {
+  purple: 'hover:border-purple-400 dark:hover:border-purple-500',
+  blue: 'hover:border-blue-400 dark:hover:border-blue-500',
+  green: 'hover:border-green-400 dark:hover:border-green-500',
+  orange: 'hover:border-orange-400 dark:hover:border-orange-500',
+  teal: 'hover:border-teal-400 dark:hover:border-teal-500',
+  gray: 'hover:border-gray-400 dark:hover:border-gray-500',
+};
+
+// ============================================================================
+// Card Hover Background Tints - Subtle background on hover
+// ============================================================================
+export const cardHoverBgTints: Record<AccentVariant, string> = {
+  purple: 'hover:bg-purple-50/30 dark:hover:bg-purple-900/10',
+  blue: 'hover:bg-blue-50/30 dark:hover:bg-blue-900/10',
+  green: 'hover:bg-green-50/30 dark:hover:bg-green-900/10',
+  orange: 'hover:bg-orange-50/30 dark:hover:bg-orange-900/10',
+  teal: 'hover:bg-teal-50/30 dark:hover:bg-teal-900/10',
+  gray: 'hover:bg-gray-50/30 dark:hover:bg-gray-900/10',
+};
+
+// ============================================================================
 // FAQ Colors - Numbered badge styling for FAQ items
 // ============================================================================
 // Uses AccentVariant subset for FAQ card left borders and text colors

@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import PricingCard from '@/components/PricingCard';
 import Button from '@/components/Button';
+import PageHeader from '@/components/PageHeader';
+import Card from '@/components/Card';
 import { AccentColor } from '@/lib/colors';
 
 // ============================================================================
@@ -74,14 +76,10 @@ export default function PricingPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Simple, Transparent Pricing
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            No hidden fees. No surprises. Just clear pricing for quality work.
-          </p>
-        </div>
+        <PageHeader
+          title="Simple, Transparent Pricing"
+          description="No hidden fees. No surprises. Just clear pricing for quality work."
+        />
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-10">
@@ -91,7 +89,7 @@ export default function PricingPage() {
         </div>
 
         {/* Custom Tasks */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
+        <Card hoverColor="orange" hoverEffect="glow" className="mb-10">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Not Sure What You Need?
@@ -104,7 +102,7 @@ export default function PricingPage() {
               Tell Us What You Need
             </Button>
           </div>
-        </div>
+        </Card>
 
         {/* FAQ Teaser */}
         <div className="text-center">

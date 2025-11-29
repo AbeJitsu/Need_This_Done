@@ -1,6 +1,8 @@
 import { getServices } from '@/config/site.config';
 import ServiceCard from '@/components/ServiceCard';
-import Button from '@/components/Button';
+import PageHeader from '@/components/PageHeader';
+import Card from '@/components/Card';
+import CTASection from '@/components/CTASection';
 
 // ============================================================================
 // Services Page - What NeedThisDone Offers
@@ -20,14 +22,10 @@ export default function ServicesPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            How We Can Help
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Too busy? Not sure where to start? We handle the tasks you don't have time for, so you can focus on what matters most.
-          </p>
-        </div>
+        <PageHeader
+          title="How We Can Help"
+          description="Too busy? Not sure where to start? We handle the tasks you don't have time for, so you can focus on what matters most."
+        />
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-10">
@@ -45,7 +43,7 @@ export default function ServicesPage() {
         </div>
 
         {/* What to Expect */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
+        <Card hoverColor="green" hoverEffect="glow" className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
             What You Can Expect
           </h2>
@@ -95,25 +93,18 @@ export default function ServicesPage() {
               </div>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* CTA */}
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Ready to Get Started?
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
-            See how we work, or let's get started.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button variant="orange" href="/how-it-works" size="md">
-              How It Works
-            </Button>
-            <Button variant="teal" href="/faq" size="md">
-              FAQ
-            </Button>
-          </div>
-        </div>
+        <CTASection
+          title="Ready to Get Started?"
+          description="See how we work, or let's get started."
+          buttons={[
+            { text: 'How It Works', variant: 'orange', href: '/how-it-works' },
+            { text: 'FAQ', variant: 'teal', href: '/faq' }
+          ]}
+          hoverColor="orange"
+        />
       </div>
     </div>
   );

@@ -58,6 +58,66 @@
 3. **Info Cards** - "What to Expect", "Not Sure", "Timeline Note" all use similar card styling
 4. **Hover Patterns** - Border/shadow/lift effects repeated across components
 
+### Step 0: Enhance Color System (DRY Foundation)
+
+**CRITICAL**: Update `app/lib/colors.ts` FIRST to support all component needs.
+
+**Why**: Tailwind's JIT compiler needs full class names at build time. Template strings like `` `hover:border-${color}-400` `` won't work. We need a centralized mapping.
+
+**Add to `app/lib/colors.ts`**:
+
+```tsx
+// ============================================================================
+// Card Hover Colors - For Card component hover states
+// ============================================================================
+// Centralized hover border colors for cards with color accents
+export const cardHoverColors: Record<AccentVariant, string> = {
+  purple: 'hover:border-purple-400 dark:hover:border-purple-500',
+  blue: 'hover:border-blue-400 dark:hover:border-blue-500',
+  green: 'hover:border-green-400 dark:hover:border-green-500',
+  orange: 'hover:border-orange-400 dark:hover:border-orange-500',
+  teal: 'hover:border-teal-400 dark:hover:border-teal-500',
+  gray: 'hover:border-gray-400 dark:hover:border-gray-500',
+};
+
+// ============================================================================
+// Card Hover Background Tints - Subtle background on hover
+// ============================================================================
+export const cardHoverBgTints: Record<AccentVariant, string> = {
+  purple: 'hover:bg-purple-50/30 dark:hover:bg-purple-900/10',
+  blue: 'hover:bg-blue-50/30 dark:hover:bg-blue-900/10',
+  green: 'hover:bg-green-50/30 dark:hover:bg-green-900/10',
+  orange: 'hover:bg-orange-50/30 dark:hover:bg-orange-900/10',
+  teal: 'hover:bg-teal-50/30 dark:hover:bg-teal-900/10',
+  gray: 'hover:bg-gray-50/30 dark:hover:bg-gray-900/10',
+};
+```
+
+**Update Tailwind Safelist** (`app/tailwind.config.js`):
+Add these classes so Tailwind compiles them:
+
+```js
+// Card hover colors - light mode
+'hover:border-purple-400', 'hover:border-blue-400', 'hover:border-green-400',
+'hover:border-orange-400', 'hover:border-teal-400', 'hover:border-gray-400',
+
+// Card hover colors - dark mode
+'dark:hover:border-purple-500', 'dark:hover:border-blue-500', 'dark:hover:border-green-500',
+'dark:hover:border-orange-500', 'dark:hover:border-teal-500', 'dark:hover:border-gray-500',
+
+// Card hover background tints
+'hover:bg-purple-50/30', 'hover:bg-blue-50/30', 'hover:bg-green-50/30',
+'hover:bg-orange-50/30', 'hover:bg-teal-50/30', 'hover:bg-gray-50/30',
+'dark:hover:bg-purple-900/10', 'dark:hover:bg-blue-900/10', 'dark:hover:bg-green-900/10',
+'dark:hover:bg-orange-900/10', 'dark:hover:bg-teal-900/10', 'dark:hover:bg-gray-900/10',
+```
+
+**Benefits**:
+- Single source of truth for ALL colors
+- Change hover color scheme → updates everywhere automatically
+- No string interpolation (Tailwind JIT compatible)
+- Type-safe color usage
+
 ### New Components to Create
 
 #### 1. PageHeader Component
@@ -94,11 +154,15 @@ export default function PageHeader({ title, description, className = '' }: PageH
 **File**: `app/components/Card.tsx`
 **Purpose**: Reusable card container with consistent hover effects
 
+**Uses centralized colors from `@/lib/colors`** - Single source of truth!
+
 ```tsx
+import { AccentVariant, cardHoverColors, cardHoverBgTints } from '@/lib/colors';
+
 interface CardProps {
   children: React.ReactNode;
   hoverColor?: AccentVariant; // purple, blue, green, orange, etc.
-  hoverEffect?: 'lift' | 'glow' | 'none';
+  hoverEffect?: 'lift' | 'glow' | 'tint' | 'none';
   className?: string;
 }
 
@@ -108,10 +172,17 @@ export default function Card({
   hoverEffect = 'lift',
   className = ''
 }: CardProps) {
-  const hoverClasses = hoverColor
-    ? `hover:border-${hoverColor}-400 dark:hover:border-${hoverColor}-500`
-    : 'hover:border-gray-400 dark:hover:border-gray-500';
+  // Get hover classes from centralized color system
+  const hoverBorderClass = hoverColor
+    ? cardHoverColors[hoverColor]
+    : cardHoverColors.gray;
 
+  // Optional: subtle background tint on hover
+  const hoverBgClass = hoverEffect === 'tint' && hoverColor
+    ? cardHoverBgTints[hoverColor]
+    : '';
+
+  // Hover effects: lift, glow, or none
   const effectClasses = hoverEffect === 'lift'
     ? 'hover:-translate-y-1 hover:shadow-xl'
     : hoverEffect === 'glow'
@@ -124,7 +195,8 @@ export default function Card({
       rounded-xl p-6
       border-2 border-gray-400 dark:border-gray-500
       transition-all duration-300
-      ${hoverClasses}
+      ${hoverBorderClass}
+      ${hoverBgClass}
       ${effectClasses}
       ${className}
     `}>
@@ -133,6 +205,8 @@ export default function Card({
   );
 }
 ```
+
+**Key DRY Feature**: All hover colors come from `cardHoverColors`. Change one file → updates everywhere!
 
 **Usage**: Replace repeated card patterns with `<Card hoverColor="purple">...</Card>`
 **Pages Affected**: All pages with "What to Expect", "Not Sure", CTA sections
@@ -192,11 +266,49 @@ export default function CTASection({
 
 ### Implementation Order
 
-1. **Create PageHeader** - Simple, no dependencies
-2. **Create Card** - Base for other components
-3. **Create CTASection** - Uses Card + Button
-4. **Refactor existing pages** - Replace patterns with new components
-5. **Update component tests** - Add .a11y.test.tsx for new components
+**CRITICAL: Color system first, then components!**
+
+1. **Enhance `app/lib/colors.ts`** - Add `cardHoverColors` and `cardHoverBgTints`
+2. **Update `tailwind.config.js`** - Add new classes to safelist
+3. **Create PageHeader** - Simple, no dependencies
+4. **Create Card** - Uses centralized color system
+5. **Create CTASection** - Uses Card + Button (both use centralized colors)
+6. **Refactor existing pages** - Replace patterns with new components
+7. **Update component tests** - Add .a11y.test.tsx for new components
+
+### Centralized Color System Architecture
+
+**Single Source of Truth**: `app/lib/colors.ts`
+
+```
+colors.ts (SINGLE SOURCE OF TRUTH)
+    ├── accentColors        → Used by Button, CircleBadge
+    ├── cardHoverColors     → Used by Card, info sections
+    ├── cardHoverBgTints    → Used by Card (tint effect)
+    ├── titleColors         → Used by headings
+    ├── faqColors           → Used by FAQ items
+    └── [other utilities]   → Used by specific components
+
+All Components Import From colors.ts
+    ├── Button.tsx          → imports accentColors
+    ├── Card.tsx            → imports cardHoverColors, cardHoverBgTints
+    ├── CTASection.tsx      → imports (via Card + Button)
+    ├── CircleBadge.tsx     → imports accentColors
+    └── [all other cards]   → import relevant color utilities
+
+UPDATE ONE FILE → CHANGES EVERYWHERE
+```
+
+**Color Change Example**:
+Want to make all purple hovers brighter?
+1. Update `cardHoverColors.purple` in `colors.ts`
+2. All Cards with `hoverColor="purple"` update automatically
+3. Services page ✓, Pricing page ✓, How It Works ✓, FAQ ✓ - ALL benefit!
+
+**Type Safety**:
+- `AccentVariant` type ensures only valid colors used
+- TypeScript catches typos at compile time
+- IntelliSense suggests available colors
 
 ### Before & After Example
 
@@ -251,13 +363,59 @@ export default function CTASection({
 
 ### Benefits
 
-- **DRY**: Single source of truth for repeated patterns
+**Component DRY**:
+- **Single source of truth**: PageHeader, Card, CTASection defined once
 - **Consistency**: All pages use same styling automatically
 - **Maintainability**: Update once, changes everywhere
 - **Orthogonality**: Card component is independent, can be used anywhere
 - **Testing**: Test base components once instead of testing each page
 - **Accessibility**: Ensure a11y in one place instead of many
 - **Readability**: Page code reads like a blueprint, not implementation details
+
+**Color DRY** (NEW):
+- **Centralized colors**: All colors in `app/lib/colors.ts`
+- **Type-safe**: TypeScript prevents invalid color usage
+- **JIT-compatible**: No template strings, proper Tailwind compilation
+- **Global updates**: Change purple hover → all purple cards update
+- **Brand consistency**: One file controls entire color palette
+- **Dark mode sync**: Light/dark variants defined together
+- **No duplication**: Zero hardcoded colors in components
+
+### Real-World Color Change Example
+
+**Scenario**: Marketing wants to make purple accents "pop" more on hover.
+
+**Before (without centralized colors)**:
+- Update `page.tsx` on Services page (line 48)
+- Update `page.tsx` on How It Works (line 65)
+- Update `page.tsx` on FAQ (line 92)
+- Update PricingCard.tsx hover classes
+- Update StepCard.tsx hover classes
+- Hope you didn't miss any...
+- **Result**: 5+ files changed, easy to miss spots, inconsistent
+
+**After (with centralized colors)** - ONE LINE CHANGE:
+```tsx
+// app/lib/colors.ts
+export const cardHoverColors: Record<AccentVariant, string> = {
+  // Change this ONE line:
+  purple: 'hover:border-purple-500 dark:hover:border-purple-400', // Was 400/500, now 500/400
+  // ...rest unchanged
+};
+```
+- **Result**: ALL purple cards update automatically
+  - ✓ Services "How It Works" preview section
+  - ✓ Pricing "Not Sure" section
+  - ✓ How It Works step cards
+  - ✓ FAQ CTA section
+  - ✓ Any future components using purple
+
+**Files changed**: 1 (colors.ts)
+**Components updated**: All that use purple
+**Risk of inconsistency**: Zero
+**Time saved**: 90%
+
+**This is the power of DRY + centralized colors!**
 
 ---
 

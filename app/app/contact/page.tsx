@@ -3,6 +3,9 @@
 import { useState, useRef } from 'react';
 import { getServices } from '@/config/site.config';
 import Button from '@/components/Button';
+import PageHeader from '@/components/PageHeader';
+import Card from '@/components/Card';
+import CTASection from '@/components/CTASection';
 
 // ============================================================================
 // Contact Page - Inquiry / Booking Form
@@ -141,17 +144,13 @@ export default function ContactPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Get In Touch
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Have a task in mind? Tell us about it and we'll get back to you within 2 business days.
-          </p>
-        </div>
+        <PageHeader
+          title="Get In Touch"
+          description="Have a task in mind? Tell us about it and we'll get back to you within 2 business days."
+        />
 
         {/* Contact Form */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
+        <Card hoverColor="purple" hoverEffect="glow" className="mb-10">
           {submitStatus === 'success' ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
@@ -350,22 +349,17 @@ export default function ContactPage() {
               </Button>
             </form>
           )}
-        </div>
+        </Card>
 
         {/* Alternative Contact */}
-        <div className="text-center">
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Want to learn more first?
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button variant="orange" href="/services" size="md">
-              View Our Services
-            </Button>
-            <Button variant="teal" href="/faq" size="md">
-              Read the FAQ
-            </Button>
-          </div>
-        </div>
+        <CTASection
+          title="Want to learn more first?"
+          buttons={[
+            { text: 'View Our Services', variant: 'orange', href: '/services' },
+            { text: 'Read the FAQ', variant: 'teal', href: '/faq' }
+          ]}
+          hoverColor="orange"
+        />
       </div>
     </div>
   );

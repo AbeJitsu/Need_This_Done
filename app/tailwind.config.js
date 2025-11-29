@@ -53,6 +53,22 @@ const config = {
     // Hover border colors - dark mode
     'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300', 'dark:hover:border-orange-300', 'dark:hover:border-teal-300', 'dark:hover:border-gray-300',
 
+    // Card hover colors - light mode (for Card component)
+    'hover:border-purple-400', 'hover:border-blue-400', 'hover:border-green-400',
+    'hover:border-orange-400', 'hover:border-teal-400', 'hover:border-gray-400',
+
+    // Card hover colors - dark mode
+    'dark:hover:border-purple-500', 'dark:hover:border-blue-500', 'dark:hover:border-green-500',
+    'dark:hover:border-orange-500', 'dark:hover:border-teal-500', 'dark:hover:border-gray-500',
+
+    // Card hover background tints - light mode
+    'hover:bg-purple-50/30', 'hover:bg-blue-50/30', 'hover:bg-green-50/30',
+    'hover:bg-orange-50/30', 'hover:bg-teal-50/30', 'hover:bg-gray-50/30',
+
+    // Card hover background tints - dark mode
+    'dark:hover:bg-purple-900/10', 'dark:hover:bg-blue-900/10', 'dark:hover:bg-green-900/10',
+    'dark:hover:bg-orange-900/10', 'dark:hover:bg-teal-900/10', 'dark:hover:bg-gray-900/10',
+
     // Animation classes
     'animate-fade-in',
     'animate-fade-in-delay-100',
