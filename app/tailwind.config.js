@@ -35,25 +35,27 @@ const config = {
     // CircleBadge padding (ring thickness)
     'p-px',
     // CircleBadge ring backgrounds - light mode (dark/muted rings)
-    'bg-purple-700', 'bg-blue-700', 'bg-green-700', 'bg-yellow-900',
+    'bg-purple-700', 'bg-blue-700', 'bg-green-700', 'bg-orange-800',
     // CircleBadge ring backgrounds - dark mode (soft pastel rings)
-    'dark:bg-purple-200', 'dark:bg-blue-200', 'dark:bg-green-200', 'dark:bg-yellow-200',
+    'dark:bg-purple-200', 'dark:bg-blue-200', 'dark:bg-green-200', 'dark:bg-orange-200',
     // CircleBadge inner circles - light mode (soft pastels)
-    'bg-purple-200', 'bg-blue-200', 'bg-green-200', 'bg-yellow-200',
+    'bg-purple-200', 'bg-blue-200', 'bg-green-200', 'bg-orange-200',
     // CircleBadge inner circles - dark mode (deep/muted)
-    'dark:bg-purple-700', 'dark:bg-blue-700', 'dark:bg-green-700', 'dark:bg-yellow-900',
+    'dark:bg-purple-700', 'dark:bg-blue-700', 'dark:bg-green-700', 'dark:bg-orange-800',
     // Title/bullet text - light mode (matches ring)
-    'text-purple-700', 'text-blue-700', 'text-green-700', 'text-yellow-900',
+    'text-purple-700', 'text-blue-700', 'text-green-700', 'text-orange-800',
     // Title/bullet text - dark mode (matches ring)
-    'dark:text-purple-200', 'dark:text-blue-200', 'dark:text-green-200', 'dark:text-yellow-200',
+    'dark:text-purple-200', 'dark:text-blue-200', 'dark:text-green-200', 'dark:text-orange-200',
     // Number text - light mode
-    'text-purple-900', 'text-blue-900', 'text-green-900',
+    'text-purple-900', 'text-blue-900', 'text-green-900', 'text-orange-900',
     // Number text - dark mode
     'dark:text-white',
+    // Button backgrounds - light mode
+    'bg-orange-100',
     // Button hover states - dark mode (for Button component)
-    'dark:hover:bg-purple-200', 'dark:hover:bg-blue-200', 'dark:hover:bg-green-200',
-    'dark:hover:text-purple-800', 'dark:hover:text-blue-800', 'dark:hover:text-green-800',
-    'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300',
+    'dark:hover:bg-purple-200', 'dark:hover:bg-blue-200', 'dark:hover:bg-green-200', 'dark:hover:bg-orange-200',
+    'dark:hover:text-purple-800', 'dark:hover:text-blue-800', 'dark:hover:text-green-800', 'dark:hover:text-orange-900',
+    'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300', 'dark:hover:border-orange-300',
   ],
 
   // ========================================================================
@@ -135,6 +137,22 @@ const config = {
           700: 'var(--yellow-700)',
           800: 'var(--yellow-800)',
           900: 'var(--yellow-900)',
+        },
+
+        // ====================================================================
+        // Oranges - Warm & Energetic
+        // ====================================================================
+        orange: {
+          50: 'var(--orange-50)',
+          100: 'var(--orange-100)',
+          200: 'var(--orange-200)',
+          300: 'var(--orange-300)',
+          400: 'var(--orange-400)',
+          500: 'var(--orange-500)',
+          600: 'var(--orange-600)',
+          700: 'var(--orange-700)',
+          800: 'var(--orange-800)',
+          900: 'var(--orange-900)',
         },
 
         // ====================================================================

@@ -106,7 +106,7 @@ export default function ServicesPage() {
             See how we work, or let's get started.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button variant="amber" href="/how-it-works" size="md">
+            <Button variant="orange" href="/how-it-works" size="md">
               How It Works
             </Button>
             <Button variant="teal" href="/faq" size="md">

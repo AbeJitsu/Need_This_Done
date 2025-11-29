@@ -6,7 +6,25 @@
 // in multiple files.
 
 export type AccentColor = 'purple' | 'blue' | 'green';
-export type StepColor = 'purple' | 'blue' | 'green' | 'amber';
+export type AccentVariant = 'purple' | 'blue' | 'green' | 'orange' | 'teal' | 'gray';
+
+// ============================================================================
+// Accent Colors - Shared styling for Button and CircleBadge
+// ============================================================================
+// Same colors in both light/dark modes (no inversion)
+// bg-100, text-700/800, border-500/400
+export const accentColors: Record<AccentVariant, {
+  bg: string;
+  text: string;
+  border: string;
+}> = {
+  purple: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-500 dark:border-purple-400' },
+  blue: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-500 dark:border-blue-400' },
+  green: { bg: 'bg-green-100', text: 'text-green-800', border: 'border-green-500 dark:border-green-400' },
+  orange: { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-500 dark:border-orange-400' },
+  teal: { bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-500 dark:border-teal-400' },
+  gray: { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-500 dark:border-gray-400' },
+};
 
 // ============================================================================
 // Title Colors - Used for headings and labels
@@ -47,7 +65,8 @@ export const lightBgColors: Record<AccentColor, string> = {
 // ============================================================================
 // FAQ Colors - Numbered badge styling for FAQ items
 // ============================================================================
-export const faqColors: Record<AccentColor | 'amber', {
+// Uses AccentVariant subset for FAQ card left borders and text colors
+export const faqColors: Record<'purple' | 'blue' | 'green' | 'orange', {
   border: string;
   text: string;
   bg: string;
@@ -75,54 +94,13 @@ export const faqColors: Record<AccentColor | 'amber', {
     numText: 'text-green-700 dark:text-white',
     hover: 'hover:border-green-400 dark:hover:border-green-400',
   },
-  amber: {
-    border: 'border-l-yellow-500',
-    text: 'text-yellow-900 dark:text-yellow-200',
-    bg: 'bg-yellow-100 dark:bg-yellow-700',
-    numText: 'text-yellow-900 dark:text-white',
-    hover: 'hover:border-yellow-400 dark:hover:border-yellow-400',
+  orange: {
+    border: 'border-l-orange-500',
+    text: 'text-orange-800 dark:text-orange-300',
+    bg: 'bg-orange-100 dark:bg-orange-700',
+    numText: 'text-orange-800 dark:text-white',
+    hover: 'hover:border-orange-400 dark:hover:border-orange-400',
   },
 };
 
-// ============================================================================
-// Step Colors - Numbered step cards (How It Works page)
-// ============================================================================
-// Includes amber for 4-step sequences
-// Note: Amber uses dark text for 5:1+ contrast ratio
-export const stepColors: Record<StepColor, {
-  bg: string;
-  border: string;
-  text: string;
-  bullet: string;
-  numberText: string;
-}> = {
-  purple: {
-    bg: 'bg-purple-200 dark:bg-purple-700',
-    border: 'border-purple-300 dark:border-purple-500',
-    text: 'text-purple-700 dark:text-purple-200',
-    bullet: 'text-purple-700 dark:text-purple-200',
-    numberText: 'text-purple-900 dark:text-white',
-  },
-  blue: {
-    bg: 'bg-blue-200 dark:bg-blue-700',
-    border: 'border-blue-300 dark:border-blue-500',
-    text: 'text-blue-700 dark:text-blue-200',
-    bullet: 'text-blue-700 dark:text-blue-200',
-    numberText: 'text-blue-900 dark:text-white',
-  },
-  green: {
-    bg: 'bg-green-200 dark:bg-green-700',
-    border: 'border-green-300 dark:border-green-500',
-    text: 'text-green-700 dark:text-green-200',
-    bullet: 'text-green-700 dark:text-green-200',
-    numberText: 'text-green-900 dark:text-white',
-  },
-  amber: {
-    bg: 'bg-yellow-200 dark:bg-yellow-700',
-    border: 'border-yellow-300 dark:border-yellow-500',
-    text: 'text-yellow-900 dark:text-yellow-200',
-    bullet: 'text-yellow-900 dark:text-yellow-200',
-    numberText: 'text-yellow-900 dark:text-white',
-  },
-};
 

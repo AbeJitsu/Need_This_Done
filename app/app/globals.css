@@ -77,7 +77,7 @@ Usage: background-color: var(--primary-color);
   --red-900: #7f1d1d;
 
   /* ======================================================================
-  YELLOWS/AMBER - Warm Gold (vibrant: cheerful and energetic)
+  YELLOWS - Warnings & Caution States
   ====================================================================== */
   --yellow-50: #fefce8;
   --yellow-100: #fef9c3;
@@ -89,6 +89,20 @@ Usage: background-color: var(--primary-color);
   --yellow-700: #a16207;
   --yellow-800: #854d0e;
   --yellow-900: #713f12;
+
+  /* ======================================================================
+  ORANGES - Warm & Energetic (call-to-action, engagement)
+  ====================================================================== */
+  --orange-50: #fff7ed;
+  --orange-100: #ffedd5;
+  --orange-200: #fed7aa;
+  --orange-300: #fdba74;
+  --orange-400: #fb923c;
+  --orange-500: #f97316;
+  --orange-600: #ea580c;
+  --orange-700: #c2410c;
+  --orange-800: #9a3412;
+  --orange-900: #7c2d12;
 
   /* ======================================================================
   PURPLES - Creativity & Premium (balanced: rich but soft)
