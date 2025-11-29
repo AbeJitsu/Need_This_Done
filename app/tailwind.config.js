@@ -28,34 +28,30 @@ const config = {
   // ========================================================================
   // Safelist - Force Tailwind to Generate These Classes
   // ========================================================================
-  // Classes in colors.ts are built dynamically and not scanned by JIT.
-  // This ensures CircleBadge ring/background colors are always compiled.
+  // Classes in accentColors are built dynamically and not scanned by JIT.
+  // This ensures Button and CircleBadge colors are always compiled.
 
   safelist: [
-    // CircleBadge padding (ring thickness)
-    'p-px',
-    // CircleBadge ring backgrounds - light mode (dark/muted rings)
-    'bg-purple-700', 'bg-blue-700', 'bg-green-700', 'bg-orange-800',
-    // CircleBadge ring backgrounds - dark mode (soft pastel rings)
-    'dark:bg-purple-200', 'dark:bg-blue-200', 'dark:bg-green-200', 'dark:bg-orange-200',
-    // CircleBadge inner circles - light mode (soft pastels)
-    'bg-purple-200', 'bg-blue-200', 'bg-green-200', 'bg-orange-200',
-    // CircleBadge inner circles - dark mode (deep/muted)
-    'dark:bg-purple-700', 'dark:bg-blue-700', 'dark:bg-green-700', 'dark:bg-orange-800',
-    // Title/bullet text - light mode (matches ring)
-    'text-purple-700', 'text-blue-700', 'text-green-700', 'text-orange-800',
-    // Title/bullet text - dark mode (matches ring)
-    'dark:text-purple-200', 'dark:text-blue-200', 'dark:text-green-200', 'dark:text-orange-200',
-    // Number text - light mode
-    'text-purple-900', 'text-blue-900', 'text-green-900', 'text-orange-900',
-    // Number text - dark mode
-    'dark:text-white',
-    // Button backgrounds - light mode
-    'bg-orange-100',
-    // Button hover states - dark mode (for Button component)
-    'dark:hover:bg-purple-200', 'dark:hover:bg-blue-200', 'dark:hover:bg-green-200', 'dark:hover:bg-orange-200',
-    'dark:hover:text-purple-800', 'dark:hover:text-blue-800', 'dark:hover:text-green-800', 'dark:hover:text-orange-900',
-    'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300', 'dark:hover:border-orange-300',
+    // Backgrounds - light mode (bg-100)
+    'bg-purple-100', 'bg-blue-100', 'bg-green-100', 'bg-orange-100', 'bg-teal-100', 'bg-gray-100',
+
+    // Text colors - light mode (text-700/800)
+    'text-purple-700', 'text-blue-700', 'text-green-800', 'text-orange-800', 'text-teal-800', 'text-gray-700',
+
+    // Border colors - light mode (border-500)
+    'border-purple-500', 'border-blue-500', 'border-green-500', 'border-orange-500', 'border-teal-500', 'border-gray-500',
+
+    // Border colors - dark mode (border-400)
+    'dark:border-purple-400', 'dark:border-blue-400', 'dark:border-green-400', 'dark:border-orange-400', 'dark:border-teal-400', 'dark:border-gray-400',
+
+    // Hover text colors
+    'hover:text-purple-800', 'hover:text-blue-800', 'hover:text-green-900', 'hover:text-orange-900', 'hover:text-teal-900', 'hover:text-gray-800',
+
+    // Hover border colors - light mode
+    'hover:border-purple-600', 'hover:border-blue-600', 'hover:border-green-600', 'hover:border-orange-600', 'hover:border-teal-600', 'hover:border-gray-600',
+
+    // Hover border colors - dark mode
+    'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300', 'dark:hover:border-orange-300', 'dark:hover:border-teal-300', 'dark:hover:border-gray-300',
   ],
 
   // ========================================================================
