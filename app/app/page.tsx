@@ -22,13 +22,13 @@ export default function HomePage() {
 
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-blue-600 dark:text-blue-400 mb-4 motion-safe:animate-fade-in motion-reduce:opacity-100">
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-blue-600 dark:text-blue-400 mb-4">
             {siteConfig.project.tagline}
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto motion-safe:animate-fade-in-delay-100 motion-reduce:opacity-100">
+          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto">
             {siteConfig.project.description}
           </p>
-          <div className="flex flex-wrap gap-4 justify-center motion-safe:animate-fade-in-delay-200 motion-reduce:opacity-100">
+          <div className="flex flex-wrap gap-4 justify-center">
             <Button variant="blue" href="/how-it-works">
               See How It Works
             </Button>
