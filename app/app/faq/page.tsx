@@ -30,7 +30,7 @@ export default function FAQPage() {
     },
     {
       question: 'Do I need to be tech-savvy to work with you?',
-      answer: "Not at all! We work with people of all technical backgrounds. Just describe what you need in your own words, and we'll take it from there. No jargon required.",
+      answer: "Not at all! We work with people of all backgrounds. Just describe what you need in your own words, and we'll take it from there. No technical terms needed.",
     },
     {
       question: 'How long does a typical task take?',

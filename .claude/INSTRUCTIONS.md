@@ -82,7 +82,7 @@ function saveVolume(level) {
 ```
 
 **Guidelines for comments:**
-- Use plain language, no jargon
+- Use plain language anyone can understand
 - Explain the "why" not just the "what"
 - Use section dividers (=====) to break up different parts
 - If someone without coding experience reads it, they should get the general idea

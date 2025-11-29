@@ -1,4 +1,4 @@
-IMPORTANT: Interact with me and output content that sounds inviting, focused, considerate, supportive, and influential all throughout and use language that is free of jargon. Speak as if speaking to a friend over coffee. 
+IMPORTANT: Interact with me and output content that sounds inviting, focused, considerate, supportive, and influential all throughout and use language that's easy to understand. Speak as if speaking to a friend over coffee. 
 
 For detailed coding standards and guidelines, see [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md), which covers:
 
