@@ -145,8 +145,8 @@ export default function ContactPage() {
 
         {/* Header */}
         <PageHeader
-          title="Get In Touch"
-          description="Have a task in mind? Tell us about it and we'll get back to you within 2 business days."
+          title="Let's Talk"
+          description="Tell us what you need help with. We'll get back to you within 2 business days—no pressure, no spam."
         />
 
         {/* Contact Form */}
@@ -157,10 +157,10 @@ export default function ContactPage() {
                 <span className="text-3xl text-green-600 dark:text-green-400">✓</span>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-                Message Sent!
+                We got your message!
               </h2>
               <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Thank you for reaching out. We'll review your request and get back to you within 2 business days.
+                Thanks for reaching out — we&apos;re excited to learn more about what you need. Expect to hear from us within 2 business days.
               </p>
               <button
                 onClick={() => setSubmitStatus('idle')}
@@ -175,7 +175,7 @@ export default function ContactPage() {
                 {/* Name */}
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Your Name <span className="text-red-500">*</span>
+                    What should we call you?
                   </label>
                   <input
                     type="text"
@@ -185,14 +185,14 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
-                    placeholder="John Doe"
+                    placeholder="Your name"
                   />
                 </div>
 
                 {/* Email */}
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Email Address <span className="text-red-500">*</span>
+                    Where can we reach you?
                   </label>
                   <input
                     type="email"
@@ -202,7 +202,7 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
-                    placeholder="john@example.com"
+                    placeholder="your@email.com"
                   />
                 </div>
               </div>
@@ -211,7 +211,7 @@ export default function ContactPage() {
                 {/* Company */}
                 <div>
                   <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Company (Optional)
+                    Company <span className="text-gray-400 dark:text-gray-500 font-normal">(if applicable)</span>
                   </label>
                   <input
                     type="text"
@@ -220,14 +220,14 @@ export default function ContactPage() {
                     value={formData.company}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
-                    placeholder="Your Company"
+                    placeholder="Where you work"
                   />
                 </div>
 
                 {/* Service Interest */}
                 <div>
                   <label htmlFor="service" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Service Interest
+                    What kind of help do you need?
                   </label>
                   <select
                     id="service"
@@ -236,7 +236,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
                   >
-                    <option value="">Select a service...</option>
+                    <option value="">Pick one (or skip this)</option>
                     {services.map((service, index) => (
                       <option key={index} value={service.title}>
                         {service.title}
@@ -250,7 +250,7 @@ export default function ContactPage() {
               {/* Message */}
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Project Details <span className="text-red-500">*</span>
+                  Tell us what&apos;s on your mind
                 </label>
                 <textarea
                   id="message"
@@ -260,14 +260,14 @@ export default function ContactPage() {
                   value={formData.message}
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)] resize-none"
-                  placeholder="Tell us about your project. What do you need done? Any specific requirements or timeline?"
+                  placeholder="What's the task? Any details that would help us understand what you're looking for?"
                 />
               </div>
 
               {/* File Attachments */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Attachments (Optional)
+                  Have files to share? <span className="text-gray-400 dark:text-gray-500 font-normal">(totally optional)</span>
                 </label>
                 <div className="space-y-3">
                   {/* File Input Area */}
@@ -286,10 +286,10 @@ export default function ContactPage() {
                       aria-label="Upload files"
                     />
                     <div className="text-gray-500 dark:text-gray-400">
-                      <span className="text-2xl block mb-2">+</span>
-                      <span className="text-sm">Click to add files</span>
+                      <span className="text-2xl block mb-2">📎</span>
+                      <span className="text-sm">Drop files here or click to browse</span>
                       <p className="text-xs mt-1 text-gray-400 dark:text-gray-500">
-                        Images, PDFs, or documents (max 5MB each, up to 3 files)
+                        Images, PDFs, or docs — up to 3 files, 5MB each
                       </p>
                     </div>
                   </div>
@@ -345,7 +345,7 @@ export default function ContactPage() {
                 disabled={isSubmitting}
                 className="w-full"
               >
-                {isSubmitting ? 'Sending...' : 'Send My Request'}
+                {isSubmitting ? 'Sending...' : 'Start the Conversation'}
               </Button>
             </form>
           )}

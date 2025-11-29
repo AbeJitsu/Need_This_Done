@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Inter, Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
-import DarkModeToggle from '@/components/DarkModeToggle';
 import { AuthProvider } from '@/context/AuthContext';
 
 // Inter font - modern, trustworthy, highly readable (body text)
@@ -80,12 +79,7 @@ export default function RootLayout({
             Skip to main content
           </a>
 
-          {/* Top-right corner: Dark mode toggle */}
-          <div className="fixed top-4 right-4 z-50">
-            <DarkModeToggle />
-          </div>
-
-          {/* Site-wide navigation */}
+          {/* Site-wide navigation (includes dark mode toggle) */}
           <Navigation />
 
           {/* Page content */}

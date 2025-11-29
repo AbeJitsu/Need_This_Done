@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 // ============================================================================
 // Provides manual dark/light mode switching with localStorage persistence
 // Overrides system preference when user makes explicit choice
-// Floating button in top-right corner with sun/moon icons
+// Lives in the Navigation header with sun/moon icons
 
 export default function DarkModeToggle() {
   const [darkMode, setDarkMode] = useState<boolean | null>(null);
@@ -61,16 +61,11 @@ export default function DarkModeToggle() {
     <button
       onClick={toggleDarkMode}
       className="
-        fixed top-6 right-6 z-50
-        p-3 rounded-lg
-        bg-white dark:bg-gray-800
-        border-2 border-gray-200 dark:border-gray-700
-        text-gray-900 dark:text-gray-100
-        hover:bg-gray-50 dark:hover:bg-gray-700
-        hover:border-gray-300 dark:hover:border-gray-600
-        transition-all duration-200
-        shadow-lg hover:shadow-xl
-        active:scale-95
+        p-2 rounded-lg
+        text-gray-600 dark:text-gray-400
+        hover:text-gray-900 dark:hover:text-gray-200
+        hover:bg-gray-100 dark:hover:bg-gray-800
+        transition-colors duration-200
         min-h-[44px] min-w-[44px]
         flex items-center justify-center
       "
@@ -79,7 +74,7 @@ export default function DarkModeToggle() {
     >
       {darkMode ? (
         // Sun icon - click to switch to light mode
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -89,7 +84,7 @@ export default function DarkModeToggle() {
         </svg>
       ) : (
         // Moon icon - click to switch to dark mode
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"

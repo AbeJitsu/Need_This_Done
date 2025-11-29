@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { signOut } from '@/lib/auth';
+import DarkModeToggle from './DarkModeToggle';
 
 // ============================================================================
 // Navigation Component - Persistent Site Navigation
@@ -113,6 +114,9 @@ export default function Navigation() {
                 </svg>
               )}
             </button>
+
+            {/* Dark Mode Toggle */}
+            <DarkModeToggle />
 
             {/* Auth Section */}
             <div className="flex-shrink-0 border-l border-gray-200 dark:border-gray-700 pl-4">
