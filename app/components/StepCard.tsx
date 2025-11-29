@@ -1,4 +1,4 @@
-import { AccentVariant, accentColors } from '@/lib/colors';
+import { AccentVariant, accentColors, cardHoverColors } from '@/lib/colors';
 import CircleBadge from './CircleBadge';
 
 // ============================================================================
@@ -26,7 +26,7 @@ export default function StepCard({
   const colors = accentColors[color];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
+    <div className={`bg-white dark:bg-gray-800 rounded-xl p-8 border-2 border-gray-400 dark:border-gray-500 transition-all ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}>
       <div className="flex items-start gap-6">
         {/* Step number badge */}
         <CircleBadge number={number} color={color} />

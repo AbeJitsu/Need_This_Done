@@ -99,10 +99,10 @@ export default function HowItWorksPage() {
         {/* CTA */}
         <CTASection
           title="Ready to Get Started?"
-          description="Check out our FAQ or explore our services."
+          description="Tell us what you need and we'll take it from there."
           buttons={[
-            { text: 'View FAQ', variant: 'orange', href: '/faq' },
-            { text: 'Our Services', variant: 'teal', href: '/services' }
+            { text: 'Get In Touch', variant: 'orange', href: '/contact' },
+            { text: 'View Pricing', variant: 'teal', href: '/pricing' }
           ]}
           hoverColor="orange"
         />

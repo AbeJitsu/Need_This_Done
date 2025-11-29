@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { faqColors } from '@/lib/colors';
 import CircleBadge from '@/components/CircleBadge';
-import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
+import CTASection from '@/components/CTASection';
 
 // ============================================================================
 // FAQ Page - Common Questions
@@ -117,7 +117,7 @@ export default function FAQPage() {
             return (
               <div
                 key={index}
-                className={`bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 border-l-4 ${styles.border} ${styles.hover} transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}
+                className={`bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 border-l-4 ${styles.border} ${styles.hover} transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}
               >
                 <div className="flex items-start gap-4">
                   <CircleBadge number={index + 1} color={color} size="sm" />
@@ -136,22 +136,15 @@ export default function FAQPage() {
         </div>
 
         {/* Contact Section */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:bg-gray-800 dark:from-transparent dark:to-transparent rounded-xl p-6 border border-blue-200 dark:border-blue-700 text-center transition-all hover:border-blue-300 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-blue-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Still Have Questions?
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
-            We're here to help. Reach out and we'll get back to you promptly.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button variant="orange" href="/how-it-works" size="md">
-              Learn How It Works
-            </Button>
-            <Button variant="teal" href="/services" size="md">
-              View Services
-            </Button>
-          </div>
-        </div>
+        <CTASection
+          title="Still Have Questions?"
+          description="We're here to help. Reach out and we'll get back to you promptly."
+          buttons={[
+            { text: 'Get In Touch', variant: 'orange', href: '/contact' },
+            { text: 'View Pricing', variant: 'teal', href: '/pricing' }
+          ]}
+          hoverColor="orange"
+        />
       </div>
     </div>
   );
