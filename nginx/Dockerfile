@@ -9,8 +9,13 @@ FROM nginx:alpine
 RUN rm /etc/nginx/conf.d/default.conf
 
 # Copy our custom configuration into the container
-# :ro = read-only (container can't accidentally modify it)
-COPY nginx.conf /etc/nginx/nginx.conf:ro
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy SSL certificates for HTTPS
+# In development: self-signed certificates (generates browser warning)
+# In production: replace with Let's Encrypt certificates
+COPY ssl/cert.pem /etc/nginx/ssl/cert.pem
+COPY ssl/key.pem /etc/nginx/ssl/key.pem
 
 # Health check - is Nginx actually responding?
 # Runs every 30 seconds, fails if no response in 3 seconds

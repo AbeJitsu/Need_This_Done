@@ -26,7 +26,7 @@ const navigationLinks = [
 
 export default function Navigation() {
   const pathname = usePathname();
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isAdmin, isLoading } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -151,6 +151,15 @@ export default function Navigation() {
                       >
                         Dashboard
                       </Link>
+                      {isAdmin && (
+                        <Link
+                          href="/admin/users"
+                          onClick={() => setShowDropdown(false)}
+                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          Manage Users
+                        </Link>
+                      )}
                       <button
                         type="button"
                         onClick={handleLogout}

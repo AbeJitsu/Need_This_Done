@@ -5,7 +5,11 @@ import { defineConfig, devices } from '@playwright/test';
 // ============================================================================
 // What: Configures end-to-end testing with Playwright.
 // Why: Automates testing of all user flows so we don't have to test manually.
-// How: Run `npm run test:e2e` to execute all tests.
+// How:
+//   - Local: `npm run test:e2e` (starts dev server automatically)
+//   - Docker: `npm run test:e2e:docker` (uses app container in Docker network)
+
+const baseURL = process.env.BASE_URL || 'http://localhost:3000';
 
 export default defineConfig({
   // ============================================================================
@@ -29,9 +33,12 @@ export default defineConfig({
   // ============================================================================
 
   use: {
-    baseURL: 'http://localhost:3000',
+    // Use BASE_URL env var (Docker) or fall back to localhost (local dev)
+    baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    // Accept self-signed certificates (nginx uses self-signed in dev)
+    ignoreHTTPSErrors: true,
   },
 
   // ============================================================================
@@ -45,19 +52,28 @@ export default defineConfig({
     },
     {
       name: 'mobile',
-      use: { ...devices['iPhone 12'] },
+      // Use iPhone 12 viewport but with Chromium (WebKit not installed in Docker)
+      use: {
+        ...devices['iPhone 12'],
+        browserName: 'chromium',
+      },
     },
   ],
 
   // ============================================================================
-  // Development Server
+  // Development Server (only when running locally)
   // ============================================================================
-  // Automatically starts the dev server before running tests.
+  // When BASE_URL is set (Docker), skip starting a webServer - the app is
+  // already running in the Docker network. Only start dev server for local runs.
 
-  webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  },
+  ...(process.env.BASE_URL
+    ? {}
+    : {
+        webServer: {
+          command: 'npm run dev',
+          url: 'http://localhost:3000',
+          reuseExistingServer: true,
+          timeout: 120 * 1000,
+        },
+      }),
 });

@@ -1,0 +1,57 @@
+# ============================================================================
+# Docker Compose E2E Test Configuration
+# ============================================================================
+# What: Runs Playwright E2E tests against the live stack through nginx.
+# Why: Tests the full user experience - nginx, app, redis, Supabase all connected.
+# How: Adds a Playwright container to the existing network. No new services started.
+#
+# Prerequisites:
+#   The stack must already be running:
+#   docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+#
+# Usage:
+#   docker-compose -f docker-compose.e2e.yml up --build --abort-on-container-exit
+#
+# Or with npm:
+#   npm run test:e2e:docker
+
+services:
+  e2e:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.e2e
+
+    container_name: e2e_tests
+
+    # ========================================================================
+    # Network Configuration
+    # ========================================================================
+    # Join the existing network where nginx, app, and redis are running.
+    # The network was created by docker-compose.yml and is named with the
+    # project prefix (need_this_done_app_network or similar).
+    networks:
+      - need_this_done_app_network
+
+    # ========================================================================
+    # Environment Variables
+    # ========================================================================
+    environment:
+      - NODE_ENV=test
+      # Go through nginx like real users (HTTPS)
+      # nginx container is accessible at "nginx" within the Docker network
+      - BASE_URL=https://nginx
+      # Accept self-signed certificates in test environment
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+
+    # ========================================================================
+    # Container Behavior
+    # ========================================================================
+    restart: "no"
+
+# ============================================================================
+# Network Reference
+# ============================================================================
+# Connect to the existing network created by docker-compose.yml
+networks:
+  need_this_done_app_network:
+    external: true
