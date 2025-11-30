@@ -1,6 +1,7 @@
 'use client';
 
 import StatusBadge from './StatusBadge';
+import { accentColors, AccentVariant } from '@/lib/colors';
 
 // ============================================================================
 // Project Card Component - Display Project Summary
@@ -9,6 +10,19 @@ import StatusBadge from './StatusBadge';
 // What: Displays project summary with status, email, service, and date.
 // Why: Provides visual preview of projects in list/grid format.
 // How: Used in admin and user dashboards; click opens detail modal.
+
+// ============================================================================
+// Service to Color Mapping - Match pricing tier colors
+// ============================================================================
+const serviceColorMap: Record<string, AccentVariant> = {
+  'Quick Task': 'purple',
+  'Standard Task': 'blue',
+  'Premium Service': 'green',
+};
+
+function getServiceColor(service: string): AccentVariant {
+  return serviceColorMap[service] || 'gray';
+}
 
 interface ProjectCardProps {
   id: string;
@@ -85,7 +99,7 @@ export default function ProjectCard({
 
       {service && (
         <div className="mb-3">
-          <span className="inline-block px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 rounded">
+          <span className={`inline-block px-2 py-1 text-xs font-medium rounded border ${accentColors[getServiceColor(service)].bg} ${accentColors[getServiceColor(service)].text} ${accentColors[getServiceColor(service)].border}`}>
             {service}
           </span>
         </div>
