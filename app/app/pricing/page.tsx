@@ -66,7 +66,7 @@ export default function PricingPage() {
         'A dedicated point of contact throughout',
       ],
       color: 'green',
-      cta: "Let's Chat",
+      cta: 'Tell Us More',
     },
   ];
 

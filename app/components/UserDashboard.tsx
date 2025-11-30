@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Button from './Button';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
+import { mockProjects, isDevPreview } from '@/lib/mockProjects';
 
 // ============================================================================
 // User Dashboard Component - View My Projects
@@ -30,6 +31,14 @@ export default function UserDashboard() {
   const fetchProjects = async () => {
     setLoading(true);
     setError(null);
+
+    // Dev preview mode - skip API call, use mock data
+    if (isDevPreview()) {
+      // Show 2 projects for user view (simulating "my" projects)
+      setProjects(mockProjects.slice(0, 2));
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch('/api/projects/mine');
@@ -93,7 +102,7 @@ export default function UserDashboard() {
           Your Projects
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Track the status of your submitted projects
+          Here's where things stand. Click any project for details.
         </p>
       </div>
 
@@ -120,13 +129,16 @@ export default function UserDashboard() {
             <span className="text-2xl">📋</span>
           </div>
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-            No Projects Yet
+            Nothing here yet
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Submit a project request to get started
+          <p className="text-gray-600 dark:text-gray-400 mb-2">
+            When you're ready to get something done, we'll be here.
+          </p>
+          <p className="text-gray-500 dark:text-gray-500 text-sm mb-6">
+            Your projects will show up right here so you can track progress and stay in the loop.
           </p>
           <Button variant="purple" href="/contact" size="md">
-            Submit a Project
+            Start a Project
           </Button>
         </div>
       ) : (
@@ -162,10 +174,10 @@ export default function UserDashboard() {
       {projects.length > 0 && (
         <div className="text-center">
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            Need to submit another project?
+            Have another project in mind?
           </p>
           <Button variant="blue" href="/contact" size="md">
-            Submit New Project
+            Start a New One
           </Button>
         </div>
       )}
