@@ -26,3 +26,35 @@ This project has an established design system (`app/lib/colors.ts`, `app/compone
 - Add accessibility tests (`.a11y.test.tsx`) for new components
 
 **The frontend-design skill is enabled** to help guide aesthetic decisions for new features while maintaining consistency with existing patterns.
+
+### Testing
+
+Everything we build should have useful tests. See [docs/e2e-test-report.md](docs/e2e-test-report.md) for the full test coverage summary.
+
+**Test types we use:**
+- **E2E tests** (`app/e2e/*.spec.ts`) - Playwright tests that click through the site like a real user
+- **Accessibility tests** (`*.a11y.test.tsx`) - Check components meet WCAG standards
+- **Unit tests** - For utility functions and complex logic
+
+**When to add tests:**
+- New pages → Add E2E tests in `app/e2e/pages.spec.ts` to verify content displays
+- New forms → Add E2E tests for validation and submission
+- New navigation → Add tests in `app/e2e/navigation.spec.ts`
+- New components → Add accessibility tests
+- Protected routes → Add tests in `app/e2e/dashboard.spec.ts`
+
+**Running tests:**
+```bash
+# E2E tests against local dev server
+cd app && npm run test:e2e
+
+# E2E tests against Docker stack
+cd app && BASE_URL=https://localhost npx playwright test
+
+# Accessibility tests
+cd app && npm run test:a11y
+```
+
+**Test file locations:**
+- `app/e2e/` - End-to-end tests
+- `app/components/*.a11y.test.tsx` - Component accessibility tests

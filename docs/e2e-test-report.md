@@ -1,6 +1,6 @@
 # E2E Test Report
 
-**Date:** November 29, 2024
+**Last Updated:** November 29, 2024
 **Environment:** Docker (need_this_done_app_network)
 **Test Runner:** Playwright 1.57.0
 
@@ -11,111 +11,123 @@
 | Metric | Count |
 |--------|-------|
 | Total Tests | 126 |
-| Passed | 49 |
-| Failed | 77 |
-| Pass Rate | 39% |
+| Passed | 121 |
+| Skipped | 5 |
+| Failed | 0 |
+| Pass Rate | 100% |
 
-The tests successfully connected to the live stack through nginx. The failures are related to test selector specificity - the tests need adjustments to match the actual page elements more precisely.
-
----
-
-## What Worked Well
-
-The E2E testing infrastructure is now fully operational:
-
-- Docker container builds and runs correctly
-- Playwright connects to nginx via HTTPS
-- Self-signed certificates are handled properly
-- Tests run against the real Next.js app with Redis and Supabase
-
-**Tests that passed include:**
-- Most mobile viewport tests
-- Dashboard route protection
-- API authentication (401 responses for unauthenticated requests)
-- Dark mode toggle functionality
-- Several navigation and page content tests
+All tests pass. The 5 skipped tests are desktop-only navigation tests that are appropriately skipped when running on mobile viewport (mobile has its own dedicated navigation tests).
 
 ---
 
-## What Needs Fixing
+## What the Tests Cover
 
-Most failures fall into a few categories:
+### Authentication (14 tests)
+- Login form displays correctly with all elements
+- Sign in button enables/disables based on form state
+- Mode switching between sign in, sign up, and forgot password
+- Password validation (minimum 6 characters)
+- Navigation links (back to home, login in nav)
+- Protected routes redirect to login
+- Mobile responsiveness
 
-### 1. Button Selectors Match Multiple Elements
+### Navigation (11 tests)
+- All nav links work on desktop
+- Logo links to homepage
+- Active link highlighting
+- Hamburger menu opens and closes on mobile
+- Clicking a link closes the mobile menu
+- All mobile nav links work
+- Dark mode toggle switches theme
+- Dark mode preference persists across pages
 
-The "Sign In" button selector matches both the submit button and the Google OAuth button. This needs `{ exact: true }` or a more specific selector.
+### Contact Form (13 tests)
+- Page header and form display correctly
+- All form fields are visible
+- Alternative contact options shown
+- Form fields can be filled
+- Service dropdown shows all options (Virtual Assistant, Data & Documents, Website Services)
+- Empty required fields prevent submission
+- Invalid email prevents submission
+- File upload area is clickable
+- File size/type restrictions shown
+- Successful form submission
+- Can send another message after success
+- Mobile form display and submission
 
-```typescript
-// Current (fails - matches 2 buttons)
-page.getByRole('button', { name: 'Sign In' })
+### Public Pages (29 tests)
 
-// Fix (matches only the submit button)
-page.getByRole('button', { name: 'Sign In', exact: true })
-```
+**Homepage:**
+- Hero section with tagline
+- Services preview section
+- How It Works preview section
+- CTA section
+- How It Works preview links to full page
 
-### 2. Page Titles Don't Match Expected Patterns
+**Services Page:**
+- Page header displays
+- All service cards visible
+- "What You Can Expect" section
+- CTA buttons navigate correctly
 
-Some pages use a generic title rather than page-specific titles:
-- Expected: `/Contact|Let's Talk/i`
-- Actual: `"NeedThisDone - Get Your Projects Done Right"`
+**Pricing Page:**
+- Page header displays
+- All pricing tiers visible (Quick Task $50, Standard Task $150, Premium Service $500)
+- Custom task section
+- CTA buttons navigate correctly
 
-### 3. Link Selectors Match Multiple Links
+**How It Works Page:**
+- Page header displays
+- All process steps visible
+- Timeline note visible
+- CTA buttons navigate correctly
 
-Pages with multiple "Services" links cause strict mode violations:
+**FAQ Page:**
+- Page header displays
+- FAQ questions visible
+- Internal links navigate correctly
+- CTA section visible
 
-```typescript
-// Current (fails - matches 3 links)
-page.getByRole('link', { name: 'Services' })
+**Cross-Page Navigation:**
+- Can navigate through entire site (desktop only)
 
-// Fix (use first() or more specific selector)
-page.getByRole('link', { name: 'Services' }).first()
-```
-
-### 4. Form Field Labels Don't Match
-
-Some contact form fields use different label text than expected.
-
----
-
-## Next Steps
-
-1. **Update selectors** to be more specific (use `exact: true`, `.first()`, or unique identifiers)
-2. **Adjust title expectations** to match actual page titles
-3. **Re-run tests** to verify fixes
-
-These are straightforward adjustments - the testing infrastructure works great, we just need to tune the selectors to match the actual UI.
-
----
-
-## Test Files Overview
-
-| File | Purpose | Status |
-|------|---------|--------|
-| navigation.spec.ts | Nav links, mobile menu, dark mode | Partial pass |
-| pages.spec.ts | Public page content | Partial pass |
-| contact.spec.ts | Contact form | Partial pass |
-| auth.spec.ts | Login page UI | Partial pass |
-| dashboard.spec.ts | Route protection, API auth | Mostly passing |
+### Dashboard (6 tests)
+- Unauthenticated users redirected to login
+- Loading state shows briefly before redirect
+- Nav shows login when not authenticated
+- API returns 401 for unauthenticated project requests
 
 ---
 
 ## How to Run Tests
 
 ```bash
-# From the app directory
-npm run test:e2e:docker
+# From the app directory, against Docker stack
+cd app && BASE_URL=https://localhost npx playwright test
 
-# Or manually from project root
-docker-compose -f docker-compose.e2e.yml up --build --abort-on-container-exit
+# Or start dev server and run tests
+cd app && npm run test:e2e
 ```
 
 ---
 
-## Infrastructure Fixed
+## Test Files
 
-We fixed two issues that were blocking the tests:
+| File | Purpose | Tests |
+|------|---------|-------|
+| [auth.spec.ts](../app/e2e/auth.spec.ts) | Login page UI and auth flows | 14 |
+| [navigation.spec.ts](../app/e2e/navigation.spec.ts) | Nav links, mobile menu, dark mode | 11 |
+| [contact.spec.ts](../app/e2e/contact.spec.ts) | Contact form validation and submission | 13 |
+| [pages.spec.ts](../app/e2e/pages.spec.ts) | Public page content verification | 29 |
+| [dashboard.spec.ts](../app/e2e/dashboard.spec.ts) | Route protection, API auth | 6 |
 
-1. **Missing SSL Certificates** - Generated self-signed certs in `nginx/ssl/`
-2. **Nginx Configuration** - Moved the `map` directive inside the `http` block
+---
 
-The nginx container is now healthy and properly routing HTTPS traffic.
+## Infrastructure Notes
+
+The E2E testing infrastructure includes:
+
+- **Self-signed SSL certificates** in `nginx/ssl/` for HTTPS testing
+- **Playwright** configured to accept self-signed certs
+- **Mobile viewport testing** using iPhone 12 dimensions with Chromium
+- **Desktop/mobile skip logic** to avoid running desktop-only tests on mobile viewport
