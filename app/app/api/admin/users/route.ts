@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 // ============================================================================
 // Admin Users API Route - /api/admin/users
@@ -41,6 +41,7 @@ async function verifyAdmin(): Promise<{
   user: any;
   error?: string;
 }> {
+  const supabase = await createSupabaseServerClient();
   const {
     data: { user },
     error: userError,
@@ -211,12 +212,14 @@ export async function PATCH(request: NextRequest) {
           );
         }
 
-        const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-          userData.user.email,
-          {
+        // Use admin client to generate password reset link
+        const { error: resetError } = await adminClient.auth.admin.generateLink({
+          type: 'recovery',
+          email: userData.user.email,
+          options: {
             redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/login`,
-          }
-        );
+          },
+        });
 
         if (resetError) {
           console.error('Failed to send reset email:', resetError.message);

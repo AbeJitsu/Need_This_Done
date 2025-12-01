@@ -132,10 +132,19 @@ export default function LoginPage() {
     setError('');
 
     try {
+      // Use environment variable for consistent redirect URL
+      // Falls back to window.location.origin if not set
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||
+                      (typeof window !== 'undefined' ? window.location.origin : '');
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${typeof window !== 'undefined' ? window.location.origin : ''}/auth/callback`,
+          redirectTo: `${siteUrl}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       });
 

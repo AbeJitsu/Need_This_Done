@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { redis } from '@/lib/redis';
+// eslint-disable-next-line no-restricted-imports -- health check only tests connectivity, no auth required
 import { supabase } from '@/lib/supabase';
 
 // ============================================================================

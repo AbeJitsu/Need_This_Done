@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { signOut } from '@/lib/auth';
 import DarkModeToggle from './DarkModeToggle';
@@ -26,6 +26,7 @@ const navigationLinks = [
 
 export default function Navigation() {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, isAuthenticated, isAdmin, isLoading } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -53,6 +54,7 @@ export default function Navigation() {
   const handleLogout = async () => {
     setShowDropdown(false);
     await signOut();
+    router.push('/login');
   };
 
   return (

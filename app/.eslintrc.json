@@ -2,5 +2,24 @@
   "extends": "next/core-web-vitals",
   "rules": {
     "react/no-unescaped-entities": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["app/api/**/*.ts", "app/**/api/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/lib/supabase"],
+                "importNames": ["supabase"],
+                "message": "API routes must use createSupabaseServerClient from '@/lib/supabase-server' for authentication. The stateless supabase client cannot read cookies."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

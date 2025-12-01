@@ -13,12 +13,23 @@ export async function GET(request: NextRequest) {
     // Create Server Client and Get User from Session
     // ========================================================================
 
+    // DEBUG: Log cookies received
+    const cookies = request.cookies.getAll();
+    console.log('=== DEBUG: Cookies received ===');
+    console.log('Cookie count:', cookies.length);
+    cookies.forEach(c => console.log(`  ${c.name}: ${c.value.substring(0, 50)}...`));
+
     const supabase = await createSupabaseServerClient();
 
     const {
       data: { user },
       error: userError,
     } = await supabase.auth.getUser();
+
+    // DEBUG: Log auth result
+    console.log('=== DEBUG: Auth result ===');
+    console.log('User:', user?.email || 'none');
+    console.log('Error:', userError?.message || 'none');
 
     if (userError || !user) {
       return NextResponse.json(
