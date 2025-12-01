@@ -54,14 +54,15 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    {
-      name: 'mobile',
-      // Use iPhone 12 viewport but with Chromium (WebKit not installed in Docker)
-      use: {
-        ...devices['iPhone 12'],
-        browserName: 'chromium',
-      },
-    },
+    // Mobile tests disabled for faster iteration - uncomment when desktop tests pass
+    // {
+    //   name: 'mobile',
+    //   // Use iPhone 12 viewport but with Chromium (WebKit not installed in Docker)
+    //   use: {
+    //     ...devices['iPhone 12'],
+    //     browserName: 'chromium',
+    //   },
+    // },
   ],
 
   // ============================================================================

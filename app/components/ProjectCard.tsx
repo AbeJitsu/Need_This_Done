@@ -1,7 +1,13 @@
 'use client';
 
 import StatusBadge from './StatusBadge';
-import { accentColors, AccentVariant } from '@/lib/colors';
+import {
+  accentColors,
+  AccentVariant,
+  cardHoverColors,
+  cardHoverBgTints,
+  statusBorderColors,
+} from '@/lib/colors';
 
 // ============================================================================
 // Project Card Component - Display Project Summary
@@ -22,6 +28,21 @@ const serviceColorMap: Record<string, AccentVariant> = {
 
 function getServiceColor(service: string): AccentVariant {
   return serviceColorMap[service] || 'gray';
+}
+
+// ============================================================================
+// Status to Color Mapping - Match status badge colors
+// ============================================================================
+const statusColorMap: Record<string, AccentVariant> = {
+  submitted: 'purple',
+  in_review: 'blue',
+  scheduled: 'teal',
+  in_progress: 'orange',
+  completed: 'green',
+};
+
+function getStatusColor(status: string): AccentVariant {
+  return statusColorMap[status] || 'gray';
 }
 
 interface ProjectCardProps {
@@ -62,10 +83,23 @@ export default function ProjectCard({
     });
   };
 
+  // Get status-matched accent color for hover effects
+  const statusAccent = getStatusColor(status);
+
   return (
     <button
       onClick={onClick}
-      className="w-full text-left bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]"
+      className={`
+        w-full text-left bg-white dark:bg-gray-800 rounded-xl p-6
+        border-2 border-gray-200 dark:border-gray-700
+        ${statusBorderColors[statusAccent]}
+        transition-all duration-300
+        ${cardHoverColors[statusAccent]}
+        ${cardHoverBgTints[statusAccent]}
+        hover:-translate-y-1 hover:shadow-lg
+        active:scale-[0.98]
+        dark:hover:shadow-[0_0_12px_0px_rgba(255,255,255,0.15)]
+      `}
     >
       {/* ====================================================================
           Header: Name, Status Badge, and Date

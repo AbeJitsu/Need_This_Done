@@ -70,6 +70,19 @@ export const leftBorderColors: Record<AccentColor, string> = {
 };
 
 // ============================================================================
+// Status Border Colors - Left border accent based on project status
+// ============================================================================
+// Used by ProjectCard to show status-matched colored left border
+export const statusBorderColors: Record<AccentVariant, string> = {
+  purple: 'border-l-4 border-l-purple-500',
+  blue: 'border-l-4 border-l-blue-500',
+  green: 'border-l-4 border-l-green-500',
+  orange: 'border-l-4 border-l-orange-500',
+  teal: 'border-l-4 border-l-teal-500',
+  gray: 'border-l-4 border-l-gray-400',
+};
+
+// ============================================================================
 // Light Background Colors - Subtle accent backgrounds
 // ============================================================================
 export const lightBgColors: Record<AccentColor, string> = {

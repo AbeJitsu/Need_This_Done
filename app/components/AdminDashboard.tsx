@@ -122,7 +122,7 @@ export default function AdminDashboard() {
           Filters
           ==================================================================== */}
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-200 dark:border-gray-700 transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
           Find what you need
         </h2>
@@ -137,7 +137,7 @@ export default function AdminDashboard() {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               title="Filter by project status"
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none"
             >
               <option value="">All statuses</option>
               <option value="submitted">Submitted</option>
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
               value={emailFilter}
               onChange={(e) => setEmailFilter(e.target.value)}
               placeholder="Name or email..."
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none"
             />
           </div>
         </div>
