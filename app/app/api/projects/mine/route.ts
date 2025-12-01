@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 // ============================================================================
 // User's Projects API Route - /api/projects/mine
@@ -10,8 +10,10 @@ import { supabase } from '@/lib/supabase';
 export async function GET() {
   try {
     // ====================================================================
-    // Get User from Session
+    // Create Server Client and Get User from Session
     // ====================================================================
+
+    const supabase = await createSupabaseServerClient();
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
 

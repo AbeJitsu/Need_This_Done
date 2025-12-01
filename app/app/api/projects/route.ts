@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 // ============================================================================
 // Projects API Route - /api/projects
@@ -98,6 +98,8 @@ export async function POST(request: Request) {
     // Check for Authenticated User (Optional)
     // ====================================================================
     // If user is logged in, link the project to their account
+
+    const supabase = await createSupabaseServerClient();
 
     let userId: string | null = null;
     try {
