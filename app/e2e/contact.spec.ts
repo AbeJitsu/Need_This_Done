@@ -141,6 +141,7 @@ test.describe('Contact Page', () => {
     await page.getByLabel(/Tell us what's on your mind/).fill(
       `E2E Test submission at ${new Date().toISOString()}. This is an automated test and can be safely deleted.`
     );
+    await page.getByLabel(/What kind of help do you need/).selectOption('Virtual Assistant');
 
     // Submit the form
     await page.getByRole('button', { name: 'Start the Conversation' }).click();
@@ -164,6 +165,7 @@ test.describe('Contact Page', () => {
     await page.getByLabel(/What should we call you/).fill('E2E Test User');
     await page.getByLabel(/Where can we reach you/).fill(testEmail);
     await page.getByLabel(/Tell us what's on your mind/).fill('E2E Test submission');
+    await page.getByLabel(/What kind of help do you need/).selectOption('Data & Documents');
 
     await page.getByRole('button', { name: 'Start the Conversation' }).click();
 
@@ -203,6 +205,7 @@ test.describe('Contact Page - Mobile', () => {
     await page.getByLabel(/What should we call you/).fill('Mobile Test User');
     await page.getByLabel(/Where can we reach you/).fill(testEmail);
     await page.getByLabel(/Tell us what's on your mind/).fill('Mobile E2E test submission');
+    await page.getByLabel(/What kind of help do you need/).selectOption('Website Services');
 
     // Submit
     await page.getByRole('button', { name: 'Start the Conversation' }).click();

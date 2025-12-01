@@ -130,6 +130,19 @@ export const cardHoverBgTints: Record<AccentVariant, string> = {
 };
 
 // ============================================================================
+// Tag Hover Colors - Hover effects for service/status tags
+// ============================================================================
+// Makes tags feel interactive with color-matched hover states
+export const tagHoverColors: Record<AccentVariant, string> = {
+  purple: 'hover:bg-purple-200 hover:border-purple-600 dark:hover:bg-purple-800 dark:hover:border-purple-300',
+  blue: 'hover:bg-blue-200 hover:border-blue-600 dark:hover:bg-blue-800 dark:hover:border-blue-300',
+  green: 'hover:bg-green-200 hover:border-green-600 dark:hover:bg-green-800 dark:hover:border-green-300',
+  orange: 'hover:bg-orange-200 hover:border-orange-600 dark:hover:bg-orange-800 dark:hover:border-orange-300',
+  teal: 'hover:bg-teal-200 hover:border-teal-600 dark:hover:bg-teal-800 dark:hover:border-teal-300',
+  gray: 'hover:bg-gray-200 hover:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-300',
+};
+
+// ============================================================================
 // Body Text Colors - For card descriptions and bullet points
 // ============================================================================
 // Light mode: gray-600 for all (readable on white)

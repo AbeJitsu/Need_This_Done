@@ -7,6 +7,7 @@ import {
   cardHoverColors,
   cardHoverBgTints,
   statusBorderColors,
+  tagHoverColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -18,9 +19,14 @@ import {
 // How: Used in admin and user dashboards; click opens detail modal.
 
 // ============================================================================
-// Service to Color Mapping - Match pricing tier colors
+// Service to Color Mapping - Match service types to theme colors
 // ============================================================================
 const serviceColorMap: Record<string, AccentVariant> = {
+  // Contact form service types
+  'Virtual Assistant': 'purple',
+  'Data & Documents': 'blue',
+  'Website Services': 'green',
+  // Pricing tier names (legacy/alternate)
   'Quick Task': 'purple',
   'Standard Task': 'blue',
   'Premium Service': 'green',
@@ -28,21 +34,6 @@ const serviceColorMap: Record<string, AccentVariant> = {
 
 function getServiceColor(service: string): AccentVariant {
   return serviceColorMap[service] || 'gray';
-}
-
-// ============================================================================
-// Status to Color Mapping - Match status badge colors
-// ============================================================================
-const statusColorMap: Record<string, AccentVariant> = {
-  submitted: 'purple',
-  in_review: 'blue',
-  scheduled: 'teal',
-  in_progress: 'orange',
-  completed: 'green',
-};
-
-function getStatusColor(status: string): AccentVariant {
-  return statusColorMap[status] || 'gray';
 }
 
 interface ProjectCardProps {
@@ -83,8 +74,8 @@ export default function ProjectCard({
     });
   };
 
-  // Get status-matched accent color for hover effects
-  const statusAccent = getStatusColor(status);
+  // Get service-matched accent color for card hover effects
+  const serviceAccent = service ? getServiceColor(service) : 'gray';
 
   return (
     <button
@@ -92,10 +83,10 @@ export default function ProjectCard({
       className={`
         w-full text-left bg-white dark:bg-gray-800 rounded-xl p-6
         border-2 border-gray-200 dark:border-gray-700
-        ${statusBorderColors[statusAccent]}
+        ${statusBorderColors[serviceAccent]}
         transition-all duration-300
-        ${cardHoverColors[statusAccent]}
-        ${cardHoverBgTints[statusAccent]}
+        ${cardHoverColors[serviceAccent]}
+        ${cardHoverBgTints[serviceAccent]}
         hover:-translate-y-1 hover:shadow-lg
         active:scale-[0.98]
         dark:hover:shadow-[0_0_12px_0px_rgba(255,255,255,0.15)]
@@ -133,7 +124,7 @@ export default function ProjectCard({
 
       {service && (
         <div className="mb-3">
-          <span className={`inline-block px-2 py-1 text-xs font-medium rounded border ${accentColors[getServiceColor(service)].bg} ${accentColors[getServiceColor(service)].text} ${accentColors[getServiceColor(service)].border}`}>
+          <span className={`inline-block px-2 py-1 text-xs font-medium rounded border transition-colors duration-200 ${accentColors[getServiceColor(service)].bg} ${accentColors[getServiceColor(service)].text} ${accentColors[getServiceColor(service)].border} ${tagHoverColors[getServiceColor(service)]}`}>
             {service}
           </span>
         </div>
