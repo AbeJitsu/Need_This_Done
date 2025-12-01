@@ -54,12 +54,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from('projects')
-      .select(
-        `
-        *,
-        project_comments(count)
-      `
-      )
+      .select('*')
       .order('created_at', { ascending: false });
 
     if (status) {

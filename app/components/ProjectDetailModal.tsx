@@ -61,8 +61,10 @@ export default function ProjectDetailModal({
       setError(null);
 
       try {
-        // Fetch project from projects/mine (user's own projects)
-        const projectRes = await fetch(`/api/projects/mine`);
+        // Admins use /api/projects/all to see all projects
+        // Regular users use /api/projects/mine to see their own
+        const endpoint = isAdmin ? '/api/projects/all' : '/api/projects/mine';
+        const projectRes = await fetch(endpoint);
         if (!projectRes.ok) throw new Error('Failed to fetch projects');
 
         const { projects } = await projectRes.json();
@@ -76,14 +78,22 @@ export default function ProjectDetailModal({
         setProject(proj);
         setNewStatus(proj.status);
 
-        // Fetch comments
-        const commentsRes = await fetch(
-          `/api/projects/${projectId}/comments`
-        );
-        if (!commentsRes.ok) throw new Error('Failed to fetch comments');
-
-        const { comments: fetchedComments } = await commentsRes.json();
-        setComments(fetchedComments || []);
+        // Fetch comments (non-fatal - project should still show if comments fail)
+        try {
+          const commentsRes = await fetch(
+            `/api/projects/${projectId}/comments`
+          );
+          if (commentsRes.ok) {
+            const { comments: fetchedComments } = await commentsRes.json();
+            setComments(fetchedComments || []);
+          } else {
+            console.warn('Could not load comments - comments table may not exist');
+            setComments([]);
+          }
+        } catch (commentErr) {
+          console.warn('Error fetching comments:', commentErr);
+          setComments([]);
+        }
       } catch (err) {
         console.error('Error fetching project:', err);
         setError('Failed to load project details');
@@ -93,7 +103,7 @@ export default function ProjectDetailModal({
     };
 
     fetchProjectAndComments();
-  }, [isOpen, projectId]);
+  }, [isOpen, projectId, isAdmin]);
 
   // ============================================================================
   // Auto-scroll to Latest Comment
@@ -214,14 +224,22 @@ export default function ProjectDetailModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-modal-title"
+        className="bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+      >
         {/* ====================================================================
             Header
             ==================================================================== */}
 
         <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <h2
+            id="project-modal-title"
+            className="text-2xl font-bold text-gray-900 dark:text-gray-100"
+          >
               {project?.name || 'Loading...'}
             </h2>
             {project && <p className="text-sm text-gray-600 dark:text-gray-400">{project.email}</p>}

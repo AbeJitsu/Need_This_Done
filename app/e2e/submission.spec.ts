@@ -31,10 +31,11 @@ async function deleteTestProject(email: string) {
   await supabase.from('projects').delete().eq('email', email);
 }
 
-async function getProjectByEmail(email: string, retries = 3): Promise<any> {
+async function getProjectByEmail(email: string, retries = 5): Promise<any> {
   // Retry a few times with delay for cloud DB eventual consistency
+  // Cloud databases can take a moment to propagate, especially under load
   for (let i = 0; i < retries; i++) {
-    await delay(1000); // Wait 1 second before each query
+    await delay(1500); // Wait 1.5 seconds before each query
     const { data } = await supabase
       .from('projects')
       .select('*')
@@ -54,21 +55,19 @@ async function getProjectByEmail(email: string, retries = 3): Promise<any> {
 // ============================================================================
 
 test.describe('Contact Form Submission Flow', () => {
-  // Unique emails for each test to avoid conflicts
-  const testEmails = {
-    noAttachments: 'test-no-files@e2e-submission.com',
-    oneAttachment: 'test-1-file@e2e-submission.com',
-    twoAttachments: 'test-2-files@e2e-submission.com',
-    threeAttachments: 'test-3-files@e2e-submission.com',
-    adminRetrieval: 'test-admin-retrieval@e2e-submission.com',
-  };
+  // Retry flaky tests up to 2 times (cloud database latency can cause timing issues)
+  test.describe.configure({ retries: 2 });
 
-  // Clean up test data before running
-  test.beforeAll(async () => {
-    for (const email of Object.values(testEmails)) {
-      await deleteTestProject(email);
-    }
-  });
+  // Unique emails for each test run to avoid conflicts between parallel workers
+  // Using timestamp ensures each test run has unique emails
+  const runId = Date.now();
+  const testEmails = {
+    noAttachments: `test-no-files-${runId}@e2e-submission.com`,
+    oneAttachment: `test-1-file-${runId}@e2e-submission.com`,
+    twoAttachments: `test-2-files-${runId}@e2e-submission.com`,
+    threeAttachments: `test-3-files-${runId}@e2e-submission.com`,
+    adminRetrieval: `test-admin-retrieval-${runId}@e2e-submission.com`,
+  };
 
   // Clean up after all tests complete
   test.afterAll(async () => {
