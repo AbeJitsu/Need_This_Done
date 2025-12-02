@@ -28,32 +28,65 @@ const config = {
   // ========================================================================
   // Safelist - Force Tailwind to Generate These Classes
   // ========================================================================
-  // Classes in colors.ts are built dynamically and not scanned by JIT.
-  // This ensures CircleBadge ring/background colors are always compiled.
+  // Classes in accentColors are built dynamically and not scanned by JIT.
+  // This ensures Button and CircleBadge colors are always compiled.
 
   safelist: [
-    // CircleBadge padding (ring thickness)
-    'p-px',
-    // CircleBadge backgrounds - light mode
-    'bg-purple-200', 'bg-blue-200', 'bg-green-200', 'bg-orange-200',
-    // CircleBadge backgrounds - dark mode (muted with opacity)
-    'dark:bg-purple-900/60', 'dark:bg-blue-900/60', 'dark:bg-green-900/60', 'dark:bg-orange-900/60',
-    // Title/bullet text - light mode
-    'text-purple-700', 'text-blue-700', 'text-green-700', 'text-orange-700',
-    // Title/bullet text - dark mode (softer)
-    'dark:text-purple-300', 'dark:text-blue-300', 'dark:text-green-300', 'dark:text-orange-300',
-    // Number text - light mode
-    'text-purple-900', 'text-blue-900', 'text-green-900', 'text-orange-900',
-    // Number text - dark mode (colored instead of white)
-    'dark:text-purple-200', 'dark:text-blue-200', 'dark:text-green-200', 'dark:text-orange-200',
-    // Border colors for badges - light mode
-    'border-purple-300', 'border-blue-300', 'border-green-300', 'border-orange-300',
-    // Border colors for badges - dark mode (muted)
-    'dark:border-purple-700', 'dark:border-blue-700', 'dark:border-green-700', 'dark:border-orange-700',
-    // Button hover states - dark mode (for Button component)
-    'dark:hover:bg-purple-200', 'dark:hover:bg-blue-200', 'dark:hover:bg-green-200', 'dark:hover:bg-orange-200',
-    'dark:hover:text-purple-800', 'dark:hover:text-blue-800', 'dark:hover:text-green-800', 'dark:hover:text-orange-800',
-    'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300', 'dark:hover:border-orange-300',
+    // Backgrounds - light mode (bg-100)
+    'bg-purple-100', 'bg-blue-100', 'bg-green-100', 'bg-orange-100', 'bg-teal-100', 'bg-gray-100',
+
+    // Text colors - light mode (text-700/800)
+    'text-purple-700', 'text-blue-700', 'text-green-800', 'text-orange-800', 'text-teal-800', 'text-gray-700',
+
+    // Border colors - light mode (border-500)
+    'border-purple-500', 'border-blue-500', 'border-green-500', 'border-orange-500', 'border-teal-500', 'border-gray-500',
+
+    // Border colors - dark mode (border-400)
+    'dark:border-purple-400', 'dark:border-blue-400', 'dark:border-green-400', 'dark:border-orange-400', 'dark:border-teal-400', 'dark:border-gray-400',
+
+    // Hover text colors
+    'hover:text-purple-800', 'hover:text-blue-800', 'hover:text-green-900', 'hover:text-orange-900', 'hover:text-teal-900', 'hover:text-gray-800',
+
+    // Hover border colors - light mode
+    'hover:border-purple-600', 'hover:border-blue-600', 'hover:border-green-600', 'hover:border-orange-600', 'hover:border-teal-600', 'hover:border-gray-600',
+
+    // Hover border colors - dark mode
+    'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300', 'dark:hover:border-orange-300', 'dark:hover:border-teal-300', 'dark:hover:border-gray-300',
+
+    // Card hover colors - light mode (for Card component)
+    'hover:border-purple-400', 'hover:border-blue-400', 'hover:border-green-400',
+    'hover:border-orange-400', 'hover:border-teal-400', 'hover:border-gray-400',
+
+    // Card hover colors - dark mode
+    'dark:hover:border-purple-500', 'dark:hover:border-blue-500', 'dark:hover:border-green-500',
+    'dark:hover:border-orange-500', 'dark:hover:border-teal-500', 'dark:hover:border-gray-500',
+
+    // Card hover background tints - light mode
+    'hover:bg-purple-50/30', 'hover:bg-blue-50/30', 'hover:bg-green-50/30',
+    'hover:bg-orange-50/30', 'hover:bg-teal-50/30', 'hover:bg-gray-50/30',
+
+    // Card hover background tints - dark mode
+    'dark:hover:bg-purple-900/10', 'dark:hover:bg-blue-900/10', 'dark:hover:bg-green-900/10',
+    'dark:hover:bg-orange-900/10', 'dark:hover:bg-teal-900/10', 'dark:hover:bg-gray-900/10',
+
+    // Body text colors - dark mode (100 shade for high contrast)
+    'dark:text-purple-100', 'dark:text-blue-100', 'dark:text-green-100',
+    'dark:text-orange-100', 'dark:text-teal-100', 'dark:text-gray-100',
+
+    // Animation classes
+    'animate-fade-in',
+    'animate-fade-in-delay-100',
+    'animate-fade-in-delay-200',
+    'motion-safe:animate-fade-in',
+    'motion-safe:animate-fade-in-delay-100',
+    'motion-safe:animate-fade-in-delay-200',
+    'motion-reduce:opacity-100',
+
+    // Transform classes
+    'hover:scale-105',
+    'hover:-translate-y-1',
+    'active:scale-95',
+    'active:scale-98',
   ],
 
   // ========================================================================
@@ -122,22 +155,6 @@ const config = {
         },
 
         // ====================================================================
-        // Oranges - Energy & Action
-        // ====================================================================
-        orange: {
-          50: 'var(--orange-50)',
-          100: 'var(--orange-100)',
-          200: 'var(--orange-200)',
-          300: 'var(--orange-300)',
-          400: 'var(--orange-400)',
-          500: 'var(--orange-500)',
-          600: 'var(--orange-600)',
-          700: 'var(--orange-700)',
-          800: 'var(--orange-800)',
-          900: 'var(--orange-900)',
-        },
-
-        // ====================================================================
         // Yellows - Warnings & Attention
         // ====================================================================
         yellow: {
@@ -151,6 +168,22 @@ const config = {
           700: 'var(--yellow-700)',
           800: 'var(--yellow-800)',
           900: 'var(--yellow-900)',
+        },
+
+        // ====================================================================
+        // Oranges - Warm & Energetic
+        // ====================================================================
+        orange: {
+          50: 'var(--orange-50)',
+          100: 'var(--orange-100)',
+          200: 'var(--orange-200)',
+          300: 'var(--orange-300)',
+          400: 'var(--orange-400)',
+          500: 'var(--orange-500)',
+          600: 'var(--orange-600)',
+          700: 'var(--orange-700)',
+          800: 'var(--orange-800)',
+          900: 'var(--orange-900)',
         },
 
         // ====================================================================
@@ -241,6 +274,23 @@ const config = {
         '7xl': ['4.84rem', { lineHeight: '1' }],
         '8xl': ['6.45rem', { lineHeight: '1' }],
         '9xl': ['8.6rem', { lineHeight: '1' }],
+      },
+
+      // ======================================================================
+      // Animations - Subtle Page Load Effects
+      // ======================================================================
+      // Fade-in animations for hero section with staggered delays
+      // Respects prefers-reduced-motion via motion-safe variants
+      animation: {
+        'fade-in': 'fadeIn 0.6s ease-out forwards',
+        'fade-in-delay-100': 'fadeIn 0.6s ease-out 100ms forwards',
+        'fade-in-delay-200': 'fadeIn 0.6s ease-out 200ms forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
     },
   },

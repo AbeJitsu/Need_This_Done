@@ -3,6 +3,9 @@
 import { useState, useRef } from 'react';
 import { getServices } from '@/config/site.config';
 import Button from '@/components/Button';
+import PageHeader from '@/components/PageHeader';
+import Card from '@/components/Card';
+import CTASection from '@/components/CTASection';
 
 // ============================================================================
 // Contact Page - Inquiry / Booking Form
@@ -141,27 +144,23 @@ export default function ContactPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Get In Touch
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Have a task in mind? Tell us about it and we'll get back to you within 2 business days.
-          </p>
-        </div>
+        <PageHeader
+          title="Let's Talk"
+          description="Tell us what you need help with. We'll get back to you within 2 business days—no pressure, no spam."
+        />
 
         {/* Contact Form */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
+        <Card hoverColor="purple" hoverEffect="glow" className="mb-10">
           {submitStatus === 'success' ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                 <span className="text-3xl text-green-600 dark:text-green-400">✓</span>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-                Message Sent!
+                We got your message!
               </h2>
               <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Thank you for reaching out. We'll review your request and get back to you within 2 business days.
+                Thanks for reaching out — we&apos;re excited to learn more about what you need. Expect to hear from us within 2 business days.
               </p>
               <button
                 onClick={() => setSubmitStatus('idle')}
@@ -176,7 +175,7 @@ export default function ContactPage() {
                 {/* Name */}
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Your Name <span className="text-red-500">*</span>
+                    What should we call you?
                   </label>
                   <input
                     type="text"
@@ -186,14 +185,14 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
-                    placeholder="John Doe"
+                    placeholder="Your name"
                   />
                 </div>
 
                 {/* Email */}
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Email Address <span className="text-red-500">*</span>
+                    Where can we reach you?
                   </label>
                   <input
                     type="email"
@@ -203,7 +202,7 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
-                    placeholder="john@example.com"
+                    placeholder="your@email.com"
                   />
                 </div>
               </div>
@@ -212,7 +211,7 @@ export default function ContactPage() {
                 {/* Company */}
                 <div>
                   <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Company (Optional)
+                    Company <span className="text-gray-400 dark:text-gray-500 font-normal">(if applicable)</span>
                   </label>
                   <input
                     type="text"
@@ -221,14 +220,14 @@ export default function ContactPage() {
                     value={formData.company}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
-                    placeholder="Your Company"
+                    placeholder="Where you work"
                   />
                 </div>
 
                 {/* Service Interest */}
                 <div>
                   <label htmlFor="service" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Service Interest
+                    What kind of help do you need?
                   </label>
                   <select
                     id="service"
@@ -237,7 +236,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
                   >
-                    <option value="">Select a service...</option>
+                    <option value="">Pick one (or skip this)</option>
                     {services.map((service, index) => (
                       <option key={index} value={service.title}>
                         {service.title}
@@ -251,7 +250,7 @@ export default function ContactPage() {
               {/* Message */}
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Project Details <span className="text-red-500">*</span>
+                  Tell us what&apos;s on your mind
                 </label>
                 <textarea
                   id="message"
@@ -261,14 +260,14 @@ export default function ContactPage() {
                   value={formData.message}
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)] resize-none"
-                  placeholder="Tell us about your project. What do you need done? Any specific requirements or timeline?"
+                  placeholder="What's the task? Any details that would help us understand what you're looking for?"
                 />
               </div>
 
               {/* File Attachments */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Attachments (Optional)
+                  Have files to share? <span className="text-gray-400 dark:text-gray-500 font-normal">(totally optional)</span>
                 </label>
                 <div className="space-y-3">
                   {/* File Input Area */}
@@ -287,10 +286,10 @@ export default function ContactPage() {
                       aria-label="Upload files"
                     />
                     <div className="text-gray-500 dark:text-gray-400">
-                      <span className="text-2xl block mb-2">+</span>
-                      <span className="text-sm">Click to add files</span>
+                      <span className="text-2xl block mb-2">📎</span>
+                      <span className="text-sm">Drop files here or click to browse</span>
                       <p className="text-xs mt-1 text-gray-400 dark:text-gray-500">
-                        Images, PDFs, or documents (max 5MB each, up to 3 files)
+                        Images, PDFs, or docs — up to 3 files, 5MB each
                       </p>
                     </div>
                   </div>
@@ -340,32 +339,28 @@ export default function ContactPage() {
               )}
 
               {/* Submit Button */}
-              <Button
-                variant="purple"
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full"
-              >
-                {isSubmitting ? 'Sending...' : 'Send My Request'}
-              </Button>
+              <div className="flex justify-center">
+                <Button
+                  variant="purple"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Sending...' : 'Start the Conversation'}
+                </Button>
+              </div>
             </form>
           )}
-        </div>
+        </Card>
 
         {/* Alternative Contact */}
-        <div className="text-center">
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Want to learn more first?
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button variant="orange" href="/services" size="md">
-              View Our Services
-            </Button>
-            <Button variant="teal" href="/faq" size="md">
-              Read the FAQ
-            </Button>
-          </div>
-        </div>
+        <CTASection
+          title="Want to learn more first?"
+          buttons={[
+            { text: 'View Our Services', variant: 'orange', href: '/services' },
+            { text: 'Read the FAQ', variant: 'teal', href: '/faq' }
+          ]}
+          hoverColor="orange"
+        />
       </div>
     </div>
   );

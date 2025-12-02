@@ -21,8 +21,8 @@ export default function HomePage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Hero Section */}
-        <div className="text-center mb-10">
-          <h1 className="text-5xl font-bold text-blue-600 dark:text-blue-400 mb-4">
+        <div className="text-center mb-16">
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-blue-600 dark:text-blue-400 mb-4">
             {siteConfig.project.tagline}
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto">
@@ -43,7 +43,7 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
             What We Offer
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
             {siteConfig.services.map((service, index) => (
               <ServiceCard
                 key={index}
@@ -62,9 +62,9 @@ export default function HomePage() {
         {/* How It Works Preview */}
         <Link
           href="/how-it-works"
-          className="block mb-10 bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 transition-all hover:border-purple-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-purple-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)] group"
+          className="block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 hover:border-purple-400 hover:shadow-xl hover:bg-purple-50/30 active:scale-98 dark:hover:border-purple-500 dark:hover:bg-purple-900/10 dark:hover:shadow-[0_0_24px_rgba(168,85,247,0.3)] group"
         >
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center transition-colors">
             Simple Process
           </h2>
           <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -96,13 +96,13 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-          <p className="text-center mt-6 text-purple-600 dark:text-purple-400 font-medium group-hover:underline">
+          <p className="text-center mt-6 text-gray-700 dark:text-gray-300 font-medium group-hover:underline">
             Learn more about our process →
           </p>
         </Link>
 
         {/* CTA Section */}
-        <div className="text-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+        <div className="text-center bg-white dark:bg-gray-800 border-2 border-gray-400 dark:border-gray-500 rounded-xl p-8 shadow-lg hover:shadow-xl hover:border-orange-400 dark:hover:border-orange-500 transition-all duration-300">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Ready to Get Started?
           </h2>
@@ -110,7 +110,7 @@ export default function HomePage() {
             Have a task in mind? We'd love to help.
           </p>
           <Button variant="orange" href="/contact">
-            Let's Get Started
+            Tell Us What You Need
           </Button>
         </div>
       </div>

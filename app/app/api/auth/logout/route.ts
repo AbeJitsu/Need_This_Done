@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { NextRequest, NextResponse } from 'next/server';
 
 // ============================================================================
@@ -31,6 +31,7 @@ export async function POST(_request: NextRequest) {
     // somehow got the token, they can't use it after logout because
     // the server no longer recognizes it as valid.
 
+    const supabase = await createSupabaseServerClient();
     const { error } = await supabase.auth.signOut();
 
     if (error) {

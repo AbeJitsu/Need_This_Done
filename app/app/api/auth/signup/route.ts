@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports -- signup creates new users, no existing session needed
 import { supabase } from '@/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
       password, // This is hashed by Supabase - we never store plain passwords
       options: {
         data: metadata || {}, // Store additional user info (name, etc.)
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
       },
     });
 

@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { supabaseAdmin } from '@/lib/supabase';
 
 // ============================================================================
 // Projects API Route - /api/projects
 // ============================================================================
 // Handles project submissions from the contact form.
 // POST: Creates a new project inquiry in the database with optional file attachments.
+//
+// Note: Uses supabaseAdmin for inserts because the contact form can be submitted
+// by anonymous users. The admin client bypasses RLS to allow these inserts.
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_FILES = 3;
@@ -99,14 +103,29 @@ export async function POST(request: Request) {
     // ====================================================================
     // If user is logged in, link the project to their account
 
+    const supabase = await createSupabaseServerClient();
+
     let userId: string | null = null;
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         userId = user.id;
       }
-    } catch (err) {
+    } catch {
       // User not logged in - that's OK, continue as guest
+    }
+
+    // ====================================================================
+    // Verify Admin Client Available
+    // ====================================================================
+    // Contact form submissions need the admin client to bypass RLS
+
+    if (!supabaseAdmin) {
+      console.error('SUPABASE_SERVICE_ROLE_KEY not configured');
+      return NextResponse.json(
+        { error: 'Server configuration error. Please contact support.' },
+        { status: 500 }
+      );
     }
 
     // ====================================================================
@@ -123,7 +142,7 @@ export async function POST(request: Request) {
         const fileExt = file.name.split('.').pop();
         const fileName = `${sanitizedEmail}/${timestamp}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabaseAdmin.storage
           .from('project-attachments')
           .upload(fileName, file);
 
@@ -140,7 +159,7 @@ export async function POST(request: Request) {
     // Insert into Database
     // ====================================================================
 
-    const { data: project, error } = await supabase
+    const { data: project, error } = await supabaseAdmin
       .from('projects')
       .insert({
         name: name.trim(),

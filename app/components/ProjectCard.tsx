@@ -1,6 +1,14 @@
 'use client';
 
 import StatusBadge from './StatusBadge';
+import {
+  accentColors,
+  AccentVariant,
+  cardHoverColors,
+  cardHoverBgTints,
+  statusBorderColors,
+  tagHoverColors,
+} from '@/lib/colors';
 
 // ============================================================================
 // Project Card Component - Display Project Summary
@@ -9,6 +17,24 @@ import StatusBadge from './StatusBadge';
 // What: Displays project summary with status, email, service, and date.
 // Why: Provides visual preview of projects in list/grid format.
 // How: Used in admin and user dashboards; click opens detail modal.
+
+// ============================================================================
+// Service to Color Mapping - Match service types to theme colors
+// ============================================================================
+const serviceColorMap: Record<string, AccentVariant> = {
+  // Contact form service types
+  'Virtual Assistant': 'purple',
+  'Data & Documents': 'blue',
+  'Website Services': 'green',
+  // Pricing tier names (legacy/alternate)
+  'Quick Task': 'purple',
+  'Standard Task': 'blue',
+  'Premium Service': 'green',
+};
+
+function getServiceColor(service: string): AccentVariant {
+  return serviceColorMap[service] || 'gray';
+}
 
 interface ProjectCardProps {
   id: string;
@@ -48,10 +74,23 @@ export default function ProjectCard({
     });
   };
 
+  // Get service-matched accent color for card hover effects
+  const serviceAccent = service ? getServiceColor(service) : 'gray';
+
   return (
     <button
       onClick={onClick}
-      className="w-full text-left bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]"
+      className={`
+        w-full text-left bg-white dark:bg-gray-800 rounded-xl p-6
+        border-2 border-gray-200 dark:border-gray-700
+        ${statusBorderColors[serviceAccent]}
+        transition-all duration-300
+        ${cardHoverColors[serviceAccent]}
+        ${cardHoverBgTints[serviceAccent]}
+        hover:-translate-y-1 hover:shadow-lg
+        active:scale-[0.98]
+        dark:hover:shadow-[0_0_12px_0px_rgba(255,255,255,0.15)]
+      `}
     >
       {/* ====================================================================
           Header: Name, Status Badge, and Date
@@ -85,7 +124,7 @@ export default function ProjectCard({
 
       {service && (
         <div className="mb-3">
-          <span className="inline-block px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 rounded">
+          <span className={`inline-block px-2 py-1 text-xs font-medium rounded border transition-colors duration-200 ${accentColors[getServiceColor(service)].bg} ${accentColors[getServiceColor(service)].text} ${accentColors[getServiceColor(service)].border} ${tagHoverColors[getServiceColor(service)]}`}>
             {service}
           </span>
         </div>

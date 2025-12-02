@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import AdminDashboard from '@/components/AdminDashboard';
 import UserDashboard from '@/components/UserDashboard';
+import { getPreviewMode } from '@/lib/mockProjects';
 
 // ============================================================================
 // Dashboard Page - Router for Admin/User Views
@@ -16,16 +17,40 @@ import UserDashboard from '@/components/UserDashboard';
 export default function DashboardPage() {
   const router = useRouter();
   const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
+  const [previewMode, setPreviewMode] = useState<'admin' | 'user' | null>(null);
 
   // ============================================================================
-  // Redirect if Not Authenticated
+  // Check for Dev Preview Mode
   // ============================================================================
 
   useEffect(() => {
+    setPreviewMode(getPreviewMode());
+  }, []);
+
+  // ============================================================================
+  // Redirect if Not Authenticated (skip in preview mode)
+  // ============================================================================
+
+  useEffect(() => {
+    if (previewMode) return; // Skip auth redirect in dev preview mode
     if (!authLoading && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isAuthenticated, authLoading, router]);
+  }, [isAuthenticated, authLoading, router, previewMode]);
+
+  // ============================================================================
+  // Dev Preview Mode - Bypass Auth for Development
+  // ============================================================================
+
+  if (previewMode) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+          {previewMode === 'admin' ? <AdminDashboard /> : <UserDashboard />}
+        </div>
+      </div>
+    );
+  }
 
   // ============================================================================
   // Show Loading State

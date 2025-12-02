@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { NextRequest, NextResponse } from 'next/server';
 
 // ============================================================================
@@ -44,6 +44,9 @@ export async function POST(request: NextRequest) {
     // ========================================================================
     // Step 2: Authenticate with Supabase
     // ========================================================================
+    // Uses the server client which automatically handles cookies.
+    // This ensures the session is stored in cookies for subsequent requests.
+    //
     // Supabase uses bcrypt to compare the provided password against the
     // stored hash. Bcrypt is slow on purpose—this prevents brute-force
     // attacks (trying thousands of passwords per second).
@@ -51,13 +54,12 @@ export async function POST(request: NextRequest) {
     // If credentials are valid, Supabase returns:
     // - user: User object (ID, email, metadata, etc.)
     // - session: Contains access_token and refresh_token (JWTs)
-    //
-    // These tokens are like "ticket stubs" that prove the user is authenticated
-    // without sending the password again.
+
+    const supabase = await createSupabaseServerClient();
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
-      password, // Bcrypt compares this against the stored hash
+      password,
     });
 
     if (error) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 // ============================================================================
 // Project Comments API Route - /api/projects/[id]/comments
@@ -9,10 +9,11 @@ import { supabase } from '@/lib/supabase';
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
+    const supabase = await createSupabaseServerClient();
 
     // ====================================================================
     // Get User from Session
@@ -32,7 +33,7 @@ export async function GET(
     // ====================================================================
     // User can see comments on their project, admin can see all comments
 
-    const isAdmin = (user.user_metadata as any)?.is_admin === true;
+    const isAdmin = user.user_metadata?.is_admin === true;
 
     // Get the project to verify user ownership
     const { data: project } = await supabase
@@ -69,8 +70,7 @@ export async function GET(
         content,
         is_internal,
         created_at,
-        user_id,
-        user:user_id(email)
+        user_id
       `)
       .eq('project_id', id)
       .order('created_at', { ascending: true });
@@ -92,12 +92,17 @@ export async function GET(
     }
 
     // ====================================================================
-    // Return Comments
+    // Return Comments (with mock user email for now)
     // ====================================================================
+
+    const commentsWithUser = (comments || []).map(c => ({
+      ...c,
+      user: { email: user.email || 'unknown' }
+    }));
 
     return NextResponse.json({
       success: true,
-      comments: comments || [],
+      comments: commentsWithUser,
     });
   } catch (error) {
     console.error('Comments GET error:', error);
@@ -111,10 +116,11 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
+    const supabase = await createSupabaseServerClient();
 
     // ====================================================================
     // Get User from Session
@@ -147,7 +153,7 @@ export async function POST(
     // Check Authorization
     // ====================================================================
 
-    const isAdmin = (user.user_metadata as any)?.is_admin === true;
+    const isAdmin = user.user_metadata?.is_admin === true;
 
     // Get the project to verify ownership
     const { data: project } = await supabase
@@ -210,7 +216,10 @@ export async function POST(
     return NextResponse.json({
       success: true,
       message: 'Comment created',
-      comment,
+      comment: {
+        ...comment,
+        user: { email: user.email || 'unknown' }
+      },
     });
   } catch (error) {
     console.error('Comments POST error:', error);

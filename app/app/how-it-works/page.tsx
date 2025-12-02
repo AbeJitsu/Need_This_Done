@@ -1,6 +1,8 @@
 import StepCard from '@/components/StepCard';
-import Button from '@/components/Button';
-import { StepColor } from '@/lib/colors';
+import PageHeader from '@/components/PageHeader';
+import Card from '@/components/Card';
+import CTASection from '@/components/CTASection';
+import { AccentVariant } from '@/lib/colors';
 
 // ============================================================================
 // How It Works Page - The NeedThisDone Process
@@ -18,7 +20,7 @@ export default function HowItWorksPage() {
     title: string;
     description: string;
     details: string[];
-    color: StepColor;
+    color: AccentVariant;
   }[] = [
     {
       number: 1,
@@ -71,14 +73,10 @@ export default function HowItWorksPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            How It Works
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Here's how we work together to get your project done right.
-          </p>
-        </div>
+        <PageHeader
+          title="How It Works"
+          description="Here's how we work together to get your project done right."
+        />
 
         {/* Steps */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
@@ -88,7 +86,7 @@ export default function HowItWorksPage() {
         </div>
 
         {/* Timeline Note */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-10 transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
+        <Card hoverColor="blue" hoverEffect="glow" className="mb-10">
           <h3 className="font-semibold text-blue-600 dark:text-blue-400 mb-2">
             Typical Timeline
           </h3>
@@ -96,25 +94,18 @@ export default function HowItWorksPage() {
             Most projects are completed within 1-2 weeks, depending on scope.
             Larger projects may take longer - we'll provide a clear timeline with your quote.
           </p>
-        </div>
+        </Card>
 
         {/* CTA */}
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Ready to Get Started?
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
-            Check out our FAQ or explore our services.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button variant="orange" href="/faq" size="md">
-              View FAQ
-            </Button>
-            <Button variant="teal" href="/services" size="md">
-              Our Services
-            </Button>
-          </div>
-        </div>
+        <CTASection
+          title="Ready to Get Started?"
+          description="Tell us what you need and we'll take it from there."
+          buttons={[
+            { text: 'Get In Touch', variant: 'orange', href: '/contact' },
+            { text: 'View Pricing', variant: 'teal', href: '/pricing' }
+          ]}
+          hoverColor="orange"
+        />
       </div>
     </div>
   );

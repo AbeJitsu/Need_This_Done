@@ -1,17 +1,17 @@
-import { StepColor, stepColors } from '@/lib/colors';
+import { AccentVariant, accentColors } from '@/lib/colors';
 
 // ============================================================================
 // CircleBadge Component
 // ============================================================================
 // A reusable numbered circle badge that can be used anywhere in the app.
-// Supports three size variants for different contexts like step cards,
-// FAQ items, hero sections, or pricing tiers.
+// Uses shared accentColors for consistent styling with Button.
+// Same colors in both light/dark modes (no inversion).
 
 type BadgeSize = 'sm' | 'md' | 'lg';
 
 interface CircleBadgeProps {
   number: number;
-  color: StepColor;
+  color: AccentVariant;
   size?: BadgeSize;
 }
 
@@ -27,13 +27,13 @@ export default function CircleBadge({
   color,
   size = 'md',
 }: CircleBadgeProps) {
-  const colors = stepColors[color];
+  const colors = accentColors[color];
   const sizeClass = sizeClasses[size];
 
-  // Softer styling with border-2 to match button aesthetic
+  // Same styling as Button: bg-100, text-700/800, border-500/400
   return (
     <div
-      className={`flex-shrink-0 ${sizeClass} ${colors.bg} border-2 ${colors.border} ${colors.numberText} rounded-full flex items-center justify-center font-bold`}
+      className={`flex-shrink-0 ${sizeClass} ${colors.bg} border-2 ${colors.border} ${colors.text} rounded-full flex items-center justify-center font-bold`}
     >
       {number}
     </div>

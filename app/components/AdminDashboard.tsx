@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
+import { mockProjects, isDevPreview } from '@/lib/mockProjects';
 
 // ============================================================================
 // Admin Dashboard Component - View All Projects with Filters
@@ -34,6 +35,13 @@ export default function AdminDashboard() {
     setLoading(true);
     setError(null);
 
+    // Dev preview mode - skip API call, use mock data
+    if (isDevPreview()) {
+      setProjects(mockProjects);
+      setLoading(false);
+      return;
+    }
+
     try {
       const params = new URLSearchParams();
       if (statusFilter) params.append('status', statusFilter);
@@ -44,6 +52,10 @@ export default function AdminDashboard() {
       );
 
       if (!res.ok) {
+        if (res.status === 401) {
+          setError('Please sign in to view projects');
+          return;
+        }
         if (res.status === 403) {
           setError('You do not have permission to view all projects');
           return;
@@ -102,7 +114,7 @@ export default function AdminDashboard() {
           Project Dashboard
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          View and manage all client projects
+          Everything in one place. Click a project to dig in.
         </p>
       </div>
 
@@ -110,21 +122,22 @@ export default function AdminDashboard() {
           Filters
           ==================================================================== */}
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-200 dark:border-gray-700 transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-          Filters
+          Find what you need
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Status Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Status
+              Show me
             </label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              title="Filter by project status"
+              className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none"
             >
               <option value="">All statuses</option>
               <option value="submitted">Submitted</option>
@@ -138,14 +151,14 @@ export default function AdminDashboard() {
           {/* Email Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Search Email
+              Search by client
             </label>
             <input
               type="text"
               value={emailFilter}
               onChange={(e) => setEmailFilter(e.target.value)}
-              placeholder="Search by email..."
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              placeholder="Name or email..."
+              className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none"
             />
           </div>
         </div>
@@ -174,11 +187,21 @@ export default function AdminDashboard() {
             <span className="text-2xl">📋</span>
           </div>
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-            No Projects Found
+            No matches
           </h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            Try adjusting your filters
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            Try different filters or clear them to see everything.
           </p>
+          <button
+            type="button"
+            onClick={() => {
+              setStatusFilter('');
+              setEmailFilter('');
+            }}
+            className="px-6 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          >
+            Clear Filters
+          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { redis } from '@/lib/redis';
+// eslint-disable-next-line no-restricted-imports -- public demo endpoint, no auth required
 import { supabase } from '@/lib/supabase';
 
 // ============================================================================
