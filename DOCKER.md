@@ -77,7 +77,7 @@ docker-compose up --build
 
 **Start development mode:**
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
 ## Common Commands
@@ -86,12 +86,12 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 
 **Development mode (recommended):**
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
 **Development mode (background):**
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d
 ```
 
 **Production mode:**
@@ -290,6 +290,22 @@ Bind for 0.0.0.0:3000 failed: port is already allocated
    docker-compose up  # without -d to see real-time logs
    ```
 
+### Issue: "Cannot find module '/app/server.js'"
+
+**Symptom:**
+```
+Error: Cannot find module '/app/server.js'
+```
+
+**Cause:** You built with production settings but ran with dev settings. The dev compose file mounts your local source code over `/app`, hiding the `server.js` that the production build created.
+
+**Solution:** Always use `--build` when starting dev mode:
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+```
+
+This ensures the dev Dockerfile is used, which runs `npx next dev` instead of looking for `server.js`.
+
 ### Issue: Changes not appearing (dev mode)
 
 **Symptom:** Code changes don't show in browser
@@ -412,19 +428,17 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 
 ```bash
 # Start development
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 
 # Stop when done
 docker-compose down
 
-# After adding npm packages
-docker-compose build app
-docker-compose up
+# After adding npm packages (in dev mode)
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 
-# If things are broken
-docker-compose down -v
-docker-compose build --no-cache app
-docker-compose up
+# If things are broken (dev mode)
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
 ## Understanding the Files

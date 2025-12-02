@@ -23,14 +23,13 @@ This application runs in Docker with three services: nginx (front door), Next.js
 
 **Quick start (development mode):**
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
 **Most common fix (when modules are missing or things are broken):**
 ```bash
-docker-compose down -v
-docker-compose build --no-cache app
-docker-compose up
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
 ### Contrast Requirements
