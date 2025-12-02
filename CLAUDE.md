@@ -9,11 +9,33 @@ For detailed coding standards and guidelines, see [.claude/INSTRUCTIONS.md](.cla
 
 Use self-documenting code with section-level comments as our documentation. Comment major sections and blocks to explain what they do and why, in plain language that educated adults can understand regardless of coding experience. Focus on the big picture and reasoning, not line-by-line explanations.
 
+### Docker & Infrastructure
 
+This application runs in Docker with three services: nginx (front door), Next.js app, and Redis (cache).
+
+**For complete Docker documentation**, see [DOCKER.md](DOCKER.md), which covers:
+- Architecture overview and how services connect
+- Starting/stopping in development vs production mode
+- Common commands and troubleshooting
+- Environment variable setup
+- Package management in Docker
+- What to do when things break
+
+**Quick start (development mode):**
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+```
+
+**Most common fix (when modules are missing or things are broken):**
+```bash
+docker-compose down -v
+docker-compose build --no-cache app
+docker-compose up
+```
 
 ### Contrast Requirements
 
-- Minimum 5:1 contrast ratio for all text
+- All text and design choices must meet WCAG AA contrast requirements: at least 4.5:1 for normal text and 3:1 for large text. For stricter accessibility, aim for a minimum 5:1 ratio. See [WCAG Contrast Guidelines](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html) for details.
 
 ### Design System Context
 
