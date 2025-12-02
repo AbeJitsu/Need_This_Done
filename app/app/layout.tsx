@@ -82,8 +82,10 @@ export default function RootLayout({
           {/* Site-wide navigation (includes dark mode toggle) */}
           <Navigation />
 
-          {/* Page content */}
-          <main id="main-content">{children}</main>
+          {/* Page content - gradient background applied here once for all pages */}
+          <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">
+            {children}
+          </main>
         </AuthProvider>
       </body>
     </html>

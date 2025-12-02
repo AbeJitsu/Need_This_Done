@@ -71,8 +71,7 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
         <PageHeader
@@ -114,7 +113,6 @@ export default function PricingPage() {
             </div>
           </div>
         </Card>
-      </div>
     </div>
   );
 }

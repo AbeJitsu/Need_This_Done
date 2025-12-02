@@ -162,7 +162,7 @@ export default function LoginPage() {
   // Show loading while checking auth state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
+      <div className="flex items-center justify-center py-20">
         <div className="text-gray-600 dark:text-gray-300">Loading...</div>
       </div>
     );
@@ -174,8 +174,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-md mx-auto px-4 sm:px-6 py-12">
+    <div className="max-w-md mx-auto px-4 sm:px-6 py-12">
 
         {/* Header */}
         <div className="text-center mb-8">
@@ -371,7 +370,6 @@ export default function LoginPage() {
             Back to Home
           </Link>
         </div>
-      </div>
     </div>
   );
 }

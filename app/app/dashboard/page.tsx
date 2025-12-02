@@ -44,10 +44,8 @@ export default function DashboardPage() {
 
   if (previewMode) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-          {previewMode === 'admin' ? <AdminDashboard /> : <UserDashboard />}
-        </div>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+        {previewMode === 'admin' ? <AdminDashboard /> : <UserDashboard />}
       </div>
     );
   }
@@ -58,7 +56,7 @@ export default function DashboardPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
+      <div className="flex items-center justify-center py-20">
         <div className="text-gray-600 dark:text-gray-300">Loading...</div>
       </div>
     );
@@ -77,10 +75,8 @@ export default function DashboardPage() {
   // ============================================================================
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-        {isAdmin ? <AdminDashboard /> : <UserDashboard />}
-      </div>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      {isAdmin ? <AdminDashboard /> : <UserDashboard />}
     </div>
   );
 }
