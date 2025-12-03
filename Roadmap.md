@@ -154,6 +154,12 @@ Everything runs in containers, so what works locally works on the server.
 - [ ] Document Medusa API contract (endpoints, auth, data shape)
 - [ ] Set up Docker compose for local development stack
 
+## Setup Guides
+
+- [Storybook Setup](app/guides/storybook-setup.md) - Next.js App Router integration, writing stories, deployment
+- [Medusa Setup](app/guides/medusa-setup.md) - Headless commerce API, environment variables, Stripe
+- [Puck Setup](app/guides/puck-setup.md) - Page builder config, dynamic routes, component exposure
+
 ## Questions or Changes?
 
 This document should evolve. If a component doesn't serve the team, we change it. If a developer finds a better pattern, we document it here.
