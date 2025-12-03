@@ -52,3 +52,6 @@ coverage/
 *.tmp
 *.temp
 .turbo/
+
+*storybook.log
+storybook-static
