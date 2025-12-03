@@ -30,6 +30,14 @@ Our application runs in Docker with three main services that work together:
 │  │  - Session storage                            │  │
 │  │  - Temporary data cache                       │  │
 │  └──────────────────────────────────────────────┘  │
+│                                                      │
+│  ┌──────────────────────────────────────────────┐  │
+│  │  storybook_dev (Component Library - Dev)    │  │
+│  │  Port: 6006                                   │  │
+│  │  - Interactive component development         │  │
+│  │  - Visual component documentation            │  │
+│  │  - Dev mode only (not in production)         │  │
+│  └──────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -74,6 +82,7 @@ docker-compose up --build
 - Better error messages
 - Debugging tools enabled
 - Port 3000 exposed directly
+- Storybook component library on port 6006
 
 **Start development mode:**
 ```bash
@@ -140,6 +149,7 @@ docker-compose logs -f
 docker logs nextjs_app
 docker logs redis
 docker logs nginx
+docker logs storybook_dev  # Dev mode only
 ```
 
 **Last 50 lines:**
@@ -374,6 +384,88 @@ docker-compose up
 
 **Important:** Changes to `package.json` always require a rebuild.
 
+## Storybook Commands (Dev Mode Only)
+
+Storybook runs automatically when you start the dev stack. Here are useful commands for working with it:
+
+### View Storybook
+
+**Interactive dev server (recommended):**
+```bash
+# Starts automatically with dev stack, or access directly:
+open http://localhost:6006
+```
+
+**Static build (via nginx):**
+```bash
+# Pre-built documentation at:
+open https://localhost/design
+```
+
+### Manage Storybook Container
+
+**View Storybook logs:**
+```bash
+docker logs storybook_dev -f
+```
+
+**Restart Storybook only:**
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml restart storybook
+```
+
+**Stop Storybook without affecting other services:**
+```bash
+docker stop storybook_dev
+```
+
+**Start Storybook after stopping:**
+```bash
+docker start storybook_dev
+```
+
+### Build Static Storybook
+
+To update the static build served at `/design`:
+
+```bash
+# Build Storybook to storybook-static/
+docker exec nextjs_app npm run build-storybook
+
+# The nginx /design route will automatically serve the new build
+```
+
+### Troubleshooting Storybook
+
+**Storybook not starting:**
+```bash
+# Check logs
+docker logs storybook_dev
+
+# Rebuild the container
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml build storybook
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up storybook
+```
+
+**Port 6006 already in use:**
+```bash
+# Find what's using it
+lsof -i :6006
+
+# Or change the port in docker-compose.dev.yml:
+# ports:
+#   - "6007:6006"  # Maps host 6007 to container 6006
+```
+
+**Hot reload not working:**
+```bash
+# Restart the Storybook container
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml restart storybook
+
+# Or rebuild if that doesn't work
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml build --no-cache storybook
+```
+
 ## Health Checks
 
 The system includes automatic health monitoring:
@@ -394,9 +486,13 @@ When running in development mode:
 - **Direct to Next.js:** http://localhost:3000
 - **Via Nginx (HTTP):** http://localhost
 - **Via Nginx (HTTPS):** https://localhost
+- **Storybook (dev server):** http://localhost:6006 - Interactive component development with hot reload
+- **Storybook (static build):** https://localhost/design - Pre-built component documentation via nginx
 - **Redis:** localhost:6379 (if you need direct access)
 
-**Recommended:** Use http://localhost:3000 during development for fastest feedback.
+**Recommended:**
+- Use http://localhost:3000 for app development
+- Use http://localhost:6006 for component development in Storybook
 
 ## Clean Slate (Nuclear Option)
 
