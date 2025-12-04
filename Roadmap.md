@@ -65,16 +65,49 @@ This document outlines our proposed technology stack, the architecture decisions
 
 ## The Stack
 
-| Component | Role | Why |
-|-----------|------|-----|
-| **Next.js** | Frontend framework | Server-side rendering + static generation, built-in API routes, seamless Supabase integration |
-| **Nginx** | Reverse proxy / web server | Routes traffic, serves static assets, handles SSL, lightweight and battle-tested |
-| **Redis** | In-memory cache | Reduces load on Supabase and Medusa by caching frequently accessed data (products, user sessions, etc.) |
-| **Supabase** | Database + authentication | PostgreSQL backend with built-in auth, real-time subscriptions, eliminates backend boilerplate |
-| **Medusa** | Headless commerce engine | Products, orders, carts, inventory—handled by Medusa so we focus on frontend experience |
-| **Puck** | Page builder | Enables non-developers to compose layouts dynamically without touching code |
-| **Storybook** | Component documentation | Every component has documented variations, states, and edge cases—deployed as team documentation |
-| **Docker** | Containerization | Entire stack runs in containers for consistency across machines and easy deployment |
+### Next.js
+**What it does:** React framework for building the frontend with server-side rendering and API routes
+**Why it matters:** Provides fast, SEO-friendly pages with built-in routing and optimization. Handles chat API routes. Industry standard for modern web apps.
+
+### Nginx
+**What it does:** Reverse proxy and web server that routes traffic to different services
+**Why it matters:** Handles SSL, load balancing, and serves static files efficiently. Acts as the entry point for all requests.
+
+### Redis
+**What it does:** In-memory cache for storing frequently accessed data
+**Why it matters:** Dramatically speeds up page loads by caching database queries and API responses. Reduces load on Supabase.
+
+### Supabase
+**What it does:** PostgreSQL database with pgvector extension for semantic search
+**Why it matters:** Stores content, user data, AND vector embeddings for semantic search. Single source of truth for all data including auth, storage, and real-time features.
+
+### Medusa
+**What it does:** Headless ecommerce backend (cart, checkout, inventory, orders)
+**Why it matters:** Handles all commerce logic so you don't build payment processing, tax calculations, and order management from scratch.
+
+### Puck
+**What it does:** Visual page builder that lets non-devs compose pages with React components
+**Why it matters:** Clients can build and edit pages without touching code. Makes the platform accessible to non-technical users.
+
+### Storybook
+**What it does:** Component development environment for building and documenting UI components
+**Why it matters:** Lets you build/test components in isolation before integrating them. Creates living documentation of available components.
+
+### Tiptap
+**What it does:** Modern WYSIWYG editor that supports embedded React components
+**Why it matters:** Replaces TinyMCE with a flexible editor that can embed interactive elements (quizzes, flashcards) directly in content.
+
+### Vercel AI SDK
+**What it does:** React hooks and utilities for building AI chat interfaces
+**Why it matters:** Handles chat state, streaming responses, and API integration. Makes adding AI chat trivial without building from scratch.
+
+### OpenAI API
+**What it does:** Embeddings for semantic search + chat completions
+**Why it matters:** Powers vector search (text-embedding-3-small) and conversational AI (GPT-4 or Claude via API).
+
+### Docker
+**What it does:** Containerization platform for local development environment
+**Why it matters:** Ensures everyone runs the same setup (Nginx, Redis, databases) without "works on my machine" problems.
 
 ## Data Flow
 
