@@ -224,7 +224,7 @@ export default function DatabaseDemo() {
       {flowTrace.length > 0 && (
         <div className="mb-6 space-y-3">
           <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-semibold">
-            What Just Happened:
+            What Just Happened
           </p>
           {flowTrace.map((trace, index) => {
             const sourceColor =
