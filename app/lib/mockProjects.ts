@@ -8,7 +8,22 @@
 // SAFETY: Only works when NODE_ENV === 'development'
 // Production builds completely ignore the preview parameter.
 
-export const mockProjects = [
+// Type matching the Project interface from useDashboard
+type ProjectStatus = 'submitted' | 'in_review' | 'scheduled' | 'in_progress' | 'completed';
+
+interface MockProject {
+  id: string;
+  name: string;
+  email: string;
+  service: string | null;
+  status: ProjectStatus;
+  created_at: string;
+  message: string;
+  project_comments: { count: number }[];
+  attachments: string[] | null;
+}
+
+export const mockProjects: MockProject[] = [
   {
     id: 'mock-1',
     name: 'Website Redesign',
@@ -19,7 +34,7 @@ export const mockProjects = [
     message:
       'Looking to refresh our company website with a modern design. We want something clean and professional that represents our brand well.',
     project_comments: [{ count: 5 }],
-    attachments: [{ id: '1' }, { id: '2' }],
+    attachments: ['file1.pdf', 'file2.png'],
   },
   {
     id: 'mock-2',
@@ -31,7 +46,7 @@ export const mockProjects = [
     message:
       'Need a modern logo for my tech startup. Something minimal and memorable.',
     project_comments: [{ count: 3 }],
-    attachments: [],
+    attachments: null,
   },
   {
     id: 'mock-3',
@@ -43,7 +58,7 @@ export const mockProjects = [
     message:
       'We need a full e-commerce solution with payment processing and inventory management.',
     project_comments: [{ count: 0 }],
-    attachments: [{ id: '1' }, { id: '2' }, { id: '3' }],
+    attachments: ['requirements.pdf', 'mockup.png', 'brand-guide.pdf'],
   },
   {
     id: 'mock-4',
@@ -54,7 +69,7 @@ export const mockProjects = [
     created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
     message: 'Need blog posts and website copy for our marketing campaign.',
     project_comments: [{ count: 2 }],
-    attachments: [{ id: '1' }],
+    attachments: ['brief.docx'],
   },
 ];
 

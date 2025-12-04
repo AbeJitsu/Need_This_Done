@@ -40,7 +40,7 @@ interface ProjectCardProps {
   id: string;
   name: string;
   email: string;
-  service?: string;
+  service?: string | null;
   status: 'submitted' | 'in_review' | 'scheduled' | 'in_progress' | 'completed';
   createdAt: string;
   messagePreview: string;

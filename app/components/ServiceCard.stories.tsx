@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import ServiceCard from './ServiceCard';
 
 // ============================================================================
@@ -149,6 +149,13 @@ export const FullWithLink: Story = {
 // ============================================================================
 
 export const AllCompactColors: Story = {
+  args: {
+    title: 'Example Service',
+    tagline: 'Example tagline',
+    description: 'Example description',
+    color: 'purple',
+    variant: 'compact',
+  },
   render: () => (
     <div className="space-y-4 w-[400px]">
       <ServiceCard
@@ -177,6 +184,13 @@ export const AllCompactColors: Story = {
 };
 
 export const AllFullColors: Story = {
+  args: {
+    title: 'Example Service',
+    tagline: 'Example tagline',
+    description: 'Example description',
+    color: 'purple',
+    variant: 'full',
+  },
   render: () => (
     <div className="space-y-4 w-[400px]">
       <ServiceCard

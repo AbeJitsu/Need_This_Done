@@ -1,103 +1,48 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
-import { mockProjects, isDevPreview } from '@/lib/mockProjects';
+import { useDashboard, LoadingSkeleton, ErrorDisplay } from '@/hooks/useDashboard';
 
 // ============================================================================
 // Admin Dashboard Component - View All Projects with Filters
 // ============================================================================
 // What: Displays all projects with filtering and management capabilities.
 // Why: Admins need to see and manage all client projects.
-// How: Fetches from /api/projects/all with optional filters.
+// How: Uses shared useDashboard hook with admin-specific filters.
 
 export default function AdminDashboard() {
   // ============================================================================
-  // State Management
+  // Filter State (Admin-specific)
   // ============================================================================
 
-  const [projects, setProjects] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Filter state
   const [statusFilter, setStatusFilter] = useState('');
   const [emailFilter, setEmailFilter] = useState('');
 
-  // ============================================================================
-  // Fetch Projects
-  // ============================================================================
-
-  const fetchProjects = async () => {
-    setLoading(true);
-    setError(null);
-
-    // Dev preview mode - skip API call, use mock data
-    if (isDevPreview()) {
-      setProjects(mockProjects);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const params = new URLSearchParams();
-      if (statusFilter) params.append('status', statusFilter);
-      if (emailFilter) params.append('email', emailFilter);
-
-      const res = await fetch(
-        `/api/projects/all${params.toString() ? '?' + params.toString() : ''}`
-      );
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          setError('Please sign in to view projects');
-          return;
-        }
-        if (res.status === 403) {
-          setError('You do not have permission to view all projects');
-          return;
-        }
-        throw new Error('Failed to fetch projects');
-      }
-
-      const { projects: fetchedProjects } = await res.json();
-      setProjects(fetchedProjects || []);
-    } catch (err) {
-      console.error('Error fetching projects:', err);
-      setError('Failed to load projects');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Memoize filters to prevent unnecessary re-fetches
+  const filters = useMemo(
+    () => ({ status: statusFilter, email: emailFilter }),
+    [statusFilter, emailFilter]
+  );
 
   // ============================================================================
-  // Initial Load and Filter Changes
+  // Shared Dashboard Logic
   // ============================================================================
 
-  useEffect(() => {
-    fetchProjects();
-  }, [statusFilter, emailFilter]);
-
-  // ============================================================================
-  // Handle Modal
-  // ============================================================================
-
-  const handleOpenProject = (projectId: string) => {
-    setSelectedProjectId(projectId);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedProjectId(null);
-  };
-
-  const handleProjectUpdate = () => {
-    fetchProjects();
-  };
+  const {
+    projects,
+    loading,
+    error,
+    selectedProjectId,
+    isModalOpen,
+    handleOpenProject,
+    handleCloseModal,
+    handleProjectUpdate,
+  } = useDashboard({
+    endpoint: '/api/projects/all',
+    filters,
+  });
 
   // ============================================================================
   // Render
@@ -169,18 +114,9 @@ export default function AdminDashboard() {
           ==================================================================== */}
 
       {error ? (
-        <div className="p-6 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-          <p className="text-red-700 dark:text-red-300">{error}</p>
-        </div>
+        <ErrorDisplay message={error} />
       ) : loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[...Array(4)].map((_, i) => (
-            <div
-              key={i}
-              className="bg-gray-100 dark:bg-gray-700 rounded-xl p-6 animate-pulse h-48"
-            />
-          ))}
-        </div>
+        <LoadingSkeleton />
       ) : projects.length === 0 ? (
         <div className="bg-white dark:bg-gray-800 rounded-xl p-12 border border-gray-200 dark:border-gray-700 text-center">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">

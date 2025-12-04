@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import CircleBadge from './CircleBadge';
 
 // ============================================================================
@@ -217,6 +217,7 @@ export const SingleDigit: Story = {
 // ============================================================================
 
 export const SizeComparisonPurple: Story = {
+  args: { number: 1, color: 'purple' },
   render: () => (
     <div className="flex items-center gap-6">
       <div className="text-center">
@@ -236,6 +237,7 @@ export const SizeComparisonPurple: Story = {
 };
 
 export const SizeComparisonBlue: Story = {
+  args: { number: 2, color: 'blue' },
   render: () => (
     <div className="flex items-center gap-6">
       <div className="text-center">
@@ -259,6 +261,7 @@ export const SizeComparisonBlue: Story = {
 // ============================================================================
 
 export const AllColorsSmall: Story = {
+  args: { number: 1, color: 'purple' },
   render: () => (
     <div className="flex flex-wrap gap-4">
       <div className="text-center">
@@ -290,6 +293,7 @@ export const AllColorsSmall: Story = {
 };
 
 export const AllColorsMedium: Story = {
+  args: { number: 1, color: 'purple' },
   render: () => (
     <div className="flex flex-wrap gap-4">
       <div className="text-center">
@@ -321,6 +325,7 @@ export const AllColorsMedium: Story = {
 };
 
 export const AllColorsLarge: Story = {
+  args: { number: 1, color: 'purple' },
   render: () => (
     <div className="flex flex-wrap gap-4">
       <div className="text-center">
@@ -356,6 +361,7 @@ export const AllColorsLarge: Story = {
 // ============================================================================
 
 export const CompleteMatrix: Story = {
+  args: { number: 1, color: 'purple' },
   render: () => (
     <div className="space-y-8">
       <div>

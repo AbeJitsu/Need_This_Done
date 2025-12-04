@@ -4,7 +4,7 @@
 // Demonstrates different configurations of the CTASection component including
 // various button counts, hover colors, and with/without descriptions.
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import CTASection from './CTASection';
 
 const meta = {

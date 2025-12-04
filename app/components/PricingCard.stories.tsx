@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import PricingCard from './PricingCard';
 
 // ============================================================================
@@ -254,6 +254,15 @@ export const MinimalFeatures: Story = {
 // ============================================================================
 
 export const AllColors: Story = {
+  args: {
+    name: 'Example',
+    price: '$99',
+    period: 'per month',
+    description: 'All colors comparison',
+    features: ['Feature one', 'Feature two'],
+    color: 'purple',
+    cta: 'Get Started',
+  },
   render: () => (
     <div className="grid grid-cols-3 gap-6 w-[1200px]">
       <PricingCard

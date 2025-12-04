@@ -29,6 +29,8 @@ export async function GET(request: NextRequest) {
     // Build Query with Filters
     // ========================================================================
 
+    const supabase = await createSupabaseServerClient();
+
     let query = supabase
       .from('projects')
       .select('*')

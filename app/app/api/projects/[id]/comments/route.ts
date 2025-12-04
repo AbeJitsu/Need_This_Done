@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
-import { verifyProjectAccess, verifyAuth, isUserAdmin } from '@/lib/api-auth';
+import { verifyProjectAccess, verifyAuth } from '@/lib/api-auth';
 
 // ============================================================================
 // Project Comments API Route - /api/projects/[id]/comments

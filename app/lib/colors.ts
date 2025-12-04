@@ -197,4 +197,32 @@ export const faqColors: Record<'purple' | 'blue' | 'green' | 'orange', {
   },
 };
 
+// ============================================================================
+// Feature Card Colors - Styling for FeatureCard component variants
+// ============================================================================
+// Maps variant names to accent colors for consistent theming
+export type FeatureCardVariant = 'default' | 'primary' | 'success';
+
+export const featureCardColors: Record<FeatureCardVariant, {
+  container: string;
+  icon: string;
+  hover: string;
+}> = {
+  default: {
+    container: 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800',
+    icon: 'text-gray-700 dark:text-gray-300',
+    hover: 'hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-lg',
+  },
+  primary: {
+    container: 'border-blue-200 dark:border-blue-800 bg-blue-50/30 dark:bg-gray-700',
+    icon: 'text-blue-600 dark:text-blue-400',
+    hover: 'hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg hover:shadow-blue-500/10 dark:hover:shadow-blue-500/20',
+  },
+  success: {
+    container: 'border-green-200 dark:border-green-800 bg-green-50/30 dark:bg-gray-700',
+    icon: 'text-green-600 dark:text-green-400',
+    hover: 'hover:border-green-300 dark:hover:border-green-700 hover:shadow-lg hover:shadow-green-500/10 dark:hover:shadow-green-500/20',
+  },
+};
+
 

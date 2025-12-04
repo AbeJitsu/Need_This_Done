@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import StepCard from './StepCard';
 
 // ============================================================================
@@ -217,6 +217,13 @@ export const StepWithMinimalDetails: Story = {
 // ============================================================================
 
 export const AllColorsStep1: Story = {
+  args: {
+    number: 1,
+    title: 'Example Step',
+    description: 'Example description',
+    details: ['Detail one', 'Detail two'],
+    color: 'purple',
+  },
   render: () => (
     <div className="space-y-4 w-[700px]">
       <StepCard
@@ -270,6 +277,13 @@ export const AllColorsStep1: Story = {
 // ============================================================================
 
 export const CompleteProcess: Story = {
+  args: {
+    number: 1,
+    title: 'Example Step',
+    description: 'Example description',
+    details: ['Detail one', 'Detail two'],
+    color: 'purple',
+  },
   render: () => (
     <div className="space-y-6 w-[700px]">
       <StepCard
