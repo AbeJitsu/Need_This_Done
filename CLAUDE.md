@@ -2,7 +2,10 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 
 ## Project Overview
 
-See [README.md](README.md) for project structure, quick start commands, and where things live.
+See [README.md](README.md) for:
+- **Directory structure** - Complete breakdown of folders and subfolders (Root Level, Application, Infrastructure & Configuration, Documentation, Testing)
+- **Quick start commands** - How to run the app and Storybook
+- **Key files** - Where core utilities and clients live
 
 ## Coding Standards
 
