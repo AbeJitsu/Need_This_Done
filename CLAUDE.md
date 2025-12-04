@@ -19,13 +19,9 @@ Use self-documenting code with section-level comments. Comment major sections an
 
 ## Design System
 
-Reference [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for brand identity and aesthetic direction.
+See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for technical standards (accessibility, colors, testing).
 
-When working on frontend:
-- Use existing color utilities from `app/lib/colors.ts`
-- Support both light and dark modes
-- Meet WCAG AA contrast (5:1 minimum)
-- Add accessibility tests (`.a11y.test.tsx`) for new components
+See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for brand identity and aesthetic direction.
 
 The frontend-design skill is enabled for aesthetic guidance.
 

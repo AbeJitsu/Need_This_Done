@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { verifyAdmin as verifyAdminAuth } from '@/lib/api-auth';
 
 // ============================================================================
 // Admin Users API Route - /api/admin/users
@@ -33,47 +33,13 @@ function getAdminClient() {
 }
 
 // ============================================================================
-// Verify Admin Access
-// ============================================================================
-
-async function verifyAdmin(): Promise<{
-  isAdmin: boolean;
-  user: any;
-  error?: string;
-}> {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) {
-    return { isAdmin: false, user: null, error: 'Unauthorized. Please sign in.' };
-  }
-
-  const isAdmin = user.user_metadata?.is_admin === true;
-
-  if (!isAdmin) {
-    return { isAdmin: false, user, error: 'Forbidden. Admin access required.' };
-  }
-
-  return { isAdmin: true, user };
-}
-
-// ============================================================================
 // GET - List All Users
 // ============================================================================
 
 export async function GET() {
   try {
-    const { isAdmin, error } = await verifyAdmin();
-
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error },
-        { status: error?.includes('Unauthorized') ? 401 : 403 }
-      );
-    }
+    const authResult = await verifyAdminAuth();
+    if (authResult.error) return authResult.error;
 
     // Use admin client to list users
     const adminClient = getAdminClient();
@@ -123,14 +89,9 @@ export async function GET() {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const { isAdmin, user: adminUser, error } = await verifyAdmin();
-
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error },
-        { status: error?.includes('Unauthorized') ? 401 : 403 }
-      );
-    }
+    const authResult = await verifyAdminAuth();
+    if (authResult.error) return authResult.error;
+    const adminUser = authResult.user;
 
     const body = await request.json();
     const { userId, action, value } = body;

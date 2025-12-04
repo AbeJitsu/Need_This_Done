@@ -25,6 +25,7 @@ volumes:
 
 networks:
   app_network:
+    name: ntd_app_network
     driver: bridge
 
 # ============================================================================
@@ -94,9 +95,6 @@ services:
       - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
       - REDIS_URL=redis://redis:6379
-      # Uncomment if you add custom session handling (currently unused - Supabase handles auth)
-      # - SESSION_SECRET=${SESSION_SECRET}
-      # - SESSION_MAX_AGE=${SESSION_MAX_AGE:-2592000}
 
     # Port 3000 is where Next.js runs
     # NOT exposed to outside world - only nginx can reach it

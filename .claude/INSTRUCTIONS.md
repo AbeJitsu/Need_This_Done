@@ -113,27 +113,8 @@ Use names that clearly describe what something does:
 
 Think of it like labeling moving boxes - future you (and others) will thank you for being specific.
 
-## Design System & Frontend Aesthetics
+## Design System
 
-### Our Design Philosophy
+See [docs/DESIGN_SYSTEM.md](../docs/DESIGN_SYSTEM.md) for technical standards (colors, accessibility, component testing).
 
-This project uses a **centralized design system**:
-- **Color library** (`app/lib/colors.ts`) - accentColors, titleColors, etc.
-- **Reusable components** - Button, CircleBadge, ServiceCard, PricingCard, FeatureCard
-- **Dark mode support** - Full light/dark theming with CSS variables
-- **Accessibility testing** - WCAG AA compliance (5:1 contrast minimum)
-
-### When Building Components
-
-1. **Use existing patterns first** - Check `app/components/` for similar components
-2. **Leverage color utilities** - Import from `@/lib/colors` for consistency
-3. **Support dark mode** - Every component needs light and dark variants
-4. **Test accessibility** - Add `.a11y.test.tsx` files for new components
-
-### Design Guidance
-
-The frontend-design skill provides aesthetic direction for new features. When designing:
-- Reference `.claude/DESIGN_BRIEF.md` for brand identity and constraints
-- Let the plugin guide creative choices while maintaining professional tone
-- Preserve accessibility standards (5:1 contrast, dark mode support)
-- Build on existing patterns rather than replacing them
+See [DESIGN_BRIEF.md](DESIGN_BRIEF.md) for brand identity and aesthetic direction.

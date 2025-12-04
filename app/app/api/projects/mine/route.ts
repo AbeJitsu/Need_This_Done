@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { verifyAuth } from '@/lib/api-auth';
 
 // ============================================================================
 // User's Projects API Route - /api/projects/mine
@@ -10,24 +11,18 @@ import { createSupabaseServerClient } from '@/lib/supabase-server';
 export async function GET() {
   try {
     // ====================================================================
-    // Create Server Client and Get User from Session
+    // Verify Authentication
     // ====================================================================
 
-    const supabase = await createSupabaseServerClient();
-
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-    if (userError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Please sign in.' },
-        { status: 401 }
-      );
-    }
+    const authResult = await verifyAuth();
+    if (authResult.error) return authResult.error;
+    const user = authResult.user;
 
     // ====================================================================
     // Fetch User's Projects
     // ====================================================================
 
+    const supabase = await createSupabaseServerClient();
     const { data: projects, error } = await supabase
       .from('projects')
       .select('*')

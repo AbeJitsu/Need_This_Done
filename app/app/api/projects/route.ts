@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { supabaseAdmin } from '@/lib/supabase';
+import { isValidEmail, validateFiles } from '@/lib/validation';
 
 // ============================================================================
 // Projects API Route - /api/projects
@@ -10,19 +11,6 @@ import { supabaseAdmin } from '@/lib/supabase';
 //
 // Note: Uses supabaseAdmin for inserts because the contact form can be submitted
 // by anonymous users. The admin client bypasses RLS to allow these inserts.
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const MAX_FILES = 3;
-const ALLOWED_TYPES = [
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'image/webp',
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'text/plain',
-];
 
 export async function POST(request: Request) {
   try {
@@ -57,8 +45,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!isValidEmail(email)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
         { status: 400 }
@@ -76,26 +63,12 @@ export async function POST(request: Request) {
     // Validate Files (if any)
     // ====================================================================
 
-    if (files.length > MAX_FILES) {
+    const fileValidation = validateFiles(files);
+    if (!fileValidation.valid) {
       return NextResponse.json(
-        { error: `Maximum ${MAX_FILES} files allowed` },
+        { error: fileValidation.error },
         { status: 400 }
       );
-    }
-
-    for (const file of files) {
-      if (file.size > MAX_FILE_SIZE) {
-        return NextResponse.json(
-          { error: `File ${file.name} exceeds 5MB limit` },
-          { status: 400 }
-        );
-      }
-      if (!ALLOWED_TYPES.includes(file.type)) {
-        return NextResponse.json(
-          { error: `File type not allowed: ${file.name}` },
-          { status: 400 }
-        );
-      }
     }
 
     // ====================================================================

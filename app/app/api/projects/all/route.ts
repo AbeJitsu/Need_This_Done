@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { verifyAdmin } from '@/lib/api-auth';
 
 // ============================================================================
 // All Projects API Route - /api/projects/all (Admin Only)
@@ -10,46 +11,11 @@ import { createSupabaseServerClient } from '@/lib/supabase-server';
 export async function GET(request: NextRequest) {
   try {
     // ========================================================================
-    // Create Server Client and Get User from Session
+    // Verify Admin Access
     // ========================================================================
 
-    // DEBUG: Log cookies received
-    const cookies = request.cookies.getAll();
-    console.log('=== DEBUG: Cookies received ===');
-    console.log('Cookie count:', cookies.length);
-    cookies.forEach(c => console.log(`  ${c.name}: ${c.value.substring(0, 50)}...`));
-
-    const supabase = await createSupabaseServerClient();
-
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    // DEBUG: Log auth result
-    console.log('=== DEBUG: Auth result ===');
-    console.log('User:', user?.email || 'none');
-    console.log('Error:', userError?.message || 'none');
-
-    if (userError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Please sign in.' },
-        { status: 401 }
-      );
-    }
-
-    // ========================================================================
-    // Verify Admin Status
-    // ========================================================================
-
-    const isAdmin = user.user_metadata?.is_admin === true;
-
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: 'Forbidden. Admin access required.' },
-        { status: 403 }
-      );
-    }
+    const authResult = await verifyAdmin();
+    if (authResult.error) return authResult.error;
 
     // ========================================================================
     // Parse Query Parameters

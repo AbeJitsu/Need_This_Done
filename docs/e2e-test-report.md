@@ -1,7 +1,7 @@
 # E2E Test Report
 
-**Last Updated:** November 29, 2024
-**Environment:** Docker (need_this_done_app_network)
+**Last Updated:** December 4, 2025
+**Environment:** Docker (ntd_app_network)
 **Test Runner:** Playwright 1.57.0
 
 ---
@@ -113,13 +113,16 @@ cd app && npm run test:e2e
 
 ## Test Files
 
-| File | Purpose | Tests |
-|------|---------|-------|
-| [auth.spec.ts](../app/e2e/auth.spec.ts) | Login page UI and auth flows | 14 |
-| [navigation.spec.ts](../app/e2e/navigation.spec.ts) | Nav links, mobile menu, dark mode | 11 |
-| [contact.spec.ts](../app/e2e/contact.spec.ts) | Contact form validation and submission | 13 |
-| [pages.spec.ts](../app/e2e/pages.spec.ts) | Public page content verification | 29 |
-| [dashboard.spec.ts](../app/e2e/dashboard.spec.ts) | Route protection, API auth | 6 |
+| File | Purpose |
+|------|---------|
+| [auth.spec.ts](../app/e2e/auth.spec.ts) | Login page UI and auth flows |
+| [navigation.spec.ts](../app/e2e/navigation.spec.ts) | Nav links, mobile menu, dark mode |
+| [contact.spec.ts](../app/e2e/contact.spec.ts) | Contact form validation and submission |
+| [pages.spec.ts](../app/e2e/pages.spec.ts) | Public page content verification |
+| [dashboard.spec.ts](../app/e2e/dashboard.spec.ts) | Route protection, API auth |
+| [admin-dashboard.spec.ts](../app/e2e/admin-dashboard.spec.ts) | Admin dashboard functionality |
+| [submission.spec.ts](../app/e2e/submission.spec.ts) | Form submission workflows |
+| [pages-dark-mode.spec.ts](../app/e2e/pages-dark-mode.spec.ts) | Dark mode across all pages |
 
 ---
 

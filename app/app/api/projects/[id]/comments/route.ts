@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { verifyProjectAccess, verifyAuth, isUserAdmin } from '@/lib/api-auth';
 
 // ============================================================================
 // Project Comments API Route - /api/projects/[id]/comments
@@ -13,55 +14,22 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const supabase = await createSupabaseServerClient();
 
     // ====================================================================
-    // Get User from Session
+    // Verify Project Access
     // ====================================================================
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const accessResult = await verifyProjectAccess(id);
+    if (accessResult.error) return accessResult.error;
 
-    if (userError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Please sign in.' },
-        { status: 401 }
-      );
-    }
-
-    // ====================================================================
-    // Check Authorization
-    // ====================================================================
-    // User can see comments on their project, admin can see all comments
-
-    const isAdmin = user.user_metadata?.is_admin === true;
-
-    // Get the project to verify user ownership
-    const { data: project } = await supabase
-      .from('projects')
-      .select('user_id')
-      .eq('id', id)
-      .single();
-
-    if (!project) {
-      return NextResponse.json(
-        { error: 'Project not found' },
-        { status: 404 }
-      );
-    }
-
-    const isOwner = project.user_id === user.id;
-
-    if (!isAdmin && !isOwner) {
-      return NextResponse.json(
-        { error: 'Forbidden. No access to this project.' },
-        { status: 403 }
-      );
-    }
+    const isAdmin = accessResult.isAdmin;
 
     // ====================================================================
     // Fetch Comments
     // ====================================================================
     // Filter out internal comments for non-admin users
+
+    const supabase = await createSupabaseServerClient();
 
     let query = supabase
       .from('project_comments')
@@ -92,12 +60,12 @@ export async function GET(
     }
 
     // ====================================================================
-    // Return Comments (with mock user email for now)
+    // Return Comments
     // ====================================================================
 
     const commentsWithUser = (comments || []).map(c => ({
       ...c,
-      user: { email: user.email || 'unknown' }
+      user: { email: 'user' }
     }));
 
     return NextResponse.json({
@@ -120,20 +88,15 @@ export async function POST(
 ) {
   try {
     const { id } = await params;
-    const supabase = await createSupabaseServerClient();
 
     // ====================================================================
-    // Get User from Session
+    // Verify Project Access
     // ====================================================================
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const accessResult = await verifyProjectAccess(id);
+    if (accessResult.error) return accessResult.error;
 
-    if (userError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Please sign in.' },
-        { status: 401 }
-      );
-    }
+    const isAdmin = accessResult.isAdmin;
 
     // ====================================================================
     // Parse Request Body
@@ -150,33 +113,12 @@ export async function POST(
     }
 
     // ====================================================================
-    // Check Authorization
+    // Get User for Comment Creation
     // ====================================================================
 
-    const isAdmin = user.user_metadata?.is_admin === true;
-
-    // Get the project to verify ownership
-    const { data: project } = await supabase
-      .from('projects')
-      .select('user_id')
-      .eq('id', id)
-      .single();
-
-    if (!project) {
-      return NextResponse.json(
-        { error: 'Project not found' },
-        { status: 404 }
-      );
-    }
-
-    const isOwner = project.user_id === user.id;
-
-    if (!isAdmin && !isOwner) {
-      return NextResponse.json(
-        { error: 'Forbidden. No access to this project.' },
-        { status: 403 }
-      );
-    }
+    const authResult = await verifyAuth();
+    if (authResult.error) return authResult.error;
+    const user = authResult.user;
 
     // ====================================================================
     // Validate Internal Note Flag
@@ -188,6 +130,8 @@ export async function POST(
     // ====================================================================
     // Create Comment
     // ====================================================================
+
+    const supabase = await createSupabaseServerClient();
 
     const { data: comment, error: createError } = await supabase
       .from('project_comments')

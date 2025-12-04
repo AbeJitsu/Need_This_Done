@@ -2,12 +2,11 @@
 
 ## Design Philosophy
 
+See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for complete standards.
+
 - Conservative, professional design with warmth and polish
-- WCAG AA accessibility (5:1 contrast minimum)
-- Light and dark mode support
-- Motion-safe animations (respects prefers-reduced-motion)
 - DRY architecture with reusable components
-- Single source of truth for colors in `app/lib/colors.ts`
+- Motion-safe animations (respects prefers-reduced-motion)
 
 ---
 
@@ -180,16 +179,15 @@ Everything runs in containers, so what works locally works on the server.
 
 ## Next Steps
 
-- [ ] Set up Storybook in Next.js project
+- [x] Set up Storybook in Next.js project *(complete - http://localhost:6006)*
+- [x] Set up Docker compose for local development stack *(complete)*
+- [x] Configure context7 MCP for Claude Code workflows *(complete)*
 - [ ] Deploy Storybook as static site served by Nginx at `/design`
-- [ ] Configure context7 MCP for Claude Code workflows
 - [ ] Define Redis cache invalidation strategy (per feature)
 - [ ] Document Medusa API contract (endpoints, auth, data shape)
-- [ ] Set up Docker compose for local development stack
 
-## Setup Guides
+## Setup Guides (Pending)
 
-- [Storybook Setup](app/guides/storybook-setup.md) - Next.js App Router integration, writing stories, deployment
 - [Medusa Setup](app/guides/medusa-setup.md) - Headless commerce API, environment variables, Stripe
 - [Puck Setup](app/guides/puck-setup.md) - Page builder config, dynamic routes, component exposure
 

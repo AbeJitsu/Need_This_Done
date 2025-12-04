@@ -27,10 +27,10 @@ services:
     # Network Configuration
     # ========================================================================
     # Join the existing network where nginx, app, and redis are running.
-    # The network was created by docker-compose.yml and is named with the
-    # project prefix (need_this_done_app_network or similar).
+    # The network uses an explicit name (ntd_app_network) defined in
+    # docker-compose.yml to avoid dependency on the project directory name.
     networks:
-      - need_this_done_app_network
+      - ntd_app_network
 
     # ========================================================================
     # Environment Variables
@@ -53,5 +53,5 @@ services:
 # ============================================================================
 # Connect to the existing network created by docker-compose.yml
 networks:
-  need_this_done_app_network:
+  ntd_app_network:
     external: true

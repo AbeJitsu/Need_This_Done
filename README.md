@@ -27,6 +27,7 @@ Once running:
 |------|----------------|
 | [DOCKER.md](DOCKER.md) | How to run the app, architecture, troubleshooting |
 | [Roadmap.md](Roadmap.md) | Tech stack, what's built, what's pending |
+| [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Design standards, accessibility, component testing |
 | [docs/dark-mode-testing.md](docs/dark-mode-testing.md) | Dark mode testing guidelines and WCAG compliance |
 | [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) | Coding standards (DRY, comments, organization) |
 | [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) | Brand identity, colors, design system |
@@ -123,7 +124,7 @@ See [docs/e2e-test-report.md](docs/e2e-test-report.md) for current test coverage
 
 ## Design Principles
 
-- WCAG AA accessibility (5:1 contrast minimum)
-- Light and dark mode support
-- DRY architecture with reusable components
-- Self-documenting code with section-level comments
+See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for complete standards:
+- Accessibility (WCAG AA, 5:1 contrast minimum)
+- Color system (`app/lib/colors.ts`) and dark mode
+- Component testing requirements

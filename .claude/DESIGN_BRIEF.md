@@ -31,10 +31,13 @@
 
 ## Design Constraints (Non-Negotiable)
 
-1. **Accessibility**: Minimum 5:1 contrast ratio (WCAG AA) for all text
-2. **Dark Mode**: Every design must work equally well in both light and dark themes
-3. **Color System**: Use or extend existing palette in `app/lib/colors.ts` (don't replace)
-4. **Testing**: All new components require passing `.a11y.test.tsx` files
+See [docs/DESIGN_SYSTEM.md](../docs/DESIGN_SYSTEM.md) for complete technical standards.
+
+Summary:
+- **Accessibility**: 5:1 contrast minimum (WCAG AA)
+- **Dark Mode**: All designs must work in both themes
+- **Color System**: Extend `app/lib/colors.ts` (don't replace)
+- **Testing**: New components need `.a11y.test.tsx` files
 
 ## Opportunities for Enhancement
 
