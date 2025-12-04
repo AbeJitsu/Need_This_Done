@@ -21,4 +21,4 @@ COPY ssl/key.pem /etc/nginx/ssl/key.pem
 # Runs every 30 seconds, fails if no response in 3 seconds
 # If it fails 3 times in a row, Docker marks the container as unhealthy
 HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost/health || exit 1
+  CMD wget --quiet --tries=1 --spider http://127.0.0.1/health || exit 1
