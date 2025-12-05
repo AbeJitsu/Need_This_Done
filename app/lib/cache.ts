@@ -48,6 +48,12 @@ export const CACHE_KEYS = {
   // Static content
   services: () => 'static:services',
   pricing: () => 'static:pricing',
+
+  // Medusa ecommerce
+  products: () => 'medusa:products:all',
+  cart: (cartId: string) => `medusa:cart:${cartId}`,
+  order: (orderId: string) => `medusa:order:${orderId}`,
+  userOrders: (userId: string) => `medusa:orders:user:${userId}`,
 } as const;
 
 // ============================================================================
