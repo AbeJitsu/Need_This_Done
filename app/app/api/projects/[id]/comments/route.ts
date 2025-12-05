@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { verifyProjectAccess, verifyAuth } from '@/lib/api-auth';
+import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 
 // ============================================================================
 // Project Comments API Route - /api/projects/[id]/comments
@@ -25,45 +26,49 @@ export async function GET(
     const isAdmin = accessResult.isAdmin;
 
     // ====================================================================
-    // Fetch Comments
+    // Fetch Comments (with Caching)
     // ====================================================================
-    // Filter out internal comments for non-admin users
+    // Cache separately for admin vs client views (admins see internal notes)
+    // TTL: 60 seconds
 
     const supabase = await createSupabaseServerClient();
 
-    let query = supabase
-      .from('project_comments')
-      .select(`
-        id,
-        content,
-        is_internal,
-        created_at,
-        user_id
-      `)
-      .eq('project_id', id)
-      .order('created_at', { ascending: true });
+    const result = await cache.wrap(
+      CACHE_KEYS.projectComments(id, isAdmin),
+      async () => {
+        let query = supabase
+          .from('project_comments')
+          .select(`
+            id,
+            content,
+            is_internal,
+            created_at,
+            user_id
+          `)
+          .eq('project_id', id)
+          .order('created_at', { ascending: true });
 
-    // Non-admin users should not see internal comments
-    if (!isAdmin) {
-      query = query.eq('is_internal', false);
-    }
+        // Non-admin users should not see internal comments
+        if (!isAdmin) {
+          query = query.eq('is_internal', false);
+        }
 
-    const { data: comments, error: fetchError } = await query;
+        const { data: comments, error: fetchError } = await query;
 
-    if (fetchError) {
-      console.error('Failed to fetch comments:', fetchError.message);
+        if (fetchError) {
+          throw new Error(`Failed to fetch comments: ${fetchError.message}`);
+        }
 
-      return NextResponse.json(
-        { error: 'Failed to fetch comments' },
-        { status: 500 }
-      );
-    }
+        return comments || [];
+      },
+      CACHE_TTL.MEDIUM
+    );
 
     // ====================================================================
     // Return Comments
     // ====================================================================
 
-    const commentsWithUser = (comments || []).map(c => ({
+    const commentsWithUser = result.data.map(c => ({
       ...c,
       user: { email: 'user' }
     }));
@@ -71,6 +76,8 @@ export async function GET(
     return NextResponse.json({
       success: true,
       comments: commentsWithUser,
+      cached: result.cached,
+      source: result.source,
     });
   } catch (error) {
     console.error('Comments GET error:', error);
@@ -152,6 +159,14 @@ export async function POST(
         { status: 500 }
       );
     }
+
+    // ====================================================================
+    // Invalidate Comment Cache
+    // ====================================================================
+    // Clear cache for both admin and client views so next fetch is fresh
+    
+    await cache.invalidate(CACHE_KEYS.projectComments(id, true));  // Admin view
+    await cache.invalidate(CACHE_KEYS.projectComments(id, false)); // Client view
 
     // ====================================================================
     // Return Created Comment

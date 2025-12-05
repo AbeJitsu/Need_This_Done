@@ -11,6 +11,7 @@ import {
   serverError,
   handleApiError,
 } from '@/lib/api-errors';
+import { cache, CACHE_KEYS } from '@/lib/cache';
 
 // ============================================================================
 // Projects API Route - /api/projects
@@ -147,6 +148,16 @@ export async function POST(request: Request) {
 
       return serverError('Failed to submit project. Please try again.');
     }
+
+    // ====================================================================
+    // Invalidate Caches
+    // ====================================================================
+    // New project submitted - invalidate dashboard and admin caches
+
+    if (userId) {
+      await cache.invalidate(CACHE_KEYS.userProjects(userId));
+    }
+    await cache.invalidatePattern('admin:projects:*');
 
     // ====================================================================
     // Success Response

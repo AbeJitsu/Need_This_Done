@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { verifyAdmin as verifyAdminAuth } from '@/lib/api-auth';
 import { badRequest, serverError, handleApiError } from '@/lib/api-errors';
+import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 
 // ============================================================================
 // Admin Users API Route - /api/admin/users
@@ -22,33 +23,45 @@ export async function GET() {
     const authResult = await verifyAdminAuth();
     if (authResult.error) return authResult.error;
 
-    // Use admin client to list users
+    // Use admin client to list users (with caching)
+    // TTL: 5 minutes (user data changes infrequently)
     const adminClient = getSupabaseAdmin();
-    const { data, error: listError } = await adminClient.auth.admin.listUsers();
 
-    if (listError) {
-      return serverError('Failed to load users');
-    }
+    const result = await cache.wrap(
+      CACHE_KEYS.adminUsers(),
+      async () => {
+        const { data, error: listError } = await adminClient.auth.admin.listUsers();
 
-    // Transform user data for the frontend
-    // Note: banned_until is not in the TypeScript types but exists in the API response
-    const users = data.users.map((user) => {
-      const userData = user as typeof user & { banned_until?: string | null };
-      return {
-        id: user.id,
-        email: user.email,
-        created_at: user.created_at,
-        last_sign_in_at: user.last_sign_in_at,
-        email_confirmed_at: user.email_confirmed_at,
-        is_admin: user.user_metadata?.is_admin === true,
-        is_disabled: userData.banned_until !== null && userData.banned_until !== undefined,
-        name: user.user_metadata?.name || user.user_metadata?.full_name || null,
-      };
-    });
+        if (listError) {
+          throw new Error('Failed to load users');
+        }
+
+        // Transform user data for the frontend
+        // Note: banned_until is not in the TypeScript types but exists in the API response
+        const users = data.users.map((user) => {
+          const userData = user as typeof user & { banned_until?: string | null };
+          return {
+            id: user.id,
+            email: user.email,
+            created_at: user.created_at,
+            last_sign_in_at: user.last_sign_in_at,
+            email_confirmed_at: user.email_confirmed_at,
+            is_admin: user.user_metadata?.is_admin === true,
+            is_disabled: userData.banned_until !== null && userData.banned_until !== undefined,
+            name: user.user_metadata?.name || user.user_metadata?.full_name || null,
+          };
+        });
+
+        return users;
+      },
+      CACHE_TTL.LONG // 5 minutes
+    );
 
     return NextResponse.json({
-      users,
-      count: users.length,
+      users: result.data,
+      count: result.data.length,
+      cached: result.cached,
+      source: result.source,
     });
   } catch (error) {
     return handleApiError(error, 'Admin users GET');
@@ -94,6 +107,9 @@ export async function PATCH(request: NextRequest) {
           return serverError('Failed to update user role');
         }
 
+        // Invalidate user list cache
+        await cache.invalidate(CACHE_KEYS.adminUsers());
+
         return NextResponse.json({
           success: true,
           message: value ? 'User promoted to admin' : 'Admin role removed',
@@ -112,6 +128,9 @@ export async function PATCH(request: NextRequest) {
         if (updateError) {
           return serverError('Failed to update user status');
         }
+
+        // Invalidate user list cache
+        await cache.invalidate(CACHE_KEYS.adminUsers());
 
         return NextResponse.json({
           success: true,

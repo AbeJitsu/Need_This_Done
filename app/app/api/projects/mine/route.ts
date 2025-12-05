@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { verifyAuth } from '@/lib/api-auth';
-import { serverError, handleApiError } from '@/lib/api-errors';
+import { handleApiError } from '@/lib/api-errors';
+import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 
 // ============================================================================
 // User's Projects API Route - /api/projects/mine
@@ -20,27 +21,40 @@ export async function GET() {
     const user = authResult.user;
 
     // ====================================================================
-    // Fetch User's Projects
+    // Fetch User's Projects (with Caching)
     // ====================================================================
+    // Cache-aside pattern: Check cache first (~2ms), fallback to database
+    // TTL: 60 seconds (balance freshness vs. performance)
 
     const supabase = await createSupabaseServerClient();
-    const { data: projects, error } = await supabase
-      .from('projects')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
 
-    if (error) {
-      return serverError('Failed to load projects');
-    }
+    const result = await cache.wrap(
+      CACHE_KEYS.userProjects(user.id),
+      async () => {
+        const { data: projects, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          throw new Error('Failed to load projects');
+        }
+
+        return projects || [];
+      },
+      CACHE_TTL.MEDIUM
+    );
 
     // ====================================================================
     // Success Response
     // ====================================================================
 
     return NextResponse.json({
-      projects: projects || [],
-      count: projects?.length || 0,
+      projects: result.data,
+      count: result.data.length,
+      cached: result.cached,
+      source: result.source,
     });
 
   } catch (error) {
