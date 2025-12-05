@@ -36,10 +36,14 @@ export const CACHE_KEYS = {
   adminProjects: (status?: string) =>
     status ? `admin:projects:status:${status}` : 'admin:projects:all',
   adminUsers: () => 'admin:users:all',
+  adminPages: () => 'admin:pages:all',
 
   // Project data
   projectComments: (projectId: string, isAdmin: boolean) =>
     `project:comments:${projectId}${isAdmin ? ':admin' : ''}`,
+
+  // Page data
+  page: (slug: string) => `page:${slug}`,
 
   // Static content
   services: () => 'static:services',
