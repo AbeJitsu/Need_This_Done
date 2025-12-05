@@ -10,8 +10,8 @@
 
 | Metric | Count |
 |--------|-------|
-| Total Tests | 126 |
-| Passed | 121 |
+| Total Tests | 138 |
+| Passed | 133 |
 | Skipped | 5 |
 | Failed | 0 |
 | Pass Rate | 100% |
@@ -97,6 +97,26 @@ All tests pass. The 5 skipped tests are desktop-only navigation tests that are a
 - Nav shows login when not authenticated
 - API returns 401 for unauthenticated project requests
 
+### Puck Visual Page Builder (12 tests)
+
+**Page Management (admin-only):**
+- Admin can access pages management at `/admin/pages`
+- Admin can create new pages with slug and title
+- Puck editor loads for creating/editing pages
+- Admin can publish/unpublish pages
+- Admin can delete pages with confirmation
+
+**Public Page Viewing:**
+- Published pages accessible at `/{slug}` with server-side rendering
+- Unpublished pages return 404 for non-admin users
+- Published pages display correct Puck-rendered content
+- Page content caches correctly (5-minute TTL)
+
+**Permission Enforcement:**
+- Non-admin users cannot access `/admin/pages`
+- API routes enforce admin-only restrictions
+- Public users see only published pages
+
 ---
 
 ## How to Run Tests
@@ -123,6 +143,8 @@ cd app && npm run test:e2e
 | [admin-dashboard.spec.ts](../app/e2e/admin-dashboard.spec.ts) | Admin dashboard functionality |
 | [submission.spec.ts](../app/e2e/submission.spec.ts) | Form submission workflows |
 | [pages-dark-mode.spec.ts](../app/e2e/pages-dark-mode.spec.ts) | Dark mode across all pages |
+| [pages-puck.spec.ts](../app/e2e/pages-puck.spec.ts) | Puck CMS full workflow tests (create, edit, publish, delete) |
+| [pages-puck-demo.spec.ts](../app/e2e/pages-puck-demo.spec.ts) | Puck route accessibility and API endpoint verification |
 
 ---
 

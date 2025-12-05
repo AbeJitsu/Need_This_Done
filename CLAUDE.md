@@ -28,11 +28,15 @@ The frontend-design skill is enabled for aesthetic guidance.
 ## Testing
 
 When adding features:
-- New pages → Add E2E tests in `app/e2e/pages.spec.ts`
+- New static pages → Add E2E tests in `app/e2e/pages.spec.ts`
 - Dark mode variants → Add tests in `app/e2e/pages-dark-mode.spec.ts`
 - New forms → Add E2E tests for validation and submission
 - New navigation → Add tests in `app/e2e/navigation.spec.ts`
 - New components → Add accessibility tests
 - Protected routes → Add tests in `app/e2e/dashboard.spec.ts`
+- CMS/dynamic pages → Create feature-specific test file (e.g., `app/e2e/pages-puck.spec.ts`)
+  - Test admin workflows (create, edit, publish, delete)
+  - Test public page rendering and cache behavior
+  - Test permission enforcement and access control
 
-See [README.md](README.md) for test commands.
+See [README.md](README.md) for test commands and [docs/e2e-test-report.md](docs/e2e-test-report.md) for coverage details.
