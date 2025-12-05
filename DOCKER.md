@@ -680,6 +680,10 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 # If things are broken (dev mode)
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+
+# Kill everything and start fresh (clean slate)
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
 ## Understanding the Files

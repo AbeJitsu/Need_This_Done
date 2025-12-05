@@ -68,10 +68,38 @@ app.get("/admin", (req, res) => {
 // These will be implemented in Phase 3 with API bridges from Next.js
 // The main app will proxy requests to these endpoints
 
+// Sample products (in real Medusa, these come from database)
+const sampleProducts = [
+  {
+    id: "prod_1",
+    title: "Quick Task",
+    description: "Fast turnaround on small projects",
+    handle: "quick-task",
+    prices: [{ amount: 5000, currency_code: "USD" }], // $50
+    images: [{ url: "https://via.placeholder.com/300?text=Quick+Task" }],
+  },
+  {
+    id: "prod_2",
+    title: "Standard Project",
+    description: "Comprehensive project scope",
+    handle: "standard-project",
+    prices: [{ amount: 7500, currency_code: "USD" }], // $75
+    images: [{ url: "https://via.placeholder.com/300?text=Standard+Project" }],
+  },
+  {
+    id: "prod_3",
+    title: "Premium Solution",
+    description: "Full-service custom development",
+    handle: "premium-solution",
+    prices: [{ amount: 10000, currency_code: "USD" }], // $100
+    images: [{ url: "https://via.placeholder.com/300?text=Premium+Solution" }],
+  },
+];
+
 app.get("/store/products", (req, res) => {
   res.status(200).json({
-    products: [],
-    message: "Products endpoint. Configure products in Medusa admin.",
+    products: sampleProducts,
+    count: sampleProducts.length,
   });
 });
 
