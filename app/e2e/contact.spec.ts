@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { navigateToPage, fillFormField, submitForm } from './helpers';
 
 // ============================================================================
 // Contact Form E2E Tests
@@ -9,7 +10,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Contact Page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/contact');
+    await navigateToPage(page, '/contact');
   });
 
   // ==========================================================================
@@ -186,7 +187,7 @@ test.describe('Contact Page - Mobile', () => {
   test.use({ viewport: { width: 375, height: 667 } });
 
   test('form displays correctly on mobile', async ({ page }) => {
-    await page.goto('/contact');
+    await navigateToPage(page, '/contact');
 
     // Form should be visible
     await expect(page.getByLabel(/What should we call you/)).toBeVisible();
@@ -196,7 +197,7 @@ test.describe('Contact Page - Mobile', () => {
   });
 
   test('can fill and submit form on mobile', async ({ page }) => {
-    await page.goto('/contact');
+    await navigateToPage(page, '/contact');
 
     const timestamp = Date.now();
     const testEmail = `e2e-test-mobile-${timestamp}@example.com`;

@@ -78,14 +78,20 @@ services:
     # --ci flag prevents browser auto-open in container
     command: ["npm", "run", "storybook", "--", "--ci"]
 
-    # Enable interactive mode for better logging
-    stdin_open: true
-    tty: true
+    # Disable TTY mode to prevent terminal width calculation errors
+    # This prevents the "Invalid count value: -8" error in terminal rendering
+    stdin_open: false
+    tty: false
 
     # Set development environment
     environment:
       - NODE_ENV=development
       - NEXT_TELEMETRY_DISABLED=1
+      # Fix terminal rendering error (RangeError: Invalid count value: -8)
+      # Explicitly set terminal dimensions to prevent Storybook from
+      # miscalculating terminal width in Docker pseudo-TTY
+      - COLUMNS=120
+      - LINES=40
 
     # Storybook doesn't need to wait for other services
     # It's purely for component development

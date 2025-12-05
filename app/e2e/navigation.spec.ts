@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { navigateToPage, enableDarkMode, disableDarkMode } from './helpers';
 
 // ============================================================================
 // Navigation E2E Tests
@@ -17,7 +18,7 @@ test.describe('Navigation', () => {
     test.skip(({ viewport }) => viewport?.width !== undefined && viewport.width < 768, 'Desktop only');
 
     test('all navigation links work', async ({ page }) => {
-      await page.goto('/');
+      await navigateToPage(page, '/');
 
       const links = [
         { name: 'Services', url: '/services' },
@@ -35,12 +36,12 @@ test.describe('Navigation', () => {
         await expect(page).toHaveURL(link.url);
 
         // Return to home for next iteration
-        await page.goto('/');
+        await navigateToPage(page, '/');
       }
     });
 
     test('logo links to homepage', async ({ page }) => {
-      await page.goto('/services');
+      await navigateToPage(page, '/services');
 
       // Click the logo/brand name
       await page.getByRole('link', { name: 'Need This Done' }).click();
@@ -50,7 +51,7 @@ test.describe('Navigation', () => {
     });
 
     test('active link is highlighted', async ({ page }) => {
-      await page.goto('/services');
+      await navigateToPage(page, '/services');
 
       // The Services link should have the active styling (blue background)
       const servicesLink = page.getByRole('link', { name: 'Services' }).first();
@@ -58,7 +59,7 @@ test.describe('Navigation', () => {
     });
 
     test('login link is visible when not authenticated', async ({ page }) => {
-      await page.goto('/');
+      await navigateToPage(page, '/');
 
       // Login link should be visible
       await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
@@ -73,7 +74,7 @@ test.describe('Navigation', () => {
     test.use({ viewport: { width: 375, height: 667 } });
 
     test('hamburger menu toggles navigation', async ({ page }) => {
-      await page.goto('/');
+      await navigateToPage(page, '/');
 
       // Desktop nav should be hidden
       const desktopNav = page.locator('.hidden.md\\:flex');
@@ -101,7 +102,7 @@ test.describe('Navigation', () => {
     });
 
     test('clicking a link closes the mobile menu', async ({ page }) => {
-      await page.goto('/');
+      await navigateToPage(page, '/');
 
       // Open the mobile menu
       await page.getByLabel('Toggle menu').click();
@@ -129,7 +130,7 @@ test.describe('Navigation', () => {
       ];
 
       for (const link of links) {
-        await page.goto('/');
+        await navigateToPage(page, '/');
 
         // Open the mobile menu
         await page.getByLabel('Toggle menu').click();
@@ -149,35 +150,23 @@ test.describe('Navigation', () => {
 
   test.describe('Dark Mode', () => {
     test('dark mode toggle switches theme', async ({ page }) => {
-      await page.goto('/');
-
-      // Wait for the page to fully load and dark mode toggle to be available
-      const html = page.locator('html');
+      await navigateToPage(page, '/');
 
       // Find and click dark mode toggle (starts in light mode)
-      const darkModeButton = page.getByLabel('Switch to dark mode');
-      await expect(darkModeButton).toBeVisible();
-      await darkModeButton.click();
-
-      // HTML should have dark class
-      await expect(html).toHaveClass(/dark/);
+      await enableDarkMode(page);
 
       // Button should now say "Switch to light mode"
       await expect(page.getByLabel('Switch to light mode')).toBeVisible();
 
       // Click again to switch back to light mode
-      await page.getByLabel('Switch to light mode').click();
-
-      // HTML should not have dark class
-      await expect(html).not.toHaveClass(/dark/);
+      await disableDarkMode(page);
     });
 
     test('dark mode preference persists across pages', async ({ page }) => {
-      await page.goto('/');
+      await navigateToPage(page, '/');
 
       // Enable dark mode
-      await page.getByLabel('Switch to dark mode').click();
-      await expect(page.locator('html')).toHaveClass(/dark/);
+      await enableDarkMode(page);
 
       // Navigate to another page
       await page.getByRole('link', { name: 'Services' }).first().click();

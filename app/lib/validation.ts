@@ -71,7 +71,7 @@ export const PASSWORD_REQUIREMENTS = {
 } as const;
 
 export function isValidPassword(password: string): boolean {
-  return password && password.length >= PASSWORD_REQUIREMENTS.MIN_LENGTH;
+  return !!password && password.length >= PASSWORD_REQUIREMENTS.MIN_LENGTH;
 }
 
 // ============================================================================

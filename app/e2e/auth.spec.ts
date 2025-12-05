@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { navigateToPage, fillFormField } from './helpers';
 
 // ============================================================================
 // Authentication E2E Tests
@@ -9,7 +10,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Login Page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
+    await navigateToPage(page, '/login');
   });
 
   // ==========================================================================
@@ -42,8 +43,8 @@ test.describe('Login Page', () => {
   });
 
   test('sign in button enables with email and password', async ({ page }) => {
-    await page.getByLabel('Email Address').fill('test@example.com');
-    await page.getByLabel('Password').fill('password123');
+    await fillFormField(page, 'Email Address', 'test@example.com');
+    await fillFormField(page, 'Password', 'password123');
 
     const signInButton = page.getByRole('button', { name: 'Sign In', exact: true });
     await expect(signInButton).toBeEnabled();
@@ -118,8 +119,8 @@ test.describe('Login Page', () => {
     await page.getByText("Don't have an account? Sign up").click();
 
     // Fill with short password
-    await page.getByLabel('Email Address').fill('test@example.com');
-    await page.getByLabel('Password').fill('12345'); // Less than 6 characters
+    await fillFormField(page, 'Email Address', 'test@example.com');
+    await fillFormField(page, 'Password', '12345'); // Less than 6 characters
 
     // Submit
     await page.getByRole('button', { name: 'Create Account' }).click();
@@ -138,7 +139,7 @@ test.describe('Login Page', () => {
   });
 
   test('login link in navigation works', async ({ page }) => {
-    await page.goto('/');
+    await navigateToPage(page, '/');
     await page.getByRole('link', { name: 'Login' }).click();
     await expect(page).toHaveURL('/login');
   });
@@ -147,14 +148,14 @@ test.describe('Login Page', () => {
 test.describe('Protected Routes', () => {
   test('dashboard redirects to login when not authenticated', async ({ page }) => {
     // Try to access dashboard directly
-    await page.goto('/dashboard');
+    await navigateToPage(page, '/dashboard');
 
     // Should redirect to login page
     await expect(page).toHaveURL('/login');
   });
 
   test('login page shows correct state for unauthenticated users', async ({ page }) => {
-    await page.goto('/login');
+    await navigateToPage(page, '/login');
 
     // Should show login form (not redirect or show dashboard)
     await expect(page.getByRole('heading', { name: 'Welcome Back' })).toBeVisible();
@@ -165,7 +166,7 @@ test.describe('Login Page - Mobile', () => {
   test.use({ viewport: { width: 375, height: 667 } });
 
   test('login form displays correctly on mobile', async ({ page }) => {
-    await page.goto('/login');
+    await navigateToPage(page, '/login');
 
     // Form should be visible and properly laid out
     await expect(page.getByLabel('Email Address')).toBeVisible();
@@ -175,11 +176,11 @@ test.describe('Login Page - Mobile', () => {
   });
 
   test('can interact with form on mobile', async ({ page }) => {
-    await page.goto('/login');
+    await navigateToPage(page, '/login');
 
     // Fill form
-    await page.getByLabel('Email Address').fill('test@example.com');
-    await page.getByLabel('Password').fill('password123');
+    await fillFormField(page, 'Email Address', 'test@example.com');
+    await fillFormField(page, 'Password', 'password123');
 
     // Button should be enabled
     await expect(page.getByRole('button', { name: 'Sign In', exact: true })).toBeEnabled();

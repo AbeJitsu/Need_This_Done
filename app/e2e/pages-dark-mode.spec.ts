@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { navigateToPage, enableDarkMode } from './helpers';
 
 // ============================================================================
 // Dark Mode E2E Tests
@@ -33,16 +34,10 @@ test.describe('Dark Mode Rendering', () => {
         test.skip();
       }
 
-      await page.goto(pageConfig.url);
+      await navigateToPage(page, pageConfig.url);
 
       // Enable dark mode via the toggle button (same as user would)
-      const darkModeButton = page.getByLabel('Switch to dark mode');
-      await expect(darkModeButton).toBeVisible();
-      await darkModeButton.click();
-
-      // Verify dark mode class is present
-      const htmlElement = page.locator('html');
-      await expect(htmlElement).toHaveClass(/dark/);
+      await enableDarkMode(page);
 
       // Verify main content area is visible (not hidden behind dark mode issues)
       const mainContent = page.locator('main');
@@ -78,14 +73,10 @@ test.describe('Dark Mode Rendering', () => {
     const samplePages = ['/', '/services', '/demos/database'];
 
     for (const url of samplePages) {
-      await page.goto(url);
+      await navigateToPage(page, url);
 
       // Enable dark mode via toggle
-      const darkModeButton = page.getByLabel('Switch to dark mode');
-      if (await darkModeButton.isVisible()) {
-        await darkModeButton.click();
-        await expect(page.locator('html')).toHaveClass(/dark/);
-      }
+      await enableDarkMode(page);
 
       // Get all text elements
       const textElements = page.locator('p, h1, h2, h3, h4, h5, h6, button, a, label, span');

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { navigateToPage } from './helpers';
 
 // ============================================================================
 // Public Pages E2E Tests
@@ -9,7 +10,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Homepage', () => {
   test('displays hero section with tagline', async ({ page }) => {
-    await page.goto('/');
+    await navigateToPage(page, '/');
 
     // Check page title
     await expect(page).toHaveTitle(/NeedThisDone/);
@@ -21,14 +22,14 @@ test.describe('Homepage', () => {
   });
 
   test('displays services preview section', async ({ page }) => {
-    await page.goto('/');
+    await navigateToPage(page, '/');
 
     // Check "What We Offer" section
     await expect(page.getByRole('heading', { name: 'What We Offer' })).toBeVisible();
   });
 
   test('displays How It Works preview section', async ({ page }) => {
-    await page.goto('/');
+    await navigateToPage(page, '/');
 
     // Check process steps - use headings to be more specific
     await expect(page.getByRole('heading', { name: 'Simple Process' })).toBeVisible();
@@ -38,7 +39,7 @@ test.describe('Homepage', () => {
   });
 
   test('displays CTA section', async ({ page }) => {
-    await page.goto('/');
+    await navigateToPage(page, '/');
 
     // Check CTA (use first() since text appears in multiple places)
     await expect(page.getByRole('heading', { name: 'Ready to Get Started?' })).toBeVisible();
@@ -46,7 +47,7 @@ test.describe('Homepage', () => {
   });
 
   test('How It Works preview links to full page', async ({ page }) => {
-    await page.goto('/');
+    await navigateToPage(page, '/');
 
     // Click the "Learn more about our process" link
     await page.getByText('Learn more about our process').click();
@@ -58,14 +59,14 @@ test.describe('Homepage', () => {
 
 test.describe('Services Page', () => {
   test('displays page header', async ({ page }) => {
-    await page.goto('/services');
+    await navigateToPage(page, '/services');
 
     await expect(page).toHaveTitle(/Services.*NeedThisDone/);
     await expect(page.getByRole('heading', { name: 'How We Can Help' })).toBeVisible();
   });
 
   test('displays all service cards', async ({ page }) => {
-    await page.goto('/services');
+    await navigateToPage(page, '/services');
 
     // Should show the main service categories (from site.config.ts)
     await expect(page.getByText('Virtual Assistant')).toBeVisible();
@@ -74,7 +75,7 @@ test.describe('Services Page', () => {
   });
 
   test('displays What You Can Expect section', async ({ page }) => {
-    await page.goto('/services');
+    await navigateToPage(page, '/services');
 
     await expect(page.getByRole('heading', { name: 'What You Can Expect' })).toBeVisible();
     await expect(page.getByText('Clear Communication')).toBeVisible();
@@ -84,7 +85,7 @@ test.describe('Services Page', () => {
   });
 
   test('CTA buttons navigate correctly', async ({ page }) => {
-    await page.goto('/services');
+    await navigateToPage(page, '/services');
 
     // Click How It Works button (use exact + first to avoid nav conflicts)
     await page.getByRole('link', { name: 'How It Works', exact: true }).first().click();
