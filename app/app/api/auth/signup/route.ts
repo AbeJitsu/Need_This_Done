@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-restricted-imports -- signup creates new users, no existing session needed
 import { supabase } from '@/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
+import { isValidEmail, isValidPassword } from '@/lib/validation';
+import { badRequest, handleApiError } from '@/lib/api-errors';
 
 // ============================================================================
 // Sign Up Endpoint - /api/auth/signup (POST)
@@ -37,21 +39,15 @@ export async function POST(request: NextRequest) {
     // These checks happen BEFORE we touch the database.
 
     if (!email || !password) {
-      return NextResponse.json(
-        {
-          error: 'Email and password are required',
-        },
-        { status: 400 } // 400 = Bad Request (client's fault)
-      );
+      return badRequest('Email and password are required');
     }
 
-    if (password.length < 6) {
-      return NextResponse.json(
-        {
-          error: 'Password must be at least 6 characters',
-        },
-        { status: 400 }
-      );
+    if (!isValidEmail(email)) {
+      return badRequest('Invalid email format');
+    }
+
+    if (!isValidPassword(password)) {
+      return badRequest('Password must be at least 6 characters');
     }
 
     // ========================================================================
@@ -77,12 +73,7 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       // If signup fails (e.g., email already exists), return the error
-      return NextResponse.json(
-        {
-          error: error.message,
-        },
-        { status: 400 }
-      );
+      return badRequest(error.message);
     }
 
     // ========================================================================
@@ -106,13 +97,6 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     // Unexpected error (not validation error, not Supabase error)
     // This could be: JSON parsing error, network issue, etc.
-    console.error('Sign up error:', error);
-
-    return NextResponse.json(
-      {
-        error: 'An unexpected error occurred',
-      },
-      { status: 500 } // 500 = Server Error (our fault)
-    );
+    return handleApiError(error, 'Sign up');
   }
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { verifyAuth } from '@/lib/api-auth';
+import { serverError, handleApiError } from '@/lib/api-errors';
 
 // ============================================================================
 // User's Projects API Route - /api/projects/mine
@@ -30,11 +31,7 @@ export async function GET() {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Failed to fetch projects:', error.message);
-      return NextResponse.json(
-        { error: 'Failed to load projects' },
-        { status: 500 }
-      );
+      return serverError('Failed to load projects');
     }
 
     // ====================================================================
@@ -47,11 +44,6 @@ export async function GET() {
     });
 
   } catch (error) {
-    console.error('Projects mine GET error:', error);
-
-    return NextResponse.json(
-      { error: 'Failed to process request' },
-      { status: 500 }
-    );
+    return handleApiError(error, 'Projects mine GET');
   }
 }

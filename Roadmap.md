@@ -197,4 +197,4 @@ This document should evolve. If a component doesn't serve the team, we change it
 
 ---
 
-*Last Updated: December 2,2025
+*Last Updated: December 4, 2025

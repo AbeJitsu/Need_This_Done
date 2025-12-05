@@ -1,19 +1,10 @@
-# Storybook Setup Guide
+# Storybook Usage Guide
 
-This guide covers setting up Storybook with Next.js App Router for component documentation.
-
-## Installation
-
-```bash
-cd app
-npx storybook@latest init
-```
-
-This will detect Next.js and configure Storybook automatically.
+This guide covers using Storybook with Next.js App Router for component documentation and testing.
 
 ## Next.js App Router Configuration
 
-For components using `next/navigation`, enable the app directory parameter:
+For components using `next/navigation`, the configuration is already enabled:
 
 ```javascript
 // .storybook/preview.js

@@ -61,3 +61,32 @@ export function validateFiles(files: File[]): { valid: boolean; error?: string }
 
   return { valid: true };
 }
+
+// ============================================================================
+// Password Validation
+// ============================================================================
+
+export const PASSWORD_REQUIREMENTS = {
+  MIN_LENGTH: 6,
+} as const;
+
+export function isValidPassword(password: string): boolean {
+  return password && password.length >= PASSWORD_REQUIREMENTS.MIN_LENGTH;
+}
+
+// ============================================================================
+// Field Trimming Utilities
+// ============================================================================
+
+/**
+ * Trim whitespace from a field value and return null if empty after trim
+ * @param value String value to trim, or null/undefined
+ * @returns Trimmed string or null
+ */
+export function trimField(
+  value: string | null | undefined
+): string | null {
+  if (!value) return null;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}

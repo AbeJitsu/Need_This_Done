@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { NextRequest, NextResponse } from 'next/server';
+import { badRequest, handleApiError } from '@/lib/api-errors';
 
 // ============================================================================
 // Logout Endpoint - /api/auth/logout (POST)
@@ -36,13 +37,7 @@ export async function POST(_request: NextRequest) {
 
     if (error) {
       // If something goes wrong on the server side, return an error
-      console.error('Sign out error:', error);
-      return NextResponse.json(
-        {
-          error: 'Failed to sign out',
-        },
-        { status: 400 }
-      );
+      return badRequest('Failed to sign out');
     }
 
     // ========================================================================
@@ -64,13 +59,6 @@ export async function POST(_request: NextRequest) {
     );
   } catch (error) {
     // Unexpected error
-    console.error('Logout error:', error);
-
-    return NextResponse.json(
-      {
-        error: 'An unexpected error occurred',
-      },
-      { status: 500 } // 500 = Server Error
-    );
+    return handleApiError(error, 'Logout');
   }
 }

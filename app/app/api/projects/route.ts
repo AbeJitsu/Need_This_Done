@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
-import { supabaseAdmin } from '@/lib/supabase';
-import { isValidEmail, validateFiles } from '@/lib/validation';
+import { getSupabaseAdmin } from '@/lib/supabase';
+import {
+  isValidEmail,
+  validateFiles,
+  trimField,
+} from '@/lib/validation';
+import {
+  badRequest,
+  serverError,
+  handleApiError,
+} from '@/lib/api-errors';
 
 // ============================================================================
 // Projects API Route - /api/projects
@@ -31,32 +40,20 @@ export async function POST(request: Request) {
     // Validate Required Fields
     // ====================================================================
 
-    if (!name || name.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Name is required' },
-        { status: 400 }
-      );
+    if (!trimField(name)) {
+      return badRequest('Name is required');
     }
 
-    if (!email || email.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
+    if (!trimField(email)) {
+      return badRequest('Email is required');
     }
 
     if (!isValidEmail(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
+      return badRequest('Invalid email format');
     }
 
-    if (!message || message.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Project details are required' },
-        { status: 400 }
-      );
+    if (!trimField(message)) {
+      return badRequest('Project details are required');
     }
 
     // ====================================================================
@@ -65,10 +62,7 @@ export async function POST(request: Request) {
 
     const fileValidation = validateFiles(files);
     if (!fileValidation.valid) {
-      return NextResponse.json(
-        { error: fileValidation.error },
-        { status: 400 }
-      );
+      return badRequest(fileValidation.error || 'File validation failed');
     }
 
     // ====================================================================
@@ -89,16 +83,15 @@ export async function POST(request: Request) {
     }
 
     // ====================================================================
-    // Verify Admin Client Available
+    // Get Admin Client
     // ====================================================================
     // Contact form submissions need the admin client to bypass RLS
 
-    if (!supabaseAdmin) {
-      console.error('SUPABASE_SERVICE_ROLE_KEY not configured');
-      return NextResponse.json(
-        { error: 'Server configuration error. Please contact support.' },
-        { status: 500 }
-      );
+    let supabaseAdmin;
+    try {
+      supabaseAdmin = getSupabaseAdmin();
+    } catch (err) {
+      return serverError('Server configuration error. Please contact support.');
     }
 
     // ====================================================================
@@ -148,19 +141,11 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
-      console.error('Failed to insert project:', error.message);
-
       if (error.message.includes('does not exist')) {
-        return NextResponse.json(
-          { error: 'Database not configured. Please run migrations.' },
-          { status: 500 }
-        );
+        return serverError('Database not configured. Please run migrations.');
       }
 
-      return NextResponse.json(
-        { error: 'Failed to submit project. Please try again.' },
-        { status: 500 }
-      );
+      return serverError('Failed to submit project. Please try again.');
     }
 
     // ====================================================================
@@ -175,11 +160,6 @@ export async function POST(request: Request) {
     });
 
   } catch (error) {
-    console.error('Projects POST error:', error);
-
-    return NextResponse.json(
-      { error: 'Failed to process request' },
-      { status: 500 }
-    );
+    return handleApiError(error, 'Projects POST');
   }
 }

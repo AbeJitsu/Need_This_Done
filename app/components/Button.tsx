@@ -12,7 +12,7 @@ type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ButtonProps {
   children: React.ReactNode;
-  variant: AccentVariant;
+  variant?: AccentVariant;
   size?: ButtonSize;
   href?: string;
   onClick?: () => void;
@@ -49,7 +49,7 @@ const sizeClasses: Record<ButtonSize, string> = {
 
 export default function Button({
   children,
-  variant,
+  variant = 'blue',
   size = 'lg',
   href,
   onClick,

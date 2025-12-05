@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import { verifyAdmin as verifyAdminAuth } from '@/lib/api-auth';
+import { badRequest, serverError, handleApiError } from '@/lib/api-errors';
 
 // ============================================================================
 // Admin Users API Route - /api/admin/users
@@ -13,26 +14,6 @@ import { verifyAdmin as verifyAdminAuth } from '@/lib/api-auth';
 // This is separate from the client-side supabase instance.
 
 // ============================================================================
-// Create Admin Supabase Client with Service Role
-// ============================================================================
-
-function getAdminClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error('Missing Supabase admin credentials');
-  }
-
-  return createClient(supabaseUrl, serviceRoleKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
-}
-
-// ============================================================================
 // GET - List All Users
 // ============================================================================
 
@@ -42,15 +23,11 @@ export async function GET() {
     if (authResult.error) return authResult.error;
 
     // Use admin client to list users
-    const adminClient = getAdminClient();
+    const adminClient = getSupabaseAdmin();
     const { data, error: listError } = await adminClient.auth.admin.listUsers();
 
     if (listError) {
-      console.error('Failed to list users:', listError.message);
-      return NextResponse.json(
-        { error: 'Failed to load users' },
-        { status: 500 }
-      );
+      return serverError('Failed to load users');
     }
 
     // Transform user data for the frontend
@@ -74,12 +51,7 @@ export async function GET() {
       count: users.length,
     });
   } catch (error) {
-    console.error('Admin users GET error:', error);
-
-    return NextResponse.json(
-      { error: 'Failed to process request' },
-      { status: 500 }
-    );
+    return handleApiError(error, 'Admin users GET');
   }
 }
 
@@ -97,21 +69,15 @@ export async function PATCH(request: NextRequest) {
     const { userId, action, value } = body;
 
     if (!userId || !action) {
-      return NextResponse.json(
-        { error: 'Missing required fields: userId and action' },
-        { status: 400 }
-      );
+      return badRequest('Missing required fields: userId and action');
     }
 
     // Prevent admins from modifying their own account
     if (userId === adminUser.id) {
-      return NextResponse.json(
-        { error: 'Cannot modify your own account' },
-        { status: 400 }
-      );
+      return badRequest('Cannot modify your own account');
     }
 
-    const adminClient = getAdminClient();
+    const adminClient = getSupabaseAdmin();
 
     // Handle different actions
     switch (action) {
@@ -125,11 +91,7 @@ export async function PATCH(request: NextRequest) {
         );
 
         if (updateError) {
-          console.error('Failed to update admin status:', updateError.message);
-          return NextResponse.json(
-            { error: 'Failed to update user role' },
-            { status: 500 }
-          );
+          return serverError('Failed to update user role');
         }
 
         return NextResponse.json({
@@ -148,11 +110,7 @@ export async function PATCH(request: NextRequest) {
         );
 
         if (updateError) {
-          console.error('Failed to update user status:', updateError.message);
-          return NextResponse.json(
-            { error: 'Failed to update user status' },
-            { status: 500 }
-          );
+          return serverError('Failed to update user status');
         }
 
         return NextResponse.json({
@@ -167,10 +125,7 @@ export async function PATCH(request: NextRequest) {
           await adminClient.auth.admin.getUserById(userId);
 
         if (getUserError || !userData.user?.email) {
-          return NextResponse.json(
-            { error: 'Failed to get user email' },
-            { status: 500 }
-          );
+          return serverError('Failed to get user email');
         }
 
         // Use admin client to generate password reset link
@@ -183,11 +138,7 @@ export async function PATCH(request: NextRequest) {
         });
 
         if (resetError) {
-          console.error('Failed to send reset email:', resetError.message);
-          return NextResponse.json(
-            { error: 'Failed to send password reset email' },
-            { status: 500 }
-          );
+          return serverError('Failed to send password reset email');
         }
 
         return NextResponse.json({
@@ -197,17 +148,9 @@ export async function PATCH(request: NextRequest) {
       }
 
       default:
-        return NextResponse.json(
-          { error: `Unknown action: ${action}` },
-          { status: 400 }
-        );
+        return badRequest(`Unknown action: ${action}`);
     }
   } catch (error) {
-    console.error('Admin users PATCH error:', error);
-
-    return NextResponse.json(
-      { error: 'Failed to process request' },
-      { status: 500 }
-    );
+    return handleApiError(error, 'Admin users PATCH');
   }
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { verifyAdmin } from '@/lib/api-auth';
+import { serverError, handleApiError } from '@/lib/api-errors';
 
 // ============================================================================
 // All Projects API Route - /api/projects/all (Admin Only)
@@ -51,11 +52,7 @@ export async function GET(request: NextRequest) {
     const { data: projects, error } = await query;
 
     if (error) {
-      console.error('Failed to fetch all projects:', error.message);
-      return NextResponse.json(
-        { error: 'Failed to load projects' },
-        { status: 500 }
-      );
+      return serverError('Failed to load projects');
     }
 
     // ========================================================================
@@ -67,11 +64,6 @@ export async function GET(request: NextRequest) {
       count: projects?.length || 0,
     });
   } catch (error) {
-    console.error('Projects all GET error:', error);
-
-    return NextResponse.json(
-      { error: 'Failed to process request' },
-      { status: 500 }
-    );
+    return handleApiError(error, 'Projects all GET');
   }
 }

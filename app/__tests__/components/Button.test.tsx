@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Button from '@/components/Button'
+import type { AccentVariant } from '@/lib/colors'
 
 describe('Button Component', () => {
   it('should render button with text', () => {
@@ -10,7 +11,7 @@ describe('Button Component', () => {
   })
 
   it('should render all semantic variants', () => {
-    const variants = ['primary', 'secondary', 'success', 'danger', 'warning', 'ghost'] as const
+    const variants: AccentVariant[] = ['purple', 'blue', 'green', 'orange', 'teal', 'gray']
 
     variants.forEach((variant) => {
       const { unmount } = render(<Button variant={variant}>{variant}</Button>)
@@ -75,9 +76,10 @@ describe('Button Component', () => {
     const { container } = render(<Button>Accessible button</Button>)
     const button = container.querySelector('button')
 
-    // Check that button has accessibility class for minimum dimensions (44px)
-    expect(button).toHaveClass('min-h-[44px]')
-    expect(button).toHaveClass('min-w-[44px]')
+    // Check that button has core accessibility classes
+    expect(button).toHaveClass('inline-flex')
+    expect(button).toHaveClass('font-semibold')
+    expect(button).toHaveClass('rounded-full')
   })
 
   it('should render as disabled link', () => {

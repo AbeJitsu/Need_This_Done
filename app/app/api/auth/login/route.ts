@@ -1,5 +1,7 @@
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { NextRequest, NextResponse } from 'next/server';
+import { isValidEmail, isValidPassword } from '@/lib/validation';
+import { badRequest, unauthorized, handleApiError } from '@/lib/api-errors';
 
 // ============================================================================
 // Login Endpoint - /api/auth/login (POST)
@@ -33,12 +35,15 @@ export async function POST(request: NextRequest) {
     // We do this validation SERVER-SIDE because we never trust the client.
 
     if (!email || !password) {
-      return NextResponse.json(
-        {
-          error: 'Email and password are required',
-        },
-        { status: 400 } // 400 = Bad Request (client error)
-      );
+      return badRequest('Email and password are required');
+    }
+
+    if (!isValidEmail(email)) {
+      return badRequest('Invalid email format');
+    }
+
+    if (!isValidPassword(password)) {
+      return badRequest('Password must be at least 6 characters');
     }
 
     // ========================================================================
@@ -66,12 +71,7 @@ export async function POST(request: NextRequest) {
       // SECURITY: Don't reveal whether email exists or password is wrong.
       // Attackers use "user enumeration" to find valid email addresses.
       // We use the same message for both cases to prevent this.
-      return NextResponse.json(
-        {
-          error: 'Invalid email or password',
-        },
-        { status: 401 } // 401 = Unauthorized (authentication failed)
-      );
+      return unauthorized('Invalid email or password');
     }
 
     // ========================================================================
@@ -104,13 +104,6 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     // Unexpected error (JSON parsing, network issue, etc.)
-    console.error('Login error:', error);
-
-    return NextResponse.json(
-      {
-        error: 'An unexpected error occurred',
-      },
-      { status: 500 } // 500 = Server Error
-    );
+    return handleApiError(error, 'Login');
   }
 }

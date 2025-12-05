@@ -29,6 +29,7 @@ The frontend-design skill is enabled for aesthetic guidance.
 
 When adding features:
 - New pages → Add E2E tests in `app/e2e/pages.spec.ts`
+- Dark mode variants → Add tests in `app/e2e/pages-dark-mode.spec.ts`
 - New forms → Add E2E tests for validation and submission
 - New navigation → Add tests in `app/e2e/navigation.spec.ts`
 - New components → Add accessibility tests

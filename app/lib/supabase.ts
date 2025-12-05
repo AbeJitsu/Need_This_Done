@@ -68,6 +68,21 @@ export const supabaseAdmin = supabaseServiceRoleKey
   : null;
 
 // ============================================================================
+// Admin Client Factory
+// ============================================================================
+// Use this function instead of directly accessing supabaseAdmin to ensure
+// the client is configured. Throws an error if service role key is not set.
+
+export function getSupabaseAdmin() {
+  if (!supabaseAdmin) {
+    throw new Error(
+      'Admin client not configured. Missing SUPABASE_SERVICE_ROLE_KEY environment variable.'
+    );
+  }
+  return supabaseAdmin;
+}
+
+// ============================================================================
 // Usage Examples
 // ============================================================================
 // Regular Client (safe in browser):
