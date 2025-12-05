@@ -3,6 +3,7 @@ import { Inter, Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
 import { AuthProvider } from '@/context/AuthContext';
+import { CartProvider } from '@/context/CartContext';
 
 // Inter font - modern, trustworthy, highly readable (body text)
 const inter = Inter({
@@ -71,21 +72,23 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
-          {/* Skip to main content link for keyboard users */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-0 focus:top-0 focus:bg-blue-600 focus:text-white focus:p-2 focus:z-50"
-          >
-            Skip to main content
-          </a>
+          <CartProvider>
+            {/* Skip to main content link for keyboard users */}
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:left-0 focus:top-0 focus:bg-blue-600 focus:text-white focus:p-2 focus:z-50"
+            >
+              Skip to main content
+            </a>
 
-          {/* Site-wide navigation (includes dark mode toggle) */}
-          <Navigation />
+            {/* Site-wide navigation (includes dark mode toggle) */}
+            <Navigation />
 
-          {/* Page content - gradient background applied here once for all pages */}
-          <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">
-            {children}
-          </main>
+            {/* Page content - gradient background applied here once for all pages */}
+            <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">
+              {children}
+            </main>
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>
