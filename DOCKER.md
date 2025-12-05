@@ -4,45 +4,63 @@ This document explains how our Docker architecture works, how to start/stop the 
 
 ## Architecture Overview
 
-Our application runs in Docker with three main services that work together:
+Our application runs in Docker with multiple services working together:
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  Your Computer (localhost)                          │
-│                                                      │
-│  ┌──────────────────────────────────────────────┐  │
-│  │  nginx (The Front Door)                      │  │
-│  │  Ports: 80 (HTTP), 443 (HTTPS)              │  │
-│  │  - Handles SSL/HTTPS                         │  │
-│  │  - Routes traffic to the app                 │  │
-│  └──────────────┬───────────────────────────────┘  │
-│                 │                                    │
-│  ┌──────────────▼───────────────────────────────┐  │
-│  │  nextjs_app (Your Application)               │  │
-│  │  Port: 3000                                   │  │
-│  │  - Next.js frontend + API routes             │  │
-│  │  - Connects to Supabase (external)           │  │
-│  └──────────────┬───────────────────────────────┘  │
-│                 │                                    │
-│  ┌──────────────▼───────────────────────────────┐  │
-│  │  redis (Fast Cache)                          │  │
-│  │  Port: 6379                                   │  │
-│  │  - Session storage                            │  │
-│  │  - Temporary data cache                       │  │
-│  └──────────────────────────────────────────────┘  │
-│                                                      │
-│  ┌──────────────────────────────────────────────┐  │
-│  │  storybook_dev (Component Library - Dev)    │  │
-│  │  Port: 6006                                   │  │
-│  │  - Interactive component development         │  │
-│  │  - Visual component documentation            │  │
-│  │  - Dev mode only (not in production)         │  │
-│  └──────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  Your Computer (localhost)                               │
+│                                                           │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │  nginx (The Front Door)                            │  │
+│  │  Ports: 80 (HTTP), 443 (HTTPS)                    │  │
+│  │  - Handles SSL/HTTPS                               │  │
+│  │  - Routes traffic to the app                       │  │
+│  └────────────────┬─────────────────────────────────┘  │
+│                   │                                      │
+│  ┌────────────────▼─────────────────────────────────┐  │
+│  │  nextjs_app (Your Application)                   │  │
+│  │  Port: 3000                                       │  │
+│  │  - Next.js frontend + API routes                 │  │
+│  │  - Bridges to Medusa backend & Supabase          │  │
+│  └────────────────┬─────────────────────────────────┘  │
+│                   │                                      │
+│  ┌────────────────▼─────────────────────────────────┐  │
+│  │  redis (Fast Cache)                              │  │
+│  │  Port: 6379                                       │  │
+│  │  - Session storage                                │  │
+│  │  - Products, carts, orders cache                 │  │
+│  │  - Shared between app & Medusa                   │  │
+│  └────────────────────────────────────────────────┘  │
+│                                                           │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │  medusa (Ecommerce Backend)                        │  │
+│  │  Port: 9000                                         │  │
+│  │  - Product catalog API                             │  │
+│  │  - Shopping cart API                               │  │
+│  │  - Order management                                │  │
+│  └────────────────┬─────────────────────────────────┘  │
+│                   │                                      │
+│  ┌────────────────▼─────────────────────────────────┐  │
+│  │  medusa_postgres (Ecommerce Database)            │  │
+│  │  Port: 6432 (internal)                            │  │
+│  │  - Product & variant data                         │  │
+│  │  - Shopping carts                                 │  │
+│  │  - Orders (separate from app users)               │  │
+│  └────────────────────────────────────────────────┘  │
+│                                                           │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │  storybook_dev (Component Library - Dev)          │  │
+│  │  Port: 6006                                         │  │
+│  │  - Interactive component development               │  │
+│  │  - Visual component documentation                 │  │
+│  │  - Dev mode only (not in production)              │  │
+│  └────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────┘
 ```
 
 **External Services:**
-- **Supabase** - Database and authentication (hosted at `oxhjtmozsdstbokwtnwa.supabase.co`)
+- **Supabase** - User database and authentication (hosted at `oxhjtmozsdstbokwtnwa.supabase.co`)
+- **Medusa (internal)** - Ecommerce service running in Docker
 - Credentials loaded from `.env.local` files
 
 ## Two Operating Modes
@@ -187,18 +205,37 @@ Two `.env.local` files are needed:
 ### Critical Variables
 
 ```bash
+# =========================================================================
 # Supabase Configuration (Required)
+# =========================================================================
 NEXT_PUBLIC_SUPABASE_URL=https://oxhjtmozsdstbokwtnwa.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...  # Public key
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...     # Secret key
 
+# =========================================================================
 # Site Configuration (Required for OAuth)
+# =========================================================================
 NEXT_PUBLIC_SITE_URL=https://localhost
 
+# =========================================================================
+# Medusa Ecommerce Configuration
+# =========================================================================
+MEDUSA_BACKEND_URL=http://medusa:9000           # Internal Docker URL
+MEDUSA_DB_PASSWORD=your-secure-medusa-password
+MEDUSA_JWT_SECRET=your-medusa-jwt-secret-key
+MEDUSA_ADMIN_JWT_SECRET=your-medusa-admin-jwt-secret
+
+# Client-side Medusa URL (for local dev)
+NEXT_PUBLIC_MEDUSA_URL=http://localhost:9000
+
+# =========================================================================
 # Redis (Auto-configured in Docker)
+# =========================================================================
 REDIS_URL=redis://redis:6379
 
+# =========================================================================
 # Session (Optional - currently unused)
+# =========================================================================
 SESSION_SECRET=generated-random-string
 SESSION_MAX_AGE=2592000
 ```
@@ -363,6 +400,110 @@ Error: connect ECONNREFUSED redis:6379
    docker-compose restart redis
    ```
 
+### Issue: Medusa won't start or keeps restarting
+
+**Symptom:**
+```
+medusa service is in "Restarting" state
+```
+
+**Solutions:**
+1. Check Medusa logs:
+   ```bash
+   docker logs medusa --tail 50
+   ```
+
+2. Verify database is running:
+   ```bash
+   docker ps | grep medusa_postgres
+   # Should show running state
+   ```
+
+3. Check environment variables:
+   ```bash
+   docker-compose config | grep -A 10 "medusa:"
+   # Should show MEDUSA_* variables
+   ```
+
+4. Verify Medusa PostgreSQL health:
+   ```bash
+   docker exec medusa_postgres pg_isready -U medusa
+   # Should return "accepting connections"
+   ```
+
+5. Restart Medusa:
+   ```bash
+   docker-compose restart medusa
+   ```
+
+6. If still broken, full restart:
+   ```bash
+   docker-compose down
+   docker-compose up -d
+   ```
+
+### Issue: Cannot connect to Medusa API from Next.js
+
+**Symptom:**
+```
+Error: Failed to fetch products from Medusa
+```
+
+**Solutions:**
+1. Verify Medusa is running:
+   ```bash
+   curl http://localhost:9000/health
+   # Should return 200 OK
+   ```
+
+2. Check the API response:
+   ```bash
+   curl http://localhost:9000/store/products
+   # Should return JSON with products
+   ```
+
+3. Verify environment variable in .env.local:
+   ```bash
+   # app/.env.local should have:
+   NEXT_PUBLIC_MEDUSA_URL=http://localhost:9000
+   ```
+
+4. Check Next.js logs for errors:
+   ```bash
+   docker logs nextjs_app | grep -i medusa
+   ```
+
+5. Make sure Medusa dependencies installed:
+   ```bash
+   # In medusa/ directory
+   npm install
+   ```
+
+### Issue: Medusa database migration errors
+
+**Symptom:**
+```
+Error: Failed to run migration
+```
+
+**Solutions:**
+1. Reset Medusa database:
+   ```bash
+   docker exec medusa_postgres dropdb -U medusa medusa --if-exists
+   docker exec medusa_postgres createdb -U medusa medusa
+   ```
+
+2. Check database connection:
+   ```bash
+   docker exec medusa_postgres psql -U medusa -d medusa -c "SELECT 1;"
+   # Should return: 1
+   ```
+
+3. View migration status:
+   ```bash
+   docker logs medusa | grep -i migration
+   ```
+
 ## Package Management
 
 ### Adding a new npm package
@@ -483,16 +624,20 @@ docker ps  # Look for "(healthy)" or "(unhealthy)"
 
 When running in development mode:
 
-- **Direct to Next.js:** http://localhost:3000
-- **Via Nginx (HTTP):** http://localhost
-- **Via Nginx (HTTPS):** https://localhost
-- **Storybook (dev server):** http://localhost:6006 - Interactive component development with hot reload
-- **Storybook (static build):** https://localhost/design - Pre-built component documentation via nginx
+- **Next.js App:** http://localhost:3000 - Main application
+- **Via Nginx (HTTP):** http://localhost - Through reverse proxy
+- **Via Nginx (HTTPS):** https://localhost - Secure proxy
+- **Medusa API:** http://localhost:9000 - Ecommerce backend
+- **Medusa Health:** http://localhost:9000/health - API health check
+- **Products API:** http://localhost:9000/store/products - Product catalog
+- **Storybook (dev):** http://localhost:6006 - Interactive component development with hot reload
+- **Storybook (static):** https://localhost/design - Pre-built component documentation via nginx
 - **Redis:** localhost:6379 (if you need direct access)
 
 **Recommended:**
 - Use http://localhost:3000 for app development
 - Use http://localhost:6006 for component development in Storybook
+- Use http://localhost:9000 for Medusa API testing
 
 ## Clean Slate (Nuclear Option)
 
