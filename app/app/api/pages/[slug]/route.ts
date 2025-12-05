@@ -21,7 +21,7 @@ import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 // ============================================================================
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
   try {
@@ -45,24 +45,24 @@ export async function GET(
         let query = supabase
           .from('pages')
           .select('*')
-          .eq('slug', slug)
-          .single();
+          .eq('slug', slug);
 
         // Non-admins only see published pages
         if (!isAdmin) {
           query = query.eq('is_published', true);
         }
 
-        const { data: page, error } = await query;
+        const { data: pages, error } = await query;
 
         if (error) {
-          if (error.message.includes('multiple') || error.message.includes('0 rows')) {
-            return null;
-          }
           throw new Error('Failed to load page');
         }
 
-        return page;
+        if (!pages || pages.length === 0) {
+          return null;
+        }
+
+        return pages[0];
       },
       CACHE_TTL.LONG // 5 minutes for published pages
     );
@@ -137,7 +137,7 @@ export async function PUT(
 // ============================================================================
 
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
   try {
