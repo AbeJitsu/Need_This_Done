@@ -15,6 +15,10 @@ volumes:
   # Even if Redis restarts, we don't lose active sessions
   redis_data:
 
+  # Medusa PostgreSQL data - stores products, orders, inventory
+  # Separate from app database for clean schema management
+  medusa_postgres_data:
+
 # ============================================================================
 # Networks - Private Communication Channel
 # ============================================================================
@@ -158,5 +162,81 @@ services:
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ==========================================================================
+  # Medusa PostgreSQL Database (Separate from app database)
+  # ==========================================================================
+  # Medusa stores its own schema separately from Supabase to avoid:
+  # - Migration conflicts between app and Medusa upgrades
+  # - Schema contamination and version incompatibilities
+  # - Complex RLS policy management
+  # This enables independent scaling and debugging of commerce data.
+  #
+  medusa_postgres:
+    image: postgres:15-alpine
+    container_name: medusa_postgres
+
+    environment:
+      - POSTGRES_USER=medusa
+      - POSTGRES_PASSWORD=${MEDUSA_DB_PASSWORD}
+      - POSTGRES_DB=medusa
+
+    volumes:
+      - medusa_postgres_data:/var/lib/postgresql/data
+
+    expose:
+      - "6432"
+
+    networks:
+      - app_network
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medusa"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ==========================================================================
+  # Medusa Backend Service (Headless Ecommerce)
+  # ==========================================================================
+  # Medusa handles the commerce engine: products, carts, orders, checkout.
+  # Think of it as the "kitchen" for ecommerce operations, separate from
+  # the main app's "kitchen". Both use shared Redis for caching.
+  #
+  # Note: Port 9000 is not exposed to outside world. Only nginx and app
+  # containers can reach Medusa via the internal app_network.
+  #
+  medusa:
+    build:
+      context: ./medusa
+      dockerfile: Dockerfile
+    container_name: medusa_backend
+
+    environment:
+      - DATABASE_URL=postgresql://medusa:${MEDUSA_DB_PASSWORD}@medusa_postgres:5432/medusa
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${MEDUSA_JWT_SECRET}
+      - ADMIN_JWT_SECRET=${MEDUSA_ADMIN_JWT_SECRET}
+      - NODE_ENV=development
+
+    expose:
+      - "9000"
+
+    depends_on:
+      - medusa_postgres
+      - redis
+
+    networks:
+      - app_network
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/admin"]
+      interval: 30s
       timeout: 3s
       retries: 3
