@@ -29,6 +29,10 @@ Once running:
 | [Roadmap.md](Roadmap.md) | Tech stack, what's built, what's pending |
 | [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Design standards, accessibility, component testing |
 | [docs/dark-mode-testing.md](docs/dark-mode-testing.md) | Dark mode testing guidelines and WCAG compliance |
+| [docs/MEDUSA_INTEGRATION.md](docs/MEDUSA_INTEGRATION.md) | Ecommerce backend architecture and implementation |
+| [docs/ECOMMERCE_QUICK_START.md](docs/ECOMMERCE_QUICK_START.md) | Quick start guide for ecommerce setup |
+| [app/guides/puck-setup.md](app/guides/puck-setup.md) | Puck visual editor implementation and architecture |
+| [app/guides/puck-usage.md](app/guides/puck-usage.md) | Puck editor user guide and workflows |
 | [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) | Coding standards (DRY, comments, organization) |
 | [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) | Brand identity, colors, design system |
 

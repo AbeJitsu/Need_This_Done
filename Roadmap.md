@@ -80,6 +80,14 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for complete standards.
   - Docker.md updated with Medusa services and troubleshooting
   - Test coverage: product browsing, cart ops, checkout flows, admin, cache, integration
 
+### Puck Visual Editor Integration (Phases 1-6) ✅
+- **Phase 1**: Database - `pages` table with JSONB, RLS policies, auto-triggers
+- **Phase 2**: API - `/api/pages` routes with caching (60s/5min TTL)
+- **Phase 3**: Config - 5 components (Button, Card, PageHeader, CTASection, CircleBadge)
+- **Phase 4**: Admin UI - `/admin/pages` management interface
+- **Phase 5**: Public - `/[slug]` server-rendered pages
+- **Phase 6**: Tests & Docs - 12 E2E tests, complete guides
+
 ---
 
 ## Pending
@@ -294,11 +302,12 @@ Everything runs in containers, so what works locally works on the server.
 - [x] Medusa Integration architecture guide - [docs/MEDUSA_INTEGRATION.md](docs/MEDUSA_INTEGRATION.md)
 - [x] Ecommerce Quick Start guide - [docs/ECOMMERCE_QUICK_START.md](docs/ECOMMERCE_QUICK_START.md)
 - [x] Docker.md updated with Medusa services & troubleshooting
+- [x] Puck Setup guide - [app/guides/puck-setup.md](app/guides/puck-setup.md)
+- [x] Puck Usage guide - [app/guides/puck-usage.md](app/guides/puck-usage.md)
 
 ### In Progress
 - [ ] Deploy Storybook as static site served by Nginx at `/design`
 - [ ] Stripe Integration guide - `docs/STRIPE_INTEGRATION.md` (pending)
-- [ ] Puck Setup guide - [app/guides/puck-setup.md](app/guides/puck-setup.md) (pending)
 
 ### Pending
 - [ ] Define Redis cache invalidation strategy (per feature)
@@ -312,4 +321,4 @@ This document evolves as the system grows. If a component needs improvement or a
 ---
 
 *Last Updated: December 5, 2025*
-*Phase 7 Complete: Medusa ecommerce integration fully tested and documented*
+*Completed: Medusa ecommerce (Phase 7) and Puck visual editor (Phase 6) - both fully tested and documented*
