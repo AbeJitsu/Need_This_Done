@@ -15,11 +15,6 @@ import Card from '@/components/Card';
 // Why: Collect shipping/payment info and create order
 // How: Handles guest checkout, optional login, calls checkout API
 
-export const metadata = {
-  title: 'Checkout - NeedThisDone',
-  description: 'Complete your purchase securely.',
-};
-
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, cartId, itemCount } = useCart();

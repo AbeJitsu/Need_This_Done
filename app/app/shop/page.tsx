@@ -15,11 +15,6 @@ import type { Product } from '@/lib/medusa-client';
 // Why: Enables customers to browse and add items to cart
 // How: Fetches products from Medusa, displays in grid with add-to-cart buttons
 
-export const metadata = {
-  title: 'Shop - NeedThisDone',
-  description: 'Browse and purchase our services. Quick tasks, standard projects, or premium work.',
-};
-
 export default function ShopPage() {
   const { addItem, itemCount, error: cartError } = useCart();
   const [products, setProducts] = useState<Product[]>([]);

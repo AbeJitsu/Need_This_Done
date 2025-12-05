@@ -14,11 +14,6 @@ import Card from '@/components/Card';
 // Why: Lets customer review before checkout
 // How: Uses CartContext to manage items, fetches fresh cart data on mount
 
-export const metadata = {
-  title: 'Shopping Cart - NeedThisDone',
-  description: 'Review and manage your shopping cart.',
-};
-
 export default function CartPage() {
   const { cart, cartId, itemCount, updateItem, removeItem, isLoading, error: cartError } = useCart();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
