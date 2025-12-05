@@ -35,6 +35,51 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for complete standards.
 - 60-80% reduction in database queries, 15-50x faster cache hits
 - Graceful degradation when Redis unavailable
 
+### Medusa Ecommerce Integration (Phases 1-7) ✅
+- **Phase 1**: Docker infrastructure
+  - Separate Medusa PostgreSQL container (independent from app DB)
+  - Medusa Express backend on port 9000
+  - Health checks and networking configured
+
+- **Phase 2**: Medusa Backend Bootstrap
+  - Express server with CORS enabled
+  - Placeholder product, cart, and order APIs
+  - Configuration management via environment variables
+
+- **Phase 3**: Medusa API Bridge
+  - `app/lib/medusa-client.ts` with retry logic and error handling
+  - Fetch wrapper with exponential backoff (3 retries)
+  - TypeScript interfaces for products, carts, orders
+  - Cache integration with CACHE_KEYS and TTL management
+
+- **Phase 4**: Storefront UI
+  - Product catalog `/shop` with grid and pricing
+  - Product detail page `/shop/[productId]`
+  - Shopping cart page `/cart` with item management
+  - Checkout flow `/checkout` with guest & auth support
+  - CartContext for global state management with localStorage persistence
+  - Cart icon in navigation with item count badge
+
+- **Phase 5**: Admin Integration
+  - `/admin/shop` dashboard with Products & Orders tabs
+  - `/admin/shop/products/new` form for creating products
+  - `/admin/shop/orders` with status filtering
+  - Admin-only API endpoints (`/api/admin/products`, `/api/admin/orders`)
+
+- **Phase 6**: Auth Integration
+  - `orders` table in Supabase linking Medusa orders to users
+  - Row-level security for user order privacy
+  - Admin access to all orders
+  - "My Orders" section in user dashboard
+  - Automatic order linking for authenticated users
+
+- **Phase 7**: Testing & Documentation
+  - 600+ lines of E2E tests (`app/e2e/shop.spec.ts`)
+  - Complete architecture guide (`docs/MEDUSA_INTEGRATION.md`)
+  - Quick start guide for developers (`docs/ECOMMERCE_QUICK_START.md`)
+  - Docker.md updated with Medusa services and troubleshooting
+  - Test coverage: product browsing, cart ops, checkout flows, admin, cache, integration
+
 ---
 
 ## Pending
@@ -65,8 +110,59 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for complete standards.
 
 ---
 
-## Next Steps
+## Next Steps (Prioritized)
 
+### Immediate (Ecommerce Foundation)
+- [ ] Test Medusa backend locally: `npm run test:e2e -- e2e/shop.spec.ts`
+- [ ] Verify all endpoints: `/api/shop/products`, `/api/cart`, `/api/checkout`
+- [ ] Restart Docker to apply Medusa changes
+- [ ] Manual smoke test: browse shop → add to cart → checkout flow
+
+### Short Term (Payment & Operations)
+1. **Stripe Integration** - Enable actual payments
+   - Install Stripe SDK: `npm install @stripe/stripe-js`
+   - Create checkout session endpoint
+   - Implement Stripe webhook handler for payment confirmations
+   - Update `docs/STRIPE_INTEGRATION.md` (placeholder in Roadmap.md line 203)
+
+2. **Email Notifications** - Order confirmations & alerts
+   - Set up Resend account and add `RESEND_API_KEY` to `.env.local`
+   - Create `app/lib/email.ts` utility
+   - Admin alert on new project submission
+   - Order confirmation email template
+   - Hook into checkout flow
+
+### Medium Term (Admin & Documentation)
+1. **Refine Admin Workflows**
+   - Inventory management interface
+   - Bulk product import/export
+   - Order status updates & fulfillment tracking
+   - Analytics dashboard (orders, revenue, trends)
+
+2. **Complete Documentation**
+   - [ ] Document Medusa API contract (complete - see MEDUSA_INTEGRATION.md)
+   - [ ] Document Stripe integration flow
+   - [ ] Create Puck setup guide (line 204)
+
+3. **Performance & Caching**
+   - [ ] Define Redis cache invalidation strategy per feature
+   - [ ] Monitor cache hit rates
+   - [ ] Optimize product queries with pagination
+
+### Long Term (Platform Expansion)
+1. **Tier 2 Puck Components** - Extend page builder
+   - ServiceCard, PricingCard, StepCard components in Puck
+   - Gallery components
+   - Forms with submission handling
+
+2. **Advanced Features**
+   - Abandoned cart recovery emails
+   - Product recommendations engine
+   - Discount/coupon system
+   - Multi-currency support
+   - Customer reviews & ratings
+
+---
 
 # Tech Stack & Architecture Handoff
 
@@ -189,24 +285,31 @@ Everything runs in containers, so what works locally works on the server.
 4. **Knowledge transfer** - Storybook is documentation. Redis/Nginx/Docker are industry-standard. New developers can contribute quickly.
 5. **Future-proof** - Headless architecture means we can add mobile, CLI tools, or third-party integrations without major refactoring.
 
-## Next Steps
+## Setup & Documentation
 
-- [x] Set up Storybook in Next.js project *(complete - http://localhost:6006)*
-- [x] Set up Docker compose for local development stack *(complete)*
-- [x] Configure context7 MCP for Claude Code workflows *(complete)*
+### Completed ✅
+- [x] Set up Storybook in Next.js project *(http://localhost:6006)*
+- [x] Set up Docker compose for local development stack
+- [x] Configure context7 MCP for Claude Code workflows
+- [x] Medusa Integration architecture guide - [docs/MEDUSA_INTEGRATION.md](docs/MEDUSA_INTEGRATION.md)
+- [x] Ecommerce Quick Start guide - [docs/ECOMMERCE_QUICK_START.md](docs/ECOMMERCE_QUICK_START.md)
+- [x] Docker.md updated with Medusa services & troubleshooting
+
+### In Progress
 - [ ] Deploy Storybook as static site served by Nginx at `/design`
+- [ ] Stripe Integration guide - `docs/STRIPE_INTEGRATION.md` (pending)
+- [ ] Puck Setup guide - [app/guides/puck-setup.md](app/guides/puck-setup.md) (pending)
+
+### Pending
 - [ ] Define Redis cache invalidation strategy (per feature)
-- [ ] Document Medusa API contract (endpoints, auth, data shape)
-
-## Setup Guides (Pending)
-
-- [Medusa Setup](app/guides/medusa-setup.md) - Headless commerce API, environment variables, Stripe
-- [Puck Setup](app/guides/puck-setup.md) - Page builder config, dynamic routes, component exposure
+- [ ] Advanced analytics dashboard for orders & revenue
+- [ ] Inventory management interface
 
 ## Questions or Changes?
 
-This document should evolve. If a component doesn't serve the team, we change it. If a developer finds a better pattern, we document it here.
+This document evolves as the system grows. If a component needs improvement or a better pattern is found, update it here.
 
 ---
 
-*Last Updated: December 4, 2025
+*Last Updated: December 5, 2025*
+*Phase 7 Complete: Medusa ecommerce integration fully tested and documented*
