@@ -30,7 +30,7 @@ export default function DatabaseDemo() {
   const [input, setInput] = useState('');
   const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
   const [isSaving, setIsSaving] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [_isLoading, setIsLoading] = useState(false);
   const [flowTrace, setFlowTrace] = useState<FlowTrace[]>([]);
 
   // ========================================================================
@@ -98,7 +98,7 @@ export default function DatabaseDemo() {
         body: JSON.stringify({ content: input.trim() }),
       });
 
-      const data = await response.json();
+      await response.json();
       const duration = Math.round(performance.now() - startTime);
 
       if (response.ok) {
@@ -224,7 +224,7 @@ export default function DatabaseDemo() {
       {flowTrace.length > 0 && (
         <div className="mb-6 space-y-3">
           <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-semibold">
-            What Just Happened:
+            What Just Happened
           </p>
           {flowTrace.map((trace, index) => {
             const sourceColor =

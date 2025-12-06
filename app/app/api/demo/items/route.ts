@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { redis } from '@/lib/redis';
+// eslint-disable-next-line no-restricted-imports -- public demo endpoint, no auth required
 import { supabase } from '@/lib/supabase';
+import { badRequest, handleApiError } from '@/lib/api-errors';
 
 // ============================================================================
 // Demo API Route - /api/demo/items
@@ -137,17 +139,7 @@ export async function GET() {
       message: 'Data fetched from database (slower). Cached for 60 seconds. Next request will be instant.',
     } as ApiResponse);
   } catch (error) {
-    console.error('Items endpoint error:', error);
-
-    return NextResponse.json(
-      {
-        items: [],
-        source: 'database' as const,
-        cacheKey: 'demo:items',
-        message: 'Error fetching items',
-      },
-      { status: 500 }
-    );
+    return handleApiError(error, 'Items GET');
   }
 }
 
@@ -156,7 +148,7 @@ export async function POST(request: Request) {
     const { content } = await request.json();
 
     if (!content || typeof content !== 'string' || content.trim().length === 0) {
-      return NextResponse.json({ error: 'Content is required' }, { status: 400 });
+      return badRequest('Content is required');
     }
 
     // ====================================================================
@@ -215,11 +207,6 @@ export async function POST(request: Request) {
       message: 'Item saved and cache invalidated',
     });
   } catch (error) {
-    console.error('Items POST error:', error);
-
-    return NextResponse.json(
-      { error: 'Failed to save item' },
-      { status: 500 }
-    );
+    return handleApiError(error, 'Items POST');
   }
 }

@@ -11,8 +11,6 @@
 # - All dependencies installed (including dev tools)
 # - Extra logging and debugging tools
 
-version: '3.8'
-
 services:
   app:
     # Use the development Dockerfile instead of production
@@ -47,3 +45,62 @@ services:
     # You can connect to Redis directly for testing
     ports:
       - "6379:6379"
+
+  # ==========================================================================
+  # Storybook - Component Library Development Server (Dev-Only)
+  # ==========================================================================
+  # Runs Storybook dev server for interactive component development
+  # Accessible at http://localhost:6006 during development
+  # NOT included in production - dev tool only
+
+  storybook:
+    # Use the same dev Dockerfile as the app
+    # We'll override the command to run Storybook instead
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev
+
+    container_name: storybook_dev
+
+    # Share source code with app service for hot reload
+    # Changes to components appear instantly in both app and Storybook
+    volumes:
+      - ./app:/app
+      - /app/node_modules  # Preserve node_modules in container
+
+    # Expose Storybook's default port to host
+    # Access at http://localhost:6006
+    ports:
+      - "6006:6006"
+
+    # Override the default Next.js dev command
+    # Run Storybook dev server instead
+    # --ci flag prevents browser auto-open in container
+    command: ["npm", "run", "storybook", "--", "--ci"]
+
+    # Disable TTY mode to prevent terminal width calculation errors
+    # This prevents the "Invalid count value: -8" error in terminal rendering
+    stdin_open: false
+    tty: false
+
+    # Set development environment
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      # Fix terminal rendering error (RangeError: Invalid count value: -8)
+      # Explicitly set terminal dimensions to prevent Storybook from
+      # miscalculating terminal width in Docker pseudo-TTY
+      - COLUMNS=120
+      - LINES=40
+
+    # Storybook doesn't need to wait for other services
+    # It's purely for component development
+    # (No depends_on needed)
+
+    # Join the app network for consistency
+    # Allows future expansion if needed
+    networks:
+      - app_network
+
+    # Don't restart automatically - manual intervention for dev errors
+    restart: "no"

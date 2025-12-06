@@ -14,6 +14,7 @@
 
 import dotenv from 'dotenv'
 import path from 'path'
+import { beforeAll, afterEach, afterAll } from 'vitest'
 
 // Read environment variables from .env.test if available
 dotenv.config({
@@ -74,7 +75,7 @@ process.env.SUPABASE_SERVICE_ROLE_KEY =
 beforeAll(async () => {
   // Optional: Verify Redis is accessible
   try {
-    const { redis } = await import('@/lib/redis')
+    await import('@/lib/redis')
     // Verify connection by attempting to ping
     // Note: redis client may connect lazily, so we don't force connection here
   } catch (error) {

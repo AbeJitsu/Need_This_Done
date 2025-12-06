@@ -1,4 +1,4 @@
-import { createClient } from 'redis';
+import { createClient, RedisClientType } from 'redis';
 
 // ============================================================================
 // Redis Client Setup - Connection to the Fast Temporary Storage
@@ -16,12 +16,12 @@ import { createClient } from 'redis';
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 
 // ============================================================================
-// Create and Connect Redis Client
+// Create Redis Client
 // ============================================================================
 // The client is created but not connected yet
-// Connection happens when we call client.connect()
+// Connection happens lazily when we first use it
 
-const redis = createClient({
+const redis: RedisClientType = createClient({
   url: redisUrl,
 
   // Socket options for reliability
@@ -32,7 +32,7 @@ const redis = createClient({
         // Give up after 10 failed reconnection attempts
         return new Error('Max reconnection attempts reached');
       }
-      // Wait 1 second before retrying
+      // Wait progressively longer between retries (max 3 seconds)
       return Math.min(1000 * Math.pow(2, retries), 3000);
     },
   },
@@ -57,18 +57,98 @@ redis.on('ready', () => {
 });
 
 // ============================================================================
-// Connect to Redis
+// Ensure Connection Before Use
 // ============================================================================
-// Establish the connection
-// This happens once when the app starts
+// This helper ensures the client is connected before performing operations
+// Handles the async nature of Redis connections properly
 
-redis.connect().catch((error) => {
-  console.error('Failed to connect to Redis:', error);
-  // Don't throw - the app can still work without caching
-  // Just log it and continue
-});
+async function ensureConnected(): Promise<void> {
+  if (!redis.isOpen) {
+    await redis.connect();
+  }
+}
 
-export { redis };
+// ============================================================================
+// Wrapper for Safe Redis Operations
+// ============================================================================
+// Use this to ensure connection is established before any Redis operation
+
+async function ping(): Promise<string> {
+  await ensureConnected();
+  return redis.ping();
+}
+
+async function get(key: string): Promise<string | null> {
+  await ensureConnected();
+  return redis.get(key);
+}
+
+async function set(key: string, value: string, options?: { EX?: number }): Promise<string | null> {
+  await ensureConnected();
+  return redis.set(key, value, options);
+}
+
+async function setEx(key: string, seconds: number, value: string): Promise<string> {
+  await ensureConnected();
+  return redis.setEx(key, seconds, value);
+}
+
+async function del(...keys: string[]): Promise<number> {
+  await ensureConnected();
+  return redis.del(keys);
+}
+
+async function quit(): Promise<string> {
+  if (redis.isOpen) {
+    return redis.quit();
+  }
+  return 'OK';
+}
+
+// Additional methods used by integration tests
+async function keys(pattern: string): Promise<string[]> {
+  await ensureConnected();
+  return redis.keys(pattern);
+}
+
+async function setex(key: string, seconds: number, value: string): Promise<string> {
+  await ensureConnected();
+  return redis.setEx(key, seconds, value);
+}
+
+async function incr(key: string): Promise<number> {
+  await ensureConnected();
+  return redis.incr(key);
+}
+
+async function rpush(key: string, ...values: string[]): Promise<number> {
+  await ensureConnected();
+  return redis.rPush(key, values);
+}
+
+async function lrange(key: string, start: number, stop: number): Promise<string[]> {
+  await ensureConnected();
+  return redis.lRange(key, start, stop);
+}
+
+// Export a wrapper object with connection-safe methods
+const safeRedis = {
+  ping,
+  get,
+  set,
+  setEx,
+  del,
+  quit,
+  keys,
+  setex,
+  incr,
+  rpush,
+  lrange,
+  // Expose raw client for advanced use cases
+  raw: redis,
+};
+
+export { safeRedis as redis };
 
 // ============================================================================
 // Usage Examples

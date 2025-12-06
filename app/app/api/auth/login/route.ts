@@ -1,5 +1,7 @@
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { NextRequest, NextResponse } from 'next/server';
+import { isValidEmail, isValidPassword } from '@/lib/validation';
+import { badRequest, unauthorized, handleApiError } from '@/lib/api-errors';
 
 // ============================================================================
 // Login Endpoint - /api/auth/login (POST)
@@ -33,17 +35,23 @@ export async function POST(request: NextRequest) {
     // We do this validation SERVER-SIDE because we never trust the client.
 
     if (!email || !password) {
-      return NextResponse.json(
-        {
-          error: 'Email and password are required',
-        },
-        { status: 400 } // 400 = Bad Request (client error)
-      );
+      return badRequest('Email and password are required');
+    }
+
+    if (!isValidEmail(email)) {
+      return badRequest('Invalid email format');
+    }
+
+    if (!isValidPassword(password)) {
+      return badRequest('Password must be at least 6 characters');
     }
 
     // ========================================================================
     // Step 2: Authenticate with Supabase
     // ========================================================================
+    // Uses the server client which automatically handles cookies.
+    // This ensures the session is stored in cookies for subsequent requests.
+    //
     // Supabase uses bcrypt to compare the provided password against the
     // stored hash. Bcrypt is slow on purpose—this prevents brute-force
     // attacks (trying thousands of passwords per second).
@@ -51,25 +59,19 @@ export async function POST(request: NextRequest) {
     // If credentials are valid, Supabase returns:
     // - user: User object (ID, email, metadata, etc.)
     // - session: Contains access_token and refresh_token (JWTs)
-    //
-    // These tokens are like "ticket stubs" that prove the user is authenticated
-    // without sending the password again.
+
+    const supabase = await createSupabaseServerClient();
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
-      password, // Bcrypt compares this against the stored hash
+      password,
     });
 
     if (error) {
       // SECURITY: Don't reveal whether email exists or password is wrong.
       // Attackers use "user enumeration" to find valid email addresses.
       // We use the same message for both cases to prevent this.
-      return NextResponse.json(
-        {
-          error: 'Invalid email or password',
-        },
-        { status: 401 } // 401 = Unauthorized (authentication failed)
-      );
+      return unauthorized('Invalid email or password');
     }
 
     // ========================================================================
@@ -102,13 +104,6 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     // Unexpected error (JSON parsing, network issue, etc.)
-    console.error('Login error:', error);
-
-    return NextResponse.json(
-      {
-        error: 'An unexpected error occurred',
-      },
-      { status: 500 } // 500 = Server Error
-    );
+    return handleApiError(error, 'Login');
   }
 }

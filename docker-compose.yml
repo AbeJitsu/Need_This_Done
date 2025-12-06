@@ -1,5 +1,3 @@
-version: '3.8'
-
 # Docker Compose Orchestration - The Main Blueprint
 # This file defines how all four pieces of your application work together.
 # Think of it as the floor plan for a restaurant: where each room is, how they connect,
@@ -17,6 +15,10 @@ volumes:
   # Even if Redis restarts, we don't lose active sessions
   redis_data:
 
+  # Medusa PostgreSQL data - stores products, orders, inventory
+  # Separate from app database for clean schema management
+  medusa_postgres_data:
+
 # ============================================================================
 # Networks - Private Communication Channel
 # ============================================================================
@@ -27,6 +29,7 @@ volumes:
 
 networks:
   app_network:
+    name: ntd_app_network
     driver: bridge
 
 # ============================================================================
@@ -82,16 +85,20 @@ services:
       dockerfile: Dockerfile
     container_name: nextjs_app
 
+    # Load environment variables from .env.local
+    # Docker Compose reads .env by default, but Next.js uses .env.local
+    # This ensures both systems use the same file
+    env_file:
+      - .env.local
+
     # Environment variables the app needs to function
-    # These come from your .env file
+    # These come from your .env.local file (loaded above)
     environment:
       - NODE_ENV=${NODE_ENV:-production}
       - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
       - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
       - REDIS_URL=redis://redis:6379
-      - SESSION_SECRET=${SESSION_SECRET}
-      - SESSION_MAX_AGE=${SESSION_MAX_AGE:-2592000}
 
     # Port 3000 is where Next.js runs
     # NOT exposed to outside world - only nginx can reach it
@@ -107,6 +114,13 @@ services:
       - app_network
 
     restart: unless-stopped
+
+    # Health check - is the app responding?
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
 
   # ==========================================================================
   # Redis - Fast Temporary Storage
@@ -148,5 +162,81 @@ services:
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ==========================================================================
+  # Medusa PostgreSQL Database (Separate from app database)
+  # ==========================================================================
+  # Medusa stores its own schema separately from Supabase to avoid:
+  # - Migration conflicts between app and Medusa upgrades
+  # - Schema contamination and version incompatibilities
+  # - Complex RLS policy management
+  # This enables independent scaling and debugging of commerce data.
+  #
+  medusa_postgres:
+    image: postgres:15-alpine
+    container_name: medusa_postgres
+
+    environment:
+      - POSTGRES_USER=medusa
+      - POSTGRES_PASSWORD=${MEDUSA_DB_PASSWORD}
+      - POSTGRES_DB=medusa
+
+    volumes:
+      - medusa_postgres_data:/var/lib/postgresql/data
+
+    expose:
+      - "6432"
+
+    networks:
+      - app_network
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medusa"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ==========================================================================
+  # Medusa Backend Service (Headless Ecommerce)
+  # ==========================================================================
+  # Medusa handles the commerce engine: products, carts, orders, checkout.
+  # Think of it as the "kitchen" for ecommerce operations, separate from
+  # the main app's "kitchen". Both use shared Redis for caching.
+  #
+  # Note: Port 9000 is not exposed to outside world. Only nginx and app
+  # containers can reach Medusa via the internal app_network.
+  #
+  medusa:
+    build:
+      context: ./medusa
+      dockerfile: Dockerfile
+    container_name: medusa_backend
+
+    environment:
+      - DATABASE_URL=postgresql://medusa:${MEDUSA_DB_PASSWORD}@medusa_postgres:5432/medusa
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${MEDUSA_JWT_SECRET}
+      - ADMIN_JWT_SECRET=${MEDUSA_ADMIN_JWT_SECRET}
+      - NODE_ENV=development
+
+    expose:
+      - "9000"
+
+    depends_on:
+      - medusa_postgres
+      - redis
+
+    networks:
+      - app_network
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/admin"]
+      interval: 30s
       timeout: 3s
       retries: 3

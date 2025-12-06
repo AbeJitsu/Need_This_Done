@@ -1,8 +1,32 @@
 import type { Metadata } from 'next';
+import { Inter, Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
-import DarkModeToggle from '@/components/DarkModeToggle';
 import { AuthProvider } from '@/context/AuthContext';
+import { CartProvider } from '@/context/CartContext';
+
+// Inter font - modern, trustworthy, highly readable (body text)
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+// Poppins font - geometric, authoritative (logo/brand)
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['600', '700'],
+  variable: '--font-poppins',
+  display: 'swap',
+});
+
+// Playfair Display - elegant serif for logo
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['700'],
+  variable: '--font-playfair',
+  display: 'swap',
+});
 
 // ============================================================================
 // Root Layout Component
@@ -20,8 +44,8 @@ import { AuthProvider } from '@/context/AuthContext';
 // Define metadata for SEO and browser tab
 // This appears in search results and the browser tab
 export const metadata: Metadata = {
-  title: 'Full-Stack Template',
-  description: 'A production-ready full-stack web application',
+  title: 'NeedThisDone - Get Your Projects Done Right',
+  description: 'Professional project services - submit your project, get it done right.',
   viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
 };
@@ -32,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${poppins.variable} ${playfair.variable}`}>
       <head>
         {/* Dark mode prevention script - runs before React hydration to prevent flash */}
         <script
@@ -48,24 +72,23 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
-          {/* Skip to main content link for keyboard users */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-0 focus:top-0 focus:bg-blue-600 focus:text-white focus:p-2 focus:z-50"
-          >
-            Skip to main content
-          </a>
+          <CartProvider>
+            {/* Skip to main content link for keyboard users */}
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:left-0 focus:top-0 focus:bg-blue-600 focus:text-white focus:p-2 focus:z-50"
+            >
+              Skip to main content
+            </a>
 
-          {/* Top-right corner: Dark mode toggle */}
-          <div className="fixed top-4 right-4 z-50">
-            <DarkModeToggle />
-          </div>
+            {/* Site-wide navigation (includes dark mode toggle) */}
+            <Navigation />
 
-          {/* Site-wide navigation */}
-          <Navigation />
-
-          {/* Page content */}
-          <main id="main-content">{children}</main>
+            {/* Page content - gradient background applied here once for all pages */}
+            <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">
+              {children}
+            </main>
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

@@ -16,6 +16,11 @@ Look at the changes that are ready to save and write a commit message that's inv
 
 2. **Draft the message following this structure:**
 
+3. **IMPORTANT: Do NOT include the Claude Code attribution footer**
+   - Do NOT add `🤖 Generated with [Claude Code](https://claude.com/claude-code)`
+   - Do NOT add `Co-Authored-By: Claude <noreply@anthropic.com>`
+   - The message should end with the closing sentence about how it helps people
+
 ### Summary Line (under 50 characters)
 - Start with an action word: "Add", "Fix", "Update", "Remove"
 - Be specific about what changed

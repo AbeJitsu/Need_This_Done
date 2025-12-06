@@ -1,3 +1,4 @@
+import { createBrowserClient } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
 
 // ============================================================================
@@ -7,8 +8,8 @@ import { createClient } from '@supabase/supabase-js';
 // We create the connection once here and import it everywhere
 //
 // Two clients:
-// 1. Regular client: Uses anon key, safe for browser and server
-//    Respects Row Level Security (RLS) policies - users only see their own data
+// 1. Browser client: Uses @supabase/ssr to store auth in cookies (not localStorage)
+//    This enables SSR and allows server API routes to read the session
 // 2. Admin client: Uses service role key, only for server-side operations
 //    Bypasses RLS - can read and write any data (use carefully!)
 //
@@ -21,12 +22,19 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // ============================================================================
-// Regular Client - For Browsers and Client-Side Operations
+// Browser Client - For Client-Side Operations with Cookie Storage
 // ============================================================================
-// This client is safe to use in the browser because:
-// 1. The anon key has limited permissions
-// 2. Row Level Security (RLS) ensures users only see their own data
-// 3. It's the recommended approach for Supabase
+// Uses @supabase/ssr to store auth state in cookies instead of localStorage.
+// This is critical for SSR because:
+// 1. PKCE code_verifier is stored in cookies (server callback can read it)
+// 2. Session tokens are in cookies (API routes can authenticate)
+// 3. Works seamlessly with server components and API routes
+//
+// ⚠️  WARNING: DO NOT USE IN API ROUTES FOR AUTHENTICATION  ⚠️
+// ============================================================================
+// For API routes, use createSupabaseServerClient from '@/lib/supabase-server'
+// which reads cookies from the request context.
+// ============================================================================
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error(
@@ -35,7 +43,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
 
 // ============================================================================
 // Admin Client - For Server-Only Administrative Operations
@@ -58,6 +66,21 @@ if (!supabaseServiceRoleKey) {
 export const supabaseAdmin = supabaseServiceRoleKey
   ? createClient(supabaseUrl, supabaseServiceRoleKey)
   : null;
+
+// ============================================================================
+// Admin Client Factory
+// ============================================================================
+// Use this function instead of directly accessing supabaseAdmin to ensure
+// the client is configured. Throws an error if service role key is not set.
+
+export function getSupabaseAdmin() {
+  if (!supabaseAdmin) {
+    throw new Error(
+      'Admin client not configured. Missing SUPABASE_SERVICE_ROLE_KEY environment variable.'
+    );
+  }
+  return supabaseAdmin;
+}
 
 // ============================================================================
 // Usage Examples

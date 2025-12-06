@@ -82,7 +82,7 @@ function saveVolume(level) {
 ```
 
 **Guidelines for comments:**
-- Use plain language, no jargon
+- Use plain language anyone can understand
 - Explain the "why" not just the "what"
 - Use section dividers (=====) to break up different parts
 - If someone without coding experience reads it, they should get the general idea
@@ -112,3 +112,9 @@ Use names that clearly describe what something does:
 - `currentTrackIndex` not `idx`
 
 Think of it like labeling moving boxes - future you (and others) will thank you for being specific.
+
+## Design System
+
+See [docs/DESIGN_SYSTEM.md](../docs/DESIGN_SYSTEM.md) for technical standards (colors, accessibility, component testing).
+
+See [DESIGN_BRIEF.md](DESIGN_BRIEF.md) for brand identity and aesthetic direction.

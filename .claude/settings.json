@@ -1,5 +1,11 @@
 {
   "permissions": {
+    "allow": [
+      "Read(./.env.example)",
+      "Read(app/.env.example)",
+      "Write(./.env.example)",
+      "Write(app/.env.example)"
+    ],
     "deny": [
       "Read(./.env*)",
       "Read(**/.env*)"
@@ -12,6 +18,26 @@
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stop.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/post-tool-use.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/user-prompt-submit.sh"
           }
         ]
       }

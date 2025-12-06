@@ -52,3 +52,9 @@ coverage/
 *.tmp
 *.temp
 .turbo/
+
+*storybook.log
+storybook-static
+.env.test
+supabase/.branches
+supabase/.temp
