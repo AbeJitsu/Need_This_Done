@@ -68,13 +68,19 @@ show_help() {
 
   Docker Helper - Friendly Commands for Your Services
 
-  SERVICES (use these friendly names):
+  MAIN SERVICES (always running):
     front-door    Where visitors enter your site
     website       Your main site that people see
     memory        Helps pages load faster
     store         Handles shopping and checkout
     store-data    Keeps track of products and orders
-    design-tools  Preview how things look (dev only)
+
+  DEVELOPMENT TOOLS (optional):
+    design-tools  Preview how things look (Storybook)
+
+  TESTING (run on demand):
+    integration   Run integration tests
+    e2e           Run end-to-end tests
 
   COMMANDS:
     start <service>     Start a specific service
@@ -85,6 +91,7 @@ show_help() {
     down                Stop everything
     status              See what's running
     rebuild <service>   Rebuild and restart a service
+    test [type]         Run tests (integration or e2e)
     fresh               Complete fresh start (removes all data)
 
   EXAMPLES:
@@ -93,6 +100,7 @@ show_help() {
     ./scripts/docker.sh logs store
     ./scripts/docker.sh up
     ./scripts/docker.sh status
+    ./scripts/docker.sh test e2e
 
 EOF
 }
@@ -171,20 +179,73 @@ cmd_down() {
 cmd_status() {
   echo -e "${BLUE}Service Status${NC}"
   echo ""
+  echo "  Main Services:"
 
-  local services=("nginx" "nextjs_app" "redis" "medusa_backend" "medusa_postgres" "storybook_dev")
+  local main_services=("nginx" "nextjs_app" "redis" "medusa_backend" "medusa_postgres")
 
-  for docker_name in "${services[@]}"; do
+  for docker_name in "${main_services[@]}"; do
     local friendly=$(get_friendly_name "$docker_name")
     local status=$(docker ps --filter "name=^${docker_name}$" --format "{{.Status}}" 2>/dev/null)
 
     if [ -n "$status" ]; then
-      echo -e "  ${GREEN}●${NC} ${friendly} - running"
+      echo -e "    ${GREEN}●${NC} ${friendly} - running"
     else
-      echo -e "  ${RED}○${NC} ${friendly} - stopped"
+      echo -e "    ${RED}○${NC} ${friendly} - stopped"
+    fi
+  done
+
+  echo ""
+  echo "  Development Tools:"
+
+  local dev_services=("storybook_dev")
+
+  for docker_name in "${dev_services[@]}"; do
+    local friendly=$(get_friendly_name "$docker_name")
+    local status=$(docker ps --filter "name=^${docker_name}$" --format "{{.Status}}" 2>/dev/null)
+
+    if [ -n "$status" ]; then
+      echo -e "    ${GREEN}●${NC} ${friendly} - running"
+    else
+      echo -e "    ${YELLOW}○${NC} ${friendly} - stopped (optional)"
+    fi
+  done
+
+  echo ""
+  echo "  Test Containers:"
+
+  local test_services=("integration_tests" "e2e_tests")
+
+  for docker_name in "${test_services[@]}"; do
+    local friendly=$(get_friendly_name "$docker_name")
+    local status=$(docker ps --filter "name=^${docker_name}$" --format "{{.Status}}" 2>/dev/null)
+
+    if [ -n "$status" ]; then
+      echo -e "    ${GREEN}●${NC} ${friendly} - running"
+    else
+      echo -e "    ${YELLOW}○${NC} ${friendly} - not running (run on demand)"
     fi
   done
   echo ""
+}
+
+cmd_test() {
+  local test_type="$1"
+
+  case "$test_type" in
+    integration|int)
+      echo -e "${BLUE}Running integration tests...${NC}"
+      docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.test.yml up --build --abort-on-container-exit integration_tests
+      ;;
+    e2e|end-to-end)
+      echo -e "${BLUE}Running end-to-end tests...${NC}"
+      docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.e2e.yml up --build --abort-on-container-exit e2e_tests
+      ;;
+    *)
+      echo -e "${YELLOW}Choose a test type:${NC}"
+      echo "  ./scripts/docker.sh test integration"
+      echo "  ./scripts/docker.sh test e2e"
+      ;;
+  esac
 }
 
 cmd_rebuild() {
@@ -228,6 +289,7 @@ case "$1" in
   down)     cmd_down ;;
   status)   cmd_status ;;
   rebuild)  cmd_rebuild "$2" ;;
+  test)     cmd_test "$2" ;;
   fresh)    cmd_fresh ;;
   help|-h|--help|"")  show_help ;;
   *)
