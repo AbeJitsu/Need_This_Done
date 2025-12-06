@@ -105,10 +105,13 @@ services:
     expose:
       - "3000"
 
-    # Wait for Redis to be healthy before starting
-    # Don't open the restaurant until the order system is ready
+    # Wait for dependencies to be healthy before starting
+    # Don't open until memory and store are ready
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
+      medusa:
+        condition: service_healthy
 
     networks:
       - app_network
@@ -227,8 +230,10 @@ services:
       - "9000"
 
     depends_on:
-      - medusa_postgres
-      - redis
+      medusa_postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
     networks:
       - app_network

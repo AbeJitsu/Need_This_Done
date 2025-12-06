@@ -1,6 +1,9 @@
 #!/bin/bash
 # Multi-Container Health Check for Docker Development Environment
 
+# Exit gracefully if Docker isn't available
+command -v docker &> /dev/null || exit 0
+
 # Define expected containers
 EXPECTED_CONTAINERS=(
   "nextjs_app"
