@@ -1,5 +1,9 @@
 {
   "permissions": {
+    "allow": [
+      "Read(./.env.example)",
+      "Read(app/.env.example)"
+    ],
     "deny": [
       "Read(./.env*)",
       "Read(**/.env*)"
