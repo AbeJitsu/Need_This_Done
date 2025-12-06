@@ -55,3 +55,6 @@ coverage/
 
 *storybook.log
 storybook-static
+.env.test
+supabase/.branches
+supabase/.temp

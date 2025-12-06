@@ -23,7 +23,11 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:docker": "cd .. && docker-compose -f docker-compose.e2e.yml up --build --abort-on-container-exit",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "supabase:start": "cd .. && supabase start",
+    "supabase:stop": "cd .. && supabase stop",
+    "supabase:status": "cd .. && supabase status",
+    "supabase:reset": "cd .. && supabase db reset"
   },
   "dependencies": {
     "@measured/puck": "^0.20.2",

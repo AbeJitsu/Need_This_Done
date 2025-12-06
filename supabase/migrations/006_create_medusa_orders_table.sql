@@ -46,7 +46,10 @@ create policy "Admins can view all orders"
   on orders for select
   using (
     auth.role() = 'authenticated' and
-    (select is_admin from auth.users where id = auth.uid()) = true
+    coalesce(
+      (auth.jwt() ->> 'user_metadata')::jsonb ->> 'is_admin' = 'true',
+      false
+    )
   );
 
 -- ============================================================================

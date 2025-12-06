@@ -92,6 +92,42 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for complete standards.
 
 ## Pending
 
+### Public Chatbot with pgvector Semantic Search
+
+**Purpose:** Answer questions about the site (services, products, policies) via floating chat widget
+
+**Architecture:**
+- Floating chat widget (bottom-right corner, all public pages)
+- pgvector semantic search in Supabase
+- Vercel AI SDK with flexible LLM support (OpenAI gpt-4o-mini or Anthropic claude-haiku)
+- Auto-reindex on content changes (SHA-256 hash-based detection)
+
+**What Gets Indexed:**
+- Static pages (Home, Services, Pricing, How It Works, FAQ, Contact)
+- Medusa product catalog
+- ❌ Puck CMS pages (excluded - too large for vector search)
+- ❌ User conversations (public chatbot, no persistence)
+
+**Implementation:** See `/.claude/plans/structured-honking-manatee.md`
+
+**Stack:**
+- Database: Supabase pgvector (1536-dim embeddings)
+- LLM: Vercel AI SDK (flexible provider support)
+- Caching: Redis for embeddings + embedding cache
+- UI: React component with dark mode support
+
+**Cost:** ~$1-10/month depending on chat volume
+
+**Phases:**
+1. Database (pgvector extension, embeddings/indexed_content tables)
+2. Core libraries (hashing, embedding generation, chunking, content extraction)
+3. API routes (chat, manual reindex, auto reindex)
+4. UI components (ChatMessage, ChatInput, Chatbot widget)
+5. Initial indexing (static pages + products)
+6. Testing (unit, integration, E2E, accessibility)
+
+---
+
 ### Email Notifications
 
 **Prerequisites:**
