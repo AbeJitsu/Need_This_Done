@@ -83,7 +83,7 @@ const sampleProducts = [
     title: "Standard Project",
     description: "Comprehensive project scope",
     handle: "standard-project",
-    prices: [{ amount: 7500, currency_code: "USD" }], // $75
+    prices: [{ amount: 15000, currency_code: "USD" }], // $150
     images: [{ url: "https://via.placeholder.com/300?text=Standard+Project" }],
   },
   {
@@ -91,7 +91,7 @@ const sampleProducts = [
     title: "Premium Solution",
     description: "Full-service custom development",
     handle: "premium-solution",
-    prices: [{ amount: 10000, currency_code: "USD" }], // $100
+    prices: [{ amount: 50000, currency_code: "USD" }], // $500
     images: [{ url: "https://via.placeholder.com/300?text=Premium+Solution" }],
   },
 ];
