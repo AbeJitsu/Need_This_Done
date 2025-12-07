@@ -18,8 +18,8 @@ test.describe('Product Catalog & Browsing', () => {
     // Navigate to shop
     await navigateToPage(page, '/shop');
 
-    // Should see shop heading
-    await expect(page.getByRole('heading', { name: 'Shop' })).toBeVisible();
+    // Should see shop heading (actual page uses "Shop Services")
+    await expect(page.getByRole('heading', { name: /Shop Services/i })).toBeVisible();
 
     // Should display products grid
     const productGrid = page.locator('[class*="grid"]');

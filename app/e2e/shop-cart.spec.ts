@@ -16,7 +16,7 @@ test.describe('Shopping Cart - Add to Cart', () => {
     await navigateToPage(page, '/shop');
 
     // Should see shop heading
-    await expect(page.getByRole('heading', { name: 'Shop' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Shop Services/i })).toBeVisible();
 
     // Find Quick Task product and click "Add Cart"
     const quickTaskCard = page.locator('text=/Quick Task/i').first();
@@ -227,7 +227,7 @@ test.describe('Shopping Cart - Integration', () => {
   }) => {
     // Step 1: Navigate to shop
     await navigateToPage(page, '/shop');
-    await expect(page.getByRole('heading', { name: 'Shop' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Shop Services/i })).toBeVisible();
 
     // Step 2: Add item to cart
     const addButtons = page.getByRole('button', { name: /add cart/i });

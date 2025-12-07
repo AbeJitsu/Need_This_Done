@@ -8,7 +8,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Product Variants - Add to Cart Workflow', () => {
   test('products display on shop page without variant errors', async ({ page }) => {
-    await page.goto('https://localhost/shop');
+    await page.goto('/shop');
 
     // Wait for products to load
     await expect(page.getByText('Quick Task')).toBeVisible({ timeout: 10000 });
@@ -20,7 +20,7 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
   });
 
   test('can add Quick Task to cart from shop page', async ({ page }) => {
-    await page.goto('https://localhost/shop');
+    await page.goto('/shop');
 
     // Wait for products to load
     await expect(page.getByText('Quick Task')).toBeVisible({ timeout: 10000 });
@@ -36,7 +36,7 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
   });
 
   test('product detail page shows variant dropdown', async ({ page }) => {
-    await page.goto('https://localhost/shop');
+    await page.goto('/shop');
 
     // Wait for products and click Details on Quick Task
     await expect(page.getByText('Quick Task')).toBeVisible({ timeout: 10000 });
@@ -59,7 +59,7 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
   });
 
   test('can add product from detail page with variant', async ({ page }) => {
-    await page.goto('https://localhost/shop/prod_1');
+    await page.goto('/shop/prod_1');
 
     // Should show variant selector
     await expect(page.getByText('Select Variant')).toBeVisible({ timeout: 5000 });
@@ -77,7 +77,7 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
   });
 
   test('can add multiple different products to cart', async ({ page }) => {
-    await page.goto('https://localhost/shop');
+    await page.goto('/shop');
 
     // Wait for products to load
     await expect(page.getByText('Quick Task')).toBeVisible({ timeout: 10000 });
@@ -103,7 +103,7 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
 
   test('cart displays added products correctly', async ({ page }) => {
     // Add a product to cart
-    await page.goto('https://localhost/shop');
+    await page.goto('/shop');
     await expect(page.getByText('Quick Task')).toBeVisible({ timeout: 10000 });
 
     const section = page.locator('text=Quick Task').first();
@@ -112,7 +112,7 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
     await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 5000 });
 
     // Navigate to cart
-    await page.goto('https://localhost/cart');
+    await page.goto('/cart');
 
     // Verify item appears in cart
     await expect(page.getByText('Quick Task')).toBeVisible({ timeout: 5000 });
@@ -120,7 +120,7 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
   });
 
   test('standard variant is selected by default', async ({ page }) => {
-    await page.goto('https://localhost/shop/prod_2');
+    await page.goto('/shop/prod_2');
 
     // Standard variant should be pre-selected
     const variantSelect = page.locator('select').first();
@@ -130,7 +130,7 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
   });
 
   test('can adjust quantity before adding to cart', async ({ page }) => {
-    await page.goto('https://localhost/shop/prod_1');
+    await page.goto('/shop/prod_1');
 
     // Should show quantity selector
     await expect(page.getByText('Quantity')).toBeVisible({ timeout: 5000 });
@@ -154,21 +154,21 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
 
   test('all three products have variants available', async ({ page }) => {
     // Test prod_1
-    await page.goto('https://localhost/shop/prod_1');
+    await page.goto('/shop/prod_1');
     await expect(page.getByText('Select Variant')).toBeVisible({ timeout: 5000 });
     let variantSelect = page.locator('select').first();
     let options = await variantSelect.locator('option').count();
     expect(options).toBeGreaterThan(0);
 
     // Test prod_2
-    await page.goto('https://localhost/shop/prod_2');
+    await page.goto('/shop/prod_2');
     await expect(page.getByText('Select Variant')).toBeVisible({ timeout: 5000 });
     variantSelect = page.locator('select').first();
     options = await variantSelect.locator('option').count();
     expect(options).toBeGreaterThan(0);
 
     // Test prod_3
-    await page.goto('https://localhost/shop/prod_3');
+    await page.goto('/shop/prod_3');
     await expect(page.getByText('Select Variant')).toBeVisible({ timeout: 5000 });
     variantSelect = page.locator('select').first();
     options = await variantSelect.locator('option').count();
@@ -178,9 +178,9 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
 
 test.describe('Product Variants - Variant Data Integrity', () => {
   test('product API returns variants for all products', async ({ page }) => {
-    // NOTE: Using https://localhost (through NGINX) to match production architecture
-    const response = await page.request.get('https://localhost/api/shop/products', {
-      rejectOnStatusCode: false, // Accept self-signed cert in dev
+    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    const response = await page.request.get('/api/shop/products', {
+      rejectOnStatusCode: false,
     });
     const data = await response.json();
 
@@ -195,8 +195,8 @@ test.describe('Product Variants - Variant Data Integrity', () => {
   });
 
   test('variants have correct pricing', async ({ page }) => {
-    // NOTE: Using https://localhost (through NGINX) to match production architecture
-    const response = await page.request.get('https://localhost/api/shop/products', {
+    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    const response = await page.request.get('/api/shop/products', {
       rejectOnStatusCode: false,
     });
     const data = await response.json();
@@ -217,7 +217,7 @@ test.describe('Product Variants - Variant Data Integrity', () => {
   });
 
   test('variants have required fields', async ({ page }) => {
-    const response = await page.request.get('http://localhost:3000/api/shop/products');
+    const response = await page.request.get('/api/shop/products');
     const data = await response.json();
 
     for (const product of data.products) {
