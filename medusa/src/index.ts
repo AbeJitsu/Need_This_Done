@@ -180,6 +180,20 @@ app.get("/store/products", (req, res) => {
   });
 });
 
+// GET - Single Product by ID
+app.get("/store/products/:id", (req, res) => {
+  const { id } = req.params;
+  const product = sampleProducts.find((p) => p.id === id);
+
+  if (!product) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+
+  res.status(200).json({
+    product,
+  });
+});
+
 // ============================================================================
 // Cart Endpoints
 // ============================================================================
