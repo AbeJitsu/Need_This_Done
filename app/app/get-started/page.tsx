@@ -5,6 +5,8 @@ import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import CTASection from '@/components/CTASection';
+import CircleBadge from '@/components/CircleBadge';
+import { accentColors } from '@/lib/colors';
 
 // ============================================================================
 // Get Started Page - Deposit Authorization
@@ -151,32 +153,23 @@ export default function GetStartedPage() {
 
       {/* How It Works */}
       <Card hoverColor="green" hoverEffect="glow" className="mb-8">
-        <div className="p-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            How Payment Works
-          </h2>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                <span className="text-green-700 dark:text-green-300 font-bold">50%</span>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100">Now</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Deposit to authorize and start work
-                </p>
-              </div>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6 text-center">
+          How Payment Works
+        </h2>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <div className="flex items-center gap-4">
+            <CircleBadge text="50%" color="green" size="md" shape="pill" />
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100">To Start</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Deposit to begin work</p>
             </div>
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                <span className="text-blue-700 dark:text-blue-300 font-bold">50%</span>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100">On Delivery</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Final payment when you approve the work
-                </p>
-              </div>
+          </div>
+          <div className="hidden sm:block w-8 h-0.5 bg-gray-300 dark:bg-gray-600"></div>
+          <div className="flex items-center gap-4">
+            <CircleBadge text="50%" color="blue" size="md" shape="pill" />
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-gray-100">On Delivery</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">When you approve the work</p>
             </div>
           </div>
         </div>
@@ -190,8 +183,8 @@ export default function GetStartedPage() {
           </h2>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-              <p className="text-sm text-red-900 dark:text-red-200">{error}</p>
+            <div className={`mb-6 p-4 ${accentColors.red.bg} border ${accentColors.red.border} rounded-lg`}>
+              <p className={`text-sm ${accentColors.red.text}`}>{error}</p>
             </div>
           )}
 

@@ -81,7 +81,14 @@ export default function FAQPage() {
     },
     {
       question: 'How does payment work?',
-      answer: "We use a simple 50/50 structure: 50% deposit to start work, and the remaining 50% when you approve the final delivery. We accept major credit cards and other common payment methods. No surprises, just straightforward pricing.",
+      answer: (
+        <>
+          We use a simple 50/50 structure: 50% deposit to start work, and the remaining 50% when you approve the final delivery. We accept major credit cards and other common payment methods. No surprises, just straightforward pricing.{' '}
+          <Link href="/get-started" className="text-blue-700 dark:text-blue-400 font-medium hover:underline">
+            Ready to authorize a project?
+          </Link>
+        </>
+      ),
     },
     {
       question: 'What if I have a question that is not listed here?',

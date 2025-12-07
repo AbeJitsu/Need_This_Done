@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import HealthStatus from '@/components/HealthStatus';
+import SystemOverview from '@/components/SystemOverview';
 import AuthDemo from '@/components/AuthDemo';
 import DatabaseDemo from '@/components/DatabaseDemo';
 import SpeedDemo from '@/components/SpeedDemo';
@@ -73,12 +73,9 @@ export default function AdminDevPage() {
         description="System monitoring and development tools for admins."
       />
 
-      {/* System Health Section */}
+      {/* System Overview - Unified health check */}
       <section className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-          System Health
-        </h2>
-        <HealthStatus />
+        <SystemOverview />
       </section>
 
       {/* Quick Actions */}

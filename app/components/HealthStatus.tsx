@@ -17,6 +17,7 @@ interface HealthResponse {
   services: {
     redis: 'up' | 'down' | 'error';
     supabase: 'up' | 'down' | 'error';
+    medusa?: 'up' | 'down' | 'error' | 'unknown';
     app: 'up' | 'down' | 'error';
   };
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import Link from 'next/link';
 import { getServices } from '@/config/site.config';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
@@ -176,7 +177,11 @@ export default function ContactPage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="font-semibold text-blue-600 dark:text-blue-400">3.</span>
-                    Love it? Pay 50% to start, 50% on delivery
+                    Love it?{' '}
+                    <Link href="/get-started" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">
+                      Pay 50% to start
+                    </Link>
+                    , 50% on delivery
                   </li>
                 </ol>
               </div>
@@ -376,6 +381,7 @@ export default function ContactPage() {
           title="Want to learn more first?"
           buttons={[
             { text: 'View Our Services', variant: 'blue', href: '/services' },
+            { text: 'How It Works', variant: 'purple', href: '/how-it-works' },
             { text: 'Read the FAQ', variant: 'teal', href: '/faq' }
           ]}
           hoverColor="blue"

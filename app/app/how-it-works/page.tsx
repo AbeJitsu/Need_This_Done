@@ -21,6 +21,7 @@ export default function HowItWorksPage() {
     description: string;
     details: string[];
     color: AccentVariant;
+    href?: string;
   }[] = [
     {
       number: 1,
@@ -32,6 +33,7 @@ export default function HowItWorksPage() {
         'Let us know your timeline if you have one',
       ],
       color: 'green',
+      href: '/contact',
     },
     {
       number: 2,
@@ -43,28 +45,31 @@ export default function HowItWorksPage() {
         'You receive a clear, transparent quote',
       ],
       color: 'blue',
+      href: '/login',
     },
     {
       number: 3,
       title: 'Authorize & Start',
-      description: 'Love the quote? Pay a 50% deposit to authorize work and move to the front of our queue.',
+      description: 'Love the quote? Pay a 50% deposit to authorize work and we get started right away.',
       details: [
         '50% deposit to begin work',
         'Secure online payment',
-        'Work starts right away',
+        "We'll keep you updated on progress",
       ],
       color: 'purple',
+      href: '/get-started',
     },
     {
       number: 4,
-      title: 'Review & Deliver',
-      description: 'You review the completed work. Once you approve, pay the remaining 50% and we deliver everything.',
+      title: 'Approve & Receive',
+      description: 'You review the completed work. Once you approve, pay the remaining 50% and receive everything.',
       details: [
         'You review what we have done',
         'We address any feedback',
-        'Final 50% on approval, then delivery!',
+        "Final 50% on approval, then it's yours!",
       ],
       color: 'orange',
+      href: '/login',
     },
   ];
 

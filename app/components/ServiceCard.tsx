@@ -42,14 +42,14 @@ export default function ServiceCard({
 
   const cardContent = (
     <div className="flex flex-col h-full">
-      <h3 className={`font-bold mb-3 text-lg ${titleColors[color]}`}>
+      <h3 className={`font-bold mb-3 text-xl ${titleColors[color]}`}>
         {title}
       </h3>
 
       {isCompact ? (
         // Compact: Just tagline as teaser
         <>
-          <p className="text-gray-600 dark:text-gray-300 text-sm">
+          <p className="text-gray-600 dark:text-gray-300 text-base">
             {tagline}
           </p>
           <p className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]}`}>
@@ -59,7 +59,7 @@ export default function ServiceCard({
       ) : (
         // Full: Description + bullet points
         <>
-          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+          <p className="text-gray-600 dark:text-gray-300 text-base mb-4">
             {description}
           </p>
 
@@ -72,7 +72,7 @@ export default function ServiceCard({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-500 dark:text-gray-400 text-xs">
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
                     {detail}
                   </span>
                 </li>

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { AccentVariant, cardHoverColors, titleTextColors } from '@/lib/colors';
 import CircleBadge from './CircleBadge';
 
@@ -7,6 +8,7 @@ import CircleBadge from './CircleBadge';
 // Displays a numbered step with title, description, and bullet points.
 // Used on the How It Works page to explain the process.
 // Uses shared accentColors for consistent styling with Button and CircleBadge.
+// Optionally links to a relevant page when href is provided.
 
 interface StepCardProps {
   number: number;
@@ -14,6 +16,7 @@ interface StepCardProps {
   description: string;
   details: string[];
   color: AccentVariant;
+  href?: string;
 }
 
 export default function StepCard({
@@ -22,9 +25,11 @@ export default function StepCard({
   description,
   details,
   color,
+  href,
 }: StepCardProps) {
-  return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl p-8 border-2 border-gray-400 dark:border-gray-500 transition-all ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}>
+  const cardClasses = `bg-white dark:bg-gray-800 rounded-xl p-8 border-2 border-gray-400 dark:border-gray-500 transition-all ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`;
+
+  const cardContent = (
       <div className="flex items-start gap-6">
         {/* Step number badge */}
         <CircleBadge number={number} color={color} />
@@ -45,8 +50,27 @@ export default function StepCard({
               </li>
             ))}
           </ul>
+          {href && (
+            <p className={`text-sm font-medium mt-4 ${titleTextColors[color]}`}>
+              Learn more →
+            </p>
+          )}
         </div>
       </div>
+  );
+
+  // Wrap in Link if href is provided
+  if (href) {
+    return (
+      <Link href={href} className={`block ${cardClasses}`}>
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <div className={cardClasses}>
+      {cardContent}
     </div>
   );
 }

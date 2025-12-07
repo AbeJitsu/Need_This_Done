@@ -2,6 +2,7 @@ import PricingCard from '@/components/PricingCard';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
+import CircleBadge from '@/components/CircleBadge';
 import { AccentColor } from '@/lib/colors';
 
 // ============================================================================
@@ -97,9 +98,7 @@ export default function PricingPage() {
         <Card hoverColor="green" hoverEffect="glow" className="mb-10">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center flex-shrink-0">
-                <span className="text-green-700 dark:text-green-300 font-bold text-lg">50%</span>
-              </div>
+              <CircleBadge text="50%" color="green" size="md" shape="pill" />
               <div>
                 <p className="font-semibold text-gray-900 dark:text-gray-100">To Start</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Deposit to begin work</p>
@@ -107,9 +106,7 @@ export default function PricingPage() {
             </div>
             <div className="hidden sm:block w-8 h-0.5 bg-gray-300 dark:bg-gray-600"></div>
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
-                <span className="text-blue-700 dark:text-blue-300 font-bold text-lg">50%</span>
-              </div>
+              <CircleBadge text="50%" color="blue" size="md" shape="pill" />
               <div>
                 <p className="font-semibold text-gray-900 dark:text-gray-100">On Delivery</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">When you approve the work</p>

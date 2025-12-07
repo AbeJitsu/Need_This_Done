@@ -39,9 +39,11 @@ export default function HomePage() {
 
         {/* Services Preview */}
         <div className="mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
-            What We Offer
-          </h2>
+          <Link href="/services" className="block group">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              What We Offer <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+            </h2>
+          </Link>
           <div className="grid lg:grid-cols-3 gap-6">
             {siteConfig.services.map((service, index) => (
               <ServiceCard
@@ -117,9 +119,17 @@ export default function HomePage() {
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             Have a task in mind? Tell us about it and we&apos;ll get back with a personalized quote.
           </p>
-          <Button variant="orange" href="/contact">
-            Get a Quote
-          </Button>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Button variant="orange" href="/contact">
+              Get a Quote
+            </Button>
+            <Button variant="blue" href="/pricing">
+              View Pricing
+            </Button>
+          </div>
+          <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
+            Have questions? <Link href="/faq" className="text-blue-600 dark:text-blue-400 hover:underline">Check out our FAQ</Link>
+          </p>
         </div>
       </div>
   );

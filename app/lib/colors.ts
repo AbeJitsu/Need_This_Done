@@ -6,7 +6,7 @@
 // in multiple files.
 
 export type AccentColor = 'purple' | 'blue' | 'green';
-export type AccentVariant = 'purple' | 'blue' | 'green' | 'orange' | 'teal' | 'gray';
+export type AccentVariant = 'purple' | 'blue' | 'green' | 'orange' | 'teal' | 'gray' | 'red';
 
 // ============================================================================
 // Accent Colors - Shared styling for Button and CircleBadge
@@ -25,6 +25,7 @@ export const accentColors: Record<AccentVariant, {
   orange: { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-500 dark:border-orange-400' },
   teal: { bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-500 dark:border-teal-400' },
   gray: { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-500 dark:border-gray-400' },
+  red: { bg: 'bg-red-100 dark:bg-red-950', text: 'text-red-800 dark:text-red-200', border: 'border-red-500 dark:border-red-400' },
 };
 
 // ============================================================================
@@ -49,6 +50,7 @@ export const titleTextColors: Record<AccentVariant, string> = {
   orange: 'text-orange-800 dark:text-orange-100',
   teal: 'text-teal-800 dark:text-teal-100',
   gray: 'text-gray-700 dark:text-gray-100',
+  red: 'text-red-800 dark:text-red-100',
 };
 
 // ============================================================================
@@ -80,6 +82,7 @@ export const statusBorderColors: Record<AccentVariant, string> = {
   orange: 'border-l-4 border-l-orange-500',
   teal: 'border-l-4 border-l-teal-500',
   gray: 'border-l-4 border-l-gray-400',
+  red: 'border-l-4 border-l-red-500',
 };
 
 // ============================================================================
@@ -115,6 +118,7 @@ export const cardHoverColors: Record<AccentVariant, string> = {
   orange: 'hover:border-orange-400 dark:hover:border-orange-500',
   teal: 'hover:border-teal-400 dark:hover:border-teal-500',
   gray: 'hover:border-gray-400 dark:hover:border-gray-500',
+  red: 'hover:border-red-400 dark:hover:border-red-500',
 };
 
 // ============================================================================
@@ -127,6 +131,7 @@ export const cardHoverBgTints: Record<AccentVariant, string> = {
   orange: 'hover:bg-orange-50/30 dark:hover:bg-orange-900/10',
   teal: 'hover:bg-teal-50/30 dark:hover:bg-teal-900/10',
   gray: 'hover:bg-gray-50/30 dark:hover:bg-gray-900/10',
+  red: 'hover:bg-red-50/30 dark:hover:bg-red-900/10',
 };
 
 // ============================================================================
@@ -140,6 +145,7 @@ export const tagHoverColors: Record<AccentVariant, string> = {
   orange: 'hover:bg-orange-200 hover:border-orange-600 dark:hover:bg-orange-800 dark:hover:border-orange-300',
   teal: 'hover:bg-teal-200 hover:border-teal-600 dark:hover:bg-teal-800 dark:hover:border-teal-300',
   gray: 'hover:bg-gray-200 hover:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-300',
+  red: 'hover:bg-red-200 hover:border-red-600 dark:hover:bg-red-800 dark:hover:border-red-300',
 };
 
 // ============================================================================
@@ -154,6 +160,7 @@ export const bodyTextColors: Record<AccentVariant, string> = {
   orange: 'text-gray-600 dark:text-orange-100',
   teal: 'text-gray-600 dark:text-teal-100',
   gray: 'text-gray-600 dark:text-gray-100',
+  red: 'text-gray-600 dark:text-red-100',
 };
 
 // ============================================================================

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getServices } from '@/config/site.config';
 import ServiceCard from '@/components/ServiceCard';
 import PageHeader from '@/components/PageHeader';
@@ -69,17 +70,19 @@ export default function ServicesPage() {
                 </p>
               </div>
             </div>
-            <div className="flex gap-4">
+            <Link href="/pricing" className="flex gap-4 group">
               <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
                 <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Fair Pricing</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  Fair Pricing <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                </h3>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
                   Transparent quotes with no hidden fees.
                 </p>
               </div>
-            </div>
+            </Link>
             <div className="flex gap-4">
               <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
                 <span className="text-green-600 dark:text-green-700 font-bold">✓</span>

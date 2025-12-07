@@ -19,6 +19,7 @@ import { supabase } from '@/lib/supabase';
 // - Is the app responding? (obviously, since we got here)
 // - Is Redis accessible? (for sessions and caching)
 // - Is Supabase accessible? (for the database)
+// - Is Medusa accessible? (for e-commerce) - optional, doesn't affect overall health
 
 export async function GET() {
   try {
@@ -59,6 +60,25 @@ export async function GET() {
     }
 
     // ====================================================================
+    // Check Medusa Connectivity (Optional - E-commerce)
+    // ====================================================================
+    // Medusa powers the shop - products, carts, orders
+    // If it's down, shopping won't work but the main site still functions
+    // This check is informational - doesn't affect overall health status
+
+    let medusaStatus = 'unknown';
+    try {
+      const medusaUrl = process.env.MEDUSA_BACKEND_URL || 'http://medusa:9000';
+      const medusaResponse = await fetch(`${medusaUrl}/health`, {
+        signal: AbortSignal.timeout(5000), // 5 second timeout
+      });
+      medusaStatus = medusaResponse.ok ? 'up' : 'down';
+    } catch {
+      medusaStatus = 'down';
+      // Don't log - Medusa might legitimately not be running in some environments
+    }
+
+    // ====================================================================
     // Determine Overall Health
     // ====================================================================
     // If all critical services are up, the app is healthy
@@ -72,6 +92,7 @@ export async function GET() {
       services: {
         redis: redisStatus,
         supabase: supabaseStatus,
+        medusa: medusaStatus,
         app: 'up',
       },
     };
