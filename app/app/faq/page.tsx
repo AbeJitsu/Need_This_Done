@@ -109,8 +109,8 @@ export default function FAQPage() {
         {/* FAQ List */}
         <div className="space-y-6 mb-10">
           {faqs.map((faq, index) => {
-            // Cycle through colors: purple, blue, green, orange
-            const colors = ['purple', 'blue', 'green', 'orange'] as const;
+            // Cycle through colors: green, blue, purple, orange
+            const colors = ['green', 'blue', 'purple', 'orange'] as const;
             const color = colors[index % 4];
             const styles = faqColors[color];
             return (

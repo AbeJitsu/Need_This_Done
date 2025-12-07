@@ -69,7 +69,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
               <div className="flex justify-center mb-3">
-                <CircleBadge number={1} color="purple" size="md" />
+                <CircleBadge number={1} color="green" size="md" />
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Tell Us What You Need</h3>
               <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -87,7 +87,7 @@ export default function HomePage() {
             </div>
             <div>
               <div className="flex justify-center mb-3">
-                <CircleBadge number={3} color="green" size="md" />
+                <CircleBadge number={3} color="purple" size="md" />
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Task Complete</h3>
               <p className="text-gray-600 dark:text-gray-300 text-sm">

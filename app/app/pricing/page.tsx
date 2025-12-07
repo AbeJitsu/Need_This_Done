@@ -36,7 +36,7 @@ export default function PricingPage() {
         'Document formatting',
         'Get it done in days, not weeks',
       ],
-      color: 'purple',
+      color: 'green',
       cta: "Let's Do This",
     },
     {
@@ -65,7 +65,7 @@ export default function PricingPage() {
         'Larger multi-phase projects',
         'A dedicated point of contact throughout',
       ],
-      color: 'green',
+      color: 'purple',
       cta: 'Tell Us More',
     },
   ];

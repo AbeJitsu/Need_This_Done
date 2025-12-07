@@ -31,7 +31,7 @@ export default function HowItWorksPage() {
         'Attach any relevant files or documents',
         'Let us know your timeline if you have one',
       ],
-      color: 'purple',
+      color: 'green',
     },
     {
       number: 2,
@@ -53,7 +53,7 @@ export default function HowItWorksPage() {
         'Regular updates on progress',
         'Open communication for questions',
       ],
-      color: 'green',
+      color: 'purple',
     },
     {
       number: 4,

@@ -28,14 +28,16 @@ async function fetchWithRetry(
   retries = 0
 ): Promise<Response> {
   try {
-    const response = await fetch(url, {
+    const finalOptions = {
       ...options,
-      credentials: "include",
+      // Removed credentials: "include" to test if it's causing response filtering
       headers: {
         "Content-Type": "application/json",
         ...options.headers,
       },
-    });
+    };
+
+    const response = await fetch(url, finalOptions as RequestInit);
 
     // Success - return response
     if (response.ok) return response;

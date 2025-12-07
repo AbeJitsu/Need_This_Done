@@ -140,9 +140,9 @@ export default function ShopPage() {
 
             // Map Medusa product handle to our pricing tiers
             const colorMap: Record<string, 'purple' | 'blue' | 'green'> = {
-              'quick-task': 'purple',
+              'quick-task': 'green',
               'standard-task': 'blue',
-              'premium-service': 'green',
+              'premium-service': 'purple',
             };
             const hoverColor = (colorMap[product.handle] || 'purple') as 'purple' | 'blue' | 'green';
 

@@ -52,7 +52,7 @@ const siteConfig: SiteConfig = {
       tagline: 'Free up your time for what matters',
       description: 'Let us handle the day-to-day tasks that eat up your time. Email, scheduling, research, bookings, and social media posting.',
       details: 'Email management, calendar coordination, research & bookings.',
-      color: 'purple',
+      color: 'green',
     },
     {
       title: 'Data & Documents',
@@ -66,7 +66,7 @@ const siteConfig: SiteConfig = {
       tagline: 'Websites that work while you focus on business',
       description: 'From new builds to updates and maintenance. We handle websites of any size on any platform—so you can focus on your business.',
       details: 'Website builds & redesigns, content updates, e-commerce setup.',
-      color: 'green',
+      color: 'purple',
     },
   ],
 
