@@ -509,8 +509,8 @@ test.describe('Admin Shop Dashboard Integration', () => {
     request,
   }) => {
     // GET orders without auth should return 401
-    // NOTE: Using https://localhost (through NGINX) to match production architecture
-    const response = await request.get('https://localhost/api/admin/orders', {
+    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    const response = await request.get('/api/admin/orders', {
       rejectOnStatusCode: false,
     });
     expect(response.status()).toBe(401);
@@ -520,8 +520,8 @@ test.describe('Admin Shop Dashboard Integration', () => {
 test.describe('Cache Integration', () => {
   test('product list is cached efficiently', async ({ page, request }) => {
     // First request to products
-    // NOTE: Using https://localhost (through NGINX) to match production architecture
-    const response1 = await request.get('https://localhost/api/shop/products', {
+    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    const response1 = await request.get('/api/shop/products', {
       rejectOnStatusCode: false,
     });
     expect(response1.ok()).toBeTruthy();
@@ -530,7 +530,7 @@ test.describe('Cache Integration', () => {
 
     // Second request should ideally be cached
     // (exact caching behavior depends on cache configuration)
-    const response2 = await request.get('https://localhost/api/shop/products', {
+    const response2 = await request.get('/api/shop/products', {
       rejectOnStatusCode: false,
     });
     expect(response2.ok()).toBeTruthy();
@@ -538,8 +538,8 @@ test.describe('Cache Integration', () => {
 
   test('product detail is cached', async ({ request }) => {
     // Get a product first
-    // NOTE: Using https://localhost (through NGINX) to match production architecture
-    const listResponse = await request.get('https://localhost/api/shop/products', {
+    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    const listResponse = await request.get('/api/shop/products', {
       rejectOnStatusCode: false,
     });
     const listData = await listResponse.json();
@@ -548,7 +548,7 @@ test.describe('Cache Integration', () => {
       const productId = listData.products[0].id;
 
       // Get single product
-      const response = await request.get(`https://localhost/api/shop/products/${productId}`, {
+      const response = await request.get(`/api/shop/products/${productId}`, {
         rejectOnStatusCode: false,
       });
       expect(response.ok()).toBeTruthy();
@@ -667,8 +667,8 @@ test.describe('Variant Regression Tests', () => {
   test('all products in API have variants', async ({ request }) => {
     // Critical regression test: Ensure products API always returns variants
     // This prevents the "No variants available" error from reappearing
-    // NOTE: Using https://localhost (through NGINX) to match production architecture
-    const response = await request.get('https://localhost/api/shop/products', {
+    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    const response = await request.get('/api/shop/products', {
       rejectOnStatusCode: false, // Accept self-signed cert in dev
     });
     expect(response.ok()).toBeTruthy();
@@ -696,8 +696,8 @@ test.describe('Variant Regression Tests', () => {
 
   test('each variant has required pricing data', async ({ request }) => {
     // Regression test: Variants must have pricing for add-to-cart to work
-    // NOTE: Using https://localhost (through NGINX) to match production architecture
-    const response = await request.get('https://localhost/api/shop/products', {
+    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    const response = await request.get('/api/shop/products', {
       rejectOnStatusCode: false,
     });
     const data = await response.json();
@@ -777,8 +777,8 @@ test.describe('Variant Regression Tests', () => {
     request,
   }) => {
     // Regression test: Specifically verify the 3 sample products all have variants
-    // NOTE: Using https://localhost (through NGINX) to match production architecture
-    const response = await request.get('https://localhost/api/shop/products', {
+    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    const response = await request.get('/api/shop/products', {
       rejectOnStatusCode: false,
     });
     const data = await response.json();
