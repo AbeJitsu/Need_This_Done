@@ -11,13 +11,16 @@ import { Page, expect } from '@playwright/test';
 // ============================================================================
 
 /**
- * Navigate to a page and wait for network to be idle
+ * Navigate to a page and wait for DOM to be ready
+ * Note: We use 'domcontentloaded' instead of 'networkidle' because
+ * client-side rendered pages with continuous API calls may never reach
+ * a truly idle network state, causing timeouts.
  * @param page Playwright page object
  * @param path URL path to navigate to
  */
 export async function navigateToPage(page: Page, path: string) {
   await page.goto(path);
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 /**
@@ -110,7 +113,7 @@ export async function fillFormField(
  */
 export async function submitForm(page: Page, buttonText: string) {
   await page.getByRole('button', { name: buttonText }).click();
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 // ============================================================================

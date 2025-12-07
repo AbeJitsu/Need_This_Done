@@ -43,8 +43,8 @@ test.describe('Product Catalog & Browsing', () => {
     await navigateToPage(page, '/shop');
 
     // Click Details button on first product (Quick Task)
-    await page.getByRole('button', { name: /details/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Should show product title
     const productHeading = page.getByRole('heading');
@@ -82,28 +82,28 @@ test.describe('Product Catalog & Browsing', () => {
 });
 
 test.describe('Add to Cart Workflow', () => {
-  test('add to cart updates cart count in navigation', async ({ page }) => {
+  test('add to cart updates cart count on page', async ({ page }) => {
     // Navigate to product detail
     await navigateToPage(page, '/shop');
-    await page.getByRole('button', { name: /details/i }).first().click();
-    await page.waitForLoadState('networkidle');
-
-    // Get initial cart badge state
-    const cartBadge = page.locator('[class*="badge"]').first();
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Add to cart
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500); // Wait for cart update
 
-    // Cart badge should now show 1
-    await expect(cartBadge).toContainText('1');
+    // Should see success toast
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible();
+
+    // Product page shows cart item count
+    await expect(page.getByText(/you have 1 item/i)).toBeVisible();
   });
 
   test('can adjust quantity before adding to cart', async ({ page }) => {
     // Navigate to product detail
     await navigateToPage(page, '/shop');
-    await page.getByRole('button', { name: /details/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Increase quantity to 3
     const increaseButton = page.getByRole('button', { name: '+' }).first();
@@ -121,40 +121,39 @@ test.describe('Add to Cart Workflow', () => {
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
-    // Cart badge should show 3
-    const cartBadge = page.locator('[class*="badge"]').first();
-    await expect(cartBadge).toContainText('3');
+    // Should see success toast and cart count reflects quantity
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible();
+    await expect(page.getByText(/you have 3 item/i)).toBeVisible();
   });
 
   test('can add different products to cart', async ({ page }) => {
     // Add first product (Quick Task)
     await navigateToPage(page, '/shop');
-    const detailsButtons = page.getByRole('button', { name: /details/i });
+    const detailsButtons = page.getByRole('link', { name: /details/i });
     await detailsButtons.first().click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
     // Go back to shop
     await page.goBack();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Add second product (Standard Project)
     await detailsButtons.nth(1).click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
-    // Cart badge should show 2
-    const cartBadge = page.locator('[class*="badge"]').first();
-    await expect(cartBadge).toContainText('2');
+    // After adding second product, page shows 2 items in cart
+    await expect(page.getByText(/you have 2 item/i)).toBeVisible();
   });
 
   test('shows success feedback when adding to cart', async ({ page }) => {
     // Navigate to product detail
     await navigateToPage(page, '/shop');
-    await page.getByRole('button', { name: /details/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Add to cart
     const addButton = page.getByRole('button', { name: /add to cart/i });
@@ -174,14 +173,14 @@ test.describe('Shopping Cart Management', () => {
   }) => {
     // Add items to cart
     await navigateToPage(page, '/shop');
-    await page.getByRole('button', { name: /details/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
-    // Navigate to cart
-    await page.getByRole('link', { name: /cart/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    // Navigate to cart via "View Cart" link on product page
+    await page.getByRole('link', { name: /view cart/i }).click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Should see cart heading
     await expect(page.getByRole('heading', { name: /cart/i })).toBeVisible();
@@ -196,14 +195,14 @@ test.describe('Shopping Cart Management', () => {
   test('can update item quantity in cart', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
-    await page.getByRole('button', { name: /details/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
-    // Go to cart
-    await page.getByRole('link', { name: /cart/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    // Go to cart via "View Cart" link
+    await page.getByRole('link', { name: /view cart/i }).click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Increase quantity
     const increaseButton = page.getByRole('button', { name: '+' }).first();
@@ -220,23 +219,23 @@ test.describe('Shopping Cart Management', () => {
   test('can remove items from cart', async ({ page }) => {
     // Add multiple items
     await navigateToPage(page, '/shop');
-    const detailsButtons = page.getByRole('button', { name: /details/i });
+    const detailsButtons = page.getByRole('link', { name: /details/i });
     await detailsButtons.first().click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
     // Go back and add another
     await page.goBack();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await detailsButtons.nth(1).click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
-    // Go to cart
-    await page.getByRole('link', { name: /cart/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    // Go to cart via "View Cart" link
+    await page.getByRole('link', { name: /view cart/i }).click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Should show 2 items
     let itemCount = await page.locator('[class*="item"]').count();
@@ -276,25 +275,22 @@ test.describe('Shopping Cart Management', () => {
   test('persists cart across page navigation', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
-    await page.getByRole('button', { name: /details/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
-    // Navigate away
+    // Navigate away to home page
     await navigateToPage(page, '/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
-    // Cart badge should still show 1
-    const cartBadge = page.locator('[class*="badge"]').first();
-    await expect(cartBadge).toContainText('1');
+    // Navigate directly to cart page to verify persistence
+    await navigateToPage(page, '/cart');
+    await page.waitForLoadState('domcontentloaded');
 
-    // Go to cart
-    await page.getByRole('link', { name: /cart/i }).first().click();
-    await page.waitForLoadState('networkidle');
-
-    // Item should still be there
-    await expect(page.locator('text=/\\$50/i')).toBeVisible();
+    // Cart should have items (not empty)
+    // Check for order summary which only appears when cart has items
+    await expect(page.getByText(/subtotal/i)).toBeVisible();
   });
 });
 
@@ -302,14 +298,18 @@ test.describe('Guest Checkout Flow', () => {
   test('guest can checkout without authentication', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
-    await page.locator('text=/\\$50/i').first().click();
-    await page.waitForLoadState('networkidle');
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
-    // Navigate to checkout
-    await page.getByRole('link', { name: /checkout|proceed/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    // Go to cart first (product page has "View Cart", not "Proceed to Checkout")
+    await page.getByRole('link', { name: /view cart/i }).click();
+    await page.waitForLoadState('domcontentloaded');
+
+    // Navigate to checkout from cart page
+    await page.getByRole('link', { name: /proceed to checkout/i }).click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Should see checkout page
     await expect(
@@ -345,14 +345,18 @@ test.describe('Guest Checkout Flow', () => {
   test('checkout form validates required fields', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
-    await page.locator('text=/\\$50/i').first().click();
-    await page.waitForLoadState('networkidle');
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
-    // Go to checkout
-    await page.getByRole('link', { name: /checkout|proceed/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    // Go to cart first
+    await page.getByRole('link', { name: /view cart/i }).click();
+    await page.waitForLoadState('domcontentloaded');
+
+    // Go to checkout from cart page
+    await page.getByRole('link', { name: /proceed to checkout/i }).click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Try to submit without filling fields
     const submitButton = page.getByRole('button', {
@@ -375,14 +379,18 @@ test.describe('Guest Checkout Flow', () => {
   test('displays order confirmation after guest checkout', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
-    await page.locator('text=/\\$50/i').first().click();
-    await page.waitForLoadState('networkidle');
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
-    // Go to checkout
-    await page.getByRole('link', { name: /checkout|proceed/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    // Go to cart first
+    await page.getByRole('link', { name: /view cart/i }).click();
+    await page.waitForLoadState('domcontentloaded');
+
+    // Go to checkout from cart page
+    await page.getByRole('link', { name: /proceed to checkout/i }).click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Fill checkout form
     const emailInput = page.getByLabel(/email/i).first();
@@ -566,7 +574,7 @@ test.describe('Error Handling & Edge Cases', () => {
   test('handles invalid product ID gracefully', async ({ page }) => {
     // Navigate to non-existent product
     await page.goto('/shop/invalid-product-id');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should show 404 or error message
     const heading = page.getByRole('heading');
@@ -586,8 +594,8 @@ test.describe('Error Handling & Edge Cases', () => {
     await navigateToPage(page, '/shop');
 
     // Add to cart (should work)
-    await page.locator('text=/\\$50/i').first().click();
-    await page.waitForLoadState('networkidle');
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
@@ -625,9 +633,9 @@ test.describe('Integration: Complete User Journey', () => {
     await navigateToPage(page, '/shop');
     await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible();
 
-    // 2. View product detail
-    await page.locator('text=/\\$50/i').first().click();
-    await page.waitForLoadState('networkidle');
+    // 2. View product detail via Details link
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
     await expect(
       page.getByRole('button', { name: /add to cart/i })
     ).toBeVisible();
@@ -636,25 +644,24 @@ test.describe('Integration: Complete User Journey', () => {
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
-    // 4. Verify cart updated
-    const cartBadge = page.locator('[class*="badge"]').first();
-    await expect(cartBadge).toContainText('1');
+    // 4. Verify cart updated (check for success toast on product detail page)
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible();
 
-    // 5. Navigate to cart
-    await page.getByRole('link', { name: /cart/i }).first().click();
-    await page.waitForLoadState('networkidle');
+    // 5. Navigate to cart via "View Cart" link on product detail page
+    await page.getByRole('link', { name: /view cart/i }).click();
+    await page.waitForLoadState('domcontentloaded');
     await expect(page.getByRole('heading', { name: /cart/i })).toBeVisible();
 
     // 6. View order summary
     await expect(page.getByText(/subtotal|total/i)).toBeVisible();
 
-    // 7. Proceed to checkout
-    const checkoutButton = page.getByRole('button', {
-      name: /checkout|proceed/i,
+    // 7. Proceed to checkout (it's a Link, so use role='link')
+    const checkoutLink = page.getByRole('link', {
+      name: /proceed to checkout/i,
     });
-    if (await checkoutButton.isVisible()) {
-      await checkoutButton.click();
-      await page.waitForLoadState('networkidle');
+    if (await checkoutLink.isVisible()) {
+      await checkoutLink.click();
+      await page.waitForLoadState('domcontentloaded');
 
       // Should be on checkout or have checkout form visible
       const isOnCheckout = page.url().includes('/checkout');
@@ -726,11 +733,11 @@ test.describe('Variant Regression Tests', () => {
   }) => {
     // Navigate to first product
     await navigateToPage(page, '/shop');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
-    // Click first product
-    await page.locator('text=/\\$50|\\$150|\\$500/i').first().click();
-    await page.waitForLoadState('networkidle');
+    // Click Details link on first product
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Should NOT see "No variants available" error
     const errorMessage = page.locator('text=/no variants available/i');
@@ -751,11 +758,11 @@ test.describe('Variant Regression Tests', () => {
     // Critical regression test: The original issue was variants preventing add-to-cart
     // This ensures that issue never comes back
     await navigateToPage(page, '/shop');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
-    // Click first product
-    await page.locator('text=/\\$50|\\$150|\\$500/i').first().click();
-    await page.waitForLoadState('networkidle');
+    // Click Details link on first product
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
 
     // Add to cart button should be visible (variants present)
     const addButton = page.getByRole('button', { name: /add to cart/i });

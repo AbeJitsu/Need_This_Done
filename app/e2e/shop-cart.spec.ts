@@ -68,7 +68,7 @@ test.describe('Shopping Cart - Add to Cart', () => {
     const cartLink = page.getByRole('link', { name: /cart/i }).first();
     if (await cartLink.isVisible()) {
       await cartLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify cart page
       const cartHeading = page.getByRole('heading', { name: /cart/i });
@@ -100,7 +100,7 @@ test.describe('Shopping Cart - Add to Cart', () => {
     const cartLink = page.getByRole('link', { name: /cart/i }).first();
     if (await cartLink.isVisible()) {
       await cartLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should display item price
       const priceInCart = page.locator('text=/\\$50/i, text=/50\\.00/i');
@@ -127,7 +127,7 @@ test.describe('Shopping Cart - Cart Operations', () => {
     const cartLink = page.getByRole('link', { name: /cart/i }).first();
     if (await cartLink.isVisible()) {
       await cartLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for quantity input or increment button
       const quantityInput = page.locator('input[type="number"], [data-testid*="quantity"]');
@@ -160,7 +160,7 @@ test.describe('Shopping Cart - Cart Operations', () => {
     const cartLink = page.getByRole('link', { name: /cart/i }).first();
     if (await cartLink.isVisible()) {
       await cartLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for remove button
       const removeButton = page.getByRole('button', { name: /remove|delete|×|x/i }).first();
@@ -209,7 +209,7 @@ test.describe('Shopping Cart - Error Handling', () => {
 
     // Refresh page
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Cart should still have the item
     const cartBadgeAfter = page.locator('[data-testid="cart-count"]');
@@ -245,7 +245,7 @@ test.describe('Shopping Cart - Integration', () => {
     const cartLink = page.getByRole('link', { name: /cart/i }).first();
     if (await cartLink.isVisible()) {
       await cartLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Step 5: Verify cart displays
       const pageContent = page.locator('body');
