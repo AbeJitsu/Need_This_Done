@@ -27,6 +27,7 @@ export default function ProductDetailPage({
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState('');
 
   // ========================================================================
   // Fetch product details on mount
@@ -74,7 +75,10 @@ export default function ProductDetailPage({
 
       // Reset and show success
       setQuantity(1);
-      alert(`Added ${product?.title} to cart!`);
+      setToastMessage(`Added ${product?.title} to cart!`);
+
+      // Clear toast after 3 seconds
+      setTimeout(() => setToastMessage(''), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add item');
     } finally {
@@ -157,6 +161,13 @@ export default function ProductDetailPage({
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
               <p className="text-sm text-red-900 dark:text-red-200">{error}</p>
+            </div>
+          )}
+
+          {/* Toast notification */}
+          {toastMessage && (
+            <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg animate-fade-in">
+              <p className="text-sm text-green-900 dark:text-green-200">{toastMessage}</p>
             </div>
           )}
 

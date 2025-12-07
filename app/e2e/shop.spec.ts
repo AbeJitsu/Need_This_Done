@@ -31,9 +31,9 @@ test.describe('Product Catalog & Browsing', () => {
     expect(cardCount).toBeGreaterThanOrEqual(3);
 
     // Verify specific pricing tiers exist
-    await expect(page.locator('text=/\\$50/i')).toBeVisible(); // Quick Task
-    await expect(page.locator('text=/\\$150/i')).toBeVisible(); // Standard
-    await expect(page.locator('text=/\\$500/i')).toBeVisible(); // Premium
+    await expect(page.getByText('$50.00')).toBeVisible(); // Quick Task
+    await expect(page.getByText('$150.00')).toBeVisible(); // Standard
+    await expect(page.getByText('$500.00')).toBeVisible(); // Premium
   });
 
   test('product detail page shows full product information', async ({
@@ -42,8 +42,8 @@ test.describe('Product Catalog & Browsing', () => {
     // Navigate to shop
     await navigateToPage(page, '/shop');
 
-    // Click first product (Quick Task - $50)
-    await page.locator('text=/\\$50/i').first().click();
+    // Click Details button on first product (Quick Task)
+    await page.getByRole('button', { name: /details/i }).first().click();
     await page.waitForLoadState('networkidle');
 
     // Should show product title
@@ -51,8 +51,8 @@ test.describe('Product Catalog & Browsing', () => {
     const headingCount = await productHeading.count();
     expect(headingCount).toBeGreaterThan(0);
 
-    // Should display price
-    await expect(page.locator('text=/\\$50/i')).toBeVisible();
+    // Should display price (Quick Task is $50.00)
+    await expect(page.getByText('$50.00')).toBeVisible();
 
     // Should have add to cart button
     await expect(
@@ -85,7 +85,7 @@ test.describe('Add to Cart Workflow', () => {
   test('add to cart updates cart count in navigation', async ({ page }) => {
     // Navigate to product detail
     await navigateToPage(page, '/shop');
-    await page.locator('text=/\\$50/i').first().click();
+    await page.getByRole('button', { name: /details/i }).first().click();
     await page.waitForLoadState('networkidle');
 
     // Get initial cart badge state
@@ -102,7 +102,7 @@ test.describe('Add to Cart Workflow', () => {
   test('can adjust quantity before adding to cart', async ({ page }) => {
     // Navigate to product detail
     await navigateToPage(page, '/shop');
-    await page.locator('text=/\\$50/i').first().click();
+    await page.getByRole('button', { name: /details/i }).first().click();
     await page.waitForLoadState('networkidle');
 
     // Increase quantity to 3
@@ -127,9 +127,10 @@ test.describe('Add to Cart Workflow', () => {
   });
 
   test('can add different products to cart', async ({ page }) => {
-    // Add first product ($50)
+    // Add first product (Quick Task)
     await navigateToPage(page, '/shop');
-    await page.locator('text=/\\$50/i').first().click();
+    const detailsButtons = page.getByRole('button', { name: /details/i });
+    await detailsButtons.first().click();
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
@@ -138,8 +139,8 @@ test.describe('Add to Cart Workflow', () => {
     await page.goBack();
     await page.waitForLoadState('networkidle');
 
-    // Add second product ($150)
-    await page.locator('text=/\\$150/i').first().click();
+    // Add second product (Standard Project)
+    await detailsButtons.nth(1).click();
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
@@ -152,7 +153,7 @@ test.describe('Add to Cart Workflow', () => {
   test('shows success feedback when adding to cart', async ({ page }) => {
     // Navigate to product detail
     await navigateToPage(page, '/shop');
-    await page.locator('text=/\\$50/i').first().click();
+    await page.getByRole('button', { name: /details/i }).first().click();
     await page.waitForLoadState('networkidle');
 
     // Add to cart
@@ -173,7 +174,7 @@ test.describe('Shopping Cart Management', () => {
   }) => {
     // Add items to cart
     await navigateToPage(page, '/shop');
-    await page.locator('text=/\\$50/i').first().click();
+    await page.getByRole('button', { name: /details/i }).first().click();
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
@@ -185,8 +186,8 @@ test.describe('Shopping Cart Management', () => {
     // Should see cart heading
     await expect(page.getByRole('heading', { name: /cart/i })).toBeVisible();
 
-    // Should show items
-    await expect(page.locator('text=/\\$50/i')).toBeVisible();
+    // Should show items (Quick Task is $50.00)
+    await expect(page.getByText('$50.00')).toBeVisible();
 
     // Should show order summary
     await expect(page.getByText(/subtotal/i)).toBeVisible();
@@ -195,7 +196,7 @@ test.describe('Shopping Cart Management', () => {
   test('can update item quantity in cart', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
-    await page.locator('text=/\\$50/i').first().click();
+    await page.getByRole('button', { name: /details/i }).first().click();
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
@@ -219,7 +220,8 @@ test.describe('Shopping Cart Management', () => {
   test('can remove items from cart', async ({ page }) => {
     // Add multiple items
     await navigateToPage(page, '/shop');
-    await page.locator('text=/\\$50/i').first().click();
+    const detailsButtons = page.getByRole('button', { name: /details/i });
+    await detailsButtons.first().click();
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
@@ -227,7 +229,7 @@ test.describe('Shopping Cart Management', () => {
     // Go back and add another
     await page.goBack();
     await page.waitForLoadState('networkidle');
-    await page.locator('text=/\\$150/i').first().click();
+    await detailsButtons.nth(1).click();
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
@@ -274,7 +276,7 @@ test.describe('Shopping Cart Management', () => {
   test('persists cart across page navigation', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
-    await page.locator('text=/\\$50/i').first().click();
+    await page.getByRole('button', { name: /details/i }).first().click();
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);

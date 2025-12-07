@@ -11,26 +11,30 @@ import {
 // ServiceCard Component
 // ============================================================================
 // Reusable card for displaying service offerings.
-// - "compact" variant: title + description + bullet details (for home page)
-// - "full" variant: title + description + details paragraph (for services page)
+// - "compact" variant: title + tagline (teaser for home page, links to services)
+// - "full" variant: title + description + bullet details (complete info)
 
 interface ServiceCardProps {
   title: string;
-  tagline?: string;  // Kept for backwards compatibility
+  tagline: string;
   description: string;
   details?: string;
   color: AccentColor;
-  variant?: 'compact' | 'full';  // Kept for backwards compatibility
+  variant?: 'compact' | 'full';
   href?: string;
 }
 
 export default function ServiceCard({
   title,
+  tagline,
   description,
   details,
   color,
+  variant = 'full',
   href,
 }: ServiceCardProps) {
+  const isCompact = variant === 'compact';
+
   // Parse details string into bullet points (split by comma)
   const detailsList = details
     ? details.split(',').map(s => s.trim()).filter(s => s.length > 0)
@@ -42,25 +46,40 @@ export default function ServiceCard({
         {title}
       </h3>
 
-      <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
-        {description}
-      </p>
+      {isCompact ? (
+        // Compact: Just tagline as teaser
+        <>
+          <p className="text-gray-600 dark:text-gray-300 text-sm">
+            {tagline}
+          </p>
+          <p className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]}`}>
+            Learn more →
+          </p>
+        </>
+      ) : (
+        // Full: Description + bullet points
+        <>
+          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+            {description}
+          </p>
 
-      {detailsList.length > 0 && (
-        <ul className="space-y-2 mt-auto">
-          {detailsList.map((detail, index) => (
-            <li key={index} className="flex items-start gap-2">
-              <div className={`w-5 h-5 rounded-full ${checkmarkColors[color].bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                <svg className={`w-3 h-3 ${checkmarkColors[color].icon}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <span className="text-gray-500 dark:text-gray-400 text-xs">
-                {detail}
-              </span>
-            </li>
-          ))}
-        </ul>
+          {detailsList.length > 0 && (
+            <ul className="space-y-2 mt-auto">
+              {detailsList.map((detail, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <div className={`w-5 h-5 rounded-full ${checkmarkColors[color].bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                    <svg className={`w-3 h-3 ${checkmarkColors[color].icon}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-500 dark:text-gray-400 text-xs">
+                    {detail}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
       )}
     </div>
   );
