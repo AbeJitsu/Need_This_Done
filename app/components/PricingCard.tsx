@@ -42,6 +42,7 @@ export default function PricingCard({
       className={`
         relative flex flex-col h-full
         bg-white dark:bg-gray-800 rounded-xl p-6
+        ${popular ? 'pt-8' : ''}
         ${popular ? 'border-2 border-blue-500 dark:border-blue-400' : 'border border-gray-200 dark:border-gray-700'}
         border-t-4 ${topBorderColors[color]}
         transition-all ${cardHoverColors[color]}
@@ -52,7 +53,7 @@ export default function PricingCard({
     >
       {/* "Most Popular" badge */}
       {popular && (
-        <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg shadow-blue-500/25">
+        <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg shadow-blue-500/25 whitespace-nowrap">
           ⭐ Most Popular
         </span>
       )}
