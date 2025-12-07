@@ -22,41 +22,30 @@ dotenv.config({
 })
 
 // ============================================================================
-// Environment Detection - Docker vs Host
+// STRICT: Docker-Only with nginx-Only HTTP Enforcement
 // ============================================================================
-// Check if we're running inside Docker by looking for Docker-specific env vars
-// These are set by docker-compose.test.yml
-const isRunningInDocker =
-  process.env.APP_URL !== undefined || process.env.NODE_ENV === 'test'
+// Integration tests MUST run in Docker with ALL HTTP through nginx
+// This enforces production-like testing with no shortcuts or bypasses
 
-// Set up real service connections based on environment
-if (isRunningInDocker) {
-  // ========================================================================
-  // DOCKER ENVIRONMENT (inside container)
-  // ========================================================================
-  // Services communicate using Docker service names on the app_network
-  // - redis service is accessible at redis://redis:6379
-  // - app service is accessible at http://app:3000
-
-  process.env.REDIS_URL = process.env.REDIS_URL || 'redis://redis:6379'
-  process.env.APP_URL = process.env.APP_URL || 'http://app:3000'
-
-  console.log(
-    '📦 Running integration tests in Docker network (production-like environment)'
+// Validate that required environment variables are set by docker-compose.test.yml
+if (!process.env.APP_URL || !process.env.REDIS_URL) {
+  throw new Error(
+    '❌ Integration tests must run in Docker.\n' +
+    'Use: npm run test:docker\n' +
+    'Required: APP_URL=https://nginx and REDIS_URL=redis://redis:6379'
   )
-} else {
-  // ========================================================================
-  // HOST ENVIRONMENT (from your laptop)
-  // ========================================================================
-  // Services are accessed via exposed ports on localhost
-  // - redis is exposed at localhost:6379
-  // - app is exposed at localhost:3000
-
-  process.env.REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379'
-  process.env.APP_URL = process.env.APP_URL || 'http://localhost:3000'
-
-  console.log('💻 Running integration tests from host machine (localhost)')
 }
+
+// Validate that APP_URL uses nginx (not direct app access)
+if (!process.env.APP_URL.includes('nginx')) {
+  throw new Error(
+    `❌ APP_URL must use nginx reverse proxy (got: ${process.env.APP_URL})\n` +
+    'Docker compose should set: APP_URL=https://nginx\n' +
+    'Direct app access (http://app:3000) bypasses nginx and violates architecture'
+  )
+}
+
+console.log('✅ Integration tests running through nginx:', process.env.APP_URL)
 
 // ============================================================================
 // Supabase Configuration (same for both Docker and Host)

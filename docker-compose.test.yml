@@ -49,7 +49,8 @@ services:
       - REDIS_URL=redis://redis:6379
 
       # Next.js app URL using Docker service name
-      - APP_URL=http://app:3000
+      - APP_URL=https://nginx
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
 
       # Supabase configuration (same as anywhere else)
       # You can override these with .env file or docker-compose command line args

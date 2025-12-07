@@ -18,9 +18,11 @@ import { describe, it, expect } from 'vitest'
 
 describe('Health Check Integration', () => {
   // Use APP_URL environment variable set by vitest.integration.setup.ts
-  // - In Docker: http://app:3000
-  // - From Host: http://localhost:3000
-  const HEALTH_ENDPOINT = `${process.env.APP_URL || 'http://localhost:3000'}/api/health`
+  // Must run in Docker with APP_URL=https://nginx (nginx reverse proxy)
+  if (!process.env.APP_URL) {
+    throw new Error('APP_URL must be set. Run tests via: npm run test:docker')
+  }
+  const HEALTH_ENDPOINT = `${process.env.APP_URL}/api/health`
 
   it('should be able to reach the health endpoint', async () => {
     try {
