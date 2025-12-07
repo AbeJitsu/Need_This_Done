@@ -9,10 +9,10 @@ FROM node:18-alpine
 WORKDIR /app
 
 # ============================================================================
-# Install dependencies
+# Install dependencies (including dev for TypeScript compilation)
 # ============================================================================
 COPY package.json package-lock.json ./
-RUN npm install --production
+RUN npm install
 
 # ============================================================================
 # Copy source code
@@ -22,7 +22,12 @@ COPY . .
 # ============================================================================
 # Build TypeScript
 # ============================================================================
-RUN npm run build 2>/dev/null || true
+RUN npm run build
+
+# ============================================================================
+# Remove dev dependencies to reduce image size
+# ============================================================================
+RUN npm prune --production
 
 # ============================================================================
 # Expose port

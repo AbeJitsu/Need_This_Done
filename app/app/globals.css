@@ -378,17 +378,17 @@ Respects user motion preferences via motion-safe: prefix in Tailwind.
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeIn 0.8s ease-out forwards;
   opacity: 0;
 }
 
 .animate-fade-in-delay-100 {
-  animation: fadeIn 0.4s ease-out 100ms forwards;
+  animation: fadeIn 0.8s ease-out 150ms forwards;
   opacity: 0;
 }
 
 .animate-fade-in-delay-200 {
-  animation: fadeIn 0.4s ease-out 200ms forwards;
+  animation: fadeIn 0.8s ease-out 300ms forwards;
   opacity: 0;
 }
 

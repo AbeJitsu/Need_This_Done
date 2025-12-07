@@ -132,6 +132,47 @@ const sampleProducts = [
   },
 ];
 
+// ============================================================================
+// Cart Storage System
+// ============================================================================
+// In-memory storage for shopping carts (like a checkout counter)
+// Each cart holds items with variant info, quantities, and prices
+
+interface CartItem {
+  id: string;
+  variant_id: string;
+  quantity: number;
+  unit_price: number;
+}
+
+interface Cart {
+  id: string;
+  items: CartItem[];
+  created_at: string;
+  updated_at: string;
+}
+
+const carts = new Map<string, Cart>();
+
+// Helper: Generate unique ID
+function generateId(prefix: string): string {
+  return `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+}
+
+// Helper: Calculate cart totals
+function calculateCartTotals(cart: Cart) {
+  const subtotal = cart.items.reduce((sum, item) => sum + (item.unit_price * item.quantity), 0);
+  return {
+    subtotal,
+    total: subtotal,
+    tax_total: 0,
+  };
+}
+
+// ============================================================================
+// Products Endpoint
+// ============================================================================
+
 app.get("/store/products", (req, res) => {
   res.status(200).json({
     products: sampleProducts,
@@ -139,10 +180,151 @@ app.get("/store/products", (req, res) => {
   });
 });
 
+// ============================================================================
+// Cart Endpoints
+// ============================================================================
+
+// POST - Create New Cart
 app.post("/store/carts", (req, res) => {
+  const cartId = generateId("cart");
+  const cart: Cart = {
+    id: cartId,
+    items: [],
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+
+  carts.set(cartId, cart);
+
   res.status(201).json({
-    cart: { id: "temp-cart-id" },
-    message: "Cart creation will be implemented with full Medusa setup",
+    cart: {
+      id: cart.id,
+      items: cart.items,
+      ...calculateCartTotals(cart),
+    },
+  });
+});
+
+// GET - Retrieve Cart by ID
+app.get("/store/carts/:id", (req, res) => {
+  const { id } = req.params;
+  const cart = carts.get(id);
+
+  if (!cart) {
+    return res.status(404).json({ error: "Cart not found" });
+  }
+
+  res.status(200).json({
+    cart: {
+      id: cart.id,
+      items: cart.items,
+      ...calculateCartTotals(cart),
+    },
+  });
+});
+
+// POST - Add Item to Cart
+app.post("/store/carts/:id/line-items", (req, res) => {
+  const { id } = req.params;
+  const { variant_id, quantity } = req.body;
+
+  const cart = carts.get(id);
+  if (!cart) {
+    return res.status(404).json({ error: "Cart not found" });
+  }
+
+  // Find variant to get price
+  let variant = null;
+  for (const prod of sampleProducts) {
+    const v = prod.variants?.find((v: any) => v.id === variant_id);
+    if (v) {
+      variant = v;
+      break;
+    }
+  }
+
+  if (!variant) {
+    return res.status(404).json({ error: "Variant not found" });
+  }
+
+  // Check if item already in cart
+  const existingItem = cart.items.find((item) => item.variant_id === variant_id);
+
+  if (existingItem) {
+    // Update quantity if already exists
+    existingItem.quantity += quantity;
+  } else {
+    // Add new item
+    const lineItem: CartItem = {
+      id: generateId("item"),
+      variant_id,
+      quantity,
+      unit_price: (variant as any).prices[0].amount,
+    };
+    cart.items.push(lineItem);
+  }
+
+  cart.updated_at = new Date().toISOString();
+
+  res.status(201).json({
+    cart: {
+      id: cart.id,
+      items: cart.items,
+      ...calculateCartTotals(cart),
+    },
+  });
+});
+
+// POST - Update Line Item Quantity
+app.post("/store/carts/:id/line-items/:line_id", (req, res) => {
+  const { id, line_id } = req.params;
+  const { quantity } = req.body;
+
+  const cart = carts.get(id);
+  if (!cart) {
+    return res.status(404).json({ error: "Cart not found" });
+  }
+
+  const item = cart.items.find((i) => i.id === line_id);
+  if (!item) {
+    return res.status(404).json({ error: "Line item not found" });
+  }
+
+  item.quantity = quantity;
+  cart.updated_at = new Date().toISOString();
+
+  res.status(200).json({
+    cart: {
+      id: cart.id,
+      items: cart.items,
+      ...calculateCartTotals(cart),
+    },
+  });
+});
+
+// DELETE - Remove Item from Cart
+app.delete("/store/carts/:id/line-items/:line_id", (req, res) => {
+  const { id, line_id } = req.params;
+
+  const cart = carts.get(id);
+  if (!cart) {
+    return res.status(404).json({ error: "Cart not found" });
+  }
+
+  const itemIndex = cart.items.findIndex((i) => i.id === line_id);
+  if (itemIndex === -1) {
+    return res.status(404).json({ error: "Line item not found" });
+  }
+
+  cart.items.splice(itemIndex, 1);
+  cart.updated_at = new Date().toISOString();
+
+  res.status(200).json({
+    cart: {
+      id: cart.id,
+      items: cart.items,
+      ...calculateCartTotals(cart),
+    },
   });
 });
 

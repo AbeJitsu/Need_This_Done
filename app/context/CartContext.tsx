@@ -39,17 +39,39 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   // ========================================================================
-  // Initialize cart from localStorage on mount
+  // Initialize cart from localStorage on mount and validate it exists
   // ========================================================================
   useEffect(() => {
-    try {
-      const savedCartId = localStorage.getItem('medusa_cart_id');
-      if (savedCartId) {
-        setCartId(savedCartId);
+    const initializeCart = async () => {
+      try {
+        const savedCartId = localStorage.getItem('medusa_cart_id');
+        if (savedCartId) {
+          // Validate that the saved cart actually exists on the server
+          try {
+            const response = await fetch(`/api/cart?id=${savedCartId}`);
+            if (response.ok) {
+              // Cart exists, use it
+              const data = await response.json();
+              setCart(data.cart);
+              setCartId(savedCartId);
+            } else {
+              // Cart doesn't exist (maybe server restarted), clear and create new one
+              console.log(`Saved cart ${savedCartId} no longer exists, clearing localStorage`);
+              localStorage.removeItem('medusa_cart_id');
+              setCartId(null);
+            }
+          } catch (err) {
+            console.warn('Could not validate saved cart, will create new one on first action:', err);
+            localStorage.removeItem('medusa_cart_id');
+            setCartId(null);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to initialize cart:', err);
       }
-    } catch (err) {
-      console.error('Failed to load cart from localStorage:', err);
-    }
+    };
+
+    initializeCart();
   }, []);
 
   // ========================================================================
