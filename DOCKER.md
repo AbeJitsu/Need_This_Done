@@ -59,9 +59,196 @@ Our application runs in Docker with multiple services working together:
 ```
 
 **External Services:**
-- **Supabase** - User database and authentication (hosted at `oxhjtmozsdstbokwtnwa.supabase.co`)
+- **Supabase** - User database and authentication (hosted at `oxhjtmozsdstbokwtnwa.supabase.co`, or local via CLI)
 - **Medusa (internal)** - Ecommerce service running in Docker
 - Credentials loaded from `.env.local` files
+
+## Supabase Local Development
+
+**Architecture Decision:** Supabase runs separately via CLI, NOT in docker-compose.
+
+### Why Separate Systems?
+
+The project intentionally uses two complementary systems:
+
+| Layer | System | Status | Command |
+|-------|--------|--------|---------|
+| 🛒 Commerce | docker-compose | ✅ Ready | `docker-compose up -d` |
+| 🔐 Auth | Supabase CLI | ✅ Configured | `supabase start` |
+
+**Separation of Concerns:**
+- **Commerce layer** (docker-compose): nginx, Next.js app, Medusa, Redis, medusa_postgres
+- **Auth layer** (Supabase CLI): PostgreSQL with pgvector, API server, real-time, file storage
+
+This architecture:
+- Separates commerce (products, orders, carts) from authentication (users, profiles)
+- Allows independent scaling and development
+- Matches production environment (cloud Supabase for auth, dockerized commerce services)
+- Simplifies database migrations (Supabase CLI handles auth schema)
+
+### Starting Supabase Locally
+
+**Prerequisites:**
+```bash
+# Install Supabase CLI (macOS)
+brew install supabase/tap/supabase
+
+# Verify installation
+supabase --version
+```
+
+**Start local Supabase instance:**
+```bash
+cd /Users/abereyes/Projects/Personal/Need_This_Done
+supabase start
+
+# This will:
+# - Start PostgreSQL on 127.0.0.1:54322
+# - Start Supabase API on 127.0.0.1:54321
+# - Start Realtime server
+# - Apply migrations from supabase/migrations/
+# - Print connection credentials
+```
+
+**Expected output:**
+```
+API URL: http://127.0.0.1:54321
+DB URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+Anon Key: eyJ...
+Service Role Key: eyJ...
+```
+
+**Check status:**
+```bash
+supabase status
+
+# Shows all running services and their ports
+```
+
+**Stop Supabase:**
+```bash
+supabase stop
+
+# Or reset everything (WARNING: deletes all local data):
+supabase db reset
+```
+
+### Environment Configuration
+
+**For local development with Supabase CLI:**
+
+Update `app/.env.local`:
+```bash
+# Local Supabase (from supabase status output)
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<from supabase status>
+SUPABASE_SERVICE_ROLE_KEY=<from supabase status>
+```
+
+**For production:**
+
+Use hosted Supabase credentials (already configured in `.env.local`):
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://oxhjtmozsdstbokwtnwa.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+```
+
+### Complete Development Workflow
+
+**Starting the full stack:**
+
+```bash
+# Terminal 1: Start Supabase (runs until you stop it)
+supabase start
+
+# Terminal 2: Start docker-compose services
+docker-compose up -d
+
+# Now you have:
+# - Supabase API: http://127.0.0.1:54321
+# - Next.js app: https://localhost (via nginx)
+# - Medusa API: http://localhost:9000
+# - Storybook: http://localhost:6006 (dev mode)
+```
+
+**Stopping for the day:**
+
+```bash
+# Stop docker services
+docker-compose down
+
+# Stop Supabase
+supabase stop
+```
+
+**Full reset (clean slate):**
+
+```bash
+# Stop everything
+docker-compose down -v
+supabase stop
+
+# Reset Supabase (WARNING: deletes all local data)
+supabase db reset
+
+# Start fresh
+supabase start
+docker-compose up -d
+```
+
+### Troubleshooting Supabase
+
+**Issue: "supabase: command not found"**
+
+```bash
+# Install Supabase CLI
+brew install supabase/tap/supabase
+```
+
+**Issue: Port 54321 or 54322 already in use**
+
+```bash
+# Find what's using the port
+lsof -i :54321
+lsof -i :54322
+
+# Stop the conflicting service or change Supabase ports in supabase/config.toml
+```
+
+**Issue: Migrations fail to apply**
+
+```bash
+# Check migration status
+supabase migration list
+
+# Reset and reapply
+supabase db reset
+
+# Or manually fix and reapply
+supabase db push
+```
+
+**Issue: Can't connect to Supabase from Next.js**
+
+```bash
+# 1. Verify Supabase is running
+supabase status
+
+# 2. Check environment variables in app/.env.local
+cat app/.env.local | grep SUPABASE
+
+# 3. Ensure NEXT_PUBLIC_SUPABASE_URL points to http://127.0.0.1:54321 for local dev
+
+# 4. Restart Next.js container to pick up env changes
+docker-compose restart app
+```
+
+### Related Documentation
+
+- [supabase/config.toml](supabase/config.toml) - Supabase CLI configuration
+- [supabase/migrations/](supabase/migrations/) - Database schema migrations
+- [app/.env.test](app/.env.test) - Test credentials for local Supabase
 
 ## Two Operating Modes
 
