@@ -16,30 +16,21 @@ test.describe('Shopping Cart - Add to Cart', () => {
     await navigateToPage(page, '/shop');
 
     // Should see shop heading
-    await expect(page.getByRole('heading', { name: /Shop Services/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Shop/i })).toBeVisible();
 
-    // Find Quick Task product and click "Add Cart"
-    const quickTaskCard = page.locator('text=/Quick Task/i').first();
-    await expect(quickTaskCard).toBeVisible();
+    // Click "Details" link to go to product page
+    await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
 
-    // Click "Add Cart" button
-    const addCartButton = quickTaskCard.locator('..').getByRole('button', { name: /add cart/i });
-    await expect(addCartButton).toBeVisible();
-    await addCartButton.click();
+    // Add to cart from product detail page
+    await page.getByRole('button', { name: /add to cart/i }).click();
+    await page.waitForTimeout(500);
 
-    // Should see success message or cart update
-    // Wait for success toast/notification
-    await page.waitForTimeout(1000);
+    // Should see success message (toast notification)
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 5000 });
 
-    // Cart badge should update (if visible)
-    const cartBadge = page.locator('[data-testid="cart-count"]');
-    if (await cartBadge.isVisible()) {
-      await expect(cartBadge).toContainText(/[1-9]/);
-    }
-
-    // No error messages should be visible
-    const errorMessages = page.locator('text=/failed to add/i, text=/error/i');
-    expect(await errorMessages.count()).toBe(0);
+    // View Cart link should be visible
+    await expect(page.getByRole('link', { name: /view cart/i })).toBeVisible();
   });
 
   test('can add multiple different items to cart', async ({ page }) => {
