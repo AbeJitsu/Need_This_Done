@@ -42,7 +42,7 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
             What We Offer
           </h2>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-3 gap-6">
             {siteConfig.services.map((service, index) => (
               <ServiceCard
                 key={index}
