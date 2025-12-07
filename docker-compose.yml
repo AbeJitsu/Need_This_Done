@@ -82,8 +82,12 @@ services:
   app:
     build:
       context: ./app
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: nextjs_app
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+      - /app/.next
 
     # Load environment variables from .env.local
     # Docker Compose reads .env by default, but Next.js uses .env.local
@@ -219,6 +223,10 @@ services:
       dockerfile: Dockerfile
     container_name: medusa_backend
 
+    # Load environment variables from root .env.local (single source of truth)
+    env_file:
+      - .env.local
+
     environment:
       - DATABASE_URL=postgresql://medusa:${MEDUSA_DB_PASSWORD}@medusa_postgres:5432/medusa
       - REDIS_URL=redis://redis:6379
@@ -241,7 +249,7 @@ services:
     restart: unless-stopped
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/admin"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:9000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

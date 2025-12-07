@@ -1,11 +1,13 @@
 const dotenv = require("dotenv");
+const path = require("path");
 
 let ENV_FILE_NAME = ".env";
 if (process.env.NODE_ENV === "production") {
   ENV_FILE_NAME = ".env.production";
 }
 
-dotenv.config({ path: process.cwd().includes("medusa") ? "../.env.local" : ".env.local" });
+// Always load from parent directory (root .env.local)
+dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 

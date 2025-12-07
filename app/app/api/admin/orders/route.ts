@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyAdmin } from '@/lib/api-auth';
 import { handleApiError } from '@/lib/api-errors';
-import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
+import { cache, CACHE_TTL } from '@/lib/cache';
 
 // ============================================================================
 // Admin Orders API Route - /api/admin/orders

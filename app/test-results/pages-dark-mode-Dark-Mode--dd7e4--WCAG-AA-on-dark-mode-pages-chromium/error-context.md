@@ -1,0 +1,82 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - navigation [ref=e3]:
+    - generic [ref=e5]:
+      - link "Need This Done" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - link "Home" [ref=e9] [cursor=pointer]:
+            - /url: /
+          - link "Services" [ref=e10] [cursor=pointer]:
+            - /url: /services
+          - link "Pricing" [ref=e11] [cursor=pointer]:
+            - /url: /pricing
+          - link "How It Works" [ref=e12] [cursor=pointer]:
+            - /url: /how-it-works
+          - link "FAQ" [ref=e13] [cursor=pointer]:
+            - /url: /faq
+          - link "Contact" [ref=e14] [cursor=pointer]:
+            - /url: /contact
+        - link "Shopping cart with 0 items" [ref=e15] [cursor=pointer]:
+          - /url: /cart
+          - img [ref=e16]
+        - button "Switch to light mode" [ref=e18] [cursor=pointer]:
+          - img [ref=e19]
+        - link "Login" [ref=e22] [cursor=pointer]:
+          - /url: /login
+  - main [ref=e23]:
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - heading "How We Can Help" [level=1] [ref=e26]
+        - paragraph [ref=e27]: Too busy? Not sure where to start? We handle the tasks you don't have time for, so you can focus on what matters most.
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - heading "Virtual Assistant" [level=3] [ref=e30]
+          - paragraph [ref=e31]: Let us handle the day-to-day tasks that eat up your time. Email, scheduling, research, bookings, and social media posting.
+          - paragraph [ref=e32]: Email management, calendar coordination, research & bookings.
+        - generic [ref=e33]:
+          - heading "Data & Documents" [level=3] [ref=e34]
+          - paragraph [ref=e35]: From messy spreadsheets to polished reports. We organize, format, and prepare your documents so they look professional.
+          - paragraph [ref=e36]: Spreadsheets, data entry, reports, presentations, file organization.
+        - generic [ref=e37]:
+          - heading "Website Services" [level=3] [ref=e38]
+          - paragraph [ref=e39]: From new builds to updates and maintenance. We handle websites of any size on any platform—so you can focus on your business.
+          - paragraph [ref=e40]: Website builds & redesigns, content updates, e-commerce setup.
+      - generic [ref=e41]:
+        - heading "What You Can Expect" [level=2] [ref=e42]
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - generic [ref=e46]: ✓
+            - generic [ref=e47]:
+              - heading "Clear Communication" [level=3] [ref=e48]
+              - paragraph [ref=e49]: We keep you informed every step of the way. No surprises.
+          - generic [ref=e50]:
+            - generic [ref=e52]: ✓
+            - generic [ref=e53]:
+              - heading "Quality Work" [level=3] [ref=e54]
+              - paragraph [ref=e55]: We take pride in delivering work you can rely on.
+          - generic [ref=e56]:
+            - generic [ref=e58]: ✓
+            - generic [ref=e59]:
+              - heading "Fair Pricing" [level=3] [ref=e60]
+              - paragraph [ref=e61]: Transparent quotes with no hidden fees.
+          - generic [ref=e62]:
+            - generic [ref=e64]: ✓
+            - generic [ref=e65]:
+              - heading "Timely Delivery" [level=3] [ref=e66]
+              - paragraph [ref=e67]: We respect your deadlines and deliver on time.
+      - generic [ref=e68]:
+        - heading "Ready to Get Started?" [level=2] [ref=e69]
+        - paragraph [ref=e70]: See how we work, or let's get started.
+        - generic [ref=e71]:
+          - link "How It Works" [ref=e72] [cursor=pointer]:
+            - /url: /how-it-works
+          - link "FAQ" [ref=e73] [cursor=pointer]:
+            - /url: /faq
+  - alert [ref=e74]
+```

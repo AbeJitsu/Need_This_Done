@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { medusaClient } from '@/lib/medusa-client';
 import { verifyAdmin } from '@/lib/api-auth';
-import { badRequest, serverError, handleApiError } from '@/lib/api-errors';
+import { badRequest, handleApiError } from '@/lib/api-errors';
 import { cache, CACHE_KEYS } from '@/lib/cache';
 
 // ============================================================================

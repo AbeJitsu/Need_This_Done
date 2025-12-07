@@ -20,8 +20,6 @@ import { cache, CACHE_KEYS } from '@/lib/cache';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json().catch(() => ({}));
-
     // Create new cart in Medusa
     const cart = await medusaClient.carts.create();
 
