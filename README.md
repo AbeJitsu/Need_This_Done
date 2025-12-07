@@ -1,134 +1,738 @@
 # NeedThisDone.com
 
-A professional services platform built with Next.js, running in Docker with nginx, Redis, and Supabase.
+A professional services platform built with Next.js, running in Docker with nginx, Redis, Medusa (ecommerce), and Supabase (auth & database).
+
+---
+
+## Table of Contents
+
+- [Quick Start (30 seconds)](#quick-start)
+- [What This Project Is](#what-this-project-is)
+- [Architecture Overview](#architecture-overview)
+- [Development Setup](#development-setup)
+- [Project Structure](#project-structure)
+- [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
+- [Caching Strategy](#caching-strategy)
+- [Testing](#testing)
+- [Troubleshooting](#troubleshooting)
+- [Design System](#design-system)
+- [Key Files Reference](#key-files-reference)
+
+---
 
 ## Quick Start
 
 ```bash
-# Development (with hot reload)
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+# Start Docker services
+docker-compose up -d
 
-# If things break (missing modules, weird errors)
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+# Start Supabase (auth & database)
+supabase start
+
+# Once running, access:
+# - App:       https://localhost
+# - Storybook: http://localhost:6006
 ```
 
-Once running:
-- **App**: https://localhost
-- **Storybook**: http://localhost:6006
+**If things break:**
+```bash
+docker-compose down -v
+docker-compose up --build
+```
+
+---
+
+## What This Project Is
+
+A modern platform for professional services that combines:
+
+- **E-commerce platform**: Browse products, add to cart, checkout, manage orders
+- **User accounts**: Authentication, profiles, order history
+- **Admin dashboard**: Manage products, view orders, user management
+- **Visual page builder**: Non-technical users can create pages (Puck visual editor)
+- **Component library**: Reusable, accessible React components (Storybook)
+
+**Tech Stack:**
+- **Frontend**: Next.js 14 (React) with TypeScript
+- **Backend**: Next.js API routes + Medusa (ecommerce engine)
+- **Database**: Supabase (PostgreSQL with pgvector for auth)
+- **Ecommerce**: Medusa headless commerce engine
+- **Cache**: Redis for performance
+- **Infrastructure**: Docker + Nginx reverse proxy
+- **Design**: Tailwind CSS with dark mode support
+
+---
+
+## Architecture Overview
+
+```
+┌──────────────────────────────────────────┐
+│          Browser / User                  │
+└───────────┬────────────────────────────┘
+            │
+┌───────────▼────────────────────────┐
+│   Nginx (reverse proxy, SSL)       │
+│   - Routes all traffic (port 443)  │
+└───────────┬────────────────────────┘
+            │
+    ┌───────┴───────┬───────────┐
+    │               │           │
+┌───▼────────┐  ┌──▼──────┐  ┌─▼──────────┐
+│ Next.js    │  │ Medusa  │  │ Supabase   │
+│ - Pages    │  │ Backend │  │ - Auth     │
+│ - API      │  │ - Cart  │  │ - Database │
+│ - Auth     │  │ - Orders│  │            │
+└───┬────────┘  └──┬──────┘  └─┬──────────┘
+    │              │           │
+    └──────────┬───┴───────────┘
+               │
+    ┌──────────▼──────────┐
+    │ Redis Cache         │
+    │ - Products          │
+    │ - User dashboards   │
+    │ - Cart data         │
+    └─────────────────────┘
+```
+
+**Data Flow**:
+1. User makes request to your domain
+2. Nginx receives it (handles SSL, routes traffic)
+3. Next.js serves pages or API routes
+4. Next.js calls Medusa backend for ecommerce
+5. Next.js calls Supabase for user/auth data
+6. Redis caches frequently accessed data
+
+**Why This Design**:
+- ✅ **Separation of concerns** - Commerce, auth, and user data are separate
+- ✅ **Independent scaling** - Each service scales independently
+- ✅ **Fast iteration** - Change UI without touching business logic
+- ✅ **Future-proof** - Can add mobile, CLI, or third-party integrations
+
+---
+
+## Development Setup
+
+### Prerequisites
+
+```bash
+# Install Docker
+# https://www.docker.com/products/docker-desktop
+
+# Install Supabase CLI (macOS)
+brew install supabase/tap/supabase
+
+# Verify installations
+docker --version
+supabase --version
+```
+
+### Starting the Full Stack
+
+**Terminal 1: Start Docker services (commerce + cache)**
+```bash
+docker-compose up -d
+```
+
+This starts:
+- Nginx (reverse proxy on https://localhost)
+- Next.js app (port 3000)
+- Medusa backend (port 9000)
+- Medusa PostgreSQL (internal)
+- Redis cache (internal)
+
+**Terminal 2: Start Supabase (auth + database)**
+```bash
+supabase start
+```
+
+This starts:
+- PostgreSQL (port 54322)
+- Supabase API (port 54321)
+- Realtime server
+- Applies migrations
+
+**Once Everything is Running**:
+```bash
+# App is at https://localhost
+# Storybook is at http://localhost:6006
+```
+
+### Environment Configuration
+
+**Root `.env.local`** (shared by Docker services):
+```bash
+# Medusa backend
+MEDUSA_DB_PASSWORD=your_secure_password
+MEDUSA_JWT_SECRET=your_jwt_secret
+MEDUSA_ADMIN_JWT_SECRET=your_admin_secret
+
+# Redis
+REDIS_URL=redis://redis:6379
+
+# Supabase
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_KEY=your-service-key
+```
+
+**`app/.env.local`** (Next.js app):
+```bash
+# Medusa (for client-side access)
+NEXT_PUBLIC_MEDUSA_URL=http://localhost:9000
+
+# Supabase (same as root)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_KEY=your-service-key
+```
+
+### Stopping Services
+
+```bash
+# Stop Docker services
+docker-compose down
+
+# Stop Supabase
+supabase stop
+
+# Reset Supabase (clears all data)
+supabase db reset
+```
 
 ---
 
 ## Project Structure
 
-### Documentation
-
-| File | What it covers |
-|------|----------------|
-| [DOCKER.md](DOCKER.md) | How to run the app, architecture, troubleshooting |
-| [Roadmap.md](Roadmap.md) | Tech stack, what's built, what's pending |
-| [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Design standards, accessibility, component testing |
-| [docs/dark-mode-testing.md](docs/dark-mode-testing.md) | Dark mode testing guidelines and WCAG compliance |
-| [docs/MEDUSA_INTEGRATION.md](docs/MEDUSA_INTEGRATION.md) | Ecommerce backend architecture and implementation |
-| [docs/ECOMMERCE_QUICK_START.md](docs/ECOMMERCE_QUICK_START.md) | Quick start guide for ecommerce setup |
-| [app/guides/puck-setup.md](app/guides/puck-setup.md) | Puck visual editor implementation and architecture |
-| [app/guides/puck-usage.md](app/guides/puck-usage.md) | Puck editor user guide and workflows |
-| [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) | Coding standards (DRY, comments, organization) |
-| [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) | Brand identity, colors, design system |
-
-### Directory Structure
-
-#### Root Level
+### Root Level
 
 | File/Folder | Purpose |
 |-------------|---------|
-| `CLAUDE.md` | Project-specific instructions for Claude Code |
-| `README.md` | Main project documentation (you are here) |
-| `DOCKER.md` | Docker setup, architecture, troubleshooting |
-| `Roadmap.md` | Tech stack and feature planning |
-| `docker-compose*.yml` | Docker configurations (dev, prod, test, e2e) |
+| `README.md` | This file - main project documentation |
+| `Roadmap.md` | Feature roadmap - what's done, what's next |
+| `CLAUDE.md` | Project guidelines for Claude Code |
+| `docker-compose.yml` | Docker service definitions |
+| `docker-compose.dev.yml` | Development-specific overrides |
+| `nginx/` | Reverse proxy configuration and SSL certs |
+| `supabase/` | Database migrations and configuration |
+| `medusa/` | Ecommerce backend service |
 
-#### Application (`app/`)
+### Application (`app/`)
 
 | Folder | Purpose |
 |--------|---------|
 | `app/app/` | Next.js App Router - pages and API routes |
-| `├── admin/` | Admin dashboard routes |
-| `├── api/` | API route handlers (auth, demo, projects, files, health) |
-| `├── auth/` | Authentication pages |
-| `├── demos/` | Demo pages (auth, database, speed) |
-| `app/components/` | Reusable React UI components (with Storybook stories) |
-| `app/lib/` | Shared utilities (colors, auth, database clients) |
-| `app/context/` | React Context providers (AuthContext) |
+| `├── shop/` | E-commerce shop and product catalog |
+| `├── cart/` | Shopping cart page |
+| `├── checkout/` | Checkout and order creation |
+| `├── admin/` | Admin dashboard (products, orders, users) |
+| `├── api/` | API route handlers (auth, products, carts, orders) |
+| `app/components/` | Reusable React UI components |
+| `app/context/` | React Context providers (CartContext, AuthContext) |
+| `app/lib/` | Shared utilities (colors, auth, database, cache) |
 | `app/config/` | App-wide configuration |
-
-#### Infrastructure & Configuration
-
-| Folder | Purpose |
-|--------|---------|
-| `.claude/` | Claude Code configuration |
-| `├── commands/` | Custom slash commands |
-| `├── hooks/` | Git hooks for workflow automation |
-| `├── skills/` | Custom Claude skills (frontend-design) |
-| `.github/workflows/` | CI/CD workflows (accessibility testing) |
-| `nginx/` | Reverse proxy and SSL configuration |
-| `├── ssl/` | SSL certificates |
-| `supabase/` | Database backend configuration |
-| `├── migrations/` | Database schema migrations |
-| `scripts/` | Deployment and setup automation |
-
-#### Documentation
-
-| Folder/File | Purpose |
-|-------------|---------|
-| `docs/` | Developer technical guides |
-| `├── dark-mode-testing.md` | Dark mode testing guidelines and best practices |
-| `├── e2e-test-report.md` | E2E test coverage report |
-| `├── dev-preview-urls.md` | Preview environment configuration |
-| `├── url-configuration.md` | URL and redirect configuration |
-
-#### Testing & Quality
-
-| Folder | Purpose |
-|--------|---------|
 | `app/e2e/` | End-to-end tests (Playwright) |
 | `app/__tests__/` | Unit tests and accessibility tests |
-| `├── api/` | API endpoint tests |
-| `├── components/` | Component unit & a11y tests |
-| `├── lib/` | Library/utility tests |
-| `├── setup/` | Test configuration and utilities |
 
-### Testing Commands
-
-```bash
-# Run E2E tests
-cd app && npm run test:e2e
-
-# Run accessibility tests
-cd app && npm run test:a11y
-
-# Run against Docker stack
-cd app && BASE_URL=https://localhost npx playwright test
-```
-
-See [docs/e2e-test-report.md](docs/e2e-test-report.md) for current test coverage.
-
----
-
-## Key Files
+### Key Utilities
 
 | File | What it does |
 |------|--------------|
 | `app/lib/colors.ts` | Single source of truth for all colors |
 | `app/lib/auth.ts` | Authentication utilities |
-| `app/lib/supabase.ts` | Database client |
-| `app/lib/redis.ts` | Cache client |
+| `app/lib/supabase.ts` | Supabase database client |
+| `app/lib/redis.ts` | Redis cache client |
+| `app/lib/medusa-client.ts` | Medusa API wrapper with retry logic |
+| `app/lib/cache.ts` | Cache utility with pattern invalidation |
+| `app/context/CartContext.tsx` | Shopping cart state management |
 
 ---
 
-## Design Principles
+## Shopping Cart & Ecommerce
 
-See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for complete standards:
-- Accessibility (WCAG AA, 5:1 contrast minimum)
-- Color system (`app/lib/colors.ts`) and dark mode
-- Component testing requirements
+### How It Works
+
+The cart system is a **three-tier architecture**:
+
+1. **Medusa Backend** (port 9000) - In-memory cart storage with REST API
+2. **Next.js API Routes** (`/api/cart/*`) - Bridge between frontend and Medusa
+3. **React CartContext** - Frontend state management with localStorage persistence
+
+### Cart Data Flow
+
+```
+User clicks "Add to Cart"
+      ↓
+CartContext.addItem(variant_id, quantity)
+      ↓
+POST /api/cart/{cartId}/items
+      ↓
+POST http://medusa:9000/store/carts/{cartId}/line-items
+      ↓
+Medusa returns updated cart
+      ↓
+CartContext updates state + localStorage
+      ↓
+UI updates: badge shows item count, success toast appears
+```
+
+### Medusa API Endpoints
+
+```bash
+# Create a new cart
+POST /store/carts
+→ Returns: {cart: {id, items: [], subtotal: 0, total: 0}}
+
+# Get cart details
+GET /store/carts/{cartId}
+→ Returns: {cart: {id, items: [...], subtotal, total}}
+
+# Add item to cart
+POST /store/carts/{cartId}/line-items
+Body: {variant_id: "variant_prod_1_default", quantity: 1}
+→ Returns: {cart: {...updated cart with new item...}}
+
+# Update item quantity
+POST /store/carts/{cartId}/line-items/{itemId}
+Body: {quantity: 2}
+→ Returns: {cart: {...}}
+
+# Remove item from cart
+DELETE /store/carts/{cartId}/line-items/{itemId}
+→ Returns: {cart: {...updated cart...}}
+```
+
+### Frontend Usage
+
+```typescript
+import { useCart } from '@/context/CartContext';
+
+function ShopPage() {
+  const { addItem, cart } = useCart();
+
+  const handleAddToCart = async (variantId: string, quantity: number) => {
+    try {
+      await addItem(variantId, quantity);
+      // Cart updated, UI refreshes automatically
+    } catch (error) {
+      // Show error to user
+    }
+  };
+
+  return (
+    <>
+      <button onClick={() => handleAddToCart('variant_prod_1_default', 1)}>
+        Add to Cart
+      </button>
+      <span>Items in cart: {cart?.items.length || 0}</span>
+    </>
+  );
+}
+```
+
+### Testing the Cart
+
+**Manual browser test**:
+```bash
+# 1. Navigate to https://localhost/shop
+# 2. Click "Add Cart" on a product
+# 3. Should see success toast
+# 4. Cart badge should update
+# 5. Click cart icon to view items
+```
+
+**API test**:
+```bash
+# Create cart
+CART=$(curl -s -X POST http://localhost:9000/store/carts | jq -r '.cart.id')
+
+# Add item
+curl -s -X POST "http://localhost:9000/store/carts/$CART/line-items" \
+  -H "Content-Type: application/json" \
+  -d '{"variant_id":"variant_prod_1_default","quantity":1}' | jq '.'
+
+# Get cart
+curl -s "http://localhost:9000/store/carts/$CART" | jq '.'
+```
+
+**Automated E2E tests**:
+```bash
+cd app
+npm run test:e2e -- e2e/shop-cart.spec.ts
+```
+
+---
+
+## Caching Strategy
+
+### Why Caching Matters
+
+Without caching, every user request hits the database (slow).
+With caching (Redis), most requests are answered from cache (fast).
+
+**Impact**:
+- 60-80% reduction in database queries
+- 15-50x faster response times on cache hits
+- Significantly lower Supabase costs
+
+### Cache-Aside Pattern
+
+The caching system uses a simple, effective pattern:
+
+```
+Request comes in
+    ↓
+Check Redis cache
+    ├─ HIT: return cached data (2ms)
+    └─ MISS: query database
+         ↓
+      Store result in Redis with TTL
+         ↓
+      Return data to user (200-300ms first time)
+```
+
+### Adding Caching to Routes
+
+```typescript
+import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
+
+// In your API route
+export async function GET(request: Request) {
+  const result = await cache.wrap(
+    CACHE_KEYS.myData('some-id'),
+    async () => {
+      // This function only runs on cache MISS
+      const { data, error } = await supabase
+        .from('my_table')
+        .select('*');
+
+      if (error) throw new Error('Failed to fetch');
+      return data;
+    },
+    CACHE_TTL.MEDIUM  // 60 seconds
+  );
+
+  return NextResponse.json(result);
+}
+
+// When data changes (create, update, delete)
+await cache.invalidate(CACHE_KEYS.myData('some-id'));
+```
+
+### Cache Configuration
+
+**TTL Values**:
+- `CACHE_TTL.SHORT` (30s) - Frequently updated data
+- `CACHE_TTL.MEDIUM` (60s) - Dashboard data (default)
+- `CACHE_TTL.LONG` (300s / 5m) - Admin data
+- `CACHE_TTL.STATIC` (3600s / 1h) - Services, pricing
+
+**Current Cache Keys**:
+```
+products:all              All products (1m)
+cart:{cartId}            Cart data (30s)
+order:{orderId}          Order details (5m)
+user:projects:{userId}   User's projects (1m)
+admin:projects:all       All projects (5m)
+```
+
+---
+
+## Testing
+
+### Test Types
+
+| Type | Command | Purpose |
+|------|---------|---------|
+| Unit tests | `npm run test:run` | Test functions, utilities |
+| Accessibility | `npm run test:a11y` | Test dark mode, contrast, WCAG AA |
+| E2E tests | `npm run test:e2e` | Test complete user flows |
+
+### Running Tests
+
+```bash
+cd app
+
+# Run all tests once
+npm run test:run
+
+# Run tests in watch mode (re-run on file change)
+npm test
+
+# Run only accessibility tests
+npm run test:a11y
+
+# Run E2E tests
+npm run test:e2e
+
+# Run specific E2E test with browser visible
+npx playwright test e2e/shop-cart.spec.ts --headed
+
+# Run specific test by name
+npx playwright test -k "can add to cart"
+```
+
+### E2E Test Coverage
+
+**Shop & Cart** (`e2e/shop-cart.spec.ts`):
+- Browse products
+- View product details
+- Add items to cart
+- Update quantities
+- Remove items
+- Cart persists after refresh
+
+**Auth & Checkout** (`e2e/auth.spec.ts`):
+- Login/logout
+- Register account
+- Protected routes
+- Order creation
+
+**Admin** (`e2e/dashboard.spec.ts`):
+- Admin-only access
+- Product management
+- Order dashboard
+
+**Dark Mode** (`e2e/pages-dark-mode.spec.ts`):
+- All pages in light mode
+- All pages in dark mode
+- Contrast ratios meet WCAG AA
+
+### Dark Mode Testing
+
+All components must pass contrast testing in both light and dark modes:
+
+```typescript
+import { testBothModes, hasContrastViolations } from '@/__tests__/setup/a11y-utils';
+
+it('should have no contrast issues in both modes', async () => {
+  const { container } = render(<MyComponent />);
+  const results = await testBothModes(container, 'MyComponent');
+
+  expect(hasContrastViolations(results.light)).toBe(false);
+  expect(hasContrastViolations(results.dark)).toBe(false);
+});
+```
+
+Common dark mode issues & fixes are documented in [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md).
+
+---
+
+## Troubleshooting
+
+### Issue: "Failed to add item to cart"
+
+**Symptom**: Error when clicking "Add to Cart"
+
+**Solutions**:
+```bash
+# 1. Verify Medusa is running
+docker-compose ps medusa
+# Should show "healthy"
+
+# 2. Test Medusa directly
+curl http://localhost:9000/health
+# Should return 200
+
+# 3. Check variant exists
+curl http://localhost:3000/api/shop/products | jq '.products[0].variants'
+# Should show variant array
+
+# 4. Clear Redis cache
+docker exec redis redis-cli FLUSHALL
+
+# 5. Restart services
+docker-compose restart medusa app
+```
+
+### Issue: Pages loading slowly
+
+**Symptom**: Product page takes 5+ seconds
+
+**Solutions**:
+```bash
+# Check Redis is running
+docker-compose ps redis
+
+# Check cache hit rate
+redis-cli INFO stats
+
+# View cache keys
+redis-cli KEYS '*'
+
+# Clear old cache
+redis-cli FLUSHALL
+```
+
+### Issue: Dark mode contrast problems
+
+**Symptom**: Text hard to read in dark mode
+
+**Solutions**:
+```bash
+# Run accessibility tests
+cd app && npm run test:a11y
+
+# Test locally in browser
+# Toggle dark mode → Check all text readable
+
+# Common fix: ensure dark: variant exists
+# ❌ Wrong: <p className="text-gray-800">
+# ✅ Right: <p className="text-gray-900 dark:text-gray-100">
+```
+
+### Issue: Supabase connection errors
+
+**Symptom**: "Failed to connect to Supabase"
+
+**Solutions**:
+```bash
+# Verify Supabase is running
+supabase status
+
+# Check credentials in app/.env.local
+cat app/.env.local | grep SUPABASE
+
+# Restart Supabase
+supabase stop
+supabase start
+
+# Reset if needed (WARNING: clears data)
+supabase db reset
+```
+
+### Issue: Docker containers won't start
+
+**Symptom**: `docker-compose up` fails
+
+**Solutions**:
+```bash
+# Check Docker is running
+docker ps
+
+# View detailed logs
+docker-compose logs -f medusa
+
+# Clean and rebuild
+docker-compose down -v
+docker-compose up --build
+
+# Check port availability
+lsof -i :3000    # App
+lsof -i :9000    # Medusa
+lsof -i :6379    # Redis
+```
+
+---
+
+## Design System
+
+See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
+
+- **Color System** - Centralized colors in `app/lib/colors.ts`
+- **Accessibility Standards** - WCAG AA compliance, 5:1 contrast minimum
+- **Dark Mode Requirements** - Every component must work in light & dark
+- **Component Testing** - Automated a11y tests, testing utilities
+- **Dark Mode Testing Guide** - Common issues and fixes
+- **Component Patterns** - Existing components, building new components
+
+---
+
+## Key Files Reference
+
+### Configuration & Setup
+| File | Purpose |
+|------|---------|
+| `.env.local` | Root environment variables |
+| `app/.env.local` | Next.js environment variables |
+| `docker-compose.yml` | Docker service definitions |
+| `app/tsconfig.json` | TypeScript configuration |
+
+### Core Libraries
+| File | Purpose |
+|------|---------|
+| `app/lib/colors.ts` | All color definitions |
+| `app/lib/auth.ts` | Authentication logic |
+| `app/lib/supabase.ts` | Supabase client setup |
+| `app/lib/redis.ts` | Redis cache client |
+| `app/lib/medusa-client.ts` | Medusa API wrapper |
+| `app/lib/cache.ts` | Caching utility & keys |
+
+### State Management
+| File | Purpose |
+|------|---------|
+| `app/context/CartContext.tsx` | Shopping cart state |
+| `app/context/AuthContext.tsx` | User authentication state |
+
+### Backend Services
+| File | Purpose |
+|------|---------|
+| `medusa/src/index.ts` | Medusa Express server |
+| `medusa/medusa-config.js` | Medusa configuration |
+| `nginx/nginx.conf` | Nginx reverse proxy config |
+| `supabase/migrations/` | Database schema |
+
+### Testing
+| File | Purpose |
+|------|---------|
+| `app/e2e/` | Playwright E2E tests |
+| `app/__tests__/setup/a11y-utils.ts` | Accessibility test utilities |
+| `playwright.config.ts` | Playwright configuration |
+
+---
+
+## Coding Standards
+
+See [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) for:
+- DRY principle (Don't Repeat Yourself)
+- Code organization and structure
+- Comment style and guidelines
+- File naming conventions
+
+See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for:
+- Brand identity and visual style
+- Color palette and typography
+- Design system philosophy
+- Creative direction
+
+---
+
+## What's Next?
+
+### Pending Features
+
+See [Roadmap.md](Roadmap.md) for the complete roadmap, including:
+- Payment processing (Stripe integration)
+- Inventory management
+- Multi-tier pricing
+- Analytics and reporting
+
+### How to Add Features
+
+1. **Understand the architecture** - Review relevant sections above
+2. **Check existing components** - Don't reinvent the wheel (`app/components/`)
+3. **Write tests first** - Add E2E test in `app/e2e/`
+4. **Implement feature** - Follow coding standards
+5. **Test dark mode** - Run `npm run test:a11y`
+6. **Test complete flow** - Run `npm run test:e2e`
+7. **Update this README** - Add to relevant section
+
+---
+
+## Getting Help
+
+**Need help with...**
+
+- **Development setup?** → See [Development Setup](#development-setup)
+- **Ecommerce/cart?** → See [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
+- **Testing?** → See [Testing](#testing)
+- **Design standards?** → See [Design System](#design-system)
+- **Troubleshooting?** → See [Troubleshooting](#troubleshooting)
+- **Code quality?** → See [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md)
+
+**For Claude Code users**: See [CLAUDE.md](CLAUDE.md) for project-specific instructions.
+
+---
+
+**Last Updated**: December 2025
+**Maintained By**: Development Team
+**Status**: Active & Growing

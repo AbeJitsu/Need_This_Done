@@ -44,6 +44,7 @@ Complete guide to all documentation in the project. Find what you need based on 
 | [CART_SYSTEM.md](./CART_SYSTEM.md) | Shopping cart architecture & implementation | Developers | 20 min read |
 | [MEDUSA_INTEGRATION.md](./MEDUSA_INTEGRATION.md) | Full ecommerce architecture & APIs | Developers | 25 min read |
 | [ECOMMERCE_QUICK_START.md](./ECOMMERCE_QUICK_START.md) | Quick start, setup, common tasks | Everyone | 10 min read |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | Tech stack & architectural decisions | Developers | 15 min read |
 
 ### Operations & Quality
 
@@ -58,6 +59,12 @@ Complete guide to all documentation in the project. Find what you need based on 
 | Document | Purpose | Audience | Length |
 |----------|---------|----------|--------|
 | [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) | Colors, components, accessibility | Designers/Developers | 15 min read |
+
+### Developer References
+
+| Document | Purpose | Audience | Length |
+|----------|---------|----------|--------|
+| [HOOKS.md](./HOOKS.md) | Claude Code hooks implementation guide | Developers | 20 min read |
 
 ### Configuration & Setup
 
@@ -106,14 +113,17 @@ Complete guide to all documentation in the project. Find what you need based on 
 docs/
 ├── INDEX.md (← You are here)
 ├── SYSTEM_OVERVIEW_FOR_EVERYONE.md (Non-technical guide)
+├── ARCHITECTURE.md (Tech stack & decisions)
 ├── CART_SYSTEM.md (Cart architecture)
 ├── MEDUSA_INTEGRATION.md (Ecommerce architecture)
 ├── ECOMMERCE_QUICK_START.md (Setup & quick start)
 ├── PRE_MERGE_CHECKLIST.md (Testing checklist)
 ├── CACHING_STRATEGY.md (Performance & caching)
 ├── DESIGN_SYSTEM.md (Design standards)
+├── HOOKS.md (Claude Code hooks reference)
 ├── URL_CONFIGURATION.md (URL configuration)
-└── dark-mode-testing.md (Dark mode testing)
+├── dark-mode-testing.md (Dark mode testing)
+└── e2e-test-report.md (Test coverage report)
 ```
 
 ---
@@ -233,14 +243,17 @@ redis-cli FLUSHALL
 | Document | Status | Last Updated | Notes |
 |----------|--------|--------------|-------|
 | SYSTEM_OVERVIEW_FOR_EVERYONE.md | ✅ Current | Dec 2025 | Brand new, comprehensive |
+| ARCHITECTURE.md | ✅ Current | Dec 2025 | Brand new, extracted from Roadmap |
 | CART_SYSTEM.md | ✅ Current | Dec 2025 | Brand new, in-depth |
 | PRE_MERGE_CHECKLIST.md | ✅ Current | Dec 2025 | Brand new, tested |
 | ECOMMERCE_QUICK_START.md | ✅ Current | Dec 2025 | Still relevant |
 | MEDUSA_INTEGRATION.md | ✅ Current | Dec 2025 | Architecture still valid |
 | DESIGN_SYSTEM.md | ✅ Current | Dec 2025 | Still relevant |
 | CACHING_STRATEGY.md | ✅ Current | Dec 2025 | Still relevant |
+| HOOKS.md | ✅ Current | Dec 2025 | Reference guide for Claude Code |
 | URL_CONFIGURATION.md | ✅ Current | Dec 2025 | Still relevant |
 | dark-mode-testing.md | ✅ Current | Dec 2025 | Still relevant |
+| e2e-test-report.md | ⚠️ Regenerated | Dec 2025 | Auto-generated test results, updates frequently |
 
 ---
 
