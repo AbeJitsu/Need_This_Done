@@ -509,7 +509,10 @@ test.describe('Admin Shop Dashboard Integration', () => {
     request,
   }) => {
     // GET orders without auth should return 401
-    const response = await request.get('/api/admin/orders');
+    // NOTE: Using https://localhost (through NGINX) to match production architecture
+    const response = await request.get('https://localhost/api/admin/orders', {
+      rejectOnStatusCode: false,
+    });
     expect(response.status()).toBe(401);
   });
 });
@@ -517,28 +520,37 @@ test.describe('Admin Shop Dashboard Integration', () => {
 test.describe('Cache Integration', () => {
   test('product list is cached efficiently', async ({ page, request }) => {
     // First request to products
-    const response1 = await request.get('/api/shop/products');
+    // NOTE: Using https://localhost (through NGINX) to match production architecture
+    const response1 = await request.get('https://localhost/api/shop/products', {
+      rejectOnStatusCode: false,
+    });
     expect(response1.ok()).toBeTruthy();
 
     const data1 = await response1.json();
-    const cached1 = data1.cached || false;
 
     // Second request should ideally be cached
     // (exact caching behavior depends on cache configuration)
-    const response2 = await request.get('/api/shop/products');
+    const response2 = await request.get('https://localhost/api/shop/products', {
+      rejectOnStatusCode: false,
+    });
     expect(response2.ok()).toBeTruthy();
   });
 
   test('product detail is cached', async ({ request }) => {
     // Get a product first
-    const listResponse = await request.get('/api/shop/products');
+    // NOTE: Using https://localhost (through NGINX) to match production architecture
+    const listResponse = await request.get('https://localhost/api/shop/products', {
+      rejectOnStatusCode: false,
+    });
     const listData = await listResponse.json();
 
     if (listData.products && listData.products.length > 0) {
       const productId = listData.products[0].id;
 
       // Get single product
-      const response = await request.get(`/api/shop/products/${productId}`);
+      const response = await request.get(`https://localhost/api/shop/products/${productId}`, {
+        rejectOnStatusCode: false,
+      });
       expect(response.ok()).toBeTruthy();
 
       const data = await response.json();
@@ -648,5 +660,151 @@ test.describe('Integration: Complete User Journey', () => {
 
       expect(isOnCheckout || hasCheckoutForm).toBeTruthy();
     }
+  });
+});
+
+test.describe('Variant Regression Tests', () => {
+  test('all products in API have variants', async ({ request }) => {
+    // Critical regression test: Ensure products API always returns variants
+    // This prevents the "No variants available" error from reappearing
+    // NOTE: Using https://localhost (through NGINX) to match production architecture
+    const response = await request.get('https://localhost/api/shop/products', {
+      rejectOnStatusCode: false, // Accept self-signed cert in dev
+    });
+    expect(response.ok()).toBeTruthy();
+
+    const data = await response.json();
+    expect(data.products).toBeDefined();
+    expect(Array.isArray(data.products)).toBe(true);
+
+    // Each product MUST have variants
+    data.products.forEach((product: any) => {
+      expect(
+        product.variants,
+        `Product "${product.title}" (${product.id}) must have variants array`
+      ).toBeDefined();
+      expect(
+        Array.isArray(product.variants),
+        `Product "${product.title}" variants must be an array`
+      ).toBe(true);
+      expect(
+        product.variants.length,
+        `Product "${product.title}" must have at least one variant`
+      ).toBeGreaterThan(0);
+    });
+  });
+
+  test('each variant has required pricing data', async ({ request }) => {
+    // Regression test: Variants must have pricing for add-to-cart to work
+    // NOTE: Using https://localhost (through NGINX) to match production architecture
+    const response = await request.get('https://localhost/api/shop/products', {
+      rejectOnStatusCode: false,
+    });
+    const data = await response.json();
+
+    data.products.forEach((product: any) => {
+      product.variants.forEach((variant: any) => {
+        expect(variant.id).toBeDefined();
+        expect(variant.prices).toBeDefined();
+        expect(Array.isArray(variant.prices)).toBe(true);
+        expect(variant.prices.length).toBeGreaterThan(0);
+
+        // Each price must have amount and currency_code
+        variant.prices.forEach((price: any) => {
+          expect(price.amount).toBeDefined();
+          expect(price.amount).toBeGreaterThan(0);
+          expect(price.currency_code).toBeDefined();
+        });
+      });
+    });
+  });
+
+  test('product detail page variant dropdown does not show errors', async ({
+    page,
+  }) => {
+    // Navigate to first product
+    await navigateToPage(page, '/shop');
+    await page.waitForLoadState('networkidle');
+
+    // Click first product
+    await page.locator('text=/\\$50|\\$150|\\$500/i').first().click();
+    await page.waitForLoadState('networkidle');
+
+    // Should NOT see "No variants available" error
+    const errorMessage = page.locator('text=/no variants available/i');
+    await expect(errorMessage).not.toBeVisible();
+
+    // Should have variant selector (if product detail page shows variants UI)
+    const selectElement = page.locator('select').first();
+    const hasSelect = await selectElement.isVisible().catch(() => false);
+
+    if (hasSelect) {
+      // Variant select should have options
+      const options = await selectElement.locator('option').count();
+      expect(options).toBeGreaterThan(0);
+    }
+  });
+
+  test('add to cart works without variant errors', async ({ page }) => {
+    // Critical regression test: The original issue was variants preventing add-to-cart
+    // This ensures that issue never comes back
+    await navigateToPage(page, '/shop');
+    await page.waitForLoadState('networkidle');
+
+    // Click first product
+    await page.locator('text=/\\$50|\\$150|\\$500/i').first().click();
+    await page.waitForLoadState('networkidle');
+
+    // Add to cart button should be visible (variants present)
+    const addButton = page.getByRole('button', { name: /add to cart/i });
+    await expect(addButton).toBeVisible();
+
+    // Click add to cart
+    await addButton.click();
+    await page.waitForTimeout(500);
+
+    // Should NOT show error about variants
+    const errorMessage = page.locator('text=/no variants|variant.*error/i');
+    await expect(errorMessage).not.toBeVisible();
+
+    // Cart badge should update, indicating success
+    const cartBadge = page.locator('[class*="badge"]');
+    const hasUpdate = await cartBadge.filter({ hasText: /[1-9]/ }).isVisible().catch(() => false);
+    // If badge visible and updated, that's good sign
+  });
+
+  test('quick task, standard project, and premium solution all have variants', async ({
+    request,
+  }) => {
+    // Regression test: Specifically verify the 3 sample products all have variants
+    // NOTE: Using https://localhost (through NGINX) to match production architecture
+    const response = await request.get('https://localhost/api/shop/products', {
+      rejectOnStatusCode: false,
+    });
+    const data = await response.json();
+
+    // Find each product
+    const quickTask = data.products.find((p: any) => p.id === 'prod_1');
+    const standardProject = data.products.find((p: any) => p.id === 'prod_2');
+    const premiumSolution = data.products.find((p: any) => p.id === 'prod_3');
+
+    // All must exist and have variants
+    expect(quickTask, 'Quick Task product not found').toBeDefined();
+    expect(quickTask.variants, 'Quick Task must have variants').toBeDefined();
+    expect(quickTask.variants.length, 'Quick Task must have at least 1 variant').toBeGreaterThan(0);
+
+    expect(standardProject, 'Standard Project product not found').toBeDefined();
+    expect(standardProject.variants, 'Standard Project must have variants').toBeDefined();
+    expect(
+      standardProject.variants.length,
+      'Standard Project must have at least 1 variant'
+    ).toBeGreaterThan(0);
+
+    expect(premiumSolution, 'Premium Solution product not found').toBeDefined();
+    expect(premiumSolution.variants, 'Premium Solution must have variants').toBeDefined();
+    expect(
+      premiumSolution.variants.length,
+      'Premium Solution must have at least 1 variant'
+    ).toBeGreaterThan(0);
   });
 });

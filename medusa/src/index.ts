@@ -77,6 +77,18 @@ const sampleProducts = [
     handle: "quick-task",
     prices: [{ amount: 5000, currency_code: "USD" }], // $50
     images: [{ url: "https://via.placeholder.com/300?text=Quick+Task" }],
+    variants: [
+      {
+        id: "variant_prod_1_default",
+        title: "Standard",
+        product_id: "prod_1",
+        prices: [{ amount: 5000, currency_code: "USD" }],
+        inventory_quantity: 999,
+        manage_inventory: false,
+        allow_backorder: true,
+        options: [],
+      },
+    ],
   },
   {
     id: "prod_2",
@@ -85,6 +97,18 @@ const sampleProducts = [
     handle: "standard-project",
     prices: [{ amount: 15000, currency_code: "USD" }], // $150
     images: [{ url: "https://via.placeholder.com/300?text=Standard+Project" }],
+    variants: [
+      {
+        id: "variant_prod_2_default",
+        title: "Standard",
+        product_id: "prod_2",
+        prices: [{ amount: 15000, currency_code: "USD" }],
+        inventory_quantity: 999,
+        manage_inventory: false,
+        allow_backorder: true,
+        options: [],
+      },
+    ],
   },
   {
     id: "prod_3",
@@ -93,6 +117,18 @@ const sampleProducts = [
     handle: "premium-solution",
     prices: [{ amount: 50000, currency_code: "USD" }], // $500
     images: [{ url: "https://via.placeholder.com/300?text=Premium+Solution" }],
+    variants: [
+      {
+        id: "variant_prod_3_default",
+        title: "Standard",
+        product_id: "prod_3",
+        prices: [{ amount: 50000, currency_code: "USD" }],
+        inventory_quantity: 999,
+        manage_inventory: false,
+        allow_backorder: true,
+        options: [],
+      },
+    ],
   },
 ];
 

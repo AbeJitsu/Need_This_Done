@@ -86,6 +86,17 @@ async function handleResponse<T>(response: Response): Promise<T> {
 // Why: Display products in storefront
 // How: Query Medusa product endpoints
 
+interface ProductVariant {
+  id: string;
+  title: string;
+  product_id: string;
+  prices: { amount: number; currency_code: string }[];
+  inventory_quantity?: number;
+  manage_inventory?: boolean;
+  allow_backorder?: boolean;
+  options?: any[];
+}
+
 interface Product {
   id: string;
   title: string;
@@ -93,6 +104,7 @@ interface Product {
   handle: string;
   prices?: { amount: number; currency_code: string }[];
   images?: { url: string }[];
+  variants?: ProductVariant[];
 }
 
 export const products = {
@@ -351,4 +363,4 @@ export const medusaClient = {
   admin,
 };
 
-export type { Product, Cart, LineItem, Order, AdminProduct, MedusaError };
+export type { Product, ProductVariant, Cart, LineItem, Order, AdminProduct, MedusaError };
