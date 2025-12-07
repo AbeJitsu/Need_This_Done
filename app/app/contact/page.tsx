@@ -149,7 +149,7 @@ export default function ContactPage() {
         />
 
         {/* Contact Form */}
-        <Card hoverColor="purple" hoverEffect="glow" className="mb-10">
+        <Card className="mb-10">
           {submitStatus === 'success' ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
@@ -158,9 +158,29 @@ export default function ContactPage() {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 We got your message!
               </h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Thanks for reaching out — we&apos;re excited to learn more about what you need. Expect to hear from us within 2 business days.
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                Thanks for reaching out — we&apos;re excited to learn more about what you need.
               </p>
+
+              {/* What happens next */}
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6 text-left max-w-md mx-auto">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">What happens next:</h3>
+                <ol className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
+                  <li className="flex items-start gap-2">
+                    <span className="font-semibold text-blue-600 dark:text-blue-400">1.</span>
+                    We&apos;ll review your request within 2 business days
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="font-semibold text-blue-600 dark:text-blue-400">2.</span>
+                    You&apos;ll receive a personalized quote via email
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="font-semibold text-blue-600 dark:text-blue-400">3.</span>
+                    Love it? Pay 50% to start, 50% on delivery
+                  </li>
+                </ol>
+              </div>
+
               <button
                 onClick={() => setSubmitStatus('idle')}
                 className="text-blue-600 dark:text-blue-400 font-medium hover:underline"
@@ -356,9 +376,9 @@ export default function ContactPage() {
           title="Want to learn more first?"
           buttons={[
             { text: 'View Our Services', variant: 'blue', href: '/services' },
-            { text: 'Read the FAQ', variant: 'purple', href: '/faq' }
+            { text: 'Read the FAQ', variant: 'teal', href: '/faq' }
           ]}
-          hoverColor="purple"
+          hoverColor="blue"
         />
     </div>
   );

@@ -80,8 +80,8 @@ export default function FAQPage() {
       answer: 'We keep you updated every step of the way. You can expect clear progress updates and quick responses to your questions. We believe good communication makes everything easier.',
     },
     {
-      question: 'What payment methods do you accept?',
-      answer: "We accept major credit cards and other common payment methods. Payment details are discussed when you approve the quote - no surprises.",
+      question: 'How does payment work?',
+      answer: "We use a simple 50/50 structure: 50% deposit to start work, and the remaining 50% when you approve the final delivery. We accept major credit cards and other common payment methods. No surprises, just straightforward pricing.",
     },
     {
       question: 'What if I have a question that is not listed here?',
@@ -139,7 +139,7 @@ export default function FAQPage() {
           title="Still Have Questions?"
           description="We're here to help. Reach out and we'll get back to you promptly."
           buttons={[
-            { text: 'Get In Touch', variant: 'orange', href: '/contact' },
+            { text: 'Get a Quote', variant: 'orange', href: '/contact' },
             { text: 'View Pricing', variant: 'teal', href: '/pricing' }
           ]}
           hoverColor="orange"

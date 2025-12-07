@@ -28,11 +28,11 @@ export default function HomePage() {
             {siteConfig.project.description}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
+            <Button variant="orange" href="/contact">
+              Get a Quote
+            </Button>
             <Button variant="blue" href="/how-it-works">
               See How It Works
-            </Button>
-            <Button variant="purple" href="/services">
-              View Services
             </Button>
           </div>
         </div>
@@ -61,37 +61,46 @@ export default function HomePage() {
         {/* How It Works Preview */}
         <Link
           href="/how-it-works"
-          className="block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 hover:border-purple-400 hover:shadow-xl hover:bg-purple-50/30 active:scale-98 dark:hover:border-purple-500 dark:hover:bg-purple-900/10 dark:hover:shadow-[0_0_24px_rgba(168,85,247,0.3)] group"
+          className="block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 hover:border-blue-400 hover:shadow-xl active:scale-98 dark:hover:border-blue-500 group"
         >
           <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center transition-colors">
             Simple Process
           </h2>
-          <div className="grid md:grid-cols-3 gap-8 text-center">
+          <div className="grid md:grid-cols-4 gap-6 text-center">
             <div>
               <div className="flex justify-center mb-3">
                 <CircleBadge number={1} color="green" size="md" />
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Tell Us What You Need</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Tell Us</h3>
               <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Describe your task, attach any files, and let us know your timeline.
+                Describe what you need
               </p>
             </div>
             <div>
               <div className="flex justify-center mb-3">
                 <CircleBadge number={2} color="blue" size="md" />
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Get a Response</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Get a Quote</h3>
               <p className="text-gray-600 dark:text-gray-300 text-sm">
-                We review your request and get back to you within 2 business days.
+                We respond in 2 days
               </p>
             </div>
             <div>
               <div className="flex justify-center mb-3">
                 <CircleBadge number={3} color="purple" size="md" />
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Task Complete</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Authorize</h3>
               <p className="text-gray-600 dark:text-gray-300 text-sm">
-                We handle the work and deliver results you can count on.
+                50% deposit to start
+              </p>
+            </div>
+            <div>
+              <div className="flex justify-center mb-3">
+                <CircleBadge number={4} color="orange" size="md" />
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Delivery</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                Review and approve
               </p>
             </div>
           </div>
@@ -106,10 +115,10 @@ export default function HomePage() {
             Ready to Get Started?
           </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            Have a task in mind? We'd love to help.
+            Have a task in mind? Tell us about it and we&apos;ll get back with a personalized quote.
           </p>
           <Button variant="orange" href="/contact">
-            Tell Us What You Need
+            Get a Quote
           </Button>
         </div>
       </div>

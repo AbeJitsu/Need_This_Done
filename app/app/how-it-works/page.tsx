@@ -36,33 +36,33 @@ export default function HowItWorksPage() {
     {
       number: 2,
       title: 'We Review & Respond',
-      description: 'We carefully review your request and get back to you within 2 business days with questions or a clear quote.',
+      description: 'We carefully review your request and get back to you within 2 business days with a personalized quote.',
       details: [
         'We assess what needs to be done',
         'We ask clarifying questions if needed',
-        'You receive a straightforward quote',
+        'You receive a clear, transparent quote',
       ],
       color: 'blue',
     },
     {
       number: 3,
-      title: 'We Get to Work',
-      description: 'Once you give the go-ahead, we start on your task. We keep you updated so you always know where things stand.',
+      title: 'Authorize & Start',
+      description: 'Love the quote? Pay a 50% deposit to authorize work and move to the front of our queue.',
       details: [
-        'Work begins on your task',
-        'Regular updates on progress',
-        'Open communication for questions',
+        '50% deposit to begin work',
+        'Secure online payment',
+        'Work starts right away',
       ],
       color: 'purple',
     },
     {
       number: 4,
       title: 'Review & Deliver',
-      description: 'You review the completed work. We make any needed adjustments until you are completely satisfied.',
+      description: 'You review the completed work. Once you approve, pay the remaining 50% and we deliver everything.',
       details: [
         'You review what we have done',
         'We address any feedback',
-        'Final delivery. Task complete!',
+        'Final 50% on approval, then delivery!',
       ],
       color: 'orange',
     },
@@ -98,9 +98,9 @@ export default function HowItWorksPage() {
         {/* CTA */}
         <CTASection
           title="Ready to Get Started?"
-          description="Tell us what you need and we'll take it from there."
+          description="Tell us what you need and we'll get back with a personalized quote."
           buttons={[
-            { text: 'Get In Touch', variant: 'orange', href: '/contact' },
+            { text: 'Get a Quote', variant: 'orange', href: '/contact' },
             { text: 'View Pricing', variant: 'teal', href: '/pricing' }
           ]}
           hoverColor="orange"

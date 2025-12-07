@@ -97,9 +97,10 @@ export default function ServicesPage() {
         {/* CTA */}
         <CTASection
           title="Ready to Get Started?"
-          description="See how we work, or let's get started."
+          description="Tell us about your project and we'll get back to you with a personalized quote."
           buttons={[
-            { text: 'How It Works', variant: 'orange', href: '/how-it-works' },
+            { text: 'Get a Quote', variant: 'orange', href: '/contact' },
+            { text: 'How It Works', variant: 'blue', href: '/how-it-works' },
             { text: 'FAQ', variant: 'teal', href: '/faq' }
           ]}
           hoverColor="orange"

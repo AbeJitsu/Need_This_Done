@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { useCart } from '@/context/CartContext';
 import { signOut } from '@/lib/auth';
 import DarkModeToggle from './DarkModeToggle';
 
@@ -16,20 +15,19 @@ import DarkModeToggle from './DarkModeToggle';
 // Active link is highlighted based on current URL.
 // Shows login link or user dropdown based on auth state.
 
+// Main navigation links (excludes Contact - that's now the primary CTA)
 const navigationLinks = [
   { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/how-it-works', label: 'How It Works' },
   { href: '/faq', label: 'FAQ' },
-  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, isAuthenticated, isAdmin, isLoading } = useAuth();
-  const { itemCount } = useCart();
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -86,11 +84,11 @@ export default function Navigation() {
                     key={link.href}
                     href={link.href}
                     className={`
-                      px-3 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors
+                      px-3 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors border
                       ${
                         isActive
-                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                          ? 'bg-blue-100 text-blue-700 border-blue-500 dark:border-blue-400'
+                          : 'text-gray-600 dark:text-gray-400 border-transparent hover:text-gray-900 dark:hover:text-gray-200'
                       }
                     `}
                   >
@@ -119,27 +117,23 @@ export default function Navigation() {
               )}
             </button>
 
-            {/* Shopping Cart Icon */}
+            {/* Get a Quote CTA - Primary conversion action */}
             <Link
-              href="/cart"
-              className="relative p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
-              aria-label={`Shopping cart with ${itemCount} items`}
+              href="/contact"
+              className={`
+                hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors border
+                bg-orange-100 text-orange-800 border-orange-500 dark:border-orange-400
+                hover:text-orange-900 hover:border-orange-600 dark:hover:border-orange-300
+              `}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-              {itemCount > 0 && (
-                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-                  {itemCount}
-                </span>
-              )}
+              Get a Quote
             </Link>
 
             {/* Dark Mode Toggle */}
             <DarkModeToggle />
 
-            {/* Auth Section */}
-            <div className="flex-shrink-0 border-l border-gray-200 dark:border-gray-700 pl-4">
+            {/* Auth Section - Less prominent, for returning customers */}
+            <div className="flex-shrink-0">
               {isLoading ? (
                 <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
               ) : isAuthenticated ? (
@@ -148,12 +142,11 @@ export default function Navigation() {
                   <button
                     type="button"
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-md transition-colors"
+                    className="flex items-center gap-2 px-2 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-md transition-colors"
                   >
-                    <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-semibold">
+                    <div className="w-7 h-7 rounded-full bg-gray-400 dark:bg-gray-600 text-white flex items-center justify-center text-xs font-semibold">
                       {user?.email?.charAt(0).toUpperCase() || 'U'}
                     </div>
-                    <span className="hidden sm:inline">Account</span>
                   </button>
 
                   {showDropdown && (
@@ -172,13 +165,22 @@ export default function Navigation() {
                         Dashboard
                       </Link>
                       {isAdmin && (
-                        <Link
-                          href="/admin/users"
-                          onClick={() => setShowDropdown(false)}
-                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                          Manage Users
-                        </Link>
+                        <>
+                          <Link
+                            href="/admin/users"
+                            onClick={() => setShowDropdown(false)}
+                            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            Manage Users
+                          </Link>
+                          <Link
+                            href="/admin/dev"
+                            onClick={() => setShowDropdown(false)}
+                            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            Dev Dashboard
+                          </Link>
+                        </>
                       )}
                       <button
                         type="button"
@@ -191,19 +193,12 @@ export default function Navigation() {
                   )}
                 </div>
               ) : (
-                // Logged Out - Login Link
+                // Logged Out - Subtle login link for returning customers
                 <Link
                   href="/login"
-                  className={`
-                    px-3 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors
-                    ${
-                      pathname === '/login'
-                        ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                    }
-                  `}
+                  className="hidden sm:inline-flex text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 >
-                  Login
+                  Sign in
                 </Link>
               )}
             </div>
@@ -226,11 +221,11 @@ export default function Navigation() {
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`
-                    block px-3 py-2 text-base font-medium rounded-md transition-colors
+                    block px-3 py-2 text-base font-medium rounded-md transition-colors border
                     ${
                       isActive
-                        ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
+                        ? 'bg-blue-100 text-blue-700 border-blue-500 dark:border-blue-400'
+                        : 'text-gray-600 dark:text-gray-400 border-transparent hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
                     }
                   `}
                 >
@@ -238,6 +233,26 @@ export default function Navigation() {
                 </Link>
               );
             })}
+
+            {/* Primary CTA in mobile menu */}
+            <Link
+              href="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium rounded-md transition-colors mt-2 border bg-orange-100 text-orange-800 border-orange-500 dark:border-orange-400 hover:text-orange-900 hover:border-orange-600 dark:hover:border-orange-300"
+            >
+              Get a Quote
+            </Link>
+
+            {/* Sign in link for mobile */}
+            {!isAuthenticated && (
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                Sign in
+              </Link>
+            )}
           </div>
         </div>
       )}
