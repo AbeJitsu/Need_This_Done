@@ -28,4 +28,4 @@ COPY . .
 
 # Default command: run integration tests
 # Environment variables are provided by docker-compose.test.yml
-CMD ["npm", "run", "test:integration:run"]
+CMD ["npx", "vitest", "run", "--config", "vitest.integration.config.ts"]
