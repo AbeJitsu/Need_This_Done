@@ -245,7 +245,7 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
                  border-l border-t border-b border-gray-200 dark:border-gray-700
                  transition-all duration-300 ease-in-out"
       role="dialog"
-      aria-modal="false"
+      aria-modal="true"
       aria-labelledby="chatbot-title"
     >
       {/* ================================================================
