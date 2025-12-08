@@ -171,18 +171,25 @@
    - Hook into checkout flow
 
 ### Medium Term (Admin & Documentation)
-1. **Refine Admin Workflows**
+1. **Google Calendar Integration** - Scheduling & appointments
+   - Connect Google Calendar API for appointment booking
+   - Allow clients to schedule consultations/project kickoff calls
+   - Admin calendar sync for availability management
+   - Automated reminders and confirmation emails
+   - Integration with project workflow (link appointments to projects)
+
+2. **Refine Admin Workflows**
    - Inventory management interface
    - Bulk product import/export
    - Order status updates & fulfillment tracking
    - Analytics dashboard (orders, revenue, trends)
 
-2. **Complete Documentation**
+3. **Complete Documentation**
    - [ ] Document Medusa API contract (complete - see MEDUSA_INTEGRATION.md)
    - [ ] Document Stripe integration flow
    - [ ] Create Puck setup guide (line 204)
 
-3. **Performance & Caching**
+4. **Performance & Caching**
    - [ ] Define Redis cache invalidation strategy per feature
    - [ ] Monitor cache hit rates
    - [ ] Optimize product queries with pagination
@@ -202,5 +209,18 @@
 
 ---
 
-*Last Updated: December 6, 2025*
+## Known Issues
+
+### Context7 MCP Authorization Issue
+- **Status:** Unresolved
+- **Problem:** `resolve-library-id` works but `get-library-docs` returns "Unauthorized"
+- **API Key:** Format correct (`ctx7sk-...`), stored in `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **To Resolve:**
+  1. Verify key is active at [context7.com/dashboard](https://context7.com/dashboard)
+  2. Try regenerating a new API key
+  3. Update MCP config with new key and restart Claude
+
+---
+
+*Last Updated: December 8, 2025*
 *Completed: Medusa ecommerce (Phase 7), Puck visual editor (Phase 6), and Supabase local development setup*
