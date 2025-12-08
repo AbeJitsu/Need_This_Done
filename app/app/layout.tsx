@@ -4,6 +4,7 @@ import './globals.css';
 import Navigation from '@/components/Navigation';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
+import { StripeProvider } from '@/context/StripeContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 
 // Inter font - modern, trustworthy, highly readable (body text)
@@ -74,25 +75,27 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <CartProvider>
-            {/* Skip to main content link for keyboard users */}
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:absolute focus:left-0 focus:top-0 focus:bg-blue-600 focus:text-white focus:p-2 focus:z-50"
-            >
-              Skip to main content
-            </a>
+            <StripeProvider>
+              {/* Skip to main content link for keyboard users */}
+              <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:absolute focus:left-0 focus:top-0 focus:bg-blue-600 focus:text-white focus:p-2 focus:z-50"
+              >
+                Skip to main content
+              </a>
 
-            {/* Site-wide navigation (includes dark mode toggle) */}
-            <Navigation />
+              {/* Site-wide navigation (includes dark mode toggle) */}
+              <Navigation />
 
-            {/* Page content - gradient background applied here once for all pages */}
-            <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">
-              {children}
-            </main>
+              {/* Page content - gradient background applied here once for all pages */}
+              <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">
+                {children}
+              </main>
 
-            {/* AI Chatbot - floating widget available on all pages */}
-            <PageIndexer />
-            <ChatbotWidget />
+              {/* AI Chatbot - floating widget available on all pages */}
+              <PageIndexer />
+              <ChatbotWidget />
+            </StripeProvider>
           </CartProvider>
         </AuthProvider>
       </body>

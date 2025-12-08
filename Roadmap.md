@@ -135,16 +135,41 @@
 - Client confirmation email (2 business day response)
 - Hook into `/api/projects` POST handler
 
-### Stripe Integration
+### Stripe Integration ✅
 
-**Current (Manual):**
-- Create payment links in Stripe dashboard
-- Send links manually after quoting
+**Implemented:**
+- Stripe Elements (embedded payment form on checkout page)
+- One-time payments via PaymentIntent
+- Subscription support (API ready)
+- Webhook handling for payment events
+- Database tables for customers, subscriptions, payments
 
-**Future (Automated):**
-- Checkout session endpoint
-- Payment link generation from admin panel
-- Webhook integration for payment updates
+**Environment Variables Required:**
+```
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+**Files Created:**
+- `app/lib/stripe.ts` - Server-side Stripe client
+- `app/context/StripeContext.tsx` - Client-side provider
+- `app/components/PaymentForm.tsx` - Stripe Elements form
+- `app/app/api/stripe/create-payment-intent/route.ts`
+- `app/app/api/stripe/create-subscription/route.ts`
+- `app/app/api/stripe/webhook/route.ts`
+- `supabase/migrations/010_create_stripe_tables.sql`
+
+**Testing:**
+```bash
+# Install Stripe CLI, then:
+stripe login
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+```
+
+**Test Cards:**
+- `4242424242424242` - Success
+- `4000000000000002` - Declined
 
 ---
 
@@ -157,11 +182,7 @@
 - [ ] Manual smoke test: browse shop → add to cart → checkout flow
 
 ### Short Term (Payment & Operations)
-1. **Stripe Integration** - Enable actual payments
-   - Install Stripe SDK: `npm install @stripe/stripe-js`
-   - Create checkout session endpoint
-   - Implement Stripe webhook handler for payment confirmations
-   - Update `docs/STRIPE_INTEGRATION.md` (placeholder in Roadmap.md line 203)
+1. ~~**Stripe Integration** - Enable actual payments~~ ✅ DONE
 
 2. **Email Notifications** - Order confirmations & alerts
    - Set up Resend account and add `RESEND_API_KEY` to `.env.local`
@@ -223,4 +244,4 @@
 ---
 
 *Last Updated: December 8, 2025*
-*Completed: Medusa ecommerce (Phase 7), Puck visual editor (Phase 6), and Supabase local development setup*
+*Completed: Medusa ecommerce (Phase 7), Puck visual editor (Phase 6), Stripe payment integration, and Supabase local development setup*
