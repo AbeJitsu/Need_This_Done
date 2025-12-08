@@ -71,16 +71,19 @@ export async function POST(req: Request) {
     const supabase = getSupabaseAdmin();
 
     const similarityThreshold = parseFloat(
-      process.env.VECTOR_SEARCH_SIMILARITY_THRESHOLD || '0.5'
+      process.env.VECTOR_SEARCH_SIMILARITY_THRESHOLD || '0.1'
     );
     const maxResults = parseInt(
       process.env.VECTOR_SEARCH_MAX_RESULTS || '5'
     );
 
+    // Convert embedding array to string format for pgvector RPC
+    const embeddingStr = `[${embedding.join(',')}]`;
+
     const { data: matches, error: searchError } = await supabase.rpc(
       'match_page_embeddings',
       {
-        query_embedding: embedding,
+        query_embedding: embeddingStr,
         match_threshold: similarityThreshold,
         match_count: maxResults,
       }

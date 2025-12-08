@@ -21,9 +21,6 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-// For Docker: Use internal URL for server-side operations (host.docker.internal)
-// Falls back to the public URL if not set
-const supabaseInternalUrl = process.env.SUPABASE_INTERNAL_URL || supabaseUrl;
 
 // ============================================================================
 // Browser Client - For Client-Side Operations with Cookie Storage
@@ -68,7 +65,7 @@ if (!supabaseServiceRoleKey) {
 }
 
 export const supabaseAdmin = supabaseServiceRoleKey
-  ? createClient(supabaseInternalUrl!, supabaseServiceRoleKey)
+  ? createClient(supabaseUrl!, supabaseServiceRoleKey)
   : null;
 
 // ============================================================================
