@@ -98,11 +98,25 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
   // Persist messages to localStorage when they change
   // ========================================================================
   useEffect(() => {
-    // Only save if we have messages and not currently loading
-    if (messages.length > 0 && !isLoading) {
+    // Save messages whenever they change (including during streaming)
+    if (messages.length > 0) {
       saveMessagesToStorage(messages);
     }
-  }, [messages, isLoading]);
+  }, [messages]);
+
+  // ========================================================================
+  // Save messages before page unload (handles full page navigations)
+  // ========================================================================
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (messages.length > 0) {
+        saveMessagesToStorage(messages);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [messages]);
 
   // ========================================================================
   // Auto-scroll to bottom when new messages arrive
@@ -137,6 +151,15 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
 
+  // ========================================================================
+  // Clear chat handler - clears both state and localStorage
+  // ========================================================================
+  // Note: This hook must be before any conditional returns
+  const handleClearChat = useCallback(() => {
+    setMessages([]);
+    clearMessagesFromStorage();
+  }, [setMessages]);
+
   // Don't render if panel is closed
   if (!isOpen) return null;
 
@@ -151,14 +174,6 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
     setInput(''); // Clear input immediately
     await sendMessage({ text: trimmedInput });
   };
-
-  // ========================================================================
-  // Clear chat handler - clears both state and localStorage
-  // ========================================================================
-  const handleClearChat = useCallback(() => {
-    setMessages([]);
-    clearMessagesFromStorage();
-  }, [setMessages]);
 
   // ========================================================================
   // Collapsed View - Narrow strip with expand button

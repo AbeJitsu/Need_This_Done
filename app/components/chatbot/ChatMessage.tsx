@@ -1,5 +1,7 @@
 'use client';
 
+import { useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import type { UIMessage } from 'ai';
 
 // ============================================================================
@@ -35,6 +37,23 @@ function getMessageText(message: UIMessage): string {
 export default function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === 'user';
   const content = getMessageText(message);
+  const router = useRouter();
+
+  // ========================================================================
+  // Handle link clicks - use client-side navigation for internal links
+  // ========================================================================
+  // This prevents full page reloads and preserves chat state
+  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'A') {
+      const href = target.getAttribute('href');
+      // Use client-side navigation for internal links (starting with /)
+      if (href && href.startsWith('/')) {
+        e.preventDefault();
+        router.push(href);
+      }
+    }
+  }, [router]);
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
@@ -47,6 +66,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
       >
         {/* Message content with markdown link support */}
         <div
+          onClick={handleClick}
           className={`prose prose-sm max-w-none ${
             isUser
               ? 'prose-invert'
