@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
 import { useDashboard, LoadingSkeleton, ErrorDisplay } from '@/hooks/useDashboard';
@@ -61,6 +62,53 @@ export default function AdminDashboard() {
         <p className="text-gray-600 dark:text-gray-400">
           Everything in one place. Click a project to dig in.
         </p>
+      </div>
+
+      {/* ====================================================================
+          Quick Links
+          ==================================================================== */}
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Link
+          href="/admin/content"
+          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all group"
+        >
+          <div className="text-2xl mb-2">📝</div>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+            Edit Content
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Marketing pages</p>
+        </Link>
+        <Link
+          href="/admin/pages"
+          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-purple-400 dark:hover:border-purple-500 hover:shadow-md transition-all group"
+        >
+          <div className="text-2xl mb-2">🎨</div>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400">
+            Puck Pages
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Custom pages</p>
+        </Link>
+        <Link
+          href="/admin/shop"
+          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-500 hover:shadow-md transition-all group"
+        >
+          <div className="text-2xl mb-2">🛒</div>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-green-600 dark:group-hover:text-green-400">
+            Shop
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Products & orders</p>
+        </Link>
+        <Link
+          href="/admin/dev"
+          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-orange-400 dark:hover:border-orange-500 hover:shadow-md transition-all group"
+        >
+          <div className="text-2xl mb-2">⚙️</div>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-orange-600 dark:group-hover:text-orange-400">
+            Dev Tools
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">System overview</p>
+        </Link>
       </div>
 
       {/* ====================================================================

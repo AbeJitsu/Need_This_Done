@@ -169,21 +169,48 @@ MEDUSA_ADMIN_JWT_SECRET=your_admin_secret
 # Redis
 REDIS_URL=redis://redis:6379
 
-# Supabase
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_KEY=your-service-key
-```
-
-**`app/.env.local`** (Next.js app):
-```bash
-# Medusa (for client-side access)
-NEXT_PUBLIC_MEDUSA_URL=http://localhost:9000
-
-# Supabase (same as root)
+# Supabase (see "Choosing Cloud vs Local Supabase" below)
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_KEY=your-service-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-key
+
+# AI Chatbot (optional - for RAG chatbot feature)
+OPENAI_API_KEY=sk-...
+```
+
+### Choosing Cloud vs Local Supabase
+
+You can run with **Cloud Supabase** (easier, OAuth works) or **Local Supabase** (offline, free).
+
+**Option A: Cloud Supabase (Recommended for OAuth)**
+```bash
+# .env.local - Point to your cloud project
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...your-cloud-anon-key
+SUPABASE_SERVICE_ROLE_KEY=eyJ...your-cloud-service-key
+# Don't set SUPABASE_INTERNAL_URL (not needed for cloud)
+```
+
+**Option B: Local Supabase (Offline development)**
+```bash
+# .env.local - Point to local Supabase + internal URL for Docker
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-local-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-local-service-key
+
+# REQUIRED for Docker: Allows container to reach host's Supabase
+SUPABASE_INTERNAL_URL=http://host.docker.internal:54321
+```
+
+**Note**: OAuth providers (Google, GitHub, etc.) only work with Cloud Supabase unless you configure them locally. For local development with OAuth, use Cloud Supabase.
+
+**`app/.env.local`** (Next.js app - can symlink to root):
+```bash
+# Either copy .env.local to app/.env.local, OR create a symlink:
+# cd app && ln -sf ../.env.local .env.local
+
+# Medusa (for client-side access)
+NEXT_PUBLIC_MEDUSA_URL=http://localhost:9000
 ```
 
 ### Stopping Services

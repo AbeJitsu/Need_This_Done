@@ -4,27 +4,58 @@ import ServiceCard from '@/components/ServiceCard';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
+import { getDefaultServicesContent } from '@/lib/default-page-content';
+import type { ServicesPageContent } from '@/lib/page-content-types';
 
 // ============================================================================
 // Services Page - What NeedThisDone Offers
 // ============================================================================
 // Lists the services available and explains what clients can expect.
+// Services come from site.config.ts (developer-controlled).
+// Other content is fetched from the database (if customized) or uses defaults.
 
 export const metadata = {
   title: 'Services - NeedThisDone',
   description: 'We handle everyday tasks for busy professionals. Data, documents, admin work, and friendly tech help.',
 };
 
-export default function ServicesPage() {
-  const services = getServices();
+// ============================================================================
+// Content Fetching
+// ============================================================================
+
+async function getContent(): Promise<ServicesPageContent> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/page-content/services`, {
+      next: { revalidate: 60 },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.content as ServicesPageContent;
+    }
+  } catch (error) {
+    console.error('Failed to fetch services content:', error);
+  }
+
+  return getDefaultServicesContent();
+}
+
+// ============================================================================
+// Page Component
+// ============================================================================
+
+export default async function ServicesPage() {
+  const content = await getContent();
+  const services = getServices(); // Services always come from config
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
         <PageHeader
-          title="How We Can Help"
-          description="Too busy? Not sure where to start? We handle the tasks you don't have time for, so you can focus on what matters most."
+          title={content.header.title}
+          description={content.header.description}
         />
 
         {/* Services Grid */}
@@ -45,68 +76,50 @@ export default function ServicesPage() {
         {/* What to Expect */}
         <Card hoverColor="green" hoverEffect="glow" className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
-            What You Can Expect
+            {content.expectationsTitle}
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Clear Communication</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  We keep you informed every step of the way. No surprises.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Quality Work</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  We take pride in delivering work you can rely on.
-                </p>
-              </div>
-            </div>
-            <Link href="/pricing" className="flex gap-4 group">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  Fair Pricing <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Transparent quotes with no hidden fees.
-                </p>
-              </div>
-            </Link>
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Timely Delivery</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  We respect your deadlines and deliver on time.
-                </p>
-              </div>
-            </div>
+            {content.expectations.map((item, index) => {
+              const itemContent = (
+                <>
+                  <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
+                    <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
+                  </div>
+                  <div>
+                    <h3 className={`font-semibold text-gray-900 dark:text-gray-100 mb-1 ${item.link ? 'group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors' : ''}`}>
+                      {item.title}
+                      {item.link && <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity"> →</span>}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                      {item.description}
+                    </p>
+                  </div>
+                </>
+              );
+
+              if (item.link) {
+                return (
+                  <Link key={index} href={item.link.href} className="flex gap-4 group">
+                    {itemContent}
+                  </Link>
+                );
+              }
+
+              return (
+                <div key={index} className="flex gap-4">
+                  {itemContent}
+                </div>
+              );
+            })}
           </div>
         </Card>
 
         {/* CTA */}
         <CTASection
-          title="Ready to Get Started?"
-          description="Tell us about your project and we'll get back to you with a personalized quote."
-          buttons={[
-            { text: 'Get a Quote', variant: 'orange', href: '/contact' },
-            { text: 'How It Works', variant: 'blue', href: '/how-it-works' },
-            { text: 'FAQ', variant: 'teal', href: '/faq' }
-          ]}
-          hoverColor="orange"
+          title={content.cta.title}
+          description={content.cta.description}
+          buttons={content.cta.buttons}
+          hoverColor={content.cta.hoverColor || 'orange'}
         />
     </div>
   );

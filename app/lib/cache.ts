@@ -45,6 +45,10 @@ export const CACHE_KEYS = {
   // Page data
   page: (slug: string) => `page:${slug}`,
 
+  // Page content (editable marketing page content)
+  pageContent: (slug: string) => `page-content:${slug}`,
+  adminPageContent: () => 'admin:page-content:all',
+
   // Static content
   services: () => 'static:services',
   pricing: () => 'static:pricing',
