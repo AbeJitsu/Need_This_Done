@@ -1,10 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Read(./.env.example)",
-      "Read(app/.env.example)",
-      "Write(./.env.example)",
-      "Write(app/.env.example)"
+   
     ],
     "deny": [
       "Read(./.env*)",

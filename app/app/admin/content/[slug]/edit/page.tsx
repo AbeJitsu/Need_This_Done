@@ -3,27 +3,20 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Puck, type Data } from '@measured/puck';
-import {
-  getContentConfig,
-  contentToPuckData,
-  puckDataToContent,
-} from '@/lib/puck-content-configs';
+import { ContentEditor } from '@/components/content-editor';
 import {
   EDITABLE_PAGES,
-  PAGE_DISPLAY_NAMES,
   type EditablePageSlug,
   type PageContent,
 } from '@/lib/page-content-types';
-import Button from '@/components/Button';
-import '@measured/puck/puck.css';
+import { getDefaultContent } from '@/lib/default-page-content';
 
 // ============================================================================
-// Admin Content Editor - Puck-based Editor for Page Content
+// Admin Content Editor Page
 // ============================================================================
-// What: Visual editor for marketing page content (not layout)
-// Why: Allows non-technical users to edit text, colors, and items
-// How: Uses Puck with content-specific configs, transforms data on save
+// What: Side-by-side editor for marketing page content
+// Why: Allows non-technical users to edit text, colors, and content
+// How: Uses ContentEditor with form on left, live preview on right
 
 export default function EditContentPage({
   params,
@@ -32,14 +25,12 @@ export default function EditContentPage({
 }) {
   const router = useRouter();
   const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
-  const [initialData, setInitialData] = useState<Data | null>(null);
+  const [initialContent, setInitialContent] = useState<PageContent | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   const slug = params.slug as EditablePageSlug;
   const isValidSlug = EDITABLE_PAGES.includes(slug);
-  const displayName = PAGE_DISPLAY_NAMES[slug] || slug;
 
   // Auth protection
   useEffect(() => {
@@ -70,9 +61,7 @@ export default function EditContentPage({
           throw new Error(data.error || 'Failed to load content');
         }
 
-        // Transform our content structure to Puck's format
-        const puckData = contentToPuckData(slug, data.content as PageContent);
-        setInitialData(puckData);
+        setInitialContent(data.content as PageContent);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load content');
       } finally {
@@ -83,100 +72,70 @@ export default function EditContentPage({
     fetchContent();
   }, [isAdmin, isValidSlug, slug]);
 
-  const handleSave = async (data: Data) => {
-    setSaving(true);
-    setError('');
+  // Handle publish
+  const handlePublish = async (content: PageContent) => {
+    const response = await fetch(`/api/page-content/${slug}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content }),
+    });
 
-    try {
-      // Transform Puck's format back to our content structure
-      const content = puckDataToContent(slug, data);
+    const result = await response.json();
 
-      const response = await fetch(`/api/page-content/${slug}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to save content');
-      }
-
-      // Navigate back to content list
-      router.push('/admin/content');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save content');
-      setSaving(false);
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to save content');
     }
+
+    // Navigate back to content list on success
+    router.push('/admin/content');
   };
 
+  // Loading state
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">Loading...</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading editor...</p>
+        </div>
       </div>
     );
   }
 
-  if (!isAdmin || !isValidSlug || !initialData) return null;
-
-  const config = getContentConfig(slug);
-
-  return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
-        <div className="container mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Edit {displayName} Content
-            </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Changes will appear on the live page when you save
-            </p>
+  // Error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="text-center max-w-md">
+          <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
           </div>
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant="gray"
-              href="/admin/content"
-            >
-              Cancel
-            </Button>
-            <Button
-              size="sm"
-              variant="gray"
-              href={`/${slug === 'home' ? '' : slug}`}
-            >
-              Preview Page
-            </Button>
-          </div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            Failed to Load
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+          <button
+            onClick={() => router.push('/admin/content')}
+            className="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            Back to Content List
+          </button>
         </div>
       </div>
+    );
+  }
 
-      {/* Error Message */}
-      {error && (
-        <div className="bg-red-50 border-b border-red-200 text-red-700 px-4 py-3 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
-          <div className="container mx-auto">{error}</div>
-        </div>
-      )}
+  // Auth/validation guards
+  if (!isAdmin || !isValidSlug || !initialContent) return null;
 
-      {/* Saving Indicator */}
-      {saving && (
-        <div className="bg-blue-50 border-b border-blue-200 text-blue-700 px-4 py-3 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-300">
-          <div className="container mx-auto">Saving changes...</div>
-        </div>
-      )}
-
-      {/* Puck Editor */}
-      <Puck
-        config={config}
-        data={initialData}
-        onPublish={handleSave}
-        headerPath="/admin/content"
-        headerTitle={`Edit ${displayName}`}
-      />
-    </div>
+  return (
+    <ContentEditor
+      slug={slug}
+      initialContent={initialContent}
+      defaultContent={getDefaultContent(slug)}
+      onPublish={handlePublish}
+    />
   );
 }

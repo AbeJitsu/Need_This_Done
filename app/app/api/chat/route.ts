@@ -29,21 +29,40 @@ export async function POST(req: Request) {
       );
     }
 
+    // ========================================================================
+    // Extract message content (handles AI SDK v5 format with parts array)
+    // ========================================================================
+    // AI SDK v5 sends: { parts: [{ type: "text", text: "..." }], role: "user" }
+    // Legacy format:   { content: "...", role: "user" }
+    const getMessageContent = (msg: { content?: string; parts?: { type: string; text: string }[] }): string | null => {
+      if (msg.content) return msg.content;
+      if (msg.parts?.[0]?.text) return msg.parts[0].text;
+      return null;
+    };
+
     // Get the last user message for embedding
     const lastMessage = messages[messages.length - 1];
-    if (!lastMessage?.content || typeof lastMessage.content !== 'string') {
+    const lastMessageContent = getMessageContent(lastMessage);
+
+    if (!lastMessageContent) {
       return new Response(
         JSON.stringify({ error: 'Invalid message format' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
+    // Transform messages to standard format for streamText
+    const normalizedMessages = messages.map((msg: { role: string; content?: string; parts?: { type: string; text: string }[] }) => ({
+      role: msg.role,
+      content: getMessageContent(msg) || '',
+    }));
+
     // ========================================================================
     // Step 1: Generate embedding for user's question
     // ========================================================================
     const { embedding } = await embed({
       model: openai.embedding('text-embedding-3-small'),
-      value: lastMessage.content,
+      value: lastMessageContent,
     });
 
     // ========================================================================
@@ -120,7 +139,7 @@ Example: "Our services include data entry and web development [Services](/servic
     const result = streamText({
       model: openai('gpt-4o-mini'),
       system: systemPrompt,
-      messages,
+      messages: normalizedMessages,
       maxOutputTokens: 1000,
       temperature: 0.7,
     });
