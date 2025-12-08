@@ -361,9 +361,9 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
           <div className="flex justify-start">
             <div className="bg-gray-100 dark:bg-gray-700 rounded-2xl rounded-bl-md px-4 py-3">
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce animate-delay-0" />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce animate-delay-150" />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce animate-delay-300" />
               </div>
             </div>
           </div>
@@ -410,6 +410,8 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
+            aria-label="Send message"
+            title="Send message"
             className="px-5 py-3 rounded-xl
                        bg-blue-600 hover:bg-blue-700
                        dark:bg-blue-500 dark:hover:bg-blue-600

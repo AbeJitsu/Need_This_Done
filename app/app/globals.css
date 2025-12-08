@@ -399,6 +399,24 @@ Respects prefers-reduced-motion for users who prefer minimal animation
 WCAG requirement for accessibility
 */
 
+/* ========================================================================
+Animation Delay Utilities - Loading States
+========================================================================
+Used for staggered bounce animations (e.g., loading dots in chatbot)
+*/
+
+.animate-delay-0 {
+  animation-delay: 0ms;
+}
+
+.animate-delay-150 {
+  animation-delay: 150ms;
+}
+
+.animate-delay-300 {
+  animation-delay: 300ms;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -13,21 +13,10 @@ dotenv.config({ path: '.env.local' });
 //   - Local: `npm run test:e2e` (starts dev server automatically)
 //   - Docker: `npm run test:e2e:docker` (uses app container in Docker network)
 
-const baseURL = process.env.BASE_URL;
-
-// Validate that BASE_URL is set (required for all E2E test runs)
-if (!baseURL) {
-  throw new Error(
-    'BASE_URL environment variable is required.\n' +
-    'Local dev: Set BASE_URL=http://localhost:3000\n' +
-    'Docker: Set BASE_URL=https://nginx (done automatically by docker-compose.e2e.yml)'
-  );
-}
-
-// Warn if not using nginx in Docker/CI environments
-if (process.env.CI && !baseURL.includes('nginx')) {
-  console.warn('⚠️  Warning: E2E tests should use nginx in Docker/CI environments');
-}
+// Base URL for E2E tests - always go through nginx
+// Local: https://localhost (nginx on host)
+// Docker: https://nginx (set by docker-compose.e2e.yml)
+const baseURL = process.env.BASE_URL || 'https://localhost';
 
 export default defineConfig({
   // ============================================================================
