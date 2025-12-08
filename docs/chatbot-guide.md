@@ -92,10 +92,10 @@ Verifies if a page is indexed with a specific content hash.
 
 Set these in your environment or docker-compose.yml:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `VECTOR_SEARCH_SIMILARITY_THRESHOLD` | 0.5 | Minimum similarity score (0-1) |
-| `VECTOR_SEARCH_MAX_RESULTS` | 5 | Maximum chunks to include in context |
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VECTOR_SEARCH_SIMILARITY_THRESHOLD` | Yes | Minimum similarity score (0-1). Recommended: 0.5 |
+| `VECTOR_SEARCH_MAX_RESULTS` | Yes | Maximum chunks to include in context. Recommended: 5 |
 
 Lower threshold = more results but potentially less relevant.
 Higher threshold = fewer but more precise matches.

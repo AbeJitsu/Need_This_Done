@@ -70,12 +70,19 @@ export async function POST(req: Request) {
     // ========================================================================
     const supabase = getSupabaseAdmin();
 
+    // Vector search config - values must be set via environment variables
     const similarityThreshold = parseFloat(
-      process.env.VECTOR_SEARCH_SIMILARITY_THRESHOLD || '0.5'
+      process.env.VECTOR_SEARCH_SIMILARITY_THRESHOLD!
     );
     const maxResults = parseInt(
-      process.env.VECTOR_SEARCH_MAX_RESULTS || '5'
+      process.env.VECTOR_SEARCH_MAX_RESULTS!
     );
+
+    if (isNaN(similarityThreshold) || isNaN(maxResults)) {
+      throw new Error(
+        'VECTOR_SEARCH_SIMILARITY_THRESHOLD and VECTOR_SEARCH_MAX_RESULTS env vars are required'
+      );
+    }
 
     // Convert embedding array to string format for pgvector RPC
     const embeddingStr = `[${embedding.join(',')}]`;
