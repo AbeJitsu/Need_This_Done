@@ -1,10 +1,47 @@
 'use client';
 
-import { useRef, useEffect, useState, useMemo, FormEvent } from 'react';
+import { useRef, useEffect, useState, useMemo, useCallback, FormEvent } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { TextStreamChatTransport } from 'ai';
+import type { UIMessage } from '@ai-sdk/react';
 import ChatMessage from './ChatMessage';
 import { useIndexingOptional } from './IndexingContext';
+
+// ============================================================================
+// Chat Persistence - Keep chat history across page navigations
+// ============================================================================
+const CHAT_STORAGE_KEY = 'ntd-chat-messages';
+
+function loadMessagesFromStorage(): UIMessage[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const stored = localStorage.getItem(CHAT_STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (e) {
+    console.warn('[Chat] Failed to load messages from storage:', e);
+  }
+  return [];
+}
+
+function saveMessagesToStorage(messages: UIMessage[]) {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+  } catch (e) {
+    console.warn('[Chat] Failed to save messages to storage:', e);
+  }
+}
+
+function clearMessagesFromStorage() {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.removeItem(CHAT_STORAGE_KEY);
+  } catch (e) {
+    console.warn('[Chat] Failed to clear messages from storage:', e);
+  }
+}
 
 // ============================================================================
 // Chatbot Panel Component
@@ -46,12 +83,26 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
     []
   );
 
-  // Use the chat hook with the transport
+  // Load initial messages from localStorage
+  const initialMessages = useMemo(() => loadMessagesFromStorage(), []);
+
+  // Use the chat hook with the transport and initial messages
   const { messages, sendMessage, status, error, setMessages } = useChat({
     transport,
+    initialMessages,
   });
 
   const isLoading = status === 'streaming' || status === 'submitted';
+
+  // ========================================================================
+  // Persist messages to localStorage when they change
+  // ========================================================================
+  useEffect(() => {
+    // Only save if we have messages and not currently loading
+    if (messages.length > 0 && !isLoading) {
+      saveMessagesToStorage(messages);
+    }
+  }, [messages, isLoading]);
 
   // ========================================================================
   // Auto-scroll to bottom when new messages arrive
@@ -102,11 +153,12 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
   };
 
   // ========================================================================
-  // Clear chat handler
+  // Clear chat handler - clears both state and localStorage
   // ========================================================================
-  const handleClearChat = () => {
+  const handleClearChat = useCallback(() => {
     setMessages([]);
-  };
+    clearMessagesFromStorage();
+  }, [setMessages]);
 
   // ========================================================================
   // Collapsed View - Narrow strip with expand button
