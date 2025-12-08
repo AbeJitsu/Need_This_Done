@@ -27,9 +27,12 @@
     "supabase:reset": "cd .. && supabase db reset"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.79",
+    "@ai-sdk/react": "^2.0.109",
     "@measured/puck": "^0.20.2",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.38.0",
+    "ai": "^5.0.108",
     "iron-session": "^8.0.0",
     "next": "^14.0.0",
     "react": "^18.2.0",

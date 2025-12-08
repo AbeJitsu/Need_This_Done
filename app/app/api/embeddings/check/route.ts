@@ -1,0 +1,69 @@
+import { NextResponse } from 'next/server';
+import { getSupabaseAdmin } from '@/lib/supabase';
+
+// ============================================================================
+// Embeddings Check API - GET /api/embeddings/check
+// ============================================================================
+// What: Checks if a page is already indexed with the current content hash
+// Why: Avoid re-indexing unchanged pages (saves API costs and time)
+// How: Query page_embeddings table for matching URL + hash
+
+/**
+ * GET /api/embeddings/check
+ *
+ * Query parameters:
+ * - page_url: The URL path to check (required)
+ * - content_hash: The SHA-256 hash of current content (required)
+ *
+ * Returns:
+ * - indexed: boolean - Whether the page is indexed with this hash
+ */
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const pageUrl = searchParams.get('page_url');
+    const contentHash = searchParams.get('content_hash');
+
+    // Validate required parameters
+    if (!pageUrl || !contentHash) {
+      return NextResponse.json(
+        { error: 'Missing required parameters: page_url and content_hash' },
+        { status: 400 }
+      );
+    }
+
+    const supabase = getSupabaseAdmin();
+
+    // Check if any embedding exists for this URL with this exact hash
+    // We only need to check one record since all chunks share the same hash
+    const { data, error } = await supabase
+      .from('page_embeddings')
+      .select('id, content_hash')
+      .eq('page_url', pageUrl)
+      .eq('content_hash', contentHash)
+      .limit(1);
+
+    if (error) {
+      console.error('Error checking embeddings:', error);
+      return NextResponse.json(
+        { error: 'Database error while checking embeddings' },
+        { status: 500 }
+      );
+    }
+
+    // Page is indexed if we found a matching record
+    const isIndexed = data && data.length > 0;
+
+    return NextResponse.json({
+      indexed: isIndexed,
+      page_url: pageUrl,
+      content_hash: contentHash,
+    });
+  } catch (error) {
+    console.error('Embeddings check error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}

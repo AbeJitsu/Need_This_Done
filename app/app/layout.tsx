@@ -4,6 +4,7 @@ import './globals.css';
 import Navigation from '@/components/Navigation';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
+import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 
 // Inter font - modern, trustworthy, highly readable (body text)
 const inter = Inter({
@@ -88,6 +89,10 @@ export default function RootLayout({
             <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">
               {children}
             </main>
+
+            {/* AI Chatbot - floating widget available on all pages */}
+            <PageIndexer />
+            <ChatbotWidget />
           </CartProvider>
         </AuthProvider>
       </body>
