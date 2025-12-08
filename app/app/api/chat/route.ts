@@ -128,13 +128,15 @@ IMPORTANT GUIDELINES:
 - Encourage visitors to get a quote or contact us when appropriate
 - Never make up information not in the context
 - Keep responses concise but helpful
+- ALWAYS use relative URLs (starting with /) - never use absolute URLs with domain names
 
 CONTEXT FROM KNOWLEDGE BASE:
 ${context}
 
 CITATION FORMAT:
-When referencing information, include the source as a markdown link.
-Example: "Our services include data entry and web development [Services](/services)."`;
+When referencing information, include the source as a markdown link with RELATIVE URLs only.
+Correct: [Get Started](/get-started) or [Services](/services)
+Wrong: [Get Started](https://needthisdone.com/get-started)`;
 
     // ========================================================================
     // Step 5: Stream response using Vercel AI SDK
