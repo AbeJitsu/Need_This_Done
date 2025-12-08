@@ -83,14 +83,18 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
     []
   );
 
-  // Load initial messages from localStorage
-  const initialMessages = useMemo(() => loadMessagesFromStorage(), []);
-
-  // Use the chat hook with the transport and initial messages
+  // Use the chat hook with the transport
   const { messages, sendMessage, status, error, setMessages } = useChat({
     transport,
-    initialMessages,
   });
+
+  // Load initial messages from localStorage on mount
+  useEffect(() => {
+    const storedMessages = loadMessagesFromStorage();
+    if (storedMessages.length > 0) {
+      setMessages(storedMessages);
+    }
+  }, [setMessages]);
 
   const isLoading = status === 'streaming' || status === 'submitted';
 
@@ -272,7 +276,7 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
           >
             Chat Assistant
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-gray-600 dark:text-gray-300">
             Ask me anything about our services
           </p>
         </div>

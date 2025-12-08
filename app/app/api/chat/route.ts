@@ -98,8 +98,15 @@ export async function POST(req: Request) {
     // Step 3: Build context from matched content
     // ========================================================================
     let context = 'No relevant information found in the knowledge base.';
+    let validUrls: string[] = [];
 
     if (matches && matches.length > 0) {
+      // Extract unique URLs from matches for the system prompt
+      // This ensures the LLM only links to pages that actually exist
+      validUrls = [...new Set(matches.map(
+        (m: { page_url: string }) => m.page_url
+      ))];
+
       // Build context string with source attribution
       // The system prompt instructs the LLM to cite sources using markdown links
       context = matches
@@ -133,10 +140,13 @@ IMPORTANT GUIDELINES:
 CONTEXT FROM KNOWLEDGE BASE:
 ${context}
 
+VALID URLS (only link to URLs from this list):
+${validUrls.length > 0 ? validUrls.map(url => `- ${url}`).join('\n') : '- /contact (for quotes and inquiries)'}
+
 CITATION FORMAT:
-When referencing information, include the source as a markdown link with RELATIVE URLs only.
-Correct: [Get Started](/get-started) or [Services](/services)
-Wrong: [Get Started](https://needthisdone.com/get-started)`;
+- ONLY use URLs from the VALID URLS list above - never invent URLs
+- Use relative URLs (starting with /) - never use absolute URLs with domain names
+- Example: [Get a Quote](/contact) or [Services](/services)`;
 
     // ========================================================================
     // Step 5: Stream response using Vercel AI SDK
