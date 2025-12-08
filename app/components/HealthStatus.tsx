@@ -53,12 +53,10 @@ export default function HealthStatus() {
   };
 
   // ========================================================================
-  // Effects: Fetch on Mount and Set Up Auto-Refresh
+  // Effects: Fetch on Mount
   // ========================================================================
   useEffect(() => {
     fetchHealth();
-    const interval = setInterval(fetchHealth, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   // ========================================================================
@@ -156,15 +154,32 @@ export default function HealthStatus() {
           />
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">System Status</h2>
         </div>
-        <span
-          className={`text-xs font-semibold px-3 py-1 rounded-full ${
-            health.status === 'healthy'
-              ? 'bg-green-100 dark:bg-gray-800 text-green-700 dark:text-green-300'
-              : 'bg-red-100 dark:bg-gray-800 text-red-700 dark:text-red-300'
-          }`}
-        >
-          {health.status === 'healthy' ? 'All Operational' : 'Issues Detected'}
-        </span>
+        <div className="flex items-center gap-3">
+          <span
+            className={`text-xs font-semibold px-3 py-1 rounded-full ${
+              health.status === 'healthy'
+                ? 'bg-green-100 dark:bg-gray-800 text-green-700 dark:text-green-300'
+                : 'bg-red-100 dark:bg-gray-800 text-red-700 dark:text-red-300'
+            }`}
+          >
+            {health.status === 'healthy' ? 'All Operational' : 'Issues Detected'}
+          </span>
+          <button
+            onClick={fetchHealth}
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2"
+            title="Refresh status"
+            aria-label="Refresh status"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Service Status Cards Grid */}
@@ -183,8 +198,6 @@ export default function HealthStatus() {
       <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
         <p className="text-xs text-gray-500 dark:text-gray-400">
           Last checked: {lastUpdated ? formatTime(health.timestamp) : 'Never'}
-          <span className="mx-2">•</span>
-          Refreshes every 30 seconds
         </p>
       </div>
     </div>

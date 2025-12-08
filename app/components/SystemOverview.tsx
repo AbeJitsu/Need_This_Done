@@ -70,8 +70,6 @@ export default function SystemOverview() {
 
   useEffect(() => {
     fetchHealth();
-    const interval = setInterval(fetchHealth, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   // ========================================================================
@@ -239,7 +237,7 @@ export default function SystemOverview() {
 
           {/* Last Checked */}
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-4 text-center">
-            Last checked {lastChecked?.toLocaleTimeString()} · Auto-refreshes every 30 seconds
+            Last checked {lastChecked?.toLocaleTimeString()}
           </p>
         </div>
       )}

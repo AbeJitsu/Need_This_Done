@@ -168,11 +168,6 @@ export default function ContainerArchitecture() {
   useEffect(() => {
     fetchHealth();
     checkMedusa();
-    const interval = setInterval(() => {
-      fetchHealth();
-      checkMedusa();
-    }, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   // ========================================================================
