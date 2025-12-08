@@ -2,8 +2,8 @@
 // Content Extractor
 // ============================================================================
 // What: Extracts meaningful text content from the DOM for indexing
-// Why: Need clean text without navigation, footers, scripts, etc.
-// How: Selects main content areas, removes noise, extracts text
+// Why: Need clean text that captures all visible content on the page
+// How: Walks the DOM tree, extracts visible text, preserves structure
 
 /**
  * Extracted page content with metadata.
@@ -15,30 +15,103 @@ export interface ExtractedContent {
 }
 
 /**
- * Elements to remove before extracting text.
- * These contain non-content elements that shouldn't be indexed.
+ * Selectors for elements that should be completely skipped.
+ * These contain non-content or UI elements that shouldn't be indexed.
  */
-const ELEMENTS_TO_REMOVE = [
-  'nav',
-  'header',
-  'footer',
+const ELEMENTS_TO_SKIP = [
   'script',
   'style',
   'noscript',
   'iframe',
-  'svg',
+  'template',
   '.chatbot-widget',        // Don't index the chatbot itself
   '.chatbot-button',
-  '[aria-hidden="true"]',
-  '.sr-only',               // Screen reader only content
   '[data-noindex]',         // Explicitly marked as no-index
 ];
 
 /**
+ * Selectors for navigation/UI elements.
+ * We still want their text content for context.
+ */
+const NAV_ELEMENTS = [
+  'nav',
+  '[role="navigation"]',
+];
+
+/**
+ * Checks if an element is visible (not hidden via CSS).
+ */
+function isVisible(element: HTMLElement): boolean {
+  const style = window.getComputedStyle(element);
+  return (
+    style.display !== 'none' &&
+    style.visibility !== 'hidden' &&
+    style.opacity !== '0' &&
+    !element.hidden
+  );
+}
+
+/**
+ * Extracts text from an element, preserving some structure.
+ * Adds appropriate spacing between different content blocks.
+ */
+function extractTextWithStructure(element: HTMLElement): string {
+  const parts: string[] = [];
+
+  // Walk through child nodes
+  for (const node of element.childNodes) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent?.trim();
+      if (text) {
+        parts.push(text);
+      }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      const el = node as HTMLElement;
+
+      // Skip hidden elements and elements to skip
+      if (!isVisible(el)) continue;
+
+      const tagName = el.tagName.toLowerCase();
+
+      // Skip elements that shouldn't be indexed
+      if (ELEMENTS_TO_SKIP.some(sel => el.matches(sel))) continue;
+
+      // Skip SVG elements entirely
+      if (tagName === 'svg') continue;
+
+      // Skip screen-reader-only content
+      if (el.classList.contains('sr-only')) continue;
+
+      // Recursively extract text
+      const childText = extractTextWithStructure(el);
+      if (!childText) continue;
+
+      // Add appropriate spacing based on element type
+      if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tagName)) {
+        // Headings get their own line with emphasis
+        parts.push(`\n\n${childText}\n`);
+      } else if (['p', 'div', 'section', 'article', 'main', 'li'].includes(tagName)) {
+        // Block elements get line breaks
+        parts.push(`\n${childText}`);
+      } else if (['br'].includes(tagName)) {
+        parts.push('\n');
+      } else {
+        // Inline elements just add text with space
+        parts.push(` ${childText}`);
+      }
+    }
+  }
+
+  return parts.join('').trim();
+}
+
+/**
  * Extracts text content from the current page DOM.
  *
- * Targets the main content area and removes navigation, scripts,
- * and other non-content elements to get clean, indexable text.
+ * Improved extraction that:
+ * - Gets all visible text content, not just <main>
+ * - Preserves document structure for better context
+ * - Includes pricing, features, and other important content
  *
  * @returns Extracted content with text, title, and metadata
  */
@@ -46,11 +119,9 @@ export function extractPageContent(): ExtractedContent {
   // Get page title
   const title = document.title || 'Untitled Page';
 
-  // Find the main content container
-  // Priority: <main>, then <article>, then [role="main"], then <body>
+  // Start with body if no main element
   const mainElement =
     document.querySelector('main') ||
-    document.querySelector('article') ||
     document.querySelector('[role="main"]') ||
     document.body;
 
@@ -58,21 +129,41 @@ export function extractPageContent(): ExtractedContent {
     return { text: '', title, metadata: {} };
   }
 
-  // Clone the element so we don't modify the actual DOM
+  // Clone to avoid modifying the DOM
   const clone = mainElement.cloneNode(true) as HTMLElement;
 
-  // Remove unwanted elements from the clone
-  ELEMENTS_TO_REMOVE.forEach(selector => {
+  // Remove elements that should never be indexed
+  ELEMENTS_TO_SKIP.forEach(selector => {
     clone.querySelectorAll(selector).forEach(el => el.remove());
   });
 
-  // Extract and clean text
-  let text = clone.textContent || '';
+  // Extract text with structure preserved
+  let text = extractTextWithStructure(clone);
 
-  // Clean up whitespace
+  // Also capture important navigation text for context
+  const navParts: string[] = [];
+  NAV_ELEMENTS.forEach(selector => {
+    document.querySelectorAll(selector).forEach(nav => {
+      const navClone = nav.cloneNode(true) as HTMLElement;
+      // Remove scripts/styles from nav
+      navClone.querySelectorAll('script, style, svg').forEach(el => el.remove());
+      const navText = navClone.textContent?.trim();
+      if (navText) {
+        navParts.push(navText);
+      }
+    });
+  });
+
+  // Prepend navigation context if we have it
+  if (navParts.length > 0) {
+    text = `Navigation: ${navParts.join(' | ')}\n\n${text}`;
+  }
+
+  // Clean up excessive whitespace while preserving structure
   text = text
-    .replace(/\s+/g, ' ')      // Multiple spaces/newlines → single space
-    .replace(/\n+/g, '\n')     // Multiple newlines → single newline
+    .replace(/[ \t]+/g, ' ')           // Multiple spaces → single space
+    .replace(/\n{3,}/g, '\n\n')        // 3+ newlines → 2 newlines
+    .replace(/^\s+|\s+$/gm, '')        // Trim each line
     .trim();
 
   // Extract metadata
@@ -95,6 +186,9 @@ export function extractPageContent(): ExtractedContent {
   if (ogDesc) {
     metadata.og_description = ogDesc.getAttribute('content') || '';
   }
+
+  // Add page URL for reference
+  metadata.url = window.location.pathname;
 
   return { text, title, metadata };
 }

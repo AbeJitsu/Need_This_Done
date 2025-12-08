@@ -1,5 +1,7 @@
 'use client';
 
+import { useIndexingOptional, IndexingStatus } from './IndexingContext';
+
 // ============================================================================
 // Chatbot Button Component
 // ============================================================================
@@ -12,6 +14,44 @@ interface ChatbotButtonProps {
 }
 
 /**
+ * Returns the color class for the indexing status indicator.
+ */
+function getStatusColor(status: IndexingStatus): string {
+  switch (status) {
+    case 'indexed':
+      return 'bg-green-500';
+    case 'indexing':
+    case 'checking':
+      return 'bg-yellow-500 animate-pulse';
+    case 'not_indexed':
+    case 'error':
+      return 'bg-red-500';
+    default:
+      return 'bg-gray-400';
+  }
+}
+
+/**
+ * Returns tooltip text for the indexing status.
+ */
+function getStatusTooltip(status: IndexingStatus): string {
+  switch (status) {
+    case 'indexed':
+      return 'Page indexed';
+    case 'indexing':
+      return 'Indexing...';
+    case 'checking':
+      return 'Checking...';
+    case 'not_indexed':
+      return 'Not indexed';
+    case 'error':
+      return 'Indexing error';
+    default:
+      return 'Unknown';
+  }
+}
+
+/**
  * Floating chat button that appears in the bottom-right corner.
  *
  * Design features:
@@ -20,8 +60,14 @@ interface ChatbotButtonProps {
  * - Chat bubble icon
  * - Hover and focus states for accessibility
  * - Dark mode support
+ * - Dev mode: Shows indexing status indicator
  */
 export default function ChatbotButton({ onClick }: ChatbotButtonProps) {
+  const indexing = useIndexingOptional();
+
+  // Show dev indicator only in development mode
+  const showDevIndicator = indexing?.isDevMode && indexing.status !== 'unknown';
+
   return (
     <button
       onClick={onClick}
@@ -53,6 +99,15 @@ export default function ChatbotButton({ onClick }: ChatbotButtonProps) {
           d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
         />
       </svg>
+
+      {/* Dev mode: Indexing status indicator */}
+      {showDevIndicator && (
+        <span
+          className={`absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white
+                      ${getStatusColor(indexing.status)}`}
+          title={getStatusTooltip(indexing.status)}
+        />
+      )}
     </button>
   );
 }

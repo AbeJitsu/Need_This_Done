@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import ChatbotButton from './ChatbotButton';
 import ChatbotModal from './ChatbotModal';
+import { IndexingProvider } from './IndexingContext';
 
 // ============================================================================
 // Chatbot Widget Component
@@ -19,6 +20,7 @@ import ChatbotModal from './ChatbotModal';
  * - Open/close state
  * - Button rendering (always visible)
  * - Modal rendering (when open)
+ * - Indexing state context for debug features
  *
  * Usage in layout.tsx:
  * ```tsx
@@ -35,12 +37,12 @@ export default function ChatbotWidget() {
   const closeChat = () => setIsOpen(false);
 
   return (
-    <>
+    <IndexingProvider>
       {/* Floating button - always visible when chat is closed */}
       {!isOpen && <ChatbotButton onClick={openChat} />}
 
       {/* Chat modal - visible when open */}
       <ChatbotModal isOpen={isOpen} onClose={closeChat} />
-    </>
+    </IndexingProvider>
   );
 }

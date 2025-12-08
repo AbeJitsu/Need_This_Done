@@ -8,6 +8,7 @@ import {
   shouldIndexPage,
   getPageType,
 } from '@/lib/chatbot';
+import { useIndexingOptional } from './IndexingContext';
 
 // ============================================================================
 // Page Indexer Component
@@ -26,6 +27,9 @@ import {
  * 4. Checks if already indexed with this hash
  * 5. If not indexed (or content changed), triggers indexing
  *
+ * Also updates the IndexingContext (if available) with the current status
+ * for the debug indicator.
+ *
  * Add to layout.tsx to enable site-wide automatic indexing:
  * ```tsx
  * import PageIndexer from '@/components/chatbot/PageIndexer';
@@ -39,13 +43,18 @@ export default function PageIndexer() {
   const hasIndexedRef = useRef(false);
   const previousPathnameRef = useRef<string>('');
 
+  // Get indexing context for status updates (optional - may not be in provider)
+  const indexing = useIndexingOptional();
+
   // Reset indexing flag when pathname changes
   useEffect(() => {
     if (pathname !== previousPathnameRef.current) {
       hasIndexedRef.current = false;
       previousPathnameRef.current = pathname;
+      // Reset status when navigating to a new page
+      indexing?.setStatus('unknown');
     }
-  }, [pathname]);
+  }, [pathname, indexing]);
 
   useEffect(() => {
     // Skip if already indexed this page load
@@ -53,6 +62,7 @@ export default function PageIndexer() {
 
     // Skip pages that shouldn't be indexed
     if (!shouldIndexPage(pathname)) {
+      indexing?.setStatus('not_indexed');
       return;
     }
 
@@ -62,6 +72,8 @@ export default function PageIndexer() {
       if (hasIndexedRef.current) return;
       hasIndexedRef.current = true;
 
+      indexing?.setStatus('checking');
+
       try {
         // ====================================================================
         // Step 1: Extract content from the page
@@ -70,9 +82,13 @@ export default function PageIndexer() {
 
         // Skip if not enough content
         if (!text || text.length < 100) {
-          console.debug(`[PageIndexer] Skipping ${pathname}: not enough content`);
+          console.debug(`[PageIndexer] Skipping ${pathname}: not enough content (${text.length} chars)`);
+          indexing?.setStatus('not_indexed');
+          indexing?.setErrorMessage('Not enough content to index');
           return;
         }
+
+        console.debug(`[PageIndexer] Extracted ${text.length} characters from ${pathname}`);
 
         // ====================================================================
         // Step 2: Generate content hash
@@ -90,6 +106,8 @@ export default function PageIndexer() {
 
         if (!checkResponse.ok) {
           console.warn(`[PageIndexer] Failed to check indexing status for ${pathname}`);
+          indexing?.setStatus('error');
+          indexing?.setErrorMessage('Failed to check indexing status');
           return;
         }
 
@@ -98,6 +116,7 @@ export default function PageIndexer() {
         // Skip if already indexed with same content
         if (indexed) {
           console.debug(`[PageIndexer] ${pathname} already indexed (hash matches)`);
+          indexing?.setStatus('indexed');
           return;
         }
 
@@ -105,6 +124,7 @@ export default function PageIndexer() {
         // Step 4: Index the page
         // ====================================================================
         console.debug(`[PageIndexer] Indexing ${pathname}...`);
+        indexing?.setStatus('indexing');
 
         const pageType = getPageType(pathname);
 
@@ -126,12 +146,18 @@ export default function PageIndexer() {
           console.debug(
             `[PageIndexer] Successfully indexed ${pathname}: ${result.chunks_indexed} chunk(s)`
           );
+          indexing?.setStatus('indexed');
+          indexing?.setLastIndexedAt(new Date().toISOString());
         } else {
           const error = await indexResponse.json();
           console.warn(`[PageIndexer] Failed to index ${pathname}:`, error);
+          indexing?.setStatus('error');
+          indexing?.setErrorMessage(error.error || 'Failed to index page');
         }
       } catch (error) {
         console.error(`[PageIndexer] Error indexing ${pathname}:`, error);
+        indexing?.setStatus('error');
+        indexing?.setErrorMessage(error instanceof Error ? error.message : 'Unknown error');
       }
     };
 
@@ -155,7 +181,7 @@ export default function PageIndexer() {
     }
 
     return cleanup;
-  }, [pathname]);
+  }, [pathname, indexing]);
 
   // This component doesn't render anything
   return null;
