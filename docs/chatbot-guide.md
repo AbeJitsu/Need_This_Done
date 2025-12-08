@@ -94,7 +94,7 @@ Set these in your environment or docker-compose.yml:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `VECTOR_SEARCH_SIMILARITY_THRESHOLD` | 0.1 | Minimum similarity score (0-1) |
+| `VECTOR_SEARCH_SIMILARITY_THRESHOLD` | 0.5 | Minimum similarity score (0-1) |
 | `VECTOR_SEARCH_MAX_RESULTS` | 5 | Maximum chunks to include in context |
 
 Lower threshold = more results but potentially less relevant.

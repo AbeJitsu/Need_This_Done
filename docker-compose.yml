@@ -105,7 +105,7 @@ services:
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
       - REDIS_URL=redis://redis:6379
       # Vector search config - lowered threshold for better semantic matching
-      - VECTOR_SEARCH_SIMILARITY_THRESHOLD=0.1
+      - VECTOR_SEARCH_SIMILARITY_THRESHOLD=0.5
 
     # Port 3000 is where Next.js runs
     # NOT exposed to outside world - only nginx can reach it

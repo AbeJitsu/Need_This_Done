@@ -71,7 +71,7 @@ export async function POST(req: Request) {
     const supabase = getSupabaseAdmin();
 
     const similarityThreshold = parseFloat(
-      process.env.VECTOR_SEARCH_SIMILARITY_THRESHOLD || '0.1'
+      process.env.VECTOR_SEARCH_SIMILARITY_THRESHOLD || '0.5'
     );
     const maxResults = parseInt(
       process.env.VECTOR_SEARCH_MAX_RESULTS || '5'
