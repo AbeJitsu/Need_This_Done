@@ -244,10 +244,25 @@ export const formInputColors = {
   placeholder: 'placeholder:text-gray-600 dark:placeholder:text-gray-400',
   // Focus state
   focus: 'focus:ring-2 focus:ring-orange-500 focus:border-orange-500',
-  // Helper text below inputs
-  helper: 'text-gray-500 dark:text-gray-400',
-  // Label text
-  label: 'text-gray-900 dark:text-gray-100',
+  // Helper text below inputs - 5:1 contrast in both modes
+  helper: 'text-gray-600 dark:text-gray-300',
+  // Label text - 5:1 contrast in both modes
+  label: 'text-gray-700 dark:text-gray-100',
+};
+
+// ============================================================================
+// Form Validation Colors - Error and success messaging
+// ============================================================================
+// High contrast colors for validation feedback - meets WCAG AA (5:1) in both modes
+export const formValidationColors = {
+  // Error message styling - matches accentColors.red pattern
+  error: 'text-red-800 dark:text-red-100',
+  // Success message styling - high contrast green
+  success: 'text-green-800 dark:text-green-100',
+  // Warning message styling - high contrast orange
+  warning: 'text-orange-800 dark:text-orange-100',
+  // Info message styling - high contrast blue
+  info: 'text-blue-800 dark:text-blue-100',
 };
 
 

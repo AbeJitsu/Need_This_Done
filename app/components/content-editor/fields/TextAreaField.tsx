@@ -5,6 +5,8 @@
 // Why: Some content needs multiple lines (descriptions, FAQ answers)
 // How: Controlled textarea with auto-resize option
 
+import { formInputColors, formValidationColors } from '@/lib/colors';
+
 interface TextAreaFieldProps {
   label: string;
   value: string;
@@ -34,7 +36,7 @@ export default function TextAreaField({
     <div className={`space-y-1 ${className}`}>
       <label
         htmlFor={inputId}
-        className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        className={`block text-sm font-medium ${formInputColors.label}`}
       >
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
@@ -62,11 +64,11 @@ export default function TextAreaField({
       />
 
       {hint && !error && (
-        <p className="text-xs text-gray-500 dark:text-gray-400">{hint}</p>
+        <p className={`text-xs ${formInputColors.helper}`}>{hint}</p>
       )}
 
       {error && (
-        <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+        <p className={`text-xs ${formValidationColors.error}`}>{error}</p>
       )}
     </div>
   );

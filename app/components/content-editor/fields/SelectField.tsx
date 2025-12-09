@@ -5,6 +5,8 @@
 // Why: Used for predefined options (colors, button variants, etc.)
 // How: Controlled select with typed options
 
+import { formInputColors, formValidationColors } from '@/lib/colors';
+
 export interface SelectOption {
   value: string;
   label: string;
@@ -37,7 +39,7 @@ export default function SelectField({
     <div className={`space-y-1 ${className}`}>
       <label
         htmlFor={inputId}
-        className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        className={`block text-sm font-medium ${formInputColors.label}`}
       >
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
@@ -68,11 +70,11 @@ export default function SelectField({
       </select>
 
       {hint && !error && (
-        <p className="text-xs text-gray-500 dark:text-gray-400">{hint}</p>
+        <p className={`text-xs ${formInputColors.helper}`}>{hint}</p>
       )}
 
       {error && (
-        <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+        <p className={`text-xs ${formValidationColors.error}`}>{error}</p>
       )}
     </div>
   );

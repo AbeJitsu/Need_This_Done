@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
+import { formInputColors, formValidationColors } from '@/lib/colors';
 
 // ============================================================================
 // Login Page - User Authentication
@@ -197,20 +198,20 @@ export default function LoginPage() {
             {/* Error Message */}
             {error && (
               <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+                <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
               </div>
             )}
 
             {/* Success Message */}
             {successMessage && (
               <div className="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-                <p className="text-sm text-green-700 dark:text-green-300">{successMessage}</p>
+                <p className={`text-sm ${formValidationColors.success}`}>{successMessage}</p>
               </div>
             )}
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="email" className={`block text-sm font-medium ${formInputColors.label}`}>
                 Email Address
               </label>
               <input
@@ -229,7 +230,7 @@ export default function LoginPage() {
             {/* Password - Hidden in forgot password mode */}
             {!isForgotPassword && (
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="password" className={`block text-sm font-medium ${formInputColors.label}`}>
                   Password
                 </label>
                 <input
@@ -253,7 +254,7 @@ export default function LoginPage() {
                         setError('');
                         setSuccessMessage('');
                       }}
-                      className="text-sm text-purple-700 dark:text-purple-400 hover:underline"
+                      className="text-sm text-purple-700 dark:text-purple-300 hover:underline"
                     >
                       Forgot your password?
                     </button>
@@ -301,7 +302,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleGoogleSignIn}
                 disabled={isSubmitting}
-                className="w-full py-3 px-6 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold rounded-full border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3"
+                className="w-full py-3 px-6 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-100 font-semibold rounded-full border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3"
               >
                 {/* Google Icon SVG */}
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
@@ -337,7 +338,7 @@ export default function LoginPage() {
                     setSuccessMessage('');
                   }}
                   disabled={isSubmitting}
-                  className="text-sm text-blue-700 dark:text-blue-400 hover:underline"
+                  className="text-sm text-blue-700 dark:text-blue-300 hover:underline"
                 >
                   Back to Sign In
                 </button>
@@ -350,7 +351,7 @@ export default function LoginPage() {
                     setSuccessMessage('');
                   }}
                   disabled={isSubmitting}
-                  className="text-sm text-blue-700 dark:text-blue-400 hover:underline"
+                  className="text-sm text-blue-700 dark:text-blue-300 hover:underline"
                 >
                   {isSignUpMode
                     ? 'Already have an account? Sign in'
@@ -365,7 +366,7 @@ export default function LoginPage() {
         <div className="text-center mt-6">
           <Link
             href="/"
-            className="text-green-700 dark:text-green-400 hover:underline text-sm"
+            className="text-green-700 dark:text-green-300 hover:underline text-sm"
           >
             Back to Home
           </Link>

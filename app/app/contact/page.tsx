@@ -7,6 +7,7 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
+import { formInputColors, formValidationColors } from '@/lib/colors';
 
 // ============================================================================
 // Contact Page - Inquiry / Booking Form
@@ -198,7 +199,7 @@ export default function ContactPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Name */}
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="name" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                     What should we call you?
                   </label>
                   <input
@@ -215,7 +216,7 @@ export default function ContactPage() {
 
                 {/* Email */}
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="email" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                     Where can we reach you?
                   </label>
                   <input
@@ -234,8 +235,8 @@ export default function ContactPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Company */}
                 <div>
-                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Company <span className="text-gray-400 dark:text-gray-500 font-normal">(if applicable)</span>
+                  <label htmlFor="company" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                    Company <span className={`${formInputColors.helper} font-normal`}>(if applicable)</span>
                   </label>
                   <input
                     type="text"
@@ -250,7 +251,7 @@ export default function ContactPage() {
 
                 {/* Service Interest */}
                 <div>
-                  <label htmlFor="service" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="service" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                     What kind of help do you need?
                   </label>
                   <select
@@ -273,7 +274,7 @@ export default function ContactPage() {
 
               {/* Message */}
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="message" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                   Tell us what&apos;s on your mind
                 </label>
                 <textarea
@@ -290,8 +291,8 @@ export default function ContactPage() {
 
               {/* File Attachments */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Have files to share? <span className="text-gray-400 dark:text-gray-500 font-normal">(totally optional)</span>
+                <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                  Have files to share? <span className={`${formInputColors.helper} font-normal`}>(totally optional)</span>
                 </label>
                 <div className="space-y-3">
                   {/* File Input Area */}
@@ -309,10 +310,10 @@ export default function ContactPage() {
                       title="Upload files"
                       aria-label="Upload files"
                     />
-                    <div className="text-gray-500 dark:text-gray-400">
+                    <div className={formInputColors.helper}>
                       <span className="text-2xl block mb-2">📎</span>
                       <span className="text-sm">Drop files here or click to browse</span>
-                      <p className="text-xs mt-1 text-gray-400 dark:text-gray-500">
+                      <p className={`text-xs mt-1 ${formInputColors.helper}`}>
                         Images, PDFs, or docs — up to 3 files, 5MB each
                       </p>
                     </div>
@@ -348,7 +349,7 @@ export default function ContactPage() {
 
                   {/* File Error */}
                   {fileError && (
-                    <p className="text-sm text-red-600 dark:text-red-400">{fileError}</p>
+                    <p className={`text-sm ${formValidationColors.error}`}>{fileError}</p>
                   )}
                 </div>
               </div>
@@ -356,7 +357,7 @@ export default function ContactPage() {
               {/* Error Message */}
               {submitStatus === 'error' && (
                 <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                  <p className="text-red-700 dark:text-red-300 text-sm">
+                  <p className={`${formValidationColors.error} text-sm`}>
                     Something went wrong. Please try again, or reach out to us another way - we're here to help.
                   </p>
                 </div>
