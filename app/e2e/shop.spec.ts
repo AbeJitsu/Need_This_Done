@@ -507,7 +507,7 @@ test.describe('Authenticated User Checkout & Order History', () => {
 });
 
 test.describe('Admin Shop Dashboard Integration', () => {
-  test('admin can access shop dashboard', async ({ page, request }) => {
+  test('admin can access shop dashboard', async ({ request }) => {
     // Check if admin routes exist
     const response = await request.get('/admin/shop');
 
@@ -542,15 +542,14 @@ test.describe('Admin Shop Dashboard Integration', () => {
 });
 
 test.describe('Cache Integration', () => {
-  test('product list is cached efficiently', async ({ page, request }) => {
+  test('product list is cached efficiently', async ({ request }) => {
     // First request to products
     // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
     const response1 = await request.get('/api/shop/products', {
       failOnStatusCode: false,
     });
     expect(response1.ok()).toBeTruthy();
-
-    const data1 = await response1.json();
+    await response1.json();
 
     // Second request should ideally be cached
     // (exact caching behavior depends on cache configuration)
@@ -792,10 +791,7 @@ test.describe('Variant Regression Tests', () => {
     const errorMessage = page.locator('text=/no variants|variant.*error/i');
     await expect(errorMessage).not.toBeVisible();
 
-    // Cart badge should update, indicating success
-    const cartBadge = page.locator('[class*="badge"]');
-    const hasUpdate = await cartBadge.filter({ hasText: /[1-9]/ }).isVisible().catch(() => false);
-    // If badge visible and updated, that's good sign
+    // Cart badge should update, indicating success - if badge visible and updated, that's good sign
   });
 
   test('quick task, standard project, and premium solution all have variants', async ({

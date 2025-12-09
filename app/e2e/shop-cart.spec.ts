@@ -93,10 +93,8 @@ test.describe('Shopping Cart - Add to Cart', () => {
       await cartLink.click();
       await page.waitForLoadState('domcontentloaded');
 
-      // Should display item price
-      const priceInCart = page.locator('text=/\\$50/i, text=/50\\.00/i');
+      // Should display item price somewhere on cart page
       if (await page.locator('[data-testid="cart-items"]').isVisible()) {
-        // Price should be displayed somewhere on cart page
         // The exact format depends on implementation
       }
     }
@@ -159,9 +157,7 @@ test.describe('Shopping Cart - Cart Operations', () => {
         await removeButton.click();
         await page.waitForTimeout(500);
 
-        // Cart should be empty or show empty state
-        const emptyCart = page.locator('text=/empty/i, text=/no items/i');
-        // Item should no longer be visible
+        // Item should no longer be visible after removal
       }
     }
   });
@@ -176,7 +172,6 @@ test.describe('Shopping Cart - Error Handling', () => {
     // This is a defensive test - should not normally happen
 
     // If error occurs, it should be visible to user
-    const errorMessages = page.locator('[role="alert"], .error, text=/failed/i');
     // Errors may or may not appear depending on current state
   });
 
@@ -191,14 +186,7 @@ test.describe('Shopping Cart - Error Handling', () => {
       await page.waitForTimeout(1000);
     }
 
-    // Get cart count before refresh
-    const cartBadgeBefore = page.locator('[data-testid="cart-count"]');
-    let countBefore = '0';
-    if (await cartBadgeBefore.isVisible()) {
-      countBefore = await cartBadgeBefore.textContent() || '0';
-    }
-
-    // Refresh page
+    // Refresh page to test persistence
     await page.reload();
     await page.waitForLoadState('domcontentloaded');
 
@@ -228,8 +216,7 @@ test.describe('Shopping Cart - Integration', () => {
     }
 
     // Step 3: Verify no error messages
-    const errorMessages = page.locator('text=/failed/i, text=/error/i');
-    const errorCount = await errorMessages.count();
+    const errorCount = await page.locator('text=/failed/i, text=/error/i').count();
     expect(errorCount).toBe(0);
 
     // Step 4: Navigate to cart page
