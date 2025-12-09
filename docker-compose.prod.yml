@@ -31,6 +31,12 @@ services:
     restart: always
 
   app:
+    # Use production Dockerfile instead of dev
+    # Production build uses standalone output and runs optimized server
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+
     # Resource limits - the kitchen can't use all resources
     # Allows other services to function even if the app is under heavy load
     deploy:
