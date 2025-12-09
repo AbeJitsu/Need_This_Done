@@ -29,15 +29,47 @@ jobs:
         working-directory: app
         run: npm ci
 
-      - name: Run TypeScript type-check
+      - name: Install Playwright browsers
         working-directory: app
-        run: npm run type-check
+        run: npx playwright install --with-deps
 
-      - name: Upload test results
+      - name: Build Next.js app
+        working-directory: app
+        run: npm run build
+        env:
+          NEXT_PUBLIC_MEDUSA_URL: http://localhost:3000
+          MEDUSA_BACKEND_URL: http://localhost:9000
+
+      - name: Start Next.js server
+        working-directory: app
+        run: npm start &
+        env:
+          NODE_ENV: production
+
+      - name: Wait for server to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -f http://localhost:3000 2>/dev/null; then
+              echo "Server is ready"
+              exit 0
+            fi
+            echo "Waiting for server... ($i/30)"
+            sleep 2
+          done
+          echo "Server failed to start"
+          exit 1
+
+      - name: Run accessibility tests (all pages, light & dark modes)
+        working-directory: app
+        run: npx playwright test __tests__/accessibility/all-pages.a11y.test.ts
+        env:
+          BASE_URL: http://localhost:3000
+
+      - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: app/coverage/
+          name: accessibility-report
+          path: app/playwright-report/
           retention-days: 30
           if-no-files-found: ignore
