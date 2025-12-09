@@ -21,6 +21,10 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+// During Docker build, env vars aren't available yet (they're injected at runtime).
+// We create a dummy client during build to avoid errors, but it will be properly
+// initialized when the app actually runs.
+const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';
 
 // ============================================================================
 // Browser Client - For Client-Side Operations with Cookie Storage
@@ -37,14 +41,18 @@ const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 // which reads cookies from the request context.
 // ============================================================================
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!isBuildTime && (!supabaseUrl || !supabaseAnonKey)) {
   throw new Error(
     'Missing Supabase environment variables. ' +
     'Did you copy .env.example to .env.local and fill in your credentials?'
   );
 }
 
-export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
+// Use dummy values during build, real values at runtime
+export const supabase = createBrowserClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder-key'
+);
 
 // ============================================================================
 // Admin Client - For Server-Only Administrative Operations
@@ -57,15 +65,18 @@ export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
 //
 // NEVER expose this to the browser - the service role key is like the master key
 
-if (!supabaseServiceRoleKey) {
+if (!isBuildTime && !supabaseServiceRoleKey) {
   console.warn(
     'SUPABASE_SERVICE_ROLE_KEY not set. ' +
     'Some admin operations will fail. This is OK for development.'
   );
 }
 
-export const supabaseAdmin = supabaseServiceRoleKey
-  ? createClient(supabaseUrl!, supabaseServiceRoleKey)
+export const supabaseAdmin = supabaseServiceRoleKey || isBuildTime
+  ? createClient(
+      supabaseUrl || 'https://placeholder.supabase.co',
+      supabaseServiceRoleKey || 'placeholder-service-key'
+    )
   : null;
 
 // ============================================================================
