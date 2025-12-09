@@ -1,5 +1,25 @@
 IMPORTANT: Interact with me and output content that sounds inviting, focused, considerate, supportive, and influential all throughout and use language that's easy to understand. Speak as if speaking to a friend over coffee.
 
+## Development & Deployment Workflow
+
+**Always follow this workflow:**
+
+1. **Local Development** (test changes first):
+   - Use `docker-compose up -d` to start dev environment
+   - Access at https://localhost (self-signed SSL certs)
+   - Test all changes thoroughly
+
+2. **Push to GitHub** (after local testing passes):
+   - Commit and push changes to the `dev` branch
+
+3. **Production Deployment** (deploy to DigitalOcean):
+   - SSH to DigitalOcean server
+   - Pull latest from GitHub
+   - Use `docker-compose -f docker-compose.production.yml up --build -d`
+   - Site runs at https://needthisdone.com (Let's Encrypt SSL)
+
+**NEVER run production builds locally** - always test with dev environment first.
+
 ## Project Overview
 
 See [README.md](README.md) for:
