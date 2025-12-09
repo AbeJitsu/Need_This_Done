@@ -146,7 +146,7 @@ async function handlePaymentSuccess(
 
     // Invalidate order cache
     try {
-      await cache.delete(`order:${orderId}`);
+      await cache.invalidate(`order:${orderId}`);
     } catch {
       // Cache invalidation is best-effort
     }
