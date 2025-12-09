@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { constructWebhookEvent } from '@/lib/stripe';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { cache, CACHE_KEYS } from '@/lib/cache';
+import { cache } from '@/lib/cache';
 import Stripe from 'stripe';
 
 // ============================================================================
