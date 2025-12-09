@@ -64,3 +64,5 @@ storybook-static
 supabase/.branches
 supabase/.temp
 .env.production
+app/playwright-report/
+.env.production
