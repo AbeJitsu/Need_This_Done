@@ -12,7 +12,13 @@ if echo "$COMMAND" | grep -q '^git.*commit'; then
   echo "🔍 Running TypeScript type-check before commit..."
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-  cd "$CLAUDE_PROJECT_DIR/app"
+  # Navigate to app directory (handle both $CLAUDE_PROJECT_DIR set and relative paths)
+  if [ -n "$CLAUDE_PROJECT_DIR" ]; then
+    cd "$CLAUDE_PROJECT_DIR/app" || exit 2
+  else
+    cd "app" || exit 2
+  fi
+
   npm run type-check
 
   if [ $? -ne 0 ]; then
