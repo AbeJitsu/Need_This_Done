@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { streamText, embed } from 'ai';
+import { streamText, embed, type CoreMessage } from 'ai';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
 // ============================================================================
@@ -52,8 +52,8 @@ export async function POST(req: Request) {
     }
 
     // Transform messages to standard format for streamText
-    const normalizedMessages = messages.map((msg: { role: string; content?: string; parts?: { type: string; text: string }[] }) => ({
-      role: msg.role,
+    const normalizedMessages: CoreMessage[] = messages.map((msg: { role: string; content?: string; parts?: { type: string; text: string }[] }) => ({
+      role: msg.role as 'user' | 'assistant' | 'system',
       content: getMessageContent(msg) || '',
     }));
 
