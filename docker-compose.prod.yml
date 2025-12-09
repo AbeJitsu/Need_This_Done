@@ -36,10 +36,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
+          cpus: '0.5'
           memory: 2G
         reservations:
-          cpus: '1'
+          cpus: '0.3'
           memory: 1G
 
     # Don't mount source code volumes in production
