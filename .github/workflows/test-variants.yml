@@ -2,9 +2,9 @@ name: Test Product Variants
 
 on:
   push:
-    branches: [main, dev, experiment]
+    branches: [main]
   pull_request:
-    branches: [main, dev]
+    branches: [main]
 
 jobs:
   test-variants:
