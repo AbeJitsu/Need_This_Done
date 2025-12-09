@@ -1,0 +1,118 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      app:
+        condition: service_started
+    networks:
+      - app_network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 512M
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: nextjs_app
+    networks:
+      - app_network
+    depends_on:
+      redis:
+        condition: service_healthy
+      medusa:
+        condition: service_healthy
+    env_file:
+      - .env.local
+    environment:
+      - NODE_ENV=production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.7'
+          memory: 2G
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 512M
+
+  medusa:
+    build:
+      context: ./medusa-backend
+      dockerfile: Dockerfile
+    container_name: medusa_backend
+    networks:
+      - app_network
+    depends_on:
+      medusa_postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://medusa:medusa@medusa_postgres:5432/medusa
+      - REDIS_URL=redis://redis:6379
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 512M
+
+  medusa_postgres:
+    image: postgres:15-alpine
+    container_name: medusa_postgres
+    environment:
+      POSTGRES_USER: ${MEDUSA_POSTGRES_USER:-medusa}
+      POSTGRES_PASSWORD: ${MEDUSA_POSTGRES_PASSWORD:-medusa}
+      POSTGRES_DB: ${MEDUSA_POSTGRES_DB:-medusa}
+      PGPORT: ${MEDUSA_POSTGRES_PORT:-5432}
+    networks:
+      - app_network
+    volumes:
+      - medusa_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medusa"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 512M
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  medusa_postgres_data:
