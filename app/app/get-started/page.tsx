@@ -6,7 +6,7 @@ import Card from '@/components/Card';
 import Button from '@/components/Button';
 import CTASection from '@/components/CTASection';
 import CircleBadge from '@/components/CircleBadge';
-import { accentColors } from '@/lib/colors';
+import { accentColors, formInputColors } from '@/lib/colors';
 
 // ============================================================================
 // Get Started Page - Deposit Authorization
@@ -190,7 +190,7 @@ export default function GetStartedPage() {
 
           <div className="space-y-4 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+              <label className={`block text-sm font-medium mb-2 ${formInputColors.label}`}>
                 Quote Reference Number
               </label>
               <input
@@ -198,15 +198,15 @@ export default function GetStartedPage() {
                 value={quoteRef}
                 onChange={(e) => setQuoteRef(e.target.value)}
                 placeholder="e.g., QT-2024-001"
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className={`w-full px-4 py-3 border rounded-lg ${formInputColors.base} ${formInputColors.placeholder} ${formInputColors.focus}`}
               />
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <p className={`mt-1 text-sm ${formInputColors.helper}`}>
                 You&apos;ll find this in your quote email
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+              <label className={`block text-sm font-medium mb-2 ${formInputColors.label}`}>
                 Email Address
               </label>
               <input
@@ -214,9 +214,9 @@ export default function GetStartedPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className={`w-full px-4 py-3 border rounded-lg ${formInputColors.base} ${formInputColors.placeholder} ${formInputColors.focus}`}
               />
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <p className={`mt-1 text-sm ${formInputColors.helper}`}>
                 Use the same email from your quote request
               </p>
             </div>

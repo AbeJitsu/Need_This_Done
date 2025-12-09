@@ -25,7 +25,7 @@ export const accentColors: Record<AccentVariant, {
   orange: { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-500 dark:border-orange-400' },
   teal: { bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-500 dark:border-teal-400' },
   gray: { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-500 dark:border-gray-400' },
-  red: { bg: 'bg-red-100 dark:bg-red-950', text: 'text-red-800 dark:text-red-200', border: 'border-red-500 dark:border-red-400' },
+  red: { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-700 dark:border-red-300' },
 };
 
 // ============================================================================
@@ -230,6 +230,24 @@ export const featureCardColors: Record<FeatureCardVariant, {
     icon: 'text-green-600 dark:text-green-400',
     hover: 'hover:border-green-300 dark:hover:border-green-700 hover:shadow-lg hover:shadow-green-500/10 dark:hover:shadow-green-500/20',
   },
+};
+
+// ============================================================================
+// Form Input Colors - Styling for text inputs, textareas, and selects
+// ============================================================================
+// Provides consistent, accessible styling for all form elements
+// Placeholder text meets WCAG contrast requirements in both modes
+export const formInputColors = {
+  // Base input styling
+  base: 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100',
+  // Placeholder text - subtle but readable
+  placeholder: 'placeholder:text-gray-600 dark:placeholder:text-gray-400',
+  // Focus state
+  focus: 'focus:ring-2 focus:ring-orange-500 focus:border-orange-500',
+  // Helper text below inputs
+  helper: 'text-gray-500 dark:text-gray-400',
+  // Label text
+  label: 'text-gray-900 dark:text-gray-100',
 };
 
 

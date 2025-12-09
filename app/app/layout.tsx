@@ -60,19 +60,37 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable} ${playfair.variable}`}>
       <head>
-        {/* Dark mode prevention script - runs before React hydration to prevent flash */}
+        {/* FOUC Prevention: Apply dark mode immediately before any rendering */}
+        {/* This blocking script runs before CSS/content loads to prevent flash */}
+        {/* Matches DarkModeToggle logic: check localStorage first, then system preference */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              try {
-                const isDark = localStorage.getItem('darkMode') === 'true';
-                if (isDark) document.documentElement.classList.add('dark');
-              } catch (e) {}
+              (function() {
+                try {
+                  const stored = localStorage.getItem('darkMode');
+                  let isDark = false;
+
+                  if (stored !== null) {
+                    // User has explicitly set a preference
+                    isDark = stored === 'true';
+                  } else {
+                    // Fall back to system preference
+                    isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  }
+
+                  if (isDark) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.add('light');
+                  }
+                } catch (e) {}
+              })();
             `,
           }}
         />
       </head>
-      <body>
+      <body className="transition-colors duration-0">
         <AuthProvider>
           <CartProvider>
             <StripeProvider>
