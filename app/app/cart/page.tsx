@@ -15,7 +15,7 @@ import Card from '@/components/Card';
 // How: Uses CartContext to manage items, fetches fresh cart data on mount
 
 export default function CartPage() {
-  const { cart, cartId, itemCount, updateItem, removeItem, isLoading, error: cartError } = useCart();
+  const { cart, cartId, itemCount, updateItem, removeItem, isLoading: _isLoading, error: cartError } = useCart();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [localError, setLocalError] = useState('');
 

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
-import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import type { Product } from '@/lib/medusa-client';
 

@@ -237,7 +237,7 @@ async function handleSubscriptionUpdate(
 
   // Invalidate user's subscription cache
   try {
-    await cache.delete(`subscription:${customer.user_id}`);
+    await cache.invalidate(`subscription:${customer.user_id}`);
   } catch {
     // Cache invalidation is best-effort
   }
@@ -267,14 +267,15 @@ async function handleSubscriptionDeleted(
  */
 async function handleInvoicePaid(
   invoice: Stripe.Invoice,
-  supabase: ReturnType<typeof getSupabaseAdmin>
+  _supabase: ReturnType<typeof getSupabaseAdmin>
 ) {
   console.log(`Invoice paid: ${invoice.id}`);
 
   // For subscription invoices, the subscription status is updated via
   // customer.subscription.updated event, so we just log here
-  if (invoice.subscription) {
-    console.log(`Subscription ${invoice.subscription} invoice paid`);
+  const invoiceData = invoice as any;
+  if (invoiceData.subscription) {
+    console.log(`Subscription ${invoiceData.subscription} invoice paid`);
   }
 }
 
@@ -283,15 +284,16 @@ async function handleInvoicePaid(
  */
 async function handleInvoicePaymentFailed(
   invoice: Stripe.Invoice,
-  supabase: ReturnType<typeof getSupabaseAdmin>
+  _supabase: ReturnType<typeof getSupabaseAdmin>
 ) {
   console.log(`Invoice payment failed: ${invoice.id}`);
 
   // The subscription status change will be handled by customer.subscription.updated
   // This is just for logging/alerting purposes
-  if (invoice.subscription) {
+  const invoiceData = invoice as any;
+  if (invoiceData.subscription) {
     console.warn(
-      `Subscription ${invoice.subscription} invoice payment failed`
+      `Subscription ${invoiceData.subscription} invoice payment failed`
     );
     // Here you might want to send an email notification to the user
   }

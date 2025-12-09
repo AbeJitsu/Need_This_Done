@@ -30,6 +30,7 @@ const hoverStates: Record<AccentVariant, string> = {
   green: 'hover:text-green-900 hover:border-green-600 dark:hover:border-green-300',
   orange: 'hover:text-orange-900 hover:border-orange-600 dark:hover:border-orange-300',
   teal: 'hover:text-teal-900 hover:border-teal-600 dark:hover:border-teal-300',
+  red: 'hover:text-red-900 hover:border-red-600 dark:hover:border-red-300',
   gray: 'hover:text-gray-800 hover:border-gray-600 dark:hover:border-gray-300',
 };
 

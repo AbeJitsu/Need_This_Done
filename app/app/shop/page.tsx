@@ -135,7 +135,6 @@ export default function ShopPage() {
           {products.map((product) => {
             // Get price from first variant
             const price = product.prices?.[0]?.amount ?? 0;
-            const currencyCode = product.prices?.[0]?.currency_code ?? 'USD';
             const image = product.images?.[0]?.url;
 
             // Map Medusa product handle to our pricing tiers
