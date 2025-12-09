@@ -277,19 +277,19 @@ const config = {
       },
 
       // ======================================================================
-      // Animations - Subtle Page Load Effects
+      // Animations - Smooth Fade & Slide from Left
       // ======================================================================
-      // Fade-in animations for hero section with staggered delays
+      // Pricing cards fade in and slide from left to right with staggered delays
       // Respects prefers-reduced-motion via motion-safe variants
       animation: {
-        'fade-in': 'fadeIn 0.6s ease-out forwards',
-        'fade-in-delay-100': 'fadeIn 0.6s ease-out 100ms forwards',
-        'fade-in-delay-200': 'fadeIn 0.6s ease-out 200ms forwards',
+        'fade-in': 'fadeInLeft 2s ease-in forwards',
+        'fade-in-delay-100': 'fadeInLeft 2s ease-in 200ms forwards',
+        'fade-in-delay-200': 'fadeInLeft 2s ease-in 400ms forwards',
       },
       keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0', transform: 'translateY(10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+        fadeInLeft: {
+          '0%': { opacity: '0', transform: 'translateX(-30px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
         },
       },
     },
