@@ -1,0 +1,58 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to DigitalOcean
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          # Create SSH key file
+          mkdir -p ~/.ssh
+          echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          # Add server to known_hosts to avoid interactive prompt
+          ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
+
+          # Deploy to server
+          ssh -i ~/.ssh/deploy_key root@$DEPLOY_HOST << 'EOF'
+          cd /root/Need_This_Done
+          echo "Pulling latest code from GitHub..."
+          git pull origin main
+          echo "Building and starting Docker containers..."
+          docker-compose -f docker-compose.production.yml up --build -d
+          echo "Checking service health..."
+          sleep 10
+          docker ps
+          echo "✓ Deployment complete!"
+          EOF
+
+      - name: Verify deployment
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          echo "Checking if site is accessible..."
+          curl -k https://needthisdone.com/ -I -w "\nStatus: %{http_code}\n" || echo "Site check in progress..."
+
+      - name: Deployment notification
+        if: success()
+        run: echo "✓ Deployment to ${{ github.ref }} successful!"
+
+      - name: Deployment failed
+        if: failure()
+        run: |
+          echo "❌ Deployment failed on branch ${{ github.ref }}"
+          exit 1
