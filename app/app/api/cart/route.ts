@@ -18,7 +18,7 @@ import { cache, CACHE_KEYS } from '@/lib/cache';
 // ============================================================================
 // Creates a new empty cart in Medusa and returns cart ID
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
     // Create new cart in Medusa
     const cart = await medusaClient.carts.create();
