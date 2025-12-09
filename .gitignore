@@ -58,3 +58,4 @@ storybook-static
 .env.test
 supabase/.branches
 supabase/.temp
+.env.production
