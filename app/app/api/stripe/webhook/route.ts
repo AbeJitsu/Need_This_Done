@@ -213,6 +213,7 @@ async function handleSubscriptionUpdate(
   }
 
   // Upsert subscription record
+  const subData = subscription as any;
   const { error } = await supabase.from('subscriptions').upsert(
     {
       user_id: customer.user_id,
@@ -220,12 +221,12 @@ async function handleSubscriptionUpdate(
       stripe_price_id: subscription.items.data[0]?.price.id || '',
       status: subscription.status,
       current_period_start: new Date(
-        subscription.current_period_start * 1000
+        subData.current_period_start * 1000
       ).toISOString(),
       current_period_end: new Date(
-        subscription.current_period_end * 1000
+        subData.current_period_end * 1000
       ).toISOString(),
-      cancel_at_period_end: subscription.cancel_at_period_end,
+      cancel_at_period_end: subData.cancel_at_period_end,
     },
     { onConflict: 'stripe_subscription_id' }
   );
