@@ -112,7 +112,7 @@ export async function POST(req: Request) {
       // This ensures the LLM only links to pages that actually exist
       validUrls = [...new Set(matches.map(
         (m: { page_url: string }) => m.page_url
-      ))];
+      ))] as string[];
 
       // Build context string with source attribution
       // The system prompt instructs the LLM to cite sources using markdown links
