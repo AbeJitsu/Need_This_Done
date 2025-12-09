@@ -49,6 +49,10 @@ FROM dependencies AS builder
 # Copy the source code
 COPY . .
 
+# Create empty .env.local for Next.js build
+# Environment variables will be injected at runtime by docker-compose
+RUN touch .env.local
+
 # Build the Next.js app
 # This creates:
 # - .next/ folder (compiled JavaScript)
