@@ -20,10 +20,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: '0.2'
           memory: 512M
         reservations:
-          cpus: '0.5'
+          cpus: '0.1'
           memory: 256M
 
     # Restart policy: always comes back after crashes
@@ -36,10 +36,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: '0.7'
           memory: 2G
         reservations:
-          cpus: '0.3'
+          cpus: '0.4'
           memory: 1G
 
     # Don't mount source code volumes in production
@@ -54,12 +54,34 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: '0.2'
           memory: 512M
         reservations:
-          cpus: '0.5'
+          cpus: '0.1'
           memory: 256M
 
     # Always restart Redis if it fails
     # Your cache is critical for performance
+    restart: always
+
+  medusa:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.3'
+          memory: 512M
+    restart: always
+
+  medusa_postgres:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 256M
     restart: always
