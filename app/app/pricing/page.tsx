@@ -64,7 +64,7 @@ export default async function PricingPage() {
               : index === 1 ? 'motion-safe:animate-fade-in-delay-100'
               : 'motion-safe:animate-fade-in-delay-200';
             return (
-              <div key={index} className={`motion-reduce:opacity-100 ${delayClass}`}>
+              <div key={index} className={`opacity-0 translate-x-[-30px] motion-reduce:opacity-100 motion-reduce:translate-x-0 ${delayClass}`}>
                 <PricingCard {...tier} />
               </div>
             );

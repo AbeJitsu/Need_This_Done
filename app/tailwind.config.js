@@ -282,9 +282,9 @@ const config = {
       // Pricing cards fade in and slide from left to right with staggered delays
       // Respects prefers-reduced-motion via motion-safe variants
       animation: {
-        'fade-in': 'fadeInLeft 2s ease-in forwards',
-        'fade-in-delay-100': 'fadeInLeft 2s ease-in 200ms forwards',
-        'fade-in-delay-200': 'fadeInLeft 2s ease-in 400ms forwards',
+        'fade-in': 'fadeInLeft 2s ease-out forwards',
+        'fade-in-delay-100': 'fadeInLeft 2s ease-out 100ms forwards',
+        'fade-in-delay-200': 'fadeInLeft 2s ease-out 200ms forwards',
       },
       keyframes: {
         fadeInLeft: {
