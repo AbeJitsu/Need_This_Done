@@ -15,6 +15,9 @@ import { createClient, RedisClientType } from 'redis';
 
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 
+// During Docker build, Redis isn't available. Skip connection attempts during build.
+const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';
+
 // ============================================================================
 // Create Redis Client
 // ============================================================================
@@ -35,6 +38,9 @@ const redis: RedisClientType = createClient({
       // Wait progressively longer between retries (max 3 seconds)
       return Math.min(1000 * Math.pow(2, retries), 3000);
     },
+
+    // During build, don't wait forever for connection
+    connectTimeout: isBuildTime ? 100 : 5000,
   },
 });
 
@@ -61,10 +67,21 @@ redis.on('ready', () => {
 // ============================================================================
 // This helper ensures the client is connected before performing operations
 // Handles the async nature of Redis connections properly
+// During build time, skip connection to avoid timeouts
 
 async function ensureConnected(): Promise<void> {
+  // Skip Redis connection during build - pages will be static
+  if (isBuildTime) {
+    return;
+  }
+
   if (!redis.isOpen) {
-    await redis.connect();
+    try {
+      await redis.connect();
+    } catch (error) {
+      console.error('Failed to connect to Redis:', error);
+      // Don't throw - let the app continue without cache
+    }
   }
 }
 
