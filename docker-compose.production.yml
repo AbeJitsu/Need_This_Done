@@ -63,7 +63,7 @@ services:
 
   medusa:
     build:
-      context: ./medusa-backend
+      context: ./medusa
       dockerfile: Dockerfile
     container_name: medusa_backend
     networks:
