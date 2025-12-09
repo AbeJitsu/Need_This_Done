@@ -46,6 +46,11 @@ services:
     # Code is baked into the Docker image (immutable and faster)
     volumes: []
 
+    # Explicitly set NODE_ENV to production
+    # This overrides the ${NODE_ENV:-production} variable expansion in base file
+    environment:
+      - NODE_ENV=production
+
     # Automatically restart the app if it crashes
     restart: always
 
