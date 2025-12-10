@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { signOut } from '@/lib/auth';
+import { navigationColors } from '@/lib/colors';
 import DarkModeToggle from './DarkModeToggle';
 
 // ============================================================================
@@ -89,7 +90,7 @@ export default function Navigation() {
                       ${
                         isActive
                           ? 'bg-blue-100 text-blue-700 border-blue-500 dark:border-blue-400 hover:text-blue-800 dark:hover:text-blue-900'
-                          : 'text-gray-600 dark:text-gray-400 border-transparent hover:text-gray-900 dark:hover:text-gray-200'
+                          : `${navigationColors.link} border-transparent ${navigationColors.linkHover}`
                       }
                     `}
                   >
@@ -103,7 +104,7 @@ export default function Navigation() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+              className={`lg:hidden p-2 ${navigationColors.link} ${navigationColors.linkHover} transition-colors`}
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen ? "true" : "false"}
             >
@@ -143,7 +144,7 @@ export default function Navigation() {
                   <button
                     type="button"
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center gap-2 px-2 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 rounded-md transition-colors"
+                    className={`flex items-center gap-2 px-2 py-1.5 text-sm font-medium ${navigationColors.userButton} ${navigationColors.userButtonHover} rounded-md transition-colors`}
                   >
                     <div className="w-7 h-7 rounded-full bg-gray-400 dark:bg-gray-600 text-white flex items-center justify-center text-xs font-semibold">
                       {user?.email?.charAt(0).toUpperCase() || 'U'}
@@ -153,7 +154,7 @@ export default function Navigation() {
                   {showDropdown && (
                     <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
                       <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Signed in as</p>
+                        <p className={`text-xs ${navigationColors.dropdownHelper}`}>Signed in as</p>
                         <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                           {user?.email}
                         </p>
@@ -197,7 +198,7 @@ export default function Navigation() {
                 // Logged Out - Subtle login link for returning customers
                 <Link
                   href="/login"
-                  className="hidden sm:inline-flex text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  className={`hidden sm:inline-flex text-xs ${navigationColors.signIn} ${navigationColors.signInHover} transition-colors`}
                 >
                   Sign in
                 </Link>
@@ -226,7 +227,7 @@ export default function Navigation() {
                     ${
                       isActive
                         ? 'bg-blue-100 text-blue-700 border-blue-500 dark:border-blue-400'
-                        : 'text-gray-600 dark:text-gray-400 border-transparent hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
+                        : `${navigationColors.link} border-transparent hover:bg-gray-100 dark:hover:bg-gray-800 ${navigationColors.linkHover}`
                     }
                   `}
                 >
@@ -249,7 +250,7 @@ export default function Navigation() {
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+                className={`block px-3 py-2 text-sm ${navigationColors.signIn} ${navigationColors.signInHover}`}
               >
                 Sign in
               </Link>

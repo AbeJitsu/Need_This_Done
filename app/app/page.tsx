@@ -4,6 +4,7 @@ import Button from '@/components/Button';
 import ServiceCard from '@/components/ServiceCard';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultHomeContent } from '@/lib/default-page-content';
+import { formInputColors, titleColors } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -132,9 +133,9 @@ export default async function HomePage() {
               </Button>
             ))}
           </div>
-          <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
+          <p className={`mt-6 text-sm ${formInputColors.helper}`}>
             {content.cta.footer}{' '}
-            <Link href={content.cta.footerLinkHref} className="text-blue-600 dark:text-blue-400 hover:underline">
+            <Link href={content.cta.footerLinkHref} className={`${titleColors.blue} hover:underline`}>
               {content.cta.footerLinkText}
             </Link>
           </p>

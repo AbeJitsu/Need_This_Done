@@ -86,7 +86,7 @@ export default async function ServicesPage() {
                     <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
                   </div>
                   <div>
-                    <h3 className={`font-semibold text-gray-900 dark:text-gray-100 mb-1 ${item.link ? 'group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors' : ''}`}>
+                    <h3 className={`font-semibold text-gray-900 dark:text-gray-100 mb-1 ${item.link ? 'group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors' : ''}`}>
                       {item.title}
                       {item.link && <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity"> →</span>}
                     </h3>

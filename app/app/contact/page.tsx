@@ -7,7 +7,7 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
-import { formInputColors, formValidationColors } from '@/lib/colors';
+import { formInputColors, formValidationColors, titleColors } from '@/lib/colors';
 
 // ============================================================================
 // Contact Page - Inquiry / Booking Form
@@ -155,7 +155,7 @@ export default function ContactPage() {
           {submitStatus === 'success' ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                <span className="text-3xl text-green-600 dark:text-green-400">✓</span>
+                <span className="text-3xl text-green-600 dark:text-green-300">✓</span>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 We got your message!
@@ -169,17 +169,17 @@ export default function ContactPage() {
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">What happens next:</h3>
                 <ol className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
                   <li className="flex items-start gap-2">
-                    <span className="font-semibold text-blue-600 dark:text-blue-400">1.</span>
+                    <span className="font-semibold text-blue-600 dark:text-blue-300">1.</span>
                     We&apos;ll review your request within 2 business days
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="font-semibold text-blue-600 dark:text-blue-400">2.</span>
+                    <span className="font-semibold text-blue-600 dark:text-blue-300">2.</span>
                     You&apos;ll receive a personalized quote via email
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="font-semibold text-blue-600 dark:text-blue-400">3.</span>
+                    <span className="font-semibold text-blue-600 dark:text-blue-300">3.</span>
                     Love it?{' '}
-                    <Link href="/get-started" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">
+                    <Link href="/get-started" className={`${titleColors.blue} font-medium hover:underline`}>
                       Pay 50% to start
                     </Link>
                     , 50% on delivery
@@ -189,7 +189,7 @@ export default function ContactPage() {
 
               <button
                 onClick={() => setSubmitStatus('idle')}
-                className="text-blue-600 dark:text-blue-400 font-medium hover:underline"
+                className={`${titleColors.blue} font-medium hover:underline`}
               >
                 Send another message
               </button>
@@ -338,7 +338,7 @@ export default function ContactPage() {
                           <button
                             type="button"
                             onClick={() => removeFile(index)}
-                            className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 ml-2 flex-shrink-0"
+                            className="text-red-500 hover:text-red-700 dark:text-red-300 dark:hover:text-red-100 ml-2 flex-shrink-0"
                           >
                             Remove
                           </button>

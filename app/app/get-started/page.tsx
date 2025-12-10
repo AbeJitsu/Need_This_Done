@@ -87,7 +87,7 @@ export default function GetStartedPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-gray-100">Confirmation Email</h3>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-gray-600 dark:text-gray-300">
                     Check your inbox for a receipt and project details.
                   </p>
                 </div>
@@ -99,7 +99,7 @@ export default function GetStartedPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-gray-100">We Get to Work</h3>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-gray-600 dark:text-gray-300">
                     Your project moves to the front of our queue and work begins.
                   </p>
                 </div>
@@ -111,7 +111,7 @@ export default function GetStartedPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-gray-100">Stay in Touch</h3>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-gray-600 dark:text-gray-300">
                     We&apos;ll keep you updated on progress and reach out with any questions.
                   </p>
                 </div>
@@ -123,7 +123,7 @@ export default function GetStartedPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-gray-100">Review & Delivery</h3>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-gray-600 dark:text-gray-300">
                     Once complete, you&apos;ll review the work. Final 50% is due upon approval.
                   </p>
                 </div>
@@ -161,7 +161,7 @@ export default function GetStartedPage() {
             <CircleBadge text="50%" color="green" size="md" shape="pill" />
             <div>
               <p className="font-semibold text-gray-900 dark:text-gray-100">To Start</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Deposit to begin work</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Deposit to begin work</p>
             </div>
           </div>
           <div className="hidden sm:block w-8 h-0.5 bg-gray-300 dark:bg-gray-600"></div>
@@ -169,7 +169,7 @@ export default function GetStartedPage() {
             <CircleBadge text="50%" color="blue" size="md" shape="pill" />
             <div>
               <p className="font-semibold text-gray-900 dark:text-gray-100">On Delivery</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">When you approve the work</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">When you approve the work</p>
             </div>
           </div>
         </div>
@@ -232,7 +232,7 @@ export default function GetStartedPage() {
             {isProcessing ? 'Processing...' : 'Authorize & Pay Deposit'}
           </Button>
 
-          <p className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-4 text-center text-sm text-gray-500 dark:text-gray-300">
             Secure payment processing. Your information is protected.
           </p>
         </form>

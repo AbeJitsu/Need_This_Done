@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { faqColors } from '@/lib/colors';
+import { faqColors, titleColors } from '@/lib/colors';
 import CircleBadge from '@/components/CircleBadge';
 import PageHeader from '@/components/PageHeader';
 import CTASection from '@/components/CTASection';
@@ -65,7 +65,7 @@ function renderAnswer(answer: string, links?: Array<{ text: string; href: string
         <Link
           key={idx}
           href={link.href}
-          className="text-blue-700 dark:text-blue-400 font-medium hover:underline"
+          className={`${titleColors.blue} font-medium hover:underline`}
         >
           {link.text}
         </Link>

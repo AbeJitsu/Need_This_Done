@@ -6,6 +6,7 @@ import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
+import { formInputColors, formValidationColors } from '@/lib/colors';
 import type { Product } from '@/lib/medusa-client';
 
 // ============================================================================
@@ -83,7 +84,7 @@ export default function ShopPage() {
       {/* Cart item count indicator */}
       {itemCount > 0 && (
         <div className="mb-6 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-          <p className="text-sm text-blue-900 dark:text-blue-200">
+          <p className={`text-sm ${formValidationColors.info}`}>
             You have <span className="font-semibold">{itemCount}</span> item{itemCount !== 1 ? 's' : ''} in your cart.{' '}
             <Link href="/cart" className="underline hover:text-blue-700 dark:hover:text-blue-300">
               View cart
@@ -95,33 +96,33 @@ export default function ShopPage() {
       {/* Error messages */}
       {error && (
         <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-sm text-red-900 dark:text-red-200">{error}</p>
+          <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
         </div>
       )}
 
       {cartError && (
         <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-sm text-red-900 dark:text-red-200">{cartError}</p>
+          <p className={`text-sm ${formValidationColors.error}`}>{cartError}</p>
         </div>
       )}
 
       {/* Toast notification */}
       {toastMessage && (
         <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg animate-fade-in">
-          <p className="text-sm text-green-900 dark:text-green-200">{toastMessage}</p>
+          <p className={`text-sm ${formValidationColors.success}`}>{toastMessage}</p>
         </div>
       )}
 
       {/* Products grid */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <p className="text-gray-600 dark:text-gray-400">Loading products...</p>
+          <p className="text-gray-600 dark:text-gray-300">Loading products...</p>
         </div>
       ) : products.length === 0 ? (
         <div className="flex items-center justify-center py-20">
           <Card hoverEffect="none">
             <div className="p-8 text-center">
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
                 No products available yet. Check back soon!
               </p>
               <Button variant="purple" href="/">
@@ -171,7 +172,7 @@ export default function ShopPage() {
 
                     {/* Description */}
                     {product.description && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 flex-grow">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-6 flex-grow">
                         {product.description}
                       </p>
                     )}

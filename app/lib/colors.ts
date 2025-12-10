@@ -31,10 +31,11 @@ export const accentColors: Record<AccentVariant, {
 // ============================================================================
 // Title Colors - Used for headings and labels (generic)
 // ============================================================================
+// Updated to meet WCAG AA (5:1 contrast) in dark mode
 export const titleColors: Record<AccentColor, string> = {
-  purple: 'text-purple-600 dark:text-purple-400',
-  blue: 'text-blue-600 dark:text-blue-400',
-  green: 'text-green-600 dark:text-green-400',
+  purple: 'text-purple-600 dark:text-purple-300',
+  blue: 'text-blue-600 dark:text-blue-300',
+  green: 'text-green-600 dark:text-green-300',
 };
 
 // ============================================================================
@@ -263,6 +264,27 @@ export const formValidationColors = {
   warning: 'text-orange-800 dark:text-orange-100',
   // Info message styling - high contrast blue
   info: 'text-blue-800 dark:text-blue-100',
+};
+
+// ============================================================================
+// Navigation Colors - Styling for navigation links and elements
+// ============================================================================
+// Consistent, accessible colors for all navigation elements - meets WCAG AA (5:1)
+export const navigationColors = {
+  // Non-active navigation links - readable but not too prominent
+  link: 'text-gray-600 dark:text-gray-300',
+  // Hover state for navigation links
+  linkHover: 'hover:text-gray-900 dark:hover:text-gray-200',
+  // Sign in link - subtle but accessible
+  signIn: 'text-gray-600 dark:text-gray-300',
+  // Sign in hover state
+  signInHover: 'hover:text-gray-800 dark:hover:text-gray-100',
+  // Dropdown helper text (e.g., "Signed in as")
+  dropdownHelper: 'text-gray-500 dark:text-gray-300',
+  // User menu button text
+  userButton: 'text-gray-500 dark:text-gray-300',
+  // User menu button hover
+  userButtonHover: 'hover:text-gray-700 dark:hover:text-gray-200',
 };
 
 

@@ -72,7 +72,7 @@ export default function ServiceCard({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                  <span className="text-gray-500 dark:text-gray-300 text-sm">
                     {detail}
                   </span>
                 </li>

@@ -73,7 +73,7 @@ export default function CartPage() {
 
         <Card hoverEffect="none">
           <div className="p-8 text-center">
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
               Looks like you haven't added anything yet.
             </p>
             <Button variant="purple" href="/shop">
@@ -117,7 +117,7 @@ export default function CartPage() {
                         {/* Item title would come from product data */}
                         Product #{item.variant_id.slice(0, 8)}
                       </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                         Variant: {item.variant_id}
                       </p>
                     </div>
@@ -181,14 +181,14 @@ export default function CartPage() {
 
               <div className="space-y-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+                  <span className="text-gray-600 dark:text-gray-300">Subtotal</span>
                   <span className="text-gray-900 dark:text-gray-100 font-semibold">
                     ${(subtotal / 100).toFixed(2)}
                   </span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Tax</span>
+                  <span className="text-gray-600 dark:text-gray-300">Tax</span>
                   <span className="text-gray-900 dark:text-gray-100 font-semibold">
                     ${(tax / 100).toFixed(2)}
                   </span>
@@ -223,7 +223,7 @@ export default function CartPage() {
           {/* Info box */}
           <Card hoverColor="blue" hoverEffect="glow" className="mt-4">
             <div className="p-6">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-gray-600 dark:text-gray-300">
                 Prices shown are in USD. Your final cost may vary based on your location and any applicable taxes.
               </p>
             </div>

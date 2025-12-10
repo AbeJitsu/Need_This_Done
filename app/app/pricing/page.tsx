@@ -81,7 +81,7 @@ export default async function PricingPage() {
                   <p className="font-semibold text-gray-900 dark:text-gray-100">
                     {content.paymentNote.depositLabel}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
                     {content.paymentNote.depositDescription}
                   </p>
                 </div>
@@ -93,7 +93,7 @@ export default async function PricingPage() {
                   <p className="font-semibold text-gray-900 dark:text-gray-100">
                     {content.paymentNote.deliveryLabel}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
                     {content.paymentNote.deliveryDescription}
                   </p>
                 </div>
