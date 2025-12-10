@@ -12,6 +12,7 @@ import {
   handleApiError,
 } from '@/lib/api-errors';
 import { cache, CACHE_KEYS } from '@/lib/cache';
+import { sendProjectSubmissionEmails } from '@/lib/email-service';
 
 // ============================================================================
 // Projects API Route - /api/projects
@@ -147,6 +148,52 @@ export async function POST(request: Request) {
       }
 
       return serverError('Failed to submit project. Please try again.');
+    }
+
+    // ====================================================================
+    // Send Email Notifications
+    // ====================================================================
+    // Send emails to both admin and client
+    // Emails failing should not break the submission (already in database)
+
+    try {
+      const { adminSent, clientSent } = await sendProjectSubmissionEmails(
+        // Admin notification data
+        {
+          projectId: project.id,
+          name: project.name,
+          email: project.email,
+          company: project.company || undefined,
+          service: project.service || undefined,
+          message: project.message,
+          attachmentCount: attachmentPaths.length,
+          submittedAt: new Date(project.created_at).toLocaleString('en-US', {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+          }),
+        },
+        // Client confirmation
+        project.email,
+        {
+          name: project.name,
+          service: project.service || undefined,
+        }
+      );
+
+      // Log email results (optional: store in database for tracking)
+      if (adminSent) {
+        console.log(
+          `[Projects API] Admin notification sent for project ${project.id}`
+        );
+      }
+      if (clientSent) {
+        console.log(
+          `[Projects API] Client confirmation sent to ${project.email}`
+        );
+      }
+    } catch (emailError) {
+      // Don't fail the submission if emails break
+      console.error('[Projects API] Email notification error:', emailError);
     }
 
     // ====================================================================

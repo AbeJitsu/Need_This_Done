@@ -305,7 +305,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
 export const defaultHomeContent: HomePageContent = {
   hero: {
     buttons: [
-      { text: 'Get a Quote', variant: 'orange', href: '/contact' },
+      { text: 'View Services', variant: 'orange', href: '/services' },
       { text: 'See How It Works', variant: 'blue', href: '/how-it-works' },
     ],
   },
