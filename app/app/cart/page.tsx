@@ -6,6 +6,7 @@ import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
+import { formInputColors, formValidationColors, titleColors, dangerColors } from '@/lib/colors';
 
 // ============================================================================
 // Shopping Cart Page - /cart
@@ -73,7 +74,7 @@ export default function CartPage() {
 
         <Card hoverEffect="none">
           <div className="p-8 text-center">
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
+            <p className={`${formInputColors.helper} mb-6`}>
               Looks like you haven't added anything yet.
             </p>
             <Button variant="purple" href="/shop">
@@ -100,7 +101,7 @@ export default function CartPage() {
       {/* Error messages */}
       {(localError || cartError) && (
         <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-sm text-red-900 dark:text-red-200">{localError || cartError}</p>
+          <p className={`text-sm ${formValidationColors.error}`}>{localError || cartError}</p>
         </div>
       )}
 
@@ -117,14 +118,14 @@ export default function CartPage() {
                         {/* Item title would come from product data */}
                         Product #{item.variant_id.slice(0, 8)}
                       </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                      <p className={`text-sm ${formInputColors.helper} mt-1`}>
                         Variant: {item.variant_id}
                       </p>
                     </div>
                     <button
                       onClick={() => handleRemoveItem(item.id || '')}
                       disabled={isUpdating === item.id}
-                      className="text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition"
+                      className={`text-gray-500 ${dangerColors.hover} transition`}
                     >
                       ×
                     </button>
@@ -165,7 +166,7 @@ export default function CartPage() {
 
           {/* Continue shopping link */}
           <div className="mt-6">
-            <Link href="/shop" className="text-blue-600 dark:text-blue-400 hover:underline">
+            <Link href="/shop" className={`${titleColors.blue} hover:underline`}>
               ← Continue Shopping
             </Link>
           </div>
@@ -181,14 +182,14 @@ export default function CartPage() {
 
               <div className="space-y-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-300">Subtotal</span>
+                  <span className={formInputColors.helper}>Subtotal</span>
                   <span className="text-gray-900 dark:text-gray-100 font-semibold">
                     ${(subtotal / 100).toFixed(2)}
                   </span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-300">Tax</span>
+                  <span className={formInputColors.helper}>Tax</span>
                   <span className="text-gray-900 dark:text-gray-100 font-semibold">
                     ${(tax / 100).toFixed(2)}
                   </span>
@@ -223,7 +224,7 @@ export default function CartPage() {
           {/* Info box */}
           <Card hoverColor="blue" hoverEffect="glow" className="mt-4">
             <div className="p-6">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className={`text-sm ${formInputColors.helper}`}>
                 Prices shown are in USD. Your final cost may vary based on your location and any applicable taxes.
               </p>
             </div>

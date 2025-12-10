@@ -345,7 +345,7 @@ export const defaultHomeContent: HomePageContent = {
     description:
       "Have a task in mind? Tell us about it and we'll get back with a personalized quote.",
     buttons: [
-      { text: 'Get a Quote', variant: 'orange', href: '/contact' },
+      { text: 'Start Your Project', variant: 'orange', href: '/contact' },
       { text: 'View Pricing', variant: 'blue', href: '/pricing' },
     ],
     footer: 'Have questions?',

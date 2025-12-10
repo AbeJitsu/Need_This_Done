@@ -1,11 +1,46 @@
 {
   "permissions": {
     "allow": [
-   
+      "Edit(**/*)",
+      "Write(**/*)",
+      "Bash(chmod:*)",
+      "Bash(rm:*)",
+      "Bash(git:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(tree:*)",
+      "Bash(xargs:*)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(curl:*)",
+      "Bash(echo:*)",
+      "Bash(docker:*)",
+      "Bash(python3:*)",
+      "Bash(doctl:*)",
+      "Bash(ssh-keygen:*)",
+      "Bash(ssh:*)",
+      "Bash(dig:*)",
+      "Bash(node:*)",
+      "SlashCommand(/docker)",
+      "SlashCommand(/dac)"
     ],
     "deny": [
       "Read(./.env*)",
-      "Read(**/.env*)"
+      "Read(**/.env*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git push origin main:*)",
+      "Bash(git push origin master:*)",
+      "Bash(git reset --hard:*)",
+      "Write(**/.env*)",
+      "Edit(**/.env*)",
+      "Write(**/secrets.*)",
+      "Edit(**/secrets.*)"
     ]
   },
   "hooks": {

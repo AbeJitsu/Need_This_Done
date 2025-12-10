@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { faqColors, titleColors } from '@/lib/colors';
+import { faqColors, titleColors, formInputColors } from '@/lib/colors';
 import CircleBadge from '@/components/CircleBadge';
 import PageHeader from '@/components/PageHeader';
 import CTASection from '@/components/CTASection';
@@ -116,7 +116,7 @@ export default async function FAQPage() {
                     <h2 className={`text-lg font-semibold mb-2 ${styles.text}`}>
                       {faq.question}
                     </h2>
-                    <p className="text-gray-600 dark:text-gray-300">
+                    <p className={formInputColors.helper}>
                       {renderAnswer(faq.answer, faq.links)}
                     </p>
                   </div>

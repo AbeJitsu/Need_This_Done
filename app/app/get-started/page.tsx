@@ -6,7 +6,7 @@ import Card from '@/components/Card';
 import Button from '@/components/Button';
 import CTASection from '@/components/CTASection';
 import CircleBadge from '@/components/CircleBadge';
-import { accentColors, formInputColors } from '@/lib/colors';
+import { accentColors, formInputColors, featureCardColors, stepBadgeColors, mutedTextColors } from '@/lib/colors';
 
 // ============================================================================
 // Get Started Page - Deposit Authorization
@@ -62,14 +62,14 @@ export default function GetStartedPage() {
       <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-12">
         <div className="text-center mb-8">
           <div className="inline-block p-4 bg-green-100 dark:bg-green-900 rounded-full mb-4">
-            <svg className="w-10 h-10 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <svg className={`w-10 h-10 ${featureCardColors.success.icon}`} fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">
             You&apos;re All Set!
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
+          <p className={`text-lg ${formInputColors.helper}`}>
             We&apos;ve received your deposit and we&apos;re excited to get started.
           </p>
         </div>
@@ -83,11 +83,11 @@ export default function GetStartedPage() {
             <div className="space-y-4">
               <div className="flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                  <span className="text-green-700 dark:text-green-300 font-semibold">1</span>
+                  <span className={`${stepBadgeColors.green} font-semibold`}>1</span>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-gray-100">Confirmation Email</h3>
-                  <p className="text-gray-600 dark:text-gray-300">
+                  <p className={formInputColors.helper}>
                     Check your inbox for a receipt and project details.
                   </p>
                 </div>
@@ -95,11 +95,11 @@ export default function GetStartedPage() {
 
               <div className="flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                  <span className="text-blue-700 dark:text-blue-300 font-semibold">2</span>
+                  <span className={`${stepBadgeColors.blue} font-semibold`}>2</span>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-gray-100">We Get to Work</h3>
-                  <p className="text-gray-600 dark:text-gray-300">
+                  <p className={formInputColors.helper}>
                     Your project moves to the front of our queue and work begins.
                   </p>
                 </div>
@@ -107,11 +107,11 @@ export default function GetStartedPage() {
 
               <div className="flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
-                  <span className="text-purple-700 dark:text-purple-300 font-semibold">3</span>
+                  <span className={`${stepBadgeColors.purple} font-semibold`}>3</span>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-gray-100">Stay in Touch</h3>
-                  <p className="text-gray-600 dark:text-gray-300">
+                  <p className={formInputColors.helper}>
                     We&apos;ll keep you updated on progress and reach out with any questions.
                   </p>
                 </div>
@@ -119,11 +119,11 @@ export default function GetStartedPage() {
 
               <div className="flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
-                  <span className="text-orange-700 dark:text-orange-300 font-semibold">4</span>
+                  <span className={`${stepBadgeColors.orange} font-semibold`}>4</span>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-gray-100">Review & Delivery</h3>
-                  <p className="text-gray-600 dark:text-gray-300">
+                  <p className={formInputColors.helper}>
                     Once complete, you&apos;ll review the work. Final 50% is due upon approval.
                   </p>
                 </div>
@@ -161,7 +161,7 @@ export default function GetStartedPage() {
             <CircleBadge text="50%" color="green" size="md" shape="pill" />
             <div>
               <p className="font-semibold text-gray-900 dark:text-gray-100">To Start</p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">Deposit to begin work</p>
+              <p className={`text-sm ${formInputColors.helper}`}>Deposit to begin work</p>
             </div>
           </div>
           <div className="hidden sm:block w-8 h-0.5 bg-gray-300 dark:bg-gray-600"></div>
@@ -169,7 +169,7 @@ export default function GetStartedPage() {
             <CircleBadge text="50%" color="blue" size="md" shape="pill" />
             <div>
               <p className="font-semibold text-gray-900 dark:text-gray-100">On Delivery</p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">When you approve the work</p>
+              <p className={`text-sm ${formInputColors.helper}`}>When you approve the work</p>
             </div>
           </div>
         </div>
@@ -232,7 +232,7 @@ export default function GetStartedPage() {
             {isProcessing ? 'Processing...' : 'Authorize & Pay Deposit'}
           </Button>
 
-          <p className="mt-4 text-center text-sm text-gray-500 dark:text-gray-300">
+          <p className={`mt-4 text-center text-sm ${mutedTextColors.light}`}>
             Secure payment processing. Your information is protected.
           </p>
         </form>

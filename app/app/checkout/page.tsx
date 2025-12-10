@@ -9,6 +9,7 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import PaymentForm from '@/components/PaymentForm';
+import { formInputColors, formValidationColors, featureCardColors } from '@/lib/colors';
 
 // ============================================================================
 // Checkout Page - /checkout
@@ -155,7 +156,7 @@ export default function CheckoutPage() {
         <div className="text-center mb-8">
           <div className="inline-block p-3 bg-green-100 dark:bg-green-900 rounded-full mb-4">
             <svg
-              className="w-8 h-8 text-green-600 dark:text-green-400"
+              className={`w-8 h-8 ${featureCardColors.success.icon}`}
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -169,7 +170,7 @@ export default function CheckoutPage() {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Payment Successful!
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className={formInputColors.helper}>
             Thank you for your purchase.
           </p>
         </div>
@@ -177,7 +178,7 @@ export default function CheckoutPage() {
         <Card hoverEffect="none" className="mb-6">
           <div className="p-8">
             <div className="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+              <p className={`text-sm ${formInputColors.helper} mb-2`}>
                 Order Number
               </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 font-mono break-all">
@@ -186,18 +187,18 @@ export default function CheckoutPage() {
             </div>
 
             <div className="mb-6">
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+              <p className={`text-sm ${formInputColors.helper} mb-2`}>
                 Confirmation Email
               </p>
               <p className="text-lg text-gray-900 dark:text-gray-100">{email}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+              <p className={`text-sm ${formInputColors.helper} mt-2`}>
                 Check your inbox for a confirmation email with tracking
                 information.
               </p>
             </div>
 
             <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-              <p className="text-sm text-green-900 dark:text-green-200">
+              <p className={`text-sm ${formValidationColors.success}`}>
                 Your payment has been processed securely. You&apos;ll receive a
                 receipt via email shortly.
               </p>
@@ -232,7 +233,7 @@ export default function CheckoutPage() {
             {/* Error message */}
             {error && (
               <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-sm text-red-900 dark:text-red-200">{error}</p>
+                <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
               </div>
             )}
 
@@ -282,7 +283,7 @@ export default function CheckoutPage() {
       {itemCount === 0 ? (
         <Card hoverEffect="none">
           <div className="p-8 text-center">
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
+            <p className={`${formInputColors.helper} mb-4`}>
               Your cart is empty.
             </p>
             <Button variant="purple" href="/shop">
@@ -297,7 +298,7 @@ export default function CheckoutPage() {
             {/* Error message */}
             {error && (
               <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-sm text-red-900 dark:text-red-200">{error}</p>
+                <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
               </div>
             )}
 
@@ -310,13 +311,13 @@ export default function CheckoutPage() {
 
                 {isAuthenticated ? (
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+                    <p className={`text-sm ${formInputColors.helper} mb-2`}>
                       Email
                     </p>
                     <p className="text-lg text-gray-900 dark:text-gray-100 font-medium">
                       {email}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                    <p className={`text-sm ${formInputColors.helper} mt-2`}>
                       Logged in as{' '}
                       <span className="font-semibold">{user?.email}</span>
                     </p>
@@ -334,7 +335,7 @@ export default function CheckoutPage() {
                       className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                       placeholder="your@email.com"
                     />
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                    <p className={`text-sm ${formInputColors.helper} mt-2`}>
                       We&apos;ll use this email to send your order confirmation
                       and receipt.
                     </p>
@@ -456,7 +457,7 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
 
           <div className="space-y-3 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-300">Items</span>
+              <span className={formInputColors.helper}>Items</span>
               <span className="text-gray-900 dark:text-gray-100 font-semibold">
                 {itemCount}
               </span>
@@ -465,7 +466,7 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
             {cart && (
               <>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-300">
+                  <span className={formInputColors.helper}>
                     Subtotal
                   </span>
                   <span className="text-gray-900 dark:text-gray-100 font-semibold">
@@ -474,7 +475,7 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-300">Tax</span>
+                  <span className={formInputColors.helper}>Tax</span>
                   <span className="text-gray-900 dark:text-gray-100 font-semibold">
                     ${((cart.tax_total || 0) / 100).toFixed(2)}
                   </span>

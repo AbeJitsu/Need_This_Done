@@ -45,6 +45,25 @@ See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for brand identity and ae
 
 The frontend-design skill is enabled for aesthetic guidance.
 
+### Color System
+
+**NEVER hardcode colors.** All colors come from [lib/colors.ts](app/lib/colors.ts).
+
+**Import what you need:**
+```typescript
+import { formInputColors, formValidationColors, titleColors } from '@/lib/colors';
+```
+
+**Use in className:**
+```typescript
+<p className={formInputColors.helper}>Helper text</p>
+<p className={`text-sm ${formValidationColors.error}`}>Error message</p>
+```
+
+**Available:** formInputColors, formValidationColors, titleColors, stepBadgeColors, successCheckmarkColors, dangerColors, mutedTextColors, headingColors, linkColors, linkHoverColors, accentColors, featureCardColors, navigationColors.
+
+**Why:** WCAG AA compliance, DRY principle, easy design changes.
+
 ## Testing
 
 When adding features:

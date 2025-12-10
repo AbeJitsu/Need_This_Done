@@ -6,7 +6,7 @@ import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
-import { formInputColors, formValidationColors } from '@/lib/colors';
+import { formInputColors, formValidationColors, linkHoverColors } from '@/lib/colors';
 import type { Product } from '@/lib/medusa-client';
 
 // ============================================================================
@@ -86,7 +86,7 @@ export default function ShopPage() {
         <div className="mb-6 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
           <p className={`text-sm ${formValidationColors.info}`}>
             You have <span className="font-semibold">{itemCount}</span> item{itemCount !== 1 ? 's' : ''} in your cart.{' '}
-            <Link href="/cart" className="underline hover:text-blue-700 dark:hover:text-blue-300">
+            <Link href="/cart" className={`underline ${linkHoverColors.blue}`}>
               View cart
             </Link>
           </p>
@@ -116,13 +116,13 @@ export default function ShopPage() {
       {/* Products grid */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <p className="text-gray-600 dark:text-gray-300">Loading products...</p>
+          <p className={formInputColors.helper}>Loading products...</p>
         </div>
       ) : products.length === 0 ? (
         <div className="flex items-center justify-center py-20">
           <Card hoverEffect="none">
             <div className="p-8 text-center">
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
+              <p className={`${formInputColors.helper} mb-4`}>
                 No products available yet. Check back soon!
               </p>
               <Button variant="purple" href="/">
@@ -172,7 +172,7 @@ export default function ShopPage() {
 
                     {/* Description */}
                     {product.description && (
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-6 flex-grow">
+                      <p className={`text-sm ${formInputColors.helper} mb-6 flex-grow`}>
                         {product.description}
                       </p>
                     )}

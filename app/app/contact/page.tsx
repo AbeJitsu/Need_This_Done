@@ -7,7 +7,7 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
-import { formInputColors, formValidationColors, titleColors } from '@/lib/colors';
+import { formInputColors, formValidationColors, titleColors, successCheckmarkColors, dangerColors, mutedTextColors } from '@/lib/colors';
 
 // ============================================================================
 // Contact Page - Inquiry / Booking Form
@@ -155,29 +155,29 @@ export default function ContactPage() {
           {submitStatus === 'success' ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                <span className="text-3xl text-green-600 dark:text-green-300">✓</span>
+                <span className={`text-3xl ${successCheckmarkColors.icon}`}>✓</span>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 We got your message!
               </h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
+              <p className={`${formInputColors.helper} mb-4`}>
                 Thanks for reaching out — we&apos;re excited to learn more about what you need.
               </p>
 
               {/* What happens next */}
               <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6 text-left max-w-md mx-auto">
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">What happens next:</h3>
-                <ol className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
+                <ol className={`text-sm ${formInputColors.helper} space-y-2`}>
                   <li className="flex items-start gap-2">
-                    <span className="font-semibold text-blue-600 dark:text-blue-300">1.</span>
+                    <span className={`font-semibold ${titleColors.blue}`}>1.</span>
                     We&apos;ll review your request within 2 business days
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="font-semibold text-blue-600 dark:text-blue-300">2.</span>
+                    <span className={`font-semibold ${titleColors.blue}`}>2.</span>
                     You&apos;ll receive a personalized quote via email
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="font-semibold text-blue-600 dark:text-blue-300">3.</span>
+                    <span className={`font-semibold ${titleColors.blue}`}>3.</span>
                     Love it?{' '}
                     <Link href="/get-started" className={`${titleColors.blue} font-medium hover:underline`}>
                       Pay 50% to start
@@ -328,17 +328,17 @@ export default function ContactPage() {
                           className="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-gray-700 rounded-lg"
                         >
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className="text-sm text-gray-600 dark:text-gray-300 truncate">
+                            <span className={`text-sm ${formInputColors.helper} truncate`}>
                               {file.name}
                             </span>
-                            <span className="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">
+                            <span className={`text-xs ${mutedTextColors.normal} flex-shrink-0`}>
                               ({formatFileSize(file.size)})
                             </span>
                           </div>
                           <button
                             type="button"
                             onClick={() => removeFile(index)}
-                            className="text-red-500 hover:text-red-700 dark:text-red-300 dark:hover:text-red-100 ml-2 flex-shrink-0"
+                            className={`${dangerColors.text} ${dangerColors.hoverStrong} ml-2 flex-shrink-0`}
                           >
                             Remove
                           </button>

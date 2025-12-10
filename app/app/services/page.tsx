@@ -6,6 +6,7 @@ import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
 import { getDefaultServicesContent } from '@/lib/default-page-content';
 import type { ServicesPageContent } from '@/lib/page-content-types';
+import { formInputColors, successCheckmarkColors } from '@/lib/colors';
 
 // ============================================================================
 // Services Page - What NeedThisDone Offers
@@ -83,14 +84,14 @@ export default async function ServicesPage() {
               const itemContent = (
                 <>
                   <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
-                    <span className="text-green-600 dark:text-green-700 font-bold">✓</span>
+                    <span className={`${successCheckmarkColors.iconAlt} font-bold`}>✓</span>
                   </div>
                   <div>
                     <h3 className={`font-semibold text-gray-900 dark:text-gray-100 mb-1 ${item.link ? 'group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors' : ''}`}>
                       {item.title}
                       {item.link && <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity"> →</span>}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    <p className={`${formInputColors.helper} text-sm`}>
                       {item.description}
                     </p>
                   </div>

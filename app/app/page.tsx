@@ -54,10 +54,10 @@ export default async function HomePage() {
 
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-blue-600 dark:text-blue-400 mb-4">
+          <h1 className={`text-5xl md:text-6xl font-bold tracking-tight ${titleColors.blue} mb-4`}>
             {siteConfig.project.tagline}
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto">
+          <p className={`text-xl ${formInputColors.helper} leading-relaxed mb-6 max-w-3xl mx-auto`}>
             {siteConfig.project.description}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
@@ -72,7 +72,7 @@ export default async function HomePage() {
         {/* Services Preview */}
         <div className="mb-10">
           <Link href="/services" className="block group">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors">
               {content.servicesTitle} <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
             </h2>
           </Link>
@@ -107,13 +107,13 @@ export default async function HomePage() {
                   <CircleBadge number={step.number} color={step.color} size="md" />
                 </div>
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{step.title}</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                <p className={`${formInputColors.helper} text-sm`}>
                   {step.description}
                 </p>
               </div>
             ))}
           </div>
-          <p className="text-center mt-6 text-gray-700 dark:text-gray-300 font-medium group-hover:underline">
+          <p className={`text-center mt-6 ${formInputColors.helper} font-medium group-hover:underline`}>
             {content.processPreview.linkText}
           </p>
         </Link>
@@ -123,7 +123,7 @@ export default async function HomePage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             {content.cta.title}
           </h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
+          <p className={`${formInputColors.helper} mb-6`}>
             {content.cta.description}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">

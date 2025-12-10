@@ -5,6 +5,7 @@ import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultPricingContent } from '@/lib/default-page-content';
 import type { PricingPageContent } from '@/lib/page-content-types';
+import { formInputColors } from '@/lib/colors';
 
 // ============================================================================
 // Pricing Page - Service Pricing Tiers
@@ -81,7 +82,7 @@ export default async function PricingPage() {
                   <p className="font-semibold text-gray-900 dark:text-gray-100">
                     {content.paymentNote.depositLabel}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                  <p className={`text-sm ${formInputColors.helper}`}>
                     {content.paymentNote.depositDescription}
                   </p>
                 </div>
@@ -93,7 +94,7 @@ export default async function PricingPage() {
                   <p className="font-semibold text-gray-900 dark:text-gray-100">
                     {content.paymentNote.deliveryLabel}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                  <p className={`text-sm ${formInputColors.helper}`}>
                     {content.paymentNote.deliveryDescription}
                   </p>
                 </div>
@@ -108,7 +109,7 @@ export default async function PricingPage() {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               {content.customSection.title}
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
+            <p className={`${formInputColors.helper} mb-6`}>
               {content.customSection.description}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

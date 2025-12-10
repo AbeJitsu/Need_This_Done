@@ -4,6 +4,7 @@ import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
 import { getDefaultHowItWorksContent } from '@/lib/default-page-content';
 import type { HowItWorksPageContent } from '@/lib/page-content-types';
+import { formInputColors, titleColors } from '@/lib/colors';
 
 // ============================================================================
 // How It Works Page - The NeedThisDone Process
@@ -63,10 +64,10 @@ export default async function HowItWorksPage() {
 
         {/* Timeline Note */}
         <Card hoverColor={content.timeline.hoverColor || 'blue'} hoverEffect="glow" className="mb-10">
-          <h3 className="font-semibold text-blue-600 dark:text-blue-300 mb-2">
+          <h3 className={`font-semibold ${titleColors.blue} mb-2`}>
             {content.timeline.title}
           </h3>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className={formInputColors.helper}>
             {content.timeline.description}
           </p>
         </Card>

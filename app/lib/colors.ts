@@ -287,4 +287,65 @@ export const navigationColors = {
   userButtonHover: 'hover:text-gray-700 dark:hover:text-gray-200',
 };
 
+// ============================================================================
+// Step Badge Colors - Numbered badges for multi-step processes
+// ============================================================================
+// Used for numbered step indicators in process explanations and forms
+export const stepBadgeColors: Record<AccentVariant, string> = {
+  purple: 'text-purple-700 dark:text-purple-300',
+  blue: 'text-blue-700 dark:text-blue-300',
+  green: 'text-green-700 dark:text-green-300',
+  orange: 'text-orange-700 dark:text-orange-300',
+  teal: 'text-teal-700 dark:text-teal-300',
+  gray: 'text-gray-700 dark:text-gray-300',
+  red: 'text-red-700 dark:text-red-300',
+};
+
+// ============================================================================
+// Success Checkmark Colors - For checkmarks in feature lists and success states
+// ============================================================================
+export const successCheckmarkColors = {
+  icon: 'text-green-600 dark:text-green-300',
+  iconAlt: 'text-green-600 dark:text-green-700', // Alternative used in services page
+};
+
+// ============================================================================
+// Danger/Destructive Action Colors - For delete, remove, cancel actions
+// ============================================================================
+export const dangerColors = {
+  text: 'text-red-500 dark:text-red-300',
+  hover: 'hover:text-red-600 dark:hover:text-red-400',
+  hoverStrong: 'hover:text-red-700 dark:hover:text-red-100',
+};
+
+// ============================================================================
+// Muted Text Colors - For very subtle secondary text
+// ============================================================================
+export const mutedTextColors = {
+  normal: 'text-gray-400 dark:text-gray-500',
+  light: 'text-gray-500 dark:text-gray-300',
+};
+
+// ============================================================================
+// Heading Text Colors - Standard heading colors (non-accented)
+// ============================================================================
+export const headingColors = {
+  primary: 'text-gray-900 dark:text-gray-100',
+  secondary: 'text-gray-700 dark:text-gray-300',
+};
+
+// ============================================================================
+// Link Colors - For text links
+// ============================================================================
+export const linkColors = {
+  blue: 'text-blue-600 dark:text-blue-400',
+};
+
+// ============================================================================
+// Link Hover Colors - For blue link hover states
+// ============================================================================
+export const linkHoverColors = {
+  blue: 'hover:text-blue-700 dark:hover:text-blue-300',
+};
+
 
