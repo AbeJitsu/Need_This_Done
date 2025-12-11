@@ -55,7 +55,7 @@ A modern platform for professional services that combines:
 **Tech Stack:**
 - **Frontend**: Next.js 14 (React) with TypeScript
 - **Backend**: Next.js API routes + Medusa (ecommerce engine)
-- **Database**: Supabase (PostgreSQL with pgvector for auth)
+- **Database**: Supabase (PostgreSQL with pgvector for AI chatbot)
 - **Ecommerce**: Medusa headless commerce engine
 - **Payments**: Stripe (one-time & subscriptions)
 - **Email**: Resend (transactional emails)
@@ -191,6 +191,11 @@ RESEND_ADMIN_EMAIL=admin@needthisdone.com
 # AI Chatbot (optional)
 OPENAI_API_KEY=sk-...
 VECTOR_SEARCH_SIMILARITY_THRESHOLD=0.5
+VECTOR_SEARCH_MAX_RESULTS=5
+
+# Site Configuration
+NEXT_PUBLIC_SITE_URL=https://localhost
+NODE_ENV=development
 ```
 
 ### Choosing Cloud vs Local Supabase
@@ -731,7 +736,7 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
 |------|---------|
 | `app/e2e/` | Playwright E2E tests |
 | `app/__tests__/setup/a11y-utils.ts` | Accessibility test utilities |
-| `playwright.config.ts` | Playwright configuration |
+| `app/playwright.config.ts` | Playwright configuration |
 
 ---
 
