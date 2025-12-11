@@ -1,88 +1,134 @@
 # Medusa Backend - Need This Done
 
-Headless ecommerce backend for the Need This Done platform. Handles product catalog, shopping carts, orders, and checkout flows.
+Custom Express backend that mimics Medusa's REST API for ecommerce functionality. Handles product catalog, shopping carts, and checkout flows.
+
+> **Note**: This is a **bootstrap implementation**, not a full Medusa installation. See [TODO.md](../TODO.md) for the full Medusa migration plan.
+
+---
+
+## Current State (Bootstrap)
+
+This is a lightweight Express server that implements Medusa-compatible endpoints:
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Products | Hardcoded | 3 products defined in `src/index.ts` |
+| Carts | In-memory | Lost on container restart |
+| Orders | Placeholder | Returns temp ID, linked in Supabase |
+| Admin | Basic | Health check only |
+
+**What this means:**
+- Products can't be added/edited without code changes
+- Cart data doesn't persist across restarts
+- Perfect for development, needs upgrade for production
+
+---
 
 ## Architecture
 
-- **Database**: PostgreSQL (separate from Supabase)
+- **Server**: Express.js with CORS
+- **Database**: PostgreSQL (available but products not stored there yet)
 - **Cache**: Redis (shared with main app)
 - **Port**: 9000 (internal to Docker network)
-- **Admin**: Accessible at `/admin` when running
 
-## Configuration
+---
 
-Medusa reads configuration from `medusa-config.js` and environment variables from the root `.env.local`.
+## Products (Hardcoded)
 
-**Environment variables** (set in root `.env.local`):
-- `DATABASE_URL` - PostgreSQL connection string
-- `REDIS_URL` - Redis connection string
-- `JWT_SECRET` - JWT signing key
-- `NODE_ENV` - development or production
+Three pricing tiers defined in `src/index.ts`:
 
-## Running Locally
+| Product | Price | Handle | Variant ID |
+|---------|-------|--------|------------|
+| Quick Task | $50 | `quick-task` | `variant_prod_1_default` |
+| Standard Project | $150 | `standard-task` | `variant_prod_2_default` |
+| Premium Solution | $500 | `premium-solution` | `variant_prod_3_default` |
 
-### Docker (Recommended)
+---
 
+## API Endpoints
+
+### Products
 ```bash
-# From project root
-docker-compose up medusa
+GET /store/products          # List all products
+GET /store/products/:id      # Single product by ID
 ```
 
-Medusa will be available at `http://localhost:9000`
-Admin will be at `http://localhost:9000/admin`
-
-### Development
-
+### Carts
 ```bash
-cd medusa
-npm install
-npm run dev
+POST /store/carts                              # Create empty cart
+GET /store/carts/:id                           # Get cart
+POST /store/carts/:id/line-items               # Add item
+POST /store/carts/:id/line-items/:line_id      # Update quantity
+DELETE /store/carts/:id/line-items/:line_id    # Remove item
 ```
+
+### Orders
+```bash
+POST /store/orders           # Create order (placeholder)
+```
+
+### Health
+```bash
+GET /health                  # Service health check
+GET /admin                   # Admin status (Docker health check)
+```
+
+---
 
 ## Project Structure
 
 ```
 medusa/
 ├── src/
-│   ├── admin/          # Admin dashboard customizations
-│   ├── api/            # Custom API endpoints
-│   ├── models/         # Database models
-│   ├── migrations/     # Database migrations
-│   └── services/       # Business logic services
-├── medusa-config.js    # Medusa configuration
+│   └── index.ts        # Express server with all endpoints
+├── medusa-config.js    # Configuration (env vars)
 ├── package.json        # Dependencies
-└── Dockerfile          # Docker build configuration
+└── Dockerfile          # Docker build
 ```
 
-## Services (3 Tier Pricing Model)
+---
 
-Products are managed through Medusa's admin panel:
-- Quick Task ($50)
-- Standard Task ($150)
-- Premium Service ($500)
+## Running Locally
 
-These are stored in Medusa's PostgreSQL database, completely separate from app/user data in Supabase.
+### Docker (Recommended)
+```bash
+# From project root
+docker-compose up medusa
+```
 
-## API Endpoints
+Available at `http://localhost:9000`
 
-All Medusa API endpoints are proxied through Next.js API routes in the main app.
+### Development
+```bash
+cd medusa
+npm install
+npm run dev
+```
 
-**Key endpoints**:
-- `GET /api/pages/:slug` → `medusa:9000/store/products/:id`
-- `POST /api/cart` → `medusa:9000/store/carts`
-- `POST /api/checkout` → `medusa:9000/store/orders`
-- `GET /api/orders` → `medusa:9000/store/orders` (with auth)
+---
 
-## Next Steps
+## Configuration
 
-1. Configure actual products in Medusa admin
-2. Implement seed data for 3 pricing tiers
-3. Connect Stripe payment processor
-4. Build storefront in `/shop` route
-5. Create admin integration at `/admin/shop`
+Environment variables (set in root `.env.local`):
+- `MEDUSA_DB_PASSWORD` - PostgreSQL password
+- `MEDUSA_JWT_SECRET` - JWT signing key
+- `MEDUSA_ADMIN_JWT_SECRET` - Admin JWT key
+- `REDIS_URL` - Redis connection string
+
+---
+
+## Integration with Next.js
+
+The Next.js app communicates with this backend through:
+
+1. **medusa-client.ts** (`app/lib/medusa-client.ts`) - Fetch wrapper with retry logic
+2. **API Routes** (`app/app/api/`) - Proxy endpoints for cart, products, checkout
+3. **CartContext** (`app/context/CartContext.tsx`) - Frontend state management
+
+---
 
 ## Documentation
 
-- [Medusa Official Docs](https://docs.medusajs.com/)
-- [Setup Guide](../app/guides/medusa-setup.md) - Implementation details
-- [Puck Setup](../app/guides/puck-setup.md) - Related CMS integration
+- [Main README](../README.md) - Project overview
+- [TODO.md](../TODO.md) - Full Medusa migration plan
+- [Medusa Official Docs](https://docs.medusajs.com/) - For future full implementation

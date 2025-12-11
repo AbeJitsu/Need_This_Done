@@ -955,6 +955,6 @@ This is the fastest way to get started if you're already in a Claude Code sessio
 ## See Also
 
 - [worktree-swarm skill](../.claude/skills/worktree-swarm.md) — Interactive skill for Claude Code
-- [DEPLOY_CLI.md](DEPLOY_CLI.md) — Deployment workflow
+- [DEPLOYMENT.md](DEPLOYMENT.md) — Deployment workflow
 - [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) — Design standards for UI work
 - [.claude/INSTRUCTIONS.md](../.claude/INSTRUCTIONS.md) — Code organization standards

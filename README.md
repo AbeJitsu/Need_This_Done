@@ -57,6 +57,8 @@ A modern platform for professional services that combines:
 - **Backend**: Next.js API routes + Medusa (ecommerce engine)
 - **Database**: Supabase (PostgreSQL with pgvector for auth)
 - **Ecommerce**: Medusa headless commerce engine
+- **Payments**: Stripe (one-time & subscriptions)
+- **Email**: Resend (transactional emails)
 - **Cache**: Redis for performance
 - **Infrastructure**: Docker + Nginx reverse proxy
 - **Design**: Tailwind CSS with dark mode support
@@ -165,17 +167,30 @@ This starts:
 MEDUSA_DB_PASSWORD=your_secure_password
 MEDUSA_JWT_SECRET=your_jwt_secret
 MEDUSA_ADMIN_JWT_SECRET=your_admin_secret
+MEDUSA_BACKEND_URL=http://medusa:9000  # Internal Docker URL
 
 # Redis
 REDIS_URL=redis://redis:6379
+SKIP_CACHE=true  # Optional: bypass Redis in dev mode
 
 # Supabase (see "Choosing Cloud vs Local Supabase" below)
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-key
 
-# AI Chatbot (optional - for RAG chatbot feature)
+# Stripe (payments)
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# Email (Resend)
+RESEND_API_KEY=re_...
+RESEND_FROM_EMAIL=hello@needthisdone.com
+RESEND_ADMIN_EMAIL=admin@needthisdone.com
+
+# AI Chatbot (optional)
 OPENAI_API_KEY=sk-...
+VECTOR_SEARCH_SIMILARITY_THRESHOLD=0.5
 ```
 
 ### Choosing Cloud vs Local Supabase
@@ -235,7 +250,7 @@ supabase db reset
 | File/Folder | Purpose |
 |-------------|---------|
 | `README.md` | This file - main project documentation |
-| `Roadmap.md` | Feature roadmap - what's done, what's next |
+| `TODO.md` | Task tracker (To Do / In Progress / Done) |
 | `CLAUDE.md` | Project guidelines for Claude Code |
 | `docker-compose.yml` | Docker service definitions |
 | `docker-compose.dev.yml` | Development-specific overrides |
@@ -601,11 +616,21 @@ cd app && npm run test:a11y
 
 # Test locally in browser
 # Toggle dark mode → Check all text readable
-
-# Common fix: ensure dark: variant exists
-# ❌ Wrong: <p className="text-gray-800">
-# ✅ Right: <p className="text-gray-900 dark:text-gray-100">
 ```
+
+**Fix**: Always use centralized colors from `app/lib/colors.ts`:
+```typescript
+// ❌ Wrong: hardcoded Tailwind classes
+<p className="text-gray-800">Text</p>
+
+// ✅ Right: use color system
+import { headingColors, formInputColors } from '@/lib/colors';
+
+<h2 className={headingColors.primary}>Heading</h2>
+<p className={formInputColors.helper}>Helper text</p>
+```
+
+Available color utilities: `headingColors`, `formInputColors`, `formValidationColors`, `titleColors`, `accentColors`, `navigationColors`, `dangerColors`, `linkColors`, and more. See [app/lib/colors.ts](app/lib/colors.ts) for the full list.
 
 ### Issue: Supabase connection errors
 
@@ -683,12 +708,15 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
 | `app/lib/redis.ts` | Redis cache client |
 | `app/lib/medusa-client.ts` | Medusa API wrapper |
 | `app/lib/cache.ts` | Caching utility & keys |
+| `app/lib/stripe.ts` | Stripe server client |
+| `app/lib/email.ts` | Resend email utility |
 
 ### State Management
 | File | Purpose |
 |------|---------|
 | `app/context/CartContext.tsx` | Shopping cart state |
 | `app/context/AuthContext.tsx` | User authentication state |
+| `app/context/StripeContext.tsx` | Stripe Elements provider |
 
 ### Backend Services
 | File | Purpose |
@@ -725,13 +753,7 @@ See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for:
 
 ## What's Next?
 
-### Pending Features
-
-See [Roadmap.md](Roadmap.md) for the complete roadmap, including:
-- Payment processing (Stripe integration)
-- Inventory management
-- Multi-tier pricing
-- Analytics and reporting
+See [TODO.md](TODO.md) for the current task tracker with prioritized work items.
 
 ### How to Add Features
 
