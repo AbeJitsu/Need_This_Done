@@ -29,9 +29,9 @@ WORKDIR /app
 
 FROM base AS dependencies
 
-# Copy only package files (not the whole app)
+# Copy only package files and npm configuration (not the whole app)
 # This allows Docker to cache this layer - reuse it if packages don't change
-COPY package*.json ./
+COPY package*.json .npmrc ./
 
 # npm ci = "clean install" (exactly as specified, no surprises)
 # --frozen-lockfile = use exact versions from package-lock.json
