@@ -7,6 +7,7 @@ A professional services platform built with Next.js, running in Docker with ngin
 ## Table of Contents
 
 - [Quick Start (30 seconds)](#quick-start)
+- [Deployment](#deployment)
 - [What This Project Is](#what-this-project-is)
 - [Architecture Overview](#architecture-overview)
 - [Development Setup](#development-setup)
@@ -39,6 +40,19 @@ supabase start
 docker-compose down -v
 docker-compose up --build
 ```
+
+---
+
+## Deployment
+
+To deploy changes to production (https://needthisdone.com):
+
+1. **Test locally** at https://localhost
+2. **Commit and push to main:** `git push origin main`
+3. **GitHub Actions automatically deploys** (3-5 minutes)
+4. **Done!** No manual SSH needed
+
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment instructions, troubleshooting, and manual deployment steps.
 
 ---
 
