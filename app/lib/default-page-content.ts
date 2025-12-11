@@ -87,7 +87,7 @@ export const defaultPricingContent: PricingPageContent = {
     description:
       "Every project is unique. Tell us what you're working on and we'll figure out the best approach together. Or check out our FAQ for quick answers.",
     buttons: [
-      { text: "Let's Figure It Out", variant: 'orange', href: '/contact' },
+      { text: 'View Services', variant: 'orange', href: '/services' },
       { text: 'Read the FAQ', variant: 'purple', href: '/faq' },
     ],
     hoverColor: 'orange',
@@ -166,7 +166,7 @@ export const defaultFAQContent: FAQPageContent = {
     description:
       "We're here to help. Reach out and we'll get back to you promptly.",
     buttons: [
-      { text: 'Get a Quote', variant: 'orange', href: '/contact' },
+      { text: 'View Services', variant: 'orange', href: '/services' },
       { text: 'View Pricing', variant: 'teal', href: '/pricing' },
     ],
     hoverColor: 'orange',
@@ -208,7 +208,7 @@ export const defaultServicesContent: ServicesPageContent = {
     description:
       "Tell us about your project and we'll get back to you with a personalized quote.",
     buttons: [
-      { text: 'Get a Quote', variant: 'orange', href: '/contact' },
+      { text: 'View Pricing', variant: 'orange', href: '/pricing' },
       { text: 'How It Works', variant: 'blue', href: '/how-it-works' },
       { text: 'FAQ', variant: 'teal', href: '/faq' },
     ],
@@ -291,7 +291,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
     description:
       "Tell us what you need and we'll get back with a personalized quote.",
     buttons: [
-      { text: 'Get a Quote', variant: 'orange', href: '/contact' },
+      { text: 'View Services', variant: 'orange', href: '/services' },
       { text: 'View Pricing', variant: 'teal', href: '/pricing' },
     ],
     hoverColor: 'orange',
@@ -345,7 +345,7 @@ export const defaultHomeContent: HomePageContent = {
     description:
       "Have a task in mind? Tell us about it and we'll get back with a personalized quote.",
     buttons: [
-      { text: 'Start Your Project', variant: 'orange', href: '/contact' },
+      { text: 'Check FAQ', variant: 'orange', href: '/faq' },
       { text: 'View Pricing', variant: 'blue', href: '/pricing' },
     ],
     footer: 'Have questions?',

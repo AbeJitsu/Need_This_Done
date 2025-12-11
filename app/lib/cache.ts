@@ -6,6 +6,11 @@ import { redis } from './redis';
 // What: Provides simple cache.wrap(), cache.get(), cache.set() functions
 // Why: Reduces boilerplate for caching patterns, handles JSON serialization
 // How: Wraps the redis client with type-safe generics and smart defaults
+//
+// Development Mode: Set SKIP_CACHE=true to bypass Redis entirely for faster
+// frontend development without Redis connection loops
+
+const skipCache = process.env.SKIP_CACHE === 'true';
 
 // ============================================================================
 // TTL (Time To Live) Constants
@@ -82,6 +87,12 @@ async function wrap<T>(
   fetcher: () => Promise<T>,
   ttl: number = CACHE_TTL.MEDIUM
 ): Promise<{ data: T; cached: boolean; source: 'cache' | 'database' }> {
+  // Development mode: skip caching entirely
+  if (skipCache) {
+    const data = await fetcher();
+    return { data, cached: false, source: 'database' };
+  }
+
   try {
     // Step 1: Try to get from cache
     const cached = await get<T>(key);
