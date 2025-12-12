@@ -13,12 +13,13 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files and npm configuration
+COPY package*.json .npmrc ./
 
 # npm install (not npm ci) because we want dev dependencies
 # Install all tools for development: testing, linting, debugging
-RUN npm install
+# --legacy-peer-deps needed for @react-email/components compatibility
+RUN npm install --legacy-peer-deps
 
 # Don't copy source code - it will be mounted as a volume
 # This means changes to your files appear instantly
