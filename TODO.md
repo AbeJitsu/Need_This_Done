@@ -8,14 +8,19 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 _Currently active work items_
 
-**Email Notifications** (Infrastructure: ✅ Ready)
+**Email Notifications - Quick Wins** (Infrastructure: ✅ Ready) ← DO FIRST
 - [x] Set up Resend account and verify `RESEND_API_KEY` in `.env.local`
 - [x] Configure DNS (DKIM, SPF) with Namecheap
 - [x] Deploy email config to production (DigitalOcean)
 - [ ] Add auth emails (account creation, login notifications)
 - [ ] Test admin alert on new project submission
-- [ ] Add order confirmation emails (requires Medusa implementation)
-- [ ] Add purchase receipt emails (requires Medusa implementation)
+
+**Medusa Real Implementation** ← START AFTER EMAIL QUICK WINS
+- [ ] Plan database schema for products, carts, orders
+- [ ] Replace bootstrap Express backend with real Medusa
+- [ ] Implement database-persisted products (replace hardcoded)
+- [ ] Implement database-persisted carts (replace in-memory)
+- [ ] Implement proper order management
 
 ---
 
@@ -23,9 +28,7 @@ _Currently active work items_
 
 ### Immediate
 
-**CRITICAL - Setup Required (Code ready, accounts needed)**
-
-**Stripe Payments** (Implementation: ✅ app/lib/stripe.ts, app/context/StripeContext.tsx)
+**Stripe Payments** (blocked until Medusa done)
 - [ ] Create Stripe account at https://stripe.com
 - [ ] Get live API keys (STRIPE_SECRET_KEY, NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 - [ ] Create webhook endpoint at /api/stripe/webhook
@@ -34,14 +37,9 @@ _Currently active work items_
 - [ ] Test payment flow in checkout
 - [ ] Verify webhook events process correctly
 
-**Medusa Real Implementation** (Bootstrap: ❌ medusa/src/index.ts - HIGH PRIORITY)
-- [ ] Plan database schema for products
-- [ ] Plan database schema for carts
-- [ ] Plan database schema for orders
-- [ ] Replace bootstrap Express backend with real Medusa
-- [ ] Implement database-persisted products (replace hardcoded)
-- [ ] Implement database-persisted carts (replace in-memory)
-- [ ] Implement proper order management
+**Email Notifications - E-commerce** (blocked until Medusa + Stripe)
+- [ ] Add order confirmation emails
+- [ ] Add purchase receipt emails
 
 **Testing & Verification**
 - [ ] Test Medusa backend locally: `npm run test:e2e -- e2e/shop.spec.ts`
@@ -85,13 +83,6 @@ _Currently active work items_
 - [ ] Discount/coupon system
 - [ ] Multi-currency support
 - [ ] Customer reviews & ratings
-
-**Full Medusa Implementation**
-- [ ] Migrate from bootstrap Express backend to real Medusa
-- [ ] Database-persisted products (replace hardcoded)
-- [ ] Database-persisted carts (replace in-memory)
-- [ ] Medusa admin dashboard for product management
-- [ ] Seed data system for pricing tiers
 
 ---
 
