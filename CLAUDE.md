@@ -53,6 +53,21 @@ Follow [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) for:
 
 Use self-documenting code with section-level comments. Comment major sections and blocks to explain what they do and why, in plain language that educated adults can understand regardless of coding experience.
 
+### No Broken Windows Policy
+
+**Fix warnings and errors immediately—don't ignore them.**
+
+- If a build produces warnings → fix them before shipping
+- If a test fails → fix it, don't skip the test
+- If TypeScript complains → resolve the type error, don't use `@ts-ignore`
+- If linting fails → address the issue, don't disable the rule
+- If accessibility tests fail → fix the accessibility issue
+- If a feature is half-done → complete it or remove it, don't leave it broken
+
+**Why this matters:** Small broken windows multiply. One ignored warning becomes ten, which becomes a hundred. Broken code accumulates technical debt that slows everything down. Maintaining high standards keeps the codebase healthy and maintainable.
+
+**The rule:** Zero warnings in production code. Always.
+
 ## Design System
 
 See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for technical standards (accessibility, colors, testing).

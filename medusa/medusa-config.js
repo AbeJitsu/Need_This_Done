@@ -66,15 +66,17 @@ module.exports = {
   modules,
 
   // ============================================================================
-  // Authentication
+  // Plugins
   // ============================================================================
+  // NOTE: Admin plugin removed temporarily to debug startup issues
   plugins: [
     {
-      resolve: "@medusajs/admin",
-      options: {
-        autoRebuild: true,
-        develop: process.env.NODE_ENV === "development",
-      },
+      resolve: "medusa-fulfillment-manual",
+      options: {},
+    },
+    {
+      resolve: "medusa-payment-manual",
+      options: {},
     },
   ],
 };

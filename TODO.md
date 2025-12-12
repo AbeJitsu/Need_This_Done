@@ -4,24 +4,47 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 ---
 
+## Production Readiness Status
+
+**Last Verified:** December 2025
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Medusa Backend | ✅ Working | Products, carts, checkout functional |
+| Stripe Payments | ✅ Working | Real payment processing (not mock) |
+| E2E Tests | ⚠️ 91% | 62/68 passing, 6 need updates |
+| Security | ❌ Critical | Hardcoded secrets must be fixed |
+| Google Calendar | ❌ 0% | Not started |
+| Admin Approval | ❌ 0% | Not started |
+
+### Critical Security Issues (MUST FIX BEFORE PRODUCTION)
+
+1. **Hardcoded admin password** in `medusa/seed-products.js` (line 11: `admin123`)
+2. **Default secrets** in `docker-compose.yml` (JWT, cookie secrets with weak fallbacks)
+3. **Exposed debug endpoints** (`/api/embeddings/debug`, `/api/demo/*`) - no authentication
+4. **Weak fallback secrets** in `medusa/medusa-config.js`
+
+---
+
 ## In Progress
 
 _Currently active work items_
 
 **Medusa Real Implementation + Google Calendar Bookings** ← CURRENT PRIORITY
 
-**Phase 0: Bug Fix (10-15 min)**
+**Phase 0: Bug Fix** ✅ COMPLETE
 - [x] Fix email links using `NEXT_PUBLIC_SITE_URL` env var (localhost → needthisdone.com)
-  - Files: AdminNotification.tsx, ClientConfirmation.tsx, LoginNotificationEmail.tsx, WelcomeEmail.tsx
-  - Already configured in .env.example: `NEXT_PUBLIC_SITE_URL=https://localhost`
-  - Update to production .env.local on DigitalOcean: `NEXT_PUBLIC_SITE_URL=https://needthisdone.com`
+- [x] Test email links in production
 
-**Phase 1: Medusa Backend (4-5 hrs)**
-- [ ] Initialize real Medusa (replace bootstrap Express in `/medusa/src/index.ts`)
-- [ ] Create consultation products seed (15-min/$20, 30-min/$35, 55-min/$50)
-- [ ] Run Medusa migrations (database-persisted products, carts, orders)
-- [ ] Update checkout to mark consultation products with `metadata.requires_appointment`
-- [ ] Test products API, cart persistence, checkout flow
+**Phase 1: Medusa Backend** ✅ COMPLETE
+- [x] Initialize real Medusa (replace bootstrap Express in `/medusa/src/index.ts`)
+- [x] Create consultation products seed (15-min/$20, 30-min/$35, 55-min/$50)
+- [x] Update checkout to mark consultation products with `metadata.requires_appointment`
+- [x] Add Supabase migration for `requires_appointment` column in orders table
+- [x] Fix TypeORM 0.3.23+ compatibility issue (patch-typeorm.js)
+- [x] Fix shop page price display (variants[0].prices[0].amount)
+- [x] Update E2E tests for consultation products
+- [x] Verify products API, cart persistence, checkout flow locally
 
 **Phase 2: Google Calendar Integration (4-5 hrs)**
 - [ ] Complete Google Cloud Console setup (see instructions below)
@@ -38,14 +61,28 @@ _Currently active work items_
 - [ ] Send confirmation emails with .ics attachments
 
 **Phase 4: Testing & Deploy (1-2 hrs)**
-- [ ] E2E tests for Medusa backend
+- [x] E2E tests for Medusa backend (shop.spec.ts - 32/32 passing)
+- [ ] Fix shop-variants.spec.ts (6 tests using old product IDs)
 - [ ] E2E tests for appointment booking flow
 - [ ] Manual testing in dev environment
+- [ ] Fix security issues before production deploy
 - [ ] Deploy to production
 
 ---
 
 ## To Do
+
+### Security Pre-Production (BLOCKING)
+
+**These MUST be fixed before deploying to production:**
+
+- [ ] Remove hardcoded admin password from `medusa/seed-products.js` - use env vars
+- [ ] Remove default secret fallbacks from `docker-compose.yml` - require explicit env vars
+- [ ] Remove weak secret fallbacks from `medusa/medusa-config.js`
+- [ ] Protect or remove `/api/embeddings/debug` endpoint
+- [ ] Protect or remove `/api/demo/speed` and `/api/demo/items` endpoints
+- [ ] Add missing nginx security headers (HSTS, CSP, Permissions-Policy)
+- [ ] Verify CORS settings for production domain
 
 ### Immediate
 
@@ -126,6 +163,9 @@ _Currently active work items_
 
 _Keep ~5-10 recent wins here, trim periodically once documented in README.md_
 
+- [x] Real Medusa Backend - Full implementation with TypeORM patch for 0.3.23+ compatibility. Products seeded via Admin API (seed-products.js). Cart and checkout fully functional. 32/32 shop E2E tests passing. (Dec 2025)
+- [x] Consultation Products - 3 products created: 15-min ($20), 30-min ($35), 55-min ($50) with `requires_appointment` metadata. Shop page displays correct prices via `variants[0].prices[0].amount`. (Dec 2025)
+- [x] Production Readiness Audit - Comprehensive security audit completed. Identified 4 critical issues (hardcoded secrets), verified checkout is real (not mock), documented all findings. (Dec 2025)
 - [x] Auth Email Templates & Admin Alerts - Created WelcomeEmail.tsx and LoginNotificationEmail.tsx templates. Added sendWelcomeEmail() and sendLoginNotification() to email-service.ts. Wired to auth routes (signup sends welcome, login sends notification). Created test-emails.ts script for manual verification. All 4 email types tested successfully. (Dec 2025)
 - [x] Accessibility Test Fixes - Fixed dark mode testing (emulateMedia before navigation), heading order compliance (h3→h2 in ServiceCard), centralized colors in components. All 10 a11y tests pass. (Dec 2025)
 - [x] Self-Documenting npm Scripts - Renamed cryptic scripts (dcup, dcdown, dcps) to clear names (dev:start, dev:stop, dev:status). Added Docker Commands table to README as single source of truth. (Dec 2025)

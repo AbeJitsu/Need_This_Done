@@ -49,6 +49,20 @@ export async function POST(request: NextRequest) {
       return badRequest('Email is required for guest checkout');
     }
 
+    // Fetch cart to check for appointment-required products
+    let cart;
+    let requiresAppointment = false;
+    try {
+      cart = await medusaClient.carts.get(cart_id);
+      // Check if any items require appointments
+      requiresAppointment = cart.items?.some(
+        (item) => item.product?.metadata?.requires_appointment === true
+      ) || false;
+    } catch (error) {
+      console.error('Failed to fetch cart for appointment check:', error);
+      // Continue checkout even if cart fetch fails
+    }
+
     // Create order from cart in Medusa
     let order;
     try {
@@ -73,6 +87,7 @@ export async function POST(request: NextRequest) {
             total: order.total,
             status: order.status,
             email: order.email,
+            requires_appointment: requiresAppointment,
           });
 
         if (dbError) {
@@ -97,6 +112,7 @@ export async function POST(request: NextRequest) {
         order,
         order_id: order.id,
         tracking_email: order.email,
+        requires_appointment: requiresAppointment,
       },
       { status: 201 }
     );

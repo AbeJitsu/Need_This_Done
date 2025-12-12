@@ -127,21 +127,26 @@ A modern platform for professional services that combines:
 
 ### Medusa Backend (Current State)
 
-> **Note**: This is a **bootstrap implementation**, not a full Medusa installation. See [TODO.md](TODO.md) for the full Medusa migration plan.
+Real Medusa implementation with database-persisted products, carts, and orders. All consultation products require appointment scheduling before fulfillment.
 
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Products | Hardcoded | 3 pricing tiers in `medusa/src/index.ts` |
-| Carts | In-memory | Lost on container restart |
-| Orders | Placeholder | Returns temp ID, linked in Supabase |
-| Email | ✅ Ready | Infrastructure ready via `app/lib/email.ts` |
+| Feature | Status | Details |
+|---------|--------|---------|
+| Products | ✅ Database-seeded | 3 consultation tiers, seeded via `npm run seed` |
+| Carts | ✅ Database-persisted | Stored in Medusa PostgreSQL |
+| Orders | ✅ Production-ready | Full order objects, linked in Supabase with appointment tracking |
+| Appointments | ⏳ In Progress | Supabase table & appointment request form coming in Phase 2 |
+| Email | ✅ Ready | Infrastructure via Resend + `app/lib/email-service.ts` |
 
-**Products** (hardcoded in `medusa/src/index.ts`):
-| Product | Price | Handle |
-|---------|-------|--------|
-| Quick Task | $50 | `quick-task` |
-| Standard Project | $150 | `standard-task` |
-| Premium Solution | $500 | `premium-solution` |
+**Consultation Products** (seeded via `medusa/seed-products.js` using Admin API):
+| Product | Price | Duration | Handle |
+|---------|-------|----------|--------|
+| 15-Minute Quick Consultation | $20 | 15 min | `consultation-15-min` |
+| 30-Minute Strategy Consultation | $35 | 30 min | `consultation-30-min` |
+| 55-Minute Deep Dive Consultation | $50 | 55 min | `consultation-55-min` |
+
+**Admin Credentials** (for Medusa Admin panel):
+- Email: `admin@needthisdone.com`
+- Password: Configured via environment variable (see security notes in TODO.md)
 
 ---
 
@@ -649,13 +654,15 @@ npx playwright test -k "can add to cart"
 
 ### E2E Test Coverage
 
-**Shop & Cart** (`e2e/shop-cart.spec.ts`):
+**Shop & Cart** (`e2e/shop.spec.ts`, `shop-cart.spec.ts`):
 - Browse products
 - View product details
 - Add items to cart
 - Update quantities
 - Remove items
 - Cart persists after refresh
+- Complete checkout flow
+- Guest and authenticated checkout
 
 **Auth & Checkout** (`e2e/auth.spec.ts`):
 - Login/logout

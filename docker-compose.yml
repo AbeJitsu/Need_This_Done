@@ -95,17 +95,11 @@ services:
     env_file:
       - .env.local
 
-    # Environment variables the app needs to function
-    # These come from your .env.local file (loaded above)
+    # Environment variables that override or add to .env.local
+    # Note: All vars from env_file are already passed. Only add overrides here.
     environment:
-      - NODE_ENV=${NODE_ENV:-production}
-      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
-      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
-      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - NODE_ENV=${NODE_ENV:-development}
       - REDIS_URL=redis://redis:6379
-      # Vector search config - lowered threshold for better semantic matching
-      - VECTOR_SEARCH_SIMILARITY_THRESHOLD=0.5
 
     # Port 3000 is where Next.js runs
     # NOT exposed to outside world - only nginx can reach it
@@ -190,7 +184,7 @@ services:
 
     environment:
       - POSTGRES_USER=medusa
-      - POSTGRES_PASSWORD=${MEDUSA_DB_PASSWORD}
+      - POSTGRES_PASSWORD=${MEDUSA_DB_PASSWORD:-medusa_dev_password}
       - POSTGRES_DB=medusa
 
     volumes:
@@ -231,10 +225,11 @@ services:
       - .env.local
 
     environment:
-      - DATABASE_URL=postgresql://medusa:${MEDUSA_DB_PASSWORD}@medusa_postgres:5432/medusa
+      - DATABASE_URL=postgresql://medusa:${MEDUSA_DB_PASSWORD:-medusa_dev_password}@medusa_postgres:5432/medusa
       - REDIS_URL=redis://redis:6379
-      - JWT_SECRET=${MEDUSA_JWT_SECRET}
-      - ADMIN_JWT_SECRET=${MEDUSA_ADMIN_JWT_SECRET}
+      - JWT_SECRET=${MEDUSA_JWT_SECRET:-supersecretjwtkey_for_dev}
+      - ADMIN_JWT_SECRET=${MEDUSA_ADMIN_JWT_SECRET:-supersecretadminjwtkey_for_dev}
+      - COOKIE_SECRET=${COOKIE_SECRET:-supersecretcookiekey_for_dev}
       - NODE_ENV=development
 
     expose:

@@ -110,7 +110,8 @@ export default function ProductDetailPage({
     );
   }
 
-  const price = product.prices?.[0]?.amount ?? 0;
+  // Get price from first variant's prices array (Medusa structure)
+  const price = product.variants?.[0]?.prices?.[0]?.amount ?? 0;
   const image = product.images?.[0]?.url;
 
   // Get variant options (simplified - real Medusa setup would have proper variants)

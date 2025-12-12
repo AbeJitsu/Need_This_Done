@@ -39,6 +39,7 @@
       "Read(**/.env.development)",
       "Read(./.env.test)",
       "Read(**/.env.test)",
+      "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(rm -rf:*)",

@@ -30,10 +30,10 @@ test.describe('Product Catalog & Browsing', () => {
     const cardCount = await productCards.count();
     expect(cardCount).toBeGreaterThanOrEqual(3);
 
-    // Verify specific pricing tiers exist
-    await expect(page.getByText('$50.00')).toBeVisible(); // Quick Task
-    await expect(page.getByText('$150.00')).toBeVisible(); // Standard
-    await expect(page.getByText('$500.00')).toBeVisible(); // Premium
+    // Verify consultation pricing tiers exist
+    await expect(page.getByText('$20.00')).toBeVisible(); // 15-min consultation
+    await expect(page.getByText('$35.00')).toBeVisible(); // 30-min consultation
+    await expect(page.getByText('$50.00')).toBeVisible(); // 55-min consultation
   });
 
   test('product detail page shows full product information', async ({
@@ -51,8 +51,8 @@ test.describe('Product Catalog & Browsing', () => {
     const headingCount = await productHeading.count();
     expect(headingCount).toBeGreaterThan(0);
 
-    // Should display price (Quick Task is $50.00)
-    await expect(page.getByText('$50.00')).toBeVisible();
+    // Should display price (15-min consultation is $20.00)
+    await expect(page.getByText('$20.00')).toBeVisible();
 
     // Should have add to cart button
     await expect(
@@ -127,7 +127,7 @@ test.describe('Add to Cart Workflow', () => {
   });
 
   test('can add different products to cart', async ({ page }) => {
-    // Add first product (Quick Task)
+    // Add first product (15-min consultation)
     await navigateToPage(page, '/shop');
     const detailsButtons = page.getByRole('link', { name: /details/i });
     await detailsButtons.first().click();
@@ -139,7 +139,7 @@ test.describe('Add to Cart Workflow', () => {
     await page.goBack();
     await page.waitForLoadState('domcontentloaded');
 
-    // Add second product (Standard Project)
+    // Add second product (30-min consultation)
     await detailsButtons.nth(1).click();
     await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /add to cart/i }).click();
@@ -350,9 +350,9 @@ test.describe('Guest Checkout Flow', () => {
     await expect(page.getByText(/order summary/i)).toBeVisible();
     await expect(page.getByText(/\$\d+\.\d{2}/).first()).toBeVisible();
 
-    // Should have place order button
+    // Should have continue to payment button
     await expect(
-      page.getByRole('button', { name: /place order|complete|submit/i })
+      page.getByRole('button', { name: /continue to payment|place order|complete|submit/i })
     ).toBeVisible();
   });
 
@@ -374,7 +374,7 @@ test.describe('Guest Checkout Flow', () => {
 
     // Try to submit without filling fields
     const submitButton = page.getByRole('button', {
-      name: /place order|complete|submit/i,
+      name: /continue to payment|place order|complete|submit/i,
     });
     if (await submitButton.isVisible()) {
       await submitButton.click();
@@ -424,7 +424,7 @@ test.describe('Guest Checkout Flow', () => {
 
     // Submit order
     const submitButton = page.getByRole('button', {
-      name: /place order|complete|submit/i,
+      name: /continue to payment|place order|complete|submit/i,
     });
     if (await submitButton.isVisible()) {
       await submitButton.click();
@@ -794,38 +794,38 @@ test.describe('Variant Regression Tests', () => {
     // Cart badge should update, indicating success - if badge visible and updated, that's good sign
   });
 
-  test('quick task, standard project, and premium solution all have variants', async ({
+  test('all consultation products have variants', async ({
     request,
   }) => {
-    // Regression test: Specifically verify the 3 sample products all have variants
+    // Regression test: Verify 3 consultation products all have variants
     // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
     const response = await request.get('/api/shop/products', {
       failOnStatusCode: false,
     });
     const data = await response.json();
 
-    // Find each product
-    const quickTask = data.products.find((p: any) => p.id === 'prod_1');
-    const standardProject = data.products.find((p: any) => p.id === 'prod_2');
-    const premiumSolution = data.products.find((p: any) => p.id === 'prod_3');
+    // Find each consultation product by handle
+    const consultation15 = data.products.find((p: any) => p.handle === 'consultation-15-min');
+    const consultation30 = data.products.find((p: any) => p.handle === 'consultation-30-min');
+    const consultation55 = data.products.find((p: any) => p.handle === 'consultation-55-min');
 
     // All must exist and have variants
-    expect(quickTask, 'Quick Task product not found').toBeDefined();
-    expect(quickTask.variants, 'Quick Task must have variants').toBeDefined();
-    expect(quickTask.variants.length, 'Quick Task must have at least 1 variant').toBeGreaterThan(0);
+    expect(consultation15, '15-min consultation product not found').toBeDefined();
+    expect(consultation15.variants, '15-min consultation must have variants').toBeDefined();
+    expect(consultation15.variants.length, '15-min consultation must have at least 1 variant').toBeGreaterThan(0);
 
-    expect(standardProject, 'Standard Project product not found').toBeDefined();
-    expect(standardProject.variants, 'Standard Project must have variants').toBeDefined();
+    expect(consultation30, '30-min consultation product not found').toBeDefined();
+    expect(consultation30.variants, '30-min consultation must have variants').toBeDefined();
     expect(
-      standardProject.variants.length,
-      'Standard Project must have at least 1 variant'
+      consultation30.variants.length,
+      '30-min consultation must have at least 1 variant'
     ).toBeGreaterThan(0);
 
-    expect(premiumSolution, 'Premium Solution product not found').toBeDefined();
-    expect(premiumSolution.variants, 'Premium Solution must have variants').toBeDefined();
+    expect(consultation55, '55-min consultation product not found').toBeDefined();
+    expect(consultation55.variants, '55-min consultation must have variants').toBeDefined();
     expect(
-      premiumSolution.variants.length,
-      'Premium Solution must have at least 1 variant'
+      consultation55.variants.length,
+      '55-min consultation must have at least 1 variant'
     ).toBeGreaterThan(0);
   });
 });

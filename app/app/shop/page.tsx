@@ -134,15 +134,15 @@ export default function ShopPage() {
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => {
-            // Get price from first variant
-            const price = product.prices?.[0]?.amount ?? 0;
+            // Get price from first variant's prices array
+            const price = product.variants?.[0]?.prices?.[0]?.amount ?? 0;
             const image = product.images?.[0]?.url;
 
-            // Map Medusa product handle to our pricing tiers
+            // Map consultation product handles to color tiers
             const colorMap: Record<string, 'purple' | 'blue' | 'green'> = {
-              'quick-task': 'green',
-              'standard-task': 'blue',
-              'premium-service': 'purple',
+              'consultation-15-min': 'green',
+              'consultation-30-min': 'blue',
+              'consultation-55-min': 'purple',
             };
             const hoverColor = (colorMap[product.handle] || 'purple') as 'purple' | 'blue' | 'green';
 

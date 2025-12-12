@@ -107,6 +107,11 @@ interface Product {
   prices?: { amount: number; currency_code: string }[];
   images?: { url: string }[];
   variants?: ProductVariant[];
+  metadata?: {
+    requires_appointment?: boolean;
+    duration_minutes?: number;
+    [key: string]: any;
+  };
 }
 
 export const products = {
@@ -142,6 +147,8 @@ interface LineItem {
   id?: string;
   variant_id: string;
   quantity: number;
+  variant?: ProductVariant;
+  product?: Product;
 }
 
 interface Cart {
