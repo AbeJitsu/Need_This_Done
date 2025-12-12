@@ -8,14 +8,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 _Currently active work items_
 
-**Email Notifications - Quick Wins** (Infrastructure: ✅ Ready) ← DO FIRST
-- [x] Set up Resend account and verify `RESEND_API_KEY` in `.env.local`
-- [x] Configure DNS (DKIM, SPF) with Namecheap
-- [x] Deploy email config to production (DigitalOcean)
-- [ ] Add auth emails (account creation, login notifications)
-- [ ] Test admin alert on new project submission
-
-**Medusa Real Implementation** ← START AFTER EMAIL QUICK WINS
+**Medusa Real Implementation** ← CURRENT PRIORITY
 - [ ] Plan database schema for products, carts, orders
 - [ ] Replace bootstrap Express backend with real Medusa
 - [ ] Implement database-persisted products (replace hardcoded)
@@ -90,6 +83,7 @@ _Currently active work items_
 
 _Keep ~5-10 recent wins here, trim periodically once documented in README.md_
 
+- [x] Auth Email Templates & Admin Alerts - Created WelcomeEmail.tsx and LoginNotificationEmail.tsx templates. Added sendWelcomeEmail() and sendLoginNotification() to email-service.ts. Wired to auth routes (signup sends welcome, login sends notification). Created test-emails.ts script for manual verification. All 4 email types tested successfully. (Dec 2025)
 - [x] Accessibility Test Fixes - Fixed dark mode testing (emulateMedia before navigation), heading order compliance (h3→h2 in ServiceCard), centralized colors in components. All 10 a11y tests pass. (Dec 2025)
 - [x] Self-Documenting npm Scripts - Renamed cryptic scripts (dcup, dcdown, dcps) to clear names (dev:start, dev:stop, dev:status). Added Docker Commands table to README as single source of truth. (Dec 2025)
 - [x] Docker Dev Environment Fix - Root cause: npm scripts were missing `-f docker-compose.dev.yml` overlay which provides the `.env.local` mount. Fix: Updated all dev scripts to use both compose files. Also restored missing `resend` and `@react-email/components` dependencies. (Dec 2025)
