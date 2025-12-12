@@ -24,8 +24,8 @@ A professional services platform built with Next.js, running in Docker with ngin
 ## Quick Start
 
 ```bash
-# Start Docker services
-docker-compose up -d
+# Start Docker services (local development)
+npm run dcup
 
 # Start Supabase (auth & database)
 supabase start
@@ -37,8 +37,8 @@ supabase start
 
 **If things break:**
 ```bash
-docker-compose down -v
-docker-compose up --build
+npm run dcdown
+npm run dcbuild && npm run dcup
 ```
 
 ---
@@ -151,7 +151,7 @@ supabase --version
 
 **Terminal 1: Start Docker services (commerce + cache)**
 ```bash
-docker-compose up -d
+npm run dcup
 ```
 
 This starts:
@@ -256,7 +256,7 @@ SUPABASE_INTERNAL_URL=http://host.docker.internal:54321
 
 ```bash
 # Stop Docker services
-docker-compose down
+npm run dcdown
 
 # Stop Supabase
 supabase stop
@@ -264,6 +264,41 @@ supabase stop
 # Reset Supabase (clears all data)
 supabase db reset
 ```
+
+### Docker Environments (Local vs Production)
+
+**Important**: Local development and production use completely separate Docker configurations.
+
+| Aspect | Local Development | Production (DigitalOcean) |
+|--------|-------------------|---------------------------|
+| Compose file(s) | `docker-compose.yml` + `docker-compose.dev.yml` | `docker-compose.production.yml` (standalone) |
+| Dockerfile | `app/Dockerfile.dev` | `app/Dockerfile` |
+| Source code | Volume mounted (hot reload) | Baked into image |
+| SSL | Self-signed (localhost) | Let's Encrypt (needthisdone.com) |
+| Ports exposed | 3000, 6379, 6006 (debugging) | 80, 443 only (via nginx) |
+
+**Local Development**
+```bash
+# Uses overlay pattern: base config + dev overrides
+npm run dcup
+# Or manually:
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+```
+
+The dev overlay (`docker-compose.dev.yml`) adds:
+- Volume mounts for hot reload
+- `.env.local` mount for environment variables
+- Exposed ports for debugging
+- Storybook service
+
+**Production Deployment**
+```bash
+# SSH to DigitalOcean server, then:
+git pull origin main
+docker-compose -f docker-compose.production.yml up --build -d
+```
+
+Production uses a completely standalone compose file - it does NOT reference the base or dev files. Changes to `docker-compose.yml` or `docker-compose.dev.yml` do not affect production.
 
 ---
 
@@ -644,8 +679,8 @@ Common dark mode issues & fixes are documented in [docs/DESIGN_SYSTEM.md](docs/D
 **Solutions**:
 ```bash
 # 1. Verify Medusa is running
-docker-compose ps medusa
-# Should show "healthy"
+npm run dcps
+# Medusa should show "healthy"
 
 # 2. Test Medusa directly
 curl http://localhost:9000/health
@@ -659,7 +694,7 @@ curl http://localhost:3000/api/shop/products | jq '.products[0].variants'
 docker exec redis redis-cli FLUSHALL
 
 # 5. Restart services
-docker-compose restart medusa app
+npm run dcrestart
 ```
 
 ### Issue: Pages loading slowly
@@ -669,7 +704,7 @@ docker-compose restart medusa app
 **Solutions**:
 ```bash
 # Check Redis is running
-docker-compose ps redis
+npm run dcps
 
 # Check cache hit rate
 redis-cli INFO stats
@@ -730,7 +765,7 @@ supabase db reset
 
 ### Issue: Docker containers won't start
 
-**Symptom**: `docker-compose up` fails
+**Symptom**: `npm run dcup` fails
 
 **Solutions**:
 ```bash
@@ -738,11 +773,11 @@ supabase db reset
 docker ps
 
 # View detailed logs
-docker-compose logs -f medusa
+npm run dclogs
 
 # Clean and rebuild
-docker-compose down -v
-docker-compose up --build
+npm run dcdown
+npm run dcbuild && npm run dcup
 
 # Check port availability
 lsof -i :3000    # App
