@@ -663,6 +663,11 @@ npx playwright test -k "can add to cart"
 - All pages in dark mode
 - Contrast ratios meet WCAG AA
 
+**Accessibility** (`e2e/accessibility.a11y.test.ts`):
+- Uses axe-playwright for WCAG AA compliance
+- Tests Home, Services, Pricing, How It Works, FAQ in both light and dark modes
+- Dark mode tests use `emulateMedia({ colorScheme: 'dark' })` before navigation to trigger proper theme application
+
 ### Dark Mode Testing
 
 All components must pass contrast testing in both light and dark modes:
@@ -754,7 +759,7 @@ import { headingColors, formInputColors } from '@/lib/colors';
 <p className={formInputColors.helper}>Helper text</p>
 ```
 
-Available color utilities: `headingColors`, `formInputColors`, `formValidationColors`, `titleColors`, `accentColors`, `navigationColors`, `dangerColors`, `linkColors`, and more. See [app/lib/colors.ts](app/lib/colors.ts) for the full list.
+Available color utilities: `headingColors`, `formInputColors`, `formValidationColors`, `titleColors`, `accentColors`, `navigationColors`, `dangerColors`, `linkColors`, `mutedTextColors`, `alertColors`, `dividerColors`, `placeholderColors`, `checkmarkColors`, `cardHoverColors`, `topBorderColors`, `groupHoverColors`, `cardBgColors`, `cardBorderColors`. See [app/lib/colors.ts](app/lib/colors.ts) for the full list.
 
 ### Issue: Supabase connection errors
 

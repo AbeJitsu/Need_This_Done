@@ -4,6 +4,8 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 
 **Always follow this workflow:**
 
+0. **Check TODO.md** for current priorities and what needs doing
+
 1. **Local Development** (test changes first):
    - Use `npm run dev:start` to start dev environment
    - Access at https://localhost (self-signed SSL certs)
@@ -21,6 +23,18 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
    - Site runs at https://needthisdone.com (Let's Encrypt SSL)
 
 **NEVER run production builds locally** - always test with dev environment first.
+
+## Task Tracking
+
+**TODO.md** is the central task tracker:
+- Check it before starting new work
+- Update it when completing tasks
+- Items flow: To Do → In Progress → Recently Completed → documented in README.md
+
+**.claude plans** (in `.claude/plans/`) are for complex implementations:
+- Created when planning mode is invoked
+- Contains detailed steps and file changes
+- Referenced during execution for context
 
 ## Project Overview
 

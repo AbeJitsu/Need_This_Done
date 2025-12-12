@@ -16,11 +16,6 @@ _(No active tasks)_
 
 ### Immediate
 
-**Environment Variable Documentation** ✅
-- [x] Updated root `.env.example` with all 31 variables
-- [x] Consolidated to single .env.example (deleted app/.env.example)
-- [x] Deployed to production (DigitalOcean)
-
 **CRITICAL - Setup Required (Code ready, accounts needed)**
 
 **Stripe Payments** (Implementation: ✅ app/lib/stripe.ts, app/context/StripeContext.tsx)
@@ -48,15 +43,6 @@ _(No active tasks)_
 - [ ] Run accessibility tests: `npm run test:a11y`
 
 ### Short Term
-
-**DRY Violations (Color System)** ✅
-- [x] Fix Shop page hardcoded colors (6 instances)
-- [x] Fix Services page hardcoded colors (4 instances)
-- [x] Fix Pricing page hardcoded colors (6 instances)
-- [x] Fix How It Works page hardcoded colors (2 instances)
-- [x] Fix FAQ page hardcoded colors (1 instance)
-- [x] Final verification: search for remaining hardcoded colors
-- [ ] Visual verification in light and dark mode
 
 **Email Notifications** (Infrastructure: ✅ Ready)
 - [x] Set up Resend account and verify `RESEND_API_KEY` in `.env.local`
@@ -115,17 +101,12 @@ _(No active tasks)_
 
 _Keep ~5-10 recent wins here, trim periodically once documented in README.md_
 
+- [x] Accessibility Test Fixes - Fixed dark mode testing (emulateMedia before navigation), heading order compliance (h3→h2 in ServiceCard), centralized colors in components. All 10 a11y tests pass. (Dec 2025)
 - [x] Self-Documenting npm Scripts - Renamed cryptic scripts (dcup, dcdown, dcps) to clear names (dev:start, dev:stop, dev:status). Added Docker Commands table to README as single source of truth. (Dec 2025)
 - [x] Docker Dev Environment Fix - Root cause: npm scripts were missing `-f docker-compose.dev.yml` overlay which provides the `.env.local` mount. Fix: Updated all dev scripts to use both compose files. Also restored missing `resend` and `@react-email/components` dependencies. (Dec 2025)
 - [x] DRY Color System Cleanup - Fixed hardcoded colors across Shop, Services, Pricing, How It Works, FAQ pages; added alertColors, dividerColors, placeholderColors, checkmarkBgColors, cardBgColors, cardBorderColors, groupHoverColors to lib/colors.ts (Dec 2025)
 - [x] Resend Email Setup - Full email infrastructure with DNS verification, production deployment, sends from hello@needthisdone.com (Dec 2025)
 - [x] Environment Variable Documentation - Updated README.md with all 31 variables, generation commands, and clear sections (Dec 2025)
-- [x] Documentation Audit - Comprehensive 3-agent review of .env.example, README.md, and codebase (Dec 2025)
-- [x] Public Chatbot with pgvector - semantic search, floating widget (Dec 2025)
-- [x] Stripe Integration - payments, subscriptions, webhooks (Dec 2025)
-- [x] Puck Visual Editor - 5 components, admin UI, public pages (Dec 2025)
-- [x] Redis Caching - comprehensive caching system with invalidation logic (Dec 2025)
-- [x] Admin Dashboard - user management, role-based routing (Dec 2025)
 
 ---
 
