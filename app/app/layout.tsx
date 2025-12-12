@@ -58,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable} ${playfair.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${poppins.variable} ${playfair.variable}`}>
       <head>
         {/* FOUC Prevention: Apply dark mode immediately before any rendering */}
         {/* This blocking script runs before CSS/content loads to prevent flash */}

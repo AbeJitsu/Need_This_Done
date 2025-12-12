@@ -1,4 +1,4 @@
-import { sendEmailWithRetry, EMAIL_CONFIG } from './email';
+import { sendEmailWithRetry, getEmailConfig } from './email';
 import AdminNotification, {
   type AdminNotificationProps,
 } from '../emails/AdminNotification';
@@ -27,7 +27,9 @@ import ClientConfirmation, {
 export async function sendAdminNotification(
   data: AdminNotificationProps
 ): Promise<string | null> {
-  if (!EMAIL_CONFIG.adminEmail) {
+  const emailConfig = getEmailConfig();
+
+  if (!emailConfig.adminEmail) {
     console.warn('[Email] Admin email not configured, skipping notification');
     return null;
   }
@@ -35,7 +37,7 @@ export async function sendAdminNotification(
   const subject = `🎯 New Project: ${data.name}${data.service ? ` - ${data.service}` : ''}`;
 
   return sendEmailWithRetry(
-    EMAIL_CONFIG.adminEmail,
+    emailConfig.adminEmail,
     subject,
     AdminNotification(data)
   );

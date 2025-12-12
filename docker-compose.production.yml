@@ -1,3 +1,21 @@
+# Production Docker Compose - STANDALONE Configuration
+# ============================================================================
+# This file is used ONLY for production deployment on DigitalOcean.
+# It is completely independent - it does NOT use docker-compose.yml or
+# docker-compose.dev.yml. Changes to those files do not affect production.
+#
+# Usage (on DigitalOcean server):
+#   git pull origin main
+#   docker-compose -f docker-compose.production.yml up --build -d
+#
+# Key differences from development:
+# - Multi-stage Dockerfile build (smaller image, no devDependencies)
+# - No volume mounts (code is baked into image)
+# - Resource limits on all containers
+# - Let's Encrypt SSL certificates
+# - Only ports 80/443 exposed (via nginx)
+# ============================================================================
+
 version: '3.8'
 
 services:

@@ -1,257 +1,265 @@
 # Deployment Guide
 
-This document explains how to deploy changes to your production server at https://needthisdone.com.
-
-## Quick Start
-
-1. **Make and test changes locally** at https://localhost
-2. **Commit and push to main branch**:
-   ```bash
-   git add .
-   git commit -m "Your message"
-   git push origin main
-   ```
-3. **GitHub Actions automatically deploys** — no manual work needed!
-4. **Check your live site** at https://needthisdone.com (takes 3-5 minutes)
+Complete guide to deploying NeedThisDone.com to production.
 
 ---
 
-## Deployment Workflow
+## Quick Deploy (GitHub Actions - Automatic)
 
-### Local Development → Testing → Production
+The easiest way to deploy:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ 1. LOCAL DEVELOPMENT (Your Machine)                             │
-│ - Make code changes                                              │
-│ - Run: docker-compose up -d --build                              │
-│ - Test at https://localhost                                      │
-└────────────────┬────────────────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────────────────┐
-│ 2. GIT & GITHUB (Your Repository)                               │
-│ - git add .                                                      │
-│ - git commit -m "message"                                        │
-│ - git push origin main                                           │
-└────────────────┬────────────────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────────────────┐
-│ 3. GITHUB ACTIONS (Automated)                                   │
-│ - Triggered automatically on push to main                        │
-│ - SSHes into DigitalOcean                                        │
-│ - Pulls latest code                                              │
-│ - Rebuilds Docker containers                                    │
-│ - Verifies site is accessible                                   │
-└────────────────┬────────────────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────────────────┐
-│ 4. PRODUCTION (DigitalOcean)                                    │
-│ - Site runs at https://needthisdone.com                          │
-│ - Watch GitHub Actions for deployment status                    │
-└─────────────────────────────────────────────────────────────────┘
-```
+1. **Test locally** at https://localhost
+2. **Commit and push to main:** `git push origin main`
+3. **GitHub Actions automatically deploys** (3-5 minutes)
+4. **Done!** Site live at https://needthisdone.com
 
 ---
 
-## Step-by-Step: Local Testing
+## Manual Deploy (CLI - Single Droplet)
 
-Before pushing to production, always test locally:
+**Cost: ~$24/month** - All services on one server.
 
-### 1. Start Development Environment
-```bash
-docker-compose up -d --build
-```
-
-This rebuilds all containers with your changes and starts them.
-
-### 2. Test at https://localhost
-- Accept the self-signed SSL certificate warning
-- Test all your changes thoroughly
-- Check the browser console for errors
-- Test on mobile if possible
-
-### 3. Check Logs (if something breaks)
-```bash
-docker-compose logs nextjs_app
-```
-
-### 4. Stop When Done
-```bash
-docker-compose down
-```
-
----
-
-## Step-by-Step: Push to Production
-
-Once local testing passes:
-
-### 1. Stage Your Changes
-```bash
-git add .
-```
-
-### 2. Commit with Descriptive Message
-```bash
-git commit -m "Your descriptive commit message"
-```
-
-### 3. Push to Main Branch
-```bash
-git push origin main
-```
-
-### 4. Watch GitHub Actions Deploy
-- Go to https://github.com/AbeJitsu/Need_This_Done/actions
-- Click the latest workflow run
-- Watch the "deploy" job progress
-- Takes 3-5 minutes typically
-
-### 5. Verify Live Site
-- Visit https://needthisdone.com
-- Refresh a few times to ensure it's updated
-- Check that your changes are live
-
----
-
-## What GitHub Actions Does Automatically
-
-When you push to `main`, the `.github/workflows/deploy.yml` workflow:
-
-1. **Checks out your code** from GitHub
-2. **SSHes into DigitalOcean** using a deploy key
-3. **Navigates to the project folder** at `/root/Need_This_Done`
-4. **Pulls latest code** with `git pull origin main`
-5. **Rebuilds containers** with `docker-compose -f docker-compose.production.yml up --build -d`
-6. **Verifies deployment** by checking if the site responds
-7. **Reports status** back to GitHub Actions
-
----
-
-## SSH Connection (Already Configured)
-
-Your SSH connection is set up with:
+### Prerequisites
 
 ```bash
-ssh needthisdone
+# Install DigitalOcean CLI (macOS)
+brew install doctl
+
+# Authenticate
+doctl auth init
+# Paste API token from: https://cloud.digitalocean.com/account/api/tokens
+
+# Set up SSH key
+ssh-keygen -t ed25519 -C "your-email@example.com" -f ~/.ssh/digitalocean
+doctl compute ssh-key create my-laptop --public-key "$(cat ~/.ssh/digitalocean.pub)"
 ```
 
-This is configured in `~/.ssh/config`:
-```
-Host needthisdone
-    HostName 159.65.223.234
-    User root
-    IdentityFile ~/.ssh/digitalocean
-```
-
-### Manual SSH (If Needed)
-If you need to debug or check something on the server:
+### Deploy in 5 Steps
 
 ```bash
-ssh needthisdone
-cd ~/Need_This_Done
-git status          # See current state
-git log --oneline   # See commit history
-docker ps          # See running containers
-docker-compose logs # See container logs
+# 1. Create droplet (4GB, $24/month)
+doctl compute droplet create needthisdone \
+  --image ubuntu-24-04-x64 \
+  --size s-2vcpu-4gb \
+  --region nyc1 \
+  --ssh-keys $(doctl compute ssh-key list --format ID --no-header) \
+  --enable-monitoring \
+  --wait
+
+# 2. Get droplet IP
+DROPLET_IP=$(doctl compute droplet list needthisdone --format PublicIPv4 --no-header)
+echo "Droplet IP: $DROPLET_IP"
+
+# 3. Initial server setup
+ssh root@$DROPLET_IP << 'ENDSSH'
+  apt update && apt upgrade -y
+  curl -fsSL https://get.docker.com | sh
+  curl -L "https://github.com/docker/compose/releases/download/v2.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  chmod +x /usr/local/bin/docker-compose
+  ufw allow OpenSSH && ufw allow 80/tcp && ufw allow 443/tcp && ufw --force enable
+  echo "✅ Server ready!"
+ENDSSH
+
+# 4. Clone and deploy
+ssh root@$DROPLET_IP << 'ENDSSH'
+  git clone https://github.com/yourusername/Need_This_Done.git
+  cd Need_This_Done
+  # Create .env.local (see Environment Variables section below)
+  docker-compose -f docker-compose.production.yml up -d --build
+  echo "✅ App deployed!"
+ENDSSH
+
+# 5. Set up domain (at your registrar)
+echo "Create DNS A record: yourdomain.com -> $DROPLET_IP"
 ```
-
----
-
-## Docker Build Process
-
-### Local Build (Development)
-- Runs `npm install --legacy-peer-deps`
-- Uses mounted volumes (changes appear instantly)
-- Includes all dev dependencies for testing/linting
-
-### Production Build (DigitalOcean)
-- Runs `npm ci --frozen-lockfile`
-- Uses exact versions from package-lock.json
-- Creates optimized production image
-- Only includes runtime dependencies
-
-**Note:** The local `.next/` folder is NOT used in Docker. Each build creates its own inside the container.
-
----
-
-## Troubleshooting
-
-### Deployment Failed in GitHub Actions
-
-1. **Check the error** in GitHub Actions logs
-2. **Common issues:**
-   - Missing environment variables
-   - Docker build failure (check package.json dependencies)
-   - SSH key problems (unlikely, but check `secrets.DEPLOY_KEY`)
-
-3. **Fix locally and try again:**
-   ```bash
-   docker-compose down
-   docker-compose up -d --build
-   # Test changes
-   git push origin main  # Triggers redeploy
-   ```
-
-### Site Not Updating After Deployment
-
-1. **Clear your browser cache** (Cmd+Shift+R on Mac)
-2. **Wait 5 minutes** — sometimes takes a moment to fully propagate
-3. **Check GitHub Actions** — verify deployment actually completed
-4. **SSH to server and check logs:**
-   ```bash
-   ssh needthisdone
-   docker-compose logs nextjs_app
-   ```
-
-### Can't Connect to DigitalOcean
-
-1. **Verify SSH key exists:**
-   ```bash
-   ls -la ~/.ssh/digitalocean
-   ```
-
-2. **Test SSH connection:**
-   ```bash
-   ssh needthisdone
-   ```
-
-3. **If connection fails:**
-   - Verify you're on the right network
-   - Check that the server is running in DigitalOcean dashboard
-   - Confirm the IP hasn't changed (should be 159.65.223.234)
-
----
-
-## Key Files
-
-- **`.github/workflows/deploy.yml`** — Defines the automated deployment workflow
-- **`docker-compose.yml`** — Development environment
-- **`docker-compose.production.yml`** — Production environment
-- **`app/Dockerfile`** — Production image
-- **`app/Dockerfile.dev`** — Development image
-- **`app/.npmrc`** — npm configuration for peer dependencies
 
 ---
 
 ## Environment Variables
 
-The production server uses environment variables configured in DigitalOcean. If you need to add/change them:
+Create `.env.local` on your server with these variables:
 
-1. **SSH to the server:** `ssh needthisdone`
-2. **Check current env vars:** `docker-compose -f docker-compose.production.yml config | grep -A 20 environment`
-3. **Edit docker-compose.production.yml** if needed
-4. **Rebuild:** `docker-compose -f docker-compose.production.yml up --build -d`
+```bash
+# ============================================================================
+# REQUIRED - Core Services
+# ============================================================================
+
+# Supabase (from https://app.supabase.com/project/[your-project]/settings/api)
+NEXT_PUBLIC_SUPABASE_URL=https://[your-project].supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
+
+# Redis (Docker internal - keep this exact value)
+REDIS_URL=redis://redis:6379
+
+# Site URL
+NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+NODE_ENV=production
+
+# ============================================================================
+# REQUIRED - Medusa E-commerce
+# ============================================================================
+
+# Generate with: openssl rand -base64 32
+MEDUSA_DB_PASSWORD=your_secure_password
+MEDUSA_JWT_SECRET=your_jwt_secret_min_32_chars
+MEDUSA_ADMIN_JWT_SECRET=your_admin_jwt_secret_min_32_chars
+MEDUSA_BACKEND_URL=http://medusa:9000
+
+# ============================================================================
+# REQUIRED - Stripe Payments
+# ============================================================================
+
+# From https://dashboard.stripe.com/apikeys (use live keys for production)
+STRIPE_SECRET_KEY=sk_live_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# ============================================================================
+# REQUIRED - Email (Resend)
+# ============================================================================
+
+# From https://resend.com/api-keys
+RESEND_API_KEY=re_...
+RESEND_FROM_EMAIL=hello@yourdomain.com
+RESEND_ADMIN_EMAIL=admin@yourdomain.com
+
+# ============================================================================
+# REQUIRED - AI Chatbot
+# ============================================================================
+
+# From https://platform.openai.com/api-keys
+OPENAI_API_KEY=sk-...
+VECTOR_SEARCH_SIMILARITY_THRESHOLD=0.5
+```
+
+### Generate Secrets
+
+```bash
+# Run this to generate secure random strings
+echo "MEDUSA_DB_PASSWORD=$(openssl rand -base64 32)"
+echo "MEDUSA_JWT_SECRET=$(openssl rand -base64 32)"
+echo "MEDUSA_ADMIN_JWT_SECRET=$(openssl rand -base64 32)"
+```
 
 ---
 
-## Questions?
+## SSL Certificates (HTTPS)
 
-If deployment seems broken:
-1. Check GitHub Actions logs for errors
-2. SSH into the server and check Docker logs
-3. Verify all code is actually committed and pushed to main
-4. Make sure you're testing with `docker-compose up -d --build` locally first
+After DNS propagates (~5-60 minutes):
+
+```bash
+ssh root@$DROPLET_IP
+
+# Install Certbot
+apt install -y python3-venv
+python3 -m venv /opt/certbot/
+/opt/certbot/bin/pip install certbot
+ln -s /opt/certbot/bin/certbot /usr/bin/certbot
+
+# Get certificate
+certbot certonly --standalone \
+  -d yourdomain.com \
+  -d www.yourdomain.com \
+  --email your-email@example.com \
+  --agree-tos \
+  --non-interactive
+
+# Copy certs to nginx
+cp /etc/letsencrypt/live/yourdomain.com/fullchain.pem nginx/ssl/
+cp /etc/letsencrypt/live/yourdomain.com/privkey.pem nginx/ssl/
+
+# Restart services
+cd Need_This_Done
+docker-compose -f docker-compose.production.yml restart nginx
+
+# Set up auto-renewal
+echo "0 0 * * 0 /usr/bin/certbot renew --quiet" | tee -a /etc/crontab
+```
+
+---
+
+## Post-Deployment Checklist
+
+- [ ] App loads at https://yourdomain.com
+- [ ] Can browse products at /shop
+- [ ] Can add items to cart
+- [ ] Can create account / login
+- [ ] Checkout with Stripe works
+- [ ] Admin dashboard accessible at /admin
+- [ ] Chatbot responds to questions
+- [ ] Email notifications working
+
+---
+
+## Common Commands
+
+### View Logs
+```bash
+docker-compose -f docker-compose.production.yml logs -f app
+docker-compose -f docker-compose.production.yml logs -f medusa
+```
+
+### Restart Services
+```bash
+docker-compose -f docker-compose.production.yml restart
+```
+
+### Update App (after git push)
+```bash
+cd Need_This_Done
+git pull origin main
+docker-compose -f docker-compose.production.yml up -d --build
+```
+
+### Check Resource Usage
+```bash
+docker stats
+```
+
+### Database Backup
+```bash
+docker-compose exec postgres pg_dump -U medusa medusa > backup-$(date +%Y%m%d).sql
+```
+
+---
+
+## Troubleshooting
+
+### Can't connect to database
+- Check database is running: `docker-compose ps`
+- Verify connection string in `.env.local`
+- Check logs: `docker-compose logs postgres`
+
+### SSL not working
+- Wait 5 minutes after DNS setup
+- Verify DNS propagated: `dig yourdomain.com`
+- Check certificates: `certbot certificates`
+
+### Out of memory / crashes
+- Check usage: `docker stats`
+- Resize droplet to larger size
+- Add swap space
+
+### Slow performance
+- Verify Redis is running and connected
+- Check cache hit rates
+- Consider CDN for static assets
+
+---
+
+## Cost Summary
+
+| Option | Monthly Cost |
+|--------|--------------|
+| Single Droplet (4GB) | $24 |
+| With backups | $26-28 |
+| App Platform | $54-89 |
+
+---
+
+## Resources
+
+- [DigitalOcean CLI Docs](https://docs.digitalocean.com/reference/doctl/)
+- [Docker Compose Reference](https://docs.docker.com/compose/)
+- [Let's Encrypt Certbot](https://certbot.eff.org/)

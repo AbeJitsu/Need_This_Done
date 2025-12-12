@@ -6,7 +6,7 @@ import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
-import { formInputColors, formValidationColors, linkHoverColors } from '@/lib/colors';
+import { formInputColors, formValidationColors, linkHoverColors, alertColors, placeholderColors, headingColors } from '@/lib/colors';
 import type { Product } from '@/lib/medusa-client';
 
 // ============================================================================
@@ -83,7 +83,7 @@ export default function ShopPage() {
 
       {/* Cart item count indicator */}
       {itemCount > 0 && (
-        <div className="mb-6 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+        <div className={`mb-6 p-3 ${alertColors.info.bg} ${alertColors.info.border} rounded-lg`}>
           <p className={`text-sm ${formValidationColors.info}`}>
             You have <span className="font-semibold">{itemCount}</span> item{itemCount !== 1 ? 's' : ''} in your cart.{' '}
             <Link href="/cart" className={`underline ${linkHoverColors.blue}`}>
@@ -95,20 +95,20 @@ export default function ShopPage() {
 
       {/* Error messages */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
           <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
         </div>
       )}
 
       {cartError && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
           <p className={`text-sm ${formValidationColors.error}`}>{cartError}</p>
         </div>
       )}
 
       {/* Toast notification */}
       {toastMessage && (
-        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg animate-fade-in">
+        <div className={`mb-6 p-4 ${alertColors.success.bg} ${alertColors.success.border} rounded-lg animate-fade-in`}>
           <p className={`text-sm ${formValidationColors.success}`}>{toastMessage}</p>
         </div>
       )}
@@ -151,7 +151,7 @@ export default function ShopPage() {
                 <div className="flex flex-col h-full">
                   {/* Product image */}
                   {image && (
-                    <div className="w-full h-40 bg-gray-200 dark:bg-gray-700 rounded-t-lg overflow-hidden">
+                    <div className={`w-full h-40 ${placeholderColors.bg} rounded-t-lg overflow-hidden`}>
                       <img
                         src={image}
                         alt={product.title}
@@ -162,11 +162,11 @@ export default function ShopPage() {
 
                   <div className="p-6 flex flex-col flex-grow">
                     {/* Title and price */}
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                    <h3 className={`text-lg font-semibold ${headingColors.primary} mb-2`}>
                       {product.title}
                     </h3>
 
-                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                    <p className={`text-2xl font-bold ${headingColors.primary} mb-4`}>
                       ${(price / 100).toFixed(2)}
                     </p>
 

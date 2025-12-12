@@ -6,7 +6,7 @@ import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
 import { getDefaultServicesContent } from '@/lib/default-page-content';
 import type { ServicesPageContent } from '@/lib/page-content-types';
-import { formInputColors, successCheckmarkColors } from '@/lib/colors';
+import { formInputColors, successCheckmarkColors, headingColors, checkmarkBgColors, groupHoverColors } from '@/lib/colors';
 
 // ============================================================================
 // Services Page - What NeedThisDone Offers
@@ -76,18 +76,18 @@ export default async function ServicesPage() {
 
         {/* What to Expect */}
         <Card hoverColor="green" hoverEffect="glow" className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
+          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-6 text-center`}>
             {content.expectationsTitle}
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {content.expectations.map((item, index) => {
               const itemContent = (
                 <>
-                  <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-200 flex items-center justify-center flex-shrink-0">
+                  <div className={`w-8 h-8 rounded-full ${checkmarkBgColors.green} flex items-center justify-center flex-shrink-0`}>
                     <span className={`${successCheckmarkColors.iconAlt} font-bold`}>✓</span>
                   </div>
                   <div>
-                    <h3 className={`font-semibold text-gray-900 dark:text-gray-100 mb-1 ${item.link ? 'group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors' : ''}`}>
+                    <h3 className={`font-semibold ${headingColors.primary} mb-1 ${item.link ? `${groupHoverColors.blue} transition-colors` : ''}`}>
                       {item.title}
                       {item.link && <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity"> →</span>}
                     </h3>

@@ -14,6 +14,7 @@ A professional services platform built with Next.js, running in Docker with ngin
 - [Project Structure](#project-structure)
 - [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
 - [Caching Strategy](#caching-strategy)
+- [Email Notifications](#email-notifications)
 - [Testing](#testing)
 - [Troubleshooting](#troubleshooting)
 - [Design System](#design-system)
@@ -24,8 +25,8 @@ A professional services platform built with Next.js, running in Docker with ngin
 ## Quick Start
 
 ```bash
-# Start Docker services
-docker-compose up -d
+# Start Docker services (local development)
+npm run dev:start
 
 # Start Supabase (auth & database)
 supabase start
@@ -37,9 +38,23 @@ supabase start
 
 **If things break:**
 ```bash
-docker-compose down -v
-docker-compose up --build
+npm run dev:stop
+npm run dev:build && npm run dev:start
 ```
+
+### Docker Commands
+
+| Command | What it does |
+|---------|--------------|
+| `npm run dev:start` | Start all dev containers |
+| `npm run dev:stop` | Stop all dev containers |
+| `npm run dev:restart` | Restart dev containers |
+| `npm run dev:build` | Rebuild dev images |
+| `npm run dev:logs` | View container logs (live) |
+| `npm run dev:status` | Show container status |
+| `npm run prod:build` | Build production image (for testing locally) |
+| `npm run prod:start` | Start production containers (local testing) |
+| `npm run prod:stop` | Stop production containers |
 
 ---
 
@@ -69,8 +84,10 @@ A modern platform for professional services that combines:
 **Tech Stack:**
 - **Frontend**: Next.js 14 (React) with TypeScript
 - **Backend**: Next.js API routes + Medusa (ecommerce engine)
-- **Database**: Supabase (PostgreSQL with pgvector for auth)
+- **Database**: Supabase (PostgreSQL with pgvector for AI chatbot)
 - **Ecommerce**: Medusa headless commerce engine
+- **Payments**: Stripe (one-time & subscriptions)
+- **Email**: Resend (transactional emails) - ✅ Configured, sends from hello@needthisdone.com
 - **Cache**: Redis for performance
 - **Infrastructure**: Docker + Nginx reverse proxy
 - **Design**: Tailwind CSS with dark mode support
@@ -122,6 +139,24 @@ A modern platform for professional services that combines:
 - ✅ **Fast iteration** - Change UI without touching business logic
 - ✅ **Future-proof** - Can add mobile, CLI, or third-party integrations
 
+### Medusa Backend (Current State)
+
+> **Note**: This is a **bootstrap implementation**, not a full Medusa installation. See [TODO.md](TODO.md) for the full Medusa migration plan.
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Products | Hardcoded | 3 pricing tiers in `medusa/src/index.ts` |
+| Carts | In-memory | Lost on container restart |
+| Orders | Placeholder | Returns temp ID, linked in Supabase |
+| Email | ✅ Ready | Infrastructure ready via `app/lib/email.ts` |
+
+**Products** (hardcoded in `medusa/src/index.ts`):
+| Product | Price | Handle |
+|---------|-------|--------|
+| Quick Task | $50 | `quick-task` |
+| Standard Project | $150 | `standard-task` |
+| Premium Solution | $500 | `premium-solution` |
+
 ---
 
 ## Development Setup
@@ -144,7 +179,7 @@ supabase --version
 
 **Terminal 1: Start Docker services (commerce + cache)**
 ```bash
-docker-compose up -d
+npm run dev:start
 ```
 
 This starts:
@@ -176,20 +211,47 @@ This starts:
 **Root `.env.local`** (shared by Docker services):
 ```bash
 # Medusa backend
-MEDUSA_DB_PASSWORD=your_secure_password
-MEDUSA_JWT_SECRET=your_jwt_secret
-MEDUSA_ADMIN_JWT_SECRET=your_admin_secret
+MEDUSA_DB_PASSWORD=your_secure_password  # Generate: openssl rand -base64 32
+MEDUSA_JWT_SECRET=your_jwt_secret  # Generate: openssl rand -base64 32
+MEDUSA_ADMIN_JWT_SECRET=your_admin_secret  # Generate: openssl rand -base64 32
+MEDUSA_BACKEND_URL=http://medusa:9000  # Internal Docker URL
+DATABASE_URL=postgresql://medusa:password@localhost:5432/medusa  # Auto-constructed in docker-compose
+COOKIE_SECRET=your_cookie_secret  # Generate: openssl rand -base64 32
+ADMIN_CORS=http://localhost:7001,https://localhost  # Admin panel CORS origins
 
 # Redis
 REDIS_URL=redis://redis:6379
+SKIP_CACHE=true  # Optional: bypass Redis in dev mode
 
 # Supabase (see "Choosing Cloud vs Local Supabase" below)
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-key
 
-# AI Chatbot (optional - for RAG chatbot feature)
+# Stripe (payments)
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# Email (Resend) - ✅ Configured & Deployed
+RESEND_API_KEY=re_...                         # Your Resend API key
+RESEND_FROM_EMAIL=hello@needthisdone.com      # Verified domain (DNS: DKIM, SPF)
+RESEND_ADMIN_EMAIL=abe.raise@gmail.com        # Admin notification recipient
+
+# AI Chatbot (optional - defaults shown)
 OPENAI_API_KEY=sk-...
+NEXT_PUBLIC_CHATBOT_MODEL=gpt-4o-mini  # Chat model
+NEXT_PUBLIC_CHATBOT_MAX_TOKENS=1000  # Max response tokens
+NEXT_PUBLIC_CHATBOT_TEMPERATURE=0.7  # Chat creativity (0-1)
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small  # Embedding model
+EMBEDDING_BATCH_SIZE=100  # Batch size for embeddings
+VECTOR_SEARCH_SIMILARITY_THRESHOLD=0.7  # Min similarity score (0-1)
+VECTOR_SEARCH_MAX_RESULTS=5  # Max search results
+
+# Site Configuration
+NEXT_PUBLIC_SITE_URL=https://localhost  # Used for auth redirects
+NEXT_PUBLIC_URL=https://localhost  # Used for metadata/SEO
+NODE_ENV=development
 ```
 
 ### Choosing Cloud vs Local Supabase
@@ -218,20 +280,11 @@ SUPABASE_INTERNAL_URL=http://host.docker.internal:54321
 
 **Note**: OAuth providers (Google, GitHub, etc.) only work with Cloud Supabase unless you configure them locally. For local development with OAuth, use Cloud Supabase.
 
-**`app/.env.local`** (Next.js app - can symlink to root):
-```bash
-# Either copy .env.local to app/.env.local, OR create a symlink:
-# cd app && ln -sf ../.env.local .env.local
-
-# Medusa (for client-side access)
-NEXT_PUBLIC_MEDUSA_URL=http://localhost:9000
-```
-
 ### Stopping Services
 
 ```bash
 # Stop Docker services
-docker-compose down
+npm run dev:stop
 
 # Stop Supabase
 supabase stop
@@ -239,6 +292,40 @@ supabase stop
 # Reset Supabase (clears all data)
 supabase db reset
 ```
+
+### Docker Environments (Local vs Production)
+
+**Important**: Local development and production use completely separate Docker configurations.
+
+| Aspect | Local Development | Production (DigitalOcean) |
+|--------|-------------------|---------------------------|
+| Compose file(s) | `docker-compose.yml` + `docker-compose.dev.yml` | `docker-compose.production.yml` (standalone) |
+| Dockerfile | `app/Dockerfile.dev` | `app/Dockerfile` |
+| Source code | Volume mounted (hot reload) | Baked into image |
+| SSL | Self-signed (localhost) | Let's Encrypt (needthisdone.com) |
+| Ports exposed | 3000, 6379, 6006 (debugging) | 80, 443 only (via nginx) |
+
+**Local Development**
+```bash
+npm run dev:start
+```
+
+See [Docker Commands](#docker-commands) table for all available commands.
+
+The dev overlay (`docker-compose.dev.yml`) adds:
+- Volume mounts for hot reload
+- `.env.local` mount for environment variables
+- Exposed ports for debugging
+- Storybook service
+
+**Production Deployment**
+```bash
+# SSH to DigitalOcean server, then:
+git pull origin main
+docker-compose -f docker-compose.production.yml up --build -d
+```
+
+Production uses a completely standalone compose file - it does NOT reference the base or dev files. Changes to `docker-compose.yml` or `docker-compose.dev.yml` do not affect production.
 
 ---
 
@@ -249,7 +336,7 @@ supabase db reset
 | File/Folder | Purpose |
 |-------------|---------|
 | `README.md` | This file - main project documentation |
-| `Roadmap.md` | Feature roadmap - what's done, what's next |
+| `TODO.md` | Task tracker (To Do / In Progress / Done) |
 | `CLAUDE.md` | Project guidelines for Claude Code |
 | `docker-compose.yml` | Docker service definitions |
 | `docker-compose.dev.yml` | Development-specific overrides |
@@ -478,6 +565,58 @@ admin:projects:all       All projects (5m)
 
 ---
 
+## Email Notifications
+
+### How It Works
+
+Email is handled by **Resend** with a two-layer architecture:
+
+1. **email.ts** - Core infrastructure (client, retry logic, idempotency)
+2. **email-service.ts** - Business logic (what emails to send and when)
+
+### Current Email Capabilities
+
+| Email Type | Status | Trigger |
+|------------|--------|---------|
+| Admin notifications | ✅ Ready | New project submission |
+| Client confirmation | ✅ Ready | After form submission |
+| Auth emails | 🔜 Planned | Account creation, login |
+| Order confirmations | 🔜 Planned | After purchase (requires Medusa) |
+
+### Email Configuration
+
+```bash
+RESEND_API_KEY=re_...                    # API key from resend.com
+RESEND_FROM_EMAIL=hello@needthisdone.com # Must match verified domain
+RESEND_ADMIN_EMAIL=abe.raise@gmail.com   # Where admin alerts go
+```
+
+### Sending Emails
+
+```typescript
+import { sendEmailWithRetry } from '@/lib/email';
+import { sendAdminNotification, sendClientConfirmation } from '@/lib/email-service';
+
+// Option 1: Use business logic functions (recommended)
+await sendAdminNotification({ name: 'John', email: 'john@example.com', ... });
+await sendClientConfirmation('john@example.com', { name: 'John' });
+
+// Option 2: Send custom email with retry logic
+await sendEmailWithRetry(
+  'recipient@example.com',
+  'Subject Line',
+  <YourReactEmailComponent {...props} />
+);
+```
+
+### Email Templates
+
+React Email templates are in `app/emails/`:
+- `AdminNotification.tsx` - New project alert for admin
+- `ClientConfirmation.tsx` - Submission confirmation for clients
+
+---
+
 ## Testing
 
 ### Test Types
@@ -567,8 +706,8 @@ Common dark mode issues & fixes are documented in [docs/DESIGN_SYSTEM.md](docs/D
 **Solutions**:
 ```bash
 # 1. Verify Medusa is running
-docker-compose ps medusa
-# Should show "healthy"
+npm run dev:status
+# Medusa should show "healthy"
 
 # 2. Test Medusa directly
 curl http://localhost:9000/health
@@ -582,7 +721,7 @@ curl http://localhost:3000/api/shop/products | jq '.products[0].variants'
 docker exec redis redis-cli FLUSHALL
 
 # 5. Restart services
-docker-compose restart medusa app
+npm run dev:restart
 ```
 
 ### Issue: Pages loading slowly
@@ -592,7 +731,7 @@ docker-compose restart medusa app
 **Solutions**:
 ```bash
 # Check Redis is running
-docker-compose ps redis
+npm run dev:status
 
 # Check cache hit rate
 redis-cli INFO stats
@@ -615,11 +754,21 @@ cd app && npm run test:a11y
 
 # Test locally in browser
 # Toggle dark mode → Check all text readable
-
-# Common fix: ensure dark: variant exists
-# ❌ Wrong: <p className="text-gray-800">
-# ✅ Right: <p className="text-gray-900 dark:text-gray-100">
 ```
+
+**Fix**: Always use centralized colors from `app/lib/colors.ts`:
+```typescript
+// ❌ Wrong: hardcoded Tailwind classes
+<p className="text-gray-800">Text</p>
+
+// ✅ Right: use color system
+import { headingColors, formInputColors } from '@/lib/colors';
+
+<h2 className={headingColors.primary}>Heading</h2>
+<p className={formInputColors.helper}>Helper text</p>
+```
+
+Available color utilities: `headingColors`, `formInputColors`, `formValidationColors`, `titleColors`, `accentColors`, `navigationColors`, `dangerColors`, `linkColors`, and more. See [app/lib/colors.ts](app/lib/colors.ts) for the full list.
 
 ### Issue: Supabase connection errors
 
@@ -630,8 +779,8 @@ cd app && npm run test:a11y
 # Verify Supabase is running
 supabase status
 
-# Check credentials in app/.env.local
-cat app/.env.local | grep SUPABASE
+# Check credentials in .env.local
+cat .env.local | grep SUPABASE
 
 # Restart Supabase
 supabase stop
@@ -643,7 +792,7 @@ supabase db reset
 
 ### Issue: Docker containers won't start
 
-**Symptom**: `docker-compose up` fails
+**Symptom**: `npm run dev:start` fails
 
 **Solutions**:
 ```bash
@@ -651,11 +800,11 @@ supabase db reset
 docker ps
 
 # View detailed logs
-docker-compose logs -f medusa
+npm run dev:logs
 
 # Clean and rebuild
-docker-compose down -v
-docker-compose up --build
+npm run dev:stop
+npm run dev:build && npm run dev:start
 
 # Check port availability
 lsof -i :3000    # App
@@ -683,8 +832,7 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
 ### Configuration & Setup
 | File | Purpose |
 |------|---------|
-| `.env.local` | Root environment variables |
-| `app/.env.local` | Next.js environment variables |
+| `.env.local` | Environment variables (used by Next.js and all services) |
 | `docker-compose.yml` | Docker service definitions |
 | `app/tsconfig.json` | TypeScript configuration |
 
@@ -697,12 +845,16 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
 | `app/lib/redis.ts` | Redis cache client |
 | `app/lib/medusa-client.ts` | Medusa API wrapper |
 | `app/lib/cache.ts` | Caching utility & keys |
+| `app/lib/stripe.ts` | Stripe server client |
+| `app/lib/email.ts` | Resend email client & helpers |
+| `app/lib/email-service.ts` | Email business logic (notifications, confirmations) |
 
 ### State Management
 | File | Purpose |
 |------|---------|
 | `app/context/CartContext.tsx` | Shopping cart state |
 | `app/context/AuthContext.tsx` | User authentication state |
+| `app/context/StripeContext.tsx` | Stripe Elements provider |
 
 ### Backend Services
 | File | Purpose |
@@ -717,7 +869,7 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
 |------|---------|
 | `app/e2e/` | Playwright E2E tests |
 | `app/__tests__/setup/a11y-utils.ts` | Accessibility test utilities |
-| `playwright.config.ts` | Playwright configuration |
+| `app/playwright.config.ts` | Playwright configuration |
 
 ---
 
@@ -739,13 +891,7 @@ See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for:
 
 ## What's Next?
 
-### Pending Features
-
-See [Roadmap.md](Roadmap.md) for the complete roadmap, including:
-- Payment processing (Stripe integration)
-- Inventory management
-- Multi-tier pricing
-- Analytics and reporting
+See [TODO.md](TODO.md) for the current task tracker with prioritized work items.
 
 ### How to Add Features
 

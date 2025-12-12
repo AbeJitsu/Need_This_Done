@@ -348,4 +348,71 @@ export const linkHoverColors = {
   blue: 'hover:text-blue-700 dark:hover:text-blue-300',
 };
 
+// ============================================================================
+// Group Hover Colors - For elements that change on parent hover
+// ============================================================================
+// Used for text that changes color when a parent with group class is hovered
+export const groupHoverColors = {
+  blue: 'group-hover:text-blue-600 dark:group-hover:text-blue-300',
+};
+
+// ============================================================================
+// Alert Colors - Notification and message box styling
+// ============================================================================
+// Consistent backgrounds and borders for info, error, success, warning alerts
+export const alertColors = {
+  info: {
+    bg: 'bg-blue-50 dark:bg-blue-900/20',
+    border: 'border border-blue-200 dark:border-blue-800',
+  },
+  error: {
+    bg: 'bg-red-50 dark:bg-red-900/20',
+    border: 'border border-red-200 dark:border-red-800',
+  },
+  success: {
+    bg: 'bg-green-50 dark:bg-green-900/20',
+    border: 'border border-green-200 dark:border-green-800',
+  },
+  warning: {
+    bg: 'bg-orange-50 dark:bg-orange-900/20',
+    border: 'border border-orange-200 dark:border-orange-800',
+  },
+};
+
+// ============================================================================
+// Divider Colors - For horizontal/vertical separators
+// ============================================================================
+export const dividerColors = {
+  subtle: 'bg-gray-300 dark:bg-gray-600',
+};
+
+// ============================================================================
+// Placeholder Colors - For image placeholders and empty states
+// ============================================================================
+export const placeholderColors = {
+  bg: 'bg-gray-200 dark:bg-gray-700',
+};
+
+// ============================================================================
+// Checkmark Background Colors - For circular checkmark containers
+// ============================================================================
+export const checkmarkBgColors: Record<'green' | 'blue' | 'purple', string> = {
+  green: 'bg-green-100 dark:bg-green-200',
+  blue: 'bg-blue-100 dark:bg-blue-200',
+  purple: 'bg-purple-100 dark:bg-purple-200',
+};
+
+// ============================================================================
+// Card Background Colors - For card containers
+// ============================================================================
+export const cardBgColors = {
+  base: 'bg-white dark:bg-gray-800',
+};
+
+// ============================================================================
+// Card Border Colors - For card container borders
+// ============================================================================
+export const cardBorderColors = {
+  subtle: 'border-2 border-gray-400 dark:border-gray-500',
+};
 

@@ -141,4 +141,4 @@ Library ID: /websites/storybook_js
 
 ---
 
-*See also: [Roadmap.md](../../Roadmap.md) for architecture overview*
+*See also: [README.md](../../README.md) for architecture overview*

@@ -29,14 +29,15 @@ WORKDIR /app
 
 FROM base AS dependencies
 
-# Copy only package files and npm configuration (not the whole app)
+# Copy package files and npm configuration
 # This allows Docker to cache this layer - reuse it if packages don't change
 COPY package*.json .npmrc ./
 
 # npm ci = "clean install" (exactly as specified, no surprises)
 # --frozen-lockfile = use exact versions from package-lock.json
+# --legacy-peer-deps = needed for @react-email/components compatibility
 # Ensures identical setup on developer laptop and production server
-RUN npm ci --frozen-lockfile
+RUN npm ci --frozen-lockfile --legacy-peer-deps
 
 # ============================================================================
 # Stage 3: Builder - Cook and Optimize
