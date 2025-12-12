@@ -8,7 +8,14 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 _Currently active work items_
 
-_(No active tasks)_
+**Email Notifications** (Infrastructure: ✅ Ready)
+- [x] Set up Resend account and verify `RESEND_API_KEY` in `.env.local`
+- [x] Configure DNS (DKIM, SPF) with Namecheap
+- [x] Deploy email config to production (DigitalOcean)
+- [ ] Add auth emails (account creation, login notifications)
+- [ ] Test admin alert on new project submission
+- [ ] Add order confirmation emails (requires Medusa implementation)
+- [ ] Add purchase receipt emails (requires Medusa implementation)
 
 ---
 
@@ -43,15 +50,6 @@ _(No active tasks)_
 - [ ] Run accessibility tests: `npm run test:a11y`
 
 ### Short Term
-
-**Email Notifications** (Infrastructure: ✅ Ready)
-- [x] Set up Resend account and verify `RESEND_API_KEY` in `.env.local`
-- [x] Configure DNS (DKIM, SPF) with Namecheap
-- [x] Deploy email config to production (DigitalOcean)
-- [ ] Add auth emails (account creation, login notifications)
-- [ ] Test admin alert on new project submission
-- [ ] Add order confirmation emails (requires Medusa implementation)
-- [ ] Add purchase receipt emails (requires Medusa implementation)
 
 **Admin Workflows**
 - [ ] Inventory management interface
