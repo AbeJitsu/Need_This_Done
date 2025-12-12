@@ -5,6 +5,12 @@ import AdminNotification, {
 import ClientConfirmation, {
   type ClientConfirmationProps,
 } from '../emails/ClientConfirmation';
+import WelcomeEmail, {
+  type WelcomeEmailProps,
+} from '../emails/WelcomeEmail';
+import LoginNotificationEmail, {
+  type LoginNotificationEmailProps,
+} from '../emails/LoginNotificationEmail';
 
 // ============================================================================
 // Email Service Functions
@@ -95,4 +101,38 @@ export async function sendProjectSubmissionEmails(
   }
 
   return { adminSent, clientSent };
+}
+
+// ============================================================================
+// Authentication Emails
+// ============================================================================
+
+/**
+ * Send welcome email to new users after account creation.
+ * Provides helpful getting-started links and sets expectations.
+ *
+ * @param data - User data (email, optional name)
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendWelcomeEmail(
+  data: WelcomeEmailProps
+): Promise<string | null> {
+  const subject = '🎉 Welcome to NeedThisDone!';
+
+  return sendEmailWithRetry(data.email, subject, WelcomeEmail(data));
+}
+
+/**
+ * Send login notification email for security awareness.
+ * Alerts user to new sign-in and provides reset option if suspicious.
+ *
+ * @param data - Login details (email, time, IP, user agent)
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendLoginNotification(
+  data: LoginNotificationEmailProps
+): Promise<string | null> {
+  const subject = '🔐 New Sign-In to Your NeedThisDone Account';
+
+  return sendEmailWithRetry(data.email, subject, LoginNotificationEmail(data));
 }

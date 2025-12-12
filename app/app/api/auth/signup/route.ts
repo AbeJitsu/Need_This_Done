@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
 import { isValidEmail, isValidPassword } from '@/lib/validation';
 import { badRequest, handleApiError } from '@/lib/api-errors';
+import { sendWelcomeEmail } from '@/lib/email-service';
 
 // ============================================================================
 // Sign Up Endpoint - /api/auth/signup (POST)
@@ -77,7 +78,23 @@ export async function POST(request: NextRequest) {
     }
 
     // ========================================================================
-    // Step 3: Return Success Response
+    // Step 3: Send Welcome Email
+    // ========================================================================
+    // Send our custom welcome email in addition to Supabase's confirmation.
+    // This runs async - we don't wait for it to complete before responding.
+    // Email failures shouldn't break the signup flow.
+
+    if (data.user?.email) {
+      sendWelcomeEmail({
+        email: data.user.email,
+        name: metadata?.name || metadata?.full_name,
+      }).catch((err) => {
+        console.error('[Signup] Welcome email failed:', err);
+      });
+    }
+
+    // ========================================================================
+    // Step 4: Return Success Response
     // ========================================================================
     // User account created! We return:
     // - data.user: The new user object (includes ID, email, created_at, etc.)

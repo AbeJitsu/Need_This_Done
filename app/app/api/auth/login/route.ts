@@ -2,6 +2,7 @@ import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { NextRequest, NextResponse } from 'next/server';
 import { isValidEmail, isValidPassword } from '@/lib/validation';
 import { badRequest, unauthorized, handleApiError } from '@/lib/api-errors';
+import { sendLoginNotification } from '@/lib/email-service';
 
 // ============================================================================
 // Login Endpoint - /api/auth/login (POST)
@@ -75,7 +76,38 @@ export async function POST(request: NextRequest) {
     }
 
     // ========================================================================
-    // Step 3: Return Tokens to Client
+    // Step 3: Send Login Notification Email
+    // ========================================================================
+    // Security feature: notify user of new sign-ins so they can spot
+    // unauthorized access. Runs async - doesn't block the login response.
+
+    if (data.user?.email) {
+      const ipAddress =
+        request.headers.get('x-forwarded-for')?.split(',')[0] ||
+        request.headers.get('x-real-ip') ||
+        'Unknown';
+      const userAgent = request.headers.get('user-agent') || 'Unknown';
+
+      sendLoginNotification({
+        email: data.user.email,
+        loginTime: new Date().toLocaleString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          timeZoneName: 'short',
+        }),
+        ipAddress,
+        userAgent,
+      }).catch((err) => {
+        console.error('[Login] Login notification email failed:', err);
+      });
+    }
+
+    // ========================================================================
+    // Step 4: Return Tokens to Client
     // ========================================================================
     // Authentication succeeded! We return:
     //

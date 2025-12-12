@@ -578,9 +578,10 @@ Email is handled by **Resend** with a two-layer architecture:
 
 | Email Type | Status | Trigger |
 |------------|--------|---------|
+| Welcome email | ✅ Ready | After account creation |
+| Login notification | ✅ Ready | After each sign-in (security) |
 | Admin notifications | ✅ Ready | New project submission |
 | Client confirmation | ✅ Ready | After form submission |
-| Auth emails | 🔜 Planned | Account creation, login |
 | Order confirmations | 🔜 Planned | After purchase (requires Medusa) |
 
 ### Email Configuration
@@ -612,8 +613,17 @@ await sendEmailWithRetry(
 ### Email Templates
 
 React Email templates are in `app/emails/`:
+- `WelcomeEmail.tsx` - Welcome message after account creation
+- `LoginNotificationEmail.tsx` - Security alert after each sign-in
 - `AdminNotification.tsx` - New project alert for admin
 - `ClientConfirmation.tsx` - Submission confirmation for clients
+
+### Testing Emails
+
+```bash
+# Send all 4 email types to verify they work
+cd app && npm run test:emails
+```
 
 ---
 
@@ -676,6 +686,11 @@ npx playwright test -k "can add to cart"
 - All pages in light mode
 - All pages in dark mode
 - Contrast ratios meet WCAG AA
+
+**Accessibility** (`e2e/accessibility.a11y.test.ts`):
+- Uses axe-playwright for WCAG AA compliance
+- Tests Home, Services, Pricing, How It Works, FAQ in both light and dark modes
+- Dark mode tests use `emulateMedia({ colorScheme: 'dark' })` before navigation to trigger proper theme application
 
 ### Dark Mode Testing
 
@@ -768,7 +783,7 @@ import { headingColors, formInputColors } from '@/lib/colors';
 <p className={formInputColors.helper}>Helper text</p>
 ```
 
-Available color utilities: `headingColors`, `formInputColors`, `formValidationColors`, `titleColors`, `accentColors`, `navigationColors`, `dangerColors`, `linkColors`, and more. See [app/lib/colors.ts](app/lib/colors.ts) for the full list.
+Available color utilities: `headingColors`, `formInputColors`, `formValidationColors`, `titleColors`, `accentColors`, `navigationColors`, `dangerColors`, `linkColors`, `mutedTextColors`, `alertColors`, `dividerColors`, `placeholderColors`, `checkmarkColors`, `cardHoverColors`, `topBorderColors`, `groupHoverColors`, `cardBgColors`, `cardBorderColors`. See [app/lib/colors.ts](app/lib/colors.ts) for the full list.
 
 ### Issue: Supabase connection errors
 
