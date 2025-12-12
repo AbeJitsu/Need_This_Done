@@ -5,7 +5,7 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 **Always follow this workflow:**
 
 1. **Local Development** (test changes first):
-   - Use `docker-compose up -d` to start dev environment
+   - Use `npm run dev:start` to start dev environment
    - Access at https://localhost (self-signed SSL certs)
    - Test all changes thoroughly
 
@@ -15,7 +15,7 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 3. **Production Deployment** (deploy to DigitalOcean):
    - SSH to DigitalOcean server
    - Pull latest from GitHub
-   - Use `docker-compose -f docker-compose.production.yml up --build -d`
+   - Use `npm run prod:build` then `npm run prod:start`
    - Site runs at https://needthisdone.com (Let's Encrypt SSL)
 
 **NEVER run production builds locally** - always test with dev environment first.

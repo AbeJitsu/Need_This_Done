@@ -1,16 +1,16 @@
 {
   "scripts": {
-    "dcup": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml up -d",
-    "dcdown": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml down",
-    "dcrestart": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml restart",
-    "dcbuild": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml build",
-    "dclogs": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml logs -f",
-    "dcps": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml ps",
-    "dcup:prod": "docker-compose -f docker-compose.production.yml up -d",
-    "dcdown:prod": "docker-compose -f docker-compose.production.yml down",
-    "dcbuild:prod": "docker-compose -f docker-compose.production.yml build",
-    "dclogs:prod": "docker-compose -f docker-compose.production.yml logs -f",
-    "dcps:prod": "docker-compose -f docker-compose.production.yml ps"
+    "dev:start": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml up -d",
+    "dev:stop": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml down",
+    "dev:restart": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml restart",
+    "dev:build": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml build",
+    "dev:logs": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml logs -f",
+    "dev:status": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml ps",
+    "prod:start": "docker-compose -f docker-compose.production.yml up -d",
+    "prod:stop": "docker-compose -f docker-compose.production.yml down",
+    "prod:build": "docker-compose -f docker-compose.production.yml build",
+    "prod:logs": "docker-compose -f docker-compose.production.yml logs -f",
+    "prod:status": "docker-compose -f docker-compose.production.yml ps"
   },
   "dependencies": {
     "dotenv": "^17.2.3"

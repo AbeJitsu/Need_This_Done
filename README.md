@@ -25,7 +25,7 @@ A professional services platform built with Next.js, running in Docker with ngin
 
 ```bash
 # Start Docker services (local development)
-npm run dcup
+npm run dev:start
 
 # Start Supabase (auth & database)
 supabase start
@@ -37,9 +37,23 @@ supabase start
 
 **If things break:**
 ```bash
-npm run dcdown
-npm run dcbuild && npm run dcup
+npm run dev:stop
+npm run dev:build && npm run dev:start
 ```
+
+### Docker Commands
+
+| Command | What it does |
+|---------|--------------|
+| `npm run dev:start` | Start all dev containers |
+| `npm run dev:stop` | Stop all dev containers |
+| `npm run dev:restart` | Restart dev containers |
+| `npm run dev:build` | Rebuild dev images |
+| `npm run dev:logs` | View container logs (live) |
+| `npm run dev:status` | Show container status |
+| `npm run prod:build` | Build production image (for testing locally) |
+| `npm run prod:start` | Start production containers (local testing) |
+| `npm run prod:stop` | Stop production containers |
 
 ---
 
@@ -151,7 +165,7 @@ supabase --version
 
 **Terminal 1: Start Docker services (commerce + cache)**
 ```bash
-npm run dcup
+npm run dev:start
 ```
 
 This starts:
@@ -256,7 +270,7 @@ SUPABASE_INTERNAL_URL=http://host.docker.internal:54321
 
 ```bash
 # Stop Docker services
-npm run dcdown
+npm run dev:stop
 
 # Stop Supabase
 supabase stop
@@ -280,7 +294,7 @@ supabase db reset
 **Local Development**
 ```bash
 # Uses overlay pattern: base config + dev overrides
-npm run dcup
+npm run dev:start
 # Or manually:
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
@@ -679,7 +693,7 @@ Common dark mode issues & fixes are documented in [docs/DESIGN_SYSTEM.md](docs/D
 **Solutions**:
 ```bash
 # 1. Verify Medusa is running
-npm run dcps
+npm run dev:status
 # Medusa should show "healthy"
 
 # 2. Test Medusa directly
@@ -694,7 +708,7 @@ curl http://localhost:3000/api/shop/products | jq '.products[0].variants'
 docker exec redis redis-cli FLUSHALL
 
 # 5. Restart services
-npm run dcrestart
+npm run dev:restart
 ```
 
 ### Issue: Pages loading slowly
@@ -704,7 +718,7 @@ npm run dcrestart
 **Solutions**:
 ```bash
 # Check Redis is running
-npm run dcps
+npm run dev:status
 
 # Check cache hit rate
 redis-cli INFO stats
@@ -765,7 +779,7 @@ supabase db reset
 
 ### Issue: Docker containers won't start
 
-**Symptom**: `npm run dcup` fails
+**Symptom**: `npm run dev:start` fails
 
 **Solutions**:
 ```bash
@@ -773,11 +787,11 @@ supabase db reset
 docker ps
 
 # View detailed logs
-npm run dclogs
+npm run dev:logs
 
 # Clean and rebuild
-npm run dcdown
-npm run dcbuild && npm run dcup
+npm run dev:stop
+npm run dev:build && npm run dev:start
 
 # Check port availability
 lsof -i :3000    # App
