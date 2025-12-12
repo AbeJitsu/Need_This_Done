@@ -4,6 +4,8 @@ import {
   topBorderColors,
   checkmarkColors,
   cardHoverColors,
+  formInputColors,
+  mutedTextColors,
 } from '@/lib/colors';
 import Button from '@/components/Button';
 
@@ -67,11 +69,11 @@ export default function PricingCard({
           <span className={`text-5xl font-bold ${titleColors[color]}`}>
             {price.replace('From ', '')}
           </span>
-          <span className="block text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <span className={`block text-sm ${mutedTextColors.light} mt-1`}>
             starting {period}
           </span>
         </div>
-        <p className="text-gray-600 dark:text-gray-300 text-sm">
+        <p className={`${formInputColors.helper} text-sm`}>
           {description}
         </p>
       </div>
@@ -85,7 +87,7 @@ export default function PricingCard({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <span className="text-gray-600 dark:text-gray-300 text-sm">
+            <span className={`${formInputColors.helper} text-sm`}>
               {feature}
             </span>
           </li>
