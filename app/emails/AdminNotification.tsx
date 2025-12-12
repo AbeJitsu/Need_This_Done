@@ -36,7 +36,8 @@ export default function AdminNotification({
   attachmentCount,
   submittedAt,
 }: AdminNotificationProps) {
-  const dashboardUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com'}/admin/projects/${projectId}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com';
+  const dashboardUrl = `${siteUrl}/admin/projects/${projectId}`;
 
   return (
     <Html>

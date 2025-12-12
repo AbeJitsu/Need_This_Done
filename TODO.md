@@ -8,18 +8,61 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 _Currently active work items_
 
-**Medusa Real Implementation** ← CURRENT PRIORITY
-- [ ] Plan database schema for products, carts, orders
-- [ ] Replace bootstrap Express backend with real Medusa
-- [ ] Implement database-persisted products (replace hardcoded)
-- [ ] Implement database-persisted carts (replace in-memory)
-- [ ] Implement proper order management
+**Medusa Real Implementation + Google Calendar Bookings** ← CURRENT PRIORITY
+
+**Phase 0: Bug Fix (10-15 min)**
+- [x] Fix email links using `NEXT_PUBLIC_SITE_URL` env var (localhost → needthisdone.com)
+  - Files: AdminNotification.tsx, ClientConfirmation.tsx, LoginNotificationEmail.tsx, WelcomeEmail.tsx
+  - Already configured in .env.example: `NEXT_PUBLIC_SITE_URL=https://localhost`
+  - Update to production .env.local on DigitalOcean: `NEXT_PUBLIC_SITE_URL=https://needthisdone.com`
+
+**Phase 1: Medusa Backend (4-5 hrs)**
+- [ ] Initialize real Medusa (replace bootstrap Express in `/medusa/src/index.ts`)
+- [ ] Create consultation products seed (15-min/$20, 30-min/$35, 55-min/$50)
+- [ ] Run Medusa migrations (database-persisted products, carts, orders)
+- [ ] Update checkout to mark consultation products with `metadata.requires_appointment`
+- [ ] Test products API, cart persistence, checkout flow
+
+**Phase 2: Google Calendar Integration (4-5 hrs)**
+- [ ] Complete Google Cloud Console setup (see instructions below)
+- [ ] Create Supabase migration: google_calendar_tokens table
+- [ ] Create `/app/lib/google-calendar.ts` with OAuth flow
+- [ ] Create appointment_requests Supabase table (with business hour validation)
+- [ ] Build appointment request form component (post-checkout)
+- [ ] Wire appointment request email notifications
+
+**Phase 3: Admin Approval Workflow (3-4 hrs)**
+- [ ] Build admin appointments dashboard (`/admin/appointments`)
+- [ ] Implement approve/modify/cancel endpoints
+- [ ] Create calendar event on approval (Google Calendar API)
+- [ ] Send confirmation emails with .ics attachments
+
+**Phase 4: Testing & Deploy (1-2 hrs)**
+- [ ] E2E tests for Medusa backend
+- [ ] E2E tests for appointment booking flow
+- [ ] Manual testing in dev environment
+- [ ] Deploy to production
 
 ---
 
 ## To Do
 
 ### Immediate
+
+**Google Cloud Console Setup** ← DO THIS IN PARALLEL WHILE CODING
+**DO NOT WAIT** - Complete these steps while Claude codes Phase 1
+- [ ] Step 1: Create Google Cloud project at https://console.cloud.google.com/ (project name: "NeedThisDone Appointments")
+- [ ] Step 2: Enable Google Calendar API
+- [ ] Step 3: Configure OAuth consent screen (External, with scopes: calendar.events, calendar.readonly)
+- [ ] Step 4: Create OAuth 2.0 credentials (Web application)
+  - Authorized origins: `https://needthisdone.com`, `http://localhost:3000`
+  - Redirect URIs: `https://needthisdone.com/api/google/callback`, `http://localhost:3000/api/google/callback`
+- [ ] Step 5: Copy credentials and provide to Claude:
+  - GOOGLE_CLIENT_ID
+  - GOOGLE_CLIENT_SECRET
+- [ ] Step 6: Verify setup (check Credentials, Enabled APIs, OAuth consent)
+
+**Full detailed instructions** are in the implementation plan file at: `.claude/plans/modular-meandering-hinton.md` (section: "Google Cloud Console Setup Guide")
 
 **Stripe Payments** (blocked until Medusa done)
 - [ ] Create Stripe account at https://stripe.com
