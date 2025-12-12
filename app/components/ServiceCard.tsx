@@ -5,6 +5,8 @@ import {
   topBorderColors,
   cardHoverColors,
   checkmarkColors,
+  formInputColors,
+  mutedTextColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -42,14 +44,14 @@ export default function ServiceCard({
 
   const cardContent = (
     <div className="flex flex-col h-full">
-      <h3 className={`font-bold mb-3 text-xl ${titleColors[color]}`}>
+      <h2 className={`font-bold mb-3 text-xl ${titleColors[color]}`}>
         {title}
-      </h3>
+      </h2>
 
       {isCompact ? (
         // Compact: Just tagline as teaser
         <>
-          <p className="text-gray-600 dark:text-gray-300 text-base">
+          <p className={`${formInputColors.helper} text-base`}>
             {tagline}
           </p>
           <p className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]}`}>
@@ -59,7 +61,7 @@ export default function ServiceCard({
       ) : (
         // Full: Description + bullet points
         <>
-          <p className="text-gray-600 dark:text-gray-300 text-base mb-4">
+          <p className={`${formInputColors.helper} text-base mb-4`}>
             {description}
           </p>
 
@@ -72,7 +74,7 @@ export default function ServiceCard({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-gray-500 dark:text-gray-300 text-sm">
+                  <span className={`${mutedTextColors.light} text-sm`}>
                     {detail}
                   </span>
                 </li>

@@ -31,11 +31,13 @@ export const accentColors: Record<AccentVariant, {
 // ============================================================================
 // Title Colors - Used for headings and labels (generic)
 // ============================================================================
-// Updated to meet WCAG AA (5:1 contrast) in dark mode
+// Updated to meet WCAG AA (4.5:1 contrast) for normal text in both modes
+// Light mode: -700 shades ensure 4.5:1+ contrast on white
+// Dark mode: -300 shades ensure 4.5:1+ contrast on gray-800
 export const titleColors: Record<AccentColor, string> = {
-  purple: 'text-purple-600 dark:text-purple-300',
-  blue: 'text-blue-600 dark:text-blue-300',
-  green: 'text-green-600 dark:text-green-300',
+  purple: 'text-purple-700 dark:text-purple-300',
+  blue: 'text-blue-700 dark:text-blue-300',
+  green: 'text-green-700 dark:text-green-300',
 };
 
 // ============================================================================

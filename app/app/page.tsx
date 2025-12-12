@@ -4,7 +4,7 @@ import Button from '@/components/Button';
 import ServiceCard from '@/components/ServiceCard';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultHomeContent } from '@/lib/default-page-content';
-import { formInputColors, titleColors } from '@/lib/colors';
+import { formInputColors, titleColors, headingColors, groupHoverColors } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -72,7 +72,7 @@ export default async function HomePage() {
         {/* Services Preview */}
         <div className="mb-10">
           <Link href="/services" className="block group">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors">
+            <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center ${groupHoverColors.blue} transition-colors`}>
               {content.servicesTitle} <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
             </h2>
           </Link>
@@ -97,7 +97,7 @@ export default async function HomePage() {
           href="/how-it-works"
           className="block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 hover:border-blue-400 hover:shadow-xl active:scale-98 dark:hover:border-blue-500 group"
         >
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center transition-colors">
+          <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center transition-colors`}>
             {content.processPreview.title}
           </h2>
           <div className="grid md:grid-cols-4 gap-6 text-center">
@@ -106,7 +106,7 @@ export default async function HomePage() {
                 <div className="flex justify-center mb-3">
                   <CircleBadge number={step.number} color={step.color} size="md" />
                 </div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{step.title}</h3>
+                <h3 className={`font-semibold ${headingColors.primary} mb-2`}>{step.title}</h3>
                 <p className={`${formInputColors.helper} text-sm`}>
                   {step.description}
                 </p>
@@ -120,7 +120,7 @@ export default async function HomePage() {
 
         {/* CTA Section */}
         <div className="text-center bg-white dark:bg-gray-800 border-2 border-gray-400 dark:border-gray-500 rounded-xl p-8 shadow-lg hover:shadow-xl hover:border-orange-400 dark:hover:border-orange-500 transition-all duration-300">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-4`}>
             {content.cta.title}
           </h2>
           <p className={`${formInputColors.helper} mb-6`}>

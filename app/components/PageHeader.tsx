@@ -1,3 +1,5 @@
+import { headingColors, formInputColors } from '@/lib/colors';
+
 // ============================================================================
 // PageHeader Component - Consistent Page Headers
 // ============================================================================
@@ -13,11 +15,11 @@ interface PageHeaderProps {
 export default function PageHeader({ title, description, className = '' }: PageHeaderProps) {
   return (
     <div className={`text-center mb-12 ${className}`}>
-      <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-4">
+      <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${headingColors.primary} mb-4`}>
         {title}
       </h1>
       {description && (
-        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+        <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
           {description}
         </p>
       )}
