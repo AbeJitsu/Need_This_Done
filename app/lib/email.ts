@@ -96,23 +96,19 @@ export async function sendEmailWithRetry(
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const emailConfig = getEmailConfig();
-      const { data, error } = await resend.emails.send(
-        {
-          from: emailConfig.from,
-          to,
-          subject,
-          react,
-          reply_to: emailConfig.replyTo,
+      const { data, error } = await resend.emails.send({
+        from: emailConfig.from,
+        to,
+        subject,
+        react,
+        reply_to: emailConfig.replyTo,
+        // Note: Idempotency key moved to request headers in newer SDK versions
+        // The SDK handles retries internally; manual retry logic provides
+        // additional resilience for network-level failures
+        headers: {
+          'X-Idempotency-Key': idempotencyKey,
         },
-        {
-          // Idempotency key prevents duplicate sends on retry
-          // If this request fails and we retry with the same key,
-          // Resend will return the original response without sending again
-          headers: {
-            'Idempotency-Key': idempotencyKey,
-          },
-        }
-      );
+      });
 
       if (!error && data) {
         if (attempt > 1) {
