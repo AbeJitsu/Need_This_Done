@@ -5,7 +5,7 @@ import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultPricingContent } from '@/lib/default-page-content';
 import type { PricingPageContent } from '@/lib/page-content-types';
-import { formInputColors } from '@/lib/colors';
+import { formInputColors, headingColors, dividerColors } from '@/lib/colors';
 
 // ============================================================================
 // Pricing Page - Service Pricing Tiers
@@ -79,7 +79,7 @@ export default async function PricingPage() {
               <div className="flex items-center gap-4">
                 <CircleBadge text={content.paymentNote.depositPercent} color="green" size="md" shape="pill" />
                 <div>
-                  <p className="font-semibold text-gray-900 dark:text-gray-100">
+                  <p className={`font-semibold ${headingColors.primary}`}>
                     {content.paymentNote.depositLabel}
                   </p>
                   <p className={`text-sm ${formInputColors.helper}`}>
@@ -87,11 +87,11 @@ export default async function PricingPage() {
                   </p>
                 </div>
               </div>
-              <div className="hidden sm:block w-8 h-0.5 bg-gray-300 dark:bg-gray-600"></div>
+              <div className={`hidden sm:block w-8 h-0.5 ${dividerColors.subtle}`}></div>
               <div className="flex items-center gap-4">
                 <CircleBadge text={content.paymentNote.deliveryPercent} color="blue" size="md" shape="pill" />
                 <div>
-                  <p className="font-semibold text-gray-900 dark:text-gray-100">
+                  <p className={`font-semibold ${headingColors.primary}`}>
                     {content.paymentNote.deliveryLabel}
                   </p>
                   <p className={`text-sm ${formInputColors.helper}`}>
@@ -106,7 +106,7 @@ export default async function PricingPage() {
         {/* Custom Tasks + FAQ */}
         <Card hoverColor={content.customSection.hoverColor || 'orange'} hoverEffect="glow">
           <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+            <h2 className={`text-2xl font-bold ${headingColors.primary} mb-4`}>
               {content.customSection.title}
             </h2>
             <p className={`${formInputColors.helper} mb-6`}>

@@ -49,13 +49,13 @@ _(No active tasks)_
 
 ### Short Term
 
-**DRY Violations (Color System)**
-- [ ] Fix Shop page hardcoded colors (6 instances)
-- [ ] Fix Services page hardcoded colors (4 instances)
-- [ ] Fix Pricing page hardcoded colors (6 instances)
-- [ ] Fix How It Works page hardcoded colors (2 instances)
-- [ ] Fix FAQ page hardcoded colors (1 instance)
-- [ ] Final verification: search for remaining hardcoded colors
+**DRY Violations (Color System)** ✅
+- [x] Fix Shop page hardcoded colors (6 instances)
+- [x] Fix Services page hardcoded colors (4 instances)
+- [x] Fix Pricing page hardcoded colors (6 instances)
+- [x] Fix How It Works page hardcoded colors (2 instances)
+- [x] Fix FAQ page hardcoded colors (1 instance)
+- [x] Final verification: search for remaining hardcoded colors
 - [ ] Visual verification in light and dark mode
 
 **Email Notifications** (Infrastructure: ✅ Ready)
@@ -115,6 +115,7 @@ _(No active tasks)_
 
 _Keep ~5-10 recent wins here, trim periodically once documented in README.md_
 
+- [x] DRY Color System Cleanup - Fixed hardcoded colors across Shop, Services, Pricing, How It Works, FAQ pages; added alertColors, dividerColors, placeholderColors, checkmarkBgColors, cardBgColors, cardBorderColors, groupHoverColors to lib/colors.ts (Dec 2025)
 - [x] Resend Email Setup - Full email infrastructure with DNS verification, production deployment, sends from hello@needthisdone.com (Dec 2025)
 - [x] Environment Variable Documentation - Updated README.md with all 31 variables, generation commands, and clear sections (Dec 2025)
 - [x] Documentation Audit - Comprehensive 3-agent review of .env.example, README.md, and codebase (Dec 2025)
