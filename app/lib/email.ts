@@ -40,12 +40,13 @@ export function getResend(): Resend {
 // Email Configuration
 // ============================================================================
 // Centralized email addresses and settings
+// Using a getter function to read env vars at runtime (not module load time)
 
-export const EMAIL_CONFIG = {
+export const getEmailConfig = () => ({
   from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
   adminEmail: process.env.RESEND_ADMIN_EMAIL,
   replyTo: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
-} as const;
+});
 
 // ============================================================================
 // Email Error Types
@@ -94,13 +95,14 @@ export async function sendEmailWithRetry(
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
+      const emailConfig = getEmailConfig();
       const { data, error } = await resend.emails.send(
         {
-          from: EMAIL_CONFIG.from,
+          from: emailConfig.from,
           to,
           subject,
           react,
-          reply_to: EMAIL_CONFIG.replyTo,
+          reply_to: emailConfig.replyTo,
         },
         {
           // Idempotency key prevents duplicate sends on retry
@@ -188,14 +190,15 @@ export async function sendEmail(
 ): Promise<string | null> {
   try {
     const resend = getResend();
+    const emailConfig = getEmailConfig();
 
     const { data, error } = await resend.emails.send({
-      from: EMAIL_CONFIG.from,
+      from: emailConfig.from,
       to,
       subject,
       html,
       text,
-      reply_to: EMAIL_CONFIG.replyTo,
+      reply_to: emailConfig.replyTo,
     });
 
     if (error) {

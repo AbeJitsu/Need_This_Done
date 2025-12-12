@@ -8,7 +8,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 _Currently active work items_
 
-- [ ] Documentation consolidation - centralizing 40 scattered docs into organized structure
+_(No active tasks)_
 
 ---
 
@@ -16,15 +16,12 @@ _Currently active work items_
 
 ### Immediate
 
-**CRITICAL - Setup Required (Code ready, accounts needed)**
+**Environment Variable Documentation** ✅
+- [x] Updated root `.env.example` with all 31 variables
+- [x] Consolidated to single .env.example (deleted app/.env.example)
+- [x] Deployed to production (DigitalOcean)
 
-**Resend Email Service** (Implementation: ✅ app/lib/email.ts)
-- [ ] Create Resend account at https://resend.com
-- [ ] Get API key and add RESEND_API_KEY to .env.local
-- [ ] Add RESEND_FROM_EMAIL (sending address)
-- [ ] Add RESEND_ADMIN_EMAIL (admin notifications)
-- [ ] Test email flow in checkout
-- [ ] Verify order confirmations send
+**CRITICAL - Setup Required (Code ready, accounts needed)**
 
 **Stripe Payments** (Implementation: ✅ app/lib/stripe.ts, app/context/StripeContext.tsx)
 - [ ] Create Stripe account at https://stripe.com
@@ -61,11 +58,14 @@ _Currently active work items_
 - [ ] Final verification: search for remaining hardcoded colors
 - [ ] Visual verification in light and dark mode
 
-**Email Notifications**
-- [ ] Set up Resend account and verify `RESEND_API_KEY` in `.env.local`
+**Email Notifications** (Infrastructure: ✅ Ready)
+- [x] Set up Resend account and verify `RESEND_API_KEY` in `.env.local`
+- [x] Configure DNS (DKIM, SPF) with Namecheap
+- [x] Deploy email config to production (DigitalOcean)
+- [ ] Add auth emails (account creation, login notifications)
 - [ ] Test admin alert on new project submission
-- [ ] Test order confirmation email template
-- [ ] Verify email flow in checkout process
+- [ ] Add order confirmation emails (requires Medusa implementation)
+- [ ] Add purchase receipt emails (requires Medusa implementation)
 
 **Admin Workflows**
 - [ ] Inventory management interface
@@ -115,6 +115,9 @@ _Currently active work items_
 
 _Keep ~5-10 recent wins here, trim periodically once documented in README.md_
 
+- [x] Resend Email Setup - Full email infrastructure with DNS verification, production deployment, sends from hello@needthisdone.com (Dec 2025)
+- [x] Environment Variable Documentation - Updated README.md with all 31 variables, generation commands, and clear sections (Dec 2025)
+- [x] Documentation Audit - Comprehensive 3-agent review of .env.example, README.md, and codebase (Dec 2025)
 - [x] Public Chatbot with pgvector - semantic search, floating widget (Dec 2025)
 - [x] Stripe Integration - payments, subscriptions, webhooks (Dec 2025)
 - [x] Puck Visual Editor - 5 components, admin UI, public pages (Dec 2025)
