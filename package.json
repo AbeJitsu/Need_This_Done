@@ -5,7 +5,12 @@
     "dcrestart": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml restart",
     "dcbuild": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml build",
     "dclogs": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml logs -f",
-    "dcps": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml ps"
+    "dcps": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml ps",
+    "dcup:prod": "docker-compose -f docker-compose.production.yml up -d",
+    "dcdown:prod": "docker-compose -f docker-compose.production.yml down",
+    "dcbuild:prod": "docker-compose -f docker-compose.production.yml build",
+    "dclogs:prod": "docker-compose -f docker-compose.production.yml logs -f",
+    "dcps:prod": "docker-compose -f docker-compose.production.yml ps"
   },
   "dependencies": {
     "dotenv": "^17.2.3"
