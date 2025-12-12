@@ -10,7 +10,9 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
    - Test all changes thoroughly
 
 2. **Push to GitHub** (after local testing passes):
-   - Commit and push changes to the `dev` branch
+   - Run `/dac` to draft a commit message for approval
+   - **NEVER commit directly** - always wait for user approval
+   - Push changes to the `dev` branch after approval
 
 3. **Production Deployment** (deploy to DigitalOcean):
    - SSH to DigitalOcean server

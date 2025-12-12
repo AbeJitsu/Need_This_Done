@@ -293,11 +293,10 @@ supabase db reset
 
 **Local Development**
 ```bash
-# Uses overlay pattern: base config + dev overrides
 npm run dev:start
-# Or manually:
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
+
+See [Docker Commands](#docker-commands) table for all available commands.
 
 The dev overlay (`docker-compose.dev.yml`) adds:
 - Volume mounts for hot reload
