@@ -564,9 +564,10 @@ Email is handled by **Resend** with a two-layer architecture:
 
 | Email Type | Status | Trigger |
 |------------|--------|---------|
+| Welcome email | ✅ Ready | After account creation |
+| Login notification | ✅ Ready | After each sign-in (security) |
 | Admin notifications | ✅ Ready | New project submission |
 | Client confirmation | ✅ Ready | After form submission |
-| Auth emails | 🔜 Planned | Account creation, login |
 | Order confirmations | 🔜 Planned | After purchase (requires Medusa) |
 
 ### Email Configuration
@@ -598,8 +599,17 @@ await sendEmailWithRetry(
 ### Email Templates
 
 React Email templates are in `app/emails/`:
+- `WelcomeEmail.tsx` - Welcome message after account creation
+- `LoginNotificationEmail.tsx` - Security alert after each sign-in
 - `AdminNotification.tsx` - New project alert for admin
 - `ClientConfirmation.tsx` - Submission confirmation for clients
+
+### Testing Emails
+
+```bash
+# Send all 4 email types to verify they work
+cd app && npm run test:emails
+```
 
 ---
 
