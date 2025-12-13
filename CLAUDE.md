@@ -26,10 +26,19 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 
 ## Task Tracking
 
-**TODO.md** is the central task tracker:
+**TODO.md** is for **incomplete, untested features**:
 - Check it before starting new work
 - Update it when completing tasks
-- Items flow: To Do → In Progress → Recently Completed → documented in README.md
+- Contains: To Do, In Progress, Recently Completed sections
+- Security issues, bugs, and work-in-progress go here
+- Once a feature is **production-ready and tested**, move it to README.md
+
+**README.md** is for **production-ready, battle-tested features**:
+- Only document features that are complete and working
+- Never include failing tests, incomplete implementations, or security warnings
+- If something isn't ready for production, it stays in TODO.md
+
+**Flow:** TODO.md (incomplete) → test & verify → README.md (production-ready)
 
 **.claude plans** (in `.claude/plans/`) are for complex implementations:
 - Created when planning mode is invoked

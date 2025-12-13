@@ -9,9 +9,30 @@ if (process.env.NODE_ENV === "production") {
 // Always load from parent directory (root .env.local)
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
-const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
+// ============================================================================
+// Required Environment Variables
+// ============================================================================
+// These must be set in .env.local - no fallbacks for security
 
-const DATABASE_URL = process.env.DATABASE_URL || "postgresql://medusa:password@localhost:5432/medusa";
+const REDIS_URL = process.env.REDIS_URL;
+if (!REDIS_URL) {
+  throw new Error('REDIS_URL environment variable is required');
+}
+
+const DATABASE_URL = process.env.DATABASE_URL;
+if (!DATABASE_URL) {
+  throw new Error('DATABASE_URL environment variable is required');
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
+
+const COOKIE_SECRET = process.env.COOKIE_SECRET;
+if (!COOKIE_SECRET) {
+  throw new Error('COOKIE_SECRET environment variable is required');
+}
 
 const modules = {
   eventBusModuleService: {
@@ -51,13 +72,19 @@ module.exports = {
     // ============================================================================
     // API Configuration
     // ============================================================================
-    jwt_secret: process.env.JWT_SECRET || "your-jwt-secret",
-    cookie_secret: process.env.COOKIE_SECRET || "your-cookie-secret",
+    jwt_secret: JWT_SECRET,
+    cookie_secret: COOKIE_SECRET,
 
     // ============================================================================
-    // Admin Configuration
+    // CORS Configuration
     // ============================================================================
-    admin_cors: process.env.ADMIN_CORS || "http://localhost:3000",
+    // Admin CORS - Which origins can access the admin API
+    // Must be set explicitly for security (no fallback)
+    admin_cors: process.env.ADMIN_CORS,
+
+    // Store CORS - Which origins can access the store API (storefront)
+    // Required for the Next.js frontend to make API calls
+    store_cors: process.env.STORE_CORS || process.env.ADMIN_CORS,
   },
 
   // ============================================================================

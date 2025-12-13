@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { openai } from '@ai-sdk/openai';
 import { embed } from 'ai';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 // ============================================================================
 // Embeddings Debug API - GET /api/embeddings/debug
@@ -9,6 +10,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 // What: Debug tool to inspect embeddings and test vector search
 // Why: Helps diagnose why chatbot isn't finding relevant content
 // How: Shows content chunks and tests vector similarity search
+// Security: Admin-only endpoint - exposes sensitive embedding data
 
 /**
  * GET /api/embeddings/debug
@@ -21,10 +23,39 @@ import { getSupabaseAdmin } from '@/lib/supabase';
  */
 export async function GET(request: Request) {
   try {
+    // ========================================================================
+    // Admin Authentication Check
+    // ========================================================================
+    // This endpoint exposes all embeddings and content chunks.
+    // Only admins should have access to this debug information.
+    const authSupabase = await createSupabaseServerClient();
+    const { data: { user }, error: authError } = await authSupabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    // Check if user has admin role
+    const { data: profile } = await authSupabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (!profile || profile.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Forbidden - Admin access required' },
+        { status: 403 }
+      );
+    }
     const { searchParams } = new URL(request.url);
     const testQuery = searchParams.get('query');
     const showContent = searchParams.get('show_content') !== 'false';
 
+    // Use admin client for querying embeddings (no RLS restrictions)
     const supabase = getSupabaseAdmin();
 
     // ========================================================================

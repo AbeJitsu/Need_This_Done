@@ -8,7 +8,13 @@ const http = require('http');
 
 const BASE_URL = 'http://localhost:9000';
 const ADMIN_EMAIL = 'admin@needthisdone.com';
-const ADMIN_PASS = 'admin123';
+const ADMIN_PASSWORD = process.env.MEDUSA_ADMIN_PASSWORD;
+
+// Security check: Ensure admin password is set via environment variable
+if (!ADMIN_PASSWORD) {
+  console.error('Error: MEDUSA_ADMIN_PASSWORD environment variable is required');
+  process.exit(1);
+}
 
 let sessionCookie = null;
 
@@ -62,7 +68,7 @@ async function main() {
   console.log('1. Authenticating...');
   const authRes = await makeRequest('POST', '/admin/auth', {
     email: ADMIN_EMAIL,
-    password: ADMIN_PASS
+    password: ADMIN_PASSWORD
   });
   if (authRes.status !== 200) {
     console.error('Auth failed:', authRes.data);

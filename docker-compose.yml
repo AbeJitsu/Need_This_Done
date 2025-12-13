@@ -182,9 +182,11 @@ services:
     image: postgres:15-alpine
     container_name: medusa_postgres
 
+    # REQUIRED: These secrets must be set in .env.local
+    # No fallback values provided for security reasons
     environment:
       - POSTGRES_USER=medusa
-      - POSTGRES_PASSWORD=${MEDUSA_DB_PASSWORD:-medusa_dev_password}
+      - POSTGRES_PASSWORD=${MEDUSA_DB_PASSWORD}
       - POSTGRES_DB=medusa
 
     volumes:
@@ -224,12 +226,14 @@ services:
     env_file:
       - .env.local
 
+    # REQUIRED: All secrets must be set in .env.local
+    # No fallback values provided for security reasons
     environment:
-      - DATABASE_URL=postgresql://medusa:${MEDUSA_DB_PASSWORD:-medusa_dev_password}@medusa_postgres:5432/medusa
+      - DATABASE_URL=postgresql://medusa:${MEDUSA_DB_PASSWORD}@medusa_postgres:5432/medusa
       - REDIS_URL=redis://redis:6379
-      - JWT_SECRET=${MEDUSA_JWT_SECRET:-supersecretjwtkey_for_dev}
-      - ADMIN_JWT_SECRET=${MEDUSA_ADMIN_JWT_SECRET:-supersecretadminjwtkey_for_dev}
-      - COOKIE_SECRET=${COOKIE_SECRET:-supersecretcookiekey_for_dev}
+      - JWT_SECRET=${MEDUSA_JWT_SECRET}
+      - ADMIN_JWT_SECRET=${MEDUSA_ADMIN_JWT_SECRET}
+      - COOKIE_SECRET=${COOKIE_SECRET}
       - NODE_ENV=development
 
     expose:
