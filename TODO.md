@@ -14,8 +14,8 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Stripe Payments | ✅ Working | Real payment processing (not mock) |
 | E2E Tests | ✅ 100% | 110/110 passing |
 | Security | ✅ Fixed | All critical issues resolved |
-| Google Calendar | 🟡 60% | Backend complete, needs Google Cloud setup |
-| Admin Approval | ❌ 0% | Not started |
+| Google Calendar | 🟡 80% | Backend + Admin UI complete, needs Google Cloud setup |
+| Admin Approval | 🟡 80% | Dashboard + endpoints done, needs Google credentials |
 
 ### Critical Security Issues ✅ RESOLVED
 
@@ -33,23 +33,23 @@ _Currently active work items_
 
 **Google Calendar Appointment Booking** ← CURRENT PRIORITY
 
-**Phase 2: Google Calendar Integration (4-5 hrs)**
+**Phase 2: Google Calendar Integration** ✅ COMPLETE
 - [ ] Complete Google Cloud Console setup (see instructions in To Do section) ← BLOCKED: Needs user action
 - [x] Create Supabase migration: google_calendar_tokens table
 - [x] Create `/app/lib/google-calendar.ts` with OAuth flow
 - [x] Create appointment_requests Supabase table (with business hour validation)
 - [x] Build appointment request form component (post-checkout)
 - [x] Create order confirmation & appointment confirmation email templates
-- [ ] Wire appointment request email notifications
+- [x] Wire appointment request email notifications (AppointmentRequestNotificationEmail.tsx)
 
-**Phase 3: Admin Approval Workflow (3-4 hrs)**
-- [ ] Build admin appointments dashboard (`/admin/appointments`)
-- [ ] Implement approve/modify/cancel endpoints
-- [ ] Create calendar event on approval (Google Calendar API)
-- [ ] Send confirmation emails with .ics attachments
+**Phase 3: Admin Approval Workflow** ✅ COMPLETE
+- [x] Build admin appointments dashboard (`/admin/appointments`)
+- [x] Implement approve/modify/cancel endpoints
+- [x] Create calendar event on approval (Google Calendar API)
+- [x] Send confirmation emails with .ics attachments
 
 **Phase 4: Testing & Deploy (1-2 hrs)**
-- [ ] E2E tests for appointment booking flow
+- [x] E2E tests for appointment booking flow (19 tests in appointments.spec.ts)
 - [ ] Manual testing in dev environment
 - [ ] Deploy to production
 
@@ -77,10 +77,10 @@ _Currently active work items_
 - [x] Add missing nginx security headers (HSTS, CSP, Permissions-Policy) - Added to both nginx.conf and nginx.prod.conf
 - [x] Verify CORS settings for production domain - Fixed medusa-config.js (removed insecure fallback, added store_cors)
 
-**Email Notifications - E-commerce**
+**Email Notifications - E-commerce** ✅ COMPLETE
 - [x] Add order confirmation emails (OrderConfirmationEmail.tsx created)
 - [x] Add appointment confirmation emails (AppointmentConfirmationEmail.tsx created)
-- [ ] Add purchase receipt emails
+- [x] Add purchase receipt emails (PurchaseReceiptEmail.tsx created)
 
 ### Short Term
 
@@ -117,6 +117,25 @@ _Currently active work items_
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+### Skills & Automation
+
+**Launch-a-Swarm Skill** ← NEEDS VALIDATION
+- [x] Created 5-domain agent architecture (Structure, Protection, Correctness, Evolution, Value)
+- [x] Integrated documentation workflow (reads TODO.md, recommends README.md updates)
+- [x] Fixed DRY violations - consolidated prompts, reduced 438→317 lines (28% smaller)
+- [x] Added self-contained agent prompts with embedded checks
+- [x] Tested prompt embedding works correctly
+- [ ] Validate skill on real feature review
+- [ ] Document in README.md after validation
+
+### Features
+
+- [x] **Appointment E2E Tests** - Created comprehensive test suite (`appointments.spec.ts`) with 19 tests covering form validation, API endpoint security, admin dashboard, and checkout flow integration. Fixed playwright.config.ts for ESM compatibility. (Dec 2025)
+- [x] **Abandoned Cart Email** - Created `AbandonedCartEmail.tsx` template with cart items display, optional discount code, and recovery CTA. Added `sendAbandonedCartEmail()` to email service. (Dec 2025)
+- [x] **Order Status UI** - Built admin order status management UI at `/admin/shop/orders` with status filtering, update actions, and expandable details. Added PATCH `/api/admin/orders/[id]/status` endpoint. (Dec 2025)
+- [x] **Admin Appointments Dashboard** - Built `/admin/appointments` page with status filtering, approve/cancel actions, and auth protection. Created API endpoints for listing appointments and managing their status. Google Calendar integration creates events on approval. (Dec 2025)
+- [x] **Appointment Email Notifications** - Added AppointmentRequestNotificationEmail for admin alerts when customers request appointments. Wired into the appointment request API route. (Dec 2025)
+- [x] **Purchase Receipt Email** - Created PurchaseReceiptEmail template with itemized order details, payment info, and totals. Added sendPurchaseReceipt to email service. (Dec 2025)
 - [x] **Google Calendar Integration Backend** - Created google-calendar.ts OAuth client, Supabase migrations for tokens & appointments, appointment request form component, API routes for /api/appointments/request and /api/google/connect|callback. Checkout page now shows appointment scheduling form for consultation products. (Dec 2025)
 - [x] **E-commerce Email Templates** - Created OrderConfirmationEmail and AppointmentConfirmationEmail React templates. Added sendOrderConfirmation and sendAppointmentConfirmation to email service. (Dec 2025)
 - [x] **Product URL Handles & Test Reliability** - Added `getByHandle` to medusa-client so product URLs like `/shop/consultation-15-min` work (not just IDs). Fixed Playwright config to load env vars from root `.env.local`. Updated all shop tests with proper timeouts for client-side rendering. (Dec 2025)

@@ -16,21 +16,21 @@ test.describe('Shopping Cart - Add to Cart', () => {
     await navigateToPage(page, '/shop');
 
     // Should see shop heading
-    await expect(page.getByRole('heading', { name: /Shop/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Shop/i })).toBeVisible({ timeout: 10000 });
 
     // Click "Details" link to go to product page
     await page.getByRole('link', { name: /details/i }).first().click();
     await page.waitForLoadState('domcontentloaded');
 
     // Add to cart from product detail page
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
 
     // Should see success message (toast notification)
-    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
 
     // View Cart link should be visible
-    await expect(page.getByRole('link', { name: /view cart/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /view cart/i })).toBeVisible({ timeout: 10000 });
   });
 
   test('can add multiple different items to cart', async ({ page }) => {
@@ -41,7 +41,7 @@ test.describe('Shopping Cart - Add to Cart', () => {
     let addButtons = page.getByRole('button', { name: /add cart/i });
     if (await addButtons.first().isVisible()) {
       await addButtons.first().click();
-      await page.waitForTimeout(500);
+      await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
     }
 
     // Add second product (Standard Project)
@@ -51,7 +51,7 @@ test.describe('Shopping Cart - Add to Cart', () => {
       const buttonsList = await buttons;
       if (buttonsList.length > 1) {
         await buttonsList[1].click();
-        await page.waitForTimeout(500);
+        await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
       }
     }
 
@@ -67,7 +67,7 @@ test.describe('Shopping Cart - Add to Cart', () => {
         // Both items should be in cart
         // Note: implementation may vary, so we verify at least one item exists
         const cartContent = page.locator('[data-testid="cart-items"], .cart-items');
-        await expect(cartContent).toBeVisible({ timeout: 5000 });
+        await expect(cartContent).toBeVisible({ timeout: 10000 });
       }
     }
   });
@@ -78,13 +78,13 @@ test.describe('Shopping Cart - Add to Cart', () => {
 
     // Get Quick Task pricing
     const quickTaskPrice = page.locator('text=$50').first();
-    await expect(quickTaskPrice).toBeVisible();
+    await expect(quickTaskPrice).toBeVisible({ timeout: 10000 });
 
     // Add Quick Task to cart
     const addButtons = page.getByRole('button', { name: /add cart/i });
     if (await addButtons.count() > 0) {
       await addButtons.first().click();
-      await page.waitForTimeout(1000);
+      await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
     }
 
     // Navigate to cart
@@ -109,7 +109,7 @@ test.describe('Shopping Cart - Cart Operations', () => {
     const addButtons = page.getByRole('button', { name: /add cart/i });
     if (await addButtons.count() > 0) {
       await addButtons.first().click();
-      await page.waitForTimeout(1000);
+      await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
     }
 
     // Navigate to cart page
@@ -123,7 +123,7 @@ test.describe('Shopping Cart - Cart Operations', () => {
       if (await quantityInput.isVisible()) {
         // Update quantity
         await quantityInput.fill('2');
-        await page.waitForTimeout(500);
+        await page.waitForLoadState('networkidle');
 
         // Verify total updated
         const total = page.locator('[data-testid*="total"], text=/total/i');
@@ -142,7 +142,7 @@ test.describe('Shopping Cart - Cart Operations', () => {
     const addButtons = page.getByRole('button', { name: /add cart/i });
     if (await addButtons.count() > 0) {
       await addButtons.first().click();
-      await page.waitForTimeout(1000);
+      await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
     }
 
     // Navigate to cart page
@@ -155,7 +155,7 @@ test.describe('Shopping Cart - Cart Operations', () => {
       const removeButton = page.getByRole('button', { name: /remove|delete|×|x/i }).first();
       if (await removeButton.isVisible()) {
         await removeButton.click();
-        await page.waitForTimeout(500);
+        await page.waitForLoadState('networkidle');
 
         // Item should no longer be visible after removal
       }
@@ -183,7 +183,7 @@ test.describe('Shopping Cart - Error Handling', () => {
     const addButtons = page.getByRole('button', { name: /add cart/i });
     if (await addButtons.count() > 0) {
       await addButtons.first().click();
-      await page.waitForTimeout(1000);
+      await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
     }
 
     // Refresh page to test persistence
@@ -206,13 +206,13 @@ test.describe('Shopping Cart - Integration', () => {
   }) => {
     // Step 1: Navigate to shop
     await navigateToPage(page, '/shop');
-    await expect(page.getByRole('heading', { name: /Shop Services/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Shop Services/i })).toBeVisible({ timeout: 10000 });
 
     // Step 2: Add item to cart
     const addButtons = page.getByRole('button', { name: /add cart/i });
     if (await addButtons.count() > 0) {
       await addButtons.first().click();
-      await page.waitForTimeout(1000);
+      await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
     }
 
     // Step 3: Verify no error messages
