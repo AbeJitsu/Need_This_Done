@@ -26,7 +26,22 @@
       "SlashCommand(/docker)",
       "SlashCommand(/dac)",
       "Task(*)",
-      "Bash(playwright:*)"
+      "Bash(playwright:*)",
+      "Bash(docker-compose:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(touch:*)",
+      "Bash(tail:*)",
+      "Bash(head:*)",
+      "Bash(ps:*)",
+      "Bash(kill:*)",
+      "Bash(sleep:*)",
+      "Bash(which:*)",
+      "Bash(tsc:*)",
+      "Bash(prettier:*)",
+      "Bash(eslint:*)",
+      "Bash(vitest:*)"
     ],
     "deny": [
       "Read(./.env)",
