@@ -12,7 +12,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 |-----------|--------|-------|
 | Medusa Backend | ✅ Working | Products, carts, checkout functional |
 | Stripe Payments | ✅ Working | Real payment processing (not mock) |
-| E2E Tests | ✅ 100% | 110/110 passing |
+| E2E Tests | ✅ 100% | 137/137 passing |
 | Security | ✅ Fixed | All critical issues resolved |
 | Google Calendar | 🟡 80% | Backend + Admin UI complete, needs Google Cloud setup |
 | Admin Approval | 🟡 80% | Dashboard + endpoints done, needs Google credentials |
@@ -119,18 +119,18 @@ _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
 ### Skills & Automation
 
-**Launch-a-Swarm Skill** ← NEEDS VALIDATION
+**Launch-a-Swarm Skill** ✅ COMPLETE
 - [x] Created 5-domain agent architecture (Structure, Protection, Correctness, Evolution, Value)
 - [x] Integrated documentation workflow (reads TODO.md, recommends README.md updates)
 - [x] Fixed DRY violations - consolidated prompts, reduced 438→317 lines (28% smaller)
 - [x] Added self-contained agent prompts with embedded checks
 - [x] Tested prompt embedding works correctly
-- [ ] Validate skill on real feature review
-- [ ] Document in README.md after validation
+- [x] Validated on real feature (test documentation - 4 parallel agents, successful synthesis)
+- [x] Documented in README.md (Developer Tools section)
 
 ### Features
 
-- [x] **Appointment E2E Tests** - Created comprehensive test suite (`appointments.spec.ts`) with 19 tests covering form validation, API endpoint security, admin dashboard, and checkout flow integration. Fixed playwright.config.ts for ESM compatibility. (Dec 2025)
+- [x] **Appointment E2E Tests** - Created comprehensive test suite (`appointments.spec.ts`) with 23 tests covering form validation, API endpoint security, admin dashboard, and checkout flow integration. Fixed playwright.config.ts for ESM compatibility. (Dec 2025)
 - [x] **Abandoned Cart Email** - Created `AbandonedCartEmail.tsx` template with cart items display, optional discount code, and recovery CTA. Added `sendAbandonedCartEmail()` to email service. (Dec 2025)
 - [x] **Order Status UI** - Built admin order status management UI at `/admin/shop/orders` with status filtering, update actions, and expandable details. Added PATCH `/api/admin/orders/[id]/status` endpoint. (Dec 2025)
 - [x] **Admin Appointments Dashboard** - Built `/admin/appointments` page with status filtering, approve/cancel actions, and auth protection. Created API endpoints for listing appointments and managing their status. Google Calendar integration creates events on approval. (Dec 2025)

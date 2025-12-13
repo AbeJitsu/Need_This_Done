@@ -630,15 +630,16 @@ cd app && npm run test:emails
 
 | Category | Tests | Status | Command |
 |----------|-------|--------|---------|
-| E2E Shop & Cart | 52 | ✅ Passing | `npm run test:e2e -- e2e/shop*.spec.ts` |
+| E2E Shop & Cart | 57 | ✅ Passing | `npm run test:e2e -- e2e/shop*.spec.ts` |
 | E2E Submissions | 5 | ✅ Passing | `npm run test:e2e -- e2e/submission.spec.ts` |
-| E2E Chatbot | 16 | ✅ Passing | `npm run test:e2e -- e2e/chatbot.spec.ts` |
+| E2E Chatbot | 14 | ✅ Passing | `npm run test:e2e -- e2e/chatbot.spec.ts` |
+| E2E Appointments | 23 | ✅ Passing | `npm run test:e2e -- e2e/appointments.spec.ts` |
 | E2E Accessibility | 10 | ✅ Passing | `npm run test:a11y` |
 | Component A11Y | 8 | ✅ Passing | `npm run test:run` |
-| Email Templates | 9 | ✅ Passing | `npm run test:run` |
+| Email Templates | 10 | ✅ Passing | `npm run test:run` |
 | Redis Integration | 6 | ✅ Passing | `npm run test:run` |
 | Health API | 4 | ✅ Passing | `npm run test:run` |
-| **Total** | **110** | ✅ **All Passing** | `npm run test:all` |
+| **Total** | **137** | ✅ **All Passing** | `npm run test:all` |
 
 ### Feature → Test Coverage Map
 
@@ -734,7 +735,7 @@ Every feature has automated tests. Here's exactly where each is tested:
 </details>
 
 <details>
-<summary><strong>AI Chatbot Widget (16 tests)</strong> - <code>e2e/chatbot.spec.ts</code></summary>
+<summary><strong>AI Chatbot Widget (14 tests)</strong> - <code>e2e/chatbot.spec.ts</code></summary>
 
 | Test Suite | Test Name | Verifies |
 |------------|-----------|----------|
@@ -758,7 +759,35 @@ Every feature has automated tests. Here's exactly where each is tested:
 </details>
 
 <details>
-<summary><strong>Email Templates (9 tests)</strong> - <code>__tests__/lib/email.unit.test.ts</code></summary>
+<summary><strong>Appointment Booking (23 tests)</strong> - <code>e2e/appointments.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Request Form | `appointment form appears after checkout for consultation products` | Form shows post-payment |
+| Request Form | `appointment request API validates required fields` | Missing fields return 400 |
+| Request Form | `appointment request API validates weekday dates` | Weekend dates rejected |
+| Request Form | `appointment request API validates business hours` | 9 AM - 5 PM enforced |
+| Request Form | `appointment request API returns 404 for non-existent order` | Invalid order handled |
+| Admin Dashboard | `admin appointments page requires authentication` | Auth redirect works |
+| Admin Dashboard | `admin appointments API requires authentication` | GET returns 401 unauth |
+| Admin Dashboard | `admin appointments approve endpoint requires authentication` | POST returns 401 |
+| Admin Dashboard | `admin appointments cancel endpoint requires authentication` | POST returns 401 |
+| Form UI | `appointment form component displays correctly` | Products load, prices visible |
+| Form UI | `business hours are displayed correctly in time options` | 9 AM - 5 PM shown |
+| Integration | `consultation product has requires_appointment metadata` | All 3 products exist |
+| Integration | `checkout session endpoint returns appointment info for consultation` | Toast appears on add |
+| Integration | `complete checkout flow shows appointment form` | Payment button visible |
+| Integration | `admin navigation includes appointments link` | Page loads without error |
+| Dashboard Layout | `admin navigation includes appointments link` | Page loads successfully |
+| Dashboard Layout | `admin appointments page structure is correct` | Endpoint exists (401 not 404) |
+| Email Notifications | `appointment request notification email template exists` | Endpoint returns 400 not 404 |
+| Email Notifications | `appointment confirmation email is sent on approval` | Endpoint exists (401 not 404) |
+| Status Management | `appointment statuses are correctly defined` | pending/approved/modified/canceled |
+
+</details>
+
+<details>
+<summary><strong>Email Templates (10 tests)</strong> - <code>__tests__/lib/email.unit.test.ts</code></summary>
 
 | Test Suite | Test Name | Verifies |
 |------------|-----------|----------|
@@ -881,15 +910,16 @@ npx playwright test -k "can add to cart"
 Tests are organized by what they verify:
 
 E2E Tests (app/e2e/)
-├── shop.spec.ts              # 32 tests: Full shop flow (browse→cart→checkout)
-├── shop-cart.spec.ts         # 8 tests: Cart-specific operations
-├── shop-variants.spec.ts     # 12 tests: Product variant handling
+├── shop.spec.ts              # 35 tests: Full shop flow (browse→cart→checkout)
+├── shop-cart.spec.ts         # 9 tests: Cart-specific operations
+├── shop-variants.spec.ts     # 13 tests: Product variant handling
 ├── submission.spec.ts        # 5 tests: Form submissions with attachments
-├── chatbot.spec.ts           # 16 tests: AI chatbot interactions
+├── chatbot.spec.ts           # 14 tests: AI chatbot interactions
+├── appointments.spec.ts      # 23 tests: Appointment booking flow
 └── accessibility.a11y.test.ts # 10 tests: WCAG AA page compliance
 
 Unit/Integration Tests (app/__tests__/)
-├── lib/email.unit.test.ts           # 9 tests: Email template rendering
+├── lib/email.unit.test.ts           # 10 tests: Email template rendering
 ├── lib/redis.integration.test.ts    # 6 tests: Cache operations
 ├── api/health.integration.test.ts   # 4 tests: Health endpoint
 └── components/
@@ -925,6 +955,48 @@ test(`${page.name} - Dark Mode Accessibility`, async ({ page: browserPage }) => 
 ```
 
 Common dark mode issues & fixes are documented in [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md).
+
+---
+
+## Developer Tools
+
+### Claude Code Skills
+
+Custom skills in `.claude/skills/` provide specialized agent capabilities:
+
+| Skill | Purpose | Trigger |
+|-------|---------|---------|
+| `launch-a-swarm` | Spawn 5 parallel agents for comprehensive code review | "launch a swarm" |
+| `frontend-design` | Generate distinctive, production-grade UI | Building web interfaces |
+| `worktree-swarm` | Orchestrate parallel development with git worktrees | "parallelize", "spawn worktrees" |
+| `docker-testing` | Enforce Docker-based testing rules | Running tests |
+
+#### Launch-a-Swarm Skill
+
+Spawns 5 specialized agents working in parallel to review code quality across all critical dimensions:
+
+```
+Structure   → DRY, clear organization, minimal coupling
+Protection  → Security, input validation, least privilege
+Correctness → Tests, data flow, error handling
+Evolution   → Flexibility, configuration, adaptability
+Value       → User need, automation, documentation
+```
+
+**Usage:**
+```
+User: "launch a swarm to review my changes"
+→ 5 agents spawn in parallel
+→ Each checks from their domain perspective
+→ Results synthesized into prioritized action items
+```
+
+**When to use:**
+- Planning new features (prevention-focused)
+- Building code (real-time guidance)
+- Validating before merge/deploy (comprehensive review)
+
+See `.claude/skills/launch-a-swarm.md` for full documentation.
 
 ---
 

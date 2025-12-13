@@ -35,6 +35,11 @@ services:
     # ========================================================================
     # Environment Variables
     # ========================================================================
+    # Load environment variables from .env.local (same as app service)
+    # This provides Supabase credentials needed for E2E tests
+    env_file:
+      - .env.local
+
     environment:
       - NODE_ENV=test
       # Go through nginx like real users (HTTPS)
