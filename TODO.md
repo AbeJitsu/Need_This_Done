@@ -49,7 +49,7 @@ _Currently active work items_
 - [x] Send confirmation emails with .ics attachments
 
 **Phase 4: Testing & Deploy (1-2 hrs)**
-- [ ] E2E tests for appointment booking flow ← IN PROGRESS
+- [x] E2E tests for appointment booking flow (19 tests in appointments.spec.ts)
 - [ ] Manual testing in dev environment
 - [ ] Deploy to production
 
@@ -117,6 +117,9 @@ _Currently active work items_
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+- [x] **Appointment E2E Tests** - Created comprehensive test suite (`appointments.spec.ts`) with 19 tests covering form validation, API endpoint security, admin dashboard, and checkout flow integration. Fixed playwright.config.ts for ESM compatibility. (Dec 2025)
+- [x] **Abandoned Cart Email** - Created `AbandonedCartEmail.tsx` template with cart items display, optional discount code, and recovery CTA. Added `sendAbandonedCartEmail()` to email service. (Dec 2025)
+- [x] **Order Status UI** - Built admin order status management UI at `/admin/shop/orders` with status filtering, update actions, and expandable details. Added PATCH `/api/admin/orders/[id]/status` endpoint. (Dec 2025)
 - [x] **Admin Appointments Dashboard** - Built `/admin/appointments` page with status filtering, approve/cancel actions, and auth protection. Created API endpoints for listing appointments and managing their status. Google Calendar integration creates events on approval. (Dec 2025)
 - [x] **Appointment Email Notifications** - Added AppointmentRequestNotificationEmail for admin alerts when customers request appointments. Wired into the appointment request API route. (Dec 2025)
 - [x] **Purchase Receipt Email** - Created PurchaseReceiptEmail template with itemized order details, payment info, and totals. Added sendPurchaseReceipt to email service. (Dec 2025)

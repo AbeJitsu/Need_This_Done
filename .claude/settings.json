@@ -47,7 +47,17 @@
       "Bash(cd:*)",
       "Bash(timeout:*)",
       "Bash(wc:*)",
-      "Bash(source:*)"
+      "Bash(source:*)",
+      "Bash(diff:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(date:*)",
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(tr:*)",
+      "Bash(tee:*)",
+      "Bash(open:*)",
+      "Bash(for:*)"
     ],
     "deny": [
       "Read(./.env)",
