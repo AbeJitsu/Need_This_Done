@@ -137,7 +137,7 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 | Orders | ✅ Working | 4 E2E tests | Full order objects, linked in Supabase |
 | Email | ✅ Working | 9 unit tests | 4 email types via Resend |
 
-**All 102 automated tests passing** - See [Testing](#testing) for complete coverage map.
+**All 110 automated tests passing** - See [Testing](#testing) for complete coverage map.
 
 **Consultation Products** (seeded via `medusa/seed-products.js` using Admin API):
 | Product | Price | Duration | Handle |
@@ -628,47 +628,203 @@ cd app && npm run test:emails
 | E2E Shop & Cart | 52 | ✅ Passing | `npm run test:e2e -- e2e/shop*.spec.ts` |
 | E2E Submissions | 5 | ✅ Passing | `npm run test:e2e -- e2e/submission.spec.ts` |
 | E2E Chatbot | 16 | ✅ Passing | `npm run test:e2e -- e2e/chatbot.spec.ts` |
-| Accessibility | 10 | ✅ Passing | `npm run test:a11y` |
+| E2E Accessibility | 10 | ✅ Passing | `npm run test:a11y` |
+| Component A11Y | 8 | ✅ Passing | `npm run test:run` |
 | Email Templates | 9 | ✅ Passing | `npm run test:run` |
 | Redis Integration | 6 | ✅ Passing | `npm run test:run` |
 | Health API | 4 | ✅ Passing | `npm run test:run` |
-| **Total** | **102** | ✅ **All Passing** | `npm run test:all` |
+| **Total** | **110** | ✅ **All Passing** | `npm run test:all` |
 
 ### Feature → Test Coverage Map
 
 Every feature has automated tests. Here's exactly where each is tested:
 
-| Feature | Test File | What's Verified |
-|---------|-----------|-----------------|
-| **E-commerce** | | |
-| Product listing | `e2e/shop.spec.ts` | Products display, pricing shown, no errors |
-| Product details | `e2e/shop.spec.ts` | Full info, variant dropdown, add-to-cart |
-| Add to cart | `e2e/shop-cart.spec.ts` | Single item, multiple items, quantity adjustment |
-| Cart operations | `e2e/shop-cart.spec.ts` | Update quantity, remove items, persistence |
-| Guest checkout | `e2e/shop.spec.ts` | Form validation, order creation, confirmation |
-| Auth checkout | `e2e/shop.spec.ts` | Email autofill, order history linkage |
-| **Product Variants** | | |
-| Consultation products | `e2e/shop-variants.spec.ts` | All 3 tiers display, pricing correct |
-| Variant selection | `e2e/shop-variants.spec.ts` | Default selection, dropdown works |
-| Variant pricing | `e2e/shop-variants.spec.ts` | API returns correct prices |
-| **Form Submissions** | | |
-| Without attachments | `e2e/submission.spec.ts` | Form submits, data saved to database |
-| With 1-3 attachments | `e2e/submission.spec.ts` | Files upload, stored correctly |
-| Admin retrieval | `e2e/submission.spec.ts` | API returns attachment data |
-| **AI Chatbot** | | |
-| Chat interface | `e2e/chatbot.spec.ts` | Opens, sends messages, receives responses |
-| Context awareness | `e2e/chatbot.spec.ts` | Uses site content for answers |
-| **Emails** | | |
-| Welcome email | `__tests__/lib/email.unit.test.ts` | Renders HTML, sends via Resend |
-| Login notification | `__tests__/lib/email.unit.test.ts` | Renders HTML, includes security info |
-| Admin notification | `__tests__/lib/email.unit.test.ts` | Sends to admin, includes submission data |
-| Client confirmation | `__tests__/lib/email.unit.test.ts` | Sends to client, confirms receipt |
-| **Accessibility** | | |
-| Light mode | `e2e/accessibility.a11y.test.ts` | WCAG AA compliance (axe-core) |
-| Dark mode | `e2e/accessibility.a11y.test.ts` | Color scheme applied, contrast valid |
-| **Infrastructure** | | |
-| Redis cache | `__tests__/lib/redis.integration.test.ts` | Connection, set/get, expiry, lists |
-| Health endpoint | `__tests__/api/health.integration.test.ts` | Returns status, includes services |
+<details>
+<summary><strong>E-commerce - Shop Flow (32 tests)</strong> - <code>e2e/shop.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Product Catalog | `product listing page displays all products with pricing` | Shop displays products with $20/$35/$50 pricing |
+| Product Catalog | `product detail page shows full product information` | Title, price, add to cart, quantity selector |
+| Product Catalog | `cart icon in navigation shows item count` | Cart badge displays current count |
+| Add to Cart | `add to cart updates cart count on page` | Success toast, count updates |
+| Add to Cart | `can adjust quantity before adding to cart` | Quantity selector works |
+| Add to Cart | `can add different products to cart` | Multiple products can be added |
+| Add to Cart | `shows success feedback when adding to cart` | Toast appears, button re-enables |
+| Cart Management | `view cart shows all items with quantities and prices` | Heading, subtotal, order summary |
+| Cart Management | `can update item quantity in cart` | + button increases quantity |
+| Cart Management | `can remove items from cart` | Remove button works |
+| Cart Management | `shows empty cart message when no items` | Empty state displays |
+| Cart Management | `persists cart across page navigation` | Cart survives navigation |
+| Guest Checkout | `guest can checkout without authentication` | Email and shipping form shown |
+| Guest Checkout | `checkout form validates required fields` | Prevents empty submission |
+| Guest Checkout | `displays order confirmation after guest checkout` | Success page appears |
+| Auth Checkout | `authenticated user can checkout with autofilled email` | Login/guest options shown |
+| Auth Checkout | `authenticated user order appears in dashboard` | Orders visible in dashboard |
+| Auth Checkout | `order history shows order details correctly` | ID, date, total, status shown |
+| Admin Integration | `admin can access shop dashboard` | Returns 200/302/401 |
+| Admin Integration | `product management endpoints are protected` | POST returns 401 |
+| Admin Integration | `orders endpoint returns data for authorized requests` | GET returns 401 unauth |
+| Cache | `product list is cached efficiently` | API caches responses |
+| Cache | `product detail is cached` | Single product caching |
+| Error Handling | `handles invalid product ID gracefully` | Shows loading/error/not found |
+| Error Handling | `handles network errors in cart operations gracefully` | Shows toast and View Cart |
+| Error Handling | `checkout with empty cart shows appropriate message` | Redirects or shows message |
+| Integration | `complete flow: browse → add → cart → checkout → confirmation` | Full user journey |
+| Variant Regression | `all products in API have variants` | Variants array exists |
+| Variant Regression | `each variant has required pricing data` | Has id, prices, currency |
+| Variant Regression | `product detail page variant dropdown does not show errors` | No "No variants" error |
+| Variant Regression | `add to cart works without variant errors` | No variant errors |
+| Variant Regression | `all consultation products have variants` | 15/30/55-min have variants |
+
+</details>
+
+<details>
+<summary><strong>E-commerce - Cart Operations (8 tests)</strong> - <code>e2e/shop-cart.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Add to Cart | `can add single item to cart from shop page` | Success toast, View Cart link |
+| Add to Cart | `can add multiple different items to cart` | Multiple products added |
+| Add to Cart | `displays correct pricing for added items` | Correct price displays |
+| Cart Operations | `can update item quantity in cart` | Quantity input works |
+| Cart Operations | `can remove item from cart` | Remove button works |
+| Error Handling | `shows error when add to cart fails` | Error messages display |
+| Error Handling | `cart persists after page refresh` | localStorage/session works |
+| Integration | `complete checkout flow: add items, update quantity, proceed to cart` | Full cart flow |
+
+</details>
+
+<details>
+<summary><strong>E-commerce - Product Variants (12 tests)</strong> - <code>e2e/shop-variants.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Add to Cart Workflow | `products display on shop page without variant errors` | All 3 consultations visible |
+| Add to Cart Workflow | `can add 15-Minute Consultation to cart from shop page` | Details link, success toast |
+| Add to Cart Workflow | `product detail page shows variant dropdown` | Add to Cart visible |
+| Add to Cart Workflow | `can add product from detail page with variant` | Direct URL works |
+| Add to Cart Workflow | `can add multiple different products to cart` | Multiple via Details pages |
+| Add to Cart Workflow | `cart displays added products correctly` | Shows subtotal |
+| Add to Cart Workflow | `standard variant is selected by default` | Pre-selected value |
+| Add to Cart Workflow | `can adjust quantity before adding to cart` | Quantity controls work |
+| Add to Cart Workflow | `all three products have variants available` | All have Add to Cart |
+| Variant Data Integrity | `product API returns variants for all products` | Variants array exists |
+| Variant Data Integrity | `variants have correct pricing` | $20/$35/$50 correct |
+| Variant Data Integrity | `variants have required fields` | id, title, prices present |
+
+</details>
+
+<details>
+<summary><strong>Form Submissions (5 tests)</strong> - <code>e2e/submission.spec.ts</code></summary>
+
+| Test Name | Verifies |
+|-----------|----------|
+| `submits request WITHOUT attachments` | Form works without files, data saved to DB |
+| `submits request WITH 1 attachment` | Single file upload, stored in Supabase |
+| `submits request WITH 2 attachments` | Multiple files work simultaneously |
+| `submits request WITH 3 attachments (max allowed)` | Max 3 files enforced |
+| `admin can retrieve uploaded attachment via API` | Full round-trip: upload → storage → retrieval |
+
+</details>
+
+<details>
+<summary><strong>AI Chatbot Widget (16 tests)</strong> - <code>e2e/chatbot.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Button Tests | `should display chatbot button on homepage` | Button visible on home |
+| Button Tests | `should display chatbot button on all public pages` | Button on all 6 pages |
+| Button Tests | `should have proper button styling and accessibility` | ARIA label, title, role |
+| Modal Tests | `should open modal when button is clicked` | Modal appears with title |
+| Modal Tests | `should close modal when close button is clicked` | Close button works |
+| Modal Tests | `should close modal when Escape key is pressed` | Keyboard shortcut works |
+| Modal Tests | `should close modal when clicking outside panel area` | Panel stays stable |
+| Modal Tests | `should hide chat button when modal is open` | Button visibility toggles |
+| Chat Input | `should display welcome message when modal opens` | Welcome text appears |
+| Chat Input | `should focus input field when modal opens` | Auto-focus works |
+| Chat Input | `should allow typing in the input field` | Text input works |
+| Chat Input | `should disable send button when input is empty` | Button state changes |
+| Accessibility | `should have proper ARIA attributes on modal` | aria-modal, aria-labelledby |
+| Accessibility | `should be navigable with keyboard` | Enter key opens chat |
+| Dark Mode | `should work correctly in dark mode` | Dark styling applied |
+| Clear Chat | `should show clear button only when there are messages` | Conditional visibility |
+
+</details>
+
+<details>
+<summary><strong>Email Templates (9 tests)</strong> - <code>__tests__/lib/email.unit.test.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Email Templates | `WelcomeEmail renders to valid HTML` | Name, "Start Your First Project" CTA |
+| Email Templates | `LoginNotificationEmail renders to valid HTML` | Timestamp, IP, browser, reset link |
+| Email Templates | `AdminNotification renders to valid HTML` | Project ID, client details, service type |
+| Email Templates | `ClientConfirmation renders to valid HTML` | Name, service type, response time |
+| Email Templates | `WelcomeEmail handles missing name gracefully` | Falls back to email prefix |
+| Service Functions | `sendWelcomeEmail calls Resend with correct parameters` | Correct recipient, subject |
+| Service Functions | `sendLoginNotification calls Resend with correct parameters` | "Sign-In" in subject |
+| Service Functions | `sendAdminNotification sends to admin email` | "New Project" + client name |
+| Service Functions | `sendClientConfirmation sends to client email` | "We Got Your Message" |
+
+</details>
+
+<details>
+<summary><strong>Accessibility - E2E Pages (10 tests)</strong> - <code>e2e/accessibility.a11y.test.ts</code></summary>
+
+| Page | Modes | Verifies |
+|------|-------|----------|
+| Home (/) | Light, Dark | WCAG AA via axe-core |
+| Services (/services) | Light, Dark | WCAG AA via axe-core |
+| Pricing (/pricing) | Light, Dark | WCAG AA via axe-core |
+| How It Works (/how-it-works) | Light, Dark | WCAG AA via axe-core |
+| FAQ (/faq) | Light, Dark | WCAG AA via axe-core |
+
+**Not tested:** Contact, Login, Get Started (hardcoded colors), Shop/Cart/Checkout (external services)
+
+</details>
+
+<details>
+<summary><strong>Accessibility - Components (8 tests)</strong> - <code>__tests__/components/*.a11y.test.tsx</code></summary>
+
+| Component | Test Name | Verifies |
+|-----------|-----------|----------|
+| AuthDemo | `Light mode violations` | No a11y violations in light mode |
+| AuthDemo | `Dark mode violations` | No a11y violations in dark mode |
+| AuthDemo | `Contrast in both modes` | Sufficient color contrast |
+| DatabaseDemo | `Light mode violations` | No a11y violations in light mode |
+| DatabaseDemo | `Dark mode violations` | No a11y violations in dark mode |
+| DatabaseDemo | `Contrast in both modes` | Sufficient color contrast |
+| DatabaseDemo | `Keyboard navigation` | Focus indicators, keyboard accessible |
+| DatabaseDemo | `Flow trace contrast` | Contrast in populated state |
+
+</details>
+
+<details>
+<summary><strong>Redis Integration (6 tests)</strong> - <code>__tests__/lib/redis.integration.test.ts</code></summary>
+
+| Test Name | Verifies |
+|-----------|----------|
+| `should connect to Redis and respond to ping` | Connection established, PONG response |
+| `should set and get a value` | SET and GET commands work |
+| `should handle expiring keys` | SETEX with 1s TTL expires correctly |
+| `should handle multiple keys` | Multiple key-value pairs work |
+| `should increment counters` | INCR command works atomically |
+| `should handle lists` | RPUSH and LRANGE work |
+
+</details>
+
+<details>
+<summary><strong>Health API (4 tests)</strong> - <code>__tests__/api/health.integration.test.ts</code></summary>
+
+| Test Name | Verifies |
+|-----------|----------|
+| `should be able to reach the health endpoint` | Accessible, returns 200 or 500 |
+| `should report service statuses` | Reports all configured services |
+| `should include valid timestamp` | ISO timestamp within 5 seconds |
+| `should respond within reasonable time` | Completes within 10 seconds |
+
+</details>
 
 ### Running Tests
 
@@ -720,17 +876,20 @@ npx playwright test -k "can add to cart"
 Tests are organized by what they verify:
 
 E2E Tests (app/e2e/)
-├── shop.spec.ts           # 32 tests: Full shop flow (browse→cart→checkout)
-├── shop-cart.spec.ts      # 8 tests: Cart-specific operations
-├── shop-variants.spec.ts  # 12 tests: Product variant handling
-├── submission.spec.ts     # 5 tests: Form submissions with attachments
-├── chatbot.spec.ts        # 16 tests: AI chatbot interactions
-└── accessibility.a11y.test.ts  # 10 tests: WCAG AA compliance
+├── shop.spec.ts              # 32 tests: Full shop flow (browse→cart→checkout)
+├── shop-cart.spec.ts         # 8 tests: Cart-specific operations
+├── shop-variants.spec.ts     # 12 tests: Product variant handling
+├── submission.spec.ts        # 5 tests: Form submissions with attachments
+├── chatbot.spec.ts           # 16 tests: AI chatbot interactions
+└── accessibility.a11y.test.ts # 10 tests: WCAG AA page compliance
 
 Unit/Integration Tests (app/__tests__/)
-├── lib/email.unit.test.ts       # 9 tests: Email template rendering
-├── lib/redis.integration.test.ts # 6 tests: Cache operations
-└── api/health.integration.test.ts # 4 tests: Health endpoint
+├── lib/email.unit.test.ts           # 9 tests: Email template rendering
+├── lib/redis.integration.test.ts    # 6 tests: Cache operations
+├── api/health.integration.test.ts   # 4 tests: Health endpoint
+└── components/
+    ├── AuthDemo.a11y.test.tsx       # 3 tests: Auth component accessibility
+    └── DatabaseDemo.a11y.test.tsx   # 5 tests: Database component accessibility
 ```
 
 ### Continuous Testing Workflow
