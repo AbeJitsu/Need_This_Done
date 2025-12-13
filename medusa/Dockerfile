@@ -4,7 +4,7 @@
 # Builds the Medusa headless ecommerce backend service
 # Runs on port 9000 within the Docker network
 
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
