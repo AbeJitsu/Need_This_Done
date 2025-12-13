@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { sendAppointmentRequestNotification } from '@/lib/email-service';
 
 // ============================================================================
 // Appointment Request API Route - POST /api/appointments/request
@@ -23,6 +24,7 @@ export async function POST(request: NextRequest) {
       alternate_time_start,
       duration_minutes,
       notes,
+      service_name,
     } = body;
 
     if (!order_id || !customer_email || !preferred_date || !preferred_time_start) {
@@ -129,7 +131,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Send notification email to admin about new appointment request
+    // Send notification email to admin (fire and forget - don't block response)
+    sendAppointmentRequestNotification({
+      requestId: appointmentRequest.id,
+      orderId: order_id,
+      customerName: customer_name || null,
+      customerEmail: customer_email,
+      serviceName: service_name || 'Consultation',
+      durationMinutes: duration_minutes || 30,
+      preferredDate: preferred_date,
+      preferredTimeStart: preferred_time_start,
+      preferredTimeEnd: preferred_time_end,
+      alternateDate: alternate_date || null,
+      alternateTimeStart: alternate_time_start || null,
+      alternateTimeEnd: alternate_time_end,
+      notes: notes || null,
+      submittedAt: new Date().toLocaleString('en-US', {
+        dateStyle: 'full',
+        timeStyle: 'short',
+      }),
+    }).catch((err) => {
+      console.error('[Appointment Request] Failed to send admin notification:', err);
+    });
 
     return NextResponse.json({
       success: true,

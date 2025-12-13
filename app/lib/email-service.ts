@@ -17,6 +17,12 @@ import OrderConfirmationEmail, {
 import AppointmentConfirmationEmail, {
   type AppointmentConfirmationEmailProps,
 } from '../emails/AppointmentConfirmationEmail';
+import AppointmentRequestNotificationEmail, {
+  type AppointmentRequestNotificationProps,
+} from '../emails/AppointmentRequestNotificationEmail';
+import PurchaseReceiptEmail, {
+  type PurchaseReceiptEmailProps,
+} from '../emails/PurchaseReceiptEmail';
 
 // ============================================================================
 // Email Service Functions
@@ -169,6 +175,33 @@ export async function sendOrderConfirmation(
 }
 
 /**
+ * Send notification to admin when customer requests an appointment.
+ * Includes customer info, preferred times, and link to admin dashboard.
+ *
+ * @param data - Appointment request data
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendAppointmentRequestNotification(
+  data: AppointmentRequestNotificationProps
+): Promise<string | null> {
+  const emailConfig = getEmailConfig();
+
+  if (!emailConfig.adminEmail) {
+    console.warn('[Email] Admin email not configured, skipping appointment request notification');
+    return null;
+  }
+
+  const customerDisplay = data.customerName || data.customerEmail;
+  const subject = `📅 New Appointment Request: ${customerDisplay} - ${data.serviceName}`;
+
+  return sendEmailWithRetry(
+    emailConfig.adminEmail,
+    subject,
+    AppointmentRequestNotificationEmail(data)
+  );
+}
+
+/**
  * Send appointment confirmation email when admin approves.
  * Includes meeting details and calendar invite.
  *
@@ -191,6 +224,25 @@ export async function sendAppointmentConfirmation(
   );
 }
 
+/**
+ * Send purchase receipt email after successful payment.
+ * Includes itemized order, payment details, and totals.
+ *
+ * @param data - Purchase receipt data
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendPurchaseReceipt(
+  data: PurchaseReceiptEmailProps
+): Promise<string | null> {
+  const subject = `Receipt for Order #${data.orderId}`;
+
+  return sendEmailWithRetry(
+    data.customerEmail,
+    subject,
+    PurchaseReceiptEmail(data)
+  );
+}
+
 // Re-export types for convenience
 export type {
   AdminNotificationProps,
@@ -199,4 +251,6 @@ export type {
   LoginNotificationEmailProps,
   OrderConfirmationEmailProps,
   AppointmentConfirmationEmailProps,
+  AppointmentRequestNotificationProps,
+  PurchaseReceiptEmailProps,
 };

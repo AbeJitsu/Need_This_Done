@@ -135,6 +135,7 @@ export default function AppointmentRequestForm({
           alternate_time_start: formData.alternateTimeStart || null,
           duration_minutes: durationMinutes,
           notes: formData.notes || null,
+          service_name: serviceName,
         }),
       });
 
