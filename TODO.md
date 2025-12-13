@@ -117,6 +117,19 @@ _Currently active work items_
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+### Skills & Automation
+
+**Launch-a-Swarm Skill** ← NEEDS VALIDATION
+- [x] Created 5-domain agent architecture (Structure, Protection, Correctness, Evolution, Value)
+- [x] Integrated documentation workflow (reads TODO.md, recommends README.md updates)
+- [x] Fixed DRY violations - consolidated prompts, reduced 438→317 lines (28% smaller)
+- [x] Added self-contained agent prompts with embedded checks
+- [x] Tested prompt embedding works correctly
+- [ ] Validate skill on real feature review
+- [ ] Document in README.md after validation
+
+### Features
+
 - [x] **Appointment E2E Tests** - Created comprehensive test suite (`appointments.spec.ts`) with 19 tests covering form validation, API endpoint security, admin dashboard, and checkout flow integration. Fixed playwright.config.ts for ESM compatibility. (Dec 2025)
 - [x] **Abandoned Cart Email** - Created `AbandonedCartEmail.tsx` template with cart items display, optional discount code, and recovery CTA. Added `sendAbandonedCartEmail()` to email service. (Dec 2025)
 - [x] **Order Status UI** - Built admin order status management UI at `/admin/shop/orders` with status filtering, update actions, and expandable details. Added PATCH `/api/admin/orders/[id]/status` endpoint. (Dec 2025)
