@@ -169,6 +169,16 @@ export default function Navigation() {
                       {isAdmin && (
                         <>
                           <Link
+                            href="/admin/appointments"
+                            onClick={() => setShowDropdown(false)}
+                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Appointments
+                          </Link>
+                          <Link
                             href="/admin/users"
                             onClick={() => setShowDropdown(false)}
                             className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"

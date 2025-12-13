@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Full-stack Next.js application with Supabase and Redis",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

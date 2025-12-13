@@ -8,7 +8,7 @@ import Card from '@/components/Card';
 import Button from '@/components/Button';
 
 // ============================================================================
-// Orders Dashboard - /admin/shop/orders
+// Orders Dashboard - /admin/orders
 // ============================================================================
 // What: Displays all customer orders with status management
 // Why: Admins need to track and update order statuses

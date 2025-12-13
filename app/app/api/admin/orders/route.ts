@@ -22,15 +22,24 @@ export async function GET() {
     if (authResult.error) return authResult.error;
 
     const result = await cache.wrap(
-      'admin:medusa:orders:all',
+      'admin:orders:all',
       async () => {
-        // Note: In a real implementation, you would:
-        // 1. Get the admin auth token from your Medusa setup
-        // 2. Call Medusa admin orders endpoint
-        // 3. Return all orders with full details
+        // Import Supabase server client
+        const { createSupabaseServerClient } = await import('@/lib/supabase-server');
+        const supabase = await createSupabaseServerClient();
 
-        // For now, return empty list (will be populated when Medusa is fully configured)
-        return [];
+        // Fetch all orders from Supabase
+        const { data: orders, error: fetchError } = await supabase
+          .from('orders')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (fetchError) {
+          console.error('[Admin Orders] Fetch error:', fetchError);
+          throw new Error('Failed to fetch orders');
+        }
+
+        return orders || [];
       },
       CACHE_TTL.MEDIUM // 1 minute - orders change frequently
     );

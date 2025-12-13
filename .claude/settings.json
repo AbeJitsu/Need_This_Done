@@ -44,7 +44,10 @@
       "Bash(vitest:*)",
       "WebSearch",
       "WebFetch",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(timeout:*)",
+      "Bash(wc:*)",
+      "Bash(source:*)"
     ],
     "deny": [
       "Read(./.env)",

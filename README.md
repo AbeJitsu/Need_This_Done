@@ -609,11 +609,16 @@ React Email templates are in `app/emails/`:
 - `LoginNotificationEmail.tsx` - Security alert after each sign-in
 - `AdminNotification.tsx` - New project alert for admin
 - `ClientConfirmation.tsx` - Submission confirmation for clients
+- `OrderConfirmationEmail.tsx` - Order confirmation after checkout
+- `AppointmentConfirmationEmail.tsx` - Appointment confirmation for consultations
+- `AppointmentRequestNotificationEmail.tsx` - Admin notification for appointment requests
+- `PurchaseReceiptEmail.tsx` - Detailed receipt after payment
+- `AbandonedCartEmail.tsx` - Cart recovery reminder with optional discount
 
 ### Testing Emails
 
 ```bash
-# Send all 4 email types to verify they work
+# Send all email types to verify they work
 cd app && npm run test:emails
 ```
 
