@@ -33,6 +33,13 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 3. **Update TODO.md** as tasks complete
 4. **Run tests after each change** - Fix any failures immediately
 5. **Document completed features** in README.md
+6. **Use agent swarms** - Launch parallel agents for thorough exploration and implementation
+
+**Agent Swarm Strategy:**
+- **Exploration:** Launch 2-3 Explore agents in parallel to search different areas of the codebase
+- **Implementation:** Break large features into parallel workstreams when files don't depend on each other
+- **Documentation:** Launch agents to document different sections simultaneously
+- **Testing:** Run test suites in parallel where possible
 
 **Safety:** Commits are blocked by settings.json. All changes stay local until user reviews.
 

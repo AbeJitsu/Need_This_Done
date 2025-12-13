@@ -14,7 +14,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Stripe Payments | ✅ Working | Real payment processing (not mock) |
 | E2E Tests | ✅ 100% | 110/110 passing |
 | Security | ✅ Fixed | All critical issues resolved |
-| Google Calendar | ❌ 0% | Not started |
+| Google Calendar | 🟡 60% | Backend complete, needs Google Cloud setup |
 | Admin Approval | ❌ 0% | Not started |
 
 ### Critical Security Issues ✅ RESOLVED
@@ -34,11 +34,12 @@ _Currently active work items_
 **Google Calendar Appointment Booking** ← CURRENT PRIORITY
 
 **Phase 2: Google Calendar Integration (4-5 hrs)**
-- [ ] Complete Google Cloud Console setup (see instructions in To Do section)
-- [ ] Create Supabase migration: google_calendar_tokens table
-- [ ] Create `/app/lib/google-calendar.ts` with OAuth flow
-- [ ] Create appointment_requests Supabase table (with business hour validation)
-- [ ] Build appointment request form component (post-checkout)
+- [ ] Complete Google Cloud Console setup (see instructions in To Do section) ← BLOCKED: Needs user action
+- [x] Create Supabase migration: google_calendar_tokens table
+- [x] Create `/app/lib/google-calendar.ts` with OAuth flow
+- [x] Create appointment_requests Supabase table (with business hour validation)
+- [x] Build appointment request form component (post-checkout)
+- [x] Create order confirmation & appointment confirmation email templates
 - [ ] Wire appointment request email notifications
 
 **Phase 3: Admin Approval Workflow (3-4 hrs)**
@@ -77,7 +78,8 @@ _Currently active work items_
 - [x] Verify CORS settings for production domain - Fixed medusa-config.js (removed insecure fallback, added store_cors)
 
 **Email Notifications - E-commerce**
-- [ ] Add order confirmation emails
+- [x] Add order confirmation emails (OrderConfirmationEmail.tsx created)
+- [x] Add appointment confirmation emails (AppointmentConfirmationEmail.tsx created)
 - [ ] Add purchase receipt emails
 
 ### Short Term
@@ -115,6 +117,8 @@ _Currently active work items_
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+- [x] **Google Calendar Integration Backend** - Created google-calendar.ts OAuth client, Supabase migrations for tokens & appointments, appointment request form component, API routes for /api/appointments/request and /api/google/connect|callback. Checkout page now shows appointment scheduling form for consultation products. (Dec 2025)
+- [x] **E-commerce Email Templates** - Created OrderConfirmationEmail and AppointmentConfirmationEmail React templates. Added sendOrderConfirmation and sendAppointmentConfirmation to email service. (Dec 2025)
 - [x] **Product URL Handles & Test Reliability** - Added `getByHandle` to medusa-client so product URLs like `/shop/consultation-15-min` work (not just IDs). Fixed Playwright config to load env vars from root `.env.local`. Updated all shop tests with proper timeouts for client-side rendering. (Dec 2025)
 - [x] **Security Hardening** - Fixed all 4 critical security issues: removed hardcoded admin password (now env var), removed default secrets from docker-compose.yml, protected debug endpoints with admin auth, medusa-config.js now requires all secrets. (Dec 2025)
 - [x] **Real Medusa Backend** - Full implementation with TypeORM patch for 0.3.23+ compatibility. Products seeded via Admin API. Cart and checkout fully functional. (Dec 2025)

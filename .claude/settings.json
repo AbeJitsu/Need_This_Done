@@ -43,7 +43,8 @@
       "Bash(eslint:*)",
       "Bash(vitest:*)",
       "WebSearch",
-      "WebFetch"
+      "WebFetch",
+      "Bash(cd:*)"
     ],
     "deny": [
       "Read(./.env)",

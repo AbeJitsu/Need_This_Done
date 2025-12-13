@@ -11,6 +11,12 @@ import WelcomeEmail, {
 import LoginNotificationEmail, {
   type LoginNotificationEmailProps,
 } from '../emails/LoginNotificationEmail';
+import OrderConfirmationEmail, {
+  type OrderConfirmationEmailProps,
+} from '../emails/OrderConfirmationEmail';
+import AppointmentConfirmationEmail, {
+  type AppointmentConfirmationEmailProps,
+} from '../emails/AppointmentConfirmationEmail';
 
 // ============================================================================
 // Email Service Functions
@@ -136,3 +142,61 @@ export async function sendLoginNotification(
 
   return sendEmailWithRetry(data.email, subject, LoginNotificationEmail(data));
 }
+
+// ============================================================================
+// E-commerce Emails
+// ============================================================================
+
+/**
+ * Send order confirmation email after successful checkout.
+ * Includes order details and appointment scheduling CTA if needed.
+ *
+ * @param data - Order confirmation data
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendOrderConfirmation(
+  data: OrderConfirmationEmailProps
+): Promise<string | null> {
+  const subject = data.requiresAppointment
+    ? `✓ Order Confirmed! Schedule Your Appointment - #${data.orderId}`
+    : `✓ Order Confirmed! - #${data.orderId}`;
+
+  return sendEmailWithRetry(
+    data.customerEmail,
+    subject,
+    OrderConfirmationEmail(data)
+  );
+}
+
+/**
+ * Send appointment confirmation email when admin approves.
+ * Includes meeting details and calendar invite.
+ *
+ * @param data - Appointment confirmation data
+ * @param icsContent - Optional ICS calendar file content for attachment
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendAppointmentConfirmation(
+  data: AppointmentConfirmationEmailProps,
+  _icsContent?: string // TODO: Implement ICS attachment support
+): Promise<string | null> {
+  const subject = `📅 Appointment Confirmed: ${data.serviceName} on ${data.appointmentDate}`;
+
+  // Note: ICS attachment would require updating sendEmailWithRetry to support attachments
+  // For now, we include the .ics generation link in the email itself
+  return sendEmailWithRetry(
+    data.customerEmail,
+    subject,
+    AppointmentConfirmationEmail(data)
+  );
+}
+
+// Re-export types for convenience
+export type {
+  AdminNotificationProps,
+  ClientConfirmationProps,
+  WelcomeEmailProps,
+  LoginNotificationEmailProps,
+  OrderConfirmationEmailProps,
+  AppointmentConfirmationEmailProps,
+};

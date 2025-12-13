@@ -9,6 +9,7 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import PaymentForm from '@/components/PaymentForm';
+import AppointmentRequestForm from '@/components/AppointmentRequestForm';
 import { formInputColors, formValidationColors, featureCardColors } from '@/lib/colors';
 
 // ============================================================================
@@ -40,6 +41,13 @@ export default function CheckoutPage() {
   const [orderId, setOrderId] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
+
+  // Appointment state (for consultation products)
+  const [requiresAppointment, setRequiresAppointment] = useState(false);
+  const [appointmentInfo, setAppointmentInfo] = useState<{
+    serviceName: string;
+    durationMinutes: number;
+  } | null>(null);
 
   // Redirect if no cart items (but not during payment/confirmation)
   useEffect(() => {
@@ -99,6 +107,15 @@ export default function CheckoutPage() {
 
       // Store the order ID for later
       setOrderId(orderData.order_id);
+
+      // Store appointment info if order requires it
+      if (orderData.requires_appointment) {
+        setRequiresAppointment(true);
+        setAppointmentInfo({
+          serviceName: orderData.service_name || 'Consultation',
+          durationMinutes: orderData.duration_minutes || 30,
+        });
+      }
 
       // Create PaymentIntent for the order total
       const paymentResponse = await fetch('/api/stripe/create-payment-intent', {
@@ -172,6 +189,7 @@ export default function CheckoutPage() {
           </h1>
           <p className={formInputColors.helper}>
             Thank you for your purchase.
+            {requiresAppointment && ' Now let\'s schedule your appointment.'}
           </p>
         </div>
 
@@ -205,6 +223,19 @@ export default function CheckoutPage() {
             </div>
           </div>
         </Card>
+
+        {/* Appointment Request Form (for consultation products) */}
+        {requiresAppointment && appointmentInfo && (
+          <div className="mb-6">
+            <AppointmentRequestForm
+              orderId={orderId}
+              customerEmail={email}
+              customerName={firstName && lastName ? `${firstName} ${lastName}` : undefined}
+              durationMinutes={appointmentInfo.durationMinutes}
+              serviceName={appointmentInfo.serviceName}
+            />
+          </div>
+        )}
 
         <div className="flex gap-3">
           <Button variant="purple" href="/shop" className="flex-1">
