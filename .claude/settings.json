@@ -24,7 +24,9 @@
       "Bash(dig:*)",
       "Bash(node:*)",
       "SlashCommand(/docker)",
-      "SlashCommand(/dac)"
+      "SlashCommand(/dac)",
+      "Task(*)",
+      "Bash(playwright:*)"
     ],
     "deny": [
       "Read(./.env)",
