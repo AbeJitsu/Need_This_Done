@@ -24,6 +24,23 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 
 **NEVER run production builds locally** - always test with dev environment first.
 
+## Autonomous Work Mode
+
+**When on an experiment branch**, work continuously without stopping:
+
+1. **Don't stop for approvals** - Keep working through TODO.md items
+2. **Implement → Test → Fix → Document** - Complete the full cycle
+3. **Update TODO.md** as tasks complete
+4. **Run tests after each change** - Fix any failures immediately
+5. **Document completed features** in README.md
+
+**Safety:** Commits are blocked by settings.json. All changes stay local until user reviews.
+
+**When to pause:**
+- External service setup needed (Google Cloud Console, API keys)
+- Destructive operations that can't be undone
+- Ambiguous requirements with multiple valid approaches
+
 ## Task Tracking
 
 **TODO.md** is for **incomplete, untested features**:

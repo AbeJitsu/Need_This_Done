@@ -41,7 +41,9 @@
       "Bash(tsc:*)",
       "Bash(prettier:*)",
       "Bash(eslint:*)",
-      "Bash(vitest:*)"
+      "Bash(vitest:*)",
+      "WebSearch",
+      "WebFetch"
     ],
     "deny": [
       "Read(./.env)",
