@@ -125,59 +125,40 @@ Before spawning agents, determine:
 - What files/areas are relevant
 - **Read TODO.md** to understand current priorities and blockers
 
-**Phase Detection:**
-- **Planning**: User asks "should I...", "how should I...", mentions "design", "architecture", "approach"
-- **Building**: Code exists but incomplete, user says "I'm adding", "working on", "implementing"
-- **Validating**: Feature complete, user says "done", "finished", "review", "check", "ready"
+**Phase Detection & Focus:**
+
+| Phase | Triggers | Agent Focus |
+|-------|----------|-------------|
+| Planning | "should I...", "how should I...", "design", "architecture" | "Will this design lead to problems?" (prevention) |
+| Building | "I'm adding", "working on", "implementing" | "Is this code introducing issues?" (real-time guidance) |
+| Validating | "done", "finished", "review", "check", "ready" | "What problems exist right now?" (comprehensive review) |
 
 ### Step 2: Spawn 5 Agents in Parallel
 
 Launch all 5 agents simultaneously using the Task tool:
 
 ```
-Task tool with subagent_type: "general-purpose" for each:
-- Structure Agent
-- Protection Agent
-- Correctness Agent
-- Evolution Agent
-- Value Agent
-```
-
-**Example Task tool invocation:**
-```
 Task(
-  description: "Structure Agent: Review [feature]",
-  prompt: "[Structure Agent prompt with context]",
+  description: "[Domain] Agent: Review [feature]",
+  prompt: "[Agent prompt with context]",
   subagent_type: "general-purpose",
   run_in_background: true
 )
 ```
 
-### Step 3: Adapt to Phase
-
-Each agent asks different questions depending on timing:
-- **Planning**: "Will this design lead to problems?" (prevention)
-- **Building**: "Is this code introducing issues?" (real-time guidance)
-- **Validating**: "What problems exist right now?" (comprehensive review)
-
-### Step 4: Synthesize Results
+### Step 3: Synthesize Results
 
 After all agents complete, combine findings using the output template below.
 
 ## Agent Prompts
 
-### Structure Agent
+Each agent receives a self-contained prompt with embedded checks. Copy the full prompt—agents can't access other sections.
+
+### Base Template
 ```
-You are the Structure Agent reviewing software organization.
+You are the [DOMAIN] Agent.
 
-Domain: How code is built and organized.
-
-Your checks:
-- DRY: Is knowledge in exactly one place?
-- Independence: Can components change without breaking others?
-- Coupling: Do parts know only what they must?
-- Naming: Are names clear and meaningful?
-- Organization: Is code logically organized?
+[EMBED CHECKS FROM DOMAIN SECTION ABOVE]
 
 Phase: [PLANNING/BUILDING/VALIDATING]
 Context: [What user is working on]
@@ -189,127 +170,25 @@ Report findings as:
 3. **Positives** (what's done well)
 ```
 
-### Protection Agent
-```
-You are the Protection Agent reviewing security and safety.
+### Domain-Specific Prompts
 
-Domain: Keeping bad things out, resources protected.
+**Structure Agent** - copy checks from "1. STRUCTURE" section above
 
-Your checks:
-- Isolation: Services in separate containers?
-- Input Validation: All external data validated?
-- Least Privilege: Minimum necessary access?
-- Assertions: Assumptions verified in code?
-- Attack Surface: Exposure minimized?
-- Secrets: API keys, passwords protected?
-- Auth: Authentication and authorization enforced?
-- Resources: Connections, files, memory cleaned up?
-- XSS/CSRF/Injection: Web vulnerabilities prevented?
+**Protection Agent** - copy checks from "2. PROTECTION" section above, plus:
+- Add severity (CRITICAL/HIGH/MEDIUM/LOW) to all issues
+- Include XSS/CSRF/Injection vulnerability checks
 
-Phase: [PLANNING/BUILDING/VALIDATING]
-Context: [What user is working on]
-Files: [Relevant file paths]
+**Correctness Agent** - copy checks from "3. CORRECTNESS" section above, plus:
+- Verify test types: E2E (Playwright), Unit (Vitest), Integration, Accessibility (WCAG AA)
 
-Report findings with severity (CRITICAL/HIGH/MEDIUM/LOW):
-1. **Vulnerabilities** (with file:line references, severity)
-2. **Missing Protections** (what should exist)
-3. **Recommendations** (specific fixes)
-4. **Positives** (security done well)
-```
+**Evolution Agent** - copy checks from "4. EVOLUTION" section above
 
-### Correctness Agent
-```
-You are the Correctness Agent reviewing whether code works right.
+**Value Agent** - copy checks from "5. VALUE" section above, plus:
+- Check TODO.md for current priorities and tracked work
+- Recommend items to move from TODO.md → README.md when battle-tested
+- Flag outdated documentation in README.md
 
-Domain: Testing, data flow, error handling, reliability.
-
-Your checks:
-- Testing: Unit, integration, E2E, edge cases covered?
-- Data Flow: Clean input → transform → output?
-- State: Passed properly, not global?
-- Errors: Fail loudly, crash early?
-- Edge Cases: Null, empty, boundary values handled?
-- Both Paths: Happy path AND failure path tested?
-
-Test types to verify:
-- E2E (Playwright): User journeys tested?
-- Unit (Vitest): Functions tested in isolation?
-- Integration: External services verified?
-- Accessibility: WCAG AA compliance?
-
-Phase: [PLANNING/BUILDING/VALIDATING]
-Context: [What user is working on]
-Files: [Relevant file paths]
-
-Report findings as:
-1. **Untested Code** (with file:line references)
-2. **Missing Edge Cases** (specific scenarios)
-3. **Test Quality Issues** (flaky, slow, misleading)
-4. **Recommendations** (specific tests to add)
-5. **Positives** (good test coverage)
-```
-
-### Evolution Agent
-```
-You are the Evolution Agent reviewing changeability.
-
-Domain: Flexibility, configuration, future adaptability.
-
-Your checks:
-- Localization: Will changes ripple or stay contained?
-- Configuration: External to code? Environment variables?
-- Swappability: Can implementations be replaced?
-- Reversibility: Are decisions easy to undo?
-- Rigidity: Is code flexible or brittle?
-- Refactoring: Can we change without fear?
-
-Phase: [PLANNING/BUILDING/VALIDATING]
-Context: [What user is working on]
-Files: [Relevant file paths]
-
-Report findings as:
-1. **Rigidity Issues** (hard to change, with file:line)
-2. **Hardcoded Values** (should be config)
-3. **Missing Abstractions** (tight coupling to implementations)
-4. **Recommendations** (how to improve flexibility)
-5. **Positives** (good changeability)
-```
-
-### Value Agent
-```
-You are the Value Agent reviewing whether this delivers value.
-
-Domain: User needs, automation, delivery, simplicity, documentation workflow.
-
-Your checks:
-- User Need: Does this solve actual problems?
-- Automation: Build/test/deploy automated?
-- Documentation: Current and useful?
-- Shipping: Are we delivering or just coding?
-- Simplicity: Is it simple or over-engineered?
-- Timeliness: Can we deliver when needed?
-
-Documentation Workflow checks:
-- Read TODO.md: Is this work tracked? What's the current priority?
-- Check alignment: Does this work match TODO.md items?
-- Validation readiness: Can items move from TODO.md → README.md?
-- README.md accuracy: Are documented features actually working?
-
-Phase: [PLANNING/BUILDING/VALIDATING]
-Context: [What user is working on]
-Files: [Relevant file paths]
-
-Report findings as:
-1. **Value Gaps** (not solving user needs)
-2. **Over-Engineering** (complexity without benefit)
-3. **Documentation Updates Needed**:
-   - Items to add to TODO.md (new issues, blockers)
-   - Items to move from TODO.md → README.md (battle-tested)
-   - Items to update in README.md (outdated docs)
-4. **Delivery Blockers** (what prevents shipping)
-5. **Recommendations** (how to deliver more value)
-6. **Positives** (good value delivery)
-```
+**Important:** The orchestrator must embed the full checks in each prompt. Agents cannot access this skill file—they only receive their prompt text.
 
 ## Output Template
 
