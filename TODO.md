@@ -12,7 +12,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 |-----------|--------|-------|
 | Medusa Backend | ✅ Working | Products, carts, checkout functional |
 | Stripe Payments | ✅ Working | Real payment processing (not mock) |
-| E2E Tests | ✅ 100% | 68/68 passing |
+| E2E Tests | ✅ 100% | 102/102 passing |
 | Security | ✅ Fixed | All critical issues resolved |
 | Google Calendar | ❌ 0% | Not started |
 | Admin Approval | ❌ 0% | Not started |
@@ -115,13 +115,12 @@ _Currently active work items_
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
-- [x] **Email Link Fix (Phase 0)** - Fixed email links using `NEXT_PUBLIC_SITE_URL` env var (localhost → needthisdone.com) and verified in production. (Dec 2025)
-- [x] **Real Medusa Backend (Phase 1)** - Full implementation with TypeORM patch for 0.3.23+ compatibility. Products seeded via Admin API. Cart and checkout fully functional. 32/32 shop E2E tests passing. (Dec 2025)
-- [x] **Consultation Products** - Created 3 products: 15-min ($20), 30-min ($35), 55-min ($50) with `requires_appointment` metadata. Shop page displays correct prices. Fixed shop-variants.spec.ts (6 tests). All 68 E2E tests passing. (Dec 2025)
+- [x] **Product URL Handles & Test Reliability** - Added `getByHandle` to medusa-client so product URLs like `/shop/consultation-15-min` work (not just IDs). Fixed Playwright config to load env vars from root `.env.local`. Updated all shop tests with proper timeouts for client-side rendering. (Dec 2025)
 - [x] **Security Hardening** - Fixed all 4 critical security issues: removed hardcoded admin password (now env var), removed default secrets from docker-compose.yml, protected debug endpoints with admin auth, medusa-config.js now requires all secrets. (Dec 2025)
-- [x] **Production Readiness Audit** - Comprehensive security audit completed. Identified 4 critical issues (hardcoded secrets), verified checkout is real (not mock), documented all findings. (Dec 2025)
-- [x] **Auth Email Templates** - Created WelcomeEmail and LoginNotificationEmail templates with sendWelcomeEmail() and sendLoginNotification() service functions. Wired to auth routes. All 4 email types tested successfully. (Dec 2025)
-- [x] **Accessibility Test Fixes** - Fixed dark mode testing (emulateMedia before navigation), heading order compliance (h3→h2 in ServiceCard), centralized colors in components. All 10 a11y tests pass. (Dec 2025)
+- [x] **Real Medusa Backend** - Full implementation with TypeORM patch for 0.3.23+ compatibility. Products seeded via Admin API. Cart and checkout fully functional. (Dec 2025)
+- [x] **Consultation Products** - Created 3 products: 15-min ($20), 30-min ($35), 55-min ($50) with `requires_appointment` metadata. (Dec 2025)
+- [x] **Auth Email Templates** - Created WelcomeEmail and LoginNotificationEmail templates. Wired to auth routes. All 4 email types working. (Dec 2025)
+- [x] **Accessibility Compliance** - Fixed dark mode testing, heading order (h3→h2), centralized colors. WCAG AA compliant. (Dec 2025)
 
 ---
 

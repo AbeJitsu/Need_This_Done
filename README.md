@@ -137,7 +137,7 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 | Orders | ✅ Working | 4 E2E tests | Full order objects, linked in Supabase |
 | Email | ✅ Working | 9 unit tests | 4 email types via Resend |
 
-**All 79 automated tests passing** - See [Testing](#testing) for complete coverage map.
+**All 102 automated tests passing** - See [Testing](#testing) for complete coverage map.
 
 **Consultation Products** (seeded via `medusa/seed-products.js` using Admin API):
 | Product | Price | Duration | Handle |
@@ -625,14 +625,14 @@ cd app && npm run test:emails
 
 | Category | Tests | Status | Command |
 |----------|-------|--------|---------|
-| E2E Shop & Cart | 37 | ✅ Passing | `npm run test:e2e -- e2e/shop*.spec.ts` |
+| E2E Shop & Cart | 52 | ✅ Passing | `npm run test:e2e -- e2e/shop*.spec.ts` |
 | E2E Submissions | 5 | ✅ Passing | `npm run test:e2e -- e2e/submission.spec.ts` |
-| E2E Chatbot | 8 | ✅ Passing | `npm run test:e2e -- e2e/chatbot.spec.ts` |
+| E2E Chatbot | 16 | ✅ Passing | `npm run test:e2e -- e2e/chatbot.spec.ts` |
 | Accessibility | 10 | ✅ Passing | `npm run test:a11y` |
 | Email Templates | 9 | ✅ Passing | `npm run test:run` |
 | Redis Integration | 6 | ✅ Passing | `npm run test:run` |
 | Health API | 4 | ✅ Passing | `npm run test:run` |
-| **Total** | **79** | ✅ **All Passing** | `npm run test:all` |
+| **Total** | **102** | ✅ **All Passing** | `npm run test:all` |
 
 ### Feature → Test Coverage Map
 
@@ -672,16 +672,34 @@ Every feature has automated tests. Here's exactly where each is tested:
 
 ### Running Tests
 
+**With Docker Running** (recommended - tests against full stack):
 ```bash
 cd app
 
-# Run ALL tests (recommended before deploy)
+# Start Docker services first
+npm run dev:start   # From project root
+
+# Run ALL E2E tests against Docker stack
+SKIP_WEBSERVER=true BASE_URL=https://localhost npx playwright test
+
+# Run specific test file
+SKIP_WEBSERVER=true BASE_URL=https://localhost npx playwright test e2e/shop.spec.ts
+
+# Run with visible browser (debugging)
+SKIP_WEBSERVER=true BASE_URL=https://localhost npx playwright test --headed
+```
+
+**Without Docker** (uses local dev server):
+```bash
+cd app
+
+# Run ALL tests (starts dev server automatically)
 npm run test:all
 
-# Run only E2E tests (browser automation)
+# Run only E2E tests
 npm run test:e2e
 
-# Run only unit/integration tests (fast)
+# Run only unit/integration tests (fast, no browser)
 npm run test:run
 
 # Run only accessibility tests
@@ -691,9 +709,6 @@ npm run test:a11y
 npx playwright test e2e/shop-cart.spec.ts        # Cart operations
 npx playwright test e2e/shop-variants.spec.ts    # Product variants
 npx playwright test e2e/submission.spec.ts       # Form submissions
-
-# Run with visible browser (debugging)
-npx playwright test e2e/shop.spec.ts --headed
 
 # Run specific test by name
 npx playwright test -k "can add to cart"
@@ -705,11 +720,11 @@ npx playwright test -k "can add to cart"
 Tests are organized by what they verify:
 
 E2E Tests (app/e2e/)
-├── shop.spec.ts           # 29 tests: Full shop flow (browse→cart→checkout)
+├── shop.spec.ts           # 32 tests: Full shop flow (browse→cart→checkout)
 ├── shop-cart.spec.ts      # 8 tests: Cart-specific operations
 ├── shop-variants.spec.ts  # 12 tests: Product variant handling
 ├── submission.spec.ts     # 5 tests: Form submissions with attachments
-├── chatbot.spec.ts        # 8 tests: AI chatbot interactions
+├── chatbot.spec.ts        # 16 tests: AI chatbot interactions
 └── accessibility.a11y.test.ts  # 10 tests: WCAG AA compliance
 
 Unit/Integration Tests (app/__tests__/)

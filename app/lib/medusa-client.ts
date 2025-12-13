@@ -134,6 +134,16 @@ export const products = {
     const data = await handleResponse<{ product: Product }>(response);
     return data.product;
   },
+
+  /**
+   * Get single product by handle
+   * GET /store/products?handle=:handle
+   */
+  getByHandle: async (handle: string): Promise<Product | null> => {
+    const response = await fetchWithRetry(`${MEDUSA_URL}/store/products?handle=${encodeURIComponent(handle)}`);
+    const data = await handleResponse<{ products: Product[] }>(response);
+    return data.products?.[0] || null;
+  },
 };
 
 // ============================================================================

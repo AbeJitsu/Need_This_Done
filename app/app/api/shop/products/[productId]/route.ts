@@ -23,10 +23,22 @@ export async function GET(
   try {
     const { productId } = params;
 
+    // Detect if this is a product ID (starts with "prod_") or a handle
+    const isProductId = productId.startsWith('prod_');
+
     const result = await cache.wrap(
       CACHE_KEYS.page(`product:${productId}`),
       async () => {
-        return await medusaClient.products.get(productId);
+        if (isProductId) {
+          return await medusaClient.products.get(productId);
+        } else {
+          // Lookup by handle
+          const product = await medusaClient.products.getByHandle(productId);
+          if (!product) {
+            throw { message: 'Product not found', status: 404 };
+          }
+          return product;
+        }
       },
       CACHE_TTL.LONG // 5 minutes
     );

@@ -612,11 +612,11 @@ test.describe('Error Handling & Edge Cases', () => {
     // Add to cart (should work)
     await page.getByRole('link', { name: /details/i }).first().click();
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
 
     // Cart should have item (verify via success toast and View Cart link)
-    await expect(page.getByText(/added.*to cart/i)).toBeVisible();
+    await expect(page.getByText(/added.*to cart!/i)).toBeVisible({ timeout: 10000 });
     await expect(page.getByRole('link', { name: /view cart/i })).toBeVisible();
   });
 
@@ -654,14 +654,13 @@ test.describe('Integration: Complete User Journey', () => {
     await page.waitForLoadState('domcontentloaded');
     await expect(
       page.getByRole('button', { name: /add to cart/i })
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 10000 });
 
     // 3. Add to cart
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
 
     // 4. Verify cart updated (check for success toast on product detail page)
-    await expect(page.getByText(/added.*to cart/i)).toBeVisible();
+    await expect(page.getByText(/added.*to cart!/i)).toBeVisible({ timeout: 10000 });
 
     // 5. Navigate to cart via "View Cart" link on product detail page
     await page.getByRole('link', { name: /view cart/i }).click();
@@ -781,7 +780,7 @@ test.describe('Variant Regression Tests', () => {
 
     // Add to cart button should be visible (variants present)
     const addButton = page.getByRole('button', { name: /add to cart/i });
-    await expect(addButton).toBeVisible();
+    await expect(addButton).toBeVisible({ timeout: 10000 });
 
     // Click add to cart
     await addButton.click();
