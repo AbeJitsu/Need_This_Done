@@ -92,10 +92,12 @@ export const statusBorderColors: Record<AccentVariant, string> = {
 // ============================================================================
 // Light Background Colors - Subtle accent backgrounds
 // ============================================================================
+// Light mode: -100 shades (light pastel backgrounds with dark text)
+// Dark mode: -800 shades (solid dark backgrounds for WCAG AA contrast with light text)
 export const lightBgColors: Record<AccentColor, string> = {
-  purple: 'bg-purple-100 dark:bg-purple-900/30',
-  blue: 'bg-blue-100 dark:bg-blue-900/30',
-  green: 'bg-green-100 dark:bg-green-900/30',
+  purple: 'bg-purple-100 dark:bg-purple-800',
+  blue: 'bg-blue-100 dark:bg-blue-800',
+  green: 'bg-green-100 dark:bg-green-800',
 };
 
 // ============================================================================

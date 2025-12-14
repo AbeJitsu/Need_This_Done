@@ -175,7 +175,7 @@ export default function ServiceDetailModal() {
               </h3>
               <ul className="space-y-2">
                 {activeService.examples.items.map((example, index) => (
-                  <li key={index} className={`${headingColors.secondary} text-sm pl-4 border-l-2 border-current opacity-80`}>
+                  <li key={index} className={`${headingColors.primary} text-sm pl-4 border-l-2 border-gray-400 dark:border-gray-500`}>
                     {example}
                   </li>
                 ))}
