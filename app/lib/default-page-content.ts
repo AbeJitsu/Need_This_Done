@@ -118,13 +118,13 @@ export const defaultFAQContent: FAQPageContent = {
     {
       question: 'How long does a typical task take?',
       answer:
-        'Most tasks are completed within a few days to a week. Larger projects may take longer, but we always provide a clear timeline upfront so you know what to expect. Learn more about how it works.',
+        'Most projects are completed within 1-2 weeks, depending on scope. Quick tasks can be done in days, while bigger builds may take longer. We always provide a clear timeline upfront so you know what to expect. Learn more about how it works.',
       links: [{ text: 'how it works', href: '/how-it-works' }],
     },
     {
       question: 'How much does it cost?',
       answer:
-        "Pricing depends on the scope and complexity of your task. Check out our pricing page for general ranges. We provide transparent quotes with no hidden fees—tell us what you need, and we'll give you a clear estimate before any work begins.",
+        "Pricing depends on complexity, not service type. Quick tasks across any service start at $50. Standard projects that need more steps run $150+. Bigger builds like full websites or complex data migrations start at $500+. Check out our pricing page for details. We provide transparent quotes with no hidden fees—tell us what you need, and we'll give you a clear estimate before any work begins.",
       links: [{ text: 'pricing page', href: '/pricing' }],
     },
     {

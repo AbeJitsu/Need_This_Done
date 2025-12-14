@@ -1,24 +1,24 @@
 {
-  "header_title": "How We Can Help",
-  "header_description": "Too busy? Not sure where to start? We handle the tasks you don't have time for, so you can focus on what matters most.",
+  "header_title": "Find Your Perfect Fit",
+  "header_description": "Not sure which service you need? You're in the right place. Let's figure it out together—no pressure, no tech speak, just helpful guidance.",
   "service_cards": [
     {
-      "title": "",
+      "title": "Clear Communication",
       "tagline": "",
-      "description": "Let us handle the day-to-day tasks that eat up your time. Email, scheduling, research, bookings, and social media posting.",
-      "details": "Email Management, Calendar Coordination, Research & Bookings, Social Media Posting"
+      "description": "We keep you informed every step of the way. No surprises.",
+      "details": ""
     },
     {
-      "title": "",
+      "title": "Quality Work",
       "tagline": "",
-      "description": "From messy spreadsheets to polished reports. We organize, format, and prepare your documents so they look professional.",
-      "details": "Spreadsheets & Data Entry, Reports & Presentations, Document Formatting, File Organization"
+      "description": "We take pride in delivering work you can rely on.",
+      "details": ""
     },
     {
-      "title": "",
+      "title": "Timely Delivery",
       "tagline": "",
-      "description": "From new builds to updates and maintenance. We handle websites of any size on any platform—so you can focus on your business.",
-      "details": "Website Builds & Redesigns, Content Updates, E-commerce Setup, Ongoing Maintenance"
+      "description": "We respect your deadlines and deliver on time.",
+      "details": ""
     }
   ],
   "expectations_title": "What You Can Expect",

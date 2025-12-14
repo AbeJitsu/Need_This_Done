@@ -157,9 +157,16 @@ export default function ContactPage() {
 
         {/* Header */}
         <PageHeader
-          title="Let's Talk"
-          description="Tell us what you need help with. We'll get back to you within 2 business days—no pressure, no spam."
+          title="Request a Free Quote"
+          description="Tell us what you need help with and we'll send you a personalized quote within 2 business days—no commitment, no spam. Just a friendly estimate so you know exactly what to expect."
         />
+
+        {/* Quick links */}
+        <p className={`text-center mb-6 ${formInputColors.helper}`}>
+          <Link href="/shop" className={`font-medium hover:underline ${titleColors.purple}`}>
+            Need help now? Book a quick consultation →
+          </Link>
+        </p>
 
         {/* Contact Form */}
         <Card className="mb-10">

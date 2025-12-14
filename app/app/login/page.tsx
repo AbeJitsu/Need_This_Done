@@ -191,14 +191,14 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
-            {isForgotPassword ? 'Reset Password' : isSignUpMode ? 'Create Account' : 'Welcome Back'}
+            {isForgotPassword ? 'Reset Your Password' : isSignUpMode ? 'Join Us' : 'Welcome Back'}
           </h1>
           <p className={formInputColors.helper}>
             {isForgotPassword
-              ? 'Enter your email to receive a reset link'
+              ? "No worries—we'll send you a reset link"
               : isSignUpMode
-                ? 'Sign up to track your projects'
-                : 'Sign in to view your project status'}
+                ? 'Create an account to track your projects and stay in the loop'
+                : 'Good to see you! Sign in to check on your projects'}
           </p>
         </div>
 
@@ -373,14 +373,24 @@ export default function LoginPage() {
           </form>
         </div>
 
-        {/* Back Link */}
-        <div className="text-center mt-6">
+        {/* Helpful Links */}
+        <div className="text-center mt-6 space-y-2">
           <Link
             href="/"
             className={`${titleColors.green} hover:underline text-sm`}
           >
-            Back to Home
+            ← Back to Home
           </Link>
+          <p className={`text-sm ${formInputColors.helper}`}>
+            New here?{' '}
+            <Link href="/services" className={`${titleColors.blue} hover:underline`}>
+              See what we do
+            </Link>
+            {' · '}
+            <Link href="/contact" className={`${titleColors.blue} hover:underline`}>
+              Get a free quote
+            </Link>
+          </p>
         </div>
     </div>
   );

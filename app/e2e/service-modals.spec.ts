@@ -127,16 +127,11 @@ test.describe('Service Modals - Contrast & Accessibility', () => {
         const textRgb = parseRgb(textColor);
         const bgRgb = parseRgb(bgColor);
 
-        // Debug output
-        console.log(`[Light Mode - ${service.name}] Text: ${textColor} -> ${JSON.stringify(textRgb)}`);
-        console.log(`[Light Mode - ${service.name}] Background: ${bgColor} -> ${JSON.stringify(bgRgb)}`);
-
         expect(textRgb).toBeTruthy();
         expect(bgRgb).toBeTruthy();
 
         if (textRgb && bgRgb) {
           const ratio = getContrastRatio(textRgb, bgRgb);
-          console.log(`[Light Mode - ${service.name}] Contrast ratio: ${ratio.toFixed(2)}:1`);
           // WCAG AA requires 4.5:1 for normal text
           expect(ratio).toBeGreaterThanOrEqual(WCAG_AA_NORMAL_TEXT);
         }
@@ -211,16 +206,11 @@ test.describe('Service Modals - Contrast & Accessibility', () => {
         const textRgb = parseRgb(textColor);
         const bgRgb = parseRgb(bgColor);
 
-        // Debug output
-        console.log(`[Dark Mode - ${service.name}] Text: ${textColor} -> ${JSON.stringify(textRgb)}`);
-        console.log(`[Dark Mode - ${service.name}] Background: ${bgColor} -> ${JSON.stringify(bgRgb)}`);
-
         expect(textRgb).toBeTruthy();
         expect(bgRgb).toBeTruthy();
 
         if (textRgb && bgRgb) {
           const ratio = getContrastRatio(textRgb, bgRgb);
-          console.log(`[Dark Mode - ${service.name}] Contrast ratio: ${ratio.toFixed(2)}:1`);
           // WCAG AA requires 4.5:1 for normal text
           expect(ratio).toBeGreaterThanOrEqual(WCAG_AA_NORMAL_TEXT);
         }

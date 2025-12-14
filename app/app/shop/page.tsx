@@ -78,9 +78,20 @@ export default function ShopPage() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header */}
       <PageHeader
-        title="Shop Services"
-        description="Pick the perfect service for your project. From quick tasks to premium work."
+        title="Quick Consultations"
+        description="Not ready for a full project? Book a call first. Get expert guidance, ask questions, or figure out what you actually need—before committing to anything."
       />
+
+      {/* Back link to services */}
+      <p className={`text-center mb-6 ${formInputColors.helper}`}>
+        <Link href="/services" className={`font-medium ${linkHoverColors.blue}`}>
+          ← Compare our full services
+        </Link>
+        {' · '}
+        <Link href="/contact" className={`font-medium ${linkHoverColors.blue}`}>
+          Request a free quote →
+        </Link>
+      </p>
 
       {/* Cart item count indicator */}
       {itemCount > 0 && (
