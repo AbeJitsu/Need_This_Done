@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 // ============================================================================
 // UX Flow Evaluation Tests
@@ -31,8 +31,8 @@ test.describe('UX Flow Evaluation', () => {
       fullPage: true,
     });
 
-    // 2. Navigate to Shop (NOTE: No shop link in main nav - UX issue!)
-    await page.goto('/shop');
+    // 2. Navigate to Shop via navigation link
+    await page.click('a[href="/shop"]');
     await page.waitForLoadState('load');
     await page.waitForTimeout(2000); // Wait for products to load
     await page.screenshot({

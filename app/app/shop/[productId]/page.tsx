@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -128,11 +129,14 @@ export default function ProductDetailPage({
       <div className="grid md:grid-cols-2 gap-8">
         {/* Product image */}
         {image ? (
-          <div className="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden h-96">
-            <img
+          <div className="relative bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden h-96">
+            <Image
               src={image}
               alt={product.title}
-              className="w-full h-full object-cover"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+              priority
             />
           </div>
         ) : (

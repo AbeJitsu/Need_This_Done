@@ -34,8 +34,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate date is not in the past
+    const preferredDateTime = new Date(preferred_date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (preferredDateTime < today) {
+      return NextResponse.json(
+        { error: 'Preferred date cannot be in the past' },
+        { status: 400 }
+      );
+    }
+
     // Validate date is a weekday
-    const preferredDay = new Date(preferred_date).getDay();
+    const preferredDay = preferredDateTime.getDay();
     if (preferredDay === 0 || preferredDay === 6) {
       return NextResponse.json(
         { error: 'Preferred date must be a weekday (Monday-Friday)' },

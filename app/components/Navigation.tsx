@@ -20,6 +20,7 @@ import DarkModeToggle from './DarkModeToggle';
 const navigationLinks = [
   { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
+  { href: '/shop', label: 'Shop' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/how-it-works', label: 'How It Works' },
   { href: '/get-started', label: 'Get Started' },

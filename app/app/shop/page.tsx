@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
@@ -151,11 +152,13 @@ export default function ShopPage() {
                 <div className="flex flex-col h-full">
                   {/* Product image */}
                   {image && (
-                    <div className={`w-full h-40 ${placeholderColors.bg} rounded-t-lg overflow-hidden`}>
-                      <img
+                    <div className={`relative w-full h-40 ${placeholderColors.bg} rounded-t-lg overflow-hidden`}>
+                      <Image
                         src={image}
                         alt={product.title}
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover"
                       />
                     </div>
                   )}
@@ -194,7 +197,7 @@ export default function ShopPage() {
                         disabled={addingToCart === product.id}
                         className="flex-1"
                       >
-                        {addingToCart === product.id ? 'Adding...' : 'Add Cart'}
+                        {addingToCart === product.id ? 'Adding...' : 'Add to Cart'}
                       </Button>
                     </div>
                   </div>

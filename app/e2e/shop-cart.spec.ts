@@ -20,6 +20,7 @@ test.describe('Shopping Cart - Add to Cart', () => {
 
     // Click "Details" link to go to product page
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
 
     // Add to cart from product detail page
@@ -38,14 +39,14 @@ test.describe('Shopping Cart - Add to Cart', () => {
     await navigateToPage(page, '/shop');
 
     // Add first product (Quick Task)
-    let addButtons = page.getByRole('button', { name: /add cart/i });
+    let addButtons = page.getByRole('button', { name: /add to cart/i });
     if (await addButtons.first().isVisible()) {
       await addButtons.first().click();
       await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
     }
 
     // Add second product (Standard Project)
-    addButtons = page.getByRole('button', { name: /add cart/i });
+    addButtons = page.getByRole('button', { name: /add to cart/i });
     if (await addButtons.count() > 0) {
       const buttons = addButtons.all();
       const buttonsList = await buttons;
@@ -81,7 +82,7 @@ test.describe('Shopping Cart - Add to Cart', () => {
     await expect(quickTaskPrice).toBeVisible({ timeout: 10000 });
 
     // Add Quick Task to cart
-    const addButtons = page.getByRole('button', { name: /add cart/i });
+    const addButtons = page.getByRole('button', { name: /add to cart/i });
     if (await addButtons.count() > 0) {
       await addButtons.first().click();
       await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
@@ -106,7 +107,7 @@ test.describe('Shopping Cart - Cart Operations', () => {
     // Navigate to shop and add item
     await navigateToPage(page, '/shop');
 
-    const addButtons = page.getByRole('button', { name: /add cart/i });
+    const addButtons = page.getByRole('button', { name: /add to cart/i });
     if (await addButtons.count() > 0) {
       await addButtons.first().click();
       await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
@@ -139,7 +140,7 @@ test.describe('Shopping Cart - Cart Operations', () => {
     // Navigate to shop and add item
     await navigateToPage(page, '/shop');
 
-    const addButtons = page.getByRole('button', { name: /add cart/i });
+    const addButtons = page.getByRole('button', { name: /add to cart/i });
     if (await addButtons.count() > 0) {
       await addButtons.first().click();
       await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
@@ -180,7 +181,7 @@ test.describe('Shopping Cart - Error Handling', () => {
     await navigateToPage(page, '/shop');
 
     // Add item to cart
-    const addButtons = page.getByRole('button', { name: /add cart/i });
+    const addButtons = page.getByRole('button', { name: /add to cart/i });
     if (await addButtons.count() > 0) {
       await addButtons.first().click();
       await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
@@ -209,7 +210,7 @@ test.describe('Shopping Cart - Integration', () => {
     await expect(page.getByRole('heading', { name: /Shop Services/i })).toBeVisible({ timeout: 10000 });
 
     // Step 2: Add item to cart
-    const addButtons = page.getByRole('button', { name: /add cart/i });
+    const addButtons = page.getByRole('button', { name: /add to cart/i });
     if (await addButtons.count() > 0) {
       await addButtons.first().click();
       await expect(page.getByText(/added.*to cart/i).first()).toBeVisible({ timeout: 10000 });
