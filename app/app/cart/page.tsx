@@ -6,7 +6,16 @@ import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
-import { formInputColors, formValidationColors, titleColors, dangerColors } from '@/lib/colors';
+import {
+  formInputColors,
+  formValidationColors,
+  titleColors,
+  dangerColors,
+  alertColors,
+  headingColors,
+  dividerColors,
+  cardBorderColors,
+} from '@/lib/colors';
 
 // ============================================================================
 // Shopping Cart Page - /cart
@@ -100,7 +109,7 @@ export default function CartPage() {
 
       {/* Error messages */}
       {(localError || cartError) && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
           <p className={`text-sm ${formValidationColors.error}`}>{localError || cartError}</p>
         </div>
       )}
@@ -114,7 +123,7 @@ export default function CartPage() {
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-grow">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                      <h3 className={`text-lg font-semibold ${headingColors.primary}`}>
                         {/* Item title would come from product data */}
                         Product #{item.variant_id.slice(0, 8)}
                       </h3>
@@ -137,24 +146,24 @@ export default function CartPage() {
                       <button
                         onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
                         disabled={isUpdating === item.id}
-                        className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition disabled:opacity-50"
+                        className={`px-2 py-1 border rounded ${cardBorderColors.light} hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-50`}
                       >
                         −
                       </button>
-                      <span className="w-8 text-center font-semibold text-gray-900 dark:text-gray-100">
+                      <span className={`w-8 text-center font-semibold ${headingColors.primary}`}>
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
                         disabled={isUpdating === item.id}
-                        className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition disabled:opacity-50"
+                        className={`px-2 py-1 border rounded ${cardBorderColors.light} hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-50`}
                       >
                         +
                       </button>
                     </div>
 
                     {/* Price */}
-                    <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    <p className={`text-lg font-semibold ${headingColors.primary}`}>
                       {/* Price calculation would come from product data */}
                       Calculating...
                     </p>
@@ -176,29 +185,29 @@ export default function CartPage() {
         <div>
           <Card hoverColor="purple" hoverEffect="lift">
             <div className="p-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+              <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                 Order Summary
               </h2>
 
-              <div className="space-y-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+              <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
                 <div className="flex justify-between">
                   <span className={formInputColors.helper}>Subtotal</span>
-                  <span className="text-gray-900 dark:text-gray-100 font-semibold">
+                  <span className={`font-semibold ${headingColors.primary}`}>
                     ${(subtotal / 100).toFixed(2)}
                   </span>
                 </div>
 
                 <div className="flex justify-between">
                   <span className={formInputColors.helper}>Tax</span>
-                  <span className="text-gray-900 dark:text-gray-100 font-semibold">
+                  <span className={`font-semibold ${headingColors.primary}`}>
                     ${(tax / 100).toFixed(2)}
                   </span>
                 </div>
               </div>
 
               <div className="flex justify-between mb-6">
-                <span className="text-lg font-bold text-gray-900 dark:text-gray-100">Total</span>
-                <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
+                <span className={`text-2xl font-bold ${headingColors.primary}`}>
                   ${(total / 100).toFixed(2)}
                 </span>
               </div>

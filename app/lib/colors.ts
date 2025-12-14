@@ -466,3 +466,85 @@ export const loadingColors = {
   dot: 'bg-gray-400',
 };
 
+// ============================================================================
+// Status Badge Colors - For appointment/order status indicators
+// ============================================================================
+// Consistent styling for status badges across admin pages
+export const statusBadgeColors = {
+  pending: {
+    bg: 'bg-yellow-100 dark:bg-yellow-900/20',
+    text: 'text-yellow-800 dark:text-yellow-100',
+    border: 'border border-yellow-200 dark:border-yellow-800',
+  },
+  approved: {
+    bg: 'bg-blue-100 dark:bg-blue-900/20',
+    text: 'text-blue-800 dark:text-blue-100',
+    border: 'border border-blue-200 dark:border-blue-800',
+  },
+  confirmed: {
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    text: 'text-green-800 dark:text-green-100',
+    border: 'border border-green-200 dark:border-green-800',
+  },
+  completed: {
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    text: 'text-green-800 dark:text-green-100',
+    border: 'border border-green-200 dark:border-green-800',
+  },
+  cancelled: {
+    bg: 'bg-red-100 dark:bg-red-900/20',
+    text: 'text-red-800 dark:text-red-100',
+    border: 'border border-red-200 dark:border-red-800',
+  },
+  rejected: {
+    bg: 'bg-red-100 dark:bg-red-900/20',
+    text: 'text-red-800 dark:text-red-100',
+    border: 'border border-red-200 dark:border-red-800',
+  },
+  paid: {
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    text: 'text-green-800 dark:text-green-100',
+    border: 'border border-green-200 dark:border-green-800',
+  },
+  unpaid: {
+    bg: 'bg-gray-100 dark:bg-gray-700',
+    text: 'text-gray-800 dark:text-gray-100',
+    border: 'border border-gray-200 dark:border-gray-600',
+  },
+  refunded: {
+    bg: 'bg-purple-100 dark:bg-purple-900/20',
+    text: 'text-purple-800 dark:text-purple-100',
+    border: 'border border-purple-200 dark:border-purple-800',
+  },
+};
+
+// ============================================================================
+// File Upload Colors - For file upload dropzones
+// ============================================================================
+export const fileUploadColors = {
+  border: 'border-2 border-dashed border-gray-300 dark:border-gray-600',
+  hoverBorder: 'hover:border-blue-400 dark:hover:border-blue-500',
+  bg: 'bg-gray-50 dark:bg-gray-800',
+  hoverBg: 'hover:bg-gray-100 dark:hover:bg-gray-700',
+};
+
+// ============================================================================
+// Navigation Background Colors - For navigation bar
+// ============================================================================
+export const navigationBgColors = {
+  base: 'bg-white dark:bg-gray-900',
+  border: 'border-b border-gray-200 dark:border-gray-800',
+  dropdown: 'bg-white dark:bg-gray-800',
+  dropdownBorder: 'border border-gray-200 dark:border-gray-700',
+  dropdownHover: 'hover:bg-gray-100 dark:hover:bg-gray-700',
+};
+
+// ============================================================================
+// Layout Background Colors - For page sections and containers
+// ============================================================================
+export const layoutBgColors = {
+  page: 'bg-white dark:bg-gray-900',
+  section: 'bg-gray-50 dark:bg-gray-800',
+  gradient: 'bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800',
+};
+

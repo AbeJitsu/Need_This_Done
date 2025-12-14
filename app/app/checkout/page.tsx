@@ -10,7 +10,14 @@ import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import PaymentForm from '@/components/PaymentForm';
 import AppointmentRequestForm from '@/components/AppointmentRequestForm';
-import { formInputColors, formValidationColors, featureCardColors } from '@/lib/colors';
+import {
+  formInputColors,
+  formValidationColors,
+  featureCardColors,
+  alertColors,
+  headingColors,
+  dividerColors,
+} from '@/lib/colors';
 
 // ============================================================================
 // Checkout Page - /checkout
@@ -184,7 +191,7 @@ export default function CheckoutPage() {
               />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
             Payment Successful!
           </h1>
           <p className={formInputColors.helper}>
@@ -195,11 +202,11 @@ export default function CheckoutPage() {
 
         <Card hoverEffect="none" className="mb-6">
           <div className="p-8">
-            <div className="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+            <div className={`mb-6 pb-6 ${dividerColors.border} border-b`}>
               <p className={`text-sm ${formInputColors.helper} mb-2`}>
                 Order Number
               </p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 font-mono break-all">
+              <p className={`text-2xl font-bold ${headingColors.primary} font-mono break-all`}>
                 {orderId}
               </p>
             </div>
@@ -208,14 +215,14 @@ export default function CheckoutPage() {
               <p className={`text-sm ${formInputColors.helper} mb-2`}>
                 Confirmation Email
               </p>
-              <p className="text-lg text-gray-900 dark:text-gray-100">{email}</p>
+              <p className={`text-lg ${headingColors.primary} font-medium`}>{email}</p>
               <p className={`text-sm ${formInputColors.helper} mt-2`}>
                 Check your inbox for a confirmation email with tracking
                 information.
               </p>
             </div>
 
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+            <div className={`${alertColors.success.bg} ${alertColors.success.border} rounded-lg p-4`}>
               <p className={`text-sm ${formValidationColors.success}`}>
                 Your payment has been processed securely. You&apos;ll receive a
                 receipt via email shortly.
@@ -263,7 +270,7 @@ export default function CheckoutPage() {
           <div className="lg:col-span-2">
             {/* Error message */}
             {error && (
-              <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
                 <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
               </div>
             )}
@@ -271,7 +278,7 @@ export default function CheckoutPage() {
             {/* Payment form */}
             <Card hoverEffect="none" className="mb-6">
               <div className="p-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-4`}>
                   Payment Details
                 </h2>
 
@@ -328,7 +335,7 @@ export default function CheckoutPage() {
           <form onSubmit={handleProceedToPayment} className="lg:col-span-2">
             {/* Error message */}
             {error && (
-              <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
                 <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
               </div>
             )}
@@ -336,7 +343,7 @@ export default function CheckoutPage() {
             {/* Email section */}
             <Card hoverEffect="none" className="mb-6">
               <div className="p-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-4`}>
                   Contact Information
                 </h2>
 
@@ -345,7 +352,7 @@ export default function CheckoutPage() {
                     <p className={`text-sm ${formInputColors.helper} mb-2`}>
                       Email
                     </p>
-                    <p className="text-lg text-gray-900 dark:text-gray-100 font-medium">
+                    <p className={`text-lg ${headingColors.primary} font-medium`}>
                       {email}
                     </p>
                     <p className={`text-sm ${formInputColors.helper} mt-2`}>
@@ -355,7 +362,7 @@ export default function CheckoutPage() {
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       Email Address
                     </label>
                     <input
@@ -363,7 +370,7 @@ export default function CheckoutPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="your@email.com"
                     />
                     <p className={`text-sm ${formInputColors.helper} mt-2`}>
@@ -378,59 +385,59 @@ export default function CheckoutPage() {
             {/* Shipping info */}
             <Card hoverEffect="none" className="mb-6">
               <div className="p-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-4`}>
                   Shipping Information
                 </h2>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       First Name
                     </label>
                     <input
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="John"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       Last Name
                     </label>
                     <input
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="Doe"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       Address
                     </label>
                     <input
                       type="text"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="123 Main St"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       City, State, ZIP
                     </label>
                     <input
                       type="text"
                       value={cityStateZip}
                       onChange={(e) => setCityStateZip(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="New York, NY 10001"
                     />
                   </div>
@@ -482,14 +489,14 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
     <div>
       <Card hoverColor="purple" hoverEffect="lift">
         <div className="p-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+          <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
             Order Summary
           </h2>
 
-          <div className="space-y-3 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+          <div className={`space-y-3 mb-6 pb-6 ${dividerColors.border} border-b`}>
             <div className="flex justify-between">
               <span className={formInputColors.helper}>Items</span>
-              <span className="text-gray-900 dark:text-gray-100 font-semibold">
+              <span className={`${headingColors.primary} font-semibold`}>
                 {itemCount}
               </span>
             </div>
@@ -500,14 +507,14 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
                   <span className={formInputColors.helper}>
                     Subtotal
                   </span>
-                  <span className="text-gray-900 dark:text-gray-100 font-semibold">
+                  <span className={`${headingColors.primary} font-semibold`}>
                     ${((cart.subtotal || 0) / 100).toFixed(2)}
                   </span>
                 </div>
 
                 <div className="flex justify-between">
                   <span className={formInputColors.helper}>Tax</span>
-                  <span className="text-gray-900 dark:text-gray-100 font-semibold">
+                  <span className={`${headingColors.primary} font-semibold`}>
                     ${((cart.tax_total || 0) / 100).toFixed(2)}
                   </span>
                 </div>
@@ -517,10 +524,10 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
 
           {cart && (
             <div className="flex justify-between mb-6">
-              <span className="text-lg font-bold text-gray-900 dark:text-gray-100">
+              <span className={`text-lg font-bold ${headingColors.primary}`}>
                 Total
               </span>
-              <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              <span className={`text-2xl font-bold ${headingColors.primary}`}>
                 ${((cart.total || 0) / 100).toFixed(2)}
               </span>
             </div>

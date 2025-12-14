@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { siteConfig } from '@/config/site.config';
 import Button from '@/components/Button';
-import ServiceCard from '@/components/ServiceCard';
+import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultHomeContent } from '@/lib/default-page-content';
 import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors } from '@/lib/colors';
@@ -78,7 +78,7 @@ export default async function HomePage() {
           </Link>
           <div className="grid lg:grid-cols-3 gap-6">
             {siteConfig.services.map((service, index) => (
-              <ServiceCard
+              <ServiceCardWithModal
                 key={index}
                 title={service.title}
                 tagline={service.tagline}
@@ -86,7 +86,6 @@ export default async function HomePage() {
                 details={service.details}
                 color={service.color}
                 variant="compact"
-                href="/services"
               />
             ))}
           </div>

@@ -5,7 +5,18 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
-import { formInputColors, formValidationColors } from '@/lib/colors';
+import {
+  formInputColors,
+  formValidationColors,
+  headingColors,
+  alertColors,
+  cardBgColors,
+  cardBorderColors,
+  dividerColors,
+  mutedTextColors,
+  titleColors,
+  accentColors,
+} from '@/lib/colors';
 
 // ============================================================================
 // Login Page - User Authentication
@@ -164,7 +175,7 @@ export default function LoginPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="text-gray-600 dark:text-gray-300">Loading...</div>
+        <div className={formInputColors.helper}>Loading...</div>
       </div>
     );
   }
@@ -179,10 +190,10 @@ export default function LoginPage() {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
             {isForgotPassword ? 'Reset Password' : isSignUpMode ? 'Create Account' : 'Welcome Back'}
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className={formInputColors.helper}>
             {isForgotPassword
               ? 'Enter your email to receive a reset link'
               : isSignUpMode
@@ -192,19 +203,19 @@ export default function LoginPage() {
         </div>
 
         {/* Login Form */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 border-l-4 border-l-gray-300 dark:border-l-gray-600 shadow-sm transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]">
+        <div className={`${cardBgColors.base} rounded-xl p-8 ${cardBorderColors.light} border-l-4 border-l-gray-300 dark:border-l-gray-600 shadow-sm transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}>
           <form onSubmit={handleAuth} className="space-y-6">
 
             {/* Error Message */}
             {error && (
-              <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+              <div className={`p-3 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
                 <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
               </div>
             )}
 
             {/* Success Message */}
             {successMessage && (
-              <div className="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+              <div className={`p-3 rounded-lg ${alertColors.success.bg} ${alertColors.success.border}`}>
                 <p className={`text-sm ${formValidationColors.success}`}>{successMessage}</p>
               </div>
             )}
@@ -221,7 +232,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className={`w-full px-4 py-3 rounded-lg ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
                 placeholder="you@example.com"
                 disabled={isSubmitting}
               />
@@ -240,7 +251,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className={`w-full px-4 py-3 rounded-lg ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
                   placeholder={isSignUpMode ? 'Min 6 characters' : 'Your password'}
                   disabled={isSubmitting}
                 />
@@ -254,7 +265,7 @@ export default function LoginPage() {
                         setError('');
                         setSuccessMessage('');
                       }}
-                      className="text-sm text-purple-700 dark:text-purple-300 hover:underline"
+                      className={`text-sm ${titleColors.purple} hover:underline`}
                     >
                       Forgot your password?
                     </button>
@@ -267,7 +278,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting || !email || (!isForgotPassword && !password)}
-              className="w-full py-3 px-6 bg-blue-200 text-blue-700 font-semibold rounded-full border border-blue-300 dark:bg-blue-500 dark:text-gray-900 dark:border-blue-100 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-200 dark:hover:text-blue-800 dark:hover:border-blue-300 disabled:bg-blue-100 disabled:text-blue-400 disabled:border-blue-200 dark:disabled:bg-blue-300 dark:disabled:text-blue-900 dark:disabled:border-blue-100 disabled:cursor-not-allowed transition-all"
+              className={`w-full py-3 px-6 ${accentColors.blue.bg} ${accentColors.blue.text} font-semibold rounded-full border ${accentColors.blue.border} hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-200 dark:hover:text-blue-800 dark:hover:border-blue-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
             >
               {isSubmitting
                 ? isForgotPassword
@@ -286,10 +297,10 @@ export default function LoginPage() {
             {!isForgotPassword && (
               <div className="relative py-4">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                  <div className={`w-full border-t ${dividerColors.border}`}></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                  <span className={`px-2 ${cardBgColors.base} ${mutedTextColors.light}`}>
                     Or continue with
                   </span>
                 </div>
@@ -302,7 +313,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleGoogleSignIn}
                 disabled={isSubmitting}
-                className="w-full py-3 px-6 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-100 font-semibold rounded-full border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3"
+                className={`w-full py-3 px-6 ${cardBgColors.base} ${headingColors.secondary} font-semibold rounded-full ${cardBorderColors.lightMd} ${cardBgColors.interactive} disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3`}
               >
                 {/* Google Icon SVG */}
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
@@ -338,7 +349,7 @@ export default function LoginPage() {
                     setSuccessMessage('');
                   }}
                   disabled={isSubmitting}
-                  className="text-sm text-blue-700 dark:text-blue-300 hover:underline"
+                  className={`text-sm ${titleColors.blue} hover:underline`}
                 >
                   Back to Sign In
                 </button>
@@ -351,7 +362,7 @@ export default function LoginPage() {
                     setSuccessMessage('');
                   }}
                   disabled={isSubmitting}
-                  className="text-sm text-blue-700 dark:text-blue-300 hover:underline"
+                  className={`text-sm ${titleColors.blue} hover:underline`}
                 >
                   {isSignUpMode
                     ? 'Already have an account? Sign in'
@@ -366,7 +377,7 @@ export default function LoginPage() {
         <div className="text-center mt-6">
           <Link
             href="/"
-            className="text-green-700 dark:text-green-300 hover:underline text-sm"
+            className={`${titleColors.green} hover:underline text-sm`}
           >
             Back to Home
           </Link>
