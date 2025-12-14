@@ -4,11 +4,39 @@ import * as fs from 'fs';
 // ============================================================================
 // User Flow Capture - Screenshots + Copy for UX evaluation
 // ============================================================================
-// Purpose: Capture the current homepage → services journey for redesign planning
+// Purpose: Capture all pages for comprehensive site redesign planning
 // Run: SKIP_WEBSERVER=true BASE_URL=https://localhost npx playwright test flow-capture.spec.ts
 // Output: ux-screenshots/services-page-redesign/
 
 const OUTPUT_DIR = 'ux-screenshots/services-page-redesign';
+
+// ============================================================================
+// All Pages Capture
+// ============================================================================
+test('Capture all site pages', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+
+  const pages = [
+    { path: '/', name: '01-homepage' },
+    { path: '/services', name: '02-services' },
+    { path: '/pricing', name: '03-pricing' },
+    { path: '/how-it-works', name: '04-how-it-works' },
+    { path: '/shop', name: '05-shop' },
+    { path: '/faq', name: '06-faq' },
+    { path: '/contact', name: '07-contact' },
+    { path: '/login', name: '08-login' },
+  ];
+
+  for (const p of pages) {
+    await page.goto(p.path);
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(400);
+    await page.screenshot({
+      path: `${OUTPUT_DIR}/screenshots/${p.name}.png`,
+      fullPage: true
+    });
+  }
+});
 
 test('Capture homepage journey with copy', async ({ page }) => {
   // 1. Homepage - full view
