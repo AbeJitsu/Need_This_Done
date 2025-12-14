@@ -305,11 +305,41 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
 export const defaultHomeContent: HomePageContent = {
   hero: {
     buttons: [
-      { text: 'View Services', variant: 'orange', href: '/services' },
-      { text: 'See How It Works', variant: 'blue', href: '/how-it-works' },
+      { text: 'Book a Consultation', variant: 'orange', href: '/shop' },
+      { text: 'View Services', variant: 'blue', href: '/services' },
     ],
   },
   servicesTitle: 'What We Offer',
+  consultations: {
+    title: 'Quick Consultations',
+    description:
+      'Need expert guidance fast? Book a call and get personalized help for your project.',
+    options: [
+      {
+        name: 'Quick Chat',
+        duration: '15 min',
+        price: '$20',
+        description: 'Perfect for quick questions',
+        color: 'green',
+      },
+      {
+        name: 'Standard Call',
+        duration: '30 min',
+        price: '$35',
+        description: 'Our most popular option',
+        color: 'blue',
+      },
+      {
+        name: 'Deep Dive',
+        duration: '55 min',
+        price: '$50',
+        description: 'For complex discussions',
+        color: 'purple',
+      },
+    ],
+    linkText: 'Browse all consultations →',
+    linkHref: '/shop',
+  },
   processPreview: {
     title: 'Simple Process',
     steps: [
@@ -343,14 +373,15 @@ export const defaultHomeContent: HomePageContent = {
   cta: {
     title: 'Ready to Get Started?',
     description:
-      "Have a task in mind? Tell us about it and we'll get back with a personalized quote.",
+      'Book a consultation for immediate help, or tell us about your project for a custom quote.',
     buttons: [
-      { text: 'Check FAQ', variant: 'orange', href: '/faq' },
-      { text: 'View Pricing', variant: 'blue', href: '/pricing' },
+      { text: 'Book a Call', variant: 'orange', href: '/shop' },
+      { text: 'Request a Quote', variant: 'blue', href: '/contact' },
     ],
     footer: 'Have questions?',
     footerLinkText: 'Check out our FAQ',
     footerLinkHref: '/faq',
+    chatbotNote: 'Or use the chat button to talk with us anytime.',
     hoverColor: 'orange',
   },
 };

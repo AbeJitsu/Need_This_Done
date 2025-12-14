@@ -4,7 +4,7 @@ import Button from '@/components/Button';
 import ServiceCard from '@/components/ServiceCard';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultHomeContent } from '@/lib/default-page-content';
-import { formInputColors, titleColors, headingColors, groupHoverColors } from '@/lib/colors';
+import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -92,6 +92,47 @@ export default async function HomePage() {
           </div>
         </div>
 
+        {/* Quick Consultations Section */}
+        {content.consultations && (
+          <div className="mb-10">
+            <Link href={content.consultations.linkHref} className="block group">
+              <h2 className={`text-3xl font-bold ${headingColors.primary} mb-2 text-center ${groupHoverColors.purple} transition-colors`}>
+                {content.consultations.title} <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+              </h2>
+            </Link>
+            <p className={`text-center ${formInputColors.helper} mb-6`}>
+              {content.consultations.description}
+            </p>
+            <div className="grid md:grid-cols-3 gap-4">
+              {content.consultations.options.map((option, index) => (
+                <Link
+                  key={index}
+                  href={content.consultations!.linkHref}
+                  className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 hover:border-${option.color}-400 dark:hover:border-${option.color}-500 hover:shadow-lg transition-all duration-300 text-center`}
+                >
+                  <div className={`text-2xl font-bold ${accentColors[option.color]} mb-1`}>
+                    {option.price}
+                  </div>
+                  <div className={`font-semibold ${headingColors.primary} mb-1`}>
+                    {option.name}
+                  </div>
+                  <div className={`text-sm ${formInputColors.helper} mb-2`}>
+                    {option.duration}
+                  </div>
+                  <div className={`text-sm ${formInputColors.helper}`}>
+                    {option.description}
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <p className={`text-center mt-4 ${formInputColors.helper} font-medium hover:underline`}>
+              <Link href={content.consultations.linkHref}>
+                {content.consultations.linkText}
+              </Link>
+            </p>
+          </div>
+        )}
+
         {/* How It Works Preview */}
         <Link
           href="/how-it-works"
@@ -139,6 +180,11 @@ export default async function HomePage() {
               {content.cta.footerLinkText}
             </Link>
           </p>
+          {content.cta.chatbotNote && (
+            <p className={`mt-2 text-sm ${formInputColors.helper}`}>
+              {content.cta.chatbotNote}
+            </p>
+          )}
         </div>
       </div>
   );

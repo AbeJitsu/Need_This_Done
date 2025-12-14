@@ -141,11 +141,26 @@ export interface ProcessPreviewStep {
   color: AccentVariant;
 }
 
+export interface ConsultationOption {
+  name: string;
+  duration: string;
+  price: string;
+  description: string;
+  color: AccentVariant;
+}
+
 export interface HomePageContent {
   hero: {
     buttons: CTAButton[];
   };
   servicesTitle: string;
+  consultations?: {
+    title: string;
+    description: string;
+    options: ConsultationOption[];
+    linkText: string;
+    linkHref: string;
+  };
   processPreview: {
     title: string;
     steps: ProcessPreviewStep[];
@@ -158,6 +173,7 @@ export interface HomePageContent {
     footer: string;
     footerLinkText: string;
     footerLinkHref: string;
+    chatbotNote?: string;
     hoverColor?: AccentVariant;
   };
 }

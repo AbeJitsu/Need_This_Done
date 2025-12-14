@@ -356,6 +356,8 @@ export const linkHoverColors = {
 // Used for text that changes color when a parent with group class is hovered
 export const groupHoverColors = {
   blue: 'group-hover:text-blue-600 dark:group-hover:text-blue-300',
+  purple: 'group-hover:text-purple-600 dark:group-hover:text-purple-300',
+  orange: 'group-hover:text-orange-600 dark:group-hover:text-orange-300',
 };
 
 // ============================================================================
