@@ -60,6 +60,7 @@ _Currently active work items_
 ### Immediate
 
 **Google Cloud Console Setup** ← DO THIS IN PARALLEL WHILE CODING
+- [ ] Update OAuth consent screen email to: abe.raise@gmail.com
 - [ ] Step 1: Create Google Cloud project at https://console.cloud.google.com/ (project name: "NeedThisDone Appointments")
 - [ ] Step 2: Enable Google Calendar API
 - [ ] Step 3: Configure OAuth consent screen (External, with scopes: calendar.events, calendar.readonly)
