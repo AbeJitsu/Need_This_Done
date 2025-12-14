@@ -38,6 +38,21 @@ test('Capture all site pages', async ({ page }) => {
   }
 });
 
+test('Capture services page dark mode', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+
+  // Enable dark mode
+  await page.emulateMedia({ colorScheme: 'dark' });
+
+  await page.goto('/services');
+  await page.waitForLoadState('load');
+  await page.waitForTimeout(400);
+  await page.screenshot({
+    path: `${OUTPUT_DIR}/screenshots/02-services-dark.png`,
+    fullPage: true
+  });
+});
+
 test('Capture homepage journey with copy', async ({ page }) => {
   // 1. Homepage - full view
   await page.goto('/');

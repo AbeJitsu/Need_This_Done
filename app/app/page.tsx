@@ -89,6 +89,12 @@ export default async function HomePage() {
               />
             ))}
           </div>
+          {/* Cross-page link to services comparison */}
+          <p className={`text-center mt-4 ${formInputColors.helper}`}>
+            <Link href="/services" className="hover:underline font-medium">
+              Not sure which service? Compare them all →
+            </Link>
+          </p>
         </div>
 
         {/* Quick Consultations Section */}

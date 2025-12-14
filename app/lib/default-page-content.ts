@@ -31,12 +31,12 @@ export const defaultPricingContent: PricingPageContent = {
       price: 'From $50',
       period: 'per task',
       description:
-        'Need something done fast? This is your go-to for quick wins.',
+        'Perfect for simple tasks across any service—admin, data entry, or quick site updates.',
       features: [
-        'Content updates & simple edits',
-        'Data entry & quick formatting',
-        'Document formatting',
-        'Get it done in days, not weeks',
+        'Virtual Assistant: Email sorting, basic scheduling',
+        'Data & Documents: Simple formatting, data entry',
+        'Website: Content updates, quick fixes',
+        'Delivered in days, not weeks',
       ],
       color: 'green',
       cta: "Let's Do This",
@@ -46,11 +46,11 @@ export const defaultPricingContent: PricingPageContent = {
       price: 'From $150',
       period: 'per task',
       description:
-        'Our most popular option. Great for projects that need a little extra care.',
+        'Our most popular option. Great for projects that need research, organization, or multiple steps.',
       features: [
-        'Research projects',
-        'Spreadsheet organization',
-        'Multi-step tasks',
+        'Virtual Assistant: Research, travel planning, coordination',
+        'Data & Documents: Spreadsheet cleanup, report formatting',
+        'Website: Page redesigns, plugin setup',
         "Revisions included until you're happy",
       ],
       color: 'blue',
@@ -62,12 +62,12 @@ export const defaultPricingContent: PricingPageContent = {
       price: 'From $500',
       period: 'per project',
       description:
-        "For the big stuff. We'll be with you every step of the way.",
+        "For bigger builds and complex projects. We'll be with you every step of the way.",
       features: [
-        'Website builds & redesigns',
-        'E-commerce setup',
-        'Larger multi-phase projects',
-        'A dedicated point of contact throughout',
+        'Website builds & redesigns from scratch',
+        'E-commerce setup with product import',
+        'Large data migrations & system overhauls',
+        'Dedicated point of contact throughout',
       ],
       color: 'purple',
       cta: 'Tell Us More',
@@ -179,10 +179,112 @@ export const defaultFAQContent: FAQPageContent = {
 
 export const defaultServicesContent: ServicesPageContent = {
   header: {
-    title: 'How We Can Help',
+    title: 'Find Your Perfect Fit',
     description:
-      "Too busy? Not sure where to start? We handle the tasks you don't have time for, so you can focus on what matters most.",
+      "Not sure which service you need? You're in the right place. Let's figure it out together—no pressure, no tech speak, just helpful guidance.",
   },
+
+  // Scenario Matcher - "Does this sound like you?"
+  scenarioMatcher: {
+    title: 'Does this sound like you?',
+    description: 'Click any scenario to learn more about how we can help.',
+    scenarios: [
+      {
+        scenario: 'My inbox is drowning me and I can\'t keep up',
+        serviceKey: 'virtual-assistant',
+        serviceTitle: 'Virtual Assistant',
+        color: 'green',
+      },
+      {
+        scenario: 'I have spreadsheets that need serious help',
+        serviceKey: 'data-documents',
+        serviceTitle: 'Data & Documents',
+        color: 'blue',
+      },
+      {
+        scenario: 'My website needs work but I don\'t know where to start',
+        serviceKey: 'website-services',
+        serviceTitle: 'Website Services',
+        color: 'purple',
+      },
+      {
+        scenario: 'I need someone to handle the stuff I keep putting off',
+        serviceKey: 'virtual-assistant',
+        serviceTitle: 'Virtual Assistant',
+        color: 'green',
+      },
+      {
+        scenario: 'I need professional documents but don\'t have design skills',
+        serviceKey: 'data-documents',
+        serviceTitle: 'Data & Documents',
+        color: 'blue',
+      },
+      {
+        scenario: 'I want to sell online but the tech is overwhelming',
+        serviceKey: 'website-services',
+        serviceTitle: 'Website Services',
+        color: 'purple',
+      },
+    ],
+  },
+
+  // Comparison Table - Side-by-side view
+  comparison: {
+    title: 'Compare Services',
+    description: 'Pricing depends on complexity, not just service type. Simple tasks start at $50, bigger projects run $150-500+.',
+    columns: ['Virtual Assistant', 'Data & Documents', 'Website Services'],
+    rows: [
+      {
+        label: 'Best for',
+        values: [
+          'Freeing up your time',
+          'Turning chaos into clarity',
+          'Tech without the headache',
+        ],
+      },
+      {
+        label: 'What we handle',
+        values: [
+          'Email, calendar, research, social media',
+          'Spreadsheets, reports, templates, files',
+          'Builds, updates, e-commerce, maintenance',
+        ],
+      },
+      {
+        label: 'Typical timeline',
+        values: ['Ongoing or one-time', 'Days to 1 week', '1-4 weeks'],
+      },
+      {
+        label: 'Quick tasks',
+        values: ['$50/task', '$50/task', '$50/task'],
+      },
+      {
+        label: 'Bigger projects',
+        values: ['$150+', '$150+', '$500+'],
+      },
+    ],
+  },
+
+  // Still Not Sure - Low-friction CTA
+  stillUnsure: {
+    title: 'Still not sure?',
+    description:
+      "No problem—that's what we're here for. Book a quick 15-minute chat and we'll help you figure out exactly what you need. No pressure, no commitment.",
+    primaryButton: {
+      text: 'Book a Quick Chat',
+      subtext: 'Just $20 · 15 minutes',
+      variant: 'orange',
+      href: '/shop',
+    },
+    secondaryButton: {
+      text: 'Request a Free Quote',
+      subtext: 'Tell us about your project',
+      variant: 'blue',
+      href: '/contact',
+    },
+  },
+
+  // Existing sections (kept)
   expectationsTitle: 'What You Can Expect',
   expectations: [
     {

@@ -224,6 +224,17 @@ export default function ServiceDetailModal() {
                 <span className="block text-sm opacity-70">{activeService.ctas.secondary.description}</span>
               </Link>
             </div>
+
+            {/* Cross-page link to compare services */}
+            <p className={`text-center ${formInputColors.helper} text-sm`}>
+              <Link
+                href="/services"
+                onClick={closeModal}
+                className="hover:underline"
+              >
+                Compare all services →
+              </Link>
+            </p>
           </div>
         </div>
       </div>

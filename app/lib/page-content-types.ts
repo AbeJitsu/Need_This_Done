@@ -99,8 +99,52 @@ export interface ExpectationItem {
   };
 }
 
+/** Scenario for the "Does this sound like you?" matcher */
+export interface ServiceScenario {
+  scenario: string;
+  serviceKey: 'virtual-assistant' | 'data-documents' | 'website-services';
+  serviceTitle: string;
+  color: AccentColor;
+}
+
+/** Row in the service comparison table */
+export interface ComparisonRow {
+  label: string;
+  values: [string, string, string]; // One value per service (VA, Data, Website)
+}
+
+/** Enhanced CTA button with optional subtext */
+export interface EnhancedCTAButton extends CTAButton {
+  subtext?: string;
+}
+
 export interface ServicesPageContent {
   header: PageHeader;
+
+  // Scenario Matcher Section - "Does this sound like you?"
+  scenarioMatcher?: {
+    title: string;
+    description: string;
+    scenarios: ServiceScenario[];
+  };
+
+  // Comparison Table Section - Side-by-side view
+  comparison?: {
+    title: string;
+    description: string;
+    columns: [string, string, string]; // Service names
+    rows: ComparisonRow[];
+  };
+
+  // Still Not Sure Section - Low-friction CTA
+  stillUnsure?: {
+    title: string;
+    description: string;
+    primaryButton: EnhancedCTAButton;
+    secondaryButton: EnhancedCTAButton;
+  };
+
+  // Existing sections (kept for backwards compatibility)
   expectationsTitle: string;
   expectations: ExpectationItem[];
   cta: CTASection;
