@@ -31,15 +31,15 @@ export const defaultPricingContent: PricingPageContent = {
       price: 'From $50',
       period: 'per task',
       description:
-        'Perfect for simple tasks across any service—admin, data entry, or quick site updates.',
+        'Perfect for simple tasks across any service—admin, data entry, or quick site fixes.',
       features: [
         'Virtual Assistant: Email sorting, basic scheduling',
         'Data & Documents: Simple formatting, data entry',
-        'Website: Content updates, quick fixes',
+        'Website: Fix broken links, update text or images',
         'Delivered in days, not weeks',
       ],
       color: 'green',
-      cta: "Let's Do This",
+      // No individual CTA - uses shared consultation CTA below
     },
     {
       name: 'Standard Task',
@@ -50,12 +50,12 @@ export const defaultPricingContent: PricingPageContent = {
       features: [
         'Virtual Assistant: Research, travel planning, coordination',
         'Data & Documents: Spreadsheet cleanup, report formatting',
-        'Website: Page redesigns, plugin setup',
+        'Website: Refresh a page, add new features, speed things up',
         "Revisions included until you're happy",
       ],
       color: 'blue',
       popular: true,
-      cta: "Let's Chat",
+      // No individual CTA - uses shared consultation CTA below
     },
     {
       name: 'Premium Service',
@@ -64,13 +64,14 @@ export const defaultPricingContent: PricingPageContent = {
       description:
         "For bigger builds and complex projects. We'll be with you every step of the way.",
       features: [
-        'Website builds & redesigns from scratch',
-        'E-commerce setup with product import',
+        'Website: Build a new site or give yours a complete makeover',
+        'Online store setup so you can start selling',
         'Large data migrations & system overhauls',
         'Dedicated point of contact throughout',
       ],
       color: 'purple',
-      cta: 'Tell Us More',
+      cta: 'Request a Quote',
+      href: '/contact',
     },
   ],
   paymentNote: {

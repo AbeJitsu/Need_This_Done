@@ -72,6 +72,25 @@ export default async function PricingPage() {
           })}
         </div>
 
+        {/* Shared Consultation CTA - For Quick and Standard tiers */}
+        <Card hoverColor="blue" hoverEffect="glow" className="mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">
+            <div className="flex-1">
+              <h3 className={`text-xl font-semibold ${headingColors.primary} mb-2`}>
+                Ready to talk it through?
+              </h3>
+              <p className={`${formInputColors.helper}`}>
+                Book a quick consultation and we&apos;ll help you figure out exactly what you need—no commitment required.
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <Button variant="blue" href="/shop" size="lg">
+                Book a Consultation
+              </Button>
+            </div>
+          </div>
+        </Card>
+
         {/* Payment Structure Note */}
         {content.paymentNote.enabled && (
           <Card hoverColor="green" hoverEffect="glow" className="mb-10">

@@ -26,7 +26,7 @@ interface PricingCardProps {
   description: string;
   features: string[];
   color: AccentColor;
-  cta: string;
+  cta?: string; // Optional - if omitted, no button shown (use shared CTA instead)
   href?: string;
   popular?: boolean;
 }
@@ -97,12 +97,14 @@ export default function PricingCard({
         ))}
       </ul>
 
-      {/* CTA Button - mt-auto pushes it to the bottom */}
-      <div className="mt-auto">
-        <Button variant={color} href={href} className="w-full">
-          {cta}
-        </Button>
-      </div>
+      {/* CTA Button - mt-auto pushes it to the bottom (only shown if cta is provided) */}
+      {cta && (
+        <div className="mt-auto">
+          <Button variant={color} href={href} className="w-full">
+            {cta}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

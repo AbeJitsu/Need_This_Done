@@ -34,12 +34,21 @@ export async function GET() {
       return priceA - priceB;
     });
 
-    return NextResponse.json({
-      products: sortedProducts,
-      count: sortedProducts.length,
-      cached: result.cached,
-      source: result.source,
-    });
+    // Return with aggressive caching headers for fast navigation
+    return NextResponse.json(
+      {
+        products: sortedProducts,
+        count: sortedProducts.length,
+        cached: result.cached,
+        source: result.source,
+      },
+      {
+        headers: {
+          // Cache for 1 hour, serve stale for 24 hours while revalidating
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        },
+      }
+    );
   } catch (error) {
     return handleApiError(error, 'Products GET');
   }

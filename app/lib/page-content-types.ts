@@ -42,7 +42,8 @@ export interface PricingTier {
   description: string;
   features: string[];
   color: AccentColor;
-  cta: string;
+  cta?: string; // Optional - if omitted, no individual CTA (use shared CTA instead)
+  href?: string; // Where the CTA button links to (defaults to /contact)
   popular?: boolean;
 }
 

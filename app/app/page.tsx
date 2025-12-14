@@ -15,6 +15,9 @@ import type { HomePageContent } from '@/lib/page-content-types';
 // Hero tagline/description come from site.config.ts (developer-controlled).
 // Other content is fetched from the database (if customized) or uses defaults.
 
+// Force dynamic rendering - content comes from API
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'NeedThisDone - Get Your Projects Done Right',
   description: 'Professional project services - submit your project, get it done right.',
@@ -43,11 +46,32 @@ async function getContent(): Promise<HomePageContent> {
 }
 
 // ============================================================================
+// Prefetch Shop Products (for instant navigation)
+// ============================================================================
+// Warms the cache so /shop loads instantly when users click "Book a Consultation"
+
+async function prefetchProducts() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+    // Fire-and-forget fetch to warm Redis cache
+    await fetch(`${baseUrl}/api/shop/products`, {
+      next: { revalidate: 3600 }, // Match product cache TTL
+    });
+  } catch {
+    // Silent fail - prefetch is optional optimization
+  }
+}
+
+// ============================================================================
 // Page Component
 // ============================================================================
 
 export default async function HomePage() {
-  const content = await getContent();
+  // Fetch content and prefetch products in parallel for speed
+  const [content] = await Promise.all([
+    getContent(),
+    prefetchProducts(), // Warms cache for instant /shop navigation
+  ]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
