@@ -8,6 +8,11 @@ import {
   cardHoverBgTints,
   statusBorderColors,
   tagHoverColors,
+  cardBgColors,
+  cardBorderColors,
+  headingColors,
+  formInputColors,
+  mutedTextColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -81,8 +86,8 @@ export default function ProjectCard({
     <button
       onClick={onClick}
       className={`
-        w-full text-left bg-white dark:bg-gray-800 rounded-xl p-6
-        border-2 border-gray-200 dark:border-gray-700
+        w-full text-left ${cardBgColors.base} rounded-xl p-6
+        ${cardBorderColors.light} border-2
         ${statusBorderColors[serviceAccent]}
         transition-all duration-300
         ${cardHoverColors[serviceAccent]}
@@ -98,7 +103,7 @@ export default function ProjectCard({
 
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
+          <h3 className={`text-lg font-semibold ${headingColors.primary} truncate`}>
             {name}
           </h3>
         </div>
@@ -110,10 +115,10 @@ export default function ProjectCard({
           ==================================================================== */}
 
       <div className="flex items-center justify-between gap-4 mb-3">
-        <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+        <p className={`text-sm ${formInputColors.helper} truncate`}>
           {email}
         </p>
-        <p className="text-xs text-gray-500 dark:text-gray-500 flex-shrink-0">
+        <p className={`text-xs ${mutedTextColors.normal} flex-shrink-0`}>
           {formatDate(createdAt)}
         </p>
       </div>
@@ -134,7 +139,7 @@ export default function ProjectCard({
           Message Preview
           ==================================================================== */}
 
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+      <p className={`text-sm ${formInputColors.helper} mb-4 line-clamp-2`}>
         {messagePreview}
       </p>
 
@@ -142,7 +147,7 @@ export default function ProjectCard({
           Footer: Metadata (Comments, Files)
           ==================================================================== */}
 
-      <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-500">
+      <div className={`flex items-center gap-4 text-xs ${mutedTextColors.normal}`}>
         {commentCount > 0 && (
           <span>💬 {commentCount} comment{commentCount !== 1 ? 's' : ''}</span>
         )}

@@ -4,7 +4,7 @@ import Button from '@/components/Button';
 import ServiceCard from '@/components/ServiceCard';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultHomeContent } from '@/lib/default-page-content';
-import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors } from '@/lib/colors';
+import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -108,9 +108,9 @@ export default async function HomePage() {
                 <Link
                   key={index}
                   href={content.consultations!.linkHref}
-                  className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 hover:border-${option.color}-400 dark:hover:border-${option.color}-500 hover:shadow-lg transition-all duration-300 text-center`}
+                  className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 ${accentColors[option.color].hoverBorder} hover:shadow-lg transition-all duration-300 text-center`}
                 >
-                  <div className={`text-2xl font-bold ${accentColors[option.color]} mb-1`}>
+                  <div className={`text-2xl font-bold ${accentColors[option.color].text} mb-1`}>
                     {option.price}
                   </div>
                   <div className={`font-semibold ${headingColors.primary} mb-1`}>
@@ -136,7 +136,7 @@ export default async function HomePage() {
         {/* How It Works Preview */}
         <Link
           href="/how-it-works"
-          className="block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 hover:border-blue-400 hover:shadow-xl active:scale-98 dark:hover:border-blue-500 group"
+          className={`block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 ${cardHoverColors.blue} hover:shadow-xl active:scale-98 group`}
         >
           <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center transition-colors`}>
             {content.processPreview.title}

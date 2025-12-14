@@ -6,6 +6,9 @@ import {
   cardHoverColors,
   formInputColors,
   mutedTextColors,
+  cardBgColors,
+  cardBorderColors,
+  accentColors,
 } from '@/lib/colors';
 import Button from '@/components/Button';
 
@@ -43,9 +46,9 @@ export default function PricingCard({
     <div
       className={`
         relative flex flex-col h-full
-        bg-white dark:bg-gray-800 rounded-xl p-6
+        ${cardBgColors.base} rounded-xl p-6
         ${popular ? 'pt-8' : ''}
-        ${popular ? 'border-2 border-blue-500 dark:border-blue-400' : 'border border-gray-200 dark:border-gray-700'}
+        ${popular ? `border-2 ${accentColors.blue.border}` : cardBorderColors.light}
         border-t-4 ${topBorderColors[color]}
         transition-all ${cardHoverColors[color]}
         hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)]

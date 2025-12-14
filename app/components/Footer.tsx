@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { siteConfig } from '@/config/site.config';
-import { formInputColors, headingColors } from '@/lib/colors';
+import { formInputColors, headingColors, footerColors, dividerColors, linkHoverColors } from '@/lib/colors';
 import { OPEN_CHATBOT_EVENT } from './chatbot/ChatbotWidget';
 
 // ============================================================================
@@ -36,14 +36,14 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+    <footer className={`${footerColors.bg} ${footerColors.border}`}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand Section */}
           <div>
             <Link
               href="/"
-              className={`font-semibold text-lg ${headingColors.primary} hover:text-blue-600 dark:hover:text-blue-400 transition-colors`}
+              className={`font-semibold text-lg ${headingColors.primary} ${linkHoverColors.blue} transition-colors`}
               style={{ fontFamily: 'var(--font-poppins)' }}
             >
               {siteConfig.project.name}
@@ -61,7 +61,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`text-sm ${formInputColors.helper} hover:text-blue-600 dark:hover:text-blue-400 transition-colors`}
+                    className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}
                   >
                     {link.label}
                   </Link>
@@ -78,7 +78,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`text-sm ${formInputColors.helper} hover:text-blue-600 dark:hover:text-blue-400 transition-colors`}
+                    className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}
                   >
                     {link.label}
                   </Link>
@@ -88,7 +88,7 @@ export default function Footer() {
                 <button
                   type="button"
                   onClick={openChatbot}
-                  className={`text-sm ${formInputColors.helper} hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer`}
+                  className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors cursor-pointer`}
                 >
                   Chat with us anytime
                 </button>
@@ -98,7 +98,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className={`mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 text-center text-sm ${formInputColors.helper}`}>
+        <div className={`mt-8 pt-6 border-t ${dividerColors.border} text-center text-sm ${formInputColors.helper}`}>
           &copy; {currentYear} {siteConfig.project.name}
         </div>
       </div>

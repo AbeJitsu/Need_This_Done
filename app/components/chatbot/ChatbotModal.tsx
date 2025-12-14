@@ -6,6 +6,7 @@ import { TextStreamChatTransport } from 'ai';
 import type { UIMessage } from '@ai-sdk/react';
 import ChatMessage from './ChatMessage';
 import { useIndexingOptional } from './IndexingContext';
+import { cardBgColors, dividerColors, headingColors, formInputColors, mutedTextColors, alertColors, formValidationColors } from '@/lib/colors';
 
 // ============================================================================
 // Chat Persistence - Keep chat history across page navigations
@@ -242,12 +243,12 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
   // ========================================================================
   return (
     <div
-      className="fixed right-0 top-20 bottom-4 w-[400px] max-w-[90vw] z-50
+      className={`fixed right-0 top-20 bottom-4 w-[400px] max-w-[90vw] z-50
                  flex flex-col
-                 bg-white dark:bg-gray-800
+                 ${cardBgColors.base}
                  rounded-l-2xl shadow-2xl
-                 border-l border-t border-b border-gray-200 dark:border-gray-700
-                 transition-all duration-300 ease-in-out"
+                 border-l border-t border-b ${dividerColors.border}
+                 transition-all duration-300 ease-in-out`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="chatbot-title"
@@ -255,7 +256,7 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
       {/* ================================================================
           Header
           ================================================================ */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+      <div className={`flex items-center justify-between p-4 border-b ${dividerColors.border}`}>
         {/* Collapse button */}
         <button
           onClick={() => setIsCollapsed(true)}
@@ -272,11 +273,11 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
         <div className="flex-1 text-center">
           <h2
             id="chatbot-title"
-            className="text-lg font-semibold text-gray-900 dark:text-gray-100"
+            className={`text-lg font-semibold ${headingColors.primary}`}
           >
             Chat Assistant
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
+          <p className={`text-sm ${formInputColors.helper}`}>
             Ask me anything about our services
           </p>
         </div>
@@ -346,10 +347,10 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+            <h3 className={`text-lg font-medium ${headingColors.primary} mb-2`}>
               Hi there! How can I help?
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm max-w-sm mx-auto">
+            <p className={`${formInputColors.helper} text-sm max-w-sm mx-auto`}>
               Ask me about our services, pricing, or how we can help with your projects.
             </p>
           </div>
@@ -375,8 +376,8 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
 
         {/* Error message */}
         {error && (
-          <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-            <p className="text-red-700 dark:text-red-300 text-sm">
+          <div className={`p-3 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
+            <p className={`${formValidationColors.error} text-sm`}>
               Sorry, something went wrong. Please try again.
             </p>
           </div>
@@ -391,7 +392,7 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
           ================================================================ */}
       <form
         onSubmit={handleSubmit}
-        className="p-4 border-t border-gray-200 dark:border-gray-700"
+        className={`p-4 border-t ${dividerColors.border}`}
       >
         <div className="flex space-x-3">
           <input
@@ -401,14 +402,11 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your message..."
             disabled={isLoading}
-            className="flex-1 px-4 py-3 rounded-xl
-                       border border-gray-300 dark:border-gray-600
-                       bg-white dark:bg-gray-700
-                       text-gray-900 dark:text-gray-100
-                       placeholder-gray-500 dark:placeholder-gray-400
+            className={`flex-1 px-4 py-3 rounded-xl
+                       ${formInputColors.base} ${formInputColors.placeholder}
                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
                        disabled:opacity-50 disabled:cursor-not-allowed
-                       transition-colors"
+                       transition-colors`}
           />
 
           <button
@@ -430,7 +428,7 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
           </button>
         </div>
 
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+        <p className={`text-xs ${mutedTextColors.normal} mt-2 text-center`}>
           Press Enter to send
         </p>
       </form>
