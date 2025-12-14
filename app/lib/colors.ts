@@ -434,3 +434,35 @@ export const cardBorderColors = {
   lightMd: 'border-2 border-gray-300 dark:border-gray-600',
 };
 
+// ============================================================================
+// Primary Button Colors - For primary action buttons
+// ============================================================================
+export const primaryButtonColors = {
+  bg: 'bg-blue-600 dark:bg-blue-500',
+  hover: 'hover:bg-blue-700 dark:hover:bg-blue-600',
+  text: 'text-white',
+  focus: 'focus:ring-2 focus:ring-blue-500',
+};
+
+// ============================================================================
+// Icon Button Colors - For icon-only buttons in headers and toolbars
+// ============================================================================
+export const iconButtonColors = {
+  text: 'text-gray-500 dark:text-gray-400',
+  hover: 'hover:text-gray-700 dark:hover:text-gray-200',
+  bg: 'hover:bg-gray-100 dark:hover:bg-gray-700',
+  secondary: {
+    bg: 'bg-gray-200 dark:bg-gray-700',
+    hover: 'hover:bg-gray-300 dark:hover:bg-gray-600',
+    text: 'text-gray-600 dark:text-gray-300',
+  },
+};
+
+// ============================================================================
+// Loading Indicator Colors - For loading spinners and dots
+// ============================================================================
+export const loadingColors = {
+  bg: 'bg-gray-100 dark:bg-gray-700',
+  dot: 'bg-gray-400',
+};
+

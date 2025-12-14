@@ -6,7 +6,7 @@ import { TextStreamChatTransport } from 'ai';
 import type { UIMessage } from '@ai-sdk/react';
 import ChatMessage from './ChatMessage';
 import { useIndexingOptional } from './IndexingContext';
-import { cardBgColors, dividerColors, headingColors, formInputColors, mutedTextColors, alertColors, formValidationColors } from '@/lib/colors';
+import { cardBgColors, dividerColors, headingColors, formInputColors, mutedTextColors, alertColors, formValidationColors, primaryButtonColors, iconButtonColors, lightBgColors, loadingColors, linkColors } from '@/lib/colors';
 
 // ============================================================================
 // Chat Persistence - Keep chat history across page navigations
@@ -195,12 +195,11 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
         {/* Expand button */}
         <button
           onClick={() => setIsCollapsed(false)}
-          className="w-12 h-12 rounded-l-xl
-                     bg-blue-600 hover:bg-blue-700
-                     dark:bg-blue-500 dark:hover:bg-blue-600
-                     text-white shadow-lg
+          className={`w-12 h-12 rounded-l-xl
+                     ${primaryButtonColors.bg} ${primaryButtonColors.hover}
+                     ${primaryButtonColors.text} shadow-lg
                      flex items-center justify-center
-                     transition-colors"
+                     transition-colors`}
           aria-label="Expand chat"
           title="Expand chat"
         >
@@ -211,9 +210,9 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
 
         {/* Message count indicator */}
         {messages.length > 0 && (
-          <div className="mt-2 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50
+          <div className={`mt-2 w-8 h-8 rounded-full ${lightBgColors.blue}
                           flex items-center justify-center
-                          text-xs font-medium text-blue-600 dark:text-blue-400">
+                          text-xs font-medium ${formValidationColors.info}`}>
             {messages.length}
           </div>
         )}
@@ -221,12 +220,11 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
         {/* Close button */}
         <button
           onClick={onClose}
-          className="mt-auto mb-4 w-10 h-10 rounded-l-lg
-                     bg-gray-200 hover:bg-gray-300
-                     dark:bg-gray-700 dark:hover:bg-gray-600
-                     text-gray-600 dark:text-gray-300
+          className={`mt-auto mb-4 w-10 h-10 rounded-l-lg
+                     ${iconButtonColors.secondary.bg} ${iconButtonColors.secondary.hover}
+                     ${iconButtonColors.secondary.text}
                      flex items-center justify-center
-                     transition-colors"
+                     transition-colors`}
           aria-label="Close chat"
           title="Close chat"
         >
@@ -260,8 +258,8 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
         {/* Collapse button */}
         <button
           onClick={() => setIsCollapsed(true)}
-          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200
-                     p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className={`${iconButtonColors.text} ${iconButtonColors.hover}
+                     p-2 rounded-lg ${iconButtonColors.bg} transition-colors`}
           aria-label="Collapse chat"
           title="Collapse chat"
         >
@@ -288,9 +286,9 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
             <button
               onClick={indexing.forceReindex}
               disabled={indexing.status === 'indexing'}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200
-                         p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors
-                         disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`${iconButtonColors.text} ${iconButtonColors.hover}
+                         p-2 rounded-lg ${iconButtonColors.bg} transition-colors
+                         disabled:opacity-50 disabled:cursor-not-allowed`}
               aria-label="Re-index page"
               title={indexing.status === 'indexing' ? 'Indexing...' : 'Re-index this page'}
             >
@@ -309,8 +307,8 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
           {messages.length > 0 && (
             <button
               onClick={handleClearChat}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200
-                         p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className={`${iconButtonColors.text} ${iconButtonColors.hover}
+                         p-2 rounded-lg ${iconButtonColors.bg} transition-colors`}
               aria-label="Clear chat"
               title="Clear chat"
             >
@@ -323,8 +321,8 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
           {/* Close button */}
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200
-                       p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className={`${iconButtonColors.text} ${iconButtonColors.hover}
+                       p-2 rounded-lg ${iconButtonColors.bg} transition-colors`}
             aria-label="Close chat"
             title="Close chat"
           >
@@ -342,8 +340,8 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
         {/* Welcome message when empty */}
         {messages.length === 0 && (
           <div className="text-center py-8">
-            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className={`w-16 h-16 ${lightBgColors.blue} rounded-full flex items-center justify-center mx-auto mb-4`}>
+              <svg className={`w-8 h-8 ${linkColors.blue}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
@@ -364,11 +362,11 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
         {/* Loading indicator */}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 dark:bg-gray-700 rounded-2xl rounded-bl-md px-4 py-3">
+            <div className={`${loadingColors.bg} rounded-2xl rounded-bl-md px-4 py-3`}>
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce animate-delay-0" />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce animate-delay-150" />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce animate-delay-300" />
+                <div className={`w-2 h-2 ${loadingColors.dot} rounded-full animate-bounce animate-delay-0`} />
+                <div className={`w-2 h-2 ${loadingColors.dot} rounded-full animate-bounce animate-delay-150`} />
+                <div className={`w-2 h-2 ${loadingColors.dot} rounded-full animate-bounce animate-delay-300`} />
               </div>
             </div>
           </div>
@@ -414,13 +412,12 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
             disabled={!input.trim() || isLoading}
             aria-label="Send message"
             title="Send message"
-            className="px-5 py-3 rounded-xl
-                       bg-blue-600 hover:bg-blue-700
-                       dark:bg-blue-500 dark:hover:bg-blue-600
-                       text-white font-medium
+            className={`px-5 py-3 rounded-xl
+                       ${primaryButtonColors.bg} ${primaryButtonColors.hover}
+                       ${primaryButtonColors.text} font-medium
                        transition-colors
                        disabled:opacity-50 disabled:cursor-not-allowed
-                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                       focus:outline-none ${primaryButtonColors.focus} focus:ring-offset-2`}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
