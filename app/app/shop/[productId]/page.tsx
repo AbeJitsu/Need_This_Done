@@ -1,14 +1,14 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import ProductDetailClient from '@/components/shop/ProductDetailClient';
-import type { Product } from '@/lib/medusa-client';
+import { medusaClient, type Product } from '@/lib/medusa-client';
 
 // ============================================================================
 // Product Detail Page - /shop/[productId]
 // ============================================================================
 // What: Shows full product details with add to cart functionality
 // Why: Lets customers review before adding to cart
-// How: Server Component fetches product instantly, Client Component handles interactivity
+// How: Server Component fetches product directly from Medusa, Client Component handles interactivity
 
 // Force dynamic rendering - products come from Medusa API
 export const dynamic = 'force-dynamic';
@@ -37,22 +37,20 @@ export async function generateMetadata({
 }
 
 // ============================================================================
-// Data Fetching - Runs on Server
+// Data Fetching - Directly from Medusa (bypasses SSL issues in dev)
 // ============================================================================
 
 async function getProduct(productId: string): Promise<Product | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/shop/products/${productId}`, {
-      next: { revalidate: 300 }, // Revalidate every 5 minutes
-    });
+    // Detect if this is a product ID (starts with "prod_") or a handle
+    const isProductId = productId.startsWith('prod_');
 
-    if (!response.ok) {
-      return null;
+    if (isProductId) {
+      return await medusaClient.products.get(productId);
+    } else {
+      // Lookup by handle
+      return await medusaClient.products.getByHandle(productId);
     }
-
-    const data = await response.json();
-    return data.product;
   } catch (error) {
     console.error('Failed to fetch product:', error);
     return null;

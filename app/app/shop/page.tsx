@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
 import PageHeader from '@/components/PageHeader';
 import ShopClient from '@/components/shop/ShopClient';
-import type { Product } from '@/lib/medusa-client';
+import { medusaClient, type Product } from '@/lib/medusa-client';
 
 // ============================================================================
 // Shop Page - Product Catalog
 // ============================================================================
 // What: Displays all available products/services for purchase
 // Why: Enables customers to browse and add items to cart
-// How: Server Component fetches products instantly, Client Component handles cart
+// How: Server Component fetches products directly from Medusa, Client Component handles cart
 
 // Force dynamic rendering - products come from Medusa API
 export const dynamic = 'force-dynamic';
@@ -19,23 +19,19 @@ export const metadata: Metadata = {
 };
 
 // ============================================================================
-// Data Fetching - Runs on Server
+// Data Fetching - Directly from Medusa (bypasses SSL issues in dev)
 // ============================================================================
 
 async function getProducts(): Promise<Product[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/shop/products`, {
-      next: { revalidate: 3600 }, // Revalidate every hour
+    const products = await medusaClient.products.list();
+
+    // Sort by price ascending: green ($20) → blue ($35) → purple ($50)
+    return products.sort((a, b) => {
+      const priceA = a.variants?.[0]?.prices?.[0]?.amount ?? 0;
+      const priceB = b.variants?.[0]?.prices?.[0]?.amount ?? 0;
+      return priceA - priceB;
     });
-
-    if (!response.ok) {
-      console.error('Failed to fetch products:', response.status);
-      return [];
-    }
-
-    const data = await response.json();
-    return data.products || [];
   } catch (error) {
     console.error('Failed to fetch products:', error);
     return [];
