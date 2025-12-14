@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { StripeProvider } from '@/context/StripeContext';
@@ -109,6 +110,9 @@ export default function RootLayout({
               <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">
                 {children}
               </main>
+
+              {/* Site-wide footer */}
+              <Footer />
 
               {/* AI Chatbot - floating widget available on all pages */}
               <PageIndexer />

@@ -158,34 +158,6 @@ export default async function HomePage() {
             {content.processPreview.linkText}
           </p>
         </Link>
-
-        {/* CTA Section */}
-        <div className="text-center bg-white dark:bg-gray-800 border-2 border-gray-400 dark:border-gray-500 rounded-xl p-8 shadow-lg hover:shadow-xl hover:border-orange-400 dark:hover:border-orange-500 transition-all duration-300">
-          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-4`}>
-            {content.cta.title}
-          </h2>
-          <p className={`${formInputColors.helper} mb-6`}>
-            {content.cta.description}
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            {content.cta.buttons.map((button, index) => (
-              <Button key={index} variant={button.variant} href={button.href}>
-                {button.text}
-              </Button>
-            ))}
-          </div>
-          <p className={`mt-6 text-sm ${formInputColors.helper}`}>
-            {content.cta.footer}{' '}
-            <Link href={content.cta.footerLinkHref} className={`${titleColors.blue} hover:underline`}>
-              {content.cta.footerLinkText}
-            </Link>
-          </p>
-          {content.cta.chatbotNote && (
-            <p className={`mt-2 text-sm ${formInputColors.helper}`}>
-              {content.cta.chatbotNote}
-            </p>
-          )}
-        </div>
       </div>
   );
 }

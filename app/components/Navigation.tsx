@@ -16,15 +16,11 @@ import DarkModeToggle from './DarkModeToggle';
 // Active link is highlighted based on current URL.
 // Shows login link or user dropdown based on auth state.
 
-// Main navigation links (excludes Contact - that's now the primary CTA)
+// Main navigation links (action-oriented only - informational pages moved to footer)
 const navigationLinks = [
-  { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
   { href: '/shop', label: 'Shop' },
   { href: '/pricing', label: 'Pricing' },
-  { href: '/how-it-works', label: 'How It Works' },
-  { href: '/get-started', label: 'Get Started' },
-  { href: '/faq', label: 'FAQ' },
 ];
 
 export default function Navigation() {
