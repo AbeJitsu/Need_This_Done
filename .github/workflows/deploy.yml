@@ -33,11 +33,32 @@ jobs:
           echo "Pulling latest code from GitHub..."
           git pull origin main
           echo "Building and starting Docker containers..."
-          docker-compose --env-file .env.local -f docker-compose.production.yml up --build -d
-          echo "Checking service health..."
-          sleep 10
+          docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.prod.yml up --build -d
+
+          echo "Waiting for services to be healthy (with exponential backoff)..."
+          MAX_ATTEMPTS=8
+          DELAY=1
+          for i in $(seq 1 $MAX_ATTEMPTS); do
+            UNHEALTHY=$(docker ps --filter "health=unhealthy" --format "{{.Names}}" | wc -l)
+            STARTING=$(docker ps --filter "health=starting" --format "{{.Names}}" | wc -l)
+
+            if [ "$UNHEALTHY" -eq 0 ] && [ "$STARTING" -eq 0 ]; then
+              echo "✓ All services healthy after attempt $i!"
+              docker ps
+              echo "✓ Deployment complete!"
+              exit 0
+            fi
+
+            if [ $i -lt $MAX_ATTEMPTS ]; then
+              echo "  Attempt $i/$MAX_ATTEMPTS: Services still starting, retrying in ${DELAY}s..."
+              sleep $DELAY
+              DELAY=$((DELAY * 2))
+            fi
+          done
+
+          echo "⚠ Health check timeout - showing container status:"
           docker ps
-          echo "✓ Deployment complete!"
+          exit 1
           EOF
 
       - name: Verify deployment

@@ -41,7 +41,7 @@ get_compose_cmd() {
   # CRITICAL: Always use --env-file to ensure env vars are loaded
   # This fixes the "env vars disappear on restart" issue
   if [[ "$DOCKER_MODE" == "production" ]]; then
-    echo "docker-compose --env-file .env.local -f docker-compose.production.yml"
+    echo "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.prod.yml"
   else
     echo "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml"
   fi
@@ -112,7 +112,7 @@ show_help() {
   Docker Helper - Friendly Commands for Your Services
 
   MODES:
-    --prod, --production    Run in production mode (uses docker-compose.production.yml)
+    --prod, --production    Run in production mode (uses docker-compose.prod.yml)
                            Default: development mode
 
   MAIN SERVICES (always running):

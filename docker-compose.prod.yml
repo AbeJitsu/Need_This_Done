@@ -84,6 +84,11 @@ services:
         reservations:
           cpus: '0.3'
           memory: 512M
+    healthcheck:
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
     restart: always
 
   medusa_postgres:
