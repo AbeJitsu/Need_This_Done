@@ -36,6 +36,15 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+        NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
+        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+        NEXT_PUBLIC_CHATBOT_MODEL: ${NEXT_PUBLIC_CHATBOT_MODEL}
+        NEXT_PUBLIC_CHATBOT_MAX_TOKENS: ${NEXT_PUBLIC_CHATBOT_MAX_TOKENS}
+        NEXT_PUBLIC_CHATBOT_TEMPERATURE: ${NEXT_PUBLIC_CHATBOT_TEMPERATURE}
 
     # Resource limits - the kitchen can't use all resources
     # Allows other services to function even if the app is under heavy load
