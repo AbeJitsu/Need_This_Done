@@ -109,7 +109,7 @@ show_help() {
     ./scripts/docker.sh status
     ./scripts/docker.sh test e2e
 
-  See docs/CONTAINER_RESTART_GUIDE.md for detailed restart guide
+  See README.md → "Docker Development Workflow" for complete restart guidance
 
 EOF
 }

@@ -10,6 +10,7 @@ A professional services platform built with Next.js, running in Docker with ngin
 - [What This Project Is](#what-this-project-is)
 - [Architecture Overview](#architecture-overview)
 - [Development Setup](#development-setup)
+- [Docker Development Workflow](#docker-development-workflow)
 - [Project Structure](#project-structure)
 - [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
 - [Caching Strategy](#caching-strategy)
@@ -77,6 +78,7 @@ A modern platform for professional services that combines:
 - **Cache**: Redis for performance
 - **Infrastructure**: Docker + Nginx reverse proxy
 - **Design**: Tailwind CSS with dark mode support
+- **Testing**: Playwright E2E tests + Visual regression testing (screenshot baselines)
 
 ---
 
@@ -322,6 +324,221 @@ Production uses a completely standalone compose file - it does NOT reference the
 
 ---
 
+## Docker Development Workflow
+
+### When to Restart, Rebuild, or Wait
+
+Understanding when containers need restarting is crucial for efficient development. This section explains when changes require manual intervention vs automatic hot reload.
+
+#### Quick Reference: What Changed → What to Do
+
+| You Changed... | What to Do | Why | Command |
+|---------------|------------|-----|---------|
+| **Next.js code** (`app/lib/`, `app/app/`, `app/components/`) | Nothing* | Hot reload auto-restarts | *Wait 2-3 seconds* |
+| **API routes** (`app/app/api/`) | Restart `nextjs_app` | Hot reload sometimes misses API changes | `./scripts/docker.sh restart website` |
+| **Environment variables** (`.env.local`) | Restart both | Env vars loaded at startup | `./scripts/docker.sh restart website store` |
+| **Medusa backend** (`medusa/`) | Restart `medusa_backend` | No hot reload in Medusa | `./scripts/docker.sh restart store` |
+| **Nginx config** (`nginx/nginx.conf`) | Restart `nginx` | Config loaded at startup | `./scripts/docker.sh restart front-door` |
+| **Docker configs** (`docker-compose*.yml`, Dockerfiles) | Rebuild everything | Need fresh build | `./scripts/docker.sh rebuild <service>` |
+| **Package changes** (`package.json`, `package-lock.json`) | Rebuild service | Rebuild with new deps | `./scripts/docker.sh rebuild <service>` |
+
+\* Hot reload works **most of the time** but not always. If changes don't appear after 3 seconds, manual restart is needed.
+
+### How Hot Reload Works
+
+#### ✅ Has Hot Reload (Auto-Restart)
+
+**Next.js App** (`nextjs_app`)
+- **How it works**: Volume mount (`./app:/app`) + Next.js dev mode
+- **When it works**: Most `.ts`, `.tsx`, `.js`, `.jsx` file changes
+- **When it fails**:
+  - API route changes sometimes don't trigger reload
+  - Changes to `next.config.js`
+  - Adding new dependencies
+  - Environment variable changes
+- **Fix**: Manual restart if changes don't appear after 3 seconds
+
+**Storybook** (`storybook_dev`)
+- **How it works**: Volume mount + Storybook dev mode
+- **When it works**: Component story changes
+- **When it fails**: Storybook config changes
+- **Fix**: Manual restart
+
+#### ❌ No Hot Reload (Always Restart Manually)
+
+**Medusa Backend** (`medusa_backend`)
+- **Why no hot reload**: Medusa doesn't have hot reload built in
+- **Restart for**: ANY code change in `medusa/` directory
+- **Command**: `./scripts/docker.sh restart store`
+
+**Nginx** (`nginx`)
+- **Why no hot reload**: Nginx config loaded at startup only
+- **Restart for**: ANY config change in `nginx/` directory
+- **Command**: `./scripts/docker.sh restart front-door`
+
+**Redis & Postgres** (`redis`, `medusa_postgres`)
+- **Why no hot reload**: Data services, no code to change
+- **Restart for**: Never (unless service crashes)
+
+### Restart vs Rebuild
+
+#### When to **Restart** (faster, preserves data)
+```bash
+./scripts/docker.sh restart <service>
+```
+
+Use restart for:
+- Code changes (within existing dependencies)
+- Config file changes
+- Environment variable changes
+- Service not responding
+
+#### When to **Rebuild** (slower, clean slate)
+```bash
+./scripts/docker.sh rebuild <service>
+```
+
+Use rebuild for:
+- `package.json` / `package-lock.json` changes (new dependencies)
+- Dockerfile changes
+- Build configuration changes
+- Persistent bugs that restart doesn't fix
+
+### Helper Commands for Common Scenarios
+
+The `./scripts/docker.sh` script provides convenient shortcuts for common restart scenarios:
+
+#### After Git Pull (Smart Detection)
+```bash
+./scripts/docker.sh after-pull
+```
+
+Automatically detects which files changed and restarts only the affected services:
+- `app/` changes → restarts `website`
+- `medusa/` changes → restarts `store`
+- `nginx/` changes → restarts `front-door`
+- `.env` changes → restarts `website` + `store`
+
+#### Fix Checkout Issues
+```bash
+./scripts/docker.sh fix-checkout
+```
+
+One-command fix for common checkout problems:
+- Restarts `website` (Next.js app + API routes)
+- Restarts `store` (Medusa backend)
+- Clears any stuck payment sessions
+
+#### Restart Multiple Services
+```bash
+./scripts/docker.sh restart website store memory
+```
+
+Restart several services at once. Useful when changes affect multiple containers.
+
+### Common Development Scenarios
+
+#### Scenario 1: Fixed Checkout Bug (API Route Change)
+**What changed**: `app/app/api/checkout/session/route.ts`
+
+**Hot reload worked?** Sometimes no (API routes can be tricky)
+
+**Solution**:
+```bash
+./scripts/docker.sh restart website
+```
+
+**Why**: Force Next.js to reload API routes
+
+---
+
+#### Scenario 2: Updated Medusa Payment Logic
+**What changed**: `medusa/src/services/cart-service.ts`
+
+**Hot reload worked?** Never (Medusa has no hot reload)
+
+**Solution**:
+```bash
+./scripts/docker.sh restart store
+```
+
+**Why**: Medusa requires manual restart for all changes
+
+---
+
+#### Scenario 3: Added New npm Package
+**What changed**: `package.json` + `package-lock.json`
+
+**Hot reload worked?** Never (dependencies installed at build time)
+
+**Solution**:
+```bash
+./scripts/docker.sh rebuild website  # If package added to app/
+./scripts/docker.sh rebuild store    # If package added to medusa/
+```
+
+**Why**: Need to reinstall node_modules
+
+---
+
+#### Scenario 4: Changed Environment Variables
+**What changed**: `.env.local`
+
+**Hot reload worked?** Never (env vars loaded at container start)
+
+**Solution**:
+```bash
+# If changed Next.js env vars
+./scripts/docker.sh restart website
+
+# If changed Medusa env vars
+./scripts/docker.sh restart store
+
+# If changed both (most common)
+./scripts/docker.sh restart website store
+```
+
+**Why**: Environment variables are only read at startup
+
+---
+
+#### Scenario 5: Updated Nginx SSL Config
+**What changed**: `nginx/nginx.conf`
+
+**Hot reload worked?** Never (nginx config loaded at start)
+
+**Solution**:
+```bash
+./scripts/docker.sh restart front-door
+```
+
+**Why**: Nginx must reload config
+
+### The Foolproof Restart Checklist
+
+**After making code changes:**
+
+1. ✅ **Wait 3 seconds** - Check if hot reload worked
+2. ❌ **Changes not visible?** → Restart the service
+3. ❌ **Still not working?** → Check logs for errors
+4. ❌ **Still broken?** → Rebuild the service
+5. ❌ **Nuclear option?** → `./scripts/docker.sh fresh`
+
+**Always restart after:**
+- ✅ Pulling from git
+- ✅ Changing `.env.local`
+- ✅ Changing API routes
+- ✅ Changing Medusa code
+- ✅ Changing nginx config
+
+**Always rebuild after:**
+- ✅ Adding npm packages
+- ✅ Changing Dockerfiles
+- ✅ Changing `next.config.js`
+- ✅ Persistent bugs that restart doesn't fix
+
+---
+
 ## Project Structure
 
 ### Root Level
@@ -449,6 +666,28 @@ function ShopPage() {
   );
 }
 ```
+
+### Appointment Booking Requirements
+
+Consultation products include built-in booking constraints for quality service:
+
+| Constraint | Value | Enforced By |
+|------------|-------|-------------|
+| Advance booking | 24 hours minimum | `api/appointments/availability` |
+| Daily limit | 5 appointments max | `api/appointments/availability` |
+| Buffer time | 30 minutes between appointments | Google Calendar validation |
+| Business hours | 9 AM - 5 PM, Monday-Friday | Appointment form time picker |
+
+**Why these constraints:**
+- 24-hour advance booking: Allows proper preparation for each consultation
+- Daily limit: Maintains quality by preventing over-scheduling
+- Buffer time: Accounts for transitions, notes, and breaks
+- Business hours: Ensures availability during working hours
+
+**Implementation:**
+- Form validation in `components/AppointmentRequestForm.tsx`
+- Backend validation in `api/appointments/request/route.ts`
+- Real-time availability check via `api/appointments/availability`
 
 ### Testing the Cart
 
@@ -787,6 +1026,25 @@ Every feature has automated tests. Here's exactly where each is tested:
 </details>
 
 <details>
+<summary><strong>Visual Regression - Checkout Flow (14 screenshots)</strong> - <code>e2e/checkout-screenshots.spec.ts</code></summary>
+
+| Screenshot | Captures |
+|------------|----------|
+| Checkout Start | Empty cart → initial checkout page |
+| Guest Details Form | Email and shipping address fields |
+| Order Summary (Sticky) | Sidebar stays visible while scrolling |
+| Appointment Scheduling | Post-checkout appointment request form |
+| Payment Form | Stripe Elements integration |
+| Order Confirmation | Success page with order details |
+| Dark Mode Variants | All above in dark theme |
+
+**Purpose:** Documents the full checkout journey visually. Any unintended UI changes trigger screenshot diffs in CI, preventing accidental regressions before they ship.
+
+**Update baselines:** `npm run test:e2e -- --update-snapshots`
+
+</details>
+
+<details>
 <summary><strong>Email Templates (10 tests)</strong> - <code>__tests__/lib/email.unit.test.ts</code></summary>
 
 | Test Suite | Test Name | Verifies |
@@ -998,9 +1256,70 @@ User: "launch a swarm to review my changes"
 
 See `.claude/skills/launch-a-swarm.md` for full documentation.
 
+#### Container Restart Guide
+
+Comprehensive guide for when to restart vs rebuild Docker services. Helps diagnose issues faster and minimize downtime.
+
+**Location:** [docs/CONTAINER_RESTART_GUIDE.md](docs/CONTAINER_RESTART_GUIDE.md)
+
+**Key Features:**
+- Decision tree: restart vs rebuild
+- Smart multi-service restart support via `./docker.sh restart service1 service2`
+- Common scenarios with recommended actions
+- Troubleshooting tips for container issues
+
+**Quick Reference:**
+```bash
+# Restart single service
+./docker.sh restart medusa
+
+# Restart multiple services
+./docker.sh restart medusa redis
+
+# When to use:
+# - Config changes (.env.local updates)
+# - Service appears hung
+# - Network connectivity issues
+# - After code changes (with volume mounts)
+```
+
 ---
 
 ## Troubleshooting
+
+### Issue: Code changes not appearing
+
+**Symptom**: Made code changes but they don't show up in browser
+
+**Solutions**:
+```bash
+# 1. Wait 3 seconds for hot reload
+# Hot reload usually works for Next.js components
+
+# 2. Check which service needs restart
+# See "Docker Development Workflow" section above for details
+
+# 3. Restart the affected service
+./scripts/docker.sh restart website  # For app/ changes
+./scripts/docker.sh restart store    # For medusa/ changes
+
+# 4. Check logs for errors
+./scripts/docker.sh logs website
+./scripts/docker.sh logs store
+
+# 5. If still not working, rebuild
+./scripts/docker.sh rebuild website
+
+# 6. Nuclear option - fresh start
+./scripts/docker.sh fresh
+```
+
+**Quick fixes**:
+- After `git pull`: `./scripts/docker.sh after-pull`
+- Checkout broken: `./scripts/docker.sh fix-checkout`
+- Multiple services: `./scripts/docker.sh restart website store`
+
+See [Docker Development Workflow](#docker-development-workflow) for complete restart guidance.
 
 ### Issue: "Failed to add item to cart"
 
