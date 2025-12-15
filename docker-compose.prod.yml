@@ -15,6 +15,12 @@ version: '3.8'
 
 services:
   nginx:
+    # Mount SSL certificates from Let's Encrypt on the host
+    # Nginx needs access to these for HTTPS
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /etc/ssl/certs:/etc/ssl/certs:ro
+
     # Resource limits - the front door can't use all the building's electricity
     # Prevents one service from crashing the whole server
     deploy:
