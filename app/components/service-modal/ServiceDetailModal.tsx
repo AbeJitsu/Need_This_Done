@@ -7,7 +7,6 @@ import {
   cardBgColors,
   dividerColors,
   headingColors,
-  formInputColors,
   titleColors,
   checkmarkColors,
   topBorderColors,
@@ -130,7 +129,7 @@ export default function ServiceDetailModal() {
             <p className={`text-xl font-medium ${headingColors.primary} mb-2`}>
               {activeService.headline}
             </p>
-            <p className={`${formInputColors.helper} text-base`}>
+            <p className={`${headingColors.secondary} text-base`}>
               {activeService.hook}
             </p>
           </div>
@@ -152,7 +151,7 @@ export default function ServiceDetailModal() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className={`${formInputColors.helper}`}>
+                    <span className={`${headingColors.secondary}`}>
                       {point}
                     </span>
                   </li>

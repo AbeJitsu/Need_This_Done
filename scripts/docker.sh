@@ -11,13 +11,11 @@
 #   design-tools = Preview your designs (Storybook)
 #
 # Usage:
-#   ./scripts/docker.sh start website
-#   ./scripts/docker.sh stop store
-#   ./scripts/docker.sh restart memory
-#   ./scripts/docker.sh up        # Start everything
-#   ./scripts/docker.sh down      # Stop everything
-#   ./scripts/docker.sh status    # See what's running
-#   ./scripts/docker.sh logs website
+#   ./scripts/docker.sh start website          # Development mode
+#   ./scripts/docker.sh --prod restart store   # Production mode
+#   ./scripts/docker.sh stop memory
+#   ./scripts/docker.sh up                     # Start everything
+#   ./scripts/docker.sh --prod up              # Start production
 # ============================================================================
 
 # Color codes for friendly output
@@ -26,6 +24,35 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
+
+# ============================================================================
+# Mode Detection (Development vs Production)
+# ============================================================================
+
+# Check for --prod flag or DOCKER_MODE environment variable
+DOCKER_MODE="${DOCKER_MODE:-development}"
+if [[ "$1" == "--prod" ]] || [[ "$1" == "--production" ]]; then
+  DOCKER_MODE="production"
+  shift  # Remove flag from arguments
+fi
+
+# Get docker-compose command with proper flags
+get_compose_cmd() {
+  # CRITICAL: Always use --env-file to ensure env vars are loaded
+  # This fixes the "env vars disappear on restart" issue
+  if [[ "$DOCKER_MODE" == "production" ]]; then
+    echo "docker-compose --env-file .env.local -f docker-compose.production.yml"
+  else
+    echo "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml"
+  fi
+}
+
+# Display current mode
+if [[ "$DOCKER_MODE" == "production" ]]; then
+  MODE_DISPLAY="${RED}[PRODUCTION]${NC}"
+else
+  MODE_DISPLAY="${GREEN}[DEVELOPMENT]${NC}"
+fi
 
 # ============================================================================
 # Service Name Mapping (Friendly → Docker)
@@ -68,6 +95,10 @@ show_help() {
 
   Docker Helper - Friendly Commands for Your Services
 
+  MODES:
+    --prod, --production    Run in production mode (uses docker-compose.production.yml)
+                           Default: development mode
+
   MAIN SERVICES (always running):
     front-door    Where visitors enter your site
     website       Your main site that people see
@@ -96,18 +127,25 @@ show_help() {
     after-pull          Restart services after git pull (smart detection)
     fix-checkout        Fix common checkout issues (restart website + store)
 
-  QUICK FIXES:
-    ./scripts/docker.sh after-pull       After git pull
-    ./scripts/docker.sh fix-checkout     Checkout not working
-    ./scripts/docker.sh restart website store    Multiple services
-
-  EXAMPLES:
+  DEVELOPMENT EXAMPLES:
     ./scripts/docker.sh start memory
     ./scripts/docker.sh restart website
     ./scripts/docker.sh logs store
     ./scripts/docker.sh up
     ./scripts/docker.sh status
     ./scripts/docker.sh test e2e
+
+  PRODUCTION EXAMPLES (on DigitalOcean):
+    ./scripts/docker.sh --prod up              Start production
+    ./scripts/docker.sh --prod restart website Restart in production
+    ./scripts/docker.sh --prod logs store      View production logs
+    ./scripts/docker.sh --prod down            Stop production
+
+  QUICK FIXES:
+    ./scripts/docker.sh after-pull                    After git pull
+    ./scripts/docker.sh fix-checkout                  Checkout not working
+    ./scripts/docker.sh restart website store         Multiple services
+    ./scripts/docker.sh --prod restart website store  Production restart
 
   See README.md → "Docker Development Workflow" for complete restart guidance
 
@@ -123,8 +161,8 @@ cmd_start() {
   local docker_name=$(get_docker_name "$service")
   local friendly=$(get_friendly_name "$docker_name")
 
-  echo -e "${BLUE}Starting ${friendly}...${NC}"
-  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d "$docker_name"
+  echo -e "${MODE_DISPLAY} ${BLUE}Starting ${friendly}...${NC}"
+  $(get_compose_cmd) up -d "$docker_name"
   echo -e "${GREEN}${friendly} is now running${NC}"
 }
 
@@ -146,7 +184,7 @@ cmd_restart() {
     return 1
   fi
 
-  echo -e "${BLUE}Restarting services...${NC}"
+  echo -e "${MODE_DISPLAY} ${BLUE}Restarting services...${NC}"
   echo ""
 
   # Restart each service
@@ -155,7 +193,7 @@ cmd_restart() {
     local friendly=$(get_friendly_name "$docker_name")
 
     echo -e "  ${YELLOW}→${NC} Restarting ${friendly}..."
-    docker-compose -f docker-compose.yml -f docker-compose.dev.yml restart "$docker_name" 2>/dev/null
+    $(get_compose_cmd) restart "$docker_name" 2>/dev/null
     if [ $? -eq 0 ]; then
       echo -e "  ${GREEN}✓${NC} ${friendly} restarted"
     else
@@ -177,7 +215,7 @@ cmd_logs() {
 }
 
 cmd_up() {
-  echo -e "${BLUE}Starting all services...${NC}"
+  echo -e "${MODE_DISPLAY} ${BLUE}Starting all services...${NC}"
   echo ""
 
   # Create .env symlink if it doesn't exist (fixes docker-compose warnings)
@@ -188,28 +226,43 @@ cmd_up() {
     echo ""
   fi
 
-  echo "  This will start:"
-  echo "    - front-door (entry point)"
-  echo "    - website (your main site)"
-  echo "    - memory (fast cache)"
-  echo "    - store (shopping)"
-  echo "    - store-data (product inventory)"
-  echo "    - design-tools (component preview)"
+  if [[ "$DOCKER_MODE" == "production" ]]; then
+    echo "  Starting production services:"
+    echo "    - front-door (nginx with SSL)"
+    echo "    - website (Next.js production build)"
+    echo "    - memory (Redis cache)"
+    echo "    - store (Medusa backend)"
+    echo "    - store-data (PostgreSQL)"
+  else
+    echo "  Starting development services:"
+    echo "    - front-door (entry point)"
+    echo "    - website (your main site)"
+    echo "    - memory (fast cache)"
+    echo "    - store (shopping)"
+    echo "    - store-data (product inventory)"
+    echo "    - design-tools (component preview)"
+  fi
   echo ""
-  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d
+  $(get_compose_cmd) up --build -d
   echo ""
   echo -e "${GREEN}All services are starting up!${NC}"
   echo ""
-  echo "  Access your site at:"
-  echo "    - http://localhost:3000 (website)"
-  echo "    - http://localhost:6006 (design-tools)"
-  echo "    - http://localhost:9000 (store API)"
+  if [[ "$DOCKER_MODE" == "production" ]]; then
+    echo "  Production site will be at:"
+    echo "    - https://needthisdone.com (website)"
+    echo "    - https://needthisdone.com:9000 (store API)"
+  else
+    echo "  Access your site at:"
+    echo "    - http://localhost:3000 (website)"
+    echo "    - http://localhost:6006 (design-tools)"
+    echo "    - http://localhost:9000 (store API)"
+  fi
   echo ""
 }
 
 cmd_down() {
-  echo -e "${YELLOW}Stopping all services...${NC}"
-  docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
+  echo -e "${MODE_DISPLAY} ${YELLOW}Stopping all services...${NC}"
+  $(get_compose_cmd) down
   echo -e "${GREEN}All services stopped${NC}"
 }
 
@@ -268,6 +321,13 @@ cmd_status() {
 cmd_test() {
   local test_type="$1"
 
+  # Tests only run in development mode
+  if [[ "$DOCKER_MODE" == "production" ]]; then
+    echo -e "${RED}Error: Tests should not be run in production mode${NC}"
+    echo "Remove the --prod flag to run tests"
+    return 1
+  fi
+
   case "$test_type" in
     integration|int)
       echo -e "${BLUE}Running integration tests...${NC}"
@@ -290,14 +350,14 @@ cmd_rebuild() {
   local docker_name=$(get_docker_name "$service")
   local friendly=$(get_friendly_name "$docker_name")
 
-  echo -e "${BLUE}Rebuilding ${friendly}...${NC}"
-  docker-compose -f docker-compose.yml -f docker-compose.dev.yml build --no-cache "$docker_name"
-  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d "$docker_name"
+  echo -e "${MODE_DISPLAY} ${BLUE}Rebuilding ${friendly}...${NC}"
+  $(get_compose_cmd) build --no-cache "$docker_name"
+  $(get_compose_cmd) up -d "$docker_name"
   echo -e "${GREEN}${friendly} rebuilt and running${NC}"
 }
 
 cmd_fresh() {
-  echo -e "${RED}Fresh Start - This will remove all data!${NC}"
+  echo -e "${MODE_DISPLAY} ${RED}Fresh Start - This will remove all data!${NC}"
   echo ""
   read -p "Are you sure? (y/n) " -n 1 -r
   echo ""
@@ -311,9 +371,9 @@ cmd_fresh() {
     fi
 
     echo -e "${YELLOW}Stopping and removing everything...${NC}"
-    docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
-    docker-compose -f docker-compose.yml -f docker-compose.dev.yml build --no-cache
-    docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+    $(get_compose_cmd) down -v
+    $(get_compose_cmd) build --no-cache
+    $(get_compose_cmd) up -d
     echo -e "${GREEN}Fresh start complete!${NC}"
   else
     echo "Cancelled"
