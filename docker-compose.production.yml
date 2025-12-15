@@ -101,6 +101,8 @@ services:
     depends_on:
       medusa_postgres:
         condition: service_healthy
+    env_file:
+      - .env.local
     environment:
       - DATABASE_URL=postgres://medusa:medusa@medusa_postgres:5432/medusa
       - REDIS_URL=redis://redis:6379
