@@ -265,8 +265,31 @@ cmd_up() {
   $(get_compose_cmd) up --build -d medusa_postgres redis medusa
 
   echo ""
-  echo -e "${YELLOW}Waiting for services to be healthy...${NC}"
-  sleep 15
+  echo -e "${YELLOW}Waiting for Medusa to be ready...${NC}"
+
+  # Wait for Medusa to be healthy with exponential backoff
+  # 1s, 2s, 4s, 8s, 16s, 32s, 64s, 128s (~4.25 minutes total)
+  local max_attempts=8
+  local base_delay=1
+  local attempt=1
+
+  while [ $attempt -le $max_attempts ]; do
+    if docker exec medusa_backend wget -qO- http://localhost:9000/health 2>/dev/null | grep -iq "ok"; then
+      echo -e "${GREEN}✓ Medusa is ready after ${attempt} attempt(s)!${NC}"
+      break
+    fi
+
+    if [ $attempt -eq $max_attempts ]; then
+      echo -e "${RED}✗ Medusa failed to start after ${max_attempts} attempts${NC}"
+      return 1
+    fi
+
+    # Exponential backoff: 2^(attempt-1) seconds
+    local delay=$((base_delay * (1 << (attempt - 1))))
+    echo "  Attempt $attempt/$max_attempts failed, retrying in ${delay}s..."
+    sleep $delay
+    attempt=$((attempt + 1))
+  done
 
   # ============================================================================
   # Phase 2: Seed products and verify they exist
