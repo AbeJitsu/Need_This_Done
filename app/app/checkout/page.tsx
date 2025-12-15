@@ -9,7 +9,7 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import PaymentForm from '@/components/PaymentForm';
-import AppointmentRequestForm from '@/components/AppointmentRequestForm';
+import AppointmentStepForm, { AppointmentData } from '@/components/AppointmentStepForm';
 import {
   formInputColors,
   formValidationColors,
@@ -24,9 +24,9 @@ import {
 // ============================================================================
 // What: Completes the purchase process with Stripe payment
 // Why: Collect shipping/payment info, process payment, and create order
-// How: Multi-step flow: Contact → Shipping → Payment → Confirmation
+// How: Multi-step flow: Contact → Appointment (if needed) → Payment → Confirmation
 
-type CheckoutStep = 'info' | 'payment' | 'confirmation';
+type CheckoutStep = 'info' | 'appointment' | 'payment' | 'confirmation';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -55,12 +55,14 @@ export default function CheckoutPage() {
     serviceName: string;
     durationMinutes: number;
   } | null>(null);
+  const [appointmentData, setAppointmentData] = useState<AppointmentData | null>(null);
 
-  // Redirect if no cart items (but not during payment/confirmation)
+  // Redirect if no cart items (but not during appointment/payment/confirmation)
   useEffect(() => {
     if (
       !isProcessing &&
       itemCount === 0 &&
+      currentStep !== 'appointment' &&
       currentStep !== 'payment' &&
       currentStep !== 'confirmation'
     ) {
@@ -76,9 +78,9 @@ export default function CheckoutPage() {
   }, [user, email]);
 
   // ========================================================================
-  // Step 1: Handle info submission - proceed to payment
+  // Step 1: Handle info submission - check for appointment requirement
   // ========================================================================
-  const handleProceedToPayment = async (e: React.FormEvent) => {
+  const handleInfoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -96,7 +98,51 @@ export default function CheckoutPage() {
     try {
       setIsProcessing(true);
 
-      // Create order first (saves order in Medusa + Supabase)
+      // Check if cart requires appointment (by checking product metadata)
+      const checkResponse = await fetch('/api/checkout/check-appointment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cart_id: cartId }),
+      });
+
+      const checkData = await checkResponse.json();
+
+      if (checkResponse.ok && checkData.requires_appointment) {
+        // Store appointment info and go to appointment step
+        setRequiresAppointment(true);
+        setAppointmentInfo({
+          serviceName: checkData.service_name || 'Consultation',
+          durationMinutes: checkData.duration_minutes || 30,
+        });
+        setCurrentStep('appointment');
+      } else {
+        // No appointment needed - proceed directly to payment
+        await proceedToPayment();
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to proceed');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // ========================================================================
+  // Handle appointment selection - proceed to payment
+  // ========================================================================
+  const handleAppointmentComplete = async (data: AppointmentData) => {
+    setAppointmentData(data);
+    await proceedToPayment();
+  };
+
+  // ========================================================================
+  // Create order and payment intent - proceed to payment step
+  // ========================================================================
+  const proceedToPayment = async () => {
+    try {
+      setIsProcessing(true);
+      setError('');
+
+      // Create order (saves order in Medusa + Supabase)
       const orderResponse = await fetch('/api/checkout/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -115,8 +161,8 @@ export default function CheckoutPage() {
       // Store the order ID for later
       setOrderId(orderData.order_id);
 
-      // Store appointment info if order requires it
-      if (orderData.requires_appointment) {
+      // Update appointment info from order data if not already set
+      if (orderData.requires_appointment && !appointmentInfo) {
         setRequiresAppointment(true);
         setAppointmentInfo({
           serviceName: orderData.service_name || 'Consultation',
@@ -152,10 +198,38 @@ export default function CheckoutPage() {
   };
 
   // ========================================================================
-  // Step 2: Handle payment success
+  // Step 3: Handle payment success - create appointment if needed
   // ========================================================================
-  const handlePaymentSuccess = (paymentIntentId: string) => {
+  const handlePaymentSuccess = async (paymentIntentId: string) => {
     console.log('Payment succeeded:', paymentIntentId);
+
+    // If we have appointment data, create the appointment request now
+    if (requiresAppointment && appointmentData && orderId) {
+      try {
+        const response = await fetch('/api/appointments/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            order_id: orderId,
+            customer_email: email,
+            customer_name: firstName && lastName ? `${firstName} ${lastName}` : null,
+            preferred_date: appointmentData.preferredDate,
+            preferred_time_start: appointmentData.preferredTimeStart,
+            alternate_date: appointmentData.alternateDate || null,
+            alternate_time_start: appointmentData.alternateTimeStart || null,
+            duration_minutes: appointmentInfo?.durationMinutes || 30,
+            notes: appointmentData.notes || null,
+            service_name: appointmentInfo?.serviceName || 'Consultation',
+          }),
+        });
+
+        if (!response.ok) {
+          console.error('Failed to create appointment request');
+        }
+      } catch (err) {
+        console.error('Error creating appointment request:', err);
+      }
+    }
 
     // Clear the cart
     clearCart();
@@ -196,7 +270,7 @@ export default function CheckoutPage() {
           </h1>
           <p className={formInputColors.helper}>
             Thank you for your purchase.
-            {requiresAppointment && ' Now let\'s schedule your appointment.'}
+            {requiresAppointment && ' We\'ll confirm your appointment shortly.'}
           </p>
         </div>
 
@@ -217,10 +291,32 @@ export default function CheckoutPage() {
               </p>
               <p className={`text-lg ${headingColors.primary} font-medium`}>{email}</p>
               <p className={`text-sm ${formInputColors.helper} mt-2`}>
-                Check your inbox for a confirmation email with tracking
-                information.
+                Check your inbox for a confirmation email with your order details.
               </p>
             </div>
+
+            {/* Appointment confirmation message */}
+            {requiresAppointment && appointmentData && (
+              <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+                <p className="text-sm text-purple-700 dark:text-purple-300">
+                  <strong>Appointment Requested:</strong>{' '}
+                  {new Date(appointmentData.preferredDate + 'T12:00:00').toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                  })}{' '}
+                  at {appointmentData.preferredTimeStart.replace(/^(\d{2}):(\d{2})$/, (_, h, m) => {
+                    const hour = parseInt(h);
+                    const ampm = hour >= 12 ? 'PM' : 'AM';
+                    const hour12 = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+                    return `${hour12}:${m} ${ampm}`;
+                  })}
+                </p>
+                <p className="text-sm text-purple-600 dark:text-purple-400 mt-1">
+                  We&apos;ll review your request and confirm within 24 hours.
+                </p>
+              </div>
+            )}
 
             <div className={`${alertColors.success.bg} ${alertColors.success.border} rounded-lg p-4`}>
               <p className={`text-sm ${formValidationColors.success}`}>
@@ -230,19 +326,6 @@ export default function CheckoutPage() {
             </div>
           </div>
         </Card>
-
-        {/* Appointment Request Form (for consultation products) */}
-        {requiresAppointment && appointmentInfo && (
-          <div className="mb-6">
-            <AppointmentRequestForm
-              orderId={orderId}
-              customerEmail={email}
-              customerName={firstName && lastName ? `${firstName} ${lastName}` : undefined}
-              durationMinutes={appointmentInfo.durationMinutes}
-              serviceName={appointmentInfo.serviceName}
-            />
-          </div>
-        )}
 
         <div className="flex gap-3">
           <Button variant="purple" href="/shop" className="flex-1">
@@ -259,7 +342,40 @@ export default function CheckoutPage() {
   }
 
   // ========================================================================
-  // Payment step (Step 2)
+  // Appointment step (Step 2) - Only shows if cart requires appointment
+  // ========================================================================
+  if (currentStep === 'appointment' && appointmentInfo) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+        <PageHeader title="Schedule Your Consultation" description="Pick a time that works for you" />
+
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            {/* Error message */}
+            {error && (
+              <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+                <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
+              </div>
+            )}
+
+            <AppointmentStepForm
+              durationMinutes={appointmentInfo.durationMinutes}
+              serviceName={appointmentInfo.serviceName}
+              onComplete={handleAppointmentComplete}
+              onBack={() => setCurrentStep('info')}
+              isProcessing={isProcessing}
+            />
+          </div>
+
+          {/* Order summary sidebar */}
+          <OrderSummary cart={cart} itemCount={itemCount} />
+        </div>
+      </div>
+    );
+  }
+
+  // ========================================================================
+  // Payment step (Step 3)
   // ========================================================================
   if (currentStep === 'payment' && clientSecret) {
     return (
@@ -293,14 +409,14 @@ export default function CheckoutPage() {
               </div>
             </Card>
 
-            {/* Back button */}
+            {/* Back button - go to appointment step if it was required, otherwise info */}
             <Button
               variant="gray"
-              onClick={() => setCurrentStep('info')}
+              onClick={() => setCurrentStep(requiresAppointment ? 'appointment' : 'info')}
               className="w-full"
               size="lg"
             >
-              Back to Information
+              {requiresAppointment ? 'Back to Scheduling' : 'Back to Information'}
             </Button>
           </div>
 
@@ -332,7 +448,7 @@ export default function CheckoutPage() {
       ) : (
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Checkout form */}
-          <form onSubmit={handleProceedToPayment} className="lg:col-span-2">
+          <form onSubmit={handleInfoSubmit} className="lg:col-span-2">
             {/* Error message */}
             {error && (
               <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
