@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import { sendAppointmentConfirmation } from '@/lib/email-service';
 import { createCalendarEvent, isCalendarConnected, generateIcsContent, getValidAccessToken } from '@/lib/google-calendar';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Approve Appointment API - POST /api/admin/appointments/[id]/approve
 // ============================================================================

@@ -101,12 +101,15 @@ RUN adduser -S nextjs -u 1001
 
 WORKDIR /app
 
+# Copy package files for production dependencies
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+
 # Copy built application from builder stage
 # .next/ = compiled JavaScript
 # public/ = static files
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/.next ./.next
 
 # Switch to non-root user
 USER nextjs
@@ -124,5 +127,5 @@ ENV NEXT_TELEMETRY_DISABLED=1
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
 
-# Start the app
-CMD ["node", "server.js"]
+# Start the app with next start
+CMD ["npx", "next", "start"]

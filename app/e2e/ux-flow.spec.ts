@@ -51,7 +51,7 @@ test.describe('UX Flow Evaluation', () => {
     });
 
     // 4. Add to cart
-    const addToCartBtn = page.getByRole('button', { name: /add.*cart/i });
+    const addToCartBtn = page.getByRole('button', { name: /add.*cart/i }).first();
     await addToCartBtn.click();
     await page.waitForTimeout(1500); // Wait for toast/feedback
     await page.screenshot({

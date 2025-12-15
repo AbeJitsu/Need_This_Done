@@ -3,6 +3,8 @@ import { redis } from '@/lib/redis';
 // eslint-disable-next-line no-restricted-imports -- health check only tests connectivity, no auth required
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Health Check Endpoint - /api/health
 // ============================================================================

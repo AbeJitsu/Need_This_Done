@@ -4,6 +4,8 @@ import { verifyAuth } from '@/lib/api-auth';
 import { handleApiError } from '@/lib/api-errors';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // User's Projects API Route - /api/projects/mine
 // ============================================================================

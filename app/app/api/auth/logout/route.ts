@@ -2,6 +2,8 @@ import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { NextRequest, NextResponse } from 'next/server';
 import { badRequest, handleApiError } from '@/lib/api-errors';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Logout Endpoint - /api/auth/logout (POST)
 // ============================================================================

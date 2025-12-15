@@ -5,6 +5,8 @@ import { isValidEmail, isValidPassword } from '@/lib/validation';
 import { badRequest, handleApiError } from '@/lib/api-errors';
 import { sendWelcomeEmail } from '@/lib/email-service';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Sign Up Endpoint - /api/auth/signup (POST)
 // ============================================================================

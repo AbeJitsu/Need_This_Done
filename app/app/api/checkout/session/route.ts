@@ -5,6 +5,8 @@ import { badRequest, serverError, handleApiError } from '@/lib/api-errors';
 import { verifyAuth } from '@/lib/api-auth';
 import { cache, CACHE_KEYS } from '@/lib/cache';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Checkout Session API Route - /api/checkout/session
 // ============================================================================

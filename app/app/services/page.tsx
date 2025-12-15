@@ -18,6 +18,8 @@ import {
   groupHoverColors,
 } from '@/lib/colors';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Services Page - Decision Accelerator
 // ============================================================================

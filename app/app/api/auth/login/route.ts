@@ -4,6 +4,8 @@ import { isValidEmail, isValidPassword } from '@/lib/validation';
 import { badRequest, unauthorized, handleApiError } from '@/lib/api-errors';
 import { sendLoginNotification } from '@/lib/email-service';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Login Endpoint - /api/auth/login (POST)
 // ============================================================================

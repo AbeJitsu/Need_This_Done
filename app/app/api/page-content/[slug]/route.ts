@@ -13,6 +13,8 @@ import {
 } from '@/lib/page-content-types';
 import { getDefaultContent } from '@/lib/default-page-content';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Page Content API Route - /api/page-content/[slug]
 // ============================================================================

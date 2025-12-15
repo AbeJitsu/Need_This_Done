@@ -4,6 +4,8 @@ import { verifyAdmin as verifyAdminAuth } from '@/lib/api-auth';
 import { badRequest, serverError, handleApiError } from '@/lib/api-errors';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Admin Users API Route - /api/admin/users
 // ============================================================================

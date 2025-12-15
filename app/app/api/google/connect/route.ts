@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getAuthUrl } from '@/lib/google-calendar';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Google Calendar Connect API Route - GET /api/google/connect
 // ============================================================================

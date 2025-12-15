@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { redis } from '@/lib/redis';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Speed Demo API Route - /api/demo/speed
 // ============================================================================

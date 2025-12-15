@@ -16,7 +16,7 @@ test.describe('Appointment Request Form', () => {
     await navigateToPage(page, '/shop');
 
     // Wait for products to load (client-side rendering)
-    await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     // Click on the first consultation product (15-min)
     await page.getByRole('link', { name: /details/i }).first().click();
@@ -219,7 +219,7 @@ test.describe('Appointment Request Form UI', () => {
     await navigateToPage(page, '/shop');
 
     // Verify shop loads (foundation for appointment flow)
-    await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     // Wait for products to load (client-side rendering from API)
     // Products may take time to load from Medusa backend
@@ -239,7 +239,7 @@ test.describe('Appointment Request Form UI', () => {
     await navigateToPage(page, '/shop');
 
     // Wait for shop to load
-    await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     // Wait for products to load
     await page.waitForTimeout(2000);
@@ -292,7 +292,7 @@ test.describe('Appointment Flow Integration', () => {
   }) => {
     // Navigate to shop and wait for products to load
     await navigateToPage(page, '/shop');
-    await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     // Navigate to first consultation product
     await page.getByRole('link', { name: /details/i }).first().click();
@@ -316,7 +316,7 @@ test.describe('Appointment Flow Integration', () => {
   test('complete checkout flow shows appointment form', async ({ page }) => {
     // Add consultation product to cart
     await navigateToPage(page, '/shop');
-    await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     await page.getByRole('link', { name: /details/i }).first().click();
     await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });

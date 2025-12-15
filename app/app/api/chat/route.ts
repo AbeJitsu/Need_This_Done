@@ -2,6 +2,8 @@ import { openai } from '@ai-sdk/openai';
 import { streamText, embed, type CoreMessage } from 'ai';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Chat API Route - POST /api/chat
 // ============================================================================

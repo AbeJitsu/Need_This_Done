@@ -142,6 +142,7 @@ show_help() {
     fresh               Complete fresh start (removes all data)
     after-pull          Restart services after git pull (smart detection)
     fix-checkout        Fix common checkout issues (restart website + store)
+    verify-env          Verify critical environment variables are loaded in containers
 
   DEVELOPMENT EXAMPLES:
     ./scripts/docker.sh start memory
@@ -156,6 +157,7 @@ show_help() {
     ./scripts/docker.sh --prod restart website Restart in production
     ./scripts/docker.sh --prod logs store      View production logs
     ./scripts/docker.sh --prod down            Stop production
+    ./scripts/docker.sh --prod verify-env      Check env vars are loaded
 
   QUICK FIXES:
     ./scripts/docker.sh after-pull                    After git pull
@@ -458,6 +460,66 @@ cmd_fix_checkout() {
   echo "Try the checkout flow again at https://localhost/checkout"
 }
 
+cmd_verify_env() {
+  echo -e "${BLUE}Verifying environment variables in containers...${NC}"
+  echo ""
+
+  local errors=0
+
+  # Check if containers are running first
+  if ! docker ps --format '{{.Names}}' | grep -q "medusa_backend"; then
+    echo -e "${YELLOW}⚠ Medusa container not running, skipping verification${NC}"
+    return 0
+  fi
+
+  # Check Medusa backend has critical env vars
+  echo -e "  Checking ${YELLOW}Medusa${NC} backend..."
+
+  if ! docker exec medusa_backend printenv JWT_SECRET > /dev/null 2>&1; then
+    echo -e "    ${RED}✗ JWT_SECRET missing${NC}"
+    echo -e "      Fix: Add 'env_file: - .env.local' to medusa service in docker-compose"
+    errors=$((errors + 1))
+  else
+    echo -e "    ${GREEN}✓ JWT_SECRET loaded${NC}"
+  fi
+
+  if ! docker exec medusa_backend printenv COOKIE_SECRET > /dev/null 2>&1; then
+    echo -e "    ${RED}✗ COOKIE_SECRET missing${NC}"
+    errors=$((errors + 1))
+  else
+    echo -e "    ${GREEN}✓ COOKIE_SECRET loaded${NC}"
+  fi
+
+  # Check Next.js app has critical env vars
+  if docker ps --format '{{.Names}}' | grep -q "nextjs_app"; then
+    echo -e "  Checking ${YELLOW}Next.js${NC} app..."
+
+    if ! docker exec nextjs_app printenv NEXT_PUBLIC_SUPABASE_URL > /dev/null 2>&1; then
+      echo -e "    ${RED}✗ NEXT_PUBLIC_SUPABASE_URL missing${NC}"
+      errors=$((errors + 1))
+    else
+      echo -e "    ${GREEN}✓ NEXT_PUBLIC_SUPABASE_URL loaded${NC}"
+    fi
+
+    if ! docker exec nextjs_app printenv SUPABASE_SERVICE_ROLE_KEY > /dev/null 2>&1; then
+      echo -e "    ${RED}✗ SUPABASE_SERVICE_ROLE_KEY missing${NC}"
+      errors=$((errors + 1))
+    else
+      echo -e "    ${GREEN}✓ SUPABASE_SERVICE_ROLE_KEY loaded${NC}"
+    fi
+  fi
+
+  echo ""
+  if [ $errors -eq 0 ]; then
+    echo -e "${GREEN}✓ All critical environment variables verified${NC}"
+    return 0
+  else
+    echo -e "${RED}✗ Found $errors missing environment variable(s)${NC}"
+    echo -e "${YELLOW}Run: ./scripts/docker.sh --prod up${NC} to rebuild with correct env vars"
+    return 1
+  fi
+}
+
 # ============================================================================
 # Main Entry Point
 # ============================================================================
@@ -475,6 +537,7 @@ case "$1" in
   fresh)    cmd_fresh ;;
   after-pull) cmd_after_pull ;;
   fix-checkout) cmd_fix_checkout ;;
+  verify-env) cmd_verify_env ;;
   help|-h|--help|"")  show_help ;;
   *)
     echo -e "${RED}Unknown command: $1${NC}"

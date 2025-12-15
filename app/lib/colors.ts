@@ -108,9 +108,9 @@ export const checkmarkColors: Record<AccentColor, {
   bg: string;
   icon: string;
 }> = {
-  purple: { bg: 'bg-purple-100', icon: 'text-purple-700' },
-  blue: { bg: 'bg-blue-100', icon: 'text-blue-700' },
-  green: { bg: 'bg-green-100', icon: 'text-green-800' },
+  purple: { bg: 'bg-purple-100 dark:bg-purple-800', icon: 'text-purple-700 dark:text-purple-300' },
+  blue: { bg: 'bg-blue-100 dark:bg-blue-800', icon: 'text-blue-700 dark:text-blue-300' },
+  green: { bg: 'bg-green-100 dark:bg-green-800', icon: 'text-green-700 dark:text-green-300' },
 };
 
 // ============================================================================

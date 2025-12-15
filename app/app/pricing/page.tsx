@@ -7,6 +7,8 @@ import { getDefaultPricingContent } from '@/lib/default-page-content';
 import type { PricingPageContent } from '@/lib/page-content-types';
 import { formInputColors, headingColors, dividerColors } from '@/lib/colors';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Pricing Page - Service Pricing Tiers
 // ============================================================================

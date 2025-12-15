@@ -101,9 +101,13 @@ services:
     depends_on:
       medusa_postgres:
         condition: service_healthy
+    env_file:
+      - .env.local
     environment:
-      - DATABASE_URL=postgres://medusa:medusa@medusa_postgres:5432/medusa
+      - DATABASE_URL=postgresql://medusa:${MEDUSA_DB_PASSWORD}@medusa_postgres:5432/medusa
       - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${MEDUSA_JWT_SECRET}
+      - ADMIN_JWT_SECRET=${MEDUSA_ADMIN_JWT_SECRET}
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9000/health"]
       interval: 30s
@@ -120,10 +124,10 @@ services:
     image: postgres:15-alpine
     container_name: medusa_postgres
     environment:
-      POSTGRES_USER: ${MEDUSA_POSTGRES_USER:-medusa}
-      POSTGRES_PASSWORD: ${MEDUSA_POSTGRES_PASSWORD:-medusa}
-      POSTGRES_DB: ${MEDUSA_POSTGRES_DB:-medusa}
-      PGPORT: ${MEDUSA_POSTGRES_PORT:-5432}
+      POSTGRES_USER: medusa
+      POSTGRES_PASSWORD: ${MEDUSA_DB_PASSWORD}
+      POSTGRES_DB: medusa
+      PGPORT: 5432
     networks:
       - app_network
     volumes:
