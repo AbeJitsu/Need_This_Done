@@ -358,7 +358,6 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
         'You receive a clear, transparent quote',
       ],
       color: 'blue',
-      href: '/login',
     },
     {
       number: 3,
@@ -371,7 +370,6 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
         "We'll keep you updated on progress",
       ],
       color: 'purple',
-      href: '/get-started',
     },
     {
       number: 4,
@@ -384,7 +382,6 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
         "Final 50% on approval, then it's yours!",
       ],
       color: 'orange',
-      href: '/login',
     },
   ],
   timeline: {

@@ -34,19 +34,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate date is not in the past
-    const preferredDateTime = new Date(preferred_date);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (preferredDateTime < today) {
+    // Validate 24-hour minimum notice
+    const requestedDateTime = new Date(`${preferred_date}T${preferred_time_start}`);
+    const minDateTime = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
+    if (requestedDateTime < minDateTime) {
       return NextResponse.json(
-        { error: 'Preferred date cannot be in the past' },
+        { error: 'Appointments must be booked at least 24 hours in advance' },
         { status: 400 }
       );
     }
 
     // Validate date is a weekday
-    const preferredDay = preferredDateTime.getDay();
+    const preferredDay = new Date(preferred_date + 'T12:00:00').getDay();
     if (preferredDay === 0 || preferredDay === 6) {
       return NextResponse.json(
         { error: 'Preferred date must be a weekday (Monday-Friday)' },
@@ -93,6 +92,61 @@ export async function POST(request: NextRequest) {
     if (existingRequest) {
       return NextResponse.json(
         { error: 'Appointment request already exists for this order' },
+        { status: 409 }
+      );
+    }
+
+    // ========================================================================
+    // Validate max 5 bookings per day
+    // ========================================================================
+    const { count: dailyCount } = await supabase
+      .from('appointment_requests')
+      .select('id', { count: 'exact', head: true })
+      .eq('preferred_date', preferred_date)
+      .in('status', ['pending', 'approved']);
+
+    if (dailyCount && dailyCount >= 5) {
+      return NextResponse.json(
+        { error: 'This day is fully booked. Please select another date.' },
+        { status: 409 }
+      );
+    }
+
+    // ========================================================================
+    // Validate 30-minute buffer between appointments
+    // ========================================================================
+    // Calculate requested appointment time range
+    const [startHoursCheck, startMinutesCheck] = preferred_time_start.split(':').map(Number);
+    const requestedStartMinutes = startHoursCheck * 60 + startMinutesCheck;
+    const requestedEndMinutes = requestedStartMinutes + (duration_minutes || 30);
+
+    // Fetch existing appointments for the day
+    const { data: existingAppointments } = await supabase
+      .from('appointment_requests')
+      .select('preferred_time_start, preferred_time_end')
+      .eq('preferred_date', preferred_date)
+      .in('status', ['pending', 'approved']);
+
+    // Check for conflicts (including 30-min buffer)
+    const BUFFER_MINUTES = 30;
+    const hasConflict = existingAppointments?.some((existing) => {
+      const [existingStartH, existingStartM] = existing.preferred_time_start.split(':').map(Number);
+      const [existingEndH, existingEndM] = existing.preferred_time_end.split(':').map(Number);
+      const existingStart = existingStartH * 60 + existingStartM;
+      const existingEnd = existingEndH * 60 + existingEndM;
+
+      // Check if there's overlap with buffer
+      // New appointment must end + buffer before existing starts
+      // OR new appointment must start after existing ends + buffer
+      return !(
+        requestedEndMinutes + BUFFER_MINUTES <= existingStart ||
+        requestedStartMinutes >= existingEnd + BUFFER_MINUTES
+      );
+    });
+
+    if (hasConflict) {
+      return NextResponse.json(
+        { error: 'This time slot conflicts with an existing appointment. Please select a different time.' },
         { status: 409 }
       );
     }

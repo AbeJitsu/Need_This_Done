@@ -187,7 +187,7 @@ export default function CartPage() {
                         </p>
                         {/* Reassuring note */}
                         <p className={`text-xs mt-2 ${formInputColors.helper}`}>
-                          We&apos;ll reach out within 24 hours to schedule
+                          You&apos;ll pick your preferred time at checkout
                         </p>
                       </div>
                       {/* Remove button */}
@@ -297,7 +297,7 @@ export default function CartPage() {
           <Card hoverColor="blue" hoverEffect="glow" className="mt-4">
             <div className="p-6">
               <p className={`text-sm ${formInputColors.helper}`}>
-                <strong>What happens next?</strong> After checkout, we&apos;ll send you an email to confirm your consultation and find a time that works for you.
+                <strong>What happens next?</strong> At checkout, you&apos;ll select your preferred appointment time. We&apos;ll confirm within 24 hours and send you calendar details.
               </p>
             </div>
           </Card>
