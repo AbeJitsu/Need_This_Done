@@ -247,36 +247,93 @@ cmd_up() {
     echo ""
   fi
 
+  # ============================================================================
+  # Phase 1: Start backend services ONLY (no nginx, no app yet)
+  # ============================================================================
+  echo -e "${BLUE}Phase 1: Starting backend services...${NC}"
   if [[ "$DOCKER_MODE" == "production" ]]; then
-    echo "  Starting production services:"
-    echo "    - front-door (nginx with SSL)"
-    echo "    - website (Next.js production build)"
-    echo "    - memory (Redis cache)"
-    echo "    - store (Medusa backend)"
-    echo "    - store-data (PostgreSQL)"
+    echo "  - store-data (PostgreSQL)"
+    echo "  - memory (Redis)"
+    echo "  - store (Medusa backend)"
   else
-    echo "  Starting development services:"
-    echo "    - front-door (entry point)"
-    echo "    - website (your main site)"
-    echo "    - memory (fast cache)"
-    echo "    - store (shopping)"
-    echo "    - store-data (product inventory)"
-    echo "    - design-tools (component preview)"
+    echo "  - store-data (product inventory)"
+    echo "  - memory (fast cache)"
+    echo "  - store (shopping)"
   fi
   echo ""
-  $(get_compose_cmd) up --build -d
+
+  $(get_compose_cmd) up --build -d medusa_postgres redis medusa
+
   echo ""
-  echo -e "${GREEN}All services are starting up!${NC}"
+  echo -e "${YELLOW}Waiting for services to be healthy...${NC}"
+  sleep 15
+
+  # ============================================================================
+  # Phase 2: Seed products and verify they exist
+  # ============================================================================
+  echo ""
+  echo -e "${BLUE}Phase 2: Seeding products...${NC}"
+  echo ""
+
+  cmd_seed
+  local seed_exit=$?
+
+  if [ $seed_exit -ne 0 ]; then
+    echo ""
+    echo -e "${RED}✗ Seeding failed! Site will NOT start.${NC}"
+    echo -e "${YELLOW}Fix the seeding issue and try again.${NC}"
+    return 1
+  fi
+
+  # Verify products actually exist
+  echo ""
+  echo -e "${BLUE}Verifying products exist...${NC}"
+  local product_count=$(docker exec medusa_backend wget -qO- http://localhost:9000/store/products 2>/dev/null | grep -o '"id":"prod_' | wc -l | tr -d ' ')
+
+  if [ "$product_count" -lt 1 ]; then
+    echo -e "${RED}✗ No products found! Site will NOT start.${NC}"
+    echo -e "${YELLOW}Products must exist before the site goes live.${NC}"
+    return 1
+  fi
+
+  echo -e "${GREEN}✓ Confirmed: $product_count products ready${NC}"
+
+  # ============================================================================
+  # Phase 3: Start frontend services (nginx and app) - ONLY if products exist
+  # ============================================================================
+  echo ""
+  echo -e "${BLUE}Phase 3: Starting frontend services...${NC}"
+  if [[ "$DOCKER_MODE" == "production" ]]; then
+    echo "  - website (Next.js production build)"
+    echo "  - front-door (nginx with SSL)"
+  else
+    echo "  - website (your main site)"
+    echo "  - design-tools (component preview)"
+    echo "  - front-door (entry point)"
+  fi
+  echo ""
+
+  if [[ "$DOCKER_MODE" == "production" ]]; then
+    $(get_compose_cmd) up -d app nginx
+  else
+    $(get_compose_cmd) up -d app storybook nginx
+  fi
+
+  echo ""
+  echo -e "${GREEN}✅ All services started successfully!${NC}"
   echo ""
   if [[ "$DOCKER_MODE" == "production" ]]; then
-    echo "  Production site will be at:"
-    echo "    - https://needthisdone.com (website)"
-    echo "    - https://needthisdone.com:9000 (store API)"
+    echo "  Production site is live at:"
+    echo "    - https://needthisdone.com"
+    echo ""
+    echo "  Products confirmed: ${GREEN}$product_count products ready${NC}"
   else
-    echo "  Access your site at:"
-    echo "    - http://localhost:3000 (website)"
-    echo "    - http://localhost:6006 (design-tools)"
-    echo "    - http://localhost:9000 (store API)"
+    echo "  Development site is ready:"
+    echo "    - https://localhost (via nginx)"
+    echo "    - http://localhost:3000 (direct Next.js)"
+    echo "    - http://localhost:6006 (Storybook)"
+    echo ""
+    echo "  Products confirmed: ${GREEN}$product_count products ready${NC}"
   fi
   echo ""
 }

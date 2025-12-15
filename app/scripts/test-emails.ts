@@ -94,7 +94,7 @@ async function main() {
     sendAbandonedCartEmail,
   } = await import("../lib/email-service.js");
 
-  const TEST_EMAIL = process.env.RESEND_ADMIN_EMAIL || "abe.raise@gmail.com";
+  const TEST_EMAIL = process.env.RESEND_ADMIN_EMAIL || "test@example.com";
   console.log(`Sending test emails to: ${TEST_EMAIL}\n`);
 
   // Helper to avoid rate limits (Resend free tier: 2 requests/second)
