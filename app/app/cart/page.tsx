@@ -6,6 +6,7 @@ import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import {
   formInputColors,
   formValidationColors,
@@ -54,6 +55,8 @@ export default function CartPage() {
   const { cart, cartId, itemCount, updateItem, removeItem, error: cartError } = useCart();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [localError, setLocalError] = useState('');
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState<string | null>(null);
 
   // ========================================================================
   // Handle quantity change
@@ -76,20 +79,38 @@ export default function CartPage() {
   };
 
   // ========================================================================
-  // Handle remove item
+  // Handle remove item - Show confirmation dialog
   // ========================================================================
-  const handleRemoveItem = async (lineItemId: string) => {
-    if (!confirm('Remove this item from your cart?')) return;
+  const handleRemoveItem = (lineItemId: string) => {
+    setItemToRemove(lineItemId);
+    setShowRemoveDialog(true);
+  };
+
+  // ========================================================================
+  // Confirm remove item - Actually remove after user confirms
+  // ========================================================================
+  const confirmRemoveItem = async () => {
+    if (!itemToRemove) return;
 
     try {
-      setIsUpdating(lineItemId);
+      setIsUpdating(itemToRemove);
       setLocalError('');
-      await removeItem(lineItemId);
+      setShowRemoveDialog(false);
+      await removeItem(itemToRemove);
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : 'Failed to remove item');
     } finally {
       setIsUpdating(null);
+      setItemToRemove(null);
     }
+  };
+
+  // ========================================================================
+  // Cancel remove item
+  // ========================================================================
+  const cancelRemoveItem = () => {
+    setShowRemoveDialog(false);
+    setItemToRemove(null);
   };
 
   // ========================================================================
@@ -282,6 +303,18 @@ export default function CartPage() {
           </Card>
         </div>
       </div>
+
+      {/* Remove item confirmation dialog */}
+      <ConfirmDialog
+        isOpen={showRemoveDialog}
+        onConfirm={confirmRemoveItem}
+        onCancel={cancelRemoveItem}
+        title="Remove Item"
+        message="Remove this item from your cart?"
+        confirmLabel="Remove"
+        cancelLabel="Keep It"
+        variant="warning"
+      />
     </div>
   );
 }

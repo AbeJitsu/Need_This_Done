@@ -72,24 +72,43 @@ export default async function PricingPage() {
           })}
         </div>
 
-        {/* Shared Consultation CTA - For Quick and Standard tiers */}
-        <Card hoverColor="blue" hoverEffect="glow" className="mb-8">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">
-            <div className="flex-1">
-              <h3 className={`text-xl font-semibold ${headingColors.primary} mb-2`}>
-                Ready to talk it through?
-              </h3>
-              <p className={`${formInputColors.helper}`}>
-                Book a quick consultation and we&apos;ll help you figure out exactly what you need—no commitment required.
-              </p>
-            </div>
-            <div className="flex-shrink-0">
-              <Button variant="blue" href="/shop" size="lg">
-                Book a Consultation
-              </Button>
-            </div>
+        {/* Dual-Option CTA - Two clear paths forward */}
+        <div className="mb-8">
+          <h3 className={`text-2xl font-bold ${headingColors.primary} text-center mb-6`}>
+            Ready to Move Forward?
+          </h3>
+          <div className="grid sm:grid-cols-2 gap-6">
+            {/* Option 1: Free Quote */}
+            <Card hoverColor="orange" hoverEffect="glow">
+              <div className="text-center p-2">
+                <h4 className={`text-lg font-semibold ${headingColors.primary} mb-2`}>
+                  Get a Free Quote
+                </h4>
+                <p className={`${formInputColors.helper} mb-4 text-sm`}>
+                  Tell us what you need—we&apos;ll respond in 2 days.
+                </p>
+                <Button variant="orange" href="/contact" size="lg" className="w-full">
+                  Get Started
+                </Button>
+              </div>
+            </Card>
+
+            {/* Option 2: Paid Consultation */}
+            <Card hoverColor="blue" hoverEffect="glow">
+              <div className="text-center p-2">
+                <h4 className={`text-lg font-semibold ${headingColors.primary} mb-2`}>
+                  Book a Consultation
+                </h4>
+                <p className={`${formInputColors.helper} mb-4 text-sm`}>
+                  Let&apos;s figure it out together. Sessions from $20.
+                </p>
+                <Button variant="blue" href="/shop" size="lg" className="w-full">
+                  Book Now
+                </Button>
+              </div>
+            </Card>
           </div>
-        </Card>
+        </div>
 
         {/* Payment Structure Note */}
         {content.paymentNote.enabled && (

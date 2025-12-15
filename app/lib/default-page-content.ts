@@ -70,8 +70,7 @@ export const defaultPricingContent: PricingPageContent = {
         'Dedicated point of contact throughout',
       ],
       color: 'purple',
-      cta: 'Request a Quote',
-      href: '/contact',
+      // No individual CTA - uses shared dual-option CTA below
     },
   ],
   paymentNote: {
@@ -325,16 +324,21 @@ export const defaultServicesContent: ServicesPageContent = {
 
 export const defaultHowItWorksContent: HowItWorksPageContent = {
   header: {
-    title: 'How It Works',
+    title: 'We Make It Easy',
     description:
-      "Here's how we work together to get your project done right.",
+      'No hoops to jump through. No confusing tech speak. Just a simple, friendly process from start to finish.',
   },
+  trustBadges: [
+    { text: 'Personal attention', description: 'Real people, not bots' },
+    { text: 'Clear updates', description: 'At every step' },
+    { text: 'No surprises', description: 'Transparent pricing' },
+  ],
   steps: [
     {
       number: 1,
-      title: 'Tell Us What You Need',
+      title: 'Start the Conversation',
       description:
-        'Describe your task in your own words. Include any files, examples, or questions. No tech speak required.',
+        'Tell us what you need in your own words. No tech speak required—just describe what\'s on your plate and we\'ll take it from there.',
       details: [
         'Fill out our simple contact form',
         'Attach any relevant files or documents',
@@ -347,7 +351,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
       number: 2,
       title: 'We Review & Respond',
       description:
-        'We carefully review your request and get back to you within 2 business days with a personalized quote.',
+        'Quote within 2 business days, no obligation. We\'ll ask questions if needed and give you a clear, honest estimate.',
       details: [
         'We assess what needs to be done',
         'We ask clarifying questions if needed',
@@ -358,9 +362,9 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
     },
     {
       number: 3,
-      title: 'Authorize & Start',
+      title: 'You Authorize & We Start',
       description:
-        'Love the quote? Pay a 50% deposit to authorize work and we get started right away.',
+        '50% deposit to begin, progress updates along the way. You\'ll always know where things stand.',
       details: [
         '50% deposit to begin work',
         'Secure online payment',
@@ -373,7 +377,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
       number: 4,
       title: 'Approve & Receive',
       description:
-        'You review the completed work. Once you approve, pay the remaining 50% and receive everything.',
+        'Review the work, give feedback, and pay the remaining 50% when you\'re happy. Simple as that.',
       details: [
         'You review what we have done',
         'We address any feedback',
@@ -386,7 +390,14 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
   timeline: {
     title: 'Typical Timeline',
     description:
-      "Most projects are completed within 1-2 weeks, depending on scope. Larger projects may take longer - we'll provide a clear timeline with your quote.",
+      "Most projects wrap up in 1-2 weeks. Bigger builds take longer—we'll give you a clear timeline upfront.",
+    hoverColor: 'blue',
+  },
+  questionsSection: {
+    title: 'Questions about the process?',
+    description: "We're happy to walk you through it. No pressure, no obligation.",
+    primaryButton: { text: 'Book a Quick Chat', variant: 'blue', href: '/shop' },
+    secondaryButton: { text: 'Read the FAQ', variant: 'purple', href: '/faq' },
     hoverColor: 'blue',
   },
   cta: {
@@ -396,6 +407,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
     buttons: [
       { text: 'View Services', variant: 'orange', href: '/services' },
       { text: 'View Pricing', variant: 'teal', href: '/pricing' },
+      { text: 'Contact Us', variant: 'blue', href: '/contact' },
     ],
     hoverColor: 'orange',
   },

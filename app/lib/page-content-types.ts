@@ -164,12 +164,26 @@ export interface ProcessStep {
   href?: string;
 }
 
+/** Trust badge for reassurance section */
+export interface TrustBadge {
+  text: string;
+  description: string;
+}
+
 export interface HowItWorksPageContent {
   header: PageHeader;
+  trustBadges?: TrustBadge[];
   steps: ProcessStep[];
   timeline: {
     title: string;
     description: string;
+    hoverColor?: AccentVariant;
+  };
+  questionsSection?: {
+    title: string;
+    description: string;
+    primaryButton: CTAButton;
+    secondaryButton: CTAButton;
     hoverColor?: AccentVariant;
   };
   cta: CTASection;

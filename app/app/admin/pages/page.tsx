@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 interface Page {
   id: string;
@@ -19,9 +21,12 @@ interface Page {
 export default function PagesManagement() {
   const router = useRouter();
   const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
+  const { showToast } = useToast();
   const [pages, setPages] = useState<Page[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [pageToDelete, setPageToDelete] = useState<string | null>(null);
 
   // Auth protection
   useEffect(() => {
@@ -56,11 +61,17 @@ export default function PagesManagement() {
     fetchPages();
   }, [isAdmin]);
 
-  const handleDelete = async (slug: string) => {
-    if (!confirm('Are you sure you want to delete this page?')) return;
+  const handleDelete = (slug: string) => {
+    setPageToDelete(slug);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!pageToDelete) return;
 
     try {
-      const response = await fetch(`/api/pages/${slug}`, {
+      setShowDeleteConfirm(false);
+      const response = await fetch(`/api/pages/${pageToDelete}`, {
         method: 'DELETE',
       });
 
@@ -68,9 +79,12 @@ export default function PagesManagement() {
         throw new Error('Failed to delete page');
       }
 
-      setPages(pages.filter((p) => p.slug !== slug));
+      setPages(pages.filter((p) => p.slug !== pageToDelete));
+      showToast('Page deleted successfully', 'success');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to delete page');
+      showToast(err instanceof Error ? err.message : 'Failed to delete page', 'error');
+    } finally {
+      setPageToDelete(null);
     }
   };
 
@@ -91,8 +105,12 @@ export default function PagesManagement() {
           p.slug === slug ? { ...p, is_published: !currentStatus } : p
         )
       );
+      showToast(
+        `Page ${!currentStatus ? 'published' : 'unpublished'} successfully`,
+        'success'
+      );
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to update page');
+      showToast(err instanceof Error ? err.message : 'Failed to update page', 'error');
     }
   };
 
@@ -183,6 +201,21 @@ export default function PagesManagement() {
           </div>
         )}
       </div>
+
+      {/* Delete confirmation dialog */}
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setShowDeleteConfirm(false);
+          setPageToDelete(null);
+        }}
+        title="Delete Page"
+        message="Are you sure you want to delete this page? This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        variant="danger"
+      />
     </div>
   );
 }
