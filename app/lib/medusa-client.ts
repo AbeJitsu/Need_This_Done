@@ -198,6 +198,19 @@ export const carts = {
   },
 
   /**
+   * Update cart details (email, shipping address, etc.)
+   * POST /store/carts/:id
+   */
+  update: async (cartId: string, updates: { email?: string }): Promise<Cart> => {
+    const response = await fetchWithRetry(`${MEDUSA_URL}/store/carts/${cartId}`, {
+      method: "POST",
+      body: JSON.stringify(updates),
+    });
+    const data = await handleResponse<{ cart: Cart }>(response);
+    return data.cart;
+  },
+
+  /**
    * Add item to cart
    * POST /store/carts/:id/line-items
    */
@@ -242,6 +255,40 @@ export const carts = {
       `${MEDUSA_URL}/store/carts/${cartId}/line-items/${lineItemId}`,
       {
         method: "DELETE",
+      }
+    );
+    const data = await handleResponse<{ cart: Cart }>(response);
+    return data.cart;
+  },
+
+  /**
+   * Initialize payment sessions for cart
+   * POST /store/carts/:id/payment-sessions
+   * Returns available payment providers
+   */
+  initializePaymentSessions: async (cartId: string): Promise<Cart> => {
+    const response = await fetchWithRetry(
+      `${MEDUSA_URL}/store/carts/${cartId}/payment-sessions`,
+      {
+        method: "POST",
+        body: JSON.stringify({}),
+      }
+    );
+    const data = await handleResponse<{ cart: Cart }>(response);
+    return data.cart;
+  },
+
+  /**
+   * Select payment session provider
+   * POST /store/carts/:id/payment-session
+   * Required before completing cart
+   */
+  selectPaymentSession: async (cartId: string, providerId: string): Promise<Cart> => {
+    const response = await fetchWithRetry(
+      `${MEDUSA_URL}/store/carts/${cartId}/payment-session`,
+      {
+        method: "POST",
+        body: JSON.stringify({ provider_id: providerId }),
       }
     );
     const data = await handleResponse<{ cart: Cart }>(response);

@@ -62,7 +62,7 @@ test.describe('Chatbot Widget', () => {
     await expect(modal).toBeVisible();
 
     // Modal should have proper title
-    await expect(page.getByText('AI Assistant')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'AI Assistant' })).toBeVisible();
   });
 
   test('should close modal when close button is clicked', async ({ page }) => {
@@ -147,7 +147,7 @@ test.describe('Chatbot Widget', () => {
   test('should focus input field when modal opens', async ({ page }) => {
     await navigateToPage(page, '/');
 
-    await page.getByLabel('Open chat assistant').click();
+    await page.getByLabel('Open AI chat assistant').click();
 
     // Wait for focus
     await page.waitForTimeout(200);
@@ -160,7 +160,7 @@ test.describe('Chatbot Widget', () => {
   test('should allow typing in the input field', async ({ page }) => {
     await navigateToPage(page, '/');
 
-    await page.getByLabel('Open chat assistant').click();
+    await page.getByLabel('Open AI chat assistant').click();
 
     const input = page.getByPlaceholder('Type your message...');
     await input.fill('Hello, I have a question');
@@ -171,7 +171,7 @@ test.describe('Chatbot Widget', () => {
   test('should disable send button when input is empty', async ({ page }) => {
     await navigateToPage(page, '/');
 
-    await page.getByLabel('Open chat assistant').click();
+    await page.getByLabel('Open AI chat assistant').click();
 
     // Find the send button (it has the arrow icon)
     const sendButton = page.locator('form button[type="submit"]');
@@ -229,7 +229,7 @@ test.describe('Chatbot Widget', () => {
     await enableDarkMode(page);
 
     // Open chatbot
-    await page.getByLabel('Open chat assistant').click();
+    await page.getByLabel('Open AI chat assistant').click();
 
     const modal = page.getByRole('dialog');
     await expect(modal).toBeVisible();
@@ -250,7 +250,7 @@ test.describe('Chatbot Widget', () => {
   test('should show clear button only when there are messages', async ({ page }) => {
     await navigateToPage(page, '/');
 
-    await page.getByLabel('Open chat assistant').click();
+    await page.getByLabel('Open AI chat assistant').click();
 
     // Clear button should NOT be visible initially (no messages)
     const clearButton = page.getByLabel('Clear chat');
