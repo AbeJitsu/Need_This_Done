@@ -23,19 +23,38 @@ export const metadata: Metadata = {
 // ============================================================================
 
 async function getProducts(): Promise<Product[]> {
-  try {
-    const products = await medusaClient.products.list();
+  // Retry logic with exponential backoff for startup timing issues
+  // Pure exponential backoff: 1s, 2s, 4s, 8s, 16s, 32s, 64s, 128s, 256s, 512s
+  // Total wait time: ~17 minutes max (if Medusa takes that long, bigger issues exist)
+  const maxRetries = 10;
+  const baseDelay = 1000;
 
-    // Sort by price ascending: green ($20) → blue ($35) → purple ($50)
-    return products.sort((a, b) => {
-      const priceA = a.variants?.[0]?.prices?.[0]?.amount ?? 0;
-      const priceB = b.variants?.[0]?.prices?.[0]?.amount ?? 0;
-      return priceA - priceB;
-    });
-  } catch (error) {
-    console.error('Failed to fetch products:', error);
-    return [];
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const products = await medusaClient.products.list();
+
+      // Sort by price ascending: green ($20) → blue ($35) → purple ($50)
+      return products.sort((a, b) => {
+        const priceA = a.variants?.[0]?.prices?.[0]?.amount ?? 0;
+        const priceB = b.variants?.[0]?.prices?.[0]?.amount ?? 0;
+        return priceA - priceB;
+      });
+    } catch (error) {
+      const isLastAttempt = attempt === maxRetries;
+
+      if (isLastAttempt) {
+        console.error('[Shop] Failed to fetch products after all retries:', error);
+        return [];
+      }
+
+      // Exponential backoff: double the delay each time
+      const delay = baseDelay * Math.pow(2, attempt - 1);
+      console.log(`[Shop] Attempt ${attempt}/${maxRetries} failed, retrying in ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
   }
+
+  return [];
 }
 
 // ============================================================================

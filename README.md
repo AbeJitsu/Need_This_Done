@@ -123,7 +123,7 @@ This creates 3 consultation products ($20, $35, $50) that match the E2E test exp
 1. Creates admin user (`admin@needthisdone.com`)
 2. Seeds products via Admin API using `medusa/seed-products.js`
 3. Verifies products exist in the store
-4. Uses `MEDUSA_ADMIN_PASSWORD` from `.env.local` (falls back to `admin123` in dev)
+4. Requires `MEDUSA_ADMIN_PASSWORD` from `.env.local` (fails if not set)
 
 **Why Development Works But Production Doesn't:**
 - **Development:** Uses volume mounts, `next dev`, self-signed SSL certificates, and lenient environment variable handling
@@ -226,10 +226,9 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 
 **Admin Credentials** (for Medusa Admin panel):
 - Email: `admin@needthisdone.com`
-- Password: Set via `MEDUSA_ADMIN_PASSWORD` environment variable in `.env.local`
-- Default (dev only): `admin123` (fallback when env var not set)
+- Password: **Required** - Set via `MEDUSA_ADMIN_PASSWORD` environment variable in `.env.local`
 
-**Security Note:** The `MEDUSA_ADMIN_PASSWORD` environment variable must be set in production. Seed scripts now use this variable instead of hardcoded passwords.
+**Security Note:** The `MEDUSA_ADMIN_PASSWORD` environment variable is required for all environments. Scripts will fail if not set - no fallback passwords.
 
 ---
 

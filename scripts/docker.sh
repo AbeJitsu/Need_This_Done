@@ -527,6 +527,11 @@ cmd_seed() {
   echo -e "${MODE_DISPLAY} ${BLUE}Seeding Products Database${NC}"
   echo ""
 
+  # Load environment variables from .env.local
+  if [ -f .env.local ]; then
+    export $(grep -v '^#' .env.local | xargs)
+  fi
+
   # Check if Medusa container is running
   if ! docker ps --format '{{.Names}}' | grep -q "medusa_backend"; then
     echo -e "${RED}✗ Medusa container not running${NC}"
@@ -534,8 +539,14 @@ cmd_seed() {
     return 1
   fi
 
-  # Get admin password from environment or use default
-  local admin_password="${MEDUSA_ADMIN_PASSWORD:-admin123}"
+  # Require admin password from environment
+  if [ -z "$MEDUSA_ADMIN_PASSWORD" ]; then
+    echo -e "${RED}✗ MEDUSA_ADMIN_PASSWORD not set${NC}"
+    echo -e "${YELLOW}Add MEDUSA_ADMIN_PASSWORD to .env.local${NC}"
+    return 1
+  fi
+
+  local admin_password="$MEDUSA_ADMIN_PASSWORD"
 
   echo "Step 1: Creating admin user..."
   docker exec medusa_backend npm run seed:admin 2>&1 | grep -E "✓|✗|Created|already exists|Error" || true
