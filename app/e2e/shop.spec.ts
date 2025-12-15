@@ -18,11 +18,11 @@ test.describe('Product Catalog & Browsing', () => {
     // Navigate to shop
     await navigateToPage(page, '/shop');
 
-    // Should see shop heading (actual page uses "Shop Services")
-    await expect(page.getByRole('heading', { name: /Shop Services/i })).toBeVisible({ timeout: 10000 });
+    // Should see shop heading (actual page uses "Quick Consultations")
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
-    // Should display products grid
-    const productGrid = page.locator('[class*="grid"]');
+    // Should display products grid (use first() to avoid strict mode violation with multiple grids)
+    const productGrid = page.locator('[class*="grid"]').first();
     await expect(productGrid).toBeVisible({ timeout: 10000 });
 
     // Should have product cards with pricing (at least 3 products)
@@ -199,8 +199,8 @@ test.describe('Shopping Cart Management', () => {
     await page.getByRole('link', { name: /view cart/i }).click();
     await page.waitForLoadState('domcontentloaded');
 
-    // Should see cart heading
-    await expect(page.getByRole('heading', { name: /cart/i })).toBeVisible({ timeout: 10000 });
+    // Should see cart heading (actual heading is "Almost there!" when cart has items)
+    await expect(page.getByRole('heading', { name: /almost there|your cart/i })).toBeVisible({ timeout: 10000 });
 
     // Should show order summary with prices (price appears in Subtotal and Total)
     await expect(page.getByText(/subtotal/i)).toBeVisible({ timeout: 10000 });
@@ -333,7 +333,7 @@ test.describe('Guest Checkout Flow', () => {
   test('guest can checkout without authentication', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
-    await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     await page.getByRole('link', { name: /details/i }).first().click();
     await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
@@ -383,16 +383,16 @@ test.describe('Guest Checkout Flow', () => {
     await expect(page.getByText(/order summary/i)).toBeVisible({ timeout: 5000 });
     await expect(page.getByText(/\$\d+\.\d{2}/).first()).toBeVisible({ timeout: 5000 });
 
-    // Should have continue to payment button
+    // Should have continue button (actual button text is "Continue")
     await expect(
-      page.getByRole('button', { name: /continue to payment|place order|complete|submit/i })
+      page.getByRole('button', { name: /continue/i })
     ).toBeVisible({ timeout: 5000 });
   });
 
   test('checkout form validates required fields', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
-    await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     await page.getByRole('link', { name: /details/i }).first().click();
     await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
@@ -437,7 +437,7 @@ test.describe('Guest Checkout Flow', () => {
   test('displays order confirmation after guest checkout', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
-    await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     await page.getByRole('link', { name: /details/i }).first().click();
     await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
@@ -649,16 +649,13 @@ test.describe('Error Handling & Edge Cases', () => {
     // Wait a bit for the loading state to potentially resolve
     await page.waitForTimeout(2000);
 
-    // Should show either:
-    // 1. Loading state (product loading forever because ID doesn't exist)
-    // 2. 404 or error message
-    // 3. Empty product state
-    // The page shouldn't crash - it should show something gracefully
-    const loadingText = page.locator('text=/loading|not found|error|invalid|product/i');
-    const loadingCount = await loadingText.count();
+    // Should show Next.js 404 page (notFound() is called for invalid products)
+    // The page shouldn't crash - it should show 404 gracefully
+    const notFoundText = page.locator('text=/404|not found|page.*not.*found/i');
+    const notFoundCount = await notFoundText.count();
 
-    // Page should have some content indicating the state
-    expect(loadingCount).toBeGreaterThan(0);
+    // Page should have some content indicating it's not found
+    expect(notFoundCount).toBeGreaterThan(0);
   });
 
   test('handles network errors in cart operations gracefully', async ({
@@ -706,7 +703,7 @@ test.describe('Integration: Complete User Journey', () => {
   }) => {
     // 1. Browse products
     await navigateToPage(page, '/shop');
-    await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     // 2. View product detail via Details link
     await page.getByRole('link', { name: /details/i }).first().click();
@@ -725,7 +722,7 @@ test.describe('Integration: Complete User Journey', () => {
     // 5. Navigate to cart via "View Cart" link on product detail page
     await page.getByRole('link', { name: /view cart/i }).click();
     await page.waitForLoadState('domcontentloaded');
-    await expect(page.getByRole('heading', { name: /cart/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /almost there|your cart/i })).toBeVisible({ timeout: 10000 });
 
     // 6. View order summary (use Subtotal specifically to avoid strict mode)
     await expect(page.getByText(/subtotal/i)).toBeVisible({ timeout: 10000 });

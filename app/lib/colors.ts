@@ -20,13 +20,13 @@ export const accentColors: Record<AccentVariant, {
   border: string;
   hoverBorder: string;
 }> = {
-  purple: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-500 dark:border-purple-400', hoverBorder: 'hover:border-purple-500 dark:hover:border-purple-400' },
-  blue: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-500 dark:border-blue-400', hoverBorder: 'hover:border-blue-500 dark:hover:border-blue-400' },
-  green: { bg: 'bg-green-100', text: 'text-green-800', border: 'border-green-500 dark:border-green-400', hoverBorder: 'hover:border-green-500 dark:hover:border-green-400' },
-  orange: { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-500 dark:border-orange-400', hoverBorder: 'hover:border-orange-500 dark:hover:border-orange-400' },
-  teal: { bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-500 dark:border-teal-400', hoverBorder: 'hover:border-teal-500 dark:hover:border-teal-400' },
-  gray: { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-500 dark:border-gray-400', hoverBorder: 'hover:border-gray-500 dark:hover:border-gray-400' },
-  red: { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-700 dark:border-red-300', hoverBorder: 'hover:border-red-700 dark:hover:border-red-300' },
+  purple: { bg: 'bg-purple-100', text: 'text-purple-700 dark:text-purple-300', border: 'border-purple-500 dark:border-purple-400', hoverBorder: 'hover:border-purple-500 dark:hover:border-purple-400' },
+  blue: { bg: 'bg-blue-100', text: 'text-blue-700 dark:text-blue-300', border: 'border-blue-500 dark:border-blue-400', hoverBorder: 'hover:border-blue-500 dark:hover:border-blue-400' },
+  green: { bg: 'bg-green-100', text: 'text-green-700 dark:text-green-300', border: 'border-green-500 dark:border-green-400', hoverBorder: 'hover:border-green-500 dark:hover:border-green-400' },
+  orange: { bg: 'bg-orange-100', text: 'text-orange-700 dark:text-orange-300', border: 'border-orange-500 dark:border-orange-400', hoverBorder: 'hover:border-orange-500 dark:hover:border-orange-400' },
+  teal: { bg: 'bg-teal-100', text: 'text-teal-700 dark:text-teal-300', border: 'border-teal-500 dark:border-teal-400', hoverBorder: 'hover:border-teal-500 dark:hover:border-teal-400' },
+  gray: { bg: 'bg-gray-100', text: 'text-gray-700 dark:text-gray-300', border: 'border-gray-500 dark:border-gray-400', hoverBorder: 'hover:border-gray-500 dark:hover:border-gray-400' },
+  red: { bg: 'bg-red-100', text: 'text-red-700 dark:text-red-300', border: 'border-red-700 dark:border-red-300', hoverBorder: 'hover:border-red-700 dark:hover:border-red-300' },
 };
 
 // ============================================================================

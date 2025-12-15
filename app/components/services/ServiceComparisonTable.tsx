@@ -41,7 +41,7 @@ export default function ServiceComparisonTable({
         <table className="w-full">
           <thead>
             <tr>
-              <th className="text-left p-3" />
+              <th className="text-left p-3"><span className="sr-only">Feature</span></th>
               {columns.map((col, idx) => (
                 <th
                   key={col}
@@ -64,7 +64,7 @@ export default function ServiceComparisonTable({
                 {row.values.map((value, colIdx) => (
                   <td
                     key={colIdx}
-                    className={`text-center p-3 ${formInputColors.helper}`}
+                    className={`text-center p-3 ${headingColors.primary}`}
                   >
                     {value}
                   </td>

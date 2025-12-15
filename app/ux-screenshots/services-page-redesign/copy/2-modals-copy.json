@@ -1,65 +1,41 @@
 {
   "Virtual Assistant": {
     "title": "Virtual Assistant",
-    "tagline": "“You stay in control. We handle the work, keep you updated, and make sure nothing falls through the cracks.”",
+    "tagline": "",
     "description": "Your time is valuable. Let us handle the tasks that eat up your day.",
     "pain_points": [
       "Email management and inbox organization",
-      "Calendar coordination and appointment scheduling",
-      "Travel planning and booking",
+      "Calendar coordination and scheduling",
       "Research projects and data gathering",
-      "Social media posting and updates"
+      "Travel planning and booking"
     ],
-    "examples": [
-      "Sorting through 200 emails and flagging the 5 that need your attention",
-      "Booking your entire conference trip, from flights to dinner reservations",
-      "Researching vendors and creating a comparison spreadsheet",
-      "Scheduling meetings across three time zones without the back-and-forth",
-      "Posting your blog content to LinkedIn, Twitter, and Facebook"
-    ],
-    "cta": "Quick Chat ($20)15 minutes to discuss your needs",
-    "cta_href": "/shop"
+    "cta": "See All Services",
+    "cta_href": "/services"
   },
   "Data & Documents": {
     "title": "Data & Documents",
-    "tagline": "“No judgment, just results. We have seen it all and we know how to fix it. Your messy data becomes our clean deliverable.”",
+    "tagline": "",
     "description": "Messy spreadsheets and formatting nightmares? We turn chaos into clarity.",
     "pain_points": [
       "Spreadsheet cleanup and organization",
       "Data entry and formatting",
-      "Report preparation and presentation design",
-      "Document formatting and templates",
-      "File organization and cleanup"
+      "Report and presentation design",
+      "Document templates and file organization"
     ],
-    "examples": [
-      "Taking 5 messy spreadsheets and turning them into one organized database",
-      "Formatting your quarterly report so it actually looks professional",
-      "Entering 500 business cards into a clean, searchable contact list",
-      "Creating templates for your invoices, proposals, and reports",
-      "Organizing years of files into a system that makes sense"
-    ],
-    "cta": "Quick Chat ($20)15 minutes to discuss your needs",
-    "cta_href": "/shop"
+    "cta": "See All Services",
+    "cta_href": "/services"
   },
   "Website Services": {
     "title": "Website Services",
-    "tagline": "“We handle the tech so you do not have to. No jargon, no confusion, just a website that works the way you need it to.”",
+    "tagline": "",
     "description": "Your website should work for you, not give you a headache.",
     "pain_points": [
       "New website builds and redesigns",
       "Content updates and page edits",
       "E-commerce setup and product management",
-      "Ongoing maintenance and updates",
-      "Tech troubleshooting and support"
+      "Ongoing maintenance and support"
     ],
-    "examples": [
-      "Building a professional website for your small business from scratch",
-      "Updating your homepage, fixing broken links, and adding new pages",
-      "Setting up your online store so you can start selling",
-      "Keeping your site secure, updated, and running smoothly every month",
-      "Fixing that one thing that has been broken for weeks (you know what it is)"
-    ],
-    "cta": "Quick Chat ($20)15 minutes to discuss your needs",
-    "cta_href": "/shop"
+    "cta": "See All Services",
+    "cta_href": "/services"
   }
 }

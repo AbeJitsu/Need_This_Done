@@ -16,7 +16,7 @@ test.describe('Shopping Cart - Add to Cart', () => {
     await navigateToPage(page, '/shop');
 
     // Should see shop heading
-    await expect(page.getByRole('heading', { name: /Shop/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     // Click "Details" link to go to product page
     await page.getByRole('link', { name: /details/i }).first().click();
@@ -62,8 +62,8 @@ test.describe('Shopping Cart - Add to Cart', () => {
       await cartLink.click();
       await page.waitForLoadState('domcontentloaded');
 
-      // Verify cart page
-      const cartHeading = page.getByRole('heading', { name: /cart/i });
+      // Verify cart page (heading is "Almost there!" or "Your Cart is Empty")
+      const cartHeading = page.getByRole('heading', { name: /almost there|your cart/i });
       if (await cartHeading.isVisible()) {
         // Both items should be in cart
         // Note: implementation may vary, so we verify at least one item exists
@@ -207,7 +207,7 @@ test.describe('Shopping Cart - Integration', () => {
   }) => {
     // Step 1: Navigate to shop
     await navigateToPage(page, '/shop');
-    await expect(page.getByRole('heading', { name: /Shop Services/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     // Step 2: Add item to cart
     const addButtons = page.getByRole('button', { name: /add to cart/i });
@@ -230,8 +230,8 @@ test.describe('Shopping Cart - Integration', () => {
       const pageContent = page.locator('body');
       await expect(pageContent).toBeVisible();
 
-      // Cart should be accessible
-      const cartHeading = page.getByRole('heading', { name: /cart/i });
+      // Cart should be accessible (heading is "Almost there!" or "Your Cart is Empty")
+      const cartHeading = page.getByRole('heading', { name: /almost there|your cart/i });
       if (await cartHeading.isVisible()) {
         // Verify page structure
         expect(await cartHeading.isVisible()).toBe(true);
