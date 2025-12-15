@@ -1256,31 +1256,28 @@ User: "launch a swarm to review my changes"
 
 See `.claude/skills/launch-a-swarm.md` for full documentation.
 
-#### Container Restart Guide
+#### Container Restart Commands
 
-Comprehensive guide for when to restart vs rebuild Docker services. Helps diagnose issues faster and minimize downtime.
-
-**Location:** [docs/CONTAINER_RESTART_GUIDE.md](docs/CONTAINER_RESTART_GUIDE.md)
-
-**Key Features:**
-- Decision tree: restart vs rebuild
-- Smart multi-service restart support via `./docker.sh restart service1 service2`
-- Common scenarios with recommended actions
-- Troubleshooting tips for container issues
+For comprehensive guidance on when to restart vs rebuild Docker services, see the [Docker Development Workflow](#docker-development-workflow) section above.
 
 **Quick Reference:**
 ```bash
 # Restart single service
-./docker.sh restart medusa
+./scripts/docker.sh restart medusa
 
 # Restart multiple services
-./docker.sh restart medusa redis
+./scripts/docker.sh restart medusa redis
 
-# When to use:
+# When to use restart (preserves data, faster):
+# - Code changes (with volume mounts)
 # - Config changes (.env.local updates)
 # - Service appears hung
 # - Network connectivity issues
-# - After code changes (with volume mounts)
+
+# When to use rebuild (clean slate, slower):
+# - package.json / package-lock.json changes
+# - Dockerfile changes
+# - Persistent bugs that restart doesn't fix
 ```
 
 ---
@@ -1477,6 +1474,41 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
 | `app/context/CartContext.tsx` | Shopping cart state |
 | `app/context/AuthContext.tsx` | User authentication state |
 | `app/context/StripeContext.tsx` | Stripe Elements provider |
+| `app/context/ToastContext.tsx` | Global toast notification state |
+| `app/context/ServiceModalContext.tsx` | Service detail modal state |
+
+### UI Components
+| File | Purpose |
+|------|---------|
+| `app/components/Navigation.tsx` | Site-wide navigation with cart icon badge |
+| `app/components/ui/ConfirmDialog.tsx` | Confirmation dialog component (danger/warning/info variants) |
+| `app/components/ui/Toast.tsx` | Toast notification component |
+
+**ConfirmDialog** - Branded confirmation modal replacing browser alerts:
+```typescript
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+
+const [showConfirm, setShowConfirm] = useState(false);
+
+<ConfirmDialog
+  isOpen={showConfirm}
+  onClose={() => setShowConfirm(false)}
+  onConfirm={handleDelete}
+  title="Delete Page?"
+  message="This action cannot be undone."
+  variant="danger"
+/>
+```
+
+**Toast Notifications** - Global notification system with auto-dismiss:
+```typescript
+import { useToast } from '@/context/ToastContext';
+
+const { showToast } = useToast();
+showToast('Changes saved!', 'success');
+```
+
+All UI components are WCAG AA compliant with keyboard navigation and ARIA attributes.
 
 ### Backend Services
 | File | Purpose |
