@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { deleteCalendarEvent, isCalendarConnected, getValidAccessToken } from '@/lib/google-calendar';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Cancel Appointment API - POST /api/admin/appointments/[id]/cancel
 // ============================================================================

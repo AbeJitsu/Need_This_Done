@@ -6,6 +6,8 @@ import {
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { badRequest, unauthorized, handleApiError } from '@/lib/api-errors';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Create Subscription API Route
 // ============================================================================

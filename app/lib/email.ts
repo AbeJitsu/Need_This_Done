@@ -90,6 +90,12 @@ export async function sendEmailWithRetry(
   react: React.ReactElement,
   maxRetries: number = 3
 ): Promise<string | null> {
+  // Skip sending emails in test mode to avoid filling inbox
+  if (process.env.NODE_ENV === 'test') {
+    console.log('[TEST MODE] Skipped sending email:', { to, subject });
+    return 'test-email-id';
+  }
+
   const resend = getResend();
   const idempotencyKey = randomUUID();
 

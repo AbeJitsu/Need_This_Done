@@ -3,6 +3,8 @@ import { redis } from '@/lib/redis';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { badRequest, handleApiError } from '@/lib/api-errors';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Demo API Route - /api/demo/items
 // ============================================================================

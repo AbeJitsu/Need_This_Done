@@ -14,6 +14,8 @@ import {
 import { cache, CACHE_KEYS } from '@/lib/cache';
 import { sendProjectSubmissionEmails } from '@/lib/email-service';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Projects API Route - /api/projects
 // ============================================================================

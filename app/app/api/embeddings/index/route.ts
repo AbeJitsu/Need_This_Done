@@ -4,6 +4,8 @@ import { embedMany } from 'ai';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { chunkText } from '@/lib/chatbot';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Embeddings Index API - POST /api/embeddings/index
 // ============================================================================

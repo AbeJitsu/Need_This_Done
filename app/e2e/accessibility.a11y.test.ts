@@ -41,9 +41,9 @@ for (const page of PAGES) {
   test(`${page.name} - Light Mode Accessibility`, async ({ page: browserPage }) => {
     // Explicitly set light mode to ensure consistent testing
     await browserPage.emulateMedia({ colorScheme: 'light' });
-    await browserPage.goto(`${BASE_URL}${page.path}`, { waitUntil: 'networkidle' });
+    await browserPage.goto(`${BASE_URL}${page.path}`, { waitUntil: 'load' });
     // Wait for styles to fully compute
-    await browserPage.waitForTimeout(200);
+    await browserPage.waitForTimeout(500);
     await injectAxe(browserPage);
     await checkA11y(browserPage, null, axeConfig);
   });
@@ -59,9 +59,9 @@ for (const page of PAGES) {
   test(`${page.name} - Dark Mode Accessibility`, async ({ page: browserPage }) => {
     // Set dark mode preference before navigating (triggers layout.tsx script)
     await browserPage.emulateMedia({ colorScheme: 'dark' });
-    await browserPage.goto(`${BASE_URL}${page.path}`, { waitUntil: 'networkidle' });
+    await browserPage.goto(`${BASE_URL}${page.path}`, { waitUntil: 'load' });
     // Wait for styles to fully compute
-    await browserPage.waitForTimeout(200);
+    await browserPage.waitForTimeout(500);
     await injectAxe(browserPage);
     await checkA11y(browserPage, null, axeConfig);
   });

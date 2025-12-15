@@ -88,7 +88,7 @@ export default function Navigation() {
                       px-3 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors transition-transform border
                       ${
                         isActive
-                          ? 'bg-blue-100 text-blue-700 border-blue-500 dark:border-blue-400 hover:text-blue-800 dark:hover:text-blue-900'
+                          ? 'bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300 border-blue-500 dark:border-blue-400 hover:text-blue-800 dark:hover:text-blue-200'
                           : `${navigationColors.link} border-transparent ${navigationColors.linkHover}`
                       }
                     `}
@@ -123,8 +123,8 @@ export default function Navigation() {
               href="/contact"
               className={`
                 hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors border
-                bg-orange-100 text-orange-800 border-orange-500 dark:border-orange-400
-                hover:text-orange-900 hover:border-orange-600 dark:hover:border-orange-300
+                bg-orange-100 dark:bg-orange-800 text-orange-800 dark:text-orange-300 border-orange-500 dark:border-orange-400
+                hover:text-orange-900 dark:hover:text-orange-200 hover:border-orange-600 dark:hover:border-orange-300
               `}
             >
               Get a Quote
@@ -251,7 +251,7 @@ export default function Navigation() {
                     block px-3 py-2 text-base font-medium rounded-md transition-colors border
                     ${
                       isActive
-                        ? 'bg-blue-100 text-blue-700 border-blue-500 dark:border-blue-400'
+                        ? 'bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300 border-blue-500 dark:border-blue-400'
                         : `${navigationColors.link} border-transparent hover:bg-gray-100 dark:hover:bg-gray-800 ${navigationColors.linkHover}`
                     }
                   `}
@@ -265,7 +265,7 @@ export default function Navigation() {
             <Link
               href="/contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 text-base font-medium rounded-md transition-colors mt-2 border bg-orange-100 text-orange-800 border-orange-500 dark:border-orange-400 hover:text-orange-900 hover:border-orange-600 dark:hover:border-orange-300"
+              className="block px-3 py-2 text-base font-medium rounded-md transition-colors mt-2 border bg-orange-100 dark:bg-orange-800 text-orange-800 dark:text-orange-300 border-orange-500 dark:border-orange-400 hover:text-orange-900 dark:hover:text-orange-200 hover:border-orange-600 dark:hover:border-orange-300"
             >
               Get a Quote
             </Link>

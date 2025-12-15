@@ -5,6 +5,8 @@ import { badRequest, handleApiError } from '@/lib/api-errors';
 import { verifyAuth } from '@/lib/api-auth';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Orders API Route - /api/orders
 // ============================================================================

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Embeddings Status API - GET /api/embeddings/status
 // ============================================================================

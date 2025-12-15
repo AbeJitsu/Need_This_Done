@@ -5,6 +5,8 @@ import {
   storeTokens,
 } from '@/lib/google-calendar';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Google Calendar OAuth Callback - GET /api/google/callback
 // ============================================================================

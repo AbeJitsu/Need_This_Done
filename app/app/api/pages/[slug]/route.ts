@@ -5,6 +5,8 @@ import { verifyAdmin, verifyAuth } from '@/lib/api-auth';
 import { serverError, handleApiError } from '@/lib/api-errors';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Single Page API Route - /api/pages/[slug]
 // ============================================================================

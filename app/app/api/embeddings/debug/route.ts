@@ -4,6 +4,8 @@ import { embed } from 'ai';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Embeddings Debug API - GET /api/embeddings/debug
 // ============================================================================

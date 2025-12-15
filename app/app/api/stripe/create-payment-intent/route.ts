@@ -6,6 +6,8 @@ import {
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { badRequest, handleApiError } from '@/lib/api-errors';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Create Payment Intent API Route
 // ============================================================================

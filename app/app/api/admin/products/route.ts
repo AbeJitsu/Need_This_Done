@@ -3,6 +3,8 @@ import { verifyAdmin } from '@/lib/api-auth';
 import { badRequest, handleApiError } from '@/lib/api-errors';
 import { cache, CACHE_KEYS } from '@/lib/cache';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Admin Products API Route - /api/admin/products
 // ============================================================================

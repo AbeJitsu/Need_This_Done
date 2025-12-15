@@ -3,6 +3,8 @@ import { medusaClient } from '@/lib/medusa-client';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 import { handleApiError } from '@/lib/api-errors';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Products API Route - /api/shop/products
 // ============================================================================

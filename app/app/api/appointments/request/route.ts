@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { sendAppointmentRequestNotification } from '@/lib/email-service';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Appointment Request API Route - POST /api/appointments/request
 // ============================================================================

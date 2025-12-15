@@ -4,6 +4,8 @@ import { verifyAdmin } from '@/lib/api-auth';
 import { handleApiError } from '@/lib/api-errors';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // All Projects API Route - /api/projects/all (Admin Only)
 // ============================================================================

@@ -4,6 +4,8 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { cache } from '@/lib/cache';
 import Stripe from 'stripe';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Stripe Webhook Handler
 // ============================================================================

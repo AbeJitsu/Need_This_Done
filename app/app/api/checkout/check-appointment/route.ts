@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { medusaClient } from '@/lib/medusa-client';
 import { badRequest, handleApiError } from '@/lib/api-errors';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Check Appointment Requirement API Route - /api/checkout/check-appointment
 // ============================================================================
