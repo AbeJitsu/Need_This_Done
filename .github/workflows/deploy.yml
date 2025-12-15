@@ -33,7 +33,7 @@ jobs:
           echo "Pulling latest code from GitHub..."
           git pull origin main
           echo "Building and starting Docker containers..."
-          docker-compose -f docker-compose.production.yml up --build -d
+          docker-compose --env-file .env.local -f docker-compose.production.yml up --build -d
           echo "Checking service health..."
           sleep 10
           docker ps
