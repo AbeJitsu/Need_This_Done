@@ -58,7 +58,23 @@ fi
 # Service Name Mapping (Friendly → Docker)
 # ============================================================================
 
-get_docker_name() {
+# Get service name (for docker-compose commands: build, up, restart)
+get_service_name() {
+  case "$1" in
+    front-door|gateway)   echo "nginx" ;;
+    website|app|site)     echo "app" ;;
+    memory|cache)         echo "redis" ;;
+    store|shop)           echo "medusa" ;;
+    store-data|shop-db)   echo "medusa_postgres" ;;
+    design-tools|components|storybook) echo "storybook" ;;
+    e2e|e2e-tests)        echo "e2e_tests" ;;
+    integration|int-tests) echo "integration_tests" ;;
+    *)                    echo "$1" ;; # Pass through if already a service name
+  esac
+}
+
+# Get container name (for docker direct commands: stop, logs, ps)
+get_container_name() {
   case "$1" in
     front-door|gateway)   echo "nginx" ;;
     website|app|site)     echo "nextjs_app" ;;
@@ -68,18 +84,18 @@ get_docker_name() {
     design-tools|components|storybook) echo "storybook_dev" ;;
     e2e|e2e-tests)        echo "e2e_tests" ;;
     integration|int-tests) echo "integration_tests" ;;
-    *)                    echo "$1" ;; # Pass through if already docker name
+    *)                    echo "$1" ;; # Pass through if already a container name
   esac
 }
 
 get_friendly_name() {
   case "$1" in
     nginx)              echo "front-door" ;;
-    nextjs_app)         echo "website" ;;
+    app|nextjs_app)     echo "website" ;;
     redis)              echo "memory" ;;
-    medusa_backend)     echo "store" ;;
+    medusa|medusa_backend) echo "store" ;;
     medusa_postgres)    echo "store-data" ;;
-    storybook_dev)      echo "design-tools" ;;
+    storybook|storybook_dev) echo "design-tools" ;;
     e2e_tests)          echo "e2e" ;;
     integration_tests)  echo "integration" ;;
     *)                  echo "$1" ;;
@@ -158,21 +174,21 @@ EOF
 
 cmd_start() {
   local service="$1"
-  local docker_name=$(get_docker_name "$service")
-  local friendly=$(get_friendly_name "$docker_name")
+  local service_name=$(get_service_name "$service")
+  local friendly=$(get_friendly_name "$service_name")
 
   echo -e "${MODE_DISPLAY} ${BLUE}Starting ${friendly}...${NC}"
-  $(get_compose_cmd) up -d "$docker_name"
+  $(get_compose_cmd) up -d "$service_name"
   echo -e "${GREEN}${friendly} is now running${NC}"
 }
 
 cmd_stop() {
   local service="$1"
-  local docker_name=$(get_docker_name "$service")
-  local friendly=$(get_friendly_name "$docker_name")
+  local container_name=$(get_container_name "$service")
+  local friendly=$(get_friendly_name "$container_name")
 
   echo -e "${YELLOW}Stopping ${friendly}...${NC}"
-  docker stop "$docker_name" 2>/dev/null || echo -e "${YELLOW}${friendly} wasn't running${NC}"
+  docker stop "$container_name" 2>/dev/null || echo -e "${YELLOW}${friendly} wasn't running${NC}"
   echo -e "${GREEN}${friendly} stopped${NC}"
 }
 
@@ -189,11 +205,11 @@ cmd_restart() {
 
   # Restart each service
   for service in "$@"; do
-    local docker_name=$(get_docker_name "$service")
-    local friendly=$(get_friendly_name "$docker_name")
+    local service_name=$(get_service_name "$service")
+    local friendly=$(get_friendly_name "$service_name")
 
     echo -e "  ${YELLOW}→${NC} Restarting ${friendly}..."
-    $(get_compose_cmd) restart "$docker_name" 2>/dev/null
+    $(get_compose_cmd) restart "$service_name" 2>/dev/null
     if [ $? -eq 0 ]; then
       echo -e "  ${GREEN}✓${NC} ${friendly} restarted"
     else
@@ -207,11 +223,11 @@ cmd_restart() {
 
 cmd_logs() {
   local service="$1"
-  local docker_name=$(get_docker_name "$service")
-  local friendly=$(get_friendly_name "$docker_name")
+  local container_name=$(get_container_name "$service")
+  local friendly=$(get_friendly_name "$container_name")
 
   echo -e "${BLUE}Showing logs for ${friendly}...${NC}"
-  docker logs -f "$docker_name"
+  docker logs -f "$container_name"
 }
 
 cmd_up() {
@@ -347,12 +363,12 @@ cmd_test() {
 
 cmd_rebuild() {
   local service="$1"
-  local docker_name=$(get_docker_name "$service")
-  local friendly=$(get_friendly_name "$docker_name")
+  local service_name=$(get_service_name "$service")
+  local friendly=$(get_friendly_name "$service_name")
 
   echo -e "${MODE_DISPLAY} ${BLUE}Rebuilding ${friendly}...${NC}"
-  $(get_compose_cmd) build --no-cache "$docker_name"
-  $(get_compose_cmd) up -d "$docker_name"
+  $(get_compose_cmd) build --no-cache "$service_name"
+  $(get_compose_cmd) up -d "$service_name"
   echo -e "${GREEN}${friendly} rebuilt and running${NC}"
 }
 

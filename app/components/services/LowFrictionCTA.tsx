@@ -52,7 +52,7 @@ export default function LowFrictionCTA({
         >
           <span className="text-lg">{primaryButton.text}</span>
           {primaryButton.subtext && (
-            <span className="text-sm opacity-80 mt-1">{primaryButton.subtext}</span>
+            <span className="text-sm mt-1">{primaryButton.subtext}</span>
           )}
         </Link>
 

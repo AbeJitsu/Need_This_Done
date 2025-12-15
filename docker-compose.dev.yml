@@ -50,6 +50,8 @@ services:
     # - For CLOUD Supabase: Don't set SUPABASE_INTERNAL_URL (cloud URL works from anywhere)
     environment:
       - NODE_ENV=development
+      # Skip real email sending during testing (E2E tests trigger real endpoints)
+      - SKIP_EMAILS=true
       # Only pass SUPABASE_INTERNAL_URL if set in .env (for local Supabase)
       # Cloud Supabase doesn't need this - the public URL works from Docker
     env_file:
