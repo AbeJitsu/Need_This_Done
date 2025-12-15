@@ -4,7 +4,7 @@
 // Base card component with consistent hover effects. Uses centralized colors
 // from colors.ts for DRY, maintainable styling across all pages.
 
-import { AccentVariant, cardHoverColors, cardHoverBgTints } from '@/lib/colors';
+import { AccentVariant, cardHoverColors, cardHoverBgTints, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 interface CardProps {
   children: React.ReactNode;
@@ -38,9 +38,9 @@ export default function Card({
 
   return (
     <div className={`
-      bg-white dark:bg-gray-800
+      ${cardBgColors.base}
       rounded-xl p-6
-      border-2 border-gray-400 dark:border-gray-500
+      ${cardBorderColors.subtle}
       transition-all duration-300
       ${hoverBorderClass}
       ${hoverBgClass}

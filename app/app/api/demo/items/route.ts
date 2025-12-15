@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { redis } from '@/lib/redis';
-// eslint-disable-next-line no-restricted-imports -- public demo endpoint, no auth required
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { badRequest, handleApiError } from '@/lib/api-errors';
 
 // ============================================================================
@@ -17,6 +16,8 @@ import { badRequest, handleApiError } from '@/lib/api-errors';
 //
 // This is a real example of how every API route should work:
 // Try cache first (fast) → Fall back to database (slower) → Save to cache (future requests are instant)
+//
+// Security: Admin-only endpoint for dev dashboard demos.
 
 interface DemoItem {
   id: string;
@@ -33,6 +34,34 @@ interface ApiResponse {
 
 export async function GET() {
   try {
+    // ====================================================================
+    // Admin Authentication Check
+    // ====================================================================
+    // This endpoint is for admin dev dashboard demos only.
+    const supabase = await createSupabaseServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    // Check if user has admin role
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (!profile || profile.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Forbidden - Admin access required' },
+        { status: 403 }
+      );
+    }
+
     const cacheKey = 'demo:items';
 
     // ====================================================================
@@ -70,6 +99,7 @@ export async function GET() {
     // ====================================================================
     // Redis didn't have it, so fetch from Supabase (the filing cabinet).
     // This is slower, but only happens when data isn't cached yet.
+    // Using the authenticated supabase client from auth check above.
 
     const { data: items, error } = await supabase
       .from('demo_items')
@@ -145,6 +175,34 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    // ====================================================================
+    // Admin Authentication Check
+    // ====================================================================
+    // This endpoint is for admin dev dashboard demos only.
+    const supabase = await createSupabaseServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    // Check if user has admin role
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (!profile || profile.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Forbidden - Admin access required' },
+        { status: 403 }
+      );
+    }
+
     const { content } = await request.json();
 
     if (!content || typeof content !== 'string' || content.trim().length === 0) {
@@ -155,6 +213,7 @@ export async function POST(request: Request) {
     // Save to Database
     // ====================================================================
     // When a user creates a new item, save it permanently to Supabase.
+    // Using the authenticated supabase client from auth check above.
 
     const { data: newItem, error } = await supabase
       .from('demo_items')

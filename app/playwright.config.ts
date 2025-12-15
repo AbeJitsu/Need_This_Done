@@ -1,8 +1,15 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'node:url';
 
-// Load environment variables from .env.local for Supabase access in tests
-dotenv.config({ path: '.env.local' });
+// ESM-compatible __dirname replacement
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables from root .env.local for Supabase access in tests
+// The root .env.local is one level up from the app directory
+dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
 // ============================================================================
 // Playwright Configuration

@@ -9,16 +9,24 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import PaymentForm from '@/components/PaymentForm';
-import { formInputColors, formValidationColors, featureCardColors } from '@/lib/colors';
+import AppointmentStepForm, { AppointmentData } from '@/components/AppointmentStepForm';
+import {
+  formInputColors,
+  formValidationColors,
+  featureCardColors,
+  alertColors,
+  headingColors,
+  dividerColors,
+} from '@/lib/colors';
 
 // ============================================================================
 // Checkout Page - /checkout
 // ============================================================================
 // What: Completes the purchase process with Stripe payment
 // Why: Collect shipping/payment info, process payment, and create order
-// How: Multi-step flow: Contact → Shipping → Payment → Confirmation
+// How: Multi-step flow: Contact → Appointment (if needed) → Payment → Confirmation
 
-type CheckoutStep = 'info' | 'payment' | 'confirmation';
+type CheckoutStep = 'info' | 'appointment' | 'payment' | 'confirmation';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -41,11 +49,20 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
 
-  // Redirect if no cart items (but not during payment/confirmation)
+  // Appointment state (for consultation products)
+  const [requiresAppointment, setRequiresAppointment] = useState(false);
+  const [appointmentInfo, setAppointmentInfo] = useState<{
+    serviceName: string;
+    durationMinutes: number;
+  } | null>(null);
+  const [appointmentData, setAppointmentData] = useState<AppointmentData | null>(null);
+
+  // Redirect if no cart items (but not during appointment/payment/confirmation)
   useEffect(() => {
     if (
       !isProcessing &&
       itemCount === 0 &&
+      currentStep !== 'appointment' &&
       currentStep !== 'payment' &&
       currentStep !== 'confirmation'
     ) {
@@ -61,9 +78,9 @@ export default function CheckoutPage() {
   }, [user, email]);
 
   // ========================================================================
-  // Step 1: Handle info submission - proceed to payment
+  // Step 1: Handle info submission - check for appointment requirement
   // ========================================================================
-  const handleProceedToPayment = async (e: React.FormEvent) => {
+  const handleInfoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -81,7 +98,51 @@ export default function CheckoutPage() {
     try {
       setIsProcessing(true);
 
-      // Create order first (saves order in Medusa + Supabase)
+      // Check if cart requires appointment (by checking product metadata)
+      const checkResponse = await fetch('/api/checkout/check-appointment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cart_id: cartId }),
+      });
+
+      const checkData = await checkResponse.json();
+
+      if (checkResponse.ok && checkData.requires_appointment) {
+        // Store appointment info and go to appointment step
+        setRequiresAppointment(true);
+        setAppointmentInfo({
+          serviceName: checkData.service_name || 'Consultation',
+          durationMinutes: checkData.duration_minutes || 30,
+        });
+        setCurrentStep('appointment');
+      } else {
+        // No appointment needed - proceed directly to payment
+        await proceedToPayment();
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to proceed');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // ========================================================================
+  // Handle appointment selection - proceed to payment
+  // ========================================================================
+  const handleAppointmentComplete = async (data: AppointmentData) => {
+    setAppointmentData(data);
+    await proceedToPayment();
+  };
+
+  // ========================================================================
+  // Create order and payment intent - proceed to payment step
+  // ========================================================================
+  const proceedToPayment = async () => {
+    try {
+      setIsProcessing(true);
+      setError('');
+
+      // Create order (saves order in Medusa + Supabase)
       const orderResponse = await fetch('/api/checkout/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -99,6 +160,15 @@ export default function CheckoutPage() {
 
       // Store the order ID for later
       setOrderId(orderData.order_id);
+
+      // Update appointment info from order data if not already set
+      if (orderData.requires_appointment && !appointmentInfo) {
+        setRequiresAppointment(true);
+        setAppointmentInfo({
+          serviceName: orderData.service_name || 'Consultation',
+          durationMinutes: orderData.duration_minutes || 30,
+        });
+      }
 
       // Create PaymentIntent for the order total
       const paymentResponse = await fetch('/api/stripe/create-payment-intent', {
@@ -128,10 +198,38 @@ export default function CheckoutPage() {
   };
 
   // ========================================================================
-  // Step 2: Handle payment success
+  // Step 3: Handle payment success - create appointment if needed
   // ========================================================================
-  const handlePaymentSuccess = (paymentIntentId: string) => {
+  const handlePaymentSuccess = async (paymentIntentId: string) => {
     console.log('Payment succeeded:', paymentIntentId);
+
+    // If we have appointment data, create the appointment request now
+    if (requiresAppointment && appointmentData && orderId) {
+      try {
+        const response = await fetch('/api/appointments/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            order_id: orderId,
+            customer_email: email,
+            customer_name: firstName && lastName ? `${firstName} ${lastName}` : null,
+            preferred_date: appointmentData.preferredDate,
+            preferred_time_start: appointmentData.preferredTimeStart,
+            alternate_date: appointmentData.alternateDate || null,
+            alternate_time_start: appointmentData.alternateTimeStart || null,
+            duration_minutes: appointmentInfo?.durationMinutes || 30,
+            notes: appointmentData.notes || null,
+            service_name: appointmentInfo?.serviceName || 'Consultation',
+          }),
+        });
+
+        if (!response.ok) {
+          console.error('Failed to create appointment request');
+        }
+      } catch (err) {
+        console.error('Error creating appointment request:', err);
+      }
+    }
 
     // Clear the cart
     clearCart();
@@ -152,7 +250,7 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'confirmation') {
     return (
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <div className="text-center mb-8">
           <div className="inline-block p-3 bg-green-100 dark:bg-green-900 rounded-full mb-4">
             <svg
@@ -167,21 +265,22 @@ export default function CheckoutPage() {
               />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
             Payment Successful!
           </h1>
           <p className={formInputColors.helper}>
             Thank you for your purchase.
+            {requiresAppointment && ' We\'ll confirm your appointment shortly.'}
           </p>
         </div>
 
         <Card hoverEffect="none" className="mb-6">
           <div className="p-8">
-            <div className="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+            <div className={`mb-6 pb-6 ${dividerColors.border} border-b`}>
               <p className={`text-sm ${formInputColors.helper} mb-2`}>
                 Order Number
               </p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 font-mono break-all">
+              <p className={`text-2xl font-bold ${headingColors.primary} font-mono break-all`}>
                 {orderId}
               </p>
             </div>
@@ -190,14 +289,36 @@ export default function CheckoutPage() {
               <p className={`text-sm ${formInputColors.helper} mb-2`}>
                 Confirmation Email
               </p>
-              <p className="text-lg text-gray-900 dark:text-gray-100">{email}</p>
+              <p className={`text-lg ${headingColors.primary} font-medium`}>{email}</p>
               <p className={`text-sm ${formInputColors.helper} mt-2`}>
-                Check your inbox for a confirmation email with tracking
-                information.
+                Check your inbox for a confirmation email with your order details.
               </p>
             </div>
 
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+            {/* Appointment confirmation message */}
+            {requiresAppointment && appointmentData && (
+              <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+                <p className="text-sm text-purple-700 dark:text-purple-300">
+                  <strong>Appointment Requested:</strong>{' '}
+                  {new Date(appointmentData.preferredDate + 'T12:00:00').toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                  })}{' '}
+                  at {appointmentData.preferredTimeStart.replace(/^(\d{2}):(\d{2})$/, (_, h, m) => {
+                    const hour = parseInt(h);
+                    const ampm = hour >= 12 ? 'PM' : 'AM';
+                    const hour12 = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+                    return `${hour12}:${m} ${ampm}`;
+                  })}
+                </p>
+                <p className="text-sm text-purple-600 dark:text-purple-400 mt-1">
+                  We&apos;ll review your request and confirm within 24 hours.
+                </p>
+              </div>
+            )}
+
+            <div className={`${alertColors.success.bg} ${alertColors.success.border} rounded-lg p-4`}>
               <p className={`text-sm ${formValidationColors.success}`}>
                 Your payment has been processed securely. You&apos;ll receive a
                 receipt via email shortly.
@@ -221,18 +342,53 @@ export default function CheckoutPage() {
   }
 
   // ========================================================================
-  // Payment step (Step 2)
+  // Appointment step (Step 2) - Only shows if cart requires appointment
+  // ========================================================================
+  if (currentStep === 'appointment' && appointmentInfo) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+        <PageHeader title="Schedule Your Consultation" description="Pick a time that works for you" />
+
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            {/* Error message */}
+            {error && (
+              <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+                <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
+              </div>
+            )}
+
+            <AppointmentStepForm
+              durationMinutes={appointmentInfo.durationMinutes}
+              serviceName={appointmentInfo.serviceName}
+              onComplete={handleAppointmentComplete}
+              onBack={() => setCurrentStep('info')}
+              isProcessing={isProcessing}
+            />
+          </div>
+
+          {/* Order summary sidebar */}
+          <div className="lg:sticky lg:top-20 lg:self-start">
+            <OrderSummary cart={cart} itemCount={itemCount} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ========================================================================
+  // Payment step (Step 3)
   // ========================================================================
   if (currentStep === 'payment' && clientSecret) {
     return (
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <PageHeader title="Payment" description="Complete your purchase" />
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             {/* Error message */}
             {error && (
-              <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
                 <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
               </div>
             )}
@@ -240,7 +396,7 @@ export default function CheckoutPage() {
             {/* Payment form */}
             <Card hoverEffect="none" className="mb-6">
               <div className="p-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-4`}>
                   Payment Details
                 </h2>
 
@@ -255,19 +411,21 @@ export default function CheckoutPage() {
               </div>
             </Card>
 
-            {/* Back button */}
+            {/* Back button - go to appointment step if it was required, otherwise info */}
             <Button
               variant="gray"
-              onClick={() => setCurrentStep('info')}
+              onClick={() => setCurrentStep(requiresAppointment ? 'appointment' : 'info')}
               className="w-full"
               size="lg"
             >
-              Back to Information
+              {requiresAppointment ? 'Back to Scheduling' : 'Back to Information'}
             </Button>
           </div>
 
           {/* Order summary sidebar */}
-          <OrderSummary cart={cart} itemCount={itemCount} />
+          <div className="lg:sticky lg:top-20 lg:self-start">
+            <OrderSummary cart={cart} itemCount={itemCount} />
+          </div>
         </div>
       </div>
     );
@@ -277,7 +435,7 @@ export default function CheckoutPage() {
   // Information step (Step 1)
   // ========================================================================
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       <PageHeader title="Checkout" description="Complete your purchase" />
 
       {itemCount === 0 ? (
@@ -294,10 +452,10 @@ export default function CheckoutPage() {
       ) : (
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Checkout form */}
-          <form onSubmit={handleProceedToPayment} className="lg:col-span-2">
+          <form onSubmit={handleInfoSubmit} className="lg:col-span-2">
             {/* Error message */}
             {error && (
-              <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
                 <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
               </div>
             )}
@@ -305,7 +463,7 @@ export default function CheckoutPage() {
             {/* Email section */}
             <Card hoverEffect="none" className="mb-6">
               <div className="p-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-4`}>
                   Contact Information
                 </h2>
 
@@ -314,7 +472,7 @@ export default function CheckoutPage() {
                     <p className={`text-sm ${formInputColors.helper} mb-2`}>
                       Email
                     </p>
-                    <p className="text-lg text-gray-900 dark:text-gray-100 font-medium">
+                    <p className={`text-lg ${headingColors.primary} font-medium`}>
                       {email}
                     </p>
                     <p className={`text-sm ${formInputColors.helper} mt-2`}>
@@ -324,7 +482,7 @@ export default function CheckoutPage() {
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       Email Address
                     </label>
                     <input
@@ -332,7 +490,7 @@ export default function CheckoutPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="your@email.com"
                     />
                     <p className={`text-sm ${formInputColors.helper} mt-2`}>
@@ -347,59 +505,59 @@ export default function CheckoutPage() {
             {/* Shipping info */}
             <Card hoverEffect="none" className="mb-6">
               <div className="p-6">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-4`}>
                   Shipping Information
                 </h2>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       First Name
                     </label>
                     <input
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="John"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       Last Name
                     </label>
                     <input
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="Doe"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       Address
                     </label>
                     <input
                       type="text"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="123 Main St"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       City, State, ZIP
                     </label>
                     <input
                       type="text"
                       value={cityStateZip}
                       onChange={(e) => setCityStateZip(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="New York, NY 10001"
                     />
                   </div>
@@ -407,7 +565,7 @@ export default function CheckoutPage() {
               </div>
             </Card>
 
-            {/* Continue to payment button */}
+            {/* Continue button */}
             <Button
               variant="purple"
               type="submit"
@@ -415,7 +573,7 @@ export default function CheckoutPage() {
               className="w-full"
               size="lg"
             >
-              {isProcessing ? 'Processing...' : 'Continue to Payment'}
+              {isProcessing ? 'Processing...' : 'Continue'}
             </Button>
 
             <Button
@@ -429,7 +587,9 @@ export default function CheckoutPage() {
           </form>
 
           {/* Order summary sidebar */}
-          <OrderSummary cart={cart} itemCount={itemCount} />
+          <div className="lg:sticky lg:top-20 lg:self-start">
+            <OrderSummary cart={cart} itemCount={itemCount} />
+          </div>
         </div>
       )}
     </div>
@@ -450,33 +610,42 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
   return (
     <div>
       <Card hoverColor="purple" hoverEffect="lift">
-        <div className="p-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-            Order Summary
-          </h2>
+        <div className="p-8">
+          {/* Header with icon */}
+          <div className="flex items-center gap-3 mb-6 pb-6 border-b-2 border-purple-200 dark:border-purple-800">
+            <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+              <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+            </div>
+            <h2 className={`text-xl font-bold ${headingColors.primary}`}>
+              Order Summary
+            </h2>
+          </div>
 
-          <div className="space-y-3 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
-            <div className="flex justify-between">
-              <span className={formInputColors.helper}>Items</span>
-              <span className="text-gray-900 dark:text-gray-100 font-semibold">
+          {/* Line items */}
+          <div className={`space-y-4 mb-6 pb-6 ${dividerColors.border} border-b`}>
+            <div className="flex justify-between items-center">
+              <span className={`text-sm ${formInputColors.helper}`}>Items</span>
+              <span className={`${headingColors.primary} font-semibold`}>
                 {itemCount}
               </span>
             </div>
 
             {cart && (
               <>
-                <div className="flex justify-between">
-                  <span className={formInputColors.helper}>
+                <div className="flex justify-between items-center">
+                  <span className={`text-sm ${formInputColors.helper}`}>
                     Subtotal
                   </span>
-                  <span className="text-gray-900 dark:text-gray-100 font-semibold">
+                  <span className={`${headingColors.primary} font-semibold`}>
                     ${((cart.subtotal || 0) / 100).toFixed(2)}
                   </span>
                 </div>
 
-                <div className="flex justify-between">
-                  <span className={formInputColors.helper}>Tax</span>
-                  <span className="text-gray-900 dark:text-gray-100 font-semibold">
+                <div className="flex justify-between items-center">
+                  <span className={`text-sm ${formInputColors.helper}`}>Tax</span>
+                  <span className={`${headingColors.primary} font-semibold`}>
                     ${((cart.tax_total || 0) / 100).toFixed(2)}
                   </span>
                 </div>
@@ -484,20 +653,30 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
             )}
           </div>
 
+          {/* Total */}
           {cart && (
-            <div className="flex justify-between mb-6">
-              <span className="text-lg font-bold text-gray-900 dark:text-gray-100">
+            <div className="flex justify-between items-center mb-8 pb-6 border-b-2 border-gray-200 dark:border-gray-700">
+              <span className={`text-lg font-bold ${headingColors.primary}`}>
                 Total
               </span>
-              <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              <span className={`text-2xl font-bold ${headingColors.primary}`}>
                 ${((cart.total || 0) / 100).toFixed(2)}
               </span>
             </div>
           )}
 
-          <Button variant="blue" href="/cart" className="w-full">
+          {/* Edit cart button */}
+          <Button variant="blue" href="/cart" className="w-full mb-6" size="lg">
             Edit Cart
           </Button>
+
+          {/* Trust badge */}
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+            </svg>
+            <span>Secure checkout</span>
+          </div>
         </div>
       </Card>
     </div>

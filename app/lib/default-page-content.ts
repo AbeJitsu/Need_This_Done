@@ -31,46 +31,46 @@ export const defaultPricingContent: PricingPageContent = {
       price: 'From $50',
       period: 'per task',
       description:
-        'Need something done fast? This is your go-to for quick wins.',
+        'Perfect for simple tasks across any service—admin, data entry, or quick site fixes.',
       features: [
-        'Content updates & simple edits',
-        'Data entry & quick formatting',
-        'Document formatting',
-        'Get it done in days, not weeks',
+        'Virtual Assistant: Email sorting, basic scheduling',
+        'Data & Documents: Simple formatting, data entry',
+        'Website: Fix broken links, update text or images',
+        'Delivered in days, not weeks',
       ],
       color: 'green',
-      cta: "Let's Do This",
+      // No individual CTA - uses shared consultation CTA below
     },
     {
       name: 'Standard Task',
       price: 'From $150',
       period: 'per task',
       description:
-        'Our most popular option. Great for projects that need a little extra care.',
+        'Our most popular option. Great for projects that need research, organization, or multiple steps.',
       features: [
-        'Research projects',
-        'Spreadsheet organization',
-        'Multi-step tasks',
+        'Virtual Assistant: Research, travel planning, coordination',
+        'Data & Documents: Spreadsheet cleanup, report formatting',
+        'Website: Refresh a page, add new features, speed things up',
         "Revisions included until you're happy",
       ],
       color: 'blue',
       popular: true,
-      cta: "Let's Chat",
+      // No individual CTA - uses shared consultation CTA below
     },
     {
       name: 'Premium Service',
       price: 'From $500',
       period: 'per project',
       description:
-        "For the big stuff. We'll be with you every step of the way.",
+        "For bigger builds and complex projects. We'll be with you every step of the way.",
       features: [
-        'Website builds & redesigns',
-        'E-commerce setup',
-        'Larger multi-phase projects',
-        'A dedicated point of contact throughout',
+        'Website: Build a new site or give yours a complete makeover',
+        'Online store setup so you can start selling',
+        'Large data migrations & system overhauls',
+        'Dedicated point of contact throughout',
       ],
       color: 'purple',
-      cta: 'Tell Us More',
+      // No individual CTA - uses shared dual-option CTA below
     },
   ],
   paymentNote: {
@@ -118,13 +118,13 @@ export const defaultFAQContent: FAQPageContent = {
     {
       question: 'How long does a typical task take?',
       answer:
-        'Most tasks are completed within a few days to a week. Larger projects may take longer, but we always provide a clear timeline upfront so you know what to expect. Learn more about how it works.',
+        'Most projects are completed within 1-2 weeks, depending on scope. Quick tasks can be done in days, while bigger builds may take longer. We always provide a clear timeline upfront so you know what to expect. Learn more about how it works.',
       links: [{ text: 'how it works', href: '/how-it-works' }],
     },
     {
       question: 'How much does it cost?',
       answer:
-        "Pricing depends on the scope and complexity of your task. Check out our pricing page for general ranges. We provide transparent quotes with no hidden fees—tell us what you need, and we'll give you a clear estimate before any work begins.",
+        "Pricing depends on complexity, not service type. Quick tasks across any service start at $50. Standard projects that need more steps run $150+. Bigger builds like full websites or complex data migrations start at $500+. Check out our pricing page for details. We provide transparent quotes with no hidden fees—tell us what you need, and we'll give you a clear estimate before any work begins.",
       links: [{ text: 'pricing page', href: '/pricing' }],
     },
     {
@@ -179,10 +179,112 @@ export const defaultFAQContent: FAQPageContent = {
 
 export const defaultServicesContent: ServicesPageContent = {
   header: {
-    title: 'How We Can Help',
+    title: 'Find Your Perfect Fit',
     description:
-      "Too busy? Not sure where to start? We handle the tasks you don't have time for, so you can focus on what matters most.",
+      "Not sure which service you need? You're in the right place. Let's figure it out together—no pressure, no tech speak, just helpful guidance.",
   },
+
+  // Scenario Matcher - "Does this sound like you?"
+  scenarioMatcher: {
+    title: 'Does this sound like you?',
+    description: 'Click any scenario to learn more about how we can help.',
+    scenarios: [
+      {
+        scenario: 'My inbox is drowning me and I can\'t keep up',
+        serviceKey: 'virtual-assistant',
+        serviceTitle: 'Virtual Assistant',
+        color: 'green',
+      },
+      {
+        scenario: 'I have spreadsheets that need serious help',
+        serviceKey: 'data-documents',
+        serviceTitle: 'Data & Documents',
+        color: 'blue',
+      },
+      {
+        scenario: 'My website needs work but I don\'t know where to start',
+        serviceKey: 'website-services',
+        serviceTitle: 'Website Services',
+        color: 'purple',
+      },
+      {
+        scenario: 'I need someone to handle the stuff I keep putting off',
+        serviceKey: 'virtual-assistant',
+        serviceTitle: 'Virtual Assistant',
+        color: 'green',
+      },
+      {
+        scenario: 'I need professional documents but don\'t have design skills',
+        serviceKey: 'data-documents',
+        serviceTitle: 'Data & Documents',
+        color: 'blue',
+      },
+      {
+        scenario: 'I want to sell online but the tech is overwhelming',
+        serviceKey: 'website-services',
+        serviceTitle: 'Website Services',
+        color: 'purple',
+      },
+    ],
+  },
+
+  // Comparison Table - Side-by-side view
+  comparison: {
+    title: 'Compare Services',
+    description: 'Pricing depends on complexity, not just service type. Simple tasks start at $50, bigger projects run $150-500+.',
+    columns: ['Virtual Assistant', 'Data & Documents', 'Website Services'],
+    rows: [
+      {
+        label: 'Best for',
+        values: [
+          'Freeing up your time',
+          'Turning chaos into clarity',
+          'Tech without the headache',
+        ],
+      },
+      {
+        label: 'What we handle',
+        values: [
+          'Email, calendar, research, social media',
+          'Spreadsheets, reports, templates, files',
+          'Builds, updates, e-commerce, maintenance',
+        ],
+      },
+      {
+        label: 'Typical timeline',
+        values: ['Ongoing or one-time', 'Days to 1 week', '1-4 weeks'],
+      },
+      {
+        label: 'Quick tasks',
+        values: ['$50/task', '$50/task', '$50/task'],
+      },
+      {
+        label: 'Bigger projects',
+        values: ['$150+', '$150+', '$500+'],
+      },
+    ],
+  },
+
+  // Still Not Sure - Low-friction CTA
+  stillUnsure: {
+    title: 'Still not sure?',
+    description:
+      "No problem—that's what we're here for. Book a quick 15-minute chat and we'll help you figure out exactly what you need. No pressure, no commitment.",
+    primaryButton: {
+      text: 'Book a Quick Chat',
+      subtext: 'Just $20 · 15 minutes',
+      variant: 'orange',
+      href: '/shop',
+    },
+    secondaryButton: {
+      text: 'Request a Free Quote',
+      subtext: 'Tell us about your project',
+      variant: 'blue',
+      href: '/contact',
+    },
+  },
+
+  // Existing sections (kept)
   expectationsTitle: 'What You Can Expect',
   expectations: [
     {
@@ -222,16 +324,21 @@ export const defaultServicesContent: ServicesPageContent = {
 
 export const defaultHowItWorksContent: HowItWorksPageContent = {
   header: {
-    title: 'How It Works',
+    title: 'We Make It Easy',
     description:
-      "Here's how we work together to get your project done right.",
+      'No hoops to jump through. No confusing tech speak. Just a simple, friendly process from start to finish.',
   },
+  trustBadges: [
+    { text: 'Personal attention', description: 'Real people, not bots' },
+    { text: 'Clear updates', description: 'At every step' },
+    { text: 'No surprises', description: 'Transparent pricing' },
+  ],
   steps: [
     {
       number: 1,
-      title: 'Tell Us What You Need',
+      title: 'Start the Conversation',
       description:
-        'Describe your task in your own words. Include any files, examples, or questions. No tech speak required.',
+        'Tell us what you need in your own words. No tech speak required—just describe what\'s on your plate and we\'ll take it from there.',
       details: [
         'Fill out our simple contact form',
         'Attach any relevant files or documents',
@@ -244,46 +351,50 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
       number: 2,
       title: 'We Review & Respond',
       description:
-        'We carefully review your request and get back to you within 2 business days with a personalized quote.',
+        'Quote within 2 business days, no obligation. We\'ll ask questions if needed and give you a clear, honest estimate.',
       details: [
         'We assess what needs to be done',
         'We ask clarifying questions if needed',
         'You receive a clear, transparent quote',
       ],
       color: 'blue',
-      href: '/login',
     },
     {
       number: 3,
-      title: 'Authorize & Start',
+      title: 'You Authorize & We Start',
       description:
-        'Love the quote? Pay a 50% deposit to authorize work and we get started right away.',
+        '50% deposit to begin, progress updates along the way. You\'ll always know where things stand.',
       details: [
         '50% deposit to begin work',
         'Secure online payment',
         "We'll keep you updated on progress",
       ],
       color: 'purple',
-      href: '/get-started',
     },
     {
       number: 4,
       title: 'Approve & Receive',
       description:
-        'You review the completed work. Once you approve, pay the remaining 50% and receive everything.',
+        'Review the work, give feedback, and pay the remaining 50% when you\'re happy. Simple as that.',
       details: [
         'You review what we have done',
         'We address any feedback',
         "Final 50% on approval, then it's yours!",
       ],
       color: 'orange',
-      href: '/login',
     },
   ],
   timeline: {
     title: 'Typical Timeline',
     description:
-      "Most projects are completed within 1-2 weeks, depending on scope. Larger projects may take longer - we'll provide a clear timeline with your quote.",
+      "Most projects wrap up in 1-2 weeks. Bigger builds take longer—we'll give you a clear timeline upfront.",
+    hoverColor: 'blue',
+  },
+  questionsSection: {
+    title: 'Questions about the process?',
+    description: "We're happy to walk you through it. No pressure, no obligation.",
+    primaryButton: { text: 'Book a Quick Chat', variant: 'blue', href: '/shop' },
+    secondaryButton: { text: 'Read the FAQ', variant: 'purple', href: '/faq' },
     hoverColor: 'blue',
   },
   cta: {
@@ -293,6 +404,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
     buttons: [
       { text: 'View Services', variant: 'orange', href: '/services' },
       { text: 'View Pricing', variant: 'teal', href: '/pricing' },
+      { text: 'Contact Us', variant: 'blue', href: '/contact' },
     ],
     hoverColor: 'orange',
   },
@@ -305,11 +417,41 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
 export const defaultHomeContent: HomePageContent = {
   hero: {
     buttons: [
-      { text: 'View Services', variant: 'orange', href: '/services' },
-      { text: 'See How It Works', variant: 'blue', href: '/how-it-works' },
+      { text: 'Book a Consultation', variant: 'orange', href: '/shop' },
+      { text: 'View Services', variant: 'blue', href: '/services' },
     ],
   },
   servicesTitle: 'What We Offer',
+  consultations: {
+    title: 'Quick Consultations',
+    description:
+      'Need expert guidance fast? Book a call and get personalized help for your project.',
+    options: [
+      {
+        name: 'Quick Chat',
+        duration: '15 min',
+        price: '$20',
+        description: 'Perfect for quick questions',
+        color: 'green',
+      },
+      {
+        name: 'Standard Call',
+        duration: '30 min',
+        price: '$35',
+        description: 'Our most popular option',
+        color: 'blue',
+      },
+      {
+        name: 'Deep Dive',
+        duration: '55 min',
+        price: '$50',
+        description: 'For complex discussions',
+        color: 'purple',
+      },
+    ],
+    linkText: 'Browse all consultations →',
+    linkHref: '/shop',
+  },
   processPreview: {
     title: 'Simple Process',
     steps: [
@@ -343,14 +485,15 @@ export const defaultHomeContent: HomePageContent = {
   cta: {
     title: 'Ready to Get Started?',
     description:
-      "Have a task in mind? Tell us about it and we'll get back with a personalized quote.",
+      'Tell us about your project for a custom quote, or check our pricing to see what fits.',
     buttons: [
-      { text: 'Check FAQ', variant: 'orange', href: '/faq' },
+      { text: 'Get a Quote', variant: 'orange', href: '/contact' },
       { text: 'View Pricing', variant: 'blue', href: '/pricing' },
     ],
     footer: 'Have questions?',
     footerLinkText: 'Check out our FAQ',
     footerLinkHref: '/faq',
+    chatbotNote: 'Or use the chat button to talk with us anytime.',
     hoverColor: 'orange',
   },
 };

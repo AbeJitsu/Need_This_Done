@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { redis } from '@/lib/redis';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 // ============================================================================
 // Speed Demo API Route - /api/demo/speed
@@ -14,6 +15,8 @@ import { redis } from '@/lib/redis';
 //
 // Real performance: First request ~300ms, cached requests ~2ms
 // This is why caching is critical for fast web apps.
+//
+// Security: Admin-only endpoint for dev dashboard demos.
 
 interface SpeedDemoResponse {
   quote: string;
@@ -25,6 +28,33 @@ interface SpeedDemoResponse {
 
 export async function GET() {
   try {
+    // ========================================================================
+    // Admin Authentication Check
+    // ========================================================================
+    // This endpoint is for admin dev dashboard demos only.
+    const supabase = await createSupabaseServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    // Check if user has admin role
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (!profile || profile.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Forbidden - Admin access required' },
+        { status: 403 }
+      );
+    }
     const cacheKey = 'demo:speed:quote';
     const cacheTTL = 30; // Cache for 30 seconds
 

@@ -24,12 +24,45 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 
 **NEVER run production builds locally** - always test with dev environment first.
 
+## Autonomous Work Mode
+
+**When on an experiment branch**, work continuously without stopping:
+
+1. **Don't stop for approvals** - Keep working through TODO.md items
+2. **Implement → Test → Fix → Document** - Complete the full cycle
+3. **Update TODO.md** as tasks complete
+4. **Run tests after each change** - Fix any failures immediately
+5. **Document completed features** in README.md
+6. **Use agent swarms** - Launch parallel agents for thorough exploration and implementation
+
+**Agent Swarm Strategy:**
+- **Exploration:** Launch 2-3 Explore agents in parallel to search different areas of the codebase
+- **Implementation:** Break large features into parallel workstreams when files don't depend on each other
+- **Documentation:** Launch agents to document different sections simultaneously
+- **Testing:** Run test suites in parallel where possible
+
+**Safety:** Commits are blocked by settings.json. All changes stay local until user reviews.
+
+**When to pause:**
+- External service setup needed (Google Cloud Console, API keys)
+- Destructive operations that can't be undone
+- Ambiguous requirements with multiple valid approaches
+
 ## Task Tracking
 
-**TODO.md** is the central task tracker:
+**TODO.md** is for **incomplete, untested features**:
 - Check it before starting new work
 - Update it when completing tasks
-- Items flow: To Do → In Progress → Recently Completed → documented in README.md
+- Contains: To Do, In Progress, Recently Completed sections
+- Security issues, bugs, and work-in-progress go here
+- Once a feature is **production-ready and tested**, move it to README.md
+
+**README.md** is for **production-ready, battle-tested features**:
+- Only document features that are complete and working
+- Never include failing tests, incomplete implementations, or security warnings
+- If something isn't ready for production, it stays in TODO.md
+
+**Flow:** TODO.md (incomplete) → test & verify → README.md (production-ready)
 
 **.claude plans** (in `.claude/plans/`) are for complex implementations:
 - Created when planning mode is invoked
@@ -41,6 +74,7 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 See [README.md](README.md) for:
 - **Directory structure** - Complete breakdown of folders and subfolders (Root Level, Application, Infrastructure & Configuration, Documentation, Testing)
 - **Quick start commands** - How to run the app and Storybook
+- **Docker Development Workflow** - When to restart vs rebuild containers, hot reload behavior, helper commands
 - **Key files** - Where core utilities and clients live
 
 ## Coding Standards
@@ -52,6 +86,21 @@ Follow [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) for:
 - File organization and naming conventions
 
 Use self-documenting code with section-level comments. Comment major sections and blocks to explain what they do and why, in plain language that educated adults can understand regardless of coding experience.
+
+### No Broken Windows Policy
+
+**Fix warnings and errors immediately—don't ignore them.**
+
+- If a build produces warnings → fix them before shipping
+- If a test fails → fix it, don't skip the test
+- If TypeScript complains → resolve the type error, don't use `@ts-ignore`
+- If linting fails → address the issue, don't disable the rule
+- If accessibility tests fail → fix the accessibility issue
+- If a feature is half-done → complete it or remove it, don't leave it broken
+
+**Why this matters:** Small broken windows multiply. One ignored warning becomes ten, which becomes a hundred. Broken code accumulates technical debt that slows everything down. Maintaining high standards keeps the codebase healthy and maintainable.
+
+**The rule:** Zero warnings in production code. Always.
 
 ## Design System
 

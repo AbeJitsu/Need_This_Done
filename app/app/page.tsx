@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { siteConfig } from '@/config/site.config';
 import Button from '@/components/Button';
-import ServiceCard from '@/components/ServiceCard';
+import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultHomeContent } from '@/lib/default-page-content';
-import { formInputColors, titleColors, headingColors, groupHoverColors } from '@/lib/colors';
+import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -14,6 +14,9 @@ import type { HomePageContent } from '@/lib/page-content-types';
 // to learn more or submit a project request.
 // Hero tagline/description come from site.config.ts (developer-controlled).
 // Other content is fetched from the database (if customized) or uses defaults.
+
+// Force dynamic rendering - content comes from API
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'NeedThisDone - Get Your Projects Done Right',
@@ -43,11 +46,32 @@ async function getContent(): Promise<HomePageContent> {
 }
 
 // ============================================================================
+// Prefetch Shop Products (for instant navigation)
+// ============================================================================
+// Warms the cache so /shop loads instantly when users click "Book a Consultation"
+
+async function prefetchProducts() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+    // Fire-and-forget fetch to warm Redis cache
+    await fetch(`${baseUrl}/api/shop/products`, {
+      next: { revalidate: 3600 }, // Match product cache TTL
+    });
+  } catch {
+    // Silent fail - prefetch is optional optimization
+  }
+}
+
+// ============================================================================
 // Page Component
 // ============================================================================
 
 export default async function HomePage() {
-  const content = await getContent();
+  // Fetch content and prefetch products in parallel for speed
+  const [content] = await Promise.all([
+    getContent(),
+    prefetchProducts(), // Warms cache for instant /shop navigation
+  ]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
@@ -78,7 +102,7 @@ export default async function HomePage() {
           </Link>
           <div className="grid lg:grid-cols-3 gap-6">
             {siteConfig.services.map((service, index) => (
-              <ServiceCard
+              <ServiceCardWithModal
                 key={index}
                 title={service.title}
                 tagline={service.tagline}
@@ -86,16 +110,62 @@ export default async function HomePage() {
                 details={service.details}
                 color={service.color}
                 variant="compact"
-                href="/services"
               />
             ))}
           </div>
+          {/* Cross-page link to services comparison */}
+          <p className={`text-center mt-4 ${formInputColors.helper}`}>
+            <Link href="/services" className="hover:underline font-medium">
+              Not sure which service? Compare them all →
+            </Link>
+          </p>
         </div>
+
+        {/* Quick Consultations Section */}
+        {content.consultations && (
+          <div className="mb-10">
+            <Link href={content.consultations.linkHref} className="block group">
+              <h2 className={`text-3xl font-bold ${headingColors.primary} mb-2 text-center ${groupHoverColors.purple} transition-colors`}>
+                {content.consultations.title} <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+              </h2>
+            </Link>
+            <p className={`text-center ${formInputColors.helper} mb-6`}>
+              {content.consultations.description}
+            </p>
+            <div className="grid md:grid-cols-3 gap-4">
+              {content.consultations.options.map((option, index) => (
+                <Link
+                  key={index}
+                  href={content.consultations!.linkHref}
+                  className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 ${accentColors[option.color].hoverBorder} hover:shadow-lg transition-all duration-300 text-center`}
+                >
+                  <div className={`text-2xl font-bold ${accentColors[option.color].text} mb-1`}>
+                    {option.price}
+                  </div>
+                  <div className={`font-semibold ${headingColors.primary} mb-1`}>
+                    {option.name}
+                  </div>
+                  <div className={`text-sm ${formInputColors.helper} mb-2`}>
+                    {option.duration}
+                  </div>
+                  <div className={`text-sm ${formInputColors.helper}`}>
+                    {option.description}
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <p className={`text-center mt-4 ${formInputColors.helper} font-medium hover:underline`}>
+              <Link href={content.consultations.linkHref}>
+                {content.consultations.linkText}
+              </Link>
+            </p>
+          </div>
+        )}
 
         {/* How It Works Preview */}
         <Link
           href="/how-it-works"
-          className="block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 hover:border-blue-400 hover:shadow-xl active:scale-98 dark:hover:border-blue-500 group"
+          className={`block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 ${cardHoverColors.blue} hover:shadow-xl active:scale-98 group`}
         >
           <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center transition-colors`}>
             {content.processPreview.title}
@@ -117,29 +187,6 @@ export default async function HomePage() {
             {content.processPreview.linkText}
           </p>
         </Link>
-
-        {/* CTA Section */}
-        <div className="text-center bg-white dark:bg-gray-800 border-2 border-gray-400 dark:border-gray-500 rounded-xl p-8 shadow-lg hover:shadow-xl hover:border-orange-400 dark:hover:border-orange-500 transition-all duration-300">
-          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-4`}>
-            {content.cta.title}
-          </h2>
-          <p className={`${formInputColors.helper} mb-6`}>
-            {content.cta.description}
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            {content.cta.buttons.map((button, index) => (
-              <Button key={index} variant={button.variant} href={button.href}>
-                {button.text}
-              </Button>
-            ))}
-          </div>
-          <p className={`mt-6 text-sm ${formInputColors.helper}`}>
-            {content.cta.footer}{' '}
-            <Link href={content.cta.footerLinkHref} className={`${titleColors.blue} hover:underline`}>
-              {content.cta.footerLinkText}
-            </Link>
-          </p>
-        </div>
       </div>
   );
 }

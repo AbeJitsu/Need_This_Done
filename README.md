@@ -11,6 +11,7 @@ A professional services platform built with Next.js, running in Docker with ngin
 - [What This Project Is](#what-this-project-is)
 - [Architecture Overview](#architecture-overview)
 - [Development Setup](#development-setup)
+- [Docker Development Workflow](#docker-development-workflow)
 - [Project Structure](#project-structure)
 - [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
 - [Caching Strategy](#caching-strategy)
@@ -91,6 +92,7 @@ A modern platform for professional services that combines:
 - **Cache**: Redis for performance
 - **Infrastructure**: Docker + Nginx reverse proxy
 - **Design**: Tailwind CSS with dark mode support
+- **Testing**: Playwright E2E tests + Visual regression testing (screenshot baselines)
 
 ---
 
@@ -141,21 +143,28 @@ A modern platform for professional services that combines:
 
 ### Medusa Backend (Current State)
 
-> **Note**: This is a **bootstrap implementation**, not a full Medusa installation. See [TODO.md](TODO.md) for the full Medusa migration plan.
+Real Medusa implementation with database-persisted products, carts, and orders. All consultation products require appointment scheduling before fulfillment.
 
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Products | Hardcoded | 3 pricing tiers in `medusa/src/index.ts` |
-| Carts | In-memory | Lost on container restart |
-| Orders | Placeholder | Returns temp ID, linked in Supabase |
-| Email | ✅ Ready | Infrastructure ready via `app/lib/email.ts` |
+| Feature | Status | Tested | Details |
+|---------|--------|--------|---------|
+| Products | ✅ Working | 12 E2E tests | 3 consultation tiers, seeded via `npm run seed` |
+| Carts | ✅ Working | 8 E2E tests | Stored in Medusa PostgreSQL |
+| Checkout | ✅ Working | 6 E2E tests | Guest + authenticated checkout flows |
+| Orders | ✅ Working | 4 E2E tests | Full order objects, linked in Supabase |
+| Email | ✅ Working | 9 unit tests | 4 email types via Resend |
 
-**Products** (hardcoded in `medusa/src/index.ts`):
-| Product | Price | Handle |
-|---------|-------|--------|
-| Quick Task | $50 | `quick-task` |
-| Standard Project | $150 | `standard-task` |
-| Premium Solution | $500 | `premium-solution` |
+**All 110 automated tests passing** - See [Testing](#testing) for complete coverage map.
+
+**Consultation Products** (seeded via `medusa/seed-products.js` using Admin API):
+| Product | Price | Duration | Handle |
+|---------|-------|----------|--------|
+| 15-Minute Quick Consultation | $20 | 15 min | `consultation-15-min` |
+| 30-Minute Strategy Consultation | $35 | 30 min | `consultation-30-min` |
+| 55-Minute Deep Dive Consultation | $50 | 55 min | `consultation-55-min` |
+
+**Admin Credentials** (for Medusa Admin panel):
+- Email: `admin@needthisdone.com`
+- Password: Configured via environment variable (see security notes in TODO.md)
 
 ---
 
@@ -329,6 +338,221 @@ Production uses a completely standalone compose file - it does NOT reference the
 
 ---
 
+## Docker Development Workflow
+
+### When to Restart, Rebuild, or Wait
+
+Understanding when containers need restarting is crucial for efficient development. This section explains when changes require manual intervention vs automatic hot reload.
+
+#### Quick Reference: What Changed → What to Do
+
+| You Changed... | What to Do | Why | Command |
+|---------------|------------|-----|---------|
+| **Next.js code** (`app/lib/`, `app/app/`, `app/components/`) | Nothing* | Hot reload auto-restarts | *Wait 2-3 seconds* |
+| **API routes** (`app/app/api/`) | Restart `nextjs_app` | Hot reload sometimes misses API changes | `./scripts/docker.sh restart website` |
+| **Environment variables** (`.env.local`) | Restart both | Env vars loaded at startup | `./scripts/docker.sh restart website store` |
+| **Medusa backend** (`medusa/`) | Restart `medusa_backend` | No hot reload in Medusa | `./scripts/docker.sh restart store` |
+| **Nginx config** (`nginx/nginx.conf`) | Restart `nginx` | Config loaded at startup | `./scripts/docker.sh restart front-door` |
+| **Docker configs** (`docker-compose*.yml`, Dockerfiles) | Rebuild everything | Need fresh build | `./scripts/docker.sh rebuild <service>` |
+| **Package changes** (`package.json`, `package-lock.json`) | Rebuild service | Rebuild with new deps | `./scripts/docker.sh rebuild <service>` |
+
+\* Hot reload works **most of the time** but not always. If changes don't appear after 3 seconds, manual restart is needed.
+
+### How Hot Reload Works
+
+#### ✅ Has Hot Reload (Auto-Restart)
+
+**Next.js App** (`nextjs_app`)
+- **How it works**: Volume mount (`./app:/app`) + Next.js dev mode
+- **When it works**: Most `.ts`, `.tsx`, `.js`, `.jsx` file changes
+- **When it fails**:
+  - API route changes sometimes don't trigger reload
+  - Changes to `next.config.js`
+  - Adding new dependencies
+  - Environment variable changes
+- **Fix**: Manual restart if changes don't appear after 3 seconds
+
+**Storybook** (`storybook_dev`)
+- **How it works**: Volume mount + Storybook dev mode
+- **When it works**: Component story changes
+- **When it fails**: Storybook config changes
+- **Fix**: Manual restart
+
+#### ❌ No Hot Reload (Always Restart Manually)
+
+**Medusa Backend** (`medusa_backend`)
+- **Why no hot reload**: Medusa doesn't have hot reload built in
+- **Restart for**: ANY code change in `medusa/` directory
+- **Command**: `./scripts/docker.sh restart store`
+
+**Nginx** (`nginx`)
+- **Why no hot reload**: Nginx config loaded at startup only
+- **Restart for**: ANY config change in `nginx/` directory
+- **Command**: `./scripts/docker.sh restart front-door`
+
+**Redis & Postgres** (`redis`, `medusa_postgres`)
+- **Why no hot reload**: Data services, no code to change
+- **Restart for**: Never (unless service crashes)
+
+### Restart vs Rebuild
+
+#### When to **Restart** (faster, preserves data)
+```bash
+./scripts/docker.sh restart <service>
+```
+
+Use restart for:
+- Code changes (within existing dependencies)
+- Config file changes
+- Environment variable changes
+- Service not responding
+
+#### When to **Rebuild** (slower, clean slate)
+```bash
+./scripts/docker.sh rebuild <service>
+```
+
+Use rebuild for:
+- `package.json` / `package-lock.json` changes (new dependencies)
+- Dockerfile changes
+- Build configuration changes
+- Persistent bugs that restart doesn't fix
+
+### Helper Commands for Common Scenarios
+
+The `./scripts/docker.sh` script provides convenient shortcuts for common restart scenarios:
+
+#### After Git Pull (Smart Detection)
+```bash
+./scripts/docker.sh after-pull
+```
+
+Automatically detects which files changed and restarts only the affected services:
+- `app/` changes → restarts `website`
+- `medusa/` changes → restarts `store`
+- `nginx/` changes → restarts `front-door`
+- `.env` changes → restarts `website` + `store`
+
+#### Fix Checkout Issues
+```bash
+./scripts/docker.sh fix-checkout
+```
+
+One-command fix for common checkout problems:
+- Restarts `website` (Next.js app + API routes)
+- Restarts `store` (Medusa backend)
+- Clears any stuck payment sessions
+
+#### Restart Multiple Services
+```bash
+./scripts/docker.sh restart website store memory
+```
+
+Restart several services at once. Useful when changes affect multiple containers.
+
+### Common Development Scenarios
+
+#### Scenario 1: Fixed Checkout Bug (API Route Change)
+**What changed**: `app/app/api/checkout/session/route.ts`
+
+**Hot reload worked?** Sometimes no (API routes can be tricky)
+
+**Solution**:
+```bash
+./scripts/docker.sh restart website
+```
+
+**Why**: Force Next.js to reload API routes
+
+---
+
+#### Scenario 2: Updated Medusa Payment Logic
+**What changed**: `medusa/src/services/cart-service.ts`
+
+**Hot reload worked?** Never (Medusa has no hot reload)
+
+**Solution**:
+```bash
+./scripts/docker.sh restart store
+```
+
+**Why**: Medusa requires manual restart for all changes
+
+---
+
+#### Scenario 3: Added New npm Package
+**What changed**: `package.json` + `package-lock.json`
+
+**Hot reload worked?** Never (dependencies installed at build time)
+
+**Solution**:
+```bash
+./scripts/docker.sh rebuild website  # If package added to app/
+./scripts/docker.sh rebuild store    # If package added to medusa/
+```
+
+**Why**: Need to reinstall node_modules
+
+---
+
+#### Scenario 4: Changed Environment Variables
+**What changed**: `.env.local`
+
+**Hot reload worked?** Never (env vars loaded at container start)
+
+**Solution**:
+```bash
+# If changed Next.js env vars
+./scripts/docker.sh restart website
+
+# If changed Medusa env vars
+./scripts/docker.sh restart store
+
+# If changed both (most common)
+./scripts/docker.sh restart website store
+```
+
+**Why**: Environment variables are only read at startup
+
+---
+
+#### Scenario 5: Updated Nginx SSL Config
+**What changed**: `nginx/nginx.conf`
+
+**Hot reload worked?** Never (nginx config loaded at start)
+
+**Solution**:
+```bash
+./scripts/docker.sh restart front-door
+```
+
+**Why**: Nginx must reload config
+
+### The Foolproof Restart Checklist
+
+**After making code changes:**
+
+1. ✅ **Wait 3 seconds** - Check if hot reload worked
+2. ❌ **Changes not visible?** → Restart the service
+3. ❌ **Still not working?** → Check logs for errors
+4. ❌ **Still broken?** → Rebuild the service
+5. ❌ **Nuclear option?** → `./scripts/docker.sh fresh`
+
+**Always restart after:**
+- ✅ Pulling from git
+- ✅ Changing `.env.local`
+- ✅ Changing API routes
+- ✅ Changing Medusa code
+- ✅ Changing nginx config
+
+**Always rebuild after:**
+- ✅ Adding npm packages
+- ✅ Changing Dockerfiles
+- ✅ Changing `next.config.js`
+- ✅ Persistent bugs that restart doesn't fix
+
+---
+
 ## Project Structure
 
 ### Root Level
@@ -457,6 +681,28 @@ function ShopPage() {
 }
 ```
 
+### Appointment Booking Requirements
+
+Consultation products include built-in booking constraints for quality service:
+
+| Constraint | Value | Enforced By |
+|------------|-------|-------------|
+| Advance booking | 24 hours minimum | `api/appointments/availability` |
+| Daily limit | 5 appointments max | `api/appointments/availability` |
+| Buffer time | 30 minutes between appointments | Google Calendar validation |
+| Business hours | 9 AM - 5 PM, Monday-Friday | Appointment form time picker |
+
+**Why these constraints:**
+- 24-hour advance booking: Allows proper preparation for each consultation
+- Daily limit: Maintains quality by preventing over-scheduling
+- Buffer time: Accounts for transitions, notes, and breaks
+- Business hours: Ensures availability during working hours
+
+**Implementation:**
+- Form validation in `components/AppointmentRequestForm.tsx`
+- Backend validation in `api/appointments/request/route.ts`
+- Real-time availability check via `api/appointments/availability`
+
 ### Testing the Cart
 
 **Manual browser test**:
@@ -582,7 +828,6 @@ Email is handled by **Resend** with a two-layer architecture:
 | Login notification | ✅ Ready | After each sign-in (security) |
 | Admin notifications | ✅ Ready | New project submission |
 | Client confirmation | ✅ Ready | After form submission |
-| Order confirmations | 🔜 Planned | After purchase (requires Medusa) |
 
 ### Email Configuration
 
@@ -617,11 +862,16 @@ React Email templates are in `app/emails/`:
 - `LoginNotificationEmail.tsx` - Security alert after each sign-in
 - `AdminNotification.tsx` - New project alert for admin
 - `ClientConfirmation.tsx` - Submission confirmation for clients
+- `OrderConfirmationEmail.tsx` - Order confirmation after checkout
+- `AppointmentConfirmationEmail.tsx` - Appointment confirmation for consultations
+- `AppointmentRequestNotificationEmail.tsx` - Admin notification for appointment requests
+- `PurchaseReceiptEmail.tsx` - Detailed receipt after payment
+- `AbandonedCartEmail.tsx` - Cart recovery reminder with optional discount
 
 ### Testing Emails
 
 ```bash
-# Send all 4 email types to verify they work
+# Send all email types to verify they work
 cd app && npm run test:emails
 ```
 
@@ -629,82 +879,350 @@ cd app && npm run test:emails
 
 ## Testing
 
-### Test Types
+### Test Summary
 
-| Type | Command | Purpose |
-|------|---------|---------|
-| Unit tests | `npm run test:run` | Test functions, utilities |
-| Accessibility | `npm run test:a11y` | Test dark mode, contrast, WCAG AA |
-| E2E tests | `npm run test:e2e` | Test complete user flows |
+| Category | Tests | Status | Command |
+|----------|-------|--------|---------|
+| E2E Shop & Cart | 57 | ✅ Passing | `npm run test:e2e -- e2e/shop*.spec.ts` |
+| E2E Submissions | 5 | ✅ Passing | `npm run test:e2e -- e2e/submission.spec.ts` |
+| E2E Chatbot | 14 | ✅ Passing | `npm run test:e2e -- e2e/chatbot.spec.ts` |
+| E2E Appointments | 23 | ✅ Passing | `npm run test:e2e -- e2e/appointments.spec.ts` |
+| E2E Accessibility | 10 | ✅ Passing | `npm run test:a11y` |
+| Component A11Y | 8 | ✅ Passing | `npm run test:run` |
+| Email Templates | 10 | ✅ Passing | `npm run test:run` |
+| Redis Integration | 6 | ✅ Passing | `npm run test:run` |
+| Health API | 4 | ✅ Passing | `npm run test:run` |
+| **Total** | **137** | ✅ **All Passing** | `npm run test:all` |
+
+### Feature → Test Coverage Map
+
+Every feature has automated tests. Here's exactly where each is tested:
+
+<details>
+<summary><strong>E-commerce - Shop Flow (32 tests)</strong> - <code>e2e/shop.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Product Catalog | `product listing page displays all products with pricing` | Shop displays products with $20/$35/$50 pricing |
+| Product Catalog | `product detail page shows full product information` | Title, price, add to cart, quantity selector |
+| Product Catalog | `cart icon in navigation shows item count` | Cart badge displays current count |
+| Add to Cart | `add to cart updates cart count on page` | Success toast, count updates |
+| Add to Cart | `can adjust quantity before adding to cart` | Quantity selector works |
+| Add to Cart | `can add different products to cart` | Multiple products can be added |
+| Add to Cart | `shows success feedback when adding to cart` | Toast appears, button re-enables |
+| Cart Management | `view cart shows all items with quantities and prices` | Heading, subtotal, order summary |
+| Cart Management | `can update item quantity in cart` | + button increases quantity |
+| Cart Management | `can remove items from cart` | Remove button works |
+| Cart Management | `shows empty cart message when no items` | Empty state displays |
+| Cart Management | `persists cart across page navigation` | Cart survives navigation |
+| Guest Checkout | `guest can checkout without authentication` | Email and shipping form shown |
+| Guest Checkout | `checkout form validates required fields` | Prevents empty submission |
+| Guest Checkout | `displays order confirmation after guest checkout` | Success page appears |
+| Auth Checkout | `authenticated user can checkout with autofilled email` | Login/guest options shown |
+| Auth Checkout | `authenticated user order appears in dashboard` | Orders visible in dashboard |
+| Auth Checkout | `order history shows order details correctly` | ID, date, total, status shown |
+| Admin Integration | `admin can access shop dashboard` | Returns 200/302/401 |
+| Admin Integration | `product management endpoints are protected` | POST returns 401 |
+| Admin Integration | `orders endpoint returns data for authorized requests` | GET returns 401 unauth |
+| Cache | `product list is cached efficiently` | API caches responses |
+| Cache | `product detail is cached` | Single product caching |
+| Error Handling | `handles invalid product ID gracefully` | Shows loading/error/not found |
+| Error Handling | `handles network errors in cart operations gracefully` | Shows toast and View Cart |
+| Error Handling | `checkout with empty cart shows appropriate message` | Redirects or shows message |
+| Integration | `complete flow: browse → add → cart → checkout → confirmation` | Full user journey |
+| Variant Regression | `all products in API have variants` | Variants array exists |
+| Variant Regression | `each variant has required pricing data` | Has id, prices, currency |
+| Variant Regression | `product detail page variant dropdown does not show errors` | No "No variants" error |
+| Variant Regression | `add to cart works without variant errors` | No variant errors |
+| Variant Regression | `all consultation products have variants` | 15/30/55-min have variants |
+
+</details>
+
+<details>
+<summary><strong>E-commerce - Cart Operations (8 tests)</strong> - <code>e2e/shop-cart.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Add to Cart | `can add single item to cart from shop page` | Success toast, View Cart link |
+| Add to Cart | `can add multiple different items to cart` | Multiple products added |
+| Add to Cart | `displays correct pricing for added items` | Correct price displays |
+| Cart Operations | `can update item quantity in cart` | Quantity input works |
+| Cart Operations | `can remove item from cart` | Remove button works |
+| Error Handling | `shows error when add to cart fails` | Error messages display |
+| Error Handling | `cart persists after page refresh` | localStorage/session works |
+| Integration | `complete checkout flow: add items, update quantity, proceed to cart` | Full cart flow |
+
+</details>
+
+<details>
+<summary><strong>E-commerce - Product Variants (12 tests)</strong> - <code>e2e/shop-variants.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Add to Cart Workflow | `products display on shop page without variant errors` | All 3 consultations visible |
+| Add to Cart Workflow | `can add 15-Minute Consultation to cart from shop page` | Details link, success toast |
+| Add to Cart Workflow | `product detail page shows variant dropdown` | Add to Cart visible |
+| Add to Cart Workflow | `can add product from detail page with variant` | Direct URL works |
+| Add to Cart Workflow | `can add multiple different products to cart` | Multiple via Details pages |
+| Add to Cart Workflow | `cart displays added products correctly` | Shows subtotal |
+| Add to Cart Workflow | `standard variant is selected by default` | Pre-selected value |
+| Add to Cart Workflow | `can adjust quantity before adding to cart` | Quantity controls work |
+| Add to Cart Workflow | `all three products have variants available` | All have Add to Cart |
+| Variant Data Integrity | `product API returns variants for all products` | Variants array exists |
+| Variant Data Integrity | `variants have correct pricing` | $20/$35/$50 correct |
+| Variant Data Integrity | `variants have required fields` | id, title, prices present |
+
+</details>
+
+<details>
+<summary><strong>Form Submissions (5 tests)</strong> - <code>e2e/submission.spec.ts</code></summary>
+
+| Test Name | Verifies |
+|-----------|----------|
+| `submits request WITHOUT attachments` | Form works without files, data saved to DB |
+| `submits request WITH 1 attachment` | Single file upload, stored in Supabase |
+| `submits request WITH 2 attachments` | Multiple files work simultaneously |
+| `submits request WITH 3 attachments (max allowed)` | Max 3 files enforced |
+| `admin can retrieve uploaded attachment via API` | Full round-trip: upload → storage → retrieval |
+
+</details>
+
+<details>
+<summary><strong>AI Chatbot Widget (14 tests)</strong> - <code>e2e/chatbot.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Button Tests | `should display chatbot button on homepage` | Button visible on home |
+| Button Tests | `should display chatbot button on all public pages` | Button on all 6 pages |
+| Button Tests | `should have proper button styling and accessibility` | ARIA label, title, role |
+| Modal Tests | `should open modal when button is clicked` | Modal appears with title |
+| Modal Tests | `should close modal when close button is clicked` | Close button works |
+| Modal Tests | `should close modal when Escape key is pressed` | Keyboard shortcut works |
+| Modal Tests | `should close modal when clicking outside panel area` | Panel stays stable |
+| Modal Tests | `should hide chat button when modal is open` | Button visibility toggles |
+| Chat Input | `should display welcome message when modal opens` | Welcome text appears |
+| Chat Input | `should focus input field when modal opens` | Auto-focus works |
+| Chat Input | `should allow typing in the input field` | Text input works |
+| Chat Input | `should disable send button when input is empty` | Button state changes |
+| Accessibility | `should have proper ARIA attributes on modal` | aria-modal, aria-labelledby |
+| Accessibility | `should be navigable with keyboard` | Enter key opens chat |
+| Dark Mode | `should work correctly in dark mode` | Dark styling applied |
+| Clear Chat | `should show clear button only when there are messages` | Conditional visibility |
+
+</details>
+
+<details>
+<summary><strong>Appointment Booking (23 tests)</strong> - <code>e2e/appointments.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Request Form | `appointment form appears after checkout for consultation products` | Form shows post-payment |
+| Request Form | `appointment request API validates required fields` | Missing fields return 400 |
+| Request Form | `appointment request API validates weekday dates` | Weekend dates rejected |
+| Request Form | `appointment request API validates business hours` | 9 AM - 5 PM enforced |
+| Request Form | `appointment request API returns 404 for non-existent order` | Invalid order handled |
+| Admin Dashboard | `admin appointments page requires authentication` | Auth redirect works |
+| Admin Dashboard | `admin appointments API requires authentication` | GET returns 401 unauth |
+| Admin Dashboard | `admin appointments approve endpoint requires authentication` | POST returns 401 |
+| Admin Dashboard | `admin appointments cancel endpoint requires authentication` | POST returns 401 |
+| Form UI | `appointment form component displays correctly` | Products load, prices visible |
+| Form UI | `business hours are displayed correctly in time options` | 9 AM - 5 PM shown |
+| Integration | `consultation product has requires_appointment metadata` | All 3 products exist |
+| Integration | `checkout session endpoint returns appointment info for consultation` | Toast appears on add |
+| Integration | `complete checkout flow shows appointment form` | Payment button visible |
+| Integration | `admin navigation includes appointments link` | Page loads without error |
+| Dashboard Layout | `admin navigation includes appointments link` | Page loads successfully |
+| Dashboard Layout | `admin appointments page structure is correct` | Endpoint exists (401 not 404) |
+| Email Notifications | `appointment request notification email template exists` | Endpoint returns 400 not 404 |
+| Email Notifications | `appointment confirmation email is sent on approval` | Endpoint exists (401 not 404) |
+| Status Management | `appointment statuses are correctly defined` | pending/approved/modified/canceled |
+
+</details>
+
+<details>
+<summary><strong>Visual Regression - Checkout Flow (14 screenshots)</strong> - <code>e2e/checkout-screenshots.spec.ts</code></summary>
+
+| Screenshot | Captures |
+|------------|----------|
+| Checkout Start | Empty cart → initial checkout page |
+| Guest Details Form | Email and shipping address fields |
+| Order Summary (Sticky) | Sidebar stays visible while scrolling |
+| Appointment Scheduling | Post-checkout appointment request form |
+| Payment Form | Stripe Elements integration |
+| Order Confirmation | Success page with order details |
+| Dark Mode Variants | All above in dark theme |
+
+**Purpose:** Documents the full checkout journey visually. Any unintended UI changes trigger screenshot diffs in CI, preventing accidental regressions before they ship.
+
+**Update baselines:** `npm run test:e2e -- --update-snapshots`
+
+</details>
+
+<details>
+<summary><strong>Email Templates (10 tests)</strong> - <code>__tests__/lib/email.unit.test.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Email Templates | `WelcomeEmail renders to valid HTML` | Name, "Start Your First Project" CTA |
+| Email Templates | `LoginNotificationEmail renders to valid HTML` | Timestamp, IP, browser, reset link |
+| Email Templates | `AdminNotification renders to valid HTML` | Project ID, client details, service type |
+| Email Templates | `ClientConfirmation renders to valid HTML` | Name, service type, response time |
+| Email Templates | `WelcomeEmail handles missing name gracefully` | Falls back to email prefix |
+| Service Functions | `sendWelcomeEmail calls Resend with correct parameters` | Correct recipient, subject |
+| Service Functions | `sendLoginNotification calls Resend with correct parameters` | "Sign-In" in subject |
+| Service Functions | `sendAdminNotification sends to admin email` | "New Project" + client name |
+| Service Functions | `sendClientConfirmation sends to client email` | "We Got Your Message" |
+
+</details>
+
+<details>
+<summary><strong>Accessibility - E2E Pages (10 tests)</strong> - <code>e2e/accessibility.a11y.test.ts</code></summary>
+
+| Page | Modes | Verifies |
+|------|-------|----------|
+| Home (/) | Light, Dark | WCAG AA via axe-core |
+| Services (/services) | Light, Dark | WCAG AA via axe-core |
+| Pricing (/pricing) | Light, Dark | WCAG AA via axe-core |
+| How It Works (/how-it-works) | Light, Dark | WCAG AA via axe-core |
+| FAQ (/faq) | Light, Dark | WCAG AA via axe-core |
+
+**Not tested:** Contact, Login, Get Started (hardcoded colors), Shop/Cart/Checkout (external services)
+
+</details>
+
+<details>
+<summary><strong>Accessibility - Components (8 tests)</strong> - <code>__tests__/components/*.a11y.test.tsx</code></summary>
+
+| Component | Test Name | Verifies |
+|-----------|-----------|----------|
+| AuthDemo | `Light mode violations` | No a11y violations in light mode |
+| AuthDemo | `Dark mode violations` | No a11y violations in dark mode |
+| AuthDemo | `Contrast in both modes` | Sufficient color contrast |
+| DatabaseDemo | `Light mode violations` | No a11y violations in light mode |
+| DatabaseDemo | `Dark mode violations` | No a11y violations in dark mode |
+| DatabaseDemo | `Contrast in both modes` | Sufficient color contrast |
+| DatabaseDemo | `Keyboard navigation` | Focus indicators, keyboard accessible |
+| DatabaseDemo | `Flow trace contrast` | Contrast in populated state |
+
+</details>
+
+<details>
+<summary><strong>Redis Integration (6 tests)</strong> - <code>__tests__/lib/redis.integration.test.ts</code></summary>
+
+| Test Name | Verifies |
+|-----------|----------|
+| `should connect to Redis and respond to ping` | Connection established, PONG response |
+| `should set and get a value` | SET and GET commands work |
+| `should handle expiring keys` | SETEX with 1s TTL expires correctly |
+| `should handle multiple keys` | Multiple key-value pairs work |
+| `should increment counters` | INCR command works atomically |
+| `should handle lists` | RPUSH and LRANGE work |
+
+</details>
+
+<details>
+<summary><strong>Health API (4 tests)</strong> - <code>__tests__/api/health.integration.test.ts</code></summary>
+
+| Test Name | Verifies |
+|-----------|----------|
+| `should be able to reach the health endpoint` | Accessible, returns 200 or 500 |
+| `should report service statuses` | Reports all configured services |
+| `should include valid timestamp` | ISO timestamp within 5 seconds |
+| `should respond within reasonable time` | Completes within 10 seconds |
+
+</details>
 
 ### Running Tests
 
+**With Docker Running** (recommended - tests against full stack):
 ```bash
 cd app
 
-# Run all tests once
-npm run test:run
+# Start Docker services first
+npm run dev:start   # From project root
 
-# Run tests in watch mode (re-run on file change)
-npm test
+# Run ALL E2E tests against Docker stack
+SKIP_WEBSERVER=true BASE_URL=https://localhost npx playwright test
+
+# Run specific test file
+SKIP_WEBSERVER=true BASE_URL=https://localhost npx playwright test e2e/shop.spec.ts
+
+# Run with visible browser (debugging)
+SKIP_WEBSERVER=true BASE_URL=https://localhost npx playwright test --headed
+```
+
+**Without Docker** (uses local dev server):
+```bash
+cd app
+
+# Run ALL tests (starts dev server automatically)
+npm run test:all
+
+# Run only E2E tests
+npm run test:e2e
+
+# Run only unit/integration tests (fast, no browser)
+npm run test:run
 
 # Run only accessibility tests
 npm run test:a11y
 
-# Run E2E tests
-npm run test:e2e
-
-# Run specific E2E test with browser visible
-npx playwright test e2e/shop-cart.spec.ts --headed
+# Run specific feature tests
+npx playwright test e2e/shop-cart.spec.ts        # Cart operations
+npx playwright test e2e/shop-variants.spec.ts    # Product variants
+npx playwright test e2e/submission.spec.ts       # Form submissions
 
 # Run specific test by name
 npx playwright test -k "can add to cart"
 ```
 
-### E2E Test Coverage
+### Test Architecture
 
-**Shop & Cart** (`e2e/shop-cart.spec.ts`):
-- Browse products
-- View product details
-- Add items to cart
-- Update quantities
-- Remove items
-- Cart persists after refresh
+```
+Tests are organized by what they verify:
 
-**Auth & Checkout** (`e2e/auth.spec.ts`):
-- Login/logout
-- Register account
-- Protected routes
-- Order creation
+E2E Tests (app/e2e/)
+├── shop.spec.ts              # 35 tests: Full shop flow (browse→cart→checkout)
+├── shop-cart.spec.ts         # 9 tests: Cart-specific operations
+├── shop-variants.spec.ts     # 13 tests: Product variant handling
+├── submission.spec.ts        # 5 tests: Form submissions with attachments
+├── chatbot.spec.ts           # 14 tests: AI chatbot interactions
+├── appointments.spec.ts      # 23 tests: Appointment booking flow
+└── accessibility.a11y.test.ts # 10 tests: WCAG AA page compliance
 
-**Admin** (`e2e/dashboard.spec.ts`):
-- Admin-only access
-- Product management
-- Order dashboard
+Unit/Integration Tests (app/__tests__/)
+├── lib/email.unit.test.ts           # 10 tests: Email template rendering
+├── lib/redis.integration.test.ts    # 6 tests: Cache operations
+├── api/health.integration.test.ts   # 4 tests: Health endpoint
+└── components/
+    ├── AuthDemo.a11y.test.tsx       # 3 tests: Auth component accessibility
+    └── DatabaseDemo.a11y.test.tsx   # 5 tests: Database component accessibility
+```
 
-**Dark Mode** (`e2e/pages-dark-mode.spec.ts`):
-- All pages in light mode
-- All pages in dark mode
-- Contrast ratios meet WCAG AA
+### Continuous Testing Workflow
 
-**Accessibility** (`e2e/accessibility.a11y.test.ts`):
-- Uses axe-playwright for WCAG AA compliance
-- Tests Home, Services, Pricing, How It Works, FAQ in both light and dark modes
-- Dark mode tests use `emulateMedia({ colorScheme: 'dark' })` before navigation to trigger proper theme application
+Tests run automatically in CI/CD. Before deploying:
+
+1. **All E2E tests must pass** - Verifies user flows work end-to-end
+2. **All unit tests must pass** - Verifies utilities and services work
+3. **All accessibility tests must pass** - Verifies WCAG AA compliance
+
+**No broken windows policy**: If a test fails, fix it before shipping. We don't skip tests or ignore failures.
 
 ### Dark Mode Testing
 
-All components must pass contrast testing in both light and dark modes:
+All pages are tested in both light and dark modes using axe-playwright:
 
 ```typescript
-import { testBothModes, hasContrastViolations } from '@/__tests__/setup/a11y-utils';
+// e2e/accessibility.a11y.test.ts
+test(`${page.name} - Dark Mode Accessibility`, async ({ page: browserPage }) => {
+  // Apply dark mode BEFORE navigation
+  await browserPage.emulateMedia({ colorScheme: 'dark' });
+  await browserPage.goto(page.path);
 
-it('should have no contrast issues in both modes', async () => {
-  const { container } = render(<MyComponent />);
-  const results = await testBothModes(container, 'MyComponent');
-
-  expect(hasContrastViolations(results.light)).toBe(false);
-  expect(hasContrastViolations(results.dark)).toBe(false);
+  // Run axe accessibility audit
+  const results = await new AxeBuilder({ page: browserPage }).analyze();
+  expect(results.violations).toEqual([]);
 });
 ```
 
@@ -712,7 +1230,107 @@ Common dark mode issues & fixes are documented in [docs/DESIGN_SYSTEM.md](docs/D
 
 ---
 
+## Developer Tools
+
+### Claude Code Skills
+
+Custom skills in `.claude/skills/` provide specialized agent capabilities:
+
+| Skill | Purpose | Trigger |
+|-------|---------|---------|
+| `launch-a-swarm` | Spawn 5 parallel agents for comprehensive code review | "launch a swarm" |
+| `frontend-design` | Generate distinctive, production-grade UI | Building web interfaces |
+| `worktree-swarm` | Orchestrate parallel development with git worktrees | "parallelize", "spawn worktrees" |
+| `docker-testing` | Enforce Docker-based testing rules | Running tests |
+
+#### Launch-a-Swarm Skill
+
+Spawns 5 specialized agents working in parallel to review code quality across all critical dimensions:
+
+```
+Structure   → DRY, clear organization, minimal coupling
+Protection  → Security, input validation, least privilege
+Correctness → Tests, data flow, error handling
+Evolution   → Flexibility, configuration, adaptability
+Value       → User need, automation, documentation
+```
+
+**Usage:**
+```
+User: "launch a swarm to review my changes"
+→ 5 agents spawn in parallel
+→ Each checks from their domain perspective
+→ Results synthesized into prioritized action items
+```
+
+**When to use:**
+- Planning new features (prevention-focused)
+- Building code (real-time guidance)
+- Validating before merge/deploy (comprehensive review)
+
+See `.claude/skills/launch-a-swarm.md` for full documentation.
+
+#### Container Restart Commands
+
+For comprehensive guidance on when to restart vs rebuild Docker services, see the [Docker Development Workflow](#docker-development-workflow) section above.
+
+**Quick Reference:**
+```bash
+# Restart single service
+./scripts/docker.sh restart medusa
+
+# Restart multiple services
+./scripts/docker.sh restart medusa redis
+
+# When to use restart (preserves data, faster):
+# - Code changes (with volume mounts)
+# - Config changes (.env.local updates)
+# - Service appears hung
+# - Network connectivity issues
+
+# When to use rebuild (clean slate, slower):
+# - package.json / package-lock.json changes
+# - Dockerfile changes
+# - Persistent bugs that restart doesn't fix
+```
+
+---
+
 ## Troubleshooting
+
+### Issue: Code changes not appearing
+
+**Symptom**: Made code changes but they don't show up in browser
+
+**Solutions**:
+```bash
+# 1. Wait 3 seconds for hot reload
+# Hot reload usually works for Next.js components
+
+# 2. Check which service needs restart
+# See "Docker Development Workflow" section above for details
+
+# 3. Restart the affected service
+./scripts/docker.sh restart website  # For app/ changes
+./scripts/docker.sh restart store    # For medusa/ changes
+
+# 4. Check logs for errors
+./scripts/docker.sh logs website
+./scripts/docker.sh logs store
+
+# 5. If still not working, rebuild
+./scripts/docker.sh rebuild website
+
+# 6. Nuclear option - fresh start
+./scripts/docker.sh fresh
+```
+
+**Quick fixes**:
+- After `git pull`: `./scripts/docker.sh after-pull`
+- Checkout broken: `./scripts/docker.sh fix-checkout`
+- Multiple services: `./scripts/docker.sh restart website store`
+
+See [Docker Development Workflow](#docker-development-workflow) for complete restart guidance.
 
 ### Issue: "Failed to add item to cart"
 
@@ -870,6 +1488,41 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
 | `app/context/CartContext.tsx` | Shopping cart state |
 | `app/context/AuthContext.tsx` | User authentication state |
 | `app/context/StripeContext.tsx` | Stripe Elements provider |
+| `app/context/ToastContext.tsx` | Global toast notification state |
+| `app/context/ServiceModalContext.tsx` | Service detail modal state |
+
+### UI Components
+| File | Purpose |
+|------|---------|
+| `app/components/Navigation.tsx` | Site-wide navigation with cart icon badge |
+| `app/components/ui/ConfirmDialog.tsx` | Confirmation dialog component (danger/warning/info variants) |
+| `app/components/ui/Toast.tsx` | Toast notification component |
+
+**ConfirmDialog** - Branded confirmation modal replacing browser alerts:
+```typescript
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+
+const [showConfirm, setShowConfirm] = useState(false);
+
+<ConfirmDialog
+  isOpen={showConfirm}
+  onClose={() => setShowConfirm(false)}
+  onConfirm={handleDelete}
+  title="Delete Page?"
+  message="This action cannot be undone."
+  variant="danger"
+/>
+```
+
+**Toast Notifications** - Global notification system with auto-dismiss:
+```typescript
+import { useToast } from '@/context/ToastContext';
+
+const { showToast } = useToast();
+showToast('Changes saved!', 'success');
+```
+
+All UI components are WCAG AA compliant with keyboard navigation and ARIA attributes.
 
 ### Backend Services
 | File | Purpose |

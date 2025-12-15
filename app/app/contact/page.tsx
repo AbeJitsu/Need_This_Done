@@ -7,7 +7,18 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
-import { formInputColors, formValidationColors, titleColors, successCheckmarkColors, dangerColors, mutedTextColors } from '@/lib/colors';
+import {
+  formInputColors,
+  formValidationColors,
+  titleColors,
+  successCheckmarkColors,
+  dangerColors,
+  mutedTextColors,
+  headingColors,
+  alertColors,
+  cardBgColors,
+  fileUploadColors,
+} from '@/lib/colors';
 
 // ============================================================================
 // Contact Page - Inquiry / Booking Form
@@ -146,9 +157,16 @@ export default function ContactPage() {
 
         {/* Header */}
         <PageHeader
-          title="Let's Talk"
-          description="Tell us what you need help with. We'll get back to you within 2 business days—no pressure, no spam."
+          title="Request a Free Quote"
+          description="Tell us what you need help with and we'll send you a personalized quote within 2 business days—no commitment, no spam. Just a friendly estimate so you know exactly what to expect."
         />
+
+        {/* Quick links */}
+        <p className={`text-center mb-6 ${formInputColors.helper}`}>
+          <Link href="/shop" className={`font-medium hover:underline ${titleColors.purple}`}>
+            Need help now? Book a quick consultation →
+          </Link>
+        </p>
 
         {/* Contact Form */}
         <Card className="mb-10">
@@ -157,7 +175,7 @@ export default function ContactPage() {
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                 <span className={`text-3xl ${successCheckmarkColors.icon}`}>✓</span>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
                 We got your message!
               </h2>
               <p className={`${formInputColors.helper} mb-4`}>
@@ -165,8 +183,8 @@ export default function ContactPage() {
               </p>
 
               {/* What happens next */}
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6 text-left max-w-md mx-auto">
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">What happens next:</h3>
+              <div className={`${alertColors.info.bg} rounded-lg p-4 mb-6 text-left max-w-md mx-auto`}>
+                <h3 className={`font-semibold ${headingColors.primary} mb-2`}>What happens next:</h3>
                 <ol className={`text-sm ${formInputColors.helper} space-y-2`}>
                   <li className="flex items-start gap-2">
                     <span className={`font-semibold ${titleColors.blue}`}>1.</span>
@@ -209,7 +227,7 @@ export default function ContactPage() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
+                    className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
                     placeholder="Your name"
                   />
                 </div>
@@ -226,7 +244,7 @@ export default function ContactPage() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
+                    className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
                     placeholder="your@email.com"
                   />
                 </div>
@@ -244,7 +262,7 @@ export default function ContactPage() {
                     name="company"
                     value={formData.company}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
+                    className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
                     placeholder="Where you work"
                   />
                 </div>
@@ -259,7 +277,7 @@ export default function ContactPage() {
                     name="service"
                     value={formData.service}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)]"
+                    className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
                   >
                     <option value="">Pick one (or skip this)</option>
                     {services.map((service, index) => (
@@ -284,7 +302,7 @@ export default function ContactPage() {
                   rows={5}
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all focus:shadow-[0_0_6px_0px_rgba(0,0,0,0.1)] dark:focus:border-gray-400 dark:focus:shadow-[0_0_6px_0px_rgba(255,255,255,0.2)] resize-none"
+                  className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all resize-none`}
                   placeholder="What's the task? Any details that would help us understand what you're looking for?"
                 />
               </div>
@@ -298,7 +316,7 @@ export default function ContactPage() {
                   {/* File Input Area */}
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 transition-colors"
+                    className={`rounded-lg p-6 text-center cursor-pointer transition-colors ${fileUploadColors.border} ${fileUploadColors.hoverBorder}`}
                   >
                     <input
                       ref={fileInputRef}
@@ -325,7 +343,7 @@ export default function ContactPage() {
                       {files.map((file, index) => (
                         <div
                           key={index}
-                          className="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                          className={`flex items-center justify-between px-3 py-2 ${cardBgColors.elevated} rounded-lg`}
                         >
                           <div className="flex items-center gap-2 min-w-0">
                             <span className={`text-sm ${formInputColors.helper} truncate`}>
@@ -356,7 +374,7 @@ export default function ContactPage() {
 
               {/* Error Message */}
               {submitStatus === 'error' && (
-                <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                <div className={`p-4 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
                   <p className={`${formValidationColors.error} text-sm`}>
                     Something went wrong. Please try again, or reach out to us another way - we're here to help.
                   </p>

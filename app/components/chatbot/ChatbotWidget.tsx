@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ChatbotButton from './ChatbotButton';
 import ChatbotModal from './ChatbotModal';
 import { IndexingProvider } from './IndexingContext';
@@ -12,6 +12,9 @@ import { IndexingProvider } from './IndexingContext';
 // Why: Single component to add chatbot functionality to any page
 // How: Manages open/close state, renders button + modal
 
+// Custom event name for opening chatbot from anywhere
+export const OPEN_CHATBOT_EVENT = 'open-chatbot';
+
 /**
  * Complete chatbot widget with floating button and modal.
  *
@@ -21,6 +24,11 @@ import { IndexingProvider } from './IndexingContext';
  * - Button rendering (always visible)
  * - Modal rendering (when open)
  * - Indexing state context for debug features
+ *
+ * To open the chatbot from anywhere, dispatch a custom event:
+ * ```tsx
+ * window.dispatchEvent(new CustomEvent('open-chatbot'));
+ * ```
  *
  * Usage in layout.tsx:
  * ```tsx
@@ -35,6 +43,13 @@ export default function ChatbotWidget() {
 
   const openChat = () => setIsOpen(true);
   const closeChat = () => setIsOpen(false);
+
+  // Listen for custom event to open chatbot from anywhere
+  useEffect(() => {
+    const handleOpenChatbot = () => setIsOpen(true);
+    window.addEventListener(OPEN_CHATBOT_EVENT, handleOpenChatbot);
+    return () => window.removeEventListener(OPEN_CHATBOT_EVENT, handleOpenChatbot);
+  }, []);
 
   return (
     <IndexingProvider>

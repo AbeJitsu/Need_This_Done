@@ -23,19 +23,40 @@ export async function GET(
   try {
     const { productId } = params;
 
+    // Detect if this is a product ID (starts with "prod_") or a handle
+    const isProductId = productId.startsWith('prod_');
+
     const result = await cache.wrap(
       CACHE_KEYS.page(`product:${productId}`),
       async () => {
-        return await medusaClient.products.get(productId);
+        if (isProductId) {
+          return await medusaClient.products.get(productId);
+        } else {
+          // Lookup by handle
+          const product = await medusaClient.products.getByHandle(productId);
+          if (!product) {
+            throw { message: 'Product not found', status: 404 };
+          }
+          return product;
+        }
       },
       CACHE_TTL.LONG // 5 minutes
     );
 
-    return NextResponse.json({
-      product: result.data,
-      cached: result.cached,
-      source: result.source,
-    });
+    // Return with aggressive caching headers for fast navigation
+    return NextResponse.json(
+      {
+        product: result.data,
+        cached: result.cached,
+        source: result.source,
+      },
+      {
+        headers: {
+          // Cache for 5 minutes, serve stale for 24 hours while revalidating
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=86400',
+        },
+      }
+    );
   } catch (error) {
     return handleApiError(error, 'Product GET');
   }

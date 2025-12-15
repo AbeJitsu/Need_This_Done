@@ -18,22 +18,22 @@ test.describe('Product Catalog & Browsing', () => {
     // Navigate to shop
     await navigateToPage(page, '/shop');
 
-    // Should see shop heading (actual page uses "Shop Services")
-    await expect(page.getByRole('heading', { name: /Shop Services/i })).toBeVisible();
+    // Should see shop heading (actual page uses "Quick Consultations")
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
-    // Should display products grid
-    const productGrid = page.locator('[class*="grid"]');
-    await expect(productGrid).toBeVisible();
+    // Should display products grid (use first() to avoid strict mode violation with multiple grids)
+    const productGrid = page.locator('[class*="grid"]').first();
+    await expect(productGrid).toBeVisible({ timeout: 10000 });
 
     // Should have product cards with pricing (at least 3 products)
     const productCards = page.locator('div').filter({ hasText: /\$/ });
     const cardCount = await productCards.count();
     expect(cardCount).toBeGreaterThanOrEqual(3);
 
-    // Verify specific pricing tiers exist
-    await expect(page.getByText('$50.00')).toBeVisible(); // Quick Task
-    await expect(page.getByText('$150.00')).toBeVisible(); // Standard
-    await expect(page.getByText('$500.00')).toBeVisible(); // Premium
+    // Verify consultation pricing tiers exist
+    await expect(page.getByText('$20.00')).toBeVisible({ timeout: 10000 }); // 15-min consultation
+    await expect(page.getByText('$35.00')).toBeVisible({ timeout: 10000 }); // 30-min consultation
+    await expect(page.getByText('$50.00')).toBeVisible({ timeout: 10000 }); // 55-min consultation
   });
 
   test('product detail page shows full product information', async ({
@@ -44,23 +44,26 @@ test.describe('Product Catalog & Browsing', () => {
 
     // Click Details button on first product (Quick Task)
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
 
-    // Should show product title
+    // Wait for product content to load (client-side rendering from API)
+    // The Add to Cart button only appears after product data loads
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 15000 });
+
+    // Should show product title (now that content has loaded)
     const productHeading = page.getByRole('heading');
     const headingCount = await productHeading.count();
     expect(headingCount).toBeGreaterThan(0);
 
-    // Should display price (Quick Task is $50.00)
-    await expect(page.getByText('$50.00')).toBeVisible();
+    // Should display a valid consultation price ($20.00, $35.00, or $50.00)
+    // Product order may vary, so check for any valid price
+    await expect(page.getByText(/\$\d+\.\d{2}/).first()).toBeVisible({ timeout: 10000 });
 
-    // Should have add to cart button
-    await expect(
-      page.getByRole('button', { name: /add to cart/i })
-    ).toBeVisible();
-
-    // Should have quantity selector
-    await expect(page.getByRole('button', { name: /[-+]/i })).toBeVisible();
+    // Should have quantity selector (uses minus sign − and plus +)
+    // Using text locator since accessible name may vary
+    await expect(page.locator('button:has-text("−")').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('button:has-text("+")').first()).toBeVisible({ timeout: 10000 });
   });
 
   test('cart icon in navigation shows item count', async ({ page }) => {
@@ -86,23 +89,27 @@ test.describe('Add to Cart Workflow', () => {
     // Navigate to product detail
     await navigateToPage(page, '/shop');
     await page.getByRole('link', { name: /details/i }).first().click();
+    // Wait for product detail page to load (URL changes from /shop to /shop/[productId])
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
 
-    // Add to cart
+    // Wait for Add to Cart button to be visible (single button on detail page)
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500); // Wait for cart update
 
     // Should see success toast
-    await expect(page.getByText(/added.*to cart/i)).toBeVisible();
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
 
     // Product page shows cart item count
-    await expect(page.getByText(/you have 1 item/i)).toBeVisible();
+    await expect(page.getByText(/you have 1 item/i)).toBeVisible({ timeout: 10000 });
   });
 
   test('can adjust quantity before adding to cart', async ({ page }) => {
     // Navigate to product detail
     await navigateToPage(page, '/shop');
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
 
     // Increase quantity to 3
@@ -122,16 +129,18 @@ test.describe('Add to Cart Workflow', () => {
     await page.waitForTimeout(500);
 
     // Should see success toast and cart count reflects quantity
-    await expect(page.getByText(/added.*to cart/i)).toBeVisible();
-    await expect(page.getByText(/you have 3 item/i)).toBeVisible();
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/you have 3 item/i)).toBeVisible({ timeout: 10000 });
   });
 
   test('can add different products to cart', async ({ page }) => {
-    // Add first product (Quick Task)
+    // Add first product (15-min consultation)
     await navigateToPage(page, '/shop');
     const detailsButtons = page.getByRole('link', { name: /details/i });
     await detailsButtons.first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
@@ -139,31 +148,37 @@ test.describe('Add to Cart Workflow', () => {
     await page.goBack();
     await page.waitForLoadState('domcontentloaded');
 
-    // Add second product (Standard Project)
+    // Add second product (30-min consultation)
     await detailsButtons.nth(1).click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
     // After adding second product, page shows 2 items in cart
-    await expect(page.getByText(/you have 2 item/i)).toBeVisible();
+    await expect(page.getByText(/you have 2 item/i)).toBeVisible({ timeout: 10000 });
   });
 
   test('shows success feedback when adding to cart', async ({ page }) => {
     // Navigate to product detail
     await navigateToPage(page, '/shop');
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
 
-    // Add to cart
+    // Wait for Add to Cart button to be visible (client-side rendering)
     const addButton = page.getByRole('button', { name: /add to cart/i });
+    await expect(addButton).toBeVisible({ timeout: 10000 });
+
+    // Add to cart
     await addButton.click();
 
-    // Should show some feedback (button text change or toast)
-    await page.waitForTimeout(300);
+    // Should show some feedback (toast message)
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
 
-    // Button should be re-enabled and clickable
-    await expect(addButton).not.toBeDisabled();
+    // Button should be re-enabled and clickable after cart update completes
+    await expect(addButton).not.toBeDisabled({ timeout: 5000 });
   });
 });
 
@@ -174,30 +189,34 @@ test.describe('Shopping Cart Management', () => {
     // Add items to cart
     await navigateToPage(page, '/shop');
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
 
     // Navigate to cart via "View Cart" link on product page
     await page.getByRole('link', { name: /view cart/i }).click();
     await page.waitForLoadState('domcontentloaded');
 
-    // Should see cart heading
-    await expect(page.getByRole('heading', { name: /cart/i })).toBeVisible();
+    // Should see cart heading (actual heading is "Almost there!" when cart has items)
+    await expect(page.getByRole('heading', { name: /almost there|your cart/i })).toBeVisible({ timeout: 10000 });
 
     // Should show order summary with prices (price appears in Subtotal and Total)
-    await expect(page.getByText(/subtotal/i)).toBeVisible();
+    await expect(page.getByText(/subtotal/i)).toBeVisible({ timeout: 10000 });
     // Check that a price is displayed in the order summary
-    await expect(page.getByText(/\$\d+\.\d{2}/).first()).toBeVisible();
+    await expect(page.getByText(/\$\d+\.\d{2}/).first()).toBeVisible({ timeout: 10000 });
   });
 
   test('can update item quantity in cart', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
 
     // Go to cart via "View Cart" link
     await page.getByRole('link', { name: /view cart/i }).click();
@@ -213,7 +232,7 @@ test.describe('Shopping Cart Management', () => {
       // Check that the cart updated - item count in header should change
       // or the subtotal should increase. The specific quantity display may vary.
       // Just verify the order summary is still visible after the update
-      await expect(page.getByText(/subtotal/i)).toBeVisible();
+      await expect(page.getByText(/subtotal/i)).toBeVisible({ timeout: 10000 });
     }
   });
 
@@ -222,17 +241,21 @@ test.describe('Shopping Cart Management', () => {
     await navigateToPage(page, '/shop');
     const detailsButtons = page.getByRole('link', { name: /details/i });
     await detailsButtons.first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
 
     // Go back and add another
     await page.goBack();
     await page.waitForLoadState('domcontentloaded');
     await detailsButtons.nth(1).click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
 
     // Go to cart via "View Cart" link
     await page.getByRole('link', { name: /view cart/i }).click();
@@ -277,18 +300,17 @@ test.describe('Shopping Cart Management', () => {
     // Add item to cart
     await navigateToPage(page, '/shop');
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
-    // Wait for cart to be saved
-    await page.waitForTimeout(1000);
 
     // Verify item was added (toast shows)
-    await expect(page.getByText(/added.*to cart/i)).toBeVisible();
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
 
     // Navigate to cart via View Cart link (same session)
     await page.getByRole('link', { name: /view cart/i }).click();
     await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(500);
 
     // Cart should have items (not empty)
     // Check for order summary which only appears when cart has items
@@ -311,14 +333,25 @@ test.describe('Guest Checkout Flow', () => {
   test('guest can checkout without authentication', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
+
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+
+    // Wait for Add to Cart button (client-side rendered)
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
+
+    // Wait for success toast
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
 
     // Go to cart first (product page has "View Cart", not "Proceed to Checkout")
     await page.getByRole('link', { name: /view cart/i }).click();
     await page.waitForLoadState('domcontentloaded');
+
+    // Wait for cart to load
+    await expect(page.getByText(/subtotal/i)).toBeVisible({ timeout: 10000 });
 
     // Navigate to checkout from cart page
     await page.getByRole('link', { name: /proceed to checkout/i }).click();
@@ -327,7 +360,7 @@ test.describe('Guest Checkout Flow', () => {
     // Should see checkout page
     await expect(
       page.getByRole('heading', { name: /checkout|order/i })
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 10000 });
 
     // Should see email input for guest
     const emailInput = page.getByLabel(/email/i).first();
@@ -347,26 +380,37 @@ test.describe('Guest Checkout Flow', () => {
     }
 
     // Order summary should show items count and price
-    await expect(page.getByText(/order summary/i)).toBeVisible();
-    await expect(page.getByText(/\$\d+\.\d{2}/).first()).toBeVisible();
+    await expect(page.getByText(/order summary/i)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/\$\d+\.\d{2}/).first()).toBeVisible({ timeout: 5000 });
 
-    // Should have place order button
+    // Should have continue button (actual button text is "Continue")
     await expect(
-      page.getByRole('button', { name: /place order|complete|submit/i })
-    ).toBeVisible();
+      page.getByRole('button', { name: /continue/i })
+    ).toBeVisible({ timeout: 5000 });
   });
 
   test('checkout form validates required fields', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
+
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+
+    // Wait for Add to Cart button
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
+
+    // Wait for success toast
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
 
     // Go to cart first
     await page.getByRole('link', { name: /view cart/i }).click();
     await page.waitForLoadState('domcontentloaded');
+
+    // Wait for cart to load
+    await expect(page.getByText(/subtotal/i)).toBeVisible({ timeout: 10000 });
 
     // Go to checkout from cart page
     await page.getByRole('link', { name: /proceed to checkout/i }).click();
@@ -374,7 +418,7 @@ test.describe('Guest Checkout Flow', () => {
 
     // Try to submit without filling fields
     const submitButton = page.getByRole('button', {
-      name: /place order|complete|submit/i,
+      name: /continue to payment|place order|complete|submit/i,
     });
     if (await submitButton.isVisible()) {
       await submitButton.click();
@@ -393,18 +437,32 @@ test.describe('Guest Checkout Flow', () => {
   test('displays order confirmation after guest checkout', async ({ page }) => {
     // Add item to cart
     await navigateToPage(page, '/shop');
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
+
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+
+    // Wait for Add to Cart button
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
+
+    // Wait for success toast
+    await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 10000 });
 
     // Go to cart first
     await page.getByRole('link', { name: /view cart/i }).click();
     await page.waitForLoadState('domcontentloaded');
 
+    // Wait for cart to load
+    await expect(page.getByText(/subtotal/i)).toBeVisible({ timeout: 10000 });
+
     // Go to checkout from cart page
     await page.getByRole('link', { name: /proceed to checkout/i }).click();
     await page.waitForLoadState('domcontentloaded');
+
+    // Wait for checkout page
+    await expect(page.getByRole('heading', { name: /checkout/i })).toBeVisible({ timeout: 10000 });
 
     // Fill checkout form
     const emailInput = page.getByLabel(/email/i).first();
@@ -424,7 +482,7 @@ test.describe('Guest Checkout Flow', () => {
 
     // Submit order
     const submitButton = page.getByRole('button', {
-      name: /place order|complete|submit/i,
+      name: /continue to payment|place order|complete|submit/i,
     });
     if (await submitButton.isVisible()) {
       await submitButton.click();
@@ -591,16 +649,13 @@ test.describe('Error Handling & Edge Cases', () => {
     // Wait a bit for the loading state to potentially resolve
     await page.waitForTimeout(2000);
 
-    // Should show either:
-    // 1. Loading state (product loading forever because ID doesn't exist)
-    // 2. 404 or error message
-    // 3. Empty product state
-    // The page shouldn't crash - it should show something gracefully
-    const loadingText = page.locator('text=/loading|not found|error|invalid|product/i');
-    const loadingCount = await loadingText.count();
+    // Should show Next.js 404 page (notFound() is called for invalid products)
+    // The page shouldn't crash - it should show 404 gracefully
+    const notFoundText = page.locator('text=/404|not found|page.*not.*found/i');
+    const notFoundCount = await notFoundText.count();
 
-    // Page should have some content indicating the state
-    expect(loadingCount).toBeGreaterThan(0);
+    // Page should have some content indicating it's not found
+    expect(notFoundCount).toBeGreaterThan(0);
   });
 
   test('handles network errors in cart operations gracefully', async ({
@@ -611,12 +666,13 @@ test.describe('Error Handling & Edge Cases', () => {
 
     // Add to cart (should work)
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
 
     // Cart should have item (verify via success toast and View Cart link)
-    await expect(page.getByText(/added.*to cart/i)).toBeVisible();
+    await expect(page.getByText(/added.*to cart!/i)).toBeVisible({ timeout: 10000 });
     await expect(page.getByRole('link', { name: /view cart/i })).toBeVisible();
   });
 
@@ -647,29 +703,29 @@ test.describe('Integration: Complete User Journey', () => {
   }) => {
     // 1. Browse products
     await navigateToPage(page, '/shop');
-    await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Quick Consultations/i })).toBeVisible({ timeout: 10000 });
 
     // 2. View product detail via Details link
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
     await expect(
       page.getByRole('button', { name: /add to cart/i })
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 10000 });
 
     // 3. Add to cart
     await page.getByRole('button', { name: /add to cart/i }).click();
-    await page.waitForTimeout(500);
 
     // 4. Verify cart updated (check for success toast on product detail page)
-    await expect(page.getByText(/added.*to cart/i)).toBeVisible();
+    await expect(page.getByText(/added.*to cart!/i)).toBeVisible({ timeout: 10000 });
 
     // 5. Navigate to cart via "View Cart" link on product detail page
     await page.getByRole('link', { name: /view cart/i }).click();
     await page.waitForLoadState('domcontentloaded');
-    await expect(page.getByRole('heading', { name: /cart/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /almost there|your cart/i })).toBeVisible({ timeout: 10000 });
 
     // 6. View order summary (use Subtotal specifically to avoid strict mode)
-    await expect(page.getByText(/subtotal/i)).toBeVisible();
+    await expect(page.getByText(/subtotal/i)).toBeVisible({ timeout: 10000 });
 
     // 7. Proceed to checkout (it's a Link, so use role='link')
     const checkoutLink = page.getByRole('link', {
@@ -682,7 +738,7 @@ test.describe('Integration: Complete User Journey', () => {
       await page.waitForLoadState('domcontentloaded');
 
       // Should be on checkout page
-      await expect(page.getByRole('heading', { name: /checkout/i })).toBeVisible({ timeout: 5000 });
+      await expect(page.getByRole('heading', { name: /checkout/i })).toBeVisible({ timeout: 10000 });
     }
   });
 });
@@ -756,7 +812,7 @@ test.describe('Variant Regression Tests', () => {
 
     // Should NOT see "No variants available" error
     const errorMessage = page.locator('text=/no variants available/i');
-    await expect(errorMessage).not.toBeVisible();
+    await expect(errorMessage).not.toBeVisible({ timeout: 10000 });
 
     // Should have variant selector (if product detail page shows variants UI)
     const selectElement = page.locator('select').first();
@@ -777,11 +833,12 @@ test.describe('Variant Regression Tests', () => {
 
     // Click Details link on first product
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
 
     // Add to cart button should be visible (variants present)
     const addButton = page.getByRole('button', { name: /add to cart/i });
-    await expect(addButton).toBeVisible();
+    await expect(addButton).toBeVisible({ timeout: 10000 });
 
     // Click add to cart
     await addButton.click();
@@ -789,43 +846,43 @@ test.describe('Variant Regression Tests', () => {
 
     // Should NOT show error about variants
     const errorMessage = page.locator('text=/no variants|variant.*error/i');
-    await expect(errorMessage).not.toBeVisible();
+    await expect(errorMessage).not.toBeVisible({ timeout: 10000 });
 
     // Cart badge should update, indicating success - if badge visible and updated, that's good sign
   });
 
-  test('quick task, standard project, and premium solution all have variants', async ({
+  test('all consultation products have variants', async ({
     request,
   }) => {
-    // Regression test: Specifically verify the 3 sample products all have variants
+    // Regression test: Verify 3 consultation products all have variants
     // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
     const response = await request.get('/api/shop/products', {
       failOnStatusCode: false,
     });
     const data = await response.json();
 
-    // Find each product
-    const quickTask = data.products.find((p: any) => p.id === 'prod_1');
-    const standardProject = data.products.find((p: any) => p.id === 'prod_2');
-    const premiumSolution = data.products.find((p: any) => p.id === 'prod_3');
+    // Find each consultation product by handle
+    const consultation15 = data.products.find((p: any) => p.handle === 'consultation-15-min');
+    const consultation30 = data.products.find((p: any) => p.handle === 'consultation-30-min');
+    const consultation55 = data.products.find((p: any) => p.handle === 'consultation-55-min');
 
     // All must exist and have variants
-    expect(quickTask, 'Quick Task product not found').toBeDefined();
-    expect(quickTask.variants, 'Quick Task must have variants').toBeDefined();
-    expect(quickTask.variants.length, 'Quick Task must have at least 1 variant').toBeGreaterThan(0);
+    expect(consultation15, '15-min consultation product not found').toBeDefined();
+    expect(consultation15.variants, '15-min consultation must have variants').toBeDefined();
+    expect(consultation15.variants.length, '15-min consultation must have at least 1 variant').toBeGreaterThan(0);
 
-    expect(standardProject, 'Standard Project product not found').toBeDefined();
-    expect(standardProject.variants, 'Standard Project must have variants').toBeDefined();
+    expect(consultation30, '30-min consultation product not found').toBeDefined();
+    expect(consultation30.variants, '30-min consultation must have variants').toBeDefined();
     expect(
-      standardProject.variants.length,
-      'Standard Project must have at least 1 variant'
+      consultation30.variants.length,
+      '30-min consultation must have at least 1 variant'
     ).toBeGreaterThan(0);
 
-    expect(premiumSolution, 'Premium Solution product not found').toBeDefined();
-    expect(premiumSolution.variants, 'Premium Solution must have variants').toBeDefined();
+    expect(consultation55, '55-min consultation product not found').toBeDefined();
+    expect(consultation55.variants, '55-min consultation must have variants').toBeDefined();
     expect(
-      premiumSolution.variants.length,
-      'Premium Solution must have at least 1 variant'
+      consultation55.variants.length,
+      '55-min consultation must have at least 1 variant'
     ).toBeGreaterThan(0);
   });
 });

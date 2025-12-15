@@ -18,14 +18,15 @@ export const accentColors: Record<AccentVariant, {
   bg: string;
   text: string;
   border: string;
+  hoverBorder: string;
 }> = {
-  purple: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-500 dark:border-purple-400' },
-  blue: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-500 dark:border-blue-400' },
-  green: { bg: 'bg-green-100', text: 'text-green-800', border: 'border-green-500 dark:border-green-400' },
-  orange: { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-500 dark:border-orange-400' },
-  teal: { bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-500 dark:border-teal-400' },
-  gray: { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-500 dark:border-gray-400' },
-  red: { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-700 dark:border-red-300' },
+  purple: { bg: 'bg-purple-100', text: 'text-purple-700 dark:text-purple-300', border: 'border-purple-500 dark:border-purple-400', hoverBorder: 'hover:border-purple-500 dark:hover:border-purple-400' },
+  blue: { bg: 'bg-blue-100', text: 'text-blue-700 dark:text-blue-300', border: 'border-blue-500 dark:border-blue-400', hoverBorder: 'hover:border-blue-500 dark:hover:border-blue-400' },
+  green: { bg: 'bg-green-100', text: 'text-green-700 dark:text-green-300', border: 'border-green-500 dark:border-green-400', hoverBorder: 'hover:border-green-500 dark:hover:border-green-400' },
+  orange: { bg: 'bg-orange-100', text: 'text-orange-700 dark:text-orange-300', border: 'border-orange-500 dark:border-orange-400', hoverBorder: 'hover:border-orange-500 dark:hover:border-orange-400' },
+  teal: { bg: 'bg-teal-100', text: 'text-teal-700 dark:text-teal-300', border: 'border-teal-500 dark:border-teal-400', hoverBorder: 'hover:border-teal-500 dark:hover:border-teal-400' },
+  gray: { bg: 'bg-gray-100', text: 'text-gray-700 dark:text-gray-300', border: 'border-gray-500 dark:border-gray-400', hoverBorder: 'hover:border-gray-500 dark:hover:border-gray-400' },
+  red: { bg: 'bg-red-100', text: 'text-red-700 dark:text-red-300', border: 'border-red-700 dark:border-red-300', hoverBorder: 'hover:border-red-700 dark:hover:border-red-300' },
 };
 
 // ============================================================================
@@ -91,10 +92,12 @@ export const statusBorderColors: Record<AccentVariant, string> = {
 // ============================================================================
 // Light Background Colors - Subtle accent backgrounds
 // ============================================================================
+// Light mode: -100 shades (light pastel backgrounds with dark text)
+// Dark mode: -800 shades (solid dark backgrounds for WCAG AA contrast with light text)
 export const lightBgColors: Record<AccentColor, string> = {
-  purple: 'bg-purple-100 dark:bg-purple-900/30',
-  blue: 'bg-blue-100 dark:bg-blue-900/30',
-  green: 'bg-green-100 dark:bg-green-900/30',
+  purple: 'bg-purple-100 dark:bg-purple-800',
+  blue: 'bg-blue-100 dark:bg-blue-800',
+  green: 'bg-green-100 dark:bg-green-800',
 };
 
 // ============================================================================
@@ -356,6 +359,8 @@ export const linkHoverColors = {
 // Used for text that changes color when a parent with group class is hovered
 export const groupHoverColors = {
   blue: 'group-hover:text-blue-600 dark:group-hover:text-blue-300',
+  purple: 'group-hover:text-purple-600 dark:group-hover:text-purple-300',
+  orange: 'group-hover:text-orange-600 dark:group-hover:text-orange-300',
 };
 
 // ============================================================================
@@ -386,6 +391,15 @@ export const alertColors = {
 // ============================================================================
 export const dividerColors = {
   subtle: 'bg-gray-300 dark:bg-gray-600',
+  border: 'border-gray-200 dark:border-gray-700',
+};
+
+// ============================================================================
+// Footer Colors - For site-wide footer
+// ============================================================================
+export const footerColors = {
+  bg: 'bg-white dark:bg-gray-900',
+  border: 'border-t border-gray-200 dark:border-gray-800',
 };
 
 // ============================================================================
@@ -409,6 +423,8 @@ export const checkmarkBgColors: Record<'green' | 'blue' | 'purple', string> = {
 // ============================================================================
 export const cardBgColors = {
   base: 'bg-white dark:bg-gray-800',
+  elevated: 'bg-gray-50 dark:bg-gray-700',
+  interactive: 'hover:bg-gray-50 dark:hover:bg-gray-700/50',
 };
 
 // ============================================================================
@@ -416,5 +432,121 @@ export const cardBgColors = {
 // ============================================================================
 export const cardBorderColors = {
   subtle: 'border-2 border-gray-400 dark:border-gray-500',
+  light: 'border border-gray-200 dark:border-gray-700',
+  lightMd: 'border-2 border-gray-300 dark:border-gray-600',
+};
+
+// ============================================================================
+// Primary Button Colors - For primary action buttons
+// ============================================================================
+export const primaryButtonColors = {
+  bg: 'bg-blue-600 dark:bg-blue-500',
+  hover: 'hover:bg-blue-700 dark:hover:bg-blue-600',
+  text: 'text-white',
+  focus: 'focus:ring-2 focus:ring-blue-500',
+};
+
+// ============================================================================
+// Icon Button Colors - For icon-only buttons in headers and toolbars
+// ============================================================================
+export const iconButtonColors = {
+  text: 'text-gray-500 dark:text-gray-400',
+  hover: 'hover:text-gray-700 dark:hover:text-gray-200',
+  bg: 'hover:bg-gray-100 dark:hover:bg-gray-700',
+  secondary: {
+    bg: 'bg-gray-200 dark:bg-gray-700',
+    hover: 'hover:bg-gray-300 dark:hover:bg-gray-600',
+    text: 'text-gray-600 dark:text-gray-300',
+  },
+};
+
+// ============================================================================
+// Loading Indicator Colors - For loading spinners and dots
+// ============================================================================
+export const loadingColors = {
+  bg: 'bg-gray-100 dark:bg-gray-700',
+  dot: 'bg-gray-400',
+};
+
+// ============================================================================
+// Status Badge Colors - For appointment/order status indicators
+// ============================================================================
+// Consistent styling for status badges across admin pages
+export const statusBadgeColors = {
+  pending: {
+    bg: 'bg-yellow-100 dark:bg-yellow-900/20',
+    text: 'text-yellow-800 dark:text-yellow-100',
+    border: 'border border-yellow-200 dark:border-yellow-800',
+  },
+  approved: {
+    bg: 'bg-blue-100 dark:bg-blue-900/20',
+    text: 'text-blue-800 dark:text-blue-100',
+    border: 'border border-blue-200 dark:border-blue-800',
+  },
+  confirmed: {
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    text: 'text-green-800 dark:text-green-100',
+    border: 'border border-green-200 dark:border-green-800',
+  },
+  completed: {
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    text: 'text-green-800 dark:text-green-100',
+    border: 'border border-green-200 dark:border-green-800',
+  },
+  cancelled: {
+    bg: 'bg-red-100 dark:bg-red-900/20',
+    text: 'text-red-800 dark:text-red-100',
+    border: 'border border-red-200 dark:border-red-800',
+  },
+  rejected: {
+    bg: 'bg-red-100 dark:bg-red-900/20',
+    text: 'text-red-800 dark:text-red-100',
+    border: 'border border-red-200 dark:border-red-800',
+  },
+  paid: {
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    text: 'text-green-800 dark:text-green-100',
+    border: 'border border-green-200 dark:border-green-800',
+  },
+  unpaid: {
+    bg: 'bg-gray-100 dark:bg-gray-700',
+    text: 'text-gray-800 dark:text-gray-100',
+    border: 'border border-gray-200 dark:border-gray-600',
+  },
+  refunded: {
+    bg: 'bg-purple-100 dark:bg-purple-900/20',
+    text: 'text-purple-800 dark:text-purple-100',
+    border: 'border border-purple-200 dark:border-purple-800',
+  },
+};
+
+// ============================================================================
+// File Upload Colors - For file upload dropzones
+// ============================================================================
+export const fileUploadColors = {
+  border: 'border-2 border-dashed border-gray-300 dark:border-gray-600',
+  hoverBorder: 'hover:border-blue-400 dark:hover:border-blue-500',
+  bg: 'bg-gray-50 dark:bg-gray-800',
+  hoverBg: 'hover:bg-gray-100 dark:hover:bg-gray-700',
+};
+
+// ============================================================================
+// Navigation Background Colors - For navigation bar
+// ============================================================================
+export const navigationBgColors = {
+  base: 'bg-white dark:bg-gray-900',
+  border: 'border-b border-gray-200 dark:border-gray-800',
+  dropdown: 'bg-white dark:bg-gray-800',
+  dropdownBorder: 'border border-gray-200 dark:border-gray-700',
+  dropdownHover: 'hover:bg-gray-100 dark:hover:bg-gray-700',
+};
+
+// ============================================================================
+// Layout Background Colors - For page sections and containers
+// ============================================================================
+export const layoutBgColors = {
+  page: 'bg-white dark:bg-gray-900',
+  section: 'bg-gray-50 dark:bg-gray-800',
+  gradient: 'bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800',
 };
 

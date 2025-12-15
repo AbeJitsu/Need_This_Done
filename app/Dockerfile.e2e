@@ -47,7 +47,7 @@ RUN apt-get update && apt-get install -y \
 # ============================================================================
 
 COPY package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Install Playwright browsers (uses version from package.json)
 RUN npx playwright install chromium
@@ -65,4 +65,5 @@ COPY . .
 # - BASE_URL=https://nginx (connects through nginx)
 # - NODE_ENV=test
 
-CMD ["npm", "run", "test:e2e"]
+# Wait for services to be fully ready before running tests
+CMD ["sh", "-c", "sleep 10 && npm run test:e2e"]

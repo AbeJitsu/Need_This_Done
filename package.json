@@ -6,11 +6,12 @@
     "dev:build": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml build",
     "dev:logs": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml logs -f",
     "dev:status": "docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.dev.yml ps",
-    "prod:start": "docker-compose -f docker-compose.production.yml up -d",
-    "prod:stop": "docker-compose -f docker-compose.production.yml down",
-    "prod:build": "docker-compose -f docker-compose.production.yml build",
-    "prod:logs": "docker-compose -f docker-compose.production.yml logs -f",
-    "prod:status": "docker-compose -f docker-compose.production.yml ps"
+    "prod:start": "./scripts/docker.sh --prod up",
+    "prod:stop": "./scripts/docker.sh --prod down",
+    "prod:build": "./scripts/docker.sh --prod rebuild",
+    "prod:restart": "./scripts/docker.sh --prod restart",
+    "prod:logs": "./scripts/docker.sh --prod logs",
+    "prod:status": "./scripts/docker.sh --prod status"
   },
   "dependencies": {
     "dotenv": "^17.2.3"

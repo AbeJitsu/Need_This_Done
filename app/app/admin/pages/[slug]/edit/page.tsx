@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
 import { Puck } from '@measured/puck';
 import { puckConfig } from '@/lib/puck-config';
 import '@measured/puck/puck.css';
@@ -10,6 +11,7 @@ import '@measured/puck/puck.css';
 export default function EditPage({ params }: { params: { slug: string } }) {
   const router = useRouter();
   const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
+  const { showToast } = useToast();
   const [page, setPage] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +39,7 @@ export default function EditPage({ params }: { params: { slug: string } }) {
 
         setPage(data.page);
       } catch (err) {
-        alert(err instanceof Error ? err.message : 'Failed to load page');
+        showToast(err instanceof Error ? err.message : 'Failed to load page', 'error');
         router.push('/admin/pages');
       } finally {
         setLoading(false);
@@ -45,7 +47,7 @@ export default function EditPage({ params }: { params: { slug: string } }) {
     };
 
     fetchPage();
-  }, [isAdmin, params.slug, router]);
+  }, [isAdmin, params.slug, router, showToast]);
 
   const handleSave = async (data: any) => {
     try {
@@ -63,9 +65,10 @@ export default function EditPage({ params }: { params: { slug: string } }) {
         throw new Error(result.error || 'Failed to update page');
       }
 
+      showToast('Page updated successfully', 'success');
       router.push('/admin/pages');
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to update page');
+      showToast(err instanceof Error ? err.message : 'Failed to update page', 'error');
     }
   };
 

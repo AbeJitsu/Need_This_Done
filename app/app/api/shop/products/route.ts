@@ -24,15 +24,31 @@ export async function GET() {
         const products = await medusaClient.products.list();
         return products;
       },
-      CACHE_TTL.MEDIUM // 1 minute for storefront freshness
+      CACHE_TTL.STATIC // 1 hour - products rarely change (only 3 consultation tiers)
     );
 
-    return NextResponse.json({
-      products: result.data,
-      count: result.data.length,
-      cached: result.cached,
-      source: result.source,
+    // Sort by price ascending: green ($20) → blue ($35) → purple ($50)
+    const sortedProducts = [...result.data].sort((a, b) => {
+      const priceA = a.variants?.[0]?.prices?.[0]?.amount ?? 0;
+      const priceB = b.variants?.[0]?.prices?.[0]?.amount ?? 0;
+      return priceA - priceB;
     });
+
+    // Return with aggressive caching headers for fast navigation
+    return NextResponse.json(
+      {
+        products: sortedProducts,
+        count: sortedProducts.length,
+        cached: result.cached,
+        source: result.source,
+      },
+      {
+        headers: {
+          // Cache for 1 hour, serve stale for 24 hours while revalidating
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        },
+      }
+    );
   } catch (error) {
     return handleApiError(error, 'Products GET');
   }

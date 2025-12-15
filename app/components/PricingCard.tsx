@@ -6,6 +6,9 @@ import {
   cardHoverColors,
   formInputColors,
   mutedTextColors,
+  cardBgColors,
+  cardBorderColors,
+  accentColors,
 } from '@/lib/colors';
 import Button from '@/components/Button';
 
@@ -23,7 +26,7 @@ interface PricingCardProps {
   description: string;
   features: string[];
   color: AccentColor;
-  cta: string;
+  cta?: string; // Optional - if omitted, no button shown (use shared CTA instead)
   href?: string;
   popular?: boolean;
 }
@@ -43,9 +46,9 @@ export default function PricingCard({
     <div
       className={`
         relative flex flex-col h-full
-        bg-white dark:bg-gray-800 rounded-xl p-6
+        ${cardBgColors.base} rounded-xl p-6
         ${popular ? 'pt-8' : ''}
-        ${popular ? 'border-2 border-blue-500 dark:border-blue-400' : 'border border-gray-200 dark:border-gray-700'}
+        ${popular ? `border-2 ${accentColors.blue.border}` : cardBorderColors.light}
         border-t-4 ${topBorderColors[color]}
         transition-all ${cardHoverColors[color]}
         hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)]
@@ -94,12 +97,14 @@ export default function PricingCard({
         ))}
       </ul>
 
-      {/* CTA Button - mt-auto pushes it to the bottom */}
-      <div className="mt-auto">
-        <Button variant={color} href={href} className="w-full">
-          {cta}
-        </Button>
-      </div>
+      {/* CTA Button - mt-auto pushes it to the bottom (only shown if cta is provided) */}
+      {cta && (
+        <div className="mt-auto">
+          <Button variant={color} href={href} className="w-full">
+            {cta}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

@@ -14,11 +14,14 @@
 
 import dotenv from 'dotenv'
 import path from 'path'
+import { fileURLToPath } from 'node:url'
 import { beforeAll, afterEach, afterAll } from 'vitest'
+
+const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 // Read environment variables from .env.test if available
 dotenv.config({
-  path: path.resolve(__dirname, '.env.test'),
+  path: path.resolve(dirname, '.env.test'),
 })
 
 // ============================================================================

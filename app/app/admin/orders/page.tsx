@@ -1,0 +1,352 @@
+'use client';
+
+import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
+import { getSession } from '@/lib/auth';
+import Card from '@/components/Card';
+import Button from '@/components/Button';
+
+// ============================================================================
+// Orders Dashboard - /admin/orders
+// ============================================================================
+// What: Displays all customer orders with status management
+// Why: Admins need to track and update order statuses
+// How: Fetches from Supabase, shows status filters, and provides update actions
+
+interface Order {
+  id: string;
+  user_id: string | null;
+  medusa_order_id: string;
+  total: number | null;
+  status: string | null;
+  email: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+type StatusFilter = 'all' | 'pending' | 'processing' | 'shipped' | 'delivered' | 'canceled';
+
+const STATUS_OPTIONS: StatusFilter[] = ['pending', 'processing', 'shipped', 'delivered', 'canceled'];
+
+export default function OrdersDashboard() {
+  const router = useRouter();
+  const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
+
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
+
+  // ========================================================================
+  // Auth protection
+  // ========================================================================
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/login');
+    } else if (!authLoading && isAuthenticated && !isAdmin) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, isAdmin, authLoading, router]);
+
+  // ========================================================================
+  // Fetch orders
+  // ========================================================================
+  const fetchOrders = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const session = await getSession();
+      if (!session?.access_token) {
+        throw new Error('Not authenticated');
+      }
+
+      const response = await fetch('/api/admin/orders', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to fetch orders');
+      }
+
+      const data = await response.json();
+      setOrders(data.orders || []);
+    } catch (err) {
+      console.error('Failed to load orders:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load orders');
+      setOrders([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    fetchOrders();
+  }, [isAdmin, fetchOrders]);
+
+  // ========================================================================
+  // Filter orders by status
+  // ========================================================================
+  useEffect(() => {
+    if (statusFilter === 'all') {
+      setFilteredOrders(orders);
+    } else {
+      setFilteredOrders(orders.filter((order) => order.status === statusFilter));
+    }
+  }, [orders, statusFilter]);
+
+  // ========================================================================
+  // Handle status update
+  // ========================================================================
+  const handleStatusUpdate = async (orderId: string, newStatus: string) => {
+    try {
+      setActionLoading(orderId);
+
+      const session = await getSession();
+      if (!session?.access_token) {
+        throw new Error('Not authenticated');
+      }
+
+      const response = await fetch(`/api/admin/orders/${orderId}/status`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to update order status');
+      }
+
+      // Refresh orders list
+      await fetchOrders();
+    } catch (err) {
+      console.error('Failed to update order status:', err);
+      setError(err instanceof Error ? err.message : 'Failed to update order status');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  // ========================================================================
+  // Get status badge color
+  // ========================================================================
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'delivered':
+        return 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
+      case 'shipped':
+        return 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200';
+      case 'processing':
+        return 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200';
+      case 'pending':
+        return 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200';
+      case 'canceled':
+        return 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
+      default:
+        return 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200';
+    }
+  };
+
+  // ========================================================================
+  // Format currency
+  // ========================================================================
+  const formatCurrency = (cents: number | null) => {
+    if (cents === null) return 'N/A';
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(cents / 100);
+  };
+
+  // ========================================================================
+  // Format date
+  // ========================================================================
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+  };
+
+  if (authLoading || loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAdmin) return null;
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          Orders
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400">
+          Track and manage customer orders
+        </p>
+      </div>
+
+      {/* Error message */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <p className="text-sm text-red-900 dark:text-red-200">{error}</p>
+          <button
+            onClick={() => setError('')}
+            className="mt-2 text-sm text-red-700 dark:text-red-300 underline"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
+      {/* Filter buttons */}
+      <div className="mb-6 flex flex-wrap gap-2">
+        <button
+          onClick={() => setStatusFilter('all')}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            statusFilter === 'all'
+              ? 'bg-purple-600 dark:bg-purple-500 text-white'
+              : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'
+          }`}
+        >
+          All ({orders.length})
+        </button>
+        {STATUS_OPTIONS.map((status) => (
+          <button
+            key={status}
+            onClick={() => setStatusFilter(status)}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              statusFilter === status
+                ? 'bg-purple-600 dark:bg-purple-500 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'
+            }`}
+          >
+            {status.charAt(0).toUpperCase() + status.slice(1)} ({orders.filter((o) => o.status === status).length})
+          </button>
+        ))}
+      </div>
+
+      {/* Orders list */}
+      {filteredOrders.length === 0 ? (
+        <Card hoverEffect="none">
+          <div className="p-8 text-center">
+            <div className="inline-block p-3 bg-gray-100 dark:bg-gray-800 rounded-full mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+            </div>
+            <p className="text-gray-600 dark:text-gray-400">
+              {orders.length === 0
+                ? 'No orders yet. Orders will appear here when customers make purchases.'
+                : 'No orders match the selected filter.'}
+            </p>
+          </div>
+        </Card>
+      ) : (
+        <div className="grid gap-4">
+          {filteredOrders.map((order) => (
+            <Card key={order.id} hoverEffect="lift">
+              <div className="p-6">
+                {/* Header row */}
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                      Order #{order.medusa_order_id.slice(0, 12)}...
+                    </h3>
+                    {order.email && (
+                      <a
+                        href={`mailto:${order.email}`}
+                        className="text-sm text-purple-600 dark:text-purple-400 hover:underline"
+                      >
+                        {order.email}
+                      </a>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status || 'pending')}`}
+                    >
+                      {(order.status || 'pending').charAt(0).toUpperCase() + (order.status || 'pending').slice(1)}
+                    </span>
+                    <p className="text-lg font-bold text-gray-900 dark:text-gray-100 mt-2">
+                      {formatCurrency(order.total)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Order details */}
+                <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Order ID</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 font-mono">{order.medusa_order_id}</p>
+                  </div>
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Created</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">{formatDate(order.created_at)}</p>
+                  </div>
+                </div>
+
+                {/* Expandable section for status updates */}
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                  <button
+                    onClick={() => setExpandedOrderId(expandedOrderId === order.id ? null : order.id)}
+                    className="flex items-center gap-2 text-sm text-purple-600 dark:text-purple-400 hover:underline"
+                  >
+                    <svg
+                      className={`w-4 h-4 transition-transform ${expandedOrderId === order.id ? 'rotate-90' : ''}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    {expandedOrderId === order.id ? 'Hide' : 'Update'} Status
+                  </button>
+
+                  {/* Status update buttons */}
+                  {expandedOrderId === order.id && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {STATUS_OPTIONS.map((status) => (
+                        <Button
+                          key={status}
+                          variant={order.status === status ? 'gray' : 'purple'}
+                          size="sm"
+                          onClick={() => handleStatusUpdate(order.id, status)}
+                          disabled={actionLoading === order.id || order.status === status}
+                        >
+                          {actionLoading === order.id
+                            ? 'Updating...'
+                            : `${status.charAt(0).toUpperCase() + status.slice(1)}`}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

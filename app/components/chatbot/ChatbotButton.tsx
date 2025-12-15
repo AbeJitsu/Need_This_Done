@@ -81,8 +81,8 @@ export default function ChatbotButton({ onClick }: ChatbotButtonProps) {
                  hover:scale-105
                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
                  dark:focus:ring-offset-gray-900"
-      aria-label="Open chat assistant"
-      title="Chat with us"
+      aria-label="Open AI chat assistant"
+      title="Chat with AI assistant"
     >
       {/* Chat bubble icon */}
       <svg

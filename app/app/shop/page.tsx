@@ -1,209 +1,60 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useCart } from '@/context/CartContext';
-import Button from '@/components/Button';
+import { Metadata } from 'next';
 import PageHeader from '@/components/PageHeader';
-import Card from '@/components/Card';
-import { formInputColors, formValidationColors, linkHoverColors, alertColors, placeholderColors, headingColors } from '@/lib/colors';
-import type { Product } from '@/lib/medusa-client';
+import ShopClient from '@/components/shop/ShopClient';
+import { medusaClient, type Product } from '@/lib/medusa-client';
 
 // ============================================================================
 // Shop Page - Product Catalog
 // ============================================================================
 // What: Displays all available products/services for purchase
 // Why: Enables customers to browse and add items to cart
-// How: Fetches products from Medusa, displays in grid with add-to-cart buttons
+// How: Server Component fetches products directly from Medusa, Client Component handles cart
 
-export default function ShopPage() {
-  const { addItem, itemCount, error: cartError } = useCart();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [addingToCart, setAddingToCart] = useState<string | null>(null);
-  const [toastMessage, setToastMessage] = useState('');
+// Force dynamic rendering - products come from Medusa API
+export const dynamic = 'force-dynamic';
 
-  // ========================================================================
-  // Fetch products on mount
-  // ========================================================================
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('/api/shop/products');
-        const data = await response.json();
+export const metadata: Metadata = {
+  title: 'Quick Consultations - NeedThisDone',
+  description: 'Book a call for expert guidance, ask questions, or figure out what you actually need—before committing to anything.',
+};
 
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to load products');
-        }
+// ============================================================================
+// Data Fetching - Directly from Medusa (bypasses SSL issues in dev)
+// ============================================================================
 
-        setProducts(data.products || []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load products');
-      } finally {
-        setLoading(false);
-      }
-    };
+async function getProducts(): Promise<Product[]> {
+  try {
+    const products = await medusaClient.products.list();
 
-    fetchProducts();
-  }, []);
+    // Sort by price ascending: green ($20) → blue ($35) → purple ($50)
+    return products.sort((a, b) => {
+      const priceA = a.variants?.[0]?.prices?.[0]?.amount ?? 0;
+      const priceB = b.variants?.[0]?.prices?.[0]?.amount ?? 0;
+      return priceA - priceB;
+    });
+  } catch (error) {
+    console.error('Failed to fetch products:', error);
+    return [];
+  }
+}
 
-  // ========================================================================
-  // Handle add to cart
-  // ========================================================================
-  const handleAddToCart = async (product: Product) => {
-    try {
-      setAddingToCart(product.id);
+// ============================================================================
+// Page Component - Server Component
+// ============================================================================
 
-      // Get first variant (simplified - real implementation would let user choose)
-      const variant = product.variants?.[0];
-      if (!variant) {
-        throw new Error('No variants available for this product');
-      }
-
-      await addItem(variant.id, 1);
-      setToastMessage(`Added ${product.title} to cart!`);
-
-      // Clear toast after 3 seconds
-      setTimeout(() => setToastMessage(''), 3000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to add item');
-    } finally {
-      setAddingToCart(null);
-    }
-  };
+export default async function ShopPage() {
+  const products = await getProducts();
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header */}
       <PageHeader
-        title="Shop Services"
-        description="Pick the perfect service for your project. From quick tasks to premium work."
+        title="Quick Consultations"
+        description="Not ready for a full project? Book a call first. Get expert guidance, ask questions, or figure out what you actually need—before committing to anything."
       />
 
-      {/* Cart item count indicator */}
-      {itemCount > 0 && (
-        <div className={`mb-6 p-3 ${alertColors.info.bg} ${alertColors.info.border} rounded-lg`}>
-          <p className={`text-sm ${formValidationColors.info}`}>
-            You have <span className="font-semibold">{itemCount}</span> item{itemCount !== 1 ? 's' : ''} in your cart.{' '}
-            <Link href="/cart" className={`underline ${linkHoverColors.blue}`}>
-              View cart
-            </Link>
-          </p>
-        </div>
-      )}
-
-      {/* Error messages */}
-      {error && (
-        <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-          <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
-        </div>
-      )}
-
-      {cartError && (
-        <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-          <p className={`text-sm ${formValidationColors.error}`}>{cartError}</p>
-        </div>
-      )}
-
-      {/* Toast notification */}
-      {toastMessage && (
-        <div className={`mb-6 p-4 ${alertColors.success.bg} ${alertColors.success.border} rounded-lg animate-fade-in`}>
-          <p className={`text-sm ${formValidationColors.success}`}>{toastMessage}</p>
-        </div>
-      )}
-
-      {/* Products grid */}
-      {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <p className={formInputColors.helper}>Loading products...</p>
-        </div>
-      ) : products.length === 0 ? (
-        <div className="flex items-center justify-center py-20">
-          <Card hoverEffect="none">
-            <div className="p-8 text-center">
-              <p className={`${formInputColors.helper} mb-4`}>
-                No products available yet. Check back soon!
-              </p>
-              <Button variant="purple" href="/">
-                Go Home
-              </Button>
-            </div>
-          </Card>
-        </div>
-      ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => {
-            // Get price from first variant
-            const price = product.prices?.[0]?.amount ?? 0;
-            const image = product.images?.[0]?.url;
-
-            // Map Medusa product handle to our pricing tiers
-            const colorMap: Record<string, 'purple' | 'blue' | 'green'> = {
-              'quick-task': 'green',
-              'standard-task': 'blue',
-              'premium-service': 'purple',
-            };
-            const hoverColor = (colorMap[product.handle] || 'purple') as 'purple' | 'blue' | 'green';
-
-            return (
-              <Card key={product.id} hoverColor={hoverColor} hoverEffect="lift">
-                <div className="flex flex-col h-full">
-                  {/* Product image */}
-                  {image && (
-                    <div className={`w-full h-40 ${placeholderColors.bg} rounded-t-lg overflow-hidden`}>
-                      <img
-                        src={image}
-                        alt={product.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-
-                  <div className="p-6 flex flex-col flex-grow">
-                    {/* Title and price */}
-                    <h3 className={`text-lg font-semibold ${headingColors.primary} mb-2`}>
-                      {product.title}
-                    </h3>
-
-                    <p className={`text-2xl font-bold ${headingColors.primary} mb-4`}>
-                      ${(price / 100).toFixed(2)}
-                    </p>
-
-                    {/* Description */}
-                    {product.description && (
-                      <p className={`text-sm ${formInputColors.helper} mb-6 flex-grow`}>
-                        {product.description}
-                      </p>
-                    )}
-
-                    {/* Links and buttons */}
-                    <div className="flex gap-2 mt-auto">
-                      <Button
-                        variant={hoverColor}
-                        size="sm"
-                        href={`/shop/${product.id}`}
-                        className="flex-1"
-                      >
-                        Details
-                      </Button>
-                      <Button
-                        variant="gray"
-                        size="sm"
-                        onClick={() => handleAddToCart(product)}
-                        disabled={addingToCart === product.id}
-                        className="flex-1"
-                      >
-                        {addingToCart === product.id ? 'Adding...' : 'Add Cart'}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      )}
+      {/* Client-side interactivity (cart, add buttons) */}
+      <ShopClient products={products} />
     </div>
   );
 }
