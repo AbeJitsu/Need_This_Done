@@ -143,6 +143,7 @@ show_help() {
     after-pull          Restart services after git pull (smart detection)
     fix-checkout        Fix common checkout issues (restart website + store)
     verify-env          Verify critical environment variables are loaded in containers
+    seed                Seed database with consultation products
 
   DEVELOPMENT EXAMPLES:
     ./scripts/docker.sh start memory
@@ -151,6 +152,7 @@ show_help() {
     ./scripts/docker.sh up
     ./scripts/docker.sh status
     ./scripts/docker.sh test e2e
+    ./scripts/docker.sh seed                   Seed products database
 
   PRODUCTION EXAMPLES (on DigitalOcean):
     ./scripts/docker.sh --prod up              Start production
@@ -158,6 +160,7 @@ show_help() {
     ./scripts/docker.sh --prod logs store      View production logs
     ./scripts/docker.sh --prod down            Stop production
     ./scripts/docker.sh --prod verify-env      Check env vars are loaded
+    ./scripts/docker.sh --prod seed            Seed production database
 
   QUICK FIXES:
     ./scripts/docker.sh after-pull                    After git pull
@@ -520,6 +523,44 @@ cmd_verify_env() {
   fi
 }
 
+cmd_seed() {
+  echo -e "${MODE_DISPLAY} ${BLUE}Seeding Products Database${NC}"
+  echo ""
+
+  # Check if Medusa container is running
+  if ! docker ps --format '{{.Names}}' | grep -q "medusa_backend"; then
+    echo -e "${RED}✗ Medusa container not running${NC}"
+    echo -e "${YELLOW}Start services first: ./scripts/docker.sh up${NC}"
+    return 1
+  fi
+
+  # Get admin password from environment or use default
+  local admin_password="${MEDUSA_ADMIN_PASSWORD:-admin123}"
+
+  echo "Step 1: Creating admin user..."
+  docker exec medusa_backend npm run seed:admin 2>&1 | grep -E "✓|✗|Created|already exists|Error" || true
+  echo ""
+
+  echo "Step 2: Seeding consultation products..."
+  docker exec -e MEDUSA_ADMIN_PASSWORD="$admin_password" medusa_backend node seed-products.js
+
+  local exit_code=$?
+  echo ""
+
+  if [ $exit_code -eq 0 ]; then
+    echo -e "${GREEN}✅ Database seeded successfully!${NC}"
+    echo ""
+    if [[ "$DOCKER_MODE" == "production" ]]; then
+      echo "  Verify at: https://needthisdone.com/shop"
+    else
+      echo "  Verify at: https://localhost/shop"
+    fi
+  else
+    echo -e "${RED}✗ Seeding failed${NC}"
+    return 1
+  fi
+}
+
 # ============================================================================
 # Main Entry Point
 # ============================================================================
@@ -538,6 +579,7 @@ case "$1" in
   after-pull) cmd_after_pull ;;
   fix-checkout) cmd_fix_checkout ;;
   verify-env) cmd_verify_env ;;
+  seed)     cmd_seed ;;
   help|-h|--help|"")  show_help ;;
   *)
     echo -e "${RED}Unknown command: $1${NC}"

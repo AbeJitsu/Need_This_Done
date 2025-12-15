@@ -102,7 +102,7 @@ export interface ExpectationItem {
 
 /** Scenario for the "Does this sound like you?" matcher */
 export interface ServiceScenario {
-  scenario: string;
+  quotes: string[]; // Array of bullet point quotes
   serviceKey: 'virtual-assistant' | 'data-documents' | 'website-services';
   serviceTitle: string;
   color: AccentColor;

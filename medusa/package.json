@@ -12,7 +12,7 @@
     "dev": "medusa develop",
     "migrate": "medusa migrations run",
     "seed": "medusa seed -f src/seeds/seed.ts",
-    "seed:admin": "medusa user -e admin@needthisdone.com -p admin123",
+    "seed:admin": "medusa user -e admin@needthisdone.com -p ${MEDUSA_ADMIN_PASSWORD:-admin123}",
     "test": "jest"
   },
   "dependencies": {

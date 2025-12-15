@@ -39,13 +39,13 @@ export default function ScenarioMatcher({
       </p>
 
       {/* Scenario Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
         {scenarios.map((scenario, index) => (
           <button
             key={index}
             onClick={() => handleScenarioClick(scenario.serviceKey)}
             className={`
-              p-5 rounded-xl text-left
+              p-6 rounded-xl text-left
               bg-white dark:bg-gray-800
               border-2 border-gray-200 dark:border-gray-700
               ${accentColors[scenario.color].hoverBorder}
@@ -54,13 +54,8 @@ export default function ScenarioMatcher({
               group
             `}
           >
-            {/* Scenario Text */}
-            <p className={`${headingColors.primary} font-medium mb-3 leading-relaxed`}>
-              "{scenario.scenario}"
-            </p>
-
-            {/* Service Badge */}
-            <div className="flex items-center gap-2">
+            {/* Service Badge - at top */}
+            <div className="flex items-center gap-2 mb-4">
               <span
                 className={`
                   inline-block w-2 h-2 rounded-full
@@ -72,9 +67,21 @@ export default function ScenarioMatcher({
               <span className={`text-sm ${accentColors[scenario.color].text} font-medium`}>
                 {scenario.serviceTitle}
               </span>
-              <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity ml-auto">
                 →
               </span>
+            </div>
+
+            {/* Quotes */}
+            <div className="space-y-3">
+              {scenario.quotes.map((quote, quoteIndex) => (
+                <p
+                  key={quoteIndex}
+                  className={`${formInputColors.helper} text-sm leading-relaxed pl-2`}
+                >
+                  "{quote}"
+                </p>
+              ))}
             </div>
           </button>
         ))}

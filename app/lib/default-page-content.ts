@@ -190,37 +190,31 @@ export const defaultServicesContent: ServicesPageContent = {
     description: 'Click any scenario to learn more about how we can help.',
     scenarios: [
       {
-        scenario: 'My inbox is drowning me and I can\'t keep up',
+        quotes: [
+          'My inbox is drowning me and I can\'t keep up',
+          'I need someone to handle the stuff I keep putting off',
+          'My calendar is a mess and I\'m constantly double-booked',
+        ],
         serviceKey: 'virtual-assistant',
         serviceTitle: 'Virtual Assistant',
         color: 'green',
       },
       {
-        scenario: 'I have spreadsheets that need serious help',
+        quotes: [
+          'I have spreadsheets that need serious help',
+          'I need professional documents but don\'t have design skills',
+          'My data is chaos and I can\'t make sense of it',
+        ],
         serviceKey: 'data-documents',
         serviceTitle: 'Data & Documents',
         color: 'blue',
       },
       {
-        scenario: 'My website needs work but I don\'t know where to start',
-        serviceKey: 'website-services',
-        serviceTitle: 'Website Services',
-        color: 'purple',
-      },
-      {
-        scenario: 'I need someone to handle the stuff I keep putting off',
-        serviceKey: 'virtual-assistant',
-        serviceTitle: 'Virtual Assistant',
-        color: 'green',
-      },
-      {
-        scenario: 'I need professional documents but don\'t have design skills',
-        serviceKey: 'data-documents',
-        serviceTitle: 'Data & Documents',
-        color: 'blue',
-      },
-      {
-        scenario: 'I want to sell online but the tech is overwhelming',
+        quotes: [
+          'My website needs work but I don\'t know where to start',
+          'I want to sell online but the tech is overwhelming',
+          'My site looks outdated and I need a refresh',
+        ],
         serviceKey: 'website-services',
         serviceTitle: 'Website Services',
         color: 'purple',

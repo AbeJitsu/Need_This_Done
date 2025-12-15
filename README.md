@@ -61,14 +61,76 @@ npm run dev:build && npm run dev:start
 
 ## Deployment
 
+### Production Deployment to DigitalOcean
+
 To deploy changes to production (https://needthisdone.com):
 
-1. **Test locally** at https://localhost
-2. **Commit and push to main:** `git push origin main`
-3. **GitHub Actions automatically deploys** (3-5 minutes)
-4. **Done!** No manual SSH needed
+**Workflow:**
+1. **Test locally first:**
+   - Development: `npm run dev:start` → https://localhost
+   - Production build (local): `./scripts/docker.sh --prod up` → https://localhost
+2. **Commit and merge to main:**
+   ```bash
+   git checkout dev
+   git add .
+   git commit -m "Your changes"
+   git checkout main
+   git merge dev
+   git push origin main
+   ```
+3. **SSH to DigitalOcean and deploy:**
+   ```bash
+   ssh root@159.65.223.234
+   cd /root/Need_This_Done
+   git pull origin main
+   ./scripts/docker.sh --prod down
+   ./scripts/docker.sh --prod up
+   ```
+4. **Verify deployment:**
+   - Check status: `./scripts/docker.sh --prod status`
+   - Verify env vars: `./scripts/docker.sh --prod verify-env`
+   - Test site: https://needthisdone.com
 
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment instructions, troubleshooting, and manual deployment steps.
+**Common Issues & Fixes:**
+
+| Issue | Solution |
+|-------|----------|
+| Medusa fails: "JWT_SECRET not set" | Environment variables not mapped in `docker-compose.production.yml`. See lines 107-110 for proper mapping |
+| Production build succeeds but containers don't start | Medusa takes ~30-60s to become healthy. Wait, then restart: `./scripts/docker.sh --prod restart website front-door` |
+| "Container name not found" errors in docker.sh | Service names (for docker-compose) differ from container names (for docker commands). Script now handles both correctly |
+| Site not accessible but containers running | Check nginx logs: `docker logs nginx`. If SSL cert errors, ensure Let's Encrypt certs exist at `/etc/letsencrypt/` |
+| Products not showing on /shop page | Database needs seeding. See "Seeding Products" below |
+
+**Seeding Products (Required for Fresh Deployments):**
+
+When deploying to a fresh database (local or production), products won't exist until you seed them.
+
+**Local Development:**
+```bash
+./scripts/docker.sh seed
+```
+
+**Production (DigitalOcean):**
+```bash
+ssh root@159.65.223.234
+cd /root/Need_This_Done
+./scripts/docker.sh --prod seed
+```
+
+This creates 3 consultation products ($20, $35, $50) that match the E2E test expectations.
+
+**What it does:**
+1. Creates admin user (`admin@needthisdone.com`)
+2. Seeds products via Admin API using `medusa/seed-products.js`
+3. Verifies products exist in the store
+4. Uses `MEDUSA_ADMIN_PASSWORD` from `.env.local` (falls back to `admin123` in dev)
+
+**Why Development Works But Production Doesn't:**
+- **Development:** Uses volume mounts, `next dev`, self-signed SSL certificates, and lenient environment variable handling
+- **Production:** Code baked into image, `next start`, Let's Encrypt SSL, strict environment variable validation
+- **Key Fix:** `docker-compose.production.yml` must explicitly map env vars (e.g., `JWT_SECRET=${MEDUSA_JWT_SECRET}`) because production doesn't auto-load from `.env.local`
+
+See [docker-compose.production.yml](docker-compose.production.yml:104-110) for the correct environment variable configuration.
 
 ---
 
@@ -164,7 +226,10 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 
 **Admin Credentials** (for Medusa Admin panel):
 - Email: `admin@needthisdone.com`
-- Password: Configured via environment variable (see security notes in TODO.md)
+- Password: Set via `MEDUSA_ADMIN_PASSWORD` environment variable in `.env.local`
+- Default (dev only): `admin123` (fallback when env var not set)
+
+**Security Note:** The `MEDUSA_ADMIN_PASSWORD` environment variable must be set in production. Seed scripts now use this variable instead of hardcoded passwords.
 
 ---
 
