@@ -24,6 +24,7 @@ interface ServiceCardProps {
   color: AccentColor;
   variant?: 'compact' | 'full';
   href?: string;
+  onClick?: () => void;
 }
 
 export default function ServiceCard({
@@ -34,6 +35,7 @@ export default function ServiceCard({
   color,
   variant = 'full',
   href,
+  onClick,
 }: ServiceCardProps) {
   const isCompact = variant === 'compact';
 
@@ -94,6 +96,19 @@ export default function ServiceCard({
       <Link href={href} className={`block ${cardClasses}`}>
         {cardContent}
       </Link>
+    );
+  }
+
+  // Make clickable button if onClick is provided
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className={`block text-left w-full ${cardClasses} cursor-pointer`}
+      >
+        {cardContent}
+      </button>
     );
   }
 

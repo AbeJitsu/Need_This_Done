@@ -38,7 +38,7 @@ const siteConfig: SiteConfig = {
   project: {
     name: 'NeedThisDone',
     tagline: 'Get your tasks done right',
-    description: 'We handle the tasks you don\'t have time for. Real people getting everyday work done for busy professionals. Tell us what you need, and let us take care of the rest.',
+    description: 'Real people helping busy professionals get things done. Book a quick consultation or tell us about your project. We handle the rest.',
     url: 'https://needthisdone.com',
   },
 

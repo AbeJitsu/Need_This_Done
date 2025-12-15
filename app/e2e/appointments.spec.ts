@@ -20,6 +20,7 @@ test.describe('Appointment Request Form', () => {
 
     // Click on the first consultation product (15-min)
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
 
     // Wait for Add to Cart button (client-side rendered)
@@ -295,6 +296,7 @@ test.describe('Appointment Flow Integration', () => {
 
     // Navigate to first consultation product
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
 
     // Wait for product page to load
@@ -317,6 +319,7 @@ test.describe('Appointment Flow Integration', () => {
     await expect(page.getByRole('heading', { name: /shop/i })).toBeVisible({ timeout: 10000 });
 
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
 
     // Wait for product page to load

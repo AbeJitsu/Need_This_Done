@@ -63,11 +63,41 @@ export async function POST(request: NextRequest) {
       // Continue checkout even if cart fetch fails
     }
 
+    // Set customer email on cart (required for guest checkout)
+    // Medusa requires a customer email before completing the cart
+    if (email) {
+      try {
+        await medusaClient.carts.update(cart_id, { email });
+      } catch (error) {
+        console.error('Failed to set customer email on cart:', error);
+        return serverError('Failed to update cart with customer information');
+      }
+    }
+
+    // Initialize payment session on cart before completing
+    // Medusa requires this even for manual payment processing
+    try {
+      // Step 1: Initialize payment sessions (discovers available providers)
+      await medusaClient.carts.initializePaymentSessions(cart_id);
+
+      // Step 2: Select the manual payment provider
+      // We use 'manual' because actual payment happens through Stripe separately
+      await medusaClient.carts.selectPaymentSession(cart_id, 'manual');
+    } catch (error) {
+      console.error('Failed to initialize payment session:', error);
+      return serverError('Failed to prepare checkout. Please try again.');
+    }
+
     // Create order from cart in Medusa
     let order;
     try {
       order = await medusaClient.orders.create(cart_id);
     } catch (error) {
+      console.error('Failed to create order from cart:', error);
+      // Log the full error for debugging
+      if (error && typeof error === 'object' && 'message' in error) {
+        console.error('Medusa error details:', error);
+      }
       return serverError('Failed to create order from cart');
     }
 

@@ -1,38 +1,54 @@
 const dotenv = require("dotenv");
 const path = require("path");
+const fs = require("fs");
 
 let ENV_FILE_NAME = ".env";
 if (process.env.NODE_ENV === "production") {
   ENV_FILE_NAME = ".env.production";
 }
 
-// Always load from parent directory (root .env.local)
-dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
+// ============================================================================
+// Environment Variable Loading Strategy
+// ============================================================================
+// Try to load from parent directory (root .env.local) for local development
+// In Docker containers, env vars are injected via docker-compose env_file
+// This allows the same config to work both locally and in containers
+
+const envPath = path.resolve(__dirname, '../.env.local');
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+  console.log('✓ Loaded environment from .env.local');
+} else {
+  console.log('✓ Using environment variables from container (Docker env_file)');
+}
 
 // ============================================================================
 // Required Environment Variables
 // ============================================================================
 // These must be set in .env.local - no fallbacks for security
+// In Docker: docker-compose.yml maps MEDUSA_JWT_SECRET -> JWT_SECRET
+// In Local: .env.local should contain JWT_SECRET directly
 
-const REDIS_URL = process.env.REDIS_URL;
-if (!REDIS_URL) {
-  throw new Error('REDIS_URL environment variable is required');
+function requireEnv(name, fallbackName) {
+  const value = process.env[name] || (fallbackName && process.env[fallbackName]);
+  if (!value) {
+    const availableVars = Object.keys(process.env)
+      .filter(k => k.includes('SECRET') || k.includes('DATABASE') || k.includes('REDIS'))
+      .join(', ');
+    throw new Error(
+      `${name} environment variable is required.\n` +
+      `Available related vars: ${availableVars || 'none'}\n` +
+      `Docker: Ensure docker-compose.yml passes ${name} from .env.local\n` +
+      `Local: Ensure .env.local contains ${name} or ${fallbackName || name}`
+    );
+  }
+  return value;
 }
 
-const DATABASE_URL = process.env.DATABASE_URL;
-if (!DATABASE_URL) {
-  throw new Error('DATABASE_URL environment variable is required');
-}
-
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is required');
-}
-
-const COOKIE_SECRET = process.env.COOKIE_SECRET;
-if (!COOKIE_SECRET) {
-  throw new Error('COOKIE_SECRET environment variable is required');
-}
+const REDIS_URL = requireEnv('REDIS_URL');
+const DATABASE_URL = requireEnv('DATABASE_URL');
+const JWT_SECRET = requireEnv('JWT_SECRET', 'MEDUSA_JWT_SECRET');
+const COOKIE_SECRET = requireEnv('COOKIE_SECRET');
 
 const modules = {
   eventBusModuleService: {

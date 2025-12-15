@@ -35,6 +35,9 @@ const config = {
     // Backgrounds - light mode (bg-100)
     'bg-purple-100', 'bg-blue-100', 'bg-green-100', 'bg-orange-100', 'bg-teal-100', 'bg-gray-100', 'bg-red-100',
 
+    // Backgrounds - dark mode (bg-800) for lightBgColors contrast
+    'dark:bg-purple-800', 'dark:bg-blue-800', 'dark:bg-green-800', 'dark:bg-orange-800', 'dark:bg-teal-800', 'dark:bg-gray-800', 'dark:bg-red-800',
+
     // Text colors - light mode (text-700/800)
     'text-purple-700', 'text-blue-700', 'text-green-800', 'text-orange-800', 'text-teal-800', 'text-gray-700', 'text-red-800',
 

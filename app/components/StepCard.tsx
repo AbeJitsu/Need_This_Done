@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { AccentVariant, cardHoverColors, titleTextColors } from '@/lib/colors';
+import { AccentVariant, cardHoverColors, titleTextColors, cardBgColors, cardBorderColors, bodyTextColors } from '@/lib/colors';
 import CircleBadge from './CircleBadge';
 
 // ============================================================================
@@ -27,7 +27,7 @@ export default function StepCard({
   color,
   href,
 }: StepCardProps) {
-  const cardClasses = `bg-white dark:bg-gray-800 rounded-xl p-8 border-2 border-gray-400 dark:border-gray-500 transition-all ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`;
+  const cardClasses = `${cardBgColors.base} rounded-xl p-8 ${cardBorderColors.subtle} transition-all ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`;
 
   const cardContent = (
       <div className="flex items-start gap-6">
@@ -39,12 +39,12 @@ export default function StepCard({
           <h2 className={`text-xl font-bold mb-3 ${titleTextColors[color]}`}>
             {title}
           </h2>
-          <p className="text-gray-600 dark:text-gray-100 mb-4">
+          <p className={`${bodyTextColors.gray} mb-4`}>
             {description}
           </p>
           <ul className="space-y-2">
             {details.map((detail, index) => (
-              <li key={index} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-100">
+              <li key={index} className={`flex items-center gap-2 text-sm ${bodyTextColors.gray}`}>
                 <span className={titleTextColors[color]}>•</span>
                 {detail}
               </li>

@@ -108,9 +108,9 @@ export default function PricingForm({ content, onChange }: PricingFormProps) {
                 rows={2}
               />
               <TextField
-                label="Button Text"
-                value={tier.cta}
-                onChange={(v) => onTierChange({ ...tier, cta: v })}
+                label="Button Text (leave empty for shared CTA)"
+                value={tier.cta || ''}
+                onChange={(v) => onTierChange({ ...tier, cta: v || undefined })}
                 placeholder="e.g., Get Started"
               />
               <div className="flex items-center gap-3">

@@ -42,7 +42,8 @@ export interface PricingTier {
   description: string;
   features: string[];
   color: AccentColor;
-  cta: string;
+  cta?: string; // Optional - if omitted, no individual CTA (use shared CTA instead)
+  href?: string; // Where the CTA button links to (defaults to /contact)
   popular?: boolean;
 }
 
@@ -99,8 +100,52 @@ export interface ExpectationItem {
   };
 }
 
+/** Scenario for the "Does this sound like you?" matcher */
+export interface ServiceScenario {
+  scenario: string;
+  serviceKey: 'virtual-assistant' | 'data-documents' | 'website-services';
+  serviceTitle: string;
+  color: AccentColor;
+}
+
+/** Row in the service comparison table */
+export interface ComparisonRow {
+  label: string;
+  values: [string, string, string]; // One value per service (VA, Data, Website)
+}
+
+/** Enhanced CTA button with optional subtext */
+export interface EnhancedCTAButton extends CTAButton {
+  subtext?: string;
+}
+
 export interface ServicesPageContent {
   header: PageHeader;
+
+  // Scenario Matcher Section - "Does this sound like you?"
+  scenarioMatcher?: {
+    title: string;
+    description: string;
+    scenarios: ServiceScenario[];
+  };
+
+  // Comparison Table Section - Side-by-side view
+  comparison?: {
+    title: string;
+    description: string;
+    columns: [string, string, string]; // Service names
+    rows: ComparisonRow[];
+  };
+
+  // Still Not Sure Section - Low-friction CTA
+  stillUnsure?: {
+    title: string;
+    description: string;
+    primaryButton: EnhancedCTAButton;
+    secondaryButton: EnhancedCTAButton;
+  };
+
+  // Existing sections (kept for backwards compatibility)
   expectationsTitle: string;
   expectations: ExpectationItem[];
   cta: CTASection;
@@ -119,12 +164,26 @@ export interface ProcessStep {
   href?: string;
 }
 
+/** Trust badge for reassurance section */
+export interface TrustBadge {
+  text: string;
+  description: string;
+}
+
 export interface HowItWorksPageContent {
   header: PageHeader;
+  trustBadges?: TrustBadge[];
   steps: ProcessStep[];
   timeline: {
     title: string;
     description: string;
+    hoverColor?: AccentVariant;
+  };
+  questionsSection?: {
+    title: string;
+    description: string;
+    primaryButton: CTAButton;
+    secondaryButton: CTAButton;
     hoverColor?: AccentVariant;
   };
   cta: CTASection;
@@ -141,11 +200,26 @@ export interface ProcessPreviewStep {
   color: AccentVariant;
 }
 
+export interface ConsultationOption {
+  name: string;
+  duration: string;
+  price: string;
+  description: string;
+  color: AccentVariant;
+}
+
 export interface HomePageContent {
   hero: {
     buttons: CTAButton[];
   };
   servicesTitle: string;
+  consultations?: {
+    title: string;
+    description: string;
+    options: ConsultationOption[];
+    linkText: string;
+    linkHref: string;
+  };
   processPreview: {
     title: string;
     steps: ProcessPreviewStep[];
@@ -158,6 +232,7 @@ export interface HomePageContent {
     footer: string;
     footerLinkText: string;
     footerLinkHref: string;
+    chatbotNote?: string;
     hoverColor?: AccentVariant;
   };
 }

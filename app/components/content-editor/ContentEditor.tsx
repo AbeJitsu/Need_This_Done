@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import PagePreview from './PagePreview';
 import { HomepageForm, PricingForm, ServicesForm, FAQForm, HowItWorksForm } from './forms';
 import Button from '@/components/Button';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import {
   PAGE_DISPLAY_NAMES,
   type PageContent,
@@ -42,6 +43,7 @@ export default function ContentEditor({
   const [isPublishing, setIsPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   // Track changes
   useEffect(() => {
@@ -81,15 +83,19 @@ export default function ContentEditor({
     }
   };
 
-  // Handle cancel
+  // Handle cancel - Show confirmation if there are unsaved changes
   const handleCancel = () => {
     if (isDirty) {
-      if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
-        router.push('/admin/content');
-      }
+      setShowCancelConfirm(true);
     } else {
       router.push('/admin/content');
     }
+  };
+
+  // Confirm cancel - Leave without saving
+  const confirmCancel = () => {
+    setShowCancelConfirm(false);
+    router.push('/admin/content');
   };
 
   // Handle reset to defaults
@@ -234,6 +240,18 @@ export default function ContentEditor({
           <PagePreview slug={slug} content={content} />
         </div>
       </div>
+
+      {/* Unsaved changes confirmation dialog */}
+      <ConfirmDialog
+        isOpen={showCancelConfirm}
+        onConfirm={confirmCancel}
+        onCancel={() => setShowCancelConfirm(false)}
+        title="Unsaved Changes"
+        message="You have unsaved changes. Are you sure you want to leave?"
+        confirmLabel="Leave"
+        cancelLabel="Stay"
+        variant="warning"
+      />
     </div>
   );
 }

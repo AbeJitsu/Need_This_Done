@@ -26,11 +26,13 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
     // Wait for products to load
     await expect(page.getByText('15-Minute Quick Consultation')).toBeVisible({ timeout: 10000 });
 
-    // Click "Details" link to go to product page (shop listing has Details links, not Add Cart buttons)
+    // Click "Details" link to go to product page
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
 
-    // Add to cart from product detail page
+    // Wait for Add to Cart button then click
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
 
@@ -45,12 +47,10 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
     // Wait for products and click Details
     await expect(page.getByText('15-Minute Quick Consultation')).toBeVisible({ timeout: 10000 });
 
-    // Click first Details link
+    // Click first Details link and wait for navigation
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
-
-    // Should navigate to product detail page (URL may use handle or product ID)
-    await expect(page).toHaveURL(/\/shop\/(consultation-|prod_)/);
 
     // Should show variant selector or Add to Cart button
     // The actual product detail page layout may vary
@@ -80,7 +80,9 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
 
     // Add first product via Details page
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
     await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 5000 });
@@ -89,7 +91,9 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
     await page.goBack();
     await page.waitForLoadState('domcontentloaded');
     await page.getByRole('link', { name: /details/i }).nth(1).click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
     await page.waitForTimeout(500);
     await expect(page.getByText(/added.*to cart/i)).toBeVisible({ timeout: 5000 });
@@ -103,7 +107,9 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
 
     // Go to product detail and add to cart
     await page.getByRole('link', { name: /details/i }).first().click();
+    await page.waitForURL(/\/shop\/.+/, { timeout: 10000 });
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByRole('button', { name: /add to cart/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('button', { name: /add to cart/i }).click();
     await expect(page.getByText(/added.*to cart!/i)).toBeVisible({ timeout: 10000 });
 

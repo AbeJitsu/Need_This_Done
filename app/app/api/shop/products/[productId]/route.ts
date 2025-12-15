@@ -43,11 +43,20 @@ export async function GET(
       CACHE_TTL.LONG // 5 minutes
     );
 
-    return NextResponse.json({
-      product: result.data,
-      cached: result.cached,
-      source: result.source,
-    });
+    // Return with aggressive caching headers for fast navigation
+    return NextResponse.json(
+      {
+        product: result.data,
+        cached: result.cached,
+        source: result.source,
+      },
+      {
+        headers: {
+          // Cache for 5 minutes, serve stale for 24 hours while revalidating
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=86400',
+        },
+      }
+    );
   } catch (error) {
     return handleApiError(error, 'Product GET');
   }

@@ -74,6 +74,7 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 See [README.md](README.md) for:
 - **Directory structure** - Complete breakdown of folders and subfolders (Root Level, Application, Infrastructure & Configuration, Documentation, Testing)
 - **Quick start commands** - How to run the app and Storybook
+- **Docker Development Workflow** - When to restart vs rebuild containers, hot reload behavior, helper commands
 - **Key files** - Where core utilities and clients live
 
 ## Coding Standards

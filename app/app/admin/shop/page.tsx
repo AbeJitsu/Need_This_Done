@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import type { Product, Order } from '@/lib/medusa-client';
@@ -17,6 +18,7 @@ import type { Product, Order } from '@/lib/medusa-client';
 export default function AdminShopDashboard() {
   const router = useRouter();
   const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
+  const { showToast } = useToast();
 
   const [activeTab, setActiveTab] = useState<'products' | 'orders'>('products');
   const [products, setProducts] = useState<Product[]>([]);
@@ -181,7 +183,7 @@ export default function AdminShopDashboard() {
                         <Button
                           size="sm"
                           variant="gray"
-                          onClick={() => alert('Delete product - coming soon')}
+                          onClick={() => showToast('Delete product functionality coming soon', 'info')}
                         >
                           Delete
                         </Button>

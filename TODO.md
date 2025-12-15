@@ -31,26 +31,10 @@ All security issues fixed (Dec 2025):
 
 _Currently active work items_
 
-**Google Calendar Appointment Booking** ← CURRENT PRIORITY
+**Google Cloud Console Setup & Production Deployment** ← CURRENT PRIORITY
 
-**Phase 2: Google Calendar Integration** ✅ COMPLETE
 - [ ] Complete Google Cloud Console setup (see instructions in To Do section) ← BLOCKED: Needs user action
-- [x] Create Supabase migration: google_calendar_tokens table
-- [x] Create `/app/lib/google-calendar.ts` with OAuth flow
-- [x] Create appointment_requests Supabase table (with business hour validation)
-- [x] Build appointment request form component (post-checkout)
-- [x] Create order confirmation & appointment confirmation email templates
-- [x] Wire appointment request email notifications (AppointmentRequestNotificationEmail.tsx)
-
-**Phase 3: Admin Approval Workflow** ✅ COMPLETE
-- [x] Build admin appointments dashboard (`/admin/appointments`)
-- [x] Implement approve/modify/cancel endpoints
-- [x] Create calendar event on approval (Google Calendar API)
-- [x] Send confirmation emails with .ics attachments
-
-**Phase 4: Testing & Deploy (1-2 hrs)**
-- [x] E2E tests for appointment booking flow (19 tests in appointments.spec.ts)
-- [ ] Manual testing in dev environment
+- [ ] Manual testing in dev environment (once Google credentials available)
 - [ ] Deploy to production
 
 ---
@@ -60,6 +44,7 @@ _Currently active work items_
 ### Immediate
 
 **Google Cloud Console Setup** ← DO THIS IN PARALLEL WHILE CODING
+- [ ] Update OAuth consent screen email to: abe.raise@gmail.com
 - [ ] Step 1: Create Google Cloud project at https://console.cloud.google.com/ (project name: "NeedThisDone Appointments")
 - [ ] Step 2: Enable Google Calendar API
 - [ ] Step 3: Configure OAuth consent screen (External, with scopes: calendar.events, calendar.readonly)
@@ -117,18 +102,57 @@ _Currently active work items_
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
-### Skills & Automation
+### December 2025 - Latest Completions
 
-**Launch-a-Swarm Skill** ✅ COMPLETE
-- [x] Created 5-domain agent architecture (Structure, Protection, Correctness, Evolution, Value)
-- [x] Integrated documentation workflow (reads TODO.md, recommends README.md updates)
-- [x] Fixed DRY violations - consolidated prompts, reduced 438→317 lines (28% smaller)
-- [x] Added self-contained agent prompts with embedded checks
-- [x] Tested prompt embedding works correctly
-- [x] Validated on real feature (test documentation - 4 parallel agents, successful synthesis)
-- [x] Documented in README.md (Developer Tools section)
+**Visual Regression Testing for Checkout Flow** ✅ COMPLETE
+- [x] Created comprehensive checkout screenshot test suite (`checkout-screenshots.spec.ts`)
+- [x] Captured 14 visual regression screenshots documenting full checkout journey
+- [x] Added screenshot baseline update workflow
+- [x] Tests catch unintended UI changes before they ship
 
-### Features
+**Checkout Experience Improvements** ✅ COMPLETE
+- [x] Made order summary sticky during checkout (customers can always see their total)
+- [x] Enhanced order summary styling with icon and better spacing
+- [x] Clarified chatbot labels ("AI Assistant" for transparency)
+- [x] Streamlined button text ("Continue" instead of "Continue to Payment")
+- [x] Fixed Medusa checkout requirements (cart email initialization, payment sessions)
+
+**Enhanced Appointment Booking System** ✅ COMPLETE
+- [x] Added 24-hour advance booking requirement with validation
+- [x] Limited bookings to 5 per day for quality control
+- [x] Added 30-minute buffer between appointments
+- [x] Created appointment availability check API endpoint (`/api/appointments/availability`)
+- [x] Updated cart messaging about appointment scheduling
+- [x] Removed confusing "Learn more" links from How It Works steps 2-4
+
+**How It Works Page Redesign** ✅ COMPLETE
+- [x] Transformed from functional to warm/confidence-building UX
+- [x] Changed headline from "How It Works" to "We Make It Easy"
+- [x] Added trust badges (personal attention, clear updates, transparent pricing)
+- [x] Made Step 1 a hero card with prominent CTA
+- [x] Condensed Steps 2-4 into horizontal flow
+- [x] Added "Questions about the process?" section
+
+**Container Management & DevOps** ✅ COMPLETE
+- [x] Enhanced Docker restart scripts to support multiple services
+- [x] Created comprehensive Container Restart Guide (`docs/CONTAINER_RESTART_GUIDE.md`)
+- [x] Improved Medusa API response handling (expanding product metadata)
+- [x] Fixed checkout tests to handle Stripe live mode gracefully
+
+**Google Calendar Integration Backend** ✅ COMPLETE
+- [x] Created Supabase migration: google_calendar_tokens table
+- [x] Created `/app/lib/google-calendar.ts` with OAuth flow
+- [x] Created appointment_requests Supabase table (with business hour validation)
+- [x] Built appointment request form component (post-checkout)
+- [x] Created order confirmation & appointment confirmation email templates
+- [x] Wired appointment request email notifications (AppointmentRequestNotificationEmail.tsx)
+- [x] Built admin appointments dashboard (`/admin/appointments`)
+- [x] Implemented approve/modify/cancel endpoints
+- [x] Created calendar event on approval (Google Calendar API)
+- [x] Sent confirmation emails with .ics attachments
+- [x] E2E tests for appointment booking flow (23 tests in appointments.spec.ts)
+
+### Earlier Completions (Earlier in December)
 
 - [x] **Appointment E2E Tests** - Created comprehensive test suite (`appointments.spec.ts`) with 23 tests covering form validation, API endpoint security, admin dashboard, and checkout flow integration. Fixed playwright.config.ts for ESM compatibility. (Dec 2025)
 - [x] **Abandoned Cart Email** - Created `AbandonedCartEmail.tsx` template with cart items display, optional discount code, and recovery CTA. Added `sendAbandonedCartEmail()` to email service. (Dec 2025)
@@ -136,7 +160,6 @@ _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 - [x] **Admin Appointments Dashboard** - Built `/admin/appointments` page with status filtering, approve/cancel actions, and auth protection. Created API endpoints for listing appointments and managing their status. Google Calendar integration creates events on approval. (Dec 2025)
 - [x] **Appointment Email Notifications** - Added AppointmentRequestNotificationEmail for admin alerts when customers request appointments. Wired into the appointment request API route. (Dec 2025)
 - [x] **Purchase Receipt Email** - Created PurchaseReceiptEmail template with itemized order details, payment info, and totals. Added sendPurchaseReceipt to email service. (Dec 2025)
-- [x] **Google Calendar Integration Backend** - Created google-calendar.ts OAuth client, Supabase migrations for tokens & appointments, appointment request form component, API routes for /api/appointments/request and /api/google/connect|callback. Checkout page now shows appointment scheduling form for consultation products. (Dec 2025)
 - [x] **E-commerce Email Templates** - Created OrderConfirmationEmail and AppointmentConfirmationEmail React templates. Added sendOrderConfirmation and sendAppointmentConfirmation to email service. (Dec 2025)
 - [x] **Product URL Handles & Test Reliability** - Added `getByHandle` to medusa-client so product URLs like `/shop/consultation-15-min` work (not just IDs). Fixed Playwright config to load env vars from root `.env.local`. Updated all shop tests with proper timeouts for client-side rendering. (Dec 2025)
 - [x] **Security Hardening** - Fixed all 4 critical security issues: removed hardcoded admin password (now env var), removed default secrets from docker-compose.yml, protected debug endpoints with admin auth, medusa-config.js now requires all secrets. (Dec 2025)
@@ -144,6 +167,7 @@ _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 - [x] **Consultation Products** - Created 3 products: 15-min ($20), 30-min ($35), 55-min ($50) with `requires_appointment` metadata. (Dec 2025)
 - [x] **Auth Email Templates** - Created WelcomeEmail and LoginNotificationEmail templates. Wired to auth routes. All 4 email types working. (Dec 2025)
 - [x] **Accessibility Compliance** - Fixed dark mode testing, heading order (h3→h2), centralized colors. WCAG AA compliant. (Dec 2025)
+- [x] **Launch-a-Swarm Skill** - Created 5-domain agent architecture (Structure, Protection, Correctness, Evolution, Value). Integrated documentation workflow. Fixed DRY violations. Validated on real features. Documented in README.md (Developer Tools section).
 
 ---
 

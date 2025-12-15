@@ -124,6 +124,12 @@ async function handleListGuestOrders(email: string) {
     return badRequest('Email is required');
   }
 
+  // Validate email format to prevent injection attacks
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return badRequest('Invalid email format');
+  }
+
   try {
     const result = await cache.wrap(
       `medusa:orders:email:${email}`,
