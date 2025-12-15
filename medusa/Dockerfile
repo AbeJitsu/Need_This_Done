@@ -11,8 +11,8 @@ WORKDIR /app
 # ============================================================================
 # Install dependencies (including dev for TypeScript compilation)
 # ============================================================================
-COPY package.json ./
-RUN npm install --legacy-peer-deps
+COPY package*.json ./
+RUN npm ci --legacy-peer-deps
 
 # ============================================================================
 # Copy source code
