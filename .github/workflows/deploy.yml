@@ -32,6 +32,8 @@ jobs:
           cd /root/Need_This_Done
           echo "Pulling latest code from GitHub..."
           git pull origin main
+          echo "Loading environment variables..."
+          set -a && source .env.local && set +a
           echo "Building and starting Docker containers..."
           docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.prod.yml up --build -d
 
