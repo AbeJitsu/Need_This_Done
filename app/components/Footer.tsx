@@ -90,7 +90,7 @@ export default function Footer() {
                   onClick={openChatbot}
                   className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors cursor-pointer`}
                 >
-                  Chat with us anytime
+                  Chat with AI assistant
                 </button>
               </li>
             </ul>

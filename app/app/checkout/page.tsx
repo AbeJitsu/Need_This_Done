@@ -250,7 +250,7 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'confirmation') {
     return (
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <div className="text-center mb-8">
           <div className="inline-block p-3 bg-green-100 dark:bg-green-900 rounded-full mb-4">
             <svg
@@ -346,7 +346,7 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'appointment' && appointmentInfo) {
     return (
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <PageHeader title="Schedule Your Consultation" description="Pick a time that works for you" />
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -368,7 +368,9 @@ export default function CheckoutPage() {
           </div>
 
           {/* Order summary sidebar */}
-          <OrderSummary cart={cart} itemCount={itemCount} />
+          <div className="lg:sticky lg:top-20 lg:self-start">
+            <OrderSummary cart={cart} itemCount={itemCount} />
+          </div>
         </div>
       </div>
     );
@@ -379,7 +381,7 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'payment' && clientSecret) {
     return (
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <PageHeader title="Payment" description="Complete your purchase" />
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -421,7 +423,9 @@ export default function CheckoutPage() {
           </div>
 
           {/* Order summary sidebar */}
-          <OrderSummary cart={cart} itemCount={itemCount} />
+          <div className="lg:sticky lg:top-20 lg:self-start">
+            <OrderSummary cart={cart} itemCount={itemCount} />
+          </div>
         </div>
       </div>
     );
@@ -431,7 +435,7 @@ export default function CheckoutPage() {
   // Information step (Step 1)
   // ========================================================================
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       <PageHeader title="Checkout" description="Complete your purchase" />
 
       {itemCount === 0 ? (
@@ -561,7 +565,7 @@ export default function CheckoutPage() {
               </div>
             </Card>
 
-            {/* Continue to payment button */}
+            {/* Continue button */}
             <Button
               variant="purple"
               type="submit"
@@ -569,7 +573,7 @@ export default function CheckoutPage() {
               className="w-full"
               size="lg"
             >
-              {isProcessing ? 'Processing...' : 'Continue to Payment'}
+              {isProcessing ? 'Processing...' : 'Continue'}
             </Button>
 
             <Button
@@ -583,7 +587,9 @@ export default function CheckoutPage() {
           </form>
 
           {/* Order summary sidebar */}
-          <OrderSummary cart={cart} itemCount={itemCount} />
+          <div className="lg:sticky lg:top-20 lg:self-start">
+            <OrderSummary cart={cart} itemCount={itemCount} />
+          </div>
         </div>
       )}
     </div>
@@ -604,14 +610,23 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
   return (
     <div>
       <Card hoverColor="purple" hoverEffect="lift">
-        <div className="p-6">
-          <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
-            Order Summary
-          </h2>
+        <div className="p-8">
+          {/* Header with icon */}
+          <div className="flex items-center gap-3 mb-6 pb-6 border-b-2 border-purple-200 dark:border-purple-800">
+            <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+              <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+            </div>
+            <h2 className={`text-xl font-bold ${headingColors.primary}`}>
+              Order Summary
+            </h2>
+          </div>
 
-          <div className={`space-y-3 mb-6 pb-6 ${dividerColors.border} border-b`}>
-            <div className="flex justify-between">
-              <span className={formInputColors.helper}>Items</span>
+          {/* Line items */}
+          <div className={`space-y-4 mb-6 pb-6 ${dividerColors.border} border-b`}>
+            <div className="flex justify-between items-center">
+              <span className={`text-sm ${formInputColors.helper}`}>Items</span>
               <span className={`${headingColors.primary} font-semibold`}>
                 {itemCount}
               </span>
@@ -619,8 +634,8 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
 
             {cart && (
               <>
-                <div className="flex justify-between">
-                  <span className={formInputColors.helper}>
+                <div className="flex justify-between items-center">
+                  <span className={`text-sm ${formInputColors.helper}`}>
                     Subtotal
                   </span>
                   <span className={`${headingColors.primary} font-semibold`}>
@@ -628,8 +643,8 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
                   </span>
                 </div>
 
-                <div className="flex justify-between">
-                  <span className={formInputColors.helper}>Tax</span>
+                <div className="flex justify-between items-center">
+                  <span className={`text-sm ${formInputColors.helper}`}>Tax</span>
                   <span className={`${headingColors.primary} font-semibold`}>
                     ${((cart.tax_total || 0) / 100).toFixed(2)}
                   </span>
@@ -638,8 +653,9 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
             )}
           </div>
 
+          {/* Total */}
           {cart && (
-            <div className="flex justify-between mb-6">
+            <div className="flex justify-between items-center mb-8 pb-6 border-b-2 border-gray-200 dark:border-gray-700">
               <span className={`text-lg font-bold ${headingColors.primary}`}>
                 Total
               </span>
@@ -649,9 +665,18 @@ function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
             </div>
           )}
 
-          <Button variant="blue" href="/cart" className="w-full">
+          {/* Edit cart button */}
+          <Button variant="blue" href="/cart" className="w-full mb-6" size="lg">
             Edit Cart
           </Button>
+
+          {/* Trust badge */}
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+            </svg>
+            <span>Secure checkout</span>
+          </div>
         </div>
       </Card>
     </div>

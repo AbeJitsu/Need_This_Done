@@ -273,10 +273,10 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
             id="chatbot-title"
             className={`text-lg font-semibold ${headingColors.primary}`}
           >
-            Chat Assistant
+            AI Assistant
           </h2>
           <p className={`text-sm ${formInputColors.helper}`}>
-            Ask me anything about our services
+            Get instant answers about our services
           </p>
         </div>
 
@@ -349,7 +349,7 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
               Hi there! How can I help?
             </h3>
             <p className={`${formInputColors.helper} text-sm max-w-sm mx-auto`}>
-              Ask me about our services, pricing, or how we can help with your projects.
+              I'm an AI assistant. Ask me about our services, pricing, or how we can help with your projects.
             </p>
           </div>
         )}

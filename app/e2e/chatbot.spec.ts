@@ -20,7 +20,7 @@ test.describe('Chatbot Widget', () => {
     await navigateToPage(page, '/');
 
     // Chatbot button should be visible
-    const chatButton = page.getByLabel('Open chat assistant');
+    const chatButton = page.getByLabel('Open AI chat assistant');
     await expect(chatButton).toBeVisible();
   });
 
@@ -29,7 +29,7 @@ test.describe('Chatbot Widget', () => {
 
     for (const pagePath of publicPages) {
       await navigateToPage(page, pagePath);
-      const chatButton = page.getByLabel('Open chat assistant');
+      const chatButton = page.getByLabel('Open AI chat assistant');
       await expect(chatButton).toBeVisible();
     }
   });
@@ -37,10 +37,10 @@ test.describe('Chatbot Widget', () => {
   test('should have proper button styling and accessibility', async ({ page }) => {
     await navigateToPage(page, '/');
 
-    const chatButton = page.getByLabel('Open chat assistant');
+    const chatButton = page.getByLabel('Open AI chat assistant');
 
     // Check accessibility attributes
-    await expect(chatButton).toHaveAttribute('title', 'Chat with us');
+    await expect(chatButton).toHaveAttribute('title', 'Chat with AI assistant');
 
     // Check it's a button element
     await expect(chatButton).toHaveRole('button');
@@ -54,7 +54,7 @@ test.describe('Chatbot Widget', () => {
     await navigateToPage(page, '/');
 
     // Click the chat button
-    const chatButton = page.getByLabel('Open chat assistant');
+    const chatButton = page.getByLabel('Open AI chat assistant');
     await chatButton.click();
 
     // Modal should appear
@@ -62,14 +62,14 @@ test.describe('Chatbot Widget', () => {
     await expect(modal).toBeVisible();
 
     // Modal should have proper title
-    await expect(page.getByText('Chat Assistant')).toBeVisible();
+    await expect(page.getByText('AI Assistant')).toBeVisible();
   });
 
   test('should close modal when close button is clicked', async ({ page }) => {
     await navigateToPage(page, '/');
 
     // Open modal
-    await page.getByLabel('Open chat assistant').click();
+    await page.getByLabel('Open AI chat assistant').click();
     const modal = page.getByRole('dialog');
     await expect(modal).toBeVisible();
 
@@ -82,7 +82,7 @@ test.describe('Chatbot Widget', () => {
     await navigateToPage(page, '/');
 
     // Open modal
-    await page.getByLabel('Open chat assistant').click();
+    await page.getByLabel('Open AI chat assistant').click();
     const modal = page.getByRole('dialog');
     await expect(modal).toBeVisible();
 
@@ -95,7 +95,7 @@ test.describe('Chatbot Widget', () => {
     await navigateToPage(page, '/');
 
     // Open modal
-    await page.getByLabel('Open chat assistant').click();
+    await page.getByLabel('Open AI chat assistant').click();
     const modal = page.getByRole('dialog');
     await expect(modal).toBeVisible();
 
@@ -114,7 +114,7 @@ test.describe('Chatbot Widget', () => {
   test('should hide chat button when modal is open', async ({ page }) => {
     await navigateToPage(page, '/');
 
-    const chatButton = page.getByLabel('Open chat assistant');
+    const chatButton = page.getByLabel('Open AI chat assistant');
     await expect(chatButton).toBeVisible();
 
     // Open modal
@@ -137,11 +137,11 @@ test.describe('Chatbot Widget', () => {
   test('should display welcome message when modal opens', async ({ page }) => {
     await navigateToPage(page, '/');
 
-    await page.getByLabel('Open chat assistant').click();
+    await page.getByLabel('Open AI chat assistant').click();
 
     // Welcome message should be visible
     await expect(page.getByText('Hi there! How can I help?')).toBeVisible();
-    await expect(page.getByText(/Ask me about our services/)).toBeVisible();
+    await expect(page.getByText(/I'm an AI assistant/)).toBeVisible();
   });
 
   test('should focus input field when modal opens', async ({ page }) => {
@@ -198,7 +198,7 @@ test.describe('Chatbot Widget', () => {
   test('should have proper ARIA attributes on modal', async ({ page }) => {
     await navigateToPage(page, '/');
 
-    await page.getByLabel('Open chat assistant').click();
+    await page.getByLabel('Open AI chat assistant').click();
 
     const modal = page.getByRole('dialog');
     await expect(modal).toHaveAttribute('aria-modal', 'true');
@@ -209,7 +209,7 @@ test.describe('Chatbot Widget', () => {
     await navigateToPage(page, '/');
 
     // Focus the chat button directly and activate it with keyboard
-    const chatButton = page.getByLabel('Open chat assistant');
+    const chatButton = page.getByLabel('Open AI chat assistant');
     await chatButton.focus();
     await page.keyboard.press('Enter');
 
