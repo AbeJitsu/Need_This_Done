@@ -1,22 +1,22 @@
-IMPORTANT: Interact with me and output content that sounds inviting, focused, considerate, supportive, and influential all throughout and use language that's easy to understand. Speak as if speaking to a friend over coffee.
+IMPORTANT: Interact with me and output content that sounds and feels inviting, focused, considerate, supportive, and influential all throughout and use language that's easy to understand. Speak as if speaking to a friend over coffee.
 
 ## Development & Deployment Workflow
 
 **Always follow this workflow:**
 
 0. **Check TODO.md** for current priorities and what needs doing
-
 1. **Local Development** (test changes first):
+
    - Use `npm run dev:start` to start dev environment
    - Access at https://localhost (self-signed SSL certs)
    - Test all changes thoroughly
-
 2. **Push to GitHub** (after local testing passes):
+
    - Run `/dac` to draft a commit message for approval
    - **NEVER commit directly** - always wait for user approval
    - Push changes to the `dev` branch after approval
-
 3. **Production Deployment** (deploy to DigitalOcean):
+
    - SSH to DigitalOcean server
    - Pull latest from GitHub
    - Use `npm run prod:build` then `npm run prod:start`
@@ -36,6 +36,7 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 6. **Use agent swarms** - Launch parallel agents for thorough exploration and implementation
 
 **Agent Swarm Strategy:**
+
 - **Exploration:** Launch 2-3 Explore agents in parallel to search different areas of the codebase
 - **Implementation:** Break large features into parallel workstreams when files don't depend on each other
 - **Documentation:** Launch agents to document different sections simultaneously
@@ -44,6 +45,7 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 **Safety:** Commits are blocked by settings.json. All changes stay local until user reviews.
 
 **When to pause:**
+
 - External service setup needed (Google Cloud Console, API keys)
 - Destructive operations that can't be undone
 - Ambiguous requirements with multiple valid approaches
@@ -51,6 +53,7 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 ## Task Tracking
 
 **TODO.md** is for **incomplete, untested features**:
+
 - Check it before starting new work
 - Update it when completing tasks
 - Contains: To Do, In Progress, Recently Completed sections
@@ -58,6 +61,7 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 - Once a feature is **production-ready and tested**, move it to README.md
 
 **README.md** is for **production-ready, battle-tested features**:
+
 - Only document features that are complete and working
 - Never include failing tests, incomplete implementations, or security warnings
 - If something isn't ready for production, it stays in TODO.md
@@ -65,6 +69,7 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 **Flow:** TODO.md (incomplete) → test & verify → README.md (production-ready)
 
 **.claude plans** (in `.claude/plans/`) are for complex implementations:
+
 - Created when planning mode is invoked
 - Contains detailed steps and file changes
 - Referenced during execution for context
@@ -72,6 +77,7 @@ IMPORTANT: Interact with me and output content that sounds inviting, focused, co
 ## Project Overview
 
 See [README.md](README.md) for:
+
 - **Directory structure** - Complete breakdown of folders and subfolders (Root Level, Application, Infrastructure & Configuration, Documentation, Testing)
 - **Quick start commands** - How to run the app and Storybook
 - **Docker Development Workflow** - When to restart vs rebuild containers, hot reload behavior, helper commands
@@ -80,6 +86,7 @@ See [README.md](README.md) for:
 ## Coding Standards
 
 Follow [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) for:
+
 - Separation of concerns and code organization
 - DRY principle (Don't Repeat Yourself)
 - Clear, section-level comments explaining what code does and why
@@ -115,11 +122,13 @@ The frontend-design skill is enabled for aesthetic guidance.
 **NEVER hardcode colors.** All colors come from [lib/colors.ts](app/lib/colors.ts).
 
 **Import what you need:**
+
 ```typescript
 import { formInputColors, formValidationColors, titleColors } from '@/lib/colors';
 ```
 
 **Use in className:**
+
 ```typescript
 <p className={formInputColors.helper}>Helper text</p>
 <p className={`text-sm ${formValidationColors.error}`}>Error message</p>
@@ -132,6 +141,7 @@ import { formInputColors, formValidationColors, titleColors } from '@/lib/colors
 ## Testing
 
 When adding features:
+
 - New static pages → Add E2E tests in `app/e2e/pages.spec.ts`
 - Dark mode variants → Add tests in `app/e2e/pages-dark-mode.spec.ts`
 - New forms → Add E2E tests for validation and submission
