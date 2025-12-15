@@ -188,11 +188,14 @@ export const carts = {
   },
 
   /**
-   * Retrieve cart by ID
-   * GET /store/carts/:id
+   * Retrieve cart by ID with product metadata
+   * GET /store/carts/:id?expand=items.variant.product
    */
   get: async (cartId: string): Promise<Cart> => {
-    const response = await fetchWithRetry(`${MEDUSA_URL}/store/carts/${cartId}`);
+    // Expand items to include variant and product with metadata
+    const response = await fetchWithRetry(
+      `${MEDUSA_URL}/store/carts/${cartId}?expand=items.variant.product`
+    );
     const data = await handleResponse<{ cart: Cart }>(response);
     return data.cart;
   },
@@ -318,14 +321,15 @@ export const orders = {
   /**
    * Create order from cart
    * POST /store/carts/:id/complete-cart
+   * Note: Medusa v1 returns { type: "order", data: Order } not { order: Order }
    */
   create: async (cartId: string): Promise<Order> => {
     const response = await fetchWithRetry(`${MEDUSA_URL}/store/carts/${cartId}/complete-cart`, {
       method: "POST",
       body: JSON.stringify({}),
     });
-    const data = await handleResponse<{ order: Order }>(response);
-    return data.order;
+    const data = await handleResponse<{ type: string; data: Order }>(response);
+    return data.data;
   },
 
   /**

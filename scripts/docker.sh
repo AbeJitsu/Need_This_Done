@@ -85,7 +85,7 @@ show_help() {
   COMMANDS:
     start <service>     Start a specific service
     stop <service>      Stop a specific service
-    restart <service>   Restart a specific service
+    restart <service>   Restart a specific service (supports multiple: website store)
     logs <service>      View logs for a service
     up                  Start everything (development mode)
     down                Stop everything
@@ -93,6 +93,13 @@ show_help() {
     rebuild <service>   Rebuild and restart a service
     test [type]         Run tests (integration or e2e)
     fresh               Complete fresh start (removes all data)
+    after-pull          Restart services after git pull (smart detection)
+    fix-checkout        Fix common checkout issues (restart website + store)
+
+  QUICK FIXES:
+    ./scripts/docker.sh after-pull       After git pull
+    ./scripts/docker.sh fix-checkout     Checkout not working
+    ./scripts/docker.sh restart website store    Multiple services
 
   EXAMPLES:
     ./scripts/docker.sh start memory
@@ -101,6 +108,8 @@ show_help() {
     ./scripts/docker.sh up
     ./scripts/docker.sh status
     ./scripts/docker.sh test e2e
+
+  See docs/CONTAINER_RESTART_GUIDE.md for detailed restart guide
 
 EOF
 }
@@ -130,13 +139,32 @@ cmd_stop() {
 }
 
 cmd_restart() {
-  local service="$1"
-  local docker_name=$(get_docker_name "$service")
-  local friendly=$(get_friendly_name "$docker_name")
+  # Support multiple services: restart website store memory
+  if [ -z "$1" ]; then
+    echo -e "${RED}Error: No service specified${NC}"
+    echo "Usage: ./scripts/docker.sh restart <service> [service2] [service3]..."
+    return 1
+  fi
 
-  echo -e "${BLUE}Restarting ${friendly}...${NC}"
-  docker-compose -f docker-compose.yml -f docker-compose.dev.yml restart "$docker_name"
-  echo -e "${GREEN}${friendly} restarted${NC}"
+  echo -e "${BLUE}Restarting services...${NC}"
+  echo ""
+
+  # Restart each service
+  for service in "$@"; do
+    local docker_name=$(get_docker_name "$service")
+    local friendly=$(get_friendly_name "$docker_name")
+
+    echo -e "  ${YELLOW}→${NC} Restarting ${friendly}..."
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml restart "$docker_name" 2>/dev/null
+    if [ $? -eq 0 ]; then
+      echo -e "  ${GREEN}✓${NC} ${friendly} restarted"
+    else
+      echo -e "  ${RED}✗${NC} ${friendly} failed to restart (not running?)"
+    fi
+  done
+
+  echo ""
+  echo -e "${GREEN}Restart complete${NC}"
 }
 
 cmd_logs() {
@@ -151,6 +179,15 @@ cmd_logs() {
 cmd_up() {
   echo -e "${BLUE}Starting all services...${NC}"
   echo ""
+
+  # Create .env symlink if it doesn't exist (fixes docker-compose warnings)
+  if [ ! -e .env ] && [ -f .env.local ]; then
+    echo -e "${YELLOW}Creating .env symlink to .env.local...${NC}"
+    ln -sf .env.local .env
+    echo -e "${GREEN}✓ Symlink created${NC}"
+    echo ""
+  fi
+
   echo "  This will start:"
   echo "    - front-door (entry point)"
   echo "    - website (your main site)"
@@ -266,6 +303,13 @@ cmd_fresh() {
   echo ""
 
   if [[ $REPLY =~ ^[Yy]$ ]]; then
+    # Create .env symlink if it doesn't exist (fixes docker-compose warnings)
+    if [ ! -e .env ] && [ -f .env.local ]; then
+      echo -e "${YELLOW}Creating .env symlink to .env.local...${NC}"
+      ln -sf .env.local .env
+      echo -e "${GREEN}✓ Symlink created${NC}"
+    fi
+
     echo -e "${YELLOW}Stopping and removing everything...${NC}"
     docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
     docker-compose -f docker-compose.yml -f docker-compose.dev.yml build --no-cache
@@ -276,6 +320,68 @@ cmd_fresh() {
   fi
 }
 
+cmd_after_pull() {
+  echo -e "${BLUE}Smart Restart After Git Pull${NC}"
+  echo ""
+  echo "Detecting what changed..."
+  echo ""
+
+  local changed_files=$(git diff HEAD@{1} --name-only 2>/dev/null || echo "")
+  local restart_services=()
+
+  # Check what directories changed
+  if echo "$changed_files" | grep -q "^app/"; then
+    restart_services+=("website")
+    echo -e "  ${YELLOW}•${NC} Detected app/ changes → will restart website"
+  fi
+
+  if echo "$changed_files" | grep -q "^medusa/"; then
+    restart_services+=("store")
+    echo -e "  ${YELLOW}•${NC} Detected medusa/ changes → will restart store"
+  fi
+
+  if echo "$changed_files" | grep -q "^nginx/"; then
+    restart_services+=("front-door")
+    echo -e "  ${YELLOW}•${NC} Detected nginx/ changes → will restart front-door"
+  fi
+
+  if echo "$changed_files" | grep -q ".env"; then
+    # If services not already in list, add them
+    [[ " ${restart_services[@]} " =~ " website " ]] || restart_services+=("website")
+    [[ " ${restart_services[@]} " =~ " store " ]] || restart_services+=("store")
+    echo -e "  ${YELLOW}•${NC} Detected .env changes → will restart website + store"
+  fi
+
+  if [ ${#restart_services[@]} -eq 0 ]; then
+    echo -e "  ${GREEN}✓${NC} No service restarts needed (only docs/config changed)"
+    echo ""
+    return 0
+  fi
+
+  echo ""
+  echo -e "${BLUE}Restarting: ${restart_services[*]}${NC}"
+  echo ""
+
+  cmd_restart "${restart_services[@]}"
+}
+
+cmd_fix_checkout() {
+  echo -e "${BLUE}Fixing Checkout Issues${NC}"
+  echo ""
+  echo "This will:"
+  echo "  • Restart website (Next.js app + API routes)"
+  echo "  • Restart store (Medusa backend)"
+  echo "  • Clear any stuck payment sessions"
+  echo ""
+
+  cmd_restart website store
+
+  echo ""
+  echo -e "${GREEN}Checkout fix complete!${NC}"
+  echo ""
+  echo "Try the checkout flow again at https://localhost/checkout"
+}
+
 # ============================================================================
 # Main Entry Point
 # ============================================================================
@@ -283,7 +389,7 @@ cmd_fresh() {
 case "$1" in
   start)    cmd_start "$2" ;;
   stop)     cmd_stop "$2" ;;
-  restart)  cmd_restart "$2" ;;
+  restart)  shift; cmd_restart "$@" ;;  # Support multiple services
   logs)     cmd_logs "$2" ;;
   up)       cmd_up ;;
   down)     cmd_down ;;
@@ -291,6 +397,8 @@ case "$1" in
   rebuild)  cmd_rebuild "$2" ;;
   test)     cmd_test "$2" ;;
   fresh)    cmd_fresh ;;
+  after-pull) cmd_after_pull ;;
+  fix-checkout) cmd_fix_checkout ;;
   help|-h|--help|"")  show_help ;;
   *)
     echo -e "${RED}Unknown command: $1${NC}"
