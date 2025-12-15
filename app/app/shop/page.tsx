@@ -24,6 +24,10 @@ export const metadata: Metadata = {
 
 async function getProducts(): Promise<Product[]> {
   // Retry logic with exponential backoff for startup timing issues
+  // Handles both:
+  // 1. Network errors (Medusa not ready yet)
+  // 2. Empty results (Medusa running but not seeded yet)
+  //
   // Pure exponential backoff: 1s, 2s, 4s, 8s, 16s, 32s, 64s, 128s, 256s, 512s
   // Total wait time: ~17 minutes max (if Medusa takes that long, bigger issues exist)
   const maxRetries = 10;
@@ -33,13 +37,28 @@ async function getProducts(): Promise<Product[]> {
     try {
       const products = await medusaClient.products.list();
 
-      // Sort by price ascending: green ($20) → blue ($35) → purple ($50)
-      return products.sort((a, b) => {
-        const priceA = a.variants?.[0]?.prices?.[0]?.amount ?? 0;
-        const priceB = b.variants?.[0]?.prices?.[0]?.amount ?? 0;
-        return priceA - priceB;
-      });
+      // If we got products, return them sorted by price
+      if (products.length > 0) {
+        console.log(`[Shop] Loaded ${products.length} products on attempt ${attempt}`);
+        return products.sort((a, b) => {
+          const priceA = a.variants?.[0]?.prices?.[0]?.amount ?? 0;
+          const priceB = b.variants?.[0]?.prices?.[0]?.amount ?? 0;
+          return priceA - priceB;
+        });
+      }
+
+      // Empty products - Medusa running but not seeded yet, retry
+      const isLastAttempt = attempt === maxRetries;
+      if (isLastAttempt) {
+        console.log('[Shop] No products found after all retries (database may not be seeded)');
+        return [];
+      }
+
+      const delay = baseDelay * Math.pow(2, attempt - 1);
+      console.log(`[Shop] Attempt ${attempt}/${maxRetries}: No products yet, retrying in ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
     } catch (error) {
+      // Network error - Medusa not ready yet, retry
       const isLastAttempt = attempt === maxRetries;
 
       if (isLastAttempt) {
@@ -47,7 +66,6 @@ async function getProducts(): Promise<Product[]> {
         return [];
       }
 
-      // Exponential backoff: double the delay each time
       const delay = baseDelay * Math.pow(2, attempt - 1);
       console.log(`[Shop] Attempt ${attempt}/${maxRetries} failed, retrying in ${delay}ms...`);
       await new Promise(resolve => setTimeout(resolve, delay));
