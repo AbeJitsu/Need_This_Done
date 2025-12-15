@@ -14,6 +14,8 @@ import {
   checkmarkBgColors,
 } from '@/lib/colors';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // How It Works Page - The NeedThisDone Process
 // ============================================================================

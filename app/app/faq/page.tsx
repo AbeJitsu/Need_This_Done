@@ -6,6 +6,8 @@ import CTASection from '@/components/CTASection';
 import { getDefaultFAQContent } from '@/lib/default-page-content';
 import type { FAQPageContent } from '@/lib/page-content-types';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // FAQ Page - Common Questions
 // ============================================================================
