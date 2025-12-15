@@ -476,10 +476,10 @@ export const defaultHomeContent: HomePageContent = {
   cta: {
     title: 'Ready to Get Started?',
     description:
-      'Book a consultation for immediate help, or tell us about your project for a custom quote.',
+      'Tell us about your project for a custom quote, or check our pricing to see what fits.',
     buttons: [
-      { text: 'Book a Call', variant: 'orange', href: '/shop' },
-      { text: 'Request a Quote', variant: 'blue', href: '/contact' },
+      { text: 'Get a Quote', variant: 'orange', href: '/contact' },
+      { text: 'View Pricing', variant: 'blue', href: '/pricing' },
     ],
     footer: 'Have questions?',
     footerLinkText: 'Check out our FAQ',

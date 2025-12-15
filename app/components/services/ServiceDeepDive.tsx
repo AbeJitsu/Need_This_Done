@@ -1,16 +1,17 @@
 'use client';
 
 // ============================================================================
-// ServiceDeepDive - Expandable service details using modal content
+// ServiceDeepDive - Expandable service details with full content
 // ============================================================================
 // Progressive disclosure: shows compact view by default, expands to reveal
-// the full service details (same content as modals).
+// the complete service details. This is where users make decisions after
+// being teased by the home page modals.
 
 import { useState } from 'react';
 import {
-  serviceModalContentMap,
+  serviceFullContentMap,
   type ServiceType,
-  type ServiceModalContent,
+  type ServiceFullContent,
 } from '@/lib/service-modal-content';
 import {
   headingColors,
@@ -36,7 +37,7 @@ const serviceColors: Record<ServiceType, AccentColor> = {
 export default function ServiceDeepDive({ defaultExpanded }: ServiceDeepDiveProps) {
   const [expanded, setExpanded] = useState<ServiceType | null>(defaultExpanded || null);
 
-  const services = Object.entries(serviceModalContentMap) as [ServiceType, ServiceModalContent][];
+  const services = Object.entries(serviceFullContentMap) as [ServiceType, ServiceFullContent][];
 
   return (
     <div className="mb-10">
@@ -73,7 +74,7 @@ export default function ServiceDeepDive({ defaultExpanded }: ServiceDeepDiveProp
       {expanded && (
         <ServiceDetail
           serviceType={expanded}
-          content={serviceModalContentMap[expanded]}
+          content={serviceFullContentMap[expanded]}
           color={serviceColors[expanded]}
         />
       )}
@@ -94,7 +95,7 @@ export default function ServiceDeepDive({ defaultExpanded }: ServiceDeepDiveProp
 
 interface ServiceDetailProps {
   serviceType: ServiceType;
-  content: ServiceModalContent;
+  content: ServiceFullContent;
   color: AccentColor;
 }
 
@@ -118,11 +119,9 @@ function ServiceDetail({ content, color }: ServiceDetailProps) {
       </h3>
 
       {/* Subtitle */}
-      {content.subtitle && (
-        <p className={`${formInputColors.helper} mb-4`}>
-          {content.subtitle}
-        </p>
-      )}
+      <p className={`${formInputColors.helper} mb-4`}>
+        {content.subtitle}
+      </p>
 
       {/* Two-column layout on larger screens */}
       <div className="grid md:grid-cols-2 gap-6">

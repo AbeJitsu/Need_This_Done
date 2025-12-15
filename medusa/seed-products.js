@@ -125,21 +125,21 @@ async function main() {
     {
       title: '15-Minute Quick Consultation',
       handle: 'consultation-15-min',
-      description: 'A focused 15-minute session to discuss your specific needs, answer questions, or provide quick guidance on your project.',
+      description: "Got a quick question or need a sanity check? In 15 minutes, we'll cut through the confusion and give you clear direction—so you can stop second-guessing and start moving forward.",
       duration: 15,
       price: 2000, // $20.00
     },
     {
       title: '30-Minute Strategy Consultation',
       handle: 'consultation-30-min',
-      description: 'A comprehensive 30-minute session to dive deeper into your project, explore solutions, and develop a strategic approach.',
+      description: "Not sure where to start? This is our most popular option. We'll dig into your project together, talk through your options, and map out a clear path forward—no more spinning your wheels.",
       duration: 30,
       price: 3500, // $35.00
     },
     {
       title: '55-Minute Deep Dive Consultation',
       handle: 'consultation-55-min',
-      description: 'Our most thorough consultation. Nearly an hour to fully explore your challenges, brainstorm solutions, and create an actionable plan.',
+      description: "For bigger challenges that need real thinking time. We'll explore everything—your situation, your goals, the obstacles—and leave you with a concrete plan you can actually act on.",
       duration: 55,
       price: 5000, // $50.00
     }

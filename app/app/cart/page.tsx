@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
@@ -9,12 +9,14 @@ import Card from '@/components/Card';
 import {
   formInputColors,
   formValidationColors,
-  titleColors,
-  dangerColors,
   alertColors,
   headingColors,
   dividerColors,
   cardBorderColors,
+  titleColors,
+  leftBorderColors,
+  dangerColors,
+  type AccentColor,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -22,18 +24,36 @@ import {
 // ============================================================================
 // What: Displays items in cart with quantity management
 // Why: Lets customer review before checkout
-// How: Uses CartContext to manage items, fetches fresh cart data on mount
+// How: Uses CartContext to manage items, displays friendly consultation details
+
+// ============================================================================
+// Helper: Determine consultation color by price tier
+// ============================================================================
+// 15-min ($20) → green, 30-min ($35) → blue, 55-min ($50) → purple
+function getConsultationColor(unitPrice: number): AccentColor {
+  // Prices in cents: 2000 = $20, 3500 = $35, 5000 = $50
+  if (unitPrice <= 2500) return 'green';
+  if (unitPrice <= 4000) return 'blue';
+  return 'purple';
+}
+
+// ============================================================================
+// Helper: Get friendly duration label from title
+// ============================================================================
+function getDurationLabel(title: string): string {
+  // Extract duration from title like "15-Minute Quick Consultation"
+  const match = title.match(/(\d+)-?(?:minute|min)/i);
+  if (match) {
+    const minutes = parseInt(match[1], 10);
+    return `${minutes} minutes`;
+  }
+  return 'Consultation';
+}
 
 export default function CartPage() {
-  const { cart, cartId, itemCount, updateItem, removeItem, isLoading: _isLoading, error: cartError } = useCart();
+  const { cart, cartId, itemCount, updateItem, removeItem, error: cartError } = useCart();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [localError, setLocalError] = useState('');
-
-  // Refresh cart on mount if we have a cart ID
-  useEffect(() => {
-    // Cart should already be loaded in context
-    // This page just displays it
-  }, []);
 
   // ========================================================================
   // Handle quantity change
@@ -72,22 +92,27 @@ export default function CartPage() {
     }
   };
 
-  // Empty cart state
+  // ========================================================================
+  // Empty cart state - Friendly and helpful
+  // ========================================================================
   if (!cartId || !cart || cart.items.length === 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <PageHeader
-          title="Your Cart"
-          description="Your shopping cart is empty"
+          title="Your Cart is Empty"
+          description="Nothing here yet—but that's easy to fix!"
         />
 
         <Card hoverEffect="none">
           <div className="p-8 text-center">
-            <p className={`${formInputColors.helper} mb-6`}>
-              Looks like you haven't added anything yet.
+            <p className={`${formInputColors.helper} mb-2`}>
+              Looking for expert guidance?
             </p>
-            <Button variant="purple" href="/shop">
-              Continue Shopping
+            <p className={`${formInputColors.helper} mb-6`}>
+              Our consultations are a great way to get personalized help before committing to a project.
+            </p>
+            <Button variant="blue" href="/shop">
+              Browse Consultations
             </Button>
           </div>
         </Card>
@@ -103,8 +128,8 @@ export default function CartPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       <PageHeader
-        title="Your Cart"
-        description={`${itemCount} item${itemCount !== 1 ? 's' : ''} in your cart`}
+        title="Almost there!"
+        description={`You've got ${itemCount} ${itemCount === 1 ? 'consultation' : 'consultations'} ready to book.`}
       />
 
       {/* Error messages */}
@@ -118,65 +143,80 @@ export default function CartPage() {
         {/* Cart items */}
         <div className="lg:col-span-2">
           <div className="space-y-4">
-            {cart.items.map((item) => (
-              <Card key={item.id} hoverEffect="lift">
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-grow">
-                      <h3 className={`text-lg font-semibold ${headingColors.primary}`}>
-                        {/* Item title would come from product data */}
-                        Product #{item.variant_id.slice(0, 8)}
-                      </h3>
-                      <p className={`text-sm ${formInputColors.helper} mt-1`}>
-                        Variant: {item.variant_id}
+            {cart.items.map((item) => {
+              // Get consultation details
+              const title = item.title || item.variant?.title || 'Consultation';
+              const unitPrice = item.unit_price || 0;
+              const lineTotal = unitPrice * item.quantity;
+              const color = getConsultationColor(unitPrice);
+              const duration = getDurationLabel(title);
+
+              return (
+                <Card key={item.id} hoverEffect="lift" className={`border-l-4 ${leftBorderColors[color]}`}>
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex-grow">
+                        {/* Consultation title */}
+                        <h3 className={`text-lg font-semibold ${headingColors.primary}`}>
+                          {title}
+                        </h3>
+                        {/* Duration badge */}
+                        <p className={`text-sm mt-1 ${titleColors[color]}`}>
+                          {duration}
+                        </p>
+                        {/* Reassuring note */}
+                        <p className={`text-xs mt-2 ${formInputColors.helper}`}>
+                          We&apos;ll reach out within 24 hours to schedule
+                        </p>
+                      </div>
+                      {/* Remove button */}
+                      <button
+                        onClick={() => handleRemoveItem(item.id || '')}
+                        disabled={isUpdating === item.id}
+                        className={`text-gray-500 ${dangerColors.hover} transition text-xl leading-none`}
+                        aria-label="Remove item"
+                      >
+                        &times;
+                      </button>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      {/* Quantity controls */}
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
+                          disabled={isUpdating === item.id}
+                          className={`px-3 py-1 border rounded ${cardBorderColors.light} hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-50`}
+                        >
+                          −
+                        </button>
+                        <span className={`w-8 text-center font-semibold ${headingColors.primary}`}>
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
+                          disabled={isUpdating === item.id}
+                          className={`px-3 py-1 border rounded ${cardBorderColors.light} hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-50`}
+                        >
+                          +
+                        </button>
+                      </div>
+
+                      {/* Price */}
+                      <p className={`text-lg font-semibold ${headingColors.primary}`}>
+                        ${(lineTotal / 100).toFixed(2)}
                       </p>
                     </div>
-                    <button
-                      onClick={() => handleRemoveItem(item.id || '')}
-                      disabled={isUpdating === item.id}
-                      className={`text-gray-500 ${dangerColors.hover} transition`}
-                    >
-                      ×
-                    </button>
                   </div>
-
-                  <div className="flex justify-between items-center">
-                    {/* Quantity controls */}
-                    <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
-                        disabled={isUpdating === item.id}
-                        className={`px-2 py-1 border rounded ${cardBorderColors.light} hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-50`}
-                      >
-                        −
-                      </button>
-                      <span className={`w-8 text-center font-semibold ${headingColors.primary}`}>
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
-                        disabled={isUpdating === item.id}
-                        className={`px-2 py-1 border rounded ${cardBorderColors.light} hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-50`}
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    {/* Price */}
-                    <p className={`text-lg font-semibold ${headingColors.primary}`}>
-                      {/* Price calculation would come from product data */}
-                      Calculating...
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              );
+            })}
           </div>
 
           {/* Continue shopping link */}
           <div className="mt-6">
             <Link href="/shop" className={`${titleColors.blue} hover:underline`}>
-              ← Continue Shopping
+              &larr; Continue Shopping
             </Link>
           </div>
         </div>
@@ -197,12 +237,14 @@ export default function CartPage() {
                   </span>
                 </div>
 
-                <div className="flex justify-between">
-                  <span className={formInputColors.helper}>Tax</span>
-                  <span className={`font-semibold ${headingColors.primary}`}>
-                    ${(tax / 100).toFixed(2)}
-                  </span>
-                </div>
+                {tax > 0 && (
+                  <div className="flex justify-between">
+                    <span className={formInputColors.helper}>Tax</span>
+                    <span className={`font-semibold ${headingColors.primary}`}>
+                      ${(tax / 100).toFixed(2)}
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-between mb-6">
@@ -213,7 +255,7 @@ export default function CartPage() {
               </div>
 
               <Button
-                variant="purple"
+                variant="orange"
                 href="/checkout"
                 className="w-full mb-3"
               >
@@ -230,11 +272,11 @@ export default function CartPage() {
             </div>
           </Card>
 
-          {/* Info box */}
+          {/* Reassurance box */}
           <Card hoverColor="blue" hoverEffect="glow" className="mt-4">
             <div className="p-6">
               <p className={`text-sm ${formInputColors.helper}`}>
-                Prices shown are in USD. Your final cost may vary based on your location and any applicable taxes.
+                <strong>What happens next?</strong> After checkout, we&apos;ll send you an email to confirm your consultation and find a time that works for you.
               </p>
             </div>
           </Card>

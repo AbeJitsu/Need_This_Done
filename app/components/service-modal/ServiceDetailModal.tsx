@@ -12,17 +12,16 @@ import {
   checkmarkColors,
   topBorderColors,
   iconButtonColors,
-  lightBgColors,
   AccentColor,
 } from '@/lib/colors';
 import type { ServiceType } from '@/lib/service-modal-content';
 
 // ============================================================================
-// Service Detail Modal
+// Service Detail Modal - Teaser Format
 // ============================================================================
-// What: Centered overlay modal showing detailed service info
-// Why: Gives visitors a deep dive into each service without leaving the page
-// How: Uses ServiceModalContext for state, displays friendly non-tech content
+// What: Compact overlay modal with brief service preview
+// Why: Sparks curiosity and drives users to the services page for full details
+// How: Uses ServiceModalContext for state, shows headline + 3 bullets + 2 CTAs
 
 // Map service types to accent colors
 const serviceColors: Record<ServiceType, AccentColor> = {
@@ -128,26 +127,19 @@ export default function ServiceDetailModal() {
             >
               {activeService.title}
             </h2>
-            <p className={`text-xl font-medium ${headingColors.primary}`}>
+            <p className={`text-xl font-medium ${headingColors.primary} mb-2`}>
               {activeService.headline}
+            </p>
+            <p className={`${formInputColors.helper} text-base`}>
+              {activeService.hook}
             </p>
           </div>
 
           {/* ================================================================
-              Content section
+              Content section - Teaser format (brief, drives to services page)
               ================================================================ */}
-          <div className="px-6 pb-6 space-y-6">
-            {/* Subtitle - the friendly explanation */}
-            {activeService.subtitle && (
-              <p className={`${formInputColors.helper} text-base leading-relaxed`}>
-                {activeService.subtitle}
-              </p>
-            )}
-
-            {/* Divider */}
-            <div className={`${dividerColors.subtle} h-px`} />
-
-            {/* What we do - bullet points */}
+          <div className="px-6 pb-6 space-y-5">
+            {/* What we do - bullet points (3 items max) */}
             <div>
               <h3 className={`font-semibold ${headingColors.primary} mb-3`}>
                 What we handle:
@@ -168,31 +160,12 @@ export default function ServiceDetailModal() {
               </ul>
             </div>
 
-            {/* Examples section */}
-            <div className={`${lightBgColors[color]} rounded-xl p-5`}>
-              <h3 className={`font-semibold ${headingColors.primary} mb-3`}>
-                {activeService.examples.title}
-              </h3>
-              <ul className="space-y-2">
-                {activeService.examples.items.map((example, index) => (
-                  <li key={index} className={`${headingColors.primary} text-sm pl-4 border-l-2 border-gray-400 dark:border-gray-500`}>
-                    {example}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Reassurance message */}
-            <p className={`${titleColors[color]} font-medium text-center italic`}>
-              &ldquo;{activeService.reassurance}&rdquo;
-            </p>
-
             {/* Divider */}
             <div className={`${dividerColors.subtle} h-px`} />
 
-            {/* CTA buttons */}
+            {/* CTA buttons - Primary goes to services, Secondary to contact */}
             <div className="flex flex-col sm:flex-row gap-3">
-              {/* Primary CTA */}
+              {/* Primary CTA - See All Services */}
               <Link
                 href={activeService.ctas.primary.href}
                 onClick={closeModal}
@@ -204,11 +177,10 @@ export default function ServiceDetailModal() {
                   ${color === 'purple' ? 'bg-purple-600 hover:bg-purple-700 text-white' : ''}
                 `}
               >
-                <span className="block">{activeService.ctas.primary.text}</span>
-                <span className="block text-sm opacity-80">{activeService.ctas.primary.description}</span>
+                {activeService.ctas.primary.text}
               </Link>
 
-              {/* Secondary CTA */}
+              {/* Secondary CTA - Get a Quote */}
               <Link
                 href={activeService.ctas.secondary.href}
                 onClick={closeModal}
@@ -220,21 +192,9 @@ export default function ServiceDetailModal() {
                   ${color === 'purple' ? 'border-purple-500 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20' : ''}
                 `}
               >
-                <span className="block">{activeService.ctas.secondary.text}</span>
-                <span className="block text-sm opacity-70">{activeService.ctas.secondary.description}</span>
+                {activeService.ctas.secondary.text}
               </Link>
             </div>
-
-            {/* Cross-page link to compare services */}
-            <p className={`text-center ${formInputColors.helper} text-sm`}>
-              <Link
-                href="/services"
-                onClick={closeModal}
-                className="hover:underline"
-              >
-                Compare all services →
-              </Link>
-            </p>
           </div>
         </div>
       </div>

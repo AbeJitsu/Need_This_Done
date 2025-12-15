@@ -157,6 +157,10 @@ interface LineItem {
   id?: string;
   variant_id: string;
   quantity: number;
+  title?: string;         // Product title from Medusa cart expansion
+  description?: string;   // Product description
+  unit_price?: number;    // Price per unit in cents
+  thumbnail?: string;     // Product thumbnail URL
   variant?: ProductVariant;
   product?: Product;
 }
