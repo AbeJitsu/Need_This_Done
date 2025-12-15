@@ -16,7 +16,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@medusajs/medusa": "1.18.1",
+    "@medusajs/medusa": "1.20.11",
     "@medusajs/event-bus-redis": "1.8.9",
     "@medusajs/event-bus-local": "1.9.6",
     "@medusajs/cache-redis": "1.8.9",
