@@ -61,76 +61,288 @@ npm run dev:build && npm run dev:start
 
 ## Deployment
 
-### Production Deployment to DigitalOcean
+### Branch Workflow
 
-To deploy changes to production (https://needthisdone.com):
+**Development branches:**
+- `dev` - Active development, test changes here first
+- `main` - Stable production code, only merge after successful deployment
 
 **Workflow:**
-1. **Test locally first:**
-   - Development: `npm run dev:start` → https://localhost
-   - Production build (local): `./scripts/docker.sh --prod up` → https://localhost
-2. **Commit and merge to main:**
-   ```bash
-   git checkout dev
-   git add .
-   git commit -m "Your changes"
-   git checkout main
-   git merge dev
-   git push origin main
-   ```
-3. **SSH to DigitalOcean and deploy:**
-   ```bash
-   ssh root@159.65.223.234
-   cd /root/Need_This_Done
-   git pull origin main
-   ./scripts/docker.sh --prod down
-   ./scripts/docker.sh --prod up
-   ```
-4. **Verify deployment:**
-   - Check status: `./scripts/docker.sh --prod status`
-   - Verify env vars: `./scripts/docker.sh --prod verify-env`
-   - Test site: https://needthisdone.com
+1. Develop and test on `dev` branch locally
+2. Deploy `dev` to production for testing
+3. Once verified working on production, merge `dev` → `main`
 
-**Common Issues & Fixes:**
+### Local Development Deployment
 
-| Issue | Solution |
-|-------|----------|
-| Medusa fails: "JWT_SECRET not set" | Environment variables not mapped in `docker-compose.production.yml`. See lines 107-110 for proper mapping |
-| Production build succeeds but containers don't start | Medusa takes ~30-60s to become healthy. Wait, then restart: `./scripts/docker.sh --prod restart website front-door` |
-| "Container name not found" errors in docker.sh | Service names (for docker-compose) differ from container names (for docker commands). Script now handles both correctly |
-| Site not accessible but containers running | Check nginx logs: `docker logs nginx`. If SSL cert errors, ensure Let's Encrypt certs exist at `/etc/letsencrypt/` |
-| Products not showing on /shop page | Database needs seeding. See "Seeding Products" below |
-
-**Seeding Products (Required for Fresh Deployments):**
-
-When deploying to a fresh database (local or production), products won't exist until you seed them.
-
-**Local Development:**
+**Start local development environment:**
 ```bash
-./scripts/docker.sh seed
+# Start all services (Next.js, Medusa, Redis, PostgreSQL, Nginx)
+npm run dev:start
+
+# Access at https://localhost (self-signed SSL)
+# Storybook at http://localhost:6006
 ```
 
-**Production (DigitalOcean):**
+**When to restart vs rebuild:**
+- **Restart** (code changes, env changes): `npm run dev:restart`
+- **Rebuild** (package.json changes, Dockerfile changes): `npm run dev:build && npm run dev:start`
+
+**Stop services:**
+```bash
+npm run dev:stop
+```
+
+---
+
+### Production Deployment to DigitalOcean
+
+Production URL: **https://needthisdone.com**
+Server: `root@159.65.223.234`
+
+#### Standard Deployment (Code Changes Only)
+
+Use this for regular deployments when the database already has products seeded.
+
+**1. Test locally first:**
+```bash
+# On dev branch
+git checkout dev
+npm run dev:start
+# Test at https://localhost
+npm run dev:stop
+```
+
+**2. Push to GitHub:**
+```bash
+git push origin dev
+```
+
+**3. SSH to production and deploy:**
 ```bash
 ssh root@159.65.223.234
 cd /root/Need_This_Done
-./scripts/docker.sh --prod seed
+
+# Pull latest dev branch
+git pull origin dev
+
+# Stop containers
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
+
+# Rebuild and start (add --no-cache if Dockerfile changed)
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+# Check status
+docker ps
+docker logs medusa_backend --tail 50
+docker logs nextjs_app --tail 50
 ```
 
-This creates 3 consultation products ($20, $35, $50) that match the E2E test expectations.
+**4. Verify deployment:**
+```bash
+# Test the site
+curl -k https://needthisdone.com
+curl -k https://needthisdone.com/shop
+```
 
-**What it does:**
-1. Creates admin user (`admin@needthisdone.com`)
-2. Seeds products via Admin API using `medusa/seed-products.js`
-3. Verifies products exist in the store
-4. Requires `MEDUSA_ADMIN_PASSWORD` from `.env.local` (fails if not set)
+**5. If successful, merge to main:**
+```bash
+# On local machine
+git checkout main
+git merge dev
+git push origin main
+```
 
-**Why Development Works But Production Doesn't:**
-- **Development:** Uses volume mounts, `next dev`, self-signed SSL certificates, and lenient environment variable handling
-- **Production:** Code baked into image, `next start`, Let's Encrypt SSL, strict environment variable validation
-- **Key Fix:** `docker-compose.production.yml` must explicitly map env vars (e.g., `JWT_SECRET=${MEDUSA_JWT_SECRET}`) because production doesn't auto-load from `.env.local`
+---
 
-See [docker-compose.production.yml](docker-compose.production.yml:104-110) for the correct environment variable configuration.
+#### Fresh Database Deployment
+
+Use this when deploying to a new server or when you need to wipe the database.
+
+**Prerequisites:**
+- `.env.local` on production server with all required environment variables
+- **CRITICAL:** Ensure `MEDUSA_ADMIN_PASSWORD` is set in **BOTH** `.env.local` AND `.env` on the server
+
+**Why both .env files?**
+- **`.env.local`** - Services use this (Next.js, Medusa)
+- **`.env`** - Docker Compose uses this for variable substitution (e.g., `${MEDUSA_ADMIN_PASSWORD}`)
+
+**1. SSH to production:**
+```bash
+ssh root@159.65.223.234
+cd /root/Need_This_Done
+```
+
+**2. Verify environment variables:**
+```bash
+# Check .env.local has the password
+grep MEDUSA_ADMIN_PASSWORD .env.local
+
+# Check .env has the password (if not, add it)
+grep MEDUSA_ADMIN_PASSWORD .env
+
+# If missing from .env, add it:
+echo "" >> .env
+echo "# Medusa Admin Password" >> .env
+grep MEDUSA_ADMIN_PASSWORD .env.local >> .env
+```
+
+**3. Pull latest code:**
+```bash
+git fetch origin
+git checkout dev
+git pull origin dev
+```
+
+**4. Stop containers and drop database:**
+```bash
+# Stop all containers
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
+
+# Remove Medusa database volume (THIS DELETES ALL DATA)
+docker volume rm need_this_done_medusa_postgres_data
+
+# Verify it's gone
+docker volume ls | grep medusa
+```
+
+**5. Rebuild containers (no cache):**
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache medusa
+```
+
+**6. Start all containers:**
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
+
+**7. Wait for Medusa to be healthy:**
+```bash
+# Check Medusa logs (wait for "Server is ready on port: 9000")
+docker logs medusa_backend --tail 50 -f
+
+# Check health endpoint
+curl http://localhost:9000/health
+```
+
+**8. Create admin user:**
+```bash
+# Get password from .env
+ADMIN_PWD=$(grep '^MEDUSA_ADMIN_PASSWORD=' .env | cut -d'=' -f2)
+
+# Create admin user
+docker exec medusa_backend npx medusa user -e admin@needthisdone.com -p "$ADMIN_PWD"
+```
+
+**9. Seed products:**
+```bash
+# Run seed script (creates 3 consultation products)
+docker exec -e MEDUSA_ADMIN_PASSWORD="$ADMIN_PWD" medusa_backend node seed-products.js
+```
+
+**Expected output:**
+```
+Seeding consultation products...
+
+1. Authenticating...
+   ✓ Authenticated as admin@needthisdone.com
+2. Getting region...
+   ✓ Region: United States (reg_...)
+3. Getting shipping profile...
+   ✓ Profile: Default Shipping Profile (sp_...)
+4. Getting sales channel...
+   ✓ Channel: Default Sales Channel (sc_...)
+
+5. Creating consultation products...
+   ✓ 15-Minute Quick Consultation: Created ($20.00)
+   ✓ 30-Minute Strategy Consultation: Created ($35.00)
+   ✓ 55-Minute Deep Dive Consultation: Created ($50.00)
+
+6. Verifying products...
+   Found 3 products in store
+
+✅ Seeding complete!
+```
+
+**10. Verify in database:**
+```bash
+docker exec medusa_postgres psql -U medusa -d medusa \
+  -c "SELECT id, title, status FROM product WHERE deleted_at IS NULL;"
+```
+
+**11. Test the shop page:**
+```bash
+# Should show 3 products
+curl -s https://needthisdone.com/shop | grep -E "(Quick|Strategy|Deep Dive)"
+```
+
+**12. If successful, merge to main:**
+```bash
+# On local machine
+git checkout main
+git merge dev
+git push origin main
+```
+
+---
+
+### Common Issues & Fixes
+
+| Issue | Symptom | Solution |
+|-------|---------|----------|
+| **Environment variable warning** | `WARN: "MEDUSA_ADMIN_PASSWORD" variable is not set` | Add `MEDUSA_ADMIN_PASSWORD` to `.env` file (Docker Compose reads `.env`, services read `.env.local`) |
+| **Auth failed during seeding** | `Auth failed: Unauthorized` | Admin user password doesn't match. Delete user and recreate with correct password |
+| **No products on /shop** | Shop page empty after deployment | Database needs seeding. Follow "Fresh Database Deployment" steps 8-9 |
+| **Medusa won't start** | Container crashes on startup | Check logs: `docker logs medusa_backend`. Usually missing env vars or migration errors |
+| **Products showing but wrong data** | Old product titles/prices | Drop database and reseed, or update products via Admin API |
+| **Containers won't build** | Build errors during deployment | Use `--no-cache` flag: `docker-compose build --no-cache` |
+
+**Emergency rollback:**
+```bash
+ssh root@159.65.223.234
+cd /root/Need_This_Done
+
+# Stop containers
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
+
+# Find last working commit
+git log --oneline -10
+
+# Checkout that commit
+git checkout <commit-hash>
+
+# Rebuild and start
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
+
+---
+
+### Product Seeding Details
+
+**What gets seeded:**
+- 3 consultation products via `medusa/seed-products.js`
+- Uses Medusa Admin API (stable, documented, versioned with code)
+- Products include metadata: `requires_appointment: true`, `duration_minutes`, `service_type`
+
+**Products created:**
+
+| Product | Price | Duration | Handle |
+|---------|-------|----------|--------|
+| 15-Minute Quick Consultation | $20.00 | 15 min | `consultation-15-min` |
+| 30-Minute Strategy Consultation | $35.00 | 30 min | `consultation-30-min` |
+| 55-Minute Deep Dive Consultation | $50.00 | 55 min | `consultation-55-min` |
+
+**Why seed-products.js instead of seed.json?**
+- ✅ **Sustainable**: Uses official Medusa Admin API
+- ✅ **Idempotent**: Won't create duplicates if run multiple times
+- ✅ **Versioned**: Product definitions stored in git
+- ✅ **Flexible**: Easy to update product copy, pricing, metadata
+- ❌ **seed.json issues**: Required missing arrays, created duplicates with migrations
+
+**Admin credentials:**
+- Email: `admin@needthisdone.com`
+- Password: Set via `MEDUSA_ADMIN_PASSWORD` environment variable
 
 ---
 
