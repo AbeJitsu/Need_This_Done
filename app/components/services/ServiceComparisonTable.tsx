@@ -56,7 +56,7 @@ export default function ServiceComparisonTable({
             {rows.map((row, rowIdx) => (
               <tr
                 key={row.label}
-                className={rowIdx % 2 === 0 ? 'bg-gray-50 dark:bg-gray-700/30' : ''}
+                className={rowIdx % 2 === 0 ? 'bg-gray-50 dark:bg-gray-700' : ''}
               >
                 <td className={`p-3 ${headingColors.primary} font-medium`}>
                   {row.label}

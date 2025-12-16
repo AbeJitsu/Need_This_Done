@@ -31,7 +31,18 @@ All security issues fixed (Dec 2025):
 
 _Currently active work items_
 
-**Google Cloud Console Setup & Production Deployment** ← CURRENT PRIORITY
+**Fix Dark Mode Orange Button Contrast** ← CURRENT PRIORITY
+
+Orange "Book a Consultation" button has poor contrast in dark mode. Fix: white text/border on rich orange background (5:1 contrast).
+
+- [ ] Update `accentColors.orange` in `app/lib/colors.ts` (dark mode: bg-orange-700, text-white, border-white)
+- [ ] Update orange hover state in `app/components/Button.tsx`
+- [ ] Test in dev environment
+- [ ] Verify contrast meets 5:1 ratio
+
+---
+
+**Google Cloud Console Setup & Production Deployment**
 
 - [ ] Complete Google Cloud Console setup (see instructions in To Do section) ← BLOCKED: Needs user action
 - [ ] Manual testing in dev environment (once Google credentials available)
