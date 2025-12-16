@@ -177,7 +177,7 @@ export default function AdminProductsClient({ products }: AdminProductsClientPro
                           value={imageUrl}
                           onChange={(e) => setImageUrl(e.target.value)}
                           placeholder="https://..."
-                          className={`w-full px-3 py-2 border ${formInputColors.border} rounded-lg ${formInputColors.bg} ${formInputColors.text}`}
+                          className={`w-full px-3 py-2 rounded-lg ${formInputColors.base} ${formInputColors.focus}`}
                           disabled={uploading}
                         />
                       </div>
