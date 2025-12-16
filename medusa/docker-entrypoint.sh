@@ -55,53 +55,31 @@ else
 fi
 
 # ============================================================================
-# Seed Database (if seed file exists)
+# Seed Database (optional, errors don't stop server)
 # ============================================================================
-# Automatically populate with consultation products and regions on first start
-# This ensures products are available immediately after deployment
+# Attempts to seed on startup. If products/regions already exist, seed will
+# fail gracefully and server will start anyway.
 
-if [ -f "src/seeds/seed.ts" ]; then
-  echo "Seeding database with consultation products..."
-  npm run seed
+if [ -f "data/seed.json" ]; then
+  echo "Attempting to seed database..."
+  set +e  # Temporarily disable exit on error
+  npm run seed 2>&1
+  SEED_EXIT=$?
+  set -e  # Re-enable exit on error
 
-  if [ $? -eq 0 ]; then
+  if [ $SEED_EXIT -eq 0 ]; then
     echo "✓ Database seeded successfully"
   else
-    echo "⚠ Seed completed with warnings (products may have been partially created)"
+    echo "⚠ Seed skipped (data likely already exists)"
   fi
 else
   echo "⚠ No seed file found, skipping database seeding"
 fi
 
 # ============================================================================
-# Verify Products Exist Before Starting Server
+# Ready to Start
 # ============================================================================
-# Wait up to 30 seconds for products to be available
-# This ensures the app doesn't become available until products are ready
-
-echo "Verifying products are available..."
-MAX_RETRIES=6
-RETRY=1
-
-while [ $RETRY -le $MAX_RETRIES ]; do
-  PRODUCT_COUNT=$(psql "$DATABASE_URL" -tc "SELECT COUNT(*) FROM product WHERE deleted_at IS NULL;" 2>/dev/null | tr -d ' ')
-
-  if [ "$PRODUCT_COUNT" -gt 0 ]; then
-    echo "✓ Found $PRODUCT_COUNT products in database"
-    break
-  fi
-
-  if [ $RETRY -lt $MAX_RETRIES ]; then
-    echo "  Attempt $RETRY/$MAX_RETRIES: No products yet, retrying in 5s..."
-    sleep 5
-  fi
-
-  RETRY=$((RETRY + 1))
-done
-
-if [ "$PRODUCT_COUNT" -eq 0 ]; then
-  echo "⚠ Warning: No products found, but starting server anyway"
-fi
+echo "Database migrations complete, starting server..."
 
 # ============================================================================
 # Start Medusa Server

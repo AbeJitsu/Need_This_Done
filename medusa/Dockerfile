@@ -15,9 +15,10 @@ COPY package*.json ./
 RUN npm ci --legacy-peer-deps
 
 # ============================================================================
-# Copy source code
+# Copy source code and seed data
 # ============================================================================
 COPY . .
+# COPY data/seed.json ./data/seed.json  # Commented out - COPY . . already handles this
 
 # ============================================================================
 # Build TypeScript
