@@ -39,7 +39,7 @@
     "@supabase/supabase-js": "^2.38.0",
     "ai": "^5.0.108",
     "iron-session": "^8.0.0",
-    "next": "^14.0.0",
+    "next": "^14.2.35",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "redis": "^4.6.0",
