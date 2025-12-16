@@ -194,7 +194,7 @@ export default function AdminProductsClient({ products }: AdminProductsClientPro
                             const file = e.target.files?.[0];
                             if (file) handleFileUpload(product.id, file);
                           }}
-                          className={`w-full text-sm ${formInputColors.text}`}
+                          className={`w-full text-sm ${formInputColors.label}`}
                           disabled={uploading}
                         />
                       </div>
