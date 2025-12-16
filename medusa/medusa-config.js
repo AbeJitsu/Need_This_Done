@@ -46,7 +46,7 @@ function requireEnv(name, fallbackName) {
 }
 
 const REDIS_URL = requireEnv('REDIS_URL');
-const DATABASE_URL = requireEnv('DATABASE_URL');
+const DATABASE_URL = requireEnv('DATABASE_URL', 'MEDUSA_DATABASE_URL');
 const JWT_SECRET = requireEnv('JWT_SECRET', 'MEDUSA_JWT_SECRET');
 const COOKIE_SECRET = requireEnv('COOKIE_SECRET');
 
