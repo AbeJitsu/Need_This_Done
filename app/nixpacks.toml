@@ -1,0 +1,11 @@
+# ============================================================================
+# Nixpacks Configuration for Next.js on Railway
+# ============================================================================
+# Railway auto-detects Next.js and handles most settings.
+# This file just ensures Node 20 for consistency with Medusa.
+
+[phases.setup]
+nixPkgs = ["nodejs_20", "npm-9_x"]
+
+[start]
+cmd = "npm run start"
