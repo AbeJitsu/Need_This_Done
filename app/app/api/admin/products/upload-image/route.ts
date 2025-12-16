@@ -1,0 +1,72 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+// ============================================================================
+// Upload Image to Supabase Storage
+// ============================================================================
+// What: Uploads product images to Supabase Storage
+// Why: Provides centralized image hosting with public URLs
+// How: Uses service role key to bypass RLS, uploads to product-images bucket
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+export async function POST(request: NextRequest) {
+  try {
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
+    const productId = formData.get('productId') as string;
+
+    if (!file) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    }
+
+    if (!productId) {
+      return NextResponse.json({ error: 'No product ID provided' }, { status: 400 });
+    }
+
+    // Generate filename based on product ID
+    const fileExt = file.name.split('.').pop();
+    const fileName = `product-${productId}.${fileExt}`;
+    const filePath = fileName;
+
+    // Convert File to ArrayBuffer then Buffer
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Upload to Supabase Storage
+    const { data, error } = await supabase.storage
+      .from('product-images')
+      .upload(filePath, buffer, {
+        contentType: file.type,
+        upsert: true, // Replace existing file
+      });
+
+    if (error) {
+      console.error('[Upload Image] Supabase error:', error);
+      return NextResponse.json(
+        { error: `Failed to upload: ${error.message}` },
+        { status: 500 }
+      );
+    }
+
+    // Get public URL
+    const { data: urlData } = supabase.storage
+      .from('product-images')
+      .getPublicUrl(filePath);
+
+    return NextResponse.json({
+      success: true,
+      url: urlData.publicUrl,
+      path: data.path,
+    });
+  } catch (error) {
+    console.error('[Upload Image] Error:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Upload failed' },
+      { status: 500 }
+    );
+  }
+}

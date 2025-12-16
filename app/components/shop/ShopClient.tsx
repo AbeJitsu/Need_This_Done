@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -131,12 +130,10 @@ export default function ShopClient({ products }: ShopClientProps) {
                   {/* Product image */}
                   {image && (
                     <div className={`relative w-full h-40 ${placeholderColors.bg} rounded-t-lg overflow-hidden`}>
-                      <Image
+                      <img
                         src={image}
                         alt={product.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover"
+                        className="w-full h-full object-cover"
                       />
                     </div>
                   )}

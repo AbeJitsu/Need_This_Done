@@ -17,12 +17,19 @@ const nextConfig = {
   // Next.js automatically optimizes images for performance
   // Like a food photographing service - makes your dish look great
   images: {
-    // Only load images from your own domain for security
-    domains: [],
+    // Disable Next.js image optimization - serve images directly from Supabase
+    // This bypasses the /_next/image API which is causing issues
+    unoptimized: true,
 
-    // Cache images for 1 year (they don't change often)
-    // Browsers download once, use forever
-    formats: ['image/webp', 'image/avif'],
+    // Allowed remote patterns for external images
+    // Supabase storage domain for product images
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'oxhjtmozsdstbokwtnwa.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
   },
 
   // ========================================================================
