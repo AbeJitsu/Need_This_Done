@@ -30,6 +30,7 @@
       "SlashCommand(/dac)",
       "Task(*)",
       "Bash(playwright:*)",
+      "Bash(npx playwright:*)",
       "Bash(docker-compose:*)",
       "Bash(mkdir:*)",
       "Bash(cp:*)",

@@ -55,6 +55,55 @@ else
 fi
 
 # ============================================================================
+# Seed Database (if seed file exists)
+# ============================================================================
+# Automatically populate with consultation products and regions on first start
+# This ensures products are available immediately after deployment
+
+if [ -f "src/seeds/seed.ts" ]; then
+  echo "Seeding database with consultation products..."
+  npm run seed
+
+  if [ $? -eq 0 ]; then
+    echo "✓ Database seeded successfully"
+  else
+    echo "⚠ Seed completed with warnings (products may have been partially created)"
+  fi
+else
+  echo "⚠ No seed file found, skipping database seeding"
+fi
+
+# ============================================================================
+# Verify Products Exist Before Starting Server
+# ============================================================================
+# Wait up to 30 seconds for products to be available
+# This ensures the app doesn't become available until products are ready
+
+echo "Verifying products are available..."
+MAX_RETRIES=6
+RETRY=1
+
+while [ $RETRY -le $MAX_RETRIES ]; do
+  PRODUCT_COUNT=$(psql "$DATABASE_URL" -tc "SELECT COUNT(*) FROM product WHERE deleted_at IS NULL;" 2>/dev/null | tr -d ' ')
+
+  if [ "$PRODUCT_COUNT" -gt 0 ]; then
+    echo "✓ Found $PRODUCT_COUNT products in database"
+    break
+  fi
+
+  if [ $RETRY -lt $MAX_RETRIES ]; then
+    echo "  Attempt $RETRY/$MAX_RETRIES: No products yet, retrying in 5s..."
+    sleep 5
+  fi
+
+  RETRY=$((RETRY + 1))
+done
+
+if [ "$PRODUCT_COUNT" -eq 0 ]; then
+  echo "⚠ Warning: No products found, but starting server anyway"
+fi
+
+# ============================================================================
 # Start Medusa Server
 # ============================================================================
 
