@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import type { Product } from '@/lib/medusa-client';
@@ -74,13 +73,10 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         {/* Product image */}
         {image ? (
           <div className="relative bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden h-96">
-            <Image
+            <img
               src={image}
               alt={product.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
-              priority
+              className="w-full h-full object-cover"
             />
           </div>
         ) : (

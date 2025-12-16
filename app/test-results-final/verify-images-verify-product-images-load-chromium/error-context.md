@@ -1,0 +1,104 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - navigation [ref=e3]:
+    - generic [ref=e5]:
+      - link "Need This Done" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - link "Services" [ref=e9] [cursor=pointer]:
+            - /url: /services
+          - link "Shop" [ref=e10] [cursor=pointer]:
+            - /url: /shop
+          - link "Pricing" [ref=e11] [cursor=pointer]:
+            - /url: /pricing
+        - link "Get a Quote" [ref=e12] [cursor=pointer]:
+          - /url: /contact
+        - link "Shopping cart" [ref=e13] [cursor=pointer]:
+          - /url: /cart
+          - img [ref=e14]
+        - button "Switch to dark mode" [ref=e16] [cursor=pointer]:
+          - img [ref=e17]
+        - link "Sign in" [ref=e20] [cursor=pointer]:
+          - /url: /login
+  - main [ref=e21]:
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - heading "Quick Consultations" [level=1] [ref=e24]
+        - paragraph [ref=e25]: Not ready for a full project? Book a call first. Get expert guidance, ask questions, or figure out what you actually need—before committing to anything.
+      - paragraph [ref=e26]:
+        - link "← Compare our full services" [ref=e27] [cursor=pointer]:
+          - /url: /services
+        - text: ·
+        - link "Request a free quote →" [ref=e28] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=e29]:
+        - generic [ref=e31]:
+          - img "15-Minute Quick Consultation" [ref=e33]
+          - generic [ref=e34]:
+            - heading "15-Minute Quick Consultation" [level=3] [ref=e35]
+            - paragraph [ref=e36]: $20.00
+            - paragraph [ref=e37]: Got a quick question or need a sanity check? In 15 minutes, we'll cut through the confusion and give you clear direction—so you can stop second-guessing and start moving forward.
+            - generic [ref=e38]:
+              - link "Details" [ref=e39] [cursor=pointer]:
+                - /url: /shop/prod_01KCKXXQ5NGCS7F85JDVDXV3DG
+              - button "Add to Cart" [ref=e40] [cursor=pointer]
+        - generic [ref=e42]:
+          - img "30-Minute Strategy Consultation" [ref=e44]
+          - generic [ref=e45]:
+            - heading "30-Minute Strategy Consultation" [level=3] [ref=e46]
+            - paragraph [ref=e47]: $35.00
+            - paragraph [ref=e48]: Not sure where to start? This is our most popular option. We'll dig into your project together, talk through your options, and map out a clear path forward—no more spinning your wheels.
+            - generic [ref=e49]:
+              - link "Details" [ref=e50] [cursor=pointer]:
+                - /url: /shop/prod_01KCKXXQG5TYFDMKRC15SA7SDE
+              - button "Add to Cart" [ref=e51] [cursor=pointer]
+        - generic [ref=e53]:
+          - img "55-Minute Deep Dive Consultation" [ref=e55]
+          - generic [ref=e56]:
+            - heading "55-Minute Deep Dive Consultation" [level=3] [ref=e57]
+            - paragraph [ref=e58]: $50.00
+            - paragraph [ref=e59]: For bigger challenges that need real thinking time. We'll explore everything—your situation, your goals, the obstacles—and leave you with a concrete plan you can actually act on.
+            - generic [ref=e60]:
+              - link "Details" [ref=e61] [cursor=pointer]:
+                - /url: /shop/prod_01KCKXXQQSGB5H9BFRHP6CW354
+              - button "Add to Cart" [ref=e62] [cursor=pointer]
+  - contentinfo [ref=e63]:
+    - generic [ref=e64]:
+      - generic [ref=e65]:
+        - generic [ref=e66]:
+          - link "NeedThisDone" [ref=e67] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=e68]: Real people helping busy professionals get things done.
+        - generic [ref=e69]:
+          - heading "Quick Links" [level=3] [ref=e70]
+          - list [ref=e71]:
+            - listitem [ref=e72]:
+              - link "How It Works" [ref=e73] [cursor=pointer]:
+                - /url: /how-it-works
+            - listitem [ref=e74]:
+              - link "Contact" [ref=e75] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e76]:
+              - link "Pricing" [ref=e77] [cursor=pointer]:
+                - /url: /pricing
+        - generic [ref=e78]:
+          - heading "Help" [level=3] [ref=e79]
+          - list [ref=e80]:
+            - listitem [ref=e81]:
+              - link "FAQ" [ref=e82] [cursor=pointer]:
+                - /url: /faq
+            - listitem [ref=e83]:
+              - link "Get Started" [ref=e84] [cursor=pointer]:
+                - /url: /get-started
+            - listitem [ref=e85]:
+              - button "Chat with AI assistant" [ref=e86] [cursor=pointer]
+      - generic [ref=e87]: © 2025 NeedThisDone
+  - button "Open AI chat assistant" [ref=e88] [cursor=pointer]:
+    - img [ref=e89]
+  - alert [ref=e91]
+```

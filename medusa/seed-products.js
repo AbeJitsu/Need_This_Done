@@ -128,6 +128,8 @@ async function main() {
       description: "Got a quick question or need a sanity check? In 15 minutes, we'll cut through the confusion and give you clear direction—so you can stop second-guessing and start moving forward.",
       duration: 15,
       price: 2000, // $20.00
+      thumbnail: 'https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-15min.jpg',
+      images: ['https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-15min.jpg']
     },
     {
       title: '30-Minute Strategy Consultation',
@@ -135,6 +137,8 @@ async function main() {
       description: "Not sure where to start? This is our most popular option. We'll dig into your project together, talk through your options, and map out a clear path forward—no more spinning your wheels.",
       duration: 30,
       price: 3500, // $35.00
+      thumbnail: 'https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-30min.jpg',
+      images: ['https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-30min.jpg']
     },
     {
       title: '55-Minute Deep Dive Consultation',
@@ -142,6 +146,8 @@ async function main() {
       description: "For bigger challenges that need real thinking time. We'll explore everything—your situation, your goals, the obstacles—and leave you with a concrete plan you can actually act on.",
       duration: 55,
       price: 5000, // $50.00
+      thumbnail: 'https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-55min.jpg',
+      images: ['https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-55min.jpg']
     }
   ];
 
@@ -161,6 +167,8 @@ async function main() {
       status: 'published',
       is_giftcard: false,
       discountable: true,
+      thumbnail: product.thumbnail,
+      images: product.images,
       sales_channels: [{ id: channel.id }],
       metadata: {
         requires_appointment: true,

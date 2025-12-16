@@ -57,9 +57,17 @@ export async function POST(request: NextRequest) {
     try {
       cart = await medusaClient.carts.get(cart_id);
       // Check if any items require appointments
-      requiresAppointment = cart.items?.some(
-        (item) => item.product?.metadata?.requires_appointment === true
-      ) || false;
+      // Note: Medusa v1 with expand=items.variant.product puts product at item.variant.product
+      requiresAppointment =
+        cart.items?.some((item) => {
+          // Check both possible locations - Medusa v1 nests product under variant
+          const metadata =
+            (item.variant as { product?: { metadata?: Record<string, unknown> } })?.product
+              ?.metadata || item.product?.metadata;
+          const flag = metadata?.requires_appointment;
+          // Handle both boolean true and string "true"
+          return flag === true || flag === 'true';
+        }) || false;
     } catch (error) {
       console.error('Failed to fetch cart for appointment check:', error);
       // Continue checkout even if cart fetch fails

@@ -1,0 +1,17 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Green checkmark badge favicon for NeedThisDone -->
+  <!-- Background: Green-700, Border & Check: Green-100 -->
+
+  <!-- Outer circle with light green border -->
+  <circle cx="32" cy="32" r="30" fill="#15803d" stroke="#dcfce7" stroke-width="3"/>
+
+  <!-- Checkmark in light green -->
+  <path
+    d="M 20 32 L 28 40 L 44 24"
+    stroke="#dcfce7"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

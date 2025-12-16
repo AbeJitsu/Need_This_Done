@@ -32,19 +32,32 @@ export async function POST(request: NextRequest) {
       const cart = await medusaClient.carts.get(cart_id);
 
       // Find first appointment-required item for service details
-      const appointmentItem = cart.items?.find(
-        (item) => item.product?.metadata?.requires_appointment === true
-      );
+      // Note: Medusa v1 with expand=items.variant.product puts product at item.variant.product
+      const appointmentItem = cart.items?.find((item) => {
+        // Check both possible locations - Medusa v1 nests product under variant
+        const metadata =
+          (item.variant as { product?: { metadata?: Record<string, unknown> } })?.product
+            ?.metadata || item.product?.metadata;
+        const flag = metadata?.requires_appointment;
+        // Handle both boolean true and string "true"
+        return flag === true || flag === 'true';
+      });
 
       if (appointmentItem) {
         requiresAppointment = true;
 
+        // Get product from either location
+        const product =
+          (appointmentItem.variant as { product?: { title?: string; metadata?: Record<string, unknown> } })?.product ||
+          appointmentItem.product;
+
         // Extract service name and duration from product
-        serviceName = appointmentItem.product?.title || 'Consultation';
+        serviceName = product?.title || 'Consultation';
 
         // Try to extract duration from metadata or parse from title
-        if (appointmentItem.product?.metadata?.duration_minutes) {
-          durationMinutes = Number(appointmentItem.product.metadata.duration_minutes);
+        const metadata = product?.metadata;
+        if (metadata?.duration_minutes) {
+          durationMinutes = Number(metadata.duration_minutes);
         } else {
           // Parse duration from title like "30-Minute Strategy Consultation"
           const match = serviceName.match(/(\d+)-?(?:minute|min)/i);
