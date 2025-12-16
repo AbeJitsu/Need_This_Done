@@ -111,6 +111,10 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 
+# Create writable cache directory for Next.js fetch caching
+# Next.js needs to write to .next/cache at runtime
+RUN mkdir -p .next/cache && chown -R nextjs:nodejs .next/cache
+
 # Switch to non-root user
 USER nextjs
 
