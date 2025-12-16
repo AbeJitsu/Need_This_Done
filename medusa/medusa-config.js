@@ -71,14 +71,9 @@ module.exports = {
     // ============================================================================
     // Database Configuration
     // ============================================================================
-    // Medusa uses its own schema in Supabase to avoid conflicts with app tables
-    // Schema separation prevents migration conflicts and enables clean organization
+    // Using default public schema - connection poolers don't preserve schema settings
     database_url: DATABASE_URL,
     database_type: "postgres",
-    database_schema: "medusa",
-    database_extra: {
-      options: "-c search_path=medusa,public"
-    },
     redis_url: REDIS_URL,
 
     // ============================================================================
