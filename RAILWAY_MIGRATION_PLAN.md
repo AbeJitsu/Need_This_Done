@@ -580,6 +580,23 @@ This approach is fast, repeatable, and scriptable.
 
 ---
 
+## Prerequisites
+
+### 0. Upgrade Next.js (Security Requirement)
+
+Railway blocks deployments with known security vulnerabilities. Upgrade Next.js before deploying:
+
+```bash
+cd app
+npm install next@^14.2.35
+```
+
+**Why:** Railway scans the entire repo for vulnerabilities. CVE-2025-55184 and CVE-2025-67779 affect Next.js versions below 14.2.35.
+
+**Also:** Set **Root Directory** to `medusa` in Railway service settings so it only builds the Medusa service, not the entire repo.
+
+---
+
 ## Prerequisites Installation
 
 ### 1. Install Railway CLI
