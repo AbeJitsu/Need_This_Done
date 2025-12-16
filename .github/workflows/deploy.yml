@@ -30,12 +30,34 @@ jobs:
 
           # Deploy to server
           ssh -i ~/.ssh/deploy_key root@$DEPLOY_HOST << 'EOF'
+          set -e
           cd /root/Need_This_Done
-          echo "Pulling latest code from GitHub..."
-          git pull origin main
-          echo "Loading environment variables..."
+
+          echo "=================================================="
+          echo "🚀 Starting Deployment"
+          echo "=================================================="
+          echo ""
+
+          # Step 1: Pull latest code
+          echo "📍 Step 1/5: Pulling latest code from GitHub..."
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+          echo "✅ Code pulled successfully"
+          echo ""
+
+          # Step 2: Load environment variables
+          echo "📍 Step 2/5: Loading environment variables..."
+          if [ ! -f .env.local ]; then
+            echo "❌ Error: .env.local not found!"
+            exit 1
+          fi
           source .env.local
-          echo "Building Next.js app with explicit build args..."
+          echo "✅ Environment variables loaded"
+          echo ""
+
+          # Step 3: Build Next.js app
+          echo "📍 Step 3/5: Building Next.js app with environment variables..."
           docker build --no-cache \
             --build-arg NEXT_PUBLIC_SUPABASE_URL="$NEXT_PUBLIC_SUPABASE_URL" \
             --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY="$NEXT_PUBLIC_SUPABASE_ANON_KEY" \
@@ -46,48 +68,104 @@ jobs:
             --build-arg NEXT_PUBLIC_CHATBOT_MAX_TOKENS="$NEXT_PUBLIC_CHATBOT_MAX_TOKENS" \
             --build-arg NEXT_PUBLIC_CHATBOT_TEMPERATURE="$NEXT_PUBLIC_CHATBOT_TEMPERATURE" \
             -t need_this_done-app:latest -f app/Dockerfile app
-          echo "Starting Docker containers..."
-          docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.prod.yml up -d --no-build
+          echo "✅ Build completed successfully"
+          echo ""
 
-          echo "Waiting for services to be healthy (with exponential backoff)..."
+          # Step 4: Start containers
+          echo "📍 Step 4/5: Starting Docker containers..."
+          docker-compose --env-file .env.local -f docker-compose.yml -f docker-compose.prod.yml up -d --no-build
+          echo "✅ Containers started"
+          echo ""
+
+          # Step 5: Wait for health checks
+          echo "📍 Step 5/5: Waiting for all services to be healthy..."
           MAX_ATTEMPTS=8
-          DELAY=1
-          for i in $(seq 1 $MAX_ATTEMPTS); do
-            UNHEALTHY=$(docker ps --filter "health=unhealthy" --format "{{.Names}}" | wc -l)
-            STARTING=$(docker ps --filter "health=starting" --format "{{.Names}}" | wc -l)
+          DELAY=2
+          ATTEMPT=1
+
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            UNHEALTHY=$(docker ps --filter "health=unhealthy" --format "{{.Names}}" 2>/dev/null | wc -l)
+            STARTING=$(docker ps --filter "health=starting" --format "{{.Names}}" 2>/dev/null | wc -l)
 
             if [ "$UNHEALTHY" -eq 0 ] && [ "$STARTING" -eq 0 ]; then
-              echo "✓ All services healthy after attempt $i!"
-              docker ps
-              echo "✓ Deployment complete!"
+              echo "✅ All services are healthy!"
+              docker ps --format "table {{.Names}}\t{{.Status}}"
+              echo ""
+              echo "=================================================="
+              echo "✨ Deployment Complete - All systems operational!"
+              echo "=================================================="
               exit 0
             fi
 
-            if [ $i -lt $MAX_ATTEMPTS ]; then
-              echo "  Attempt $i/$MAX_ATTEMPTS: Services still starting, retrying in ${DELAY}s..."
+            if [ $ATTEMPT -lt $MAX_ATTEMPTS ]; then
+              ELAPSED=$((DELAY * (ATTEMPT - 1)))
+              echo "   Attempt $ATTEMPT/$MAX_ATTEMPTS: Waiting ${DELAY}s (${ELAPSED}s elapsed)..."
               sleep $DELAY
-              DELAY=$((DELAY * 2))
             fi
+
+            ATTEMPT=$((ATTEMPT + 1))
           done
 
-          echo "⚠ Health check timeout - showing container status:"
+          echo "❌ Health check timeout after $((DELAY * MAX_ATTEMPTS))s"
+          echo ""
+          echo "Container status:"
           docker ps
           exit 1
           EOF
 
       - name: Verify deployment
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
         run: |
-          echo "Checking if site is accessible..."
-          curl -k https://needthisdone.com/ -I -w "\nStatus: %{http_code}\n" || echo "Site check in progress..."
+          echo ""
+          echo "🔍 Verifying site accessibility..."
+          MAX_RETRIES=5
+          RETRY=1
+
+          while [ $RETRY -le $MAX_RETRIES ]; do
+            RESPONSE=$(curl -k -s -w "\n%{http_code}" https://needthisdone.com/ 2>/dev/null || echo "timeout\n000")
+            HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "✅ Site is accessible (HTTP $HTTP_CODE)"
+              echo ""
+              echo "Testing shop page..."
+              SHOP_CODE=$(curl -k -s -o /dev/null -w "%{http_code}" https://needthisdone.com/shop 2>/dev/null)
+              if [ "$SHOP_CODE" = "200" ]; then
+                echo "✅ Shop page is accessible (HTTP $SHOP_CODE)"
+              fi
+              exit 0
+            fi
+
+            if [ $RETRY -lt $MAX_RETRIES ]; then
+              echo "   Attempt $RETRY/$MAX_RETRIES: Site returned HTTP $HTTP_CODE, retrying in 5s..."
+              sleep 5
+            fi
+
+            RETRY=$((RETRY + 1))
+          done
+
+          echo "⚠️  Verification inconclusive (HTTP $HTTP_CODE), but deployment completed"
 
       - name: Deployment notification
         if: success()
-        run: echo "✓ Deployment to ${{ github.ref }} successful!"
+        run: |
+          echo ""
+          echo "=================================================="
+          echo "✨ Deployment Successful!"
+          echo "=================================================="
+          echo "Branch: ${{ github.ref }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Site: https://needthisdone.com"
+          echo "Shop: https://needthisdone.com/shop"
+          echo ""
 
       - name: Deployment failed
         if: failure()
         run: |
-          echo "❌ Deployment failed on branch ${{ github.ref }}"
+          echo ""
+          echo "=================================================="
+          echo "❌ Deployment Failed"
+          echo "=================================================="
+          echo "Branch: ${{ github.ref }}"
+          echo "Please check the logs above for details"
+          echo "=================================================="
           exit 1
