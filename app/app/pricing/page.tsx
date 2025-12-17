@@ -74,42 +74,84 @@ export default async function PricingPage() {
           })}
         </div>
 
-        {/* Dual-Option CTA - Two clear paths forward */}
-        <div className="mb-8">
-          <h3 className={`text-2xl font-bold ${headingColors.primary} text-center mb-6`}>
+        {/* Choose Your Path - Two clear options */}
+        <div className="text-center mb-8">
+          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
             Ready to Move Forward?
-          </h3>
-          <div className="grid sm:grid-cols-2 gap-6">
-            {/* Option 1: Free Quote */}
-            <Card hoverColor="green" hoverEffect="glow">
-              <div className="text-center p-2">
-                <h4 className={`text-lg font-semibold ${headingColors.primary} mb-2`}>
-                  Get a Free Quote
-                </h4>
-                <p className={`${formInputColors.helper} mb-4 text-sm`}>
-                  Tell us what you need. We&apos;ll respond in 2 days.
-                </p>
-                <Button variant="green" href="/contact" size="lg" className="w-full">
-                  Get Started
-                </Button>
-              </div>
-            </Card>
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            You&apos;ve seen what we offer. Pick the path that feels right for you.
+          </p>
+        </div>
 
-            {/* Option 2: Paid Consultation */}
-            <Card hoverColor="blue" hoverEffect="glow">
-              <div className="text-center p-2">
-                <h4 className={`text-lg font-semibold ${headingColors.primary} mb-2`}>
-                  Book a Consultation
-                </h4>
-                <p className={`${formInputColors.helper} mb-4 text-sm`}>
-                  Let&apos;s figure it out together. Sessions from $20.
-                </p>
-                <Button variant="blue" href="/shop" size="lg" className="w-full">
-                  Book Now
-                </Button>
+        <div className="grid md:grid-cols-2 gap-6 mb-10">
+          {/* Path 1: Get a Quote (FREE) */}
+          <Card hoverColor="green" hoverEffect="lift" className="h-full">
+            <div className="p-8 h-full flex flex-col">
+              <div className="mb-4">
+                <span className="inline-block px-4 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-sm font-semibold">
+                  Free
+                </span>
               </div>
-            </Card>
-          </div>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                Get a Quote
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-6">
+                Tell us about your project and get a custom quote
+              </p>
+              <ul className="space-y-3 mb-6 flex-grow">
+                <li className="flex items-center gap-2">
+                  <span className="text-green-600 dark:text-green-400">✓</span>
+                  <span className="text-gray-700 dark:text-gray-300">Free, no obligation</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-green-600 dark:text-green-400">✓</span>
+                  <span className="text-gray-700 dark:text-gray-300">Response in 2 business days</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-green-600 dark:text-green-400">✓</span>
+                  <span className="text-gray-700 dark:text-gray-300">Custom pricing for your needs</span>
+                </li>
+              </ul>
+              <Button variant="green" href="/contact" size="lg" className="w-full">
+                Get a Quote
+              </Button>
+            </div>
+          </Card>
+
+          {/* Path 2: Book a Consultation (PAID) */}
+          <Card hoverColor="purple" hoverEffect="lift" className="h-full">
+            <div className="p-8 h-full flex flex-col">
+              <div className="mb-4">
+                <span className="inline-block px-4 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-sm font-semibold">
+                  Expert Help
+                </span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                Book a Consultation
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-6">
+                Talk to an expert before you start
+              </p>
+              <ul className="space-y-3 mb-6 flex-grow">
+                <li className="flex items-center gap-2">
+                  <span className="text-purple-600 dark:text-purple-400">✓</span>
+                  <span className="text-gray-700 dark:text-gray-300">Expert guidance and advice</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-purple-600 dark:text-purple-400">✓</span>
+                  <span className="text-gray-700 dark:text-gray-300">Immediate scheduling</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-purple-600 dark:text-purple-400">✓</span>
+                  <span className="text-gray-700 dark:text-gray-300">Personalized recommendations</span>
+                </li>
+              </ul>
+              <Button variant="purple" href="/shop" size="lg" className="w-full">
+                Book a Consultation
+              </Button>
+            </div>
+          </Card>
         </div>
 
         {/* Payment Structure Note */}
@@ -143,24 +185,6 @@ export default async function PricingPage() {
           </Card>
         )}
 
-        {/* Custom Tasks + FAQ */}
-        <Card hoverColor={content.customSection.hoverColor || 'orange'} hoverEffect="glow">
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className={`text-2xl font-bold ${headingColors.primary} mb-4`}>
-              {content.customSection.title}
-            </h2>
-            <p className={`${formInputColors.helper} mb-6`}>
-              {content.customSection.description}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {content.customSection.buttons.map((button, index) => (
-                <Button key={index} variant={button.variant} href={button.href}>
-                  {button.text}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </Card>
     </div>
   );
 }
