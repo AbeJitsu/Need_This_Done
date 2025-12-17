@@ -25,13 +25,13 @@ interface ButtonProps {
 // Hover States - Button-specific hover effects
 // ============================================================================
 const hoverStates: Record<AccentVariant, string> = {
-  purple: 'hover:text-purple-800 hover:border-purple-600 dark:hover:border-purple-300',
-  blue: 'hover:text-blue-800 hover:border-blue-600 dark:hover:border-blue-300',
-  green: 'hover:text-green-900 hover:border-green-600 dark:hover:border-green-300',
-  orange: 'hover:text-orange-900 hover:border-orange-600 dark:hover:text-orange-100 dark:hover:border-orange-200',
-  teal: 'hover:text-teal-900 hover:border-teal-600 dark:hover:border-teal-300',
-  red: 'hover:text-red-900 hover:border-red-600 dark:hover:border-red-300',
-  gray: 'hover:text-gray-800 hover:border-gray-600 dark:hover:border-gray-300',
+  purple: 'hover:text-purple-800 hover:border-purple-600 dark:hover:text-white dark:hover:border-purple-200',
+  blue: 'hover:text-blue-800 hover:border-blue-600 dark:hover:text-white dark:hover:border-blue-200',
+  green: 'hover:text-green-900 hover:border-green-600 dark:hover:text-white dark:hover:border-green-200',
+  orange: 'hover:text-orange-900 hover:border-orange-600 dark:hover:text-white dark:hover:border-orange-200',
+  teal: 'hover:text-teal-900 hover:border-teal-600 dark:hover:text-white dark:hover:border-teal-200',
+  red: 'hover:text-red-900 hover:border-red-600 dark:hover:text-white dark:hover:border-red-200',
+  gray: 'hover:text-gray-800 hover:border-gray-600 dark:hover:text-white dark:hover:border-gray-200',
 };
 
 // ============================================================================

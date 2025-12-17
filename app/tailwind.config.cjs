@@ -37,6 +37,8 @@ const config = {
 
     // Backgrounds - dark mode (bg-800) for lightBgColors contrast
     'dark:bg-purple-800', 'dark:bg-blue-800', 'dark:bg-green-800', 'dark:bg-orange-800', 'dark:bg-teal-800', 'dark:bg-gray-800', 'dark:bg-red-800',
+    // Orange-500 for vibrant button background
+    'dark:bg-orange-500',
 
     // Text colors - light mode (text-700/800)
     'text-purple-700', 'text-blue-700', 'text-green-800', 'text-orange-800', 'text-teal-800', 'text-gray-700', 'text-red-800',
@@ -46,6 +48,8 @@ const config = {
 
     // Border colors - dark mode (border-300/400)
     'dark:border-purple-400', 'dark:border-blue-400', 'dark:border-green-400', 'dark:border-orange-400', 'dark:border-teal-400', 'dark:border-gray-400', 'dark:border-red-300',
+    // Orange light borders for 5:1 contrast
+    'dark:border-orange-200', 'dark:border-orange-100',
 
     // Hover text colors
     'hover:text-purple-800', 'hover:text-blue-800', 'hover:text-green-900', 'hover:text-orange-900', 'hover:text-teal-900', 'hover:text-gray-800',
@@ -55,6 +59,8 @@ const config = {
 
     // Hover border colors - dark mode
     'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300', 'dark:hover:border-orange-300', 'dark:hover:border-teal-300', 'dark:hover:border-gray-300',
+    // Orange light hover borders
+    'dark:hover:border-orange-200', 'dark:hover:border-orange-100',
 
     // Card hover colors - light mode (for Card component)
     'hover:border-purple-400', 'hover:border-blue-400', 'hover:border-green-400',
