@@ -27,30 +27,34 @@ export default function StepCard({
   color,
   href,
 }: StepCardProps) {
-  const cardClasses = `${cardBgColors.base} rounded-xl p-8 ${cardBorderColors.subtle} transition-all ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`;
+  const cardClasses = `${cardBgColors.base} rounded-xl p-12 ${cardBorderColors.subtle} transition-all ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`;
 
   const cardContent = (
       <div>
-        {/* Title row with badge */}
-        <div className="flex items-start gap-4 mb-3">
-          <CircleBadge number={number} color={color} />
+        {/* Title row with badge - centered */}
+        <div className="flex items-start justify-center gap-4 mb-6">
+          <CircleBadge number={number} color={color} size="sm" />
           <h2 className={`text-xl font-bold ${titleTextColors[color]}`}>
             {title}
           </h2>
         </div>
 
-        {/* Content - indented to align with title */}
-        <p className={`ml-[4.5rem] ${bodyTextColors.gray} mb-4`}>
-          {description}
-        </p>
-        <ul className="ml-[4.5rem] space-y-2">
+        {/* Content block - centered container with left-aligned text */}
+        <div className="flex justify-center">
+          <div className="w-full max-w-sm px-6 py-4">
+            <p className={`${bodyTextColors.gray} mb-4`}>
+              {description}
+            </p>
+            <ul className="space-y-3">
           {details.map((detail, index) => (
             <li key={index} className={`flex items-center gap-2 text-sm ${bodyTextColors.gray}`}>
               <span className={titleTextColors[color]}>•</span>
               {detail}
             </li>
           ))}
-        </ul>
+            </ul>
+          </div>
+        </div>
         {href && (
           <p className={`text-sm font-medium mt-4 ${titleTextColors[color]}`}>
             Learn more →

@@ -330,9 +330,9 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
   steps: [
     {
       number: 1,
-      title: 'Start the Conversation',
+      title: 'Tell Us Your Needs',
       description:
-        'Tell us what you need in your own words. No tech speak required—just describe what\'s on your plate and we\'ll take it from there.',
+        'No tech speak required. Just describe what\'s on your plate and we\'ll take it from there.',
       details: [
         'Fill out our simple contact form',
         'Attach any relevant files or documents',
@@ -343,7 +343,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
     },
     {
       number: 2,
-      title: 'We Review & Respond',
+      title: 'Get Your Quote',
       description:
         'Quote within 2 business days, no obligation. We\'ll ask questions if needed and give you a clear, honest estimate.',
       details: [
@@ -355,7 +355,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
     },
     {
       number: 3,
-      title: 'You Authorize & We Start',
+      title: 'Authorize & We Begin',
       description:
         '50% deposit to begin, progress updates along the way. You\'ll always know where things stand.',
       details: [
@@ -367,7 +367,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
     },
     {
       number: 4,
-      title: 'Approve & Receive',
+      title: 'Review & Approve',
       description:
         'Review the work, give feedback, and pay the remaining 50% when you\'re happy. Simple as that.',
       details: [
@@ -381,7 +381,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
   timeline: {
     title: 'Typical Timeline',
     description:
-      "Most projects wrap up in 1-2 weeks. Bigger builds take longer—we'll give you a clear timeline upfront.",
+      "We know waiting is part of the process. That's why we give you a realistic timeline from day one, so you can plan with confidence. Most projects take 1-2 weeks—bigger ones take longer, but we'll keep you in the loop every step of the way.",
     hoverColor: 'green',
   },
   questionsSection: {

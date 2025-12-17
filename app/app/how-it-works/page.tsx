@@ -109,7 +109,7 @@ export default async function HowItWorksPage() {
                 {step1.description}
               </p>
               <Button variant="green" href={step1.href || '/contact'} size="lg">
-                Tell Us What You Need
+                Get Started
               </Button>
             </div>
           </div>
