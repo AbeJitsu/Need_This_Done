@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import { AccentVariant, accentColors } from '@/lib/colors';
+import { AccentVariant, accentColors, accentBorderWidth } from '@/lib/colors';
 
 // ============================================================================
 // Button Component - Centralized Button Styling
 // ============================================================================
-// A single source of truth for all button styling across the site.
+// Uses the unified accentColors system from colors.ts for consistent styling
+// with CircleBadge and Navigation. All color definitions are centralized.
 // Handles both link buttons (with href) and action buttons (with onClick).
-// Uses shared accentColors for consistent styling with CircleBadge.
 
 type ButtonSize = 'sm' | 'md' | 'lg';
 
@@ -20,19 +20,6 @@ interface ButtonProps {
   className?: string;
   type?: 'button' | 'submit';
 }
-
-// ============================================================================
-// Hover States - Button-specific hover effects
-// ============================================================================
-const hoverStates: Record<AccentVariant, string> = {
-  purple: 'hover:text-purple-800 hover:border-purple-600 dark:hover:text-white dark:hover:border-purple-200',
-  blue: 'hover:text-blue-800 hover:border-blue-600 dark:hover:text-white dark:hover:border-blue-200',
-  green: 'hover:text-green-900 hover:border-green-600 dark:hover:text-white dark:hover:border-green-200',
-  orange: 'hover:text-orange-900 hover:border-orange-600 dark:hover:text-white dark:hover:border-orange-200',
-  teal: 'hover:text-teal-900 hover:border-teal-600 dark:hover:text-white dark:hover:border-teal-200',
-  red: 'hover:text-red-900 hover:border-red-600 dark:hover:text-white dark:hover:border-red-200',
-  gray: 'hover:text-gray-800 hover:border-gray-600 dark:hover:text-white dark:hover:border-gray-200',
-};
 
 // ============================================================================
 // Size Classes - Consistent padding and font sizes
@@ -59,7 +46,8 @@ export default function Button({
   type = 'button',
 }: ButtonProps) {
   const colors = accentColors[variant];
-  const baseClasses = `inline-flex items-center justify-center font-semibold rounded-full border-2 transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:ring-4 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800 ${sizeClasses[size]} ${colors.bg} ${colors.text} ${colors.border} ${hoverStates[variant]}`;
+  // All color classes come from the centralized accentColors system
+  const baseClasses = `inline-flex items-center justify-center font-semibold rounded-full ${accentBorderWidth} transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:ring-4 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800 ${sizeClasses[size]} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`;
   const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : '';
   const fullClasses = `${baseClasses} ${disabledClasses} ${className}`.trim();
 

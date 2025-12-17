@@ -9,25 +9,75 @@ export type AccentColor = 'purple' | 'blue' | 'green';
 export type AccentVariant = 'purple' | 'blue' | 'green' | 'orange' | 'teal' | 'gray' | 'red';
 
 // ============================================================================
-// Accent Colors - Shared styling for Button and CircleBadge
+// Accent Colors - Unified styling for Button, CircleBadge, and Navigation
 // ============================================================================
-// Dark text on light background - works in both light and dark modes
-// Used by components with bg-100 backgrounds (Button, CircleBadge)
-// bg-100, text-700/800, border-500/400
+// Single source of truth for all accent-colored interactive elements.
+// Light mode: Light bg (-100), dark text (-700/800), medium border (-500)
+// Dark mode: Vibrant bg (-500), dark text (gray-900) for 5:1+ contrast
+//
+// Usage: Import and spread in className, e.g.:
+//   ${accentColors.orange.bg} ${accentColors.orange.text} ${accentColors.orange.border}
+
 export const accentColors: Record<AccentVariant, {
   bg: string;
   text: string;
   border: string;
+  hoverText: string;
   hoverBorder: string;
 }> = {
-  purple: { bg: 'bg-purple-100 dark:bg-purple-800', text: 'text-purple-700 dark:text-purple-100', border: 'border-purple-500 dark:border-purple-200', hoverBorder: 'hover:border-purple-500 dark:hover:border-purple-100' },
-  blue: { bg: 'bg-blue-100 dark:bg-blue-800', text: 'text-blue-700 dark:text-blue-100', border: 'border-blue-500 dark:border-blue-200', hoverBorder: 'hover:border-blue-500 dark:hover:border-blue-100' },
-  green: { bg: 'bg-green-100 dark:bg-green-800', text: 'text-green-700 dark:text-green-100', border: 'border-green-500 dark:border-green-200', hoverBorder: 'hover:border-green-500 dark:hover:border-green-100' },
-  orange: { bg: 'bg-orange-100 dark:bg-orange-500', text: 'text-orange-700 dark:text-orange-100', border: 'border-orange-500 dark:border-orange-200', hoverBorder: 'hover:border-orange-500 dark:hover:border-orange-100' },
-  teal: { bg: 'bg-teal-100 dark:bg-teal-800', text: 'text-teal-700 dark:text-teal-100', border: 'border-teal-500 dark:border-teal-200', hoverBorder: 'hover:border-teal-500 dark:hover:border-teal-100' },
-  gray: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-700 dark:text-gray-100', border: 'border-gray-500 dark:border-gray-200', hoverBorder: 'hover:border-gray-500 dark:hover:border-gray-100' },
-  red: { bg: 'bg-red-100 dark:bg-red-800', text: 'text-red-700 dark:text-red-100', border: 'border-red-500 dark:border-red-200', hoverBorder: 'hover:border-red-500 dark:hover:border-red-100' },
+  purple: {
+    bg: 'bg-purple-100 dark:bg-purple-500',
+    text: 'text-purple-700 dark:text-purple-100',
+    border: 'border-purple-500 dark:border-purple-200',
+    hoverText: 'hover:text-purple-800 dark:hover:text-white',
+    hoverBorder: 'hover:border-purple-600 dark:hover:border-purple-100',
+  },
+  blue: {
+    bg: 'bg-blue-100 dark:bg-blue-500',
+    text: 'text-blue-700 dark:text-blue-100',
+    border: 'border-blue-500 dark:border-blue-200',
+    hoverText: 'hover:text-blue-800 dark:hover:text-white',
+    hoverBorder: 'hover:border-blue-600 dark:hover:border-blue-100',
+  },
+  green: {
+    bg: 'bg-green-100 dark:bg-green-500',
+    text: 'text-green-800 dark:text-green-100',
+    border: 'border-green-500 dark:border-green-200',
+    hoverText: 'hover:text-green-900 dark:hover:text-white',
+    hoverBorder: 'hover:border-green-600 dark:hover:border-green-100',
+  },
+  orange: {
+    bg: 'bg-orange-100 dark:bg-orange-600',
+    text: 'text-orange-800 dark:text-orange-100',
+    border: 'border-orange-500 dark:border-orange-200',
+    hoverText: 'hover:text-orange-900 dark:hover:text-white',
+    hoverBorder: 'hover:border-orange-600 dark:hover:border-orange-100',
+  },
+  teal: {
+    bg: 'bg-teal-100 dark:bg-teal-500',
+    text: 'text-teal-800 dark:text-teal-100',
+    border: 'border-teal-500 dark:border-teal-200',
+    hoverText: 'hover:text-teal-900 dark:hover:text-white',
+    hoverBorder: 'hover:border-teal-600 dark:hover:border-teal-100',
+  },
+  gray: {
+    bg: 'bg-gray-100 dark:bg-gray-500',
+    text: 'text-gray-700 dark:text-gray-100',
+    border: 'border-gray-500 dark:border-gray-200',
+    hoverText: 'hover:text-gray-800 dark:hover:text-white',
+    hoverBorder: 'hover:border-gray-600 dark:hover:border-gray-100',
+  },
+  red: {
+    bg: 'bg-red-100 dark:bg-red-500',
+    text: 'text-red-800 dark:text-red-100',
+    border: 'border-red-500 dark:border-red-200',
+    hoverText: 'hover:text-red-900 dark:hover:text-white',
+    hoverBorder: 'hover:border-red-600 dark:hover:border-red-100',
+  },
 };
+
+// Border width constant - change once to update all buttons/badges globally
+export const accentBorderWidth = 'border-2';
 
 // ============================================================================
 // Title Colors - Used for headings and labels (generic)

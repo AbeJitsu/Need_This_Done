@@ -76,7 +76,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             <img
               src={image}
               alt={product.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-[50%_25%] opacity-90 brightness-95"
             />
           </div>
         ) : (

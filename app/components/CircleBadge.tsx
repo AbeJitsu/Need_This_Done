@@ -1,11 +1,11 @@
-import { AccentVariant, accentColors } from '@/lib/colors';
+import { AccentVariant, accentColors, accentBorderWidth } from '@/lib/colors';
 
 // ============================================================================
 // CircleBadge Component
 // ============================================================================
 // A reusable numbered circle badge that can be used anywhere in the app.
-// Uses shared accentColors for consistent styling with Button.
-// Same colors in both light/dark modes (no inversion).
+// Uses the unified accentColors system from colors.ts for consistent styling
+// with Button and Navigation. Border width is centralized for easy changes.
 
 type BadgeSize = 'sm' | 'md' | 'lg';
 type BadgeShape = 'circle' | 'pill';
@@ -42,10 +42,10 @@ export default function CircleBadge({
   const colors = accentColors[color];
   const sizeClass = shape === 'pill' ? pillSizeClasses[size] : circleSizeClasses[size];
 
-  // Same styling as Button: bg-100, text-700/800, border-500/400
+  // Uses centralized accentColors and accentBorderWidth from colors.ts
   return (
     <div
-      className={`flex-shrink-0 ${sizeClass} ${colors.bg} border-2 ${colors.border} ${colors.text} rounded-full flex items-center justify-center font-bold`}
+      className={`flex-shrink-0 ${sizeClass} ${colors.bg} ${accentBorderWidth} ${colors.border} ${colors.text} rounded-full flex items-center justify-center font-bold`}
     >
       {text ?? number}
     </div>

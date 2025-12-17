@@ -304,11 +304,11 @@ export const defaultServicesContent: ServicesPageContent = {
     description:
       "Tell us about your project and we'll get back to you with a personalized quote.",
     buttons: [
-      { text: 'View Pricing', variant: 'orange', href: '/pricing' },
+      { text: 'View Pricing', variant: 'green', href: '/pricing' },
       { text: 'How It Works', variant: 'blue', href: '/how-it-works' },
-      { text: 'FAQ', variant: 'teal', href: '/faq' },
+      { text: 'FAQ', variant: 'purple', href: '/faq' },
     ],
-    hoverColor: 'orange',
+    hoverColor: 'green',
   },
 };
 

@@ -35,32 +35,36 @@ const config = {
     // Backgrounds - light mode (bg-100)
     'bg-purple-100', 'bg-blue-100', 'bg-green-100', 'bg-orange-100', 'bg-teal-100', 'bg-gray-100', 'bg-red-100',
 
-    // Backgrounds - dark mode (bg-800) for lightBgColors contrast
+    // Backgrounds - dark mode vibrant (bg-500) for unified accent system
+    'dark:bg-purple-500', 'dark:bg-blue-500', 'dark:bg-green-500', 'dark:bg-teal-500', 'dark:bg-gray-500', 'dark:bg-red-500',
+    // Orange uses 600 for better contrast with light text
+    'dark:bg-orange-600',
+    // Legacy dark backgrounds (keep for backward compatibility)
     'dark:bg-purple-800', 'dark:bg-blue-800', 'dark:bg-green-800', 'dark:bg-orange-800', 'dark:bg-teal-800', 'dark:bg-gray-800', 'dark:bg-red-800',
-    // Orange-500 for vibrant button background
-    'dark:bg-orange-500',
 
     // Text colors - light mode (text-700/800)
     'text-purple-700', 'text-blue-700', 'text-green-800', 'text-orange-800', 'text-teal-800', 'text-gray-700', 'text-red-800',
 
-    // Border colors - light mode (border-500/700)
-    'border-purple-500', 'border-blue-500', 'border-green-500', 'border-orange-500', 'border-teal-500', 'border-gray-500', 'border-red-700',
+    // Border colors - light mode (border-500)
+    'border-purple-500', 'border-blue-500', 'border-green-500', 'border-orange-500', 'border-teal-500', 'border-gray-500', 'border-red-500',
 
-    // Border colors - dark mode (border-300/400)
+    // Border colors - dark mode (border-200 for unified accent system)
+    'dark:border-purple-200', 'dark:border-blue-200', 'dark:border-green-200', 'dark:border-orange-200', 'dark:border-teal-200', 'dark:border-gray-200', 'dark:border-red-200',
+    // Legacy dark borders
     'dark:border-purple-400', 'dark:border-blue-400', 'dark:border-green-400', 'dark:border-orange-400', 'dark:border-teal-400', 'dark:border-gray-400', 'dark:border-red-300',
-    // Orange light borders for 5:1 contrast
-    'dark:border-orange-200', 'dark:border-orange-100',
 
-    // Hover text colors
-    'hover:text-purple-800', 'hover:text-blue-800', 'hover:text-green-900', 'hover:text-orange-900', 'hover:text-teal-900', 'hover:text-gray-800',
+    // Hover text colors - light mode
+    'hover:text-purple-800', 'hover:text-blue-800', 'hover:text-green-900', 'hover:text-orange-900', 'hover:text-teal-900', 'hover:text-gray-800', 'hover:text-red-900',
+    // Hover text colors - dark mode (white for all)
+    'dark:hover:text-white',
 
     // Hover border colors - light mode
-    'hover:border-purple-600', 'hover:border-blue-600', 'hover:border-green-600', 'hover:border-orange-600', 'hover:border-teal-600', 'hover:border-gray-600',
+    'hover:border-purple-600', 'hover:border-blue-600', 'hover:border-green-600', 'hover:border-orange-600', 'hover:border-teal-600', 'hover:border-gray-600', 'hover:border-red-600',
 
-    // Hover border colors - dark mode
+    // Hover border colors - dark mode (100 for unified accent system)
+    'dark:hover:border-purple-100', 'dark:hover:border-blue-100', 'dark:hover:border-green-100', 'dark:hover:border-orange-100', 'dark:hover:border-teal-100', 'dark:hover:border-gray-100', 'dark:hover:border-red-100',
+    // Legacy dark hover borders
     'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300', 'dark:hover:border-orange-300', 'dark:hover:border-teal-300', 'dark:hover:border-gray-300',
-    // Orange light hover borders
-    'dark:hover:border-orange-200', 'dark:hover:border-orange-100',
 
     // Card hover colors - light mode (for Card component)
     'hover:border-purple-400', 'hover:border-blue-400', 'hover:border-green-400',
@@ -78,9 +82,9 @@ const config = {
     'dark:hover:bg-purple-900/10', 'dark:hover:bg-blue-900/10', 'dark:hover:bg-green-900/10',
     'dark:hover:bg-orange-900/10', 'dark:hover:bg-teal-900/10', 'dark:hover:bg-gray-900/10',
 
-    // Body text colors - dark mode (100 shade for high contrast)
+    // Body text colors - dark mode (100 shade for unified accent system)
     'dark:text-purple-100', 'dark:text-blue-100', 'dark:text-green-100',
-    'dark:text-orange-100', 'dark:text-teal-100', 'dark:text-gray-100',
+    'dark:text-orange-100', 'dark:text-teal-100', 'dark:text-gray-100', 'dark:text-red-100',
 
     // Animation classes
     'animate-fade-in',
