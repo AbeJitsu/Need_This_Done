@@ -15,7 +15,6 @@ import {
   alertColors,
   headingColors,
   dividerColors,
-  cardBorderColors,
   titleColors,
   leftBorderColors,
   dangerColors,
@@ -162,10 +161,11 @@ export default function CartPage() {
         </div>
       )}
 
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Cart items */}
-        <div className="lg:col-span-2">
-          <div className="space-y-4">
+      {/* Unified container with three inner rectangles */}
+      <Card hoverEffect="none">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 p-8">
+          {/* Left column - Cart items */}
+          <div className="lg:col-span-3 space-y-6">
             {cart.items.map((item) => {
               // Get consultation details
               const title = item.title || item.variant?.title || 'Consultation';
@@ -175,79 +175,76 @@ export default function CartPage() {
               const duration = getDurationLabel(title);
 
               return (
-                <Card key={item.id} hoverEffect="lift" className={`border-l-4 ${leftBorderColors[color]}`}>
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex-grow">
-                        {/* Consultation title */}
-                        <h3 className={`text-lg font-semibold ${headingColors.primary}`}>
-                          {title}
-                        </h3>
-                        {/* Duration badge */}
-                        <p className={`text-sm mt-1 ${titleColors[color]}`}>
-                          {duration}
-                        </p>
-                        {/* Reassuring note */}
-                        <p className={`text-xs mt-2 ${formInputColors.helper}`}>
-                          You&apos;ll pick your preferred time at checkout
-                        </p>
-                      </div>
-                      {/* Remove button */}
+                <div key={item.id} className={`${dividerColors.border} border rounded-lg p-8 border-l-4 ${leftBorderColors[color]} dark:bg-gray-700/50`}>
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="flex-grow">
+                      {/* Consultation title */}
+                      <h3 className={`text-lg font-semibold ${headingColors.primary}`}>
+                        {title}
+                      </h3>
+                      {/* Duration badge */}
+                      <p className={`text-sm mt-1 ${titleColors[color]}`}>
+                        {duration}
+                      </p>
+                      {/* Reassuring note */}
+                      <p className={`text-xs mt-3 ${formInputColors.helper}`}>
+                        You&apos;ll pick your preferred time at checkout
+                      </p>
+                    </div>
+                    {/* Remove button */}
+                    <button
+                      onClick={() => handleRemoveItem(item.id || '')}
+                      disabled={isUpdating === item.id}
+                      className={`text-gray-500 ${dangerColors.hover} transition text-xl leading-none`}
+                      aria-label="Remove item"
+                    >
+                      &times;
+                    </button>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    {/* Quantity controls */}
+                    <div className="flex items-center gap-3">
                       <button
-                        onClick={() => handleRemoveItem(item.id || '')}
+                        onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
                         disabled={isUpdating === item.id}
-                        className={`text-gray-500 ${dangerColors.hover} transition text-xl leading-none`}
-                        aria-label="Remove item"
+                        className="px-4 py-2 rounded-lg border-2 border-gray-300 dark:border-gray-500 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium transition disabled:opacity-50"
                       >
-                        &times;
+                        −
+                      </button>
+                      <span className={`w-10 text-center font-semibold text-lg ${headingColors.primary}`}>
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
+                        disabled={isUpdating === item.id}
+                        className="px-4 py-2 rounded-lg border-2 border-gray-300 dark:border-gray-500 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium transition disabled:opacity-50"
+                      >
+                        +
                       </button>
                     </div>
 
-                    <div className="flex justify-between items-center">
-                      {/* Quantity controls */}
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
-                          disabled={isUpdating === item.id}
-                          className={`px-3 py-1 border rounded ${cardBorderColors.light} hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-50`}
-                        >
-                          −
-                        </button>
-                        <span className={`w-8 text-center font-semibold ${headingColors.primary}`}>
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
-                          disabled={isUpdating === item.id}
-                          className={`px-3 py-1 border rounded ${cardBorderColors.light} hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-50`}
-                        >
-                          +
-                        </button>
-                      </div>
-
-                      {/* Price */}
-                      <p className={`text-lg font-semibold ${headingColors.primary}`}>
-                        ${(lineTotal / 100).toFixed(2)}
-                      </p>
-                    </div>
+                    {/* Price */}
+                    <p className={`text-lg font-semibold ${headingColors.primary}`}>
+                      ${(lineTotal / 100).toFixed(2)}
+                    </p>
                   </div>
-                </Card>
+                </div>
               );
             })}
+
+            {/* Continue shopping link */}
+            <div className="pt-2">
+              <Link href="/shop" className={`${titleColors.blue} hover:underline`}>
+                &larr; Continue Shopping
+              </Link>
+            </div>
           </div>
 
-          {/* Continue shopping link */}
-          <div className="mt-6">
-            <Link href="/shop" className={`${titleColors.blue} hover:underline`}>
-              &larr; Continue Shopping
-            </Link>
-          </div>
-        </div>
-
-        {/* Order summary */}
-        <div>
-          <Card hoverColor="purple" hoverEffect="lift">
-            <div className="p-6">
+          {/* Right column - Order summary + Info */}
+          <div className="lg:col-span-2 space-y-6 lg:self-start lg:sticky lg:top-20">
+            {/* Order Summary - Inner rectangle */}
+            <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-800`}>
               <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                 Order Summary
               </h2>
@@ -282,7 +279,7 @@ export default function CartPage() {
                 href="/checkout"
                 className="w-full mb-3"
               >
-                Proceed to Checkout
+                Checkout
               </Button>
 
               <Button
@@ -290,21 +287,19 @@ export default function CartPage() {
                 href="/shop"
                 className="w-full"
               >
-                Continue Shopping
+                Shop
               </Button>
             </div>
-          </Card>
 
-          {/* Reassurance box */}
-          <Card hoverColor="blue" hoverEffect="glow" className="mt-4">
-            <div className="p-6">
+            {/* What happens next - Inner rectangle */}
+            <div className={`${dividerColors.border} border rounded-lg p-6 bg-blue-50/50 dark:bg-blue-900/10`}>
               <p className={`text-sm ${formInputColors.helper}`}>
                 <strong>What happens next?</strong> At checkout, you&apos;ll select your preferred appointment time. We&apos;ll confirm within 24 hours and send you calendar details.
               </p>
             </div>
-          </Card>
+          </div>
         </div>
-      </div>
+      </Card>
 
       {/* Remove item confirmation dialog */}
       <ConfirmDialog

@@ -64,6 +64,12 @@ const config = {
     // Legacy dark hover borders
     'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300', 'dark:hover:border-orange-300', 'dark:hover:border-teal-300', 'dark:hover:border-gray-300',
 
+    // Left border colors - for cart items and accent cards
+    'border-l-purple-500', 'border-l-blue-500', 'border-l-green-500',
+    'dark:border-l-purple-400', 'dark:border-l-blue-400', 'dark:border-l-green-400',
+    'hover:border-l-purple-600', 'hover:border-l-blue-600', 'hover:border-l-green-600',
+    'dark:hover:border-l-purple-300', 'dark:hover:border-l-blue-300', 'dark:hover:border-l-green-300',
+
     // Card hover colors - light mode (for Card component)
     'hover:border-purple-400', 'hover:border-blue-400', 'hover:border-green-400',
     'hover:border-orange-400', 'hover:border-teal-400', 'hover:border-gray-400',

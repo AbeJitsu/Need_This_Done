@@ -452,20 +452,20 @@ export default function CheckoutPage() {
           </div>
         </Card>
       ) : (
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Checkout form */}
-          <form onSubmit={handleInfoSubmit} className="lg:col-span-2">
-            {/* Error message */}
-            {error && (
-              <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-                <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
-              </div>
-            )}
+        <Card hoverEffect="none">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
+            {/* Left column - Checkout form */}
+            <form onSubmit={handleInfoSubmit} className="lg:col-span-2 space-y-8">
+              {/* Error message */}
+              {error && (
+                <div className={`p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+                  <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
+                </div>
+              )}
 
-            {/* Email section */}
-            <Card hoverEffect="none" className="mb-6">
-              <div className="p-6">
-                <h2 className={`text-xl font-bold ${headingColors.primary} mb-4`}>
+              {/* Contact Information - Inner rectangle 1 */}
+              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-700/50`}>
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Contact Information
                 </h2>
 
@@ -502,16 +502,14 @@ export default function CheckoutPage() {
                   </div>
                 )}
               </div>
-            </Card>
 
-            {/* Shipping info */}
-            <Card hoverEffect="none" className="mb-6">
-              <div className="p-6">
-                <h2 className={`text-xl font-bold ${headingColors.primary} mb-4`}>
+              {/* Shipping Information - Inner rectangle 2 */}
+              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-700/50`}>
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Shipping Information
                 </h2>
 
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid sm:grid-cols-2 gap-6">
                   <div>
                     <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       First Name
@@ -565,34 +563,101 @@ export default function CheckoutPage() {
                   </div>
                 </div>
               </div>
-            </Card>
 
-            {/* Continue button */}
-            <Button
-              variant="purple"
-              type="submit"
-              disabled={isProcessing}
-              className="w-full"
-              size="lg"
-            >
-              {isProcessing ? 'Processing...' : 'Continue'}
-            </Button>
+              {/* Action buttons */}
+              <div className="space-y-3">
+                <Button
+                  variant="purple"
+                  type="submit"
+                  disabled={isProcessing}
+                  className="w-full"
+                  size="lg"
+                >
+                  {isProcessing ? 'Processing...' : 'Continue'}
+                </Button>
 
-            <Button
-              variant="gray"
-              href="/cart"
-              className="w-full mt-3"
-              size="lg"
-            >
-              Back to Cart
-            </Button>
-          </form>
+                <Button
+                  variant="gray"
+                  href="/cart"
+                  className="w-full"
+                  size="lg"
+                >
+                  Back to Cart
+                </Button>
+              </div>
+            </form>
 
-          {/* Order summary sidebar */}
-          <div className="lg:sticky lg:top-20 lg:self-start">
-            <OrderSummary cart={cart} itemCount={itemCount} />
+            {/* Right column - Order Summary - Inner rectangle 3 */}
+            <div className={`${dividerColors.border} border rounded-lg p-8 lg:self-start lg:sticky lg:top-20 dark:bg-gray-800`}>
+              {/* Header with icon */}
+              <div className="flex items-center gap-3 mb-6 pb-6 border-b-2 border-purple-200 dark:border-purple-800">
+                <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg flex-shrink-0">
+                  <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </div>
+                <h2 className={`text-xl font-bold ${headingColors.primary} whitespace-nowrap`}>
+                  Order Summary
+                </h2>
+              </div>
+
+              {/* Line items */}
+              <div className={`space-y-4 mb-6 pb-6 ${dividerColors.border} border-b`}>
+                <div className="flex justify-between items-center">
+                  <span className={`text-sm ${formInputColors.helper}`}>Items</span>
+                  <span className={`${headingColors.primary} font-semibold`}>
+                    {itemCount}
+                  </span>
+                </div>
+
+                {cart && (
+                  <>
+                    <div className="flex justify-between items-center">
+                      <span className={`text-sm ${formInputColors.helper}`}>
+                        Subtotal
+                      </span>
+                      <span className={`${headingColors.primary} font-semibold`}>
+                        ${((cart.subtotal || 0) / 100).toFixed(2)}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className={`text-sm ${formInputColors.helper}`}>Tax</span>
+                      <span className={`${headingColors.primary} font-semibold`}>
+                        ${((cart.tax_total || 0) / 100).toFixed(2)}
+                      </span>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Total */}
+              {cart && (
+                <div className="flex justify-between items-center mb-6 pb-6 border-b-2 border-gray-200 dark:border-gray-700">
+                  <span className={`text-lg font-bold ${headingColors.primary}`}>
+                    Total
+                  </span>
+                  <span className={`text-2xl font-bold ${headingColors.primary}`}>
+                    ${((cart.total || 0) / 100).toFixed(2)}
+                  </span>
+                </div>
+              )}
+
+              {/* Edit cart button */}
+              <Button variant="blue" href="/cart" className="w-full mb-6" size="lg">
+                Edit Cart
+              </Button>
+
+              {/* Trust badge */}
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                <span>Secure checkout</span>
+              </div>
+            </div>
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );

@@ -120,9 +120,9 @@ export const topBorderColors: Record<AccentColor, string> = {
 // Left Border Colors - Side accent for compact cards
 // ============================================================================
 export const leftBorderColors: Record<AccentColor, string> = {
-  purple: 'border-l-purple-500 hover:border-l-purple-600',
-  blue: 'border-l-blue-500 hover:border-l-blue-600',
-  green: 'border-l-green-500 hover:border-l-green-600',
+  purple: 'border-l-purple-500 dark:border-l-purple-400 hover:border-l-purple-600 dark:hover:border-l-purple-300',
+  blue: 'border-l-blue-500 dark:border-l-blue-400 hover:border-l-blue-600 dark:hover:border-l-blue-300',
+  green: 'border-l-green-500 dark:border-l-green-400 hover:border-l-green-600 dark:hover:border-l-green-300',
 };
 
 // ============================================================================
