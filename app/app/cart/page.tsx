@@ -18,6 +18,7 @@ import {
   titleColors,
   leftBorderColors,
   dangerColors,
+  lightBgColors,
   type AccentColor,
 } from '@/lib/colors';
 
@@ -157,7 +158,7 @@ export default function CartPage() {
       {/* Error messages */}
       {(localError || cartError) && (
         <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-          <p className={`text-sm ${formValidationColors.error}`}>{localError || cartError}</p>
+          <p className={`text-sm ${alertColors.error.text}`}>{localError || cartError}</p>
         </div>
       )}
 
@@ -292,7 +293,7 @@ export default function CartPage() {
             </div>
 
             {/* What happens next - Inner rectangle */}
-            <div className={`${dividerColors.border} border rounded-lg p-6 bg-blue-50/50 dark:bg-blue-900/10`}>
+            <div className={`${dividerColors.border} border rounded-lg p-6 ${lightBgColors.blue}`}>
               <p className={`text-sm ${formInputColors.helper}`}>
                 <strong>What happens next?</strong> At checkout, you&apos;ll select your preferred appointment time. We&apos;ll confirm within 24 hours and send you calendar details.
               </p>

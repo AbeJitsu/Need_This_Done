@@ -20,6 +20,7 @@ import {
   headingColors,
   dividerColors,
   titleColors,
+  lightBgColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -453,7 +454,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* What happens next */}
-              <div className={`${dividerColors.border} border rounded-lg p-6 bg-blue-50/50 dark:bg-blue-900/10`}>
+              <div className={`${dividerColors.border} border rounded-lg p-6 ${lightBgColors.blue}`}>
                 <p className={`text-sm ${formInputColors.helper}`}>
                   <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
                 </p>
@@ -568,7 +569,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* What happens next */}
-              <div className={`${dividerColors.border} border rounded-lg p-6 bg-blue-50/50 dark:bg-blue-900/10`}>
+              <div className={`${dividerColors.border} border rounded-lg p-6 ${lightBgColors.blue}`}>
                 <p className={`text-sm ${formInputColors.helper}`}>
                   <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
                 </p>
@@ -821,7 +822,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* What happens next */}
-              <div className={`${dividerColors.border} border rounded-lg p-6 bg-blue-50/50 dark:bg-blue-900/10`}>
+              <div className={`${dividerColors.border} border rounded-lg p-6 ${lightBgColors.blue}`}>
                 <p className={`text-sm ${formInputColors.helper}`}>
                   <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
                 </p>

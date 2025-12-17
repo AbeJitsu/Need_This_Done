@@ -142,12 +142,13 @@ export const statusBorderColors: Record<AccentVariant, string> = {
 // ============================================================================
 // Light Background Colors - Subtle accent backgrounds
 // ============================================================================
-// Light mode: -100 shades (light pastel backgrounds with dark text)
-// Dark mode: -800 shades (solid dark backgrounds for WCAG AA contrast with light text)
+// Uses the same proven accentColors pattern that works perfectly for buttons
+// Light mode: -100 shades (light pastel backgrounds)
+// Dark mode: -500 shades (vibrant, highly visible backgrounds)
 export const lightBgColors: Record<AccentColor, string> = {
-  purple: 'bg-purple-100 dark:bg-purple-800',
-  blue: 'bg-blue-100 dark:bg-blue-800',
-  green: 'bg-green-100 dark:bg-green-800',
+  purple: 'bg-purple-100 dark:bg-purple-500',
+  blue: 'bg-blue-100 dark:bg-blue-500',
+  green: 'bg-green-100 dark:bg-green-500',
 };
 
 // ============================================================================
@@ -311,14 +312,14 @@ export const formInputColors = {
 // ============================================================================
 // High contrast colors for validation feedback - meets WCAG AA (5:1) in both modes
 export const formValidationColors = {
-  // Error message styling - matches accentColors.red pattern
-  error: 'text-red-800 dark:text-red-100',
-  // Success message styling - high contrast green
-  success: 'text-green-800 dark:text-green-100',
-  // Warning message styling - high contrast orange
-  warning: 'text-orange-800 dark:text-orange-100',
-  // Info message styling - high contrast blue
-  info: 'text-blue-800 dark:text-blue-100',
+  // Error message styling - white text in dark mode for contrast against vibrant bg-red-500
+  error: 'text-red-800 dark:text-white',
+  // Success message styling - white text in dark mode for contrast against vibrant bg-green-500
+  success: 'text-green-800 dark:text-white',
+  // Warning message styling - white text in dark mode for contrast against vibrant bg-orange-500
+  warning: 'text-orange-800 dark:text-white',
+  // Info message styling - white text in dark mode for contrast against vibrant bg-blue-500
+  info: 'text-blue-800 dark:text-white',
 };
 
 // ============================================================================
@@ -416,23 +417,35 @@ export const groupHoverColors = {
 // ============================================================================
 // Alert Colors - Notification and message box styling
 // ============================================================================
-// Consistent backgrounds and borders for info, error, success, warning alerts
+// Uses the same proven accentColors pattern that works perfectly for buttons
+// Light mode: -50 shades (very light backgrounds)
+// Dark mode: -500 shades (vibrant, highly visible backgrounds)
+// Border: 2px width (consistent with accentBorderWidth for buttons)
+// Text: Dark in light mode, white in dark mode for maximum contrast
 export const alertColors = {
   info: {
-    bg: 'bg-blue-50 dark:bg-blue-900/20',
-    border: 'border border-blue-200 dark:border-blue-800',
+    bg: 'bg-blue-50 dark:bg-blue-500',
+    border: 'border-2 border-blue-200 dark:border-blue-200',
+    text: 'text-blue-800 dark:text-white',
+    link: 'text-blue-700 dark:text-white underline hover:text-blue-900 dark:hover:text-gray-200',
   },
   error: {
-    bg: 'bg-red-50 dark:bg-red-900/20',
-    border: 'border border-red-200 dark:border-red-800',
+    bg: 'bg-red-50 dark:bg-red-500',
+    border: 'border-2 border-red-200 dark:border-red-200',
+    text: 'text-red-800 dark:text-white',
+    link: 'text-red-700 dark:text-white underline hover:text-red-900 dark:hover:text-gray-200',
   },
   success: {
-    bg: 'bg-green-50 dark:bg-green-900/20',
-    border: 'border border-green-200 dark:border-green-800',
+    bg: 'bg-green-50 dark:bg-green-500',
+    border: 'border-2 border-green-200 dark:border-green-200',
+    text: 'text-green-800 dark:text-white',
+    link: 'text-green-700 dark:text-white underline hover:text-green-900 dark:hover:text-gray-200',
   },
   warning: {
-    bg: 'bg-orange-50 dark:bg-orange-900/20',
-    border: 'border border-orange-200 dark:border-orange-800',
+    bg: 'bg-orange-50 dark:bg-orange-500',
+    border: 'border-2 border-orange-200 dark:border-orange-200',
+    text: 'text-orange-800 dark:text-white',
+    link: 'text-orange-700 dark:text-white underline hover:text-orange-900 dark:hover:text-gray-200',
   },
 };
 

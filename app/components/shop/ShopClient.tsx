@@ -65,10 +65,10 @@ export default function ShopClient({ products }: ShopClientProps) {
 
       {/* Cart item count indicator */}
       {itemCount > 0 && (
-        <div className={`mb-6 p-3 ${alertColors.info.bg} ${alertColors.info.border} rounded-lg`}>
-          <p className={`text-sm ${formValidationColors.info}`}>
-            You have <span className="font-semibold">{itemCount}</span> item{itemCount !== 1 ? 's' : ''} in your cart.{' '}
-            <Link href="/cart" className={`underline ${linkHoverColors.blue}`}>
+        <div className={`mb-8 p-5 ${alertColors.info.bg} ${alertColors.info.border} rounded-lg`}>
+          <p className={`text-sm ${alertColors.info.text}`}>
+            You have <span className="font-semibold">{itemCount}</span> item{itemCount !== 1 ? 's' : ''} in your cart.
+            <Link href="/cart" className={`ml-3 ${alertColors.info.link}`}>
               View cart
             </Link>
           </p>
@@ -78,20 +78,20 @@ export default function ShopClient({ products }: ShopClientProps) {
       {/* Error messages */}
       {error && (
         <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-          <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
+          <p className={`text-sm ${alertColors.error.text}`}>{error}</p>
         </div>
       )}
 
       {cartError && (
         <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-          <p className={`text-sm ${formValidationColors.error}`}>{cartError}</p>
+          <p className={`text-sm ${alertColors.error.text}`}>{cartError}</p>
         </div>
       )}
 
       {/* Toast notification */}
       {toastMessage && (
         <div className={`mb-6 p-4 ${alertColors.success.bg} ${alertColors.success.border} rounded-lg animate-fade-in`}>
-          <p className={`text-sm ${formValidationColors.success}`}>{toastMessage}</p>
+          <p className={`text-sm ${alertColors.success.text}`}>{toastMessage}</p>
         </div>
       )}
 

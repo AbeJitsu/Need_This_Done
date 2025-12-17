@@ -281,7 +281,7 @@ export default function AppointmentStepForm({
           </div>
 
           {/* Info note */}
-          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <div className={`mb-6 p-4 ${alertColors.info.bg} rounded-lg`}>
             <p className="text-sm text-blue-700 dark:text-blue-300">
               <strong>Note:</strong> Appointments must be booked at least 24 hours in advance.
               Available Monday-Friday, 9 AM - 5 PM EST. We'll confirm your appointment after payment.
