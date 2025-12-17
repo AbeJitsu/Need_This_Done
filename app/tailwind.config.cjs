@@ -36,9 +36,7 @@ const config = {
     'bg-purple-100', 'bg-blue-100', 'bg-green-100', 'bg-orange-100', 'bg-teal-100', 'bg-gray-100', 'bg-red-100',
 
     // Backgrounds - dark mode vibrant (bg-500) for unified accent system
-    'dark:bg-purple-500', 'dark:bg-blue-500', 'dark:bg-green-500', 'dark:bg-teal-500', 'dark:bg-gray-500', 'dark:bg-red-500',
-    // Orange uses 600 for better contrast with light text
-    'dark:bg-orange-600',
+    'dark:bg-purple-500', 'dark:bg-blue-500', 'dark:bg-green-500', 'dark:bg-orange-500', 'dark:bg-teal-500', 'dark:bg-gray-500', 'dark:bg-red-500',
     // Legacy dark backgrounds (keep for backward compatibility)
     'dark:bg-purple-800', 'dark:bg-blue-800', 'dark:bg-green-800', 'dark:bg-orange-800', 'dark:bg-teal-800', 'dark:bg-gray-800', 'dark:bg-red-800',
 

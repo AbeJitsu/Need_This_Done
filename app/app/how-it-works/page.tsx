@@ -126,14 +126,14 @@ export default async function HowItWorksPage() {
 
       {/* Timeline Note */}
       <Card
-        hoverColor={content.timeline.hoverColor || 'blue'}
+        hoverColor={content.timeline.hoverColor || 'green'}
         hoverEffect="glow"
         className="mb-10"
       >
         <div className="flex items-center gap-4">
-          <span className="text-2xl">⏱</span>
+          <span className="text-2xl text-gray-700 dark:text-gray-200">⏱</span>
           <div>
-            <h3 className={`font-semibold ${titleColors.blue} mb-1`}>
+            <h3 className={`font-semibold ${titleColors.green} mb-1`}>
               {content.timeline.title}
             </h3>
             <p className={formInputColors.helper}>{content.timeline.description}</p>

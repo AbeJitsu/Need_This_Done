@@ -386,7 +386,7 @@ export default function ContactPage() {
               {/* Submit Button */}
               <div className="flex justify-center">
                 <Button
-                  variant="green"
+                  variant="orange"
                   type="submit"
                   disabled={isSubmitting}
                 >
@@ -401,11 +401,11 @@ export default function ContactPage() {
         <CTASection
           title="Want to learn more first?"
           buttons={[
-            { text: 'View Our Services', variant: 'blue', href: '/services' },
-            { text: 'How It Works', variant: 'purple', href: '/how-it-works' },
-            { text: 'Read the FAQ', variant: 'teal', href: '/faq' }
+            { text: 'View Our Services', variant: 'green', href: '/services' },
+            { text: 'How It Works', variant: 'blue', href: '/how-it-works' },
+            { text: 'Read the FAQ', variant: 'purple', href: '/faq' }
           ]}
-          hoverColor="blue"
+          hoverColor="green"
         />
     </div>
   );

@@ -87,10 +87,10 @@ export const defaultPricingContent: PricingPageContent = {
     description:
       "Every project is unique. Tell us what you're working on and we'll figure out the best approach together. Or check out our FAQ for quick answers.",
     buttons: [
-      { text: 'View Services', variant: 'orange', href: '/services' },
+      { text: 'View Services', variant: 'blue', href: '/services' },
       { text: 'Read the FAQ', variant: 'purple', href: '/faq' },
     ],
-    hoverColor: 'orange',
+    hoverColor: 'blue',
   },
 };
 
@@ -382,7 +382,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
     title: 'Typical Timeline',
     description:
       "Most projects wrap up in 1-2 weeks. Bigger builds take longer—we'll give you a clear timeline upfront.",
-    hoverColor: 'blue',
+    hoverColor: 'green',
   },
   questionsSection: {
     title: 'Questions about the process?',
@@ -396,11 +396,11 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
     description:
       "Tell us what you need and we'll get back with a personalized quote.",
     buttons: [
-      { text: 'View Services', variant: 'orange', href: '/services' },
-      { text: 'View Pricing', variant: 'teal', href: '/pricing' },
-      { text: 'Contact Us', variant: 'blue', href: '/contact' },
+      { text: 'View Services', variant: 'green', href: '/services' },
+      { text: 'View Pricing', variant: 'blue', href: '/pricing' },
+      { text: 'Contact Us', variant: 'purple', href: '/contact' },
     ],
-    hoverColor: 'orange',
+    hoverColor: 'purple',
   },
 };
 

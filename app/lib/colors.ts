@@ -47,7 +47,7 @@ export const accentColors: Record<AccentVariant, {
     hoverBorder: 'hover:border-green-600 dark:hover:border-green-100',
   },
   orange: {
-    bg: 'bg-orange-100 dark:bg-orange-600',
+    bg: 'bg-orange-100 dark:bg-orange-500',
     text: 'text-orange-800 dark:text-orange-100',
     border: 'border-orange-500 dark:border-orange-200',
     hoverText: 'hover:text-orange-900 dark:hover:text-white',

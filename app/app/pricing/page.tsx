@@ -81,7 +81,7 @@ export default async function PricingPage() {
           </h3>
           <div className="grid sm:grid-cols-2 gap-6">
             {/* Option 1: Free Quote */}
-            <Card hoverColor="orange" hoverEffect="glow">
+            <Card hoverColor="green" hoverEffect="glow">
               <div className="text-center p-2">
                 <h4 className={`text-lg font-semibold ${headingColors.primary} mb-2`}>
                   Get a Free Quote
@@ -89,7 +89,7 @@ export default async function PricingPage() {
                 <p className={`${formInputColors.helper} mb-4 text-sm`}>
                   Tell us what you need—we&apos;ll respond in 2 days.
                 </p>
-                <Button variant="orange" href="/contact" size="lg" className="w-full">
+                <Button variant="green" href="/contact" size="lg" className="w-full">
                   Get Started
                 </Button>
               </div>
@@ -114,10 +114,10 @@ export default async function PricingPage() {
 
         {/* Payment Structure Note */}
         {content.paymentNote.enabled && (
-          <Card hoverColor="green" hoverEffect="glow" className="mb-10">
+          <Card hoverColor="purple" hoverEffect="glow" className="mb-10">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">
               <div className="flex items-center gap-4">
-                <CircleBadge text={content.paymentNote.depositPercent} color="green" size="md" shape="pill" />
+                <CircleBadge text={content.paymentNote.depositPercent} color="purple" size="md" shape="pill" />
                 <div>
                   <p className={`font-semibold ${headingColors.primary}`}>
                     {content.paymentNote.depositLabel}
@@ -129,7 +129,7 @@ export default async function PricingPage() {
               </div>
               <div className={`hidden sm:block w-8 h-0.5 ${dividerColors.subtle}`}></div>
               <div className="flex items-center gap-4">
-                <CircleBadge text={content.paymentNote.deliveryPercent} color="blue" size="md" shape="pill" />
+                <CircleBadge text={content.paymentNote.deliveryPercent} color="green" size="md" shape="pill" />
                 <div>
                   <p className={`font-semibold ${headingColors.primary}`}>
                     {content.paymentNote.deliveryLabel}
