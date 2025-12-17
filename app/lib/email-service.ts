@@ -1,29 +1,4 @@
 import { sendEmailWithRetry, getEmailConfig } from "./email";
-import AdminNotification, {
-  type AdminNotificationProps,
-} from "../emails/AdminNotification";
-import ClientConfirmation, {
-  type ClientConfirmationProps,
-} from "../emails/ClientConfirmation";
-import WelcomeEmail, { type WelcomeEmailProps } from "../emails/WelcomeEmail";
-import LoginNotificationEmail, {
-  type LoginNotificationEmailProps,
-} from "../emails/LoginNotificationEmail";
-import OrderConfirmationEmail, {
-  type OrderConfirmationEmailProps,
-} from "../emails/OrderConfirmationEmail";
-import AppointmentConfirmationEmail, {
-  type AppointmentConfirmationEmailProps,
-} from "../emails/AppointmentConfirmationEmail";
-import AppointmentRequestNotificationEmail, {
-  type AppointmentRequestNotificationProps,
-} from "../emails/AppointmentRequestNotificationEmail";
-import PurchaseReceiptEmail, {
-  type PurchaseReceiptEmailProps,
-} from "../emails/PurchaseReceiptEmail";
-import AbandonedCartEmail, {
-  type AbandonedCartEmailProps,
-} from "../emails/AbandonedCartEmail";
 
 // ============================================================================
 // Email Service Functions
@@ -31,6 +6,128 @@ import AbandonedCartEmail, {
 // What: High-level email operations for business workflows
 // Why: Encapsulate email sending logic for project submissions
 // How: Compose React Email templates + sending logic into reusable functions
+//
+// IMPORTANT: Email templates are dynamically imported to prevent Next.js from
+// bundling react-email's Html component during page prerendering. Static imports
+// cause build errors because Next.js confuses react-email's Html with next/document Html.
+
+// ============================================================================
+// Type Definitions (imported separately to avoid bundling components)
+// ============================================================================
+
+export type AdminNotificationProps = {
+  projectId: string;
+  name: string;
+  email: string;
+  company?: string;
+  service?: string;
+  message: string;
+  attachmentCount: number;
+  submittedAt: string;
+};
+
+export type ClientConfirmationProps = {
+  name: string;
+  service?: string;
+};
+
+export type WelcomeEmailProps = {
+  email: string;
+  name?: string;
+};
+
+export type LoginNotificationEmailProps = {
+  email: string;
+  loginTime: string;
+  ipAddress?: string;
+  userAgent?: string;
+};
+
+export type OrderConfirmationEmailProps = {
+  orderId: string;
+  orderDate: string;
+  customerEmail: string;
+  customerName?: string;
+  items: Array<{
+    name: string;
+    quantity: number;
+    price: number;
+    requiresAppointment?: boolean;
+  }>;
+  subtotal: number;
+  tax?: number;
+  total: number;
+  requiresAppointment?: boolean;
+};
+
+export type AppointmentConfirmationEmailProps = {
+  customerEmail: string;
+  customerName?: string;
+  serviceName: string;
+  appointmentDate: string;
+  appointmentTime: string;
+  durationMinutes: number;
+  orderId: string;
+  meetingLink?: string;
+  notes?: string;
+};
+
+export type AppointmentRequestNotificationProps = {
+  requestId: string;
+  orderId: string;
+  customerName: string | null;
+  customerEmail: string;
+  serviceName: string;
+  durationMinutes: number;
+  preferredDate: string;
+  preferredTimeStart: string;
+  preferredTimeEnd: string;
+  alternateDate: string | null;
+  alternateTimeStart: string | null;
+  alternateTimeEnd: string | null;
+  notes: string | null;
+  submittedAt: string;
+};
+
+export type PurchaseReceiptEmailProps = {
+  orderId: string;
+  orderDate: string;
+  customerEmail: string;
+  customerName?: string;
+  items: Array<{
+    name: string;
+    quantity: number;
+    unitPrice: number;
+    total: number;
+  }>;
+  subtotal: number;
+  tax: number;
+  total: number;
+  paymentMethod: string;
+  paymentLast4?: string;
+  billingAddress?: {
+    line1: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  };
+};
+
+export type AbandonedCartEmailProps = {
+  customerEmail: string;
+  customerName?: string;
+  cartId: string;
+  items: Array<{
+    name: string;
+    quantity: number;
+    price: number;
+  }>;
+  subtotal: number;
+  cartUrl: string;
+  discountCode?: string;
+  discountAmount?: number;
+};
 
 // ============================================================================
 // Project Submission Emails
@@ -53,6 +150,9 @@ export async function sendAdminNotification(
     return null;
   }
 
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: AdminNotification } = await import("../emails/AdminNotification");
+
   const subject = `🎯 New Project: ${data.name}${data.service ? ` - ${data.service}` : ""}`;
 
   return sendEmailWithRetry(
@@ -74,6 +174,9 @@ export async function sendClientConfirmation(
   to: string,
   data: ClientConfirmationProps,
 ): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: ClientConfirmation } = await import("../emails/ClientConfirmation");
+
   const subject = "✨ We Got Your Message! (Response in 2 Business Days)";
 
   return sendEmailWithRetry(to, subject, ClientConfirmation(data));
@@ -130,6 +233,9 @@ export async function sendProjectSubmissionEmails(
 export async function sendWelcomeEmail(
   data: WelcomeEmailProps,
 ): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: WelcomeEmail } = await import("../emails/WelcomeEmail");
+
   const subject = "🎉 Welcome to NeedThisDone!";
 
   return sendEmailWithRetry(data.email, subject, WelcomeEmail(data));
@@ -145,6 +251,9 @@ export async function sendWelcomeEmail(
 export async function sendLoginNotification(
   data: LoginNotificationEmailProps,
 ): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: LoginNotificationEmail } = await import("../emails/LoginNotificationEmail");
+
   const subject = "🔐 New Sign-In to Your NeedThisDone Account";
 
   return sendEmailWithRetry(data.email, subject, LoginNotificationEmail(data));
@@ -164,6 +273,9 @@ export async function sendLoginNotification(
 export async function sendOrderConfirmation(
   data: OrderConfirmationEmailProps,
 ): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: OrderConfirmationEmail } = await import("../emails/OrderConfirmationEmail");
+
   const subject = data.requiresAppointment
     ? `✓ Order Confirmed! Schedule Your Appointment - #${data.orderId}`
     : `✓ Order Confirmed! - #${data.orderId}`;
@@ -194,6 +306,9 @@ export async function sendAppointmentRequestNotification(
     return null;
   }
 
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: AppointmentRequestNotificationEmail } = await import("../emails/AppointmentRequestNotificationEmail");
+
   const customerDisplay = data.customerName || data.customerEmail;
   const subject = `📅 New Appointment Request: ${customerDisplay} - ${data.serviceName}`;
 
@@ -216,6 +331,9 @@ export async function sendAppointmentConfirmation(
   data: AppointmentConfirmationEmailProps,
   _icsContent?: string, // TODO: Implement ICS attachment support
 ): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: AppointmentConfirmationEmail } = await import("../emails/AppointmentConfirmationEmail");
+
   const subject = `📅 Appointment Confirmed: ${data.serviceName} on ${data.appointmentDate}`;
 
   // Note: ICS attachment would require updating sendEmailWithRetry to support attachments
@@ -237,6 +355,9 @@ export async function sendAppointmentConfirmation(
 export async function sendPurchaseReceipt(
   data: PurchaseReceiptEmailProps,
 ): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: PurchaseReceiptEmail } = await import("../emails/PurchaseReceiptEmail");
+
   const subject = `Receipt for Order #${data.orderId}`;
 
   return sendEmailWithRetry(
@@ -256,6 +377,9 @@ export async function sendPurchaseReceipt(
 export async function sendAbandonedCartEmail(
   data: AbandonedCartEmailProps,
 ): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: AbandonedCartEmail } = await import("../emails/AbandonedCartEmail");
+
   const customerDisplay = data.customerName || data.customerEmail;
   const subject = data.discountCode
     ? `${customerDisplay}, your cart is waiting (+ special discount inside!)`
@@ -267,16 +391,3 @@ export async function sendAbandonedCartEmail(
     AbandonedCartEmail(data),
   );
 }
-
-// Re-export types for convenience
-export type {
-  AdminNotificationProps,
-  ClientConfirmationProps,
-  WelcomeEmailProps,
-  LoginNotificationEmailProps,
-  OrderConfirmationEmailProps,
-  AppointmentConfirmationEmailProps,
-  AppointmentRequestNotificationProps,
-  PurchaseReceiptEmailProps,
-  AbandonedCartEmailProps,
-};
