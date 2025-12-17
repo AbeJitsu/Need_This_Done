@@ -5,7 +5,8 @@
 // Why: Centralizes communication with Medusa, handles auth, and provides type safety
 // How: Fetch wrapper with retry logic, cookie management, and error handling
 
-const MEDUSA_URL = process.env.MEDUSA_BACKEND_URL || "http://medusa:9000";
+// Railway uses NEXT_PUBLIC_MEDUSA_URL, Docker uses MEDUSA_BACKEND_URL (via internal network)
+const MEDUSA_URL = process.env.NEXT_PUBLIC_MEDUSA_URL || process.env.MEDUSA_BACKEND_URL || "http://medusa:9000";
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 

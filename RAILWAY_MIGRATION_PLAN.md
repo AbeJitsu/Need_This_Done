@@ -821,6 +821,40 @@ railway variables set ADMIN_CORS="https://needthisdone.com"
 
 ---
 
+### Phase 6.5: Update Supabase Auth Redirect URLs
+
+**Why this matters:**
+Supabase auth (Google OAuth, magic links, password reset) redirects users back to your site. These URLs must point to your new Railway domain.
+
+**Steps:**
+
+1. **Update Supabase Dashboard:**
+   - Go to Supabase Dashboard → Authentication → URL Configuration
+   - Update **Site URL**: `https://needthisdone.com` (or Railway URL if no custom domain)
+   - Update **Redirect URLs** to include:
+     - `https://needthisdone.com/**`
+     - `https://nextjs-production-d0e2.up.railway.app/**` (Railway URL)
+   - Remove old DigitalOcean URLs when ready
+
+2. **Update Railway Environment Variables:**
+   ```bash
+   # In Next.js service
+   railway variables set NEXT_PUBLIC_SITE_URL=https://needthisdone.com
+   railway variables set NEXT_PUBLIC_URL=https://needthisdone.com
+   ```
+
+3. **Update OAuth Providers (if using Google/GitHub login):**
+   - Google Cloud Console → Credentials → OAuth 2.0 Client
+   - Add authorized redirect URI: `https://oxhjtmozsdstbokwtnwa.supabase.co/auth/v1/callback`
+   - (Supabase handles the callback, but your site URL must be in Supabase config)
+
+**Test:**
+- Try logging in with Google OAuth
+- Try password reset email
+- Verify redirect lands on new domain
+
+---
+
 ### Phase 7: Verify Deployment
 
 ```bash

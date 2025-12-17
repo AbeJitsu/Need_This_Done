@@ -5,8 +5,9 @@
  */
 
 const http = require('http');
+const https = require('https');
 
-const BASE_URL = 'http://localhost:9000';
+const BASE_URL = process.env.MEDUSA_URL || process.env.NEXT_PUBLIC_MEDUSA_URL || 'http://localhost:9000';
 const ADMIN_EMAIL = 'admin@needthisdone.com';
 const ADMIN_PASSWORD = process.env.MEDUSA_ADMIN_PASSWORD;
 
@@ -23,7 +24,7 @@ function makeRequest(method, path, data = null) {
     const url = new URL(path, BASE_URL);
     const options = {
       hostname: url.hostname,
-      port: url.port,
+      port: url.port || (url.protocol === 'https:' ? 443 : 80),
       path: url.pathname + url.search,
       method,
       headers: {
@@ -35,7 +36,8 @@ function makeRequest(method, path, data = null) {
       options.headers['Cookie'] = sessionCookie;
     }
 
-    const req = http.request(options, (res) => {
+    const protocol = url.protocol === 'https:' ? https : http;
+    const req = protocol.request(options, (res) => {
       // Capture session cookie
       if (res.headers['set-cookie']) {
         sessionCookie = res.headers['set-cookie'].map(c => c.split(';')[0]).join('; ');
