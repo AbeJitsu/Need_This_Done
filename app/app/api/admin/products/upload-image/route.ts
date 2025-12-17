@@ -8,10 +8,18 @@ import { createClient } from '@supabase/supabase-js';
 // Why: Provides centralized image hosting with public URLs
 // How: Uses service role key to bypass RLS, uploads to product-images bucket
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+// Create Supabase client lazily to avoid build-time errors
+// Environment variables aren't available during Next.js page data collection
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Supabase environment variables not configured');
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,6 +43,9 @@ export async function POST(request: NextRequest) {
     // Convert File to ArrayBuffer then Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
+
+    // Get Supabase client (lazy initialization)
+    const supabase = getSupabaseClient();
 
     // Upload to Supabase Storage
     const { data, error } = await supabase.storage

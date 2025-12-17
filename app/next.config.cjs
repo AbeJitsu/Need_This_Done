@@ -4,6 +4,18 @@
 
 const nextConfig = {
   // ========================================================================
+  // Server External Packages
+  // ========================================================================
+  // Prevent react-email packages from being bundled during page prerendering
+  // React-email's Html component conflicts with next/document Html during
+  // static analysis. Marking these as external keeps them server-only.
+  serverExternalPackages: [
+    '@react-email/components',
+    '@react-email/render',
+    'react-email',
+  ],
+
+  // ========================================================================
   // Output Mode: Standalone
   // ========================================================================
   // Packages everything needed to run into a single folder
