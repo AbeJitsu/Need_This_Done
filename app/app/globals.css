@@ -37,13 +37,13 @@ Usage: background-color: var(--primary-color);
   /* ======================================================================
   BLUES - Primary Brand (20-25% of color usage)
   ====================================================================== */
-  /* Balanced blue - softened but still clearly blue */
-  --blue-50: #f2faff;
-  --blue-100: #e0f0ff;
-  --blue-200: #b8daf7;
-  --blue-300: #8ec2ed;
-  --blue-400: #64a8e0;
-  --blue-500: #4a8fd0;
+  /* Balanced blue - light shades brightened for dark mode readability */
+  --blue-50: #f0f8ff;
+  --blue-100: #e6f3ff;
+  --blue-200: #c2e0ff;
+  --blue-300: #9acbff;
+  --blue-400: #6bb0f0;
+  --blue-500: #4a93d8;
   --blue-600: #3574b8;
   --blue-700: #2a5d96;
   --blue-800: #234a78;
@@ -52,26 +52,28 @@ Usage: background-color: var(--primary-color);
   /* ======================================================================
   GREENS - Success & Growth (balanced sage-green)
   ====================================================================== */
-  --green-50: #f2faf5;
-  --green-100: #dcf5e4;
-  --green-200: #b5e8c6;
-  --green-300: #84d6a0;
-  --green-400: #52c078;
-  --green-500: #34a85c;
-  --green-600: #288a49;
-  --green-700: #236e3c;
-  --green-800: #1f5832;
-  --green-900: #1a482a;
+  /* Light shades brightened for dark mode readability */
+  --green-50: #f0fdf5;
+  --green-100: #e0fbeb;
+  --green-200: #b8f5d0;
+  --green-300: #8aebb0;
+  --green-400: #5cd88a;
+  --green-500: #3cbe68;
+  --green-600: #2a9a50;
+  --green-700: #237a40;
+  --green-800: #1f5f34;
+  --green-900: #1a4d2b;
 
   /* ======================================================================
   REDS - Errors, Critical Actions (balanced - clear but not harsh)
   ====================================================================== */
-  --red-50: #fef4f4;
-  --red-100: #fde5e5;
-  --red-200: #f9c8c8;
-  --red-300: #f2a3a3;
-  --red-400: #e87a7a;
-  --red-500: #da5757;
+  /* Light shades brightened for dark mode readability */
+  --red-50: #fff5f5;
+  --red-100: #ffe8e8;
+  --red-200: #ffc8c8;
+  --red-300: #ffa8a8;
+  --red-400: #f08080;
+  --red-500: #e05858;
   --red-600: #c43c3c;
   --red-700: #a33030;
   --red-800: #862929;
@@ -80,13 +82,14 @@ Usage: background-color: var(--primary-color);
   /* ======================================================================
   YELLOWS - Warnings & Caution States (balanced amber)
   ====================================================================== */
-  --yellow-50: #fefcf0;
-  --yellow-100: #fdf6d8;
-  --yellow-200: #f9e9a8;
-  --yellow-300: #f2d56e;
-  --yellow-400: #e8bd3e;
-  --yellow-500: #d4a520;
-  --yellow-600: #b8880e;
+  /* Light shades brightened for dark mode readability */
+  --yellow-50: #fffef0;
+  --yellow-100: #fffae0;
+  --yellow-200: #fff0b0;
+  --yellow-300: #ffe070;
+  --yellow-400: #f0c840;
+  --yellow-500: #d8af20;
+  --yellow-600: #b8900e;
   --yellow-700: #956c0c;
   --yellow-800: #7a5710;
   --yellow-900: #664812;
@@ -94,12 +97,13 @@ Usage: background-color: var(--primary-color);
   /* ======================================================================
   ORANGES - Warm & Energetic (balanced terracotta)
   ====================================================================== */
-  --orange-50: #fff8f2;
-  --orange-100: #ffecde;
-  --orange-200: #fdd5b8;
-  --orange-300: #f8b88a;
-  --orange-400: #f09558;
-  --orange-500: #e47838;
+  /* Light shades brightened for dark mode readability */
+  --orange-50: #fff9f5;
+  --orange-100: #fff0e5;
+  --orange-200: #ffdcc2;
+  --orange-300: #ffc498;
+  --orange-400: #f8a060;
+  --orange-500: #e88040;
   --orange-600: #cc5f24;
   --orange-700: #a84c1e;
   --orange-800: #8a3f1c;
@@ -108,36 +112,38 @@ Usage: background-color: var(--primary-color);
   /* ======================================================================
   PURPLES - Creativity & Premium (balanced plum)
   ====================================================================== */
-  --purple-50: #faf6fc;
-  --purple-100: #f2e9f8;
-  --purple-200: #e4d2f0;
-  --purple-300: #cfb2e2;
-  --purple-400: #b48ad0;
-  --purple-500: #9968ba;
-  --purple-600: #7f4fa0;
-  --purple-700: #694184;
-  --purple-800: #57366c;
+  /* Light shades brightened for dark mode readability */
+  --purple-50: #fcf8ff;
+  --purple-100: #f5ecff;
+  --purple-200: #e8d8ff;
+  --purple-300: #d8c0f8;
+  --purple-400: #c4a0e8;
+  --purple-500: #a878d0;
+  --purple-600: #8858b0;
+  --purple-700: #6d4590;
+  --purple-800: #573870;
   --purple-900: #482d5a;
 
   /* ======================================================================
   TEALS - Secondary accent (balanced seafoam)
   ====================================================================== */
-  --teal-50: #f0fdfb;
-  --teal-100: #d4f7f2;
-  --teal-200: #a8ede2;
-  --teal-300: #72dece;
-  --teal-400: #3ec9b6;
-  --teal-500: #26af9c;
-  --teal-600: #1c9080;
-  --teal-700: #1a7368;
-  --teal-800: #185c54;
+  /* Light shades brightened for dark mode readability */
+  --teal-50: #f0fffc;
+  --teal-100: #d8fff8;
+  --teal-200: #b0f8ed;
+  --teal-300: #80f0e0;
+  --teal-400: #50dcc8;
+  --teal-500: #30c0aa;
+  --teal-600: #20a090;
+  --teal-700: #1a7868;
+  --teal-800: #186058;
   --teal-900: #164d46;
 
   /* ======================================================================
-  GRAYSCALE - Warm Foundation (70-80% of interface)
+  GRAYSCALE - Foundation Colors
   ======================================================================
-  Light shades (50-300) have subtle warm brown undertones for a modern,
-  inviting feel. Darker shades stay neutral for text contrast.
+  Light shades (50-300) have subtle warm undertones for a friendly feel.
+  Dark shades (700-900) have cool blue undertones for a modern dark mode.
   */
   --gray-50: #faf9f7;
   --gray-100: #f5f3f0;
@@ -146,9 +152,9 @@ Usage: background-color: var(--primary-color);
   --gray-400: #a8a29e;
   --gray-500: #78716c;
   --gray-600: #57534e;
-  --gray-700: #44403c;
-  --gray-800: #292524;
-  --gray-900: #1c1917;
+  --gray-700: #484c52;
+  --gray-800: #323840;
+  --gray-900: #252a30;
 
   /* ======================================================================
   SEMANTIC MAPPINGS - Easy to update site-wide colors
