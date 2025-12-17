@@ -6,100 +6,82 @@ import { formInputColors, headingColors, footerColors, dividerColors, linkHoverC
 import { OPEN_CHATBOT_EVENT } from './chatbot/ChatbotWidget';
 
 // ============================================================================
-// Footer Component - Site-wide Footer
+// Footer Component - Compact Site-wide Footer
 // ============================================================================
-// Appears at the bottom of every page. Contains:
-// - Brand info and tagline
-// - Quick links to informational pages
-// - Help section with FAQ and chat trigger
-// - Copyright
+// Single-row layout with all links inline for minimal vertical footprint.
+// Contains brand, navigation links, chat trigger, and copyright.
 
-// Footer link sections
-const footerLinks = {
-  quickLinks: [
-    { href: '/how-it-works', label: 'How It Works' },
-    { href: '/contact', label: 'Contact' },
-    { href: '/pricing', label: 'Pricing' },
-  ],
-  help: [
-    { href: '/faq', label: 'FAQ' },
-    { href: '/get-started', label: 'Get Started' },
-  ],
-};
+const footerLinks = [
+  { href: '/how-it-works', label: 'How It Works' },
+  { href: '/contact', label: 'Contact' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/faq', label: 'FAQ' },
+  { href: '/get-started', label: 'Get Started' },
+];
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-  // Open chatbot when clicking the chat link
   const openChatbot = () => {
     window.dispatchEvent(new CustomEvent(OPEN_CHATBOT_EVENT));
   };
 
   return (
     <footer className={`${footerColors.bg} ${footerColors.border}`}>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Brand Section */}
-          <div>
-            <Link
-              href="/"
-              className={`font-semibold text-lg ${headingColors.primary} ${linkHoverColors.blue} transition-colors`}
-              style={{ fontFamily: 'var(--font-poppins)' }}
-            >
-              {siteConfig.project.name}
-            </Link>
-            <p className={`mt-2 text-sm ${formInputColors.helper} max-w-xs`}>
-              Real people helping busy professionals get things done.
-            </p>
-          </div>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-5">
+        {/* Main row: Brand + Links */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          {/* Brand */}
+          <Link
+            href="/"
+            className={`font-semibold ${headingColors.primary} ${linkHoverColors.blue} transition-colors`}
+            style={{ fontFamily: 'var(--font-poppins)' }}
+          >
+            {siteConfig.project.name}
+          </Link>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className={`font-semibold ${headingColors.primary} mb-3`}>Quick Links</h3>
-            <ul className="space-y-2">
-              {footerLinks.quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Help Section */}
-          <div>
-            <h3 className={`font-semibold ${headingColors.primary} mb-3`}>Help</h3>
-            <ul className="space-y-2">
-              {footerLinks.help.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <button
-                  type="button"
-                  onClick={openChatbot}
-                  className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors cursor-pointer`}
+          {/* Navigation links - inline with dot separators */}
+          <nav className="flex flex-wrap items-center gap-x-1 gap-y-1">
+            {footerLinks.map((link) => (
+              <span key={link.href} className="flex items-center">
+                <Link
+                  href={link.href}
+                  className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}
                 >
-                  Chat with AI assistant
-                </button>
-              </li>
-            </ul>
-          </div>
+                  {link.label}
+                </Link>
+                <span className={`mx-2 text-sm ${formInputColors.helper}`}>·</span>
+              </span>
+            ))}
+            <button
+              type="button"
+              onClick={openChatbot}
+              className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors cursor-pointer flex items-center gap-1`}
+              aria-label="Chat with AI assistant"
+            >
+              <svg
+                className="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
+              </svg>
+              <span className="sr-only sm:not-sr-only">Chat</span>
+            </button>
+          </nav>
         </div>
 
-        {/* Copyright */}
-        <div className={`mt-8 pt-6 border-t ${dividerColors.border} text-center text-sm ${formInputColors.helper}`}>
-          &copy; {currentYear} {siteConfig.project.name}
+        {/* Bottom row: Tagline + Copyright */}
+        <div className={`mt-3 pt-3 border-t ${dividerColors.border} flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-sm ${formInputColors.helper}`}>
+          <p>Real people helping busy professionals get things done.</p>
+          <p>&copy; {currentYear} {siteConfig.project.name}</p>
         </div>
       </div>
     </footer>

@@ -162,14 +162,13 @@ export const defaultFAQContent: FAQPageContent = {
     },
   ],
   cta: {
-    title: 'Still Have Questions?',
+    title: 'Ready to Talk?',
     description:
-      "We're here to help. Reach out and we'll get back to you promptly.",
+      "Book a consultation to discuss your project with an expert.",
     buttons: [
-      { text: 'View Services', variant: 'orange', href: '/services' },
-      { text: 'View Pricing', variant: 'teal', href: '/pricing' },
+      { text: 'Book a Consultation', variant: 'purple', href: '/shop' },
     ],
-    hoverColor: 'orange',
+    hoverColor: 'purple',
   },
 };
 

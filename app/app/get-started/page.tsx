@@ -6,16 +6,14 @@ import { useState } from 'react';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import CTASection from '@/components/CTASection';
-import CircleBadge from '@/components/CircleBadge';
 import { accentColors, formInputColors, featureCardColors, stepBadgeColors, mutedTextColors } from '@/lib/colors';
 
 // ============================================================================
-// Get Started Page - Deposit Authorization
+// Get Started Page - Choose Your Path
 // ============================================================================
-// What: Page for customers to authorize work with a 50% deposit
-// Why: After receiving a quote, customers come here to get started
-// How: Simple form for quote reference and payment processing
+// What: Page to help visitors choose their next step
+// Why: Visitors may either want a quote or consultation, or already have a quote
+// How: Two main path cards + authorization form for those with quotes
 
 export default function GetStartedPage() {
   const [quoteRef, setQuoteRef] = useState('');
@@ -144,45 +142,105 @@ export default function GetStartedPage() {
   }
 
   // ============================================================================
-  // Main Form
+  // Choose Your Path
   // ============================================================================
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-12">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-12">
       <PageHeader
         title="Ready to Get Started?"
-        description="You've received a quote and you're ready to move forward. Let's make it official."
+        description="Choose the path that's right for you"
       />
 
-      {/* How It Works */}
-      <Card hoverColor="green" hoverEffect="glow" className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6 text-center">
-          How Payment Works
-        </h2>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <div className="flex items-center gap-4">
-            <CircleBadge text="50%" color="green" size="md" shape="pill" />
-            <div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100">To Start</p>
-              <p className={`text-sm ${formInputColors.helper}`}>Deposit to begin work</p>
+      {/* Two Main Paths */}
+      <div className="grid md:grid-cols-2 gap-6 mb-10">
+        {/* Path 1: Get a Quote (FREE) */}
+        <Card hoverColor="green" hoverEffect="lift">
+          <div className="p-8">
+            <div className="mb-4">
+              <span className="inline-block px-4 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-sm font-semibold">
+                Free
+              </span>
             </div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+              Get a Quote
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Tell us about your project and get a custom quote
+            </p>
+            <ul className="space-y-3 mb-6">
+              <li className="flex items-center gap-2">
+                <span className="text-green-600 dark:text-green-400">✓</span>
+                <span className="text-gray-700 dark:text-gray-300">Free, no obligation</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-600 dark:text-green-400">✓</span>
+                <span className="text-gray-700 dark:text-gray-300">Response in 2 business days</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-600 dark:text-green-400">✓</span>
+                <span className="text-gray-700 dark:text-gray-300">Custom pricing for your needs</span>
+              </li>
+            </ul>
+            <Button variant="green" href="/contact" size="lg" className="w-full">
+              Get a Quote
+            </Button>
           </div>
-          <div className="hidden sm:block w-8 h-0.5 bg-gray-300 dark:bg-gray-600"></div>
-          <div className="flex items-center gap-4">
-            <CircleBadge text="50%" color="blue" size="md" shape="pill" />
-            <div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100">On Delivery</p>
-              <p className={`text-sm ${formInputColors.helper}`}>When you approve the work</p>
+        </Card>
+
+        {/* Path 2: Book a Consultation (PAID) */}
+        <Card hoverColor="purple" hoverEffect="lift">
+          <div className="p-8">
+            <div className="mb-4">
+              <span className="inline-block px-4 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-sm font-semibold">
+                Paid Service
+              </span>
             </div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+              Book a Consultation
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Talk to an expert before you start
+            </p>
+            <ul className="space-y-3 mb-6">
+              <li className="flex items-center gap-2">
+                <span className="text-purple-600 dark:text-purple-400">✓</span>
+                <span className="text-gray-700 dark:text-gray-300">Expert guidance and advice</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-purple-600 dark:text-purple-400">✓</span>
+                <span className="text-gray-700 dark:text-gray-300">Immediate scheduling</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-purple-600 dark:text-purple-400">✓</span>
+                <span className="text-gray-700 dark:text-gray-300">Personalized recommendations</span>
+              </li>
+            </ul>
+            <Button variant="purple" href="/shop" size="lg" className="w-full">
+              Book a Consultation
+            </Button>
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
+
+      {/* Already Have a Quote - Simple divider */}
+      <div className="text-center mb-10 py-6">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          Already Have a Quote?
+        </h3>
+        <p className="text-gray-600 dark:text-gray-300">
+          Enter your quote details below to authorize your project.
+        </p>
+      </div>
 
       {/* Authorization Form */}
-      <Card hoverEffect="none" className="mb-8">
+      <Card hoverEffect="none" id="authorize" className="mb-8">
         <form onSubmit={handleSubmit} className="p-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Authorize Your Project
           </h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
+            Enter your quote details to get started
+          </p>
 
           {error && (
             <div className={`mb-6 p-4 ${accentColors.red.bg} border ${accentColors.red.border} rounded-lg`}>
@@ -239,16 +297,6 @@ export default function GetStartedPage() {
           </p>
         </form>
       </Card>
-
-      {/* Don't have a quote yet? */}
-      <CTASection
-        title="Don't have a quote yet?"
-        description="No worries! Tell us about your project and we'll send you a personalized quote."
-        buttons={[
-          { text: 'Get a Quote', href: '/contact', variant: 'orange' },
-          { text: 'See Our Pricing', href: '/pricing', variant: 'blue' },
-        ]}
-      />
     </div>
   );
 }
