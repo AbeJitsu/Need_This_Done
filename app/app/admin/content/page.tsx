@@ -176,7 +176,7 @@ export default function ContentManagement() {
             How Content Editing Works
           </h3>
           <p className="text-gray-600 dark:text-gray-300 text-sm max-w-xl mx-auto">
-            Each page has its own set of editable content—titles, descriptions,
+            Each page has its own set of editable content: titles, descriptions,
             button text, colors, and more. The page layout stays the same;
             you&apos;re just updating the words and colors. Changes appear on the
             live site as soon as you save.

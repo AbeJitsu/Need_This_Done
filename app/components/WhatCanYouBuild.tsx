@@ -213,7 +213,7 @@ export default function WhatCanYouBuild() {
           </p>
           <p className="text-xs text-blue-900 dark:text-blue-300 leading-relaxed">
             This shows what you'd build on top of the foundation. The boring infrastructure (user accounts, database, authentication, security)
-            is already done. You focus on what makes this specific project unique—the custom features and business logic only you would add.
+            is already done. You focus on what makes this specific project unique. The custom features and business logic only you would add.
           </p>
         </div>
 

@@ -122,7 +122,7 @@ export default function CartPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <PageHeader
           title="Your Cart is Empty"
-          description="Nothing here yet—but that's easy to fix!"
+          description="Nothing here yet, but that's easy to fix!"
         />
 
         <Card hoverEffect="none">

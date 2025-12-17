@@ -87,7 +87,7 @@ export default async function PricingPage() {
                   Get a Free Quote
                 </h4>
                 <p className={`${formInputColors.helper} mb-4 text-sm`}>
-                  Tell us what you need—we&apos;ll respond in 2 days.
+                  Tell us what you need. We&apos;ll respond in 2 days.
                 </p>
                 <Button variant="green" href="/contact" size="lg" className="w-full">
                   Get Started

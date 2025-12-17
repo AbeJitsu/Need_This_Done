@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 // SystemOverview Component - Friendly System Health at a Glance
 // ============================================================================
 // What: Shows if everything is working, in plain language
-// Why: Admins need confidence that the system is healthy without technical jargon
+// Why: Admins need confidence that the system is healthy, explained in plain language
 // How: Simple status message with optional details for the curious
 
 interface HealthResponse {

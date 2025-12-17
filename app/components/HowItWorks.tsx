@@ -148,7 +148,7 @@ export default function HowItWorks() {
             {
               title: 'Your Visitor ↔ Your App',
               icon: '🔒',
-              description: 'Think of it like sealed mail. Data travels in locked envelopes. Even if someone intercepts it, they can\'t read it—it\'s just scrambled letters.',
+              description: 'Think of it like sealed mail. Data travels in locked envelopes. Even if someone intercepts it, they can\'t read it. It\'s just scrambled letters.',
             },
             {
               title: 'Your App ↔ Permanent Storage',
@@ -158,12 +158,12 @@ export default function HowItWorks() {
             {
               title: 'Passwords Stay Hidden',
               icon: '🚫',
-              description: 'Passwords are like fingerprints—converted into a unique pattern. Even if someone steals all the data, they get just the patterns. Passwords can never be revealed.',
+              description: 'Passwords are like fingerprints, converted into a unique pattern. Even if someone steals all the data, they get just the patterns. Passwords can never be revealed.',
             },
             {
               title: 'Login Tokens (Proof of Identity)',
               icon: '🎫',
-              description: 'Like a temporary ID badge. After login, you get a badge that proves you\'re you. It expires automatically. You don\'t send your password repeatedly—just the badge.',
+              description: 'Like a temporary ID badge. After login, you get a badge that proves you\'re you. It expires automatically. You don\'t send your password repeatedly. Just the badge.',
             },
           ].map((item, index) => (
             <div key={index} className="p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">

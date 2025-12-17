@@ -160,7 +160,7 @@ export default function ContactPage() {
         {/* Header */}
         <PageHeader
           title="Request a Free Quote"
-          description="Tell us what you need help with and we'll send you a personalized quote within 2 business days—no commitment, no spam. Just a friendly estimate so you know exactly what to expect."
+          description="Tell us what you need help with and we'll send you a personalized quote within 2 business days. No commitment, no spam. Just a friendly estimate so you know exactly what to expect."
         />
 
         {/* Quick links */}
@@ -181,7 +181,7 @@ export default function ContactPage() {
                 We got your message!
               </h2>
               <p className={`${formInputColors.helper} mb-4`}>
-                Thanks for reaching out — we&apos;re excited to learn more about what you need.
+                Thanks for reaching out. We&apos;re excited to learn more about what you need.
               </p>
 
               {/* What happens next */}
@@ -334,7 +334,7 @@ export default function ContactPage() {
                       <span className="text-2xl block mb-2">📎</span>
                       <span className="text-sm">Drop files here or click to browse</span>
                       <p className={`text-xs mt-1 ${formInputColors.helper}`}>
-                        Images, PDFs, or docs — up to 3 files, 5MB each
+                        Images, PDFs, or docs. Up to 3 files, 5MB each
                       </p>
                     </div>
                   </div>

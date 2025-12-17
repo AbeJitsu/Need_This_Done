@@ -102,7 +102,7 @@ export default function AppointmentConfirmationEmail({
             {/* Calendar Reminder */}
             <Section style={calendarReminder}>
               <Text style={calendarReminderText}>
-                📎 <strong>Check your email</strong> — We've attached a calendar
+                📎 <strong>Check your email</strong>: We've attached a calendar
                 invite (.ics file) that you can add to your calendar app.
               </Text>
             </Section>

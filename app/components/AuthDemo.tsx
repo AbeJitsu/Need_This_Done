@@ -267,7 +267,7 @@ export default function AuthDemo() {
                     <div>
                       <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Your browser creates a sealed envelope</p>
                       <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
-                        When you submit your email and password, your browser wraps them in a secure tunnel (called HTTPS). Think of it like a locked envelope—only the server can open it.
+                        When you submit your email and password, your browser wraps them in a secure tunnel (called HTTPS). Think of it like a locked envelope. Only the server can open it.
                       </p>
                     </div>
                   </div>
@@ -279,7 +279,7 @@ export default function AuthDemo() {
                     <div>
                       <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Your password gets "scrambled" permanently</p>
                       <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
-                        The server receives it and immediately transforms your password into unreadable gibberish (called hashing). Even if a hacker breaks into our servers, they can't see your actual password—it's permanently scrambled.
+                        The server receives it and immediately transforms your password into unreadable gibberish (called hashing). Even if a hacker breaks into our servers, they can't see your actual password. It's permanently scrambled.
                       </p>
                     </div>
                   </div>

@@ -64,8 +64,8 @@ export default function ClientConfirmation({
                   with pricing and timeline
                 </li>
                 <li style={listItem}>
-                  <strong>Love it?</strong> Pay 50% to start, 50% on delivery —
-                  simple as that
+                  <strong>Love it?</strong> Pay 50% to start, 50% on delivery.
+                  Simple as that
                 </li>
               </ol>
             </Section>

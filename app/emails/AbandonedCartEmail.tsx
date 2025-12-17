@@ -74,7 +74,7 @@ export default function AbandonedCartEmail({
             <Text style={greeting}>Hey {displayName},</Text>
 
             <Text style={paragraph}>
-              We noticed you left some items in your cart. No worries—we've
+              We noticed you left some items in your cart. No worries, we've
               saved everything for you! Ready to complete your order?
             </Text>
 

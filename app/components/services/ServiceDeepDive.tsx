@@ -21,7 +21,6 @@ import {
   successCheckmarkColors,
 } from '@/lib/colors';
 import type { AccentColor } from '@/lib/colors';
-import Button from '@/components/Button';
 
 interface ServiceDeepDiveProps {
   defaultExpanded?: ServiceType;
@@ -162,16 +161,6 @@ function ServiceDetail({ content, color }: ServiceDetailProps) {
       <p className={`${formInputColors.helper} italic mt-4 text-center`}>
         "{content.reassurance}"
       </p>
-
-      {/* CTAs */}
-      <div className="flex flex-wrap justify-center gap-4 mt-6">
-        <Button variant="orange" href={content.ctas.primary.href}>
-          {content.ctas.primary.text}
-        </Button>
-        <Button variant="blue" href={content.ctas.secondary.href}>
-          {content.ctas.secondary.text}
-        </Button>
-      </div>
     </div>
   );
 }

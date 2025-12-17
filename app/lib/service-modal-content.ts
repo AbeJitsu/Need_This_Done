@@ -55,7 +55,7 @@ export const virtualAssistantModal: ServiceModalContent = {
 export const dataDocumentsModal: ServiceModalContent = {
   title: 'Data & Documents',
   headline: 'Messy spreadsheets and formatting nightmares? We turn chaos into clarity.',
-  hook: 'We make your documents look professional and work better—no judgment, just results.',
+  hook: 'We make your documents look professional and work better. No judgment, just results.',
   bulletPoints: [
     'Spreadsheet cleanup and organization',
     'Data entry and formatting',
@@ -81,7 +81,7 @@ export const dataDocumentsModal: ServiceModalContent = {
 export const websiteServicesModal: ServiceModalContent = {
   title: 'Website Services',
   headline: 'Your website should work for you, not give you a headache.',
-  hook: 'You focus on your business—we handle the tech. No jargon, no confusion.',
+  hook: 'You focus on your business. We handle the tech. Plain language, clear answers.',
   bulletPoints: [
     'New website builds and redesigns',
     'Content updates and page edits',
@@ -231,7 +231,7 @@ export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
         'Fixing that one thing that has been broken for weeks (you know what it is)',
       ],
     },
-    reassurance: 'We handle the tech so you do not have to. No jargon, no confusion, just a website that works the way you need it to.',
+    reassurance: 'We handle the tech so you do not have to. We explain everything in plain language. Just a website that works the way you need it to.',
     ctas: {
       primary: { text: 'Book a Consultation', href: '/shop' },
       secondary: { text: 'Get a Quote', href: '/contact' },

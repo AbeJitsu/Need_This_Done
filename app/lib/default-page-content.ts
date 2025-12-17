@@ -31,7 +31,7 @@ export const defaultPricingContent: PricingPageContent = {
       price: 'From $50',
       period: 'per task',
       description:
-        'Perfect for simple tasks across any service—admin, data entry, or quick site fixes.',
+        'Perfect for simple tasks across any service: admin, data entry, or quick site fixes.',
       features: [
         'Virtual Assistant: Email sorting, basic scheduling',
         'Data & Documents: Simple formatting, data entry',
@@ -124,7 +124,7 @@ export const defaultFAQContent: FAQPageContent = {
     {
       question: 'How much does it cost?',
       answer:
-        "Pricing depends on complexity, not service type. Quick tasks across any service start at $50. Standard projects that need more steps run $150+. Bigger builds like full websites or complex data migrations start at $500+. Check out our pricing page for details. We provide transparent quotes with no hidden fees—tell us what you need, and we'll give you a clear estimate before any work begins.",
+        "Pricing depends on complexity, not service type. Quick tasks across any service start at $50. Standard projects that need more steps run $150+. Bigger builds like full websites or complex data migrations start at $500+. Check out our pricing page for details. We provide transparent quotes with no hidden fees. Tell us what you need, and we'll give you a clear estimate before any work begins.",
       links: [{ text: 'pricing page', href: '/pricing' }],
     },
     {
@@ -180,7 +180,7 @@ export const defaultServicesContent: ServicesPageContent = {
   header: {
     title: 'Find Your Perfect Fit',
     description:
-      "Not sure which service you need? You're in the right place. Let's figure it out together—no pressure, no tech speak, just helpful guidance.",
+      "Not sure which service you need? You're in the right place. Let's figure it out together. No pressure, no tech speak, just helpful guidance.",
   },
 
   // Scenario Matcher - "Does this sound like you?"
@@ -261,7 +261,7 @@ export const defaultServicesContent: ServicesPageContent = {
   // Choose Your Path - Two-path choice after exploring services
   chooseYourPath: {
     title: 'Choose What Works for You',
-    description: "You've explored our services—now pick your next step. Either option moves you forward, no pressure.",
+    description: "You've explored our services. Now pick your next step. Either option moves you forward, no pressure.",
     paths: [
       {
         badge: 'Free',
@@ -382,7 +382,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
   timeline: {
     title: 'Typical Timeline',
     description:
-      "We know waiting is part of the process. That's why we give you a realistic timeline from day one, so you can plan with confidence. Most projects take 1-2 weeks—bigger ones take longer, but we'll keep you in the loop every step of the way.",
+      "We know waiting is part of the process. That's why we give you a realistic timeline from day one, so you can plan with confidence. Most projects take 1-2 weeks. Bigger ones take longer, but we'll keep you in the loop every step of the way.",
     hoverColor: 'green',
   },
   questionsSection: {

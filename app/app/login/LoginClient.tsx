@@ -195,7 +195,7 @@ export default function LoginClient() {
           </h1>
           <p className={formInputColors.helper}>
             {isForgotPassword
-              ? "No worries—we'll send you a reset link"
+              ? "No worries. We'll send you a reset link"
               : isSignUpMode
                 ? 'Create an account to track your projects and stay in the loop'
                 : 'Good to see you! Sign in to check on your projects'}

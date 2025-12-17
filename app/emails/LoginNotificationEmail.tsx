@@ -61,7 +61,7 @@ export default function LoginNotificationEmail({
 
             <Text style={paragraph}>
               We noticed a new sign-in to your NeedThisDone account. If this was you,
-              no action is needed — you're all set!
+              no action is needed. You're all set!
             </Text>
 
             {/* Login Details Card */}

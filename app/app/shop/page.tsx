@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Quick Consultations - NeedThisDone',
-  description: 'Book a call for expert guidance, ask questions, or figure out what you actually need—before committing to anything.',
+  description: 'Book a call for expert guidance, ask questions, or figure out what you actually need, before committing to anything.',
 };
 
 // ============================================================================
@@ -87,7 +87,7 @@ export default async function ShopPage() {
       {/* Header */}
       <PageHeader
         title="Quick Consultations"
-        description="Not ready for a full project? Book a call first. Get expert guidance, ask questions, or figure out what you actually need—before committing to anything."
+        description="Not ready for a full project? Book a call first. Get expert guidance, ask questions, or figure out what you actually need, before committing to anything."
       />
 
       {/* Client-side interactivity (cart, add buttons) */}

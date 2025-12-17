@@ -154,20 +154,20 @@ export default function GetStartedPage() {
       {/* Two Main Paths */}
       <div className="grid md:grid-cols-2 gap-6 mb-10">
         {/* Path 1: Get a Quote (FREE) */}
-        <Card hoverColor="green" hoverEffect="lift">
-          <div className="p-8">
-            <div className="mb-4">
+        <Card hoverColor="green" hoverEffect="lift" className="h-full">
+          <div className="p-8 h-full grid grid-rows-[auto_auto_auto_1fr_auto]">
+            <div className="pb-4">
               <span className="inline-block px-4 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-sm font-semibold">
                 Free
               </span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 pb-3">
               Get a Quote
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
+            <p className="text-gray-600 dark:text-gray-300 pb-6">
               Tell us about your project and get a custom quote
             </p>
-            <ul className="space-y-3 mb-6">
+            <ul className="space-y-3 self-start">
               <li className="flex items-center gap-2">
                 <span className="text-green-600 dark:text-green-400">✓</span>
                 <span className="text-gray-700 dark:text-gray-300">Free, no obligation</span>
@@ -188,20 +188,20 @@ export default function GetStartedPage() {
         </Card>
 
         {/* Path 2: Book a Consultation (PAID) */}
-        <Card hoverColor="purple" hoverEffect="lift">
-          <div className="p-8">
-            <div className="mb-4">
+        <Card hoverColor="purple" hoverEffect="lift" className="h-full">
+          <div className="p-8 h-full grid grid-rows-[auto_auto_auto_1fr_auto]">
+            <div className="pb-4">
               <span className="inline-block px-4 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-sm font-semibold">
                 Paid Service
               </span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 pb-3">
               Book a Consultation
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
+            <p className="text-gray-600 dark:text-gray-300 pb-6">
               Talk to an expert before you start
             </p>
-            <ul className="space-y-3 mb-6">
+            <ul className="space-y-3 self-start">
               <li className="flex items-center gap-2">
                 <span className="text-purple-600 dark:text-purple-400">✓</span>
                 <span className="text-gray-700 dark:text-gray-300">Expert guidance and advice</span>

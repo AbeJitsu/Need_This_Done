@@ -64,7 +64,7 @@ const siteConfig: SiteConfig = {
     {
       title: 'Website Services',
       tagline: 'Websites that work while you focus on business',
-      description: 'From new builds to updates and maintenance. We handle websites of any size on any platform—so you can focus on your business.',
+      description: 'From new builds to updates and maintenance. We handle websites of any size on any platform, so you can focus on your business.',
       details: 'Website Builds & Redesigns, Content Updates, E-commerce Setup, Ongoing Maintenance',
       color: 'purple',
     },

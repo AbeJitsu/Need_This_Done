@@ -48,15 +48,15 @@ export default function WelcomeEmail({ name, email }: WelcomeEmailProps) {
               <Text style={cardTitle}>Here's What You Can Do</Text>
               <ul style={list}>
                 <li style={listItem}>
-                  <strong>Submit projects</strong> — Tell us what you need done and
+                  <strong>Submit projects</strong>: Tell us what you need done and
                   we'll get you a quote within 2 business days
                 </li>
                 <li style={listItem}>
-                  <strong>Track your orders</strong> — See the status of your
+                  <strong>Track your orders</strong>: See the status of your
                   projects from start to finish
                 </li>
                 <li style={listItem}>
-                  <strong>Browse our services</strong> — From websites to marketing,
+                  <strong>Browse our services</strong>: From websites to marketing,
                   we've got you covered
                 </li>
               </ul>
@@ -76,7 +76,7 @@ export default function WelcomeEmail({ name, email }: WelcomeEmailProps) {
                 <Link href={`${siteUrl}/faq`} style={calloutLink}>
                   FAQ
                 </Link>{' '}
-                or reply to this email — we're always happy to help!
+                or reply to this email. We're always happy to help!
               </Text>
             </Section>
 
