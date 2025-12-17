@@ -100,6 +100,10 @@ const config = {
     'hover:-translate-y-1',
     'active:scale-95',
     'active:scale-98',
+
+    // Product image filters (from colors.ts productImageFilters)
+    'saturate-[0.85]',
+    'contrast-[0.5]',
   ],
 
   // ========================================================================

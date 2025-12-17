@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import type { Product } from '@/lib/medusa-client';
-import { headingColors, formInputColors, alertColors, formValidationColors } from '@/lib/colors';
+import { headingColors, formInputColors, alertColors, formValidationColors, productImageStyles } from '@/lib/colors';
 
 // ============================================================================
 // Product Detail Client Component
@@ -76,7 +76,8 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             <img
               src={image}
               alt={product.title}
-              className="w-full h-full object-cover object-[50%_25%] opacity-90 brightness-95"
+              className="w-full h-full object-cover object-[50%_25%]"
+              style={productImageStyles}
             />
           </div>
         ) : (

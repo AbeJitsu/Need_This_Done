@@ -7,22 +7,24 @@ IMPORTANT: Interact with me and output content that sounds and feels inviting, f
 0. **Check TODO.md** for current priorities and what needs doing
 1. **Local Development** (test changes first):
 
-   - Use `npm run dev:start` to start dev environment
-   - Access at https://localhost (self-signed SSL certs)
+   - Run `cd app && npm run dev` to start Next.js dev server
+   - Access at http://localhost:3000
    - Test all changes thoroughly
 2. **Push to GitHub** (after local testing passes):
 
    - Run `/dac` to draft a commit message for approval
    - **NEVER commit directly** - always wait for user approval
    - Push changes to the `dev` branch after approval
-3. **Production Deployment** (deploy to DigitalOcean):
+3. **Production Deployment** (automatic via Vercel):
 
-   - SSH to DigitalOcean server
-   - Pull latest from GitHub
-   - Use `npm run prod:build` then `npm run prod:start`
-   - Site runs at https://needthisdone.com (Let's Encrypt SSL)
+   - Push to `main` branch triggers Vercel deployment
+   - Site runs at https://needthisdone.com
 
-**NEVER run production builds locally** - always test with dev environment first.
+**Architecture:**
+- **Frontend**: Vercel (Next.js)
+- **Backend**: Railway (Medusa)
+- **Database**: Supabase
+- **Cache**: Upstash Redis
 
 ## Autonomous Work Mode
 
@@ -78,9 +80,9 @@ IMPORTANT: Interact with me and output content that sounds and feels inviting, f
 
 See [README.md](README.md) for:
 
-- **Directory structure** - Complete breakdown of folders and subfolders (Root Level, Application, Infrastructure & Configuration, Documentation, Testing)
+- **Directory structure** - Complete breakdown of folders and subfolders
 - **Quick start commands** - How to run the app and Storybook
-- **Docker Development Workflow** - When to restart vs rebuild containers, hot reload behavior, helper commands
+- **Deployment architecture** - Vercel, Railway, Supabase, Upstash
 - **Key files** - Where core utilities and clients live
 
 ## Coding Standards

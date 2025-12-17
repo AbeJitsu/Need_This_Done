@@ -600,3 +600,11 @@ export const layoutBgColors = {
   gradient: 'bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800',
 };
 
+// ============================================================================
+// Product Image Filters - Consistent styling for product photos
+// ============================================================================
+// Using inline styles because Tailwind arbitrary values don't work with dynamic imports
+export const productImageStyles = {
+  filter: 'saturate(0.85) contrast(0.65)',
+};
+

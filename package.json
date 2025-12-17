@@ -1,17 +1,13 @@
 {
   "scripts": {
-    "dev:start": "./scripts/docker.sh up",
-    "dev:stop": "./scripts/docker.sh down",
-    "dev:restart": "./scripts/docker.sh restart",
-    "dev:build": "./scripts/docker.sh rebuild",
-    "dev:logs": "./scripts/docker.sh logs",
-    "dev:status": "./scripts/docker.sh status",
-    "prod:start": "./scripts/docker.sh --prod up",
-    "prod:stop": "./scripts/docker.sh --prod down",
-    "prod:build": "./scripts/docker.sh --prod rebuild",
-    "prod:restart": "./scripts/docker.sh --prod restart",
-    "prod:logs": "./scripts/docker.sh --prod logs",
-    "prod:status": "./scripts/docker.sh --prod status"
+    "dev": "cd app && npm run dev",
+    "build": "cd app && npm run build",
+    "start": "cd app && npm run start",
+    "test": "cd app && npm run test:e2e",
+    "test:a11y": "cd app && npm run test:a11y",
+    "lint": "cd app && npm run lint",
+    "type-check": "cd app && npm run type-check",
+    "storybook": "cd app && npm run storybook"
   },
   "dependencies": {
     "dotenv": "^17.2.3"

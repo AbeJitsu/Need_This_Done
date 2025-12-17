@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import { formInputColors, formValidationColors, linkHoverColors, alertColors, placeholderColors, headingColors } from '@/lib/colors';
+import { formInputColors, formValidationColors, linkHoverColors, alertColors, placeholderColors, headingColors, productImageStyles } from '@/lib/colors';
 import type { Product } from '@/lib/medusa-client';
 
 // ============================================================================
@@ -133,7 +133,8 @@ export default function ShopClient({ products }: ShopClientProps) {
                       <img
                         src={image}
                         alt={product.title}
-                        className="w-full h-full object-cover object-[50%_25%] opacity-90 brightness-95"
+                        className="w-full h-full object-cover object-[50%_25%]"
+                        style={productImageStyles}
                       />
                     </div>
                   )}
