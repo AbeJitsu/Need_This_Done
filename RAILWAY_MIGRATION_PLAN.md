@@ -840,7 +840,7 @@ Supabase auth (Google OAuth, magic links, password reset) redirects users back t
    ```bash
    # In Next.js service
    railway variables set NEXT_PUBLIC_SITE_URL=https://needthisdone.com
-   railway variables set NEXT_PUBLIC_URL=https://needthisdone.com
+   railway variables set NEXT_PUBLIC_SITE_URL=https://needthisdone.com
    ```
 
 3. **Update OAuth Providers (if using Google/GitHub login):**

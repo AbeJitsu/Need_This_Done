@@ -535,7 +535,7 @@ VECTOR_SEARCH_MAX_RESULTS=5  # Max search results
 
 # Site Configuration
 NEXT_PUBLIC_SITE_URL=https://localhost  # Used for auth redirects
-NEXT_PUBLIC_URL=https://localhost  # Used for metadata/SEO
+NEXT_PUBLIC_SITE_URL=https://localhost  # Used for metadata/SEO
 NODE_ENV=development
 ```
 

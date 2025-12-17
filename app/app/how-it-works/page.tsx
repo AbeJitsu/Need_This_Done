@@ -38,7 +38,7 @@ export const metadata = {
 
 async function getContent(): Promise<HowItWorksPageContent> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/page-content/how-it-works`, {
       next: { revalidate: 60 },
     });

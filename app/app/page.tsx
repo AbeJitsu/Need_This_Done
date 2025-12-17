@@ -29,7 +29,7 @@ export const metadata = {
 
 async function getContent(): Promise<HomePageContent> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/page-content/home`, {
       next: { revalidate: 60 },
     });
@@ -52,7 +52,7 @@ async function getContent(): Promise<HomePageContent> {
 
 async function prefetchProducts() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     // Fire-and-forget fetch to warm Redis cache
     await fetch(`${baseUrl}/api/shop/products`, {
       next: { revalidate: 3600 }, // Match product cache TTL

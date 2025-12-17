@@ -170,7 +170,7 @@ SKIP_CACHE=true
 # Site Configuration (REQUIRED - LOCAL DEVELOPMENT)
 # ============================================================================
 NEXT_PUBLIC_SITE_URL=https://localhost
-NEXT_PUBLIC_URL=https://localhost
+NEXT_PUBLIC_SITE_URL=https://localhost
 
 # ============================================================================
 # Node Environment (LOCAL DEVELOPMENT)
