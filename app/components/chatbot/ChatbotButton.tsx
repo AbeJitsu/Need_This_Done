@@ -1,6 +1,7 @@
 'use client';
 
 import { useIndexingOptional, IndexingStatus } from './IndexingContext';
+import { solidButtonColors } from '@/lib/colors';
 
 // ============================================================================
 // Chatbot Button Component
@@ -71,16 +72,15 @@ export default function ChatbotButton({ onClick }: ChatbotButtonProps) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-6 right-6 z-40
-                 bg-blue-600 hover:bg-blue-700
-                 dark:bg-blue-500 dark:hover:bg-blue-600
-                 text-white rounded-full
+      className={`fixed bottom-6 right-6 z-40
+                 ${solidButtonColors.blue.bg} ${solidButtonColors.blue.hover}
+                 ${solidButtonColors.blue.text} rounded-full
                  w-14 h-14 flex items-center justify-center
                  shadow-lg hover:shadow-xl
                  transition-all duration-200 ease-in-out
                  hover:scale-105
                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                 dark:focus:ring-offset-gray-900"
+                 dark:focus:ring-offset-gray-900`}
       aria-label="Open AI chat assistant"
       title="Chat with AI assistant"
     >

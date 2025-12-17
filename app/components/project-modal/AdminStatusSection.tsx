@@ -1,3 +1,5 @@
+import { solidButtonColors } from '@/lib/colors';
+
 // ============================================================================
 // Admin Status Section Component
 // ============================================================================
@@ -66,7 +68,7 @@ export default function AdminStatusSection({
       <button
         type="submit"
         disabled={submittingStatus || newStatus === currentStatus}
-        className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-md active:scale-[0.98] focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:active:scale-100"
+        className={`w-full py-3 px-4 font-semibold rounded-lg transition-all duration-200 hover:shadow-md active:scale-[0.98] focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:active:scale-100 ${solidButtonColors.blue.bg} ${solidButtonColors.blue.text} ${solidButtonColors.blue.hover}`}
       >
         {submittingStatus ? 'Updating...' : 'Update Status'}
       </button>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useComments } from '@/hooks/useComments';
 import { useProjectStatus } from '@/hooks/useProjectStatus';
+import { useBackdropClose } from '@/hooks/useBackdropClose';
 import ProjectModalHeader from './project-modal/ProjectModalHeader';
 import ProjectModalDetails from './project-modal/ProjectModalDetails';
 import AdminStatusSection from './project-modal/AdminStatusSection';
@@ -62,6 +63,15 @@ export default function ProjectDetailModal({
     submittingStatus,
     handleUpdateStatus: handleUpdateStatusBase,
   } = useProjectStatus(projectId, project?.status || '');
+
+  // ============================================================================
+  // Backdrop Click Handler - Close modal when clicking outside
+  // ============================================================================
+  const { handleBackdropClick, modalRef } = useBackdropClose({
+    isOpen,
+    onClose,
+    includeEscape: true, // Also handles Escape key
+  });
 
   // ============================================================================
   // Fetch Project Data
@@ -134,13 +144,26 @@ export default function ProjectDetailModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <>
+      {/* Backdrop - visual layer */}
       <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="project-modal-title"
-        className="bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="fixed inset-0 bg-black/50 z-40 transition-opacity"
+        aria-hidden="true"
+      />
+
+      {/* Modal container - handles clicks outside modal */}
+      <div
+        onClick={handleBackdropClick}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 cursor-pointer"
       >
+        <div
+          ref={modalRef}
+          onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="project-modal-title"
+          className="bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        >
         {/* Header */}
         <ProjectModalHeader
           title={project?.name || 'Loading...'}
@@ -192,6 +215,7 @@ export default function ProjectDetailModal({
           ) : null}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

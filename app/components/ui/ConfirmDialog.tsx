@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import { useBackdropClose } from '@/hooks/useBackdropClose';
 import {
   cardBgColors,
   iconButtonColors,
   headingColors,
   formInputColors,
+  solidButtonColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -28,16 +30,16 @@ interface ConfirmDialogProps {
   variant?: ConfirmDialogVariant;
 }
 
-// Variant-specific button styles
+// Variant-specific button styles - using centralized color utilities
 const variantStyles: Record<ConfirmDialogVariant, {
   confirmBg: string;
   confirmHover: string;
   confirmText: string;
 }> = {
   danger: {
-    confirmBg: 'bg-red-600 dark:bg-red-500',
-    confirmHover: 'hover:bg-red-700 dark:hover:bg-red-600',
-    confirmText: 'text-white',
+    confirmBg: solidButtonColors.red.bg,
+    confirmHover: solidButtonColors.red.hover,
+    confirmText: solidButtonColors.red.text,
   },
   warning: {
     confirmBg: 'bg-amber-600 dark:bg-amber-500',
@@ -45,9 +47,9 @@ const variantStyles: Record<ConfirmDialogVariant, {
     confirmText: 'text-white',
   },
   info: {
-    confirmBg: 'bg-blue-600 dark:bg-blue-500',
-    confirmHover: 'hover:bg-blue-700 dark:hover:bg-blue-600',
-    confirmText: 'text-white',
+    confirmBg: solidButtonColors.blue.bg,
+    confirmHover: solidButtonColors.blue.hover,
+    confirmText: solidButtonColors.blue.text,
   },
 };
 
@@ -61,64 +63,37 @@ export default function ConfirmDialog({
   cancelLabel = 'Cancel',
   variant = 'info',
 }: ConfirmDialogProps) {
-  const modalRef = useRef<HTMLDivElement>(null);
+  const { handleBackdropClick, modalRef } = useBackdropClose({
+    isOpen,
+    onClose: onCancel,
+    includeEscape: true,
+  });
   const styles = variantStyles[variant];
-
-  // ========================================================================
-  // Handle escape key to cancel
-  // ========================================================================
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onCancel();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen, onCancel]);
-
-  // ========================================================================
-  // Focus trap and scroll lock when modal is open
-  // ========================================================================
-  useEffect(() => {
-    if (isOpen) {
-      // Lock body scroll
-      document.body.style.overflow = 'hidden';
-      // Focus modal
-      modalRef.current?.focus();
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
 
   // Don't render if closed
   if (!isOpen) return null;
 
   return (
     <>
-      {/* Backdrop overlay */}
+      {/* Backdrop overlay - visual layer */}
       <div
         className="fixed inset-0 bg-black/50 dark:bg-black/70 z-40 transition-opacity"
-        onClick={onCancel}
         aria-hidden="true"
       />
 
-      {/* Modal container - centered */}
+      {/* Modal container - centered, handles clicks outside modal */}
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        onClick={handleBackdropClick}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 cursor-pointer"
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-dialog-title"
         aria-describedby="confirm-dialog-message"
       >
-        {/* Modal panel */}
+        {/* Modal panel - stops click propagation so outside clicks close modal */}
         <div
           ref={modalRef}
+          onClick={(e) => e.stopPropagation()}
           tabIndex={-1}
           className={`
             relative w-full max-w-md

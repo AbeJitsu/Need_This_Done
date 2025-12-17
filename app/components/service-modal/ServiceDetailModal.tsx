@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import Link from 'next/link';
 import { useServiceModal } from '@/context/ServiceModalContext';
+import { useBackdropClose } from '@/hooks/useBackdropClose';
 import {
   cardBgColors,
   dividerColors,
@@ -11,6 +12,7 @@ import {
   checkmarkColors,
   topBorderColors,
   iconButtonColors,
+  solidButtonColors,
   AccentColor,
 } from '@/lib/colors';
 import type { ServiceType } from '@/lib/service-modal-content';
@@ -31,65 +33,38 @@ const serviceColors: Record<ServiceType, AccentColor> = {
 
 export default function ServiceDetailModal() {
   const { isOpen, activeService, activeServiceType, closeModal } = useServiceModal();
-  const modalRef = useRef<HTMLDivElement>(null);
+  const { handleBackdropClick, modalRef } = useBackdropClose({
+    isOpen,
+    onClose: closeModal,
+    includeEscape: true,
+  });
 
   // Get the accent color for current service
   const color = activeServiceType ? serviceColors[activeServiceType] : 'blue';
-
-  // ========================================================================
-  // Handle escape key to close modal
-  // ========================================================================
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        closeModal();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen, closeModal]);
-
-  // ========================================================================
-  // Focus trap and scroll lock when modal is open
-  // ========================================================================
-  useEffect(() => {
-    if (isOpen) {
-      // Lock body scroll
-      document.body.style.overflow = 'hidden';
-      // Focus modal
-      modalRef.current?.focus();
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
 
   // Don't render if closed or no content
   if (!isOpen || !activeService) return null;
 
   return (
     <>
-      {/* Backdrop overlay */}
+      {/* Backdrop overlay - visual layer */}
       <div
         className="fixed inset-0 bg-black/50 dark:bg-black/70 z-40 transition-opacity"
-        onClick={closeModal}
         aria-hidden="true"
       />
 
-      {/* Modal container - centered */}
+      {/* Modal container - centered, handles clicks outside modal */}
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        onClick={handleBackdropClick}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 cursor-pointer"
         role="dialog"
         aria-modal="true"
         aria-labelledby="service-modal-title"
       >
-        {/* Modal panel */}
+        {/* Modal panel - stops click propagation so outside clicks close modal */}
         <div
           ref={modalRef}
+          onClick={(e) => e.stopPropagation()}
           tabIndex={-1}
           className={`
             relative w-full max-w-2xl max-h-[90vh] overflow-y-auto
@@ -171,9 +146,7 @@ export default function ServiceDetailModal() {
                 className={`
                   flex-1 text-center py-3 px-6 rounded-xl font-semibold
                   transition-all duration-200
-                  ${color === 'green' ? 'bg-green-600 hover:bg-green-700 text-white' : ''}
-                  ${color === 'blue' ? 'bg-blue-600 hover:bg-blue-700 text-white' : ''}
-                  ${color === 'purple' ? 'bg-purple-600 hover:bg-purple-700 text-white' : ''}
+                  ${solidButtonColors[color].bg} ${solidButtonColors[color].hover} ${solidButtonColors[color].text}
                 `}
               >
                 {activeService.ctas.primary.text}

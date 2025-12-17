@@ -1,4 +1,4 @@
-import { AccentVariant, accentColors, accentBorderWidth } from '@/lib/colors';
+import { AccentVariant, accentColors, accentBorderWidth, accentFontWeight } from '@/lib/colors';
 
 // ============================================================================
 // CircleBadge Component
@@ -45,7 +45,7 @@ export default function CircleBadge({
   // Uses centralized accentColors and accentBorderWidth from colors.ts
   return (
     <div
-      className={`flex-shrink-0 ${sizeClass} ${colors.bg} ${accentBorderWidth} ${colors.border} ${colors.text} rounded-full flex items-center justify-center font-bold`}
+      className={`flex-shrink-0 ${sizeClass} ${colors.bg} ${accentBorderWidth} ${colors.border} ${colors.text} rounded-full flex items-center justify-center ${accentFontWeight}`}
     >
       {text ?? number}
     </div>

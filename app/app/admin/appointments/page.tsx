@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import { filterButtonColors } from '@/lib/colors';
 
 // ============================================================================
 // Appointments Dashboard - /admin/appointments
@@ -224,8 +225,8 @@ export default function AppointmentsDashboard() {
           onClick={() => setStatusFilter('all')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             statusFilter === 'all'
-              ? 'bg-purple-600 dark:bg-purple-500 text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'
+              ? filterButtonColors.active.purple
+              : filterButtonColors.inactive
           }`}
         >
           All ({appointments.length})
@@ -234,8 +235,8 @@ export default function AppointmentsDashboard() {
           onClick={() => setStatusFilter('pending')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             statusFilter === 'pending'
-              ? 'bg-yellow-600 dark:bg-yellow-500 text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'
+              ? filterButtonColors.active.purple
+              : filterButtonColors.inactive
           }`}
         >
           Pending ({appointments.filter((a) => a.status === 'pending').length})
@@ -244,8 +245,8 @@ export default function AppointmentsDashboard() {
           onClick={() => setStatusFilter('approved')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             statusFilter === 'approved'
-              ? 'bg-green-600 dark:bg-green-500 text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'
+              ? filterButtonColors.active.green
+              : filterButtonColors.inactive
           }`}
         >
           Approved ({appointments.filter((a) => a.status === 'approved').length})
@@ -254,8 +255,8 @@ export default function AppointmentsDashboard() {
           onClick={() => setStatusFilter('canceled')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             statusFilter === 'canceled'
-              ? 'bg-red-600 dark:bg-red-500 text-white'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'
+              ? filterButtonColors.active.red
+              : filterButtonColors.inactive
           }`}
         >
           Canceled ({appointments.filter((a) => a.status === 'canceled').length})

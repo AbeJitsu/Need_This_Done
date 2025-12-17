@@ -79,6 +79,9 @@ export const accentColors: Record<AccentVariant, {
 // Border width constant - change once to update all buttons/badges globally
 export const accentBorderWidth = 'border-2';
 
+// Font weight constant - change once to update all buttons/badges globally
+export const accentFontWeight = 'font-semibold';
+
 // ============================================================================
 // Title Colors - Used for headings and labels (generic)
 // ============================================================================
@@ -629,6 +632,92 @@ export const layoutBgColors = {
   page: 'bg-white dark:bg-gray-900',
   section: 'bg-gray-50 dark:bg-gray-800',
   gradient: 'bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800',
+};
+
+// ============================================================================
+// Solid Button Colors - For solid background action buttons
+// ============================================================================
+// All accent color variants with background, hover, text, and focus ring states
+// Light mode: -600 shade for backgrounds, -700 on hover
+// Dark mode: -500 shade for backgrounds, -600 on hover (maintains brightness)
+export const solidButtonColors: Record<AccentVariant, {
+  bg: string;
+  hover: string;
+  text: string;
+  focus: string;
+}> = {
+  purple: {
+    bg: 'bg-purple-600 dark:bg-purple-500',
+    hover: 'hover:bg-purple-700 dark:hover:bg-purple-600',
+    text: 'text-white',
+    focus: 'focus:ring-2 focus:ring-purple-500',
+  },
+  blue: {
+    bg: 'bg-blue-600 dark:bg-blue-500',
+    hover: 'hover:bg-blue-700 dark:hover:bg-blue-600',
+    text: 'text-white',
+    focus: 'focus:ring-2 focus:ring-blue-500',
+  },
+  green: {
+    bg: 'bg-green-600 dark:bg-green-500',
+    hover: 'hover:bg-green-700 dark:hover:bg-green-600',
+    text: 'text-white',
+    focus: 'focus:ring-2 focus:ring-green-500',
+  },
+  orange: {
+    bg: 'bg-orange-600 dark:bg-orange-500',
+    hover: 'hover:bg-orange-700 dark:hover:bg-orange-600',
+    text: 'text-white',
+    focus: 'focus:ring-2 focus:ring-orange-500',
+  },
+  teal: {
+    bg: 'bg-teal-600 dark:bg-teal-500',
+    hover: 'hover:bg-teal-700 dark:hover:bg-teal-600',
+    text: 'text-white',
+    focus: 'focus:ring-2 focus:ring-teal-500',
+  },
+  gray: {
+    bg: 'bg-gray-600 dark:bg-gray-500',
+    hover: 'hover:bg-gray-700 dark:hover:bg-gray-600',
+    text: 'text-white',
+    focus: 'focus:ring-2 focus:ring-gray-500',
+  },
+  red: {
+    bg: 'bg-red-600 dark:bg-red-500',
+    hover: 'hover:bg-red-700 dark:hover:bg-red-600',
+    text: 'text-white',
+    focus: 'focus:ring-2 focus:ring-red-500',
+  },
+};
+
+// ============================================================================
+// Filter Button Colors - For admin filter toggle buttons
+// ============================================================================
+// Separate active and inactive states for filter buttons
+// Active colors: purple, green, red for different filter types
+// Inactive: gray styling with hover effect
+export const filterButtonColors = {
+  active: {
+    purple: 'bg-purple-600 dark:bg-purple-500 text-white',
+    green: 'bg-green-600 dark:bg-green-500 text-white',
+    red: 'bg-red-600 dark:bg-red-500 text-white',
+  },
+  inactive: 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600',
+};
+
+// ============================================================================
+// Badge Colors - For notification badges and counts
+// ============================================================================
+// Simple, bold styling for notification badges and cart counts
+// All accent color variants with vibrant backgrounds and white text
+export const badgeColors: Record<AccentVariant, string> = {
+  purple: 'bg-purple-500 text-white',
+  blue: 'bg-blue-500 text-white',
+  green: 'bg-green-500 text-white',
+  orange: 'bg-orange-500 text-white',
+  teal: 'bg-teal-500 text-white',
+  gray: 'bg-gray-500 text-white',
+  red: 'bg-red-500 text-white',
 };
 
 // ============================================================================

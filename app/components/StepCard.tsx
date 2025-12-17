@@ -30,32 +30,32 @@ export default function StepCard({
   const cardClasses = `${cardBgColors.base} rounded-xl p-8 ${cardBorderColors.subtle} transition-all ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`;
 
   const cardContent = (
-      <div className="flex items-start gap-6">
-        {/* Step number badge */}
-        <CircleBadge number={number} color={color} />
-
-        {/* Content */}
-        <div className="flex-1">
-          <h2 className={`text-xl font-bold mb-3 ${titleTextColors[color]}`}>
+      <div>
+        {/* Title row with badge */}
+        <div className="flex items-start gap-4 mb-3">
+          <CircleBadge number={number} color={color} />
+          <h2 className={`text-xl font-bold ${titleTextColors[color]}`}>
             {title}
           </h2>
-          <p className={`${bodyTextColors.gray} mb-4`}>
-            {description}
-          </p>
-          <ul className="space-y-2">
-            {details.map((detail, index) => (
-              <li key={index} className={`flex items-center gap-2 text-sm ${bodyTextColors.gray}`}>
-                <span className={titleTextColors[color]}>•</span>
-                {detail}
-              </li>
-            ))}
-          </ul>
-          {href && (
-            <p className={`text-sm font-medium mt-4 ${titleTextColors[color]}`}>
-              Learn more →
-            </p>
-          )}
         </div>
+
+        {/* Content - indented to align with title */}
+        <p className={`ml-[4.5rem] ${bodyTextColors.gray} mb-4`}>
+          {description}
+        </p>
+        <ul className="ml-[4.5rem] space-y-2">
+          {details.map((detail, index) => (
+            <li key={index} className={`flex items-center gap-2 text-sm ${bodyTextColors.gray}`}>
+              <span className={titleTextColors[color]}>•</span>
+              {detail}
+            </li>
+          ))}
+        </ul>
+        {href && (
+          <p className={`text-sm font-medium mt-4 ${titleTextColors[color]}`}>
+            Learn more →
+          </p>
+        )}
       </div>
   );
 

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { AccentVariant, accentColors, accentBorderWidth } from '@/lib/colors';
+import { AccentVariant, accentColors, accentBorderWidth, accentFontWeight } from '@/lib/colors';
 
 // ============================================================================
 // Button Component - Centralized Button Styling
@@ -47,7 +47,7 @@ export default function Button({
 }: ButtonProps) {
   const colors = accentColors[variant];
   // All color classes come from the centralized accentColors system
-  const baseClasses = `inline-flex items-center justify-center font-semibold rounded-full ${accentBorderWidth} transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:ring-4 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800 ${sizeClasses[size]} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`;
+  const baseClasses = `inline-flex items-center justify-center ${accentFontWeight} rounded-full ${accentBorderWidth} transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:ring-4 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800 ${sizeClasses[size]} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`;
   const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : '';
   const fullClasses = `${baseClasses} ${disabledClasses} ${className}`.trim();
 

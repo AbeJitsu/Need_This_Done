@@ -11,7 +11,6 @@ import Card from '@/components/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import {
   formInputColors,
-  formValidationColors,
   alertColors,
   headingColors,
   dividerColors,

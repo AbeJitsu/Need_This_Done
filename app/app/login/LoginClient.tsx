@@ -15,7 +15,7 @@ import {
   dividerColors,
   mutedTextColors,
   titleColors,
-  accentColors,
+  solidButtonColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -278,7 +278,7 @@ export default function LoginClient() {
             <button
               type="submit"
               disabled={isSubmitting || !email || (!isForgotPassword && !password)}
-              className={`w-full py-3 px-6 ${accentColors.blue.bg} ${accentColors.blue.text} font-semibold rounded-full border ${accentColors.blue.border} hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-200 dark:hover:text-blue-800 dark:hover:border-blue-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
+              className={`w-full py-3 px-6 font-semibold rounded-full border disabled:opacity-50 disabled:cursor-not-allowed transition-all ${solidButtonColors.blue.bg} ${solidButtonColors.blue.text} ${solidButtonColors.blue.hover} border-blue-600 dark:border-blue-500`}
             >
               {isSubmitting
                 ? isForgotPassword
