@@ -33,10 +33,10 @@ vi.mock('resend', () => ({
 // Template Imports
 // ============================================================================
 
-import WelcomeEmail from '@/_emails/WelcomeEmail'
-import LoginNotificationEmail from '@/_emails/LoginNotificationEmail'
-import AdminNotification from '@/_emails/AdminNotification'
-import ClientConfirmation from '@/_emails/ClientConfirmation'
+import WelcomeEmail from '../../../emails/WelcomeEmail'
+import LoginNotificationEmail from '../../../emails/LoginNotificationEmail'
+import AdminNotification from '../../../emails/AdminNotification'
+import ClientConfirmation from '../../../emails/ClientConfirmation'
 
 // ============================================================================
 // Service Imports (after mocking)
