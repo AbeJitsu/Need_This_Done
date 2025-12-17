@@ -19,6 +19,7 @@ import {
   alertColors,
   headingColors,
   dividerColors,
+  titleColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -43,6 +44,8 @@ export default function CheckoutPage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [address, setAddress] = useState('');
+  const [address2, setAddress2] = useState('');
+  const [showAddress2, setShowAddress2] = useState(false);
   const [cityStateZip, setCityStateZip] = useState('');
 
   // Payment state
@@ -89,6 +92,26 @@ export default function CheckoutPage() {
     // Validate required fields
     if (!email) {
       setError('Email is required');
+      return;
+    }
+
+    if (!firstName.trim()) {
+      setError('First name is required');
+      return;
+    }
+
+    if (!lastName.trim()) {
+      setError('Last name is required');
+      return;
+    }
+
+    if (!address.trim()) {
+      setError('Address is required');
+      return;
+    }
+
+    if (!cityStateZip.trim()) {
+      setError('City, State, ZIP is required');
       return;
     }
 
@@ -252,7 +275,7 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'confirmation') {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <div className="text-center mb-8">
           <div className="inline-block p-3 bg-green-100 dark:bg-green-900 rounded-full mb-4">
             <svg
@@ -348,32 +371,96 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'appointment' && appointmentInfo) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <PageHeader title="Schedule Your Consultation" description="Pick a time that works for you" />
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            {/* Error message */}
-            {error && (
-              <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-                <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
+        <Card hoverEffect="none">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+            {/* Left column - Appointment form */}
+            <div className="w-full">
+              {/* Error message */}
+              {error && (
+                <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+                  <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
+                </div>
+              )}
+
+              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-700/50`}>
+                <AppointmentStepForm
+                  durationMinutes={appointmentInfo.durationMinutes}
+                  serviceName={appointmentInfo.serviceName}
+                  onComplete={handleAppointmentComplete}
+                  onBack={() => setCurrentStep('info')}
+                  isProcessing={isProcessing}
+                />
               </div>
-            )}
+            </div>
 
-            <AppointmentStepForm
-              durationMinutes={appointmentInfo.durationMinutes}
-              serviceName={appointmentInfo.serviceName}
-              onComplete={handleAppointmentComplete}
-              onBack={() => setCurrentStep('info')}
-              isProcessing={isProcessing}
-            />
-          </div>
+            {/* Right column - Order Summary */}
+            <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
+              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-800`}>
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
+                  Order Summary
+                </h2>
 
-          {/* Order summary sidebar */}
-          <div className="lg:sticky lg:top-20 lg:self-start">
-            <OrderSummary cart={cart} itemCount={itemCount} />
+                {/* Cart items preview */}
+                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
+                  {cart?.items?.map((item) => (
+                    <div key={item.id} className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <p className={`font-medium ${headingColors.primary} text-sm`}>
+                          {item.title || item.variant?.title || 'Consultation'}
+                        </p>
+                        <p className={`text-xs ${formInputColors.helper}`}>
+                          Qty: {item.quantity}
+                        </p>
+                      </div>
+                      <p className={`font-semibold ${headingColors.primary} text-sm`}>
+                        ${(((item.unit_price || 0) * item.quantity) / 100).toFixed(2)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
+                  <div className="flex justify-between">
+                    <span className={formInputColors.helper}>Subtotal</span>
+                    <span className={`font-semibold ${headingColors.primary}`}>
+                      ${((cart?.subtotal || 0) / 100).toFixed(2)}
+                    </span>
+                  </div>
+
+                  {(cart?.tax_total || 0) > 0 && (
+                    <div className="flex justify-between">
+                      <span className={formInputColors.helper}>Tax</span>
+                      <span className={`font-semibold ${headingColors.primary}`}>
+                        ${((cart?.tax_total || 0) / 100).toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex justify-between mb-6">
+                  <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
+                  <span className={`text-2xl font-bold ${headingColors.primary}`}>
+                    ${((cart?.total || 0) / 100).toFixed(2)}
+                  </span>
+                </div>
+
+                <Button variant="blue" href="/cart" className="w-full" size="lg">
+                  Edit Cart
+                </Button>
+              </div>
+
+              {/* What happens next */}
+              <div className={`${dividerColors.border} border rounded-lg p-6 bg-blue-50/50 dark:bg-blue-900/10`}>
+                <p className={`text-sm ${formInputColors.helper}`}>
+                  <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
+        </Card>
       </div>
     );
   }
@@ -383,22 +470,23 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'payment' && clientSecret) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <PageHeader title="Payment" description="Complete your purchase" />
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            {/* Error message */}
-            {error && (
-              <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-                <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
-              </div>
-            )}
+        <Card hoverEffect="none">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+            {/* Left column - Payment form */}
+            <div className="w-full space-y-6">
+              {/* Error message */}
+              {error && (
+                <div className={`p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+                  <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
+                </div>
+              )}
 
-            {/* Payment form */}
-            <Card hoverEffect="none" className="mb-6">
-              <div className="p-6">
-                <h2 className={`text-xl font-bold ${headingColors.primary} mb-4`}>
+              {/* Payment form */}
+              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-700/50`}>
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Payment Details
                 </h2>
 
@@ -411,24 +499,83 @@ export default function CheckoutPage() {
                   />
                 </StripeElementsWrapper>
               </div>
-            </Card>
 
-            {/* Back button - go to appointment step if it was required, otherwise info */}
-            <Button
-              variant="gray"
-              onClick={() => setCurrentStep(requiresAppointment ? 'appointment' : 'info')}
-              className="w-full"
-              size="lg"
-            >
-              {requiresAppointment ? 'Back to Scheduling' : 'Back to Information'}
-            </Button>
-          </div>
+              {/* Back button */}
+              <Button
+                variant="gray"
+                onClick={() => setCurrentStep(requiresAppointment ? 'appointment' : 'info')}
+                className="w-full"
+                size="lg"
+              >
+                {requiresAppointment ? 'Back to Scheduling' : 'Back to Information'}
+              </Button>
+            </div>
 
-          {/* Order summary sidebar */}
-          <div className="lg:sticky lg:top-20 lg:self-start">
-            <OrderSummary cart={cart} itemCount={itemCount} />
+            {/* Right column - Order Summary */}
+            <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
+              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-800`}>
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
+                  Order Summary
+                </h2>
+
+                {/* Cart items preview */}
+                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
+                  {cart?.items?.map((item) => (
+                    <div key={item.id} className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <p className={`font-medium ${headingColors.primary} text-sm`}>
+                          {item.title || item.variant?.title || 'Consultation'}
+                        </p>
+                        <p className={`text-xs ${formInputColors.helper}`}>
+                          Qty: {item.quantity}
+                        </p>
+                      </div>
+                      <p className={`font-semibold ${headingColors.primary} text-sm`}>
+                        ${(((item.unit_price || 0) * item.quantity) / 100).toFixed(2)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
+                  <div className="flex justify-between">
+                    <span className={formInputColors.helper}>Subtotal</span>
+                    <span className={`font-semibold ${headingColors.primary}`}>
+                      ${((cart?.subtotal || 0) / 100).toFixed(2)}
+                    </span>
+                  </div>
+
+                  {(cart?.tax_total || 0) > 0 && (
+                    <div className="flex justify-between">
+                      <span className={formInputColors.helper}>Tax</span>
+                      <span className={`font-semibold ${headingColors.primary}`}>
+                        ${((cart?.tax_total || 0) / 100).toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex justify-between mb-6">
+                  <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
+                  <span className={`text-2xl font-bold ${headingColors.primary}`}>
+                    ${((cart?.total || 0) / 100).toFixed(2)}
+                  </span>
+                </div>
+
+                <Button variant="blue" href="/cart" className="w-full" size="lg">
+                  Edit Cart
+                </Button>
+              </div>
+
+              {/* What happens next */}
+              <div className={`${dividerColors.border} border rounded-lg p-6 bg-blue-50/50 dark:bg-blue-900/10`}>
+                <p className={`text-sm ${formInputColors.helper}`}>
+                  <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
+        </Card>
       </div>
     );
   }
@@ -437,7 +584,7 @@ export default function CheckoutPage() {
   // Information step (Step 1)
   // ========================================================================
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       <PageHeader title="Checkout" description="Complete your purchase" />
 
       {itemCount === 0 ? (
@@ -453,9 +600,9 @@ export default function CheckoutPage() {
         </Card>
       ) : (
         <Card hoverEffect="none">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
             {/* Left column - Checkout form */}
-            <form onSubmit={handleInfoSubmit} className="lg:col-span-2 space-y-8">
+            <form onSubmit={handleInfoSubmit} className="w-full space-y-8">
               {/* Error message */}
               {error && (
                 <div className={`p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
@@ -485,7 +632,7 @@ export default function CheckoutPage() {
                 ) : (
                   <div>
                     <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                      Email Address
+                      Email Address *
                     </label>
                     <input
                       type="email"
@@ -512,12 +659,13 @@ export default function CheckoutPage() {
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
                     <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                      First Name
+                      First Name *
                     </label>
                     <input
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
+                      required
                       className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="John"
                     />
@@ -525,12 +673,13 @@ export default function CheckoutPage() {
 
                   <div>
                     <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                      Last Name
+                      Last Name *
                     </label>
                     <input
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
+                      required
                       className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="Doe"
                     />
@@ -538,25 +687,53 @@ export default function CheckoutPage() {
 
                   <div className="sm:col-span-2">
                     <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                      Address
+                      Address *
                     </label>
                     <input
                       type="text"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
+                      required
                       className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="123 Main St"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
+                    {showAddress2 ? (
+                      <>
+                        <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                          Apt, Suite, etc. (optional)
+                        </label>
+                        <input
+                          type="text"
+                          value={address2}
+                          onChange={(e) => setAddress2(e.target.value)}
+                          className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
+                          placeholder="Apt 4B, Suite 100, etc."
+                          autoFocus
+                        />
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setShowAddress2(true)}
+                        className={`text-sm ${titleColors.blue} hover:underline`}
+                      >
+                        + Add apartment, suite, etc.
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="sm:col-span-2">
                     <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                      City, State, ZIP
+                      City, State, ZIP *
                     </label>
                     <input
                       type="text"
                       value={cityStateZip}
                       onChange={(e) => setCityStateZip(e.target.value)}
+                      required
                       className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
                       placeholder="New York, NY 10001"
                     />
@@ -587,73 +764,67 @@ export default function CheckoutPage() {
               </div>
             </form>
 
-            {/* Right column - Order Summary - Inner rectangle 3 */}
-            <div className={`${dividerColors.border} border rounded-lg p-8 lg:self-start lg:sticky lg:top-20 dark:bg-gray-800`}>
-              {/* Header with icon */}
-              <div className="flex items-center gap-3 mb-6 pb-6 border-b-2 border-purple-200 dark:border-purple-800">
-                <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg flex-shrink-0">
-                  <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                  </svg>
-                </div>
-                <h2 className={`text-xl font-bold ${headingColors.primary} whitespace-nowrap`}>
+            {/* Right column - Order Summary */}
+            <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
+              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-800`}>
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Order Summary
                 </h2>
-              </div>
 
-              {/* Line items */}
-              <div className={`space-y-4 mb-6 pb-6 ${dividerColors.border} border-b`}>
-                <div className="flex justify-between items-center">
-                  <span className={`text-sm ${formInputColors.helper}`}>Items</span>
-                  <span className={`${headingColors.primary} font-semibold`}>
-                    {itemCount}
-                  </span>
+                {/* Cart items preview */}
+                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
+                  {cart?.items?.map((item) => (
+                    <div key={item.id} className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <p className={`font-medium ${headingColors.primary} text-sm`}>
+                          {item.title || item.variant?.title || 'Consultation'}
+                        </p>
+                        <p className={`text-xs ${formInputColors.helper}`}>
+                          Qty: {item.quantity}
+                        </p>
+                      </div>
+                      <p className={`font-semibold ${headingColors.primary} text-sm`}>
+                        ${(((item.unit_price || 0) * item.quantity) / 100).toFixed(2)}
+                      </p>
+                    </div>
+                  ))}
                 </div>
 
-                {cart && (
-                  <>
-                    <div className="flex justify-between items-center">
-                      <span className={`text-sm ${formInputColors.helper}`}>
-                        Subtotal
-                      </span>
-                      <span className={`${headingColors.primary} font-semibold`}>
-                        ${((cart.subtotal || 0) / 100).toFixed(2)}
+                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
+                  <div className="flex justify-between">
+                    <span className={formInputColors.helper}>Subtotal</span>
+                    <span className={`font-semibold ${headingColors.primary}`}>
+                      ${((cart?.subtotal || 0) / 100).toFixed(2)}
+                    </span>
+                  </div>
+
+                  {(cart?.tax_total || 0) > 0 && (
+                    <div className="flex justify-between">
+                      <span className={formInputColors.helper}>Tax</span>
+                      <span className={`font-semibold ${headingColors.primary}`}>
+                        ${((cart?.tax_total || 0) / 100).toFixed(2)}
                       </span>
                     </div>
+                  )}
+                </div>
 
-                    <div className="flex justify-between items-center">
-                      <span className={`text-sm ${formInputColors.helper}`}>Tax</span>
-                      <span className={`${headingColors.primary} font-semibold`}>
-                        ${((cart.tax_total || 0) / 100).toFixed(2)}
-                      </span>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Total */}
-              {cart && (
-                <div className="flex justify-between items-center mb-6 pb-6 border-b-2 border-gray-200 dark:border-gray-700">
-                  <span className={`text-lg font-bold ${headingColors.primary}`}>
-                    Total
-                  </span>
+                <div className="flex justify-between mb-6">
+                  <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
                   <span className={`text-2xl font-bold ${headingColors.primary}`}>
-                    ${((cart.total || 0) / 100).toFixed(2)}
+                    ${((cart?.total || 0) / 100).toFixed(2)}
                   </span>
                 </div>
-              )}
 
-              {/* Edit cart button */}
-              <Button variant="blue" href="/cart" className="w-full mb-6" size="lg">
-                Edit Cart
-              </Button>
+                <Button variant="blue" href="/cart" className="w-full" size="lg">
+                  Edit Cart
+                </Button>
+              </div>
 
-              {/* Trust badge */}
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                </svg>
-                <span>Secure checkout</span>
+              {/* What happens next */}
+              <div className={`${dividerColors.border} border rounded-lg p-6 bg-blue-50/50 dark:bg-blue-900/10`}>
+                <p className={`text-sm ${formInputColors.helper}`}>
+                  <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
+                </p>
               </div>
             </div>
           </div>
@@ -663,89 +834,3 @@ export default function CheckoutPage() {
   );
 }
 
-// ============================================================================
-// Order Summary Component
-// ============================================================================
-// Reusable sidebar showing cart contents and total
-
-interface OrderSummaryProps {
-  cart: ReturnType<typeof useCart>['cart'];
-  itemCount: number;
-}
-
-function OrderSummary({ cart, itemCount }: OrderSummaryProps) {
-  return (
-    <div>
-      <Card hoverColor="purple" hoverEffect="lift">
-        <div className="p-8">
-          {/* Header with icon */}
-          <div className="flex items-center gap-3 mb-6 pb-6 border-b-2 border-purple-200 dark:border-purple-800">
-            <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-              <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-            </div>
-            <h2 className={`text-xl font-bold ${headingColors.primary}`}>
-              Order Summary
-            </h2>
-          </div>
-
-          {/* Line items */}
-          <div className={`space-y-4 mb-6 pb-6 ${dividerColors.border} border-b`}>
-            <div className="flex justify-between items-center">
-              <span className={`text-sm ${formInputColors.helper}`}>Items</span>
-              <span className={`${headingColors.primary} font-semibold`}>
-                {itemCount}
-              </span>
-            </div>
-
-            {cart && (
-              <>
-                <div className="flex justify-between items-center">
-                  <span className={`text-sm ${formInputColors.helper}`}>
-                    Subtotal
-                  </span>
-                  <span className={`${headingColors.primary} font-semibold`}>
-                    ${((cart.subtotal || 0) / 100).toFixed(2)}
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className={`text-sm ${formInputColors.helper}`}>Tax</span>
-                  <span className={`${headingColors.primary} font-semibold`}>
-                    ${((cart.tax_total || 0) / 100).toFixed(2)}
-                  </span>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Total */}
-          {cart && (
-            <div className="flex justify-between items-center mb-8 pb-6 border-b-2 border-gray-200 dark:border-gray-700">
-              <span className={`text-lg font-bold ${headingColors.primary}`}>
-                Total
-              </span>
-              <span className={`text-2xl font-bold ${headingColors.primary}`}>
-                ${((cart.total || 0) / 100).toFixed(2)}
-              </span>
-            </div>
-          )}
-
-          {/* Edit cart button */}
-          <Button variant="blue" href="/cart" className="w-full mb-6" size="lg">
-            Edit Cart
-          </Button>
-
-          {/* Trust badge */}
-          <div className="flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-            </svg>
-            <span>Secure checkout</span>
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
-}
