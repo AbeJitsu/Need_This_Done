@@ -1,29 +1,29 @@
 import { sendEmailWithRetry, getEmailConfig } from "./email";
 import AdminNotification, {
   type AdminNotificationProps,
-} from "../emails/AdminNotification";
+} from "../_emails/AdminNotification";
 import ClientConfirmation, {
   type ClientConfirmationProps,
-} from "../emails/ClientConfirmation";
-import WelcomeEmail, { type WelcomeEmailProps } from "../emails/WelcomeEmail";
+} from "../_emails/ClientConfirmation";
+import WelcomeEmail, { type WelcomeEmailProps } from "../_emails/WelcomeEmail";
 import LoginNotificationEmail, {
   type LoginNotificationEmailProps,
-} from "../emails/LoginNotificationEmail";
+} from "../_emails/LoginNotificationEmail";
 import OrderConfirmationEmail, {
   type OrderConfirmationEmailProps,
-} from "../emails/OrderConfirmationEmail";
-import AppointmentConfirmationEmail, {
+} from "../_emails/OrderConfirmationEmail";
+import AppointmentConfirmationEmail,{
   type AppointmentConfirmationEmailProps,
-} from "../emails/AppointmentConfirmationEmail";
+} from "../_emails/AppointmentConfirmationEmail";
 import AppointmentRequestNotificationEmail, {
   type AppointmentRequestNotificationProps,
-} from "../emails/AppointmentRequestNotificationEmail";
+} from "../_emails/AppointmentRequestNotificationEmail";
 import PurchaseReceiptEmail, {
   type PurchaseReceiptEmailProps,
-} from "../emails/PurchaseReceiptEmail";
+} from "../_emails/PurchaseReceiptEmail";
 import AbandonedCartEmail, {
   type AbandonedCartEmailProps,
-} from "../emails/AbandonedCartEmail";
+} from "../_emails/AbandonedCartEmail";
 
 // ============================================================================
 // Email Service Functions
