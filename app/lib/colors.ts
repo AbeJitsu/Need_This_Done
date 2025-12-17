@@ -101,7 +101,7 @@ export const titleTextColors: Record<AccentVariant, string> = {
   purple: 'text-purple-700 dark:text-purple-100',
   blue: 'text-blue-700 dark:text-blue-100',
   green: 'text-green-800 dark:text-green-100',
-  orange: 'text-orange-800 dark:text-orange-100',
+  orange: 'text-orange-600 dark:text-orange-100',
   teal: 'text-teal-800 dark:text-teal-100',
   gray: 'text-gray-700 dark:text-gray-100',
   red: 'text-red-800 dark:text-red-100',
@@ -361,7 +361,7 @@ export const stepBadgeColors: Record<AccentVariant, string> = {
 // ============================================================================
 export const successCheckmarkColors = {
   icon: 'text-green-600 dark:text-green-300',
-  iconAlt: 'text-green-600 dark:text-green-700', // Alternative used in services page
+  iconAlt: 'text-green-700 dark:text-green-100', // For vibrant bg circles - matches accent system
 };
 
 // ============================================================================
@@ -462,10 +462,28 @@ export const placeholderColors = {
 // ============================================================================
 // Checkmark Background Colors - For circular checkmark containers
 // ============================================================================
-export const checkmarkBgColors: Record<'green' | 'blue' | 'purple', string> = {
-  green: 'bg-green-100 dark:bg-green-200',
-  blue: 'bg-blue-100 dark:bg-blue-200',
-  purple: 'bg-purple-100 dark:bg-purple-200',
+// Matches accentColors pattern: light bg (-100) + dark text in light mode,
+// vibrant bg (-500) + light text + light border in dark mode
+export const checkmarkBgColors: Record<'green' | 'blue' | 'purple', {
+  bg: string;
+  border: string;
+  icon: string;
+}> = {
+  green: {
+    bg: 'bg-green-100 dark:bg-green-500',
+    border: 'border-2 border-green-500 dark:border-green-200',
+    icon: 'text-green-800 dark:text-green-100',
+  },
+  blue: {
+    bg: 'bg-blue-100 dark:bg-blue-500',
+    border: 'border-2 border-blue-500 dark:border-blue-200',
+    icon: 'text-blue-700 dark:text-blue-100',
+  },
+  purple: {
+    bg: 'bg-purple-100 dark:bg-purple-500',
+    border: 'border-2 border-purple-500 dark:border-purple-200',
+    icon: 'text-purple-700 dark:text-purple-100',
+  },
 };
 
 // ============================================================================

@@ -10,7 +10,6 @@ import {
   formInputColors,
   titleColors,
   headingColors,
-  successCheckmarkColors,
   checkmarkBgColors,
 } from '@/lib/colors';
 
@@ -77,9 +76,9 @@ export default async function HowItWorksPage() {
             {content.trustBadges.map((badge, index) => (
               <div key={index} className="flex items-center gap-3">
                 <div
-                  className={`w-8 h-8 rounded-full ${checkmarkBgColors.green} flex items-center justify-center flex-shrink-0`}
+                  className={`w-8 h-8 rounded-full ${checkmarkBgColors.green.bg} ${checkmarkBgColors.green.border} flex items-center justify-center flex-shrink-0`}
                 >
-                  <span className={`${successCheckmarkColors.iconAlt} font-bold`}>
+                  <span className={`${checkmarkBgColors.green.icon} font-bold`}>
                     ✓
                   </span>
                 </div>

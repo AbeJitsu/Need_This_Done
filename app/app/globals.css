@@ -37,100 +37,101 @@ Usage: background-color: var(--primary-color);
   /* ======================================================================
   BLUES - Primary Brand (20-25% of color usage)
   ====================================================================== */
-  --blue-50: #eff8ff;
-  --blue-100: #dbeeff;
-  --blue-200: #bfdfff;
-  --blue-300: #93c8ff;
-  --blue-400: #5fa8ff;
-  --blue-500: #3b8bff;
-  --blue-600: #1a6cf5;
-  --blue-700: #1456d1;
-  --blue-800: #1746a8;
-  --blue-900: #183d84;
+  /* Balanced blue - softened but still clearly blue */
+  --blue-50: #f2faff;
+  --blue-100: #e0f0ff;
+  --blue-200: #b8daf7;
+  --blue-300: #8ec2ed;
+  --blue-400: #64a8e0;
+  --blue-500: #4a8fd0;
+  --blue-600: #3574b8;
+  --blue-700: #2a5d96;
+  --blue-800: #234a78;
+  --blue-900: #1e3d62;
 
   /* ======================================================================
-  GREENS - Success & Growth (balanced: vibrant but approachable)
+  GREENS - Success & Growth (balanced sage-green)
   ====================================================================== */
-  --green-50: #effef4;
-  --green-100: #d9fce5;
-  --green-200: #b5f7cc;
-  --green-300: #7aeea6;
-  --green-400: #3ddd78;
-  --green-500: #14c555;
-  --green-600: #0aa344;
-  --green-700: #0c8039;
-  --green-800: #106530;
-  --green-900: #0f5329;
+  --green-50: #f2faf5;
+  --green-100: #dcf5e4;
+  --green-200: #b5e8c6;
+  --green-300: #84d6a0;
+  --green-400: #52c078;
+  --green-500: #34a85c;
+  --green-600: #288a49;
+  --green-700: #236e3c;
+  --green-800: #1f5832;
+  --green-900: #1a482a;
 
   /* ======================================================================
-  REDS - Errors, Critical Actions (2-5% of color usage)
+  REDS - Errors, Critical Actions (balanced - clear but not harsh)
   ====================================================================== */
-  --red-50: #fef2f2;
-  --red-100: #fee2e2;
-  --red-200: #fecaca;
-  --red-300: #fca5a5;
-  --red-400: #f87171;
-  --red-500: #ef4444;
-  --red-600: #dc2626;
-  --red-700: #b91c1c;
-  --red-800: #991b1b;
-  --red-900: #7f1d1d;
+  --red-50: #fef4f4;
+  --red-100: #fde5e5;
+  --red-200: #f9c8c8;
+  --red-300: #f2a3a3;
+  --red-400: #e87a7a;
+  --red-500: #da5757;
+  --red-600: #c43c3c;
+  --red-700: #a33030;
+  --red-800: #862929;
+  --red-900: #702525;
 
   /* ======================================================================
-  YELLOWS - Warnings & Caution States
+  YELLOWS - Warnings & Caution States (balanced amber)
   ====================================================================== */
-  --yellow-50: #fefce8;
-  --yellow-100: #fef9c3;
-  --yellow-200: #fef08a;
-  --yellow-300: #fde047;
-  --yellow-400: #facc15;
-  --yellow-500: #eab308;
-  --yellow-600: #ca8a04;
-  --yellow-700: #a16207;
-  --yellow-800: #854d0e;
-  --yellow-900: #713f12;
+  --yellow-50: #fefcf0;
+  --yellow-100: #fdf6d8;
+  --yellow-200: #f9e9a8;
+  --yellow-300: #f2d56e;
+  --yellow-400: #e8bd3e;
+  --yellow-500: #d4a520;
+  --yellow-600: #b8880e;
+  --yellow-700: #956c0c;
+  --yellow-800: #7a5710;
+  --yellow-900: #664812;
 
   /* ======================================================================
-  ORANGES - Warm & Energetic (call-to-action, engagement)
+  ORANGES - Warm & Energetic (balanced terracotta)
   ====================================================================== */
-  --orange-50: #fff7ed;
-  --orange-100: #ffedd5;
-  --orange-200: #fed7aa;
-  --orange-300: #fdba74;
-  --orange-400: #fb923c;
-  --orange-500: #f97316;
-  --orange-600: #ea580c;
-  --orange-700: #c2410c;
-  --orange-800: #9a3412;
-  --orange-900: #7c2d12;
+  --orange-50: #fff8f2;
+  --orange-100: #ffecde;
+  --orange-200: #fdd5b8;
+  --orange-300: #f8b88a;
+  --orange-400: #f09558;
+  --orange-500: #e47838;
+  --orange-600: #cc5f24;
+  --orange-700: #a84c1e;
+  --orange-800: #8a3f1c;
+  --orange-900: #72351a;
 
   /* ======================================================================
-  PURPLES - Creativity & Premium (balanced: rich but soft)
+  PURPLES - Creativity & Premium (balanced plum)
   ====================================================================== */
-  --purple-50: #faf5ff;
-  --purple-100: #f3e8ff;
-  --purple-200: #e9d5ff;
-  --purple-300: #d8b4fe;
-  --purple-400: #c084fc;
-  --purple-500: #a855f7;
-  --purple-600: #9333ea;
-  --purple-700: #7e22ce;
-  --purple-800: #6b21a8;
-  --purple-900: #581c87;
+  --purple-50: #faf6fc;
+  --purple-100: #f2e9f8;
+  --purple-200: #e4d2f0;
+  --purple-300: #cfb2e2;
+  --purple-400: #b48ad0;
+  --purple-500: #9968ba;
+  --purple-600: #7f4fa0;
+  --purple-700: #694184;
+  --purple-800: #57366c;
+  --purple-900: #482d5a;
 
   /* ======================================================================
-  TEALS - Vibrant Teal (secondary accent, modern & fresh)
+  TEALS - Secondary accent (balanced seafoam)
   ====================================================================== */
-  --teal-50: #f0fdfa;
-  --teal-100: #ccfbf1;
-  --teal-200: #99f6e4;
-  --teal-300: #5eead4;
-  --teal-400: #2dd4bf;
-  --teal-500: #14b8a6;
-  --teal-600: #0d9488;
-  --teal-700: #0f766e;
-  --teal-800: #115e59;
-  --teal-900: #134e4a;
+  --teal-50: #f0fdfb;
+  --teal-100: #d4f7f2;
+  --teal-200: #a8ede2;
+  --teal-300: #72dece;
+  --teal-400: #3ec9b6;
+  --teal-500: #26af9c;
+  --teal-600: #1c9080;
+  --teal-700: #1a7368;
+  --teal-800: #185c54;
+  --teal-900: #164d46;
 
   /* ======================================================================
   GRAYSCALE - Warm Foundation (70-80% of interface)

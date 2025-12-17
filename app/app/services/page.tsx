@@ -12,7 +12,6 @@ import { getDefaultServicesContent } from '@/lib/default-page-content';
 import type { ServicesPageContent } from '@/lib/page-content-types';
 import {
   formInputColors,
-  successCheckmarkColors,
   headingColors,
   checkmarkBgColors,
   groupHoverColors,
@@ -117,9 +116,9 @@ export default async function ServicesPage() {
               const itemContent = (
                 <>
                   <div
-                    className={`w-8 h-8 rounded-full ${checkmarkBgColors.green} flex items-center justify-center flex-shrink-0`}
+                    className={`w-8 h-8 rounded-full ${checkmarkBgColors.green.bg} ${checkmarkBgColors.green.border} flex items-center justify-center flex-shrink-0`}
                   >
-                    <span className={`${successCheckmarkColors.iconAlt} font-bold`}>
+                    <span className={`${checkmarkBgColors.green.icon} font-bold`}>
                       ✓
                     </span>
                   </div>
