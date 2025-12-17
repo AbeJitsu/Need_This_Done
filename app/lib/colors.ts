@@ -82,6 +82,9 @@ export const accentBorderWidth = 'border-2';
 // Font weight constant - change once to update all buttons/badges globally
 export const accentFontWeight = 'font-semibold';
 
+// Link font weight - slightly lighter than buttons for text links
+export const linkFontWeight = 'font-medium';
+
 // ============================================================================
 // Title Colors - Used for headings and labels (generic)
 // ============================================================================

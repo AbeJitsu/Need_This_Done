@@ -4,7 +4,7 @@ import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultHomeContent } from '@/lib/default-page-content';
-import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors } from '@/lib/colors';
+import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors, linkColors, linkHoverColors, linkFontWeight } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -115,7 +115,7 @@ export default async function HomePage() {
           </div>
           {/* Cross-page link to services comparison */}
           <p className={`text-center mt-4 ${formInputColors.helper}`}>
-            <Link href="/services" className="hover:underline font-medium">
+            <Link href="/services" className={`${linkColors.blue} ${linkHoverColors.blue} hover:underline ${linkFontWeight}`}>
               Not sure which service? Compare them all →
             </Link>
           </p>
