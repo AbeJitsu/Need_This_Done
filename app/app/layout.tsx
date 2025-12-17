@@ -11,6 +11,15 @@ import { ToastProvider } from '@/context/ToastContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
 
+// ============================================================================
+// Force Dynamic Rendering for All Routes
+// ============================================================================
+// The Navigation component uses useAuth and useCart hooks, which require
+// context providers. During static prerendering at build time, these contexts
+// aren't available, causing build failures. Making the layout dynamic ensures
+// all pages are rendered at request time with proper context.
+export const dynamic = 'force-dynamic';
+
 // Inter font - modern, trustworthy, highly readable (body text)
 const inter = Inter({
   subsets: ['latin'],
