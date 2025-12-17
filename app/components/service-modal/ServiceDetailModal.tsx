@@ -1,6 +1,5 @@
 'use client';
 
-import { useRef } from 'react';
 import Link from 'next/link';
 import { useServiceModal } from '@/context/ServiceModalContext';
 import { useBackdropClose } from '@/hooks/useBackdropClose';

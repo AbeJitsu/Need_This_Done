@@ -11,13 +11,15 @@ interface CardProps {
   hoverColor?: AccentVariant;
   hoverEffect?: 'lift' | 'glow' | 'tint' | 'none';
   className?: string;
+  id?: string;
 }
 
 export default function Card({
   children,
   hoverColor,
   hoverEffect = 'lift',
-  className = ''
+  className = '',
+  id
 }: CardProps) {
   // Get hover classes from centralized color system
   const hoverBorderClass = hoverColor
@@ -37,16 +39,19 @@ export default function Card({
     : '';
 
   return (
-    <div className={`
-      ${cardBgColors.base}
-      rounded-xl p-6
-      ${cardBorderColors.subtle}
-      transition-all duration-300
-      ${hoverBorderClass}
-      ${hoverBgClass}
-      ${effectClasses}
-      ${className}
-    `}>
+    <div
+      id={id}
+      className={`
+        ${cardBgColors.base}
+        rounded-xl p-6
+        ${cardBorderColors.subtle}
+        transition-all duration-300
+        ${hoverBorderClass}
+        ${hoverBgClass}
+        ${effectClasses}
+        ${className}
+      `}
+    >
       {children}
     </div>
   );

@@ -1,6 +1,5 @@
 'use client';
 
-import { useRef } from 'react';
 import { useBackdropClose } from '@/hooks/useBackdropClose';
 import {
   cardBgColors,

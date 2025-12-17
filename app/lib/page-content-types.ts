@@ -119,6 +119,23 @@ export interface EnhancedCTAButton extends CTAButton {
   subtext?: string;
 }
 
+/** Path option for the "Choose Your Path" two-path choice section */
+export interface ChoosePath {
+  badge: string;
+  title: string;
+  description: string;
+  bullets: string[];
+  button: CTAButton & { size?: 'sm' | 'md' | 'lg' };
+  hoverColor: AccentVariant;
+}
+
+/** Choose Your Path - Two-path choice after exploring services */
+export interface ChooseYourPathContent {
+  title: string;
+  description: string;
+  paths: ChoosePath[];
+}
+
 export interface ServicesPageContent {
   header: PageHeader;
 
@@ -137,18 +154,12 @@ export interface ServicesPageContent {
     rows: ComparisonRow[];
   };
 
-  // Still Not Sure Section - Low-friction CTA
-  stillUnsure?: {
-    title: string;
-    description: string;
-    primaryButton: EnhancedCTAButton;
-    secondaryButton: EnhancedCTAButton;
-  };
+  // Choose Your Path - Two-path choice after exploring services
+  chooseYourPath: ChooseYourPathContent;
 
   // Existing sections (kept for backwards compatibility)
   expectationsTitle: string;
   expectations: ExpectationItem[];
-  cta: CTASection;
 }
 
 // ============================================================================

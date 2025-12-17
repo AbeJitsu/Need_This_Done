@@ -258,23 +258,36 @@ export const defaultServicesContent: ServicesPageContent = {
     ],
   },
 
-  // Still Not Sure - Low-friction CTA
-  stillUnsure: {
-    title: 'Still not sure?',
-    description:
-      "No problem—that's what we're here for. Book a quick 15-minute chat and we'll help you figure out exactly what you need. No pressure, no commitment.",
-    primaryButton: {
-      text: 'Book a Quick Chat',
-      subtext: 'Just $20 · 15 minutes',
-      variant: 'orange',
-      href: '/shop',
-    },
-    secondaryButton: {
-      text: 'Request a Free Quote',
-      subtext: 'Tell us about your project',
-      variant: 'blue',
-      href: '/contact',
-    },
+  // Choose Your Path - Two-path choice after exploring services
+  chooseYourPath: {
+    title: 'Choose What Works for You',
+    description: "You've explored our services—now pick your next step. Either option moves you forward, no pressure.",
+    paths: [
+      {
+        badge: 'Free',
+        title: 'Get a Quote',
+        description: 'Tell us about your project and get a custom quote',
+        bullets: [
+          'Free, no obligation',
+          'Response in 2 business days',
+          'Custom pricing for your needs',
+        ],
+        button: { text: 'Get a Quote', variant: 'green', href: '/contact', size: 'lg' },
+        hoverColor: 'green',
+      },
+      {
+        badge: 'Expert Help',
+        title: 'Book a Consultation',
+        description: 'Talk to an expert before you start',
+        bullets: [
+          'Expert guidance and advice',
+          'Immediate scheduling',
+          'Personalized recommendations',
+        ],
+        button: { text: 'Book a Consultation', variant: 'purple', href: '/shop', size: 'lg' },
+        hoverColor: 'purple',
+      },
+    ],
   },
 
   // Existing sections (kept)
@@ -298,17 +311,6 @@ export const defaultServicesContent: ServicesPageContent = {
       description: 'We respect your deadlines and deliver on time.',
     },
   ],
-  cta: {
-    title: 'Ready to Get Started?',
-    description:
-      "Tell us about your project and we'll get back to you with a personalized quote.",
-    buttons: [
-      { text: 'View Pricing', variant: 'green', href: '/pricing' },
-      { text: 'How It Works', variant: 'blue', href: '/how-it-works' },
-      { text: 'FAQ', variant: 'purple', href: '/faq' },
-    ],
-    hoverColor: 'green',
-  },
 };
 
 // ============================================================================

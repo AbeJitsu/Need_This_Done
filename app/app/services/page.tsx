@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
-import CTASection from '@/components/CTASection';
+import Button from '@/components/Button';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';
 import ServiceDetailModal from '@/components/service-modal/ServiceDetailModal';
 import ScenarioMatcher from '@/components/services/ScenarioMatcher';
 import ServiceComparisonTable from '@/components/services/ServiceComparisonTable';
 import ServiceDeepDive from '@/components/services/ServiceDeepDive';
-import LowFrictionCTA from '@/components/services/LowFrictionCTA';
 import { getDefaultServicesContent } from '@/lib/default-page-content';
 import type { ServicesPageContent } from '@/lib/page-content-types';
 import {
@@ -94,14 +93,58 @@ export default async function ServicesPage() {
         {/* 4. Service Deep-Dives - Expandable details */}
         <ServiceDeepDive />
 
-        {/* 5. "Still Not Sure?" - Low-friction CTA */}
-        {content.stillUnsure && (
-          <LowFrictionCTA
-            title={content.stillUnsure.title}
-            description={content.stillUnsure.description}
-            primaryButton={content.stillUnsure.primaryButton}
-            secondaryButton={content.stillUnsure.secondaryButton}
-          />
+        {/* 5. Choose Your Path - Two clear options */}
+        {content.chooseYourPath && (
+          <>
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                {content.chooseYourPath.title}
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                {content.chooseYourPath.description}
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6 mb-10">
+              {content.chooseYourPath.paths.map((path, index) => (
+                <Card key={index} hoverColor={path.hoverColor} hoverEffect="lift">
+                  <div className="p-8">
+                    {/* Badge */}
+                    <div className="mb-4">
+                      <span className={`inline-block px-4 py-1 bg-${path.hoverColor}-100 dark:bg-${path.hoverColor}-900 text-${path.hoverColor}-700 dark:text-${path.hoverColor}-300 rounded-full text-sm font-semibold`}>
+                        {path.badge}
+                      </span>
+                    </div>
+                    {/* Title + Description */}
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                      {path.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">
+                      {path.description}
+                    </p>
+                    {/* Bullets */}
+                    <ul className="space-y-3 mb-6">
+                      {path.bullets.map((bullet, idx) => (
+                        <li key={idx} className="flex items-center gap-2">
+                          <span className={`text-${path.hoverColor}-600 dark:text-${path.hoverColor}-400`}>✓</span>
+                          <span className="text-gray-700 dark:text-gray-300">{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    {/* Button */}
+                    <Button
+                      variant={path.button.variant}
+                      href={path.button.href}
+                      size={path.button.size || 'lg'}
+                      className="w-full"
+                    >
+                      {path.button.text}
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </>
         )}
 
         {/* 6. Trust Signals - What You Can Expect */}
@@ -160,13 +203,6 @@ export default async function ServicesPage() {
           </div>
         </Card>
 
-        {/* 7. Final CTA */}
-        <CTASection
-          title={content.cta.title}
-          description={content.cta.description}
-          buttons={content.cta.buttons}
-          hoverColor={content.cta.hoverColor || 'orange'}
-        />
       </div>
 
       {/* Modal for scenario clicks */}

@@ -3,13 +3,10 @@
 import {
   TextField,
   TextAreaField,
-  SelectField,
   CollapsibleSection,
   ArrayField,
-  ButtonField,
-  hoverColorOptions,
 } from '../fields';
-import type { ServicesPageContent, ExpectationItem, CTAButton } from '@/lib/page-content-types';
+import type { ServicesPageContent, ExpectationItem } from '@/lib/page-content-types';
 
 // ============================================================================
 // Services Page Form
@@ -124,42 +121,24 @@ export default function ServicesForm({ content, onChange }: ServicesFormProps) {
         />
       </CollapsibleSection>
 
-      {/* CTA Section */}
-      <CollapsibleSection title="Call to Action" defaultOpen={false}>
+      {/* Choose Your Path Section */}
+      <CollapsibleSection title="Choose Your Path" defaultOpen={false}>
         <TextField
           label="Title"
-          value={content.cta.title}
-          onChange={(v) => updateField('cta', { ...content.cta, title: v })}
-          placeholder="e.g., Ready to Get Started?"
+          value={content.chooseYourPath.title}
+          onChange={(v) => updateField('chooseYourPath', { ...content.chooseYourPath, title: v })}
+          placeholder="e.g., Choose What Works for You"
         />
         <TextAreaField
           label="Description"
-          value={content.cta.description}
-          onChange={(v) => updateField('cta', { ...content.cta, description: v })}
-          placeholder="Text below the CTA title"
+          value={content.chooseYourPath.description}
+          onChange={(v) => updateField('chooseYourPath', { ...content.chooseYourPath, description: v })}
+          placeholder="Text below the title"
           rows={2}
         />
-        <SelectField
-          label="Card Hover Color"
-          value={content.cta.hoverColor || 'orange'}
-          onChange={(v) => updateField('cta', { ...content.cta, hoverColor: v as ServicesPageContent['cta']['hoverColor'] })}
-          options={hoverColorOptions}
-        />
-        <ArrayField<CTAButton>
-          label="Buttons"
-          items={content.cta.buttons}
-          onChange={(buttons) => updateField('cta', { ...content.cta, buttons })}
-          createItem={() => ({ text: '', href: '', variant: 'purple' })}
-          itemLabel={(btn) => btn.text || 'New Button'}
-          maxItems={3}
-          renderItem={(button, _, onButtonChange) => (
-            <ButtonField
-              label=""
-              value={button}
-              onChange={onButtonChange}
-            />
-          )}
-        />
+        <p className="text-sm text-gray-600 mt-4 mb-4">
+          Two paths are displayed: Get a Quote (Free/Green) and Book a Consultation (Expert Help/Purple). Edit path details in the content management system.
+        </p>
       </CollapsibleSection>
     </div>
   );

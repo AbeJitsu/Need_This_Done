@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import { formInputColors, formValidationColors, linkHoverColors, alertColors, placeholderColors, headingColors, productImageStyles } from '@/lib/colors';
+import { formInputColors, linkHoverColors, alertColors, placeholderColors, headingColors, productImageStyles } from '@/lib/colors';
 import type { Product } from '@/lib/medusa-client';
 
 // ============================================================================

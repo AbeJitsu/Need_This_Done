@@ -3,7 +3,6 @@ import { getServices } from '@/config/site.config';
 import ServiceCard from '@/components/ServiceCard';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
-import CTASection from '@/components/CTASection';
 import type { ServicesPageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -84,14 +83,6 @@ export default function ServicesPreview({ content }: ServicesPreviewProps) {
           })}
         </div>
       </Card>
-
-      {/* CTA */}
-      <CTASection
-        title={content.cta.title}
-        description={content.cta.description}
-        buttons={content.cta.buttons}
-        hoverColor={content.cta.hoverColor || 'orange'}
-      />
     </div>
   );
 }
