@@ -376,7 +376,7 @@ export default function CheckoutPage() {
         <PageHeader title="Schedule Your Consultation" description="Pick a time that works for you" />
 
         <Card hoverEffect="none">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-8 p-8">
             {/* Left column - Appointment form */}
             <div className="w-full">
               {/* Error message */}
@@ -386,15 +386,13 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-700/50`}>
-                <AppointmentStepForm
-                  durationMinutes={appointmentInfo.durationMinutes}
-                  serviceName={appointmentInfo.serviceName}
-                  onComplete={handleAppointmentComplete}
-                  onBack={() => setCurrentStep('info')}
-                  isProcessing={isProcessing}
-                />
-              </div>
+              <AppointmentStepForm
+                durationMinutes={appointmentInfo.durationMinutes}
+                serviceName={appointmentInfo.serviceName}
+                onComplete={handleAppointmentComplete}
+                onBack={() => setCurrentStep('info')}
+                isProcessing={isProcessing}
+              />
             </div>
 
             {/* Right column - Order Summary */}

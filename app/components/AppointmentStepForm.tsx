@@ -154,7 +154,7 @@ export default function AppointmentStepForm({
   };
 
   return (
-    <Card hoverEffect="none" className="mb-6">
+    <Card hoverEffect="none">
       <div className="p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
@@ -184,7 +184,7 @@ export default function AppointmentStepForm({
             <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
               Preferred Date & Time
             </h3>
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Date *
@@ -209,7 +209,7 @@ export default function AppointmentStepForm({
                   value={formData.preferredTimeStart}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                  className="w-full min-w-[130px] px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                 >
                   <option value="">Select a time</option>
                   {availableTimeOptions.map((option) => (
@@ -228,7 +228,7 @@ export default function AppointmentStepForm({
               Alternate Date & Time{' '}
               <span className={formInputColors.helper}>(optional but helpful)</span>
             </h3>
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Date
@@ -251,7 +251,7 @@ export default function AppointmentStepForm({
                   name="alternateTimeStart"
                   value={formData.alternateTimeStart}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                  className="w-full min-w-[130px] px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                 >
                   <option value="">Select a time</option>
                   {availableTimeOptions.map((option) => (

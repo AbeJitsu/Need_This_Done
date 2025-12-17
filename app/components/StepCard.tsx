@@ -47,7 +47,7 @@ export default function StepCard({
             </p>
             <ul className="space-y-3">
           {details.map((detail, index) => (
-            <li key={index} className={`flex items-center gap-2 text-sm ${bodyTextColors.gray}`}>
+            <li key={index} className={`flex items-start gap-2 text-sm ${bodyTextColors.gray}`}>
               <span className={titleTextColors[color]}>•</span>
               {detail}
             </li>
