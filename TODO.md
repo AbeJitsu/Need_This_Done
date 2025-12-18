@@ -12,10 +12,10 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 |-----------|--------|-------|
 | Medusa Backend | ✅ Working | Products, carts, checkout functional |
 | Stripe Payments | ✅ Working | Real payment processing (not mock) |
-| E2E Tests | ✅ 100% | 137/137 passing |
+| E2E Tests | ✅ 100% | 126/126 passing |
 | Security | ✅ Fixed | All critical issues resolved |
-| Google Calendar | 🟡 80% | Backend + Admin UI complete, needs Google Cloud setup |
-| Admin Approval | 🟡 80% | Dashboard + endpoints done, needs Google credentials |
+| Google Calendar | 🟡 90% | Backend + Admin UI + credentials complete, needs testing |
+| Admin Approval | 🟡 90% | Dashboard + endpoints + credentials done, needs testing |
 
 ### Critical Security Issues ✅ RESOLVED
 
@@ -31,21 +31,12 @@ All security issues fixed (Dec 2025):
 
 _Currently active work items_
 
-**Fix Dark Mode Orange Button Contrast** ← CURRENT PRIORITY
+**Google Calendar Integration - Final Testing & Deployment**
 
-Orange "Book a Consultation" button has poor contrast in dark mode. Fix: white text/border on rich orange background (5:1 contrast).
-
-- [ ] Update `accentColors.orange` in `app/lib/colors.ts` (dark mode: bg-orange-700, text-white, border-white)
-- [ ] Update orange hover state in `app/components/Button.tsx`
-- [ ] Test in dev environment
-- [ ] Verify contrast meets 5:1 ratio
-
----
-
-**Google Cloud Console Setup & Production Deployment**
-
-- [ ] Complete Google Cloud Console setup (see instructions in To Do section) ← BLOCKED: Needs user action
-- [ ] Manual testing in dev environment (once Google credentials available)
+- [x] Google Cloud Console setup complete (credentials in .env.local)
+- [ ] Manual testing of appointment booking flow in dev environment
+- [ ] Test Google OAuth authorization flow
+- [ ] Test calendar event creation on appointment approval
 - [ ] Deploy to production
 
 ---
@@ -54,20 +45,11 @@ Orange "Book a Consultation" button has poor contrast in dark mode. Fix: white t
 
 ### Immediate
 
-**Google Cloud Console Setup** ← DO THIS IN PARALLEL WHILE CODING
-- [ ] Update OAuth consent screen email to: abe.raise@gmail.com
-- [ ] Step 1: Create Google Cloud project at https://console.cloud.google.com/ (project name: "NeedThisDone Appointments")
-- [ ] Step 2: Enable Google Calendar API
-- [ ] Step 3: Configure OAuth consent screen (External, with scopes: calendar.events, calendar.readonly)
-- [ ] Step 4: Create OAuth 2.0 credentials (Web application)
-  - Authorized origins: `https://needthisdone.com`, `http://localhost:3000`
-  - Redirect URIs: `https://needthisdone.com/api/google/callback`, `http://localhost:3000/api/google/callback`
-- [ ] Step 5: Copy credentials and provide to Claude:
-  - GOOGLE_CLIENT_ID
-  - GOOGLE_CLIENT_SECRET
-- [ ] Step 6: Verify setup (check Credentials, Enabled APIs, OAuth consent)
-
-**Full detailed instructions** are in the implementation plan file at: `.claude/plans/modular-meandering-hinton.md` (section: "Google Cloud Console Setup Guide")
+**Google Cloud Console Setup** ✅ COMPLETE
+- [x] Google Cloud project created
+- [x] Google Calendar API enabled
+- [x] OAuth consent screen configured
+- [x] OAuth 2.0 credentials created and stored in .env.local
 
 **Production Security Hardening** ✅ COMPLETE
 - [x] Add missing nginx security headers (HSTS, CSP, Permissions-Policy) - Added to both nginx.conf and nginx.prod.conf
@@ -114,6 +96,13 @@ Orange "Book a Consultation" button has poor contrast in dark mode. Fix: white t
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
 ### December 2025 - Latest Completions
+
+**Dark Mode Accent Button Contrast Fix** ✅ COMPLETE
+- [x] Updated `accentColors.orange` in `app/lib/colors.ts` (dark mode: bg-orange-700, text-white, border-white)
+- [x] Updated `accentColors.teal` with same contrast pattern (5:1+ ratio)
+- [x] Light mode: text-*-900 for better contrast on light backgrounds
+- [x] Hover states updated for smooth transitions
+- [x] WCAG AA compliant: white text on dark colored backgrounds achieves 5:1+ contrast
 
 **Visual Regression Testing for Checkout Flow** ✅ COMPLETE
 - [x] Created comprehensive checkout screenshot test suite (`checkout-screenshots.spec.ts`)

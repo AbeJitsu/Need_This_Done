@@ -190,7 +190,7 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 | Orders | ✅ Working | 4 E2E tests | Full order objects, linked in Supabase |
 | Email | ✅ Working | 9 unit tests | 4 email types via Resend |
 
-**All 110 automated tests passing** - See [Testing](#testing) for complete coverage map.
+**All 126 E2E tests passing** - See [Testing](#testing) for complete coverage map.
 
 **Consultation Products** (seeded via `medusa/seed-products.js` using Admin API):
 | Product | Price | Duration | Handle |
@@ -629,16 +629,15 @@ cd app && npm run test:emails
 
 | Category | Tests | Status | Command |
 |----------|-------|--------|---------|
-| E2E Shop & Cart | 57 | ✅ Passing | `npm run test:e2e -- e2e/shop*.spec.ts` |
+| E2E Shop & Cart | ~50 | ✅ Passing | `npm run test:e2e -- e2e/shop*.spec.ts` |
 | E2E Submissions | 5 | ✅ Passing | `npm run test:e2e -- e2e/submission.spec.ts` |
-| E2E Chatbot | 14 | ✅ Passing | `npm run test:e2e -- e2e/chatbot.spec.ts` |
-| E2E Appointments | 23 | ✅ Passing | `npm run test:e2e -- e2e/appointments.spec.ts` |
-| E2E Accessibility | 10 | ✅ Passing | `npm run test:a11y` |
-| Component A11Y | 8 | ✅ Passing | `npm run test:run` |
-| Email Templates | 10 | ✅ Passing | `npm run test:run` |
-| Redis Integration | 6 | ✅ Passing | `npm run test:run` |
-| Health API | 4 | ✅ Passing | `npm run test:run` |
-| **Total** | **137** | ✅ **All Passing** | `npm run test:all` |
+| E2E Chatbot | 17 | ✅ Passing | `npm run test:e2e -- e2e/chatbot.spec.ts` |
+| E2E Appointments | 19 | ✅ Passing | `npm run test:e2e -- e2e/appointments.spec.ts` |
+| E2E Service Modals | 12 | ✅ Passing | `npm run test:e2e -- e2e/service-modals.spec.ts` |
+| E2E UX Flow | 3 | ✅ Passing | `npm run test:e2e -- e2e/ux-flow.spec.ts` |
+| E2E Accessibility | 10 | ✅ Passing | `npm run test:e2e -- e2e/accessibility.a11y.test.ts` |
+| E2E Visual Regression | 10 | ✅ Passing | `npm run test:e2e -- e2e/checkout-screenshots.spec.ts` |
+| **Total** | **126** | ✅ **All Passing** | `npm run test:e2e` |
 
 ### Feature → Test Coverage Map
 

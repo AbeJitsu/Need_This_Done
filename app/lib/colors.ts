@@ -47,18 +47,18 @@ export const accentColors: Record<AccentVariant, {
     hoverBorder: 'hover:border-green-600 dark:hover:border-green-100',
   },
   orange: {
-    bg: 'bg-orange-100 dark:bg-orange-500',
-    text: 'text-orange-800 dark:text-orange-100',
-    border: 'border-orange-500 dark:border-orange-200',
-    hoverText: 'hover:text-orange-900 dark:hover:text-white',
-    hoverBorder: 'hover:border-orange-600 dark:hover:border-orange-100',
+    bg: 'bg-orange-100 dark:bg-orange-700',
+    text: 'text-orange-900 dark:text-white',
+    border: 'border-orange-500 dark:border-white',
+    hoverText: 'hover:text-orange-950 dark:hover:text-orange-100',
+    hoverBorder: 'hover:border-orange-700 dark:hover:border-orange-200',
   },
   teal: {
-    bg: 'bg-teal-100 dark:bg-teal-500',
-    text: 'text-teal-800 dark:text-teal-100',
-    border: 'border-teal-500 dark:border-teal-200',
-    hoverText: 'hover:text-teal-900 dark:hover:text-white',
-    hoverBorder: 'hover:border-teal-600 dark:hover:border-teal-100',
+    bg: 'bg-teal-100 dark:bg-teal-700',
+    text: 'text-teal-900 dark:text-white',
+    border: 'border-teal-500 dark:border-white',
+    hoverText: 'hover:text-teal-950 dark:hover:text-teal-100',
+    hoverBorder: 'hover:border-teal-700 dark:hover:border-teal-200',
   },
   gray: {
     bg: 'bg-gray-100 dark:bg-gray-500',
@@ -729,5 +729,56 @@ export const badgeColors: Record<AccentVariant, string> = {
 // Using inline styles because Tailwind arbitrary values don't work with dynamic imports
 export const productImageStyles = {
   filter: 'saturate(0.85) contrast(0.65)',
+};
+
+// ============================================================================
+// Service Comparison Card Colors - For service comparison sections
+// ============================================================================
+// Three-column card layout with distinct colors for each service type.
+// Each service gets a unique accent color for visual differentiation.
+// Light mode: subtle tinted backgrounds with dark text
+// Dark mode: darker tinted backgrounds with light text
+export type ServiceType = 'virtualAssistant' | 'dataDocuments' | 'website';
+
+export const serviceComparisonColors: Record<ServiceType, {
+  bg: string;
+  border: string;
+  headerBg: string;
+  headerText: string;
+  labelText: string;
+  valueText: string;
+  pricingBg: string;
+  pricingBorder: string;
+}> = {
+  virtualAssistant: {
+    bg: 'bg-white dark:bg-gray-800',
+    border: 'border-2 border-green-200 dark:border-green-700',
+    headerBg: 'bg-green-50 dark:bg-green-900/30',
+    headerText: 'text-green-700 dark:text-green-300',
+    labelText: 'text-gray-500 dark:text-gray-400',
+    valueText: 'text-gray-900 dark:text-gray-100',
+    pricingBg: 'bg-green-50 dark:bg-green-900/20',
+    pricingBorder: 'border-t border-green-200 dark:border-green-800',
+  },
+  dataDocuments: {
+    bg: 'bg-white dark:bg-gray-800',
+    border: 'border-2 border-blue-200 dark:border-blue-700',
+    headerBg: 'bg-blue-50 dark:bg-blue-900/30',
+    headerText: 'text-blue-700 dark:text-blue-300',
+    labelText: 'text-gray-500 dark:text-gray-400',
+    valueText: 'text-gray-900 dark:text-gray-100',
+    pricingBg: 'bg-blue-50 dark:bg-blue-900/20',
+    pricingBorder: 'border-t border-blue-200 dark:border-blue-800',
+  },
+  website: {
+    bg: 'bg-white dark:bg-gray-800',
+    border: 'border-2 border-purple-200 dark:border-purple-700',
+    headerBg: 'bg-purple-50 dark:bg-purple-900/30',
+    headerText: 'text-purple-700 dark:text-purple-300',
+    labelText: 'text-gray-500 dark:text-gray-400',
+    valueText: 'text-gray-900 dark:text-gray-100',
+    pricingBg: 'bg-purple-50 dark:bg-purple-900/20',
+    pricingBorder: 'border-t border-purple-200 dark:border-purple-800',
+  },
 };
 
