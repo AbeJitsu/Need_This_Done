@@ -88,10 +88,10 @@ export default function ServiceComparisonTable({
                   <div className="space-y-2">
                     {pricingRows.map((row) => (
                       <div key={row.label} className="flex justify-between items-center">
-                        <span className={`text-sm ${headingColors.secondary}`}>
+                        <span className={`text-sm ${colors.pricingLabelText}`}>
                           {row.label}
                         </span>
-                        <span className={`font-semibold ${headingColors.primary}`}>
+                        <span className={`font-semibold ${colors.pricingValueText}`}>
                           {row.values[colIdx]}
                         </span>
                       </div>

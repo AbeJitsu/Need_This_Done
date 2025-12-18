@@ -791,6 +791,8 @@ export const serviceComparisonColors: Record<ServiceType, {
   headerText: string;
   pricingBg: string;
   pricingBorder: string;
+  pricingLabelText: string;
+  pricingValueText: string;
 }> = {
   virtualAssistant: {
     border: 'border-2 border-green-200 dark:border-green-700',
@@ -798,6 +800,8 @@ export const serviceComparisonColors: Record<ServiceType, {
     headerText: 'text-green-700 dark:text-green-100',
     pricingBg: 'bg-green-100 dark:bg-green-500',
     pricingBorder: 'border-t border-green-200 dark:border-green-300',
+    pricingLabelText: 'text-green-700 dark:text-green-100',
+    pricingValueText: 'text-green-900 dark:text-white',
   },
   dataDocuments: {
     border: 'border-2 border-blue-200 dark:border-blue-700',
@@ -805,6 +809,8 @@ export const serviceComparisonColors: Record<ServiceType, {
     headerText: 'text-blue-700 dark:text-blue-100',
     pricingBg: 'bg-blue-100 dark:bg-blue-500',
     pricingBorder: 'border-t border-blue-200 dark:border-blue-300',
+    pricingLabelText: 'text-blue-700 dark:text-blue-100',
+    pricingValueText: 'text-blue-900 dark:text-white',
   },
   website: {
     border: 'border-2 border-purple-200 dark:border-purple-700',
@@ -812,6 +818,8 @@ export const serviceComparisonColors: Record<ServiceType, {
     headerText: 'text-purple-700 dark:text-purple-100',
     pricingBg: 'bg-purple-100 dark:bg-purple-500',
     pricingBorder: 'border-t border-purple-200 dark:border-purple-300',
+    pricingLabelText: 'text-purple-700 dark:text-purple-100',
+    pricingValueText: 'text-purple-900 dark:text-white',
   },
 };
 

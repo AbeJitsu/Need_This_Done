@@ -123,9 +123,9 @@ function ServiceDetail({ content, color }: ServiceDetailProps) {
       </p>
 
       {/* Two-column layout on larger screens */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* What we handle */}
-        <div>
+        <div className="min-w-0">
           <h4 className={`font-semibold ${headingColors.primary} mb-3`}>
             What we handle:
           </h4>
@@ -140,7 +140,7 @@ function ServiceDetail({ content, color }: ServiceDetailProps) {
         </div>
 
         {/* Examples */}
-        <div className={`${lightBgColors[color]} p-4 rounded-lg`}>
+        <div className={`min-w-0 overflow-hidden ${lightBgColors[color]} p-4 rounded-lg`}>
           <h4 className={`font-semibold ${headingColors.primary} mb-3`}>
             {content.examples.title}
           </h4>
