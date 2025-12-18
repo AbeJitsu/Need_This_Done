@@ -16,6 +16,9 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Security | ✅ Fixed | All critical issues resolved |
 | Google Calendar | 🟡 90% | Backend + Admin UI + credentials complete, needs testing |
 | Admin Approval | 🟡 90% | Dashboard + endpoints + credentials done, needs testing |
+| Infrastructure | ✅ Migrated | Vercel hosting live, Digital Ocean shut down |
+| DNS | ✅ Configured | needthisdone.com → Vercel via Namecheap |
+| Email (Resend) | ✅ Working | hello@needthisdone.com verified |
 
 ### Critical Security Issues ✅ RESOLVED
 
@@ -44,6 +47,12 @@ _Currently active work items_
 ## To Do
 
 ### Immediate
+
+**Google OAuth Display URL** 🟡 PENDING
+- [ ] Google Sign-In currently shows `oxhjtmozsdstbokwtnwa.supabase.co` instead of `needthisdone.com`
+- **Option A:** Supabase Custom Domain ($35/month Pro plan required)
+- **Option B:** Implement direct Google Sign-In (bypass Supabase Auth for OAuth)
+- Decision needed on preferred approach
 
 **Google Cloud Console Setup** ✅ COMPLETE
 - [x] Google Cloud project created
@@ -96,6 +105,15 @@ _Currently active work items_
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
 ### December 2025 - Latest Completions
+
+**Infrastructure Migration to Vercel** ✅ COMPLETE
+- [x] Added needthisdone.com and www.needthisdone.com to Vercel
+- [x] Updated DNS in Namecheap (A record → 216.150.1.1, www CNAME → cname.vercel-dns.com)
+- [x] Resend email domain already verified (SPF, DKIM configured)
+- [x] Shut down Digital Ocean droplet
+- [x] Merged railway-migration branch to main
+- [x] SSL auto-provisioned by Vercel
+- [x] Site live at https://needthisdone.com
 
 **Dark Mode Accent Button Contrast Fix** ✅ COMPLETE
 - [x] Updated `accentColors.orange` in `app/lib/colors.ts` (dark mode: bg-orange-700, text-white, border-white)
