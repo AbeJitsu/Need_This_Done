@@ -4,6 +4,50 @@
 // Centralized color class definitions used across cards and components.
 // This keeps our styling consistent and avoids duplicating color schemes
 // in multiple files.
+//
+// ============================================================================
+// HOW TO USE THIS FILE
+// ============================================================================
+//
+// THE CORE PATTERN (memorize this):
+// ┌─────────────────────────────────────────────────────────────────────────┐
+// │  LIGHT MODE              │  DARK MODE                                   │
+// ├─────────────────────────────────────────────────────────────────────────┤
+// │  Background: -100        │  Background: -500 (vibrant)                  │
+// │  Text: -700 or -800      │  Text: -100 (light)                          │
+// │  Border: -500            │  Border: -200 or -300                        │
+// └─────────────────────────────────────────────────────────────────────────┘
+//
+// QUICK REFERENCE:
+//   bg:     'bg-purple-100 dark:bg-purple-500'
+//   text:   'text-purple-700 dark:text-purple-100'
+//   border: 'border-purple-500 dark:border-purple-200'
+//
+// WHEN TO USE EACH SHADE:
+//   -50:  Very subtle backgrounds (light mode only)
+//   -100: Standard light backgrounds (light mode)
+//   -200: Light borders
+//   -300: Darker borders (dark mode)
+//   -500: Vibrant backgrounds (dark mode) + medium borders (light mode)
+//   -700: Dark text (light mode)
+//   -800: Darker text (light mode, for green/red)
+//   -100: Light text (dark mode)
+//
+// ADDING NEW COLORS:
+//   1. Follow the pattern above for light/dark mode
+//   2. Use AccentVariant type for new color keys
+//   3. Test in both light and dark mode
+//   4. Ensure WCAG AA contrast (4.5:1 for text, 3:1 for large text)
+//
+// EXISTING EXPORTS TO REUSE:
+//   - accentColors: Full button/badge styling (bg, text, border, hover)
+//   - titleTextColors: Colored headings
+//   - headingColors: Gray headings (primary/secondary)
+//   - formInputColors: Form field styling
+//   - cardBgColors: Card backgrounds
+//   - cardBorderColors: Card borders
+//
+// ============================================================================
 
 export type AccentColor = 'purple' | 'blue' | 'green';
 export type AccentVariant = 'purple' | 'blue' | 'green' | 'orange' | 'teal' | 'gray' | 'red';
@@ -47,18 +91,18 @@ export const accentColors: Record<AccentVariant, {
     hoverBorder: 'hover:border-green-600 dark:hover:border-green-100',
   },
   orange: {
-    bg: 'bg-orange-100 dark:bg-orange-700',
+    bg: 'bg-orange-100 dark:bg-orange-500',
     text: 'text-orange-900 dark:text-white',
-    border: 'border-orange-500 dark:border-white',
+    border: 'border-orange-500 dark:border-orange-200',
     hoverText: 'hover:text-orange-950 dark:hover:text-orange-100',
-    hoverBorder: 'hover:border-orange-700 dark:hover:border-orange-200',
+    hoverBorder: 'hover:border-orange-600 dark:hover:border-orange-100',
   },
   teal: {
-    bg: 'bg-teal-100 dark:bg-teal-700',
+    bg: 'bg-teal-100 dark:bg-teal-500',
     text: 'text-teal-900 dark:text-white',
-    border: 'border-teal-500 dark:border-white',
+    border: 'border-teal-500 dark:border-teal-200',
     hoverText: 'hover:text-teal-950 dark:hover:text-teal-100',
-    hoverBorder: 'hover:border-teal-700 dark:hover:border-teal-200',
+    hoverBorder: 'hover:border-teal-600 dark:hover:border-teal-100',
   },
   gray: {
     bg: 'bg-gray-100 dark:bg-gray-500',
@@ -720,7 +764,7 @@ export const badgeColors: Record<AccentVariant, string> = {
   orange: 'bg-orange-500 text-white',
   teal: 'bg-teal-500 text-white',
   gray: 'bg-gray-500 text-white',
-  red: 'bg-red-500 text-white',
+  red: 'bg-red-600 text-white',
 };
 
 // ============================================================================
@@ -735,50 +779,39 @@ export const productImageStyles = {
 // Service Comparison Card Colors - For service comparison sections
 // ============================================================================
 // Three-column card layout with distinct colors for each service type.
-// Each service gets a unique accent color for visual differentiation.
-// Light mode: subtle tinted backgrounds with dark text
-// Dark mode: darker tinted backgrounds with light text
+// Only stores accent-specific colors. Common text colors use centralized system:
+// - Card background: use cardBgColors.base
+// - Label text: use headingColors.secondary
+// - Value text: use headingColors.primary
 export type ServiceType = 'virtualAssistant' | 'dataDocuments' | 'website';
 
 export const serviceComparisonColors: Record<ServiceType, {
-  bg: string;
   border: string;
   headerBg: string;
   headerText: string;
-  labelText: string;
-  valueText: string;
   pricingBg: string;
   pricingBorder: string;
 }> = {
   virtualAssistant: {
-    bg: 'bg-white dark:bg-gray-800',
     border: 'border-2 border-green-200 dark:border-green-700',
-    headerBg: 'bg-green-50 dark:bg-green-900/30',
-    headerText: 'text-green-700 dark:text-green-300',
-    labelText: 'text-gray-500 dark:text-gray-400',
-    valueText: 'text-gray-900 dark:text-gray-100',
-    pricingBg: 'bg-green-50 dark:bg-green-900/20',
-    pricingBorder: 'border-t border-green-200 dark:border-green-800',
+    headerBg: 'bg-green-100 dark:bg-green-500',
+    headerText: 'text-green-700 dark:text-green-100',
+    pricingBg: 'bg-green-100 dark:bg-green-500',
+    pricingBorder: 'border-t border-green-200 dark:border-green-300',
   },
   dataDocuments: {
-    bg: 'bg-white dark:bg-gray-800',
     border: 'border-2 border-blue-200 dark:border-blue-700',
-    headerBg: 'bg-blue-50 dark:bg-blue-900/30',
-    headerText: 'text-blue-700 dark:text-blue-300',
-    labelText: 'text-gray-500 dark:text-gray-400',
-    valueText: 'text-gray-900 dark:text-gray-100',
-    pricingBg: 'bg-blue-50 dark:bg-blue-900/20',
-    pricingBorder: 'border-t border-blue-200 dark:border-blue-800',
+    headerBg: 'bg-blue-100 dark:bg-blue-500',
+    headerText: 'text-blue-700 dark:text-blue-100',
+    pricingBg: 'bg-blue-100 dark:bg-blue-500',
+    pricingBorder: 'border-t border-blue-200 dark:border-blue-300',
   },
   website: {
-    bg: 'bg-white dark:bg-gray-800',
     border: 'border-2 border-purple-200 dark:border-purple-700',
-    headerBg: 'bg-purple-50 dark:bg-purple-900/30',
-    headerText: 'text-purple-700 dark:text-purple-300',
-    labelText: 'text-gray-500 dark:text-gray-400',
-    valueText: 'text-gray-900 dark:text-gray-100',
-    pricingBg: 'bg-purple-50 dark:bg-purple-900/20',
-    pricingBorder: 'border-t border-purple-200 dark:border-purple-800',
+    headerBg: 'bg-purple-100 dark:bg-purple-500',
+    headerText: 'text-purple-700 dark:text-purple-100',
+    pricingBg: 'bg-purple-100 dark:bg-purple-500',
+    pricingBorder: 'border-t border-purple-200 dark:border-purple-300',
   },
 };
 

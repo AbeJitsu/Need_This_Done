@@ -7,7 +7,7 @@
 // Each card has its own visual identity with color-coded accents.
 // Makes it easy to scan and compare services at a glance.
 
-import { headingColors, formInputColors, serviceComparisonColors } from '@/lib/colors';
+import { headingColors, formInputColors, serviceComparisonColors, cardBgColors } from '@/lib/colors';
 import type { ComparisonRow } from '@/lib/page-content-types';
 import type { ServiceType } from '@/lib/colors';
 
@@ -56,7 +56,7 @@ export default function ServiceComparisonTable({
               key={serviceName}
               className={`
                 rounded-xl overflow-hidden
-                ${colors.bg} ${colors.border}
+                ${cardBgColors.base} ${colors.border}
                 transition-shadow hover:shadow-lg
                 grid grid-rows-[auto_1fr_auto]
               `}
@@ -72,10 +72,10 @@ export default function ServiceComparisonTable({
               <div className="px-6 py-5 grid content-start gap-4">
                 {infoRows.map((row) => (
                   <div key={row.label} className="min-h-[4.5rem]">
-                    <p className={`text-xs font-medium uppercase tracking-wide ${colors.labelText} mb-1`}>
+                    <p className={`text-xs font-medium uppercase tracking-wide ${headingColors.secondary} mb-1`}>
                       {row.label}
                     </p>
-                    <p className={`${colors.valueText} text-sm leading-relaxed`}>
+                    <p className={`${headingColors.primary} text-sm leading-relaxed`}>
                       {row.values[colIdx]}
                     </p>
                   </div>
@@ -88,10 +88,10 @@ export default function ServiceComparisonTable({
                   <div className="space-y-2">
                     {pricingRows.map((row) => (
                       <div key={row.label} className="flex justify-between items-center">
-                        <span className={`text-sm ${colors.labelText}`}>
+                        <span className={`text-sm ${headingColors.secondary}`}>
                           {row.label}
                         </span>
-                        <span className={`font-semibold ${colors.valueText}`}>
+                        <span className={`font-semibold ${headingColors.primary}`}>
                           {row.values[colIdx]}
                         </span>
                       </div>

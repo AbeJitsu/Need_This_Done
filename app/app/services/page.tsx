@@ -14,6 +14,9 @@ import {
   headingColors,
   checkmarkBgColors,
   groupHoverColors,
+  accentColors,
+  accentBorderWidth,
+  AccentVariant,
 } from '@/lib/colors';
 
 export const dynamic = 'force-dynamic';
@@ -109,9 +112,9 @@ export default async function ServicesPage() {
               {content.chooseYourPath.paths.map((path, index) => (
                 <Card key={index} hoverColor={path.hoverColor} hoverEffect="lift">
                   <div className="p-8">
-                    {/* Badge */}
+                    {/* Badge - uses centralized accentColors for consistent dark mode */}
                     <div className="mb-4">
-                      <span className={`inline-block px-4 py-1 bg-${path.hoverColor}-100 dark:bg-${path.hoverColor}-900 text-${path.hoverColor}-700 dark:text-${path.hoverColor}-300 rounded-full text-sm font-semibold`}>
+                      <span className={`inline-block px-4 py-1 ${accentColors[path.hoverColor as AccentVariant].bg} ${accentColors[path.hoverColor as AccentVariant].text} ${accentColors[path.hoverColor as AccentVariant].border} ${accentBorderWidth} rounded-full text-sm font-semibold`}>
                         {path.badge}
                       </span>
                     </div>
@@ -126,7 +129,7 @@ export default async function ServicesPage() {
                     <ul className="space-y-3 mb-6">
                       {path.bullets.map((bullet, idx) => (
                         <li key={idx} className="flex items-center gap-2">
-                          <span className={`text-${path.hoverColor}-600 dark:text-${path.hoverColor}-400`}>✓</span>
+                          <span className={accentColors[path.hoverColor as AccentVariant].text}>✓</span>
                           <span className="text-gray-700 dark:text-gray-300">{bullet}</span>
                         </li>
                       ))}

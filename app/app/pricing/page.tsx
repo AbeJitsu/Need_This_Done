@@ -5,7 +5,7 @@ import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultPricingContent } from '@/lib/default-page-content';
 import type { PricingPageContent } from '@/lib/page-content-types';
-import { formInputColors, headingColors, dividerColors } from '@/lib/colors';
+import { formInputColors, headingColors, dividerColors, accentColors, accentBorderWidth } from '@/lib/colors';
 
 export const dynamic = 'force-dynamic';
 
@@ -89,7 +89,7 @@ export default async function PricingPage() {
           <Card hoverColor="green" hoverEffect="lift" className="h-full">
             <div className="p-8 h-full flex flex-col">
               <div className="mb-4">
-                <span className="inline-block px-4 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-sm font-semibold">
+                <span className={`inline-block px-4 py-1 ${accentColors.green.bg} ${accentColors.green.text} ${accentColors.green.border} ${accentBorderWidth} rounded-full text-sm font-semibold`}>
                   Free
                 </span>
               </div>
@@ -123,7 +123,7 @@ export default async function PricingPage() {
           <Card hoverColor="purple" hoverEffect="lift" className="h-full">
             <div className="p-8 h-full flex flex-col">
               <div className="mb-4">
-                <span className="inline-block px-4 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-sm font-semibold">
+                <span className={`inline-block px-4 py-1 ${accentColors.purple.bg} ${accentColors.purple.text} ${accentColors.purple.border} ${accentBorderWidth} rounded-full text-sm font-semibold`}>
                   Expert Help
                 </span>
               </div>
