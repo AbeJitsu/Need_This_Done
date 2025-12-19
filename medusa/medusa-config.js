@@ -11,23 +11,22 @@ if (process.env.NODE_ENV === "production") {
 // Environment Variable Loading Strategy
 // ============================================================================
 // Try to load from parent directory (root .env.local) for local development
-// In Docker containers, env vars are injected via docker-compose env_file
-// This allows the same config to work both locally and in containers
+// On Railway, env vars are injected via the dashboard configuration
+// This allows the same config to work both locally and in production
 
 const envPath = path.resolve(__dirname, '../.env.local');
 if (fs.existsSync(envPath)) {
   dotenv.config({ path: envPath });
   console.log('✓ Loaded environment from .env.local');
 } else {
-  console.log('✓ Using environment variables from container (Docker env_file)');
+  console.log('✓ Using environment variables from platform (Railway/Vercel)');
 }
 
 // ============================================================================
 // Required Environment Variables
 // ============================================================================
-// These must be set in .env.local - no fallbacks for security
-// In Docker: docker-compose.yml maps MEDUSA_JWT_SECRET -> JWT_SECRET
-// In Local: .env.local should contain JWT_SECRET directly
+// These must be set in .env.local (local dev) or platform config (Railway)
+// All secrets are required with no fallbacks for security
 
 function requireEnv(name, fallbackName) {
   const value = process.env[name] || (fallbackName && process.env[fallbackName]);
@@ -38,7 +37,7 @@ function requireEnv(name, fallbackName) {
     throw new Error(
       `${name} environment variable is required.\n` +
       `Available related vars: ${availableVars || 'none'}\n` +
-      `Docker: Ensure docker-compose.yml passes ${name} from .env.local\n` +
+      `Railway: Set ${name} in the Variables tab\n` +
       `Local: Ensure .env.local contains ${name} or ${fallbackName || name}`
     );
   }

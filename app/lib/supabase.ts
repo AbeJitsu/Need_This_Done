@@ -21,7 +21,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-// During Docker build, env vars aren't available yet (they're injected at runtime).
+// During build, env vars may not be available yet (they're injected at runtime).
 // We create a dummy client during build to avoid errors, but it will be properly
 // initialized when the app actually runs.
 const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';

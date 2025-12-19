@@ -137,7 +137,7 @@ export default function WhatCanYouBuild() {
           <div>• Database (Supabase)</div>
           <div>• Speed Cache (Redis)</div>
           <div>• API Routes</div>
-          <div>• Docker Network</div>
+          <div>• Cloud Services</div>
           <div>• Dark Mode</div>
           <div>• Test Suite</div>
           <div>• Health Monitoring</div>

@@ -20,7 +20,7 @@ const nextConfig = {
   // ========================================================================
   // Packages everything needed to run into a single folder
   // Like pre-packaging meals so they only need heating, not cooking
-  // Result: Faster Docker builds, smaller images, easier deployment
+  // Result: Faster builds, smaller images, easier deployment
   output: 'standalone',
 
   // ========================================================================

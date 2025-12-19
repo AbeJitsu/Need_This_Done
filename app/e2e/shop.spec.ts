@@ -591,7 +591,7 @@ test.describe('Admin Shop Dashboard Integration', () => {
     request,
   }) => {
     // GET orders without auth should return 401
-    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    // NOTE: Using relative URL so Playwright uses baseURL
     const response = await request.get('/api/admin/orders', {
       failOnStatusCode: false,
     });
@@ -602,7 +602,7 @@ test.describe('Admin Shop Dashboard Integration', () => {
 test.describe('Cache Integration', () => {
   test('product list is cached efficiently', async ({ request }) => {
     // First request to products
-    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    // NOTE: Using relative URL so Playwright uses baseURL
     const response1 = await request.get('/api/shop/products', {
       failOnStatusCode: false,
     });
@@ -619,7 +619,7 @@ test.describe('Cache Integration', () => {
 
   test('product detail is cached', async ({ request }) => {
     // Get a product first
-    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    // NOTE: Using relative URL so Playwright uses baseURL
     const listResponse = await request.get('/api/shop/products', {
       failOnStatusCode: false,
     });
@@ -747,7 +747,7 @@ test.describe('Variant Regression Tests', () => {
   test('all products in API have variants', async ({ request }) => {
     // Critical regression test: Ensure products API always returns variants
     // This prevents the "No variants available" error from reappearing
-    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    // NOTE: Using relative URL so Playwright uses baseURL
     const response = await request.get('/api/shop/products', {
       failOnStatusCode: false, // Accept self-signed cert in dev
     });
@@ -776,7 +776,7 @@ test.describe('Variant Regression Tests', () => {
 
   test('each variant has required pricing data', async ({ request }) => {
     // Regression test: Variants must have pricing for add-to-cart to work
-    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    // NOTE: Using relative URL so Playwright uses baseURL
     const response = await request.get('/api/shop/products', {
       failOnStatusCode: false,
     });
@@ -855,7 +855,7 @@ test.describe('Variant Regression Tests', () => {
     request,
   }) => {
     // Regression test: Verify 3 consultation products all have variants
-    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    // NOTE: Using relative URL so Playwright uses baseURL
     const response = await request.get('/api/shop/products', {
       failOnStatusCode: false,
     });

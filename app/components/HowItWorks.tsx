@@ -275,13 +275,13 @@ const { data } = await supabase
               </ol>
             </div>
 
-            {/* Docker Note */}
+            {/* Cloud Services Note */}
             <div className="p-3 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-blue-700 rounded">
               <p className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-1">
-                🐳 All Services in Docker
+                ☁️ Cloud Infrastructure
               </p>
               <p className="text-xs text-blue-900 dark:text-blue-300">
-                Redis and Supabase run in Docker containers. The app, Redis, and database all communicate securely within a private Docker network.
+                Redis (Upstash) and Supabase run as managed cloud services. The app communicates securely with these services over encrypted connections.
               </p>
             </div>
           </div>

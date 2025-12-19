@@ -31,9 +31,8 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get('code');
   const next = requestUrl.searchParams.get('next') || '/dashboard';
 
-  // Use NEXT_PUBLIC_SITE_URL for the redirect base to avoid internal port leaking
-  // Inside Docker, request.url contains the internal port (3000), but we need
-  // the external URL (https://localhost) that nginx serves
+  // Use NEXT_PUBLIC_SITE_URL for the redirect base
+  // This ensures we redirect to the correct public URL
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin;
   const redirectUrl = new URL(next, siteUrl);
   const response = NextResponse.redirect(redirectUrl);

@@ -4,7 +4,7 @@ This document explains how URLs are configured across the application, particula
 
 ## The Problem
 
-When running behind nginx (Docker setup), the Next.js app receives requests on its internal port (3000), but users access the site through nginx on port 443 (HTTPS). If we use `request.url` directly for redirects, users get sent to `localhost:3000` instead of `https://localhost`.
+The Next.js app may receive requests with different URL bases in development vs production. If we use `request.url` directly for redirects, users might get sent to an incorrect URL.
 
 ## The Solution: NEXT_PUBLIC_SITE_URL
 
@@ -106,9 +106,8 @@ upstream sent too big header while reading response header from upstream
 - Verify the code uses `NEXT_PUBLIC_SITE_URL` not `request.url`
 
 ### 502 Bad Gateway after OAuth
-- Rebuild nginx: `docker-compose build --no-cache nginx`
-- Verify buffer settings in nginx.conf
-- Restart: `docker-compose up -d`
+- Restart the dev server
+- Check your Vercel deployment logs
 
 ### OAuth redirect mismatch errors
 - Check Supabase Dashboard redirect URLs match `NEXT_PUBLIC_SITE_URL`

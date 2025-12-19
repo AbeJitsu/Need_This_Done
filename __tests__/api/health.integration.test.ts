@@ -7,20 +7,20 @@ import { describe, it, expect } from 'vitest'
 // They verify that the endpoint correctly reports service status
 // when connecting to actual Redis and other services.
 //
-// The APP_URL is dynamically set based on the test environment:
-// - In Docker: http://app:3000 (uses Docker service name)
-// - From Host: http://localhost:3000 (uses exposed port)
+// The APP_URL should be set based on the test environment:
+// - Local dev: http://localhost:3000
+// - Production: https://needthisdone.com
 //
 // Prerequisites:
-// - Next.js dev server running
-// - Redis running
+// - Next.js dev server running (npm run dev)
+// - REDIS_URL set to Upstash Redis
 // - Services properly configured in environment
 
 describe('Health Check Integration', () => {
   // Use APP_URL environment variable set by vitest.integration.setup.ts
-  // Must run in Docker with APP_URL=https://nginx (nginx reverse proxy)
+  // Set APP_URL=http://localhost:3000 for local testing
   if (!process.env.APP_URL) {
-    throw new Error('APP_URL must be set. Run tests via: npm run test:docker')
+    throw new Error('APP_URL must be set. Example: APP_URL=http://localhost:3000 npm run test:integration')
   }
   const HEALTH_ENDPOINT = `${process.env.APP_URL}/api/health`
 

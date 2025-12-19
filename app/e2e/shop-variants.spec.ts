@@ -178,7 +178,7 @@ test.describe('Product Variants - Add to Cart Workflow', () => {
 
 test.describe('Product Variants - Variant Data Integrity', () => {
   test('product API returns variants for all products', async ({ page }) => {
-    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    // NOTE: Using relative URL so Playwright uses baseURL
     const response = await page.request.get('/api/shop/products', {
       failOnStatusCode: false,
     });
@@ -195,7 +195,7 @@ test.describe('Product Variants - Variant Data Integrity', () => {
   });
 
   test('variants have correct pricing', async ({ page }) => {
-    // NOTE: Using relative URL so Playwright uses baseURL (nginx through Docker)
+    // NOTE: Using relative URL so Playwright uses baseURL
     const response = await page.request.get('/api/shop/products', {
       failOnStatusCode: false,
     });

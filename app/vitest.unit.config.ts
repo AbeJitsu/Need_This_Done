@@ -8,7 +8,7 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 // Unit Test Configuration
 // ============================================================================
 // For testing isolated modules with mocked dependencies.
-// These tests do NOT require Docker or external services.
+// These tests do NOT require external services - all dependencies are mocked.
 //
 // Run with: npm run test:unit
 

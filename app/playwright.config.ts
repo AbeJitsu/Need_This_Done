@@ -16,13 +16,9 @@ dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 // ============================================================================
 // What: Configures end-to-end testing with Playwright.
 // Why: Automates testing of all user flows so we don't have to test manually.
-// How:
-//   - Local: `npm run test:e2e` (starts dev server automatically)
-//   - Docker: `npm run test:e2e:docker` (uses app container in Docker network)
+// How: Run `npm run test:e2e` (starts dev server automatically)
 
-// Base URL for E2E tests - always go through nginx
-// Local: https://localhost (nginx on host)
-// Docker: https://nginx (set by docker-compose.e2e.yml)
+// Base URL for E2E tests
 const baseURL = process.env.BASE_URL || 'https://localhost';
 
 export default defineConfig({
@@ -47,7 +43,7 @@ export default defineConfig({
   // ============================================================================
 
   use: {
-    // Use BASE_URL env var (Docker) or fall back to localhost (local dev)
+    // Use BASE_URL env var or fall back to localhost (local dev)
     baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -67,7 +63,6 @@ export default defineConfig({
     // Mobile tests disabled for faster iteration - uncomment when desktop tests pass
     // {
     //   name: 'mobile',
-    //   // Use iPhone 12 viewport but with Chromium (WebKit not installed in Docker)
     //   use: {
     //     ...devices['iPhone 12'],
     //     browserName: 'chromium',
@@ -78,8 +73,8 @@ export default defineConfig({
   // ============================================================================
   // Development Server (only when running locally)
   // ============================================================================
-  // When BASE_URL is set (Docker), skip starting a webServer - the app is
-  // already running in the Docker network. Only start dev server for local runs.
+  // When BASE_URL is set, skip starting a webServer - the app is already running.
+  // Only start dev server for local runs.
 
   ...(process.env.BASE_URL || process.env.SKIP_WEBSERVER
     ? {}

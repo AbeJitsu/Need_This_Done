@@ -1,8 +1,8 @@
 # Claude Code Hooks Reference Guide
 
-This guide documents all available Claude Code hooks with practical examples tailored to this project's needs (Next.js with Docker, E2E testing, and accessibility).
+This guide documents all available Claude Code hooks with practical examples tailored to this project's needs (Next.js, E2E testing, and accessibility).
 
-**Current Setup**: We have a [Stop hook](.claude/hooks/stop.sh) that checks Docker containers. This guide shows what other hooks are available and how to implement them.
+**Current Setup**: This guide shows available hooks and how to implement them.
 
 ---
 
@@ -53,7 +53,7 @@ command=$(echo "$input" | jq -r '.tool_input.command // ""')
 
 # Block dangerous patterns
 if [[ "$tool_name" == "Bash" ]]; then
-  if [[ "$command" =~ rm[[:space:]]+-rf[[:space:]]+/ ]] || [[ "$command" =~ docker[[:space:]]+system[[:space:]]prune ]]; then
+  if [[ "$command" =~ rm[[:space:]]+-rf[[:space:]]+/ ]]; then
     echo '{"decision":"block","reason":"Blocked potentially dangerous command"}' | jq -c
     exit 0
   fi
@@ -205,8 +205,8 @@ exit 0
 
 cat >&2 <<'EOF'
 🚀 Need This Done Project
-  - Next.js app with Docker dev environment
-  - Run: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+  - Next.js app deployed on Vercel
+  - Dev: cd app && npm run dev
   - Tests: npm --prefix app run test:a11y
   - Design system: docs/DESIGN_SYSTEM.md
   - Storybook: npm --prefix app run storybook
@@ -242,14 +242,10 @@ exit 0
 **When it triggers:** When the main Claude Code agent finishes responding
 
 **Use cases:**
-- Health checks (like our Docker check)
+- Health checks
 - Suggest next steps
 - Cleanup and validation
 - Status reporting
-
-**Current Implementation:**
-
-We already use this hook! See [.claude/hooks/stop.sh](.claude/hooks/stop.sh) - it checks if Docker containers are running and provides helpful guidance if they're not.
 
 ---
 
@@ -458,7 +454,7 @@ Trigger the event that fires the hook and verify the behavior.
 
 ## Recommended Hooks for This Project
 
-Based on your Next.js + Docker + Testing setup, these hooks are most useful:
+Based on your Next.js + Vercel + Testing setup, these hooks are most useful:
 
 ### Priority 1: PostToolUse (Auto-format)
 
@@ -470,7 +466,7 @@ Auto-inject testing best practices when you mention tests - helps ensure E2E tes
 
 ### Priority 3: SessionStart (Project Info)
 
-Display project info at startup - quick reference for Docker commands, test runners, and key files.
+Display project info at startup - quick reference for dev commands, test runners, and key files.
 
 ---
 

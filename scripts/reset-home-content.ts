@@ -26,7 +26,7 @@ async function resetHomeContent() {
 
   console.log('✅ Custom homepage content deleted');
   console.log('📝 Homepage will now use defaults from lib/default-page-content.ts');
-  console.log('🔄 Restart app to clear cache: docker-compose restart redis app');
+  console.log('🔄 Restart dev server to clear cache, or redeploy to Vercel');
 }
 
 resetHomeContent();

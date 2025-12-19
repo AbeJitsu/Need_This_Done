@@ -8,11 +8,10 @@ import { navigateToPage } from './helpers';
 //       and visual regression testing.
 // Why: Provides visual documentation of the checkout experience and helps
 //      catch unintended UI changes.
-// How: Runs through nginx (via BASE_URL=https://nginx in Docker) for a
-//      production-like experience. Uses Stripe test cards.
+// How: Runs with the dev server. Uses Stripe test cards.
 //
-// Run locally through nginx:
-//   npm run test:e2e:docker -- --grep "Checkout Flow"
+// Run locally:
+//   npm run test:e2e -- --grep "Checkout Flow"
 
 const SCREENSHOTS_DIR = 'e2e/screenshots/checkout';
 

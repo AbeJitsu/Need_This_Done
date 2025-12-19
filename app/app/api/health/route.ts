@@ -10,8 +10,8 @@ export const dynamic = 'force-dynamic';
 // ============================================================================
 // What is a health check?
 // A health check is like a doorbell for your application. External monitoring
-// systems (load balancers, uptime monitors, Docker) call this endpoint to verify
-// the app is alive and all critical systems are working.
+// systems (load balancers, uptime monitors, deployment platforms) call this endpoint
+// to verify the app is alive and all critical systems are working.
 //
 // Returns:
 // - 200 OK: Everything is working
@@ -70,7 +70,7 @@ export async function GET() {
 
     let medusaStatus = 'unknown';
     try {
-      const medusaUrl = process.env.MEDUSA_BACKEND_URL || 'http://medusa:9000';
+      const medusaUrl = process.env.MEDUSA_BACKEND_URL || process.env.NEXT_PUBLIC_MEDUSA_URL;
       const medusaResponse = await fetch(`${medusaUrl}/health`, {
         signal: AbortSignal.timeout(5000), // 5 second timeout
       });

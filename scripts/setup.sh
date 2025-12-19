@@ -53,11 +53,53 @@ echo ""
 echo ""
 
 # ============================================================================
+# Collect User Input - Redis (Upstash)
+# ============================================================================
+
+echo "======================================================================="
+echo "2. Redis Configuration (Upstash)"
+echo "======================================================================="
+echo ""
+echo "Get your Redis URL from: https://console.upstash.com"
+echo "Create a Redis database and copy the connection string."
+echo ""
+
+read -p "Upstash Redis URL (redis://...): " redis_url
+
+while [ -z "$redis_url" ]; do
+  echo "Redis URL is required for caching."
+  read -p "Upstash Redis URL: " redis_url
+done
+
+echo ""
+
+# ============================================================================
+# Collect User Input - Medusa (Railway)
+# ============================================================================
+
+echo "======================================================================="
+echo "3. Medusa Backend Configuration (Railway)"
+echo "======================================================================="
+echo ""
+echo "Get your Medusa backend URL from your Railway deployment."
+echo "It should look like: https://your-app.railway.app"
+echo ""
+
+read -p "Railway Medusa URL (https://...): " medusa_backend_url
+
+while [ -z "$medusa_backend_url" ]; do
+  echo "Medusa backend URL is required for e-commerce features."
+  read -p "Railway Medusa URL: " medusa_backend_url
+done
+
+echo ""
+
+# ============================================================================
 # Collect User Input - Stripe
 # ============================================================================
 
 echo "======================================================================="
-echo "2. Stripe Payment Configuration"
+echo "4. Stripe Payment Configuration"
 echo "======================================================================="
 echo ""
 echo "Get these from: https://dashboard.stripe.com/apikeys"
@@ -82,7 +124,7 @@ echo ""
 # ============================================================================
 
 echo "======================================================================="
-echo "3. Resend Email Configuration"
+echo "5. Resend Email Configuration"
 echo "======================================================================="
 echo ""
 echo "Get your API key from: https://resend.com/api-keys"
@@ -99,7 +141,7 @@ echo ""
 # ============================================================================
 
 echo "======================================================================="
-echo "4. OpenAI Configuration"
+echo "6. OpenAI Configuration"
 echo "======================================================================="
 echo ""
 echo "Get your API key from: https://platform.openai.com/api-keys"
@@ -120,7 +162,7 @@ echo ""
 # ============================================================================
 
 echo "======================================================================="
-echo "5. Generating Secure Secrets"
+echo "7. Generating Secure Secrets"
 echo "======================================================================="
 echo ""
 echo "Auto-generating secure passwords and secrets for Medusa backend..."
@@ -142,7 +184,7 @@ echo ""
 # ============================================================================
 
 echo "======================================================================="
-echo "6. Creating .env.local File"
+echo "8. Creating .env.local File"
 echo "======================================================================="
 echo ""
 
@@ -161,15 +203,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=$supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=$supabase_service_role_key
 
 # ============================================================================
-# Redis Configuration (REQUIRED)
+# Redis Configuration (Upstash)
 # ============================================================================
-REDIS_URL=redis://redis:6379
+REDIS_URL=$redis_url
 SKIP_CACHE=true
 
 # ============================================================================
-# Site Configuration (REQUIRED - LOCAL DEVELOPMENT)
+# Site Configuration (LOCAL DEVELOPMENT)
 # ============================================================================
-NEXT_PUBLIC_SITE_URL=https://localhost
 NEXT_PUBLIC_SITE_URL=https://localhost
 
 # ============================================================================
@@ -184,7 +225,7 @@ MEDUSA_DB_PASSWORD=$medusa_db_password
 MEDUSA_JWT_SECRET=$medusa_jwt_secret
 MEDUSA_ADMIN_JWT_SECRET=$medusa_admin_jwt_secret
 COOKIE_SECRET=$cookie_secret
-MEDUSA_BACKEND_URL=http://medusa:9000
+MEDUSA_BACKEND_URL=$medusa_backend_url
 ADMIN_CORS=https://localhost
 
 # ============================================================================
@@ -258,8 +299,8 @@ fi
 echo ""
 echo "🚀 Ready to start development:"
 echo ""
-echo "   docker-compose up -d"
-echo "   # Then visit: https://localhost"
+echo "   cd app && npm run dev"
+echo "   # Then visit: http://localhost:3000"
 echo ""
 echo "Happy building! 🎯"
 echo ""

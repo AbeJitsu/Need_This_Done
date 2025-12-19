@@ -3,12 +3,12 @@ import { describe, it, expect, beforeAll, afterEach } from 'vitest'
 // ============================================================================
 // Redis Integration Tests
 // ============================================================================
-// These tests connect to REAL Redis running in Docker.
+// These tests connect to REAL Redis (Upstash in production, local for testing).
 // They verify caching, persistence, and connection functionality.
 //
 // Prerequisites:
-// - Redis running on localhost:6379 (or configured REDIS_URL)
-// - Environment variable REDIS_URL set correctly
+// - REDIS_URL environment variable set to your Upstash Redis URL
+// - Or a local Redis instance for testing
 
 describe('Redis Integration', () => {
   let redis: any

@@ -37,7 +37,7 @@ Thumbs.db
 .env.prod
 .env.prod.local
 
-# Docker volumes and local data (these shouldn't be in git)
+# Local data directories (these shouldn't be in git)
 data/
 volumes/
 

@@ -1,7 +1,7 @@
 # E2E Test Report
 
 **Last Updated:** December 5, 2025
-**Environment:** Docker (ntd_app_network)
+**Environment:** Local development / Vercel
 **Test Runner:** Playwright 1.57.0
 
 ---
@@ -122,10 +122,7 @@ All tests pass. The 5 skipped tests are desktop-only navigation tests that are a
 ## How to Run Tests
 
 ```bash
-# From the app directory, against Docker stack
-cd app && BASE_URL=https://localhost npx playwright test
-
-# Or start dev server and run tests
+# From the app directory
 cd app && npm run test:e2e
 ```
 

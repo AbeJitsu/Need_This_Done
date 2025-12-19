@@ -10,12 +10,11 @@ import { createClient, RedisClientType } from 'redis';
 // - Rate limiting (track how many requests per user)
 // - Real-time counters
 //
-// Environment variable comes from docker-compose.yml
-// redis://redis:6379 = container name:port inside Docker
+// Configured via REDIS_URL environment variable (Upstash Redis in production)
 
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 
-// During Docker build, Redis isn't available. Skip connection attempts during build.
+// During build, Redis isn't available. Skip connection attempts during build.
 const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';
 
 // ============================================================================

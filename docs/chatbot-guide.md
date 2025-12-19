@@ -90,7 +90,7 @@ Verifies if a page is indexed with a specific content hash.
 
 ## Configuration
 
-Set these in your environment or docker-compose.yml:
+Set these in your environment (.env.local):
 
 | Variable | Required | Description |
 |----------|----------|-------------|
