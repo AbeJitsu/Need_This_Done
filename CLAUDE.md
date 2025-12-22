@@ -52,6 +52,20 @@ IMPORTANT: Interact with me and output content that sounds and feels inviting, f
 - Destructive operations that can't be undone
 - Ambiguous requirements with multiple valid approaches
 
+## Hooks
+
+Three lightweight hooks in `.claude/hooks/` support autonomous work:
+
+| Hook | Purpose |
+|------|---------|
+| `post-tool-use.sh` | Auto-runs ESLint --fix on edited TypeScript files |
+| `user-prompt-submit.sh` | Brief reminder to run tests when test keywords detected |
+| `stop-check.sh` | Triggers cleanup of TODO.md → README.md when too many completed items accumulate |
+
+All hooks are non-blocking - they help maintain code quality and documentation automatically.
+
+**Intentionally removed:** Pre-commit type-check hook (conflicted with autonomous workflow and `/dac` approval process).
+
 ## Task Tracking
 
 **TODO.md** is for **incomplete, untested features**:

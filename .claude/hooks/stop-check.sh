@@ -1,44 +1,29 @@
 #!/bin/bash
+# Stop Hook: Ensure TODO.md and README.md are properly maintained
+# What: Checks for completed items in TODO.md that should be moved to README.md
+# Why: TODO.md should only have in-progress/pending tasks; completed work goes to README.md
 
-# ============================================================================
-# Stop Hook - Check Progress Checklist Before Stopping
-# ============================================================================
-# Runs when Claude is about to stop. Checks if work is complete.
-# If incomplete tasks remain, prompts user to continue.
+TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
 
-CHECKLIST_FILE="$CLAUDE_PROJECT_DIR/DRY_VIOLATIONS_CHECKLIST.md"
+if [ -f "$TODO_FILE" ]; then
+  # Count completed items in Recently Completed section
+  COMPLETED=$(grep -c "^\- \[x\]" "$TODO_FILE" 2>/dev/null || echo "0")
 
-# Check if checklist exists
-if [ ! -f "$CHECKLIST_FILE" ]; then
-  echo "ℹ️  No active checklist found. Safe to stop."
-  exit 0
+  # Count COMPLETE sections that might need moving to README
+  COMPLETE_SECTIONS=$(grep -c "✅ COMPLETE" "$TODO_FILE" 2>/dev/null || echo "0")
+
+  if [ "$COMPLETED" -gt 10 ] || [ "$COMPLETE_SECTIONS" -gt 5 ]; then
+    echo ""
+    echo "🧹 ACTION REQUIRED: Clean up documentation before stopping."
+    echo ""
+    echo "TODO.md has $COMPLETE_SECTIONS completed sections and $COMPLETED checked items."
+    echo ""
+    echo "Please do the following:"
+    echo "1. Move production-ready completed features from TODO.md to README.md"
+    echo "2. Keep only the 5-7 most recent completions in TODO.md"
+    echo "3. Remove older completed items that are already documented"
+    echo ""
+  fi
 fi
 
-# Count incomplete tasks
-INCOMPLETE_COUNT=$(grep -c "^- \[ \]" "$CHECKLIST_FILE" 2>/dev/null || echo "0")
-TOTAL_COUNT=$(grep -c "^- \[" "$CHECKLIST_FILE" 2>/dev/null || echo "0")
-COMPLETE_COUNT=$((TOTAL_COUNT - INCOMPLETE_COUNT))
-
-# If all tasks complete, allow stop
-if [ "$INCOMPLETE_COUNT" -eq 0 ]; then
-  echo "✅ All tasks complete! Safe to stop."
-  echo ""
-  echo "📊 Final Stats:"
-  echo "   Completed: $COMPLETE_COUNT/$TOTAL_COUNT tasks"
-  exit 0
-fi
-
-# If incomplete, show warning
-echo "⚠️  Work is not complete!"
-echo ""
-echo "📊 Progress:"
-echo "   Completed: $COMPLETE_COUNT/$TOTAL_COUNT tasks"
-echo "   Remaining: $INCOMPLETE_COUNT tasks"
-echo ""
-echo "📋 Next incomplete tasks:"
-grep "^- \[ \]" "$CHECKLIST_FILE" | head -5 | sed 's/^/   /'
-echo ""
-
-# Allow stop anyway (just inform user)
-# Exit 0 to not block - this is informational only
 exit 0

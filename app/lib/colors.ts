@@ -1,5 +1,5 @@
 // ============================================================================
-// Shared Color Utilities
+// Shared Color Utilities - Last verified: Dec 2025
 // ============================================================================
 // Centralized color class definitions used across cards and components.
 // This keeps our styling consistent and avoids duplicating color schemes

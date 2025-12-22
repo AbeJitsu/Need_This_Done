@@ -105,6 +105,14 @@ _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
 ### December 2025 - Latest Completions
 
+**Claude Hooks Cleanup for Autonomous Work** ✅ COMPLETE
+- [x] Evaluated all 4 hooks against autonomous workflow goals
+- [x] Deleted `pre-commit-check.sh` (blocked commits, conflicted with `/dac` approval)
+- [x] Rewrote `stop-check.sh` to check TODO.md/README.md instead of non-existent checklist
+- [x] Simplified `user-prompt-submit.sh` (60 lines → 15 lines, just a brief reminder)
+- [x] Kept `post-tool-use.sh` (auto-lint, non-blocking, supports No Broken Windows)
+- [x] Documented all 3 hooks in CLAUDE.md
+
 **Infrastructure Migration to Vercel** ✅ COMPLETE
 - [x] Added needthisdone.com and www.needthisdone.com to Vercel
 - [x] Updated DNS in Namecheap (A record → 216.150.1.1, www CNAME → cname.vercel-dns.com)
