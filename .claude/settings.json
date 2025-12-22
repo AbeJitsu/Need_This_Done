@@ -1,143 +1,43 @@
 {
   "permissions": {
     "allow": [
+      "Read(**/*)",
       "Edit(**/*)",
       "Write(**/*)",
-      "Bash(chmod:*)",
-      "Bash(rm:*)",
-      "Bash(git:*)",
-      "Bash(git diff:*)",
-      "Bash(git status:*)",
-      "Bash(git log:*)",
-      "Bash(find:*)",
-      "Bash(cat:*)",
-      "Bash(grep:*)",
-      "Bash(ls:*)",
-      "Bash(ls -la:*)",
-      "Bash(ls -l:*)",
-      "Bash(ls -a:*)",
-      "Bash(tree:*)",
-      "Bash(xargs:*)",
-      "Bash(npm:*)",
-      "Bash(npx:*)",
-      "Bash(curl:*)",
-      "Bash(echo:*)",
-      "Bash(python3:*)",
-      "Bash(doctl:*)",
-      "Bash(ssh-keygen:*)",
-      "Bash(ssh:*)",
-      "Bash(dig:*)",
-      "Bash(node:*)",
-      "SlashCommand(/dac)",
-      "Task(*)",
-      "Bash(playwright:*)",
-      "Bash(npx playwright:*)",
-      "Bash(mkdir:*)",
-      "Bash(cp:*)",
-      "Bash(mv:*)",
-      "Bash(touch:*)",
-      "Bash(tail:*)",
-      "Bash(head:*)",
-      "Bash(ps:*)",
-      "Bash(kill:*)",
-      "Bash(sleep:*)",
-      "Bash(which:*)",
-      "Bash(tsc:*)",
-      "Bash(prettier:*)",
-      "Bash(eslint:*)",
-      "Bash(vitest:*)",
+      "Bash(*)",
       "WebSearch",
       "WebFetch",
-      "Bash(cd:*)",
-      "Bash(timeout:*)",
-      "Bash(wc:*)",
-      "Bash(source:*)",
-      "Bash(diff:*)",
-      "Bash(sort:*)",
-      "Bash(uniq:*)",
-      "Bash(date:*)",
-      "Bash(sed:*)",
-      "Bash(awk:*)",
-      "Bash(tr:*)",
-      "Bash(tee:*)",
-      "Bash(open:*)",
-      "Bash(for:*)"
+      "Task(*)",
+      "SlashCommand(/dac)"
     ],
     "deny": [
-      "Read(./.env)",
-      "Read(**/.env)",
-      "Read(./.env.local)",
-      "Read(**/.env.local)",
-      "Read(./.env.*.local)",
-      "Read(**/.env.*.local)",
-      "Read(./.env.production)",
-      "Read(**/.env.production)",
-      "Read(./.env.development)",
-      "Read(**/.env.development)",
-      "Read(./.env.test)",
-      "Read(**/.env.test)",
       "Bash(git commit:*)",
+      "Bash(git merge:*)",
+      "Bash(git rebase:*)",
       "Bash(git push:*)",
-      "Bash(rm -rf:*)",
-      "Bash(git push --force:*)",
-      "Bash(git push -f:*)",
-      "Bash(git push origin main:*)",
-      "Bash(git push origin master:*)",
+      "Bash(git checkout:*)",
       "Bash(git reset --hard:*)",
-      "Write(**/.env)",
-      "Write(**/.env.local)",
-      "Write(**/.env.*.local)",
-      "Write(**/.env.production)",
-      "Write(**/.env.development)",
-      "Write(**/.env.test)",
-      "Edit(**/.env)",
-      "Edit(**/.env.local)",
-      "Edit(**/.env.*.local)",
-      "Edit(**/.env.production)",
-      "Edit(**/.env.development)",
-      "Edit(**/.env.test)",
+      "Bash(git branch -d:*)",
+      "Bash(git branch -D:*)",
+      "Bash(git add -A:*)",
+      "Bash(git add .:*)",
+      "Bash(rm -rf /*)",
+      "Bash(sudo:*)",
+      "Read(**/.env*)",
+      "Write(**/.env*)",
+      "Edit(**/.env*)",
+      "Read(**/secrets.*)",
       "Write(**/secrets.*)",
       "Edit(**/secrets.*)"
     ]
   },
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/pre-commit-check.sh"
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stop.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/post-tool-use.sh"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/user-prompt-submit.sh"
           }
         ]
       }
