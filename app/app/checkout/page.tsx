@@ -34,7 +34,7 @@ type CheckoutStep = 'info' | 'appointment' | 'payment' | 'confirmation';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, cartId, itemCount, clearCart } = useCart();
+  const { cart, cartId, itemCount, clearCart, isSyncing, isCartReady } = useCart();
   const { user, isAuthenticated } = useAuth();
 
   // Step state
@@ -165,6 +165,17 @@ export default function CheckoutPage() {
   // Create order and payment intent - proceed to payment step
   // ========================================================================
   const proceedToPayment = async () => {
+    // Guard: Ensure cart is fully synced before proceeding
+    if (isSyncing) {
+      setError('Just a moment - finishing up your cart changes...');
+      return;
+    }
+
+    if (!isCartReady) {
+      setError('Hmm, something went wrong with your cart. Please go back and try adding your items again.');
+      return;
+    }
+
     try {
       setIsProcessing(true);
       setError('');

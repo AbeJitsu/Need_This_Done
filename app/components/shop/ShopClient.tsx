@@ -38,7 +38,12 @@ export default function ShopClient({ products }: ShopClientProps) {
         throw new Error('No variants available for this product');
       }
 
-      await addItem(variant.id, 1);
+      // Pass product info for instant optimistic display
+      await addItem(variant.id, 1, {
+        title: product.title,
+        unit_price: product.variants?.[0]?.prices?.[0]?.amount || 0,
+        thumbnail: product.images?.[0]?.url,
+      });
       setToastMessage(`Added ${product.title} to cart!`);
 
       // Clear toast after 3 seconds

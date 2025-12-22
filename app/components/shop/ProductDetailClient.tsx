@@ -46,7 +46,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       setIsAddingToCart(true);
       setError('');
 
-      await addItem(selectedVariant, quantity);
+      // Pass product info for instant optimistic display
+      await addItem(selectedVariant, quantity, {
+        title: product.title,
+        unit_price: price,
+        thumbnail: image,
+      });
 
       // Reset and show success
       setQuantity(1);
