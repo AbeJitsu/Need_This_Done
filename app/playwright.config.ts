@@ -52,6 +52,12 @@ export default defineConfig({
   },
 
   // ============================================================================
+  // Screenshot Configuration
+  // ============================================================================
+  // Custom snapshot directory for visual regression testing
+  snapshotDir: './e2e/visual-regression',
+
+  // ============================================================================
   // Test Projects - Different Browsers/Devices
   // ============================================================================
 
@@ -60,14 +66,13 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    // Mobile tests disabled for faster iteration - uncomment when desktop tests pass
-    // {
-    //   name: 'mobile',
-    //   use: {
-    //     ...devices['iPhone 12'],
-    //     browserName: 'chromium',
-    //   },
-    // },
+    {
+      name: 'mobile',
+      use: {
+        ...devices['iPhone 12'],
+        browserName: 'chromium',
+      },
+    },
   ],
 
   // ============================================================================
