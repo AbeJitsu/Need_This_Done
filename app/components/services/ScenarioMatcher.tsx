@@ -74,14 +74,14 @@ export default function ScenarioMatcher({
 
             {/* Quotes */}
             <div className="space-y-3">
-              {scenario.quotes.map((quote, quoteIndex) => (
+              {scenario.quotes?.map((quote, quoteIndex) => (
                 <p
                   key={quoteIndex}
                   className={`${formInputColors.helper} text-sm leading-relaxed pl-2`}
                 >
                   "{quote}"
                 </p>
-              ))}
+              )) || null}
             </div>
           </button>
         ))}
