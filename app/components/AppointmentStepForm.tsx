@@ -66,8 +66,9 @@ export default function AppointmentStepForm({
   maxDate.setMonth(maxDate.getMonth() + 3);
   const maxDateStr = maxDate.toISOString().split('T')[0];
 
-  // Business hours options (9 AM - 5 PM)
+  // Business hours options (8:30 AM - 5:30 PM EST)
   const timeOptions = [
+    { value: '08:30', label: '8:30 AM' },
     { value: '09:00', label: '9:00 AM' },
     { value: '09:30', label: '9:30 AM' },
     { value: '10:00', label: '10:00 AM' },
@@ -84,13 +85,49 @@ export default function AppointmentStepForm({
     { value: '15:30', label: '3:30 PM' },
     { value: '16:00', label: '4:00 PM' },
     { value: '16:30', label: '4:30 PM' },
+    { value: '17:00', label: '5:00 PM' },
+    { value: '17:30', label: '5:30 PM' },
   ];
 
-  // Filter out times that would end after 5 PM
+  // Filter out times that would end after 6:00 PM (last start time is 5:30 PM)
+  // AND times that are less than 24 hours from now for the selected date
   const availableTimeOptions = timeOptions.filter((option) => {
     const [hours, minutes] = option.value.split(':').map(Number);
     const endTimeMinutes = hours * 60 + minutes + durationMinutes;
-    return endTimeMinutes <= 17 * 60; // 5 PM = 17:00
+
+    // Must end by 6:00 PM (allow 5:30 PM start for 30-min consultations)
+    if (endTimeMinutes > 18 * 60) return false;
+
+    // If a date is selected, check if this time is at least 24 hours from now
+    if (formData.preferredDate) {
+      const selectedDateTime = new Date(`${formData.preferredDate}T${option.value}`);
+      const minDateTime = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+      // Must be at least 24 hours from now
+      if (selectedDateTime < minDateTime) return false;
+    }
+
+    return true;
+  });
+
+  // Filter available times for alternate date/time
+  const availableAlternateTimeOptions = timeOptions.filter((option) => {
+    const [hours, minutes] = option.value.split(':').map(Number);
+    const endTimeMinutes = hours * 60 + minutes + durationMinutes;
+
+    // Must end by 6:00 PM (allow 5:30 PM start for 30-min consultations)
+    if (endTimeMinutes > 18 * 60) return false;
+
+    // If alternate date is selected, check if this time is at least 24 hours from now
+    if (formData.alternateDate) {
+      const selectedDateTime = new Date(`${formData.alternateDate}T${option.value}`);
+      const minDateTime = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+      // Must be at least 24 hours from now
+      if (selectedDateTime < minDateTime) return false;
+    }
+
+    return true;
   });
 
   const handleChange = (
@@ -201,23 +238,53 @@ export default function AppointmentStepForm({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Time *
                 </label>
-                <select
-                  name="preferredTimeStart"
-                  value={formData.preferredTimeStart}
-                  onChange={handleChange}
-                  required
-                  className="w-full min-w-[130px] px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
-                >
-                  <option value="">Select a time</option>
-                  {availableTimeOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                {!formData.preferredDate ? (
+                  <p className={`text-sm ${formInputColors.helper} py-3`}>
+                    Select a date first
+                  </p>
+                ) : availableTimeOptions.length === 0 ? (
+                  <p className={`text-sm ${formValidationColors.error} py-3`}>
+                    No times available for this date. Please select a later date.
+                  </p>
+                ) : (
+                  <>
+                    {/* Desktop: Dropdown select */}
+                    <select
+                      name="preferredTimeStart"
+                      value={formData.preferredTimeStart}
+                      onChange={handleChange}
+                      className="hidden md:block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                    >
+                      <option value="">Select a time</option>
+                      {availableTimeOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Mobile: Button grid for better tap targets */}
+                    <div className="md:hidden grid grid-cols-3 gap-2">
+                      {availableTimeOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => setFormData((prev) => ({ ...prev, preferredTimeStart: option.value }))}
+                          className={`py-3 px-2 text-sm font-medium rounded-lg border-2 transition-all ${
+                            formData.preferredTimeStart === option.value
+                              ? 'bg-purple-600 border-purple-600 text-white'
+                              : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20'
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -244,22 +311,53 @@ export default function AppointmentStepForm({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Time
                 </label>
-                <select
-                  name="alternateTimeStart"
-                  value={formData.alternateTimeStart}
-                  onChange={handleChange}
-                  className="w-full min-w-[130px] px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
-                >
-                  <option value="">Select a time</option>
-                  {availableTimeOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                {!formData.alternateDate ? (
+                  <p className={`text-sm ${formInputColors.helper} py-3`}>
+                    Select a date first
+                  </p>
+                ) : availableAlternateTimeOptions.length === 0 ? (
+                  <p className={`text-sm ${formValidationColors.error} py-3`}>
+                    No times available for this date. Please select a later date.
+                  </p>
+                ) : (
+                  <>
+                    {/* Desktop: Dropdown select */}
+                    <select
+                      name="alternateTimeStart"
+                      value={formData.alternateTimeStart}
+                      onChange={handleChange}
+                      className="hidden md:block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                    >
+                      <option value="">Select a time</option>
+                      {availableAlternateTimeOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Mobile: Button grid for better tap targets */}
+                    <div className="md:hidden grid grid-cols-3 gap-2">
+                      {availableAlternateTimeOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => setFormData((prev) => ({ ...prev, alternateTimeStart: option.value }))}
+                          className={`py-3 px-2 text-sm font-medium rounded-lg border-2 transition-all ${
+                            formData.alternateTimeStart === option.value
+                              ? 'bg-purple-600 border-purple-600 text-white'
+                              : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20'
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -284,7 +382,7 @@ export default function AppointmentStepForm({
           <div className={`mb-6 p-4 ${alertColors.info.bg} rounded-lg`}>
             <p className="text-sm text-blue-700 dark:text-blue-300">
               <strong>Note:</strong> Appointments must be booked at least 24 hours in advance.
-              Available Monday-Friday, 9 AM - 5 PM EST. We'll confirm your appointment after payment.
+              Available Monday-Friday, 8:30 AM - 5:30 PM EST. We'll confirm your appointment after payment.
             </p>
           </div>
 
