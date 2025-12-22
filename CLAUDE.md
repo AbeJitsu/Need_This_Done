@@ -44,13 +44,75 @@ IMPORTANT: Interact with me and output content that sounds and feels inviting, f
 - **Documentation:** Launch agents to document different sections simultaneously
 - **Testing:** Run test suites in parallel where possible
 
-**Safety:** Commits are blocked by settings.json. All changes stay local until user reviews.
+**Safety:** Commits and destructive git operations are blocked by settings.json (see [Git & Bash Command Restrictions](#git--bash-command-restrictions) for full list). All changes stay local until user reviews.
 
 **When to pause:**
 
 - External service setup needed (Google Cloud Console, API keys)
 - Destructive operations that can't be undone
 - Ambiguous requirements with multiple valid approaches
+
+## Git & Bash Command Restrictions
+
+To keep things safe during autonomous work, certain git and bash commands are blocked by settings.json. Here's what you can and can't do:
+
+### ✅ Safe Commands (Always Allowed)
+
+**Git read-only operations:**
+- `git status` - Check current state
+- `git log` - View commit history
+- `git diff` - See changes
+- `git branch` - List branches
+- `git branch --show-current` - Get current branch name
+
+**Development commands:**
+- `npm run dev` - Start dev server
+- `npm test` - Run tests
+- `npm run build` - Build project
+- `cd app && npm run dev` - Navigate and run commands
+
+**File operations:**
+- All Read, Edit, Write tool operations
+- ESLint via post-tool-use hook
+
+### 🚫 Blocked Commands (Require User Approval)
+
+**Git write operations:**
+- `git commit` - Commits need user review
+- `git push` - Pushing to remote needs approval
+- `git merge` - Merging branches blocked
+- `git rebase` - Rebasing blocked
+- `git checkout` - Branch switching blocked
+- `git reset --hard` - Destructive resets blocked
+- `git branch -d/-D` - Branch deletion blocked
+- `git add -A` / `git add .` - Bulk staging blocked
+
+**Destructive operations:**
+- `rm -rf` - Recursive deletion blocked
+- `sudo` - Elevated privileges blocked
+
+**Environment files:**
+- Reading/writing .env files blocked (use system environment)
+- Reading/writing secrets.* files blocked
+
+### Why These Restrictions Matter
+
+These safeguards let you work fast on experiment branches while preventing:
+- Accidental commits without review
+- Unintended branch switches during multi-branch work
+- Destructive operations that can't be undone
+- Exposure of secrets or credentials
+
+All changes stay local until you review and manually approve them.
+
+### What to Do When Blocked
+
+If you need to run a blocked command:
+1. Explain what you need to do and why
+2. Ask the user to run it manually
+3. Continue with the next step after they confirm
+
+Example: "I need to commit these changes. Please run: `git commit -m 'your message'`"
 
 ## Hooks
 
