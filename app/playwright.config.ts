@@ -19,7 +19,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 // How: Run `npm run test:e2e` (starts dev server automatically)
 
 // Base URL for E2E tests
-const baseURL = process.env.BASE_URL || 'https://localhost';
+const baseURL = process.env.BASE_URL || 'http://localhost:3000';
 
 export default defineConfig({
   // ============================================================================
