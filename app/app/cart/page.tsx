@@ -119,7 +119,7 @@ export default function CartPage() {
   // ========================================================================
   if (!cartId || !cart || cart.items.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-8">
         <PageHeader
           title="Your Cart is Empty"
           description="Nothing here yet, but that's easy to fix!"
@@ -148,7 +148,7 @@ export default function CartPage() {
   const total = cart.total || subtotal + tax;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-8">
       <PageHeader
         title="Almost there!"
         description={`You've got ${itemCount} ${itemCount === 1 ? 'consultation' : 'consultations'} ready to book.`}
@@ -163,7 +163,7 @@ export default function CartPage() {
 
       {/* Unified container with three inner rectangles */}
       <Card hoverEffect="none">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
           {/* Left column - Cart items */}
           <div className="lg:col-span-3 space-y-6">
             {cart.items.map((item) => {
@@ -175,7 +175,7 @@ export default function CartPage() {
               const duration = getDurationLabel(title);
 
               return (
-                <div key={item.id} className={`${dividerColors.border} border rounded-lg p-8 border-l-4 ${leftBorderColors[color]} dark:bg-gray-700/50`}>
+                <div key={item.id} className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 border-l-4 ${leftBorderColors[color]} dark:bg-gray-700/50`}>
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex-grow">
                       {/* Consultation title */}
@@ -244,7 +244,7 @@ export default function CartPage() {
           {/* Right column - Order summary + Info */}
           <div className="lg:col-span-2 space-y-6 lg:self-start lg:sticky lg:top-20">
             {/* Order Summary - Inner rectangle */}
-            <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-800`}>
+            <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-800`}>
               <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                 Order Summary
               </h2>
@@ -292,7 +292,7 @@ export default function CartPage() {
             </div>
 
             {/* What happens next - Inner rectangle */}
-            <div className={`${dividerColors.border} border rounded-lg p-6 ${lightBgColors.blue}`}>
+            <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 ${lightBgColors.blue}`}>
               <p className={`text-sm ${formInputColors.helper}`}>
                 <strong>What happens next?</strong> At checkout, you&apos;ll select your preferred appointment time. We&apos;ll confirm within 24 hours and send you calendar details.
               </p>

@@ -276,7 +276,7 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'confirmation') {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <div className="inline-block p-3 bg-green-100 dark:bg-green-900 rounded-full mb-4">
             <svg
@@ -301,7 +301,7 @@ export default function CheckoutPage() {
         </div>
 
         <Card hoverEffect="none" className="mb-6">
-          <div className="p-8">
+          <div className="p-4 sm:p-6 lg:p-8">
             <div className={`mb-6 pb-6 ${dividerColors.border} border-b`}>
               <p className={`text-sm ${formInputColors.helper} mb-2`}>
                 Order Number
@@ -372,11 +372,11 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'appointment' && appointmentInfo) {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
         <PageHeader title="Schedule Your Consultation" description="Pick a time that works for you" />
 
         <Card hoverEffect="none">
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-8 p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
             {/* Left column - Appointment form */}
             <div className="w-full">
               {/* Error message */}
@@ -397,7 +397,7 @@ export default function CheckoutPage() {
 
             {/* Right column - Order Summary */}
             <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-800`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-800`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Order Summary
                 </h2>
@@ -452,7 +452,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* What happens next */}
-              <div className={`${dividerColors.border} border rounded-lg p-6 ${lightBgColors.blue}`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 ${lightBgColors.blue}`}>
                 <p className={`text-sm ${formInputColors.helper}`}>
                   <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
                 </p>
@@ -469,11 +469,11 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'payment' && clientSecret) {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
         <PageHeader title="Payment" description="Complete your purchase" />
 
         <Card hoverEffect="none">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
             {/* Left column - Payment form */}
             <div className="w-full space-y-6">
               {/* Error message */}
@@ -484,7 +484,7 @@ export default function CheckoutPage() {
               )}
 
               {/* Payment form */}
-              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-700/50`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700/50`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Payment Details
                 </h2>
@@ -512,7 +512,7 @@ export default function CheckoutPage() {
 
             {/* Right column - Order Summary */}
             <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-800`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-800`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Order Summary
                 </h2>
@@ -567,7 +567,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* What happens next */}
-              <div className={`${dividerColors.border} border rounded-lg p-6 ${lightBgColors.blue}`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 ${lightBgColors.blue}`}>
                 <p className={`text-sm ${formInputColors.helper}`}>
                   <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
                 </p>
@@ -583,12 +583,12 @@ export default function CheckoutPage() {
   // Information step (Step 1)
   // ========================================================================
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
       <PageHeader title="Checkout" description="Complete your purchase" />
 
       {itemCount === 0 ? (
         <Card hoverEffect="none">
-          <div className="p-8 text-center">
+          <div className="p-4 sm:p-6 lg:p-8 text-center">
             <p className={`${formInputColors.helper} mb-4`}>
               Your cart is empty.
             </p>
@@ -599,7 +599,7 @@ export default function CheckoutPage() {
         </Card>
       ) : (
         <Card hoverEffect="none">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
             {/* Left column - Checkout form */}
             <form onSubmit={handleInfoSubmit} className="w-full space-y-8">
               {/* Error message */}
@@ -610,7 +610,7 @@ export default function CheckoutPage() {
               )}
 
               {/* Contact Information - Inner rectangle 1 */}
-              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-700/50`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700/50`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Contact Information
                 </h2>
@@ -650,7 +650,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Shipping Information - Inner rectangle 2 */}
-              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-700/50`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700/50`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Shipping Information
                 </h2>
@@ -765,7 +765,7 @@ export default function CheckoutPage() {
 
             {/* Right column - Order Summary */}
             <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              <div className={`${dividerColors.border} border rounded-lg p-8 dark:bg-gray-800`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-800`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Order Summary
                 </h2>
@@ -820,7 +820,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* What happens next */}
-              <div className={`${dividerColors.border} border rounded-lg p-6 ${lightBgColors.blue}`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 ${lightBgColors.blue}`}>
                 <p className={`text-sm ${formInputColors.helper}`}>
                   <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
                 </p>
