@@ -143,3 +143,54 @@ export async function waitForElement(page: Page, selector: string) {
   const element = page.locator(selector);
   await expect(element).toBeVisible();
 }
+
+// ============================================================================
+// Authentication Helpers
+// ============================================================================
+
+/**
+ * Wait for page to be fully ready (DOM + network requests settled)
+ * @param page Playwright page object
+ */
+export async function waitForPageReady(page: Page) {
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForLoadState('networkidle');
+}
+
+/**
+ * Log in as admin user using E2E test credentials
+ * @param page Playwright page object
+ */
+export async function loginAsAdmin(page: Page) {
+  const adminEmail = process.env.E2E_ADMIN_EMAIL;
+  const adminPassword = process.env.E2E_ADMIN_PASSWORD;
+
+  if (!adminEmail || !adminPassword) {
+    throw new Error('E2E_ADMIN_EMAIL and E2E_ADMIN_PASSWORD must be set in .env.local');
+  }
+
+  await page.goto('/login');
+  await fillFormField(page, 'Email', adminEmail);
+  await fillFormField(page, 'Password', adminPassword);
+  await submitForm(page, 'Sign In');
+  await waitForPageReady(page);
+}
+
+/**
+ * Log in as regular user using E2E test credentials
+ * @param page Playwright page object
+ */
+export async function loginAsUser(page: Page) {
+  const userEmail = process.env.E2E_USER_EMAIL;
+  const userPassword = process.env.E2E_USER_PASSWORD;
+
+  if (!userEmail || !userPassword) {
+    throw new Error('E2E_USER_EMAIL and E2E_USER_PASSWORD must be set in .env.local');
+  }
+
+  await page.goto('/login');
+  await fillFormField(page, 'Email', userEmail);
+  await fillFormField(page, 'Password', userPassword);
+  await submitForm(page, 'Sign In');
+  await waitForPageReady(page);
+}
