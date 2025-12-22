@@ -161,6 +161,19 @@ See [README.md](README.md) for:
 - **Deployment architecture** - Vercel, Railway, Supabase, Upstash
 - **Key files** - Where core utilities and clients live
 
+## Terminal Preferences
+
+**Chain commands with `&&`** - When giving terminal commands to run, combine sequential operations into a single line:
+```bash
+# Good
+git checkout main && git merge dev && git push origin main
+
+# Avoid
+git checkout main
+git merge dev
+git push origin main
+```
+
 ## Coding Standards
 
 Follow [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) for:
