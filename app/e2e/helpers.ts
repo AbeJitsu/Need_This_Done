@@ -112,7 +112,8 @@ export async function fillFormField(
  * @param buttonText The text of the submit button
  */
 export async function submitForm(page: Page, buttonText: string) {
-  await page.getByRole('button', { name: buttonText }).click();
+  // Use type='submit' selector to avoid matching OAuth buttons
+  await page.locator('button[type="submit"]').filter({ hasText: buttonText }).click();
   await page.waitForLoadState('domcontentloaded');
 }
 
@@ -151,10 +152,19 @@ export async function waitForElement(page: Page, selector: string) {
 /**
  * Wait for page to be fully ready (DOM + network requests settled)
  * @param page Playwright page object
+ * @param waitForNetwork Whether to wait for network idle (default: false for screenshots)
  */
-export async function waitForPageReady(page: Page) {
+export async function waitForPageReady(page: Page, waitForNetwork: boolean = false) {
   await page.waitForLoadState('domcontentloaded');
-  await page.waitForLoadState('networkidle');
+  if (waitForNetwork) {
+    try {
+      await page.waitForLoadState('networkidle', { timeout: 5000 });
+    } catch {
+      // Ignore timeout - some pages continuously fetch data
+    }
+  }
+  // Wait a bit for rendering to complete
+  await page.waitForTimeout(500);
 }
 
 /**
