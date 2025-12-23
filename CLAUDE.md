@@ -255,3 +255,26 @@ When adding features:
   - Test permission enforcement and access control
 
 See [README.md](README.md) for test commands and [docs/e2e-test-report.md](docs/e2e-test-report.md) for coverage details.
+
+### Visual Regression Screenshots
+
+Screenshots are managed by Playwright's built-in snapshot system. One location, fully automated.
+
+**Location:** `app/e2e/visual-regression/screenshots.spec.ts-snapshots/`
+
+**Update all baselines after UI changes:**
+```bash
+cd app && npx playwright test screenshots.spec.ts --update-snapshots
+```
+
+**Run visual regression tests (compares against baselines):**
+```bash
+cd app && npx playwright test screenshots.spec.ts
+```
+
+**When to update screenshots:**
+- After intentional UI changes (new components, layout changes, color updates)
+- After updating dependencies that affect rendering
+- When CI fails due to expected visual differences
+
+**What gets captured:** All public pages + admin pages, in both light/dark mode, desktop/mobile viewports.
