@@ -13,12 +13,24 @@ import { createClient } from '@supabase/supabase-js';
 // ============================================================================
 // Supabase Admin Client (for user sync)
 // ============================================================================
+// Only created if SUPABASE_SERVICE_ROLE_KEY is set. Google OAuth user sync
+// will be skipped if this client isn't available (users can still sign in,
+// they just won't be auto-synced to Supabase Auth).
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { autoRefreshToken: false, persistSession: false } }
-);
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+const supabaseAdmin = supabaseServiceRoleKey && supabaseUrl
+  ? createClient(supabaseUrl, supabaseServiceRoleKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    })
+  : null;
+
+if (!supabaseAdmin && process.env.NODE_ENV !== 'production') {
+  console.warn(
+    '[auth-options] SUPABASE_SERVICE_ROLE_KEY not set. Google OAuth user sync disabled.'
+  );
+}
 
 // ============================================================================
 // NextAuth Configuration
@@ -137,6 +149,12 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       // Only sync OAuth users (credentials already exist in Supabase)
       if (account?.provider === 'google' && user.email) {
+        // Skip sync if admin client not configured
+        if (!supabaseAdmin) {
+          console.warn('[signIn] Skipping Supabase sync - admin client not configured');
+          return true;
+        }
+
         try {
           // Check if user exists in Supabase Auth
           const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
