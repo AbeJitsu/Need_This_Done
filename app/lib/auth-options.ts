@@ -113,6 +113,8 @@ export const authOptions: NextAuthOptions = {
         token.name = user.name ?? undefined;
         token.picture = user.image ?? undefined;
         token.provider = account?.provider;
+        // Include admin status (set during signIn callback)
+        token.isAdmin = (user as { isAdmin?: boolean }).isAdmin ?? false;
       }
       return token;
     },
@@ -125,6 +127,8 @@ export const authOptions: NextAuthOptions = {
         session.user.email = (token.email as string) || '';
         session.user.name = (token.name as string) || null;
         session.user.image = (token.picture as string) || null;
+        // Include admin status for client-side checks
+        (session.user as { isAdmin?: boolean }).isAdmin = token.isAdmin as boolean ?? false;
       }
       return session;
     },
@@ -157,8 +161,9 @@ export const authOptions: NextAuthOptions = {
               user.id = newUser.user.id;
             }
           } else {
-            // Use existing Supabase user ID
+            // Use existing Supabase user ID and admin status
             user.id = existingUser.id;
+            (user as { isAdmin?: boolean }).isAdmin = existingUser.user_metadata?.is_admin === true;
           }
         } catch (error) {
           // Log but don't block sign-in if Supabase sync fails

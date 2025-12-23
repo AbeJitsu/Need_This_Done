@@ -4,9 +4,13 @@
 // Shared authentication helpers for API routes. These handle the common
 // patterns of verifying users, checking admin status, and validating
 // project access - reducing duplication across route handlers.
+//
+// Supports both Supabase sessions (email/password) and NextAuth sessions (Google OAuth)
 
 import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { authOptions } from '@/lib/auth-options';
 import type { User } from '@supabase/supabase-js';
 
 // ============================================================================
@@ -27,23 +31,50 @@ type ProjectAccessResult = {
 // ============================================================================
 // Verify Authentication
 // ============================================================================
-// Checks if a user is authenticated. Returns the user object on success,
-// or a 401 NextResponse error if not authenticated.
+// Checks if a user is authenticated via Supabase OR NextAuth.
+// Returns the user object on success, or a 401 NextResponse error if not.
+//
+// Priority: Supabase session first (email/password), then NextAuth (Google OAuth)
 
 export async function verifyAuth(): Promise<AuthResult> {
+  // First, try Supabase session (email/password login)
   const supabase = await createSupabaseServerClient();
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  const { data: { user: supabaseUser } } = await supabase.auth.getUser();
 
-  if (userError || !user) {
-    return {
-      error: NextResponse.json(
-        { error: 'Unauthorized. Please sign in.' },
-        { status: 401 }
-      ),
-    };
+  if (supabaseUser) {
+    return { user: supabaseUser };
   }
 
-  return { user };
+  // Fall back to NextAuth session (Google OAuth)
+  const nextAuthSession = await getServerSession(authOptions);
+
+  if (nextAuthSession?.user?.id) {
+    // NextAuth user - construct a compatible User object
+    // The user.id from NextAuth is the Supabase user ID (synced during sign-in)
+    const sessionUser = nextAuthSession.user as { id: string; email?: string | null; name?: string | null; image?: string | null; isAdmin?: boolean };
+    const pseudoUser = {
+      id: sessionUser.id,
+      email: sessionUser.email || undefined,
+      user_metadata: {
+        name: sessionUser.name,
+        avatar_url: sessionUser.image,
+        is_admin: sessionUser.isAdmin ?? false,
+      },
+      app_metadata: {},
+      aud: 'authenticated',
+      created_at: '',
+    } as User;
+
+    return { user: pseudoUser };
+  }
+
+  // No valid session found
+  return {
+    error: NextResponse.json(
+      { error: 'Unauthorized. Please sign in.' },
+      { status: 401 }
+    ),
+  };
 }
 
 // ============================================================================

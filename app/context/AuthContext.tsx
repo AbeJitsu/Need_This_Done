@@ -89,15 +89,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isLoading = sessionStatus === 'loading' || supabaseLoading;
 
   // Determine the active user - NextAuth session takes precedence
-  const user: User | null = session?.user
+  const sessionUser = session?.user as { id?: string; email?: string | null; name?: string | null; image?: string | null; isAdmin?: boolean } | undefined;
+  const user: User | null = sessionUser
     ? {
-        id: (session.user as any).id || session.user.email || '',
-        email: session.user.email || undefined,
-        name: session.user.name || undefined,
-        image: session.user.image || undefined,
+        id: sessionUser.id || sessionUser.email || '',
+        email: sessionUser.email || undefined,
+        name: sessionUser.name || undefined,
+        image: sessionUser.image || undefined,
         user_metadata: {
-          name: session.user.name || undefined,
-          avatar_url: session.user.image || undefined,
+          name: sessionUser.name || undefined,
+          avatar_url: sessionUser.image || undefined,
+          is_admin: sessionUser.isAdmin ?? false,
         },
       }
     : supabaseUser;
