@@ -78,10 +78,16 @@ export default function Footer() {
           </nav>
         </div>
 
-        {/* Bottom row: Tagline + Copyright */}
+        {/* Bottom row: Tagline + Legal + Copyright */}
         <div className={`mt-3 pt-3 border-t ${dividerColors.border} flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-sm ${formInputColors.helper}`}>
           <p>Real people helping busy professionals get things done.</p>
-          <p>&copy; {currentYear} {siteConfig.project.name}</p>
+          <p className="flex items-center gap-2">
+            <Link href="/privacy" className={`${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}>Privacy</Link>
+            <span>·</span>
+            <Link href="/terms" className={`${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}>Terms</Link>
+            <span>·</span>
+            <span>&copy; {currentYear}</span>
+          </p>
         </div>
       </div>
     </footer>

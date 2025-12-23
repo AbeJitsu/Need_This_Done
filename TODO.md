@@ -48,10 +48,10 @@ _Currently active work items_
 
 ### Immediate
 
-**Privacy Policy & Terms of Service Pages** 🔴 REQUIRED FOR GCC
-- [ ] Create `/privacy` page with Privacy Policy content
-- [ ] Create `/terms` page with Terms of Service content
-- [ ] Required for Google Cloud Console production verification
+**Privacy Policy & Terms of Service Pages** ✅ COMPLETE
+- [x] Create `/privacy` page with Privacy Policy content
+- [x] Create `/terms` page with Terms of Service content
+- [x] Required for Google Cloud Console production verification
 
 **Google OAuth Display URL** ✅ COMPLETE
 - [x] Migrated from Supabase OAuth to NextAuth.js for Google Sign-In
