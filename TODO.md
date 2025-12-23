@@ -14,6 +14,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Stripe Payments | ✅ Working | Real payment processing (not mock) |
 | E2E Tests | ✅ 100% | 126/126 passing |
 | Security | ✅ Fixed | All critical issues resolved |
+| Google OAuth | ✅ Working | NextAuth.js shows needthisdone.com (not Supabase URL) |
 | Google Calendar | 🟡 90% | Backend + Admin UI + credentials complete, needs testing |
 | Admin Approval | 🟡 90% | Dashboard + endpoints + credentials done, needs testing |
 | Infrastructure | ✅ Migrated | Vercel hosting live, Digital Ocean shut down |
@@ -47,11 +48,12 @@ _Currently active work items_
 
 ### Immediate
 
-**Google OAuth Display URL** 🟡 PENDING
-- [ ] Google Sign-In currently shows `oxhjtmozsdstbokwtnwa.supabase.co` instead of `needthisdone.com`
-- **Option A:** Supabase Custom Domain ($35/month Pro plan required)
-- **Option B:** Implement direct Google Sign-In (bypass Supabase Auth for OAuth)
-- Decision needed on preferred approach
+**Google OAuth Display URL** ✅ COMPLETE
+- [x] Migrated from Supabase OAuth to NextAuth.js for Google Sign-In
+- [x] Users now see `needthisdone.com` during Google OAuth (not Supabase URL)
+- [x] Email/password auth still uses Supabase Auth (backward compatible)
+- [x] Google OAuth users auto-synced to Supabase Auth (RLS policies work)
+- See README.md Authentication section for implementation details
 
 **Google Cloud Console Setup** ✅ COMPLETE
 - [x] Google Cloud project created
@@ -104,6 +106,24 @@ _Currently active work items_
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
 ### December 2025 - Latest Completions
+
+**NextAuth.js Migration for Google OAuth** ✅ COMPLETE
+- [x] Installed next-auth package
+- [x] Created NextAuth API route (`/api/auth/[...nextauth]`)
+- [x] Configured Google OAuth provider (shows needthisdone.com during sign-in)
+- [x] Added Credentials provider for email/password (uses Supabase Auth)
+- [x] Created hybrid AuthContext (NextAuth session + Supabase fallback)
+- [x] Google OAuth users auto-sync to Supabase Auth (RLS policies work)
+- [x] Added TypeScript type extensions for NextAuth
+- [x] Documented in README.md Authentication section
+
+**Optimistic Cart Updates** ✅ COMPLETE
+- [x] Cart operations now update UI immediately (before server response)
+- [x] Background sync with Medusa API
+- [x] Automatic rollback on failure
+- [x] Added `isSyncing` and `isCartReady` signals for checkout safety
+- [x] Temporary items tracked until server confirmation
+- [x] Documented in README.md Shopping Cart section
 
 **Claude Hooks Cleanup for Autonomous Work** ✅ COMPLETE
 - [x] Evaluated all 4 hooks against autonomous workflow goals

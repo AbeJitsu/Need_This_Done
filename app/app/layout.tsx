@@ -3,6 +3,7 @@ import { Inter, Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import SessionProvider from '@/components/providers/SessionProvider';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { StripeProvider } from '@/context/StripeContext';
@@ -111,6 +112,7 @@ export default function RootLayout({
         />
       </head>
       <body className="transition-colors duration-0">
+        <SessionProvider>
         <AuthProvider>
           <CartProvider>
             <StripeProvider>
@@ -146,6 +148,7 @@ export default function RootLayout({
             </StripeProvider>
           </CartProvider>
         </AuthProvider>
+        </SessionProvider>
       </body>
     </html>
   );

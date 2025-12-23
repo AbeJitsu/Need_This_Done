@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { onAuthStateChange } from '@/lib/auth';
 
 // ============================================================================
@@ -9,12 +10,17 @@ import { onAuthStateChange } from '@/lib/auth';
 // This context makes the current user's information available to any component.
 // Components can check if a user is logged in, get their email/ID, etc.
 // without having to pass props all the way down the component tree.
+//
+// HYBRID AUTH: Supports both NextAuth (Google OAuth) and Supabase (email/password)
 
 interface User {
   id: string;
   email?: string;
+  name?: string;
+  image?: string;
   user_metadata?: {
     name?: string;
+    is_admin?: boolean;
     [key: string]: any;
   };
 }
@@ -34,41 +40,67 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // ============================================================================
 // Wrap your app with this provider to enable auth context everywhere.
 // Typically placed in the root layout or a top-level component.
+//
+// Checks both NextAuth session (for Google OAuth) and Supabase auth
+// (for email/password users). NextAuth takes precedence if both exist.
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // NextAuth session
+  const { data: session, status: sessionStatus } = useSession();
+
+  // Supabase auth state (for email/password fallback)
+  const [supabaseUser, setSupabaseUser] = useState<User | null>(null);
+  const [supabaseLoading, setSupabaseLoading] = useState(true);
 
   useEffect(() => {
     // ====================================================================
-    // Listen for Auth State Changes
+    // Listen for Supabase Auth State Changes
     // ====================================================================
-    // When the user logs in or out, update the context.
-    // This keeps the UI in sync with the actual auth state.
+    // For users who signed in with email/password through Supabase
 
     const unsubscribe = onAuthStateChange((authUser) => {
       if (authUser) {
-        setUser({
+        setSupabaseUser({
           id: authUser.id,
           email: authUser.email,
+          name: authUser.user_metadata?.name,
           user_metadata: authUser.user_metadata,
         });
       } else {
-        setUser(null);
+        setSupabaseUser(null);
       }
-      setIsLoading(false);
+      setSupabaseLoading(false);
     });
 
     // ====================================================================
     // Cleanup
     // ====================================================================
-    // When the component unmounts, stop listening for changes
     return () => {
       if (unsubscribe) {
         unsubscribe();
       }
     };
   }, []);
+
+  // ============================================================================
+  // Merge Auth Sources - NextAuth takes precedence
+  // ============================================================================
+
+  const isLoading = sessionStatus === 'loading' || supabaseLoading;
+
+  // Determine the active user - NextAuth session takes precedence
+  const user: User | null = session?.user
+    ? {
+        id: (session.user as any).id || session.user.email || '',
+        email: session.user.email || undefined,
+        name: session.user.name || undefined,
+        image: session.user.image || undefined,
+        user_metadata: {
+          name: session.user.name || undefined,
+          avatar_url: session.user.image || undefined,
+        },
+      }
+    : supabaseUser;
 
   // ============================================================================
   // Derive Admin Status and Role from User Metadata

@@ -15,6 +15,7 @@ A professional services platform built with Next.js, deployed on Vercel with Med
 - [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
 - [Caching Strategy](#caching-strategy)
 - [Email Notifications](#email-notifications)
+- [Authentication](#authentication)
 - [Testing](#testing)
 - [Troubleshooting](#troubleshooting)
 - [Design System](#design-system)
@@ -376,16 +377,59 @@ User clicks "Add to Cart"
       ↓
 CartContext.addItem(variant_id, quantity)
       ↓
+┌─────────────────────────────────────┐
+│ OPTIMISTIC UPDATE (instant)        │
+│ UI shows item immediately          │
+│ Cart badge updates, toast appears  │
+└─────────────────────────────────────┘
+      ↓ (background)
 POST /api/cart/{cartId}/items
       ↓
 POST {MEDUSA_BACKEND_URL}/store/carts/{cartId}/line-items
       ↓
-Medusa returns updated cart
-      ↓
-CartContext updates state + localStorage
-      ↓
-UI updates: badge shows item count, success toast appears
+┌─────────────────────────────────────┐
+│ Server confirms or rollback        │
+│ Success: Replace temp with real ID │
+│ Failure: Restore previous state    │
+└─────────────────────────────────────┘
 ```
+
+### Optimistic Updates
+
+Cart operations update the UI **immediately**, then sync with the server in the background. This makes the cart feel instant even with network latency.
+
+**How it works:**
+
+1. **User clicks "Add to Cart"** → UI updates instantly with temporary item
+2. **Background sync** → Request sent to Medusa API
+3. **Server response** → Replace optimistic data with server response
+4. **On failure** → Rollback to previous state, show error
+
+**Cart Context signals:**
+
+| Signal | Meaning |
+|--------|---------|
+| `isSyncing` | Background sync in progress |
+| `isCartReady` | Cart synced, safe for checkout |
+| `hasTemporaryItems` | Items pending server confirmation |
+
+**Usage:**
+
+```typescript
+const { addItem, isSyncing, isCartReady } = useCart();
+
+// UI responds instantly
+await addItem(variantId, quantity, {
+  title: product.title,
+  unit_price: price,
+  thumbnail: image,
+});
+
+// Disable checkout while syncing
+<Button disabled={!isCartReady}>Proceed to Checkout</Button>
+```
+
+**Rollback behavior:** If the server request fails, the cart automatically restores to its previous state and displays an error message. No manual intervention needed.
 
 ### Medusa API Endpoints
 
@@ -620,6 +664,106 @@ React Email templates are in `app/emails/`:
 # Send all email types to verify they work
 cd app && npm run test:emails
 ```
+
+---
+
+## Authentication
+
+### How It Works
+
+Authentication uses a **hybrid approach** combining NextAuth.js (for Google OAuth) and Supabase Auth (for email/password):
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    User Sign-In                         │
+└───────────────────────┬─────────────────────────────────┘
+                        │
+        ┌───────────────┴───────────────┐
+        │                               │
+┌───────▼───────┐              ┌────────▼────────┐
+│ Google OAuth  │              │ Email/Password  │
+│  (NextAuth)   │              │   (Supabase)    │
+└───────┬───────┘              └────────┬────────┘
+        │                               │
+        │  Creates/links user           │ Verifies via
+        │  in Supabase Auth             │ Supabase Auth API
+        │                               │
+        └───────────────┬───────────────┘
+                        │
+              ┌─────────▼─────────┐
+              │  AuthContext      │
+              │  (unified state)  │
+              └───────────────────┘
+```
+
+**Why this design:**
+- **Google OAuth via NextAuth** → Users see `needthisdone.com` during sign-in (not a third-party URL)
+- **Email/password via Supabase** → Existing password auth continues to work
+- **User sync** → Google users are synced to Supabase Auth so RLS policies work
+- **Single AuthContext** → Frontend has one source of truth for auth state
+
+### Configuration
+
+**Required environment variables:**
+
+```bash
+# NextAuth (for Google OAuth)
+NEXTAUTH_URL=https://needthisdone.com
+NEXTAUTH_SECRET=your-secret-key  # Generate with: openssl rand -base64 32
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+
+# Supabase (for email/password and database)
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...  # For user sync
+```
+
+**Google Cloud Console setup:**
+1. Create project at [console.cloud.google.com](https://console.cloud.google.com)
+2. Enable Google+ API
+3. Create OAuth 2.0 credentials
+4. Add authorized redirect URI: `https://needthisdone.com/api/auth/callback/google`
+
+### Usage
+
+```typescript
+// Sign in with Google
+import { signIn } from 'next-auth/react';
+await signIn('google', { callbackUrl: '/dashboard' });
+
+// Sign in with email/password (uses Supabase)
+import { signIn } from 'next-auth/react';
+await signIn('credentials', { email, password, callbackUrl: '/dashboard' });
+
+// Get current user in components
+import { useAuth } from '@/context/AuthContext';
+const { user, isAuthenticated, isLoading, logout } = useAuth();
+
+// Protected API routes
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth-options';
+
+export async function GET(request: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+  // ... authenticated logic
+}
+```
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `app/lib/auth-options.ts` | NextAuth configuration (providers, callbacks) |
+| `app/api/auth/[...nextauth]/route.ts` | NextAuth API route handler |
+| `app/context/AuthContext.tsx` | Unified auth state (NextAuth + Supabase) |
+| `app/components/providers/SessionProvider.tsx` | NextAuth session wrapper |
+| `app/types/next-auth.d.ts` | TypeScript type extensions |
 
 ---
 
@@ -1116,7 +1260,8 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
 | File | Purpose |
 |------|---------|
 | `app/lib/colors.ts` | All color definitions |
-| `app/lib/auth.ts` | Authentication logic |
+| `app/lib/auth.ts` | Authentication utilities (legacy) |
+| `app/lib/auth-options.ts` | NextAuth configuration (Google OAuth + Credentials) |
 | `app/lib/supabase.ts` | Supabase client setup |
 | `app/lib/redis.ts` | Redis cache client |
 | `app/lib/medusa-client.ts` | Medusa API wrapper |

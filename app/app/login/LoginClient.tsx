@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { signIn } from 'next-auth/react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import {
@@ -136,35 +137,19 @@ export default function LoginClient() {
   };
 
   // ============================================================================
-  // Handle Google Sign-In
+  // Handle Google Sign-In (via NextAuth)
   // ============================================================================
+  // Uses NextAuth for Google OAuth so users see needthisdone.com in the
+  // Google consent screen instead of the Supabase URL.
 
   const handleGoogleSignIn = async () => {
     setIsSubmitting(true);
     setError('');
 
     try {
-      // Use environment variable for consistent redirect URL
-      // Falls back to window.location.origin if not set
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||
-                      (typeof window !== 'undefined' ? window.location.origin : '');
-
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${siteUrl}/auth/callback`,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
-        },
-      });
-
-      if (error) {
-        setError(error.message);
-        setIsSubmitting(false);
-      }
-      // If successful, Supabase will redirect to Google login
+      // NextAuth handles the OAuth flow - redirects to Google then back to our domain
+      await signIn('google', { callbackUrl: '/dashboard' });
+      // Note: signIn redirects, so code after this won't execute on success
     } catch (err) {
       setError('Failed to sign in with Google');
       setIsSubmitting(false);
