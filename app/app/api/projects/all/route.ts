@@ -60,7 +60,8 @@ export async function GET(request: NextRequest) {
         const { data: projects, error } = await query;
 
         if (error) {
-          throw new Error('Failed to load projects');
+          console.error('[Projects all] Supabase query error:', JSON.stringify(error));
+          throw new Error(`Failed to load projects: ${error.message}`);
         }
 
         return projects || [];
