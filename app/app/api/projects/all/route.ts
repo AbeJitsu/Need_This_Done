@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import { verifyAdmin } from '@/lib/api-auth';
 import { handleApiError } from '@/lib/api-errors';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
@@ -34,8 +34,9 @@ export async function GET(request: NextRequest) {
     // ========================================================================
     // Cache status filters, but bypass cache for email searches (less common)
     // TTL: 60 seconds
+    // Uses admin client to bypass RLS (user already verified as admin above)
 
-    const supabase = await createSupabaseServerClient();
+    const supabaseAdmin = getSupabaseAdmin();
 
     // Build cache key based on status filter (email searches bypass cache)
     const cacheKey = CACHE_KEYS.adminProjects(status || undefined);
@@ -43,7 +44,7 @@ export async function GET(request: NextRequest) {
     const result = await cache.wrap(
       cacheKey,
       async () => {
-        let query = supabase
+        let query = supabaseAdmin
           .from('projects')
           .select('*')
           .order('created_at', { ascending: false });
