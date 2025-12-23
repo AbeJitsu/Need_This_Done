@@ -14,7 +14,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Stripe Payments | ✅ Working | Real payment processing (not mock) |
 | E2E Tests | ✅ 100% | 126/126 passing |
 | Security | ✅ Fixed | All critical issues resolved |
-| Google OAuth | ✅ Working | NextAuth.js shows needthisdone.com (not Supabase URL) |
+| Google OAuth | 🟡 90% | NextAuth.js code complete, needs GCC setup |
 | Google Calendar | 🟡 90% | Backend + Admin UI + credentials complete, needs testing |
 | Admin Approval | 🟡 90% | Dashboard + endpoints + credentials done, needs testing |
 | Infrastructure | ✅ Migrated | Vercel hosting live, Digital Ocean shut down |
