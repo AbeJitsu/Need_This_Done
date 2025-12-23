@@ -48,6 +48,11 @@ _Currently active work items_
 
 ### Immediate
 
+**Privacy Policy & Terms of Service Pages** 🔴 REQUIRED FOR GCC
+- [ ] Create `/privacy` page with Privacy Policy content
+- [ ] Create `/terms` page with Terms of Service content
+- [ ] Required for Google Cloud Console production verification
+
 **Google OAuth Display URL** ✅ COMPLETE
 - [x] Migrated from Supabase OAuth to NextAuth.js for Google Sign-In
 - [x] Users now see `needthisdone.com` during Google OAuth (not Supabase URL)
