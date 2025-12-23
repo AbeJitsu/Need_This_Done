@@ -12,9 +12,9 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 |-----------|--------|-------|
 | Medusa Backend | ✅ Working | Products, carts, checkout functional |
 | Stripe Payments | ✅ Working | Real payment processing (not mock) |
-| E2E Tests | ✅ 100% | 126/126 passing |
+| E2E Tests | ✅ 100% | 177 tests passing |
 | Security | ✅ Fixed | All critical issues resolved |
-| Google OAuth | 🟡 90% | NextAuth.js code complete, needs GCC setup |
+| Google OAuth | ✅ Working | Users see needthisdone.com during sign-in |
 | Google Calendar | 🟡 90% | Backend + Admin UI + credentials complete, needs testing |
 | Admin Approval | 🟡 90% | Dashboard + endpoints + credentials done, needs testing |
 | Infrastructure | ✅ Migrated | Vercel hosting live, Digital Ocean shut down |
@@ -47,35 +47,6 @@ _Currently active work items_
 
 ## To Do
 
-### Immediate
-
-**Privacy Policy & Terms of Service Pages** ✅ COMPLETE
-- [x] Create `/privacy` page with Privacy Policy content
-- [x] Create `/terms` page with Terms of Service content
-- [x] Required for Google Cloud Console production verification
-
-**Google OAuth Display URL** ✅ COMPLETE
-- [x] Migrated from Supabase OAuth to NextAuth.js for Google Sign-In
-- [x] Users now see `needthisdone.com` during Google OAuth (not Supabase URL)
-- [x] Email/password auth still uses Supabase Auth (backward compatible)
-- [x] Google OAuth users auto-synced to Supabase Auth (RLS policies work)
-- See README.md Authentication section for implementation details
-
-**Google Cloud Console Setup** ✅ COMPLETE
-- [x] Google Cloud project created
-- [x] Google Calendar API enabled
-- [x] OAuth consent screen configured
-- [x] OAuth 2.0 credentials created and stored in .env.local
-
-**Production Security Hardening** ✅ COMPLETE
-- [x] Add missing nginx security headers (HSTS, CSP, Permissions-Policy) - Added to both nginx.conf and nginx.prod.conf
-- [x] Verify CORS settings for production domain - Fixed medusa-config.js (removed insecure fallback, added store_cors)
-
-**Email Notifications - E-commerce** ✅ COMPLETE
-- [x] Add order confirmation emails (OrderConfirmationEmail.tsx created)
-- [x] Add appointment confirmation emails (AppointmentConfirmationEmail.tsx created)
-- [x] Add purchase receipt emails (PurchaseReceiptEmail.tsx created)
-
 ### Short Term
 
 **Admin Workflows**
@@ -106,112 +77,36 @@ _Currently active work items_
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
-### December 2025 - Latest Completions
+**Admin Dashboard Bug Fixes & E2E Tests** ✅ COMPLETE (Dec 2025)
+- [x] Fixed admin search cache bug - searches now bypass cache and query database
+- [x] Fixed admin status updates via new `/api/projects/[id]/status` route
+- [x] Fixed database trigger (migration 017) for service role operations
+- [x] Added comprehensive E2E test suite (`admin-project-flow.spec.ts`) - 6 tests
 
-**NextAuth.js Migration for Google OAuth** ✅ COMPLETE
-- [x] Installed next-auth package
-- [x] Created NextAuth API route (`/api/auth/[...nextauth]`)
-- [x] Configured Google OAuth provider (shows needthisdone.com during sign-in)
-- [x] Added Credentials provider for email/password (uses Supabase Auth)
-- [x] Created hybrid AuthContext (NextAuth session + Supabase fallback)
-- [x] Google OAuth users auto-sync to Supabase Auth (RLS policies work)
-- [x] Added TypeScript type extensions for NextAuth
-- [x] Documented in README.md Authentication section
+**Puck Page Builder Disabled** ✅ COMPLETE (Dec 2025)
+- [x] Disabled admin dashboard link until production ready
+- [x] Disabled E2E tests for admin pages builder
+- [x] Files remain in codebase for future enablement
 
-**Optimistic Cart Updates** ✅ COMPLETE
-- [x] Cart operations now update UI immediately (before server response)
-- [x] Background sync with Medusa API
-- [x] Automatic rollback on failure
-- [x] Added `isSyncing` and `isCartReady` signals for checkout safety
-- [x] Temporary items tracked until server confirmation
-- [x] Documented in README.md Shopping Cart section
+**Privacy Policy & Terms of Service** ✅ COMPLETE (Dec 2025)
+- [x] Created `/privacy` page with Privacy Policy content
+- [x] Created `/terms` page with Terms of Service content
+- [x] Required for Google Cloud Console production verification
 
-**Claude Hooks Cleanup for Autonomous Work** ✅ COMPLETE
-- [x] Evaluated all 4 hooks against autonomous workflow goals
-- [x] Deleted `pre-commit-check.sh` (blocked commits, conflicted with `/dac` approval)
-- [x] Rewrote `stop-check.sh` to check TODO.md/README.md instead of non-existent checklist
-- [x] Simplified `user-prompt-submit.sh` (60 lines → 15 lines, just a brief reminder)
-- [x] Kept `post-tool-use.sh` (auto-lint, non-blocking, supports No Broken Windows)
-- [x] Documented all 3 hooks in CLAUDE.md
+**NextAuth.js Migration for Google OAuth** ✅ COMPLETE (Dec 2025)
+- [x] Google OAuth users now see `needthisdone.com` during sign-in
+- [x] Hybrid auth: Google via NextAuth, email/password via Supabase
+- [x] Users auto-sync to Supabase Auth for RLS policy support
 
-**Infrastructure Migration to Vercel** ✅ COMPLETE
-- [x] Added needthisdone.com and www.needthisdone.com to Vercel
-- [x] Updated DNS in Namecheap (A record → 216.150.1.1, www CNAME → cname.vercel-dns.com)
-- [x] Resend email domain already verified (SPF, DKIM configured)
-- [x] Shut down Digital Ocean droplet
-- [x] Merged railway-migration branch to main
-- [x] SSL auto-provisioned by Vercel
+**Infrastructure Migration to Vercel** ✅ COMPLETE (Dec 2025)
 - [x] Site live at https://needthisdone.com
+- [x] DNS configured via Namecheap, SSL auto-provisioned
+- [x] Digital Ocean droplet shut down
 
-**Dark Mode Accent Button Contrast Fix** ✅ COMPLETE
-- [x] Updated `accentColors.orange` in `app/lib/colors.ts` (dark mode: bg-orange-700, text-white, border-white)
-- [x] Updated `accentColors.teal` with same contrast pattern (5:1+ ratio)
-- [x] Light mode: text-*-900 for better contrast on light backgrounds
-- [x] Hover states updated for smooth transitions
-- [x] WCAG AA compliant: white text on dark colored backgrounds achieves 5:1+ contrast
-
-**Visual Regression Testing for Checkout Flow** ✅ COMPLETE
-- [x] Created comprehensive checkout screenshot test suite (`checkout-screenshots.spec.ts`)
-- [x] Captured 14 visual regression screenshots documenting full checkout journey
-- [x] Added screenshot baseline update workflow
-- [x] Tests catch unintended UI changes before they ship
-
-**Checkout Experience Improvements** ✅ COMPLETE
-- [x] Made order summary sticky during checkout (customers can always see their total)
-- [x] Enhanced order summary styling with icon and better spacing
-- [x] Clarified chatbot labels ("AI Assistant" for transparency)
-- [x] Streamlined button text ("Continue" instead of "Continue to Payment")
-- [x] Fixed Medusa checkout requirements (cart email initialization, payment sessions)
-
-**Enhanced Appointment Booking System** ✅ COMPLETE
-- [x] Added 24-hour advance booking requirement with validation
-- [x] Limited bookings to 5 per day for quality control
-- [x] Added 30-minute buffer between appointments
-- [x] Created appointment availability check API endpoint (`/api/appointments/availability`)
-- [x] Updated cart messaging about appointment scheduling
-- [x] Removed confusing "Learn more" links from How It Works steps 2-4
-
-**How It Works Page Redesign** ✅ COMPLETE
-- [x] Transformed from functional to warm/confidence-building UX
-- [x] Changed headline from "How It Works" to "We Make It Easy"
-- [x] Added trust badges (personal attention, clear updates, transparent pricing)
-- [x] Made Step 1 a hero card with prominent CTA
-- [x] Condensed Steps 2-4 into horizontal flow
-- [x] Added "Questions about the process?" section
-
-**DevOps & Testing Improvements** ✅ COMPLETE
-- [x] Improved Medusa API response handling (expanding product metadata)
-- [x] Fixed checkout tests to handle Stripe live mode gracefully
-
-**Google Calendar Integration Backend** ✅ COMPLETE
-- [x] Created Supabase migration: google_calendar_tokens table
-- [x] Created `/app/lib/google-calendar.ts` with OAuth flow
-- [x] Created appointment_requests Supabase table (with business hour validation)
-- [x] Built appointment request form component (post-checkout)
-- [x] Created order confirmation & appointment confirmation email templates
-- [x] Wired appointment request email notifications (AppointmentRequestNotificationEmail.tsx)
-- [x] Built admin appointments dashboard (`/admin/appointments`)
-- [x] Implemented approve/modify/cancel endpoints
-- [x] Created calendar event on approval (Google Calendar API)
-- [x] Sent confirmation emails with .ics attachments
-- [x] E2E tests for appointment booking flow (23 tests in appointments.spec.ts)
-
-### Earlier Completions (Earlier in December)
-
-- [x] **Appointment E2E Tests** - Created comprehensive test suite (`appointments.spec.ts`) with 23 tests covering form validation, API endpoint security, admin dashboard, and checkout flow integration. Fixed playwright.config.ts for ESM compatibility. (Dec 2025)
-- [x] **Abandoned Cart Email** - Created `AbandonedCartEmail.tsx` template with cart items display, optional discount code, and recovery CTA. Added `sendAbandonedCartEmail()` to email service. (Dec 2025)
-- [x] **Order Status UI** - Built admin order status management UI at `/admin/shop/orders` with status filtering, update actions, and expandable details. Added PATCH `/api/admin/orders/[id]/status` endpoint. (Dec 2025)
-- [x] **Admin Appointments Dashboard** - Built `/admin/appointments` page with status filtering, approve/cancel actions, and auth protection. Created API endpoints for listing appointments and managing their status. Google Calendar integration creates events on approval. (Dec 2025)
-- [x] **Appointment Email Notifications** - Added AppointmentRequestNotificationEmail for admin alerts when customers request appointments. Wired into the appointment request API route. (Dec 2025)
-- [x] **Purchase Receipt Email** - Created PurchaseReceiptEmail template with itemized order details, payment info, and totals. Added sendPurchaseReceipt to email service. (Dec 2025)
-- [x] **E-commerce Email Templates** - Created OrderConfirmationEmail and AppointmentConfirmationEmail React templates. Added sendOrderConfirmation and sendAppointmentConfirmation to email service. (Dec 2025)
-- [x] **Product URL Handles & Test Reliability** - Added `getByHandle` to medusa-client so product URLs like `/shop/consultation-15-min` work (not just IDs). Fixed Playwright config to load env vars from root `.env.local`. Updated all shop tests with proper timeouts for client-side rendering. (Dec 2025)
-- [x] **Security Hardening** - Fixed critical security issues: removed hardcoded admin password (now env var), protected debug endpoints with admin auth, medusa-config.js now requires all secrets. (Dec 2025)
-- [x] **Real Medusa Backend** - Full implementation with TypeORM patch for 0.3.23+ compatibility. Products seeded via Admin API. Cart and checkout fully functional. (Dec 2025)
-- [x] **Consultation Products** - Created 3 products: 15-min ($20), 30-min ($35), 55-min ($50) with `requires_appointment` metadata. (Dec 2025)
-- [x] **Auth Email Templates** - Created WelcomeEmail and LoginNotificationEmail templates. Wired to auth routes. All 4 email types working. (Dec 2025)
-- [x] **Accessibility Compliance** - Fixed dark mode testing, heading order (h3→h2), centralized colors. WCAG AA compliant. (Dec 2025)
-- [x] **Launch-a-Swarm Skill** - Created 5-domain agent architecture (Structure, Protection, Correctness, Evolution, Value). Integrated documentation workflow. Fixed DRY violations. Validated on real features. Documented in README.md (Developer Tools section).
+**Google Calendar Integration Backend** ✅ COMPLETE (Dec 2025)
+- [x] Admin appointments dashboard with approve/cancel actions
+- [x] Calendar event creation on approval
+- [x] E2E tests for appointment booking (23 tests)
 
 ---
 

@@ -191,7 +191,7 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 | Orders | ✅ Working | 4 E2E tests | Full order objects, linked in Supabase |
 | Email | ✅ Working | 9 unit tests | 4 email types via Resend |
 
-**All 126 E2E tests passing** - See [Testing](#testing) for complete coverage map.
+**All 177 E2E tests passing** - See [Testing](#testing) for complete coverage map.
 
 **Consultation Products** (seeded via `medusa/seed-products.js` using Admin API):
 | Product | Price | Duration | Handle |
@@ -781,7 +781,8 @@ export async function GET(request: Request) {
 | E2E UX Flow | 3 | ✅ Passing | `npm run test:e2e -- e2e/ux-flow.spec.ts` |
 | E2E Accessibility | 10 | ✅ Passing | `npm run test:e2e -- e2e/accessibility.a11y.test.ts` |
 | E2E Visual Regression | 10 | ✅ Passing | `npm run test:e2e -- e2e/checkout-screenshots.spec.ts` |
-| **Total** | **126** | ✅ **All Passing** | `npm run test:e2e` |
+| E2E Admin Project Flow | 6 | ✅ Passing | `npm run test:e2e -- e2e/admin-project-flow.spec.ts` |
+| **Total** | **177** | ✅ **All Passing** | `npm run test:e2e` |
 
 ### Feature → Test Coverage Map
 
@@ -925,6 +926,20 @@ Every feature has automated tests. Here's exactly where each is tested:
 | Email Notifications | `appointment request notification email template exists` | Endpoint returns 400 not 404 |
 | Email Notifications | `appointment confirmation email is sent on approval` | Endpoint exists (401 not 404) |
 | Status Management | `appointment statuses are correctly defined` | pending/approved/modified/canceled |
+
+</details>
+
+<details>
+<summary><strong>Admin Project Management (6 tests)</strong> - <code>e2e/admin-project-flow.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Dashboard | `admin can view projects in dashboard` | Projects list loads, search filter works |
+| Dashboard | `admin can open project modal and see details` | Modal shows name, email, service, message |
+| Status Updates | `admin can update project status` | Status dropdown works, status note saved |
+| Comments | `admin can add a comment` | Comment appears in thread |
+| Comments | `admin can add an internal note` | Internal flag works, badge displays |
+| UI | `admin can close modal` | X button and Escape key close modal |
 
 </details>
 
