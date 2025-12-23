@@ -56,15 +56,21 @@ export const getSession = async () => {
 // ============================================================================
 // Sign Out / Log Out
 // ============================================================================
-// Clear the user's session and log them out
+// Clear the user's session and log them out.
+// Handles both Supabase sessions (email/password) and NextAuth sessions (Google OAuth).
 export const signOut = async () => {
   try {
+    // Sign out from Supabase (for email/password users)
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      console.error('Error signing out:', error);
-      return false;
+      console.error('Error signing out from Supabase:', error);
     }
+
+    // Sign out from NextAuth (for Google OAuth users)
+    // Import dynamically to avoid bundling issues on server
+    const { signOut: nextAuthSignOut } = await import('next-auth/react');
+    await nextAuthSignOut({ redirect: false });
 
     return true;
   } catch (err) {
