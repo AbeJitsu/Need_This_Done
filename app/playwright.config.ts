@@ -105,9 +105,11 @@ export default defineConfig({
     ? {}
     : {
         webServer: {
-          command: 'npm run dev',
+          // SKIP_CACHE=true disables Redis caching during E2E tests
+          // This prevents stale cache issues when tests create/modify data
+          command: 'SKIP_CACHE=true npm run dev',
           url: 'http://localhost:3000',
-          reuseExistingServer: true,
+          reuseExistingServer: false, // Always start fresh server with SKIP_CACHE
           timeout: 120 * 1000,
         },
       }),

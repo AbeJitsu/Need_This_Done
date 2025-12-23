@@ -1,27 +1,27 @@
 {
   "header_title": "Find Your Perfect Fit",
-  "header_description": "Not sure which service you need? You're in the right place. Let's figure it out together—no pressure, no tech speak, just helpful guidance.",
+  "header_description": "Not sure which service you need? You're in the right place. Let's figure it out together. No pressure, no tech speak, just helpful guidance.",
   "service_cards": [
     {
-      "title": "Clear Communication",
+      "title": "Virtual Assistant",
       "tagline": "",
-      "description": "We keep you informed every step of the way. No surprises.",
+      "description": "Best for",
       "details": ""
     },
     {
-      "title": "Quality Work",
+      "title": "Virtual Assistant",
       "tagline": "",
-      "description": "We take pride in delivering work you can rely on.",
+      "description": "",
       "details": ""
     },
     {
-      "title": "Timely Delivery",
+      "title": "",
       "tagline": "",
-      "description": "We respect your deadlines and deliver on time.",
+      "description": "Best for",
       "details": ""
     }
   ],
   "expectations_title": "What You Can Expect",
   "expectations": [],
-  "cta_title": "Ready to Get Started?"
+  "cta_title": "What You Can Expect"
 }

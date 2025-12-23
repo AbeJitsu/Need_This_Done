@@ -20,6 +20,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Infrastructure | ✅ Migrated | Vercel hosting live, Digital Ocean shut down |
 | DNS | ✅ Configured | needthisdone.com → Vercel via Namecheap |
 | Email (Resend) | ✅ Working | hello@needthisdone.com verified |
+| Puck Page Builder | ⛔ Disabled | Not production ready - see Disabled Features |
 
 ### Critical Security Issues ✅ RESOLVED
 
@@ -91,11 +92,6 @@ _Currently active work items_
 - [ ] Optimize product queries with pagination
 
 ### Long Term
-
-**Tier 2 Puck Components**
-- [ ] ServiceCard, PricingCard, StepCard components in Puck
-- [ ] Gallery components
-- [ ] Forms with submission handling
 
 **Advanced Ecommerce Features**
 - [ ] Abandoned cart recovery emails
@@ -216,6 +212,20 @@ _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 - [x] **Auth Email Templates** - Created WelcomeEmail and LoginNotificationEmail templates. Wired to auth routes. All 4 email types working. (Dec 2025)
 - [x] **Accessibility Compliance** - Fixed dark mode testing, heading order (h3→h2), centralized colors. WCAG AA compliant. (Dec 2025)
 - [x] **Launch-a-Swarm Skill** - Created 5-domain agent architecture (Structure, Protection, Correctness, Evolution, Value). Integrated documentation workflow. Fixed DRY violations. Validated on real features. Documented in README.md (Developer Tools section).
+
+---
+
+## Disabled Features
+
+Features that are implemented but not production-ready:
+
+**Puck Page Builder** (Dec 2025)
+- Visual page builder using Puck.js library
+- Admin UI commented out in `AdminDashboard.tsx`
+- E2E tests for `/admin/pages` disabled in `screenshots.spec.ts`
+- Files remain in codebase (`app/admin/pages/`, `lib/puck-config.tsx`, `app/[slug]/page.tsx`)
+- Reason: Needs more testing and polish before production use
+- To re-enable: uncomment the Link in AdminDashboard.tsx and re-enable tests
 
 ---
 

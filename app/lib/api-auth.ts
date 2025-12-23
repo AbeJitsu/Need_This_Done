@@ -39,7 +39,14 @@ type ProjectAccessResult = {
 export async function verifyAuth(): Promise<AuthResult> {
   // First, try Supabase session (email/password login)
   const supabase = await createSupabaseServerClient();
-  const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+  const { data: { user: supabaseUser }, error: supabaseError } = await supabase.auth.getUser();
+
+  console.log('[verifyAuth] Supabase check:', JSON.stringify({
+    hasUser: !!supabaseUser,
+    userId: supabaseUser?.id,
+    userEmail: supabaseUser?.email,
+    error: supabaseError?.message,
+  }));
 
   if (supabaseUser) {
     return { user: supabaseUser };
