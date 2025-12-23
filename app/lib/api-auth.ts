@@ -49,6 +49,15 @@ export async function verifyAuth(): Promise<AuthResult> {
   try {
     const nextAuthSession = await getServerSession(authOptions);
 
+    // Debug logging - remove after fixing
+    console.log('[verifyAuth] NextAuth session:', JSON.stringify({
+      hasSession: !!nextAuthSession,
+      hasUser: !!nextAuthSession?.user,
+      userId: nextAuthSession?.user?.id,
+      userEmail: nextAuthSession?.user?.email,
+      isAdmin: (nextAuthSession?.user as { isAdmin?: boolean })?.isAdmin,
+    }));
+
     if (nextAuthSession?.user?.id) {
       // NextAuth user - construct a compatible User object
       // The user.id from NextAuth is the Supabase user ID (synced during sign-in)
