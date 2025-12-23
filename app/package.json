@@ -43,6 +43,7 @@
     "redis": "^4.6.0",
     "resend": "^3.0.0",
     "stripe": "^20.0.0",
+    "svix": "^1.82.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {
