@@ -46,26 +46,31 @@ export async function verifyAuth(): Promise<AuthResult> {
   }
 
   // Fall back to NextAuth session (Google OAuth)
-  const nextAuthSession = await getServerSession(authOptions);
+  try {
+    const nextAuthSession = await getServerSession(authOptions);
 
-  if (nextAuthSession?.user?.id) {
-    // NextAuth user - construct a compatible User object
-    // The user.id from NextAuth is the Supabase user ID (synced during sign-in)
-    const sessionUser = nextAuthSession.user as { id: string; email?: string | null; name?: string | null; image?: string | null; isAdmin?: boolean };
-    const pseudoUser = {
-      id: sessionUser.id,
-      email: sessionUser.email || undefined,
-      user_metadata: {
-        name: sessionUser.name,
-        avatar_url: sessionUser.image,
-        is_admin: sessionUser.isAdmin ?? false,
-      },
-      app_metadata: {},
-      aud: 'authenticated',
-      created_at: '',
-    } as User;
+    if (nextAuthSession?.user?.id) {
+      // NextAuth user - construct a compatible User object
+      // The user.id from NextAuth is the Supabase user ID (synced during sign-in)
+      const sessionUser = nextAuthSession.user;
+      const pseudoUser = {
+        id: sessionUser.id,
+        email: sessionUser.email || undefined,
+        user_metadata: {
+          name: sessionUser.name,
+          avatar_url: sessionUser.image,
+          is_admin: sessionUser.isAdmin ?? false,
+        },
+        app_metadata: {},
+        aud: 'authenticated',
+        created_at: '',
+      } as User;
 
-    return { user: pseudoUser };
+      return { user: pseudoUser };
+    }
+  } catch (error) {
+    console.error('[verifyAuth] NextAuth session check failed:', error);
+    // Continue to return unauthorized error below
   }
 
   // No valid session found
