@@ -126,15 +126,17 @@ Example: "I need to commit these changes. Please run: `git commit -m 'your messa
 
 ## Hooks
 
-Three lightweight hooks in `.claude/hooks/` support autonomous work:
+Five hooks in `.claude/hooks/` support your workflow:
 
-| Hook | Purpose |
-|------|---------|
-| `post-tool-use.sh` | Auto-runs ESLint --fix on edited TypeScript files |
-| `user-prompt-submit.sh` | Brief reminder to run tests when test keywords detected |
-| `stop-check.sh` | Triggers cleanup of TODO.md → README.md when too many completed items accumulate |
+| Hook | When | Purpose |
+|------|------|---------|
+| `session-start.sh` | Session starts/resumes/compacts | Shows TODO.md priorities |
+| `post-tool-use.sh` | After Edit/Write on .ts/.tsx | Auto-runs ESLint --fix |
+| `todo-sync.sh` | After TodoWrite | Reminds to update TODO.md |
+| `stop-check.sh` | Before stopping | Blocks if >7 completed items |
+| `user-prompt-submit.sh` | User submits prompt | Reminds to run tests |
 
-All hooks are non-blocking - they help maintain code quality and documentation automatically.
+**TODO.md is the source of truth.** SessionStart shows your options when you're ready to code.
 
 **Intentionally removed:** Pre-commit type-check hook (conflicted with autonomous workflow and `/dac` approval process).
 

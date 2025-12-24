@@ -77,37 +77,6 @@ _Currently active work items_
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
-**Admin Dashboard Bug Fixes & E2E Tests** ✅ COMPLETE (Dec 2025)
-- [x] Fixed admin search cache bug - searches now bypass cache and query database
-- [x] Fixed admin status updates via new `/api/projects/[id]/status` route
-- [x] Fixed database trigger (migration 017) for service role operations
-- [x] Added comprehensive E2E test suite (`admin-project-flow.spec.ts`) - 6 tests
-
-**Puck Page Builder Disabled** ✅ COMPLETE (Dec 2025)
-- [x] Disabled admin dashboard link until production ready
-- [x] Disabled E2E tests for admin pages builder
-- [x] Files remain in codebase for future enablement
-
-**Privacy Policy & Terms of Service** ✅ COMPLETE (Dec 2025)
-- [x] Created `/privacy` page with Privacy Policy content
-- [x] Created `/terms` page with Terms of Service content
-- [x] Required for Google Cloud Console production verification
-
-**NextAuth.js Migration for Google OAuth** ✅ COMPLETE (Dec 2025)
-- [x] Google OAuth users now see `needthisdone.com` during sign-in
-- [x] Hybrid auth: Google via NextAuth, email/password via Supabase
-- [x] Users auto-sync to Supabase Auth for RLS policy support
-
-**Infrastructure Migration to Vercel** ✅ COMPLETE (Dec 2025)
-- [x] Site live at https://needthisdone.com
-- [x] DNS configured via Namecheap, SSL auto-provisioned
-- [x] Digital Ocean droplet shut down
-
-**Google Calendar Integration Backend** ✅ COMPLETE (Dec 2025)
-- [x] Admin appointments dashboard with approve/cancel actions
-- [x] Calendar event creation on approval
-- [x] E2E tests for appointment booking (23 tests)
-
 ---
 
 ## Disabled Features
