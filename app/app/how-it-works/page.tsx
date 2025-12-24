@@ -72,7 +72,7 @@ export default async function HowItWorksPage() {
       {/* Trust Badges - Reassurance before diving in */}
       {content.trustBadges && content.trustBadges.length > 0 && (
         <Card hoverColor="green" hoverEffect="glow" className="mb-10">
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-6 md:gap-10">
             {content.trustBadges.map((badge, index) => (
               <div key={index} className="flex items-center gap-3">
                 <div
