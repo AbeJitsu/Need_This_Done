@@ -4,23 +4,137 @@ A professional services platform built with Next.js, deployed on Vercel with Med
 
 ---
 
+## Current State at a Glance
+
+```
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         PROJECT STATUS DASHBOARD                              ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                              ║
+║  CODEBASE METRICS                        PRODUCTION READINESS                ║
+║  ─────────────────                       ────────────────────                 ║
+║  📄 15 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
+║  🔐 13 Admin Pages                       ✅ Stripe Payments                  ║
+║  🔌 47 API Routes                        ✅ Supabase Auth & Database         ║
+║  🧩 88 React Components                  ✅ Redis Caching (Upstash)          ║
+║  📦 5 Context Providers                  ✅ Email Notifications (Resend)     ║
+║  🔧 25 Lib Utilities                     ✅ Google OAuth                     ║
+║  🪝 4 Custom Hooks                       🟡 Google Calendar (90% - needs test)║
+║  🧪 177 E2E Tests Passing                ⛔ Puck Page Builder (disabled)     ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+```
+
+### Tech Stack
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              TECHNOLOGY STACK                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  FRONTEND                     BACKEND                   INFRASTRUCTURE      │
+│  ────────                     ───────                   ──────────────      │
+│  Next.js 14                   Medusa (Railway)          Vercel (hosting)    │
+│  React 18                     Supabase (PostgreSQL)     Railway (Medusa)    │
+│  TypeScript 5.3               Upstash (Redis)           Supabase (DB)       │
+│  Tailwind CSS 3.4             Stripe (payments)         Upstash (cache)     │
+│                               Resend (email)                                │
+│                               Google Calendar API                           │
+│                                                                             │
+│  TESTING                      DEV TOOLS                 AI/SEARCH           │
+│  ───────                      ─────────                 ─────────           │
+│  Playwright (E2E)             Storybook 10.1            OpenAI GPT          │
+│  Vitest (unit)                ESLint                    Vercel AI SDK       │
+│  Axe Core (a11y)              TypeScript                Vector embeddings   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Service Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           HOW THE PIECES FIT TOGETHER                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                              ┌─────────────────┐
+                              │     BROWSER     │
+                              │   (User/Admin)  │
+                              └────────┬────────┘
+                                       │ HTTPS
+                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                              VERCEL EDGE                                      │
+│                     (CDN, SSL, Global Distribution)                           │
+└──────────────────────────────────────┬───────────────────────────────────────┘
+                                       │
+                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                           NEXT.JS APP (app/)                                  │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │  15 PUBLIC   │  │  13 ADMIN    │  │  47 API      │  │  88 REACT    │      │
+│  │  PAGES       │  │  PAGES       │  │  ROUTES      │  │  COMPONENTS  │      │
+│  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘      │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐    │
+│  │                        5 CONTEXT PROVIDERS                            │    │
+│  │  AuthContext │ CartContext │ ToastContext │ StripeContext │ ServiceModal │
+│  └──────────────────────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────┬───────────────────────────────────────┘
+                                       │
+         ┌─────────────────────────────┼─────────────────────────────┐
+         │                             │                             │
+         ▼                             ▼                             ▼
+┌─────────────────┐          ┌─────────────────┐          ┌─────────────────┐
+│     MEDUSA      │          │    SUPABASE     │          │     UPSTASH     │
+│    (Railway)    │          │    (Cloud)      │          │    (Redis)      │
+├─────────────────┤          ├─────────────────┤          ├─────────────────┤
+│ • Products      │          │ • Auth (users)  │          │ • Product cache │
+│ • Carts         │          │ • Database      │          │ • Cart cache    │
+│ • Orders        │          │ • File storage  │          │ • Order cache   │
+│ • Variants      │          │ • RLS policies  │          │ • Session data  │
+└─────────────────┘          └─────────────────┘          └─────────────────┘
+         │                             │
+         │                             │
+         ▼                             ▼
+┌─────────────────┐          ┌─────────────────┐          ┌─────────────────┐
+│     STRIPE      │          │     RESEND      │          │ GOOGLE CALENDAR │
+│   (Payments)    │          │    (Email)      │          │   (Scheduling)  │
+├─────────────────┤          ├─────────────────┤          ├─────────────────┤
+│ • Checkout      │          │ • Welcome       │          │ • OAuth flow    │
+│ • Subscriptions │          │ • Order confirm │          │ • Event create  │
+│ • Webhooks      │          │ • Admin alerts  │          │ • Availability  │
+└─────────────────┘          └─────────────────┘          └─────────────────┘
+```
+
+---
+
 ## Table of Contents
 
+**Getting Started**
 - [Quick Start (30 seconds)](#quick-start)
-- [Deployment](#deployment)
-- [What This Project Is](#what-this-project-is)
-- [Architecture Overview](#architecture-overview) ← *includes system workflow charts*
 - [Development Setup](#development-setup)
-- [Project Structure](#project-structure)
+
+**Understanding the System**
+- [Current State at a Glance](#current-state-at-a-glance) ← *status dashboard, tech stack, architecture*
+- [Project Structure](#project-structure) ← *complete file map, 28 pages, 47 APIs, 88 components*
+- [Architecture Overview](#architecture-overview) ← *data flow diagrams*
+
+**Core Features**
 - [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
-- [Caching Strategy](#caching-strategy)
-- [Email Notifications](#email-notifications)
 - [Authentication](#authentication)
-- [Testing](#testing)
+- [Email Notifications](#email-notifications)
+- [Caching Strategy](#caching-strategy)
+
+**Operations**
+- [Deployment](#deployment)
+- [Testing](#testing) ← *177 E2E tests*
 - [Troubleshooting](#troubleshooting)
+
+**Reference**
 - [Design System](#design-system)
 - [Key Files Reference](#key-files-reference)
-- [High-Priority Improvements](#high-priority-improvements) ← *3 high-value enhancements*
+- [High-Priority Improvements](#high-priority-improvements) ← *3 high-value next steps*
 
 ---
 
@@ -497,44 +611,244 @@ supabase db reset
 
 ## Project Structure
 
-### Root Level
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            COMPLETE FILE MAP                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-| File/Folder | Purpose |
-|-------------|---------|
-| `README.md` | This file - main project documentation |
-| `TODO.md` | Task tracker (To Do / In Progress / Done) |
-| `CLAUDE.md` | Project guidelines for Claude Code |
-| `supabase/` | Database migrations and configuration |
-| `medusa/` | Ecommerce backend service (deployed on Railway) |
+/home/user/Need_This_Done/
+├── README.md              ← You are here (single source of truth)
+├── TODO.md                ← Task tracker (In Progress / Done)
+├── CLAUDE.md              ← AI assistant instructions
+│
+├── app/                   ← NEXT.JS APPLICATION
+│   ├── app/               ← Pages & API routes (Next.js App Router)
+│   ├── components/        ← 88 React components
+│   ├── context/           ← 5 state providers
+│   ├── lib/               ← 25 utility files
+│   ├── hooks/             ← 4 custom React hooks
+│   ├── emails/            ← Email templates (React Email)
+│   ├── e2e/               ← 25 Playwright test files
+│   └── __tests__/         ← Unit & accessibility tests
+│
+├── supabase/              ← DATABASE
+│   └── migrations/        ← Schema migrations
+│
+└── medusa/                ← E-COMMERCE BACKEND (Railway)
+    ├── src/               ← Medusa customizations
+    └── seed-products.js   ← Product seeding script
+```
 
-### Application (`app/`)
+### Complete Page Inventory (28 pages total)
 
-| Folder | Purpose |
-|--------|---------|
-| `app/app/` | Next.js App Router - pages and API routes |
-| `├── shop/` | E-commerce shop and product catalog |
-| `├── cart/` | Shopping cart page |
-| `├── checkout/` | Checkout and order creation |
-| `├── admin/` | Admin dashboard (products, orders, users) |
-| `├── api/` | API route handlers (auth, products, carts, orders) |
-| `app/components/` | Reusable React UI components |
-| `app/context/` | React Context providers (CartContext, AuthContext) |
-| `app/lib/` | Shared utilities (colors, auth, database, cache) |
-| `app/config/` | App-wide configuration |
-| `app/e2e/` | End-to-end tests (Playwright) |
-| `app/__tests__/` | Unit tests and accessibility tests |
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          PUBLIC PAGES (15 pages)                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  MARKETING                    E-COMMERCE                   AUTH             │
+│  /                 (home)     /shop             (catalog)  /login           │
+│  /services                    /shop/[productId] (detail)   /auth/callback   │
+│  /pricing                     /cart                                         │
+│  /how-it-works               /checkout                     LEGAL            │
+│  /faq                         /dashboard        (orders)   /privacy         │
+│  /contact                                                  /terms           │
+│  /get-started                 DYNAMIC                                       │
+│                               /p/[slug]         (CMS)                       │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-### Key Utilities
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          ADMIN PAGES (13 pages)                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  SHOP MANAGEMENT              CONTENT (Puck ⛔)            OTHER            │
+│  /admin/shop                  /admin/pages       (list)    /admin/users     │
+│  /admin/shop/products         /admin/pages/new   (create)  /admin/appointments│
+│  /admin/shop/products/new     /admin/pages/[slug]/edit     /admin/dev       │
+│  /admin/shop/orders                                                         │
+│  /admin/orders       (legacy) /admin/content     (alt CMS)                  │
+│  /admin/products     (legacy) /admin/content/[slug]/edit                    │
+│                                                                             │
+│  Note: Puck page builder ⛔ DISABLED - needs testing before production      │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
-| File | What it does |
-|------|--------------|
-| `app/lib/colors.ts` | Single source of truth for all colors |
-| `app/lib/auth.ts` | Authentication utilities |
-| `app/lib/supabase.ts` | Supabase database client |
-| `app/lib/redis.ts` | Redis cache client |
-| `app/lib/medusa-client.ts` | Medusa API wrapper with retry logic |
-| `app/lib/cache.ts` | Cache utility with pattern invalidation |
-| `app/context/CartContext.tsx` | Shopping cart state management |
+### Complete API Route Inventory (47 routes)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           API ROUTES BY CATEGORY                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+AUTHENTICATION (4 routes)
+├── POST /api/auth/[...nextauth]     NextAuth handler (Google OAuth + credentials)
+├── POST /api/auth/login             Email/password login
+├── POST /api/auth/signup            New user registration
+└── POST /api/auth/logout            Session termination
+
+SHOPPING & E-COMMERCE (8 routes)
+├── GET/POST /api/cart               Create or get cart
+├── GET/POST/DELETE /api/cart/[cartId]/items   Manage cart items
+├── GET /api/shop/products           List all products (cached)
+├── GET /api/shop/products/[productId]   Single product detail
+├── POST /api/checkout/session       Create Stripe checkout session
+├── POST /api/checkout/check-appointment   Validate appointment requirements
+├── GET/POST /api/orders             Order management
+└── GET /api/user/orders             User's order history
+
+ADMIN MANAGEMENT (9 routes)
+├── GET/POST /api/admin/products     Product CRUD (Medusa Admin API)
+├── POST /api/admin/products/upload-image    Upload product images
+├── POST /api/admin/products/update-image    Update existing images
+├── GET/POST /api/admin/orders       View all orders
+├── PUT /api/admin/orders/[id]/status    Update order status
+├── GET/POST /api/admin/appointments     Appointment queue
+├── PUT /api/admin/appointments/[id]/approve   Approve booking
+├── PUT /api/admin/appointments/[id]/cancel    Cancel booking
+└── GET/POST /api/admin/users        User management
+
+PAYMENTS (3 routes)
+├── POST /api/stripe/create-payment-intent   One-time payments
+├── POST /api/stripe/create-subscription     Recurring payments
+└── POST /api/stripe/webhook         Handle Stripe events
+
+CONTENT & PAGES (3 routes)
+├── GET/POST /api/pages              Dynamic page management
+├── GET /api/page-content/[slug]     Get page content by slug
+└── GET /api/pages/[slug]            Get full page data
+
+GOOGLE INTEGRATION (2 routes)
+├── POST /api/google/connect         Initiate OAuth flow
+└── GET /api/google/callback         Handle OAuth callback
+
+PROJECTS (5 routes)
+├── GET/POST /api/projects           Project submissions
+├── GET /api/projects/mine           User's projects
+├── GET /api/projects/all            All projects (admin)
+├── PUT /api/projects/[id]/status    Update status
+└── POST /api/projects/[id]/comments Add comments
+
+MEDIA (3 routes)
+├── GET/POST /api/media              Upload/list media
+├── GET/DELETE /api/media/[id]       Get/delete media item
+└── GET /api/files/[...path]         Serve uploaded files
+
+AI & SEARCH (5 routes)
+├── POST /api/chat                   AI chatbot (GPT-powered)
+├── POST /api/embeddings/index       Index content for search
+├── POST /api/embeddings/check       Check indexing status
+├── GET /api/embeddings/status       Embedding status
+└── GET /api/embeddings/debug        Debug embeddings
+
+MISC (4 routes)
+├── GET /api/health                  Service health check
+├── POST /api/appointments/request   Request appointment
+├── POST /api/email-forward          Forward emails
+└── GET /api/demo/*                  Demo/testing endpoints
+```
+
+### Component Inventory (88 components)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        COMPONENTS BY MODULE                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CORE UI (37 components)
+├── Layout:        Navigation, Footer, DarkModeToggle
+├── Design System: Button, Card, PageHeader, CTASection, CircleBadge
+├── Cards:         PricingCard, ServiceCard, StepCard, FeatureCard, ProjectCard
+├── Dashboards:    AdminDashboard, UserDashboard
+├── Forms:         AppointmentRequestForm, AppointmentStepForm, PaymentForm
+├── Modals:        ProjectDetailModal, ServiceDetailModal
+└── Demos:         AuthDemo, DatabaseDemo, HealthStatus, SpeedDemo
+
+CHATBOT MODULE (6 components)
+├── ChatbotWidget      Main chat interface
+├── ChatbotModal       Modal wrapper
+├── ChatbotButton      Trigger button
+├── ChatMessage        Message bubbles
+├── PageIndexer        Content indexer
+└── IndexingContext    State management
+
+CONTENT EDITOR MODULE (13 components)
+├── Core:     ContentEditor, PagePreview
+├── Fields:   TextField, TextAreaField, SelectField, ArrayField
+├── Forms:    HomepageForm, HowItWorksForm, FAQForm, PricingForm, ServicesForm
+└── Previews: HomepagePreview, HowItWorksPreview, FAQPreview, PricingPreview
+
+PUCK PAGE BUILDER (3 helper components) ⛔ DISABLED
+├── ImageField        Custom image picker
+├── ProductPicker     Product selection
+└── RichTextField     WYSIWYG field
+
+MEDIA MODULE (2 components)
+├── ImageUpload       Upload interface
+└── MediaLibrary      Media browser
+
+PROJECT MODAL MODULE (4 components)
+├── ProjectModalHeader
+├── ProjectModalDetails
+├── ProjectComments
+└── AdminStatusSection
+
+SHOP MODULE (2 components)
+├── ShopClient        Product grid
+└── ProductDetailClient   Product page
+
+UI PRIMITIVES (2 components)
+├── ConfirmDialog     Confirmation modals
+└── Toast             Notifications
+
+STORYBOOK STORIES (8 files)
+└── Button, Card, PageHeader, CTASection, CircleBadge, PricingCard, etc.
+```
+
+### Lib Utilities (25 files)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          UTILITY LIBRARIES                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+EXTERNAL SERVICE CLIENTS
+├── medusa-client.ts     Medusa API (products, carts, orders) with retry logic
+├── supabase.ts          Supabase client (browser)
+├── supabase-server.ts   Supabase client (server)
+├── redis.ts             Upstash Redis with reconnection
+├── stripe.ts            Stripe client singleton
+├── email.ts             Resend email client
+├── email-service.ts     Email notification logic
+└── google-calendar.ts   Google Calendar OAuth + API
+
+AUTHENTICATION
+├── auth.ts              NextAuth session helpers
+├── auth-options.ts      NextAuth config (Google + credentials)
+└── api-auth.ts          API route authentication
+
+CACHING
+└── cache.ts             Type-safe cache wrapper with TTL
+
+DESIGN SYSTEM
+└── colors.ts            Central color definitions (WCAG AA)
+
+PUCK CONFIG
+└── puck-config.tsx      22 page builder components (2,100+ lines)
+
+CONTENT TYPES
+├── default-page-content.ts   Default templates
+├── page-content-types.ts     Type definitions
+├── service-modal-content.ts  Modal content
+└── media-types.ts            Supported formats
+
+AI/CHATBOT
+├── chatbot/index.ts
+├── chatbot/content-extractor.ts
+├── chatbot/content-hash.ts
+└── chatbot/text-chunker.ts
+```
 
 ---
 
