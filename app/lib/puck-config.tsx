@@ -5,6 +5,9 @@ import Card from '@/components/Card';
 import PageHeader from '@/components/PageHeader';
 import CTASection from '@/components/CTASection';
 import CircleBadge from '@/components/CircleBadge';
+import TabsComponent from '@/components/puck/TabsComponent';
+import ProductCardComponent from '@/components/puck/ProductCardComponent';
+import MediaPickerField from '@/components/puck/MediaPickerField';
 import type { AccentVariant } from '@/lib/colors';
 
 // ============================================================================
@@ -601,8 +604,11 @@ export const puckConfig: Config = {
     Image: {
       fields: {
         src: {
-          type: 'text',
-          label: 'Image URL (paste from Media Library)',
+          type: 'custom',
+          label: 'Image',
+          render: ({ value, onChange }) => (
+            <MediaPickerField value={value || ''} onChange={onChange} label="Select Image" />
+          ),
         },
         alt: {
           type: 'text',
@@ -696,8 +702,11 @@ export const puckConfig: Config = {
     Hero: {
       fields: {
         backgroundImage: {
-          type: 'text',
-          label: 'Background Image URL',
+          type: 'custom',
+          label: 'Background Image',
+          render: ({ value, onChange }) => (
+            <MediaPickerField value={value || ''} onChange={onChange} label="Select Background" />
+          ),
         },
         title: {
           type: 'text',
@@ -952,8 +961,11 @@ export const puckConfig: Config = {
           label: 'Images',
           arrayFields: {
             src: {
-              type: 'text',
-              label: 'Image URL',
+              type: 'custom',
+              label: 'Image',
+              render: ({ value, onChange }) => (
+                <MediaPickerField value={value || ''} onChange={onChange} label="Select Image" />
+              ),
             },
             alt: {
               type: 'text',
@@ -1311,83 +1323,14 @@ export const puckConfig: Config = {
         accentColor: 'purple' as AccentVariant,
         fullWidth: 'no',
       },
-      render: ({ tabs, style, accentColor, fullWidth }) => {
-        const accentMap: Record<string, { active: string; border: string; bg: string }> = {
-          purple: { active: 'text-purple-600 dark:text-purple-400', border: 'border-purple-600 dark:border-purple-400', bg: 'bg-purple-600' },
-          blue: { active: 'text-blue-600 dark:text-blue-400', border: 'border-blue-600 dark:border-blue-400', bg: 'bg-blue-600' },
-          green: { active: 'text-green-600 dark:text-green-400', border: 'border-green-600 dark:border-green-400', bg: 'bg-green-600' },
-          orange: { active: 'text-orange-600 dark:text-orange-400', border: 'border-orange-600 dark:border-orange-400', bg: 'bg-orange-600' },
-          teal: { active: 'text-teal-600 dark:text-teal-400', border: 'border-teal-600 dark:border-teal-400', bg: 'bg-teal-600' },
-          gray: { active: 'text-gray-800 dark:text-gray-200', border: 'border-gray-600 dark:border-gray-400', bg: 'bg-gray-600' },
-        };
-        const colors = accentMap[accentColor] || accentMap.purple;
-
-        const iconMap: Record<string, ReactNode> = {
-          star: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>,
-          heart: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>,
-          check: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>,
-          info: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
-          settings: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
-        };
-
-        if (!tabs || tabs.length === 0) {
-          return (
-            <div className="text-center py-8 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl">
-              <p className="text-gray-500 dark:text-gray-400">Add tabs</p>
-            </div>
-          );
-        }
-
-        // For static rendering, show all tabs with first one active
-        // In real usage, this would need client-side state management
-        return (
-          <div className="w-full">
-            {/* Tab Headers */}
-            <div className={`flex ${fullWidth === 'yes' ? 'w-full' : ''} ${style === 'boxed' ? 'bg-gray-100 dark:bg-gray-800 p-1 rounded-xl' : style === 'underline' ? 'border-b border-gray-200 dark:border-gray-700' : 'gap-2'}`}>
-              {tabs.map((tab: { label?: string; icon?: string }, index: number) => {
-                const isFirst = index === 0;
-                let tabClass = '';
-
-                if (style === 'underline') {
-                  tabClass = `px-4 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${
-                    isFirst
-                      ? `${colors.active} ${colors.border}`
-                      : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300'
-                  } ${fullWidth === 'yes' ? 'flex-1 text-center' : ''}`;
-                } else if (style === 'pills') {
-                  tabClass = `px-4 py-2 font-medium text-sm rounded-lg transition-colors ${
-                    isFirst
-                      ? `${colors.bg} text-white`
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
-                  } ${fullWidth === 'yes' ? 'flex-1 text-center' : ''}`;
-                } else {
-                  tabClass = `px-4 py-2 font-medium text-sm rounded-lg transition-colors ${
-                    isFirst
-                      ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-gray-100'
-                      : 'text-gray-600 dark:text-gray-400'
-                  } ${fullWidth === 'yes' ? 'flex-1 text-center' : ''}`;
-                }
-
-                return (
-                  <button
-                    key={index}
-                    type="button"
-                    className={`flex items-center justify-center gap-2 ${tabClass}`}
-                  >
-                    {tab.icon && tab.icon !== 'none' && iconMap[tab.icon]}
-                    {tab.label || 'Tab'}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Tab Content - Show first tab */}
-            <div className="mt-4 p-4 text-gray-700 dark:text-gray-300">
-              {tabs[0]?.content || 'No content'}
-            </div>
-          </div>
-        );
-      },
+      render: ({ tabs, style, accentColor, fullWidth }) => (
+        <TabsComponent
+          tabs={tabs}
+          style={style as 'underline' | 'pills' | 'boxed'}
+          accentColor={accentColor}
+          fullWidth={fullWidth as 'yes' | 'no'}
+        />
+      ),
     },
 
     // ========================================================================
@@ -1558,61 +1501,15 @@ export const puckConfig: Config = {
         imageAspect: 'square',
         accentColor: 'purple' as AccentVariant,
       },
-      render: ({ productId, showPrice, showDescription, imageAspect, accentColor }) => {
-        const aspectMap: Record<string, string> = {
-          square: 'aspect-square',
-          landscape: 'aspect-[4/3]',
-          portrait: 'aspect-[3/4]',
-        };
-
-        const accentMap: Record<string, string> = {
-          purple: 'hover:border-purple-400 dark:hover:border-purple-500',
-          blue: 'hover:border-blue-400 dark:hover:border-blue-500',
-          green: 'hover:border-green-400 dark:hover:border-green-500',
-          orange: 'hover:border-orange-400 dark:hover:border-orange-500',
-          teal: 'hover:border-teal-400 dark:hover:border-teal-500',
-          gray: 'hover:border-gray-400 dark:hover:border-gray-500',
-        };
-
-        if (!productId) {
-          return (
-            <div className="bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 p-8 text-center">
-              <svg className="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">Enter a Product ID</p>
-            </div>
-          );
-        }
-
-        // Static placeholder - in real usage, this would fetch product data
-        return (
-          <div className={`bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 ${accentMap[accentColor]} overflow-hidden transition-all hover:shadow-lg group`}>
-            <div className={`${aspectMap[imageAspect]} bg-gray-100 dark:bg-gray-700 overflow-hidden`}>
-              <div className="w-full h-full flex items-center justify-center text-gray-400">
-                <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-              </div>
-            </div>
-            <div className="p-4">
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                Product: {productId}
-              </h3>
-              {showDescription === 'yes' && (
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
-                  Product description will load dynamically
-                </p>
-              )}
-              {showPrice === 'yes' && (
-                <p className="text-lg font-bold text-purple-600 dark:text-purple-400 mt-2">
-                  $--.-
-                </p>
-              )}
-            </div>
-          </div>
-        );
-      },
+      render: ({ productId, showPrice, showDescription, imageAspect, accentColor }) => (
+        <ProductCardComponent
+          productId={productId}
+          showPrice={showPrice as 'yes' | 'no'}
+          showDescription={showDescription as 'yes' | 'no'}
+          imageAspect={imageAspect as 'square' | 'landscape' | 'portrait'}
+          accentColor={accentColor}
+        />
+      ),
     },
 
     // ========================================================================
