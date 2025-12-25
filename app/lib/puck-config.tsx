@@ -10,6 +10,9 @@ import ProductCardComponent from '@/components/puck/ProductCardComponent';
 import MediaPickerField from '@/components/puck/MediaPickerField';
 import ProductGridComponent from '@/components/puck/ProductGridComponent';
 import AccordionComponent from '@/components/puck/AccordionComponent';
+import TestimonialsComponent from '@/components/puck/TestimonialsComponent';
+import VideoEmbedComponent from '@/components/puck/VideoEmbedComponent';
+import StatsCounterComponent from '@/components/puck/StatsCounterComponent';
 import type { AccentVariant } from '@/lib/colors';
 
 // ============================================================================
@@ -1862,6 +1865,312 @@ export const puckConfig: Config = {
         );
       },
     },
+
+    // ========================================================================
+    // SOCIAL PROOF & ENGAGEMENT COMPONENTS
+    // ========================================================================
+
+    // ========================================================================
+    // Testimonials - Customer Reviews & Social Proof
+    // ========================================================================
+    Testimonials: {
+      fields: {
+        testimonials: {
+          type: 'array',
+          label: 'Testimonials',
+          arrayFields: {
+            quote: {
+              type: 'textarea',
+              label: 'Quote',
+            },
+            author: {
+              type: 'text',
+              label: 'Author Name',
+            },
+            role: {
+              type: 'text',
+              label: 'Role/Title',
+            },
+            company: {
+              type: 'text',
+              label: 'Company',
+            },
+            avatar: {
+              type: 'text',
+              label: 'Avatar URL (optional)',
+            },
+            rating: {
+              type: 'number',
+              label: 'Rating (1-5)',
+            },
+          },
+          defaultItemProps: {
+            quote: 'This product has transformed the way we work. Highly recommended!',
+            author: 'Jane Smith',
+            role: 'CEO',
+            company: 'Acme Inc',
+            rating: 5,
+          },
+        },
+        layout: {
+          type: 'select',
+          label: 'Layout',
+          options: [
+            { label: 'Carousel', value: 'carousel' },
+            { label: 'Grid', value: 'grid' },
+            { label: 'Single (Featured)', value: 'single' },
+          ],
+        },
+        showRating: {
+          type: 'radio',
+          label: 'Show Star Rating',
+          options: [
+            { label: 'Yes', value: 'yes' },
+            { label: 'No', value: 'no' },
+          ],
+        },
+        showAvatar: {
+          type: 'radio',
+          label: 'Show Avatar',
+          options: [
+            { label: 'Yes', value: 'yes' },
+            { label: 'No', value: 'no' },
+          ],
+        },
+        autoPlay: {
+          type: 'radio',
+          label: 'Auto-Play (Carousel)',
+          options: [
+            { label: 'Yes', value: 'yes' },
+            { label: 'No', value: 'no' },
+          ],
+        },
+        accentColor: {
+          type: 'select',
+          label: 'Accent Color',
+          options: colorOptions,
+        },
+      },
+      defaultProps: {
+        testimonials: [
+          {
+            quote: 'Absolutely amazing service! They delivered beyond our expectations.',
+            author: 'Sarah Johnson',
+            role: 'Marketing Director',
+            company: 'TechCorp',
+            rating: 5,
+          },
+          {
+            quote: 'Professional, responsive, and incredibly talented team.',
+            author: 'Michael Chen',
+            role: 'Founder',
+            company: 'StartupXYZ',
+            rating: 5,
+          },
+          {
+            quote: 'Transformed our business with their innovative solutions.',
+            author: 'Emily Davis',
+            role: 'Operations Manager',
+            company: 'Global Inc',
+            rating: 5,
+          },
+        ],
+        layout: 'carousel',
+        showRating: 'yes',
+        showAvatar: 'yes',
+        autoPlay: 'yes',
+        accentColor: 'purple' as AccentVariant,
+      },
+      render: ({ testimonials, layout, showRating, showAvatar, autoPlay, accentColor }) => (
+        <TestimonialsComponent
+          testimonials={testimonials}
+          layout={layout as 'carousel' | 'grid' | 'single'}
+          showRating={showRating as 'yes' | 'no'}
+          showAvatar={showAvatar as 'yes' | 'no'}
+          autoPlay={autoPlay as 'yes' | 'no'}
+          accentColor={accentColor}
+        />
+      ),
+    },
+
+    // ========================================================================
+    // VideoEmbed - YouTube/Vimeo Embed
+    // ========================================================================
+    VideoEmbed: {
+      fields: {
+        url: {
+          type: 'text',
+          label: 'Video URL (YouTube or Vimeo)',
+        },
+        title: {
+          type: 'text',
+          label: 'Title (for accessibility)',
+        },
+        caption: {
+          type: 'text',
+          label: 'Caption (optional)',
+        },
+        aspectRatio: {
+          type: 'select',
+          label: 'Aspect Ratio',
+          options: [
+            { label: 'Widescreen (16:9)', value: '16:9' },
+            { label: 'Standard (4:3)', value: '4:3' },
+            { label: 'Square (1:1)', value: '1:1' },
+            { label: 'Vertical (9:16)', value: '9:16' },
+          ],
+        },
+        autoPlay: {
+          type: 'radio',
+          label: 'Auto-Play',
+          options: [
+            { label: 'Yes', value: 'yes' },
+            { label: 'No', value: 'no' },
+          ],
+        },
+        showControls: {
+          type: 'radio',
+          label: 'Show Controls',
+          options: [
+            { label: 'Yes', value: 'yes' },
+            { label: 'No', value: 'no' },
+          ],
+        },
+        thumbnailMode: {
+          type: 'radio',
+          label: 'Show Thumbnail First',
+          options: [
+            { label: 'Yes', value: 'yes' },
+            { label: 'No', value: 'no' },
+          ],
+        },
+        accentColor: {
+          type: 'select',
+          label: 'Play Button Color',
+          options: colorOptions,
+        },
+      },
+      defaultProps: {
+        url: '',
+        aspectRatio: '16:9',
+        autoPlay: 'no',
+        showControls: 'yes',
+        thumbnailMode: 'yes',
+        accentColor: 'purple' as AccentVariant,
+      },
+      render: ({ url, title, caption, aspectRatio, autoPlay, showControls, thumbnailMode, accentColor }) => (
+        <VideoEmbedComponent
+          url={url}
+          title={title}
+          caption={caption}
+          aspectRatio={aspectRatio as '16:9' | '4:3' | '1:1' | '9:16'}
+          autoPlay={autoPlay as 'yes' | 'no'}
+          showControls={showControls as 'yes' | 'no'}
+          thumbnailMode={thumbnailMode as 'yes' | 'no'}
+          accentColor={accentColor}
+        />
+      ),
+    },
+
+    // ========================================================================
+    // StatsCounter - Animated Statistics Display
+    // ========================================================================
+    StatsCounter: {
+      fields: {
+        stats: {
+          type: 'array',
+          label: 'Statistics',
+          arrayFields: {
+            value: {
+              type: 'number',
+              label: 'Number Value',
+            },
+            prefix: {
+              type: 'text',
+              label: 'Prefix (e.g., $)',
+            },
+            suffix: {
+              type: 'text',
+              label: 'Suffix (e.g., +, %, K)',
+            },
+            label: {
+              type: 'text',
+              label: 'Label',
+            },
+            icon: {
+              type: 'select',
+              label: 'Icon',
+              options: [
+                { label: 'None', value: '' },
+                { label: 'Users', value: 'users' },
+                { label: 'Chart', value: 'chart' },
+                { label: 'Star', value: 'star' },
+                { label: 'Check', value: 'check' },
+                { label: 'Clock', value: 'clock' },
+                { label: 'Trophy', value: 'trophy' },
+                { label: 'Heart', value: 'heart' },
+                { label: 'Globe', value: 'globe' },
+              ],
+            },
+          },
+          defaultItemProps: {
+            value: 100,
+            suffix: '+',
+            label: 'Happy Customers',
+            icon: 'users',
+          },
+        },
+        layout: {
+          type: 'select',
+          label: 'Layout',
+          options: [
+            { label: '2 Columns', value: '2-col' },
+            { label: '3 Columns', value: '3-col' },
+            { label: '4 Columns', value: '4-col' },
+            { label: 'Horizontal Row', value: 'horizontal' },
+          ],
+        },
+        style: {
+          type: 'select',
+          label: 'Style',
+          options: [
+            { label: 'Cards', value: 'cards' },
+            { label: 'Minimal', value: 'minimal' },
+            { label: 'Bordered', value: 'bordered' },
+          ],
+        },
+        animationDuration: {
+          type: 'number',
+          label: 'Animation Duration (ms)',
+        },
+        accentColor: {
+          type: 'select',
+          label: 'Accent Color',
+          options: colorOptions,
+        },
+      },
+      defaultProps: {
+        stats: [
+          { value: 500, suffix: '+', label: 'Happy Customers', icon: 'users' },
+          { value: 98, suffix: '%', label: 'Satisfaction Rate', icon: 'star' },
+          { value: 24, suffix: '/7', label: 'Support', icon: 'clock' },
+          { value: 50, suffix: '+', label: 'Countries', icon: 'globe' },
+        ],
+        layout: '4-col',
+        style: 'cards',
+        animationDuration: 2000,
+        accentColor: 'purple' as AccentVariant,
+      },
+      render: ({ stats, layout, style, animationDuration, accentColor }) => (
+        <StatsCounterComponent
+          stats={stats}
+          layout={layout as '2-col' | '3-col' | '4-col' | 'horizontal'}
+          style={style as 'cards' | 'minimal' | 'bordered'}
+          animationDuration={animationDuration}
+          accentColor={accentColor}
+        />
+      ),
+    },
   },
 
   // ============================================================================
@@ -1874,7 +2183,7 @@ export const puckConfig: Config = {
     },
     media: {
       title: 'Media',
-      components: ['Image', 'ImageGallery', 'Hero', 'ImageText'],
+      components: ['Image', 'ImageGallery', 'Hero', 'ImageText', 'VideoEmbed'],
     },
     content: {
       title: 'Content',
@@ -1883,6 +2192,10 @@ export const puckConfig: Config = {
     interactive: {
       title: 'Interactive',
       components: ['Accordion', 'Tabs', 'FeatureGrid', 'Button', 'Card', 'CircleBadge'],
+    },
+    socialProof: {
+      title: 'Social Proof',
+      components: ['Testimonials', 'StatsCounter'],
     },
     ecommerce: {
       title: 'E-Commerce',
