@@ -36,9 +36,8 @@ const adminPages = [
   { path: '/admin/orders', name: 'admin-orders', folder: 'admin/orders' },
   { path: '/admin/appointments', name: 'admin-appointments', folder: 'admin/appointments' },
   { path: '/admin/users', name: 'admin-users', folder: 'admin/users' },
-  // Puck Pages - Disabled (not production ready)
-  // { path: '/admin/pages', name: 'admin-pages', folder: 'admin/pages' },
-  // { path: '/admin/pages/new', name: 'admin-pages-new', folder: 'admin/pages-new' },
+  { path: '/admin/pages', name: 'admin-pages', folder: 'admin/pages' },
+  { path: '/admin/pages/new', name: 'admin-pages-new', folder: 'admin/pages-new' },
   { path: '/admin/content', name: 'admin-content', folder: 'admin/content' },
   { path: '/admin/shop', name: 'admin-shop', folder: 'admin/shop' },
   { path: '/admin/shop/orders', name: 'admin-shop-orders', folder: 'admin/shop-orders' },
