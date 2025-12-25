@@ -1,10 +1,18 @@
 # NeedThisDone.com
 
-A professional services platform built with Next.js, deployed on Vercel with Medusa (ecommerce on Railway), Redis (Upstash), and Supabase (auth & database).
+Welcome! This is your home base for understanding and working with the NeedThisDone platform.
+
+**What is this?** A professional services platform where clients can browse services, book consultations, and get things done. Built with Next.js and backed by a solid stack of managed services.
+
+**New here?** Start with [Quick Start](#quick-start) to get running in 30 seconds, then explore the [Current State](#current-state-at-a-glance) to see what's already built.
+
+**Looking for something specific?** The [Table of Contents](#table-of-contents) is organized by what you're trying to do.
 
 ---
 
 ## Current State at a Glance
+
+Here's where we are right now - what's working, what's almost ready, and what's on hold:
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -140,18 +148,18 @@ A professional services platform built with Next.js, deployed on Vercel with Med
 
 ## Quick Start
 
+Ready to dive in? You'll be up and running in about 30 seconds:
+
 ```bash
-# Install dependencies
-cd app && npm install
-
-# Start local development server
-npm run dev
-
-# Access at http://localhost:3000
-# Storybook: npm run storybook (port 6006)
+cd app && npm install    # First time only
+npm run dev              # Start the dev server
 ```
 
-### Available Commands
+Open http://localhost:3000 and you're in! The app hot-reloads, so your changes appear instantly.
+
+**Want to explore the component library?** Run `npm run storybook` to see all UI components in isolation.
+
+### Helpful Commands
 
 | Command | What it does |
 |---------|--------------|
@@ -849,6 +857,8 @@ AI/CHATBOT
 ├── chatbot/content-hash.ts
 └── chatbot/text-chunker.ts
 ```
+
+**Feeling overwhelmed?** Don't worry - you don't need to understand everything at once. Most tasks only touch a few files. Start with the feature you're working on and explore outward from there.
 
 ---
 
@@ -1853,7 +1863,7 @@ See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for:
 
 ## High-Priority Improvements
 
-These are the highest-value enhancements that can be made to the system right now. Each builds on existing infrastructure and delivers immediate user value.
+Looking for a meaningful contribution? These three improvements build on what's already working and deliver real value. Each one is well-scoped and uses existing infrastructure.
 
 ### 1. Live Product Data in Puck E-Commerce Components
 
@@ -1960,19 +1970,21 @@ See [TODO.md](TODO.md) for the current task tracker with prioritized work items.
 
 ## Getting Help
 
-**Need help with...**
+Stuck on something? Here's where to look:
 
-- **Development setup?** → See [Development Setup](#development-setup)
-- **Ecommerce/cart?** → See [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
-- **Testing?** → See [Testing](#testing)
-- **Design standards?** → See [Design System](#design-system)
-- **Troubleshooting?** → See [Troubleshooting](#troubleshooting)
-- **Code quality?** → See [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md)
+| If you need help with... | Check out... |
+|--------------------------|--------------|
+| Getting the app running | [Quick Start](#quick-start) or [Development Setup](#development-setup) |
+| How the cart/shop works | [Shopping Cart & Ecommerce](#shopping-cart--ecommerce) |
+| Running or writing tests | [Testing](#testing) |
+| Colors, components, accessibility | [Design System](#design-system) |
+| Something's not working | [Troubleshooting](#troubleshooting) |
+| Code style and patterns | [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) |
 
-**For Claude Code users**: See [CLAUDE.md](CLAUDE.md) for project-specific instructions.
+**Using Claude Code?** See [CLAUDE.md](CLAUDE.md) for project-specific instructions that help Claude understand this codebase.
 
 ---
 
+Thanks for being here. This project is actively maintained and growing - your contributions make it better for everyone.
+
 **Last Updated**: December 2025
-**Maintained By**: Development Team
-**Status**: Active & Growing
