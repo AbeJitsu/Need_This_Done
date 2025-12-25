@@ -8,6 +8,8 @@ import CircleBadge from '@/components/CircleBadge';
 import TabsComponent from '@/components/puck/TabsComponent';
 import ProductCardComponent from '@/components/puck/ProductCardComponent';
 import MediaPickerField from '@/components/puck/MediaPickerField';
+import ProductGridComponent from '@/components/puck/ProductGridComponent';
+import AccordionComponent from '@/components/puck/AccordionComponent';
 import type { AccentVariant } from '@/lib/colors';
 
 // ============================================================================
@@ -1188,70 +1190,14 @@ export const puckConfig: Config = {
         style: 'bordered',
         accentColor: 'purple' as AccentVariant,
       },
-      render: ({ items, style, accentColor }) => {
-        const accentMap: Record<string, { border: string; bg: string; text: string }> = {
-          purple: { border: 'border-purple-200 dark:border-purple-800', bg: 'bg-purple-50 dark:bg-purple-900/20', text: 'text-purple-600 dark:text-purple-400' },
-          blue: { border: 'border-blue-200 dark:border-blue-800', bg: 'bg-blue-50 dark:bg-blue-900/20', text: 'text-blue-600 dark:text-blue-400' },
-          green: { border: 'border-green-200 dark:border-green-800', bg: 'bg-green-50 dark:bg-green-900/20', text: 'text-green-600 dark:text-green-400' },
-          orange: { border: 'border-orange-200 dark:border-orange-800', bg: 'bg-orange-50 dark:bg-orange-900/20', text: 'text-orange-600 dark:text-orange-400' },
-          teal: { border: 'border-teal-200 dark:border-teal-800', bg: 'bg-teal-50 dark:bg-teal-900/20', text: 'text-teal-600 dark:text-teal-400' },
-          gray: { border: 'border-gray-200 dark:border-gray-700', bg: 'bg-gray-50 dark:bg-gray-800/50', text: 'text-gray-600 dark:text-gray-400' },
-        };
-        const colors = accentMap[accentColor] || accentMap.purple;
-
-        const styleClasses: Record<string, { wrapper: string; item: string }> = {
-          bordered: {
-            wrapper: `border ${colors.border} rounded-xl overflow-hidden divide-y divide-gray-200 dark:divide-gray-700`,
-            item: '',
-          },
-          separated: {
-            wrapper: 'space-y-3',
-            item: `border ${colors.border} rounded-xl overflow-hidden`,
-          },
-          minimal: {
-            wrapper: 'divide-y divide-gray-200 dark:divide-gray-700',
-            item: '',
-          },
-        };
-        const styles = styleClasses[style] || styleClasses.bordered;
-
-        if (!items || items.length === 0) {
-          return (
-            <div className="text-center py-8 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl">
-              <p className="text-gray-500 dark:text-gray-400">Add accordion items</p>
-            </div>
-          );
-        }
-
-        return (
-          <div className={styles.wrapper}>
-            {items.map((item: { title?: string; content?: string; defaultOpen?: string }, index: number) => (
-              <details
-                key={index}
-                open={item.defaultOpen === 'open'}
-                className={`group ${styles.item}`}
-              >
-                <summary className={`flex items-center justify-between cursor-pointer px-5 py-4 ${colors.bg} hover:bg-opacity-80 transition-colors`}>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">
-                    {item.title || 'Untitled'}
-                  </span>
-                  <svg
-                    className={`w-5 h-5 ${colors.text} transition-transform group-open:rotate-180`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </summary>
-                <div className="px-5 py-4 text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
-                  {item.content || ''}
-                </div>
-              </details>
-            ))}
-          </div>
-        );
-      },
+      render: ({ items, allowMultiple, style, accentColor }) => (
+        <AccordionComponent
+          items={items}
+          allowMultiple={allowMultiple as 'yes' | 'no'}
+          style={style as 'bordered' | 'separated' | 'minimal'}
+          accentColor={accentColor}
+        />
+      ),
     },
 
     // ========================================================================
@@ -1565,68 +1511,15 @@ export const puckConfig: Config = {
         showPrice: 'yes',
         accentColor: 'purple' as AccentVariant,
       },
-      render: ({ productIds, columns, gap, showPrice, accentColor }) => {
-        const columnsMap: Record<string, string> = {
-          '2': 'grid-cols-1 sm:grid-cols-2',
-          '3': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-          '4': 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
-        };
-        const gapMap: Record<string, string> = {
-          sm: 'gap-3',
-          md: 'gap-4',
-          lg: 'gap-6',
-          xl: 'gap-8',
-        };
-
-        const accentMap: Record<string, string> = {
-          purple: 'hover:border-purple-400 dark:hover:border-purple-500',
-          blue: 'hover:border-blue-400 dark:hover:border-blue-500',
-          green: 'hover:border-green-400 dark:hover:border-green-500',
-          orange: 'hover:border-orange-400 dark:hover:border-orange-500',
-          teal: 'hover:border-teal-400 dark:hover:border-teal-500',
-          gray: 'hover:border-gray-400 dark:hover:border-gray-500',
-        };
-
-        if (!productIds || productIds.length === 0) {
-          return (
-            <div className="text-center py-12 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl">
-              <svg className="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-              <p className="text-gray-500 dark:text-gray-400">Add products to the grid</p>
-            </div>
-          );
-        }
-
-        return (
-          <div className={`grid ${columnsMap[columns]} ${gapMap[gap]}`}>
-            {productIds.map((item: { id?: string }, index: number) => (
-              <div
-                key={index}
-                className={`bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 ${accentMap[accentColor]} overflow-hidden transition-all hover:shadow-lg group`}
-              >
-                <div className="aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden">
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                  </div>
-                </div>
-                <div className="p-3">
-                  <h3 className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">
-                    {item.id || 'Product'}
-                  </h3>
-                  {showPrice === 'yes' && (
-                    <p className="text-sm font-semibold text-purple-600 dark:text-purple-400 mt-1">
-                      $--.-
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        );
-      },
+      render: ({ productIds, columns, gap, showPrice, accentColor }) => (
+        <ProductGridComponent
+          productIds={productIds}
+          columns={columns as '2' | '3' | '4'}
+          gap={gap as 'sm' | 'md' | 'lg' | 'xl'}
+          showPrice={showPrice as 'yes' | 'no'}
+          accentColor={accentColor}
+        />
+      ),
     },
 
     // ========================================================================
