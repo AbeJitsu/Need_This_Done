@@ -3,10 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
+import { getPuckFullColors, puckAspectMap, PuckEmptyState } from '@/lib/puck-utils';
+import { cardHoverColors, solidButtonColors, type AccentVariant } from '@/lib/colors';
 
 // ============================================================================
 // LIVE PRODUCT CARD COMPONENT
 // Fetches real product data from Medusa and enables Add to Cart
+// DRY: Uses getPuckFullColors() and layout utilities from puck-utils
 // ============================================================================
 
 interface Product {
@@ -32,45 +35,6 @@ interface ProductCardComponentProps {
   accentColor: string;
 }
 
-const aspectMap: Record<string, string> = {
-  square: 'aspect-square',
-  landscape: 'aspect-[4/3]',
-  portrait: 'aspect-[3/4]',
-};
-
-const accentMap: Record<string, { border: string; button: string; price: string }> = {
-  purple: {
-    border: 'hover:border-purple-400 dark:hover:border-purple-500',
-    button: 'bg-purple-600 hover:bg-purple-700',
-    price: 'text-purple-600 dark:text-purple-400',
-  },
-  blue: {
-    border: 'hover:border-blue-400 dark:hover:border-blue-500',
-    button: 'bg-blue-600 hover:bg-blue-700',
-    price: 'text-blue-600 dark:text-blue-400',
-  },
-  green: {
-    border: 'hover:border-green-400 dark:hover:border-green-500',
-    button: 'bg-green-600 hover:bg-green-700',
-    price: 'text-green-600 dark:text-green-400',
-  },
-  orange: {
-    border: 'hover:border-orange-400 dark:hover:border-orange-500',
-    button: 'bg-orange-600 hover:bg-orange-700',
-    price: 'text-orange-600 dark:text-orange-400',
-  },
-  teal: {
-    border: 'hover:border-teal-400 dark:hover:border-teal-500',
-    button: 'bg-teal-600 hover:bg-teal-700',
-    price: 'text-teal-600 dark:text-teal-400',
-  },
-  gray: {
-    border: 'hover:border-gray-400 dark:hover:border-gray-500',
-    button: 'bg-gray-600 hover:bg-gray-700',
-    price: 'text-gray-600 dark:text-gray-400',
-  },
-};
-
 export default function ProductCardComponent({
   productId,
   showPrice,
@@ -84,7 +48,11 @@ export default function ProductCardComponent({
   const [adding, setAdding] = useState(false);
   const { addItem } = useCart();
 
-  const colors = accentMap[accentColor] || accentMap.purple;
+  // Get colors from centralized utilities
+  const colorVariant = accentColor as AccentVariant;
+  const colors = getPuckFullColors(accentColor);
+  const hoverBorder = cardHoverColors[colorVariant] || cardHoverColors.purple;
+  const buttonColors = solidButtonColors[colorVariant] || solidButtonColors.purple;
 
   // Fetch product data
   useEffect(() => {
@@ -133,23 +101,25 @@ export default function ProductCardComponent({
     }
   };
 
-  // Empty state - no product ID provided
+  // Empty state - no product ID provided - use shared component
   if (!productId) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 p-8 text-center">
-        <svg className="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-        </svg>
-        <p className="text-gray-500 dark:text-gray-400 text-sm">Enter a Product ID to display</p>
-      </div>
+      <PuckEmptyState
+        message="Enter a Product ID to display"
+        icon={
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        }
+      />
     );
   }
 
-  // Loading state
+  // Loading state - use puckAspectMap
   if (loading) {
     return (
       <div className={`bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 overflow-hidden animate-pulse`}>
-        <div className={`${aspectMap[imageAspect]} bg-gray-200 dark:bg-gray-700`} />
+        <div className={`${puckAspectMap[imageAspect]} bg-gray-200 dark:bg-gray-700`} />
         <div className="p-4">
           <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
           <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-1" />
@@ -174,17 +144,17 @@ export default function ProductCardComponent({
   }
 
   // Get price from first variant
-  const variant = product.variants?.[0];
-  const price = variant?.prices?.[0]?.amount || 0;
+  const productVariant = product.variants?.[0];
+  const price = productVariant?.prices?.[0]?.amount || 0;
   const formattedPrice = (price / 100).toLocaleString('en-US', {
     style: 'currency',
-    currency: variant?.prices?.[0]?.currency_code?.toUpperCase() || 'USD',
+    currency: productVariant?.prices?.[0]?.currency_code?.toUpperCase() || 'USD',
   });
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 ${colors.border} overflow-hidden transition-all hover:shadow-lg group`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 ${hoverBorder} overflow-hidden transition-all hover:shadow-lg group`}>
       {/* Product Image */}
-      <div className={`${aspectMap[imageAspect]} bg-gray-100 dark:bg-gray-700 overflow-hidden relative`}>
+      <div className={`${puckAspectMap[imageAspect]} bg-gray-100 dark:bg-gray-700 overflow-hidden relative`}>
         {product.thumbnail ? (
           <Image
             src={product.thumbnail}
@@ -214,16 +184,16 @@ export default function ProductCardComponent({
         )}
 
         {showPrice === 'yes' && (
-          <p className={`text-lg font-bold ${colors.price} mt-2`}>
+          <p className={`text-lg font-bold ${colors.accentText} mt-2`}>
             {formattedPrice}
           </p>
         )}
 
-        {/* Add to Cart Button */}
+        {/* Add to Cart Button - uses centralized button colors */}
         <button
           onClick={handleAddToCart}
-          disabled={adding || !variant}
-          className={`mt-3 w-full py-2 px-4 rounded-lg text-white font-medium transition-colors ${colors.button} disabled:opacity-50 disabled:cursor-not-allowed`}
+          disabled={adding || !productVariant}
+          className={`mt-3 w-full py-2 px-4 rounded-lg ${buttonColors.text} font-medium transition-colors ${buttonColors.bg} ${buttonColors.hover} disabled:opacity-50 disabled:cursor-not-allowed`}
         >
           {adding ? 'Adding...' : 'Add to Cart'}
         </button>

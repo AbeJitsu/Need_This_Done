@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { getPuckFullColors, PuckEmptyState } from '@/lib/puck-utils';
 
 // ============================================================================
 // Testimonials Component - Social Proof Display
@@ -8,6 +9,7 @@ import { useState, useEffect, useCallback } from 'react';
 // What: Interactive testimonial carousel/grid with customer reviews
 // Why: Social proof drives conversions - 92% of customers read reviews before buying
 // How: Client component with useState for carousel navigation, auto-play support
+// DRY: Uses getPuckFullColors() from puck-utils for consistent color handling
 
 interface Testimonial {
   quote?: string;
@@ -31,22 +33,13 @@ interface TestimonialsComponentProps {
 // Star Rating Component
 // ============================================================================
 
-function StarRating({ rating, color }: { rating: number; color: string }) {
-  const colorMap: Record<string, string> = {
-    purple: 'text-purple-500',
-    blue: 'text-blue-500',
-    green: 'text-green-500',
-    orange: 'text-orange-500',
-    teal: 'text-teal-500',
-    gray: 'text-gray-500',
-  };
-
+function StarRating({ rating, starColor }: { rating: number; starColor: string }) {
   return (
     <div className="flex gap-0.5 mb-3">
       {[1, 2, 3, 4, 5].map((star) => (
         <svg
           key={star}
-          className={`w-5 h-5 ${star <= rating ? colorMap[color] || colorMap.purple : 'text-gray-300 dark:text-gray-600'}`}
+          className={`w-5 h-5 ${star <= rating ? starColor : 'text-gray-300 dark:text-gray-600'}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -65,38 +58,20 @@ function TestimonialCard({
   testimonial,
   showRating,
   showAvatar,
-  accentColor,
+  colors,
 }: {
   testimonial: Testimonial;
   showRating: boolean;
   showAvatar: boolean;
-  accentColor: string;
+  colors: ReturnType<typeof getPuckFullColors>;
 }) {
-  const borderColorMap: Record<string, string> = {
-    purple: 'border-purple-200 dark:border-purple-800 hover:border-purple-300 dark:hover:border-purple-700',
-    blue: 'border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-700',
-    green: 'border-green-200 dark:border-green-800 hover:border-green-300 dark:hover:border-green-700',
-    orange: 'border-orange-200 dark:border-orange-800 hover:border-orange-300 dark:hover:border-orange-700',
-    teal: 'border-teal-200 dark:border-teal-800 hover:border-teal-300 dark:hover:border-teal-700',
-    gray: 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600',
-  };
-
-  const quoteColorMap: Record<string, string> = {
-    purple: 'text-purple-300 dark:text-purple-700',
-    blue: 'text-blue-300 dark:text-blue-700',
-    green: 'text-green-300 dark:text-green-700',
-    orange: 'text-orange-300 dark:text-orange-700',
-    teal: 'text-teal-300 dark:text-teal-700',
-    gray: 'text-gray-300 dark:text-gray-600',
-  };
-
   return (
     <div
-      className={`relative bg-white dark:bg-gray-800 rounded-xl p-6 border ${borderColorMap[accentColor] || borderColorMap.purple} transition-all duration-300 h-full flex flex-col`}
+      className={`relative bg-white dark:bg-gray-800 rounded-xl p-6 border ${colors.cardBorderHover} transition-all duration-300 h-full flex flex-col`}
     >
       {/* Quote mark */}
       <svg
-        className={`absolute top-4 right-4 w-8 h-8 ${quoteColorMap[accentColor] || quoteColorMap.purple}`}
+        className={`absolute top-4 right-4 w-8 h-8 ${colors.quoteColor}`}
         fill="currentColor"
         viewBox="0 0 24 24"
       >
@@ -105,7 +80,7 @@ function TestimonialCard({
 
       {/* Rating */}
       {showRating && testimonial.rating && (
-        <StarRating rating={testimonial.rating} color={accentColor} />
+        <StarRating rating={testimonial.rating} starColor={colors.starColor} />
       )}
 
       {/* Quote */}
@@ -162,6 +137,9 @@ export default function TestimonialsComponent({
   const showAvatarBool = showAvatar === 'yes';
   const autoPlayBool = autoPlay === 'yes';
 
+  // Get colors from centralized utility
+  const colors = getPuckFullColors(accentColor);
+
   // Auto-play carousel
   const nextSlide = useCallback(() => {
     if (testimonials.length > 0) {
@@ -174,27 +152,25 @@ export default function TestimonialsComponent({
       const interval = setInterval(nextSlide, 5000);
       return () => clearInterval(interval);
     }
+    return undefined;
   }, [layout, autoPlayBool, testimonials.length, nextSlide]);
 
-  // Empty state
+  // Empty state - use shared component
   if (!testimonials || testimonials.length === 0) {
     return (
-      <div className="text-center py-12 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl">
-        <svg
-          className="w-12 h-12 mx-auto text-gray-400 mb-3"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-          />
-        </svg>
-        <p className="text-gray-500 dark:text-gray-400">Add testimonials to display</p>
-      </div>
+      <PuckEmptyState
+        message="Add testimonials to display"
+        icon={
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+            />
+          </svg>
+        }
+      />
     );
   }
 
@@ -206,7 +182,7 @@ export default function TestimonialsComponent({
           testimonial={testimonials[0]}
           showRating={showRatingBool}
           showAvatar={showAvatarBool}
-          accentColor={accentColor}
+          colors={colors}
         />
       </div>
     );
@@ -229,23 +205,14 @@ export default function TestimonialsComponent({
             testimonial={testimonial}
             showRating={showRatingBool}
             showAvatar={showAvatarBool}
-            accentColor={accentColor}
+            colors={colors}
           />
         ))}
       </div>
     );
   }
 
-  // Carousel layout
-  const dotColorMap: Record<string, string> = {
-    purple: 'bg-purple-600',
-    blue: 'bg-blue-600',
-    green: 'bg-green-600',
-    orange: 'bg-orange-600',
-    teal: 'bg-teal-600',
-    gray: 'bg-gray-600',
-  };
-
+  // Carousel layout - use colors.dotActive from centralized utility
   return (
     <div className="relative">
       {/* Main testimonial */}
@@ -261,7 +228,7 @@ export default function TestimonialsComponent({
                   testimonial={testimonial}
                   showRating={showRatingBool}
                   showAvatar={showAvatarBool}
-                  accentColor={accentColor}
+                  colors={colors}
                 />
               </div>
             </div>
@@ -278,7 +245,7 @@ export default function TestimonialsComponent({
               onClick={() => setCurrentIndex(index)}
               className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                 index === currentIndex
-                  ? `${dotColorMap[accentColor] || dotColorMap.purple} w-8`
+                  ? `${colors.dotActive} w-8`
                   : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
               }`}
               aria-label={`Go to testimonial ${index + 1}`}

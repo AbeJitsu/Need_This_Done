@@ -112,6 +112,119 @@ export const puckCardBg = cardBgColors.base;
 export const puckCardBorder = cardBorderColors.light;
 
 // ============================================================================
+// Extended Puck Color Utilities
+// ============================================================================
+// Additional color getters for specific component needs
+
+/**
+ * Get quote icon colors (for testimonial quote marks)
+ * Uses lighter shades for decorative quote icons
+ */
+function getQuoteColorClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'text-purple-300 dark:text-purple-700',
+    blue: 'text-blue-300 dark:text-blue-700',
+    green: 'text-green-300 dark:text-green-700',
+    orange: 'text-orange-300 dark:text-orange-700',
+    teal: 'text-teal-300 dark:text-teal-700',
+    gray: 'text-gray-300 dark:text-gray-600',
+    red: 'text-red-300 dark:text-red-700',
+  };
+  return map[color] || map.purple;
+}
+
+/**
+ * Get card border with hover state (for testimonials, products)
+ */
+function getCardBorderHoverClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'border-purple-200 dark:border-purple-800 hover:border-purple-300 dark:hover:border-purple-700',
+    blue: 'border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-700',
+    green: 'border-green-200 dark:border-green-800 hover:border-green-300 dark:hover:border-green-700',
+    orange: 'border-orange-200 dark:border-orange-800 hover:border-orange-300 dark:hover:border-orange-700',
+    teal: 'border-teal-200 dark:border-teal-800 hover:border-teal-300 dark:hover:border-teal-700',
+    gray: 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600',
+    red: 'border-red-200 dark:border-red-800 hover:border-red-300 dark:hover:border-red-700',
+  };
+  return map[color] || map.purple;
+}
+
+/**
+ * Get subtle background for cards/sections
+ */
+function getSubtleBgClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'bg-purple-50 dark:bg-purple-900/20',
+    blue: 'bg-blue-50 dark:bg-blue-900/20',
+    green: 'bg-green-50 dark:bg-green-900/20',
+    orange: 'bg-orange-50 dark:bg-orange-900/20',
+    teal: 'bg-teal-50 dark:bg-teal-900/20',
+    gray: 'bg-gray-50 dark:bg-gray-800/50',
+    red: 'bg-red-50 dark:bg-red-900/20',
+  };
+  return map[color] || map.purple;
+}
+
+/**
+ * Get hover background for interactive elements
+ */
+function getHoverBgClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'hover:bg-purple-100 dark:hover:bg-purple-900/30',
+    blue: 'hover:bg-blue-100 dark:hover:bg-blue-900/30',
+    green: 'hover:bg-green-100 dark:hover:bg-green-900/30',
+    orange: 'hover:bg-orange-100 dark:hover:bg-orange-900/30',
+    teal: 'hover:bg-teal-100 dark:hover:bg-teal-900/30',
+    gray: 'hover:bg-gray-100 dark:hover:bg-gray-700/50',
+    red: 'hover:bg-red-100 dark:hover:bg-red-900/30',
+  };
+  return map[color] || map.purple;
+}
+
+/**
+ * Get text color for accent (600 light / 400 dark)
+ */
+function getAccentTextClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'text-purple-600 dark:text-purple-400',
+    blue: 'text-blue-600 dark:text-blue-400',
+    green: 'text-green-600 dark:text-green-400',
+    orange: 'text-orange-600 dark:text-orange-400',
+    teal: 'text-teal-600 dark:text-teal-400',
+    gray: 'text-gray-600 dark:text-gray-400',
+    red: 'text-red-600 dark:text-red-400',
+  };
+  return map[color] || map.purple;
+}
+
+/**
+ * Get comprehensive Puck styling for a color
+ * Extended version with all derived colors for Puck components
+ */
+export function getPuckFullColors(color: string) {
+  const variant = color as AccentVariant;
+  const base = getPuckAccentColors(color);
+  const solid = solidButtonColors[variant] || solidButtonColors.purple;
+
+  return {
+    ...base,
+    // Additional utilities
+    quoteColor: getQuoteColorClass(variant),
+    cardBorderHover: getCardBorderHoverClass(variant),
+    subtleBg: getSubtleBgClass(variant),
+    hoverBg: getHoverBgClass(variant),
+    accentText: getAccentTextClass(variant),
+    // Button utilities (combined for convenience)
+    buttonBg: `${solid.bg} ${solid.hover}`,
+    buttonText: solid.text,
+    // Price text (same as accentText)
+    priceText: getAccentTextClass(variant),
+    // Product card hover border
+    productHoverBorder: `hover:border-${variant === 'gray' ? 'gray' : variant}-400 dark:hover:border-${variant === 'gray' ? 'gray' : variant}-500`,
+  };
+}
+
+// ============================================================================
 // Layout Utilities - Grid columns and gaps
 // ============================================================================
 

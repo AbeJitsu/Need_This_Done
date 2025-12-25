@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { getPuckFullColors, puckAspectMap } from '@/lib/puck-utils';
 
 // ============================================================================
 // Video Embed Component - Rich Media Display
@@ -8,6 +9,7 @@ import { useState, useMemo } from 'react';
 // What: Responsive YouTube/Vimeo embed with lazy loading and thumbnail preview
 // Why: Video content increases engagement by 80% and time on page
 // How: Parses video URLs to extract IDs, renders optimized iframe embeds
+// DRY: Uses getPuckFullColors() from puck-utils for consistent color handling
 
 interface VideoEmbedComponentProps {
   url: string;
@@ -117,22 +119,15 @@ export default function VideoEmbedComponent({
     [videoInfo, isPlaying, showControls]
   );
 
-  // Aspect ratio classes
+  // Get colors from centralized utility
+  const colors = getPuckFullColors(accentColor);
+
+  // Aspect ratio classes - extended version for video-specific ratios
   const aspectClasses: Record<string, string> = {
     '16:9': 'aspect-video',
-    '4:3': 'aspect-[4/3]',
-    '1:1': 'aspect-square',
+    '4:3': puckAspectMap.landscape,
+    '1:1': puckAspectMap.square,
     '9:16': 'aspect-[9/16] max-w-sm mx-auto',
-  };
-
-  // Button color map
-  const buttonColorMap: Record<string, string> = {
-    purple: 'bg-purple-600 hover:bg-purple-700',
-    blue: 'bg-blue-600 hover:bg-blue-700',
-    green: 'bg-green-600 hover:bg-green-700',
-    orange: 'bg-orange-600 hover:bg-orange-700',
-    teal: 'bg-teal-600 hover:bg-teal-700',
-    gray: 'bg-gray-600 hover:bg-gray-700',
   };
 
   // Empty/invalid state
@@ -186,10 +181,10 @@ export default function VideoEmbedComponent({
             />
             {/* Overlay */}
             <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
-            {/* Play button */}
+            {/* Play button - uses centralized button colors */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div
-                className={`w-20 h-20 rounded-full ${buttonColorMap[accentColor] || buttonColorMap.purple} flex items-center justify-center shadow-xl transition-transform duration-300 group-hover:scale-110`}
+                className={`w-20 h-20 rounded-full ${colors.buttonBg} flex items-center justify-center shadow-xl transition-transform duration-300 group-hover:scale-110`}
               >
                 <svg
                   className="w-8 h-8 text-white ml-1"

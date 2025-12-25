@@ -3,10 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
+import { getPuckFullColors, puckColumnsMap, puckGapMap, PuckEmptyState } from '@/lib/puck-utils';
+import { cardHoverColors, solidButtonColors, type AccentVariant } from '@/lib/colors';
 
 // ============================================================================
 // LIVE PRODUCT GRID COMPONENT
 // Fetches multiple products from Medusa and displays in a responsive grid
+// DRY: Uses getPuckFullColors() and layout utilities from puck-utils
 // ============================================================================
 
 interface Product {
@@ -32,52 +35,6 @@ interface ProductGridComponentProps {
   accentColor: string;
 }
 
-const columnsMap: Record<string, string> = {
-  '2': 'grid-cols-1 sm:grid-cols-2',
-  '3': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-  '4': 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
-};
-
-const gapMap: Record<string, string> = {
-  sm: 'gap-3',
-  md: 'gap-4',
-  lg: 'gap-6',
-  xl: 'gap-8',
-};
-
-const accentMap: Record<string, { border: string; button: string; price: string }> = {
-  purple: {
-    border: 'hover:border-purple-400 dark:hover:border-purple-500',
-    button: 'bg-purple-600 hover:bg-purple-700',
-    price: 'text-purple-600 dark:text-purple-400',
-  },
-  blue: {
-    border: 'hover:border-blue-400 dark:hover:border-blue-500',
-    button: 'bg-blue-600 hover:bg-blue-700',
-    price: 'text-blue-600 dark:text-blue-400',
-  },
-  green: {
-    border: 'hover:border-green-400 dark:hover:border-green-500',
-    button: 'bg-green-600 hover:bg-green-700',
-    price: 'text-green-600 dark:text-green-400',
-  },
-  orange: {
-    border: 'hover:border-orange-400 dark:hover:border-orange-500',
-    button: 'bg-orange-600 hover:bg-orange-700',
-    price: 'text-orange-600 dark:text-orange-400',
-  },
-  teal: {
-    border: 'hover:border-teal-400 dark:hover:border-teal-500',
-    button: 'bg-teal-600 hover:bg-teal-700',
-    price: 'text-teal-600 dark:text-teal-400',
-  },
-  gray: {
-    border: 'hover:border-gray-400 dark:hover:border-gray-500',
-    button: 'bg-gray-600 hover:bg-gray-700',
-    price: 'text-gray-600 dark:text-gray-400',
-  },
-};
-
 export default function ProductGridComponent({
   productIds,
   columns,
@@ -90,7 +47,11 @@ export default function ProductGridComponent({
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
   const { addItem } = useCart();
 
-  const colors = accentMap[accentColor] || accentMap.purple;
+  // Get colors from centralized utilities
+  const colorVariant = accentColor as AccentVariant;
+  const colors = getPuckFullColors(accentColor);
+  const hoverBorder = cardHoverColors[colorVariant] || cardHoverColors.purple;
+  const buttonColors = solidButtonColors[colorVariant] || solidButtonColors.purple;
   const validProductIds = productIds.filter(item => item.id?.trim());
 
   // Fetch all products
@@ -148,22 +109,24 @@ export default function ProductGridComponent({
     }
   };
 
-  // Empty state
+  // Empty state - use shared component
   if (validProductIds.length === 0) {
     return (
-      <div className="text-center py-12 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl">
-        <svg className="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-        </svg>
-        <p className="text-gray-500 dark:text-gray-400">Add product IDs to display</p>
-      </div>
+      <PuckEmptyState
+        message="Add product IDs to display"
+        icon={
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        }
+      />
     );
   }
 
-  // Loading state
+  // Loading state - use puckColumnsMap and puckGapMap
   if (loading) {
     return (
-      <div className={`grid ${columnsMap[columns]} ${gapMap[gap]}`}>
+      <div className={`grid ${puckColumnsMap[columns]} ${puckGapMap[gap]}`}>
         {validProductIds.map((_, index) => (
           <div key={index} className="bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 overflow-hidden animate-pulse">
             <div className="aspect-square bg-gray-200 dark:bg-gray-700" />
@@ -178,7 +141,7 @@ export default function ProductGridComponent({
   }
 
   return (
-    <div className={`grid ${columnsMap[columns]} ${gapMap[gap]}`}>
+    <div className={`grid ${puckColumnsMap[columns]} ${puckGapMap[gap]}`}>
       {validProductIds.map((item, index) => {
         const product = item.id ? products.get(item.id) : null;
 
@@ -199,17 +162,17 @@ export default function ProductGridComponent({
         }
 
         // Get price from first variant
-        const variant = product.variants?.[0];
-        const price = variant?.prices?.[0]?.amount || 0;
+        const productVariant = product.variants?.[0];
+        const price = productVariant?.prices?.[0]?.amount || 0;
         const formattedPrice = (price / 100).toLocaleString('en-US', {
           style: 'currency',
-          currency: variant?.prices?.[0]?.currency_code?.toUpperCase() || 'USD',
+          currency: productVariant?.prices?.[0]?.currency_code?.toUpperCase() || 'USD',
         });
 
         return (
           <div
             key={index}
-            className={`bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 ${colors.border} overflow-hidden transition-all hover:shadow-lg group`}
+            className={`bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 ${hoverBorder} overflow-hidden transition-all hover:shadow-lg group`}
           >
             {/* Product Image */}
             <div className="aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden relative">
@@ -236,16 +199,16 @@ export default function ProductGridComponent({
               </h3>
 
               {showPrice === 'yes' && (
-                <p className={`text-sm font-semibold ${colors.price} mt-1`}>
+                <p className={`text-sm font-semibold ${colors.accentText} mt-1`}>
                   {formattedPrice}
                 </p>
               )}
 
-              {/* Add to Cart Button */}
+              {/* Add to Cart Button - uses centralized button colors */}
               <button
                 onClick={() => handleAddToCart(product)}
-                disabled={addingToCart === product.id || !variant}
-                className={`mt-2 w-full py-1.5 px-3 rounded-lg text-white text-xs font-medium transition-colors ${colors.button} disabled:opacity-50 disabled:cursor-not-allowed`}
+                disabled={addingToCart === product.id || !productVariant}
+                className={`mt-2 w-full py-1.5 px-3 rounded-lg ${buttonColors.text} text-xs font-medium transition-colors ${buttonColors.bg} ${buttonColors.hover} disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 {addingToCart === product.id ? 'Adding...' : 'Add to Cart'}
               </button>
