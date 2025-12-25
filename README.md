@@ -24,11 +24,11 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║  📄 15 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
 ║  🔐 13 Admin Pages                       ✅ Stripe Payments                  ║
 ║  🔌 47 API Routes                        ✅ Supabase Auth & Database         ║
-║  🧩 88 React Components                  ✅ Redis Caching (Upstash)          ║
+║  🧩 96 React Components                  ✅ Redis Caching (Upstash)          ║
 ║  📦 5 Context Providers                  ✅ Email Notifications (Resend)     ║
-║  🔧 25 Lib Utilities                     ✅ Google OAuth                     ║
+║  🔧 26 Lib Utilities                     ✅ Google OAuth                     ║
 ║  🪝 4 Custom Hooks                       🟡 Google Calendar (90% - needs test)║
-║  🧪 177 E2E Tests Passing                ⛔ Puck Page Builder (disabled)     ║
+║  🧪 177 E2E Tests Passing                🟡 Puck (28 components, needs E2E)  ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -80,7 +80,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                           NEXT.JS APP (app/)                                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  15 PUBLIC   │  │  13 ADMIN    │  │  47 API      │  │  88 REACT    │      │
+│  │  15 PUBLIC   │  │  13 ADMIN    │  │  47 API      │  │  96 REACT    │      │
 │  │  PAGES       │  │  PAGES       │  │  ROUTES      │  │  COMPONENTS  │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘      │
 │                                                                              │
@@ -678,7 +678,7 @@ supabase db reset
 │  /admin/orders       (legacy) /admin/content     (alt CMS)                  │
 │  /admin/products     (legacy) /admin/content/[slug]/edit                    │
 │                                                                             │
-│  Note: Puck page builder ⛔ DISABLED - needs testing before production      │
+│  Note: Puck has 28 components ready - needs E2E tests before production     │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -1863,92 +1863,75 @@ See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for:
 
 ## High-Priority Improvements
 
-Looking for a meaningful contribution? These three improvements build on what's already working and deliver real value. Each one is well-scoped and uses existing infrastructure.
+Here's what's been recently completed and what's next on the roadmap:
 
-### 1. Live Product Data in Puck E-Commerce Components
+### ✅ Recently Completed (December 2025)
 
-**Current State**: ProductCard and ProductGrid components display placeholder content (static title, price, image).
+These improvements are **done and working**:
 
-**Improvement**: Connect these components to the live Medusa product API so admins can select real products when building pages.
+| Component | What It Does | Status |
+|-----------|--------------|--------|
+| **ProductCardComponent** | Fetches live product data from Medusa API | ✅ Implemented |
+| **ProductGridComponent** | Grid of products with parallel fetching | ✅ Implemented |
+| **TabsComponent** | Interactive client-side tabs with useState | ✅ Implemented |
+| **AccordionComponent** | Interactive accordion with allowMultiple | ✅ Implemented |
+| **MediaPickerField** | Visual media library browser modal | ✅ Implemented |
+| **TestimonialsComponent** | Carousel/grid of customer reviews | ✅ Implemented |
+| **VideoEmbedComponent** | YouTube/Vimeo embed with lazy loading | ✅ Implemented |
+| **StatsCounterComponent** | Animated count-up numbers | ✅ Implemented |
+| **Order Status Emails** | Automatic email on status change | ✅ Implemented |
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│ BEFORE                        │ AFTER                        │
-├───────────────────────────────┼──────────────────────────────┤
-│ ProductCard:                  │ ProductCard:                 │
-│ ├── title: "Sample Product"   │ ├── productId: dropdown      │
-│ ├── price: "$19.99"           │ │   └── fetches from Medusa  │
-│ └── image: text URL           │ ├── Live title, price, image │
-│                               │ └── Real "Add to Cart" action│
-│ Admin types everything        │ Admin selects, data syncs    │
-└──────────────────────────────────────────────────────────────┘
-```
+**Puck Component Library**: Now 28 components across 6 categories:
+- **Layout** (4): Spacer, Container, Columns, Divider
+- **Media** (5): Image, ImageGallery, Hero, ImageText, VideoEmbed
+- **Content** (4): TextBlock, RichText, PageHeader, CTASection
+- **Interactive** (6): Accordion, Tabs, FeatureGrid, Button, Card, CircleBadge
+- **Social Proof** (2): Testimonials, StatsCounter
+- **E-Commerce** (4): ProductCard, ProductGrid, FeaturedProduct, PricingTable
 
-**Files to modify**:
-- `lib/puck-config.tsx` - Add product fetcher to ProductCard/ProductGrid fields
-- `app/api/shop/products/route.ts` - Already exists, provides product list
-
-**Value**: Enables non-technical admins to create product showcase pages that stay synced with inventory.
-
----
-
-### 2. Interactive Client-Side Tabs Component
-
-**Current State**: The Tabs component in Puck only renders the first tab (server-side render limitation).
-
-**Improvement**: Convert to a client component with proper state management so users can click between tabs.
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│ BEFORE                        │ AFTER                        │
-├───────────────────────────────┼──────────────────────────────┤
-│ ┌─────┬─────┬─────┐           │ ┌─────┬─────┬─────┐          │
-│ │Tab 1│Tab 2│Tab 3│           │ │Tab 1│Tab 2│Tab 3│          │
-│ └─────┴─────┴─────┘           │ └─────┴─────┴─────┘          │
-│ ┌─────────────────┐           │ ┌─────────────────┐          │
-│ │ Content 1       │           │ │ Content 2       │ ◄── Clickable! │
-│ │ (always shown)  │           │ │ (user selected) │          │
-│ └─────────────────┘           │ └─────────────────┘          │
-│ Tab clicks do nothing         │ Full interactivity           │
-└──────────────────────────────────────────────────────────────┘
-```
-
-**Files to modify**:
-- `lib/puck-config.tsx` - Extract Tabs to client component file
-- Create `components/puck/TabsComponent.tsx` with useState
-
-**Value**: Unlocks a common UI pattern for FAQs, feature comparisons, and content organization.
+Plus supporting utilities: MediaPickerField, shared puck-utils.ts
 
 ---
 
-### 3. Media Library Integration with Image Components
+### 🔜 Next Up (High Value)
 
-**Current State**: Image and Gallery components use plain text URL inputs. The Media Library exists but isn't connected to these components.
+#### 1. Enable Puck Page Builder in Production
 
-**Improvement**: Add a MediaLibrary picker modal to Image/Gallery fields, allowing admins to browse and select from uploaded media.
+**Current State**: Puck is fully built (28 components) but disabled pending testing.
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│ BEFORE                        │ AFTER                        │
-├───────────────────────────────┼──────────────────────────────┤
-│ Image URL:                    │ ┌─────────────────────────┐  │
-│ ┌──────────────────────────┐  │ │ [Browse Media Library]  │  │
-│ │ https://example.com/...  │  │ └─────────────────────────┘  │
-│ └──────────────────────────┘  │           ▼                  │
-│ Admin copies/pastes URLs      │ ┌─────────────────────────┐  │
-│                               │ │ 📷 img1  📷 img2  📷 img3 │  │
-│                               │ │ 📷 img4  📷 img5  📷 img6 │  │
-│                               │ └─────────────────────────┘  │
-│                               │ Click to select → URL filled │
-└──────────────────────────────────────────────────────────────┘
-```
+**What's Needed**:
+- E2E tests for Puck admin workflows (create, edit, publish, delete)
+- Test public page rendering and cache behavior
+- Permission enforcement testing
 
-**Files to modify**:
-- `lib/puck-config.tsx` - Add custom field renderer for image URLs
-- Create `components/puck/MediaPickerField.tsx` - Modal that fetches from `/api/media`
-- `app/api/media/route.ts` - Already exists (GET lists media)
+**Value**: Unlocks visual page building for non-technical users.
 
-**Value**: Transforms content editing from technical URL management to visual media selection.
+---
+
+#### 2. Google Calendar Integration Testing
+
+**Current State**: OAuth flow built, event creation API ready (90% complete).
+
+**What's Needed**:
+- Manual testing of appointment booking flow
+- Test calendar event creation on appointment approval
+- Deploy to production
+
+**Value**: Automatic calendar invites when appointments are booked.
+
+---
+
+#### 3. Admin Analytics Dashboard
+
+**Current State**: Order and appointment data exists but no visualization.
+
+**What's Needed**:
+- Revenue trends chart (daily/weekly/monthly)
+- Order status breakdown
+- Popular products/services
+- Customer acquisition metrics
+
+**Value**: Business insights for decision-making.
 
 ---
 
