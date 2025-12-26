@@ -49,15 +49,15 @@ _Currently active work items_
 
 ### Short Term (This Week)
 
-**Template System Foundation** ✅ STARTED
+**Template System Foundation** ✅ COMPLETE
 - [x] Create template type definitions (`lib/templates/types.ts`)
 - [x] Build template utilities (`lib/templates/utils.ts`)
 - [x] Create 5 starter templates (course, business, product, portfolio, contact)
 - [x] Build TemplatePicker component (phone-friendly)
 - [x] Build PageWizard component (5-step flow)
-- [ ] Create admin page for wizard at `/admin/pages/new`
-- [ ] Wire wizard output to Puck page storage
-- [ ] Test wizard end-to-end
+- [x] Create admin page with "Choose Your Path" (wizard OR full editor)
+- [x] Wire wizard output to Puck page storage via `/api/pages`
+- [ ] Test wizard end-to-end in dev environment
 
 **Admin Workflows**
 - [ ] Inventory management interface

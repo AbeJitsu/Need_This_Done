@@ -9,12 +9,31 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { Puck } from '@measured/puck';
 import { puckConfig } from '@/lib/puck-config';
+import { PageWizard } from '@/components/templates';
+import type { PuckPageData } from '@/lib/templates';
 import '@measured/puck/puck.css';
+
+// ============================================================================
+// NEW PAGE - Choose Your Path
+// ============================================================================
+// Offers two ways to create a page:
+// 1. Quick Wizard - 5 simple steps, phone-friendly, template-based
+// 2. Full Editor - Complete Puck editor for power users
+//
+// Both output the same Puck JSON format, stored the same way.
+// ============================================================================
+
+type CreationMode = 'choose' | 'wizard' | 'editor';
 
 export default function NewPage() {
   const router = useRouter();
   const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
   const { showToast } = useToast();
+
+  // Which creation mode are we in?
+  const [mode, setMode] = useState<CreationMode>('choose');
+
+  // Editor state (only used in 'editor' mode)
   const [slug, setSlug] = useState('');
   const [title, setTitle] = useState('');
   const [validationError, setValidationError] = useState('');
@@ -30,24 +49,23 @@ export default function NewPage() {
     }
   }, [isAuthenticated, isAdmin, authLoading, router]);
 
-  const handleSave = useCallback(async (data: any) => {
-    // Validate slug and title
-    if (!slug || !title) {
-      setValidationError('Please enter both slug and title');
-      return;
-    }
+  // ============================================================================
+  // Save Functions - Shared by both wizard and editor
+  // ============================================================================
 
-    setValidationError('');
-    setSaveStatus('saving');
-
+  const savePage = useCallback(async (
+    pageSlug: string,
+    pageTitle: string,
+    content: PuckPageData
+  ): Promise<boolean> => {
     try {
       const response = await fetch('/api/pages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          slug,
-          title,
-          content: data,
+          slug: pageSlug,
+          title: pageTitle,
+          content,
         }),
       });
 
@@ -57,21 +75,68 @@ export default function NewPage() {
         throw new Error(result.error || 'Failed to create page');
       }
 
+      return true;
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to create page', 'error');
+      return false;
+    }
+  }, [showToast]);
+
+  // ============================================================================
+  // Wizard Completion Handler
+  // ============================================================================
+
+  const handleWizardComplete = useCallback(async (data: PuckPageData, templateId: string) => {
+    // Generate slug from template ID and timestamp
+    const timestamp = Date.now().toString(36);
+    const pageSlug = `${templateId}-${timestamp}`;
+
+    // Get title from the hero section if possible
+    const heroSection = data.content.find((c) => c.type === 'Hero');
+    const pageTitle = heroSection?.props?.heading as string || `New ${templateId} page`;
+
+    const success = await savePage(pageSlug, pageTitle, data);
+
+    if (success) {
+      showToast('Page created! Redirecting to editor...', 'success');
+      // Redirect to edit page so they can fine-tune
+      router.push(`/admin/pages/${pageSlug}/edit`);
+    }
+  }, [savePage, showToast, router]);
+
+  // ============================================================================
+  // Editor Save Handler
+  // ============================================================================
+
+  const handleEditorSave = useCallback(async (data: PuckPageData) => {
+    if (!slug || !title) {
+      setValidationError('Please enter both slug and title');
+      return;
+    }
+
+    setValidationError('');
+    setSaveStatus('saving');
+
+    const success = await savePage(slug, title, data);
+
+    if (success) {
       setSaveStatus('saved');
       setHasUnsavedChanges(false);
       showToast('Page created successfully', 'success');
       router.push('/admin/pages');
-    } catch (err) {
+    } else {
       setSaveStatus('idle');
-      showToast(err instanceof Error ? err.message : 'Failed to create page', 'error');
     }
-  }, [slug, title, router, showToast]);
+  }, [slug, title, savePage, showToast, router]);
 
-  // Track unsaved changes
-  const handleChange = useCallback(() => {
+  const handleEditorChange = useCallback(() => {
     setHasUnsavedChanges(true);
     setSaveStatus('idle');
   }, []);
+
+  // ============================================================================
+  // Loading State
+  // ============================================================================
 
   if (authLoading) {
     return (
@@ -83,11 +148,172 @@ export default function NewPage() {
 
   if (!isAdmin) return null;
 
+  // ============================================================================
+  // Render: Choose Mode
+  // ============================================================================
+
+  if (mode === 'choose') {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+        {/* Header */}
+        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-4">
+          <div className="max-w-4xl mx-auto">
+            <nav className="flex items-center gap-2 text-sm mb-4">
+              <Link
+                href="/dashboard"
+                className="text-gray-500 dark:text-gray-400 hover:text-purple-600"
+              >
+                Admin
+              </Link>
+              <span className="text-gray-400">/</span>
+              <Link
+                href="/admin/pages"
+                className="text-gray-500 dark:text-gray-400 hover:text-purple-600"
+              >
+                Pages
+              </Link>
+              <span className="text-gray-400">/</span>
+              <span className="text-gray-900 dark:text-gray-100 font-medium">New</span>
+            </nav>
+
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              Create a New Page
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
+              Choose how you want to build your page
+            </p>
+          </div>
+        </header>
+
+        {/* Path Selection */}
+        <main className="flex-1 px-4 py-8">
+          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+            {/* Wizard Path */}
+            <button
+              onClick={() => setMode('wizard')}
+              className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-purple-500 hover:shadow-lg transition-all group"
+            >
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <svg className="w-8 h-8 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+
+              <div className="flex items-center gap-2 mb-2">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                  Quick Start
+                </h2>
+                <span className="px-2 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
+                  Recommended
+                </span>
+              </div>
+
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                Answer 5 simple questions and get a professional page in under a minute. Perfect for phones.
+              </p>
+
+              <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  5 templates to choose from
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  Pick colors and content
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  Edit with full builder after
+                </li>
+              </ul>
+
+              <div className="mt-6 flex items-center text-purple-600 dark:text-purple-400 font-medium group-hover:gap-3 gap-2 transition-all">
+                Start Wizard
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </button>
+
+            {/* Full Editor Path */}
+            <button
+              onClick={() => setMode('editor')}
+              className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-blue-500 hover:shadow-lg transition-all group"
+            >
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                </svg>
+              </div>
+
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                Full Editor
+              </h2>
+
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                Complete control with drag-and-drop. 40+ components, pixel-perfect layouts.
+              </p>
+
+              <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  40+ components
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  Start from blank canvas
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  Best on desktop
+                </li>
+              </ul>
+
+              <div className="mt-6 flex items-center text-blue-600 dark:text-blue-400 font-medium group-hover:gap-3 gap-2 transition-all">
+                Open Editor
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // ============================================================================
+  // Render: Wizard Mode
+  // ============================================================================
+
+  if (mode === 'wizard') {
+    return (
+      <PageWizard
+        onComplete={handleWizardComplete}
+        onCancel={() => setMode('choose')}
+      />
+    );
+  }
+
+  // ============================================================================
+  // Render: Editor Mode (Original Puck Editor)
+  // ============================================================================
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* ========================================================================
-          Header with Breadcrumbs & Page Details
-          ======================================================================== */}
+      {/* Header with Breadcrumbs & Page Details */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="container mx-auto px-6 py-5">
           {/* Breadcrumb Navigation */}
@@ -106,27 +332,34 @@ export default function NewPage() {
               Pages
             </Link>
             <span className="text-gray-400 dark:text-gray-500">/</span>
-            <span className="text-gray-900 dark:text-gray-100 font-medium">New Page</span>
+            <button
+              onClick={() => setMode('choose')}
+              className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+            >
+              New Page
+            </button>
+            <span className="text-gray-400 dark:text-gray-500">/</span>
+            <span className="text-gray-900 dark:text-gray-100 font-medium">Full Editor</span>
           </nav>
 
           {/* Header Row */}
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-4">
-              <Link
-                href="/admin/pages"
+              <button
+                onClick={() => setMode('choose')}
                 className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                title="Back to Pages"
+                title="Back to options"
               >
                 <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
-              </Link>
+              </button>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                  Create New Page
+                  Full Editor
                 </h1>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Design your page with drag-and-drop components
+                  Build from scratch with 40+ components
                 </p>
               </div>
             </div>
@@ -210,14 +443,12 @@ export default function NewPage() {
         </div>
       </div>
 
-      {/* ========================================================================
-          Puck Editor
-          ======================================================================== */}
+      {/* Puck Editor */}
       <Puck
         config={puckConfig}
         data={{ content: [], root: {} }}
-        onPublish={handleSave}
-        onChange={handleChange}
+        onPublish={handleEditorSave}
+        onChange={handleEditorChange}
       />
     </div>
   );
