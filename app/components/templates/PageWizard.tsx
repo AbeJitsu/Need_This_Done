@@ -8,6 +8,9 @@ import {
   getWizardProgress,
   STARTER_TEMPLATES,
   filterByCategory,
+  CATEGORY_INFO,
+  ALL_CATEGORIES,
+  COLOR_OPTIONS,
 } from '@/lib/templates';
 import { accentColors, type AccentVariant } from '@/lib/colors';
 
@@ -40,29 +43,6 @@ interface PageWizardProps {
 type WizardStepId = 'category' | 'template' | 'color' | 'content' | 'preview';
 
 const WIZARD_STEPS: WizardStepId[] = ['category', 'template', 'color', 'content', 'preview'];
-
-// Category display info
-const CATEGORIES: Array<{
-  id: TemplateCategory;
-  label: string;
-  description: string;
-  icon: string;
-}> = [
-  { id: 'landing', label: 'Landing Page', description: 'Sales pages, launches, promotions', icon: '🚀' },
-  { id: 'course', label: 'Course', description: 'Online courses, training programs', icon: '📚' },
-  { id: 'shop', label: 'Shop', description: 'Products, collections, e-commerce', icon: '🛒' },
-  { id: 'content', label: 'Content', description: 'Blog, portfolio, about pages', icon: '📝' },
-  { id: 'utility', label: 'Utility', description: 'Contact, thank you, simple pages', icon: '⚙️' },
-];
-
-// Available colors for selection
-const COLOR_OPTIONS: Array<{ id: AccentVariant; label: string }> = [
-  { id: 'purple', label: 'Purple' },
-  { id: 'blue', label: 'Blue' },
-  { id: 'teal', label: 'Teal' },
-  { id: 'green', label: 'Green' },
-  { id: 'orange', label: 'Orange' },
-];
 
 export default function PageWizard({ onComplete, onCancel }: PageWizardProps) {
   // Wizard state
@@ -262,40 +242,43 @@ function StepCategory({
       </p>
 
       <div className="space-y-3">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => onSelect(cat.id)}
-            className={`w-full p-4 rounded-xl border-2 text-left transition-all flex items-start gap-4 ${
-              selected === cat.id
-                ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-            }`}
-          >
-            <span className="text-3xl">{cat.icon}</span>
-            <div>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                {cat.label}
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {cat.description}
-              </p>
-            </div>
-            {selected === cat.id && (
-              <svg
-                className="w-6 h-6 text-purple-600 ml-auto flex-shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
+        {ALL_CATEGORIES.map((catId) => {
+          const cat = CATEGORY_INFO[catId];
+          return (
+            <button
+              key={catId}
+              onClick={() => onSelect(catId)}
+              className={`w-full p-4 rounded-xl border-2 text-left transition-all flex items-start gap-4 ${
+                selected === catId
+                  ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
+                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+              }`}
+            >
+              <span className="text-3xl">{cat.icon}</span>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+                  {cat.label}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {cat.description}
+                </p>
+              </div>
+              {selected === catId && (
+                <svg
+                  className="w-6 h-6 text-purple-600 ml-auto flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
               </svg>
             )}
           </button>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

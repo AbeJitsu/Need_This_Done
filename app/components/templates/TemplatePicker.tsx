@@ -2,7 +2,13 @@
 
 import { useState, useMemo } from 'react';
 import type { PageTemplate, TemplateCategory } from '@/lib/templates';
-import { filterByCategory, searchTemplates, sortTemplates } from '@/lib/templates';
+import {
+  filterByCategory,
+  searchTemplates,
+  sortTemplates,
+  CATEGORY_INFO,
+  ALL_CATEGORIES,
+} from '@/lib/templates';
 import { accentColors } from '@/lib/colors';
 
 // ============================================================================
@@ -22,17 +28,6 @@ interface TemplatePickerProps {
   onSelect: (template: PageTemplate) => void;
   selectedId?: string;
 }
-
-// Category metadata for display
-const CATEGORY_INFO: Record<TemplateCategory, { label: string; icon: string }> = {
-  landing: { label: 'Landing Pages', icon: '🚀' },
-  course: { label: 'Courses', icon: '📚' },
-  shop: { label: 'Shop', icon: '🛒' },
-  content: { label: 'Content', icon: '📝' },
-  utility: { label: 'Utility', icon: '⚙️' },
-};
-
-const ALL_CATEGORIES: TemplateCategory[] = ['landing', 'course', 'shop', 'content', 'utility'];
 
 export default function TemplatePicker({
   templates,

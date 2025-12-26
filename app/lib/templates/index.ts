@@ -66,3 +66,13 @@ export {
 
 // Templates
 export { STARTER_TEMPLATES, getTemplateById, getAllTemplates } from './starter-templates';
+
+// Config (centralized metadata)
+export type { CategoryInfo, ColorOption } from './config';
+export {
+  CATEGORY_INFO,
+  ALL_CATEGORIES,
+  COLOR_OPTIONS,
+  getCategoryInfo,
+  getColorLabel,
+} from './config';
