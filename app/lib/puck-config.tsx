@@ -1,5 +1,4 @@
 import type { Config } from '@measured/puck';
-import type { ReactNode } from 'react';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import PageHeader from '@/components/PageHeader';
@@ -14,6 +13,7 @@ import TestimonialsComponent from '@/components/puck/TestimonialsComponent';
 import VideoEmbedComponent from '@/components/puck/VideoEmbedComponent';
 import StatsCounterComponent from '@/components/puck/StatsCounterComponent';
 import { solidButtonColors, type AccentVariant } from '@/lib/colors';
+import { getPuckAccentColors, getPuckFullColors, puckColumnsMap, puckIcons, getDividerColors, getPricingColors } from './puck-utils';
 
 // ============================================================================
 // Puck Configuration - Visual Editor Component Library
@@ -496,34 +496,7 @@ export const puckConfig: Config = {
         color: 'gray' as AccentVariant,
       },
       render: ({ style, color }) => {
-        const colorMap: Record<string, { border: string; gradient: string }> = {
-          purple: {
-            border: 'border-purple-300 dark:border-purple-700',
-            gradient: 'from-transparent via-purple-400 to-transparent',
-          },
-          blue: {
-            border: 'border-blue-300 dark:border-blue-700',
-            gradient: 'from-transparent via-blue-400 to-transparent',
-          },
-          green: {
-            border: 'border-green-300 dark:border-green-700',
-            gradient: 'from-transparent via-green-400 to-transparent',
-          },
-          orange: {
-            border: 'border-orange-300 dark:border-orange-700',
-            gradient: 'from-transparent via-orange-400 to-transparent',
-          },
-          teal: {
-            border: 'border-teal-300 dark:border-teal-700',
-            gradient: 'from-transparent via-teal-400 to-transparent',
-          },
-          gray: {
-            border: 'border-gray-300 dark:border-gray-600',
-            gradient: 'from-transparent via-gray-400 to-transparent',
-          },
-        };
-
-        const colors = colorMap[color] || colorMap.gray;
+        const colors = getDividerColors(color);
 
         if (style === 'gradient') {
           return (
@@ -1349,30 +1322,8 @@ export const puckConfig: Config = {
         accentColor: 'purple' as AccentVariant,
       },
       render: ({ features, columns, accentColor }) => {
-        const columnsMap: Record<string, string> = {
-          '2': 'grid-cols-1 md:grid-cols-2',
-          '3': 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-          '4': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
-        };
-
-        const accentMap: Record<string, { bg: string; text: string }> = {
-          purple: { bg: 'bg-purple-100 dark:bg-purple-900/30', text: 'text-purple-600 dark:text-purple-400' },
-          blue: { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-600 dark:text-blue-400' },
-          green: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-600 dark:text-green-400' },
-          orange: { bg: 'bg-orange-100 dark:bg-orange-900/30', text: 'text-orange-600 dark:text-orange-400' },
-          teal: { bg: 'bg-teal-100 dark:bg-teal-900/30', text: 'text-teal-600 dark:text-teal-400' },
-          gray: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-600 dark:text-gray-400' },
-        };
-        const colors = accentMap[accentColor] || accentMap.purple;
-
-        const iconMap: Record<string, ReactNode> = {
-          star: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>,
-          check: <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
-          lightning: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>,
-          shield: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>,
-          heart: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>,
-          cog: <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
-        };
+        // Use centralized color utilities from puck-utils
+        const colors = getPuckAccentColors(accentColor);
 
         if (!features || features.length === 0) {
           return (
@@ -1383,14 +1334,14 @@ export const puckConfig: Config = {
         }
 
         return (
-          <div className={`grid ${columnsMap[columns]} gap-6`}>
+          <div className={`grid ${puckColumnsMap[columns as keyof typeof puckColumnsMap]} gap-6`}>
             {features.map((feature: { icon?: string; title?: string; description?: string }, index: number) => (
               <div
                 key={index}
                 className="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
               >
-                <div className={`w-12 h-12 ${colors.bg} ${colors.text} rounded-xl flex items-center justify-center mb-4`}>
-                  {iconMap[feature.icon || 'check'] || iconMap.check}
+                <div className={`w-12 h-12 ${colors.iconBg} ${colors.text} rounded-xl flex items-center justify-center mb-4`}>
+                  {puckIcons[feature.icon || 'check'] || puckIcons.check}
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                   {feature.title || 'Feature'}
@@ -1589,15 +1540,8 @@ export const puckConfig: Config = {
         showBadge: 'none',
       },
       render: ({ productId, layout, title, description, buttonText, buttonLink, accentColor, showBadge }) => {
-        const accentMap: Record<string, { bg: string; text: string; button: string }> = {
-          purple: { bg: 'bg-purple-100 dark:bg-purple-900/30', text: 'text-purple-600 dark:text-purple-400', button: 'bg-purple-600 hover:bg-purple-700' },
-          blue: { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-600 dark:text-blue-400', button: 'bg-blue-600 hover:bg-blue-700' },
-          green: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-600 dark:text-green-400', button: 'bg-green-600 hover:bg-green-700' },
-          orange: { bg: 'bg-orange-100 dark:bg-orange-900/30', text: 'text-orange-600 dark:text-orange-400', button: 'bg-orange-600 hover:bg-orange-700' },
-          teal: { bg: 'bg-teal-100 dark:bg-teal-900/30', text: 'text-teal-600 dark:text-teal-400', button: 'bg-teal-600 hover:bg-teal-700' },
-          gray: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-600 dark:text-gray-400', button: 'bg-gray-600 hover:bg-gray-700' },
-        };
-        const colors = accentMap[accentColor] || accentMap.purple;
+        // Use centralized color utilities from puck-utils
+        const colors = getPuckFullColors(accentColor);
 
         const badgeMap: Record<string, { text: string; class: string }> = {
           new: { text: 'New', class: 'bg-green-500' },
@@ -1624,7 +1568,7 @@ export const puckConfig: Config = {
 
         const contentElement = (
           <div className="w-full md:w-1/2 flex flex-col justify-center py-8 md:py-0">
-            <div className={`inline-flex items-center px-3 py-1 ${colors.bg} ${colors.text} rounded-full text-sm font-medium mb-4 w-fit`}>
+            <div className={`inline-flex items-center px-3 py-1 ${colors.iconBg} ${colors.accentText} rounded-full text-sm font-medium mb-4 w-fit`}>
               {productId || 'Product ID'}
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
@@ -1640,7 +1584,7 @@ export const puckConfig: Config = {
               {buttonText && (
                 <a
                   href={buttonLink || '/shop'}
-                  className={`px-6 py-3 text-white font-medium rounded-lg ${colors.button} transition-colors`}
+                  className={`px-6 py-3 text-white font-medium rounded-lg ${colors.buttonBg} transition-colors`}
                 >
                   {buttonText}
                 </a>
@@ -1779,15 +1723,7 @@ export const puckConfig: Config = {
         accentColor: 'purple' as AccentVariant,
       },
       render: ({ plans, accentColor }) => {
-        const accentMap: Record<string, { border: string; bg: string; button: string; badge: string }> = {
-          purple: { border: 'border-purple-500', bg: 'bg-purple-50 dark:bg-purple-900/20', button: 'bg-purple-600 hover:bg-purple-700', badge: 'bg-purple-500' },
-          blue: { border: 'border-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20', button: 'bg-blue-600 hover:bg-blue-700', badge: 'bg-blue-500' },
-          green: { border: 'border-green-500', bg: 'bg-green-50 dark:bg-green-900/20', button: 'bg-green-600 hover:bg-green-700', badge: 'bg-green-500' },
-          orange: { border: 'border-orange-500', bg: 'bg-orange-50 dark:bg-orange-900/20', button: 'bg-orange-600 hover:bg-orange-700', badge: 'bg-orange-500' },
-          teal: { border: 'border-teal-500', bg: 'bg-teal-50 dark:bg-teal-900/20', button: 'bg-teal-600 hover:bg-teal-700', badge: 'bg-teal-500' },
-          gray: { border: 'border-gray-500', bg: 'bg-gray-50 dark:bg-gray-800', button: 'bg-gray-600 hover:bg-gray-700', badge: 'bg-gray-500' },
-        };
-        const colors = accentMap[accentColor] || accentMap.purple;
+        const colors = getPricingColors(accentColor);
 
         if (!plans || plans.length === 0) {
           return (

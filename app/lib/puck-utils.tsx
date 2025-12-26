@@ -198,6 +198,131 @@ function getAccentTextClass(color: AccentVariant): string {
 }
 
 /**
+ * Get highlight border (500 shade) for pricing cards, featured sections
+ */
+function getHighlightBorderClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'border-purple-500',
+    blue: 'border-blue-500',
+    green: 'border-green-500',
+    orange: 'border-orange-500',
+    teal: 'border-teal-500',
+    gray: 'border-gray-500',
+    red: 'border-red-500',
+  };
+  return map[color] || map.purple;
+}
+
+/**
+ * Get badge background (500 shade) for "Most Popular", "Featured" badges
+ */
+function getBadgeBgClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'bg-purple-500',
+    blue: 'bg-blue-500',
+    green: 'bg-green-500',
+    orange: 'bg-orange-500',
+    teal: 'bg-teal-500',
+    gray: 'bg-gray-500',
+    red: 'bg-red-500',
+  };
+  return map[color] || map.purple;
+}
+
+/**
+ * Get divider border color (for solid and dashed dividers)
+ */
+function getDividerBorderClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'border-purple-300 dark:border-purple-700',
+    blue: 'border-blue-300 dark:border-blue-700',
+    green: 'border-green-300 dark:border-green-700',
+    orange: 'border-orange-300 dark:border-orange-700',
+    teal: 'border-teal-300 dark:border-teal-700',
+    gray: 'border-gray-300 dark:border-gray-600',
+    red: 'border-red-300 dark:border-red-700',
+  };
+  return map[color] || map.gray;
+}
+
+/**
+ * Get divider gradient color (for gradient dividers)
+ */
+function getDividerGradientClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'from-transparent via-purple-400 to-transparent',
+    blue: 'from-transparent via-blue-400 to-transparent',
+    green: 'from-transparent via-green-400 to-transparent',
+    orange: 'from-transparent via-orange-400 to-transparent',
+    teal: 'from-transparent via-teal-400 to-transparent',
+    gray: 'from-transparent via-gray-400 to-transparent',
+    red: 'from-transparent via-red-400 to-transparent',
+  };
+  return map[color] || map.gray;
+}
+
+/**
+ * Get border color for accent (600 light / 400 dark)
+ */
+function getAccentBorderClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'border-purple-600 dark:border-purple-400',
+    blue: 'border-blue-600 dark:border-blue-400',
+    green: 'border-green-600 dark:border-green-400',
+    orange: 'border-orange-600 dark:border-orange-400',
+    teal: 'border-teal-600 dark:border-teal-400',
+    gray: 'border-gray-600 dark:border-gray-400',
+    red: 'border-red-600 dark:border-red-400',
+  };
+  return map[color] || map.purple;
+}
+
+/**
+ * Get solid background color for accent (600 shade)
+ */
+function getSolidBgClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'bg-purple-600',
+    blue: 'bg-blue-600',
+    green: 'bg-green-600',
+    orange: 'bg-orange-600',
+    teal: 'bg-teal-600',
+    gray: 'bg-gray-600',
+    red: 'bg-red-600',
+  };
+  return map[color] || map.purple;
+}
+
+/**
+ * Get tab colors for TabsComponent
+ * Returns active text, border, and background colors
+ */
+export function getTabColors(color: string) {
+  const variant = color as AccentVariant;
+  return {
+    active: getAccentTextClass(variant),
+    border: getAccentBorderClass(variant),
+    bg: getSolidBgClass(variant),
+  };
+}
+
+/**
+ * Get pricing table colors for highlighted plans
+ * Provides all color utilities needed for pricing cards
+ */
+export function getPricingColors(color: string) {
+  const variant = color as AccentVariant;
+  const solid = solidButtonColors[variant] || solidButtonColors.purple;
+
+  return {
+    border: getHighlightBorderClass(variant),
+    bg: getSubtleBgClass(variant),
+    button: `${solid.bg} ${solid.hover}`,
+    badge: getBadgeBgClass(variant),
+  };
+}
+
+/**
  * Get comprehensive Puck styling for a color
  * Extended version with all derived colors for Puck components
  */
@@ -221,6 +346,18 @@ export function getPuckFullColors(color: string) {
     priceText: getAccentTextClass(variant),
     // Product card hover border
     productHoverBorder: `hover:border-${variant === 'gray' ? 'gray' : variant}-400 dark:hover:border-${variant === 'gray' ? 'gray' : variant}-500`,
+  };
+}
+
+/**
+ * Get divider colors for solid, dashed, and gradient dividers
+ * Falls back to gray if color not found
+ */
+export function getDividerColors(color: string) {
+  const variant = color as AccentVariant;
+  return {
+    border: getDividerBorderClass(variant),
+    gradient: getDividerGradientClass(variant),
   };
 }
 

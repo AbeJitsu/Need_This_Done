@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { verifyAdmin } from '@/lib/api-auth';
 import { getAuthUrl } from '@/lib/google-calendar';
 
 export const dynamic = 'force-dynamic';
@@ -11,43 +11,15 @@ export const dynamic = 'force-dynamic';
 // Why: Admin needs to authorize access to their Google Calendar
 // How: Generates OAuth URL with state parameter for security
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
-    // Get the current user from the session
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-
-    // Get authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Unauthorized - Please log in' },
-        { status: 401 }
-      );
+    // Verify admin access
+    const authResult = await verifyAdmin();
+    if (authResult.error) {
+      return authResult.error;
     }
 
-    const token = authHeader.substring(7);
-
-    // Verify the user
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized - Invalid token' },
-        { status: 401 }
-      );
-    }
-
-    // Check if user is admin
-    const isAdmin = user.user_metadata?.is_admin === true;
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: 'Forbidden - Admin access required' },
-        { status: 403 }
-      );
-    }
+    const user = authResult.user;
 
     // Generate state parameter (includes user ID for security)
     const state = Buffer.from(JSON.stringify({

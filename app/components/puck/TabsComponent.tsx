@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, ReactNode } from 'react';
+import { getTabColors } from '@/lib/puck-utils';
 
 // ============================================================================
 // INTERACTIVE TABS COMPONENT
@@ -20,16 +21,6 @@ interface TabsComponentProps {
   fullWidth: 'yes' | 'no';
 }
 
-// Color mapping for accent colors
-const accentMap: Record<string, { active: string; border: string; bg: string }> = {
-  purple: { active: 'text-purple-600 dark:text-purple-400', border: 'border-purple-600 dark:border-purple-400', bg: 'bg-purple-600' },
-  blue: { active: 'text-blue-600 dark:text-blue-400', border: 'border-blue-600 dark:border-blue-400', bg: 'bg-blue-600' },
-  green: { active: 'text-green-600 dark:text-green-400', border: 'border-green-600 dark:border-green-400', bg: 'bg-green-600' },
-  orange: { active: 'text-orange-600 dark:text-orange-400', border: 'border-orange-600 dark:border-orange-400', bg: 'bg-orange-600' },
-  teal: { active: 'text-teal-600 dark:text-teal-400', border: 'border-teal-600 dark:border-teal-400', bg: 'bg-teal-600' },
-  gray: { active: 'text-gray-800 dark:text-gray-200', border: 'border-gray-600 dark:border-gray-400', bg: 'bg-gray-600' },
-};
-
 // Icon components for tab labels
 const iconMap: Record<string, ReactNode> = {
   star: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>,
@@ -41,7 +32,7 @@ const iconMap: Record<string, ReactNode> = {
 
 export default function TabsComponent({ tabs, style, accentColor, fullWidth }: TabsComponentProps) {
   const [activeTab, setActiveTab] = useState(0);
-  const colors = accentMap[accentColor] || accentMap.purple;
+  const colors = getTabColors(accentColor);
 
   // Empty state
   if (!tabs || tabs.length === 0) {

@@ -114,6 +114,17 @@ _Currently active work items_
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+**DRY Refactoring & Code Quality Audit** (Dec 2025)
+- Fixed critical dynamic Tailwind classes in Hero/ImageText that would break in production
+- Centralized Puck color utilities in `puck-utils.tsx`:
+  - `getDividerColors()` - Divider border/gradient
+  - `getPricingColors()` - PricingTable border/bg/button/badge
+  - `getTabColors()` - TabsComponent active/border/bg
+  - Updated FeatureGrid, FeaturedProduct to use `getPuckFullColors()`
+- Centralized template metadata in `lib/templates/config.ts` (category + color info)
+- Removed debug console.logs from supabase.ts, api-auth.ts, auth/callback
+- Fixed `/api/google/connect` to use `verifyAdmin()` pattern
+
 **Template System & Page Wizard** (Dec 2025)
 - Orthogonal template architecture (`lib/templates/`) - types, utils, starter templates
 - 5 starter templates: Course Landing, Business Landing, Product Launch, Portfolio, Contact
