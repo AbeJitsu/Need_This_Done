@@ -140,6 +140,9 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 - [Troubleshooting](#troubleshooting)
 
 **Reference**
+- [Puck Visual Builder](#puck-visual-builder) ← *28 components, color utilities*
+- [Template System](#template-system) ← *5-step wizard, starter templates*
+- [API Patterns](#api-patterns) ← *auth, error handling*
 - [Design System](#design-system)
 - [Key Files Reference](#key-files-reference)
 - [High-Priority Improvements](#high-priority-improvements) ← *3 high-value next steps*
@@ -1748,6 +1751,178 @@ supabase start
 # Reset if needed (WARNING: clears data)
 supabase db reset
 ```
+
+---
+
+## Puck Visual Builder
+
+Puck enables drag-and-drop page building. Currently **disabled** pending E2E testing.
+
+### 30+ Available Components
+
+| Category | Components |
+|----------|------------|
+| **Layout** | Spacer, Container, Columns, Divider, TextBlock |
+| **Media** | Image, Hero, ImageText, ImageGallery, RichText, VideoEmbed |
+| **Interactive** | Accordion, Tabs, FeatureGrid, Button, Card, CircleBadge |
+| **E-Commerce** | ProductCard, ProductGrid, FeaturedProduct, PricingTable |
+| **Social Proof** | Testimonials, StatsCounter |
+| **CTA** | CTASection, PageHeader |
+
+### Puck Color Utilities
+
+All Puck components use centralized colors from `lib/puck-utils.tsx`:
+
+```typescript
+import { getPuckAccentColors, getPuckFullColors } from '@/lib/puck-utils';
+
+// Basic colors (bg, text, border, hover states)
+const colors = getPuckAccentColors('purple');
+
+// Full colors (includes buttonBg, iconBg, subtleBg, etc.)
+const fullColors = getPuckFullColors('blue');
+```
+
+**Layout maps:** `puckColumnsMap`, `puckGapMap`, `puckAspectMap`, `puckContainerWidthMap`
+**Icons:** `puckIcons` - 15+ SVG icons (star, check, heart, shield, etc.)
+
+### Adding New Puck Components
+
+Edit `lib/puck-config.tsx` and add to the `components` object:
+
+```typescript
+MyComponent: {
+  fields: {
+    title: { type: 'text', label: 'Title' },
+    variant: {
+      type: 'select',
+      label: 'Variant',
+      options: [
+        { label: 'Primary', value: 'primary' },
+        { label: 'Secondary', value: 'secondary' },
+      ]
+    },
+  },
+  defaultProps: {
+    title: 'Default Title',
+    variant: 'primary',
+  },
+  render: ({ title, variant }) => (
+    <div className={variant === 'primary' ? 'bg-purple-100' : 'bg-gray-100'}>
+      <h2>{title}</h2>
+    </div>
+  ),
+},
+```
+
+Each component needs:
+- `fields` - Editor inputs (text, select, radio, etc.)
+- `defaultProps` - Default values
+- `render` - React component that renders the output
+
+---
+
+## Template System
+
+Templates are pre-built page layouts users customize through a 5-step wizard.
+
+### Architecture
+
+```
+lib/templates/
+├── types.ts          # PageTemplate, TemplateSection, WizardState
+├── config.ts         # CATEGORY_INFO, COLOR_OPTIONS
+├── utils.ts          # filterByCategory, searchTemplates, etc.
+├── starter-templates.ts  # Ready-to-use templates
+└── index.ts          # Re-exports everything
+```
+
+### Template Categories
+
+| Category | Purpose | Icon |
+|----------|---------|------|
+| landing | Sales pages, launches, promotions | 🚀 |
+| course | Online courses, training programs | 📚 |
+| shop | Products, collections, e-commerce | 🛒 |
+| content | Blog, portfolio, about pages | 📝 |
+| utility | Contact, thank you, simple pages | ⚙️ |
+
+### Creating a New Template
+
+Add to `lib/templates/starter-templates.ts`:
+
+```typescript
+export const myTemplate: PageTemplate = {
+  id: 'my-template',
+  name: 'My Template',
+  description: 'What this template is for',
+  category: 'landing',
+  audience: 'business',
+  tags: ['keyword1', 'keyword2'],
+  defaultColor: 'purple',
+  sections: [
+    { type: 'Hero', props: { title: '...', subtitle: '...' } },
+    { type: 'FeatureGrid', props: { features: [...] } },
+    // ... more sections
+  ],
+  placeholders: [
+    { id: 'headline', label: 'Headline', type: 'text', sectionIndex: 0, propPath: 'title' },
+  ],
+};
+```
+
+---
+
+## API Patterns
+
+### Authentication
+
+Use the centralized auth helpers from `lib/api-auth.ts`:
+
+```typescript
+import { verifyAdmin, verifyAuth } from '@/lib/api-auth';
+
+export async function GET() {
+  // For admin-only routes
+  const authResult = await verifyAdmin();
+  if (authResult.error) return authResult.error;
+
+  const user = authResult.user; // Guaranteed admin user
+  // ... rest of handler
+}
+```
+
+**Available functions:**
+- `verifyAdmin()` - Requires admin role, returns user or error response
+- `verifyAuth()` - Requires any authenticated user
+
+### Error Handling
+
+Use the centralized error helpers from `lib/api-errors.ts`:
+
+```typescript
+import { handleApiError, badRequest, unauthorized } from '@/lib/api-errors';
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+
+    if (!body.requiredField) {
+      return badRequest('requiredField is required');
+    }
+
+    // ... operation
+  } catch (error) {
+    return handleApiError(error, 'POST /api/endpoint');
+  }
+}
+```
+
+**Available functions:**
+- `badRequest(message)` - Returns 400 with message
+- `unauthorized(message?)` - Returns 401
+- `notFound(message?)` - Returns 404
+- `handleApiError(error, context)` - Logs and returns 500
 
 ---
 
