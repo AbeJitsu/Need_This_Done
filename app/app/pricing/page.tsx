@@ -3,7 +3,7 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
-import { getDefaultPricingContent } from '@/lib/default-page-content';
+import { getDefaultContent } from '@/lib/default-page-content';
 import type { PricingPageContent } from '@/lib/page-content-types';
 import { formInputColors, headingColors, dividerColors, accentColors, accentBorderWidth } from '@/lib/colors';
 
@@ -41,7 +41,7 @@ async function getContent(): Promise<PricingPageContent> {
   }
 
   // Fallback to defaults
-  return getDefaultPricingContent();
+  return getDefaultContent('pricing') as PricingPageContent;
 }
 
 // ============================================================================

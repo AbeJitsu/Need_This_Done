@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import type { Product } from '@/lib/medusa-client';
@@ -46,7 +47,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       setIsAddingToCart(true);
       setError('');
 
-      await addItem(selectedVariant, quantity);
+      // Pass product info for instant optimistic display
+      await addItem(selectedVariant, quantity, {
+        title: product.title,
+        unit_price: price,
+        thumbnail: image,
+      });
 
       // Reset and show success
       setQuantity(1);
@@ -73,11 +79,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         {/* Product image */}
         {image ? (
           <div className="relative bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden h-96">
-            <img
+            <Image
               src={image}
               alt={product.title}
-              className="w-full h-full object-cover object-[50%_25%]"
+              fill
+              className="object-cover object-[50%_25%]"
               style={productImageStyles}
+              unoptimized
             />
           </div>
         ) : (

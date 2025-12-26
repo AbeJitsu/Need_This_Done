@@ -1,5 +1,17 @@
 IMPORTANT: Interact with me and output content that sounds and feels inviting, focused, considerate, supportive, and influential all throughout and use language that's easy to understand. Speak as if speaking to a friend over coffee.
 
+## Communication Preferences
+
+**Use ASCII workflow charts** when explaining:
+- Complex flows or state changes
+- Before/after comparisons
+- Multi-step processes
+- Problem → Solution explanations
+
+Keep charts simple, use box-drawing characters, and label each step clearly.
+
+---
+
 ## Development & Deployment Workflow
 
 **Always follow this workflow:**
@@ -25,6 +37,8 @@ IMPORTANT: Interact with me and output content that sounds and feels inviting, f
 - **Backend**: Railway (Medusa)
 - **Database**: Supabase
 - **Cache**: Upstash Redis
+
+---
 
 ## Autonomous Work Mode
 
@@ -52,183 +66,116 @@ IMPORTANT: Interact with me and output content that sounds and feels inviting, f
 - Destructive operations that can't be undone
 - Ambiguous requirements with multiple valid approaches
 
+---
+
 ## Git & Bash Command Restrictions
 
-To keep things safe during autonomous work, certain git and bash commands are blocked by settings.json. Here's what you can and can't do:
+To keep things safe during autonomous work, certain git and bash commands are blocked by settings.json:
 
 ### ✅ Safe Commands (Always Allowed)
 
-**Git read-only operations:**
-- `git status` - Check current state
-- `git log` - View commit history
-- `git diff` - See changes
-- `git branch` - List branches
-- `git branch --show-current` - Get current branch name
-
-**Development commands:**
-- `npm run dev` - Start dev server
-- `npm test` - Run tests
-- `npm run build` - Build project
-- `cd app && npm run dev` - Navigate and run commands
-
-**File operations:**
-- All Read, Edit, Write tool operations
-- ESLint via post-tool-use hook
+**Git read-only:** `git status`, `git log`, `git diff`, `git branch`
+**Development:** `npm run dev`, `npm test`, `npm run build`, `npm run lint`
+**File operations:** All Read, Edit, Write tool operations
 
 ### 🚫 Blocked Commands (Require User Approval)
 
-**Git write operations:**
-- `git commit` - Commits need user review
-- `git push` - Pushing to remote needs approval
-- `git merge` - Merging branches blocked
-- `git rebase` - Rebasing blocked
-- `git checkout` - Branch switching blocked
-- `git reset --hard` - Destructive resets blocked
-- `git branch -d/-D` - Branch deletion blocked
-- `git add -A` / `git add .` - Bulk staging blocked
-
-**Destructive operations:**
-- `rm -rf` - Recursive deletion blocked
-- `sudo` - Elevated privileges blocked
-
-**Environment files:**
-- Reading/writing .env files blocked (use system environment)
-- Reading/writing secrets.* files blocked
-
-### Why These Restrictions Matter
-
-These safeguards let you work fast on experiment branches while preventing:
-- Accidental commits without review
-- Unintended branch switches during multi-branch work
-- Destructive operations that can't be undone
-- Exposure of secrets or credentials
-
-All changes stay local until you review and manually approve them.
+**Git write:** `git commit`, `git push`, `git merge`, `git rebase`, `git checkout`
+**Destructive:** `rm -rf`, `sudo`
+**Secrets:** Reading/writing `.env` or `secrets.*` files
 
 ### What to Do When Blocked
 
-If you need to run a blocked command:
 1. Explain what you need to do and why
 2. Ask the user to run it manually
 3. Continue with the next step after they confirm
 
 Example: "I need to commit these changes. Please run: `git commit -m 'your message'`"
 
+---
+
 ## Hooks
 
-Three lightweight hooks in `.claude/hooks/` support autonomous work:
+Five hooks in `.claude/hooks/` support your workflow:
 
-| Hook | Purpose |
-|------|---------|
-| `post-tool-use.sh` | Auto-runs ESLint --fix on edited TypeScript files |
-| `user-prompt-submit.sh` | Brief reminder to run tests when test keywords detected |
-| `stop-check.sh` | Triggers cleanup of TODO.md → README.md when too many completed items accumulate |
+| Hook | When | Purpose |
+|------|------|---------|
+| `session-start.sh` | Session starts/resumes | Shows TODO.md priorities |
+| `post-tool-use.sh` | After Edit/Write on .ts/.tsx | Auto-runs ESLint --fix |
+| `todo-sync.sh` | After TodoWrite | Reminds to update TODO.md |
+| `stop-check.sh` | Before stopping | Blocks if >7 completed items |
+| `user-prompt-submit.sh` | User submits prompt | Reminds to run tests |
 
-All hooks are non-blocking - they help maintain code quality and documentation automatically.
+**TODO.md is the source of truth.** Check it before starting work, update it when completing tasks.
 
-**Intentionally removed:** Pre-commit type-check hook (conflicted with autonomous workflow and `/dac` approval process).
+---
 
 ## Task Tracking
 
-**TODO.md** is for **incomplete, untested features**:
-
-- Check it before starting new work
-- Update it when completing tasks
-- Contains: To Do, In Progress, Recently Completed sections
-- Security issues, bugs, and work-in-progress go here
-- Once a feature is **production-ready and tested**, move it to README.md
-
-**README.md** is for **production-ready, battle-tested features**:
-
-- Only document features that are complete and working
-- Never include failing tests, incomplete implementations, or security warnings
-- If something isn't ready for production, it stays in TODO.md
+**TODO.md** → Incomplete, untested features
+**README.md** → Production-ready, battle-tested features
 
 **Flow:** TODO.md (incomplete) → test & verify → README.md (production-ready)
 
-**.claude plans** (in `.claude/plans/`) are for complex implementations:
+---
 
-- Created when planning mode is invoked
-- Contains detailed steps and file changes
-- Referenced during execution for context
+## Terminal Preferences
 
-## Project Overview
+**Chain commands with `&&`** - When giving terminal commands to run, combine sequential operations into a single line:
+```bash
+# Good
+git checkout main && git merge dev && git push origin main
 
-See [README.md](README.md) for:
+# Avoid
+git checkout main
+git merge dev
+git push origin main
+```
 
-- **Directory structure** - Complete breakdown of folders and subfolders
-- **Quick start commands** - How to run the app and Storybook
-- **Deployment architecture** - Vercel, Railway, Supabase, Upstash
-- **Key files** - Where core utilities and clients live
+---
 
-## Coding Standards
-
-Follow [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) for:
-
-- Separation of concerns and code organization
-- DRY principle (Don't Repeat Yourself)
-- Clear, section-level comments explaining what code does and why
-- File organization and naming conventions
-
-Use self-documenting code with section-level comments. Comment major sections and blocks to explain what they do and why, in plain language that educated adults can understand regardless of coding experience.
-
-### No Broken Windows Policy
+## No Broken Windows Policy
 
 **Fix warnings and errors immediately—don't ignore them.**
 
-- If a build produces warnings → fix them before shipping
-- If a test fails → fix it, don't skip the test
-- If TypeScript complains → resolve the type error, don't use `@ts-ignore`
-- If linting fails → address the issue, don't disable the rule
-- If accessibility tests fail → fix the accessibility issue
-- If a feature is half-done → complete it or remove it, don't leave it broken
+- Build warnings → fix before shipping
+- Test failures → fix, don't skip
+- TypeScript errors → resolve, don't `@ts-ignore`
+- Linting failures → address, don't disable
+- Half-done features → complete or remove
 
-**Why this matters:** Small broken windows multiply. One ignored warning becomes ten, which becomes a hundred. Broken code accumulates technical debt that slows everything down. Maintaining high standards keeps the codebase healthy and maintainable.
+**Zero warnings in production code. Always.**
 
-**The rule:** Zero warnings in production code. Always.
+---
 
-## Design System
-
-See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for technical standards (accessibility, colors, testing).
-
-See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for brand identity and aesthetic direction.
-
-The frontend-design skill is enabled for aesthetic guidance.
-
-### Color System
+## Color System Reminder
 
 **NEVER hardcode colors.** All colors come from [lib/colors.ts](app/lib/colors.ts).
 
-**Import what you need:**
-
 ```typescript
-import { formInputColors, formValidationColors, titleColors } from '@/lib/colors';
-```
+import { formInputColors, accentColors } from '@/lib/colors';
 
-**Use in className:**
-
-```typescript
 <p className={formInputColors.helper}>Helper text</p>
-<p className={`text-sm ${formValidationColors.error}`}>Error message</p>
 ```
 
-**Available:** formInputColors, formValidationColors, titleColors, stepBadgeColors, successCheckmarkColors, dangerColors, mutedTextColors, headingColors, linkColors, linkHoverColors, accentColors, featureCardColors, navigationColors.
+For Puck components, use `getPuckAccentColors()` and `getPuckFullColors()` from `lib/puck-utils.tsx`.
 
-**Why:** WCAG AA compliance, DRY principle, easy design changes.
+---
 
-## Testing
+## Quick Reference
 
-When adding features:
+| Need | Go to |
+|------|-------|
+| Commands | See [README.md → Quick Start](README.md#quick-start) |
+| Architecture | See [README.md → Architecture Overview](README.md#architecture-overview) |
+| Testing | See [README.md → Testing](README.md#testing) |
+| Puck Components | See [README.md → Puck Visual Builder](README.md#puck-visual-builder) |
+| Template System | See [README.md → Template System](README.md#template-system) |
+| API Patterns | See [README.md → API Patterns](README.md#api-patterns) |
+| Design System | See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) |
+| Brand Identity | See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) |
+| Coding Standards | See [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) |
 
-- New static pages → Add E2E tests in `app/e2e/pages.spec.ts`
-- Dark mode variants → Add tests in `app/e2e/pages-dark-mode.spec.ts`
-- New forms → Add E2E tests for validation and submission
-- New navigation → Add tests in `app/e2e/navigation.spec.ts`
-- New components → Add accessibility tests
-- Protected routes → Add tests in `app/e2e/dashboard.spec.ts`
-- CMS/dynamic pages → Create feature-specific test file (e.g., `app/e2e/pages-puck.spec.ts`)
-  - Test admin workflows (create, edit, publish, delete)
-  - Test public page rendering and cache behavior
-  - Test permission enforcement and access control
+---
 
-See [README.md](README.md) for test commands and [docs/e2e-test-report.md](docs/e2e-test-report.md) for coverage details.
+*Last Updated: December 2025*

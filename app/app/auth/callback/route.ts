@@ -37,10 +37,6 @@ export async function GET(request: NextRequest) {
   const redirectUrl = new URL(next, siteUrl);
   const response = NextResponse.redirect(redirectUrl);
 
-  console.log('=== AUTH CALLBACK DEBUG ===');
-  console.log('Request URL:', request.url);
-  console.log('Code present:', !!code);
-
   if (code) {
     // Create a Supabase client that reads cookies from request and writes to response
     // This ensures the session cookies are included in the redirect
@@ -53,10 +49,7 @@ export async function GET(request: NextRequest) {
             return request.cookies.getAll();
           },
           setAll(cookiesToSet) {
-            console.log('=== SETTING COOKIES ===');
             cookiesToSet.forEach(({ name, value, options }) => {
-              console.log(`Setting cookie: ${name}`);
-              console.log(`  Options:`, JSON.stringify(options));
               response.cookies.set(name, value, options);
             });
           },
@@ -65,15 +58,8 @@ export async function GET(request: NextRequest) {
     );
 
     // Exchange the code for a session - this sets cookies on the response
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-    console.log('Exchange result:', error ? `Error: ${error.message}` : `Success: ${data.user?.email}`);
+    await supabase.auth.exchangeCodeForSession(code);
   }
-
-  // Log all cookies on the response
-  console.log('=== RESPONSE COOKIES ===');
-  response.cookies.getAll().forEach(c => {
-    console.log(`  ${c.name}: ${c.value.substring(0, 30)}...`);
-  });
 
   return response;
 }

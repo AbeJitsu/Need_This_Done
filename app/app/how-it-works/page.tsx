@@ -4,7 +4,7 @@ import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
 import CircleBadge from '@/components/CircleBadge';
 import Button from '@/components/Button';
-import { getDefaultHowItWorksContent } from '@/lib/default-page-content';
+import { getDefaultContent } from '@/lib/default-page-content';
 import type { HowItWorksPageContent } from '@/lib/page-content-types';
 import {
   formInputColors,
@@ -50,7 +50,7 @@ async function getContent(): Promise<HowItWorksPageContent> {
     console.error('Failed to fetch how-it-works content:', error);
   }
 
-  return getDefaultHowItWorksContent();
+  return getDefaultContent('how-it-works') as HowItWorksPageContent;
 }
 
 // ============================================================================
@@ -72,7 +72,7 @@ export default async function HowItWorksPage() {
       {/* Trust Badges - Reassurance before diving in */}
       {content.trustBadges && content.trustBadges.length > 0 && (
         <Card hoverColor="green" hoverEffect="glow" className="mb-10">
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-6 md:gap-10">
             {content.trustBadges.map((badge, index) => (
               <div key={index} className="flex items-center gap-3">
                 <div

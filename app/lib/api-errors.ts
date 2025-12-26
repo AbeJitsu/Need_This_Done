@@ -53,6 +53,15 @@ export function forbidden(message: string = 'Forbidden'): NextResponse {
 }
 
 /**
+ * Return a 404 Not Found error response
+ * @param message The error message (defaults to generic message)
+ * @returns NextResponse with 404 status
+ */
+export function notFound(message: string = 'Not found'): NextResponse {
+  return NextResponse.json({ error: message }, { status: 404 });
+}
+
+/**
  * Return a 500 Server Error response
  * @param message The error message (defaults to generic message)
  * @returns NextResponse with 500 status

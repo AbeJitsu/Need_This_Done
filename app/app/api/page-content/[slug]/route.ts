@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { verifyAdmin } from '@/lib/api-auth';
 import { serverError, handleApiError } from '@/lib/api-errors';
@@ -44,12 +43,13 @@ export async function GET(
       );
     }
 
-    const supabase = await createSupabaseServerClient();
+    // Use admin client to bypass RLS - this is public content
+    const supabaseAdmin = getSupabaseAdmin();
 
     const result = await cache.wrap(
       CACHE_KEYS.pageContent(slug),
       async () => {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseAdmin
           .from('page_content')
           .select('*')
           .eq('page_slug', slug)

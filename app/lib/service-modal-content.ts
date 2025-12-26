@@ -119,12 +119,8 @@ export function getServiceModalContent(serviceType: ServiceType): ServiceModalCo
   return serviceModalContentMap[serviceType];
 }
 
-/**
- * Get all service modal content
- */
-export function getAllServiceModalContent(): Record<ServiceType, ServiceModalContent> {
-  return serviceModalContentMap;
-}
+// Note: getAllServiceModalContent() was removed because it's unused.
+// Access serviceModalContentMap directly instead.
 
 // ============================================================================
 // Full Service Content - For Services Page Deep Dive

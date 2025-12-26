@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import { verifyAdmin } from '@/lib/api-auth';
 import { handleApiError } from '@/lib/api-errors';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
@@ -34,32 +34,48 @@ export async function GET(request: NextRequest) {
     // ========================================================================
     // Cache status filters, but bypass cache for email searches (less common)
     // TTL: 60 seconds
+    // Uses admin client to bypass RLS (user already verified as admin above)
 
-    const supabase = await createSupabaseServerClient();
+    const supabaseAdmin = getSupabaseAdmin();
 
-    // Build cache key based on status filter (email searches bypass cache)
+    // Build query
+    let query = supabaseAdmin
+      .from('projects')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    if (email) {
+      // Email searches bypass cache - run query directly
+      query = query.or(`email.ilike.%${email}%,name.ilike.%${email}%`);
+      const { data: projects, error } = await query;
+
+      if (error) {
+        console.error('[Projects all] Supabase query error:', JSON.stringify(error));
+        throw new Error(`Failed to load projects: ${error.message}`);
+      }
+
+      return NextResponse.json({
+        projects: projects || [],
+        count: (projects || []).length,
+        cached: false,
+        source: 'database',
+      });
+    }
+
+    // Status-only queries use cache
     const cacheKey = CACHE_KEYS.adminProjects(status || undefined);
-
     const result = await cache.wrap(
       cacheKey,
       async () => {
-        let query = supabase
-          .from('projects')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (status) {
-          query = query.eq('status', status);
-        }
-
-        if (email) {
-          query = query.ilike('email', `%${email}%`);
-        }
-
         const { data: projects, error } = await query;
 
         if (error) {
-          throw new Error('Failed to load projects');
+          console.error('[Projects all] Supabase query error:', JSON.stringify(error));
+          throw new Error(`Failed to load projects: ${error.message}`);
         }
 
         return projects || [];

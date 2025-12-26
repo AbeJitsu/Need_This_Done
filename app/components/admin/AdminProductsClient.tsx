@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { formInputColors, headingColors, alertColors, formValidationColors } from '@/lib/colors';
@@ -139,10 +140,12 @@ export default function AdminProductsClient({ products }: AdminProductsClientPro
                 {/* Product image */}
                 {image && (
                   <div className="relative w-full h-40 bg-gray-200 dark:bg-gray-700 rounded-t-lg overflow-hidden">
-                    <img
+                    <Image
                       src={image}
                       alt={product.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      unoptimized
                     />
                   </div>
                 )}

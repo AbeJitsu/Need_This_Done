@@ -129,6 +129,25 @@ export type AbandonedCartEmailProps = {
   discountAmount?: number;
 };
 
+export type OrderStatusUpdateEmailProps = {
+  customerEmail: string;
+  customerName?: string;
+  orderId: string;
+  previousStatus: string;
+  newStatus: string;
+  updatedAt: string;
+};
+
+export type AppointmentCancellationEmailProps = {
+  customerEmail: string;
+  customerName?: string;
+  appointmentDate: string;
+  appointmentTime: string;
+  serviceName: string;
+  orderId: string;
+  reason?: string;
+};
+
 // ============================================================================
 // Project Submission Emails
 // ============================================================================
@@ -389,5 +408,58 @@ export async function sendAbandonedCartEmail(
     data.customerEmail,
     subject,
     AbandonedCartEmail(data),
+  );
+}
+
+/**
+ * Send order status update email when order status changes.
+ * Keeps customers informed throughout the fulfillment process.
+ *
+ * @param data - Order status update data (customer info, order ID, status change)
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendOrderStatusUpdate(
+  data: OrderStatusUpdateEmailProps,
+): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: OrderStatusUpdateEmail } = await import("../emails/OrderStatusUpdateEmail");
+
+  // Status-specific subject lines for better open rates
+  const subjectMap: Record<string, string> = {
+    pending: `⏳ Order #${data.orderId} Received`,
+    processing: `⚙️ Order #${data.orderId} is Being Processed`,
+    shipped: `📦 Order #${data.orderId} Has Shipped!`,
+    delivered: `✓ Order #${data.orderId} Delivered`,
+    canceled: `Order #${data.orderId} Canceled`,
+  };
+
+  const subject = subjectMap[data.newStatus] || `Order #${data.orderId} Status Update`;
+
+  return sendEmailWithRetry(
+    data.customerEmail,
+    subject,
+    OrderStatusUpdateEmail(data),
+  );
+}
+
+/**
+ * Send appointment cancellation email when admin cancels.
+ * Notifies customer and provides rebooking options.
+ *
+ * @param data - Appointment cancellation data
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendAppointmentCancellation(
+  data: AppointmentCancellationEmailProps,
+): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: AppointmentCancellationEmail } = await import("../emails/AppointmentCancellationEmail");
+
+  const subject = `Appointment Canceled: ${data.serviceName} on ${data.appointmentDate}`;
+
+  return sendEmailWithRetry(
+    data.customerEmail,
+    subject,
+    AppointmentCancellationEmail(data),
   );
 }

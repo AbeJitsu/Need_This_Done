@@ -1,41 +1,168 @@
 # NeedThisDone.com
 
-A professional services platform built with Next.js, deployed on Vercel with Medusa (ecommerce on Railway), Redis (Upstash), and Supabase (auth & database).
+Welcome! This is your home base for understanding and working with the NeedThisDone platform.
+
+**What is this?** A professional services platform where clients can browse services, book consultations, and get things done. Built with Next.js and backed by a solid stack of managed services.
+
+**New here?** Start with [Quick Start](#quick-start) to get running in 30 seconds, then explore the [Current State](#current-state-at-a-glance) to see what's already built.
+
+**Looking for something specific?** The [Table of Contents](#table-of-contents) is organized by what you're trying to do.
+
+---
+
+## Current State at a Glance
+
+Here's where we are right now - what's working, what's almost ready, and what's on hold:
+
+```
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         PROJECT STATUS DASHBOARD                              ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                              ║
+║  CODEBASE METRICS                        PRODUCTION READINESS                ║
+║  ─────────────────                       ────────────────────                 ║
+║  📄 15 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
+║  🔐 13 Admin Pages                       ✅ Stripe Payments                  ║
+║  🔌 47 API Routes                        ✅ Supabase Auth & Database         ║
+║  🧩 96 React Components                  ✅ Redis Caching (Upstash)          ║
+║  📦 5 Context Providers                  ✅ Email Notifications (Resend)     ║
+║  🔧 26 Lib Utilities                     ✅ Google OAuth                     ║
+║  🪝 4 Custom Hooks                       🟡 Google Calendar (90% - needs test)║
+║  🧪 177 E2E Tests Passing                🟡 Puck (28 components, needs E2E)  ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+```
+
+### Tech Stack
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              TECHNOLOGY STACK                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  FRONTEND                     BACKEND                   INFRASTRUCTURE      │
+│  ────────                     ───────                   ──────────────      │
+│  Next.js 14                   Medusa (Railway)          Vercel (hosting)    │
+│  React 18                     Supabase (PostgreSQL)     Railway (Medusa)    │
+│  TypeScript 5.3               Upstash (Redis)           Supabase (DB)       │
+│  Tailwind CSS 3.4             Stripe (payments)         Upstash (cache)     │
+│                               Resend (email)                                │
+│                               Google Calendar API                           │
+│                                                                             │
+│  TESTING                      DEV TOOLS                 AI/SEARCH           │
+│  ───────                      ─────────                 ─────────           │
+│  Playwright (E2E)             Storybook 10.1            OpenAI GPT          │
+│  Vitest (unit)                ESLint                    Vercel AI SDK       │
+│  Axe Core (a11y)              TypeScript                Vector embeddings   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Service Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           HOW THE PIECES FIT TOGETHER                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                              ┌─────────────────┐
+                              │     BROWSER     │
+                              │   (User/Admin)  │
+                              └────────┬────────┘
+                                       │ HTTPS
+                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                              VERCEL EDGE                                      │
+│                     (CDN, SSL, Global Distribution)                           │
+└──────────────────────────────────────┬───────────────────────────────────────┘
+                                       │
+                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                           NEXT.JS APP (app/)                                  │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │  15 PUBLIC   │  │  13 ADMIN    │  │  47 API      │  │  96 REACT    │      │
+│  │  PAGES       │  │  PAGES       │  │  ROUTES      │  │  COMPONENTS  │      │
+│  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘      │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐    │
+│  │                        5 CONTEXT PROVIDERS                            │    │
+│  │  AuthContext │ CartContext │ ToastContext │ StripeContext │ ServiceModal │
+│  └──────────────────────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────┬───────────────────────────────────────┘
+                                       │
+         ┌─────────────────────────────┼─────────────────────────────┐
+         │                             │                             │
+         ▼                             ▼                             ▼
+┌─────────────────┐          ┌─────────────────┐          ┌─────────────────┐
+│     MEDUSA      │          │    SUPABASE     │          │     UPSTASH     │
+│    (Railway)    │          │    (Cloud)      │          │    (Redis)      │
+├─────────────────┤          ├─────────────────┤          ├─────────────────┤
+│ • Products      │          │ • Auth (users)  │          │ • Product cache │
+│ • Carts         │          │ • Database      │          │ • Cart cache    │
+│ • Orders        │          │ • File storage  │          │ • Order cache   │
+│ • Variants      │          │ • RLS policies  │          │ • Session data  │
+└─────────────────┘          └─────────────────┘          └─────────────────┘
+         │                             │
+         │                             │
+         ▼                             ▼
+┌─────────────────┐          ┌─────────────────┐          ┌─────────────────┐
+│     STRIPE      │          │     RESEND      │          │ GOOGLE CALENDAR │
+│   (Payments)    │          │    (Email)      │          │   (Scheduling)  │
+├─────────────────┤          ├─────────────────┤          ├─────────────────┤
+│ • Checkout      │          │ • Welcome       │          │ • OAuth flow    │
+│ • Subscriptions │          │ • Order confirm │          │ • Event create  │
+│ • Webhooks      │          │ • Admin alerts  │          │ • Availability  │
+└─────────────────┘          └─────────────────┘          └─────────────────┘
+```
 
 ---
 
 ## Table of Contents
 
+**Getting Started**
 - [Quick Start (30 seconds)](#quick-start)
-- [Deployment](#deployment)
-- [What This Project Is](#what-this-project-is)
-- [Architecture Overview](#architecture-overview)
 - [Development Setup](#development-setup)
-- [Project Structure](#project-structure)
+
+**Understanding the System**
+- [Current State at a Glance](#current-state-at-a-glance) ← *status dashboard, tech stack, architecture*
+- [Project Structure](#project-structure) ← *complete file map, 28 pages, 47 APIs, 88 components*
+- [Architecture Overview](#architecture-overview) ← *data flow diagrams*
+
+**Core Features**
 - [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
-- [Caching Strategy](#caching-strategy)
+- [Authentication](#authentication)
 - [Email Notifications](#email-notifications)
-- [Testing](#testing)
+- [Caching Strategy](#caching-strategy)
+
+**Operations**
+- [Deployment](#deployment)
+- [Testing](#testing) ← *177 E2E tests*
 - [Troubleshooting](#troubleshooting)
+
+**Reference**
+- [Puck Visual Builder](#puck-visual-builder) ← *28 components, color utilities*
+- [Template System](#template-system) ← *5-step wizard, starter templates*
+- [API Patterns](#api-patterns) ← *auth, error handling*
 - [Design System](#design-system)
 - [Key Files Reference](#key-files-reference)
+- [High-Priority Improvements](#high-priority-improvements) ← *3 high-value next steps*
 
 ---
 
 ## Quick Start
 
+Ready to dive in? You'll be up and running in about 30 seconds:
+
 ```bash
-# Install dependencies
-cd app && npm install
-
-# Start local development server
-npm run dev
-
-# Access at http://localhost:3000
-# Storybook: npm run storybook (port 6006)
+cd app && npm install    # First time only
+npm run dev              # Start the dev server
 ```
 
-### Available Commands
+Open http://localhost:3000 and you're in! The app hot-reloads, so your changes appear instantly.
+
+**Want to explore the component library?** Run `npm run storybook` to see all UI components in isolation.
+
+### Helpful Commands
 
 | Command | What it does |
 |---------|--------------|
@@ -171,6 +298,183 @@ A modern platform for professional services that combines:
 4. Next.js calls Supabase for user/auth data
 5. Upstash Redis caches frequently accessed data
 
+### Complete System Workflow
+
+The following diagram shows how all system components interact for major user journeys:
+
+```
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          USER JOURNEY WORKFLOWS                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. BROWSE & SHOP FLOW                                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  User visits site          CDN + Edge           Next.js App
+       │                        │                    │
+       ▼                        ▼                    ▼
+  ┌─────────┐   HTTPS    ┌───────────┐   SSR    ┌─────────────┐
+  │ Browser │ ─────────► │  Vercel   │ ───────► │  App Router │
+  └─────────┘            │   Edge    │          └──────┬──────┘
+       ▲                 └───────────┘                 │
+       │                                               ▼
+       │                                    ┌──────────────────┐
+       │    Rendered Page                   │ Check Redis Cache│
+       │◄───────────────────────────────────├──────────────────┤
+       │                                    │ HIT? Return data │
+       │                                    │ MISS? Query ↓    │
+       │                                    └────────┬─────────┘
+       │                                             │
+       │                           ┌─────────────────┼─────────────────┐
+       │                           ▼                 ▼                 ▼
+       │                    ┌───────────┐     ┌───────────┐     ┌───────────┐
+       │                    │  Medusa   │     │ Supabase  │     │   Cache   │
+       │                    │ (Railway) │     │   (DB)    │     │  (Redis)  │
+       │                    └───────────┘     └───────────┘     └───────────┘
+       │                    Products, Carts   Users, Auth      Warm Cache
+       │                    Orders, Variants  Pages, Media
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 2. CART & CHECKOUT FLOW                                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  Add to Cart (Optimistic Updates)
+  ═══════════════════════════════
+
+  Click "Add"   UI Updates     Background Sync       Server Response
+      │         Instantly           │                     │
+      ▼             ▼               ▼                     ▼
+  ┌───────┐    ┌────────┐    ┌────────────┐    ┌─────────────────┐
+  │ User  │───►│ React  │───►│ POST       │───►│ Medusa validates│
+  │ Click │    │ State  │    │ /api/cart  │    │ & confirms      │
+  └───────┘    └────────┘    └────────────┘    └────────┬────────┘
+                   ▲                                     │
+                   │         ┌───────────────────────────┘
+                   │         ▼
+                   │    ┌───────────────────┐
+                   └────│ Replace temp ID   │  (or rollback on failure)
+                        │ with server data  │
+                        └───────────────────┘
+
+
+  Checkout Flow
+  ═════════════
+
+  Cart Page       Guest/Auth        Payment          Order Created
+      │               │                │                  │
+      ▼               ▼                ▼                  ▼
+  ┌────────┐    ┌──────────┐    ┌───────────┐    ┌─────────────────┐
+  │ Review │───►│ Email +  │───►│  Stripe   │───►│ Order stored in │
+  │ Items  │    │ Shipping │    │ Checkout  │    │ Medusa + Link   │
+  └────────┘    └──────────┘    └───────────┘    │ saved in        │
+                                      │          │ Supabase        │
+                     ┌────────────────┘          └────────┬────────┘
+                     ▼                                    │
+              ┌─────────────┐                             ▼
+              │ Stripe      │                   ┌─────────────────┐
+              │ processes   │                   │ Is Consultation?│
+              │ payment     │                   └────────┬────────┘
+              └─────────────┘                            │
+                                          ┌──────────────┴──────────────┐
+                                          ▼                             ▼
+                                    ┌───────────┐               ┌─────────────┐
+                                    │    Yes    │               │     No      │
+                                    │ Show      │               │ Confirmation│
+                                    │ Booking   │               │ Page Only   │
+                                    │ Form      │               └─────────────┘
+                                    └─────┬─────┘
+                                          │
+                                          ▼
+                                    ┌─────────────┐
+                                    │ Appointment │──► Google Calendar
+                                    │ Request     │──► Admin Notification
+                                    └─────────────┘──► Email Confirmation
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 3. AUTHENTICATION FLOW                                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                         ┌─────────────────────────┐
+                         │     User Sign-In        │
+                         └───────────┬─────────────┘
+                                     │
+                    ┌────────────────┴────────────────┐
+                    ▼                                 ▼
+            ┌───────────────┐                ┌───────────────┐
+            │ Google OAuth  │                │ Email/Password│
+            │  (NextAuth)   │                │  (Supabase)   │
+            └───────┬───────┘                └───────┬───────┘
+                    │                                │
+                    │ Creates/syncs user             │ Verifies via
+                    │ in Supabase Auth               │ Supabase Auth
+                    │                                │
+                    └────────────────┬───────────────┘
+                                     ▼
+                          ┌─────────────────────┐
+                          │ Unified AuthContext │
+                          │ (single state for   │
+                          │  all auth methods)  │
+                          └──────────┬──────────┘
+                                     │
+               ┌─────────────────────┼─────────────────────┐
+               ▼                     ▼                     ▼
+        ┌────────────┐       ┌────────────┐       ┌────────────┐
+        │ Dashboard  │       │ Cart Link  │       │ Order      │
+        │ Access     │       │ to User    │       │ History    │
+        └────────────┘       └────────────┘       └────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 4. ADMIN & CMS FLOW (Puck Page Builder)                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  Admin User         Puck Editor          Save/Publish         Live Site
+       │                  │                    │                   │
+       ▼                  ▼                    ▼                   ▼
+  ┌─────────┐    ┌────────────────┐    ┌─────────────┐    ┌─────────────┐
+  │ Login   │───►│ Visual Editor  │───►│ POST        │───►│ Cached page │
+  │ /admin  │    │ - 22 Components│    │ /api/pages  │    │ served via  │
+  └─────────┘    │ - Drag & Drop  │    │             │    │ /p/[slug]   │
+                 │ - Live Preview │    │ Supabase    │    └─────────────┘
+                 └────────────────┘    │ storage     │
+                                       └─────────────┘
+
+  Component Categories:
+  ┌──────────────────────────────────────────────────────────────────┐
+  │ Layout   │ Hero, Columns, Cards, Container, Grid, Section        │
+  │ Media    │ Image, Gallery, Video, MediaLibrary                   │
+  │ Content  │ Text, Heading, List, Divider, Spacer, RichText       │
+  │ Inter.   │ Button, Accordion, Tabs, ContactForm                  │
+  │ Commerce │ ProductCard, ProductGrid, PriceDisplay, AddToCart    │
+  └──────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 5. EMAIL NOTIFICATION FLOW                                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  Trigger Event           Email Service          Resend API
+       │                       │                     │
+       ▼                       ▼                     ▼
+  ┌──────────────┐    ┌─────────────────┐    ┌─────────────┐
+  │ Order placed │───►│ email-service.ts│───►│   Resend    │──► User Inbox
+  │ User signs up│    │ - Retry logic   │    │ (SMTP API)  │
+  │ Appointment  │    │ - Idempotency   │    └─────────────┘
+  │ Form submit  │    │ - React Email   │
+  └──────────────┘    └─────────────────┘
+
+  Email Types:
+  ├── Welcome (signup)
+  ├── Login Notification (security)
+  ├── Order Confirmation
+  ├── Appointment Confirmation
+  ├── Admin Notification (new project/order)
+  └── Client Confirmation (form submission)
+```
+
 **Why This Design**:
 - ✅ **Zero-ops deployment** - Push to GitHub, auto-deploys everywhere
 - ✅ **Global edge network** - Vercel CDN for fast page loads
@@ -190,7 +494,7 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 | Orders | ✅ Working | 4 E2E tests | Full order objects, linked in Supabase |
 | Email | ✅ Working | 9 unit tests | 4 email types via Resend |
 
-**All 126 E2E tests passing** - See [Testing](#testing) for complete coverage map.
+**All 177 E2E tests passing** - See [Testing](#testing) for complete coverage map.
 
 **Consultation Products** (seeded via `medusa/seed-products.js` using Admin API):
 | Product | Price | Duration | Handle |
@@ -318,44 +622,246 @@ supabase db reset
 
 ## Project Structure
 
-### Root Level
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            COMPLETE FILE MAP                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-| File/Folder | Purpose |
-|-------------|---------|
-| `README.md` | This file - main project documentation |
-| `TODO.md` | Task tracker (To Do / In Progress / Done) |
-| `CLAUDE.md` | Project guidelines for Claude Code |
-| `supabase/` | Database migrations and configuration |
-| `medusa/` | Ecommerce backend service (deployed on Railway) |
+/home/user/Need_This_Done/
+├── README.md              ← You are here (single source of truth)
+├── TODO.md                ← Task tracker (In Progress / Done)
+├── CLAUDE.md              ← AI assistant instructions
+│
+├── app/                   ← NEXT.JS APPLICATION
+│   ├── app/               ← Pages & API routes (Next.js App Router)
+│   ├── components/        ← 88 React components
+│   ├── context/           ← 5 state providers
+│   ├── lib/               ← 25 utility files
+│   ├── hooks/             ← 4 custom React hooks
+│   ├── emails/            ← Email templates (React Email)
+│   ├── e2e/               ← 25 Playwright test files
+│   └── __tests__/         ← Unit & accessibility tests
+│
+├── supabase/              ← DATABASE
+│   └── migrations/        ← Schema migrations
+│
+└── medusa/                ← E-COMMERCE BACKEND (Railway)
+    ├── src/               ← Medusa customizations
+    └── seed-products.js   ← Product seeding script
+```
 
-### Application (`app/`)
+### Complete Page Inventory (28 pages total)
 
-| Folder | Purpose |
-|--------|---------|
-| `app/app/` | Next.js App Router - pages and API routes |
-| `├── shop/` | E-commerce shop and product catalog |
-| `├── cart/` | Shopping cart page |
-| `├── checkout/` | Checkout and order creation |
-| `├── admin/` | Admin dashboard (products, orders, users) |
-| `├── api/` | API route handlers (auth, products, carts, orders) |
-| `app/components/` | Reusable React UI components |
-| `app/context/` | React Context providers (CartContext, AuthContext) |
-| `app/lib/` | Shared utilities (colors, auth, database, cache) |
-| `app/config/` | App-wide configuration |
-| `app/e2e/` | End-to-end tests (Playwright) |
-| `app/__tests__/` | Unit tests and accessibility tests |
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          PUBLIC PAGES (15 pages)                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  MARKETING                    E-COMMERCE                   AUTH             │
+│  /                 (home)     /shop             (catalog)  /login           │
+│  /services                    /shop/[productId] (detail)   /auth/callback   │
+│  /pricing                     /cart                                         │
+│  /how-it-works               /checkout                     LEGAL            │
+│  /faq                         /dashboard        (orders)   /privacy         │
+│  /contact                                                  /terms           │
+│  /get-started                 DYNAMIC                                       │
+│                               /p/[slug]         (CMS)                       │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-### Key Utilities
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          ADMIN PAGES (13 pages)                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  SHOP MANAGEMENT              CONTENT (Puck ⛔)            OTHER            │
+│  /admin/shop                  /admin/pages       (list)    /admin/users     │
+│  /admin/shop/products         /admin/pages/new   (create)  /admin/appointments│
+│  /admin/shop/products/new     /admin/pages/[slug]/edit     /admin/dev       │
+│  /admin/shop/orders                                                         │
+│  /admin/orders       (legacy) /admin/content     (alt CMS)                  │
+│  /admin/products     (legacy) /admin/content/[slug]/edit                    │
+│                                                                             │
+│  Note: Puck has 28 components ready - needs E2E tests before production     │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
-| File | What it does |
-|------|--------------|
-| `app/lib/colors.ts` | Single source of truth for all colors |
-| `app/lib/auth.ts` | Authentication utilities |
-| `app/lib/supabase.ts` | Supabase database client |
-| `app/lib/redis.ts` | Redis cache client |
-| `app/lib/medusa-client.ts` | Medusa API wrapper with retry logic |
-| `app/lib/cache.ts` | Cache utility with pattern invalidation |
-| `app/context/CartContext.tsx` | Shopping cart state management |
+### Complete API Route Inventory (47 routes)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           API ROUTES BY CATEGORY                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+AUTHENTICATION (4 routes)
+├── POST /api/auth/[...nextauth]     NextAuth handler (Google OAuth + credentials)
+├── POST /api/auth/login             Email/password login
+├── POST /api/auth/signup            New user registration
+└── POST /api/auth/logout            Session termination
+
+SHOPPING & E-COMMERCE (8 routes)
+├── GET/POST /api/cart               Create or get cart
+├── GET/POST/DELETE /api/cart/[cartId]/items   Manage cart items
+├── GET /api/shop/products           List all products (cached)
+├── GET /api/shop/products/[productId]   Single product detail
+├── POST /api/checkout/session       Create Stripe checkout session
+├── POST /api/checkout/check-appointment   Validate appointment requirements
+├── GET/POST /api/orders             Order management
+└── GET /api/user/orders             User's order history
+
+ADMIN MANAGEMENT (9 routes)
+├── GET/POST /api/admin/products     Product CRUD (Medusa Admin API)
+├── POST /api/admin/products/upload-image    Upload product images
+├── POST /api/admin/products/update-image    Update existing images
+├── GET/POST /api/admin/orders       View all orders
+├── PUT /api/admin/orders/[id]/status    Update order status
+├── GET/POST /api/admin/appointments     Appointment queue
+├── PUT /api/admin/appointments/[id]/approve   Approve booking
+├── PUT /api/admin/appointments/[id]/cancel    Cancel booking
+└── GET/POST /api/admin/users        User management
+
+PAYMENTS (3 routes)
+├── POST /api/stripe/create-payment-intent   One-time payments
+├── POST /api/stripe/create-subscription     Recurring payments
+└── POST /api/stripe/webhook         Handle Stripe events
+
+CONTENT & PAGES (3 routes)
+├── GET/POST /api/pages              Dynamic page management
+├── GET /api/page-content/[slug]     Get page content by slug
+└── GET /api/pages/[slug]            Get full page data
+
+GOOGLE INTEGRATION (2 routes)
+├── POST /api/google/connect         Initiate OAuth flow
+└── GET /api/google/callback         Handle OAuth callback
+
+PROJECTS (5 routes)
+├── GET/POST /api/projects           Project submissions
+├── GET /api/projects/mine           User's projects
+├── GET /api/projects/all            All projects (admin)
+├── PUT /api/projects/[id]/status    Update status
+└── POST /api/projects/[id]/comments Add comments
+
+MEDIA (3 routes)
+├── GET/POST /api/media              Upload/list media
+├── GET/DELETE /api/media/[id]       Get/delete media item
+└── GET /api/files/[...path]         Serve uploaded files
+
+AI & SEARCH (5 routes)
+├── POST /api/chat                   AI chatbot (GPT-powered)
+├── POST /api/embeddings/index       Index content for search
+├── POST /api/embeddings/check       Check indexing status
+├── GET /api/embeddings/status       Embedding status
+└── GET /api/embeddings/debug        Debug embeddings
+
+MISC (4 routes)
+├── GET /api/health                  Service health check
+├── POST /api/appointments/request   Request appointment
+├── POST /api/email-forward          Forward emails
+└── GET /api/demo/*                  Demo/testing endpoints
+```
+
+### Component Inventory (88 components)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        COMPONENTS BY MODULE                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CORE UI (37 components)
+├── Layout:        Navigation, Footer, DarkModeToggle
+├── Design System: Button, Card, PageHeader, CTASection, CircleBadge
+├── Cards:         PricingCard, ServiceCard, StepCard, FeatureCard, ProjectCard
+├── Dashboards:    AdminDashboard, UserDashboard
+├── Forms:         AppointmentRequestForm, AppointmentStepForm, PaymentForm
+├── Modals:        ProjectDetailModal, ServiceDetailModal
+└── Demos:         AuthDemo, DatabaseDemo, HealthStatus, SpeedDemo
+
+CHATBOT MODULE (6 components)
+├── ChatbotWidget      Main chat interface
+├── ChatbotModal       Modal wrapper
+├── ChatbotButton      Trigger button
+├── ChatMessage        Message bubbles
+├── PageIndexer        Content indexer
+└── IndexingContext    State management
+
+CONTENT EDITOR MODULE (13 components)
+├── Core:     ContentEditor, PagePreview
+├── Fields:   TextField, TextAreaField, SelectField, ArrayField
+├── Forms:    HomepageForm, HowItWorksForm, FAQForm, PricingForm, ServicesForm
+└── Previews: HomepagePreview, HowItWorksPreview, FAQPreview, PricingPreview
+
+PUCK PAGE BUILDER (3 helper components) ⛔ DISABLED
+├── ImageField        Custom image picker
+├── ProductPicker     Product selection
+└── RichTextField     WYSIWYG field
+
+MEDIA MODULE (2 components)
+├── ImageUpload       Upload interface
+└── MediaLibrary      Media browser
+
+PROJECT MODAL MODULE (4 components)
+├── ProjectModalHeader
+├── ProjectModalDetails
+├── ProjectComments
+└── AdminStatusSection
+
+SHOP MODULE (2 components)
+├── ShopClient        Product grid
+└── ProductDetailClient   Product page
+
+UI PRIMITIVES (2 components)
+├── ConfirmDialog     Confirmation modals
+└── Toast             Notifications
+
+STORYBOOK STORIES (8 files)
+└── Button, Card, PageHeader, CTASection, CircleBadge, PricingCard, etc.
+```
+
+### Lib Utilities (25 files)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          UTILITY LIBRARIES                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+EXTERNAL SERVICE CLIENTS
+├── medusa-client.ts     Medusa API (products, carts, orders) with retry logic
+├── supabase.ts          Supabase client (browser)
+├── supabase-server.ts   Supabase client (server)
+├── redis.ts             Upstash Redis with reconnection
+├── stripe.ts            Stripe client singleton
+├── email.ts             Resend email client
+├── email-service.ts     Email notification logic
+└── google-calendar.ts   Google Calendar OAuth + API
+
+AUTHENTICATION
+├── auth.ts              NextAuth session helpers
+├── auth-options.ts      NextAuth config (Google + credentials)
+└── api-auth.ts          API route authentication
+
+CACHING
+└── cache.ts             Type-safe cache wrapper with TTL
+
+DESIGN SYSTEM
+└── colors.ts            Central color definitions (WCAG AA)
+
+PUCK CONFIG
+└── puck-config.tsx      22 page builder components (2,100+ lines)
+
+CONTENT TYPES
+├── default-page-content.ts   Default templates
+├── page-content-types.ts     Type definitions
+├── service-modal-content.ts  Modal content
+└── media-types.ts            Supported formats
+
+AI/CHATBOT
+├── chatbot/index.ts
+├── chatbot/content-extractor.ts
+├── chatbot/content-hash.ts
+└── chatbot/text-chunker.ts
+```
+
+**Feeling overwhelmed?** Don't worry - you don't need to understand everything at once. Most tasks only touch a few files. Start with the feature you're working on and explore outward from there.
 
 ---
 
@@ -376,16 +882,59 @@ User clicks "Add to Cart"
       ↓
 CartContext.addItem(variant_id, quantity)
       ↓
+┌─────────────────────────────────────┐
+│ OPTIMISTIC UPDATE (instant)        │
+│ UI shows item immediately          │
+│ Cart badge updates, toast appears  │
+└─────────────────────────────────────┘
+      ↓ (background)
 POST /api/cart/{cartId}/items
       ↓
 POST {MEDUSA_BACKEND_URL}/store/carts/{cartId}/line-items
       ↓
-Medusa returns updated cart
-      ↓
-CartContext updates state + localStorage
-      ↓
-UI updates: badge shows item count, success toast appears
+┌─────────────────────────────────────┐
+│ Server confirms or rollback        │
+│ Success: Replace temp with real ID │
+│ Failure: Restore previous state    │
+└─────────────────────────────────────┘
 ```
+
+### Optimistic Updates
+
+Cart operations update the UI **immediately**, then sync with the server in the background. This makes the cart feel instant even with network latency.
+
+**How it works:**
+
+1. **User clicks "Add to Cart"** → UI updates instantly with temporary item
+2. **Background sync** → Request sent to Medusa API
+3. **Server response** → Replace optimistic data with server response
+4. **On failure** → Rollback to previous state, show error
+
+**Cart Context signals:**
+
+| Signal | Meaning |
+|--------|---------|
+| `isSyncing` | Background sync in progress |
+| `isCartReady` | Cart synced, safe for checkout |
+| `hasTemporaryItems` | Items pending server confirmation |
+
+**Usage:**
+
+```typescript
+const { addItem, isSyncing, isCartReady } = useCart();
+
+// UI responds instantly
+await addItem(variantId, quantity, {
+  title: product.title,
+  unit_price: price,
+  thumbnail: image,
+});
+
+// Disable checkout while syncing
+<Button disabled={!isCartReady}>Proceed to Checkout</Button>
+```
+
+**Rollback behavior:** If the server request fails, the cart automatically restores to its previous state and displays an error message. No manual intervention needed.
 
 ### Medusa API Endpoints
 
@@ -623,6 +1172,106 @@ cd app && npm run test:emails
 
 ---
 
+## Authentication
+
+### How It Works
+
+Authentication uses a **hybrid approach** combining NextAuth.js (for Google OAuth) and Supabase Auth (for email/password):
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    User Sign-In                         │
+└───────────────────────┬─────────────────────────────────┘
+                        │
+        ┌───────────────┴───────────────┐
+        │                               │
+┌───────▼───────┐              ┌────────▼────────┐
+│ Google OAuth  │              │ Email/Password  │
+│  (NextAuth)   │              │   (Supabase)    │
+└───────┬───────┘              └────────┬────────┘
+        │                               │
+        │  Creates/links user           │ Verifies via
+        │  in Supabase Auth             │ Supabase Auth API
+        │                               │
+        └───────────────┬───────────────┘
+                        │
+              ┌─────────▼─────────┐
+              │  AuthContext      │
+              │  (unified state)  │
+              └───────────────────┘
+```
+
+**Why this design:**
+- **Google OAuth via NextAuth** → Users see `needthisdone.com` during sign-in (not a third-party URL)
+- **Email/password via Supabase** → Existing password auth continues to work
+- **User sync** → Google users are synced to Supabase Auth so RLS policies work
+- **Single AuthContext** → Frontend has one source of truth for auth state
+
+### Configuration
+
+**Required environment variables:**
+
+```bash
+# NextAuth (for Google OAuth)
+NEXTAUTH_URL=https://needthisdone.com
+NEXTAUTH_SECRET=your-secret-key  # Generate with: openssl rand -base64 32
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+
+# Supabase (for email/password and database)
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...  # For user sync
+```
+
+**Google Cloud Console setup:**
+1. Create project at [console.cloud.google.com](https://console.cloud.google.com)
+2. Enable Google+ API
+3. Create OAuth 2.0 credentials
+4. Add authorized redirect URI: `https://needthisdone.com/api/auth/callback/google`
+
+### Usage
+
+```typescript
+// Sign in with Google
+import { signIn } from 'next-auth/react';
+await signIn('google', { callbackUrl: '/dashboard' });
+
+// Sign in with email/password (uses Supabase)
+import { signIn } from 'next-auth/react';
+await signIn('credentials', { email, password, callbackUrl: '/dashboard' });
+
+// Get current user in components
+import { useAuth } from '@/context/AuthContext';
+const { user, isAuthenticated, isLoading, logout } = useAuth();
+
+// Protected API routes
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth-options';
+
+export async function GET(request: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+  // ... authenticated logic
+}
+```
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `app/lib/auth-options.ts` | NextAuth configuration (providers, callbacks) |
+| `app/api/auth/[...nextauth]/route.ts` | NextAuth API route handler |
+| `app/context/AuthContext.tsx` | Unified auth state (NextAuth + Supabase) |
+| `app/components/providers/SessionProvider.tsx` | NextAuth session wrapper |
+| `app/types/next-auth.d.ts` | TypeScript type extensions |
+
+---
+
 ## Testing
 
 ### Test Summary
@@ -637,7 +1286,8 @@ cd app && npm run test:emails
 | E2E UX Flow | 3 | ✅ Passing | `npm run test:e2e -- e2e/ux-flow.spec.ts` |
 | E2E Accessibility | 10 | ✅ Passing | `npm run test:e2e -- e2e/accessibility.a11y.test.ts` |
 | E2E Visual Regression | 10 | ✅ Passing | `npm run test:e2e -- e2e/checkout-screenshots.spec.ts` |
-| **Total** | **126** | ✅ **All Passing** | `npm run test:e2e` |
+| E2E Admin Project Flow | 6 | ✅ Passing | `npm run test:e2e -- e2e/admin-project-flow.spec.ts` |
+| **Total** | **177** | ✅ **All Passing** | `npm run test:e2e` |
 
 ### Feature → Test Coverage Map
 
@@ -781,6 +1431,20 @@ Every feature has automated tests. Here's exactly where each is tested:
 | Email Notifications | `appointment request notification email template exists` | Endpoint returns 400 not 404 |
 | Email Notifications | `appointment confirmation email is sent on approval` | Endpoint exists (401 not 404) |
 | Status Management | `appointment statuses are correctly defined` | pending/approved/modified/canceled |
+
+</details>
+
+<details>
+<summary><strong>Admin Project Management (6 tests)</strong> - <code>e2e/admin-project-flow.spec.ts</code></summary>
+
+| Test Suite | Test Name | Verifies |
+|------------|-----------|----------|
+| Dashboard | `admin can view projects in dashboard` | Projects list loads, search filter works |
+| Dashboard | `admin can open project modal and see details` | Modal shows name, email, service, message |
+| Status Updates | `admin can update project status` | Status dropdown works, status note saved |
+| Comments | `admin can add a comment` | Comment appears in thread |
+| Comments | `admin can add an internal note` | Internal flag works, badge displays |
+| UI | `admin can close modal` | X button and Escape key close modal |
 
 </details>
 
@@ -1090,6 +1754,178 @@ supabase db reset
 
 ---
 
+## Puck Visual Builder
+
+Puck enables drag-and-drop page building. Currently **disabled** pending E2E testing.
+
+### 30+ Available Components
+
+| Category | Components |
+|----------|------------|
+| **Layout** | Spacer, Container, Columns, Divider, TextBlock |
+| **Media** | Image, Hero, ImageText, ImageGallery, RichText, VideoEmbed |
+| **Interactive** | Accordion, Tabs, FeatureGrid, Button, Card, CircleBadge |
+| **E-Commerce** | ProductCard, ProductGrid, FeaturedProduct, PricingTable |
+| **Social Proof** | Testimonials, StatsCounter |
+| **CTA** | CTASection, PageHeader |
+
+### Puck Color Utilities
+
+All Puck components use centralized colors from `lib/puck-utils.tsx`:
+
+```typescript
+import { getPuckAccentColors, getPuckFullColors } from '@/lib/puck-utils';
+
+// Basic colors (bg, text, border, hover states)
+const colors = getPuckAccentColors('purple');
+
+// Full colors (includes buttonBg, iconBg, subtleBg, etc.)
+const fullColors = getPuckFullColors('blue');
+```
+
+**Layout maps:** `puckColumnsMap`, `puckGapMap`, `puckAspectMap`, `puckContainerWidthMap`
+**Icons:** `puckIcons` - 15+ SVG icons (star, check, heart, shield, etc.)
+
+### Adding New Puck Components
+
+Edit `lib/puck-config.tsx` and add to the `components` object:
+
+```typescript
+MyComponent: {
+  fields: {
+    title: { type: 'text', label: 'Title' },
+    variant: {
+      type: 'select',
+      label: 'Variant',
+      options: [
+        { label: 'Primary', value: 'primary' },
+        { label: 'Secondary', value: 'secondary' },
+      ]
+    },
+  },
+  defaultProps: {
+    title: 'Default Title',
+    variant: 'primary',
+  },
+  render: ({ title, variant }) => (
+    <div className={variant === 'primary' ? 'bg-purple-100' : 'bg-gray-100'}>
+      <h2>{title}</h2>
+    </div>
+  ),
+},
+```
+
+Each component needs:
+- `fields` - Editor inputs (text, select, radio, etc.)
+- `defaultProps` - Default values
+- `render` - React component that renders the output
+
+---
+
+## Template System
+
+Templates are pre-built page layouts users customize through a 5-step wizard.
+
+### Architecture
+
+```
+lib/templates/
+├── types.ts          # PageTemplate, TemplateSection, WizardState
+├── config.ts         # CATEGORY_INFO, COLOR_OPTIONS
+├── utils.ts          # filterByCategory, searchTemplates, etc.
+├── starter-templates.ts  # Ready-to-use templates
+└── index.ts          # Re-exports everything
+```
+
+### Template Categories
+
+| Category | Purpose | Icon |
+|----------|---------|------|
+| landing | Sales pages, launches, promotions | 🚀 |
+| course | Online courses, training programs | 📚 |
+| shop | Products, collections, e-commerce | 🛒 |
+| content | Blog, portfolio, about pages | 📝 |
+| utility | Contact, thank you, simple pages | ⚙️ |
+
+### Creating a New Template
+
+Add to `lib/templates/starter-templates.ts`:
+
+```typescript
+export const myTemplate: PageTemplate = {
+  id: 'my-template',
+  name: 'My Template',
+  description: 'What this template is for',
+  category: 'landing',
+  audience: 'business',
+  tags: ['keyword1', 'keyword2'],
+  defaultColor: 'purple',
+  sections: [
+    { type: 'Hero', props: { title: '...', subtitle: '...' } },
+    { type: 'FeatureGrid', props: { features: [...] } },
+    // ... more sections
+  ],
+  placeholders: [
+    { id: 'headline', label: 'Headline', type: 'text', sectionIndex: 0, propPath: 'title' },
+  ],
+};
+```
+
+---
+
+## API Patterns
+
+### Authentication
+
+Use the centralized auth helpers from `lib/api-auth.ts`:
+
+```typescript
+import { verifyAdmin, verifyAuth } from '@/lib/api-auth';
+
+export async function GET() {
+  // For admin-only routes
+  const authResult = await verifyAdmin();
+  if (authResult.error) return authResult.error;
+
+  const user = authResult.user; // Guaranteed admin user
+  // ... rest of handler
+}
+```
+
+**Available functions:**
+- `verifyAdmin()` - Requires admin role, returns user or error response
+- `verifyAuth()` - Requires any authenticated user
+
+### Error Handling
+
+Use the centralized error helpers from `lib/api-errors.ts`:
+
+```typescript
+import { handleApiError, badRequest, unauthorized } from '@/lib/api-errors';
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+
+    if (!body.requiredField) {
+      return badRequest('requiredField is required');
+    }
+
+    // ... operation
+  } catch (error) {
+    return handleApiError(error, 'POST /api/endpoint');
+  }
+}
+```
+
+**Available functions:**
+- `badRequest(message)` - Returns 400 with message
+- `unauthorized(message?)` - Returns 401
+- `notFound(message?)` - Returns 404
+- `handleApiError(error, context)` - Logs and returns 500
+
+---
+
 ## Design System
 
 See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
@@ -1116,7 +1952,8 @@ See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
 | File | Purpose |
 |------|---------|
 | `app/lib/colors.ts` | All color definitions |
-| `app/lib/auth.ts` | Authentication logic |
+| `app/lib/auth.ts` | Authentication utilities (legacy) |
+| `app/lib/auth-options.ts` | NextAuth configuration (Google OAuth + Credentials) |
 | `app/lib/supabase.ts` | Supabase client setup |
 | `app/lib/redis.ts` | Redis cache client |
 | `app/lib/medusa-client.ts` | Medusa API wrapper |
@@ -1199,6 +2036,80 @@ See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for:
 
 ---
 
+## High-Priority Improvements
+
+Here's what's been recently completed and what's next on the roadmap:
+
+### ✅ Recently Completed (December 2025)
+
+These improvements are **done and working**:
+
+| Component | What It Does | Status |
+|-----------|--------------|--------|
+| **ProductCardComponent** | Fetches live product data from Medusa API | ✅ Implemented |
+| **ProductGridComponent** | Grid of products with parallel fetching | ✅ Implemented |
+| **TabsComponent** | Interactive client-side tabs with useState | ✅ Implemented |
+| **AccordionComponent** | Interactive accordion with allowMultiple | ✅ Implemented |
+| **MediaPickerField** | Visual media library browser modal | ✅ Implemented |
+| **TestimonialsComponent** | Carousel/grid of customer reviews | ✅ Implemented |
+| **VideoEmbedComponent** | YouTube/Vimeo embed with lazy loading | ✅ Implemented |
+| **StatsCounterComponent** | Animated count-up numbers | ✅ Implemented |
+| **Order Status Emails** | Automatic email on status change | ✅ Implemented |
+
+**Puck Component Library**: Now 28 components across 6 categories:
+- **Layout** (4): Spacer, Container, Columns, Divider
+- **Media** (5): Image, ImageGallery, Hero, ImageText, VideoEmbed
+- **Content** (4): TextBlock, RichText, PageHeader, CTASection
+- **Interactive** (6): Accordion, Tabs, FeatureGrid, Button, Card, CircleBadge
+- **Social Proof** (2): Testimonials, StatsCounter
+- **E-Commerce** (4): ProductCard, ProductGrid, FeaturedProduct, PricingTable
+
+Plus supporting utilities: MediaPickerField, shared puck-utils.ts
+
+---
+
+### 🔜 Next Up (High Value)
+
+#### 1. Enable Puck Page Builder in Production
+
+**Current State**: Puck is fully built (28 components) but disabled pending testing.
+
+**What's Needed**:
+- E2E tests for Puck admin workflows (create, edit, publish, delete)
+- Test public page rendering and cache behavior
+- Permission enforcement testing
+
+**Value**: Unlocks visual page building for non-technical users.
+
+---
+
+#### 2. Google Calendar Integration Testing
+
+**Current State**: OAuth flow built, event creation API ready (90% complete).
+
+**What's Needed**:
+- Manual testing of appointment booking flow
+- Test calendar event creation on appointment approval
+- Deploy to production
+
+**Value**: Automatic calendar invites when appointments are booked.
+
+---
+
+#### 3. Admin Analytics Dashboard
+
+**Current State**: Order and appointment data exists but no visualization.
+
+**What's Needed**:
+- Revenue trends chart (daily/weekly/monthly)
+- Order status breakdown
+- Popular products/services
+- Customer acquisition metrics
+
+**Value**: Business insights for decision-making.
+
+---
+
 ## What's Next?
 
 See [TODO.md](TODO.md) for the current task tracker with prioritized work items.
@@ -1217,19 +2128,21 @@ See [TODO.md](TODO.md) for the current task tracker with prioritized work items.
 
 ## Getting Help
 
-**Need help with...**
+Stuck on something? Here's where to look:
 
-- **Development setup?** → See [Development Setup](#development-setup)
-- **Ecommerce/cart?** → See [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
-- **Testing?** → See [Testing](#testing)
-- **Design standards?** → See [Design System](#design-system)
-- **Troubleshooting?** → See [Troubleshooting](#troubleshooting)
-- **Code quality?** → See [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md)
+| If you need help with... | Check out... |
+|--------------------------|--------------|
+| Getting the app running | [Quick Start](#quick-start) or [Development Setup](#development-setup) |
+| How the cart/shop works | [Shopping Cart & Ecommerce](#shopping-cart--ecommerce) |
+| Running or writing tests | [Testing](#testing) |
+| Colors, components, accessibility | [Design System](#design-system) |
+| Something's not working | [Troubleshooting](#troubleshooting) |
+| Code style and patterns | [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) |
 
-**For Claude Code users**: See [CLAUDE.md](CLAUDE.md) for project-specific instructions.
+**Using Claude Code?** See [CLAUDE.md](CLAUDE.md) for project-specific instructions that help Claude understand this codebase.
 
 ---
 
+Thanks for being here. This project is actively maintained and growing - your contributions make it better for everyone.
+
 **Last Updated**: December 2025
-**Maintained By**: Development Team
-**Status**: Active & Growing

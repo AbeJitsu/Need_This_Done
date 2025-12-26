@@ -39,7 +39,6 @@ async function getProducts(): Promise<Product[]> {
 
       // If we got products, return them sorted by price
       if (products.length > 0) {
-        console.log(`[Shop] Loaded ${products.length} products on attempt ${attempt}`);
         return products.sort((a, b) => {
           const priceA = a.variants?.[0]?.prices?.[0]?.amount ?? 0;
           const priceB = b.variants?.[0]?.prices?.[0]?.amount ?? 0;
@@ -50,12 +49,11 @@ async function getProducts(): Promise<Product[]> {
       // Empty products - Medusa running but not seeded yet, retry
       const isLastAttempt = attempt === maxRetries;
       if (isLastAttempt) {
-        console.log('[Shop] No products found after all retries (database may not be seeded)');
+        console.warn('[Shop] No products found after all retries (database may not be seeded)');
         return [];
       }
 
       const delay = baseDelay * Math.pow(2, attempt - 1);
-      console.log(`[Shop] Attempt ${attempt}/${maxRetries}: No products yet, retrying in ${delay}ms...`);
       await new Promise(resolve => setTimeout(resolve, delay));
     } catch (error) {
       // Network error - Medusa not ready yet, retry
@@ -67,7 +65,6 @@ async function getProducts(): Promise<Product[]> {
       }
 
       const delay = baseDelay * Math.pow(2, attempt - 1);
-      console.log(`[Shop] Attempt ${attempt}/${maxRetries} failed, retrying in ${delay}ms...`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }

@@ -21,6 +21,9 @@ dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 // Base URL for E2E tests
 const baseURL = process.env.BASE_URL || 'http://localhost:3000';
 
+// Auth state file path
+const ADMIN_AUTH_FILE = path.join(__dirname, '.auth/admin.json');
+
 export default defineConfig({
   // ============================================================================
   // Test Directory and Execution
@@ -58,20 +61,37 @@ export default defineConfig({
   snapshotDir: './e2e/visual-regression',
 
   // ============================================================================
-  // Test Projects - Different Browsers/Devices
+  // Test Projects - Auth Setup + Browser Testing
   // ============================================================================
 
   projects: [
+    // Setup project: logs in once, saves session
+    {
+      name: 'setup',
+      testMatch: /auth\.setup\.ts/,
+    },
+
+    // Desktop Chrome - uses saved auth session
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: ADMIN_AUTH_FILE,
+      },
+      dependencies: ['setup'],
+      testIgnore: /auth\.setup\.ts/,
     },
+
+    // Mobile - uses saved auth session
     {
       name: 'mobile',
       use: {
         ...devices['iPhone 12'],
         browserName: 'chromium',
+        storageState: ADMIN_AUTH_FILE,
       },
+      dependencies: ['setup'],
+      testIgnore: /auth\.setup\.ts/,
     },
   ],
 
@@ -85,9 +105,11 @@ export default defineConfig({
     ? {}
     : {
         webServer: {
-          command: 'npm run dev',
+          // SKIP_CACHE=true disables Redis caching during E2E tests
+          // This prevents stale cache issues when tests create/modify data
+          command: 'SKIP_CACHE=true npm run dev',
           url: 'http://localhost:3000',
-          reuseExistingServer: true,
+          reuseExistingServer: false, // Always start fresh server with SKIP_CACHE
           timeout: 120 * 1000,
         },
       }),

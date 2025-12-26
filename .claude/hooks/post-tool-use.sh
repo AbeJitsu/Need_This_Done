@@ -31,6 +31,11 @@ if [[ "$FILE_PATH" =~ node_modules|\.next|dist|build ]]; then
   exit 0
 fi
 
+# Skip if node_modules not installed (cloud environments)
+if [[ ! -d "$CLAUDE_PROJECT_DIR/app/node_modules" ]]; then
+  exit 0
+fi
+
 # Convert absolute path to relative path from app/ directory
 RELATIVE_PATH=$(echo "$FILE_PATH" | sed "s|^.*/app/||")
 

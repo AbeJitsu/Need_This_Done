@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test('capture all customer-facing pages for comparison', async ({ page }) => {
   const pages = [

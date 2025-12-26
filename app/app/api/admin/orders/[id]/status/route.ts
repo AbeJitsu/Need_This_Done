@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { sendOrderStatusUpdate } from '@/lib/email-service';
 
 export const dynamic = 'force-dynamic';
 
@@ -108,11 +109,33 @@ export async function PATCH(
       // Continue - cache invalidation failure shouldn't block the response
     }
 
+    // Send status update email to customer
+    let emailSent = false;
+    if (order.email) {
+      try {
+        const emailResult = await sendOrderStatusUpdate({
+          customerEmail: order.email,
+          orderId: order.medusa_order_id || id,
+          previousStatus: order.status,
+          newStatus,
+          updatedAt: new Date().toISOString(),
+        });
+        emailSent = emailResult !== null;
+        if (emailSent) {
+          console.log(`[Update Order Status] Email sent to ${order.email} for order ${id}`);
+        }
+      } catch (emailError) {
+        console.error('[Update Order Status] Email failed:', emailError);
+        // Continue - email failure shouldn't block the response
+      }
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Order status updated successfully',
       order_id: id,
       new_status: newStatus,
+      email_sent: emailSent,
     });
 
   } catch (error) {

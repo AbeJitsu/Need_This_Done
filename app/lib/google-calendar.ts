@@ -513,7 +513,7 @@ export function generateIcsContent(
   const formatDate = (date: Date) =>
     date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
 
-  const uid = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}@needthisdone.com`;
+  const uid = `${Date.now()}-${Math.random().toString(36).substring(2, 11)}@needthisdone.com`;
   const now = formatDate(new Date());
 
   let ics = [

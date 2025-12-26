@@ -3,7 +3,7 @@ import { siteConfig } from '@/config/site.config';
 import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
-import { getDefaultHomeContent } from '@/lib/default-page-content';
+import { getDefaultContent } from '@/lib/default-page-content';
 import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors, linkColors, linkHoverColors, linkFontWeight } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
 
@@ -42,7 +42,7 @@ async function getContent(): Promise<HomePageContent> {
     console.error('Failed to fetch home content:', error);
   }
 
-  return getDefaultHomeContent();
+  return getDefaultContent('home') as HomePageContent;
 }
 
 // ============================================================================
