@@ -39,14 +39,7 @@ type ProjectAccessResult = {
 export async function verifyAuth(): Promise<AuthResult> {
   // First, try Supabase session (email/password login)
   const supabase = await createSupabaseServerClient();
-  const { data: { user: supabaseUser }, error: supabaseError } = await supabase.auth.getUser();
-
-  console.log('[verifyAuth] Supabase check:', JSON.stringify({
-    hasUser: !!supabaseUser,
-    userId: supabaseUser?.id,
-    userEmail: supabaseUser?.email,
-    error: supabaseError?.message,
-  }));
+  const { data: { user: supabaseUser } } = await supabase.auth.getUser();
 
   if (supabaseUser) {
     return { user: supabaseUser };
@@ -55,15 +48,6 @@ export async function verifyAuth(): Promise<AuthResult> {
   // Fall back to NextAuth session (Google OAuth)
   try {
     const nextAuthSession = await getServerSession(authOptions);
-
-    // Debug logging - remove after fixing
-    console.log('[verifyAuth] NextAuth session:', JSON.stringify({
-      hasSession: !!nextAuthSession,
-      hasUser: !!nextAuthSession?.user,
-      userId: nextAuthSession?.user?.id,
-      userEmail: nextAuthSession?.user?.email,
-      isAdmin: (nextAuthSession?.user as { isAdmin?: boolean })?.isAdmin,
-    }));
 
     if (nextAuthSession?.user?.id) {
       // NextAuth user - construct a compatible User object

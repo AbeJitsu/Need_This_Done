@@ -8,7 +8,6 @@ import {
   getWizardProgress,
   STARTER_TEMPLATES,
   filterByCategory,
-  getTemplateById,
 } from '@/lib/templates';
 import { accentColors, type AccentVariant } from '@/lib/colors';
 

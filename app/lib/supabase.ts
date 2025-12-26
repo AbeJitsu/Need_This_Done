@@ -86,14 +86,6 @@ export const supabaseAdmin = supabaseServiceRoleKey || isBuildTime
 // the client is configured. Throws an error if service role key is not set.
 
 export function getSupabaseAdmin() {
-  // Debug logging - remove after fixing
-  console.log('[getSupabaseAdmin] Admin client check:', {
-    hasClient: !!supabaseAdmin,
-    hasServiceKey: !!supabaseServiceRoleKey,
-    hasUrl: !!supabaseUrl,
-    isBuildTime,
-  });
-
   if (!supabaseAdmin) {
     throw new Error(
       'Admin client not configured. Missing SUPABASE_SERVICE_ROLE_KEY environment variable.'

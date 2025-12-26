@@ -13,7 +13,7 @@ import AccordionComponent from '@/components/puck/AccordionComponent';
 import TestimonialsComponent from '@/components/puck/TestimonialsComponent';
 import VideoEmbedComponent from '@/components/puck/VideoEmbedComponent';
 import StatsCounterComponent from '@/components/puck/StatsCounterComponent';
-import type { AccentVariant } from '@/lib/colors';
+import { solidButtonColors, type AccentVariant } from '@/lib/colors';
 
 // ============================================================================
 // Puck Configuration - Visual Editor Component Library
@@ -793,6 +793,9 @@ export const puckConfig: Config = {
           right: 'items-end text-right',
         };
 
+        // Use centralized button colors (fixes dynamic Tailwind class issue)
+        const btnColors = solidButtonColors[buttonColor as AccentVariant] || solidButtonColors.purple;
+
         return (
           <div
             className={`relative w-full ${heightMap[height]} bg-cover bg-center`}
@@ -816,7 +819,7 @@ export const puckConfig: Config = {
               {buttonText && (
                 <a
                   href={buttonLink || '#'}
-                  className={`inline-flex items-center px-6 py-3 text-lg font-semibold rounded-lg shadow-lg transition-all hover:scale-105 bg-${buttonColor}-600 hover:bg-${buttonColor}-700 text-white`}
+                  className={`inline-flex items-center px-6 py-3 text-lg font-semibold rounded-lg shadow-lg transition-all hover:scale-105 ${btnColors.bg} ${btnColors.hover} ${btnColors.text}`}
                 >
                   {buttonText}
                 </a>
@@ -903,6 +906,9 @@ export const puckConfig: Config = {
           lg: 'md:w-1/3',
         };
 
+        // Use centralized button colors (fixes dynamic Tailwind class issue)
+        const btnColors = solidButtonColors[buttonColor as AccentVariant] || solidButtonColors.purple;
+
         const imageElement = (
           <div className={`w-full ${imageSizeMap[imageSize]} flex-shrink-0`}>
             {image ? (
@@ -930,7 +936,7 @@ export const puckConfig: Config = {
             {buttonText && (
               <a
                 href={buttonLink || '#'}
-                className={`inline-flex items-center px-5 py-2.5 font-medium rounded-lg transition-colors bg-${buttonColor}-600 hover:bg-${buttonColor}-700 text-white w-fit`}
+                className={`inline-flex items-center px-5 py-2.5 font-medium rounded-lg transition-colors ${btnColors.bg} ${btnColors.hover} ${btnColors.text} w-fit`}
               >
                 {buttonText}
               </a>
