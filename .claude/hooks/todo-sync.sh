@@ -1,5 +1,5 @@
 #!/bin/bash
-# PostToolUse Hook: Remind Claude to align with TODO.md
+# TodoSync Hook: Remind Claude to align with TODO.md
 # What: After TodoWrite, reminds Claude to check TODO.md for priorities
 # Why: TODO.md is the source of truth - Claude's internal list should match it
 #

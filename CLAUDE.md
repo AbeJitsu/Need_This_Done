@@ -1,5 +1,42 @@
 IMPORTANT: Interact with me and output content that sounds and feels inviting, focused, considerate, supportive, and influential all throughout and use language that's easy to understand. Speak as if speaking to a friend over coffee.
 
+## Table of Contents
+
+- [Quick Commands](#quick-commands)
+- [Communication Preferences](#communication-preferences)
+- [Development Workflow](#development--deployment-workflow)
+- [Integration Status](#integration-status)
+- [Key Utilities](#key-utilities-reference)
+- [Puck Visual Builder](#puck-visual-builder)
+- [Template System](#template-system)
+- [API Patterns](#api-patterns)
+- [Caching System](#caching-system)
+- [Design System](#design-system)
+- [Testing](#testing)
+- [Autonomous Work Mode](#autonomous-work-mode)
+- [Git Restrictions](#git--bash-command-restrictions)
+- [Hooks](#hooks)
+
+---
+
+## Quick Commands
+
+Commands you'll use most often:
+
+| Command | What it does |
+|---------|--------------|
+| `cd app && npm run dev` | Start dev server at localhost:3000 |
+| `cd app && npm run lint` | Run ESLint |
+| `cd app && npm run type-check` | Check TypeScript |
+| `cd app && npm test` | Run all tests |
+| `cd app && npm run test:a11y` | Quick accessibility tests only |
+| `cd app && npm run test:e2e:ui` | Interactive E2E testing |
+| `cd app && npm run storybook` | Component development |
+| `/dac` | Draft a commit message for approval |
+| `/check-work` | Check current work status and git context |
+
+---
+
 ## Communication Preferences
 
 **Use ASCII workflow charts** when explaining:
@@ -10,23 +47,22 @@ IMPORTANT: Interact with me and output content that sounds and feels inviting, f
 
 Keep charts simple, use box-drawing characters, and label each step clearly.
 
+---
+
 ## Development & Deployment Workflow
 
 **Always follow this workflow:**
 
 0. **Check TODO.md** for current priorities and what needs doing
 1. **Local Development** (test changes first):
-
    - Run `cd app && npm run dev` to start Next.js dev server
    - Access at http://localhost:3000
    - Test all changes thoroughly
 2. **Push to GitHub** (after local testing passes):
-
    - Run `/dac` to draft a commit message for approval
    - **NEVER commit directly** - always wait for user approval
    - Push changes to the `dev` branch after approval
 3. **Production Deployment** (automatic via Vercel):
-
    - Push to `main` branch triggers Vercel deployment
    - Site runs at https://needthisdone.com
 
@@ -35,6 +71,273 @@ Keep charts simple, use box-drawing characters, and label each step clearly.
 - **Backend**: Railway (Medusa)
 - **Database**: Supabase
 - **Cache**: Upstash Redis
+
+---
+
+## Integration Status
+
+Quick reference of what's production-ready vs in-progress:
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Medusa Backend | ✅ Ready | Products, carts, checkout |
+| Stripe Payments | ✅ Ready | Real payment processing |
+| Google OAuth | ✅ Ready | User sign-in |
+| E2E Tests | ✅ Ready | 177 tests passing |
+| Puck Page Builder | ⛔ Disabled | Not production ready - see below |
+
+**Puck is currently disabled.** The visual page builder and template system are implemented but need E2E testing before production use. Admin UI link is commented out in `AdminDashboard.tsx`.
+
+---
+
+## Key Utilities Reference
+
+Important files in `app/lib/` you'll use often:
+
+| File | Purpose |
+|------|---------|
+| `colors.ts` | Centralized color system (WCAG AA compliant) |
+| `api-auth.ts` | `verifyAdmin()`, `verifyAuth()` for API routes |
+| `api-errors.ts` | `handleApiError()`, `badRequest()`, `unauthorized()` |
+| `cache.ts` | Redis caching with `cache.wrap()`, TTL constants |
+| `puck-config.tsx` | Puck component definitions (30+ components) |
+| `puck-utils.tsx` | Puck color utilities and layout maps |
+| `templates/` | Template system (types, utils, starter templates) |
+| `medusa-client.ts` | E-commerce API client |
+| `stripe.ts` | Payment processing (server-side only) |
+| `email-service.ts` | Email sending functions |
+| `validation.ts` | Input validation helpers |
+
+---
+
+## Puck Visual Builder
+
+Puck enables drag-and-drop page building. Currently **disabled** pending E2E testing.
+
+### 30+ Available Components
+
+**Layout:** Spacer, Container, Columns, Divider, TextBlock
+**Media:** Image, Hero, ImageText, ImageGallery, RichText, VideoEmbed
+**Interactive:** Accordion, Tabs, FeatureGrid, Button, Card, CircleBadge
+**E-Commerce:** ProductCard, ProductGrid, FeaturedProduct, PricingTable
+**Social Proof:** Testimonials, StatsCounter
+**CTA:** CTASection, PageHeader
+
+### Puck Color Utilities
+
+All Puck components use centralized colors from `lib/puck-utils.tsx`:
+
+```typescript
+import { getPuckAccentColors, getPuckFullColors } from '@/lib/puck-utils';
+
+// Basic colors (bg, text, border, hover states)
+const colors = getPuckAccentColors('purple');
+
+// Full colors (includes buttonBg, iconBg, subtleBg, etc.)
+const fullColors = getPuckFullColors('blue');
+```
+
+**Layout maps:** `puckColumnsMap`, `puckGapMap`, `puckAspectMap`, `puckContainerWidthMap`
+**Icons:** `puckIcons` - 15+ SVG icons (star, check, heart, shield, etc.)
+
+### Adding New Puck Components
+
+Edit `lib/puck-config.tsx` and add to the `components` object. Each component needs:
+- `fields` - Editor inputs (text, select, radio, etc.)
+- `defaultProps` - Default values
+- `render` - React component that renders the output
+
+---
+
+## Template System
+
+Templates are pre-built page layouts users customize through a 5-step wizard.
+
+### Architecture
+
+```
+lib/templates/
+├── types.ts          # PageTemplate, TemplateSection, WizardState
+├── config.ts         # CATEGORY_INFO, COLOR_OPTIONS
+├── utils.ts          # filterByCategory, searchTemplates, etc.
+├── starter-templates.ts  # Ready-to-use templates
+└── index.ts          # Re-exports everything
+```
+
+### Template Categories
+
+| Category | Purpose | Icon |
+|----------|---------|------|
+| landing | Sales pages, launches, promotions | 🚀 |
+| course | Online courses, training programs | 📚 |
+| shop | Products, collections, e-commerce | 🛒 |
+| content | Blog, portfolio, about pages | 📝 |
+| utility | Contact, thank you, simple pages | ⚙️ |
+
+### Creating a New Template
+
+Add to `lib/templates/starter-templates.ts`:
+
+```typescript
+export const myTemplate: PageTemplate = {
+  id: 'my-template',
+  name: 'My Template',
+  description: 'What this template is for',
+  category: 'landing',
+  audience: 'business',
+  tags: ['keyword1', 'keyword2'],
+  defaultColor: 'purple',
+  sections: [
+    { type: 'Hero', props: { title: '...', subtitle: '...' } },
+    { type: 'FeatureGrid', props: { features: [...] } },
+    // ... more sections
+  ],
+  placeholders: [
+    { id: 'headline', label: 'Headline', type: 'text', sectionIndex: 0, propPath: 'title' },
+  ],
+};
+```
+
+---
+
+## API Patterns
+
+### Authentication
+
+```typescript
+import { verifyAdmin, verifyAuth } from '@/lib/api-auth';
+
+export async function GET() {
+  // For admin-only routes
+  const authResult = await verifyAdmin();
+  if (authResult.error) return authResult.error;
+
+  const user = authResult.user; // Guaranteed admin user
+  // ... rest of handler
+}
+```
+
+### Error Handling
+
+```typescript
+import { handleApiError, badRequest, unauthorized } from '@/lib/api-errors';
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+
+    if (!body.requiredField) {
+      return badRequest('requiredField is required');
+    }
+
+    // ... operation
+  } catch (error) {
+    return handleApiError(error, 'POST /api/endpoint');
+  }
+}
+```
+
+---
+
+## Caching System
+
+Redis caching with automatic JSON serialization and graceful degradation.
+
+### TTL Constants
+
+```typescript
+import { cache, CACHE_TTL, CACHE_KEYS } from '@/lib/cache';
+
+CACHE_TTL.STATIC    // 1 hour - Static content
+CACHE_TTL.LONG      // 5 minutes - User data
+CACHE_TTL.MEDIUM    // 1 minute - Dashboard (default)
+CACHE_TTL.SHORT     // 30 seconds - Frequently updated
+CACHE_TTL.REALTIME  // 10 seconds - Near real-time
+```
+
+### Cache-Aside Pattern
+
+```typescript
+const result = await cache.wrap(
+  CACHE_KEYS.userProjects(userId),
+  async () => {
+    // Only runs on cache miss
+    const { data } = await supabase.from('projects').select('*');
+    return data;
+  },
+  CACHE_TTL.MEDIUM
+);
+
+// result.data = the data
+// result.cached = true if from cache
+```
+
+### Invalidation
+
+```typescript
+await cache.invalidate(CACHE_KEYS.userProjects(userId));
+await cache.invalidatePattern('admin:projects:*');
+```
+
+**Dev mode:** Set `SKIP_CACHE=true` in `.env.local` to bypass Redis.
+
+---
+
+## Design System
+
+See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for technical standards.
+See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for brand identity.
+
+### Color System
+
+**NEVER hardcode colors.** All colors come from [lib/colors.ts](app/lib/colors.ts).
+
+```typescript
+import { formInputColors, accentColors } from '@/lib/colors';
+
+<p className={formInputColors.helper}>Helper text</p>
+<button className={accentColors.purple.bg}>Click me</button>
+```
+
+See `app/lib/colors.ts` for the full list of available color objects.
+
+### No Broken Windows Policy
+
+**Fix warnings and errors immediately—don't ignore them.**
+
+- Build warnings → fix before shipping
+- Test failures → fix, don't skip
+- TypeScript errors → resolve, don't `@ts-ignore`
+- Linting failures → address, don't disable
+- Half-done features → complete or remove
+
+**Zero warnings in production code. Always.**
+
+---
+
+## Testing
+
+See [docs/e2e-test-report.md](docs/e2e-test-report.md) for full coverage details.
+
+**Quick commands:**
+```bash
+cd app && npm test              # All tests
+cd app && npm run test:a11y     # Accessibility only
+cd app && npm run test:e2e:ui   # Interactive E2E
+```
+
+**Adding tests:**
+- Static pages → `e2e/pages.spec.ts`
+- Dark mode → `e2e/pages-dark-mode.spec.ts`
+- Navigation → `e2e/navigation.spec.ts`
+- Protected routes → `e2e/dashboard.spec.ts`
+
+**Visual regression:**
+```bash
+cd app && npx playwright test screenshots.spec.ts --update-snapshots
+```
+
+---
 
 ## Autonomous Work Mode
 
@@ -45,84 +348,43 @@ Keep charts simple, use box-drawing characters, and label each step clearly.
 3. **Update TODO.md** as tasks complete
 4. **Run tests after each change** - Fix any failures immediately
 5. **Document completed features** in README.md
-6. **Use agent swarms** - Launch parallel agents for thorough exploration and implementation
+6. **Use agent swarms** - Launch parallel agents for thorough exploration
 
 **Agent Swarm Strategy:**
-
-- **Exploration:** Launch 2-3 Explore agents in parallel to search different areas of the codebase
-- **Implementation:** Break large features into parallel workstreams when files don't depend on each other
-- **Documentation:** Launch agents to document different sections simultaneously
-- **Testing:** Run test suites in parallel where possible
-
-**Safety:** Commits and destructive git operations are blocked by settings.json (see [Git & Bash Command Restrictions](#git--bash-command-restrictions) for full list). All changes stay local until user reviews.
+- **Exploration:** Launch 2-3 Explore agents to search different areas
+- **Implementation:** Break features into parallel workstreams
+- **Documentation:** Document different sections simultaneously
 
 **When to pause:**
-
 - External service setup needed (Google Cloud Console, API keys)
 - Destructive operations that can't be undone
 - Ambiguous requirements with multiple valid approaches
 
+---
+
 ## Git & Bash Command Restrictions
 
-To keep things safe during autonomous work, certain git and bash commands are blocked by settings.json. Here's what you can and can't do:
+To keep things safe, certain commands are blocked by settings.json:
 
 ### ✅ Safe Commands (Always Allowed)
 
-**Git read-only operations:**
-- `git status` - Check current state
-- `git log` - View commit history
-- `git diff` - See changes
-- `git branch` - List branches
-- `git branch --show-current` - Get current branch name
-
-**Development commands:**
-- `npm run dev` - Start dev server
-- `npm test` - Run tests
-- `npm run build` - Build project
-- `cd app && npm run dev` - Navigate and run commands
-
-**File operations:**
-- All Read, Edit, Write tool operations
-- ESLint via post-tool-use hook
+**Git read-only:** `git status`, `git log`, `git diff`, `git branch`
+**Development:** `npm run dev`, `npm test`, `npm run build`, `npm run lint`
+**File operations:** All Read, Edit, Write tool operations
 
 ### 🚫 Blocked Commands (Require User Approval)
 
-**Git write operations:**
-- `git commit` - Commits need user review
-- `git push` - Pushing to remote needs approval
-- `git merge` - Merging branches blocked
-- `git rebase` - Rebasing blocked
-- `git checkout` - Branch switching blocked
-- `git reset --hard` - Destructive resets blocked
-- `git branch -d/-D` - Branch deletion blocked
-- `git add -A` / `git add .` - Bulk staging blocked
-
-**Destructive operations:**
-- `rm -rf` - Recursive deletion blocked
-- `sudo` - Elevated privileges blocked
-
-**Environment files:**
-- Reading/writing .env files blocked (use system environment)
-- Reading/writing secrets.* files blocked
-
-### Why These Restrictions Matter
-
-These safeguards let you work fast on experiment branches while preventing:
-- Accidental commits without review
-- Unintended branch switches during multi-branch work
-- Destructive operations that can't be undone
-- Exposure of secrets or credentials
-
-All changes stay local until you review and manually approve them.
+**Git write:** `git commit`, `git push`, `git merge`, `git rebase`, `git checkout`
+**Destructive:** `rm -rf`, `sudo`
+**Secrets:** Reading/writing `.env` or `secrets.*` files
 
 ### What to Do When Blocked
 
-If you need to run a blocked command:
 1. Explain what you need to do and why
 2. Ask the user to run it manually
 3. Continue with the next step after they confirm
 
-Example: "I need to commit these changes. Please run: `git commit -m 'your message'`"
+---
 
 ## Hooks
 
@@ -130,153 +392,33 @@ Five hooks in `.claude/hooks/` support your workflow:
 
 | Hook | When | Purpose |
 |------|------|---------|
-| `session-start.sh` | Session starts/resumes/compacts | Shows TODO.md priorities |
+| `session-start.sh` | Session starts/resumes | Shows TODO.md priorities |
 | `post-tool-use.sh` | After Edit/Write on .ts/.tsx | Auto-runs ESLint --fix |
 | `todo-sync.sh` | After TodoWrite | Reminds to update TODO.md |
 | `stop-check.sh` | Before stopping | Blocks if >7 completed items |
 | `user-prompt-submit.sh` | User submits prompt | Reminds to run tests |
 
-**TODO.md is the source of truth.** SessionStart shows your options when you're ready to code.
+**TODO.md is the source of truth.** Check it before starting work, update it when completing tasks.
 
-**Intentionally removed:** Pre-commit type-check hook (conflicted with autonomous workflow and `/dac` approval process).
+---
 
 ## Task Tracking
 
-**TODO.md** is for **incomplete, untested features**:
-
-- Check it before starting new work
-- Update it when completing tasks
-- Contains: To Do, In Progress, Recently Completed sections
-- Security issues, bugs, and work-in-progress go here
-- Once a feature is **production-ready and tested**, move it to README.md
-
-**README.md** is for **production-ready, battle-tested features**:
-
-- Only document features that are complete and working
-- Never include failing tests, incomplete implementations, or security warnings
-- If something isn't ready for production, it stays in TODO.md
+**TODO.md** → Incomplete, untested features
+**README.md** → Production-ready, battle-tested features
 
 **Flow:** TODO.md (incomplete) → test & verify → README.md (production-ready)
 
-**.claude plans** (in `.claude/plans/`) are for complex implementations:
-
-- Created when planning mode is invoked
-- Contains detailed steps and file changes
-- Referenced during execution for context
+---
 
 ## Project Overview
 
-See [README.md](README.md) for:
-
-- **Directory structure** - Complete breakdown of folders and subfolders
-- **Quick start commands** - How to run the app and Storybook
-- **Deployment architecture** - Vercel, Railway, Supabase, Upstash
-- **Key files** - Where core utilities and clients live
-
-## Terminal Preferences
-
-**Chain commands with `&&`** - When giving terminal commands to run, combine sequential operations into a single line:
-```bash
-# Good
-git checkout main && git merge dev && git push origin main
-
-# Avoid
-git checkout main
-git merge dev
-git push origin main
-```
+See [README.md](README.md) for directory structure, quick start, and deployment details.
 
 ## Coding Standards
 
-Follow [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) for:
+Follow [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) for code organization and DRY principles.
 
-- Separation of concerns and code organization
-- DRY principle (Don't Repeat Yourself)
-- Clear, section-level comments explaining what code does and why
-- File organization and naming conventions
+---
 
-Use self-documenting code with section-level comments. Comment major sections and blocks to explain what they do and why, in plain language that educated adults can understand regardless of coding experience.
-
-### No Broken Windows Policy
-
-**Fix warnings and errors immediately—don't ignore them.**
-
-- If a build produces warnings → fix them before shipping
-- If a test fails → fix it, don't skip the test
-- If TypeScript complains → resolve the type error, don't use `@ts-ignore`
-- If linting fails → address the issue, don't disable the rule
-- If accessibility tests fail → fix the accessibility issue
-- If a feature is half-done → complete it or remove it, don't leave it broken
-
-**Why this matters:** Small broken windows multiply. One ignored warning becomes ten, which becomes a hundred. Broken code accumulates technical debt that slows everything down. Maintaining high standards keeps the codebase healthy and maintainable.
-
-**The rule:** Zero warnings in production code. Always.
-
-## Design System
-
-See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for technical standards (accessibility, colors, testing).
-
-See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for brand identity and aesthetic direction.
-
-The frontend-design skill is enabled for aesthetic guidance.
-
-### Color System
-
-**NEVER hardcode colors.** All colors come from [lib/colors.ts](app/lib/colors.ts).
-
-**Import what you need:**
-
-```typescript
-import { formInputColors, formValidationColors, titleColors } from '@/lib/colors';
-```
-
-**Use in className:**
-
-```typescript
-<p className={formInputColors.helper}>Helper text</p>
-<p className={`text-sm ${formValidationColors.error}`}>Error message</p>
-```
-
-**Available:** formInputColors, formValidationColors, titleColors, stepBadgeColors, successCheckmarkColors, dangerColors, mutedTextColors, headingColors, linkColors, linkHoverColors, accentColors, featureCardColors, navigationColors.
-
-**Why:** WCAG AA compliance, DRY principle, easy design changes.
-
-## Testing
-
-When adding features:
-
-- New static pages → Add E2E tests in `app/e2e/pages.spec.ts`
-- Dark mode variants → Add tests in `app/e2e/pages-dark-mode.spec.ts`
-- New forms → Add E2E tests for validation and submission
-- New navigation → Add tests in `app/e2e/navigation.spec.ts`
-- New components → Add accessibility tests
-- Protected routes → Add tests in `app/e2e/dashboard.spec.ts`
-- CMS/dynamic pages → Create feature-specific test file (e.g., `app/e2e/pages-puck.spec.ts`)
-  - Test admin workflows (create, edit, publish, delete)
-  - Test public page rendering and cache behavior
-  - Test permission enforcement and access control
-
-See [README.md](README.md) for test commands and [docs/e2e-test-report.md](docs/e2e-test-report.md) for coverage details.
-
-### Visual Regression Screenshots
-
-Screenshots are managed by Playwright's built-in snapshot system. One location, fully automated.
-
-**Location:** `app/e2e/visual-regression/screenshots.spec.ts-snapshots/`
-
-**Update all baselines after UI changes:**
-```bash
-cd app && npx playwright test screenshots.spec.ts --update-snapshots
-```
-
-**Run visual regression tests (compares against baselines):**
-```bash
-cd app && npx playwright test screenshots.spec.ts
-```
-
-**When to update screenshots:**
-- After intentional UI changes (new components, layout changes, color updates)
-- After updating dependencies that affect rendering
-- When CI fails due to expected visual differences
-
-**What gets captured:** All public pages + admin pages, in both light/dark mode, desktop/mobile viewports.
+*Last Updated: December 2025*
