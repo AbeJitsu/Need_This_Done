@@ -513,25 +513,6 @@ export function getDefaultContent(slug: EditablePageSlug): PageContent {
   return defaultContentMap[slug];
 }
 
-/**
- * Get typed default content for a specific page
- */
-export function getDefaultPricingContent(): PricingPageContent {
-  return defaultPricingContent;
-}
-
-export function getDefaultFAQContent(): FAQPageContent {
-  return defaultFAQContent;
-}
-
-export function getDefaultServicesContent(): ServicesPageContent {
-  return defaultServicesContent;
-}
-
-export function getDefaultHowItWorksContent(): HowItWorksPageContent {
-  return defaultHowItWorksContent;
-}
-
-export function getDefaultHomeContent(): HomePageContent {
-  return defaultHomeContent;
-}
+// Note: Individual typed getters (getDefaultPricingContent, etc.) were removed
+// because they're unused. Use getDefaultContent(slug) instead, which returns
+// the correct typed content based on the slug.

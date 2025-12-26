@@ -7,7 +7,7 @@ import ServiceDetailModal from '@/components/service-modal/ServiceDetailModal';
 import ScenarioMatcher from '@/components/services/ScenarioMatcher';
 import ServiceComparisonTable from '@/components/services/ServiceComparisonTable';
 import ServiceDeepDive from '@/components/services/ServiceDeepDive';
-import { getDefaultServicesContent } from '@/lib/default-page-content';
+import { getDefaultContent } from '@/lib/default-page-content';
 import type { ServicesPageContent } from '@/lib/page-content-types';
 import {
   formInputColors,
@@ -55,7 +55,7 @@ async function getContent(): Promise<ServicesPageContent> {
     console.error('Failed to fetch services content:', error);
   }
 
-  return getDefaultServicesContent();
+  return getDefaultContent('services') as ServicesPageContent;
 }
 
 // ============================================================================

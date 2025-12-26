@@ -4,7 +4,7 @@ import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
 import CircleBadge from '@/components/CircleBadge';
 import Button from '@/components/Button';
-import { getDefaultHowItWorksContent } from '@/lib/default-page-content';
+import { getDefaultContent } from '@/lib/default-page-content';
 import type { HowItWorksPageContent } from '@/lib/page-content-types';
 import {
   formInputColors,
@@ -50,7 +50,7 @@ async function getContent(): Promise<HowItWorksPageContent> {
     console.error('Failed to fetch how-it-works content:', error);
   }
 
-  return getDefaultHowItWorksContent();
+  return getDefaultContent('how-it-works') as HowItWorksPageContent;
 }
 
 // ============================================================================

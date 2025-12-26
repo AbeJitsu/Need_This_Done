@@ -294,6 +294,22 @@ function getSolidBgClass(color: AccentVariant): string {
 }
 
 /**
+ * Get product card hover border (static classes for Tailwind compatibility)
+ */
+function getProductHoverBorderClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'hover:border-purple-400 dark:hover:border-purple-500',
+    blue: 'hover:border-blue-400 dark:hover:border-blue-500',
+    green: 'hover:border-green-400 dark:hover:border-green-500',
+    orange: 'hover:border-orange-400 dark:hover:border-orange-500',
+    teal: 'hover:border-teal-400 dark:hover:border-teal-500',
+    gray: 'hover:border-gray-400 dark:hover:border-gray-500',
+    red: 'hover:border-red-400 dark:hover:border-red-500',
+  };
+  return map[color] || map.purple;
+}
+
+/**
  * Get tab colors for TabsComponent
  * Returns active text, border, and background colors
  */
@@ -344,8 +360,8 @@ export function getPuckFullColors(color: string) {
     buttonText: solid.text,
     // Price text (same as accentText)
     priceText: getAccentTextClass(variant),
-    // Product card hover border
-    productHoverBorder: `hover:border-${variant === 'gray' ? 'gray' : variant}-400 dark:hover:border-${variant === 'gray' ? 'gray' : variant}-500`,
+    // Product card hover border (uses static classes to avoid Tailwind purge issues)
+    productHoverBorder: getProductHoverBorderClass(variant),
   };
 }
 
@@ -383,6 +399,23 @@ export const puckAspectMap = {
   landscape: 'aspect-[4/3]',
   portrait: 'aspect-[3/4]',
   wide: 'aspect-video',
+} as const;
+
+// Container width classes (used by Container, RichText, and other layout components)
+export const puckContainerWidthMap = {
+  sm: 'max-w-screen-sm',
+  md: 'max-w-screen-md',
+  lg: 'max-w-screen-lg',
+  xl: 'max-w-screen-xl',
+  full: 'max-w-full',
+} as const;
+
+// Container padding classes (used by Container, RichText, and other layout components)
+export const puckContainerPaddingMap = {
+  none: '',
+  sm: 'px-4 py-4',
+  md: 'px-6 py-6',
+  lg: 'px-8 py-8',
 } as const;
 
 // ============================================================================

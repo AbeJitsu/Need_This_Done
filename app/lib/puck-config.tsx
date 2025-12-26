@@ -13,7 +13,7 @@ import TestimonialsComponent from '@/components/puck/TestimonialsComponent';
 import VideoEmbedComponent from '@/components/puck/VideoEmbedComponent';
 import StatsCounterComponent from '@/components/puck/StatsCounterComponent';
 import { solidButtonColors, type AccentVariant } from '@/lib/colors';
-import { getPuckAccentColors, getPuckFullColors, puckColumnsMap, puckIcons, getDividerColors, getPricingColors } from './puck-utils';
+import { getPuckAccentColors, getPuckFullColors, puckColumnsMap, puckIcons, getDividerColors, getPricingColors, puckContainerWidthMap, puckContainerPaddingMap } from './puck-utils';
 
 // ============================================================================
 // Puck Configuration - Visual Editor Component Library
@@ -345,21 +345,11 @@ export const puckConfig: Config = {
         children: 'Add your content here...',
       },
       render: ({ maxWidth, padding, children }) => {
-        const widthMap: Record<string, string> = {
-          sm: 'max-w-screen-sm',
-          md: 'max-w-screen-md',
-          lg: 'max-w-screen-lg',
-          xl: 'max-w-screen-xl',
-          full: 'max-w-full',
-        };
-        const paddingMap: Record<string, string> = {
-          none: '',
-          sm: 'px-4 py-4',
-          md: 'px-6 py-6',
-          lg: 'px-8 py-8',
-        };
+        // Use centralized layout utilities from puck-utils
+        const width = puckContainerWidthMap[maxWidth as keyof typeof puckContainerWidthMap] || puckContainerWidthMap.lg;
+        const pad = puckContainerPaddingMap[padding as keyof typeof puckContainerPaddingMap] || '';
         return (
-          <div className={`mx-auto w-full ${widthMap[maxWidth] || 'max-w-screen-lg'} ${paddingMap[padding] || ''}`}>
+          <div className={`mx-auto w-full ${width} ${pad}`}>
             <div className="text-gray-700 dark:text-gray-300">{children}</div>
           </div>
         );
@@ -1083,22 +1073,12 @@ export const puckConfig: Config = {
         padding: 'none',
       },
       render: ({ content, maxWidth, padding }) => {
-        const widthMap: Record<string, string> = {
-          sm: 'max-w-screen-sm',
-          md: 'max-w-screen-md',
-          lg: 'max-w-screen-lg',
-          xl: 'max-w-screen-xl',
-          full: 'max-w-full',
-        };
-        const paddingMap: Record<string, string> = {
-          none: '',
-          sm: 'px-4 py-4',
-          md: 'px-6 py-6',
-          lg: 'px-8 py-8',
-        };
+        // Use centralized layout utilities from puck-utils
+        const width = puckContainerWidthMap[maxWidth as keyof typeof puckContainerWidthMap] || puckContainerWidthMap.lg;
+        const pad = puckContainerPaddingMap[padding as keyof typeof puckContainerPaddingMap] || '';
 
         return (
-          <div className={`mx-auto w-full ${widthMap[maxWidth] || 'max-w-screen-lg'} ${paddingMap[padding] || ''}`}>
+          <div className={`mx-auto w-full ${width} ${pad}`}>
             <div
               className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-purple-600 dark:prose-a:text-purple-400 prose-strong:text-gray-900 dark:prose-strong:text-gray-100 prose-ul:text-gray-700 dark:prose-ul:text-gray-300 prose-ol:text-gray-700 dark:prose-ol:text-gray-300 prose-blockquote:border-purple-400 prose-code:text-purple-600 dark:prose-code:text-purple-400"
               dangerouslySetInnerHTML={{ __html: content || '' }}
@@ -1207,8 +1187,8 @@ export const puckConfig: Config = {
                 { label: 'Star', value: 'star' },
                 { label: 'Heart', value: 'heart' },
                 { label: 'Check', value: 'check' },
-                { label: 'Info', value: 'info' },
-                { label: 'Settings', value: 'settings' },
+                { label: 'Shield', value: 'shield' },
+                { label: 'Cog', value: 'cog' },
               ],
             },
           },
@@ -1340,7 +1320,7 @@ export const puckConfig: Config = {
                 key={index}
                 className="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
               >
-                <div className={`w-12 h-12 ${colors.iconBg} ${colors.text} rounded-xl flex items-center justify-center mb-4`}>
+                <div className={`w-12 h-12 ${colors.iconBg} ${colors.text} rounded-xl flex items-center justify-center mb-4`} aria-hidden="true">
                   {puckIcons[feature.icon || 'check'] || puckIcons.check}
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">

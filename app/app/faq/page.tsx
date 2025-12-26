@@ -3,7 +3,7 @@ import { faqColors, titleColors, formInputColors, cardBgColors, cardBorderColors
 import CircleBadge from '@/components/CircleBadge';
 import PageHeader from '@/components/PageHeader';
 import CTASection from '@/components/CTASection';
-import { getDefaultFAQContent } from '@/lib/default-page-content';
+import { getDefaultContent } from '@/lib/default-page-content';
 import type { FAQPageContent } from '@/lib/page-content-types';
 
 export const dynamic = 'force-dynamic';
@@ -38,7 +38,7 @@ async function getContent(): Promise<FAQPageContent> {
     console.error('Failed to fetch FAQ content:', error);
   }
 
-  return getDefaultFAQContent();
+  return getDefaultContent('faq') as FAQPageContent;
 }
 
 // ============================================================================

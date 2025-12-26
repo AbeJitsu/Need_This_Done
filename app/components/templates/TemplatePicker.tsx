@@ -60,7 +60,11 @@ export default function TemplatePicker({
       {/* Search Bar - Touch-friendly height */}
       <div className="mb-4">
         <div className="relative">
+          <label htmlFor="template-search" className="sr-only">
+            Search templates
+          </label>
           <input
+            id="template-search"
             type="text"
             placeholder="Search templates..."
             value={search}
@@ -72,6 +76,7 @@ export default function TemplatePicker({
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
