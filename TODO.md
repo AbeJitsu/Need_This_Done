@@ -49,15 +49,9 @@ _Currently active work items_
 
 ### Short Term (This Week)
 
-**Template System Foundation** ✅ COMPLETE
-- [x] Create template type definitions (`lib/templates/types.ts`)
-- [x] Build template utilities (`lib/templates/utils.ts`)
-- [x] Create 5 starter templates (course, business, product, portfolio, contact)
-- [x] Build TemplatePicker component (phone-friendly)
-- [x] Build PageWizard component (5-step flow)
-- [x] Create admin page with "Choose Your Path" (wizard OR full editor)
-- [x] Wire wizard output to Puck page storage via `/api/pages`
+**Template System - Final Testing**
 - [ ] Test wizard end-to-end in dev environment
+- [ ] Verify page creation and storage works correctly
 
 **Admin Workflows**
 - [ ] Inventory management interface
@@ -110,7 +104,7 @@ _Currently active work items_
 - [ ] Customer reviews & ratings
 
 **Platform Simplicity Layer**
-- [ ] Phone-first wizard (answer 5 questions → done)
+- [x] Phone-first wizard (answer 5 questions → done) ✅ BUILT
 - [ ] Pre-built page sections (drag whole sections, not components)
 - [ ] Template marketplace (share/sell templates)
 
@@ -121,11 +115,12 @@ _Currently active work items_
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
 **Template System & Page Wizard** (Dec 2025)
-- Created orthogonal template architecture (`lib/templates/`)
+- Orthogonal template architecture (`lib/templates/`) - types, utils, starter templates
 - 5 starter templates: Course Landing, Business Landing, Product Launch, Portfolio, Contact
-- Phone-first PageWizard component (5-step flow)
+- Phone-first PageWizard component (5-step creation flow)
 - TemplatePicker with category filtering and search
-- DRY utilities for template → Puck JSON conversion
+- "Choose Your Path" admin UI at `/admin/pages/new` (wizard OR full editor)
+- Wired to existing `/api/pages` for storage
 
 ---
 
