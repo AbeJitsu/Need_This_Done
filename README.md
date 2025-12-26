@@ -233,7 +233,7 @@ MEDUSA_ADMIN_PASSWORD='xxx' node update-product-image.js consultation-15-min "ht
 ```
 
 **Admin credentials:**
-- Email: `admin@needthisdone.com`
+- Email: Set via `MEDUSA_ADMIN_EMAIL` environment variable
 - Password: Set via `MEDUSA_ADMIN_PASSWORD` environment variable
 
 ---
@@ -504,8 +504,8 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 | 55-Minute Deep Dive Consultation | $50 | 55 min | `consultation-55-min` |
 
 **Admin Credentials** (for Medusa Admin panel):
-- Email: `admin@needthisdone.com`
-- Password: **Required** - Set via `MEDUSA_ADMIN_PASSWORD` environment variable in `.env.local`
+- Email: Set via `MEDUSA_ADMIN_EMAIL` environment variable
+- Password: Set via `MEDUSA_ADMIN_PASSWORD` environment variable
 
 **Security Note:** The `MEDUSA_ADMIN_PASSWORD` environment variable is required for all environments. Scripts will fail if not set - no fallback passwords.
 
@@ -576,6 +576,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...  # Get from: s
 
 # Medusa (Railway)
 MEDUSA_BACKEND_URL=https://need-this-done-production.up.railway.app
+MEDUSA_ADMIN_EMAIL=your_admin_email  # Required for Medusa admin authentication
 MEDUSA_ADMIN_PASSWORD=your_admin_password  # Required for product management scripts
 
 # Stripe (payments)
@@ -585,8 +586,8 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 
 # Email (Resend)
 RESEND_API_KEY=re_...
-RESEND_FROM_EMAIL=hello@needthisdone.com
-RESEND_ADMIN_EMAIL=abe.raise@gmail.com
+RESEND_FROM_EMAIL=your_verified_email@domain.com
+RESEND_ADMIN_EMAIL=your_admin_notification_email
 
 # AI Chatbot (optional)
 OPENAI_API_KEY=sk-...

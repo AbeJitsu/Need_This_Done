@@ -7,8 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 // Why: Allows changing product images without direct Medusa admin access
 // How: Authenticates with Medusa admin, updates product via API
 
-const MEDUSA_BACKEND_URL = process.env.MEDUSA_BACKEND_URL || 'http://medusa_backend:9000';
-const MEDUSA_ADMIN_EMAIL = process.env.MEDUSA_ADMIN_EMAIL || 'admin@needthisdone.com';
+const MEDUSA_BACKEND_URL = process.env.MEDUSA_BACKEND_URL || process.env.NEXT_PUBLIC_MEDUSA_URL;
+const MEDUSA_ADMIN_EMAIL = process.env.MEDUSA_ADMIN_EMAIL;
 const MEDUSA_ADMIN_PASSWORD = process.env.MEDUSA_ADMIN_PASSWORD;
 
 async function authenticateWithMedusa() {

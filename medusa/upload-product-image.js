@@ -18,19 +18,19 @@ const fs = require('fs');
 const path = require('path');
 
 // Config
-const MEDUSA_URL = process.env.MEDUSA_URL || 'https://need-this-done-production.up.railway.app';
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://oxhjtmozsdstbokwtnwa.supabase.co';
+const MEDUSA_URL = process.env.MEDUSA_URL || process.env.NEXT_PUBLIC_MEDUSA_URL || 'https://need-this-done-production.up.railway.app';
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const MEDUSA_PASSWORD = process.env.MEDUSA_ADMIN_PASSWORD;
-const ADMIN_EMAIL = 'admin@needthisdone.com';
+const ADMIN_EMAIL = process.env.MEDUSA_ADMIN_EMAIL;
 
 const isHttps = MEDUSA_URL.startsWith('https');
 
 // Args
 const [, , productHandle, sourceImageUrl, filename] = process.argv;
 
-if (!MEDUSA_PASSWORD || !SUPABASE_SERVICE_KEY) {
-  console.error('Error: MEDUSA_ADMIN_PASSWORD and SUPABASE_SERVICE_ROLE_KEY are required');
+if (!ADMIN_EMAIL || !MEDUSA_PASSWORD || !SUPABASE_SERVICE_KEY) {
+  console.error('Error: MEDUSA_ADMIN_EMAIL, MEDUSA_ADMIN_PASSWORD, and SUPABASE_SERVICE_ROLE_KEY are required');
   process.exit(1);
 }
 

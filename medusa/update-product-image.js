@@ -11,16 +11,16 @@ const https = require('https');
 const http = require('http');
 
 // Default to Railway production URL
-const BASE_URL = process.env.MEDUSA_URL || 'https://need-this-done-production.up.railway.app';
+const BASE_URL = process.env.MEDUSA_URL || process.env.NEXT_PUBLIC_MEDUSA_URL || 'https://need-this-done-production.up.railway.app';
 const isHttps = BASE_URL.startsWith('https');
-const ADMIN_EMAIL = 'admin@needthisdone.com';
+const ADMIN_EMAIL = process.env.MEDUSA_ADMIN_EMAIL;
 const ADMIN_PASSWORD = process.env.MEDUSA_ADMIN_PASSWORD;
 
 // Get args
 const [, , productHandle, imageUrl] = process.argv;
 
-if (!ADMIN_PASSWORD) {
-  console.error('Error: MEDUSA_ADMIN_PASSWORD environment variable is required');
+if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+  console.error('Error: MEDUSA_ADMIN_EMAIL and MEDUSA_ADMIN_PASSWORD environment variables are required');
   process.exit(1);
 }
 

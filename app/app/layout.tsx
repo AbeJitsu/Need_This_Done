@@ -93,11 +93,12 @@ export default function RootLayout({
                   let isDark = false;
 
                   if (stored !== null) {
-                    // User has explicitly set a preference
+                    // User has explicitly set a preference - respect it
                     isDark = stored === 'true';
                   } else {
-                    // Fall back to system preference
-                    isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    // First-time visitor: default to light mode
+                    // (They can toggle to dark if they prefer)
+                    isDark = false;
                   }
 
                   if (isDark) {

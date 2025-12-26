@@ -6,13 +6,13 @@
 
 const http = require('http');
 
-const BASE_URL = 'http://localhost:9000';
-const ADMIN_EMAIL = 'admin@needthisdone.com';
+const BASE_URL = process.env.MEDUSA_URL || process.env.NEXT_PUBLIC_MEDUSA_URL || 'http://localhost:9000';
+const ADMIN_EMAIL = process.env.MEDUSA_ADMIN_EMAIL;
 const ADMIN_PASSWORD = process.env.MEDUSA_ADMIN_PASSWORD;
 
-// Security check: Ensure admin password is set via environment variable
-if (!ADMIN_PASSWORD) {
-  console.error('Error: MEDUSA_ADMIN_PASSWORD environment variable is required');
+// Security check: Ensure admin credentials are set via environment variables
+if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+  console.error('Error: MEDUSA_ADMIN_EMAIL and MEDUSA_ADMIN_PASSWORD environment variables are required');
   process.exit(1);
 }
 

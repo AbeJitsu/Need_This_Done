@@ -23,10 +23,11 @@ export default function DarkModeToggle() {
     // Check localStorage first (user preference)
     const stored = localStorage.getItem('darkMode');
     if (stored !== null) {
+      // User has explicitly set a preference - respect it
       setDarkMode(stored === 'true');
     } else {
-      // Fall back to system preference
-      setDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
+      // First-time visitor: default to light mode
+      setDarkMode(false);
     }
   }, []);
 
