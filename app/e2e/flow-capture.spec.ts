@@ -181,7 +181,6 @@ test('Capture services page with copy', async ({ page }) => {
     const sections: Record<string, string | string[] | Record<string, string>[]> = {};
 
     // Header
-    const header = document.querySelector('header') || document.querySelector('.text-center');
     sections['header_title'] = document.querySelector('h1')?.textContent || '';
     sections['header_description'] = document.querySelector('h1')?.nextElementSibling?.textContent || '';
 
@@ -197,7 +196,6 @@ test('Capture services page with copy', async ({ page }) => {
     });
 
     // What to Expect section
-    const expectSection = document.querySelector('[class*="mb-10"]');
     sections['expectations_title'] = Array.from(document.querySelectorAll('h2')).find(h => h.textContent?.includes('Expect'))?.textContent || '';
 
     const expectItems = document.querySelectorAll('[class*="flex.gap-4"]');
@@ -208,7 +206,6 @@ test('Capture services page with copy', async ({ page }) => {
     });
 
     // CTA
-    const ctaSection = document.querySelector('[class*="CTASection"]') || document.querySelector('[class*="text-center"]:last-child');
     sections['cta_title'] = Array.from(document.querySelectorAll('h2')).pop()?.textContent || '';
 
     return sections;

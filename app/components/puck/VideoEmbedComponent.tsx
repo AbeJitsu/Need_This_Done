@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { getPuckFullColors, puckAspectMap } from '@/lib/puck-utils';
 
 // ============================================================================
@@ -174,10 +175,12 @@ export default function VideoEmbedComponent({
             className="absolute inset-0 group cursor-pointer"
             aria-label={`Play ${title || 'video'}`}
           >
-            <img
+            <Image
               src={videoInfo.thumbnail}
               alt={title || 'Video thumbnail'}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              unoptimized
             />
             {/* Overlay */}
             <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />

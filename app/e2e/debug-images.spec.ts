@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test('debug product images on shop page', async ({ page }) => {
   // Capture all console messages

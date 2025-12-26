@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { MediaItem, MediaListResponse, MEDIA_FOLDERS, formatFileSize } from '@/lib/media-types';
 import ImageUpload from './ImageUpload';
 
@@ -282,11 +283,15 @@ export default function MediaLibrary({
                       onClick={() => handleSelect(item)}
                     >
                       {/* Image */}
-                      <img
-                        src={item.url}
-                        alt={item.alt_text || item.filename}
-                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                      />
+                      {item.url && (
+                        <Image
+                          src={item.url}
+                          alt={item.alt_text || item.filename}
+                          fill
+                          className="object-cover transition-transform group-hover:scale-105"
+                          unoptimized
+                        />
+                      )}
 
                       {/* Selection overlay */}
                       <div className={`absolute inset-0 transition-all ${

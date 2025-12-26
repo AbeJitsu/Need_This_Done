@@ -1,4 +1,5 @@
 import type { Config } from '@measured/puck';
+import Image from 'next/image';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import PageHeader from '@/components/PageHeader';
@@ -639,10 +640,14 @@ export const puckConfig: Config = {
 
         const image = (
           <figure className={`${sizeMap[size]} mx-auto`}>
-            <img
+            <Image
               src={src}
               alt={alt || ''}
+              width={0}
+              height={0}
+              sizes="100vw"
               className={`w-full h-auto ${roundedMap[rounded]} shadow-md`}
+              unoptimized
             />
             {caption && (
               <figcaption className="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
@@ -875,7 +880,7 @@ export const puckConfig: Config = {
         const imageElement = (
           <div className={`w-full ${imageSizeMap[imageSize]} flex-shrink-0`}>
             {image ? (
-              <img src={image} alt={imageAlt || ''} className="w-full h-auto rounded-xl shadow-lg" />
+              <Image src={image} alt={imageAlt || ''} width={0} height={0} sizes="100vw" className="w-full h-auto rounded-xl shadow-lg" unoptimized />
             ) : (
               <div className="w-full aspect-video bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
                 <span className="text-gray-400 text-sm">Add image URL</span>
@@ -1020,10 +1025,14 @@ export const puckConfig: Config = {
               <figure key={index} className="group relative">
                 <div className={`overflow-hidden rounded-lg ${aspectMap[aspectRatio]}`}>
                   {img.src ? (
-                    <img
+                    <Image
                       src={img.src}
                       alt={img.alt || `Gallery image ${index + 1}`}
+                      width={0}
+                      height={0}
+                      sizes="100vw"
                       className={`w-full h-full object-cover transition-transform group-hover:scale-105 ${aspectRatio !== 'auto' ? '' : 'h-auto'}`}
+                      unoptimized
                     />
                   ) : (
                     <div className="w-full h-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">

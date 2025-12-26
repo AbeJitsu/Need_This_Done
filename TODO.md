@@ -114,6 +114,17 @@ _Currently active work items_
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+**No Broken Windows - Lint & Type Cleanup** (Dec 2025)
+- Migrated all 12 `<img>` tags to Next.js `<Image>` components across codebase
+- Fixed React hook dependency warnings in MediaLibrary, MediaPickerField, ProductGridComponent
+- Fixed TypeScript errors: removed unused variables in E2E test files
+- Created `AppointmentCancellationEmail.tsx` template for customer notifications
+- Added `sendAppointmentCancellation()` to email-service.ts
+- Updated cancel/route.ts to notify customers when appointments are canceled
+- Added Appointments and Users quick links to AdminDashboard
+- Removed verbose console.logs from shop/page.tsx and CartContext.tsx
+- Result: Zero ESLint warnings, zero TypeScript errors
+
 **DRY Refactoring & Code Quality Audit** (Dec 2025)
 - Fixed critical dynamic Tailwind classes in Hero/ImageText that would break in production
 - Centralized Puck color utilities in `puck-utils.tsx`:

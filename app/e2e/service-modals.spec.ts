@@ -47,9 +47,8 @@ function parseRgb(rgbString: string): [number, number, number] | null {
   return null;
 }
 
-// WCAG AA minimum contrast ratios
+// WCAG AA minimum contrast ratio for normal text
 const WCAG_AA_NORMAL_TEXT = 4.5;
-const WCAG_AA_LARGE_TEXT = 3.0;
 
 test.describe('Service Modals - Contrast & Accessibility', () => {
   const services = [

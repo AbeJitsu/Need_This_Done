@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { Product } from '@/lib/medusa-client';
 
 // ============================================================================
@@ -201,12 +202,14 @@ export default function ProductPicker({
                     `}
                   >
                     {/* Image */}
-                    <div className="aspect-square bg-gray-100 dark:bg-gray-700">
+                    <div className="relative aspect-square bg-gray-100 dark:bg-gray-700">
                       {image ? (
-                        <img
+                        <Image
                           src={image}
                           alt={product.title}
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
+                          unoptimized
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
@@ -336,11 +339,15 @@ export function ProductField({ value, onChange, label }: ProductFieldProps) {
       ) : product ? (
         <div className="relative group flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
           {product.images?.[0]?.url ? (
-            <img
-              src={product.images[0].url}
-              alt={product.title}
-              className="w-12 h-12 rounded-lg object-cover"
-            />
+            <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+              <Image
+                src={product.images[0].url}
+                alt={product.title}
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            </div>
           ) : (
             <div className="w-12 h-12 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
               <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

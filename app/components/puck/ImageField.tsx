@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import MediaLibrary from '@/components/media/MediaLibrary';
 import { MediaItem } from '@/lib/media-types';
 
@@ -38,11 +39,13 @@ export default function ImageField({ value, onChange, label }: ImageFieldProps) 
       )}
 
       {value ? (
-        <div className="relative group">
-          <img
+        <div className="relative group h-32">
+          <Image
             src={value}
             alt="Selected image"
-            className="w-full h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+            fill
+            className="object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+            unoptimized
           />
           <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
             <button

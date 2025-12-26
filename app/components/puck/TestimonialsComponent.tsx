@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { getPuckFullColors, PuckEmptyState } from '@/lib/puck-utils';
 
 // ============================================================================
@@ -93,11 +94,15 @@ function TestimonialCard({
         {showAvatar && (
           <div className="flex-shrink-0">
             {testimonial.avatar ? (
-              <img
-                src={testimonial.avatar}
-                alt={testimonial.author || 'Customer'}
-                className="w-12 h-12 rounded-full object-cover"
-              />
+              <div className="relative w-12 h-12 rounded-full overflow-hidden">
+                <Image
+                  src={testimonial.avatar}
+                  alt={testimonial.author || 'Customer'}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+              </div>
             ) : (
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center text-white font-semibold text-lg">
                 {(testimonial.author || 'A').charAt(0).toUpperCase()}
