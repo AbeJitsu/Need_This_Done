@@ -74,7 +74,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               setCartId(savedCartId);
             } else {
               // Cart doesn't exist (maybe server restarted), clear and create new one
-              console.log(`Saved cart ${savedCartId} no longer exists, clearing localStorage`);
               localStorage.removeItem('medusa_cart_id');
               setCartId(null);
             }

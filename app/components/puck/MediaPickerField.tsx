@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 
 // ============================================================================
@@ -28,14 +28,7 @@ export default function MediaPickerField({ value, onChange, label }: MediaPicker
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
 
-  // Fetch media when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      fetchMedia();
-    }
-  }, [isOpen]);
-
-  const fetchMedia = async () => {
+  const fetchMedia = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({ pageSize: '50' });
@@ -51,7 +44,14 @@ export default function MediaPickerField({ value, onChange, label }: MediaPicker
     } finally {
       setLoading(false);
     }
-  };
+  }, [search]);
+
+  // Fetch media when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      fetchMedia();
+    }
+  }, [isOpen, fetchMedia]);
 
   const handleSelect = (item: MediaItem) => {
     onChange(item.url);

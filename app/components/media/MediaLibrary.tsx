@@ -80,14 +80,14 @@ export default function MediaLibrary({
       fetchMedia(true);
       setSelectedIds(new Set());
     }
-  }, [isOpen, folder, search]);
+  }, [isOpen, folder, search, fetchMedia]);
 
   // Load more
   useEffect(() => {
     if (page > 1 && isOpen) {
       fetchMedia(false);
     }
-  }, [page, isOpen]);
+  }, [page, isOpen, fetchMedia]);
 
   // ============================================================================
   // Handlers

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { deleteCalendarEvent, isCalendarConnected, getValidAccessToken } from '@/lib/google-calendar';
+import { sendAppointmentCancellation } from '@/lib/email-service';
 
 export const dynamic = 'force-dynamic';
 
@@ -107,7 +108,29 @@ export async function POST(
       );
     }
 
-    // TODO: Send cancellation email to customer
+    // Send cancellation email to customer
+    try {
+      const preferredDate = new Date(appointment.preferred_date);
+      const formattedDate = preferredDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+      const formattedTime = `${appointment.preferred_time_start} - ${appointment.preferred_time_end}`;
+
+      await sendAppointmentCancellation({
+        customerEmail: appointment.customer_email,
+        customerName: appointment.customer_name || undefined,
+        appointmentDate: formattedDate,
+        appointmentTime: formattedTime,
+        serviceName: appointment.service_name || 'Consultation',
+        orderId: appointment.order_id,
+      });
+    } catch (emailError) {
+      console.error('[Cancel Appointment] Email send failed:', emailError);
+      // Continue - cancellation succeeded, email is secondary
+    }
 
     return NextResponse.json({
       success: true,

@@ -68,7 +68,7 @@ export default function AdminDashboard() {
           Quick Links
           ==================================================================== */}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Link
           href="/admin/content"
           className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all group"
@@ -98,6 +98,26 @@ export default function AdminDashboard() {
             Shop
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">Products & orders</p>
+        </Link>
+        <Link
+          href="/admin/appointments"
+          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-cyan-400 dark:hover:border-cyan-500 hover:shadow-md transition-all group"
+        >
+          <div className="text-2xl mb-2">📅</div>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
+            Appointments
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Booking requests</p>
+        </Link>
+        <Link
+          href="/admin/users"
+          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-pink-400 dark:hover:border-pink-500 hover:shadow-md transition-all group"
+        >
+          <div className="text-2xl mb-2">👥</div>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-pink-600 dark:group-hover:text-pink-400">
+            Users
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Manage accounts</p>
         </Link>
         <Link
           href="/admin/dev"

@@ -138,6 +138,16 @@ export type OrderStatusUpdateEmailProps = {
   updatedAt: string;
 };
 
+export type AppointmentCancellationEmailProps = {
+  customerEmail: string;
+  customerName?: string;
+  appointmentDate: string;
+  appointmentTime: string;
+  serviceName: string;
+  orderId: string;
+  reason?: string;
+};
+
 // ============================================================================
 // Project Submission Emails
 // ============================================================================
@@ -429,5 +439,27 @@ export async function sendOrderStatusUpdate(
     data.customerEmail,
     subject,
     OrderStatusUpdateEmail(data),
+  );
+}
+
+/**
+ * Send appointment cancellation email when admin cancels.
+ * Notifies customer and provides rebooking options.
+ *
+ * @param data - Appointment cancellation data
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendAppointmentCancellation(
+  data: AppointmentCancellationEmailProps,
+): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: AppointmentCancellationEmail } = await import("../emails/AppointmentCancellationEmail");
+
+  const subject = `Appointment Canceled: ${data.serviceName} on ${data.appointmentDate}`;
+
+  return sendEmailWithRetry(
+    data.customerEmail,
+    subject,
+    AppointmentCancellationEmail(data),
   );
 }

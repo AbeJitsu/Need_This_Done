@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
 import { getPuckFullColors, puckColumnsMap, puckGapMap, PuckEmptyState } from '@/lib/puck-utils';
@@ -52,7 +52,14 @@ export default function ProductGridComponent({
   const colors = getPuckFullColors(accentColor);
   const hoverBorder = cardHoverColors[colorVariant] || cardHoverColors.purple;
   const buttonColors = solidButtonColors[colorVariant] || solidButtonColors.purple;
-  const validProductIds = productIds.filter(item => item.id?.trim());
+  const validProductIds = useMemo(
+    () => productIds.filter(item => item.id?.trim()),
+    [productIds]
+  );
+  const productIdKey = useMemo(
+    () => validProductIds.map(p => p.id).join(','),
+    [validProductIds]
+  );
 
   // Fetch all products
   useEffect(() => {
@@ -87,7 +94,7 @@ export default function ProductGridComponent({
     }
 
     fetchProducts();
-  }, [validProductIds.map(p => p.id).join(',')]);
+  }, [productIdKey, validProductIds]);
 
   // Handle add to cart
   const handleAddToCart = async (product: Product) => {
