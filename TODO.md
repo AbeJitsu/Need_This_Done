@@ -47,22 +47,60 @@ _Currently active work items_
 
 ## To Do
 
-### Short Term
+### Short Term (This Week)
+
+**Template System Foundation** ✅ STARTED
+- [x] Create template type definitions (`lib/templates/types.ts`)
+- [x] Build template utilities (`lib/templates/utils.ts`)
+- [x] Create 5 starter templates (course, business, product, portfolio, contact)
+- [x] Build TemplatePicker component (phone-friendly)
+- [x] Build PageWizard component (5-step flow)
+- [ ] Create admin page for wizard at `/admin/pages/new`
+- [ ] Wire wizard output to Puck page storage
+- [ ] Test wizard end-to-end
 
 **Admin Workflows**
 - [ ] Inventory management interface
 - [ ] Bulk product import/export
 - [ ] Order status updates & fulfillment tracking
-- [ ] Analytics dashboard (orders, revenue, trends)
 
-### Medium Term
+### Medium Term (2-4 Weeks)
+
+**Visual Builder Polish**
+- [ ] Re-enable Puck page builder (currently disabled)
+- [ ] Add "Edit with Puck" after wizard completion
+- [ ] Create block-level editor (mid-complexity between wizard and Puck)
+- [ ] Add template preview images
 
 **Performance & Caching**
 - [ ] Define Redis cache invalidation strategy per feature
 - [ ] Monitor cache hit rates
 - [ ] Optimize product queries with pagination
 
-### Long Term
+**Analytics Dashboard**
+- [ ] Orders, revenue, trends visualization
+- [ ] Page view analytics per Puck page
+
+### Long Term (1-3 Months)
+
+**LMS Components** - The big vision: "Learn + Sell + Build"
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    THE PLATFORM VISION                          │
+│                                                                 │
+│   📝 CMS (edit content) + 📚 LMS (teach) + 🛒 Shop (sell)       │
+│                                                                 │
+│   Built with a phone-first visual builder anyone can use        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+- [ ] CourseCard component (course preview/listing)
+- [ ] LessonPlayer component (video + content)
+- [ ] QuizBlock component (interactive quizzes)
+- [ ] ProgressBar component (course progress tracking)
+- [ ] Certificate component (completion certificates)
+- [ ] Enrollment system (paid/free courses)
+- [ ] Student dashboard (my courses, progress)
 
 **Advanced Ecommerce Features**
 - [ ] Abandoned cart recovery emails
@@ -71,11 +109,23 @@ _Currently active work items_
 - [ ] Multi-currency support
 - [ ] Customer reviews & ratings
 
+**Platform Simplicity Layer**
+- [ ] Phone-first wizard (answer 5 questions → done)
+- [ ] Pre-built page sections (drag whole sections, not components)
+- [ ] Template marketplace (share/sell templates)
+
 ---
 
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Template System & Page Wizard** (Dec 2025)
+- Created orthogonal template architecture (`lib/templates/`)
+- 5 starter templates: Course Landing, Business Landing, Product Launch, Portfolio, Contact
+- Phone-first PageWizard component (5-step flow)
+- TemplatePicker with category filtering and search
+- DRY utilities for template → Puck JSON conversion
 
 ---
 
@@ -90,6 +140,7 @@ Features that are implemented but not production-ready:
 - Files remain in codebase (`app/admin/pages/`, `lib/puck-config.tsx`, `app/[slug]/page.tsx`)
 - Reason: Needs more testing and polish before production use
 - To re-enable: uncomment the Link in AdminDashboard.tsx and re-enable tests
+- **NEW:** Template system added (`lib/templates/`) as simplified entry point to Puck
 
 ---
 
