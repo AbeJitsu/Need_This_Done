@@ -126,18 +126,17 @@ export default function Navigation() {
 
             {/* Get a Quote CTA - Primary conversion action */}
             {/* Uses centralized accentColors.orange from colors.ts */}
-            {/* Always visible - compact text on mobile */}
+            {/* Hidden on mobile to prevent overflow - available in mobile menu */}
             <Link
               href="/contact"
               className={`
-                inline-flex items-center px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm ${accentFontWeight} rounded-full whitespace-nowrap transition-all duration-300 hover:scale-105 active:scale-95
+                hidden sm:inline-flex items-center px-3 py-2 text-sm ${accentFontWeight} rounded-full whitespace-nowrap transition-all duration-300 hover:scale-105 active:scale-95
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                 ${accentBorderWidth} ${accentColors.orange.bg} ${accentColors.orange.text} ${accentColors.orange.border}
                 ${accentColors.orange.hoverText} ${accentColors.orange.hoverBorder}
               `}
             >
-              <span className="hidden sm:inline">Get a Quote</span>
-              <span className="sm:hidden">Quote</span>
+              Get a Quote
             </Link>
 
             {/* Cart Icon */}
