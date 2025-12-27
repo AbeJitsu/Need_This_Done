@@ -294,6 +294,22 @@ function getSolidBgClass(color: AccentVariant): string {
 }
 
 /**
+ * Get group hover text color (for parent hover effects)
+ */
+function getGroupHoverTextClass(color: AccentVariant): string {
+  const map: Record<AccentVariant, string> = {
+    purple: 'group-hover:text-purple-600 dark:group-hover:text-purple-400',
+    blue: 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
+    green: 'group-hover:text-green-600 dark:group-hover:text-green-400',
+    orange: 'group-hover:text-orange-600 dark:group-hover:text-orange-400',
+    teal: 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
+    gray: 'group-hover:text-gray-600 dark:group-hover:text-gray-400',
+    red: 'group-hover:text-red-600 dark:group-hover:text-red-400',
+  };
+  return map[color] || map.purple;
+}
+
+/**
  * Get product card hover border (static classes for Tailwind compatibility)
  */
 function getProductHoverBorderClass(color: AccentVariant): string {
@@ -355,6 +371,8 @@ export function getPuckFullColors(color: string) {
     subtleBg: getSubtleBgClass(variant),
     hoverBg: getHoverBgClass(variant),
     accentText: getAccentTextClass(variant),
+    // Group hover text (for parent hover effects on titles)
+    groupHoverText: getGroupHoverTextClass(variant),
     // Button utilities (combined for convenience)
     buttonBg: `${solid.bg} ${solid.hover}`,
     buttonText: solid.text,

@@ -115,7 +115,7 @@ export default async function FAQPage() {
                 <div className="flex items-start gap-4">
                   <CircleBadge number={index + 1} color={color} size="sm" />
                   <div>
-                    <h2 className={`text-lg font-semibold mb-2 ${styles.text}`}>
+                    <h2 className={`text-xl font-semibold mb-2 ${styles.text}`}>
                       {faq.question}
                     </h2>
                     <p className={formInputColors.helper}>

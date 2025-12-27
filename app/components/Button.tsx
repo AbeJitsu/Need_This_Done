@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { AccentVariant, accentColors, accentBorderWidth, accentFontWeight } from '@/lib/colors';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 // ============================================================================
 // Button Component - Centralized Button Styling
@@ -17,6 +18,8 @@ interface ButtonProps {
   href?: string;
   onClick?: () => void;
   disabled?: boolean;
+  isLoading?: boolean;
+  loadingText?: string;
   className?: string;
   type?: 'button' | 'submit';
 }
@@ -42,17 +45,20 @@ export default function Button({
   href,
   onClick,
   disabled = false,
+  isLoading = false,
+  loadingText,
   className = '',
   type = 'button',
 }: ButtonProps) {
   const colors = accentColors[variant];
+  const isDisabled = disabled || isLoading;
   // All color classes come from the centralized accentColors system
-  const baseClasses = `inline-flex items-center justify-center ${accentFontWeight} rounded-full ${accentBorderWidth} transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:ring-4 focus-visible:ring-purple-200 dark:focus-visible:ring-purple-800 ${sizeClasses[size]} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`;
-  const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : '';
+  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-full ${accentBorderWidth} transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:ring-4 focus-visible:ring-blue-300 dark:focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${sizeClasses[size]} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`;
+  const disabledClasses = isDisabled ? 'opacity-60 cursor-not-allowed hover:scale-100 active:scale-100' : '';
   const fullClasses = `${baseClasses} ${disabledClasses} ${className}`.trim();
 
   // Render as Link if href is provided and not disabled
-  if (href && !disabled) {
+  if (href && !isDisabled) {
     return (
       <Link href={href} className={fullClasses}>
         {children}
@@ -65,10 +71,12 @@ export default function Button({
     <button
       type={type}
       onClick={onClick}
-      disabled={disabled}
+      disabled={isDisabled}
       className={fullClasses}
+      aria-busy={isLoading}
     >
-      {children}
+      {isLoading && <LoadingSpinner size="sm" color="current" />}
+      {isLoading && loadingText ? loadingText : children}
     </button>
   );
 }

@@ -115,27 +115,42 @@ export default function CartPage() {
   };
 
   // ========================================================================
-  // Empty cart state - Friendly and helpful
+  // Empty cart state - Friendly and helpful with EmptyState component
   // ========================================================================
   if (!cartId || !cart || cart.items.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <PageHeader
           title="Your Cart is Empty"
           description="Nothing here yet, but that's easy to fix!"
         />
 
         <Card hoverEffect="none">
-          <div className="p-8 text-center">
-            <p className={`${formInputColors.helper} mb-2`}>
-              Looking for expert guidance?
-            </p>
-            <p className={`${formInputColors.helper} mb-6`}>
-              Our consultations are a great way to get personalized help before committing to a project.
-            </p>
-            <Button variant="blue" href="/shop">
-              Browse Consultations
-            </Button>
+          <div className="py-8 px-4">
+            <div className="flex flex-col items-center justify-center text-center">
+              {/* Cart Icon */}
+              <div className="text-gray-300 dark:text-gray-600 mb-6">
+                <svg className="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+
+              {/* Message */}
+              <h3 className={`text-xl font-semibold ${headingColors.primary} mb-2`}>
+                Your cart is waiting
+              </h3>
+              <p className={`${formInputColors.helper} max-w-sm mb-2`}>
+                Looking for expert guidance?
+              </p>
+              <p className={`${formInputColors.helper} max-w-sm mb-6`}>
+                Our consultations are a great way to get personalized help before committing to a project.
+              </p>
+
+              {/* CTA */}
+              <Button variant="blue" href="/shop">
+                Browse Consultations
+              </Button>
+            </div>
           </div>
         </Card>
       </div>
@@ -148,7 +163,7 @@ export default function CartPage() {
   const total = cart.total || subtotal + tax;
 
   return (
-    <div className="max-w-4xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       <PageHeader
         title="Almost there!"
         description={`You've got ${itemCount} ${itemCount === 1 ? 'consultation' : 'consultations'} ready to book.`}

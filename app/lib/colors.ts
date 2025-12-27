@@ -53,6 +53,37 @@ export type AccentColor = 'purple' | 'blue' | 'green';
 export type AccentVariant = 'purple' | 'blue' | 'green' | 'orange' | 'teal' | 'gray' | 'red';
 
 // ============================================================================
+// Shadow Classes - Centralized shadow utilities
+// ============================================================================
+// Consistent shadow patterns for cards, modals, and interactive elements.
+// Use these instead of hardcoding shadow values throughout the codebase.
+export const shadowClasses = {
+  // Subtle shadow for cards at rest
+  card: 'shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:shadow-[0_0_8px_0px_rgba(255,255,255,0.05)]',
+  // Elevated shadow for cards on hover
+  cardHover: 'hover:shadow-[0_0_16px_0px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_0_16px_0px_rgba(255,255,255,0.1)]',
+  // Lift effect for interactive cards
+  lift: 'hover:shadow-xl hover:-translate-y-1 transition-all duration-300',
+  // Large shadow for modals and overlays
+  modal: 'shadow-2xl',
+  // Small shadow for navigation elements
+  nav: 'shadow-sm',
+  // Medium shadow for dropdowns
+  dropdown: 'shadow-lg',
+};
+
+// ============================================================================
+// Focus Ring Classes - Consistent focus states for accessibility
+// ============================================================================
+// Use these for keyboard navigation visibility.
+export const focusRingClasses = {
+  blue: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+  purple: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+  orange: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+  green: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+};
+
+// ============================================================================
 // Accent Colors - Unified styling for Button, CircleBadge, and Navigation
 // ============================================================================
 // Single source of truth for all accent-colored interactive elements.

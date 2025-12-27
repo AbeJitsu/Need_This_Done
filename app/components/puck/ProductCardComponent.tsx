@@ -173,7 +173,7 @@ export default function ProductCardComponent({
 
       {/* Product Info */}
       <div className="p-4">
-        <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+        <h3 className={`font-semibold text-gray-900 dark:text-gray-100 ${colors.groupHoverText} transition-colors`}>
           {product.title}
         </h3>
 
