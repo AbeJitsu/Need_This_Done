@@ -713,6 +713,19 @@ export const layoutBgColors = {
 };
 
 // ============================================================================
+// Gradient Colors - For decorative gradients across the site
+// ============================================================================
+// Centralized gradient definitions to maintain consistency
+export const gradientColors = {
+  // Page background gradient for Puck pages
+  pageBackground: 'bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900',
+  // Popular badge gradient
+  popularBadge: 'bg-gradient-to-r from-blue-500 to-blue-600',
+  // Avatar placeholder gradient
+  avatarPlaceholder: 'bg-gradient-to-br from-purple-400 to-blue-500',
+};
+
+// ============================================================================
 // Solid Button Colors - For solid background action buttons
 // ============================================================================
 // All accent color variants with background, hover, text, and focus ring states

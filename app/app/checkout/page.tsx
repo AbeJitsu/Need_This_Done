@@ -147,7 +147,7 @@ export default function CheckoutPage() {
         await proceedToPayment();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to proceed');
+      setError(err instanceof Error ? err.message : 'Hmm, something went wrong. Please try again or contact us - we\'re here to help.');
     } finally {
       setIsProcessing(false);
     }
@@ -229,7 +229,7 @@ export default function CheckoutPage() {
       setClientSecret(paymentData.clientSecret);
       setCurrentStep('payment');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to proceed');
+      setError(err instanceof Error ? err.message : 'Hmm, something went wrong. Please try again or contact us - we\'re here to help.');
     } finally {
       setIsProcessing(false);
     }
@@ -288,7 +288,7 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'confirmation') {
     return (
-      <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <div className="inline-block p-3 bg-green-100 dark:bg-green-900 rounded-full mb-4">
             <svg
@@ -304,10 +304,10 @@ export default function CheckoutPage() {
             </svg>
           </div>
           <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
-            Payment Successful!
+            You're All Set!
           </h1>
           <p className={formInputColors.helper}>
-            Thank you for your purchase.
+            Thanks so much for your order - we're excited to get started!
             {requiresAppointment && ' We\'ll confirm your appointment shortly.'}
           </p>
         </div>
@@ -418,7 +418,7 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'appointment' && appointmentInfo) {
     return (
-      <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
         <PageHeader title="Schedule Your Consultation" description="Pick a time that works for you" />
 
         <Card hoverEffect="none">
@@ -515,7 +515,7 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'payment' && clientSecret) {
     return (
-      <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
         <PageHeader title="Payment" description="Complete your purchase" />
 
         <Card hoverEffect="none">
@@ -629,7 +629,7 @@ export default function CheckoutPage() {
   // Information step (Step 1)
   // ========================================================================
   return (
-    <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
       <PageHeader title="Checkout" description="Complete your purchase" />
 
       {itemCount === 0 ? (

@@ -9,6 +9,7 @@ import {
   cardBgColors,
   cardBorderColors,
   accentColors,
+  gradientColors,
 } from '@/lib/colors';
 import Button from '@/components/Button';
 
@@ -58,8 +59,8 @@ export default function PricingCard({
     >
       {/* "Most Popular" badge */}
       {popular && (
-        <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg shadow-blue-500/25 whitespace-nowrap">
-          ⭐ Most Popular
+        <span className={`absolute -top-4 left-1/2 -translate-x-1/2 ${gradientColors.popularBadge} text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg shadow-blue-500/25 whitespace-nowrap`}>
+          Most Popular
         </span>
       )}
 
