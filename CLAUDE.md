@@ -133,6 +133,49 @@ Multiple Claude Code sessions may run concurrently on different tasks. Pushing b
 └─────────────────────────────────────────────────────────────┘
 ```
 
+### Local IDE: Testing Claude Branches
+
+**Separation of concerns:** Claude Code sessions create features; you test and merge locally.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              SEPARATION OF CONCERNS                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  CLAUDE CODE SESSIONS          YOUR LOCAL IDE               │
+│  ─────────────────────         ──────────────────           │
+│  • Create new features         • git fetch --all            │
+│  • Push to branches            • git branch -a              │
+│  • Iterate on code             • Checkout & test            │
+│  • Keep pushing commits        • Run locally                │
+│                                • Review changes             │
+│         ↓                      • Create PR when ready       │
+│    Feature branches     →      • Merge after testing ✓      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Commands for your local IDE:**
+
+```bash
+# Fetch all remote branches (updates your local view)
+git fetch --all
+
+# See ALL branches (local + remote)
+git branch -a
+
+# See only remote branches (what Claude has pushed)
+git branch -r
+
+# Switch to a Claude branch to test it
+git checkout claude/feature-name
+
+# Run the app locally to test
+cd app && npm run dev
+```
+
+**The rule:** Nothing hits `main` until you've verified it works locally. Claude builds, you validate and merge.
+
 ---
 
 ## Hooks
