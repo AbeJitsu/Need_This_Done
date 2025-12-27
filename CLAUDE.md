@@ -94,6 +94,47 @@ Example: "I need to commit these changes. Please run: `git commit -m 'your messa
 
 ---
 
+## Branch Workflow
+
+When working on any task that involves creating a new branch:
+
+1. **Create the branch with a descriptive name** following this pattern: `claude/<feature-or-task-description>` (e.g., `claude/add-user-auth`, `claude/fix-nav-styling`)
+
+2. **Push the branch to origin immediately after the first meaningful commit** — don't wait until the work is complete. Run `git push -u origin <branch-name>` early so the branch is visible on GitHub.
+
+3. **Notify the user when you've pushed** by stating the branch name and a one-line summary of what you're working on.
+
+4. **Continue pushing commits as you progress** so changes can be tracked in real-time from a local IDE.
+
+**Why This Matters:**
+
+Multiple Claude Code sessions may run concurrently on different tasks. Pushing branches early enables:
+- Monitoring all in-flight work locally
+- Spotting potential conflicts before they compound
+- Controlling integration sequence when merging into main
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    BRANCH WORKFLOW                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. CREATE BRANCH                                           │
+│     └── Pattern: claude/<feature-description>               │
+│                                                             │
+│  2. FIRST MEANINGFUL COMMIT                                 │
+│     └── git push -u origin <branch-name>  ← Push early!     │
+│                                                             │
+│  3. NOTIFY                                                  │
+│     └── State branch name + one-line summary                │
+│                                                             │
+│  4. CONTINUE PUSHING                                        │
+│     └── Regular commits for real-time tracking              │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Hooks
 
 Five hooks in `.claude/hooks/` support your workflow:
