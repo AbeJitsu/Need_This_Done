@@ -12,6 +12,38 @@ Keep charts simple, use box-drawing characters, and label each step clearly.
 
 ---
 
+## Branch Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         BRANCH ARCHITECTURE                             │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   production ──────────────────────── Vercel LIVE (needthisdone.com)    │
+│        ▲                              Only merge after screenshot       │
+│        │                              verification                      │
+│        │                                                                │
+│   main ────────────────────────────── Orchestrator / Integration        │
+│        │                              (Claude sessions clone here)      │
+│        │                              (Vercel preview deploys)          │
+│        │                                                                │
+│        ├──→ claude/feature-a ──┐                                        │
+│        ├──→ claude/feature-b ──┼──→ PR to main (with screenshots)       │
+│        └──→ claude/feature-c ──┘                                        │
+│                                                                         │
+│   DEFAULT CLONE BRANCH: main                                            │
+│   LIVE PRODUCTION BRANCH: production                                    │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+**Key Points:**
+- **main** = Where all Claude Code sessions start (default branch)
+- **production** = Live site, only receives verified, screenshot-documented features
+- **claude/\*** = Feature branches, one per task
+
+---
+
 ## Development & Deployment Workflow
 
 **Always follow this workflow:**
@@ -26,10 +58,18 @@ Keep charts simple, use box-drawing characters, and label each step clearly.
 
    - Run `/dac` to draft a commit message for approval
    - **NEVER commit directly** - always wait for user approval
-   - Push changes to the `dev` branch after approval
-3. **Production Deployment** (automatic via Vercel):
+   - Push changes to your feature branch after approval
+3. **Create PR to main** (with documentation):
 
-   - Push to `main` branch triggers Vercel deployment
+   - Include screenshots of the feature
+   - Add changelog entry (see [Feature Documentation](#feature-documentation))
+   - Merge to main after review
+4. **Production Deployment** (main → production):
+
+   - Batch tested features on main
+   - Final screenshot verification
+   - Merge main → production
+   - Vercel auto-deploys from production branch
    - Site runs at https://needthisdone.com
 
 **Architecture:**
@@ -174,7 +214,7 @@ git checkout claude/feature-name
 cd app && npm run dev
 ```
 
-**The rule:** Nothing hits `main` until you've verified it works locally. Claude builds, you validate and merge.
+**The rule:** Nothing hits `main` until verified locally. Nothing hits `production` until documented with screenshots. Claude builds, you validate and merge.
 
 ---
 
@@ -200,6 +240,74 @@ Five hooks in `.claude/hooks/` support your workflow:
 **README.md** → Production-ready, battle-tested features
 
 **Flow:** TODO.md (incomplete) → test & verify → README.md (production-ready)
+
+---
+
+## Feature Documentation
+
+**Every feature must be documented with screenshots and clear copy.** Users can't benefit from features they don't know exist.
+
+### Changelog Entry Structure
+
+Each feature needs an entry in `/content/changelog/` with:
+
+```json
+{
+  "title": "Google Calendar Sync",
+  "slug": "google-calendar-sync",
+  "date": "2024-01-15",
+  "category": "Booking",
+  "description": "Your appointments now sync directly to Google Calendar—no more double-booking or manual entry.",
+  "benefit": "Save time and never miss an appointment.",
+  "howToUse": [
+    "Book an appointment as usual",
+    "Click 'Add to Calendar' on confirmation",
+    "Authorize Google Calendar access once",
+    "Done! Future appointments sync automatically"
+  ],
+  "screenshots": [
+    { "src": "/screenshots/gcal/booking-confirm.png", "alt": "Booking confirmation with calendar button" },
+    { "src": "/screenshots/gcal/calendar-event.png", "alt": "Appointment showing in Google Calendar" }
+  ]
+}
+```
+
+### Screenshot Capture
+
+E2E tests should capture screenshots at key moments:
+
+```typescript
+// In your Playwright test
+await page.screenshot({ path: 'public/screenshots/feature-name/step-1.png' });
+```
+
+### Claude Session Checklist (per feature)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              FEATURE COMPLETION CHECKLIST                   │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   □ Build the feature                                       │
+│   □ Write E2E test with screenshot captures                 │
+│   □ Create changelog entry with:                            │
+│       □ Clear title (benefit-driven)                        │
+│       □ Description (what it does)                          │
+│       □ Benefit (why users care)                            │
+│       □ How-to steps (if applicable)                        │
+│       □ Screenshot references                               │
+│   □ Run tests to generate screenshots                       │
+│   □ Push branch with PR                                     │
+│                                                             │
+│   RESULT: Feature ships WITH documentation                  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Where Users See This
+
+- **/changelog** - Chronological list of updates with screenshots
+- **/features** - Organized feature showcase by category
 
 ---
 
@@ -250,6 +358,8 @@ For Puck components, use `getPuckAccentColors()` and `getPuckFullColors()` from 
 
 | Need | Go to |
 |------|-------|
+| Branch Strategy | See [Branch Architecture](#branch-architecture) |
+| Feature Docs | See [Feature Documentation](#feature-documentation) |
 | Commands | See [README.md → Quick Start](README.md#quick-start) |
 | Architecture | See [README.md → Architecture Overview](README.md#architecture-overview) |
 | Testing | See [README.md → Testing](README.md#testing) |
@@ -262,4 +372,4 @@ For Puck components, use `getPuckAccentColors()` and `getPuckFullColors()` from 
 
 ---
 
-*Last Updated: December 2025*
+*Last Updated: December 27, 2025*
