@@ -38,14 +38,19 @@ export default function Navigation() {
   // ============================================================================
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowDropdown(false);
       }
     };
 
+    // Handle both mouse and touch events for mobile support
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, []);
 
   // ============================================================================
@@ -86,6 +91,7 @@ export default function Navigation() {
                     href={link.href}
                     className={`
                       px-3 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors transition-transform
+                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                       ${
                         isActive
                           ? `${accentBorderWidth} ${accentColors.blue.bg} ${accentColors.blue.text} ${accentColors.blue.border} ${accentColors.blue.hoverText} ${accentColors.blue.hoverBorder}`
@@ -120,21 +126,24 @@ export default function Navigation() {
 
             {/* Get a Quote CTA - Primary conversion action */}
             {/* Uses centralized accentColors.orange from colors.ts */}
+            {/* Always visible - compact text on mobile */}
             <Link
               href="/contact"
               className={`
-                hidden sm:inline-flex items-center px-3 py-2 text-sm ${accentFontWeight} rounded-full whitespace-nowrap transition-all duration-300 hover:scale-105 active:scale-95
+                inline-flex items-center px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm ${accentFontWeight} rounded-full whitespace-nowrap transition-all duration-300 hover:scale-105 active:scale-95
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                 ${accentBorderWidth} ${accentColors.orange.bg} ${accentColors.orange.text} ${accentColors.orange.border}
                 ${accentColors.orange.hoverText} ${accentColors.orange.hoverBorder}
               `}
             >
-              Get a Quote
+              <span className="hidden sm:inline">Get a Quote</span>
+              <span className="sm:hidden">Quote</span>
             </Link>
 
             {/* Cart Icon */}
             <Link
               href="/cart"
-              className={`relative p-2 ${navigationColors.link} ${navigationColors.linkHover} transition-colors`}
+              className={`relative p-2 ${navigationColors.link} ${navigationColors.linkHover} transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
               aria-label={itemCount > 0 ? `Shopping cart with ${itemCount} items` : 'Shopping cart'}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

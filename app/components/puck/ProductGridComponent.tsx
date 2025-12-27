@@ -201,7 +201,7 @@ export default function ProductGridComponent({
 
             {/* Product Info */}
             <div className="p-3">
-              <h3 className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+              <h3 className={`font-medium text-sm text-gray-900 dark:text-gray-100 truncate ${colors.groupHoverText} transition-colors`}>
                 {product.title}
               </h3>
 
