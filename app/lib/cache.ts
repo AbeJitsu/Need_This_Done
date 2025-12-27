@@ -54,6 +54,12 @@ export const CACHE_KEYS = {
   pageContent: (slug: string) => `page-content:${slug}`,
   adminPageContent: () => 'admin:page-content:all',
 
+  // Blog posts
+  blogPost: (slug: string) => `blog:post:${slug}`,
+  blogPosts: (status?: string) =>
+    status ? `blog:posts:status:${status}` : 'blog:posts:all',
+  adminBlogPosts: () => 'admin:blog:all',
+
   // Static content
   services: () => 'static:services',
   pricing: () => 'static:pricing',
