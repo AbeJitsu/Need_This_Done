@@ -87,8 +87,32 @@ export async function verifyAuth(): Promise<AuthResult> {
 // ============================================================================
 // Checks if the user is authenticated AND has admin privileges.
 // Returns 401 for unauthenticated, 403 for non-admin users.
+//
+// E2E_ADMIN_BYPASS: When NEXT_PUBLIC_E2E_ADMIN_BYPASS=true in development,
+// bypasses auth and returns a fake admin user for testing.
 
 export async function verifyAdmin(): Promise<AuthResult> {
+  // E2E bypass for local testing (development only)
+  const e2eBypass = process.env.NEXT_PUBLIC_E2E_ADMIN_BYPASS === 'true' &&
+                    process.env.NODE_ENV === 'development';
+
+  if (e2eBypass) {
+    // Return a fake admin user for E2E testing
+    // Using a valid UUID format for database compatibility
+    const fakeAdminUser = {
+      id: '00000000-0000-0000-0000-000000000000',
+      email: 'e2e@test.local',
+      user_metadata: {
+        is_admin: true,
+        full_name: 'E2E Test Admin',
+      },
+      app_metadata: {},
+      aud: 'authenticated',
+      created_at: new Date().toISOString(),
+    } as User;
+    return { user: fakeAdminUser };
+  }
+
   const authResult = await verifyAuth();
 
   if (authResult.error) {

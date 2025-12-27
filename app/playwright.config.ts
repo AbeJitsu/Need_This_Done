@@ -93,6 +93,15 @@ export default defineConfig({
       dependencies: ['setup'],
       testIgnore: /auth\.setup\.ts/,
     },
+
+    // E2E Bypass mode - no auth required (for local dev with NEXT_PUBLIC_E2E_ADMIN_BYPASS=true)
+    {
+      name: 'e2e-bypass',
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+      testIgnore: /auth\.setup\.ts/,
+    },
   ],
 
   // ============================================================================

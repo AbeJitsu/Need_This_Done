@@ -110,9 +110,9 @@ export default function PageWizard({ onComplete, onCancel }: PageWizardProps) {
     : [];
 
   return (
-    <div className="h-screen bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
+    <div className="min-h-[600px] h-[calc(100dvh-72px)] bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
       {/* Header with progress */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 sticky top-0 z-10">
+      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex-shrink-0">
         <div className="max-w-2xl mx-auto">
           {/* Top row: back button and step indicator */}
           <div className="flex items-center justify-between mb-3">
@@ -200,8 +200,8 @@ export default function PageWizard({ onComplete, onCancel }: PageWizardProps) {
         </div>
       </main>
 
-      {/* Footer with action button */}
-      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-4 sticky bottom-0">
+      {/* Footer with action button - flex-shrink-0 keeps it pinned at bottom */}
+      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-4 flex-shrink-0">
         <div className="max-w-2xl mx-auto">
           <button
             onClick={goForward}

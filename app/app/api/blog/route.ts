@@ -42,7 +42,9 @@ export async function GET(request: NextRequest) {
       if (authResult.error) return authResult.error;
     }
 
-    const supabase = await createSupabaseServerClient();
+    // Use admin client for admin views (bypasses RLS for E2E testing)
+    // Use regular client for public views (respects RLS)
+    const supabase = adminView ? getSupabaseAdmin() : await createSupabaseServerClient();
 
     // Determine cache key based on request
     const cacheKey = adminView
@@ -139,6 +141,10 @@ export async function POST(request: NextRequest) {
       slug = `${slug}-${Date.now().toString(36)}`;
     }
 
+    // E2E bypass users have a fake UUID that won't exist in auth.users
+    // Set author_id to null to avoid foreign key constraint violation
+    const isE2EBypassUser = user.id === '00000000-0000-0000-0000-000000000000';
+
     const { data: post, error } = await supabaseAdmin
       .from('blog_posts')
       .insert({
@@ -154,7 +160,7 @@ export async function POST(request: NextRequest) {
         source_url: body.source_url || null,
         meta_title: body.meta_title || null,
         meta_description: body.meta_description || null,
-        author_id: user.id,
+        author_id: isE2EBypassUser ? null : user.id,
         author_name: user.user_metadata?.full_name || user.email || 'Admin',
       })
       .select()
