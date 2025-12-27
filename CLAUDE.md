@@ -94,6 +94,90 @@ Example: "I need to commit these changes. Please run: `git commit -m 'your messa
 
 ---
 
+## Branch Workflow
+
+When working on any task that involves creating a new branch:
+
+1. **Create the branch with a descriptive name** following this pattern: `claude/<feature-or-task-description>` (e.g., `claude/add-user-auth`, `claude/fix-nav-styling`)
+
+2. **Push the branch to origin immediately after the first meaningful commit** — don't wait until the work is complete. Run `git push -u origin <branch-name>` early so the branch is visible on GitHub.
+
+3. **Notify the user when you've pushed** by stating the branch name and a one-line summary of what you're working on.
+
+4. **Continue pushing commits as you progress** so changes can be tracked in real-time from a local IDE.
+
+**Why This Matters:**
+
+Multiple Claude Code sessions may run concurrently on different tasks. Pushing branches early enables:
+- Monitoring all in-flight work locally
+- Spotting potential conflicts before they compound
+- Controlling integration sequence when merging into main
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    BRANCH WORKFLOW                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. CREATE BRANCH                                           │
+│     └── Pattern: claude/<feature-description>               │
+│                                                             │
+│  2. FIRST MEANINGFUL COMMIT                                 │
+│     └── git push -u origin <branch-name>  ← Push early!     │
+│                                                             │
+│  3. NOTIFY                                                  │
+│     └── State branch name + one-line summary                │
+│                                                             │
+│  4. CONTINUE PUSHING                                        │
+│     └── Regular commits for real-time tracking              │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Local IDE: Testing Claude Branches
+
+**Separation of concerns:** Claude Code sessions create features; you test and merge locally.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              SEPARATION OF CONCERNS                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  CLAUDE CODE SESSIONS          YOUR LOCAL IDE               │
+│  ─────────────────────         ──────────────────           │
+│  • Create new features         • git fetch --all            │
+│  • Push to branches            • git branch -a              │
+│  • Iterate on code             • Checkout & test            │
+│  • Keep pushing commits        • Run locally                │
+│                                • Review changes             │
+│         ↓                      • Create PR when ready       │
+│    Feature branches     →      • Merge after testing ✓      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Commands for your local IDE:**
+
+```bash
+# Fetch all remote branches (updates your local view)
+git fetch --all
+
+# See ALL branches (local + remote)
+git branch -a
+
+# See only remote branches (what Claude has pushed)
+git branch -r
+
+# Switch to a Claude branch to test it
+git checkout claude/feature-name
+
+# Run the app locally to test
+cd app && npm run dev
+```
+
+**The rule:** Nothing hits `main` until you've verified it works locally. Claude builds, you validate and merge.
+
+---
+
 ## Hooks
 
 Five hooks in `.claude/hooks/` support your workflow:
