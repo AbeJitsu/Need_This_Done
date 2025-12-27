@@ -21,6 +21,8 @@ import {
   dividerColors,
   titleColors,
   lightBgColors,
+  accentColors,
+  cardBgColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -147,7 +149,7 @@ export default function CheckoutPage() {
         await proceedToPayment();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to proceed');
+      setError(err instanceof Error ? err.message : 'Hmm, something went wrong. Please try again or contact us - we\'re here to help.');
     } finally {
       setIsProcessing(false);
     }
@@ -229,7 +231,7 @@ export default function CheckoutPage() {
       setClientSecret(paymentData.clientSecret);
       setCurrentStep('payment');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to proceed');
+      setError(err instanceof Error ? err.message : 'Hmm, something went wrong. Please try again or contact us - we\'re here to help.');
     } finally {
       setIsProcessing(false);
     }
@@ -288,9 +290,9 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'confirmation') {
     return (
-      <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
-          <div className="inline-block p-3 bg-green-100 dark:bg-green-900 rounded-full mb-4">
+          <div className={`inline-block p-3 ${accentColors.green.bg} rounded-full mb-4`}>
             <svg
               className={`w-8 h-8 ${featureCardColors.success.icon}`}
               fill="currentColor"
@@ -304,10 +306,10 @@ export default function CheckoutPage() {
             </svg>
           </div>
           <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
-            Payment Successful!
+            You're All Set!
           </h1>
           <p className={formInputColors.helper}>
-            Thank you for your purchase.
+            Thanks so much for your order - we're excited to get started!
             {requiresAppointment && ' We\'ll confirm your appointment shortly.'}
           </p>
         </div>
@@ -333,8 +335,8 @@ export default function CheckoutPage() {
                   }}
                   className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
                     copied
-                      ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      ? `${accentColors.green.bg} ${accentColors.green.text}`
+                      : `${accentColors.gray.bg} ${headingColors.secondary} ${cardBgColors.interactive}`
                   }`}
                   title="Copy full order number"
                 >
@@ -369,8 +371,8 @@ export default function CheckoutPage() {
 
             {/* Appointment confirmation message */}
             {requiresAppointment && appointmentData && (
-              <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
-                <p className="text-sm text-purple-700 dark:text-purple-300">
+              <div className={`mb-6 p-4 ${alertColors.info.bg} ${alertColors.info.border} rounded-lg`}>
+                <p className={`text-sm ${alertColors.info.text}`}>
                   <strong>Appointment Requested:</strong>{' '}
                   {new Date(appointmentData.preferredDate + 'T12:00:00').toLocaleDateString('en-US', {
                     weekday: 'long',
@@ -384,7 +386,7 @@ export default function CheckoutPage() {
                     return `${hour12}:${m} ${ampm}`;
                   })}
                 </p>
-                <p className="text-sm text-purple-600 dark:text-purple-400 mt-1">
+                <p className={`text-sm ${alertColors.info.text} mt-1 opacity-80`}>
                   We&apos;ll review your request and confirm within 24 hours.
                 </p>
               </div>
@@ -418,7 +420,7 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'appointment' && appointmentInfo) {
     return (
-      <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
         <PageHeader title="Schedule Your Consultation" description="Pick a time that works for you" />
 
         <Card hoverEffect="none">
@@ -515,7 +517,7 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'payment' && clientSecret) {
     return (
-      <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
         <PageHeader title="Payment" description="Complete your purchase" />
 
         <Card hoverEffect="none">
@@ -629,7 +631,7 @@ export default function CheckoutPage() {
   // Information step (Step 1)
   // ========================================================================
   return (
-    <div className="max-w-6xl mx-auto px-0 sm:px-4 md:px-6 lg:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
       <PageHeader title="Checkout" description="Complete your purchase" />
 
       {itemCount === 0 ? (

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { accentColors, formInputColors, featureCardColors, stepBadgeColors, mutedTextColors } from '@/lib/colors';
+import { accentColors, formInputColors, featureCardColors, stepBadgeColors, mutedTextColors, headingColors, checkmarkColors } from '@/lib/colors';
 
 // ============================================================================
 // Get Started Page - Choose Your Path
@@ -30,12 +30,12 @@ export default function GetStartedPage() {
     setError('');
 
     if (!quoteRef.trim()) {
-      setError('Please enter your quote reference number');
+      setError('We need your quote reference number to get started');
       return;
     }
 
     if (!email.trim()) {
-      setError('Please enter your email address');
+      setError('What\'s the email address on your quote?');
       return;
     }
 
@@ -48,7 +48,7 @@ export default function GetStartedPage() {
 
       setSuccess(true);
     } catch (err) {
-      setError('Something went wrong. Please try again or contact us directly.');
+      setError('Hmm, something went wrong. Please try again or reach out to us - we\'re here to help.');
     } finally {
       setIsProcessing(false);
     }
@@ -61,7 +61,7 @@ export default function GetStartedPage() {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-12">
         <div className="text-center mb-8">
-          <div className="inline-block p-4 bg-green-100 dark:bg-green-900 rounded-full mb-4">
+          <div className={`inline-block p-4 ${accentColors.green.bg} rounded-full mb-4`}>
             <svg className={`w-10 h-10 ${featureCardColors.success.icon}`} fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
@@ -82,11 +82,11 @@ export default function GetStartedPage() {
 
             <div className="space-y-4">
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                <div className={`flex-shrink-0 w-8 h-8 ${accentColors.green.bg} rounded-full flex items-center justify-center`}>
                   <span className={`${stepBadgeColors.green} font-semibold`}>1</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">Confirmation Email</h3>
+                  <h3 className={`font-semibold ${headingColors.primary}`}>Confirmation Email</h3>
                   <p className={formInputColors.helper}>
                     Check your inbox for a receipt and project details.
                   </p>
@@ -94,11 +94,11 @@ export default function GetStartedPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                <div className={`flex-shrink-0 w-8 h-8 ${accentColors.blue.bg} rounded-full flex items-center justify-center`}>
                   <span className={`${stepBadgeColors.blue} font-semibold`}>2</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">We Get to Work</h3>
+                  <h3 className={`font-semibold ${headingColors.primary}`}>We Get to Work</h3>
                   <p className={formInputColors.helper}>
                     Your project moves to the front of our queue and work begins.
                   </p>
@@ -106,11 +106,11 @@ export default function GetStartedPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                <div className={`flex-shrink-0 w-8 h-8 ${accentColors.purple.bg} rounded-full flex items-center justify-center`}>
                   <span className={`${stepBadgeColors.purple} font-semibold`}>3</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">Stay in Touch</h3>
+                  <h3 className={`font-semibold ${headingColors.primary}`}>Stay in Touch</h3>
                   <p className={formInputColors.helper}>
                     We&apos;ll keep you updated on progress and reach out with any questions.
                   </p>
@@ -118,11 +118,11 @@ export default function GetStartedPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
+                <div className={`flex-shrink-0 w-8 h-8 ${accentColors.orange.bg} rounded-full flex items-center justify-center`}>
                   <span className={`${stepBadgeColors.orange} font-semibold`}>4</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">Review & Delivery</h3>
+                  <h3 className={`font-semibold ${headingColors.primary}`}>Review & Delivery</h3>
                   <p className={formInputColors.helper}>
                     Once complete, you&apos;ll review the work. Final 50% is due upon approval.
                   </p>
@@ -157,28 +157,28 @@ export default function GetStartedPage() {
         <Card hoverColor="green" hoverEffect="lift" className="h-full">
           <div className="p-8 h-full grid grid-rows-[auto_auto_auto_1fr_auto]">
             <div className="pb-4">
-              <span className="inline-block px-4 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-sm font-semibold">
+              <span className={`inline-block px-4 py-1 ${accentColors.green.bg} ${accentColors.green.text} rounded-full text-sm font-semibold`}>
                 Free
               </span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 pb-3">
+            <h2 className={`text-2xl font-bold ${headingColors.primary} pb-3`}>
               Get a Quote
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 pb-6">
+            <p className={`${headingColors.secondary} pb-6`}>
               Tell us about your project and get a custom quote
             </p>
             <ul className="space-y-3 self-start">
               <li className="flex items-center gap-2">
-                <span className="text-green-600 dark:text-green-400">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Free, no obligation</span>
+                <span className={checkmarkColors.green.icon}>✓</span>
+                <span className={headingColors.secondary}>Free, no obligation</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-green-600 dark:text-green-400">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Response in 2 business days</span>
+                <span className={checkmarkColors.green.icon}>✓</span>
+                <span className={headingColors.secondary}>Response in 2 business days</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-green-600 dark:text-green-400">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Custom pricing for your needs</span>
+                <span className={checkmarkColors.green.icon}>✓</span>
+                <span className={headingColors.secondary}>Custom pricing for your needs</span>
               </li>
             </ul>
             <Button variant="green" href="/contact" size="lg" className="w-full">
@@ -191,28 +191,28 @@ export default function GetStartedPage() {
         <Card hoverColor="purple" hoverEffect="lift" className="h-full">
           <div className="p-8 h-full grid grid-rows-[auto_auto_auto_1fr_auto]">
             <div className="pb-4">
-              <span className="inline-block px-4 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-sm font-semibold">
+              <span className={`inline-block px-4 py-1 ${accentColors.purple.bg} ${accentColors.purple.text} rounded-full text-sm font-semibold`}>
                 Paid Service
               </span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 pb-3">
+            <h2 className={`text-2xl font-bold ${headingColors.primary} pb-3`}>
               Book a Consultation
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 pb-6">
+            <p className={`${headingColors.secondary} pb-6`}>
               Talk to an expert before you start
             </p>
             <ul className="space-y-3 self-start">
               <li className="flex items-center gap-2">
-                <span className="text-purple-600 dark:text-purple-400">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Expert guidance and advice</span>
+                <span className={checkmarkColors.purple.icon}>✓</span>
+                <span className={headingColors.secondary}>Expert guidance and advice</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-purple-600 dark:text-purple-400">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Immediate scheduling</span>
+                <span className={checkmarkColors.purple.icon}>✓</span>
+                <span className={headingColors.secondary}>Immediate scheduling</span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-purple-600 dark:text-purple-400">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Personalized recommendations</span>
+                <span className={checkmarkColors.purple.icon}>✓</span>
+                <span className={headingColors.secondary}>Personalized recommendations</span>
               </li>
             </ul>
             <Button variant="purple" href="/shop" size="lg" className="w-full">
@@ -236,10 +236,10 @@ export default function GetStartedPage() {
       <Card hoverEffect="none" id="authorize" className="mb-8">
         <form onSubmit={handleSubmit} className="p-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-            Authorize Your Project
+            Let&apos;s Begin Your Project
           </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            Enter your quote details to get started
+            Enter your details and we&apos;ll process your deposit
           </p>
 
           {error && (
@@ -289,7 +289,7 @@ export default function GetStartedPage() {
             className="w-full"
             size="lg"
           >
-            {isProcessing ? 'Processing...' : 'Authorize & Pay Deposit'}
+            {isProcessing ? 'Getting everything ready...' : 'Authorize & Pay Deposit'}
           </Button>
 
           <p className={`mt-4 text-center text-sm ${mutedTextColors.light}`}>

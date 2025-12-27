@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import { formInputColors, formValidationColors } from '@/lib/colors';
+import { formInputColors, formValidationColors, alertColors } from '@/lib/colors';
 
 // ============================================================================
 // Appointment Request Form Component
@@ -157,7 +157,7 @@ export default function AppointmentRequestForm({
   // Success state
   if (isSubmitted) {
     return (
-      <Card hoverEffect="none" className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+      <Card hoverEffect="none" className={`${alertColors.success.bg} ${alertColors.success.border}`}>
         <div className="p-6 text-center">
           <div className="inline-block p-3 bg-green-100 dark:bg-green-900 rounded-full mb-4">
             <svg
@@ -172,10 +172,10 @@ export default function AppointmentRequestForm({
               />
             </svg>
           </div>
-          <h3 className="text-xl font-bold text-green-800 dark:text-green-200 mb-2">
+          <h3 className={`text-xl font-bold ${alertColors.success.text} mb-2`}>
             Appointment Request Submitted!
           </h3>
-          <p className="text-green-700 dark:text-green-300">
+          <p className={alertColors.success.text}>
             We'll review your request and confirm your appointment within 24 hours.
             You'll receive a confirmation email at <strong>{customerEmail}</strong>.
           </p>
@@ -204,7 +204,7 @@ export default function AppointmentRequestForm({
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <div className={`mb-4 p-3 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
             <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
           </div>
         )}
@@ -228,7 +228,7 @@ export default function AppointmentRequestForm({
                   min={minDate}
                   max={maxDateStr}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base}`}
                 />
               </div>
               <div>
@@ -240,7 +240,7 @@ export default function AppointmentRequestForm({
                   value={formData.preferredTimeStart}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base}`}
                 >
                   <option value="">Select a time</option>
                   {availableTimeOptions.map((option) => (
@@ -271,7 +271,7 @@ export default function AppointmentRequestForm({
                   onChange={handleChange}
                   min={minDate}
                   max={maxDateStr}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base}`}
                 />
               </div>
               <div>
@@ -282,7 +282,7 @@ export default function AppointmentRequestForm({
                   name="alternateTimeStart"
                   value={formData.alternateTimeStart}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base}`}
                 >
                   <option value="">Select a time</option>
                   {availableTimeOptions.map((option) => (
@@ -307,13 +307,13 @@ export default function AppointmentRequestForm({
               onChange={handleChange}
               rows={3}
               placeholder="Any specific topics you'd like to discuss or questions you have..."
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 resize-none"
+              className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} resize-none`}
             />
           </div>
 
           {/* Info note */}
-          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <p className="text-sm text-blue-700 dark:text-blue-300">
+          <div className={`mb-6 p-4 ${alertColors.info.bg} ${alertColors.info.border} rounded-lg`}>
+            <p className={`text-sm ${alertColors.info.text}`}>
               <strong>Note:</strong> Appointments are available Monday-Friday, 9 AM - 5 PM EST.
               We'll confirm your appointment within 24 hours.
             </p>

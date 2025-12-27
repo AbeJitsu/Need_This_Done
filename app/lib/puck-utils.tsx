@@ -4,6 +4,7 @@ import {
   solidButtonColors,
   cardBorderColors,
   cardBgColors,
+  gradientColors,
   type AccentVariant,
 } from './colors';
 
@@ -380,6 +381,8 @@ export function getPuckFullColors(color: string) {
     priceText: getAccentTextClass(variant),
     // Product card hover border (uses static classes to avoid Tailwind purge issues)
     productHoverBorder: getProductHoverBorderClass(variant),
+    // Avatar placeholder gradient (from centralized gradientColors)
+    avatarGradient: gradientColors.avatarPlaceholder,
   };
 }
 

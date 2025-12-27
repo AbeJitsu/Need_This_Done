@@ -2,6 +2,7 @@ import { Render } from '@measured/puck';
 import { puckConfig } from '@/lib/puck-config';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
+import { gradientColors } from '@/lib/colors';
 
 // ============================================================================
 // Dynamic Page Viewer
@@ -40,7 +41,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
     }
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+      <div className={`min-h-screen ${gradientColors.pageBackground}`}>
         <main>
           <Render config={puckConfig} data={page.content} />
         </main>
