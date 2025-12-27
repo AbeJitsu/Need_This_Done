@@ -115,6 +115,17 @@ const config = {
     // Product image filters (from colors.ts productImageFilters)
     'saturate-[0.85]',
     'contrast-[0.5]',
+
+    // Gradient classes for popular badge and other dynamic gradients
+    'bg-gradient-to-r',
+    'bg-gradient-to-br',
+    'from-blue-500',
+    'to-blue-600',
+    'from-purple-50',
+    'via-blue-50',
+    'to-teal-50',
+    'from-purple-400',
+    'to-blue-500',
   ],
 
   // ========================================================================
