@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
@@ -28,11 +28,11 @@ import { formInputColors, headingColors, accentColors } from '@/lib/colors';
 // Reuses the same form structure as the new post creator for consistency.
 
 interface PageProps {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
 export default function EditBlogPost({ params }: PageProps) {
-  const { slug } = use(params);
+  const { slug } = params;
   const router = useRouter();
   const { isAdmin, isLoading: authLoading } = useAuth();
   const { showToast } = useToast();
