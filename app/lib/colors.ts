@@ -216,8 +216,8 @@ export const statusBorderColors: Record<AccentVariant, string> = {
   green: 'border-l-4 border-l-green-500',
   orange: 'border-l-4 border-l-orange-500',
   teal: 'border-l-4 border-l-teal-500',
-  gray: 'border-l-4 border-l-gray-400',
-  red: 'border-l-4 border-l-red-500',
+  gray: 'border-l-4 border-l-gray-300 dark:border-l-gray-600',
+  red: 'border-l-4 border-l-red-500 dark:border-l-red-400',
 };
 
 // ============================================================================

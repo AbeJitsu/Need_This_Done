@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import type { Product } from '@/lib/medusa-client';
-import { headingColors, formInputColors, alertColors, formValidationColors, productImageStyles } from '@/lib/colors';
+import { headingColors, formInputColors, alertColors, formValidationColors, productImageStyles, titleColors, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Product Detail Client Component
@@ -70,7 +70,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Back link */}
-      <Link href="/shop" className="text-blue-600 dark:text-blue-400 hover:underline mb-6 inline-block">
+      <Link href="/shop" className={`${titleColors.blue} hover:underline mb-6 inline-block`}>
         ← Back to Shop
       </Link>
 
@@ -78,7 +78,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       <div className="grid md:grid-cols-2 gap-8">
         {/* Product image */}
         {image ? (
-          <div className="relative bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden h-96">
+          <div className={`relative ${cardBgColors.elevated} rounded-lg overflow-hidden h-96`}>
             <Image
               src={image}
               alt={product.title}
@@ -89,7 +89,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             />
           </div>
         ) : (
-          <div className="bg-gray-200 dark:bg-gray-700 rounded-lg h-96 flex items-center justify-center">
+          <div className={`${cardBgColors.elevated} rounded-lg h-96 flex items-center justify-center`}>
             <p className={formInputColors.helper}>No image available</p>
           </div>
         )}
@@ -133,7 +133,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               <select
                 value={selectedVariant || ''}
                 onChange={(e) => setSelectedVariant(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                className={`w-full px-4 py-2 border ${formInputColors.base} rounded-lg`}
               >
                 {variants.map((variant: any) => (
                   <option key={variant.id} value={variant.id}>
@@ -152,7 +152,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition`}
               >
                 −
               </button>
@@ -161,11 +161,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 min="1"
                 value={quantity}
                 onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                className="w-16 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-center bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                className={`w-16 px-3 py-2 border ${formInputColors.base} rounded-lg text-center`}
               />
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition`}
               >
                 +
               </button>
