@@ -20,6 +20,7 @@ import {
   generateExcerpt,
 } from '@/lib/blog-types';
 import { formInputColors, headingColors, accentColors } from '@/lib/colors';
+import RichTextEditor from '@/components/editor/RichTextEditor';
 
 // ============================================================================
 // Edit Blog Post - /admin/blog/[slug]/edit
@@ -175,10 +176,10 @@ export default function EditBlogPost({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-6 py-8 max-w-4xl">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6">
+      <div className="container mx-auto px-6 pb-8 max-w-4xl">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm mb-6">
+        <nav className="flex items-center gap-2 text-sm mb-4">
           <Link
             href="/dashboard"
             className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
@@ -254,27 +255,17 @@ export default function EditBlogPost({ params }: PageProps) {
               {/* Content */}
               <div>
                 <label
-                  htmlFor="content"
                   className={`block text-sm font-medium ${formInputColors.label} mb-2`}
                 >
                   Content *
                 </label>
-                <textarea
-                  id="content"
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  rows={15}
-                  className={`
-                    w-full px-4 py-3 rounded-lg
-                    ${formInputColors.base}
-                    ${formInputColors.placeholder}
-                    ${formInputColors.focus}
-                    border transition-colors resize-y
-                  `}
-                  required
+                <RichTextEditor
+                  content={content}
+                  onChange={setContent}
+                  placeholder="Write your blog post content..."
                 />
                 <p className={`text-sm ${formInputColors.helper} mt-1`}>
-                  {content.length} characters • ~{Math.ceil(content.split(/\s+/).length / 200)} min
+                  {content.replace(/<[^>]*>/g, '').length} characters • ~{Math.ceil(content.replace(/<[^>]*>/g, '').split(/\s+/).filter(Boolean).length / 200)} min
                   read
                 </p>
               </div>
