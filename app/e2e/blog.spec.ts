@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // ============================================================================
 // Blog E2E Tests
@@ -11,7 +12,34 @@ import { test, expect } from '@playwright/test';
 // 1. Set NEXT_PUBLIC_E2E_ADMIN_BYPASS=true in app/.env.local
 // 2. Start dev server: npm run dev
 // 3. Run tests: SKIP_WEBSERVER=true npx playwright test e2e/blog.spec.ts --project=e2e-bypass
+//
+// ⚠️  WARNING: E2E_ADMIN_BYPASS Security
 // ============================================================================
+// The E2E_ADMIN_BYPASS flag should ONLY be used with LOCAL Supabase instances.
+// NEVER enable this flag on production or staging databases.
+// This flag bypasses authentication entirely - anyone could access admin routes.
+// ============================================================================
+
+// Supabase client for cleanup - created lazily after env vars are loaded
+let supabase: SupabaseClient | null = null;
+
+// Track timestamps of created posts for cleanup
+const createdPostTimestamps: number[] = [];
+
+function getSupabase(): SupabaseClient | null {
+  if (supabase) return supabase;
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !key) {
+    console.warn('Supabase credentials not set - cleanup will be skipped');
+    return null;
+  }
+
+  supabase = createClient(url, key);
+  return supabase;
+}
 
 test.describe('Blog Post Creation', () => {
   test.beforeEach(async ({ page }) => {
@@ -22,6 +50,45 @@ test.describe('Blog Post Creation', () => {
     if (page.url().includes('/login')) {
       test.skip(true, 'Admin authentication required - set NEXT_PUBLIC_E2E_ADMIN_BYPASS=true');
     }
+  });
+
+  // ==========================================================================
+  // Cleanup: Delete any blog posts created during tests
+  // ==========================================================================
+  // Only runs if posts were actually created (tracked via timestamps)
+  // Uses service role key to bypass RLS and delete directly
+
+  test.afterAll(async () => {
+    if (createdPostTimestamps.length === 0) {
+      console.log('No blog posts created during tests - skipping cleanup');
+      return;
+    }
+
+    const db = getSupabase();
+    if (!db) {
+      console.warn('Cannot cleanup: Supabase client not available');
+      return;
+    }
+
+    console.log(`Cleaning up ${createdPostTimestamps.length} test blog posts...`);
+
+    for (const timestamp of createdPostTimestamps) {
+      // Delete posts where title contains the test timestamp
+      // Matches patterns like "E2E Test Post 1703712345678" and "Published E2E Post 1703712345678"
+      const { error, count } = await db
+        .from('blog_posts')
+        .delete({ count: 'exact' })
+        .like('title', `%${timestamp}%`);
+
+      if (error) {
+        console.error(`Failed to delete posts with timestamp ${timestamp}:`, error.message);
+      } else if (count && count > 0) {
+        console.log(`Deleted ${count} post(s) with timestamp ${timestamp}`);
+      }
+    }
+
+    // Clear the tracked timestamps
+    createdPostTimestamps.length = 0;
   });
 
   // ==========================================================================
@@ -47,6 +114,7 @@ test.describe('Blog Post Creation', () => {
 
     // Generate unique title with timestamp to avoid slug conflicts
     const timestamp = Date.now();
+    createdPostTimestamps.push(timestamp); // Track for cleanup
     const testTitle = `E2E Test Post ${timestamp}`;
     const testContent = `This is an automated test post created at ${new Date().toISOString()}.\n\nIt tests the blog creation flow using Playwright.`;
 
@@ -85,6 +153,7 @@ test.describe('Blog Post Creation', () => {
     await page.goto('/admin/blog/new');
 
     const timestamp = Date.now();
+    createdPostTimestamps.push(timestamp); // Track for cleanup
     const testTitle = `Published E2E Post ${timestamp}`;
     const testContent = `This is a published test post.\n\nCreated and published immediately via E2E test.`;
 

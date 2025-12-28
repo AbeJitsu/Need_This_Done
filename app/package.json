@@ -25,7 +25,8 @@
     "supabase:reset": "cd .. && supabase db reset",
     "test:emails": "npx tsx scripts/test-emails.ts",
     "screenshot:map": "npx tsx scripts/build-component-map.ts",
-    "screenshot:affected": "npx tsx scripts/screenshot-affected.ts"
+    "screenshot:affected": "npx tsx scripts/screenshot-affected.ts",
+    "cleanup:e2e": "npx tsx scripts/cleanup-e2e-posts.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.79",
