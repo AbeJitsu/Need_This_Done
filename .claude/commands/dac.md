@@ -73,17 +73,22 @@ Detect change type from file patterns to choose the right prefix:
 
 5. **Decide: Auto-commit or Ask?**
 
-   **Auto-commit** if:
-   - Diff under 100 lines
-   - Single-purpose change
-   - No sensitive files
-   - Clear category detected
+   **Auto-commit** (default - prefer this):
+   - Diff under 150 lines
+   - Single-purpose change (even if touching many files)
+   - No sensitive files (.env, credentials, secrets)
+   - Clear commit message can be written
+   - Message accurately describes the changes
 
-   **Ask for approval** if:
-   - Large diff (100+ lines)
-   - Multiple unrelated changes
-   - Ambiguous purpose
+   **Ask for approval** (rare - only when truly uncertain):
+   - Very large diff (150+ lines) AND unclear purpose
+   - Multiple unrelated changes that should be separate commits
    - Contains potential sensitive data
+   - Genuinely ambiguous - you can't tell what the intent was
+
+   **Key principle**: If you can write a clear, accurate commit message, just commit.
+   Don't ask "Would you like adjustments?" for routine commits - that's friction.
+   Trust the message you drafted. The user will speak up if they want changes.
 
 ## CRITICAL: NO Claude Code signature - EVER
 - NEVER add `🤖 Generated with [Claude Code](https://claude.com/claude-code)`
@@ -119,29 +124,30 @@ helps them discover books they might have missed while browsing.
 
 ## Execution Flow
 
-### For Small, Clear Changes (Auto-commit)
+### Default: Auto-commit (most commits)
 ```
-Detected: Config change, 45 lines, single-purpose
-Auto-staging and committing...
+Analyzing: 8 files, 59 lines, single-purpose accessibility improvement
+Committing...
 
-git add -A && git commit -m "Config: Add commit-often rule..." && git push
+git add -A && git commit -m "Add loading spinners and ARIA live regions..." && git push
 ```
 
-### For Larger/Complex Changes (Ask)
+Show the commit message briefly, then execute. No "Would you like adjustments?" for clear commits.
+
+### Exception: Ask Only When Uncertain
 ```
 Draft commit message:
 [message here]
 
-This is a larger change (150 lines across 8 files).
-Would you like any adjustments before committing?
+This change touches auth, payments, AND UI in unrelated ways.
+Should these be separate commits, or one combined commit?
 ```
 
-## After Approval
+Only ask when there's genuine ambiguity about the commit scope or message.
 
-Once the user approves (says "no" to adjustments, "looks good", "ship it", etc.), execute:
+## Command Chaining
 
+Always chain with `&&` to stop if any step fails:
 ```bash
 git add -A && git commit -m "Your commit message here" && git push
 ```
-
-Chain commands with `&&` to stop if any step fails.
