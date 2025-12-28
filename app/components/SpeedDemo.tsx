@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { alertColors } from '@/lib/colors';
 
 // ============================================================================
 // Speed Demo Component - Real Redis Caching Demonstration
@@ -103,8 +104,8 @@ export default function SpeedDemo() {
 
       {/* Error State */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-gray-700 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-red-700 dark:text-red-300 text-sm">{error}</p>
+        <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+          <p className={`${alertColors.error.text} text-sm`}>{error}</p>
         </div>
       )}
 

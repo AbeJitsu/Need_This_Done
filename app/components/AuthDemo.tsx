@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { signOut } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
+import { alertColors } from '@/lib/colors';
 
 // ============================================================================
 // Authentication Demo Component - Real Sign Up/Login
@@ -130,15 +131,15 @@ export default function AuthDemo() {
         <div className="space-y-4">
           {/* Error Message */}
           {error && (
-            <div role="alert" className="p-4 bg-red-50 dark:bg-gray-800 border border-red-300 dark:border-red-700 rounded-lg">
-              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+            <div role="alert" className={`p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+              <p className={`text-sm ${alertColors.error.text}`}>{error}</p>
             </div>
           )}
 
           {/* Success Message */}
           {successMessage && (
-            <div role="alert" className="p-4 bg-green-50 dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg">
-              <p className="text-sm text-green-700 dark:text-green-300">{successMessage}</p>
+            <div role="alert" className={`p-4 ${alertColors.success.bg} ${alertColors.success.border} rounded-lg`}>
+              <p className={`text-sm ${alertColors.success.text}`}>{successMessage}</p>
             </div>
           )}
 
@@ -234,8 +235,8 @@ export default function AuthDemo() {
           </div>
 
           {/* Explanation */}
-          <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-lg">
-            <p className="text-sm text-blue-900 dark:text-blue-300">
+          <div className={`p-4 ${alertColors.info.bg} ${alertColors.info.border} rounded-lg`}>
+            <p className={`text-sm ${alertColors.info.text}`}>
               💡 <strong>This is real authentication.</strong> You can create an account here, and it will be stored securely in Supabase.
               Your password is encrypted. Your session is protected.
             </p>
@@ -301,21 +302,21 @@ export default function AuthDemo() {
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                   <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-3">Without this protection, here's what could happen:</p>
                   <div className="space-y-2 text-xs">
-                    <div className="p-2 bg-red-50 dark:bg-gray-700 border border-red-200 dark:border-red-900 rounded text-red-800 dark:text-red-200">
+                    <div className={`p-2 ${alertColors.error.bg} ${alertColors.error.border} rounded ${alertColors.error.text}`}>
                       ⚠️ <strong>At the coffee shop:</strong> Someone on the same WiFi could intercept your password and take over your account
                     </div>
-                    <div className="p-2 bg-red-50 dark:bg-gray-700 border border-red-200 dark:border-red-900 rounded text-red-800 dark:text-red-200">
+                    <div className={`p-2 ${alertColors.error.bg} ${alertColors.error.border} rounded ${alertColors.error.text}`}>
                       ⚠️ <strong>Data breach:</strong> If hackers got into our database, they'd see passwords and could hack your other accounts
                     </div>
-                    <div className="p-2 bg-red-50 dark:bg-gray-700 border border-red-200 dark:border-red-900 rounded text-red-800 dark:text-red-200">
+                    <div className={`p-2 ${alertColors.error.bg} ${alertColors.error.border} rounded ${alertColors.error.text}`}>
                       ⚠️ <strong>Session hijacking:</strong> Someone could pretend to be you without ever knowing your password
                     </div>
                   </div>
                 </div>
 
                 {/* Summary */}
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-4 bg-green-50 dark:bg-gray-700 -mx-4 -mb-4 px-4 py-4 rounded-b">
-                  <p className="text-xs text-green-900 dark:text-green-100">
+                <div className={`border-t border-gray-200 dark:border-gray-700 pt-4 ${alertColors.success.bg} -mx-4 -mb-4 px-4 py-4 rounded-b`}>
+                  <p className={`text-xs ${alertColors.success.text}`}>
                     <strong>✓ With this system:</strong> Your password never travels as plain text. It can't be intercepted. It can't be stolen. Your data is safe even if our systems are breached. This is what your users deserve.
                   </p>
                 </div>
@@ -327,11 +328,11 @@ export default function AuthDemo() {
         /* Logged In State - Session Display */
         <div className="space-y-4">
           {/* Success Banner */}
-          <div className="p-4 bg-green-50 dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg">
-            <p className="text-green-900 dark:text-green-300 font-semibold mb-1">
+          <div className={`p-4 ${alertColors.success.bg} ${alertColors.success.border} rounded-lg`}>
+            <p className={`${alertColors.success.text} font-semibold mb-1`}>
               ✓ You're Signed In
             </p>
-            <p className="text-sm text-green-800 dark:text-green-300">
+            <p className={`text-sm ${alertColors.success.text}`}>
               Your session is real and secure. Your data is encrypted.
             </p>
           </div>
@@ -365,11 +366,11 @@ export default function AuthDemo() {
           </div>
 
           {/* What This Means */}
-          <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-lg">
-            <p className="text-sm text-blue-900 dark:text-blue-300 mb-2">
+          <div className={`p-4 ${alertColors.info.bg} ${alertColors.info.border} rounded-lg`}>
+            <p className={`text-sm ${alertColors.info.text} mb-2`}>
               💡 <strong>What Just Happened:</strong>
             </p>
-            <ul className="text-xs text-blue-900 dark:text-blue-300 space-y-1">
+            <ul className={`text-xs ${alertColors.info.text} space-y-1`}>
               <li>✓ Your password was scrambled one-way (nobody can un-scramble it)</li>
               <li>✓ It traveled in a locked envelope from your browser to the server</li>
               <li>✓ You got a secure ticket that proves you're logged in</li>

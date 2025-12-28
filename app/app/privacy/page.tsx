@@ -77,11 +77,11 @@ export default function PrivacyPage() {
         <h2 className={`text-lg font-semibold mb-3 ${alertColors.info.text}`}>
           Quick Summary
         </h2>
-        <ul className={`space-y-2 ${alertColors.info.text}`}>
-          <li>• We only collect what we need to serve you</li>
-          <li>• We never sell your personal information</li>
-          <li>• You can request deletion of your data anytime</li>
-          <li>• We use industry-standard security measures</li>
+        <ul className={`space-y-2 ${alertColors.info.text} list-disc list-inside`}>
+          <li>We only collect what we need to serve you</li>
+          <li>We never sell your personal information</li>
+          <li>You can request deletion of your data anytime</li>
+          <li>We use industry-standard security measures</li>
         </ul>
       </div>
 

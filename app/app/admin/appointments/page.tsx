@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors } from '@/lib/colors';
+import { filterButtonColors, alertColors, statusBadgeColors } from '@/lib/colors';
 
 // ============================================================================
 // Appointments Dashboard - /admin/appointments
@@ -147,21 +147,12 @@ export default function AppointmentsDashboard() {
   };
 
   // ========================================================================
-  // Get status badge color
+  // Get status badge color from centralized statusBadgeColors
   // ========================================================================
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'approved':
-        return 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
-      case 'pending':
-        return 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200';
-      case 'modified':
-        return 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200';
-      case 'canceled':
-        return 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
-      default:
-        return 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200';
-    }
+  const getStatusBadgeClasses = (status: string) => {
+    const statusKey = status as keyof typeof statusBadgeColors;
+    const colors = statusBadgeColors[statusKey] || statusBadgeColors.unpaid;
+    return `${colors.bg} ${colors.text}`;
   };
 
   // ========================================================================
@@ -208,11 +199,11 @@ export default function AppointmentsDashboard() {
 
       {/* Error message */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-sm text-red-900 dark:text-red-200">{error}</p>
+        <div className={`mb-6 p-4 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
+          <p className={`text-sm ${alertColors.error.text}`}>{error}</p>
           <button
             onClick={() => setError('')}
-            className="mt-2 text-sm text-red-700 dark:text-red-300 underline"
+            className={`mt-2 text-sm ${alertColors.error.link}`}
           >
             Dismiss
           </button>
@@ -220,9 +211,10 @@ export default function AppointmentsDashboard() {
       )}
 
       {/* Filter buttons */}
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label="Filter appointments by status">
         <button
           onClick={() => setStatusFilter('all')}
+          aria-pressed={statusFilter === 'all'}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             statusFilter === 'all'
               ? filterButtonColors.active.purple
@@ -233,6 +225,7 @@ export default function AppointmentsDashboard() {
         </button>
         <button
           onClick={() => setStatusFilter('pending')}
+          aria-pressed={statusFilter === 'pending'}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             statusFilter === 'pending'
               ? filterButtonColors.active.purple
@@ -243,6 +236,7 @@ export default function AppointmentsDashboard() {
         </button>
         <button
           onClick={() => setStatusFilter('approved')}
+          aria-pressed={statusFilter === 'approved'}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             statusFilter === 'approved'
               ? filterButtonColors.active.green
@@ -253,6 +247,7 @@ export default function AppointmentsDashboard() {
         </button>
         <button
           onClick={() => setStatusFilter('canceled')}
+          aria-pressed={statusFilter === 'canceled'}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             statusFilter === 'canceled'
               ? filterButtonColors.active.red
@@ -298,7 +293,7 @@ export default function AppointmentsDashboard() {
                     </a>
                   </div>
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(appointment.status)}`}
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeClasses(appointment.status)}`}
                   >
                     {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
                   </span>
@@ -377,8 +372,8 @@ export default function AppointmentsDashboard() {
 
                   {/* Show Google Calendar link for approved appointments */}
                   {appointment.status === 'approved' && appointment.google_event_id && (
-                    <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400" aria-label="This appointment has been added to Google Calendar">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
                       </svg>
                       Added to Calendar

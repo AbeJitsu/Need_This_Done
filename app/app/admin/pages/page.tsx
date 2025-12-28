@@ -10,6 +10,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import { alertColors, statusBadgeColors } from '@/lib/colors';
 
 interface Page {
   id: string;
@@ -119,7 +120,7 @@ export default function PagesManagement() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen" role="status" aria-live="polite">
         <div className="text-center">Loading...</div>
       </div>
     );
@@ -174,7 +175,7 @@ export default function PagesManagement() {
             Error State
             ==================================================================== */}
         {error && (
-          <div className="flex items-center gap-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-5 py-4 rounded-xl mb-6">
+          <div className={`flex items-center gap-3 px-5 py-4 rounded-xl mb-6 ${alertColors.error.bg} ${alertColors.error.border} ${alertColors.error.text}`}>
             <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -198,8 +199,8 @@ export default function PagesManagement() {
                       <span
                         className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                           page.is_published
-                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                            : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                            ? `${statusBadgeColors.published.bg} ${statusBadgeColors.published.text}`
+                            : `${statusBadgeColors.draft.bg} ${statusBadgeColors.draft.text}`
                         }`}
                       >
                         {page.is_published ? 'Published' : 'Draft'}

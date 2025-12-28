@@ -1,12 +1,10 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
 import { useState } from 'react';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { accentColors, formInputColors, featureCardColors, stepBadgeColors, mutedTextColors, headingColors, checkmarkColors } from '@/lib/colors';
+import { accentColors, formInputColors, featureCardColors, stepBadgeColors, mutedTextColors, headingColors, checkmarkColors, alertColors } from '@/lib/colors';
 
 // ============================================================================
 // Get Started Page - Choose Your Path
@@ -47,7 +45,7 @@ export default function GetStartedPage() {
       await new Promise(resolve => setTimeout(resolve, 1500));
 
       setSuccess(true);
-    } catch (err) {
+    } catch {
       setError('Hmm, something went wrong. Please try again or reach out to us - we\'re here to help.');
     } finally {
       setIsProcessing(false);
@@ -243,18 +241,20 @@ export default function GetStartedPage() {
           </p>
 
           {error && (
-            <div className={`mb-6 p-4 ${accentColors.red.bg} border ${accentColors.red.border} rounded-lg`}>
-              <p className={`text-sm ${accentColors.red.text}`}>{error}</p>
+            <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+              <p className={`text-sm ${alertColors.error.text}`}>{error}</p>
             </div>
           )}
 
           <div className="space-y-4 mb-6">
             <div>
-              <label className={`block text-sm font-medium mb-2 ${formInputColors.label}`}>
+              <label htmlFor="quoteRef" className={`block text-sm font-medium mb-2 ${formInputColors.label}`}>
                 Quote Reference Number
               </label>
               <input
                 type="text"
+                id="quoteRef"
+                autoComplete="off"
                 value={quoteRef}
                 onChange={(e) => setQuoteRef(e.target.value)}
                 placeholder="e.g., QT-2024-001"
@@ -266,11 +266,13 @@ export default function GetStartedPage() {
             </div>
 
             <div>
-              <label className={`block text-sm font-medium mb-2 ${formInputColors.label}`}>
+              <label htmlFor="email" className={`block text-sm font-medium mb-2 ${formInputColors.label}`}>
                 Email Address
               </label>
               <input
                 type="email"
+                id="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"

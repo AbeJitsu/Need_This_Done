@@ -1,7 +1,5 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
 import { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
@@ -20,6 +18,7 @@ import {
   lightBgColors,
   accentColors,
   cardBgColors,
+  focusRingClasses,
   type AccentColor,
 } from '@/lib/colors';
 
@@ -212,7 +211,7 @@ export default function CartPage() {
                     <button
                       onClick={() => handleRemoveItem(item.id || '')}
                       disabled={isUpdating === item.id}
-                      className={`text-gray-500 ${dangerColors.hover} transition text-xl leading-none`}
+                      className={`text-gray-500 ${dangerColors.hover} transition text-xl leading-none rounded ${focusRingClasses.orange}`}
                       aria-label="Remove item"
                     >
                       &times;
@@ -225,7 +224,7 @@ export default function CartPage() {
                       <button
                         onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
                         disabled={isUpdating === item.id}
-                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50`}
+                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue}`}
                       >
                         −
                       </button>
@@ -235,7 +234,7 @@ export default function CartPage() {
                       <button
                         onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
                         disabled={isUpdating === item.id}
-                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50`}
+                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue}`}
                       >
                         +
                       </button>
@@ -252,7 +251,7 @@ export default function CartPage() {
 
             {/* Continue shopping link */}
             <div className="pt-2">
-              <Link href="/shop" className={`${titleColors.blue} hover:underline`}>
+              <Link href="/shop" className={`${titleColors.blue} hover:underline rounded ${focusRingClasses.blue}`}>
                 &larr; Browse More Consultations
               </Link>
             </div>

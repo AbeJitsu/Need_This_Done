@@ -79,7 +79,7 @@ export default async function HowItWorksPage() {
                   <div
                     className={`w-8 h-8 rounded-full ${checkmarkBgColors.green.bg} ${checkmarkBgColors.green.border} flex items-center justify-center flex-shrink-0`}
                   >
-                    <span className={`${checkmarkBgColors.green.icon} font-bold`}>
+                    <span className={`${checkmarkBgColors.green.icon} font-bold`} aria-hidden="true">
                       ✓
                     </span>
                   </div>
@@ -132,7 +132,7 @@ export default async function HowItWorksPage() {
         className="mb-10"
       >
         <div className="flex items-center gap-4">
-          <span className="text-2xl text-gray-700 dark:text-gray-200">⏱</span>
+          <span className="text-2xl text-gray-700 dark:text-gray-200" aria-hidden="true">⏱</span>
           <div>
             <h3 className={`font-semibold ${titleColors.green} mb-1`}>
               {content.timeline.title}

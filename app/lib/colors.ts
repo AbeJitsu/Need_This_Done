@@ -635,6 +635,7 @@ export const loadingColors = {
 // ============================================================================
 // Consistent styling for status badges across admin pages
 export const statusBadgeColors = {
+  // Appointment/general statuses
   pending: {
     bg: 'bg-yellow-100 dark:bg-yellow-900/20',
     text: 'text-yellow-800 dark:text-yellow-100',
@@ -680,6 +681,81 @@ export const statusBadgeColors = {
     text: 'text-purple-800 dark:text-purple-100',
     border: 'border border-purple-200 dark:border-purple-800',
   },
+  // Order-specific statuses
+  delivered: {
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    text: 'text-green-800 dark:text-green-100',
+    border: 'border border-green-200 dark:border-green-800',
+  },
+  shipped: {
+    bg: 'bg-blue-100 dark:bg-blue-900/20',
+    text: 'text-blue-800 dark:text-blue-100',
+    border: 'border border-blue-200 dark:border-blue-800',
+  },
+  processing: {
+    bg: 'bg-purple-100 dark:bg-purple-900/20',
+    text: 'text-purple-800 dark:text-purple-100',
+    border: 'border border-purple-200 dark:border-purple-800',
+  },
+  // Appointment-specific statuses
+  modified: {
+    bg: 'bg-blue-100 dark:bg-blue-900/20',
+    text: 'text-blue-800 dark:text-blue-100',
+    border: 'border border-blue-200 dark:border-blue-800',
+  },
+  // User role/status badges
+  admin: {
+    bg: 'bg-purple-100 dark:bg-purple-900/20',
+    text: 'text-purple-800 dark:text-purple-100',
+    border: 'border border-purple-200 dark:border-purple-800',
+  },
+  user: {
+    bg: 'bg-gray-100 dark:bg-gray-700',
+    text: 'text-gray-800 dark:text-gray-100',
+    border: 'border border-gray-200 dark:border-gray-600',
+  },
+  active: {
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    text: 'text-green-800 dark:text-green-100',
+    border: 'border border-green-200 dark:border-green-800',
+  },
+  disabled: {
+    bg: 'bg-red-100 dark:bg-red-900/20',
+    text: 'text-red-800 dark:text-red-100',
+    border: 'border border-red-200 dark:border-red-800',
+  },
+  // Page/content statuses
+  published: {
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    text: 'text-green-700 dark:text-green-400',
+    border: 'border border-green-200 dark:border-green-800',
+  },
+  draft: {
+    bg: 'bg-gray-100 dark:bg-gray-700',
+    text: 'text-gray-600 dark:text-gray-400',
+    border: 'border border-gray-200 dark:border-gray-600',
+  },
+  customized: {
+    bg: 'bg-green-100 dark:bg-green-900/50',
+    text: 'text-green-800 dark:text-green-300',
+    border: 'border border-green-200 dark:border-green-800',
+  },
+  default: {
+    bg: 'bg-gray-100 dark:bg-gray-700',
+    text: 'text-gray-700 dark:text-gray-300',
+    border: 'border border-gray-200 dark:border-gray-600',
+  },
+};
+
+// ============================================================================
+// Category Badge Colors - For changelog and content categorization
+// ============================================================================
+// Consistent styling for category badges across pages
+export const categoryBadgeColors: Record<string, string> = {
+  Admin: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-100',
+  Shop: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-100',
+  Dashboard: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-100',
+  Public: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100',
 };
 
 // ============================================================================

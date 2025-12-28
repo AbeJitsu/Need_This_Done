@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors } from '@/lib/colors';
+import { filterButtonColors, alertColors, statusBadgeColors } from '@/lib/colors';
 
 // ============================================================================
 // Orders Dashboard - /admin/orders
@@ -143,23 +143,12 @@ export default function OrdersDashboard() {
   };
 
   // ========================================================================
-  // Get status badge color
+  // Get status badge color from centralized statusBadgeColors
   // ========================================================================
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'delivered':
-        return 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
-      case 'shipped':
-        return 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200';
-      case 'processing':
-        return 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200';
-      case 'pending':
-        return 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200';
-      case 'canceled':
-        return 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
-      default:
-        return 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200';
-    }
+  const getStatusBadgeClasses = (status: string) => {
+    const statusKey = status as keyof typeof statusBadgeColors;
+    const colors = statusBadgeColors[statusKey] || statusBadgeColors.unpaid;
+    return `${colors.bg} ${colors.text}`;
   };
 
   // ========================================================================
@@ -211,11 +200,11 @@ export default function OrdersDashboard() {
 
       {/* Error message */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-sm text-red-900 dark:text-red-200">{error}</p>
+        <div className={`mb-6 p-4 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
+          <p className={`text-sm ${alertColors.error.text}`}>{error}</p>
           <button
             onClick={() => setError('')}
-            className="mt-2 text-sm text-red-700 dark:text-red-300 underline"
+            className={`mt-2 text-sm ${alertColors.error.link}`}
           >
             Dismiss
           </button>
@@ -223,9 +212,10 @@ export default function OrdersDashboard() {
       )}
 
       {/* Filter buttons */}
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label="Filter orders by status">
         <button
           onClick={() => setStatusFilter('all')}
+          aria-pressed={statusFilter === 'all'}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             statusFilter === 'all'
               ? filterButtonColors.active.purple
@@ -238,6 +228,7 @@ export default function OrdersDashboard() {
           <button
             key={status}
             onClick={() => setStatusFilter(status)}
+            aria-pressed={statusFilter === status}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               statusFilter === status
                 ? filterButtonColors.active.purple
@@ -287,7 +278,7 @@ export default function OrdersDashboard() {
                   </div>
                   <div className="text-right">
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status || 'pending')}`}
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeClasses(order.status || 'pending')}`}
                     >
                       {(order.status || 'pending').charAt(0).toUpperCase() + (order.status || 'pending').slice(1)}
                     </span>
@@ -313,6 +304,7 @@ export default function OrdersDashboard() {
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                   <button
                     onClick={() => setExpandedOrderId(expandedOrderId === order.id ? null : order.id)}
+                    aria-expanded={expandedOrderId === order.id}
                     className="flex items-center gap-2 text-sm text-purple-600 dark:text-purple-400 hover:underline"
                   >
                     <svg
@@ -320,6 +312,7 @@ export default function OrdersDashboard() {
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
+                      aria-hidden="true"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>

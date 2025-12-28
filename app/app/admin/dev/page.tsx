@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import PageHeader from '@/components/PageHeader';
@@ -43,9 +43,9 @@ export default function AdminDevPage() {
   // Toggle Demo Section
   // ============================================================================
 
-  const toggleDemo = (demo: DemoSection) => {
-    setExpandedDemo(expandedDemo === demo ? null : demo);
-  };
+  const toggleDemo = useCallback((demo: DemoSection) => {
+    setExpandedDemo((prev) => (prev === demo ? null : demo));
+  }, []);
 
   // ============================================================================
   // Loading and Auth States
@@ -88,25 +88,25 @@ export default function AdminDevPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card hoverColor="blue" hoverEffect="lift" className="text-center cursor-pointer">
             <a href="/admin/users" className="block p-2">
-              <div className="text-2xl mb-2">👥</div>
+              <div className="text-2xl mb-2" aria-hidden="true">👥</div>
               <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Manage Users</div>
             </a>
           </Card>
           <Card hoverColor="purple" hoverEffect="lift" className="text-center cursor-pointer">
             <a href="/admin/pages" className="block p-2">
-              <div className="text-2xl mb-2">📄</div>
+              <div className="text-2xl mb-2" aria-hidden="true">📄</div>
               <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Manage Pages</div>
             </a>
           </Card>
           <Card hoverColor="green" hoverEffect="lift" className="text-center cursor-pointer">
             <a href="/admin/shop" className="block p-2">
-              <div className="text-2xl mb-2">🛒</div>
+              <div className="text-2xl mb-2" aria-hidden="true">🛒</div>
               <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Shop Admin</div>
             </a>
           </Card>
           <Card hoverColor="orange" hoverEffect="lift" className="text-center cursor-pointer">
             <a href="/dashboard" className="block p-2">
-              <div className="text-2xl mb-2">📊</div>
+              <div className="text-2xl mb-2" aria-hidden="true">📊</div>
               <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Dashboard</div>
             </a>
           </Card>
@@ -127,6 +127,7 @@ export default function AdminDevPage() {
           <Card hoverColor="blue" hoverEffect="glow">
             <button
               onClick={() => toggleDemo('auth')}
+              aria-expanded={expandedDemo === 'auth'}
               className="w-full flex items-center justify-between text-left"
             >
               <div>
@@ -137,7 +138,7 @@ export default function AdminDevPage() {
                   Test user authentication flows with Supabase
                 </p>
               </div>
-              <span className="text-2xl transform transition-transform duration-200">
+              <span className="text-2xl transform transition-transform duration-200" aria-hidden="true">
                 {expandedDemo === 'auth' ? '−' : '+'}
               </span>
             </button>
@@ -152,6 +153,7 @@ export default function AdminDevPage() {
           <Card hoverColor="purple" hoverEffect="glow">
             <button
               onClick={() => toggleDemo('database')}
+              aria-expanded={expandedDemo === 'database'}
               className="w-full flex items-center justify-between text-left"
             >
               <div>
@@ -162,7 +164,7 @@ export default function AdminDevPage() {
                   Test data persistence with Supabase and Redis caching
                 </p>
               </div>
-              <span className="text-2xl transform transition-transform duration-200">
+              <span className="text-2xl transform transition-transform duration-200" aria-hidden="true">
                 {expandedDemo === 'database' ? '−' : '+'}
               </span>
             </button>
@@ -177,6 +179,7 @@ export default function AdminDevPage() {
           <Card hoverColor="green" hoverEffect="glow">
             <button
               onClick={() => toggleDemo('speed')}
+              aria-expanded={expandedDemo === 'speed'}
               className="w-full flex items-center justify-between text-left"
             >
               <div>
@@ -187,7 +190,7 @@ export default function AdminDevPage() {
                   Test Redis caching performance (10-20x faster)
                 </p>
               </div>
-              <span className="text-2xl transform transition-transform duration-200">
+              <span className="text-2xl transform transition-transform duration-200" aria-hidden="true">
                 {expandedDemo === 'speed' ? '−' : '+'}
               </span>
             </button>

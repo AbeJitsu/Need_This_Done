@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import { statusBadgeColors, alertColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Users Page - User Management
@@ -174,14 +175,14 @@ export default function AdminUsersPage() {
 
         {/* Messages */}
         {successMessage && (
-          <div className="mb-6 p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-            <p className="text-green-700 dark:text-green-300">{successMessage}</p>
+          <div className={`mb-6 p-4 rounded-lg ${alertColors.success.bg} ${alertColors.success.border}`}>
+            <p className={alertColors.success.text}>{successMessage}</p>
           </div>
         )}
 
         {error && (
-          <div className="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-            <p className="text-red-700 dark:text-red-300">{error}</p>
+          <div className={`mb-6 p-4 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
+            <p className={alertColors.error.text}>{error}</p>
           </div>
         )}
 
@@ -226,6 +227,7 @@ export default function AdminUsersPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
+                <caption className="sr-only">User accounts with role, status, and available actions</caption>
                 <thead>
                   <tr className="border-b border-gray-200 dark:border-gray-700">
                     <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -265,8 +267,8 @@ export default function AdminUsersPage() {
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             user.is_admin
-                              ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
-                              : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                              ? `${statusBadgeColors.admin.bg} ${statusBadgeColors.admin.text}`
+                              : `${statusBadgeColors.user.bg} ${statusBadgeColors.user.text}`
                           }`}
                         >
                           {user.is_admin ? 'Admin' : 'User'}
@@ -276,8 +278,8 @@ export default function AdminUsersPage() {
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             user.is_disabled
-                              ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
-                              : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                              ? `${statusBadgeColors.disabled.bg} ${statusBadgeColors.disabled.text}`
+                              : `${statusBadgeColors.active.bg} ${statusBadgeColors.active.text}`
                           }`}
                         >
                           {user.is_disabled ? 'Disabled' : 'Active'}
@@ -294,6 +296,7 @@ export default function AdminUsersPage() {
                               handleAction(user.id, 'setAdmin', !user.is_admin)
                             }
                             disabled={actionLoading === user.id}
+                            aria-label={user.is_admin ? `Remove admin role from ${user.email}` : `Grant admin role to ${user.email}`}
                             className="text-xs px-3 py-1 rounded-full border border-purple-300 text-purple-700 dark:border-purple-600 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 disabled:opacity-50 transition-colors"
                           >
                             {user.is_admin ? 'Remove Admin' : 'Make Admin'}
@@ -305,6 +308,7 @@ export default function AdminUsersPage() {
                               handleAction(user.id, 'disable', !user.is_disabled)
                             }
                             disabled={actionLoading === user.id}
+                            aria-label={user.is_disabled ? `Enable account for ${user.email}` : `Disable account for ${user.email}`}
                             className={`text-xs px-3 py-1 rounded-full border ${
                               user.is_disabled
                                 ? 'border-green-300 text-green-700 dark:border-green-600 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20'
@@ -318,6 +322,7 @@ export default function AdminUsersPage() {
                           <button
                             onClick={() => handleAction(user.id, 'resetPassword')}
                             disabled={actionLoading === user.id}
+                            aria-label={`Send password reset email to ${user.email}`}
                             className="text-xs px-3 py-1 rounded-full border border-blue-300 text-blue-700 dark:border-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 disabled:opacity-50 transition-colors"
                           >
                             Reset Password

@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import type { Product } from '@/lib/medusa-client';
-import { headingColors, formInputColors, alertColors, formValidationColors, productImageStyles, titleColors, cardBgColors } from '@/lib/colors';
+import { headingColors, formInputColors, alertColors, formValidationColors, productImageStyles, titleColors, cardBgColors, focusRingClasses } from '@/lib/colors';
 
 // ============================================================================
 // Product Detail Client Component
@@ -70,7 +70,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Back link */}
-      <Link href="/shop" className={`${titleColors.blue} hover:underline mb-6 inline-block`}>
+      <Link href="/shop" className={`${titleColors.blue} hover:underline mb-6 inline-block rounded ${focusRingClasses.blue}`}>
         ← Back to Shop
       </Link>
 
@@ -152,7 +152,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition`}
+                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition ${focusRingClasses.blue}`}
               >
                 −
               </button>
@@ -165,7 +165,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               />
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition`}
+                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition ${focusRingClasses.blue}`}
               >
                 +
               </button>

@@ -62,11 +62,11 @@ export default function TermsPage() {
         <h2 className={`text-lg font-semibold mb-3 ${alertColors.info.text}`}>
           The Short Version
         </h2>
-        <ul className={`space-y-2 ${alertColors.info.text}`}>
-          <li>• Be respectful and use our services lawfully</li>
-          <li>• Pay for services you book</li>
-          <li>• We&apos;ll do our best to help you get things done</li>
-          <li>• Either party can end the relationship anytime</li>
+        <ul className={`space-y-2 ${alertColors.info.text} list-disc list-inside`}>
+          <li>Be respectful and use our services lawfully</li>
+          <li>Pay for services you book</li>
+          <li>We&apos;ll do our best to help you get things done</li>
+          <li>Either party can end the relationship anytime</li>
         </ul>
       </div>
 

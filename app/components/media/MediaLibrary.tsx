@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { MediaItem, MediaListResponse, MEDIA_FOLDERS, formatFileSize } from '@/lib/media-types';
 import ImageUpload from './ImageUpload';
+import { alertColors } from '@/lib/colors';
 
 // ============================================================================
 // MediaLibrary Component - Image Browser & Picker Modal
@@ -247,7 +248,7 @@ export default function MediaLibrary({
             ================================================================ */}
         <div className="flex-1 overflow-y-auto p-6">
           {error && (
-            <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg">
+            <div className={`mb-4 p-4 ${alertColors.error.bg} ${alertColors.error.border} ${alertColors.error.text} rounded-lg`}>
               {error}
             </div>
           )}

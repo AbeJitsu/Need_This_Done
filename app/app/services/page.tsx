@@ -16,6 +16,7 @@ import {
   groupHoverColors,
   accentColors,
   accentBorderWidth,
+  focusRingClasses,
   AccentVariant,
 } from '@/lib/colors';
 
@@ -129,7 +130,7 @@ export default async function ServicesPage() {
                     <ul className="space-y-3 mb-6">
                       {path.bullets.map((bullet, idx) => (
                         <li key={idx} className="flex items-center gap-2">
-                          <span className={accentColors[path.hoverColor as AccentVariant].text}>✓</span>
+                          <span className={accentColors[path.hoverColor as AccentVariant].text} aria-hidden="true">✓</span>
                           <span className="text-gray-700 dark:text-gray-300">{bullet}</span>
                         </li>
                       ))}
@@ -164,7 +165,7 @@ export default async function ServicesPage() {
                   <div
                     className={`w-8 h-8 rounded-full ${checkmarkBgColors.green.bg} ${checkmarkBgColors.green.border} flex items-center justify-center flex-shrink-0`}
                   >
-                    <span className={`${checkmarkBgColors.green.icon} font-bold`}>
+                    <span className={`${checkmarkBgColors.green.icon} font-bold`} aria-hidden="true">
                       ✓
                     </span>
                   </div>
@@ -176,7 +177,7 @@ export default async function ServicesPage() {
                     >
                       {item.title}
                       {item.link && (
-                        <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true">
                           {' '}
                           →
                         </span>
@@ -191,7 +192,7 @@ export default async function ServicesPage() {
 
               if (item.link) {
                 return (
-                  <Link key={index} href={item.link.href} className="flex gap-4 group">
+                  <Link key={index} href={item.link.href} className={`flex gap-4 group rounded-lg ${focusRingClasses.blue}`}>
                     {itemContent}
                   </Link>
                 );

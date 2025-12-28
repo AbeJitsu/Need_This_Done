@@ -1,5 +1,5 @@
 import PageHeader from '@/components/PageHeader';
-import { headingColors, formInputColors, accentColors } from '@/lib/colors';
+import { headingColors, formInputColors, accentColors, focusRingClasses } from '@/lib/colors';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -182,7 +182,7 @@ function GuideCard({ guide }: { guide: Guide }) {
       {/* Header */}
       <div className="p-6 border-b border-gray-100 dark:border-gray-700">
         <div className="flex items-center gap-3 mb-3">
-          <span className="text-3xl">{guide.icon}</span>
+          <span className="text-3xl" aria-hidden="true">{guide.icon}</span>
           <div>
             <h2 className={`text-xl font-bold ${headingColors.primary}`}>{guide.title}</h2>
             <p className={formInputColors.helper}>{guide.description}</p>
@@ -228,7 +228,7 @@ function GuideCard({ guide }: { guide: Guide }) {
         <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
           <Link
             href={guide.ctaLink}
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${accentColors.purple.bg} ${accentColors.purple.text} ${accentColors.purple.hoverText} ${accentColors.purple.hoverBorder}`}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${accentColors.purple.bg} ${accentColors.purple.text} ${accentColors.purple.hoverText} ${accentColors.purple.hoverBorder} ${focusRingClasses.purple}`}
           >
             {guide.ctaText}
             <span aria-hidden="true">→</span>
@@ -252,9 +252,9 @@ function QuickLinks() {
           <li key={guide.id}>
             <a
               href={`#${guide.id}`}
-              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors bg-gray-100 dark:bg-gray-700 ${headingColors.primary} hover:bg-gray-200 dark:hover:bg-gray-600`}
+              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors bg-gray-100 dark:bg-gray-700 ${headingColors.primary} hover:bg-gray-200 dark:hover:bg-gray-600 ${focusRingClasses.purple}`}
             >
-              <span>{guide.icon}</span>
+              <span aria-hidden="true">{guide.icon}</span>
               {guide.title}
             </a>
           </li>
@@ -295,7 +295,7 @@ export default function GuidePage() {
         </p>
         <Link
           href="/contact"
-          className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${accentColors.blue.bg} ${accentColors.blue.text} ${accentColors.blue.hoverText} ${accentColors.blue.hoverBorder}`}
+          className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${accentColors.blue.bg} ${accentColors.blue.text} ${accentColors.blue.hoverText} ${accentColors.blue.hoverBorder} ${focusRingClasses.blue}`}
         >
           Contact Us
         </Link>

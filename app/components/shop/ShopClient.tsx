@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import { formInputColors, linkHoverColors, alertColors, placeholderColors, headingColors, productImageStyles } from '@/lib/colors';
+import { formInputColors, linkHoverColors, alertColors, placeholderColors, headingColors, productImageStyles, focusRingClasses } from '@/lib/colors';
 import type { Product } from '@/lib/medusa-client';
 
 // ============================================================================
@@ -60,11 +60,11 @@ export default function ShopClient({ products }: ShopClientProps) {
     <>
       {/* Back link to services */}
       <p className={`text-center mb-6 ${formInputColors.helper}`}>
-        <Link href="/services" className={`font-medium ${linkHoverColors.blue}`}>
+        <Link href="/services" className={`font-medium ${linkHoverColors.blue} ${focusRingClasses.blue} rounded`}>
           ← Compare our full services
         </Link>
         {' · '}
-        <Link href="/contact" className={`font-medium ${linkHoverColors.blue}`}>
+        <Link href="/contact" className={`font-medium ${linkHoverColors.blue} ${focusRingClasses.blue} rounded`}>
           Request a free quote →
         </Link>
       </p>

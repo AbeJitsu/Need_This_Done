@@ -15,6 +15,7 @@ import {
   accentColors,
   cardBgColors,
   cardBorderColors,
+  focusRingClasses,
 } from '@/lib/colors';
 
 export const dynamic = 'force-dynamic';
@@ -101,9 +102,9 @@ export default async function BlogPostPage({ params }: PageProps) {
       <Link
         href="/blog"
         className={`
-          inline-flex items-center gap-2 mb-8
+          inline-flex items-center gap-2 mb-8 rounded
           ${formInputColors.helper} hover:text-gray-900 dark:hover:text-gray-100
-          transition-colors
+          transition-colors ${focusRingClasses.blue}
         `}
       >
         ← Back to Blog
@@ -214,7 +215,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                   bg-gray-100 dark:bg-gray-800
                   text-gray-600 dark:text-gray-300
                   hover:bg-gray-200 dark:hover:bg-gray-700
-                  transition-colors
+                  transition-colors ${focusRingClasses.blue}
                 `}
               >
                 #{tag}

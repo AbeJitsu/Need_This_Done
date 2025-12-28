@@ -9,6 +9,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import type { Product, Order } from '@/lib/medusa-client';
+import { alertColors, statusBadgeColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Shop Dashboard - /admin/shop
@@ -24,7 +25,7 @@ export default function AdminShopDashboard() {
 
   const [activeTab, setActiveTab] = useState<'products' | 'orders'>('products');
   const [products, setProducts] = useState<Product[]>([]);
-  const [orders, _setOrders] = useState<Order[]>([]);
+  const [orders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -98,16 +99,20 @@ export default function AdminShopDashboard() {
 
       {/* Error message */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-sm text-red-900 dark:text-red-200">{error}</p>
+        <div className={`mb-6 p-4 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
+          <p className={`text-sm ${alertColors.error.text}`}>{error}</p>
         </div>
       )}
 
       {/* Tab navigation */}
       <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex gap-1">
+        <div className="flex gap-1" role="tablist" aria-label="Shop management sections">
           <button
             onClick={() => setActiveTab('products')}
+            role="tab"
+            aria-selected={activeTab === 'products'}
+            aria-controls="products-panel"
+            id="products-tab"
             className={`px-4 py-3 font-medium border-b-2 transition-colors ${
               activeTab === 'products'
                 ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400'
@@ -118,6 +123,10 @@ export default function AdminShopDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('orders')}
+            role="tab"
+            aria-selected={activeTab === 'orders'}
+            aria-controls="orders-panel"
+            id="orders-tab"
             className={`px-4 py-3 font-medium border-b-2 transition-colors ${
               activeTab === 'orders'
                 ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400'
@@ -131,7 +140,7 @@ export default function AdminShopDashboard() {
 
       {/* Products Tab */}
       {activeTab === 'products' && (
-        <div>
+        <div role="tabpanel" id="products-panel" aria-labelledby="products-tab">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
               Products
@@ -201,7 +210,7 @@ export default function AdminShopDashboard() {
 
       {/* Orders Tab */}
       {activeTab === 'orders' && (
-        <div>
+        <div role="tabpanel" id="orders-panel" aria-labelledby="orders-tab">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
             Recent Orders
           </h2>
@@ -238,10 +247,10 @@ export default function AdminShopDashboard() {
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-medium ${
                             order.status === 'completed'
-                              ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                              ? `${statusBadgeColors.completed.bg} ${statusBadgeColors.completed.text}`
                               : order.status === 'pending'
-                              ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200'
-                              : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
+                              ? `${statusBadgeColors.pending.bg} ${statusBadgeColors.pending.text}`
+                              : `${statusBadgeColors.cancelled.bg} ${statusBadgeColors.cancelled.text}`
                           }`}
                         >
                           {order.status}
