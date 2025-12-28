@@ -21,7 +21,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║                                                                              ║
 ║  CODEBASE METRICS                        PRODUCTION READINESS                ║
 ║  ─────────────────                       ────────────────────                 ║
-║  📄 18 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
+║  📄 19 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
 ║  🔐 16 Admin Pages                       ✅ Stripe Payments                  ║
 ║  🔌 49 API Routes                        ✅ Supabase Auth & Database         ║
 ║  🧩 97 React Components                  ✅ Redis Caching (Upstash)          ║
@@ -651,11 +651,11 @@ supabase db reset
     └── seed-products.js   ← Product seeding script
 ```
 
-### Complete Page Inventory (34 pages total)
+### Complete Page Inventory (35 pages total)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                          PUBLIC PAGES (18 pages)                             │
+│                          PUBLIC PAGES (19 pages)                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  MARKETING                    E-COMMERCE                   AUTH             │
@@ -669,6 +669,7 @@ supabase db reset
 │                               /p/[slug]         (CMS)      /blog            │
 │                                                            /blog/[slug]     │
 │                                                            /changelog       │
+│                                                            /guide           │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
@@ -2066,6 +2067,7 @@ These improvements are **done and working**:
 | **Customer Page Audit** | 20 high-value UI consistency fixes across all customer pages | ✅ Implemented |
 | **Changelog Page** | Public `/changelog` showing all updates with screenshots | ✅ Implemented |
 | **Visual Documentation** | Automated screenshot capture for feature documentation | ✅ Implemented |
+| **User Guide Page** | Public `/guide` with step-by-step platform instructions | ✅ Implemented |
 
 **Blog System** (`/blog`, `/admin/blog`):
 - Public blog listing and individual post pages

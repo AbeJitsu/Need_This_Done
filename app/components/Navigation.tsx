@@ -22,6 +22,7 @@ const navigationLinks = [
   { href: '/services', label: 'Services' },
   { href: '/shop', label: 'Shop' },
   { href: '/blog', label: 'Blog' },
+  { href: '/guide', label: 'Guide' },
   { href: '/pricing', label: 'Pricing' },
 ];
 

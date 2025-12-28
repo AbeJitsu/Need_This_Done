@@ -7,7 +7,8 @@
     "/cart",
     "/checkout",
     "/get-started",
-    "/admin/blog"
+    "/admin/blog",
+    "/guide"
   ],
   "branch": "december-2025-release",
   "screenshotDir": "december-2025-release",
