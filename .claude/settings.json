@@ -11,10 +11,17 @@
       "SlashCommand(/dac)",
       "SlashCommand(/document)",
       "SlashCommand(/check-work)",
+      "SlashCommand(/page-audit)",
       "Skill(dac)",
       "Skill(dac:*)",
       "Skill(document)",
       "Skill(check-work)",
+      "Skill(page-audit)",
+      "Skill(frontend-design)",
+      "Skill(launch-a-swarm)",
+      "Skill(think-ahead)",
+      "Skill(worktree-swarm)",
+      "Skill(screenshot-workflow)",
       "mcp__context7",
       "Bash(git add:*)",
       "Bash(git commit:*)",
@@ -52,6 +59,17 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh",
             "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/pre-commit-check.sh"
           }
         ]
       }
