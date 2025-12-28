@@ -1,5 +1,5 @@
 import PageHeader from '@/components/PageHeader';
-import { headingColors, formInputColors, accentColors } from '@/lib/colors';
+import { headingColors, formInputColors } from '@/lib/colors';
 import Image from 'next/image';
 import * as fs from 'fs';
 import * as path from 'path';

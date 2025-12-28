@@ -18,8 +18,6 @@ import * as path from 'path';
 import { glob } from 'glob';
 
 // Configuration
-const APP_DIR = path.join(process.cwd(), 'app');
-const COMPONENTS_DIR = path.join(process.cwd(), 'components');
 const OUTPUT_FILE = path.join(process.cwd(), 'component-route-map.json');
 
 // Types

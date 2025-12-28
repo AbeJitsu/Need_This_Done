@@ -174,7 +174,7 @@ function getCategory(routes: string[]): string {
 /**
  * Generate changelog entry template
  */
-function generateChangelogEntry(branchName: string, routes: string[], screenshotDir: string): ChangelogEntry {
+function generateChangelogEntry(branchName: string, routes: string[], _screenshotDir: string): ChangelogEntry {
   const date = new Date().toISOString().split('T')[0];
   const category = getCategory(routes);
 
