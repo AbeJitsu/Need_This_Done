@@ -1,95 +1,64 @@
 #!/bin/bash
-# Stop Hook: Ensure TODO.md is maintained before stopping
-# What: Checks that TODO.md reflects session work
-# Why: Prevents losing track of progress or leaving stale items
-#
-# Checks:
-#   1. Too many completed items (>7) - should move to README.md
+# Stop Hook: Validate before stopping
+# What: Checks TODO.md cleanup, frontend screenshots, uncommitted work
+# Why: Prevents stopping with broken builds or untracked progress
+
+# Source shared utilities (includes recursion guard)
+source "$CLAUDE_PROJECT_DIR/.claude/hooks/lib/common.sh"
 
 TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
 
-# If no TODO file, nothing to check
-if [ ! -f "$TODO_FILE" ]; then
-  exit 0
+# ============================================
+# CHECK 1: TODO.md Cleanup
+# ============================================
+if [[ -f "$TODO_FILE" ]]; then
+  COMPLETED_COUNT=$(grep -c "^\- \[x\]" "$TODO_FILE" 2>/dev/null || echo "0")
+  if [[ "$COMPLETED_COUNT" -gt 7 ]]; then
+    echo "" >&2
+    echo "TODO.md CLEANUP NEEDED:" >&2
+    echo "- $COMPLETED_COUNT completed items in TODO.md" >&2
+    echo "  Move production-ready features to README.md" >&2
+    echo "" >&2
+    exit 2
+  fi
 fi
 
-ERRORS=""
-
-# Check: Too many completed items in TODO.md (should document in README)
-COMPLETED_COUNT=$(grep -c "^\- \[x\]" "$TODO_FILE" 2>/dev/null || echo "0")
-if [ "$COMPLETED_COUNT" -gt 7 ]; then
-  ERRORS="${ERRORS}\n- $COMPLETED_COUNT completed items in TODO.md"
-  ERRORS="${ERRORS}\n  Move production-ready features to README.md"
-fi
-
-# If there are errors, block the stop
-if [ -n "$ERRORS" ]; then
+# ============================================
+# CHECK 2: Frontend Screenshots Required
+# ============================================
+if [[ -f "$FRONTEND_CHANGES_FILE" ]] && [[ -s "$FRONTEND_CHANGES_FILE" ]]; then
+  CHANGE_COUNT=$(get_tracked_count "$FRONTEND_CHANGES_FILE")
   echo "" >&2
-  echo "TODO.md CLEANUP NEEDED:" >&2
-  echo -e "$ERRORS" >&2
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+  echo "SCREENSHOTS REQUIRED - $CHANGE_COUNT frontend files modified" >&2
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
   echo "" >&2
-  echo "Flow: TODO.md → README.md (when production-ready)" >&2
+  cat "$FRONTEND_CHANGES_FILE" | sed 's/^/  → /' >&2
+  echo "" >&2
+  echo "Run: /document" >&2
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
   echo "" >&2
   exit 2
 fi
 
-# ============================================================================
-# CRITICAL: Frontend changes require screenshots for verification
-# ============================================================================
-# Check tracking file from frontend-change-detector hook
-TRACKING_FILE="$CLAUDE_PROJECT_DIR/.claude/frontend-changes.txt"
-
-if [ -f "$TRACKING_FILE" ] && [ -s "$TRACKING_FILE" ]; then
-  echo "" >&2
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
-  echo "⚠️  SCREENSHOTS REQUIRED - Frontend files were modified" >&2
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
-  echo "" >&2
-  echo "Changed files:" >&2
-  cat "$TRACKING_FILE" | sed 's/^/  → /' >&2
-  echo "" >&2
-  echo "Before committing, run:" >&2
-  echo "  /document   (captures screenshots + changelog)" >&2
-  echo "" >&2
-  echo "Or manually:" >&2
-  echo "  cd app && npm run screenshot:affected" >&2
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
-  echo "" >&2
-
-  # Block until screenshots are taken (exit 2 = blocking)
-  exit 2
-fi
-
-# Also check git diff for any uncommitted frontend changes
-FRONTEND_FILES=$(cd "$CLAUDE_PROJECT_DIR" && git diff --name-only 2>/dev/null | grep -E '^app/(app|components)/.*\.tsx$|\.css$|colors\.ts$' | head -5)
-
-if [ -n "$FRONTEND_FILES" ]; then
-  echo "" >&2
-  echo "📸 Frontend changes detected - consider running /document" >&2
-  echo "" >&2
-fi
-
-# ============================================================================
-# REMINDER: Uncommitted changes should be committed
-# ============================================================================
-# Non-blocking reminder to commit often
-
+# ============================================
+# CHECK 3: Uncommitted Changes Reminder
+# ============================================
 UNCOMMITTED=$(cd "$CLAUDE_PROJECT_DIR" && git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
 
-if [ "$UNCOMMITTED" -gt 0 ]; then
+if [[ "$UNCOMMITTED" -gt 0 ]]; then
   STAGED=$(cd "$CLAUDE_PROJECT_DIR" && git diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
   UNSTAGED=$(cd "$CLAUDE_PROJECT_DIR" && git diff --name-only 2>/dev/null | wc -l | tr -d ' ')
 
   echo "" >&2
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
-  echo "💾 UNCOMMITTED CHANGES DETECTED" >&2
+  echo "UNCOMMITTED CHANGES DETECTED" >&2
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
   echo "" >&2
   echo "  Staged: $STAGED files" >&2
   echo "  Unstaged: $UNSTAGED files" >&2
   echo "" >&2
-  echo "Run /dac to draft a commit message." >&2
-  echo "Small, frequent commits are easier to review and revert." >&2
+  echo "Run /dac to commit." >&2
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
   echo "" >&2
 fi
