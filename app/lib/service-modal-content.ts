@@ -112,6 +112,35 @@ export const serviceModalContentMap: Record<ServiceType, ServiceModalContent> = 
   'website-services': websiteServicesModal,
 };
 
+// ============================================================================
+// Title to Service Type Mapping (Single Source of Truth)
+// ============================================================================
+// Maps human-readable service titles to service type keys
+// Used by ServiceModalContext and any component that needs to resolve titles
+
+export const TITLE_TO_SERVICE_TYPE: Record<string, ServiceType> = {
+  'Virtual Assistant': 'virtual-assistant',
+  'Data & Documents': 'data-documents',
+  'Website Services': 'website-services',
+};
+
+/**
+ * Resolve a service identifier (title or type) to a ServiceType
+ * @param identifier - Either a service title ('Virtual Assistant') or type ('virtual-assistant')
+ * @returns The ServiceType or undefined if not found
+ */
+export function resolveServiceType(identifier: string): ServiceType | undefined {
+  // Try title mapping first
+  if (identifier in TITLE_TO_SERVICE_TYPE) {
+    return TITLE_TO_SERVICE_TYPE[identifier];
+  }
+  // Try direct type match
+  if (identifier in serviceModalContentMap) {
+    return identifier as ServiceType;
+  }
+  return undefined;
+}
+
 /**
  * Get modal content for a specific service
  */

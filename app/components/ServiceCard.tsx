@@ -8,6 +8,7 @@ import {
   formInputColors,
   mutedTextColors,
 } from '@/lib/colors';
+import { CheckIcon } from '@/components/ui/icons';
 
 // ============================================================================
 // ServiceCard Component
@@ -72,9 +73,7 @@ export default function ServiceCard({
               {detailsList.map((detail, index) => (
                 <li key={index} className="flex items-start gap-2">
                   <div className={`w-5 h-5 rounded-full ${checkmarkColors[color].bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                    <svg className={`w-3 h-3 ${checkmarkColors[color].icon}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <CheckIcon size="sm" className={`w-3 h-3 ${checkmarkColors[color].icon}`} strokeWidth={2.5} />
                   </div>
                   <span className={`${mutedTextColors.light} text-sm`}>
                     {detail}
