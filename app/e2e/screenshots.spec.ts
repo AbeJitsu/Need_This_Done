@@ -1,11 +1,16 @@
 import { test, expect } from '@playwright/test';
-import { loginAsAdmin, loginAsUser, waitForPageReady } from './helpers';
+import { loginAsAdmin, loginAsUser, waitForPageReady, setDarkMode } from './helpers';
 
 // ============================================================================
 // Visual Regression Testing - All Pages
 // ============================================================================
 // Captures screenshots of all pages in both light and dark modes
 // Playwright automatically runs tests across all projects (desktop/mobile)
+//
+// IMPORTANT: This site uses Tailwind's class-based dark mode (darkMode: 'class'),
+// so we use setDarkMode() to add the 'dark' class to HTML instead of emulateMedia()
+// which only affects the CSS prefers-color-scheme media query.
+//
 // Run with: npm run test:e2e -- screenshots.spec.ts --update-snapshots
 
 // ============================================================================
@@ -89,7 +94,7 @@ test.describe('Public Pages - Dark Mode', () => {
   publicPages.forEach(({ path, name, folder }) => {
     test(`${name} - dark mode`, async ({ page }, testInfo) => {
       await page.goto(path);
-      await page.emulateMedia({ colorScheme: 'dark' });
+      await setDarkMode(page);
       await waitForPageReady(page);
       await captureScreenshot(page, folder, 'dark', testInfo.project.name);
     });
@@ -124,7 +129,7 @@ test.describe('Dashboard Pages - Dark Mode', () => {
         await loginAsAdmin(page);
       }
       await page.goto(path);
-      await page.emulateMedia({ colorScheme: 'dark' });
+      await setDarkMode(page);
       await waitForPageReady(page);
       await captureScreenshot(page, folder, 'dark', testInfo.project.name);
     });
@@ -151,7 +156,7 @@ test.describe('Admin Pages - Dark Mode', () => {
     test(`${name} - dark mode`, async ({ page }, testInfo) => {
       await loginAsAdmin(page);
       await page.goto(path);
-      await page.emulateMedia({ colorScheme: 'dark' });
+      await setDarkMode(page);
       await waitForPageReady(page);
       await captureScreenshot(page, folder, 'dark', testInfo.project.name);
     });

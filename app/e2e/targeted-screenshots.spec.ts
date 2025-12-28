@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
-import { waitForPageReady, loginAsAdmin } from './helpers';
+import { waitForPageReady, loginAsAdmin, setDarkMode } from './helpers';
 
 // ============================================================================
 // Targeted Screenshot Capture
@@ -96,9 +96,6 @@ test.describe('Targeted Screenshots', () => {
   test.describe('Desktop - Dark Mode', () => {
     for (const route of staticRoutes) {
       test(`${route} - desktop dark`, async ({ page }) => {
-        // Enable dark mode
-        await page.emulateMedia({ colorScheme: 'dark' });
-
         // Login if needed
         if (requiresAuth(route)) {
           await loginAsAdmin(page);
@@ -106,6 +103,8 @@ test.describe('Targeted Screenshots', () => {
 
         // Navigate and wait
         await page.goto(route);
+        // Enable dark mode via class (Tailwind uses darkMode: 'class')
+        await setDarkMode(page);
         await waitForPageReady(page);
 
         // Capture screenshot
@@ -149,9 +148,6 @@ test.describe('Targeted Screenshots', () => {
 
     for (const route of staticRoutes) {
       test(`${route} - mobile dark`, async ({ page }) => {
-        // Enable dark mode
-        await page.emulateMedia({ colorScheme: 'dark' });
-
         // Login if needed
         if (requiresAuth(route)) {
           await loginAsAdmin(page);
@@ -159,6 +155,8 @@ test.describe('Targeted Screenshots', () => {
 
         // Navigate and wait
         await page.goto(route);
+        // Enable dark mode via class (Tailwind uses darkMode: 'class')
+        await setDarkMode(page);
         await waitForPageReady(page);
 
         // Capture screenshot

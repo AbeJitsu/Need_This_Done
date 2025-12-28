@@ -33,24 +33,40 @@ if [ -n "$ERRORS" ]; then
   exit 2
 fi
 
-# Warn (not block): Frontend changes without changelog
-FRONTEND_FILES=$(cd "$CLAUDE_PROJECT_DIR" && git diff --name-only 2>/dev/null | grep -E '^app/(app|components)/.*\.tsx$|\.css$|colors\.ts$' | head -3)
+# ============================================================================
+# CRITICAL: Frontend changes require screenshots for verification
+# ============================================================================
+# Check tracking file from frontend-change-detector hook
+TRACKING_FILE="$CLAUDE_PROJECT_DIR/.claude/frontend-changes.txt"
+
+if [ -f "$TRACKING_FILE" ] && [ -s "$TRACKING_FILE" ]; then
+  echo "" >&2
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+  echo "⚠️  SCREENSHOTS REQUIRED - Frontend files were modified" >&2
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+  echo "" >&2
+  echo "Changed files:" >&2
+  cat "$TRACKING_FILE" | sed 's/^/  → /' >&2
+  echo "" >&2
+  echo "Before committing, run:" >&2
+  echo "  /document   (captures screenshots + changelog)" >&2
+  echo "" >&2
+  echo "Or manually:" >&2
+  echo "  cd app && npm run screenshot:affected" >&2
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+  echo "" >&2
+
+  # Block until screenshots are taken (exit 2 = blocking)
+  exit 2
+fi
+
+# Also check git diff for any uncommitted frontend changes
+FRONTEND_FILES=$(cd "$CLAUDE_PROJECT_DIR" && git diff --name-only 2>/dev/null | grep -E '^app/(app|components)/.*\.tsx$|\.css$|colors\.ts$' | head -5)
 
 if [ -n "$FRONTEND_FILES" ]; then
-  BRANCH=$(cd "$CLAUDE_PROJECT_DIR" && git branch --show-current 2>/dev/null || echo "unknown")
-  SAFE_BRANCH=$(echo "$BRANCH" | tr '/' '-')
-  CHANGELOG_FILE="$CLAUDE_PROJECT_DIR/content/changelog/${SAFE_BRANCH}.json"
-
-  if [ ! -f "$CHANGELOG_FILE" ]; then
-    echo ""
-    echo "REMINDER: Frontend changes detected without changelog"
-    echo "   Changed files:"
-    echo "$FRONTEND_FILES" | sed 's/^/     - /'
-    echo ""
-    echo "   Consider: content/changelog/${SAFE_BRANCH}.json"
-    echo "   Or run: npm run screenshot:affected"
-    echo ""
-  fi
+  echo "" >&2
+  echo "📸 Frontend changes detected - consider running /document" >&2
+  echo "" >&2
 fi
 
 exit 0

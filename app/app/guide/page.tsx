@@ -192,7 +192,7 @@ function GuideCard({ guide }: { guide: Guide }) {
 
       {/* Screenshot */}
       {guide.screenshot && (
-        <div className="p-6 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
+        <div className="p-6 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
           <div className="relative aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
             <Image
               src={guide.screenshot.src}
@@ -288,7 +288,7 @@ export default function GuidePage() {
       </div>
 
       {/* Help Section */}
-      <div className="mt-12 text-center p-8 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+      <div className="mt-12 text-center p-8 bg-gray-50 dark:bg-gray-800 rounded-xl">
         <h2 className={`text-xl font-bold ${headingColors.primary} mb-2`}>Still have questions?</h2>
         <p className={`${formInputColors.helper} mb-4`}>
           We are here to help. Reach out and we will get back to you as soon as possible.

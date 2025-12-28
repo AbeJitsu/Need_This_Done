@@ -101,53 +101,53 @@ export const accentColors: Record<AccentVariant, {
   hoverBorder: string;
 }> = {
   purple: {
-    bg: 'bg-purple-100 dark:bg-purple-500',
-    text: 'text-purple-700 dark:text-purple-100',
-    border: 'border-purple-500 dark:border-purple-200',
-    hoverText: 'hover:text-purple-800 dark:hover:text-white',
-    hoverBorder: 'hover:border-purple-600 dark:hover:border-purple-100',
+    bg: 'bg-purple-100 dark:bg-purple-800',
+    text: 'text-purple-700 dark:text-white',
+    border: 'border-purple-500 dark:border-purple-400',
+    hoverText: 'hover:text-purple-800 dark:hover:text-gray-100',
+    hoverBorder: 'hover:border-purple-600 dark:hover:border-purple-300',
   },
   blue: {
-    bg: 'bg-blue-100 dark:bg-blue-500',
-    text: 'text-blue-700 dark:text-blue-100',
-    border: 'border-blue-500 dark:border-blue-200',
-    hoverText: 'hover:text-blue-800 dark:hover:text-white',
-    hoverBorder: 'hover:border-blue-600 dark:hover:border-blue-100',
+    bg: 'bg-blue-100 dark:bg-blue-800',
+    text: 'text-blue-700 dark:text-white',
+    border: 'border-blue-500 dark:border-blue-400',
+    hoverText: 'hover:text-blue-800 dark:hover:text-gray-100',
+    hoverBorder: 'hover:border-blue-600 dark:hover:border-blue-300',
   },
   green: {
-    bg: 'bg-green-100 dark:bg-green-500',
-    text: 'text-green-800 dark:text-green-100',
-    border: 'border-green-500 dark:border-green-200',
-    hoverText: 'hover:text-green-900 dark:hover:text-white',
-    hoverBorder: 'hover:border-green-600 dark:hover:border-green-100',
+    bg: 'bg-green-100 dark:bg-green-800',
+    text: 'text-green-800 dark:text-white',
+    border: 'border-green-500 dark:border-green-400',
+    hoverText: 'hover:text-green-900 dark:hover:text-gray-100',
+    hoverBorder: 'hover:border-green-600 dark:hover:border-green-300',
   },
   orange: {
-    bg: 'bg-orange-100 dark:bg-orange-500',
+    bg: 'bg-orange-100 dark:bg-orange-800',
     text: 'text-orange-900 dark:text-white',
-    border: 'border-orange-500 dark:border-orange-200',
+    border: 'border-orange-500 dark:border-orange-400',
     hoverText: 'hover:text-orange-950 dark:hover:text-orange-100',
-    hoverBorder: 'hover:border-orange-600 dark:hover:border-orange-100',
+    hoverBorder: 'hover:border-orange-600 dark:hover:border-orange-300',
   },
   teal: {
-    bg: 'bg-teal-100 dark:bg-teal-500',
+    bg: 'bg-teal-100 dark:bg-teal-800',
     text: 'text-teal-900 dark:text-white',
-    border: 'border-teal-500 dark:border-teal-200',
+    border: 'border-teal-500 dark:border-teal-400',
     hoverText: 'hover:text-teal-950 dark:hover:text-teal-100',
-    hoverBorder: 'hover:border-teal-600 dark:hover:border-teal-100',
+    hoverBorder: 'hover:border-teal-600 dark:hover:border-teal-300',
   },
   gray: {
-    bg: 'bg-gray-100 dark:bg-gray-500',
-    text: 'text-gray-700 dark:text-gray-100',
-    border: 'border-gray-500 dark:border-gray-200',
-    hoverText: 'hover:text-gray-800 dark:hover:text-white',
-    hoverBorder: 'hover:border-gray-600 dark:hover:border-gray-100',
+    bg: 'bg-gray-100 dark:bg-gray-700',
+    text: 'text-gray-700 dark:text-white',
+    border: 'border-gray-500 dark:border-gray-400',
+    hoverText: 'hover:text-gray-800 dark:hover:text-gray-100',
+    hoverBorder: 'hover:border-gray-600 dark:hover:border-gray-300',
   },
   red: {
-    bg: 'bg-red-100 dark:bg-red-500',
-    text: 'text-red-800 dark:text-red-100',
-    border: 'border-red-500 dark:border-red-200',
-    hoverText: 'hover:text-red-900 dark:hover:text-white',
-    hoverBorder: 'hover:border-red-600 dark:hover:border-red-100',
+    bg: 'bg-red-100 dark:bg-red-800',
+    text: 'text-red-800 dark:text-white',
+    border: 'border-red-500 dark:border-red-400',
+    hoverText: 'hover:text-red-900 dark:hover:text-gray-100',
+    hoverBorder: 'hover:border-red-600 dark:hover:border-red-300',
   },
 };
 
@@ -458,9 +458,11 @@ export const dangerColors = {
 // ============================================================================
 // Muted Text Colors - For very subtle secondary text
 // ============================================================================
+// Light mode: -600 ensures WCAG AA contrast (4.5:1) on white backgrounds
+// Dark mode: -300 ensures 7:1+ contrast on gray-800 backgrounds
 export const mutedTextColors = {
-  normal: 'text-gray-400 dark:text-gray-500',
-  light: 'text-gray-500 dark:text-gray-300',
+  normal: 'text-gray-500 dark:text-gray-300',
+  light: 'text-gray-600 dark:text-gray-300',
 };
 
 // ============================================================================
@@ -498,33 +500,31 @@ export const groupHoverColors = {
 // ============================================================================
 // Alert Colors - Notification and message box styling
 // ============================================================================
-// Uses the same proven accentColors pattern that works perfectly for buttons
-// Light mode: -50 shades (very light backgrounds)
-// Dark mode: -500 shades (vibrant, highly visible backgrounds)
-// Border: 2px width (consistent with accentBorderWidth for buttons)
-// Text: Dark in light mode, white in dark mode for maximum contrast
+// Light mode: -50 shades (very light backgrounds) with -800 text
+// Dark mode: -800 shades (solid backgrounds) with white text for 6-9:1 contrast
+// Border: 2px width, -400 in dark mode for visibility against -800 backgrounds
 export const alertColors = {
   info: {
-    bg: 'bg-blue-50 dark:bg-blue-500',
-    border: 'border-2 border-blue-200 dark:border-blue-200',
+    bg: 'bg-blue-50 dark:bg-blue-800',
+    border: 'border-2 border-blue-200 dark:border-blue-400',
     text: 'text-blue-800 dark:text-white',
     link: 'text-blue-700 dark:text-white underline hover:text-blue-900 dark:hover:text-gray-200',
   },
   error: {
-    bg: 'bg-red-50 dark:bg-red-500',
-    border: 'border-2 border-red-200 dark:border-red-200',
+    bg: 'bg-red-50 dark:bg-red-800',
+    border: 'border-2 border-red-200 dark:border-red-400',
     text: 'text-red-800 dark:text-white',
     link: 'text-red-700 dark:text-white underline hover:text-red-900 dark:hover:text-gray-200',
   },
   success: {
-    bg: 'bg-green-50 dark:bg-green-500',
-    border: 'border-2 border-green-200 dark:border-green-200',
+    bg: 'bg-green-50 dark:bg-green-800',
+    border: 'border-2 border-green-200 dark:border-green-400',
     text: 'text-green-800 dark:text-white',
     link: 'text-green-700 dark:text-white underline hover:text-green-900 dark:hover:text-gray-200',
   },
   warning: {
-    bg: 'bg-orange-50 dark:bg-orange-500',
-    border: 'border-2 border-orange-200 dark:border-orange-200',
+    bg: 'bg-orange-50 dark:bg-orange-800',
+    border: 'border-2 border-orange-200 dark:border-orange-400',
     text: 'text-orange-800 dark:text-white',
     link: 'text-orange-700 dark:text-white underline hover:text-orange-900 dark:hover:text-gray-200',
   },
@@ -751,10 +751,11 @@ export const statusBadgeColors = {
 // Category Badge Colors - For changelog and content categorization
 // ============================================================================
 // Consistent styling for category badges across pages
+// Category badges: -800 backgrounds with white text in dark mode for 6-9:1 contrast
 export const categoryBadgeColors: Record<string, string> = {
-  Admin: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-100',
-  Shop: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-100',
-  Dashboard: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-100',
+  Admin: 'bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-white',
+  Shop: 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-white',
+  Dashboard: 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-white',
   Public: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100',
 };
 
@@ -915,30 +916,30 @@ export const serviceComparisonColors: Record<ServiceType, {
   pricingValueText: string;
 }> = {
   virtualAssistant: {
-    border: 'border-2 border-green-200 dark:border-green-700',
-    headerBg: 'bg-green-100 dark:bg-green-500',
-    headerText: 'text-green-700 dark:text-green-100',
-    pricingBg: 'bg-green-100 dark:bg-green-500',
-    pricingBorder: 'border-t border-green-200 dark:border-green-300',
-    pricingLabelText: 'text-green-700 dark:text-green-100',
+    border: 'border-2 border-green-200 dark:border-green-600',
+    headerBg: 'bg-green-100 dark:bg-green-800',
+    headerText: 'text-green-700 dark:text-white',
+    pricingBg: 'bg-green-100 dark:bg-green-800',
+    pricingBorder: 'border-t border-green-200 dark:border-green-600',
+    pricingLabelText: 'text-green-700 dark:text-white',
     pricingValueText: 'text-green-900 dark:text-white',
   },
   dataDocuments: {
-    border: 'border-2 border-blue-200 dark:border-blue-700',
-    headerBg: 'bg-blue-100 dark:bg-blue-500',
-    headerText: 'text-blue-700 dark:text-blue-100',
-    pricingBg: 'bg-blue-100 dark:bg-blue-500',
-    pricingBorder: 'border-t border-blue-200 dark:border-blue-300',
-    pricingLabelText: 'text-blue-700 dark:text-blue-100',
+    border: 'border-2 border-blue-200 dark:border-blue-600',
+    headerBg: 'bg-blue-100 dark:bg-blue-800',
+    headerText: 'text-blue-700 dark:text-white',
+    pricingBg: 'bg-blue-100 dark:bg-blue-800',
+    pricingBorder: 'border-t border-blue-200 dark:border-blue-600',
+    pricingLabelText: 'text-blue-700 dark:text-white',
     pricingValueText: 'text-blue-900 dark:text-white',
   },
   website: {
-    border: 'border-2 border-purple-200 dark:border-purple-700',
-    headerBg: 'bg-purple-100 dark:bg-purple-500',
-    headerText: 'text-purple-700 dark:text-purple-100',
-    pricingBg: 'bg-purple-100 dark:bg-purple-500',
-    pricingBorder: 'border-t border-purple-200 dark:border-purple-300',
-    pricingLabelText: 'text-purple-700 dark:text-purple-100',
+    border: 'border-2 border-purple-200 dark:border-purple-600',
+    headerBg: 'bg-purple-100 dark:bg-purple-800',
+    headerText: 'text-purple-700 dark:text-white',
+    pricingBg: 'bg-purple-100 dark:bg-purple-800',
+    pricingBorder: 'border-t border-purple-200 dark:border-purple-600',
+    pricingLabelText: 'text-purple-700 dark:text-white',
     pricingValueText: 'text-purple-900 dark:text-white',
   },
 };

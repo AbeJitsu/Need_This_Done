@@ -79,7 +79,16 @@ Present the changelog entry and screenshots to the user:
 2. List the captured screenshots
 3. Ask if any adjustments are needed
 
-### Step 6: Ready to Commit
+### Step 6: Clear Tracking File
+
+After screenshots are captured, clear the frontend changes tracking file:
+```bash
+rm -f .claude/frontend-changes.txt
+```
+
+This prevents the stop-hook from blocking and confirms screenshots were taken.
+
+### Step 7: Ready to Commit
 
 Once approved, the changes are ready to commit:
 - Screenshots in `public/screenshots/<branch>/`

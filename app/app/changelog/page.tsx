@@ -107,7 +107,7 @@ function ChangelogCard({ entry }: { entry: ChangelogEntry }) {
 
       {/* Screenshots */}
       {entry.screenshots.length > 0 && (
-        <div className="p-6 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
+        <div className="p-6 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
           <div className="grid gap-4 md:grid-cols-2">
             {entry.screenshots.map((screenshot, index) => (
               <figure key={index} className="space-y-2">
