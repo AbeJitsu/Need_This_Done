@@ -7,6 +7,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import Button from '@/components/Button';
+import { alertColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // Payment Form Component
@@ -106,7 +107,7 @@ export default function PaymentForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Stripe Payment Element - handles all payment method types */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+      <div className={`${cardBgColors.base} p-4 rounded-lg ${cardBorderColors.light}`}>
         <PaymentElement
           options={{
             layout: 'tabs',
@@ -117,17 +118,17 @@ export default function PaymentForm({
       {/* Error/Status message */}
       {message && (
         <div
-          className={`p-4 rounded-lg border ${
+          className={`p-4 rounded-lg ${
             message.includes('successful')
-              ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
-              : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+              ? `${alertColors.success.bg} ${alertColors.success.border}`
+              : `${alertColors.error.bg} ${alertColors.error.border}`
           }`}
         >
           <p
             className={`text-sm ${
               message.includes('successful')
-                ? 'text-green-900 dark:text-green-200'
-                : 'text-red-900 dark:text-red-200'
+                ? alertColors.success.text
+                : alertColors.error.text
             }`}
           >
             {message}

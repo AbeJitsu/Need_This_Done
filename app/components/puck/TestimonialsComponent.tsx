@@ -104,7 +104,7 @@ function TestimonialCard({
                 />
               </div>
             ) : (
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center text-white font-semibold text-lg">
+              <div className={`w-12 h-12 rounded-full ${colors.avatarGradient} flex items-center justify-center text-white font-semibold text-lg`}>
                 {(testimonial.author || 'A').charAt(0).toUpperCase()}
               </div>
             )}

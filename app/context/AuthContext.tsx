@@ -107,20 +107,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // ============================================================================
   // Derive Admin Status and Role from User Metadata
   // ============================================================================
+  // E2E_ADMIN_BYPASS: When set to 'true' in .env.local, bypasses auth for testing
+  // This only works in development mode and should NEVER be set in production
 
-  const isAdmin = user?.user_metadata?.is_admin === true;
+  const e2eBypass = process.env.NEXT_PUBLIC_E2E_ADMIN_BYPASS === 'true' &&
+                    process.env.NODE_ENV === 'development';
+
+  const isAdmin = e2eBypass || user?.user_metadata?.is_admin === true;
   const userRole: 'admin' | 'user' | null = user
     ? isAdmin
       ? 'admin'
       : 'user'
     : null;
 
+  // When E2E bypass is active, create a fake admin user if none exists
+  const effectiveUser = e2eBypass && !user
+    ? { id: 'e2e-test-user', email: 'e2e@test.local', user_metadata: { is_admin: true } }
+    : user;
+
   const value: AuthContextType = {
-    user,
-    isLoading,
-    isAuthenticated: user !== null,
+    user: effectiveUser,
+    isLoading: e2eBypass ? false : isLoading,
+    isAuthenticated: e2eBypass || effectiveUser !== null,
     isAdmin,
-    userRole,
+    userRole: e2eBypass ? 'admin' : userRole,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

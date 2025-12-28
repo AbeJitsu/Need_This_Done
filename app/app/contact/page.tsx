@@ -71,10 +71,10 @@ export default function ContactPage() {
 
   const validateFile = (file: File): string | null => {
     if (!ALLOWED_TYPES.includes(file.type)) {
-      return `${file.name}: File type not allowed. Use images, PDFs, or documents.`;
+      return `Oops! "${file.name}" isn't a file type we can accept. Try an image, PDF, or Word doc instead.`;
     }
     if (file.size > MAX_FILE_SIZE) {
-      return `${file.name}: File too large. Maximum size is 5MB.`;
+      return `"${file.name}" is a bit too large (max 5MB). Could you try a smaller version?`;
     }
     return null;
   };
@@ -87,7 +87,7 @@ export default function ContactPage() {
     const totalFiles = files.length + newFiles.length;
 
     if (totalFiles > MAX_FILES) {
-      setFileError(`Maximum ${MAX_FILES} files allowed.`);
+      setFileError(`Whoops! You can only attach up to ${MAX_FILES} files at a time.`);
       return;
     }
 

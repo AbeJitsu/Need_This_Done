@@ -1,0 +1,27 @@
+{
+  "title": "Blog Content System",
+  "slug": "blog-system",
+  "date": "2025-12-27",
+  "category": "Content",
+  "description": "Share your expertise with a full-featured blog. Write posts, add images, and publish content that helps your audience.",
+  "benefit": "Build authority and connect with potential clients by sharing valuable insights. Posts are SEO-optimized and easy to repurpose from LinkedIn content.",
+  "howToUse": [
+    "Go to Admin → Manage Blog to see all posts",
+    "Click 'New Post' to create a new article",
+    "Add your title, content, and featured image",
+    "Save as draft to review, or publish immediately",
+    "View your posts at /blog on the public site"
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/december-2025-release/blog-desktop-light.png",
+      "alt": "Blog listing page showing published posts",
+      "caption": "Your blog posts displayed in a clean, scannable layout"
+    },
+    {
+      "src": "/screenshots/december-2025-release/blog-mobile-light.png",
+      "alt": "Blog page on mobile devices",
+      "caption": "Fully responsive design for readers on any device"
+    }
+  ]
+}

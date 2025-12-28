@@ -17,6 +17,8 @@ import {
   mutedTextColors,
   titleColors,
   solidButtonColors,
+  statusBorderColors,
+  cardHoverColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -54,7 +56,7 @@ export default function LoginClient() {
     e.preventDefault();
 
     if (!email) {
-      setError('Email is required');
+      setError('We\'ll need your email to proceed');
       return;
     }
 
@@ -76,7 +78,7 @@ export default function LoginClient() {
           setEmail('');
         }
       } catch (err) {
-        setError('An error occurred. Please try again.');
+        setError('Hmm, something went wrong on our end. Please try again or reach out.');
       } finally {
         setIsSubmitting(false);
       }
@@ -85,12 +87,12 @@ export default function LoginClient() {
 
     // Normal login/signup flow
     if (!password) {
-      setError('Password is required');
+      setError('Don\'t forget your password');
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError('Your password should be at least 6 characters');
       return;
     }
 
@@ -130,7 +132,7 @@ export default function LoginClient() {
         setPassword('');
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      setError('Hmm, something went wrong on our end. Please try again or reach out.');
     } finally {
       setIsSubmitting(false);
     }
@@ -151,7 +153,7 @@ export default function LoginClient() {
       await signIn('google', { callbackUrl: '/dashboard' });
       // Note: signIn redirects, so code after this won't execute on success
     } catch (err) {
-      setError('Failed to sign in with Google');
+      setError('We couldn\'t sign you in with Google. Want to try again?');
       setIsSubmitting(false);
     }
   };
@@ -188,7 +190,7 @@ export default function LoginClient() {
         </div>
 
         {/* Login Form */}
-        <div className={`${cardBgColors.base} rounded-xl p-8 ${cardBorderColors.light} border-l-4 border-l-gray-300 dark:border-l-gray-600 shadow-sm transition-all hover:border-gray-400 hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:border-gray-500 dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}>
+        <div className={`${cardBgColors.base} rounded-xl p-8 ${cardBorderColors.light} ${statusBorderColors.gray} shadow-sm transition-all ${cardHoverColors.gray} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}>
           <form onSubmit={handleAuth} className="space-y-6">
 
             {/* Error Message */}
@@ -267,10 +269,10 @@ export default function LoginClient() {
             >
               {isSubmitting
                 ? isForgotPassword
-                  ? 'Sending Reset Link...'
+                  ? 'Hold tight, sending link...'
                   : isSignUpMode
-                    ? 'Creating Account...'
-                    : 'Signing In...'
+                    ? 'Setting up your account...'
+                    : 'Welcome back...'
                 : isForgotPassword
                   ? 'Send Reset Link'
                   : isSignUpMode

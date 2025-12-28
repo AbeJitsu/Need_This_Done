@@ -33,4 +33,24 @@ if [ -n "$ERRORS" ]; then
   exit 2
 fi
 
+# Warn (not block): Frontend changes without changelog
+FRONTEND_FILES=$(cd "$CLAUDE_PROJECT_DIR" && git diff --name-only 2>/dev/null | grep -E '^app/(app|components)/.*\.tsx$|\.css$|colors\.ts$' | head -3)
+
+if [ -n "$FRONTEND_FILES" ]; then
+  BRANCH=$(cd "$CLAUDE_PROJECT_DIR" && git branch --show-current 2>/dev/null || echo "unknown")
+  SAFE_BRANCH=$(echo "$BRANCH" | tr '/' '-')
+  CHANGELOG_FILE="$CLAUDE_PROJECT_DIR/content/changelog/${SAFE_BRANCH}.json"
+
+  if [ ! -f "$CHANGELOG_FILE" ]; then
+    echo ""
+    echo "REMINDER: Frontend changes detected without changelog"
+    echo "   Changed files:"
+    echo "$FRONTEND_FILES" | sed 's/^/     - /'
+    echo ""
+    echo "   Consider: content/changelog/${SAFE_BRANCH}.json"
+    echo "   Or run: npm run screenshot:affected"
+    echo ""
+  fi
+fi
+
 exit 0

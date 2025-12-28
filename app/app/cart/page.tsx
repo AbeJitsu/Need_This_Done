@@ -18,6 +18,8 @@ import {
   leftBorderColors,
   dangerColors,
   lightBgColors,
+  accentColors,
+  cardBgColors,
   type AccentColor,
 } from '@/lib/colors';
 
@@ -73,7 +75,7 @@ export default function CartPage() {
       setLocalError('');
       await updateItem(lineItemId, newQuantity);
     } catch (err) {
-      setLocalError(err instanceof Error ? err.message : 'Failed to update item');
+      setLocalError(err instanceof Error ? err.message : 'Oops! We couldn\'t update that. Please try again.');
     } finally {
       setIsUpdating(null);
     }
@@ -99,7 +101,7 @@ export default function CartPage() {
       setShowRemoveDialog(false);
       await removeItem(itemToRemove);
     } catch (err) {
-      setLocalError(err instanceof Error ? err.message : 'Failed to remove item');
+      setLocalError(err instanceof Error ? err.message : 'We couldn\'t remove that item. Please try again or reach out if this keeps happening.');
     } finally {
       setIsUpdating(null);
       setItemToRemove(null);
@@ -223,7 +225,7 @@ export default function CartPage() {
                       <button
                         onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
                         disabled={isUpdating === item.id}
-                        className="px-4 py-2 rounded-lg border-2 border-gray-300 dark:border-gray-500 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium transition disabled:opacity-50"
+                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50`}
                       >
                         −
                       </button>
@@ -233,7 +235,7 @@ export default function CartPage() {
                       <button
                         onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
                         disabled={isUpdating === item.id}
-                        className="px-4 py-2 rounded-lg border-2 border-gray-300 dark:border-gray-500 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium transition disabled:opacity-50"
+                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50`}
                       >
                         +
                       </button>
@@ -251,7 +253,7 @@ export default function CartPage() {
             {/* Continue shopping link */}
             <div className="pt-2">
               <Link href="/shop" className={`${titleColors.blue} hover:underline`}>
-                &larr; Continue Shopping
+                &larr; Browse More Consultations
               </Link>
             </div>
           </div>
@@ -321,9 +323,9 @@ export default function CartPage() {
         isOpen={showRemoveDialog}
         onConfirm={confirmRemoveItem}
         onCancel={cancelRemoveItem}
-        title="Remove Item"
-        message="Remove this item from your cart?"
-        confirmLabel="Remove"
+        title="Remove Consultation"
+        message="Are you sure you want to remove this consultation from your cart?"
+        confirmLabel="Yes, Remove It"
         cancelLabel="Keep It"
         variant="warning"
       />

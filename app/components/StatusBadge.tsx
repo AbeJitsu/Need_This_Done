@@ -3,6 +3,9 @@
 // ============================================================================
 // Shows the current status of a project with color-coded variants.
 // Used throughout the app: in cards, modals, lists.
+// Uses centralized colors from lib/colors.ts for consistency.
+
+import { accentColors } from '@/lib/colors';
 
 interface StatusBadgeProps {
   status: 'submitted' | 'in_review' | 'scheduled' | 'in_progress' | 'completed';
@@ -11,34 +14,35 @@ interface StatusBadgeProps {
 
 export default function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
   // ============================================================================
-  // Define Status Styling
+  // Define Status Styling - Using centralized color patterns
   // ============================================================================
   // Each status has a color, background, and label
+  // Using accentColors pattern: -100 bg light / -500 bg dark, -700 text light / -100 text dark
 
   const statusConfig = {
     submitted: {
-      bg: 'bg-gray-100 dark:bg-gray-700',
-      text: 'text-gray-700 dark:text-gray-300',
+      bg: accentColors.gray.bg,
+      text: accentColors.gray.text,
       label: 'Submitted',
     },
     in_review: {
-      bg: 'bg-blue-100 dark:bg-blue-900',
-      text: 'text-blue-700 dark:text-blue-300',
+      bg: accentColors.blue.bg,
+      text: accentColors.blue.text,
       label: 'In Review',
     },
     scheduled: {
-      bg: 'bg-amber-100 dark:bg-amber-900',
-      text: 'text-amber-700 dark:text-amber-300',
+      bg: accentColors.orange.bg,
+      text: accentColors.orange.text,
       label: 'Scheduled',
     },
     in_progress: {
-      bg: 'bg-purple-100 dark:bg-purple-900',
-      text: 'text-purple-700 dark:text-purple-300',
+      bg: accentColors.purple.bg,
+      text: accentColors.purple.text,
       label: 'In Progress',
     },
     completed: {
-      bg: 'bg-green-100 dark:bg-green-900',
-      text: 'text-green-700 dark:text-green-300',
+      bg: accentColors.green.bg,
+      text: accentColors.green.text,
       label: 'Completed',
     },
   };

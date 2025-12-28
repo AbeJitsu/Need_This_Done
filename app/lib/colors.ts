@@ -216,8 +216,8 @@ export const statusBorderColors: Record<AccentVariant, string> = {
   green: 'border-l-4 border-l-green-500',
   orange: 'border-l-4 border-l-orange-500',
   teal: 'border-l-4 border-l-teal-500',
-  gray: 'border-l-4 border-l-gray-400',
-  red: 'border-l-4 border-l-red-500',
+  gray: 'border-l-4 border-l-gray-300 dark:border-l-gray-600',
+  red: 'border-l-4 border-l-red-500 dark:border-l-red-400',
 };
 
 // ============================================================================
@@ -710,6 +710,19 @@ export const layoutBgColors = {
   page: 'bg-white dark:bg-gray-900',
   section: 'bg-gray-50 dark:bg-gray-800',
   gradient: 'bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800',
+};
+
+// ============================================================================
+// Gradient Colors - For decorative gradients across the site
+// ============================================================================
+// Centralized gradient definitions to maintain consistency
+export const gradientColors = {
+  // Page background gradient for Puck pages
+  pageBackground: 'bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900',
+  // Popular badge gradient
+  popularBadge: 'bg-gradient-to-r from-blue-500 to-blue-600',
+  // Avatar placeholder gradient
+  avatarPlaceholder: 'bg-gradient-to-br from-purple-400 to-blue-500',
 };
 
 // ============================================================================

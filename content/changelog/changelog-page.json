@@ -1,0 +1,21 @@
+{
+  "title": "What's New Page",
+  "slug": "changelog-page",
+  "date": "2025-12-27",
+  "category": "Public",
+  "description": "A dedicated page showing all the latest features and improvements. See what's new at a glance with screenshots and step-by-step guides.",
+  "benefit": "Stay informed about new capabilities without digging through updates. Each entry shows you exactly what changed and how to use it.",
+  "howToUse": [
+    "Visit /changelog to see all updates",
+    "Each entry includes screenshots showing the feature",
+    "Follow the 'How to Use' steps to get started",
+    "Check back regularly for new features"
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/december-2025-release/changelog-desktop-light.png",
+      "alt": "Changelog page showing feature updates with screenshots",
+      "caption": "Visual documentation of every new feature"
+    }
+  ]
+}

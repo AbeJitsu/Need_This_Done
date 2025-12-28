@@ -9,6 +9,8 @@
       "WebFetch",
       "Task",
       "SlashCommand(/dac)",
+      "SlashCommand(/document)",
+      "Skill(document)",
       "mcp__context7",
       "Bash(git add:*)",
       "Bash(git commit:*)",

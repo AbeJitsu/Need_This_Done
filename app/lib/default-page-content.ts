@@ -21,7 +21,7 @@ import type {
 
 export const defaultPricingContent: PricingPageContent = {
   header: {
-    title: 'Pick Your Perfect Fit',
+    title: 'Pricing That Fits',
     description:
       "Every project is different, so here's a starting point. Not sure which one? Just ask and we'll help you figure it out.",
   },

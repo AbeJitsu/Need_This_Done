@@ -21,10 +21,10 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║                                                                              ║
 ║  CODEBASE METRICS                        PRODUCTION READINESS                ║
 ║  ─────────────────                       ────────────────────                 ║
-║  📄 15 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
-║  🔐 13 Admin Pages                       ✅ Stripe Payments                  ║
-║  🔌 47 API Routes                        ✅ Supabase Auth & Database         ║
-║  🧩 96 React Components                  ✅ Redis Caching (Upstash)          ║
+║  📄 19 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
+║  🔐 16 Admin Pages                       ✅ Stripe Payments                  ║
+║  🔌 49 API Routes                        ✅ Supabase Auth & Database         ║
+║  🧩 97 React Components                  ✅ Redis Caching (Upstash)          ║
 ║  📦 5 Context Providers                  ✅ Email Notifications (Resend)     ║
 ║  🔧 26 Lib Utilities                     ✅ Google OAuth                     ║
 ║  🪝 4 Custom Hooks                       🟡 Google Calendar (90% - needs test)║
@@ -651,11 +651,11 @@ supabase db reset
     └── seed-products.js   ← Product seeding script
 ```
 
-### Complete Page Inventory (28 pages total)
+### Complete Page Inventory (35 pages total)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                          PUBLIC PAGES (15 pages)                             │
+│                          PUBLIC PAGES (19 pages)                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  MARKETING                    E-COMMERCE                   AUTH             │
@@ -665,13 +665,16 @@ supabase db reset
 │  /how-it-works               /checkout                     LEGAL            │
 │  /faq                         /dashboard        (orders)   /privacy         │
 │  /contact                                                  /terms           │
-│  /get-started                 DYNAMIC                                       │
-│                               /p/[slug]         (CMS)                       │
+│  /get-started                 DYNAMIC                      CONTENT          │
+│                               /p/[slug]         (CMS)      /blog            │
+│                                                            /blog/[slug]     │
+│                                                            /changelog       │
+│                                                            /guide           │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                          ADMIN PAGES (13 pages)                              │
+│                          ADMIN PAGES (16 pages)                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  SHOP MANAGEMENT              CONTENT (Puck ⛔)            OTHER            │
@@ -679,15 +682,17 @@ supabase db reset
 │  /admin/shop/products         /admin/pages/new   (create)  /admin/appointments│
 │  /admin/shop/products/new     /admin/pages/[slug]/edit     /admin/dev       │
 │  /admin/shop/orders                                                         │
-│  /admin/orders       (legacy) /admin/content     (alt CMS)                  │
-│  /admin/products     (legacy) /admin/content/[slug]/edit                    │
+│  /admin/orders       (legacy) /admin/content     (alt CMS) BLOG             │
+│  /admin/products     (legacy) /admin/content/[slug]/edit   /admin/blog      │
+│                                                            /admin/blog/new  │
+│                                                            /admin/blog/[slug]/edit│
 │                                                                             │
 │  Note: Puck has 28 components ready - needs E2E tests before production     │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Complete API Route Inventory (47 routes)
+### Complete API Route Inventory (49 routes)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -726,10 +731,12 @@ PAYMENTS (3 routes)
 ├── POST /api/stripe/create-subscription     Recurring payments
 └── POST /api/stripe/webhook         Handle Stripe events
 
-CONTENT & PAGES (3 routes)
+CONTENT & PAGES (5 routes)
 ├── GET/POST /api/pages              Dynamic page management
 ├── GET /api/page-content/[slug]     Get page content by slug
-└── GET /api/pages/[slug]            Get full page data
+├── GET /api/pages/[slug]            Get full page data
+├── GET/POST /api/blog               Blog post listing and creation
+└── GET/PUT/DELETE /api/blog/[slug]  Single blog post CRUD
 
 GOOGLE INTEGRATION (2 routes)
 ├── POST /api/google/connect         Initiate OAuth flow
@@ -761,7 +768,7 @@ MISC (4 routes)
 └── GET /api/demo/*                  Demo/testing endpoints
 ```
 
-### Component Inventory (88 components)
+### Component Inventory (97 components)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -2056,6 +2063,30 @@ These improvements are **done and working**:
 | **VideoEmbedComponent** | YouTube/Vimeo embed with lazy loading | ✅ Implemented |
 | **StatsCounterComponent** | Animated count-up numbers | ✅ Implemented |
 | **Order Status Emails** | Automatic email on status change | ✅ Implemented |
+| **Blog Content System** | Full blog with admin CRUD, public pages, LinkedIn repurposing | ✅ Implemented |
+| **Customer Page Audit** | 20 high-value UI consistency fixes across all customer pages | ✅ Implemented |
+| **Changelog Page** | Public `/changelog` showing all updates with screenshots | ✅ Implemented |
+| **Visual Documentation** | Automated screenshot capture for feature documentation | ✅ Implemented |
+| **User Guide Page** | Public `/guide` with step-by-step platform instructions | ✅ Implemented |
+
+**Blog System** (`/blog`, `/admin/blog`):
+- Public blog listing and individual post pages
+- Admin dashboard for creating, editing, and managing posts
+- SEO-friendly slugs and metadata
+- Designed for easy LinkedIn content repurposing
+- Supabase migration: `021_create_blog_posts_table.sql`
+
+**Customer Page Improvements** (December 2025):
+- Consistent color system usage across cart, checkout, contact, login pages
+- Improved form styling and validation feedback
+- StatusBadge and PricingCard component refinements
+- Better accessibility with proper color contrast
+
+**Changelog & Documentation** (`/changelog`):
+- Public changelog page showing all platform updates
+- Visual documentation with screenshots for each feature
+- Automated screenshot capture workflow (`npm run screenshot:affected`)
+- Screenshots stored in `public/screenshots/` for public access
 
 **Puck Component Library**: Now 28 components across 6 categories:
 - **Layout** (4): Spacer, Container, Columns, Divider
