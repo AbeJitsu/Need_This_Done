@@ -10,13 +10,20 @@
       "Task",
       "SlashCommand(/dac)",
       "SlashCommand(/document)",
+      "SlashCommand(/check-work)",
+      "Skill(dac)",
+      "Skill(dac:*)",
       "Skill(document)",
+      "Skill(check-work)",
       "mcp__context7",
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(git checkout:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
     ],
     "deny": [
       "Bash(git push origin main:*)",
