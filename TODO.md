@@ -114,6 +114,15 @@ _Currently active work items_
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+**Automated Screenshot Documentation System** (Dec 2025)
+- `/document` slash command for capturing screenshots of changed pages
+- Smart detection: only screenshots affected routes (not all 150+)
+- Component-to-route mapping with 34 routes, 42 components
+- Auto-generates changelog entries with screenshots
+- Public `/changelog` page displays all updates
+- Commands: `npm run screenshot:map` and `npm run screenshot:affected`
+- Flow: Make changes → run `/document` → fill in changelog → commit
+
 **No Broken Windows - Lint & Type Cleanup** (Dec 2025)
 - Migrated all 12 `<img>` tags to Next.js `<Image>` components across codebase
 - Fixed React hook dependency warnings in MediaLibrary, MediaPickerField, ProductGridComponent

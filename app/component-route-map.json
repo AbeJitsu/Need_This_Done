@@ -1,0 +1,633 @@
+{
+  "generatedAt": "2025-12-27T23:59:01.710Z",
+  "routes": [
+    {
+      "path": "/",
+      "file": "app/page.tsx",
+      "imports": [
+        "components/Button",
+        "components/ServiceCardWithModal",
+        "components/CircleBadge",
+        "lib/default-page-content",
+        "lib/colors",
+        "lib/page-content-types"
+      ]
+    },
+    {
+      "path": "/terms",
+      "file": "app/terms/page.tsx",
+      "imports": [
+        "components/PageHeader",
+        "lib/colors"
+      ]
+    },
+    {
+      "path": "/shop",
+      "file": "app/shop/page.tsx",
+      "imports": [
+        "components/PageHeader",
+        "components/shop/ShopClient",
+        "lib/medusa-client"
+      ]
+    },
+    {
+      "path": "/services",
+      "file": "app/services/page.tsx",
+      "imports": [
+        "components/PageHeader",
+        "components/Card",
+        "components/Button",
+        "components/service-modal/ServiceDetailModal",
+        "components/services/ScenarioMatcher",
+        "components/services/ServiceComparisonTable",
+        "components/services/ServiceDeepDive",
+        "lib/default-page-content",
+        "lib/page-content-types",
+        "lib/colors",
+        "context/ServiceModalContext"
+      ]
+    },
+    {
+      "path": "/privacy",
+      "file": "app/privacy/page.tsx",
+      "imports": [
+        "components/PageHeader",
+        "lib/colors"
+      ]
+    },
+    {
+      "path": "/pricing",
+      "file": "app/pricing/page.tsx",
+      "imports": [
+        "components/PricingCard",
+        "components/Button",
+        "components/PageHeader",
+        "components/Card",
+        "components/CircleBadge",
+        "lib/default-page-content",
+        "lib/page-content-types",
+        "lib/colors"
+      ]
+    },
+    {
+      "path": "/login",
+      "file": "app/login/page.tsx",
+      "imports": []
+    },
+    {
+      "path": "/how-it-works",
+      "file": "app/how-it-works/page.tsx",
+      "imports": [
+        "components/StepCard",
+        "components/PageHeader",
+        "components/Card",
+        "components/CTASection",
+        "components/CircleBadge",
+        "components/Button",
+        "lib/default-page-content",
+        "lib/page-content-types",
+        "lib/colors"
+      ]
+    },
+    {
+      "path": "/get-started",
+      "file": "app/get-started/page.tsx",
+      "imports": [
+        "components/PageHeader",
+        "components/Card",
+        "components/Button",
+        "lib/colors"
+      ]
+    },
+    {
+      "path": "/faq",
+      "file": "app/faq/page.tsx",
+      "imports": [
+        "components/CircleBadge",
+        "components/PageHeader",
+        "components/CTASection",
+        "lib/colors",
+        "lib/default-page-content",
+        "lib/page-content-types"
+      ]
+    },
+    {
+      "path": "/dashboard",
+      "file": "app/dashboard/page.tsx",
+      "imports": [
+        "components/AdminDashboard",
+        "components/UserDashboard",
+        "lib/mockProjects",
+        "context/AuthContext"
+      ]
+    },
+    {
+      "path": "/contact",
+      "file": "app/contact/page.tsx",
+      "imports": [
+        "components/Button",
+        "components/PageHeader",
+        "components/Card",
+        "components/CTASection",
+        "lib/colors"
+      ]
+    },
+    {
+      "path": "/checkout",
+      "file": "app/checkout/page.tsx",
+      "imports": [
+        "components/Button",
+        "components/PageHeader",
+        "components/Card",
+        "components/PaymentForm",
+        "components/AppointmentStepForm",
+        "lib/colors",
+        "context/CartContext",
+        "context/AuthContext",
+        "context/StripeContext"
+      ]
+    },
+    {
+      "path": "/cart",
+      "file": "app/cart/page.tsx",
+      "imports": [
+        "components/Button",
+        "components/PageHeader",
+        "components/Card",
+        "components/ui/ConfirmDialog",
+        "lib/colors",
+        "context/CartContext"
+      ]
+    },
+    {
+      "path": "/blog",
+      "file": "app/blog/page.tsx",
+      "imports": [
+        "components/PageHeader",
+        "components/blog/BlogPostCard",
+        "lib/blog-types",
+        "lib/colors"
+      ]
+    },
+    {
+      "path": "/[slug]",
+      "file": "app/[slug]/page.tsx",
+      "imports": [
+        "lib/puck-config",
+        "lib/colors"
+      ]
+    },
+    {
+      "path": "/shop/[productId]",
+      "file": "app/shop/[productId]/page.tsx",
+      "imports": [
+        "components/shop/ProductDetailClient",
+        "lib/medusa-client"
+      ]
+    },
+    {
+      "path": "/blog/[slug]",
+      "file": "app/blog/[slug]/page.tsx",
+      "imports": [
+        "components/Button",
+        "lib/blog-types",
+        "lib/colors"
+      ]
+    },
+    {
+      "path": "/admin/users",
+      "file": "app/admin/users/page.tsx",
+      "imports": [
+        "components/PageHeader",
+        "components/Card",
+        "components/Button",
+        "context/AuthContext"
+      ]
+    },
+    {
+      "path": "/admin/shop",
+      "file": "app/admin/shop/page.tsx",
+      "imports": [
+        "components/Button",
+        "components/Card",
+        "lib/medusa-client",
+        "context/AuthContext",
+        "context/ToastContext"
+      ]
+    },
+    {
+      "path": "/admin/products",
+      "file": "app/admin/products/page.tsx",
+      "imports": [
+        "components/PageHeader",
+        "components/admin/AdminProductsClient",
+        "lib/medusa-client"
+      ]
+    },
+    {
+      "path": "/admin/pages",
+      "file": "app/admin/pages/page.tsx",
+      "imports": [
+        "components/Button",
+        "components/Card",
+        "components/ui/ConfirmDialog",
+        "context/AuthContext",
+        "context/ToastContext"
+      ]
+    },
+    {
+      "path": "/admin/orders",
+      "file": "app/admin/orders/page.tsx",
+      "imports": [
+        "components/Card",
+        "components/Button",
+        "lib/auth",
+        "lib/colors",
+        "context/AuthContext"
+      ]
+    },
+    {
+      "path": "/admin/dev",
+      "file": "app/admin/dev/page.tsx",
+      "imports": [
+        "components/PageHeader",
+        "components/Card",
+        "components/Button",
+        "components/SystemOverview",
+        "components/AuthDemo",
+        "components/DatabaseDemo",
+        "components/SpeedDemo",
+        "context/AuthContext"
+      ]
+    },
+    {
+      "path": "/admin/content",
+      "file": "app/admin/content/page.tsx",
+      "imports": [
+        "components/Button",
+        "components/Card",
+        "components/PageHeader",
+        "lib/page-content-types",
+        "context/AuthContext"
+      ]
+    },
+    {
+      "path": "/admin/blog",
+      "file": "app/admin/blog/page.tsx",
+      "imports": [
+        "components/Button",
+        "components/Card",
+        "components/ui/ConfirmDialog",
+        "lib/blog-types",
+        "lib/colors",
+        "context/AuthContext",
+        "context/ToastContext"
+      ]
+    },
+    {
+      "path": "/admin/appointments",
+      "file": "app/admin/appointments/page.tsx",
+      "imports": [
+        "components/Card",
+        "components/Button",
+        "lib/auth",
+        "lib/colors",
+        "context/AuthContext"
+      ]
+    },
+    {
+      "path": "/admin/shop/orders",
+      "file": "app/admin/shop/orders/page.tsx",
+      "imports": [
+        "components/Card",
+        "components/Button",
+        "lib/auth",
+        "lib/colors",
+        "context/AuthContext"
+      ]
+    },
+    {
+      "path": "/admin/pages/new",
+      "file": "app/admin/pages/new/page.tsx",
+      "imports": [
+        "components/templates",
+        "lib/puck-config",
+        "lib/templates",
+        "context/AuthContext",
+        "context/ToastContext"
+      ]
+    },
+    {
+      "path": "/admin/blog/new",
+      "file": "app/admin/blog/new/page.tsx",
+      "imports": [
+        "components/Button",
+        "components/Card",
+        "lib/blog-types",
+        "lib/colors",
+        "context/AuthContext",
+        "context/ToastContext"
+      ]
+    },
+    {
+      "path": "/admin/shop/products/new",
+      "file": "app/admin/shop/products/new/page.tsx",
+      "imports": [
+        "components/Button",
+        "components/Card",
+        "context/AuthContext"
+      ]
+    },
+    {
+      "path": "/admin/pages/[slug]/edit",
+      "file": "app/admin/pages/[slug]/edit/page.tsx",
+      "imports": [
+        "lib/puck-config",
+        "context/AuthContext",
+        "context/ToastContext"
+      ]
+    },
+    {
+      "path": "/admin/content/[slug]/edit",
+      "file": "app/admin/content/[slug]/edit/page.tsx",
+      "imports": [
+        "components/content-editor",
+        "lib/page-content-types",
+        "lib/default-page-content",
+        "context/AuthContext"
+      ]
+    },
+    {
+      "path": "/admin/blog/[slug]/edit",
+      "file": "app/admin/blog/[slug]/edit/page.tsx",
+      "imports": [
+        "components/Button",
+        "components/Card",
+        "components/editor/RichTextEditor",
+        "lib/blog-types",
+        "lib/colors",
+        "context/AuthContext",
+        "context/ToastContext"
+      ]
+    }
+  ],
+  "componentToRoutes": {
+    "components/Button": [
+      "/",
+      "/services",
+      "/pricing",
+      "/how-it-works",
+      "/get-started",
+      "/contact",
+      "/checkout",
+      "/cart",
+      "/blog/[slug]",
+      "/admin/users",
+      "/admin/shop",
+      "/admin/pages",
+      "/admin/orders",
+      "/admin/dev",
+      "/admin/content",
+      "/admin/blog",
+      "/admin/appointments",
+      "/admin/shop/orders",
+      "/admin/blog/new",
+      "/admin/shop/products/new",
+      "/admin/blog/[slug]/edit"
+    ],
+    "components/ServiceCardWithModal": [
+      "/"
+    ],
+    "components/CircleBadge": [
+      "/",
+      "/pricing",
+      "/how-it-works",
+      "/faq"
+    ],
+    "lib/default-page-content": [
+      "/",
+      "/services",
+      "/pricing",
+      "/how-it-works",
+      "/faq",
+      "/admin/content/[slug]/edit"
+    ],
+    "lib/colors": [
+      "/",
+      "/terms",
+      "/services",
+      "/privacy",
+      "/pricing",
+      "/how-it-works",
+      "/get-started",
+      "/faq",
+      "/contact",
+      "/checkout",
+      "/cart",
+      "/blog",
+      "/[slug]",
+      "/blog/[slug]",
+      "/admin/orders",
+      "/admin/blog",
+      "/admin/appointments",
+      "/admin/shop/orders",
+      "/admin/blog/new",
+      "/admin/blog/[slug]/edit"
+    ],
+    "lib/page-content-types": [
+      "/",
+      "/services",
+      "/pricing",
+      "/how-it-works",
+      "/faq",
+      "/admin/content",
+      "/admin/content/[slug]/edit"
+    ],
+    "components/PageHeader": [
+      "/terms",
+      "/shop",
+      "/services",
+      "/privacy",
+      "/pricing",
+      "/how-it-works",
+      "/get-started",
+      "/faq",
+      "/contact",
+      "/checkout",
+      "/cart",
+      "/blog",
+      "/admin/users",
+      "/admin/products",
+      "/admin/dev",
+      "/admin/content"
+    ],
+    "components/shop/ShopClient": [
+      "/shop"
+    ],
+    "lib/medusa-client": [
+      "/shop",
+      "/shop/[productId]",
+      "/admin/shop",
+      "/admin/products"
+    ],
+    "components/Card": [
+      "/services",
+      "/pricing",
+      "/how-it-works",
+      "/get-started",
+      "/contact",
+      "/checkout",
+      "/cart",
+      "/admin/users",
+      "/admin/shop",
+      "/admin/pages",
+      "/admin/orders",
+      "/admin/dev",
+      "/admin/content",
+      "/admin/blog",
+      "/admin/appointments",
+      "/admin/shop/orders",
+      "/admin/blog/new",
+      "/admin/shop/products/new",
+      "/admin/blog/[slug]/edit"
+    ],
+    "components/service-modal/ServiceDetailModal": [
+      "/services"
+    ],
+    "components/services/ScenarioMatcher": [
+      "/services"
+    ],
+    "components/services/ServiceComparisonTable": [
+      "/services"
+    ],
+    "components/services/ServiceDeepDive": [
+      "/services"
+    ],
+    "context/ServiceModalContext": [
+      "/services"
+    ],
+    "components/PricingCard": [
+      "/pricing"
+    ],
+    "components/StepCard": [
+      "/how-it-works"
+    ],
+    "components/CTASection": [
+      "/how-it-works",
+      "/faq",
+      "/contact"
+    ],
+    "components/AdminDashboard": [
+      "/dashboard"
+    ],
+    "components/UserDashboard": [
+      "/dashboard"
+    ],
+    "lib/mockProjects": [
+      "/dashboard"
+    ],
+    "context/AuthContext": [
+      "/dashboard",
+      "/checkout",
+      "/admin/users",
+      "/admin/shop",
+      "/admin/pages",
+      "/admin/orders",
+      "/admin/dev",
+      "/admin/content",
+      "/admin/blog",
+      "/admin/appointments",
+      "/admin/shop/orders",
+      "/admin/pages/new",
+      "/admin/blog/new",
+      "/admin/shop/products/new",
+      "/admin/pages/[slug]/edit",
+      "/admin/content/[slug]/edit",
+      "/admin/blog/[slug]/edit"
+    ],
+    "components/PaymentForm": [
+      "/checkout"
+    ],
+    "components/AppointmentStepForm": [
+      "/checkout"
+    ],
+    "context/CartContext": [
+      "/checkout",
+      "/cart"
+    ],
+    "context/StripeContext": [
+      "/checkout"
+    ],
+    "components/ui/ConfirmDialog": [
+      "/cart",
+      "/admin/pages",
+      "/admin/blog"
+    ],
+    "components/blog/BlogPostCard": [
+      "/blog"
+    ],
+    "lib/blog-types": [
+      "/blog",
+      "/blog/[slug]",
+      "/admin/blog",
+      "/admin/blog/new",
+      "/admin/blog/[slug]/edit"
+    ],
+    "lib/puck-config": [
+      "/[slug]",
+      "/admin/pages/new",
+      "/admin/pages/[slug]/edit"
+    ],
+    "components/shop/ProductDetailClient": [
+      "/shop/[productId]"
+    ],
+    "context/ToastContext": [
+      "/admin/shop",
+      "/admin/pages",
+      "/admin/blog",
+      "/admin/pages/new",
+      "/admin/blog/new",
+      "/admin/pages/[slug]/edit",
+      "/admin/blog/[slug]/edit"
+    ],
+    "components/admin/AdminProductsClient": [
+      "/admin/products"
+    ],
+    "lib/auth": [
+      "/admin/orders",
+      "/admin/appointments",
+      "/admin/shop/orders"
+    ],
+    "components/SystemOverview": [
+      "/admin/dev"
+    ],
+    "components/AuthDemo": [
+      "/admin/dev"
+    ],
+    "components/DatabaseDemo": [
+      "/admin/dev"
+    ],
+    "components/SpeedDemo": [
+      "/admin/dev"
+    ],
+    "components/templates": [
+      "/admin/pages/new"
+    ],
+    "lib/templates": [
+      "/admin/pages/new"
+    ],
+    "components/content-editor": [
+      "/admin/content/[slug]/edit"
+    ],
+    "components/editor/RichTextEditor": [
+      "/admin/blog/[slug]/edit"
+    ]
+  },
+  "globalFiles": [
+    "app/layout.tsx",
+    "app/globals.css",
+    "lib/colors.ts",
+    "components/Navigation.tsx",
+    "components/Footer.tsx"
+  ]
+}

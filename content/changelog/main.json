@@ -1,0 +1,26 @@
+{
+  "title": "Public Changelog Page",
+  "slug": "public-changelog",
+  "date": "2025-12-28",
+  "category": "Public",
+  "description": "A dedicated page showing all platform updates with screenshots, descriptions, and how-to guides.",
+  "benefit": "Stay informed about new features and improvements without checking external docs or release notes.",
+  "howToUse": [
+    "Visit /changelog from the main navigation",
+    "Browse updates by date (newest first)",
+    "Click on any entry to see screenshots and details",
+    "Use the how-to steps to try new features"
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/main/changelog-desktop-light.png",
+      "alt": "Changelog page showing feature updates with screenshots",
+      "caption": "The changelog page displays all platform updates in a clean, browsable format"
+    },
+    {
+      "src": "/screenshots/main/changelog-mobile-light.png",
+      "alt": "Changelog page on mobile",
+      "caption": "Fully responsive design works great on mobile devices"
+    }
+  ]
+}
