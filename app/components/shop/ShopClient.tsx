@@ -179,9 +179,11 @@ export default function ShopClient({ products }: ShopClientProps) {
                         size="sm"
                         onClick={() => handleAddToCart(product)}
                         disabled={addingToCart === product.id}
+                        isLoading={addingToCart === product.id}
+                        loadingText="Adding..."
                         className="flex-1"
                       >
-                        {addingToCart === product.id ? 'Adding...' : 'Add to Cart'}
+                        Add to Cart
                       </Button>
                     </div>
                   </div>

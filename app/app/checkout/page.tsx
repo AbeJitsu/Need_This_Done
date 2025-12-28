@@ -22,6 +22,7 @@ import {
   accentColors,
   cardBgColors,
 } from '@/lib/colors';
+import { CheckIcon } from '@/components/ui/icons';
 
 // ============================================================================
 // Checkout Page - /checkout
@@ -339,9 +340,7 @@ export default function CheckoutPage() {
                 >
                   {copied ? (
                     <>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+                      <CheckIcon size="sm" />
                       Copied
                     </>
                   ) : (

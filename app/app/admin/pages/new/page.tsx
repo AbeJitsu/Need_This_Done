@@ -13,6 +13,7 @@ import { PageWizard } from '@/components/templates';
 import type { PuckPageData } from '@/lib/templates';
 import '@measured/puck/puck.css';
 import { alertColors } from '@/lib/colors';
+import { CheckIcon } from '@/components/ui/icons';
 
 // ============================================================================
 // NEW PAGE - Choose Your Path
@@ -384,9 +385,7 @@ export default function NewPage() {
               )}
               {saveStatus === 'saved' && (
                 <span className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <CheckIcon size="sm" />
                   Saved
                 </span>
               )}

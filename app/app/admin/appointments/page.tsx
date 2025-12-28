@@ -177,8 +177,8 @@ export default function AppointmentsDashboard() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+      <div className="flex items-center justify-center min-h-screen" role="status" aria-live="polite" aria-busy="true">
+        <p className="text-gray-600 dark:text-gray-400">Loading appointments...</p>
       </div>
     );
   }
@@ -356,14 +356,18 @@ export default function AppointmentsDashboard() {
                         size="sm"
                         onClick={() => handleAction(appointment.id, 'approve')}
                         disabled={actionLoading === appointment.id}
+                        isLoading={actionLoading === appointment.id}
+                        loadingText="Approving..."
                       >
-                        {actionLoading === appointment.id ? 'Processing...' : 'Approve'}
+                        Approve
                       </Button>
                       <Button
                         variant="gray"
                         size="sm"
                         onClick={() => handleAction(appointment.id, 'cancel')}
                         disabled={actionLoading === appointment.id}
+                        isLoading={actionLoading === appointment.id}
+                        loadingText="Canceling..."
                       >
                         Cancel
                       </Button>

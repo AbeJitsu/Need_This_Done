@@ -178,8 +178,8 @@ export default function OrdersDashboard() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+      <div className="flex items-center justify-center min-h-screen" role="status" aria-live="polite" aria-busy="true">
+        <p className="text-gray-600 dark:text-gray-400">Loading orders...</p>
       </div>
     );
   }
@@ -212,9 +212,10 @@ export default function OrdersDashboard() {
       )}
 
       {/* Filter buttons */}
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label="Filter orders by status">
         <button
           onClick={() => setStatusFilter('all')}
+          aria-pressed={statusFilter === 'all'}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             statusFilter === 'all'
               ? filterButtonColors.active.purple
@@ -227,6 +228,7 @@ export default function OrdersDashboard() {
           <button
             key={status}
             onClick={() => setStatusFilter(status)}
+            aria-pressed={statusFilter === status}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               statusFilter === status
                 ? filterButtonColors.active.purple
@@ -302,6 +304,7 @@ export default function OrdersDashboard() {
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                   <button
                     onClick={() => setExpandedOrderId(expandedOrderId === order.id ? null : order.id)}
+                    aria-expanded={expandedOrderId === order.id}
                     className="flex items-center gap-2 text-sm text-purple-600 dark:text-purple-400 hover:underline"
                   >
                     <svg
@@ -309,6 +312,7 @@ export default function OrdersDashboard() {
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
+                      aria-hidden="true"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -325,10 +329,10 @@ export default function OrdersDashboard() {
                           size="sm"
                           onClick={() => handleStatusUpdate(order.id, status)}
                           disabled={actionLoading === order.id || order.status === status}
+                          isLoading={actionLoading === order.id}
+                          loadingText="Updating..."
                         >
-                          {actionLoading === order.id
-                            ? 'Updating...'
-                            : `${status.charAt(0).toUpperCase() + status.slice(1)}`}
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
                         </Button>
                       ))}
                     </div>

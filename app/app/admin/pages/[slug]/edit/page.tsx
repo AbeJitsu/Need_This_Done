@@ -10,6 +10,7 @@ import { useToast } from '@/context/ToastContext';
 import { Puck } from '@measured/puck';
 import { puckConfig } from '@/lib/puck-config';
 import '@measured/puck/puck.css';
+import { CheckIcon } from '@/components/ui/icons';
 
 export default function EditPage({ params }: { params: { slug: string } }) {
   const router = useRouter();
@@ -193,9 +194,7 @@ export default function EditPage({ params }: { params: { slug: string } }) {
               )}
               {saveStatus === 'saved' && (
                 <span className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <CheckIcon size="sm" />
                   Saved
                 </span>
               )}

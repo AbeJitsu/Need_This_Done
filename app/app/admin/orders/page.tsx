@@ -178,8 +178,8 @@ export default function OrdersDashboard() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+      <div className="flex items-center justify-center min-h-screen" role="status" aria-live="polite" aria-busy="true">
+        <p className="text-gray-600 dark:text-gray-400">Loading orders...</p>
       </div>
     );
   }
@@ -329,10 +329,10 @@ export default function OrdersDashboard() {
                           size="sm"
                           onClick={() => handleStatusUpdate(order.id, status)}
                           disabled={actionLoading === order.id || order.status === status}
+                          isLoading={actionLoading === order.id}
+                          loadingText="Updating..."
                         >
-                          {actionLoading === order.id
-                            ? 'Updating...'
-                            : `${status.charAt(0).toUpperCase() + status.slice(1)}`}
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
                         </Button>
                       ))}
                     </div>

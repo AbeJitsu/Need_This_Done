@@ -151,8 +151,8 @@ export default function AdminUsersPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="text-gray-600 dark:text-gray-300">Loading...</div>
+      <div className="flex items-center justify-center py-20" role="status" aria-live="polite" aria-busy="true">
+        <div className="text-gray-600 dark:text-gray-300">Loading users...</div>
       </div>
     );
   }
