@@ -2,36 +2,27 @@
 # PostToolUse Hook: Auto-lint TypeScript files after edits
 # What: Automatically runs ESLint with --fix on edited .ts/.tsx files
 # Why: Ensures code style consistency and catches linting issues immediately
-# How: Parses tool usage JSON, filters for Edit/Write on TypeScript files, runs lint
+# How: Uses shared utilities, runs lint non-blocking
 
-# Read JSON input from stdin
+# Source shared utilities (includes recursion guard)
+source "$CLAUDE_PROJECT_DIR/.claude/hooks/lib/common.sh"
+
+# Read JSON input
 INPUT=$(cat)
-
-# Extract tool name and file path using jq
 TOOL_NAME=$(echo "$INPUT" | jq -r '.tool // empty')
-FILE_PATH=$(echo "$INPUT" | jq -r '.parameters.file_path // .parameters.path // empty')
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .parameters.file_path // empty')
 
 # Only process Edit and Write tools
 if [[ "$TOOL_NAME" != "Edit" && "$TOOL_NAME" != "Write" ]]; then
   exit 0
 fi
 
-# Only process .ts and .tsx files
-if [[ ! "$FILE_PATH" =~ \.(ts|tsx)$ ]]; then
+# Only process TypeScript files in app/
+if ! is_typescript_file "$FILE_PATH" || ! is_in_app_dir "$FILE_PATH"; then
   exit 0
 fi
 
-# Skip if file is not in the app/ directory
-if [[ ! "$FILE_PATH" =~ /app/ ]]; then
-  exit 0
-fi
-
-# Skip node_modules and build artifacts
-if [[ "$FILE_PATH" =~ node_modules|\.next|dist|build ]]; then
-  exit 0
-fi
-
-# Skip if node_modules not installed (cloud environments)
+# Skip if node_modules not installed
 if [[ ! -d "$CLAUDE_PROJECT_DIR/app/node_modules" ]]; then
   exit 0
 fi
@@ -39,9 +30,7 @@ fi
 # Convert absolute path to relative path from app/ directory
 RELATIVE_PATH=$(echo "$FILE_PATH" | sed "s|^.*/app/||")
 
-# Run ESLint with --fix on the specific file
-# cd into app/ directory and run npm command
-# Use || true to prevent hook failures from blocking Claude
+# Run ESLint with --fix (non-blocking)
 cd "$CLAUDE_PROJECT_DIR/app" && npm run lint -- --fix "$RELATIVE_PATH" &>/dev/null || true
 
 exit 0

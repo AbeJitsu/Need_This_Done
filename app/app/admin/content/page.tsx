@@ -12,6 +12,7 @@ import {
   EDITABLE_PAGES,
   PAGE_DISPLAY_NAMES,
 } from '@/lib/page-content-types';
+import { alertColors, statusBadgeColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Content Management - List of Editable Marketing Pages
@@ -90,7 +91,7 @@ export default function ContentManagement() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen" role="status" aria-live="polite">
         <div className="text-center">Loading...</div>
       </div>
     );
@@ -106,7 +107,7 @@ export default function ContentManagement() {
       />
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+        <div className={`px-4 py-3 rounded mb-4 ${alertColors.error.bg} ${alertColors.error.border} ${alertColors.error.text}`}>
           {error}
         </div>
       )}
@@ -132,8 +133,8 @@ export default function ContentManagement() {
                       <span
                         className={`text-xs px-2 py-1 rounded ${
                           isCustomized
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300'
-                            : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                            ? `${statusBadgeColors.customized.bg} ${statusBadgeColors.customized.text}`
+                            : `${statusBadgeColors.default.bg} ${statusBadgeColors.default.text}`
                         }`}
                       >
                         {isCustomized ? 'Customized' : 'Using Defaults'}

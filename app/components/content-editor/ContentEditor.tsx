@@ -16,6 +16,7 @@ import {
   type HowItWorksPageContent,
   type EditablePageSlug,
 } from '@/lib/page-content-types';
+import { alertColors } from '@/lib/colors';
 
 // ============================================================================
 // Content Editor - Main Editor Component
@@ -183,8 +184,8 @@ export default function ContentEditor({
 
       {/* Error Banner */}
       {error && (
-        <div className="flex-shrink-0 bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 px-4 py-2">
-          <p className="text-sm text-red-700 dark:text-red-300 text-center">
+        <div className={`flex-shrink-0 ${alertColors.error.bg} border-b ${alertColors.error.border} px-4 py-2`}>
+          <p className={`text-sm ${alertColors.error.text} text-center`}>
             {error}
           </p>
         </div>

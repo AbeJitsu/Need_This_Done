@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
+import { alertColors } from '@/lib/colors';
 
 // ============================================================================
 // Create Product Page - /admin/shop/products/new
@@ -105,8 +106,8 @@ export default function CreateProductPage() {
 
       {/* Error message */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-sm text-red-900 dark:text-red-200">{error}</p>
+        <div className={`mb-6 p-4 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
+          <p className={`text-sm ${alertColors.error.text}`}>{error}</p>
         </div>
       )}
 

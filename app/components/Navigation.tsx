@@ -8,6 +8,7 @@ import { useCart } from '@/context/CartContext';
 import { signOut } from '@/lib/auth';
 import { navigationColors, accentColors, accentBorderWidth, accentFontWeight, badgeColors } from '@/lib/colors';
 import DarkModeToggle from './DarkModeToggle';
+import { CloseIcon } from '@/components/ui/icons';
 
 // ============================================================================
 // Navigation Component - Persistent Site Navigation
@@ -66,7 +67,7 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
+    <nav aria-label="Main navigation" className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo / Home Link */}
@@ -116,9 +117,7 @@ export default function Navigation() {
               aria-expanded={mobileMenuOpen ? "true" : "false"}
             >
               {mobileMenuOpen ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <CloseIcon size="lg" />
               ) : (
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />

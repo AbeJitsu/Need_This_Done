@@ -29,4 +29,22 @@ echo ""
 echo "==========================="
 echo ""
 
+# ============================================================================
+# Improvement Prompt - Continuous Quality Focus
+# ============================================================================
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🎯 CONTINUOUS IMPROVEMENT"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "What is ONE high-value improvement we can make right now?"
+echo ""
+echo "Quality Lenses:"
+echo "  UX  │ User delight, clarity, accessibility"
+echo "  DX  │ Dev speed, tooling, documentation"
+echo "  DRY │ Extract duplicates, centralize logic"
+echo "  ⊥   │ Orthogonal modules, no coupling"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
 exit 0

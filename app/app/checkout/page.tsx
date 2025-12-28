@@ -1,7 +1,5 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
@@ -24,6 +22,7 @@ import {
   accentColors,
   cardBgColors,
 } from '@/lib/colors';
+import { CheckIcon } from '@/components/ui/icons';
 
 // ============================================================================
 // Checkout Page - /checkout
@@ -240,8 +239,7 @@ export default function CheckoutPage() {
   // ========================================================================
   // Step 3: Handle payment success - create appointment if needed
   // ========================================================================
-  const handlePaymentSuccess = async (paymentIntentId: string) => {
-    console.log('Payment succeeded:', paymentIntentId);
+  const handlePaymentSuccess = async (_paymentIntentId: string) => {
 
     // If we have appointment data, create the appointment request now
     if (requiresAppointment && appointmentData && orderId) {
@@ -266,8 +264,8 @@ export default function CheckoutPage() {
         if (!response.ok) {
           console.error('Failed to create appointment request');
         }
-      } catch (err) {
-        console.error('Error creating appointment request:', err);
+      } catch {
+        console.error('Error creating appointment request');
       }
     }
 
@@ -342,9 +340,7 @@ export default function CheckoutPage() {
                 >
                   {copied ? (
                     <>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+                      <CheckIcon size="sm" />
                       Copied
                     </>
                   ) : (
@@ -678,11 +674,13 @@ export default function CheckoutPage() {
                   </div>
                 ) : (
                   <div>
-                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                    <label htmlFor="checkout-email" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       Email Address *
                     </label>
                     <input
                       type="email"
+                      id="checkout-email"
+                      autoComplete="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -705,11 +703,13 @@ export default function CheckoutPage() {
 
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                    <label htmlFor="firstName" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       First Name *
                     </label>
                     <input
                       type="text"
+                      id="firstName"
+                      autoComplete="given-name"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       required
@@ -719,11 +719,13 @@ export default function CheckoutPage() {
                   </div>
 
                   <div>
-                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                    <label htmlFor="lastName" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       Last Name *
                     </label>
                     <input
                       type="text"
+                      id="lastName"
+                      autoComplete="family-name"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       required
@@ -733,11 +735,13 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                    <label htmlFor="address" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       Address *
                     </label>
                     <input
                       type="text"
+                      id="address"
+                      autoComplete="street-address"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       required
@@ -749,11 +753,13 @@ export default function CheckoutPage() {
                   <div className="sm:col-span-2">
                     {showAddress2 ? (
                       <>
-                        <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                        <label htmlFor="address2" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                           Apt, Suite, etc. (optional)
                         </label>
                         <input
                           type="text"
+                          id="address2"
+                          autoComplete="address-line2"
                           value={address2}
                           onChange={(e) => setAddress2(e.target.value)}
                           className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
@@ -773,11 +779,13 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                    <label htmlFor="cityStateZip" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                       City, State, ZIP *
                     </label>
                     <input
                       type="text"
+                      id="cityStateZip"
+                      autoComplete="address-level2"
                       value={cityStateZip}
                       onChange={(e) => setCityStateZip(e.target.value)}
                       required

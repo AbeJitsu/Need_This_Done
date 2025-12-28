@@ -101,15 +101,15 @@ export default async function PricingPage() {
               </p>
               <ul className="space-y-3 mb-6 flex-grow">
                 <li className="flex items-center gap-2">
-                  <span className="text-green-600 dark:text-green-400">✓</span>
+                  <span className="text-green-600 dark:text-green-400" aria-hidden="true">✓</span>
                   <span className="text-gray-700 dark:text-gray-300">Free, no obligation</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-green-600 dark:text-green-400">✓</span>
+                  <span className="text-green-600 dark:text-green-400" aria-hidden="true">✓</span>
                   <span className="text-gray-700 dark:text-gray-300">Response in 2 business days</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-green-600 dark:text-green-400">✓</span>
+                  <span className="text-green-600 dark:text-green-400" aria-hidden="true">✓</span>
                   <span className="text-gray-700 dark:text-gray-300">Custom pricing for your needs</span>
                 </li>
               </ul>
@@ -135,15 +135,15 @@ export default async function PricingPage() {
               </p>
               <ul className="space-y-3 mb-6 flex-grow">
                 <li className="flex items-center gap-2">
-                  <span className="text-purple-600 dark:text-purple-400">✓</span>
+                  <span className="text-purple-600 dark:text-purple-400" aria-hidden="true">✓</span>
                   <span className="text-gray-700 dark:text-gray-300">Expert guidance and advice</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-purple-600 dark:text-purple-400">✓</span>
+                  <span className="text-purple-600 dark:text-purple-400" aria-hidden="true">✓</span>
                   <span className="text-gray-700 dark:text-gray-300">Immediate scheduling</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-purple-600 dark:text-purple-400">✓</span>
+                  <span className="text-purple-600 dark:text-purple-400" aria-hidden="true">✓</span>
                   <span className="text-gray-700 dark:text-gray-300">Personalized recommendations</span>
                 </li>
               </ul>

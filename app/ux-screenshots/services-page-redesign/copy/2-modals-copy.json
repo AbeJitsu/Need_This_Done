@@ -1,0 +1,41 @@
+{
+  "Virtual Assistant": {
+    "title": "Virtual Assistant",
+    "tagline": "",
+    "description": "Your time is valuable. Let us handle the tasks that eat up your day.",
+    "pain_points": [
+      "Email management and inbox organization",
+      "Calendar coordination and scheduling",
+      "Research projects and data gathering",
+      "Travel planning and booking"
+    ],
+    "cta": "See All Services",
+    "cta_href": "/services"
+  },
+  "Data & Documents": {
+    "title": "Data & Documents",
+    "tagline": "",
+    "description": "Messy spreadsheets and formatting nightmares? We turn chaos into clarity.",
+    "pain_points": [
+      "Spreadsheet cleanup and organization",
+      "Data entry and formatting",
+      "Report and presentation design",
+      "Document templates and file organization"
+    ],
+    "cta": "See All Services",
+    "cta_href": "/services"
+  },
+  "Website Services": {
+    "title": "Website Services",
+    "tagline": "",
+    "description": "Your website should work for you, not give you a headache.",
+    "pain_points": [
+      "New website builds and redesigns",
+      "Content updates and page edits",
+      "E-commerce setup and product management",
+      "Ongoing maintenance and support"
+    ],
+    "cta": "See All Services",
+    "cta_href": "/services"
+  }
+}

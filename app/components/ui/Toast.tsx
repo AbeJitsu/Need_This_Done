@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { alertColors, formValidationColors } from '@/lib/colors';
+import { CheckIcon, CloseIcon } from '@/components/ui/icons';
 
 // ============================================================================
 // Toast - Notification component
@@ -18,6 +19,13 @@ interface ToastProps {
   onDismiss: () => void;
 }
 
+// Info icon - unique to this component, not extracted
+const InfoIcon = () => (
+  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+);
+
 // Type-specific styles
 const toastStyles: Record<ToastType, {
   bg: string;
@@ -29,31 +37,19 @@ const toastStyles: Record<ToastType, {
     bg: alertColors.success.bg,
     border: alertColors.success.border,
     text: formValidationColors.success,
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-      </svg>
-    ),
+    icon: <CheckIcon size="md" />,
   },
   error: {
     bg: alertColors.error.bg,
     border: alertColors.error.border,
     text: formValidationColors.error,
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    ),
+    icon: <CloseIcon size="md" />,
   },
   info: {
     bg: alertColors.info.bg,
     border: alertColors.info.border,
     text: formValidationColors.info,
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
+    icon: <InfoIcon />,
   },
 };
 
@@ -98,9 +94,7 @@ export default function Toast({ message, type, onDismiss }: ToastProps) {
         className={`${styles.text} opacity-70 hover:opacity-100 transition-opacity flex-shrink-0`}
         aria-label="Dismiss notification"
       >
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        <CloseIcon size="sm" />
       </button>
 
       {/* Animation keyframes */}

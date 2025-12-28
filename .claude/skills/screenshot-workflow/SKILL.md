@@ -1,3 +1,8 @@
+---
+name: screenshot-workflow
+description: Captures ALL 150+ pages across 4 variants (desktop/mobile, light/dark) for visual regression testing. Use this skill when setting up baseline screenshots or running comprehensive visual regression tests. Triggers on "screenshot workflow", "visual regression", or "baseline screenshots".
+---
+
 # Screenshot Workflow (Baseline Visual Regression)
 
 Captures ALL 150+ pages across 4 variants for visual regression testing.

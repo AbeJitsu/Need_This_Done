@@ -9,6 +9,7 @@ import ProjectModalHeader from './project-modal/ProjectModalHeader';
 import ProjectModalDetails from './project-modal/ProjectModalDetails';
 import AdminStatusSection from './project-modal/AdminStatusSection';
 import ProjectComments from './project-modal/ProjectComments';
+import { alertColors } from '@/lib/colors';
 
 // ============================================================================
 // Project Detail Modal Component
@@ -178,8 +179,8 @@ export default function ProjectDetailModal({
               Loading project details...
             </p>
           ) : error ? (
-            <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-              <p className="text-red-700 dark:text-red-300">{error}</p>
+            <div className={`p-4 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
+              <p className={alertColors.error.text}>{error}</p>
             </div>
           ) : project ? (
             <>

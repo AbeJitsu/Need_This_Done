@@ -16,7 +16,7 @@ import {
   BLOG_STATUS_LABELS,
   formatPublishedDate,
 } from '@/lib/blog-types';
-import { statusBadgeColors } from '@/lib/colors';
+import { statusBadgeColors, alertColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Blog Dashboard - /admin/blog
@@ -136,7 +136,7 @@ export default function BlogManagement() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen" role="status" aria-live="polite">
         <div className="text-center">Loading...</div>
       </div>
     );
@@ -188,11 +188,12 @@ export default function BlogManagement() {
         </div>
 
         {/* Status Filter Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6" role="group" aria-label="Filter posts by status">
           {(['all', 'draft', 'published', 'archived'] as const).map((status) => (
             <button
               key={status}
               onClick={() => setStatusFilter(status)}
+              aria-pressed={statusFilter === status}
               className={`
                 px-4 py-2 rounded-lg text-sm font-medium transition-colors
                 ${
@@ -209,7 +210,7 @@ export default function BlogManagement() {
 
         {/* Error State */}
         {error && (
-          <div className="flex items-center gap-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-5 py-4 rounded-xl mb-6">
+          <div className={`flex items-center gap-3 px-5 py-4 rounded-xl mb-6 ${alertColors.error.bg} ${alertColors.error.border} ${alertColors.error.text}`}>
             <svg
               className="w-5 h-5 flex-shrink-0"
               fill="none"

@@ -43,6 +43,34 @@ export async function navigateAndVerifyTitle(
 // ============================================================================
 
 /**
+ * Set dark mode by adding the 'dark' class to the HTML element.
+ * This is the reliable way for Tailwind class-based dark mode (darkMode: 'class').
+ * Use this for screenshot tests instead of emulateMedia which only affects CSS media queries.
+ * @param page Playwright page object
+ */
+export async function setDarkMode(page: Page) {
+  await page.evaluate(() => {
+    document.documentElement.classList.add('dark');
+    // Also set localStorage to persist if the page checks it
+    localStorage.setItem('theme', 'dark');
+  });
+  // Small wait for styles to apply
+  await page.waitForTimeout(100);
+}
+
+/**
+ * Set light mode by removing the 'dark' class from the HTML element.
+ * @param page Playwright page object
+ */
+export async function setLightMode(page: Page) {
+  await page.evaluate(() => {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  });
+  await page.waitForTimeout(100);
+}
+
+/**
  * Enable dark mode by clicking the dark mode toggle button
  * @param page Playwright page object
  */

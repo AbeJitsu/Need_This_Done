@@ -1,22 +1,27 @@
 import { test } from '@playwright/test';
 import * as fs from 'fs';
+import { setDarkMode } from './helpers';
 
 // ============================================================================
 // User Flow Capture - Screenshots + Copy for UX evaluation
 // ============================================================================
 // Purpose: Capture all pages for comprehensive site redesign planning
-// Run: SKIP_WEBSERVER=true BASE_URL=https://localhost npx playwright test flow-capture.spec.ts
+// Run: npx playwright test flow-capture.spec.ts --project=e2e-bypass
 // Output: ux-screenshots/services-page-redesign/
+//
+// NOTE: This test runs with E2E_ADMIN_BYPASS enabled, meaning user is logged in.
+// Public pages are captured. Admin pages are captured as authenticated user.
+// The /login page redirects to /dashboard when authenticated, so we capture that instead.
 
 const OUTPUT_DIR = 'ux-screenshots/services-page-redesign';
 
 // ============================================================================
-// All Pages Capture
+// Public Pages Capture (no auth required)
 // ============================================================================
-test('Capture all site pages', async ({ page }) => {
+test('Capture public pages', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
 
-  const pages = [
+  const publicPages = [
     { path: '/', name: '01-homepage' },
     { path: '/services', name: '02-services' },
     { path: '/pricing', name: '03-pricing' },
@@ -24,10 +29,38 @@ test('Capture all site pages', async ({ page }) => {
     { path: '/shop', name: '05-shop' },
     { path: '/faq', name: '06-faq' },
     { path: '/contact', name: '07-contact' },
-    { path: '/login', name: '08-login' },
+    { path: '/guide', name: '08-guide' },
   ];
 
-  for (const p of pages) {
+  for (const p of publicPages) {
+    await page.goto(p.path);
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(400);
+    await page.screenshot({
+      path: `${OUTPUT_DIR}/screenshots/${p.name}.png`,
+      fullPage: true
+    });
+  }
+});
+
+// ============================================================================
+// Admin Pages Capture (requires auth - uses E2E_ADMIN_BYPASS)
+// ============================================================================
+test('Capture admin pages', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+
+  const adminPages = [
+    { path: '/dashboard', name: '10-dashboard' },
+    { path: '/admin/blog', name: '11-admin-blog' },
+    { path: '/admin/pages', name: '12-admin-pages' },
+    { path: '/admin/content', name: '13-admin-content' },
+    { path: '/admin/shop', name: '14-admin-shop' },
+    { path: '/admin/orders', name: '15-admin-orders' },
+    { path: '/admin/appointments', name: '16-admin-appointments' },
+    { path: '/admin/users', name: '17-admin-users' },
+  ];
+
+  for (const p of adminPages) {
     await page.goto(p.path);
     await page.waitForLoadState('load');
     await page.waitForTimeout(400);
@@ -41,10 +74,9 @@ test('Capture all site pages', async ({ page }) => {
 test('Capture services page dark mode', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
 
-  // Enable dark mode
-  await page.emulateMedia({ colorScheme: 'dark' });
-
   await page.goto('/services');
+  // Enable dark mode via class (Tailwind uses darkMode: 'class')
+  await setDarkMode(page);
   await page.waitForLoadState('load');
   await page.waitForTimeout(400);
   await page.screenshot({

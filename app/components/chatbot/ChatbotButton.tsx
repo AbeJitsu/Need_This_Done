@@ -20,13 +20,13 @@ interface ChatbotButtonProps {
 function getStatusColor(status: IndexingStatus): string {
   switch (status) {
     case 'indexed':
-      return 'bg-green-500';
+      return 'bg-green-600';
     case 'indexing':
     case 'checking':
-      return 'bg-yellow-500 animate-pulse';
+      return 'bg-orange-500 animate-pulse';
     case 'not_indexed':
     case 'error':
-      return 'bg-red-500';
+      return 'bg-red-600';
     default:
       return 'bg-gray-400';
   }

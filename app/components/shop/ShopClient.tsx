@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import { formInputColors, linkHoverColors, alertColors, placeholderColors, headingColors, productImageStyles } from '@/lib/colors';
+import { formInputColors, linkHoverColors, alertColors, placeholderColors, headingColors, productImageStyles, focusRingClasses } from '@/lib/colors';
 import type { Product } from '@/lib/medusa-client';
 
 // ============================================================================
@@ -60,11 +60,11 @@ export default function ShopClient({ products }: ShopClientProps) {
     <>
       {/* Back link to services */}
       <p className={`text-center mb-6 ${formInputColors.helper}`}>
-        <Link href="/services" className={`font-medium ${linkHoverColors.blue}`}>
+        <Link href="/services" className={`font-medium ${linkHoverColors.blue} ${focusRingClasses.blue} rounded`}>
           ← Compare our full services
         </Link>
         {' · '}
-        <Link href="/contact" className={`font-medium ${linkHoverColors.blue}`}>
+        <Link href="/contact" className={`font-medium ${linkHoverColors.blue} ${focusRingClasses.blue} rounded`}>
           Request a free quote →
         </Link>
       </p>
@@ -179,9 +179,11 @@ export default function ShopClient({ products }: ShopClientProps) {
                         size="sm"
                         onClick={() => handleAddToCart(product)}
                         disabled={addingToCart === product.id}
+                        isLoading={addingToCart === product.id}
+                        loadingText="Adding..."
                         className="flex-1"
                       >
-                        {addingToCart === product.id ? 'Adding...' : 'Add to Cart'}
+                        Add to Cart
                       </Button>
                     </div>
                   </div>

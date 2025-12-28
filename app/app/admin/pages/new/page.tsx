@@ -12,6 +12,8 @@ import { puckConfig } from '@/lib/puck-config';
 import { PageWizard } from '@/components/templates';
 import type { PuckPageData } from '@/lib/templates';
 import '@measured/puck/puck.css';
+import { alertColors } from '@/lib/colors';
+import { CheckIcon } from '@/components/ui/icons';
 
 // ============================================================================
 // NEW PAGE - Choose Your Path
@@ -383,9 +385,7 @@ export default function NewPage() {
               )}
               {saveStatus === 'saved' && (
                 <span className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <CheckIcon size="sm" />
                   Saved
                 </span>
               )}
@@ -433,7 +433,7 @@ export default function NewPage() {
 
           {/* Validation Error */}
           {validationError && (
-            <div className="mt-4 flex items-center gap-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-lg">
+            <div className={`mt-4 flex items-center gap-2 text-sm px-4 py-3 rounded-lg ${alertColors.error.bg} ${alertColors.error.border} ${alertColors.error.text}`}>
               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>

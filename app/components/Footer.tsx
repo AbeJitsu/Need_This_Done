@@ -41,7 +41,7 @@ export default function Footer() {
           </Link>
 
           {/* Navigation links - inline with dot separators */}
-          <nav className="flex flex-wrap items-center gap-x-1 gap-y-1">
+          <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-x-1 gap-y-1">
             {footerLinks.map((link) => (
               <span key={link.href} className="flex items-center">
                 <Link

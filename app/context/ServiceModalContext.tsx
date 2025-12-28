@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useCallback } from 'react';
-import { serviceModalContentMap } from '@/lib/service-modal-content';
+import { serviceModalContentMap, resolveServiceType } from '@/lib/service-modal-content';
 import type { ServiceModalContent, ServiceType } from '@/lib/service-modal-content';
 
 // ============================================================================
@@ -22,19 +22,9 @@ interface ServiceModalContextType {
 const ServiceModalContext = createContext<ServiceModalContextType | undefined>(undefined);
 
 // ============================================================================
-// Title to Service Type Mapping
-// ============================================================================
-// Maps human-readable service titles to service type keys
-
-const titleToServiceType: Record<string, ServiceType> = {
-  'Virtual Assistant': 'virtual-assistant',
-  'Data & Documents': 'data-documents',
-  'Website Services': 'website-services',
-};
-
-// ============================================================================
 // Service Modal Provider
 // ============================================================================
+// Note: Title-to-type mapping moved to lib/service-modal-content.ts (single source of truth)
 
 export function ServiceModalProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,15 +36,11 @@ export function ServiceModalProvider({ children }: { children: React.ReactNode }
   // ========================================================================
   // Accepts either service ID ('virtual-assistant') or title ('Virtual Assistant')
   const openModal = useCallback((serviceIdentifier: string) => {
-    // Try to match by title first (what ServiceCard passes)
-    let serviceType = titleToServiceType[serviceIdentifier] as ServiceType | undefined;
+    // Use centralized resolver from lib/service-modal-content.ts
+    // Handles both title ('Virtual Assistant') and type ('virtual-assistant') lookups
+    const serviceType = resolveServiceType(serviceIdentifier);
 
-    // If not found by title, try as direct service type key
-    if (!serviceType && serviceIdentifier in serviceModalContentMap) {
-      serviceType = serviceIdentifier as ServiceType;
-    }
-
-    if (serviceType && serviceModalContentMap[serviceType]) {
+    if (serviceType) {
       setActiveService(serviceModalContentMap[serviceType]);
       setActiveServiceType(serviceType);
       setIsOpen(true);

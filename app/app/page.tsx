@@ -4,7 +4,7 @@ import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultContent } from '@/lib/default-page-content';
-import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors, linkColors, linkHoverColors, linkFontWeight } from '@/lib/colors';
+import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors, linkColors, linkHoverColors, linkFontWeight, focusRingClasses } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -115,7 +115,7 @@ export default async function HomePage() {
           </div>
           {/* Cross-page link to services comparison */}
           <p className={`text-center mt-4 ${formInputColors.helper}`}>
-            <Link href="/services" className={`${linkColors.blue} ${linkHoverColors.blue} hover:underline ${linkFontWeight}`}>
+            <Link href="/services" className={`${linkColors.blue} ${linkHoverColors.blue} hover:underline ${linkFontWeight} ${focusRingClasses.blue} rounded`}>
               Not sure which service? Compare them all →
             </Link>
           </p>
@@ -137,7 +137,7 @@ export default async function HomePage() {
                 <Link
                   key={index}
                   href={content.consultations!.linkHref}
-                  className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 ${accentColors[option.color].hoverBorder} hover:shadow-lg transition-all duration-300 text-center`}
+                  className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 ${accentColors[option.color].hoverBorder} hover:shadow-lg transition-all duration-300 text-center ${focusRingClasses[option.color as keyof typeof focusRingClasses] || focusRingClasses.blue}`}
                 >
                   <div className={`text-2xl font-bold ${accentColors[option.color].text} mb-1`}>
                     {option.price}
@@ -155,7 +155,7 @@ export default async function HomePage() {
               ))}
             </div>
             <p className={`text-center mt-4 ${formInputColors.helper} font-medium hover:underline`}>
-              <Link href={content.consultations.linkHref}>
+              <Link href={content.consultations.linkHref} className={`${focusRingClasses.purple} rounded`}>
                 {content.consultations.linkText}
               </Link>
             </p>
@@ -165,7 +165,7 @@ export default async function HomePage() {
         {/* How It Works Preview */}
         <Link
           href="/how-it-works"
-          className={`block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 ${cardHoverColors.blue} hover:shadow-xl active:scale-98 group`}
+          className={`block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 ${cardHoverColors.blue} hover:shadow-xl active:scale-98 group ${focusRingClasses.blue}`}
         >
           <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center transition-colors`}>
             {content.processPreview.title}

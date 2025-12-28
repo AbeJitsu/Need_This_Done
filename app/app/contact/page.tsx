@@ -1,7 +1,5 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
 import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { getServices } from '@/config/site.config';
@@ -175,7 +173,7 @@ export default function ContactPage() {
           {submitStatus === 'success' ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                <span className={`text-3xl ${successCheckmarkColors.icon}`}>✓</span>
+                <span className={`text-3xl ${successCheckmarkColors.icon}`} aria-hidden="true">✓</span>
               </div>
               <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
                 We got your message!
@@ -208,6 +206,7 @@ export default function ContactPage() {
               </div>
 
               <button
+                type="button"
                 onClick={() => setSubmitStatus('idle')}
                 className={`${titleColors.blue} font-medium hover:underline`}
               >
@@ -331,7 +330,7 @@ export default function ContactPage() {
                       aria-label="Upload files"
                     />
                     <div className={formInputColors.helper}>
-                      <span className="text-2xl block mb-2">📎</span>
+                      <span className="text-2xl block mb-2" aria-hidden="true">📎</span>
                       <span className="text-sm">Drop files here or click to browse</span>
                       <p className={`text-xs mt-1 ${formInputColors.helper}`}>
                         Images, PDFs, or docs. Up to 3 files, 5MB each

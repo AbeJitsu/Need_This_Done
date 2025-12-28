@@ -1,7 +1,7 @@
 import PageHeader from '@/components/PageHeader';
 import BlogPostCard from '@/components/blog/BlogPostCard';
 import { BlogPostSummary, BLOG_CATEGORIES } from '@/lib/blog-types';
-import { headingColors, formInputColors, accentColors } from '@/lib/colors';
+import { headingColors, formInputColors, accentColors, focusRingClasses } from '@/lib/colors';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
@@ -88,7 +88,7 @@ export default async function BlogPage() {
                   className={`
                     px-4 py-2 rounded-full text-sm font-medium transition-colors
                     ${accentColors.gray.bg} ${accentColors.gray.text}
-                    hover:opacity-80
+                    hover:opacity-80 ${focusRingClasses.blue}
                   `}
                 >
                   All Posts
@@ -100,7 +100,7 @@ export default async function BlogPage() {
                     className={`
                       px-4 py-2 rounded-full text-sm font-medium transition-colors
                       bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300
-                      hover:bg-gray-200 dark:hover:bg-gray-700
+                      hover:bg-gray-200 dark:hover:bg-gray-700 ${focusRingClasses.blue}
                     `}
                   >
                     {label}

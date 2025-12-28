@@ -1,5 +1,5 @@
 import PageHeader from '@/components/PageHeader';
-import { headingColors, formInputColors } from '@/lib/colors';
+import { headingColors, formInputColors, categoryBadgeColors } from '@/lib/colors';
 import Image from 'next/image';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -79,16 +79,9 @@ async function getChangelogEntries(): Promise<ChangelogEntry[]> {
 // ============================================================================
 
 function CategoryBadge({ category }: { category: string }) {
-  const colors: Record<string, string> = {
-    Admin: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-    Shop: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-    Dashboard: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-    Public: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
-  };
-
   return (
     <span
-      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${colors[category] || colors.Public}`}
+      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${categoryBadgeColors[category] || categoryBadgeColors.Public}`}
     >
       {category}
     </span>
@@ -114,7 +107,7 @@ function ChangelogCard({ entry }: { entry: ChangelogEntry }) {
 
       {/* Screenshots */}
       {entry.screenshots.length > 0 && (
-        <div className="p-6 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
+        <div className="p-6 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
           <div className="grid gap-4 md:grid-cols-2">
             {entry.screenshots.map((screenshot, index) => (
               <figure key={index} className="space-y-2">
@@ -143,7 +136,7 @@ function ChangelogCard({ entry }: { entry: ChangelogEntry }) {
         {/* Benefit */}
         {entry.benefit && (
           <div className="flex items-start gap-3">
-            <span className="text-2xl">✨</span>
+            <span className="text-2xl" aria-hidden="true">✨</span>
             <div>
               <h3 className={`font-semibold ${headingColors.secondary} mb-1`}>Why You&apos;ll Love It</h3>
               <p className={formInputColors.helper}>{entry.benefit}</p>
@@ -154,7 +147,7 @@ function ChangelogCard({ entry }: { entry: ChangelogEntry }) {
         {/* How To Use */}
         {entry.howToUse.length > 0 && (
           <div className="flex items-start gap-3">
-            <span className="text-2xl">📖</span>
+            <span className="text-2xl" aria-hidden="true">📖</span>
             <div>
               <h3 className={`font-semibold ${headingColors.secondary} mb-2`}>How to Use</h3>
               <ol className="list-decimal list-inside space-y-1">
@@ -190,7 +183,7 @@ export default async function ChangelogPage() {
       {entries.length === 0 ? (
         /* Empty State */
         <div className="text-center py-16">
-          <div className="text-6xl mb-4">🚀</div>
+          <div className="text-6xl mb-4" aria-hidden="true">🚀</div>
           <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
             Building Something Great
           </h2>

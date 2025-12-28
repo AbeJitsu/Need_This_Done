@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { alertColors } from '@/lib/colors';
 
 // ============================================================================
 // HealthStatus Component - Premium Semantic Status Display
@@ -67,29 +68,29 @@ export default function HealthStatus() {
     switch (service) {
       case 'up':
         return {
-          bg: 'bg-green-50 dark:bg-gray-800',
-          border: 'border-green-200 dark:border-gray-700',
+          bg: alertColors.success.bg,
+          border: alertColors.success.border,
           badgeBg: 'bg-green-600',
-          badgeText: 'text-green-900 dark:text-green-100',
-          statusText: 'text-green-700 dark:text-green-300',
+          badgeText: alertColors.success.text,
+          statusText: alertColors.success.text,
           label: 'Operational',
         };
       case 'down':
         return {
-          bg: 'bg-red-50 dark:bg-gray-800',
-          border: 'border-red-200 dark:border-gray-700',
+          bg: alertColors.error.bg,
+          border: alertColors.error.border,
           badgeBg: 'bg-red-600',
-          badgeText: 'text-red-900 dark:text-red-100',
-          statusText: 'text-red-700 dark:text-red-300',
+          badgeText: alertColors.error.text,
+          statusText: alertColors.error.text,
           label: 'Down',
         };
       case 'error':
         return {
-          bg: 'bg-yellow-50 dark:bg-gray-800',
-          border: 'border-yellow-200 dark:border-gray-700',
-          badgeBg: 'bg-yellow-600',
-          badgeText: 'text-yellow-900 dark:text-yellow-100',
-          statusText: 'text-yellow-700 dark:text-yellow-300',
+          bg: alertColors.warning.bg,
+          border: alertColors.warning.border,
+          badgeBg: 'bg-orange-600',
+          badgeText: alertColors.warning.text,
+          statusText: alertColors.warning.text,
           label: 'Error',
         };
       default:
