@@ -69,4 +69,29 @@ if [ -n "$FRONTEND_FILES" ]; then
   echo "" >&2
 fi
 
+# ============================================================================
+# REMINDER: Uncommitted changes should be committed
+# ============================================================================
+# Non-blocking reminder to commit often
+
+UNCOMMITTED=$(cd "$CLAUDE_PROJECT_DIR" && git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+
+if [ "$UNCOMMITTED" -gt 0 ]; then
+  STAGED=$(cd "$CLAUDE_PROJECT_DIR" && git diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
+  UNSTAGED=$(cd "$CLAUDE_PROJECT_DIR" && git diff --name-only 2>/dev/null | wc -l | tr -d ' ')
+
+  echo "" >&2
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+  echo "💾 UNCOMMITTED CHANGES DETECTED" >&2
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+  echo "" >&2
+  echo "  Staged: $STAGED files" >&2
+  echo "  Unstaged: $UNSTAGED files" >&2
+  echo "" >&2
+  echo "Run /dac to draft a commit message." >&2
+  echo "Small, frequent commits are easier to review and revert." >&2
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+  echo "" >&2
+fi
+
 exit 0
