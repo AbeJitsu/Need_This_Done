@@ -238,6 +238,3 @@ Done! Launch instructions:
 Let me know when they're done and I'll help you merge!
 ```
 
-## Reference
-
-For the complete guide with all details, see [docs/WORKTREE_SWARM_GUIDE.md](../docs/WORKTREE_SWARM_GUIDE.md).

@@ -2,9 +2,19 @@
 
 Speak like a friend over coffee - inviting, focused, considerate, supportive. Easy to understand.
 
-## Communication
+## Quick Reference
 
-Use ASCII charts for complex flows. Keep them simple.
+| Task | Command |
+|------|---------|
+| Start dev server | `cd app && npm run dev` |
+| Run all tests | `cd app && npm run test:e2e` |
+| Run accessibility tests | `cd app && npm run test:a11y` |
+| Start Storybook | `cd app && npm run storybook` |
+| Check priorities | Read `TODO.md` |
+| Understand codebase | Read `README.md` |
+| Draft a commit | Run `/dac` |
+| Document changes | Run `/document` |
+| Check work status | Run `/check-work` |
 
 ## How to Work
 
@@ -15,20 +25,43 @@ Use ASCII charts for complex flows. Keep them simple.
 
 ## Rules (Auto-Loaded)
 
-These are enforced via `.claude/rules/`:
-- **colors.md** - Never hardcode colors, use `lib/colors.ts`
-- **quality.md** - Fix warnings immediately, zero warnings in production
+All rules in `.claude/rules/` are enforced automatically:
+
+| Rule | Purpose |
+|------|---------|
+| **colors.md** | Never hardcode colors, use `lib/colors.ts` |
+| **quality.md** | Fix warnings immediately, zero warnings in production |
+| **design-system.md** | Accessibility standards, dark mode, component patterns |
+| **design-brief.md** | Brand identity, visual style, creative direction |
+| **coding-standards.md** | DRY principle, code organization, naming conventions |
+| **hooks.md** | Reference for Claude Code hooks configuration |
 
 ## Commands
 
-- `/dac` - Draft a commit message
-- `/document` - Screenshot changes + generate changelog
-- `/check-work` - Check git status and context
+| Command | What It Does |
+|---------|--------------|
+| `/dac` | Draft a commit message following project conventions |
+| `/document` | Screenshot changed pages + generate changelog entry |
+| `/check-work` | Show git status, diffs, and next steps |
+
+## Skills
+
+Specialized agents available via `.claude/skills/`:
+
+| Skill | When to Use |
+|-------|-------------|
+| **launch-a-swarm** | Say "launch a swarm" for parallel code review across 5 domains |
+| **frontend-design** | Building distinctive UI with high design quality |
+| **worktree-swarm** | Parallelizing work across git worktrees |
+| **screenshot-workflow** | Capturing baseline screenshots for visual regression |
 
 ## Git Safety
 
-Blocked by settings.json: `git commit`, `git push`, `git merge`, destructive ops.
-When blocked, explain what you need and ask user to run it.
+**Allowed:** `git add`, `git commit`, `git push`, `git checkout`, `git branch` (commit often!)
+
+**Blocked:** Direct push to main, force push, merge, rebase, hard reset, branch deletion.
+
+For blocked operations, explain what you need and ask the user to run it.
 
 ## Branches
 
@@ -38,3 +71,14 @@ Push early and often. Nothing hits `main` without review.
 ## Terminal
 
 Chain commands: `cmd1 && cmd2 && cmd3`
+
+## Communication
+
+Use ASCII charts for complex flows. Keep them simple.
+
+## Environment Tips
+
+- **Frontend app** is in `/app` directory
+- **Supabase** migrations in `/supabase/migrations`
+- **Medusa backend** in `/medusa` (deployed on Railway)
+- **Environment variables** in `.env.local` (see README.md for required vars)

@@ -24,7 +24,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║  📄 19 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
 ║  🔐 16 Admin Pages                       ✅ Stripe Payments                  ║
 ║  🔌 49 API Routes                        ✅ Supabase Auth & Database         ║
-║  🧩 97 React Components                  ✅ Redis Caching (Upstash)          ║
+║  🧩 87 React Components                  ✅ Redis Caching (Upstash)          ║
 ║  📦 5 Context Providers                  ✅ Email Notifications (Resend)     ║
 ║  🔧 26 Lib Utilities                     ✅ Google OAuth                     ║
 ║  🪝 4 Custom Hooks                       🟡 Google Calendar (90% - needs test)║
@@ -80,7 +80,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                           NEXT.JS APP (app/)                                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  15 PUBLIC   │  │  13 ADMIN    │  │  47 API      │  │  96 REACT    │      │
+│  │  15 PUBLIC   │  │  13 ADMIN    │  │  49 API      │  │  87 REACT    │      │
 │  │  PAGES       │  │  PAGES       │  │  ROUTES      │  │  COMPONENTS  │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘      │
 │                                                                              │
@@ -125,7 +125,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 
 **Understanding the System**
 - [Current State at a Glance](#current-state-at-a-glance) ← *status dashboard, tech stack, architecture*
-- [Project Structure](#project-structure) ← *complete file map, 28 pages, 47 APIs, 88 components*
+- [Project Structure](#project-structure) ← *complete file map, 35 pages, 49 APIs, 87 components*
 - [Architecture Overview](#architecture-overview) ← *data flow diagrams*
 
 **Core Features**
@@ -635,7 +635,7 @@ supabase db reset
 │
 ├── app/                   ← NEXT.JS APPLICATION
 │   ├── app/               ← Pages & API routes (Next.js App Router)
-│   ├── components/        ← 88 React components
+│   ├── components/        ← 87 React components
 │   ├── context/           ← 5 state providers
 │   ├── lib/               ← 25 utility files
 │   ├── hooks/             ← 4 custom React hooks
@@ -768,7 +768,7 @@ MISC (4 routes)
 └── GET /api/demo/*                  Demo/testing endpoints
 ```
 
-### Component Inventory (97 components)
+### Component Inventory (87 components)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -1936,7 +1936,7 @@ export async function POST(request: Request) {
 
 ## Design System
 
-See [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) for:
+See [.claude/rules/design-system.md](.claude/rules/design-system.md) for:
 
 - **Color System** - Centralized colors in `app/lib/colors.ts`
 - **Accessibility Standards** - WCAG AA compliance, 5:1 contrast minimum
@@ -2030,13 +2030,13 @@ All UI components are WCAG AA compliant with keyboard navigation and ARIA attrib
 
 ## Coding Standards
 
-See [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) for:
+See [.claude/rules/coding-standards.md](.claude/rules/coding-standards.md) for:
 - DRY principle (Don't Repeat Yourself)
 - Code organization and structure
 - Comment style and guidelines
 - File naming conventions
 
-See [.claude/DESIGN_BRIEF.md](.claude/DESIGN_BRIEF.md) for:
+See [.claude/rules/design-brief.md](.claude/rules/design-brief.md) for:
 - Brand identity and visual style
 - Color palette and typography
 - Design system philosophy
@@ -2169,7 +2169,7 @@ Stuck on something? Here's where to look:
 | Running or writing tests | [Testing](#testing) |
 | Colors, components, accessibility | [Design System](#design-system) |
 | Something's not working | [Troubleshooting](#troubleshooting) |
-| Code style and patterns | [.claude/INSTRUCTIONS.md](.claude/INSTRUCTIONS.md) |
+| Code style and patterns | [.claude/rules/coding-standards.md](.claude/rules/coding-standards.md) |
 
 **Using Claude Code?** See [CLAUDE.md](CLAUDE.md) for project-specific instructions that help Claude understand this codebase.
 
