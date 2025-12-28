@@ -1,0 +1,25 @@
+{
+  "title": "Design System Updates",
+  "slug": "design-consistency",
+  "date": "2025-12-27",
+  "category": "Design",
+  "description": "Improved visual consistency across the entire platform. Colors, gradients, and dark mode now work seamlessly everywhere.",
+  "benefit": "A more polished, professional look. Dark mode users will notice fixes to status badges and borders. Popular badges now pop with gradient styling.",
+  "howToUse": [
+    "Toggle dark mode to see the improved styling",
+    "Check out the pricing page's 'Most Popular' badge",
+    "View any status badge for cleaner dark mode colors"
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/december-2025-release/shop-desktop-dark.png",
+      "alt": "Shop page in dark mode with improved styling",
+      "caption": "Dark mode with proper contrast and styling throughout"
+    },
+    {
+      "src": "/screenshots/december-2025-release/home-desktop-light.png",
+      "alt": "Homepage with updated navigation",
+      "caption": "Navigation now includes quick access to the Blog"
+    }
+  ]
+}

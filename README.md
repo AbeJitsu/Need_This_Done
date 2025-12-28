@@ -21,7 +21,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║                                                                              ║
 ║  CODEBASE METRICS                        PRODUCTION READINESS                ║
 ║  ─────────────────                       ────────────────────                 ║
-║  📄 17 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
+║  📄 18 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
 ║  🔐 16 Admin Pages                       ✅ Stripe Payments                  ║
 ║  🔌 49 API Routes                        ✅ Supabase Auth & Database         ║
 ║  🧩 97 React Components                  ✅ Redis Caching (Upstash)          ║
@@ -651,11 +651,11 @@ supabase db reset
     └── seed-products.js   ← Product seeding script
 ```
 
-### Complete Page Inventory (33 pages total)
+### Complete Page Inventory (34 pages total)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                          PUBLIC PAGES (17 pages)                             │
+│                          PUBLIC PAGES (18 pages)                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  MARKETING                    E-COMMERCE                   AUTH             │
@@ -668,6 +668,7 @@ supabase db reset
 │  /get-started                 DYNAMIC                      CONTENT          │
 │                               /p/[slug]         (CMS)      /blog            │
 │                                                            /blog/[slug]     │
+│                                                            /changelog       │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
@@ -2063,6 +2064,8 @@ These improvements are **done and working**:
 | **Order Status Emails** | Automatic email on status change | ✅ Implemented |
 | **Blog Content System** | Full blog with admin CRUD, public pages, LinkedIn repurposing | ✅ Implemented |
 | **Customer Page Audit** | 20 high-value UI consistency fixes across all customer pages | ✅ Implemented |
+| **Changelog Page** | Public `/changelog` showing all updates with screenshots | ✅ Implemented |
+| **Visual Documentation** | Automated screenshot capture for feature documentation | ✅ Implemented |
 
 **Blog System** (`/blog`, `/admin/blog`):
 - Public blog listing and individual post pages
@@ -2076,6 +2079,12 @@ These improvements are **done and working**:
 - Improved form styling and validation feedback
 - StatusBadge and PricingCard component refinements
 - Better accessibility with proper color contrast
+
+**Changelog & Documentation** (`/changelog`):
+- Public changelog page showing all platform updates
+- Visual documentation with screenshots for each feature
+- Automated screenshot capture workflow (`npm run screenshot:affected`)
+- Screenshots stored in `public/screenshots/` for public access
 
 **Puck Component Library**: Now 28 components across 6 categories:
 - **Layout** (4): Spacer, Container, Columns, Divider
