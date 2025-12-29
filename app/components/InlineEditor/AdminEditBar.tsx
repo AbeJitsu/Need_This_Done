@@ -62,8 +62,9 @@ export default function AdminEditBar({ pageSlug: propSlug, onSave }: AdminEditBa
   // Use prop slug or context slug
   const currentSlug = propSlug || contextSlug;
 
-  // Only show for authenticated admins
-  if (!isAuthenticated || !isAdmin) {
+  // Only show for authenticated admins on Puck pages
+  // If no page slug is set, this isn't a Puck page - don't show the bar
+  if (!isAuthenticated || !isAdmin || !currentSlug) {
     return null;
   }
 
