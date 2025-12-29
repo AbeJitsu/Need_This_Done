@@ -1,0 +1,21 @@
+{
+  "title": "Automated Changelog Updates",
+  "slug": "changelog-automation",
+  "date": "2025-12-29",
+  "category": "Admin",
+  "description": "The changelog now updates itself. When frontend changes are made, Claude automatically generates documentation with screenshots and user-friendly descriptions.",
+  "benefit": "Stay informed about every improvement without anyone having to remember to write it up. Changes are captured and documented the moment they happen.",
+  "howToUse": [
+    "Visit /changelog to see all updates",
+    "New entries appear automatically when features ship",
+    "Each entry includes screenshots showing what changed",
+    "Descriptions explain both what changed and why it matters"
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/main/changelog-desktop-light.png",
+      "alt": "Changelog page showing automated entries",
+      "caption": "Entries are generated automatically with context from code changes"
+    }
+  ]
+}

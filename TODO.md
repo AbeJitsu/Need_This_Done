@@ -28,16 +28,26 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[→] **Inline Page Editing System** - Click any component to edit it inline
+[!] **Inline Page Editing System** - Click any component to edit it inline
     Context: app/components/InlineEditor/, app/context/InlineEditContext.tsx
     Plan: .claude/plans/swift-moseying-noodle.md
-    Steps:
-    - [x] Admin sidebar navigation (committed 68b6b75)
+    **BLOCKED:** Needs user decision on scope
+
+    Completed:
+    - [x] Admin sidebar navigation (committed 68b6b75, 8dac6b8)
+    - [x] Explored home page structure for Puck migration
+
+    Scope Options (need user input):
+    - **Option A (Full):** Migrate all pages to Puck + build custom inline editor
+    - **Option B (Quick):** Add "Edit Page" button for admins on existing Puck pages
+
+    Remaining if Option A:
     - [ ] Migrate Home page to Puck (proof of concept)
     - [ ] Create InlineEditContext for edit mode state
     - [ ] Build Property Sidebar for component editing
     - [ ] Live preview with save/discard
-    Done when: Admin can click any component on a page, edit properties in sidebar, save changes
+
+    Done when: Admin can edit page content (via inline click or Puck editor)
 
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
     Context: app/api/appointments/, .env.local credentials
