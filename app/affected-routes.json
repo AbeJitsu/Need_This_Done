@@ -1,8 +1,41 @@
 {
   "routes": [
-    "/blog/[slug]"
+    "/",
+    "/terms",
+    "/shop",
+    "/services",
+    "/privacy",
+    "/pricing",
+    "/login",
+    "/how-it-works",
+    "/get-started",
+    "/faq",
+    "/dashboard",
+    "/contact",
+    "/checkout",
+    "/cart",
+    "/blog",
+    "/[slug]",
+    "/shop/[productId]",
+    "/blog/[slug]",
+    "/admin/users",
+    "/admin/shop",
+    "/admin/products",
+    "/admin/pages",
+    "/admin/orders",
+    "/admin/dev",
+    "/admin/content",
+    "/admin/blog",
+    "/admin/appointments",
+    "/admin/shop/orders",
+    "/admin/pages/new",
+    "/admin/blog/new",
+    "/admin/shop/products/new",
+    "/admin/pages/[slug]/edit",
+    "/admin/content/[slug]/edit",
+    "/admin/blog/[slug]/edit"
   ],
   "branch": "main",
   "screenshotDir": "main",
-  "generatedAt": "2025-12-29T17:52:04.644Z"
+  "generatedAt": "2025-12-29T23:36:25.285Z"
 }

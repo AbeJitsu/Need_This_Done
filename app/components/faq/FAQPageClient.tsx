@@ -1,14 +1,12 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { faqColors, titleColors, formInputColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 import CircleBadge from '@/components/CircleBadge';
 import PageHeader from '@/components/PageHeader';
 import CTASection from '@/components/CTASection';
 import { EditableSection, EditableItem } from '@/components/InlineEditor';
-import { useInlineEdit } from '@/context/InlineEditContext';
-import { getDefaultContent } from '@/lib/default-page-content';
+import { useEditableContent } from '@/hooks/useEditableContent';
 import type { FAQPageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -17,16 +15,6 @@ import type { FAQPageContent } from '@/lib/page-content-types';
 
 interface FAQPageClientProps {
   content: FAQPageContent;
-}
-
-// Deep merge content with defaults to ensure all required sections exist
-function mergeWithDefaults(content: Partial<FAQPageContent>): FAQPageContent {
-  const defaults = getDefaultContent('faq') as FAQPageContent;
-  return {
-    header: content.header || defaults.header,
-    items: content.items || defaults.items,
-    cta: content.cta || defaults.cta,
-  };
 }
 
 // Helper: Render Answer with Links
@@ -70,23 +58,7 @@ function renderAnswer(answer: string, links?: Array<{ text: string; href: string
 }
 
 export default function FAQPageClient({ content: initialContent }: FAQPageClientProps) {
-  const { setPageSlug, setPageContent, pageContent } = useInlineEdit();
-
-  // Memoize merged content to prevent infinite re-renders
-  const safeInitialContent = useMemo(
-    () => mergeWithDefaults(initialContent),
-    [initialContent]
-  );
-
-  // Initialize the edit context when the component mounts
-  useEffect(() => {
-    setPageSlug('faq');
-    setPageContent(safeInitialContent as unknown as Record<string, unknown>);
-  }, [safeInitialContent, setPageSlug, setPageContent]);
-
-  // Use pageContent from context if available (has pending edits), otherwise use initial
-  const rawContent = (pageContent as unknown as FAQPageContent) || safeInitialContent;
-  const content = mergeWithDefaults(rawContent);
+  const { content } = useEditableContent<FAQPageContent>('faq', initialContent);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">

@@ -1,14 +1,12 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
 import PricingCard from '@/components/PricingCard';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
 import { EditableSection, EditableItem } from '@/components/InlineEditor';
-import { useInlineEdit } from '@/context/InlineEditContext';
-import { getDefaultContent } from '@/lib/default-page-content';
+import { useEditableContent } from '@/hooks/useEditableContent';
 import type { PricingPageContent } from '@/lib/page-content-types';
 import { formInputColors, headingColors, dividerColors, accentColors, accentBorderWidth } from '@/lib/colors';
 
@@ -20,35 +18,8 @@ interface PricingPageClientProps {
   content: PricingPageContent;
 }
 
-// Deep merge content with defaults to ensure all required sections exist
-function mergeWithDefaults(content: Partial<PricingPageContent>): PricingPageContent {
-  const defaults = getDefaultContent('pricing') as PricingPageContent;
-  return {
-    header: content.header || defaults.header,
-    tiers: content.tiers || defaults.tiers,
-    paymentNote: content.paymentNote || defaults.paymentNote,
-    customSection: content.customSection ?? defaults.customSection,
-  };
-}
-
 export default function PricingPageClient({ content: initialContent }: PricingPageClientProps) {
-  const { setPageSlug, setPageContent, pageContent } = useInlineEdit();
-
-  // Memoize merged content to prevent infinite re-renders
-  const safeInitialContent = useMemo(
-    () => mergeWithDefaults(initialContent),
-    [initialContent]
-  );
-
-  // Initialize the edit context when the component mounts
-  useEffect(() => {
-    setPageSlug('pricing');
-    setPageContent(safeInitialContent as unknown as Record<string, unknown>);
-  }, [safeInitialContent, setPageSlug, setPageContent]);
-
-  // Use pageContent from context if available (has pending edits), otherwise use initial
-  const rawContent = (pageContent as unknown as PricingPageContent) || safeInitialContent;
-  const content = mergeWithDefaults(rawContent);
+  const { content } = useEditableContent<PricingPageContent>('pricing', initialContent);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">

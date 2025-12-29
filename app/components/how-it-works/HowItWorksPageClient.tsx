@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
 import StepCard from '@/components/StepCard';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
@@ -8,8 +7,7 @@ import CTASection from '@/components/CTASection';
 import CircleBadge from '@/components/CircleBadge';
 import Button from '@/components/Button';
 import { EditableSection, EditableItem } from '@/components/InlineEditor';
-import { useInlineEdit } from '@/context/InlineEditContext';
-import { getDefaultContent } from '@/lib/default-page-content';
+import { useEditableContent } from '@/hooks/useEditableContent';
 import type { HowItWorksPageContent } from '@/lib/page-content-types';
 import {
   formInputColors,
@@ -26,37 +24,8 @@ interface HowItWorksPageClientProps {
   content: HowItWorksPageContent;
 }
 
-// Deep merge content with defaults to ensure all required sections exist
-function mergeWithDefaults(content: Partial<HowItWorksPageContent>): HowItWorksPageContent {
-  const defaults = getDefaultContent('how-it-works') as HowItWorksPageContent;
-  return {
-    header: content.header || defaults.header,
-    trustBadges: content.trustBadges ?? defaults.trustBadges,
-    steps: content.steps || defaults.steps,
-    timeline: content.timeline || defaults.timeline,
-    questionsSection: content.questionsSection ?? defaults.questionsSection,
-    cta: content.cta || defaults.cta,
-  };
-}
-
 export default function HowItWorksPageClient({ content: initialContent }: HowItWorksPageClientProps) {
-  const { setPageSlug, setPageContent, pageContent } = useInlineEdit();
-
-  // Memoize merged content to prevent infinite re-renders
-  const safeInitialContent = useMemo(
-    () => mergeWithDefaults(initialContent),
-    [initialContent]
-  );
-
-  // Initialize the edit context when the component mounts
-  useEffect(() => {
-    setPageSlug('how-it-works');
-    setPageContent(safeInitialContent as unknown as Record<string, unknown>);
-  }, [safeInitialContent, setPageSlug, setPageContent]);
-
-  // Use pageContent from context if available (has pending edits), otherwise use initial
-  const rawContent = (pageContent as unknown as HowItWorksPageContent) || safeInitialContent;
-  const content = mergeWithDefaults(rawContent);
+  const { content } = useEditableContent<HowItWorksPageContent>('how-it-works', initialContent);
   const [step1, ...remainingSteps] = content.steps;
 
   return (

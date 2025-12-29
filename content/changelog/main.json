@@ -1,0 +1,74 @@
+{
+  "title": "Main",
+  "slug": "main",
+  "date": "2025-12-29",
+  "category": "Dashboard",
+  "description": "",
+  "benefit": "",
+  "howToUse": [],
+  "screenshots": [
+    {
+      "src": "/screenshots/main/home-desktop-light.png",
+      "alt": "Screenshot of /",
+      "caption": ""
+    },
+    {
+      "src": "/screenshots/main/terms-desktop-light.png",
+      "alt": "Screenshot of /terms",
+      "caption": ""
+    },
+    {
+      "src": "/screenshots/main/shop-desktop-light.png",
+      "alt": "Screenshot of /shop",
+      "caption": ""
+    },
+    {
+      "src": "/screenshots/main/services-desktop-light.png",
+      "alt": "Screenshot of /services",
+      "caption": ""
+    },
+    {
+      "src": "/screenshots/main/privacy-desktop-light.png",
+      "alt": "Screenshot of /privacy",
+      "caption": ""
+    }
+  ],
+  "_gitContext": ".claude/rules/etc-easy-to-change.md                | 119 +++++++++++++++++++++\n CLAUDE.md                                          |   1 +\n app/affected-routes.json                           |  37 ++++++-\n app/components/faq/FAQPageClient.tsx               |  32 +-----\n app/components/home/HomePageClient.tsx             |  39 +------\n .../how-it-works/HowItWorksPageClient.tsx          |  35 +-----\n app/components/pricing/PricingPageClient.tsx       |  33 +-----\n app/lib/colors.ts                                  |   2 +\n app/ux-screenshots/09-how-it-works.png             | Bin 8295 -> 306193 bytes\n 9 files changed, 167 insertions(+), 131 deletions(-)",
+  "_affectedRoutes": [
+    "/",
+    "/terms",
+    "/shop",
+    "/services",
+    "/privacy",
+    "/pricing",
+    "/login",
+    "/how-it-works",
+    "/get-started",
+    "/faq",
+    "/dashboard",
+    "/contact",
+    "/checkout",
+    "/cart",
+    "/blog",
+    "/[slug]",
+    "/shop/[productId]",
+    "/blog/[slug]",
+    "/admin/users",
+    "/admin/shop",
+    "/admin/products",
+    "/admin/pages",
+    "/admin/orders",
+    "/admin/dev",
+    "/admin/content",
+    "/admin/blog",
+    "/admin/appointments",
+    "/admin/shop/orders",
+    "/admin/pages/new",
+    "/admin/blog/new",
+    "/admin/shop/products/new",
+    "/admin/pages/[slug]/edit",
+    "/admin/content/[slug]/edit",
+    "/admin/blog/[slug]/edit"
+  ],
+  "_needsCompletion": true
+}

@@ -51,6 +51,7 @@ All rules in `.claude/rules/` are enforced automatically:
 
 | Rule | Purpose |
 |------|---------|
+| **etc-easy-to-change.md** | Design for changeability: 1 change = 1 file edit |
 | **tdd.md** | Test-Driven Development: write tests first, code second, always |
 | **colors.md** | Never hardcode colors, use `lib/colors.ts` |
 | **quality.md** | Fix warnings immediately, zero warnings in production |
