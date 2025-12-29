@@ -9,8 +9,10 @@ import { CartProvider } from '@/context/CartContext';
 import { StripeProvider } from '@/context/StripeContext';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';
 import { ToastProvider } from '@/context/ToastContext';
+import { InlineEditProvider } from '@/context/InlineEditContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
+import { AdminEditBar, PropertySidebar } from '@/components/InlineEditor';
 
 // ============================================================================
 // Force Dynamic Rendering for All Routes
@@ -119,31 +121,37 @@ export default function RootLayout({
             <StripeProvider>
               <ServiceModalProvider>
                 <ToastProvider>
-                  {/* Skip to main content link for keyboard users */}
-                  <a
-                    href="#main-content"
-                    className="sr-only focus:not-sr-only focus:absolute focus:left-0 focus:top-0 focus:bg-blue-600 focus:text-white focus:p-2 focus:z-50"
-                  >
-                    Skip to main content
-                  </a>
+                  <InlineEditProvider>
+                    {/* Skip to main content link for keyboard users */}
+                    <a
+                      href="#main-content"
+                      className="sr-only focus:not-sr-only focus:absolute focus:left-0 focus:top-0 focus:bg-blue-600 focus:text-white focus:p-2 focus:z-50"
+                    >
+                      Skip to main content
+                    </a>
 
-                  {/* Site-wide navigation (includes dark mode toggle) */}
-                  <Navigation />
+                    {/* Site-wide navigation (includes dark mode toggle) */}
+                    <Navigation />
 
-                  {/* Page content - gradient background applied here once for all pages */}
-                  <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">
-                    {children}
-                  </main>
+                    {/* Page content - gradient background applied here once for all pages */}
+                    <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">
+                      {children}
+                    </main>
 
-                  {/* Site-wide footer */}
-                  <Footer />
+                    {/* Site-wide footer */}
+                    <Footer />
 
-                  {/* AI Chatbot - floating widget available on all pages */}
-                  <PageIndexer />
-                  <ChatbotWidget />
+                    {/* AI Chatbot - floating widget available on all pages */}
+                    <PageIndexer />
+                    <ChatbotWidget />
 
-                  {/* Service detail modal - available on all pages */}
-                  <ServiceDetailModal />
+                    {/* Service detail modal - available on all pages */}
+                    <ServiceDetailModal />
+
+                    {/* Inline editing - floating toolbar + property sidebar for admins */}
+                    <AdminEditBar />
+                    <PropertySidebar />
+                  </InlineEditProvider>
                 </ToastProvider>
               </ServiceModalProvider>
             </StripeProvider>

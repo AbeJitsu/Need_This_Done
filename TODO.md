@@ -41,13 +41,16 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
     - [x] InlineEditContext created (app/context/InlineEditContext.tsx)
     - [x] AdminEditBar component (app/components/InlineEditor/AdminEditBar.tsx)
     - [x] PropertySidebar component (app/components/InlineEditor/PropertySidebar.tsx)
+    - [x] InlineEditProvider added to layout (app/app/layout.tsx)
+    - [x] PuckPageRenderer with click detection (app/components/InlineEditor/PuckPageRenderer.tsx)
+    - [x] Components clickable in edit mode with hover outlines
 
     In Progress:
-    - [→] Wire components together + live preview
+    - [→] Test end-to-end flow and implement save functionality
 
     Remaining:
-    - [ ] Add InlineEditProvider to layout
-    - [ ] Integrate with Puck page rendering
+    - [ ] Add save API endpoint to persist changes
+    - [ ] Test with actual Puck page
 
     Done when: Admin can click any component on a page, edit properties in sidebar, save changes
 

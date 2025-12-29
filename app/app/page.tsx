@@ -1,14 +1,13 @@
 import Link from 'next/link';
-import { Render } from '@measured/puck';
-import { puckConfig } from '@/lib/puck-config';
 import { siteConfig } from '@/config/site.config';
 import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultContent } from '@/lib/default-page-content';
-import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors, linkColors, linkHoverColors, linkFontWeight, focusRingClasses, gradientColors } from '@/lib/colors';
+import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors, linkColors, linkHoverColors, linkFontWeight, focusRingClasses } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
 import { headers } from 'next/headers';
+import { PuckPageRenderer } from '@/components/InlineEditor';
 
 // ============================================================================
 // Home Page - NeedThisDone Landing Page
@@ -113,15 +112,9 @@ export default async function HomePage() {
   // Check for Puck-based home page first
   const puckPage = await getPuckHomePage();
 
-  // If a published Puck home page exists, render it
+  // If a published Puck home page exists, render it with inline edit support
   if (puckPage) {
-    return (
-      <div className={`min-h-screen ${gradientColors.pageBackground}`}>
-        <main>
-          <Render config={puckConfig} data={puckPage.content} />
-        </main>
-      </div>
-    );
+    return <PuckPageRenderer slug="home" content={puckPage.content} />;
   }
 
   // Otherwise, fall back to the original implementation

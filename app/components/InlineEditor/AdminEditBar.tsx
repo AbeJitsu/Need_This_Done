@@ -12,11 +12,11 @@ import { solidButtonColors, focusRingClasses } from '@/lib/colors';
 // How: Appears at top of page when admin is viewing, controls edit mode state
 
 interface AdminEditBarProps {
-  pageSlug: string;
+  pageSlug?: string;
   onSave?: () => Promise<void>;
 }
 
-export default function AdminEditBar({ pageSlug, onSave }: AdminEditBarProps) {
+export default function AdminEditBar({ pageSlug: propSlug, onSave }: AdminEditBarProps) {
   const { isAdmin, isAuthenticated } = useAuth();
   const {
     isEditMode,
@@ -24,7 +24,11 @@ export default function AdminEditBar({ pageSlug, onSave }: AdminEditBarProps) {
     hasUnsavedChanges,
     clearPendingChanges,
     setPageSlug,
+    pageSlug: contextSlug,
   } = useInlineEdit();
+
+  // Use prop slug or context slug
+  const currentSlug = propSlug || contextSlug;
 
   // Only show for authenticated admins
   if (!isAuthenticated || !isAdmin) {
@@ -43,9 +47,11 @@ export default function AdminEditBar({ pageSlug, onSave }: AdminEditBarProps) {
       }
       setEditMode(false);
     } else {
-      // Entering edit mode
-      setPageSlug(pageSlug);
-      setEditMode(true);
+      // Entering edit mode - only if we have a page slug
+      if (currentSlug) {
+        setPageSlug(currentSlug);
+        setEditMode(true);
+      }
     }
   };
 
@@ -138,10 +144,15 @@ export default function AdminEditBar({ pageSlug, onSave }: AdminEditBarProps) {
             <button
               type="button"
               onClick={handleToggleEditMode}
+              disabled={!currentSlug}
+              title={currentSlug ? 'Enter edit mode' : 'Navigate to a Puck page to enable editing'}
               className={`
-                px-3 py-1.5 text-sm font-medium rounded-lg
-                ${solidButtonColors.blue.bg} ${solidButtonColors.blue.hover} ${solidButtonColors.blue.text}
-                transition-colors ${focusRingClasses.blue}
+                px-3 py-1.5 text-sm font-medium rounded-lg transition-colors
+                ${currentSlug
+                  ? `${solidButtonColors.blue.bg} ${solidButtonColors.blue.hover} ${solidButtonColors.blue.text}`
+                  : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                }
+                ${focusRingClasses.blue}
               `}
             >
               Enter Edit Mode
