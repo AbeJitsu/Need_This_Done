@@ -324,6 +324,14 @@ const guides: Guide[] = [
 // ============================================================================
 
 function GuideCard({ guide }: { guide: Guide }) {
+  // Dev-time warning for missing screenshots
+  if (process.env.NODE_ENV === 'development' && !guide.screenshot) {
+    console.warn(
+      `[Guide] Missing screenshot for "${guide.title}" (id: ${guide.id}). ` +
+      `Add a screenshot to improve the user experience.`
+    );
+  }
+
   return (
     <article
       id={guide.id}
@@ -340,8 +348,8 @@ function GuideCard({ guide }: { guide: Guide }) {
         </div>
       </div>
 
-      {/* Screenshot */}
-      {guide.screenshot && (
+      {/* Screenshot - show placeholder in dev mode if missing */}
+      {guide.screenshot ? (
         <div className="p-6 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
           <div className="relative aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
             <Image
@@ -353,7 +361,22 @@ function GuideCard({ guide }: { guide: Guide }) {
             />
           </div>
         </div>
-      )}
+      ) : process.env.NODE_ENV === 'development' ? (
+        <div className="p-6 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-700">
+          <div className="relative aspect-video bg-amber-100 dark:bg-amber-900/30 rounded-lg overflow-hidden flex items-center justify-center border-2 border-dashed border-amber-300 dark:border-amber-600">
+            <div className="text-center p-4">
+              <span className="text-4xl mb-2 block">📸</span>
+              <p className="font-medium text-amber-800 dark:text-amber-200">Missing Screenshot</p>
+              <p className="text-sm text-amber-600 dark:text-amber-400 mt-1">
+                Add screenshot for &quot;{guide.title}&quot;
+              </p>
+              <code className="text-xs bg-amber-200 dark:bg-amber-800 px-2 py-1 rounded mt-2 inline-block text-amber-900 dark:text-amber-100">
+                id: {guide.id}
+              </code>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {/* Steps */}
       <div className="p-6">
