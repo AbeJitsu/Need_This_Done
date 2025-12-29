@@ -35,7 +35,7 @@ All security issues fixed (Dec 2025):
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[ ] **Google Calendar Testing** - Complete integration testing
+[!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
     Context: app/api/appointments/, .env.local credentials
     Done when: OAuth flow works, calendar events created on approval
     - [x] Google Cloud Console setup complete
