@@ -12,7 +12,7 @@ import { ToastProvider } from '@/context/ToastContext';
 import { InlineEditProvider } from '@/context/InlineEditContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
-import { AdminSidebar, AdminSidebarToggle } from '@/components/InlineEditor';
+import { AdminSidebar, AdminSidebarToggle, EditModeBar } from '@/components/InlineEditor';
 
 // ============================================================================
 // Force Dynamic Rendering for All Routes
@@ -132,6 +132,9 @@ export default function RootLayout({
 
                     {/* Site-wide navigation (includes dark mode toggle) */}
                     <Navigation />
+
+                    {/* Edit mode indicator bar - shows when admin is in edit mode */}
+                    <EditModeBar />
 
                     {/* Page content - gradient background applied here once for all pages */}
                     <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">

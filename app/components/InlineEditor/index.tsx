@@ -7,6 +7,7 @@ export { default as AdminSidebar } from './AdminSidebar';
 export { default as AdminSidebarToggle } from './AdminSidebarToggle';
 export { default as EditableSection } from './EditableSection';
 export { default as EditableItem } from './EditableItem';
+export { default as EditModeBar } from './EditModeBar';
 
 // Puck page rendering (for pages built with Puck visual builder)
 export { default as PuckPageRenderer } from './PuckPageRenderer';
