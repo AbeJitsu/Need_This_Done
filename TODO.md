@@ -113,6 +113,13 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+**Fully Automated Changelog System** (Dec 29, 2025)
+- Stop hook prompts Claude to complete changelog entries automatically
+- `screenshot-affected.ts` embeds git context (`_gitContext`, `_affectedRoutes`, `_needsCompletion`)
+- E2E test suite validates changelog page, template generation, dynamic loading
+- Added Content and Design categories for route classification
+- Context: `.claude/hooks/stop-check.sh`, `app/scripts/screenshot-affected.ts`
+
 **Puck Page Builder + TipTap Editor** (Dec 2025)
 - Re-enabled Puck visual page builder
 - Added TipTap WYSIWYG editor for rich text editing
@@ -122,6 +129,7 @@ _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 - Stop hook blocks until TODO.md tasks complete
 - Task markers: [→] working, [ ] ready, [x] done, [!] blocked
 - Session start shows current task
+- Auto-documents frontend changes with screenshots
 
 **Template System Testing** (Dec 2025)
 - Fixed auth.setup.ts for existing sessions
@@ -132,11 +140,6 @@ _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 - statusBadgeColors: 36 uses across 10 files
 - focusRingClasses: 30 uses across 9 files
 - aria-hidden: 53 uses across 25 files
-
-**Claude Code Autonomous Readiness** (Dec 2025)
-- Swarm review of .claude configuration across 5 domains
-- Fixed JSON parsing in user-prompt-submit.sh hook
-- Added credential file protections (*.pem, *.key, credentials.json)
 
 ---
 
@@ -154,4 +157,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 2025*
+*Last Updated: December 29, 2025*
