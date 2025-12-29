@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
-import { EditableSection } from '@/components/InlineEditor';
+import { EditableSection, EditableItem } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import {
   formInputColors,
@@ -82,9 +82,18 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             {content.hero.buttons.map((button, index) => (
-              <Button key={index} variant={button.variant} href={button.href}>
-                {button.text}
-              </Button>
+              <EditableItem
+                key={index}
+                sectionKey="hero"
+                arrayField="buttons"
+                index={index}
+                label={button.text}
+                content={button as unknown as Record<string, unknown>}
+              >
+                <Button variant={button.variant} href={button.href}>
+                  {button.text}
+                </Button>
+              </EditableItem>
             ))}
           </div>
         </div>
@@ -103,15 +112,23 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </Link>
           <div className="grid lg:grid-cols-3 gap-6">
             {content.services.cards.map((service, index) => (
-              <ServiceCardWithModal
+              <EditableItem
                 key={index}
-                title={service.title}
-                tagline={service.tagline}
-                description={service.description}
-                details={service.details}
-                color={service.color as 'blue' | 'purple' | 'green'}
-                variant="compact"
-              />
+                sectionKey="services"
+                arrayField="cards"
+                index={index}
+                label={service.title}
+                content={service as unknown as Record<string, unknown>}
+              >
+                <ServiceCardWithModal
+                  title={service.title}
+                  tagline={service.tagline}
+                  description={service.description}
+                  details={service.details}
+                  color={service.color as 'blue' | 'purple' | 'green'}
+                  variant="compact"
+                />
+              </EditableItem>
             ))}
           </div>
           <p className={`text-center mt-4 ${formInputColors.helper}`}>
@@ -142,18 +159,26 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             </p>
             <div className="grid md:grid-cols-3 gap-4">
               {content.consultations.options.map((option, index) => (
-                <Link
+                <EditableItem
                   key={index}
-                  href={content.consultations!.linkHref}
-                  className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 ${accentColors[option.color].hoverBorder} hover:shadow-lg transition-all duration-300 text-center ${focusRingClasses[option.color as keyof typeof focusRingClasses] || focusRingClasses.blue}`}
+                  sectionKey="consultations"
+                  arrayField="options"
+                  index={index}
+                  label={option.name}
+                  content={option as unknown as Record<string, unknown>}
                 >
-                  <div className={`text-2xl font-bold ${accentColors[option.color].text} mb-1`}>
-                    {option.price}
-                  </div>
-                  <div className={`font-semibold ${headingColors.primary} mb-1`}>{option.name}</div>
-                  <div className={`text-sm ${formInputColors.helper} mb-2`}>{option.duration}</div>
-                  <div className={`text-sm ${formInputColors.helper}`}>{option.description}</div>
-                </Link>
+                  <Link
+                    href={content.consultations!.linkHref}
+                    className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 ${accentColors[option.color].hoverBorder} hover:shadow-lg transition-all duration-300 text-center ${focusRingClasses[option.color as keyof typeof focusRingClasses] || focusRingClasses.blue}`}
+                  >
+                    <div className={`text-2xl font-bold ${accentColors[option.color].text} mb-1`}>
+                      {option.price}
+                    </div>
+                    <div className={`font-semibold ${headingColors.primary} mb-1`}>{option.name}</div>
+                    <div className={`text-sm ${formInputColors.helper} mb-2`}>{option.duration}</div>
+                    <div className={`text-sm ${formInputColors.helper}`}>{option.description}</div>
+                  </Link>
+                </EditableItem>
               ))}
             </div>
             <p className={`text-center mt-4 ${formInputColors.helper} font-medium hover:underline`}>
@@ -176,13 +201,22 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </h2>
           <div className="grid md:grid-cols-4 gap-6 text-center">
             {content.processPreview.steps.map((step, index) => (
-              <div key={index}>
-                <div className="flex justify-center mb-3">
-                  <CircleBadge number={step.number} color={step.color} size="md" />
+              <EditableItem
+                key={index}
+                sectionKey="processPreview"
+                arrayField="steps"
+                index={index}
+                label={step.title}
+                content={step as unknown as Record<string, unknown>}
+              >
+                <div>
+                  <div className="flex justify-center mb-3">
+                    <CircleBadge number={step.number} color={step.color} size="md" />
+                  </div>
+                  <h3 className={`font-semibold ${headingColors.primary} mb-2`}>{step.title}</h3>
+                  <p className={`${formInputColors.helper} text-sm`}>{step.description}</p>
                 </div>
-                <h3 className={`font-semibold ${headingColors.primary} mb-2`}>{step.title}</h3>
-                <p className={`${formInputColors.helper} text-sm`}>{step.description}</p>
-              </div>
+              </EditableItem>
             ))}
           </div>
           <p className={`text-center mt-6 ${formInputColors.helper} font-medium group-hover:underline`}>
@@ -202,9 +236,18 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </p>
           <div className="flex flex-wrap gap-4 justify-center mb-6">
             {content.cta.buttons.map((button, index) => (
-              <Button key={index} variant={button.variant} href={button.href}>
-                {button.text}
-              </Button>
+              <EditableItem
+                key={index}
+                sectionKey="cta"
+                arrayField="buttons"
+                index={index}
+                label={button.text}
+                content={button as unknown as Record<string, unknown>}
+              >
+                <Button variant={button.variant} href={button.href}>
+                  {button.text}
+                </Button>
+              </EditableItem>
             ))}
           </div>
           {content.cta.footer && (

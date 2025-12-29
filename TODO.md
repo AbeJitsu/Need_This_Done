@@ -60,13 +60,13 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Click section → Edit all fields in sidebar                             │
 │  Pattern: EditableSection wrapper on all marketing pages                │
 │                                                                         │
-│  Phase 2: Item-Level Editing ← NEXT                                     │
+│  Phase 2: Item-Level Editing ✅ DONE                                    │
 │  ────────────────────────────                                           │
 │  Click card/item → Edit just that item                                  │
 │  Pattern: EditableItem wrapper for array items                          │
 │  Breadcrumb: Section → Item navigation                                  │
 │                                                                         │
-│  Phase 2.5: Edit Mode UX                                                │
+│  Phase 2.5: Edit Mode UX ← NEXT                                         │
 │  ────────────────────────                                               │
 │  Block link clicks in edit mode                                         │
 │  Show helpful hints and guidance                                        │
@@ -82,9 +82,14 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 ```
 
 Phase 2 Sub-tasks:
-- [ ] Create EditableItem component for clicking individual cards/items
-- [ ] Update sidebar for item editing with breadcrumb navigation
-- [ ] Wrap array items in all 5 marketing pages
+- [x] Create EditableItem component for clicking individual cards/items
+- [x] Update sidebar for item editing with breadcrumb navigation
+- [x] Wrap array items in all 5 marketing pages
+      - [x] Services: scenarios, comparison columns, paths, expectations
+      - [x] Home: buttons, cards, options, steps (5 arrays)
+      - [x] Pricing: tier cards
+      - [x] FAQ: FAQ items
+      - [x] How It Works: trust badges, process steps
 
 Phase 2.5 Sub-tasks:
 - [ ] Edit mode indicator bar (top of viewport)
@@ -189,11 +194,7 @@ _No features currently disabled._
 
 ---
 
-## Known Issues
 
-**Context7 MCP Authorization**
-- `resolve-library-id` works but `get-library-docs` returns "Unauthorized"
-- Try regenerating API key at [context7.com/dashboard](https://context7.com/dashboard)
 
 ---
 

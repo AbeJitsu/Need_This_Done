@@ -6,7 +6,7 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
-import { EditableSection } from '@/components/InlineEditor';
+import { EditableSection, EditableItem } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { getDefaultContent } from '@/lib/default-page-content';
 import type { PricingPageContent } from '@/lib/page-content-types';
@@ -65,9 +65,18 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
               : index === 1 ? 'motion-safe:animate-fade-in-delay-100'
               : 'motion-safe:animate-fade-in-delay-200';
             return (
-              <div key={index} className={`opacity-0 translate-x-[-30px] motion-reduce:opacity-100 motion-reduce:translate-x-0 ${delayClass}`}>
-                <PricingCard {...tier} />
-              </div>
+              <EditableItem
+                key={index}
+                sectionKey="tiers"
+                arrayField=""
+                index={index}
+                label={tier.name}
+                content={tier as unknown as Record<string, unknown>}
+              >
+                <div className={`opacity-0 translate-x-[-30px] motion-reduce:opacity-100 motion-reduce:translate-x-0 ${delayClass}`}>
+                  <PricingCard {...tier} />
+                </div>
+              </EditableItem>
             );
           })}
         </div>

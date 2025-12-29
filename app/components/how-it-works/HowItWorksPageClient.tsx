@@ -7,7 +7,7 @@ import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
 import CircleBadge from '@/components/CircleBadge';
 import Button from '@/components/Button';
-import { EditableSection } from '@/components/InlineEditor';
+import { EditableSection, EditableItem } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { getDefaultContent } from '@/lib/default-page-content';
 import type { HowItWorksPageContent } from '@/lib/page-content-types';
@@ -73,23 +73,32 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
             <div className="flex justify-center">
               <div className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-6 md:gap-10">
                 {content.trustBadges.map((badge, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <div
-                      className={`w-8 h-8 rounded-full ${checkmarkBgColors.green.bg} ${checkmarkBgColors.green.border} flex items-center justify-center flex-shrink-0`}
-                    >
-                      <span className={`${checkmarkBgColors.green.icon} font-bold`} aria-hidden="true">
-                        ✓
-                      </span>
+                  <EditableItem
+                    key={index}
+                    sectionKey="trustBadges"
+                    arrayField=""
+                    index={index}
+                    label={badge.text}
+                    content={badge as unknown as Record<string, unknown>}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-8 h-8 rounded-full ${checkmarkBgColors.green.bg} ${checkmarkBgColors.green.border} flex items-center justify-center flex-shrink-0`}
+                      >
+                        <span className={`${checkmarkBgColors.green.icon} font-bold`} aria-hidden="true">
+                          ✓
+                        </span>
+                      </div>
+                      <div>
+                        <p className={`font-semibold ${headingColors.primary}`}>
+                          {badge.text}
+                        </p>
+                        <p className={`text-sm ${formInputColors.helper}`}>
+                          {badge.description}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className={`font-semibold ${headingColors.primary}`}>
-                        {badge.text}
-                      </p>
-                      <p className={`text-sm ${formInputColors.helper}`}>
-                        {badge.description}
-                      </p>
-                    </div>
-                  </div>
+                  </EditableItem>
                 ))}
               </div>
             </div>
@@ -101,28 +110,45 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
       <EditableSection sectionKey="steps" label="Process Steps">
         {/* Hero Step 1 - The clear starting point */}
         {step1 && (
-          <Card hoverColor="green" hoverEffect="lift" className="mb-10">
-            <div className="flex flex-col md:flex-row gap-6 items-center p-2">
-              <CircleBadge number={step1.number} color="green" size="lg" />
-              <div className="flex-1 text-center md:text-left">
-                <h2 className={`text-2xl font-bold ${titleColors.green} mb-3`}>
-                  {step1.title}
-                </h2>
-                <p className={`${formInputColors.helper} mb-4 text-lg`}>
-                  {step1.description}
-                </p>
-                <Button variant="green" href={step1.href || '/contact'} size="lg">
-                  Get Started
-                </Button>
+          <EditableItem
+            sectionKey="steps"
+            arrayField=""
+            index={0}
+            label={step1.title}
+            content={step1 as unknown as Record<string, unknown>}
+          >
+            <Card hoverColor="green" hoverEffect="lift" className="mb-10">
+              <div className="flex flex-col md:flex-row gap-6 items-center p-2">
+                <CircleBadge number={step1.number} color="green" size="lg" />
+                <div className="flex-1 text-center md:text-left">
+                  <h2 className={`text-2xl font-bold ${titleColors.green} mb-3`}>
+                    {step1.title}
+                  </h2>
+                  <p className={`${formInputColors.helper} mb-4 text-lg`}>
+                    {step1.description}
+                  </p>
+                  <Button variant="green" href={step1.href || '/contact'} size="lg">
+                    Get Started
+                  </Button>
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          </EditableItem>
         )}
 
         {/* Steps 2-4 - Horizontal flow showing progression */}
         <div className="grid md:grid-cols-3 gap-6 mb-10">
-          {remainingSteps.map((step) => (
-            <StepCard key={step.number} {...step} />
+          {remainingSteps.map((step, index) => (
+            <EditableItem
+              key={step.number}
+              sectionKey="steps"
+              arrayField=""
+              index={index + 1}
+              label={step.title}
+              content={step as unknown as Record<string, unknown>}
+            >
+              <StepCard {...step} />
+            </EditableItem>
           ))}
         </div>
       </EditableSection>

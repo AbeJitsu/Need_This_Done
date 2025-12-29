@@ -6,7 +6,7 @@ import { faqColors, titleColors, formInputColors, cardBgColors, cardBorderColors
 import CircleBadge from '@/components/CircleBadge';
 import PageHeader from '@/components/PageHeader';
 import CTASection from '@/components/CTASection';
-import { EditableSection } from '@/components/InlineEditor';
+import { EditableSection, EditableItem } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { getDefaultContent } from '@/lib/default-page-content';
 import type { FAQPageContent } from '@/lib/page-content-types';
@@ -104,22 +104,30 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
             const color = colors[index % 4];
             const styles = faqColors[color];
             return (
-              <div
+              <EditableItem
                 key={index}
-                className={`${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.subtle} border-l-4 ${styles.border} ${styles.hover} transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}
+                sectionKey="items"
+                arrayField=""
+                index={index}
+                label={faq.question}
+                content={faq as unknown as Record<string, unknown>}
               >
-                <div className="flex items-start gap-4">
-                  <CircleBadge number={index + 1} color={color} size="sm" />
-                  <div>
-                    <h2 className={`text-xl font-semibold mb-2 ${styles.text}`}>
-                      {faq.question}
-                    </h2>
-                    <p className={formInputColors.helper}>
-                      {renderAnswer(faq.answer, faq.links)}
-                    </p>
+                <div
+                  className={`${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.subtle} border-l-4 ${styles.border} ${styles.hover} transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}
+                >
+                  <div className="flex items-start gap-4">
+                    <CircleBadge number={index + 1} color={color} size="sm" />
+                    <div>
+                      <h2 className={`text-xl font-semibold mb-2 ${styles.text}`}>
+                        {faq.question}
+                      </h2>
+                      <p className={formInputColors.helper}>
+                        {renderAnswer(faq.answer, faq.links)}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </EditableItem>
             );
           })}
         </div>
