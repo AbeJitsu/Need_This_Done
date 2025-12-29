@@ -48,14 +48,49 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 ### Medium Term (2-4 Weeks)
 
 **Inline Editing System** - Click any component to edit it
+**Plan:** [.claude/plans/inline-editing-phase2.md](.claude/plans/inline-editing-phase2.md)
+
 ```
-Phase 1: Section Editing ✅ DONE
-Phase 2: Item-Level Editing (click individual cards) ← NEXT
-Phase 3: Component Creation (add/delete/reorder)
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    INLINE EDITING SYSTEM ROADMAP                        │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  Phase 1: Section Editing ✅ DONE                                       │
+│  ─────────────────────────                                              │
+│  Click section → Edit all fields in sidebar                             │
+│  Pattern: EditableSection wrapper on all marketing pages                │
+│                                                                         │
+│  Phase 2: Item-Level Editing ← NEXT                                     │
+│  ────────────────────────────                                           │
+│  Click card/item → Edit just that item                                  │
+│  Pattern: EditableItem wrapper for array items                          │
+│  Breadcrumb: Section → Item navigation                                  │
+│                                                                         │
+│  Phase 2.5: Edit Mode UX                                                │
+│  ────────────────────────                                               │
+│  Block link clicks in edit mode                                         │
+│  Show helpful hints and guidance                                        │
+│  Visual feedback on all interactions                                    │
+│                                                                         │
+│  Phase 3: Component Creation                                            │
+│  ──────────────────────────                                             │
+│  [+ Add] buttons to create new items                                    │
+│  Delete/reorder existing items                                          │
+│  Component picker modal                                                 │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Phase 2: EditableItem component for clicking individual cards/items
-- [ ] Phase 2: Breadcrumb navigation (Section → Item)
-- [ ] Phase 3: [+ Add] buttons, component picker, drag & drop
+
+Phase 2 Sub-tasks:
+- [ ] Create EditableItem component for clicking individual cards/items
+- [ ] Update sidebar for item editing with breadcrumb navigation
+- [ ] Wrap array items in all 5 marketing pages
+
+Phase 2.5 Sub-tasks:
+- [ ] Edit mode indicator bar (top of viewport)
+- [ ] Click interception for links/buttons in edit areas
+- [ ] Toast feedback for blocked actions
+- [ ] Hover states and tooltips
 
 **Visual Builder Polish**
 - [x] Re-enable Puck page builder ✅ DONE
