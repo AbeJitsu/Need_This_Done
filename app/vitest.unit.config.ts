@@ -13,6 +13,8 @@ export default defineConfig({
     include: [
       // Colors validation test - catches dark mode contrast issues
       '../__tests__/lib/colors.test.ts',
+      // Editable routes test - route to slug mapping
+      '../__tests__/lib/editable-routes.test.ts',
     ],
   },
   resolve: {

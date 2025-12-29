@@ -15,6 +15,8 @@ export default defineConfig({
     include: [
       '../__tests__/components/**/*.a11y.test.ts?(x)',
       '../__tests__/lib/**/*.test.ts',
+      // Hook tests disabled due to jsdom/webidl-conversions compatibility issue
+      // '../__tests__/hooks/**/*.test.ts?(x)',
     ],
     coverage: {
       provider: 'v8',

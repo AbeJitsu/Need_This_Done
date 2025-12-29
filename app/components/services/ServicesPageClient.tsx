@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
@@ -11,8 +10,7 @@ import ScenarioMatcher from '@/components/services/ScenarioMatcher';
 import ServiceComparisonTable from '@/components/services/ServiceComparisonTable';
 import ServiceDeepDive from '@/components/services/ServiceDeepDive';
 import { EditableSection, EditableItem } from '@/components/InlineEditor';
-import { useInlineEdit } from '@/context/InlineEditContext';
-import { getDefaultContent } from '@/lib/default-page-content';
+import { useEditableContent } from '@/hooks/useEditableContent';
 import type { ServicesPageContent } from '@/lib/page-content-types';
 import {
   formInputColors,
@@ -30,45 +28,19 @@ import {
 // ============================================================================
 // What: Client-side wrapper that enables inline editing for admins
 // Why: Allows clicking on sections and editing them directly in the sidebar
-// How: Initializes edit context and wraps sections with EditableSection
+// How: Uses useEditableContent hook for automatic context setup and merging
 
 interface ServicesPageClientProps {
   content: ServicesPageContent;
 }
 
-// Deep merge content with defaults to ensure all required sections exist
-function mergeWithDefaults(content: Partial<ServicesPageContent>): ServicesPageContent {
-  const defaults = getDefaultContent('services') as ServicesPageContent;
-  return {
-    header: content.header || defaults.header,
-    scenarioMatcher: content.scenarioMatcher ?? defaults.scenarioMatcher,
-    comparison: content.comparison ?? defaults.comparison,
-    chooseYourPath: content.chooseYourPath ?? defaults.chooseYourPath,
-    expectationsTitle: content.expectationsTitle || defaults.expectationsTitle,
-    expectations: content.expectations || defaults.expectations,
-  };
-}
-
 export default function ServicesPageClient({ content: initialContent }: ServicesPageClientProps) {
-  const { setPageSlug, setPageContent, pageContent } = useInlineEdit();
-
-  // Memoize merged content to prevent infinite re-renders
-  // Without this, mergeWithDefaults creates a new object every render,
-  // which triggers the useEffect, which sets state, which re-renders...
-  const safeInitialContent = useMemo(
-    () => mergeWithDefaults(initialContent),
-    [initialContent]
-  );
-
-  // Initialize the edit context when the component mounts
-  useEffect(() => {
-    setPageSlug('services');
-    setPageContent(safeInitialContent as unknown as Record<string, unknown>);
-  }, [safeInitialContent, setPageSlug, setPageContent]);
-
-  // Use pageContent from context if available (has pending edits), otherwise use initial
-  const rawContent = (pageContent as unknown as ServicesPageContent) || safeInitialContent;
-  const content = mergeWithDefaults(rawContent);
+  // Single hook call replaces 20+ lines of boilerplate:
+  // - Merges with defaults
+  // - Memoizes to prevent infinite re-renders
+  // - Registers with edit context
+  // - Returns live content with pending edits
+  const { content } = useEditableContent<ServicesPageContent>('services', initialContent);
 
   return (
     <ServiceModalProvider>
