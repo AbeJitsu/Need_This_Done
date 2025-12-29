@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { faqColors, titleColors, formInputColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 import CircleBadge from '@/components/CircleBadge';
@@ -72,8 +72,11 @@ function renderAnswer(answer: string, links?: Array<{ text: string; href: string
 export default function FAQPageClient({ content: initialContent }: FAQPageClientProps) {
   const { setPageSlug, setPageContent, pageContent } = useInlineEdit();
 
-  // Ensure content has all required sections by merging with defaults
-  const safeInitialContent = mergeWithDefaults(initialContent);
+  // Memoize merged content to prevent infinite re-renders
+  const safeInitialContent = useMemo(
+    () => mergeWithDefaults(initialContent),
+    [initialContent]
+  );
 
   // Initialize the edit context when the component mounts
   useEffect(() => {

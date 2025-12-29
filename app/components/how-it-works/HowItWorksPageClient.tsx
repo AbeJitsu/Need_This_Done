@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import StepCard from '@/components/StepCard';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
@@ -42,8 +42,11 @@ function mergeWithDefaults(content: Partial<HowItWorksPageContent>): HowItWorksP
 export default function HowItWorksPageClient({ content: initialContent }: HowItWorksPageClientProps) {
   const { setPageSlug, setPageContent, pageContent } = useInlineEdit();
 
-  // Ensure content has all required sections by merging with defaults
-  const safeInitialContent = mergeWithDefaults(initialContent);
+  // Memoize merged content to prevent infinite re-renders
+  const safeInitialContent = useMemo(
+    () => mergeWithDefaults(initialContent),
+    [initialContent]
+  );
 
   // Initialize the edit context when the component mounts
   useEffect(() => {

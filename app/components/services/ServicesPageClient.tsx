@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
@@ -52,8 +52,13 @@ function mergeWithDefaults(content: Partial<ServicesPageContent>): ServicesPageC
 export default function ServicesPageClient({ content: initialContent }: ServicesPageClientProps) {
   const { setPageSlug, setPageContent, pageContent } = useInlineEdit();
 
-  // Ensure content has all required sections by merging with defaults
-  const safeInitialContent = mergeWithDefaults(initialContent);
+  // Memoize merged content to prevent infinite re-renders
+  // Without this, mergeWithDefaults creates a new object every render,
+  // which triggers the useEffect, which sets state, which re-renders...
+  const safeInitialContent = useMemo(
+    () => mergeWithDefaults(initialContent),
+    [initialContent]
+  );
 
   // Initialize the edit context when the component mounts
   useEffect(() => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import PricingCard from '@/components/PricingCard';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
@@ -34,8 +34,11 @@ function mergeWithDefaults(content: Partial<PricingPageContent>): PricingPageCon
 export default function PricingPageClient({ content: initialContent }: PricingPageClientProps) {
   const { setPageSlug, setPageContent, pageContent } = useInlineEdit();
 
-  // Ensure content has all required sections by merging with defaults
-  const safeInitialContent = mergeWithDefaults(initialContent);
+  // Memoize merged content to prevent infinite re-renders
+  const safeInitialContent = useMemo(
+    () => mergeWithDefaults(initialContent),
+    [initialContent]
+  );
 
   // Initialize the edit context when the component mounts
   useEffect(() => {
