@@ -9,18 +9,35 @@ source "$CLAUDE_PROJECT_DIR/.claude/hooks/lib/common.sh"
 TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
 
 # ============================================
-# CHECK 1: Frontend Screenshots Required
+# CHECK 1: Frontend Changes → Auto-Document
 # ============================================
 if [[ -f "$FRONTEND_CHANGES_FILE" ]] && [[ -s "$FRONTEND_CHANGES_FILE" ]]; then
   CHANGE_COUNT=$(get_tracked_count "$FRONTEND_CHANGES_FILE")
   echo "" >&2
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
-  echo "SCREENSHOTS REQUIRED - $CHANGE_COUNT frontend files modified" >&2
+  echo "AUTO-DOCUMENTING $CHANGE_COUNT frontend changes..." >&2
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
   cat "$FRONTEND_CHANGES_FILE" | sed 's/^/  → /' >&2
   echo "" >&2
-  echo "Run: /document" >&2
-  exit 2
+
+  # Run the screenshot/changelog script
+  cd "$CLAUDE_PROJECT_DIR/app" && npm run screenshot:affected 2>&1 | sed 's/^/  /' >&2
+  SCREENSHOT_EXIT=$?
+
+  if [[ $SCREENSHOT_EXIT -eq 0 ]]; then
+    # Success - clear tracking file
+    rm -f "$FRONTEND_CHANGES_FILE"
+    echo "" >&2
+    echo "✅ Documentation generated. Changelog template ready for review." >&2
+    echo "" >&2
+  else
+    # Failed - still clear tracking to avoid infinite loop, but warn
+    rm -f "$FRONTEND_CHANGES_FILE"
+    echo "" >&2
+    echo "⚠️  Screenshot capture failed (exit $SCREENSHOT_EXIT)" >&2
+    echo "   Changelog template created but may need manual screenshots." >&2
+    echo "" >&2
+  fi
 fi
 
 # ============================================
