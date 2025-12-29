@@ -63,7 +63,7 @@ export default function EditBlogPost({ params }: PageProps) {
 
     const fetchPost = async () => {
       try {
-        const response = await fetch(`/api/blog/${slug}`);
+        const response = await fetch(`/api/blog/${slug}?admin=true`);
         const data = await response.json();
 
         if (!response.ok) {
