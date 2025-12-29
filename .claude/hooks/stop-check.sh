@@ -75,16 +75,30 @@ if [[ -f "$FRONTEND_CHANGES_FILE" ]] && [[ -s "$FRONTEND_CHANGES_FILE" ]]; then
 fi
 
 # ============================================
-# CHECK 2: Uncommitted Changes
+# CHECK 2: Uncommitted Changes (Session-Specific)
+# Only blocks on files THIS session modified
 # ============================================
-UNCOMMITTED=$(cd "$CLAUDE_PROJECT_DIR" && git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
-if [[ "$UNCOMMITTED" -gt 0 ]]; then
-  echo "" >&2
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
-  echo "UNCOMMITTED CHANGES - Run /dac before continuing" >&2
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
-  exit 2
+if [[ -f "$SESSION_CHANGES_FILE" ]] && [[ -s "$SESSION_CHANGES_FILE" ]]; then
+  SESSION_UNCOMMITTED=0
+  SESSION_FILES=""
+  while read -r file; do
+    # Check if this file has uncommitted changes
+    if cd "$CLAUDE_PROJECT_DIR" && git status --porcelain "$file" 2>/dev/null | grep -q .; then
+      SESSION_UNCOMMITTED=1
+      SESSION_FILES="$SESSION_FILES\n  $file"
+    fi
+  done < "$SESSION_CHANGES_FILE"
+
+  if [[ "$SESSION_UNCOMMITTED" -eq 1 ]]; then
+    echo "" >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo "UNCOMMITTED CHANGES (this session) - Run /dac" >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo -e "$SESSION_FILES" >&2
+    exit 2
+  fi
 fi
+# No session files tracked = no blocking (allows other sessions to work)
 
 # ============================================
 # CHECK 2.5: Significant Work → Changelog Check
