@@ -47,6 +47,8 @@ export default function EditableItem({
 
     // Stop propagation so section doesn't get selected
     e.stopPropagation();
+    // Prevent default to block Link navigation, form submissions, etc.
+    e.preventDefault();
 
     const selection: ItemSelection = {
       sectionKey,
@@ -63,7 +65,7 @@ export default function EditableItem({
   if (isEditMode) {
     return (
       <div
-        onClick={handleClick}
+        onClickCapture={handleClick}
         className={`
           group/item relative cursor-pointer transition-all duration-150
           ${isSelected
