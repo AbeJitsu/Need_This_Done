@@ -63,8 +63,10 @@ All rules in `.claude/rules/` are enforced automatically:
 | Command | What It Does |
 |---------|--------------|
 | `/dac` | Draft a commit message following project conventions |
-| `/document` | Screenshot changed pages + generate changelog entry |
+| `/document` | Screenshot changed pages + generate changelog entry (auto-runs on session end) |
 | `/check-work` | Show git status, diffs, and next steps |
+
+**Auto-Documentation**: Frontend changes are tracked automatically. When a session ends, the stop hook runs `npm run screenshot:affected` to capture screenshots and create changelog templates. No manual `/document` needed.
 
 ## Skills
 

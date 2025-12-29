@@ -1,0 +1,16 @@
+{
+  "title": "Main",
+  "slug": "main",
+  "date": "2025-12-29",
+  "category": "Public",
+  "description": "",
+  "benefit": "",
+  "howToUse": [],
+  "screenshots": [
+    {
+      "src": "/screenshots/main/blog-[slug]-desktop-light.png",
+      "alt": "Screenshot of /blog/[slug]",
+      "caption": ""
+    }
+  ]
+}

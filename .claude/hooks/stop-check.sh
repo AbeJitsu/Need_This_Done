@@ -20,24 +20,31 @@ if [[ -f "$FRONTEND_CHANGES_FILE" ]] && [[ -s "$FRONTEND_CHANGES_FILE" ]]; then
   cat "$FRONTEND_CHANGES_FILE" | sed 's/^/  → /' >&2
   echo "" >&2
 
-  # Run the screenshot/changelog script
-  cd "$CLAUDE_PROJECT_DIR/app" && npm run screenshot:affected 2>&1 | sed 's/^/  /' >&2
-  SCREENSHOT_EXIT=$?
+  # Check if dev server is running
+  if curl -s --max-time 2 http://localhost:3000 >/dev/null 2>&1; then
+    # Dev server running - full screenshot capture
+    echo "  Dev server detected. Capturing screenshots..." >&2
+    cd "$CLAUDE_PROJECT_DIR/app" && npm run screenshot:affected 2>&1 | sed 's/^/  /' >&2
+    SCREENSHOT_EXIT=$?
 
-  if [[ $SCREENSHOT_EXIT -eq 0 ]]; then
-    # Success - clear tracking file
-    rm -f "$FRONTEND_CHANGES_FILE"
-    echo "" >&2
-    echo "✅ Documentation generated. Changelog template ready for review." >&2
-    echo "" >&2
+    if [[ $SCREENSHOT_EXIT -eq 0 ]]; then
+      rm -f "$FRONTEND_CHANGES_FILE"
+      echo "" >&2
+      echo "✅ Screenshots + changelog template generated." >&2
+    else
+      rm -f "$FRONTEND_CHANGES_FILE"
+      echo "" >&2
+      echo "⚠️  Screenshot capture failed. Changelog template created." >&2
+    fi
   else
-    # Failed - still clear tracking to avoid infinite loop, but warn
+    # No dev server - create changelog template only
+    echo "  No dev server at localhost:3000. Creating changelog template..." >&2
+    cd "$CLAUDE_PROJECT_DIR/app" && npx tsx scripts/screenshot-affected.ts --skip-playwright 2>&1 | sed 's/^/  /' >&2 || true
     rm -f "$FRONTEND_CHANGES_FILE"
     echo "" >&2
-    echo "⚠️  Screenshot capture failed (exit $SCREENSHOT_EXIT)" >&2
-    echo "   Changelog template created but may need manual screenshots." >&2
-    echo "" >&2
+    echo "📝 Changelog template created. Run 'npm run dev' + 'npm run screenshot:affected' for screenshots." >&2
   fi
+  echo "" >&2
 fi
 
 # ============================================

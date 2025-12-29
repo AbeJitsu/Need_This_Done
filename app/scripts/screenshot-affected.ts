@@ -206,6 +206,11 @@ function generateChangelogEntry(branchName: string, routes: string[], _screensho
 }
 
 /**
+ * Check for --skip-playwright flag
+ */
+const skipPlaywright = process.argv.includes('--skip-playwright');
+
+/**
  * Main function
  */
 async function main() {
@@ -295,22 +300,27 @@ async function main() {
 
   console.log(`   Changelog template: content/changelog/${safebranchName}.json`);
 
-  // Run Playwright (if spec exists)
-  console.log('\n🎭 Running Playwright...');
-  try {
-    execSync('npx playwright test e2e/targeted-screenshots.spec.ts --project=e2e-bypass', {
-      cwd: process.cwd(),
-      stdio: 'inherit',
-      env: {
-        ...process.env,
-        AFFECTED_ROUTES_FILE: AFFECTED_ROUTES_FILE,
-        SKIP_WEBSERVER: 'true', // Use existing dev server if running
-      },
-    });
-    console.log('\n✅ Screenshots captured successfully!');
-  } catch (error) {
-    console.log('\n⚠️  Playwright test not found or failed. Create e2e/targeted-screenshots.spec.ts');
-    console.log('   You can still manually capture screenshots at the affected routes.');
+  // Run Playwright (if spec exists and not skipped)
+  if (skipPlaywright) {
+    console.log('\n⏭️  Skipping Playwright (--skip-playwright flag)');
+    console.log('   Run `npm run screenshot:affected` with dev server for screenshots.');
+  } else {
+    console.log('\n🎭 Running Playwright...');
+    try {
+      execSync('npx playwright test e2e/targeted-screenshots.spec.ts --project=e2e-bypass', {
+        cwd: process.cwd(),
+        stdio: 'inherit',
+        env: {
+          ...process.env,
+          AFFECTED_ROUTES_FILE: AFFECTED_ROUTES_FILE,
+          SKIP_WEBSERVER: 'true', // Use existing dev server if running
+        },
+      });
+      console.log('\n✅ Screenshots captured successfully!');
+    } catch (error) {
+      console.log('\n⚠️  Playwright test not found or failed. Create e2e/targeted-screenshots.spec.ts');
+      console.log('   You can still manually capture screenshots at the affected routes.');
+    }
   }
 
   console.log('\n📋 Summary:');

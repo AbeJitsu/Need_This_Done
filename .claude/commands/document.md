@@ -7,12 +7,20 @@ allowed-tools: Bash(git diff:*), Bash(git status:*), Bash(npm run:*), Read(**/*)
 
 Capture screenshots of changed frontend pages and generate user-facing changelog documentation.
 
-## When to Use
+## Automatic Mode (Default)
 
-Run `/document` after making frontend changes to:
-- Capture screenshots of affected pages
-- Generate a changelog entry
-- Create documentation showing WHAT changed, WHY it matters, and HOW to use it
+Frontend changes are now **automatically documented** when a session ends:
+1. PostToolUse hook tracks frontend file changes
+2. Stop hook auto-runs `npm run screenshot:affected`
+3. Screenshots captured + changelog template created
+4. You review and fill in the description/benefit fields
+
+## Manual Mode
+
+Run `/document` manually if you want to:
+- Preview what will be documented before session ends
+- Re-run documentation after making fixes
+- Generate docs for changes not yet tracked
 
 ## Your Task
 
