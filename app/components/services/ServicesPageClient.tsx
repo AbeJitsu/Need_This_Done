@@ -10,7 +10,7 @@ import ServiceDetailModal from '@/components/service-modal/ServiceDetailModal';
 import ScenarioMatcher from '@/components/services/ScenarioMatcher';
 import ServiceComparisonTable from '@/components/services/ServiceComparisonTable';
 import ServiceDeepDive from '@/components/services/ServiceDeepDive';
-import { EditableSection } from '@/components/InlineEditor';
+import { EditableSection, EditableItem } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { getDefaultContent } from '@/lib/default-page-content';
 import type { ServicesPageContent } from '@/lib/page-content-types';
@@ -116,41 +116,50 @@ export default function ServicesPageClient({ content: initialContent }: Services
 
             <div className="grid md:grid-cols-2 gap-6 mb-10">
               {content.chooseYourPath.paths.map((path, index) => (
-                <Card key={index} hoverColor={path.hoverColor} hoverEffect="lift">
-                  <div className="p-8">
-                    {/* Badge */}
-                    <div className="mb-4">
-                      <span className={`inline-block px-4 py-1 ${accentColors[path.hoverColor as AccentVariant].bg} ${accentColors[path.hoverColor as AccentVariant].text} ${accentColors[path.hoverColor as AccentVariant].border} ${accentBorderWidth} rounded-full text-sm font-semibold`}>
-                        {path.badge}
-                      </span>
+                <EditableItem
+                  key={index}
+                  sectionKey="chooseYourPath"
+                  arrayField="paths"
+                  index={index}
+                  label={path.title}
+                  content={path as unknown as Record<string, unknown>}
+                >
+                  <Card hoverColor={path.hoverColor} hoverEffect="lift">
+                    <div className="p-8">
+                      {/* Badge */}
+                      <div className="mb-4">
+                        <span className={`inline-block px-4 py-1 ${accentColors[path.hoverColor as AccentVariant].bg} ${accentColors[path.hoverColor as AccentVariant].text} ${accentColors[path.hoverColor as AccentVariant].border} ${accentBorderWidth} rounded-full text-sm font-semibold`}>
+                          {path.badge}
+                        </span>
+                      </div>
+                      {/* Title + Description */}
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                        {path.title}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-300 mb-6">
+                        {path.description}
+                      </p>
+                      {/* Bullets */}
+                      <ul className="space-y-3 mb-6">
+                        {path.bullets.map((bullet, idx) => (
+                          <li key={idx} className="flex items-center gap-2">
+                            <span className={accentColors[path.hoverColor as AccentVariant].text} aria-hidden="true">✓</span>
+                            <span className="text-gray-700 dark:text-gray-300">{bullet}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      {/* Button */}
+                      <Button
+                        variant={path.button.variant}
+                        href={path.button.href}
+                        size={path.button.size || 'lg'}
+                        className="w-full"
+                      >
+                        {path.button.text}
+                      </Button>
                     </div>
-                    {/* Title + Description */}
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-                      {path.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-6">
-                      {path.description}
-                    </p>
-                    {/* Bullets */}
-                    <ul className="space-y-3 mb-6">
-                      {path.bullets.map((bullet, idx) => (
-                        <li key={idx} className="flex items-center gap-2">
-                          <span className={accentColors[path.hoverColor as AccentVariant].text} aria-hidden="true">✓</span>
-                          <span className="text-gray-700 dark:text-gray-300">{bullet}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {/* Button */}
-                    <Button
-                      variant={path.button.variant}
-                      href={path.button.href}
-                      size={path.button.size || 'lg'}
-                      className="w-full"
-                    >
-                      {path.button.text}
-                    </Button>
-                  </div>
-                </Card>
+                  </Card>
+                </EditableItem>
               ))}
             </div>
           </EditableSection>
@@ -198,16 +207,34 @@ export default function ServicesPageClient({ content: initialContent }: Services
 
                 if (item.link) {
                   return (
-                    <Link key={index} href={item.link.href} className={`flex gap-4 group rounded-lg ${focusRingClasses.blue}`}>
-                      {itemContent}
-                    </Link>
+                    <EditableItem
+                      key={index}
+                      sectionKey="expectations"
+                      arrayField=""
+                      index={index}
+                      label={item.title}
+                      content={item as unknown as Record<string, unknown>}
+                    >
+                      <Link href={item.link.href} className={`flex gap-4 group rounded-lg ${focusRingClasses.blue}`}>
+                        {itemContent}
+                      </Link>
+                    </EditableItem>
                   );
                 }
 
                 return (
-                  <div key={index} className="flex gap-4">
-                    {itemContent}
-                  </div>
+                  <EditableItem
+                    key={index}
+                    sectionKey="expectations"
+                    arrayField=""
+                    index={index}
+                    label={item.title}
+                    content={item as unknown as Record<string, unknown>}
+                  >
+                    <div className="flex gap-4">
+                      {itemContent}
+                    </div>
+                  </EditableItem>
                 );
               })}
             </div>

@@ -80,6 +80,8 @@ export default function AdminSidebar() {
     setEditMode,
     selectedSection,
     selectSection,
+    selectedItem,
+    clearItemSelection,
     pageContent,
     pageSlug,
     pendingChanges,
@@ -120,7 +122,7 @@ export default function AdminSidebar() {
     });
   };
 
-  // Handle field change
+  // Handle field change for section editing
   const handleFieldChange = (fieldPath: string, newValue: unknown) => {
     if (!selectedSection) return;
     // If we're drilled into a nested item, prepend the subPath
@@ -128,6 +130,14 @@ export default function AdminSidebar() {
       ? `${selectedSection.subPath}.${fieldPath}`
       : fieldPath;
     updateField(selectedSection.sectionKey, fullFieldPath, newValue);
+  };
+
+  // Handle field change for item editing (cards, FAQ items, etc.)
+  const handleItemFieldChange = (fieldPath: string, newValue: unknown) => {
+    if (!selectedItem) return;
+    // Build the full path: sectionKey.arrayField.index.fieldPath
+    const fullPath = `${selectedItem.arrayField}.${selectedItem.index}.${fieldPath}`;
+    updateField(selectedItem.sectionKey, fullPath, newValue);
   };
 
   // Drill down into a nested item (e.g., buttons.0)
@@ -159,8 +169,14 @@ export default function AdminSidebar() {
     });
   };
 
-  // Navigate back up from nested item
+  // Navigate back up from nested item or item selection
   const handleNavigateUp = () => {
+    // If viewing an item, go back to section list
+    if (selectedItem) {
+      clearItemSelection();
+      return;
+    }
+
     if (!selectedSection) return;
 
     if (selectedSection.subPath) {
@@ -217,6 +233,135 @@ export default function AdminSidebar() {
   const handleClose = () => {
     setSidebarOpen(false);
     setEditMode(false);
+  };
+
+  // Render an input for a primitive value (for item editing)
+  const renderItemPrimitiveInput = (path: string, value: unknown, fieldName: string) => {
+    const stringValue = value !== null && value !== undefined ? String(value) : '';
+    const label = fieldLabels[fieldName] || fieldName.replace(/([A-Z])/g, ' $1').trim();
+
+    // Color variant selector
+    if (fieldName === 'variant' || fieldName === 'color') {
+      return (
+        <div key={path} className="mb-3">
+          <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
+            {label}
+          </label>
+          <select
+            value={stringValue}
+            onChange={(e) => handleItemFieldChange(path, e.target.value)}
+            className={`
+              w-full px-2 py-1.5 rounded border text-sm
+              ${formInputColors.base} ${formInputColors.focus}
+              ${focusRingClasses.blue}
+            `}
+          >
+            {colorVariants.map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </div>
+      );
+    }
+
+    // Textarea for long text
+    if (fieldName === 'description' || fieldName === 'answer' || fieldName === 'details' || stringValue.length > 80) {
+      return (
+        <div key={path} className="mb-3">
+          <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
+            {label}
+          </label>
+          <textarea
+            value={stringValue}
+            onChange={(e) => handleItemFieldChange(path, e.target.value)}
+            rows={3}
+            className={`
+              w-full px-2 py-1.5 rounded border text-sm resize-y
+              ${formInputColors.base} ${formInputColors.focus}
+              ${focusRingClasses.blue}
+            `}
+          />
+        </div>
+      );
+    }
+
+    // Number input
+    if (typeof value === 'number' || fieldName === 'number') {
+      return (
+        <div key={path} className="mb-3">
+          <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
+            {label}
+          </label>
+          <input
+            type="number"
+            value={stringValue}
+            onChange={(e) => handleItemFieldChange(path, Number(e.target.value))}
+            className={`
+              w-full px-2 py-1.5 rounded border text-sm
+              ${formInputColors.base} ${formInputColors.focus}
+              ${focusRingClasses.blue}
+            `}
+          />
+        </div>
+      );
+    }
+
+    // Default text input
+    return (
+      <div key={path} className="mb-3">
+        <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
+          {label}
+        </label>
+        <input
+          type="text"
+          value={stringValue}
+          onChange={(e) => handleItemFieldChange(path, e.target.value)}
+          className={`
+            w-full px-2 py-1.5 rounded border text-sm
+            ${formInputColors.base} ${formInputColors.focus}
+            ${focusRingClasses.blue}
+          `}
+        />
+      </div>
+    );
+  };
+
+  // Render item fields (flat, no drill-down)
+  const renderItemFields = (obj: unknown, basePath: string = ''): React.ReactNode => {
+    if (obj === null || obj === undefined) return null;
+
+    // Primitive value
+    if (typeof obj !== 'object') {
+      const fieldName = basePath.split('.').pop() || '_value';
+      return renderItemPrimitiveInput(basePath, obj, fieldName);
+    }
+
+    // Array - render each item's editable fields inline
+    if (Array.isArray(obj)) {
+      return obj.map((item, index) => (
+        <div key={`${basePath}.${index}`}>
+          {renderItemFields(item, basePath ? `${basePath}.${index}` : String(index))}
+        </div>
+      ));
+    }
+
+    // Object - render each field
+    const entries = Object.entries(obj as Record<string, unknown>);
+    return (
+      <div className="space-y-1">
+        {entries.map(([key, value]) => {
+          const path = basePath ? `${basePath}.${key}` : key;
+          // Skip nested arrays/objects for now - keep item editing flat
+          if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+            return renderItemFields(value, path);
+          }
+          if (Array.isArray(value)) {
+            return null; // Skip nested arrays in item view
+          }
+          return renderItemFields(value, path);
+        })}
+      </div>
+    );
   };
 
   // Render an input for a primitive value
@@ -441,8 +586,47 @@ export default function AdminSidebar() {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
-        {selectedSection ? (
-          // Field Editor View
+        {selectedItem ? (
+          // Item Editor View (clicked on a specific card/item)
+          <div>
+            {/* Breadcrumb navigation */}
+            <div className="mb-4">
+              <button
+                type="button"
+                onClick={handleNavigateUp}
+                className={`
+                  flex items-center gap-2 text-sm font-medium
+                  ${accentColors.blue.text} hover:underline
+                `}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                All Sections
+              </button>
+            </div>
+
+            {/* Breadcrumb path */}
+            <div className="pb-3 mb-4 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <span>{sectionLabels[selectedItem.sectionKey] || selectedItem.sectionKey}</span>
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+                <span className="text-purple-600 dark:text-purple-400 font-medium">
+                  {selectedItem.label}
+                </span>
+              </div>
+              <h3 className={`font-medium ${headingColors.primary}`}>
+                {selectedItem.label}
+              </h3>
+            </div>
+
+            {/* Item fields */}
+            {renderItemFields(selectedItem.content)}
+          </div>
+        ) : selectedSection ? (
+          // Section Editor View
           <div>
             {/* Breadcrumb navigation */}
             <div className="mb-4">

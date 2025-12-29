@@ -200,14 +200,25 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
   const setEditMode = useCallback((enabled: boolean) => {
     setIsEditMode(enabled);
     if (!enabled) {
-      // Clear selections when exiting edit mode
+      // Clear all selections when exiting edit mode
       setSelectedSection(null);
+      setSelectedItem(null);
       setSelectedComponent(null);
     }
   }, []);
 
   const selectSection = useCallback((selection: SectionSelection | null) => {
     setSelectedSection(selection);
+    // Clear item selection when selecting a new section
+    setSelectedItem(null);
+  }, []);
+
+  const selectItem = useCallback((selection: ItemSelection | null) => {
+    setSelectedItem(selection);
+  }, []);
+
+  const clearItemSelection = useCallback(() => {
+    setSelectedItem(null);
   }, []);
 
   const selectComponent = useCallback((selection: ComponentSelection | null) => {
@@ -290,6 +301,9 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     // Section-based (new)
     selectedSection,
     selectSection,
+    selectedItem,
+    selectItem,
+    clearItemSelection,
     pendingChanges,
     addPendingChange,
     clearPendingChanges,
