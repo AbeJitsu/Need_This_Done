@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import Button from '@/components/Button';
+import MarkdownContent from '@/components/blog/MarkdownContent';
 import {
   BlogPost,
   formatPublishedDate,
@@ -185,19 +186,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       )}
 
       {/* Content */}
-      <div
-        className={`
-          prose prose-lg dark:prose-invert max-w-none
-          prose-headings:font-bold prose-headings:tracking-tight
-          prose-a:text-blue-600 dark:prose-a:text-blue-400
-          prose-p:${formInputColors.helper}
-        `}
-      >
-        {/* Render content - supports line breaks */}
-        {post.content.split('\n\n').map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
-        ))}
-      </div>
+      <MarkdownContent content={post.content} />
 
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
