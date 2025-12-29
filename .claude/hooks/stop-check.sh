@@ -87,6 +87,42 @@ if [[ "$UNCOMMITTED" -gt 0 ]]; then
 fi
 
 # ============================================
+# CHECK 2.5: Significant Work → Changelog Check
+# ============================================
+# Check if significant commits were made today without a changelog entry
+TODAY=$(date +%Y-%m-%d)
+CHANGELOG_DIR="$CLAUDE_PROJECT_DIR/content/changelog"
+
+# Get today's commits (excluding trivial ones like typos, formatting)
+TODAYS_COMMITS=$(cd "$CLAUDE_PROJECT_DIR" && git log --since="$TODAY 00:00" --oneline 2>/dev/null | grep -ivE "(typo|format|lint|merge|revert)" | wc -l | tr -d ' ')
+
+if [[ "$TODAYS_COMMITS" -gt 0 ]]; then
+  # Check if a changelog entry exists for today
+  TODAYS_CHANGELOG=$(find "$CHANGELOG_DIR" -name "*.json" -exec grep -l "\"date\": \"$TODAY\"" {} \; 2>/dev/null | wc -l | tr -d ' ')
+
+  if [[ "$TODAYS_CHANGELOG" -eq 0 ]]; then
+    # Get commit summary for context
+    COMMIT_SUMMARY=$(cd "$CLAUDE_PROJECT_DIR" && git log --since="$TODAY 00:00" --oneline 2>/dev/null | head -10)
+
+    echo "" >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo "CLAUDE: Review today's work for changelog" >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo "" >&2
+    echo "Today's commits ($TODAYS_COMMITS):" >&2
+    echo "$COMMIT_SUMMARY" | sed 's/^/  /' >&2
+    echo "" >&2
+    echo "If this work is user-facing or significant:" >&2
+    echo "  1. Create content/changelog/<feature-name>.json" >&2
+    echo "  2. Fill in: title, slug, date ($TODAY), category, description, benefit, howToUse" >&2
+    echo "" >&2
+    echo "If this is internal/trivial work, say 'skip changelog' to continue." >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    exit 2
+  fi
+fi
+
+# ============================================
 # CHECK 3: Task Continuation (autonomous loop)
 # ============================================
 if [[ -f "$TODO_FILE" ]]; then
