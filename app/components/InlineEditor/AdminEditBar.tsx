@@ -1,6 +1,7 @@
 'use client';
 
-import { useInlineEdit } from '@/context/InlineEditContext';
+import { useState } from 'react';
+import { useInlineEdit, type PendingChange } from '@/context/InlineEditContext';
 import { useAuth } from '@/context/AuthContext';
 import { solidButtonColors, focusRingClasses } from '@/lib/colors';
 
@@ -16,15 +17,46 @@ interface AdminEditBarProps {
   onSave?: () => Promise<void>;
 }
 
+// Apply pending changes to page data to create updated content
+function applyChangesToPageData(
+  pageData: Record<string, unknown>,
+  pendingChanges: PendingChange[]
+): Record<string, unknown> {
+  // Deep clone the page data
+  const updatedData = JSON.parse(JSON.stringify(pageData));
+
+  // Apply each pending change
+  for (const change of pendingChanges) {
+    // Parse path like "content.0" to get the component index
+    const pathParts = change.path.split('.');
+    if (pathParts[0] === 'content' && pathParts.length === 2) {
+      const componentIndex = parseInt(pathParts[1], 10);
+      if (updatedData.content && updatedData.content[componentIndex]) {
+        // Update the specific prop
+        if (!updatedData.content[componentIndex].props) {
+          updatedData.content[componentIndex].props = {};
+        }
+        updatedData.content[componentIndex].props[change.propName] = change.newValue;
+      }
+    }
+  }
+
+  return updatedData;
+}
+
 export default function AdminEditBar({ pageSlug: propSlug, onSave }: AdminEditBarProps) {
   const { isAdmin, isAuthenticated } = useAuth();
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const {
     isEditMode,
     setEditMode,
     hasUnsavedChanges,
+    pendingChanges,
     clearPendingChanges,
     setPageSlug,
     pageSlug: contextSlug,
+    pageData,
   } = useInlineEdit();
 
   // Use prop slug or context slug
@@ -59,6 +91,46 @@ export default function AdminEditBar({ pageSlug: propSlug, onSave }: AdminEditBa
     if (onSave) {
       await onSave();
       clearPendingChanges();
+      return;
+    }
+
+    // Default save behavior - call the API
+    if (!currentSlug || !pageData || pendingChanges.length === 0) {
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveError(null);
+
+    try {
+      // Apply pending changes to page data
+      const updatedContent = applyChangesToPageData(pageData, pendingChanges);
+
+      // Save to API
+      const response = await fetch(`/api/pages/${currentSlug}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: updatedContent,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save');
+      }
+
+      // Clear changes and reload the page to show saved content
+      clearPendingChanges();
+
+      // Force page reload to show saved content
+      window.location.reload();
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : 'Failed to save');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -68,7 +140,7 @@ export default function AdminEditBar({ pageSlug: propSlug, onSave }: AdminEditBa
     );
     if (confirmDiscard) {
       clearPendingChanges();
-      // Could also reload the page data here
+      setSaveError(null);
     }
   };
 
@@ -90,6 +162,11 @@ export default function AdminEditBar({ pageSlug: propSlug, onSave }: AdminEditBa
           {isEditMode && hasUnsavedChanges && (
             <span className="text-xs bg-orange-500 px-2 py-0.5 rounded-full">
               Unsaved changes
+            </span>
+          )}
+          {saveError && (
+            <span className="text-xs bg-red-500 px-2 py-0.5 rounded-full">
+              {saveError}
             </span>
           )}
         </div>
@@ -116,17 +193,17 @@ export default function AdminEditBar({ pageSlug: propSlug, onSave }: AdminEditBa
               <button
                 type="button"
                 onClick={handleSave}
-                disabled={!hasUnsavedChanges}
+                disabled={!hasUnsavedChanges || isSaving}
                 className={`
                   px-3 py-1.5 text-sm font-medium rounded-lg
-                  ${hasUnsavedChanges
+                  ${hasUnsavedChanges && !isSaving
                     ? `${solidButtonColors.green.bg} ${solidButtonColors.green.hover} ${solidButtonColors.green.text}`
                     : 'bg-gray-800 text-gray-500 cursor-not-allowed'
                   }
                   transition-colors ${focusRingClasses.green}
                 `}
               >
-                Save
+                {isSaving ? 'Saving...' : 'Save'}
               </button>
               <button
                 type="button"
