@@ -55,6 +55,7 @@ export default function EditBlogPost({ params }: PageProps) {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [useRawMarkdown, setUseRawMarkdown] = useState(true); // Default to raw for markdown content
   const [error, setError] = useState('');
 
   // Fetch post data
@@ -254,19 +255,47 @@ export default function EditBlogPost({ params }: PageProps) {
 
               {/* Content */}
               <div>
-                <label
-                  className={`block text-sm font-medium ${formInputColors.label} mb-2`}
-                >
-                  Content *
-                </label>
-                <RichTextEditor
-                  content={content}
-                  onChange={setContent}
-                  placeholder="Write your blog post content..."
-                />
+                <div className="flex justify-between items-center mb-2">
+                  <label
+                    className={`block text-sm font-medium ${formInputColors.label}`}
+                  >
+                    Content *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setUseRawMarkdown(!useRawMarkdown)}
+                    className={`text-sm px-3 py-1 rounded ${
+                      useRawMarkdown
+                        ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                    }`}
+                  >
+                    {useRawMarkdown ? 'Markdown Mode' : 'Rich Text Mode'}
+                  </button>
+                </div>
+                {useRawMarkdown ? (
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    rows={25}
+                    className={`
+                      w-full px-4 py-3 rounded-lg font-mono text-sm
+                      ${formInputColors.base}
+                      ${formInputColors.placeholder}
+                      ${formInputColors.focus}
+                      border transition-colors resize-y
+                    `}
+                    placeholder="Write your blog post in Markdown..."
+                  />
+                ) : (
+                  <RichTextEditor
+                    content={content}
+                    onChange={setContent}
+                    placeholder="Write your blog post content..."
+                  />
+                )}
                 <p className={`text-sm ${formInputColors.helper} mt-1`}>
-                  {content.replace(/<[^>]*>/g, '').length} characters • ~{Math.ceil(content.replace(/<[^>]*>/g, '').split(/\s+/).filter(Boolean).length / 200)} min
-                  read
+                  {content.length} characters • ~{Math.ceil(content.split(/\s+/).filter(Boolean).length / 200)} min read
                 </p>
               </div>
 
