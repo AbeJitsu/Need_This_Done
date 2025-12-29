@@ -9,15 +9,15 @@ import {
   ButtonField,
   colorOptions,
 } from '../fields';
-import type { HomePageContent, CTAButton, ProcessPreviewStep } from '@/lib/page-content-types';
+import type { HomePageContent, CTAButton, ProcessPreviewStep, HomeServiceCard } from '@/lib/page-content-types';
 
 // ============================================================================
 // Homepage Form
 // ============================================================================
 // What: Form for editing Homepage content
 // Why: Provides organized input fields matching the homepage structure
-// How: Collapsible sections for Hero, Process Preview, and CTA
-// Note: Hero tagline/description and service cards come from site.config (not editable here)
+// How: Collapsible sections for Hero, Services, Process Preview, and CTA
+// Note: All content is now editable via the inline sidebar editor
 
 interface HomepageFormProps {
   content: HomePageContent;
@@ -34,15 +34,21 @@ export default function HomepageForm({ content, onChange }: HomepageFormProps) {
 
   return (
     <div className="space-y-4">
-      {/* Note about hero content */}
-      <div className="px-4 py-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-        <p className="text-sm text-blue-700 dark:text-blue-300">
-          <strong>Note:</strong> The main hero title and description are defined in code (site.config.ts). You can edit the hero buttons and other sections below.
-        </p>
-      </div>
-
-      {/* Hero Buttons */}
-      <CollapsibleSection title="Hero Buttons" defaultOpen={true}>
+      {/* Hero Section */}
+      <CollapsibleSection title="Hero Section" defaultOpen={true}>
+        <TextField
+          label="Title"
+          value={content.hero.title}
+          onChange={(v) => updateField('hero', { ...content.hero, title: v })}
+          placeholder="e.g., Get your tasks done right"
+        />
+        <TextAreaField
+          label="Description"
+          value={content.hero.description}
+          onChange={(v) => updateField('hero', { ...content.hero, description: v })}
+          placeholder="Main hero description"
+          rows={2}
+        />
         <ArrayField<CTAButton>
           label="Buttons"
           items={content.hero.buttons}
@@ -60,17 +66,70 @@ export default function HomepageForm({ content, onChange }: HomepageFormProps) {
         />
       </CollapsibleSection>
 
-      {/* Services Section Title */}
-      <CollapsibleSection title="Services Section" defaultOpen={true}>
+      {/* Services Section */}
+      <CollapsibleSection title="Services Section" defaultOpen={true} badge={`${content.services.cards.length} cards`}>
         <TextField
           label="Section Title"
-          value={content.servicesTitle}
-          onChange={(v) => updateField('servicesTitle', v)}
-          placeholder="e.g., What We Do"
+          value={content.services.title}
+          onChange={(v) => updateField('services', { ...content.services, title: v })}
+          placeholder="e.g., What We Offer"
         />
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          The service cards themselves are defined in code and can&apos;t be edited here.
-        </p>
+        <TextField
+          label="Link Text"
+          value={content.services.linkText}
+          onChange={(v) => updateField('services', { ...content.services, linkText: v })}
+          placeholder="e.g., Compare them all →"
+        />
+        <TextField
+          label="Link URL"
+          value={content.services.linkHref}
+          onChange={(v) => updateField('services', { ...content.services, linkHref: v })}
+          placeholder="/services"
+        />
+        <ArrayField<HomeServiceCard>
+          label="Service Cards"
+          items={content.services.cards}
+          onChange={(cards) => updateField('services', { ...content.services, cards })}
+          createItem={() => ({ title: '', tagline: '', description: '', details: '', color: 'blue' })}
+          itemLabel={(card) => card.title || 'New Service'}
+          minItems={1}
+          maxItems={6}
+          renderItem={(card, _, onCardChange) => (
+            <div className="space-y-3">
+              <TextField
+                label="Title"
+                value={card.title}
+                onChange={(v) => onCardChange({ ...card, title: v })}
+                placeholder="e.g., Virtual Assistant"
+              />
+              <TextField
+                label="Tagline"
+                value={card.tagline}
+                onChange={(v) => onCardChange({ ...card, tagline: v })}
+                placeholder="Short description shown on card"
+              />
+              <TextAreaField
+                label="Description"
+                value={card.description}
+                onChange={(v) => onCardChange({ ...card, description: v })}
+                placeholder="Full description"
+                rows={2}
+              />
+              <TextField
+                label="Details"
+                value={card.details || ''}
+                onChange={(v) => onCardChange({ ...card, details: v })}
+                placeholder="Comma-separated features"
+              />
+              <SelectField
+                label="Color"
+                value={card.color}
+                onChange={(v) => onCardChange({ ...card, color: v as HomeServiceCard['color'] })}
+                options={colorOptions}
+              />
+            </div>
+          )}
+        />
       </CollapsibleSection>
 
       {/* Process Preview */}

@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { siteConfig } from '@/config/site.config';
 import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
@@ -28,13 +27,16 @@ import type { HomePageContent } from '@/lib/page-content-types';
 // What: Client-side wrapper for the home page that enables inline editing
 // Why: Allows admins to click on sections and edit them directly
 // How: Initializes the edit context with page content and wraps sections
+//
+// ALL content comes from the editable pageContent structure, making every
+// component on this page editable via the admin sidebar.
 
 interface HomePageClientProps {
   content: HomePageContent;
 }
 
 export default function HomePageClient({ content: initialContent }: HomePageClientProps) {
-  const { setPageSlug, setPageContent, pageContent, getFieldValue } = useInlineEdit();
+  const { setPageSlug, setPageContent, pageContent } = useInlineEdit();
 
   // Initialize the edit context when the component mounts
   useEffect(() => {
@@ -45,22 +47,16 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
   // Use pageContent from context if available (has pending edits), otherwise use initial
   const content = (pageContent as unknown as HomePageContent) || initialContent;
 
-  // Helper to get a value that might have been edited
-  const getValue = (sectionKey: string, fieldPath: string, fallback: unknown) => {
-    const value = getFieldValue(sectionKey, fieldPath);
-    return value !== undefined ? value : fallback;
-  };
-
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Hero Section */}
       <EditableSection sectionKey="hero" label="Hero Section">
         <div className="text-center mb-16">
           <h1 className={`text-5xl md:text-6xl font-bold tracking-tight ${titleColors.blue} mb-4`}>
-            {siteConfig.project.tagline}
+            {content.hero.title}
           </h1>
           <p className={`text-xl ${formInputColors.helper} leading-relaxed mb-6 max-w-3xl mx-auto`}>
-            {siteConfig.project.description}
+            {content.hero.description}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             {content.hero.buttons.map((button, index) => (
@@ -72,36 +68,36 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
         </div>
       </EditableSection>
 
-      {/* Services Preview */}
-      <EditableSection sectionKey="servicesTitle" label="Services Title">
+      {/* Services Section */}
+      <EditableSection sectionKey="services" label="Services">
         <div className="mb-10">
-          <Link href="/services" className="block group">
+          <Link href={content.services.linkHref} className="block group">
             <h2
               className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center ${groupHoverColors.blue} transition-colors`}
             >
-              {getValue('servicesTitle', '_value', content.servicesTitle) as string}{' '}
+              {content.services.title}{' '}
               <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
             </h2>
           </Link>
           <div className="grid lg:grid-cols-3 gap-6">
-            {siteConfig.services.map((service, index) => (
+            {content.services.cards.map((service, index) => (
               <ServiceCardWithModal
                 key={index}
                 title={service.title}
                 tagline={service.tagline}
                 description={service.description}
                 details={service.details}
-                color={service.color}
+                color={service.color as 'blue' | 'purple' | 'green'}
                 variant="compact"
               />
             ))}
           </div>
           <p className={`text-center mt-4 ${formInputColors.helper}`}>
             <Link
-              href="/services"
+              href={content.services.linkHref}
               className={`${linkColors.blue} ${linkHoverColors.blue} hover:underline ${linkFontWeight} ${focusRingClasses.blue} rounded`}
             >
-              Not sure which service? Compare them all →
+              {content.services.linkText}
             </Link>
           </p>
         </div>
@@ -115,12 +111,12 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
               <h2
                 className={`text-3xl font-bold ${headingColors.primary} mb-2 text-center ${groupHoverColors.purple} transition-colors`}
               >
-                {getValue('consultations', 'title', content.consultations.title) as string}{' '}
+                {content.consultations.title}{' '}
                 <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </h2>
             </Link>
             <p className={`text-center ${formInputColors.helper} mb-6`}>
-              {getValue('consultations', 'description', content.consultations.description) as string}
+              {content.consultations.description}
             </p>
             <div className="grid md:grid-cols-3 gap-4">
               {content.consultations.options.map((option, index) => (
@@ -140,7 +136,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             </div>
             <p className={`text-center mt-4 ${formInputColors.helper} font-medium hover:underline`}>
               <Link href={content.consultations.linkHref} className={`${focusRingClasses.purple} rounded`}>
-                {getValue('consultations', 'linkText', content.consultations.linkText) as string}
+                {content.consultations.linkText}
               </Link>
             </p>
           </div>
@@ -154,7 +150,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           className={`block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 ${cardHoverColors.blue} hover:shadow-xl active:scale-98 group ${focusRingClasses.blue}`}
         >
           <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center transition-colors`}>
-            {getValue('processPreview', 'title', content.processPreview.title) as string}
+            {content.processPreview.title}
           </h2>
           <div className="grid md:grid-cols-4 gap-6 text-center">
             {content.processPreview.steps.map((step, index) => (
@@ -168,7 +164,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             ))}
           </div>
           <p className={`text-center mt-6 ${formInputColors.helper} font-medium group-hover:underline`}>
-            {getValue('processPreview', 'linkText', content.processPreview.linkText) as string}
+            {content.processPreview.linkText}
           </p>
         </Link>
       </EditableSection>
@@ -177,10 +173,10 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       <EditableSection sectionKey="cta" label="Call to Action">
         <div className="text-center py-12 px-6 bg-gradient-to-r from-orange-50 to-blue-50 dark:from-orange-900/20 dark:to-blue-900/20 rounded-2xl">
           <h2 className={`text-3xl font-bold ${headingColors.primary} mb-4`}>
-            {getValue('cta', 'title', content.cta.title) as string}
+            {content.cta.title}
           </h2>
           <p className={`text-lg ${formInputColors.helper} mb-6 max-w-2xl mx-auto`}>
-            {getValue('cta', 'description', content.cta.description) as string}
+            {content.cta.description}
           </p>
           <div className="flex flex-wrap gap-4 justify-center mb-6">
             {content.cta.buttons.map((button, index) => (
@@ -191,18 +187,18 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </div>
           {content.cta.footer && (
             <p className={`${formInputColors.helper}`}>
-              {getValue('cta', 'footer', content.cta.footer) as string}{' '}
+              {content.cta.footer}{' '}
               <Link
                 href={content.cta.footerLinkHref}
                 className={`${accentColors.purple.text} hover:opacity-80 hover:underline ${linkFontWeight}`}
               >
-                {getValue('cta', 'footerLinkText', content.cta.footerLinkText) as string}
+                {content.cta.footerLinkText}
               </Link>
             </p>
           )}
           {content.cta.chatbotNote && (
             <p className={`text-sm ${formInputColors.helper} mt-2`}>
-              {getValue('cta', 'chatbotNote', content.cta.chatbotNote) as string}
+              {content.cta.chatbotNote}
             </p>
           )}
         </div>

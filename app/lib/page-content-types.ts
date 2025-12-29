@@ -219,11 +219,27 @@ export interface ConsultationOption {
   color: AccentVariant;
 }
 
+/** Service card for the home page services section */
+export interface HomeServiceCard {
+  title: string;
+  tagline: string;
+  description: string;
+  details?: string;
+  color: AccentVariant;
+}
+
 export interface HomePageContent {
   hero: {
+    title: string;
+    description: string;
     buttons: CTAButton[];
   };
-  servicesTitle: string;
+  services: {
+    title: string;
+    linkText: string;
+    linkHref: string;
+    cards: HomeServiceCard[];
+  };
   consultations?: {
     title: string;
     description: string;

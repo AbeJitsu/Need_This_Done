@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { siteConfig } from '@/config/site.config';
 import Button from '@/components/Button';
 import ServiceCard from '@/components/ServiceCard';
 import CircleBadge from '@/components/CircleBadge';
@@ -11,7 +10,7 @@ import type { HomePageContent } from '@/lib/page-content-types';
 // What: Renders the Homepage with provided content (not fetched)
 // Why: Used in the content editor to show live preview of changes
 // How: Same structure as the actual Homepage, but takes content as props
-// Note: Services and hero tagline/description come from siteConfig (not editable here)
+// Note: All content now comes from the editable pageContent
 
 interface HomepagePreviewProps {
   content: HomePageContent;
@@ -23,10 +22,10 @@ export default function HomepagePreview({ content }: HomepagePreviewProps) {
       {/* Hero Section */}
       <div className="text-center mb-16">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-blue-600 dark:text-blue-400 mb-4">
-          {siteConfig.project.tagline}
+          {content.hero.title}
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto">
-          {siteConfig.project.description}
+          {content.hero.description}
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
           {content.hero.buttons.map((button, index) => (
@@ -39,25 +38,33 @@ export default function HomepagePreview({ content }: HomepagePreviewProps) {
 
       {/* Services Preview */}
       <div className="mb-10">
-        <Link href="/services" className="block group">
+        <Link href={content.services.linkHref} className="block group">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-            {content.servicesTitle} <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+            {content.services.title} <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
           </h2>
         </Link>
         <div className="grid lg:grid-cols-3 gap-6">
-          {siteConfig.services.map((service, index) => (
+          {content.services.cards.map((service, index) => (
             <ServiceCard
               key={index}
               title={service.title}
               tagline={service.tagline}
               description={service.description}
               details={service.details}
-              color={service.color}
+              color={service.color as 'blue' | 'purple' | 'green'}
               variant="compact"
-              href="/services"
+              href={content.services.linkHref}
             />
           ))}
         </div>
+        <p className="text-center mt-4 text-gray-600 dark:text-gray-300">
+          <Link
+            href={content.services.linkHref}
+            className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+          >
+            {content.services.linkText}
+          </Link>
+        </p>
       </div>
 
       {/* How It Works Preview */}

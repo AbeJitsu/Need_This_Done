@@ -411,12 +411,41 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
 
 export const defaultHomeContent: HomePageContent = {
   hero: {
+    title: 'Get your tasks done right',
+    description: 'Real people helping busy professionals get things done. Book a quick consultation or tell us about your project. We handle the rest.',
     buttons: [
       { text: 'Book a Consultation', variant: 'orange', href: '/shop' },
       { text: 'View Services', variant: 'blue', href: '/services' },
     ],
   },
-  servicesTitle: 'What We Offer',
+  services: {
+    title: 'What We Offer',
+    linkText: 'Not sure which service? Compare them all →',
+    linkHref: '/services',
+    cards: [
+      {
+        title: 'Virtual Assistant',
+        tagline: 'Free up your time for what matters',
+        description: 'Let us handle the day-to-day tasks that eat up your time. Email, scheduling, research, bookings, and social media posting.',
+        details: 'Email Management, Calendar Coordination, Research & Bookings, Social Media Posting',
+        color: 'green',
+      },
+      {
+        title: 'Data & Documents',
+        tagline: 'From messy data to polished documents',
+        description: 'From messy spreadsheets to polished reports. We organize, format, and prepare your documents so they look professional.',
+        details: 'Spreadsheets & Data Entry, Reports & Presentations, Document Formatting, File Organization',
+        color: 'blue',
+      },
+      {
+        title: 'Website Services',
+        tagline: 'Websites that work while you focus on business',
+        description: 'From new builds to updates and maintenance. We handle websites of any size on any platform, so you can focus on your business.',
+        details: 'Website Builds & Redesigns, Content Updates, E-commerce Setup, Ongoing Maintenance',
+        color: 'purple',
+      },
+    ],
+  },
   consultations: {
     title: 'Quick Consultations',
     description:

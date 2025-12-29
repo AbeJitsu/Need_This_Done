@@ -27,7 +27,7 @@ const fieldLabels: Record<string, string> = {
   title: 'Title',
   description: 'Description',
   text: 'Text',
-  variant: 'Color',
+  variant: 'Style',
   href: 'Link URL',
   name: 'Name',
   price: 'Price',
@@ -41,12 +41,22 @@ const fieldLabels: Record<string, string> = {
   number: 'Step Number',
   color: 'Color',
   _value: 'Value',
+  // Service card fields
+  tagline: 'Tagline',
+  details: 'Details',
+  cards: 'Service Cards',
+  // Button fields
+  buttons: 'Buttons',
+  // Consultation fields
+  options: 'Options',
+  // Process fields
+  steps: 'Steps',
 };
 
 // Section labels for homepage
 const sectionLabels: Record<string, string> = {
   hero: 'Hero Section',
-  servicesTitle: 'Services Title',
+  services: 'Services',
   consultations: 'Consultations',
   processPreview: 'Process Preview',
   cta: 'Call to Action',
