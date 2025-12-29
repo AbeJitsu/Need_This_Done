@@ -70,6 +70,16 @@ export default function AdminDashboard() {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Link
+          href="/admin/blog"
+          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all group"
+        >
+          <div className="text-2xl mb-2">📰</div>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+            Blog
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Posts & drafts</p>
+        </Link>
+        <Link
           href="/admin/content"
           className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all group"
         >

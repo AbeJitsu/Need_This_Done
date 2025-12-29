@@ -897,6 +897,42 @@ export const productImageStyles = {
 };
 
 // ============================================================================
+// Admin Sidebar Colors - Navigation for admin sections
+// ============================================================================
+// Used by AdminSidebar component for consistent admin navigation styling
+export const adminSidebarColors = {
+  // Sidebar container
+  bg: 'bg-white dark:bg-gray-800',
+  border: 'border-r border-gray-200 dark:border-gray-700',
+
+  // Header section
+  headerText: 'text-gray-900 dark:text-gray-100',
+  headerSubtext: 'text-gray-500 dark:text-gray-400',
+
+  // Navigation links - inactive
+  linkText: 'text-gray-600 dark:text-gray-300',
+  linkHover: 'hover:bg-gray-100 dark:hover:bg-gray-700',
+  linkHoverText: 'hover:text-gray-900 dark:hover:text-gray-100',
+
+  // Navigation links - active
+  activeBg: 'bg-blue-50 dark:bg-blue-900/30',
+  activeBorder: 'border-l-4 border-blue-500 dark:border-blue-400',
+  activeText: 'text-blue-700 dark:text-blue-300',
+
+  // Icon colors by section
+  iconColors: {
+    dashboard: 'text-blue-600 dark:text-blue-400',
+    blog: 'text-blue-600 dark:text-blue-400',
+    content: 'text-blue-600 dark:text-blue-400',
+    pages: 'text-purple-600 dark:text-purple-400',
+    shop: 'text-green-600 dark:text-green-400',
+    appointments: 'text-teal-600 dark:text-teal-400',
+    users: 'text-pink-600 dark:text-pink-400',
+    dev: 'text-orange-600 dark:text-orange-400',
+  },
+};
+
+// ============================================================================
 // Service Comparison Card Colors - For service comparison sections
 // ============================================================================
 // Three-column card layout with distinct colors for each service type.
