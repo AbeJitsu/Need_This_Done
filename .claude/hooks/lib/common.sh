@@ -24,6 +24,20 @@ export TYPE_CHECK_NEEDED_FILE="$STATE_DIR/type-check-needed"
 export LAST_TYPE_CHECK_FILE="$STATE_DIR/last-type-check"
 
 # ============================================
+# SESSION-SPECIFIC TRACKING
+# Each Claude instance gets its own session ID
+# Enables multiple instances to work in parallel
+# ============================================
+SESSION_ID_FILE="$STATE_DIR/current-session-id"
+if [[ -f "$SESSION_ID_FILE" ]]; then
+  CLAUDE_SESSION_ID=$(cat "$SESSION_ID_FILE")
+else
+  CLAUDE_SESSION_ID="unknown"
+fi
+export CLAUDE_SESSION_ID
+export SESSION_CHANGES_FILE="$STATE_DIR/session-$CLAUDE_SESSION_ID.txt"
+
+# ============================================
 # FRONTEND FILE DETECTION
 # Single regex for all frontend file detection
 # ============================================
