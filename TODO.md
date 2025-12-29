@@ -44,7 +44,7 @@ All security issues fixed (Dec 2025):
     - [ ] Test calendar event creation on approval
     - [ ] Deploy to production
 
-[ ] **Template System Testing** - Verify wizard end-to-end
+[→] **Template System Testing** - Verify wizard end-to-end
     Context: lib/templates/, admin/pages/new
     Done when: Page creation and storage works correctly
 
