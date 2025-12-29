@@ -1,7 +1,7 @@
 #!/bin/bash
-# SessionStart Hook: Present TODO.md priorities
+# SessionStart Hook: Show current task focus
 # What: Runs when session starts, resumes, or after compacting
-# Why: So you immediately see what's ready to work on
+# Why: Immediately see what to work on - autonomous mode
 #
 # Triggers: startup, resume, compact, clear
 
@@ -11,40 +11,31 @@ if [ ! -f "$TODO_FILE" ]; then
   exit 0
 fi
 
-echo ""
-echo "=== TODO.md Priorities ==="
-echo ""
+# Parse task markers from TODO.md
+IN_PROGRESS=$(grep -E '^\[→\].*\*\*' "$TODO_FILE" | head -1)
+READY_TASKS=$(grep -E '^\[ \].*\*\*' "$TODO_FILE")
+READY_COUNT=$(echo "$READY_TASKS" | grep -c '^\[ \]' 2>/dev/null || echo 0)
 
-# Show In Progress section
-echo "IN PROGRESS:"
-awk '/^## In Progress$/,/^---$/' "$TODO_FILE" | grep -E "^\*\*|^- \[" | head -10
-
-echo ""
-
-# Show next up (Short Term from To Do)
-echo "NEXT UP (Short Term):"
-sed -n '/^### Short Term$/,/^### /p' "$TODO_FILE" | grep -E "^\*\*|^- \[" | head -8
-
-echo ""
-echo "==========================="
-echo ""
-
-# ============================================================================
-# Improvement Prompt - Continuous Quality Focus
-# ============================================================================
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🎯 CONTINUOUS IMPROVEMENT"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "What is ONE high-value improvement we can make right now?"
-echo ""
-echo "Quality Lenses:"
-echo "  UX  │ User delight, clarity, accessibility"
-echo "  DX  │ Dev speed, tooling, documentation"
-echo "  DRY │ Extract duplicates, centralize logic"
-echo "  ⊥   │ Orthogonal modules, no coupling"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+if [[ -n "$IN_PROGRESS" ]]; then
+  # Extract task name and description
+  TASK_NAME=$(echo "$IN_PROGRESS" | sed 's/\[→\] \*\*\([^*]*\)\*\*.*/\1/')
+  echo "CURRENT TASK: $TASK_NAME"
+else
+  echo "NO TASK IN PROGRESS"
+fi
+
+echo "   $READY_COUNT tasks ready in TODO.md"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
+
+# Show ready tasks if any
+if [[ "$READY_COUNT" -gt 0 ]] && [[ -z "$IN_PROGRESS" ]]; then
+  echo "Ready tasks:"
+  echo "$READY_TASKS" | head -3 | sed 's/\[ \] \*\*/  → /g' | sed 's/\*\*.*//g'
+  echo ""
+fi
 
 exit 0

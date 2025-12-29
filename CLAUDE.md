@@ -23,6 +23,28 @@ Speak like a friend over coffee - inviting, focused, considerate, supportive. Ea
 3. Run `cd app && npm run dev` to start
 4. Run `/dac` to draft commits (never commit directly)
 
+## Autonomous Mode
+
+Claude works through TODO.md tasks until complete. The stop hook blocks until all tasks are done.
+
+**Task markers in TODO.md:**
+- `[→]` = in progress (only 1 at a time)
+- `[ ]` = ready to work
+- `[x]` = completed
+- `[!]` = blocked (skipped)
+
+**Workflow:**
+1. Mark a task `[→]` to start working
+2. Complete the task
+3. Mark it `[x]` and run `/dac`
+4. Stop hook shows next task
+5. Repeat until all done
+
+**Override commands:**
+- "stop for now" - Pause autonomous work
+- "skip this task" - Mark current as `[!]` blocked
+- "take a break" - Clean stop regardless of tasks
+
 ## Rules (Auto-Loaded)
 
 All rules in `.claude/rules/` are enforced automatically:

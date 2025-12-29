@@ -33,15 +33,24 @@ All security issues fixed (Dec 2025):
 
 ## In Progress
 
-_Currently active work items_
+<!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-**Google Calendar Integration - Final Testing & Deployment**
+[→] **Google Calendar Testing** - Complete integration testing
+    Context: app/api/appointments/, .env.local credentials
+    Done when: OAuth flow works, calendar events created on approval
+    - [x] Google Cloud Console setup complete
+    - [ ] Manual testing of appointment booking flow
+    - [ ] Test Google OAuth authorization flow
+    - [ ] Test calendar event creation on approval
+    - [ ] Deploy to production
 
-- [x] Google Cloud Console setup complete (credentials in .env.local)
-- [ ] Manual testing of appointment booking flow in dev environment
-- [ ] Test Google OAuth authorization flow
-- [ ] Test calendar event creation on appointment approval
-- [ ] Deploy to production
+[ ] **Template System Testing** - Verify wizard end-to-end
+    Context: lib/templates/, admin/pages/new
+    Done when: Page creation and storage works correctly
+
+[ ] **Autonomous Workflow System** - Implement task loop
+    Context: .claude/hooks/, TODO.md
+    Done when: Stop hook blocks until all tasks complete
 
 ---
 
@@ -442,9 +451,7 @@ All major systemic issues have been resolved:
 
 ### Short Term (This Week)
 
-**Template System - Final Testing**
-- [ ] Test wizard end-to-end in dev environment
-- [ ] Verify page creation and storage works correctly
+<!-- Move items to "In Progress" section when starting work -->
 
 **Admin Workflows**
 - [ ] Inventory management interface
