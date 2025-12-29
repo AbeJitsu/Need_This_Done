@@ -339,7 +339,9 @@ const config = {
   // ========================================================================
   // Install and use Tailwind plugins for extra features
 
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 };
 
 module.exports = config;
