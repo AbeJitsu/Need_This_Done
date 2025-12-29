@@ -92,10 +92,25 @@ Phase 2 Sub-tasks:
       - [x] How It Works: trust badges, process steps
 
 Phase 2.5 Sub-tasks:
-- [ ] Edit mode indicator bar (top of viewport)
+- [x] Edit mode indicator bar (top of viewport) ✅ Done
+- [x] Z-index layering for edit controls ✅ Done
+- [x] E2E tests for edit mode exit (5 tests) ✅ Done
 - [ ] Click interception for links/buttons in edit areas
 - [ ] Toast feedback for blocked actions
 - [ ] Hover states and tooltips
+
+Code Quality: DRY Page Initialization
+- [ ] Create `usePageContent<T>()` hook in `app/hooks/usePageContent.ts`
+      - Consolidates: setPageSlug, setPageContent, mergeWithDefaults, useMemo
+      - Single source of truth for page initialization pattern
+      - Prevents infinite re-render bugs by design
+- [ ] Create test to catch infinite re-render patterns in page clients
+- [ ] Refactor page clients to use new hook:
+      - [ ] ServicesPageClient.tsx
+      - [ ] HomePageClient.tsx
+      - [ ] FAQPageClient.tsx
+      - [ ] PricingPageClient.tsx
+      - [ ] HowItWorksPageClient.tsx
 
 **Visual Builder Polish**
 - [x] Re-enable Puck page builder ✅ DONE
@@ -151,6 +166,13 @@ Phase 2.5 Sub-tasks:
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Inline Editing Bug Fixes** (Dec 29, 2025)
+- Fixed z-index layering so edit controls stay clickable (z-[60] for bar/toggle, z-50 for sidebar)
+- Fixed infinite re-render in all 5 page clients (useMemo for merged content)
+- Added 5 E2E tests for edit mode exit scenarios
+- Created test-first-bug-fixes.md rule
+- Context: EditModeBar.tsx, AdminSidebarToggle.tsx, AdminSidebar.tsx, e2e/edit-mode-exit.spec.ts
 
 **Inline Editing Phase 1: Section Editing** (Dec 29, 2025)
 - Click any section on marketing pages to edit it in sidebar
