@@ -33,15 +33,24 @@ All security issues fixed (Dec 2025):
 
 ## In Progress
 
-_Currently active work items_
+<!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-**Google Calendar Integration - Final Testing & Deployment**
+[→] **Google Calendar Testing** - Complete integration testing
+    Context: app/api/appointments/, .env.local credentials
+    Done when: OAuth flow works, calendar events created on approval
+    - [x] Google Cloud Console setup complete
+    - [ ] Manual testing of appointment booking flow
+    - [ ] Test Google OAuth authorization flow
+    - [ ] Test calendar event creation on approval
+    - [ ] Deploy to production
 
-- [x] Google Cloud Console setup complete (credentials in .env.local)
-- [ ] Manual testing of appointment booking flow in dev environment
-- [ ] Test Google OAuth authorization flow
-- [ ] Test calendar event creation on appointment approval
-- [ ] Deploy to production
+[ ] **Template System Testing** - Verify wizard end-to-end
+    Context: lib/templates/, admin/pages/new
+    Done when: Page creation and storage works correctly
+
+[x] **Autonomous Workflow System** - Implement task loop
+    Context: .claude/hooks/, TODO.md
+    Done when: Stop hook blocks until all tasks complete
 
 ---
 
@@ -442,9 +451,7 @@ All major systemic issues have been resolved:
 
 ### Short Term (This Week)
 
-**Template System - Final Testing**
-- [ ] Test wizard end-to-end in dev environment
-- [ ] Verify page creation and storage works correctly
+<!-- Move items to "In Progress" section when starting work -->
 
 **Admin Workflows**
 - [ ] Inventory management interface
@@ -507,44 +514,16 @@ All major systemic issues have been resolved:
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+**Claude Code Autonomous Readiness** (Dec 2025)
+- Swarm review of .claude configuration across 5 domains
+- Fixed JSON parsing in user-prompt-submit.sh hook
+- Added credential file protections (*.pem, *.key, credentials.json)
+- Blocked production branch push in settings.json
+
 **Automated Screenshot Documentation System** (Dec 2025)
 - `/document` slash command for capturing screenshots of changed pages
 - Smart detection: only screenshots affected routes (not all 150+)
 - Component-to-route mapping with 34 routes, 42 components
-- Auto-generates changelog entries with screenshots
-- Public `/changelog` page displays all updates
-- Commands: `npm run screenshot:map` and `npm run screenshot:affected`
-- Flow: Make changes → run `/document` → fill in changelog → commit
-
-**No Broken Windows - Lint & Type Cleanup** (Dec 2025)
-- Migrated all 12 `<img>` tags to Next.js `<Image>` components across codebase
-- Fixed React hook dependency warnings in MediaLibrary, MediaPickerField, ProductGridComponent
-- Fixed TypeScript errors: removed unused variables in E2E test files
-- Created `AppointmentCancellationEmail.tsx` template for customer notifications
-- Added `sendAppointmentCancellation()` to email-service.ts
-- Updated cancel/route.ts to notify customers when appointments are canceled
-- Added Appointments and Users quick links to AdminDashboard
-- Removed verbose console.logs from shop/page.tsx and CartContext.tsx
-- Result: Zero ESLint warnings, zero TypeScript errors
-
-**DRY Refactoring & Code Quality Audit** (Dec 2025)
-- Fixed critical dynamic Tailwind classes in Hero/ImageText that would break in production
-- Centralized Puck color utilities in `puck-utils.tsx`:
-  - `getDividerColors()` - Divider border/gradient
-  - `getPricingColors()` - PricingTable border/bg/button/badge
-  - `getTabColors()` - TabsComponent active/border/bg
-  - Updated FeatureGrid, FeaturedProduct to use `getPuckFullColors()`
-- Centralized template metadata in `lib/templates/config.ts` (category + color info)
-- Removed debug console.logs from supabase.ts, api-auth.ts, auth/callback
-- Fixed `/api/google/connect` to use `verifyAdmin()` pattern
-
-**Template System & Page Wizard** (Dec 2025)
-- Orthogonal template architecture (`lib/templates/`) - types, utils, starter templates
-- 5 starter templates: Course Landing, Business Landing, Product Launch, Portfolio, Contact
-- Phone-first PageWizard component (5-step creation flow)
-- TemplatePicker with category filtering and search
-- "Choose Your Path" admin UI at `/admin/pages/new` (wizard OR full editor)
-- Wired to existing `/api/pages` for storage
 
 ---
 

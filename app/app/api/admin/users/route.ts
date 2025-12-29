@@ -120,10 +120,12 @@ export async function PATCH(request: NextRequest) {
 
       case 'disable': {
         // Ban/unban user (disable/enable account)
+        // Note: ban_duration must be a valid Go duration string (e.g., '87600h' for ~10 years)
+        // 'infinity' is not valid - use a very long duration instead
         const { error: updateError } = await adminClient.auth.admin.updateUserById(
           userId,
           {
-            ban_duration: value ? 'infinity' : 'none',
+            ban_duration: value ? '876000h' : 'none', // ~100 years
           }
         );
 
