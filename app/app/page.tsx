@@ -1,19 +1,29 @@
 import Link from 'next/link';
+import { Render } from '@measured/puck';
+import { puckConfig } from '@/lib/puck-config';
 import { siteConfig } from '@/config/site.config';
 import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
 import { getDefaultContent } from '@/lib/default-page-content';
-import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors, linkColors, linkHoverColors, linkFontWeight, focusRingClasses } from '@/lib/colors';
+import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors, linkColors, linkHoverColors, linkFontWeight, focusRingClasses, gradientColors } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
+import { headers } from 'next/headers';
 
 // ============================================================================
 // Home Page - NeedThisDone Landing Page
 // ============================================================================
 // The main landing page that introduces the service and invites visitors
 // to learn more or submit a project request.
-// Hero tagline/description come from site.config.ts (developer-controlled).
-// Other content is fetched from the database (if customized) or uses defaults.
+//
+// PUCK MIGRATION: This page now checks for a Puck "home" page first.
+// If a published Puck page with slug "home" exists, it renders that.
+// Otherwise, it falls back to the original React implementation.
+//
+// To edit the home page visually:
+// 1. Create a page with slug "home" in /admin/pages
+// 2. Build it with Puck components
+// 3. Publish it - this page will then use the Puck version
 
 // Force dynamic rendering - content comes from API
 export const dynamic = 'force-dynamic';
@@ -24,7 +34,40 @@ export const metadata = {
 };
 
 // ============================================================================
-// Content Fetching
+// Puck Page Fetching
+// ============================================================================
+// Check if a published Puck page with slug "home" exists
+
+interface PuckPageData {
+  content: Record<string, unknown>;
+  is_published: boolean;
+}
+
+async function getPuckHomePage(): Promise<PuckPageData | null> {
+  try {
+    const headersList = await headers();
+    const protocol = headersList.get('x-forwarded-proto') || 'http';
+    const host = headersList.get('x-forwarded-host') || headersList.get('host') || 'localhost:3000';
+    const baseUrl = `${protocol}://${host}`;
+
+    const response = await fetch(`${baseUrl}/api/pages/home`, {
+      cache: 'no-store',
+    });
+
+    if (response.ok) {
+      const { page } = await response.json();
+      if (page && page.is_published) {
+        return page;
+      }
+    }
+  } catch {
+    // No Puck home page - fall through to default
+  }
+  return null;
+}
+
+// ============================================================================
+// Content Fetching (fallback for non-Puck mode)
 // ============================================================================
 
 async function getContent(): Promise<HomePageContent> {
@@ -67,6 +110,21 @@ async function prefetchProducts() {
 // ============================================================================
 
 export default async function HomePage() {
+  // Check for Puck-based home page first
+  const puckPage = await getPuckHomePage();
+
+  // If a published Puck home page exists, render it
+  if (puckPage) {
+    return (
+      <div className={`min-h-screen ${gradientColors.pageBackground}`}>
+        <main>
+          <Render config={puckConfig} data={puckPage.content} />
+        </main>
+      </div>
+    );
+  }
+
+  // Otherwise, fall back to the original implementation
   // Fetch content and prefetch products in parallel for speed
   const [content] = await Promise.all([
     getContent(),

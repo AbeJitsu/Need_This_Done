@@ -28,19 +28,21 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[!] **Inline Page Editing System** - Click any component to edit it inline
+[→] **Inline Page Editing System** - Click any component to edit it inline
     Context: app/components/InlineEditor/, app/context/InlineEditContext.tsx
     Plan: .claude/plans/swift-moseying-noodle.md
-    **Status:** Paused - focus shifted to changelog automation
     **Scope:** Option A (Full) - Migrate pages to Puck + build inline editor
 
     Completed:
     - [x] Admin sidebar navigation (committed 68b6b75, 8dac6b8)
     - [x] Explored home page structure for Puck migration
+    - [x] Home page now supports Puck rendering (app/page.tsx)
+          → Create page with slug "home" in /admin/pages to use it
 
-    Next Steps:
-    - [ ] Migrate Home page to Puck (proof of concept)
-    - [ ] Create InlineEditContext for edit mode state
+    In Progress:
+    - [→] Create InlineEditContext for edit mode state
+
+    Remaining:
     - [ ] Build Property Sidebar for component editing
     - [ ] Live preview with save/discard
 
