@@ -12,7 +12,7 @@ import { ToastProvider } from '@/context/ToastContext';
 import { InlineEditProvider } from '@/context/InlineEditContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
-import { AdminEditBar, PropertySidebar } from '@/components/InlineEditor';
+import { AdminSidebar, AdminSidebarToggle } from '@/components/InlineEditor';
 
 // ============================================================================
 // Force Dynamic Rendering for All Routes
@@ -148,9 +148,9 @@ export default function RootLayout({
                     {/* Service detail modal - available on all pages */}
                     <ServiceDetailModal />
 
-                    {/* Inline editing - floating toolbar + property sidebar for admins */}
-                    <AdminEditBar />
-                    <PropertySidebar />
+                    {/* Inline editing - floating toggle button + sidebar for admins */}
+                    <AdminSidebarToggle />
+                    <AdminSidebar />
                   </InlineEditProvider>
                 </ToastProvider>
               </ServiceModalProvider>

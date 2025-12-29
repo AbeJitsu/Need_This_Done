@@ -2,8 +2,14 @@
 // Inline Editor Components - Export all inline editing components
 // ============================================================================
 
-export { default as AdminEditBar } from './AdminEditBar';
-export { default as PropertySidebar } from './PropertySidebar';
-export { default as PuckPageWrapper } from './PuckPageWrapper';
+// Section-based editing (for marketing pages like Home, Services, etc.)
+export { default as AdminSidebar } from './AdminSidebar';
+export { default as AdminSidebarToggle } from './AdminSidebarToggle';
+export { default as EditableSection } from './EditableSection';
+
+// Puck page rendering (for pages built with Puck visual builder)
 export { default as PuckPageRenderer } from './PuckPageRenderer';
-export { default as EditableWrapper } from './EditableWrapper';
+
+// Note: AdminEditBar, PropertySidebar, PuckPageWrapper, and EditableWrapper
+// are deprecated in favor of the new section-based editing system above.
+// They remain in the codebase but are no longer exported.

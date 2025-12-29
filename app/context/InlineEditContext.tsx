@@ -3,58 +3,89 @@
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 
 // ============================================================================
-// Inline Edit Context - Manage inline editing state for Puck pages
+// Inline Edit Context - Manage inline editing state for all pages
 // ============================================================================
-// What: Provides state and functions for inline component editing
-// Why: Allows admins to click on components and edit them directly
-// How: Tracks edit mode, selected component, and pending changes
+// What: Provides state and functions for inline content editing
+// Why: Allows admins to click on page sections and edit them directly
+// How: Tracks edit mode, selected section, and pending changes
+//
+// Supports two editing modes:
+// 1. Section-based editing (for marketing pages like Home, Services, etc.)
+// 2. Component-based editing (for Puck-built pages)
 
 // ============================================================================
-// Types
+// Types - Section-based editing (marketing pages)
+// ============================================================================
+
+export interface SectionSelection {
+  // The section key in the page content (e.g., "hero", "consultations")
+  sectionKey: string;
+  // Human-readable label for the section
+  label: string;
+  // The section's current content
+  content: Record<string, unknown>;
+  // Optional: path within the section for nested editing (e.g., "buttons.0")
+  subPath?: string;
+  // Optional: label for the current nested path
+  subLabel?: string;
+}
+
+export interface PendingChange {
+  // For section-based editing
+  sectionKey: string;
+  fieldPath: string;
+  oldValue: unknown;
+  newValue: unknown;
+}
+
+// ============================================================================
+// Types - Component-based editing (Puck pages) - Legacy support
 // ============================================================================
 
 export interface ComponentSelection {
-  // The component's path in the Puck data structure (e.g., "content.0")
+  // Path to the component in the Puck content tree
   path: string;
   // The component type (e.g., "Hero", "TextBlock")
   type: string;
   // The component's current props
   props: Record<string, unknown>;
-  // Zone the component is in (e.g., "root", "column-1")
+  // The zone the component is in (optional)
   zone?: string;
 }
 
-export interface PendingChange {
+export interface LegacyPendingChange {
   path: string;
   propName: string;
   oldValue: unknown;
   newValue: unknown;
 }
 
+// ============================================================================
+// Context Type
+// ============================================================================
+
 interface InlineEditContextType {
   // Is edit mode active?
   isEditMode: boolean;
-  // Toggle edit mode on/off
   setEditMode: (enabled: boolean) => void;
 
-  // Currently selected component (null if none)
-  selectedComponent: ComponentSelection | null;
-  // Select a component for editing
-  selectComponent: (selection: ComponentSelection | null) => void;
+  // ========== Section-based editing (new) ==========
+
+  // Currently selected section (null if none)
+  selectedSection: SectionSelection | null;
+  selectSection: (selection: SectionSelection | null) => void;
 
   // Pending changes (before save)
   pendingChanges: PendingChange[];
-  // Add a pending change
   addPendingChange: (change: PendingChange) => void;
-  // Clear all pending changes
   clearPendingChanges: () => void;
 
   // Has unsaved changes?
   hasUnsavedChanges: boolean;
 
-  // Page data being edited
-  pageData: Record<string, unknown> | null;
-  setPageData: (data: Record<string, unknown> | null) => void;
+  // Current page content
+  pageContent: Record<string, unknown> | null;
+  setPageContent: (content: Record<string, unknown> | null) => void;
 
   // Page slug being edited
   pageSlug: string | null;
@@ -63,6 +94,22 @@ interface InlineEditContextType {
   // Is sidebar open?
   isSidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+
+  // Update a field and track the change
+  updateField: (sectionKey: string, fieldPath: string, newValue: unknown) => void;
+
+  // Get the current value of a field (with pending changes applied)
+  getFieldValue: (sectionKey: string, fieldPath: string) => unknown;
+
+  // ========== Component-based editing (Puck - legacy) ==========
+
+  // Currently selected component (for Puck pages)
+  selectedComponent: ComponentSelection | null;
+  selectComponent: (selection: ComponentSelection | null) => void;
+
+  // Puck page data
+  pageData: Record<string, unknown> | null;
+  setPageData: (data: Record<string, unknown> | null) => void;
 }
 
 // ============================================================================
@@ -72,37 +119,84 @@ interface InlineEditContextType {
 const InlineEditContext = createContext<InlineEditContextType | undefined>(undefined);
 
 // ============================================================================
+// Helper: Get nested value from object by path
+// ============================================================================
+
+function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
+  const keys = path.split('.');
+  let current: unknown = obj;
+  for (const key of keys) {
+    if (current === null || current === undefined) return undefined;
+    current = (current as Record<string, unknown>)[key];
+  }
+  return current;
+}
+
+// ============================================================================
+// Helper: Set nested value in object by path (immutably)
+// ============================================================================
+
+function setNestedValue(
+  obj: Record<string, unknown>,
+  path: string,
+  value: unknown
+): Record<string, unknown> {
+  const keys = path.split('.');
+  const result = JSON.parse(JSON.stringify(obj)); // Deep clone
+  let current: Record<string, unknown> = result;
+
+  for (let i = 0; i < keys.length - 1; i++) {
+    const key = keys[i];
+    if (!current[key] || typeof current[key] !== 'object') {
+      current[key] = {};
+    }
+    current = current[key] as Record<string, unknown>;
+  }
+
+  current[keys[keys.length - 1]] = value;
+  return result;
+}
+
+// ============================================================================
 // Provider
 // ============================================================================
 
 export function InlineEditProvider({ children }: { children: ReactNode }) {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState<ComponentSelection | null>(null);
-  const [pendingChanges, setPendingChanges] = useState<PendingChange[]>([]);
-  const [pageData, setPageData] = useState<Record<string, unknown> | null>(null);
-  const [pageSlug, setPageSlug] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Section-based editing state (new)
+  const [selectedSection, setSelectedSection] = useState<SectionSelection | null>(null);
+  const [pendingChanges, setPendingChanges] = useState<PendingChange[]>([]);
+  const [pageContent, setPageContent] = useState<Record<string, unknown> | null>(null);
+  const [pageSlug, setPageSlug] = useState<string | null>(null);
+
+  // Component-based editing state (Puck - legacy)
+  const [selectedComponent, setSelectedComponent] = useState<ComponentSelection | null>(null);
+  const [pageData, setPageData] = useState<Record<string, unknown> | null>(null);
 
   const setEditMode = useCallback((enabled: boolean) => {
     setIsEditMode(enabled);
     if (!enabled) {
-      // Clear selection and close sidebar when exiting edit mode
+      // Clear selections when exiting edit mode
+      setSelectedSection(null);
       setSelectedComponent(null);
-      setIsSidebarOpen(false);
     }
+  }, []);
+
+  const selectSection = useCallback((selection: SectionSelection | null) => {
+    setSelectedSection(selection);
   }, []);
 
   const selectComponent = useCallback((selection: ComponentSelection | null) => {
     setSelectedComponent(selection);
-    // Open sidebar when selecting, close when deselecting
-    setIsSidebarOpen(selection !== null);
   }, []);
 
   const addPendingChange = useCallback((change: PendingChange) => {
     setPendingChanges(prev => {
-      // Replace existing change for same path+prop or add new
+      // Replace existing change for same section+field or add new
       const existing = prev.findIndex(
-        c => c.path === change.path && c.propName === change.propName
+        c => c.sectionKey === change.sectionKey && c.fieldPath === change.fieldPath
       );
       if (existing >= 0) {
         const updated = [...prev];
@@ -117,21 +211,80 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     setPendingChanges([]);
   }, []);
 
+  // Update a field and track the change
+  const updateField = useCallback((sectionKey: string, fieldPath: string, newValue: unknown) => {
+    if (!pageContent) return;
+
+    // Handle primitive sections (wrapped with _value for editing)
+    // When fieldPath is '_value', the original section is a primitive
+    const isPrimitiveSection = fieldPath === '_value';
+    const actualPath = isPrimitiveSection ? sectionKey : `${sectionKey}.${fieldPath}`;
+    const oldValue = getNestedValue(pageContent, actualPath);
+
+    // Add to pending changes
+    addPendingChange({
+      sectionKey,
+      fieldPath,
+      oldValue,
+      newValue,
+    });
+
+    // Update page content with new value
+    setPageContent(prev => {
+      if (!prev) return prev;
+      if (isPrimitiveSection) {
+        // For primitive sections, set the value directly
+        return { ...prev, [sectionKey]: newValue };
+      }
+      return setNestedValue(prev, actualPath, newValue);
+    });
+
+    // Update selected section content if it's the one being edited
+    if (selectedSection && selectedSection.sectionKey === sectionKey) {
+      setSelectedSection(prev => {
+        if (!prev) return prev;
+        if (isPrimitiveSection) {
+          // Keep the _value wrapper for display consistency
+          return { ...prev, content: { _value: newValue } };
+        }
+        return {
+          ...prev,
+          content: setNestedValue(prev.content, fieldPath, newValue),
+        };
+      });
+    }
+  }, [pageContent, selectedSection, addPendingChange]);
+
+  // Get field value with pending changes applied
+  const getFieldValue = useCallback((sectionKey: string, fieldPath: string): unknown => {
+    if (!pageContent) return undefined;
+    const fullPath = `${sectionKey}.${fieldPath}`;
+    return getNestedValue(pageContent, fullPath);
+  }, [pageContent]);
+
   const value: InlineEditContextType = {
     isEditMode,
     setEditMode,
-    selectedComponent,
-    selectComponent,
+    // Section-based (new)
+    selectedSection,
+    selectSection,
     pendingChanges,
     addPendingChange,
     clearPendingChanges,
     hasUnsavedChanges: pendingChanges.length > 0,
-    pageData,
-    setPageData,
+    pageContent,
+    setPageContent,
     pageSlug,
     setPageSlug,
     isSidebarOpen,
     setSidebarOpen: setIsSidebarOpen,
+    updateField,
+    getFieldValue,
+    // Component-based (Puck - legacy)
+    selectedComponent,
+    selectComponent,
+    pageData,
+    setPageData,
   };
 
   return (

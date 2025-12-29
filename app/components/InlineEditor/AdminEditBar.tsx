@@ -1,3 +1,7 @@
+// @ts-nocheck
+// DEPRECATED: This component has been replaced by AdminSidebar and AdminSidebarToggle.
+// It remains in the codebase for reference but is no longer exported or used.
+
 'use client';
 
 import { useState } from 'react';

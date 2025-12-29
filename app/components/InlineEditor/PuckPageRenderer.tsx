@@ -59,7 +59,7 @@ export default function PuckPageRenderer({ slug, content }: PuckPageRendererProp
 
       if (componentIndex !== null && componentType) {
         const idx = parseInt(componentIndex, 10);
-        const puckContent = content as PuckContent;
+        const puckContent = content as unknown as PuckContent;
         const componentData = puckContent.content?.[idx];
 
         if (componentData) {
@@ -85,7 +85,7 @@ export default function PuckPageRenderer({ slug, content }: PuckPageRendererProp
       const mainContent = container.querySelector('main');
       if (mainContent) {
         const children = mainContent.children;
-        const puckContent = content as PuckContent;
+        const puckContent = content as unknown as PuckContent;
         Array.from(children).forEach((child, index) => {
           if (index < (puckContent.content?.length || 0)) {
             const componentType = puckContent.content[index]?.type || 'Unknown';
