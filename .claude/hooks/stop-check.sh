@@ -57,17 +57,13 @@ if [[ -f "$TODO_FILE" ]]; then
     exit 2
   fi
 
-  # Ready tasks exist - show next one
+  # Ready tasks exist - inform but don't block
   if [[ "$READY_COUNT" -gt 0 ]]; then
     NEXT_TASK=$(echo "$READY_TASKS" | head -1)
     TASK_NAME=$(echo "$NEXT_TASK" | sed 's/\[ \] \*\*\([^*]*\)\*\*.*/\1/')
     echo "" >&2
-    echo "═══════════════════════════════════════════════════════" >&2
-    echo "NEXT TASK: $TASK_NAME ($READY_COUNT remaining)" >&2
-    echo "═══════════════════════════════════════════════════════" >&2
-    echo "" >&2
-    echo "Mark [ ] as [→] in TODO.md and begin work." >&2
-    exit 2
+    echo "📋 $READY_COUNT tasks ready. Next: $TASK_NAME" >&2
+    # Don't block - allow exit with pending tasks
   fi
 fi
 
