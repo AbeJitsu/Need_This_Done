@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { getDefaultContent } from '@/lib/default-page-content';
+import { getPageSlugFromPath } from '@/lib/editable-routes';
 import type { EditablePageSlug, PageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -92,26 +94,33 @@ function deepMergeWithDefaults<T>(
  * - mergeWithDefaults function
  * - pageContent fallback logic
  *
- * @param slug - The page slug (must match EditablePageSlug type)
- * @param initialContent - Content passed from server component
+ * @param slugOrContent - Either a page slug OR the initial content (for auto-detection)
+ * @param contentOrDefaults - Content if slug provided, or defaults if using auto-detection
  * @param defaults - Optional defaults (auto-loaded from getDefaultContent if not provided)
  *
  * @example
- * // In a page client component:
+ * // NEW: Auto-detect slug from URL (recommended)
+ * export default function ServicesPageClient({ content: initialContent }) {
+ *   const { content, updateField } = useEditableContent<ServicesPageContent>(initialContent);
+ *   return <div>{content.header.title}</div>;
+ * }
+ *
+ * @example
+ * // LEGACY: Explicit slug (still supported for backward compatibility)
  * export default function ServicesPageClient({ content: initialContent }) {
  *   const { content, updateField } = useEditableContent<ServicesPageContent>(
  *     'services',
  *     initialContent
  *   );
- *
  *   return <div>{content.header.title}</div>;
  * }
  */
 export function useEditableContent<T extends PageContent>(
-  slug: EditablePageSlug,
-  initialContent: T | Partial<T>,
+  slugOrContent: EditablePageSlug | T | Partial<T>,
+  contentOrDefaults?: T | Partial<T>,
   defaults?: T
 ): UseEditableContentResult<T> {
+  const pathname = usePathname();
   const {
     setPageSlug,
     setPageContent,
@@ -120,35 +129,71 @@ export function useEditableContent<T extends PageContent>(
     hasUnsavedChanges,
   } = useInlineEdit();
 
+  // Detect whether first argument is a slug (string) or content (object)
+  const isSlugProvided = typeof slugOrContent === 'string';
+
+  // Resolve the slug - either from parameter or auto-detect from URL
+  const resolvedSlug = useMemo((): EditablePageSlug => {
+    if (isSlugProvided) {
+      return slugOrContent as EditablePageSlug;
+    }
+
+    // Auto-detect from pathname
+    const detected = getPageSlugFromPath(pathname);
+    if (!detected) {
+      throw new Error(
+        `Could not auto-detect page slug from pathname "${pathname}". ` +
+        `Add this route to lib/editable-routes.ts or provide slug explicitly.`
+      );
+    }
+    return detected;
+  }, [isSlugProvided, slugOrContent, pathname]);
+
+  // Resolve initial content based on call signature
+  const initialContent = useMemo((): T | Partial<T> => {
+    if (isSlugProvided) {
+      return contentOrDefaults as T | Partial<T>;
+    }
+    return slugOrContent as T | Partial<T>;
+  }, [isSlugProvided, slugOrContent, contentOrDefaults]);
+
+  // Resolve defaults based on call signature
+  const providedDefaults = useMemo((): T | undefined => {
+    if (isSlugProvided) {
+      return defaults;
+    }
+    return contentOrDefaults as T | undefined;
+  }, [isSlugProvided, contentOrDefaults, defaults]);
+
   // Get defaults from the central store if not provided
-  const resolvedDefaults = useMemo(() => {
-    return (defaults ?? getDefaultContent(slug)) as T;
-  }, [defaults, slug]);
+  const finalDefaults = useMemo(() => {
+    return (providedDefaults ?? getDefaultContent(resolvedSlug)) as T;
+  }, [providedDefaults, resolvedSlug]);
 
   // Memoize merged content to prevent infinite re-renders
   // This is the key fix - without memoization, object creation
   // triggers useEffect, which sets state, which re-renders...
   const safeInitialContent = useMemo(
-    () => deepMergeWithDefaults(initialContent as Partial<T>, resolvedDefaults),
-    [initialContent, resolvedDefaults]
+    () => deepMergeWithDefaults(initialContent as Partial<T>, finalDefaults),
+    [initialContent, finalDefaults]
   );
 
   // Initialize the edit context when the component mounts
   useEffect(() => {
-    setPageSlug(slug);
+    setPageSlug(resolvedSlug);
     setPageContent(safeInitialContent as unknown as Record<string, unknown>);
-  }, [slug, safeInitialContent, setPageSlug, setPageContent]);
+  }, [resolvedSlug, safeInitialContent, setPageSlug, setPageContent]);
 
   // Get live content (with pending edits) or fall back to initial
   const liveContent = useMemo(() => {
     if (pageContent) {
       return deepMergeWithDefaults(
         pageContent as Partial<T>,
-        resolvedDefaults
+        finalDefaults
       );
     }
     return safeInitialContent;
-  }, [pageContent, resolvedDefaults, safeInitialContent]);
+  }, [pageContent, finalDefaults, safeInitialContent]);
 
   // Wrapper for updateField that uses the current section key
   const updateField = useCallback(
@@ -166,7 +211,7 @@ export function useEditableContent<T extends PageContent>(
 
   return {
     content: liveContent,
-    pageSlug: slug,
+    pageSlug: resolvedSlug,
     updateField,
     hasUnsavedChanges,
   };

@@ -25,7 +25,8 @@ interface HowItWorksPageClientProps {
 }
 
 export default function HowItWorksPageClient({ content: initialContent }: HowItWorksPageClientProps) {
-  const { content } = useEditableContent<HowItWorksPageContent>('how-it-works', initialContent);
+  // Auto-detects slug from URL
+  const { content } = useEditableContent<HowItWorksPageContent>(initialContent);
   const [step1, ...remainingSteps] = content.steps;
 
   return (

@@ -35,8 +35,8 @@ interface HomePageClientProps {
 }
 
 export default function HomePageClient({ content: initialContent }: HomePageClientProps) {
-  // Single hook call handles merging, memoization, and context registration
-  const { content } = useEditableContent<HomePageContent>('home', initialContent);
+  // Auto-detects slug from URL - no need to pass 'home' explicitly
+  const { content } = useEditableContent<HomePageContent>(initialContent);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">

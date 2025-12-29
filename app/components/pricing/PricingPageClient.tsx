@@ -19,7 +19,8 @@ interface PricingPageClientProps {
 }
 
 export default function PricingPageClient({ content: initialContent }: PricingPageClientProps) {
-  const { content } = useEditableContent<PricingPageContent>('pricing', initialContent);
+  // Auto-detects slug from URL
+  const { content } = useEditableContent<PricingPageContent>(initialContent);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">

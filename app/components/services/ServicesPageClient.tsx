@@ -40,7 +40,8 @@ export default function ServicesPageClient({ content: initialContent }: Services
   // - Memoizes to prevent infinite re-renders
   // - Registers with edit context
   // - Returns live content with pending edits
-  const { content } = useEditableContent<ServicesPageContent>('services', initialContent);
+  // Auto-detects slug from URL - no need to pass 'services' explicitly
+  const { content } = useEditableContent<ServicesPageContent>(initialContent);
 
   return (
     <ServiceModalProvider>
