@@ -42,8 +42,12 @@ if [[ -f "$TODO_FILE" ]]; then
   # Parse task markers from In Progress section
   # [→] = in progress, [ ] = ready, [x] = done, [!] = blocked
   IN_PROGRESS=$(grep -E '^\[→\].*\*\*' "$TODO_FILE" | head -1)
-  READY_TASKS=$(grep -E '^\[ \].*\*\*' "$TODO_FILE")
-  READY_COUNT=$(echo "$READY_TASKS" | grep -c '^\[ \]' 2>/dev/null || echo 0)
+  READY_TASKS=$(grep -E '^\[ \].*\*\*' "$TODO_FILE" || true)
+  if [[ -z "$READY_TASKS" ]]; then
+    READY_COUNT=0
+  else
+    READY_COUNT=$(echo "$READY_TASKS" | wc -l | tr -d ' ')
+  fi
 
   # Task in progress - keep working
   if [[ -n "$IN_PROGRESS" ]]; then
