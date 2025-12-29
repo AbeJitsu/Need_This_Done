@@ -47,7 +47,21 @@
       "Edit(**/.env*)",
       "Read(**/secrets.*)",
       "Write(**/secrets.*)",
-      "Edit(**/secrets.*)"
+      "Edit(**/secrets.*)",
+      "Read(**/credentials.json)",
+      "Write(**/credentials.json)",
+      "Edit(**/credentials.json)",
+      "Read(**/service-account*.json)",
+      "Write(**/service-account*.json)",
+      "Edit(**/service-account*.json)",
+      "Read(**/*.pem)",
+      "Write(**/*.pem)",
+      "Edit(**/*.pem)",
+      "Read(**/*.key)",
+      "Write(**/*.key)",
+      "Edit(**/*.key)",
+      "Bash(git push origin production:*)",
+      "Bash(git push origin prod:*)"
     ]
   },
   "hooks": {
