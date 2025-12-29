@@ -47,85 +47,65 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 ### Medium Term (2-4 Weeks)
 
-**Inline Editing System** - Click any component to edit it
-**Plan:** [.claude/plans/inline-editing-phase2.md](.claude/plans/inline-editing-phase2.md)
+**Universal Inline Editing** - Click anything, edit anything, configure nothing
+**Design Principle:** [.claude/rules/etc-easy-to-change.md](.claude/rules/etc-easy-to-change.md)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                    INLINE EDITING SYSTEM ROADMAP                        │
+│                    UNIVERSAL EDITABILITY ROADMAP                         │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
 │  Phase 1: Section Editing ✅ DONE                                       │
 │  ─────────────────────────                                              │
 │  Click section → Edit all fields in sidebar                             │
-│  Pattern: EditableSection wrapper on all marketing pages                │
+│  Pattern: EditableSection wrapper                                       │
 │                                                                         │
 │  Phase 2: Item-Level Editing ✅ DONE                                    │
 │  ────────────────────────────                                           │
 │  Click card/item → Edit just that item                                  │
-│  Pattern: EditableItem wrapper for array items                          │
-│  Breadcrumb: Section → Item navigation                                  │
+│  Pattern: EditableItem wrapper for arrays                               │
 │                                                                         │
-│  Phase 2.5: Edit Mode UX ← NEXT                                         │
-│  ────────────────────────                                               │
-│  Block link clicks in edit mode                                         │
-│  Show helpful hints and guidance                                        │
-│  Visual feedback on all interactions                                    │
+│  Phase 2.5: DRY Consolidation ✅ DONE                                   │
+│  ────────────────────────────────                                       │
+│  useEditableContent<T>() hook replaces 20+ lines of boilerplate         │
+│  All 5 marketing pages migrated to 1-line hook                          │
+│  lib/editable-routes.ts maps routes to slugs                            │
 │                                                                         │
-│  Phase 3: Component Creation                                            │
+│  Phase 3: Auto Route Detection ← NEXT                                   │
+│  ────────────────────────────────                                       │
+│  useEditableContent() auto-detects slug from URL                        │
+│  New page = just call hook, no config needed                            │
+│                                                                         │
+│  Phase 4: Universal Click-to-Edit                                       │
+│  ─────────────────────────────────                                      │
+│  DOM walking + content JSON matching                                    │
+│  Click ANY text → system finds content path → edit                      │
+│  No wrappers needed                                                     │
+│                                                                         │
+│  Phase 5: Zero-Config Pages                                             │
 │  ──────────────────────────                                             │
-│  [+ Add] buttons to create new items                                    │
-│  Delete/reorder existing items                                          │
-│  Component picker modal                                                 │
+│  content/about.json exists? Page is editable.                           │
+│  No hooks. No wrappers. Just JSON + components.                         │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-Phase 2 Sub-tasks:
-- [x] Create EditableItem component for clicking individual cards/items
-- [x] Update sidebar for item editing with breadcrumb navigation
-- [x] Wrap array items in all 5 marketing pages
-      - [x] Services: scenarios, comparison columns, paths, expectations
-      - [x] Home: buttons, cards, options, steps (5 arrays)
-      - [x] Pricing: tier cards
-      - [x] FAQ: FAQ items
-      - [x] How It Works: trust badges, process steps
+Phase 3 Sub-tasks (Auto Route Detection):
+- [ ] Add `usePathname()` to useEditableContent for auto-detection
+- [ ] Remove slug parameter requirement (infer from route)
+- [ ] Test with new page that doesn't pass slug
 
-Phase 2.5 Sub-tasks:
-- [x] Edit mode indicator bar (top of viewport) ✅ Done
-- [x] Z-index layering for edit controls ✅ Done
-- [x] E2E tests for edit mode exit (5 tests) ✅ Done
-- [ ] Click interception for links/buttons in edit areas
-- [ ] Toast feedback for blocked actions
-- [ ] Hover states and tooltips
+Phase 4 Sub-tasks (Universal Click-to-Edit):
+- [ ] Create content path mapper (DOM text → JSON path)
+- [ ] Add global click handler for edit mode
+- [ ] Walk up DOM tree to find editable boundary
+- [ ] Match clicked text to content schema
 
-**Code Quality: Sustainable Page Content Architecture**
-**Plan:** [.claude/plans/sustainable-page-content.md](.claude/plans/sustainable-page-content.md)
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│  PROBLEM: 36+ pages, each repeating 15+ lines of identical boilerplate  │
-│  SOLUTION: Route-aware provider + 1-line registration hook              │
-│  RESULT: New editable page = add slug to config, that's it              │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-Phase 1: Create Infrastructure
-- [ ] Create `lib/editable-routes.ts` (route → slug mapping)
-- [ ] Create `hooks/useEditableContent.ts` (1-line registration)
-- [ ] Update `InlineEditContext` (route-aware, generic merge)
-
-Phase 2: Migrate Pages (remove boilerplate)
-- [ ] ServicesPageClient.tsx
-- [ ] HomePageClient.tsx
-- [ ] FAQPageClient.tsx
-- [ ] PricingPageClient.tsx
-- [ ] HowItWorksPageClient.tsx
-
-Phase 3: Testing & Prevention
-- [ ] Create test for duplicate boilerplate detection
-- [ ] Create test for infinite re-render patterns
-- [ ] Document pattern for new pages
+Phase 5 Sub-tasks (Zero-Config):
+- [ ] Auto-discover content JSON files at build time
+- [ ] Generate route manifest from /content/*.json
+- [ ] Remove all EditableSection/EditableItem wrappers
+- [ ] Document "add JSON file = page is editable" pattern
 
 **Visual Builder Polish**
 - [x] Re-enable Puck page builder ✅ DONE
@@ -182,18 +162,20 @@ Phase 3: Testing & Prevention
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
-**Inline Editing Bug Fixes** (Dec 29, 2025)
-- Fixed z-index layering so edit controls stay clickable (z-[60] for bar/toggle, z-50 for sidebar)
-- Fixed infinite re-render in all 5 page clients (useMemo for merged content)
-- Added 5 E2E tests for edit mode exit scenarios
-- Created TDD rule (`.claude/rules/tdd.md`)
-- Context: EditModeBar.tsx, AdminSidebarToggle.tsx, AdminSidebar.tsx, e2e/edit-mode-exit.spec.ts
+**DRY Consolidation: useEditableContent Hook** (Dec 29, 2025)
+- Created `useEditableContent<T>()` hook replacing 20+ lines of boilerplate per page
+- Migrated all 5 marketing page clients (Services, Home, FAQ, Pricing, HowItWorks)
+- Created `lib/editable-routes.ts` with 10 unit tests for route→slug mapping
+- Added ETC (Easy To Change) design principle rule
+- Context: hooks/useEditableContent.ts, lib/editable-routes.ts, .claude/rules/etc-easy-to-change.md
 
-**Inline Editing Phase 1: Section Editing** (Dec 29, 2025)
-- Click any section on marketing pages to edit it in sidebar
-- All 5 marketing pages use consistent EditableSection pattern
-- mergeWithDefaults() handles old/partial content gracefully
-- Context: app/components/InlineEditor/, app/context/InlineEditContext.tsx
+**Inline Editing Phase 2: Item-Level + Bug Fixes** (Dec 29, 2025)
+- Click individual cards/items to edit just that item
+- Fixed z-index layering (z-[60] for bar/toggle, z-50 for sidebar)
+- Fixed infinite re-render with useMemo
+- Added 5 E2E tests for edit mode exit
+- Created TDD rule (`.claude/rules/tdd.md`)
+- Context: EditableItem component, EditModeBar.tsx, AdminSidebar.tsx
 
 **Fully Automated Changelog System** (Dec 29, 2025)
 - Stop hook prompts Claude to complete changelog entries automatically
