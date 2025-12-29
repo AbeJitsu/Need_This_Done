@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import Button from '@/components/Button';
-import MarkdownContent from '@/components/blog/MarkdownContent';
 import {
   BlogPost,
   formatPublishedDate,
@@ -185,8 +184,16 @@ export default async function BlogPostPage({ params }: PageProps) {
         </div>
       )}
 
-      {/* Content */}
-      <MarkdownContent content={post.content} />
+      {/* Content - renders HTML from rich text editor */}
+      <div
+        className="prose prose-lg dark:prose-invert max-w-none
+          prose-headings:font-bold prose-headings:tracking-tight
+          prose-a:text-blue-600 dark:prose-a:text-blue-400
+          prose-pre:bg-gray-900 dark:prose-pre:bg-gray-950
+          prose-code:text-pink-600 dark:prose-code:text-pink-400
+          prose-img:rounded-lg"
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      />
 
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
