@@ -11,6 +11,7 @@ TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
 # ============================================
 # CHECK 1: Frontend Changes → Auto-Document
 # ============================================
+CHANGELOG_FILE=""
 if [[ -f "$FRONTEND_CHANGES_FILE" ]] && [[ -s "$FRONTEND_CHANGES_FILE" ]]; then
   CHANGE_COUNT=$(get_tracked_count "$FRONTEND_CHANGES_FILE")
   echo "" >&2
@@ -24,8 +25,12 @@ if [[ -f "$FRONTEND_CHANGES_FILE" ]] && [[ -s "$FRONTEND_CHANGES_FILE" ]]; then
   if curl -s --max-time 2 http://localhost:3000 >/dev/null 2>&1; then
     # Dev server running - full screenshot capture
     echo "  Dev server detected. Capturing screenshots..." >&2
-    cd "$CLAUDE_PROJECT_DIR/app" && npm run screenshot:affected 2>&1 | sed 's/^/  /' >&2
+    SCREENSHOT_OUTPUT=$(cd "$CLAUDE_PROJECT_DIR/app" && npm run screenshot:affected 2>&1)
     SCREENSHOT_EXIT=$?
+    echo "$SCREENSHOT_OUTPUT" | sed 's/^/  /' >&2
+
+    # Extract changelog file path from output
+    CHANGELOG_FILE=$(echo "$SCREENSHOT_OUTPUT" | grep "FILE:" | sed 's/.*FILE: //')
 
     if [[ $SCREENSHOT_EXIT -eq 0 ]]; then
       rm -f "$FRONTEND_CHANGES_FILE"
@@ -39,12 +44,34 @@ if [[ -f "$FRONTEND_CHANGES_FILE" ]] && [[ -s "$FRONTEND_CHANGES_FILE" ]]; then
   else
     # No dev server - create changelog template only
     echo "  No dev server at localhost:3000. Creating changelog template..." >&2
-    cd "$CLAUDE_PROJECT_DIR/app" && npx tsx scripts/screenshot-affected.ts --skip-playwright 2>&1 | sed 's/^/  /' >&2 || true
+    SCREENSHOT_OUTPUT=$(cd "$CLAUDE_PROJECT_DIR/app" && npx tsx scripts/screenshot-affected.ts --skip-playwright 2>&1)
+    echo "$SCREENSHOT_OUTPUT" | sed 's/^/  /' >&2
+    CHANGELOG_FILE=$(echo "$SCREENSHOT_OUTPUT" | grep "FILE:" | sed 's/.*FILE: //')
     rm -f "$FRONTEND_CHANGES_FILE"
     echo "" >&2
     echo "📝 Changelog template created. Run 'npm run dev' + 'npm run screenshot:affected' for screenshots." >&2
   fi
   echo "" >&2
+
+  # If changelog was created, prompt Claude to complete it
+  if [[ -n "$CHANGELOG_FILE" ]] && [[ -f "$CLAUDE_PROJECT_DIR/$CHANGELOG_FILE" ]]; then
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo "CLAUDE: Complete the changelog entry" >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo "" >&2
+    echo "Read: $CHANGELOG_FILE" >&2
+    echo "" >&2
+    echo "Fill in these fields with user-friendly marketing copy:" >&2
+    echo "  • description - What changed (1-2 sentences)" >&2
+    echo "  • benefit - Why users will love it (1 sentence)" >&2
+    echo "  • howToUse - Steps to use the feature (array of strings)" >&2
+    echo "  • screenshots[].caption - Brief caption for each screenshot" >&2
+    echo "" >&2
+    echo "Use the _gitContext and _affectedRoutes fields for context." >&2
+    echo "Then remove the underscore-prefixed fields before saving." >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    exit 2
+  fi
 fi
 
 # ============================================
