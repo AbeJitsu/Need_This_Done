@@ -20,7 +20,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Infrastructure | ✅ Migrated | Vercel hosting live, Digital Ocean shut down |
 | DNS | ✅ Configured | needthisdone.com → Vercel via Namecheap |
 | Email (Resend) | ✅ Working | hello@needthisdone.com verified |
-| Puck Page Builder | ⛔ Disabled | Not production ready - see Disabled Features |
+| Puck Page Builder | ✅ Active | Visual page builder with TipTap WYSIWYG editor |
 
 ---
 
@@ -48,7 +48,8 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 ### Medium Term (2-4 Weeks)
 
 **Visual Builder Polish**
-- [ ] Re-enable Puck page builder (currently disabled)
+- [x] Re-enable Puck page builder ✅ DONE
+- [x] Add TipTap WYSIWYG editor ✅ DONE
 - [ ] Add "Edit with Puck" after wizard completion
 - [ ] Create block-level editor (mid-complexity between wizard and Puck)
 - [ ] Add template preview images
@@ -101,6 +102,11 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+**Puck Page Builder + TipTap Editor** (Dec 2025)
+- Re-enabled Puck visual page builder
+- Added TipTap WYSIWYG editor for rich text editing
+- Template system (`lib/templates/`) as simplified entry point
+
 **Autonomous Workflow System** (Dec 2025)
 - Stop hook blocks until TODO.md tasks complete
 - Task markers: [→] working, [ ] ready, [x] done, [!] blocked
@@ -125,16 +131,7 @@ _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
 ## Disabled Features
 
-Features that are implemented but not production-ready:
-
-**Puck Page Builder** (Dec 2025)
-- Visual page builder using Puck.js library
-- Admin UI commented out in `AdminDashboard.tsx`
-- E2E tests for `/admin/pages` disabled in `screenshots.spec.ts`
-- Files remain in codebase (`app/admin/pages/`, `lib/puck-config.tsx`, `app/[slug]/page.tsx`)
-- Reason: Needs more testing and polish before production use
-- To re-enable: uncomment the Link in AdminDashboard.tsx and re-enable tests
-- **NEW:** Template system added (`lib/templates/`) as simplified entry point to Puck
+_No features currently disabled._
 
 ---
 
