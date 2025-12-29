@@ -637,39 +637,39 @@ export const loadingColors = {
 export const statusBadgeColors = {
   // Appointment/general statuses
   pending: {
-    bg: 'bg-yellow-100 dark:bg-yellow-900/20',
+    bg: 'bg-yellow-100 dark:bg-yellow-800',
     text: 'text-yellow-800 dark:text-yellow-100',
-    border: 'border border-yellow-200 dark:border-yellow-800',
+    border: 'border border-yellow-200 dark:border-yellow-700',
   },
   approved: {
-    bg: 'bg-blue-100 dark:bg-blue-900/20',
+    bg: 'bg-blue-100 dark:bg-blue-800',
     text: 'text-blue-800 dark:text-blue-100',
-    border: 'border border-blue-200 dark:border-blue-800',
+    border: 'border border-blue-200 dark:border-blue-700',
   },
   confirmed: {
-    bg: 'bg-green-100 dark:bg-green-900/20',
+    bg: 'bg-green-100 dark:bg-green-800',
     text: 'text-green-800 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-800',
+    border: 'border border-green-200 dark:border-green-700',
   },
   completed: {
-    bg: 'bg-green-100 dark:bg-green-900/20',
+    bg: 'bg-green-100 dark:bg-green-800',
     text: 'text-green-800 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-800',
+    border: 'border border-green-200 dark:border-green-700',
   },
   cancelled: {
-    bg: 'bg-red-100 dark:bg-red-900/20',
+    bg: 'bg-red-100 dark:bg-red-800',
     text: 'text-red-800 dark:text-red-100',
-    border: 'border border-red-200 dark:border-red-800',
+    border: 'border border-red-200 dark:border-red-700',
   },
   rejected: {
-    bg: 'bg-red-100 dark:bg-red-900/20',
+    bg: 'bg-red-100 dark:bg-red-800',
     text: 'text-red-800 dark:text-red-100',
-    border: 'border border-red-200 dark:border-red-800',
+    border: 'border border-red-200 dark:border-red-700',
   },
   paid: {
-    bg: 'bg-green-100 dark:bg-green-900/20',
+    bg: 'bg-green-100 dark:bg-green-800',
     text: 'text-green-800 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-800',
+    border: 'border border-green-200 dark:border-green-700',
   },
   unpaid: {
     bg: 'bg-gray-100 dark:bg-gray-700',
@@ -677,37 +677,37 @@ export const statusBadgeColors = {
     border: 'border border-gray-200 dark:border-gray-600',
   },
   refunded: {
-    bg: 'bg-purple-100 dark:bg-purple-900/20',
+    bg: 'bg-purple-100 dark:bg-purple-800',
     text: 'text-purple-800 dark:text-purple-100',
-    border: 'border border-purple-200 dark:border-purple-800',
+    border: 'border border-purple-200 dark:border-purple-700',
   },
   // Order-specific statuses
   delivered: {
-    bg: 'bg-green-100 dark:bg-green-900/20',
+    bg: 'bg-green-100 dark:bg-green-800',
     text: 'text-green-800 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-800',
+    border: 'border border-green-200 dark:border-green-700',
   },
   shipped: {
-    bg: 'bg-blue-100 dark:bg-blue-900/20',
+    bg: 'bg-blue-100 dark:bg-blue-800',
     text: 'text-blue-800 dark:text-blue-100',
-    border: 'border border-blue-200 dark:border-blue-800',
+    border: 'border border-blue-200 dark:border-blue-700',
   },
   processing: {
-    bg: 'bg-purple-100 dark:bg-purple-900/20',
+    bg: 'bg-purple-100 dark:bg-purple-800',
     text: 'text-purple-800 dark:text-purple-100',
-    border: 'border border-purple-200 dark:border-purple-800',
+    border: 'border border-purple-200 dark:border-purple-700',
   },
   // Appointment-specific statuses
   modified: {
-    bg: 'bg-blue-100 dark:bg-blue-900/20',
+    bg: 'bg-blue-100 dark:bg-blue-800',
     text: 'text-blue-800 dark:text-blue-100',
-    border: 'border border-blue-200 dark:border-blue-800',
+    border: 'border border-blue-200 dark:border-blue-700',
   },
   // User role/status badges
   admin: {
-    bg: 'bg-purple-100 dark:bg-purple-900/20',
+    bg: 'bg-purple-100 dark:bg-purple-800',
     text: 'text-purple-800 dark:text-purple-100',
-    border: 'border border-purple-200 dark:border-purple-800',
+    border: 'border border-purple-200 dark:border-purple-700',
   },
   user: {
     bg: 'bg-gray-100 dark:bg-gray-700',
@@ -715,20 +715,20 @@ export const statusBadgeColors = {
     border: 'border border-gray-200 dark:border-gray-600',
   },
   active: {
-    bg: 'bg-green-100 dark:bg-green-900/20',
+    bg: 'bg-green-100 dark:bg-green-800',
     text: 'text-green-800 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-800',
+    border: 'border border-green-200 dark:border-green-700',
   },
   disabled: {
-    bg: 'bg-red-100 dark:bg-red-900/20',
+    bg: 'bg-red-100 dark:bg-red-800',
     text: 'text-red-800 dark:text-red-100',
-    border: 'border border-red-200 dark:border-red-800',
+    border: 'border border-red-200 dark:border-red-700',
   },
   // Page/content statuses
   published: {
-    bg: 'bg-green-100 dark:bg-green-900/20',
-    text: 'text-green-700 dark:text-green-400',
-    border: 'border border-green-200 dark:border-green-800',
+    bg: 'bg-green-100 dark:bg-green-800',
+    text: 'text-green-700 dark:text-green-100',
+    border: 'border border-green-200 dark:border-green-700',
   },
   draft: {
     bg: 'bg-gray-100 dark:bg-gray-700',
@@ -736,9 +736,9 @@ export const statusBadgeColors = {
     border: 'border border-gray-200 dark:border-gray-600',
   },
   customized: {
-    bg: 'bg-green-100 dark:bg-green-900/50',
-    text: 'text-green-800 dark:text-green-300',
-    border: 'border border-green-200 dark:border-green-800',
+    bg: 'bg-green-100 dark:bg-green-800',
+    text: 'text-green-800 dark:text-green-100',
+    border: 'border border-green-200 dark:border-green-700',
   },
   default: {
     bg: 'bg-gray-100 dark:bg-gray-700',

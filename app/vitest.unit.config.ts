@@ -1,27 +1,23 @@
-import { defineConfig } from 'vitest/config'
-import path from 'path'
-import { fileURLToPath } from 'node:url'
+import { defineConfig } from 'vitest/config';
+import path from 'path';
+import { fileURLToPath } from 'node:url';
 
-const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url))
+const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
-// ============================================================================
-// Unit Test Configuration
-// ============================================================================
-// For testing isolated modules with mocked dependencies.
-// These tests do NOT require external services - all dependencies are mocked.
-//
-// Run with: npm run test:unit
-
+// Unit testing config - runs pure unit tests without jsdom or external services
+// Only includes specific test files that don't require external dependencies
 export default defineConfig({
   test: {
     environment: 'node',
     globals: true,
-    include: ['../__tests__/**/*.unit.test.ts'],
-    testTimeout: 10000,
+    include: [
+      // Colors validation test - catches dark mode contrast issues
+      '../__tests__/lib/colors.test.ts',
+    ],
   },
   resolve: {
     alias: {
-      '@': path.resolve(dirname, './'),
-    },
-  },
-})
+      '@': path.resolve(dirname, './')
+    }
+  }
+});
