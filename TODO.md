@@ -28,26 +28,6 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[x] **Inline Page Editing System** - Click any component to edit it inline
-    Context: app/components/InlineEditor/, app/context/InlineEditContext.tsx
-    Plan: .claude/plans/swift-moseying-noodle.md
-    **Scope:** Option A (Full) - Migrate pages to Puck + build inline editor
-
-    Completed:
-    - [x] Admin sidebar navigation (committed 68b6b75, 8dac6b8)
-    - [x] Explored home page structure for Puck migration
-    - [x] Home page now supports Puck rendering (app/page.tsx)
-          → Create page with slug "home" in /admin/pages to use it
-    - [x] InlineEditContext created (app/context/InlineEditContext.tsx)
-    - [x] AdminEditBar component (app/components/InlineEditor/AdminEditBar.tsx)
-    - [x] PropertySidebar component (app/components/InlineEditor/PropertySidebar.tsx)
-    - [x] InlineEditProvider added to layout (app/app/layout.tsx)
-    - [x] PuckPageRenderer with click detection (app/components/InlineEditor/PuckPageRenderer.tsx)
-    - [x] Components clickable in edit mode with hover outlines
-    - [x] Save functionality wired to PUT /api/pages/[slug]
-
-    **Status: Complete** - Ready for testing with a Puck "home" page
-
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
     Context: app/api/appointments/, .env.local credentials
     Done when: OAuth flow works, calendar events created on approval
@@ -66,6 +46,16 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [ ] Order status updates & fulfillment tracking
 
 ### Medium Term (2-4 Weeks)
+
+**Inline Editing System** - Click any component to edit it
+```
+Phase 1: Section Editing ✅ DONE
+Phase 2: Item-Level Editing (click individual cards) ← NEXT
+Phase 3: Component Creation (add/delete/reorder)
+```
+- [ ] Phase 2: EditableItem component for clicking individual cards/items
+- [ ] Phase 2: Breadcrumb navigation (Section → Item)
+- [ ] Phase 3: [+ Add] buttons, component picker, drag & drop
 
 **Visual Builder Polish**
 - [x] Re-enable Puck page builder ✅ DONE
@@ -121,6 +111,12 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Inline Editing Phase 1: Section Editing** (Dec 29, 2025)
+- Click any section on marketing pages to edit it in sidebar
+- All 5 marketing pages use consistent EditableSection pattern
+- mergeWithDefaults() handles old/partial content gracefully
+- Context: app/components/InlineEditor/, app/context/InlineEditContext.tsx
 
 **Fully Automated Changelog System** (Dec 29, 2025)
 - Stop hook prompts Claude to complete changelog entries automatically

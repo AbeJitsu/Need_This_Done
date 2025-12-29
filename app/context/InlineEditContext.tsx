@@ -30,6 +30,20 @@ export interface SectionSelection {
   subLabel?: string;
 }
 
+// Item selection for array items (cards, scenarios, steps, etc.)
+export interface ItemSelection {
+  // The section key containing the array (e.g., "services", "scenarioMatcher")
+  sectionKey: string;
+  // The array field name (e.g., "cards", "scenarios", "items")
+  arrayField: string;
+  // The index in the array
+  index: number;
+  // Human-readable label (e.g., "Data & Documents", "FAQ Item 3")
+  label: string;
+  // The item's current content
+  content: Record<string, unknown>;
+}
+
 export interface PendingChange {
   // For section-based editing
   sectionKey: string;
@@ -74,6 +88,13 @@ interface InlineEditContextType {
   // Currently selected section (null if none)
   selectedSection: SectionSelection | null;
   selectSection: (selection: SectionSelection | null) => void;
+
+  // Currently selected item within a section (for array items like cards, scenarios)
+  selectedItem: ItemSelection | null;
+  selectItem: (selection: ItemSelection | null) => void;
+
+  // Clear item selection (go back to section level)
+  clearItemSelection: () => void;
 
   // Pending changes (before save)
   pendingChanges: PendingChange[];
@@ -167,6 +188,7 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
 
   // Section-based editing state (new)
   const [selectedSection, setSelectedSection] = useState<SectionSelection | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ItemSelection | null>(null);
   const [pendingChanges, setPendingChanges] = useState<PendingChange[]>([]);
   const [pageContent, setPageContent] = useState<Record<string, unknown> | null>(null);
   const [pageSlug, setPageSlug] = useState<string | null>(null);

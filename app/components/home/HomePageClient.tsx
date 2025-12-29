@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
@@ -20,6 +20,7 @@ import {
   focusRingClasses,
 } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
+import { getDefaultContent } from '@/lib/default-page-content';
 
 // ============================================================================
 // Home Page Client Component - Renders home page with inline editing support
@@ -35,17 +36,38 @@ interface HomePageClientProps {
   content: HomePageContent;
 }
 
+// Deep merge content with defaults to ensure all required sections exist
+function mergeWithDefaults(content: Partial<HomePageContent>): HomePageContent {
+  const defaults = getDefaultContent('home') as HomePageContent;
+  return {
+    hero: content.hero || defaults.hero,
+    services: content.services || defaults.services,
+    consultations: content.consultations ?? defaults.consultations,
+    processPreview: content.processPreview || defaults.processPreview,
+    cta: content.cta || defaults.cta,
+  };
+}
+
 export default function HomePageClient({ content: initialContent }: HomePageClientProps) {
   const { setPageSlug, setPageContent, pageContent } = useInlineEdit();
+
+  // Ensure content has all required sections by merging with defaults
+  // Memoize to prevent infinite re-renders in useEffect
+  const safeInitialContent = useMemo(
+    () => mergeWithDefaults(initialContent),
+    [initialContent]
+  );
 
   // Initialize the edit context when the component mounts
   useEffect(() => {
     setPageSlug('home');
-    setPageContent(initialContent as unknown as Record<string, unknown>);
-  }, [initialContent, setPageSlug, setPageContent]);
+    setPageContent(safeInitialContent as unknown as Record<string, unknown>);
+  }, [safeInitialContent, setPageSlug, setPageContent]);
 
   // Use pageContent from context if available (has pending edits), otherwise use initial
-  const content = (pageContent as unknown as HomePageContent) || initialContent;
+  // Also merge with defaults in case pageContent is incomplete
+  const rawContent = (pageContent as unknown as HomePageContent) || safeInitialContent;
+  const content = mergeWithDefaults(rawContent);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
