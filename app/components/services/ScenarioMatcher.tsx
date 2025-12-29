@@ -7,6 +7,8 @@
 // Clicking a scenario opens the corresponding service modal.
 
 import { accentColors, headingColors, formInputColors } from '@/lib/colors';
+import { EditableItem } from '@/components/InlineEditor';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import type { ServiceScenario } from '@/lib/page-content-types';
 import { useServiceModal } from '@/context/ServiceModalContext';
 import type { ServiceType } from '@/lib/service-modal-content';
@@ -23,8 +25,11 @@ export default function ScenarioMatcher({
   scenarios,
 }: ScenarioMatcherProps) {
   const { openModal } = useServiceModal();
+  const { isEditMode } = useInlineEdit();
 
   const handleScenarioClick = (serviceKey: ServiceScenario['serviceKey']) => {
+    // Don't open modal in edit mode - let EditableItem handle the click
+    if (isEditMode) return;
     openModal(serviceKey as ServiceType);
   };
 
@@ -41,49 +46,57 @@ export default function ScenarioMatcher({
       {/* Scenario Grid */}
       <div className="grid md:grid-cols-3 gap-4">
         {scenarios.map((scenario, index) => (
-          <button
+          <EditableItem
             key={index}
-            onClick={() => handleScenarioClick(scenario.serviceKey)}
-            className={`
-              p-6 rounded-xl text-left
-              bg-white dark:bg-gray-800
-              border-2 border-gray-200 dark:border-gray-700
-              ${accentColors[scenario.color].hoverBorder}
-              hover:shadow-lg
-              transition-all duration-300
-              group
-            `}
+            sectionKey="scenarioMatcher"
+            arrayField="scenarios"
+            index={index}
+            label={scenario.serviceTitle}
+            content={scenario as unknown as Record<string, unknown>}
           >
-            {/* Service Badge - at top */}
-            <div className="flex items-center gap-2 mb-4">
-              <span
-                className={`
-                  inline-block w-2 h-2 rounded-full
-                  ${scenario.color === 'green' ? 'bg-green-500' : ''}
-                  ${scenario.color === 'blue' ? 'bg-blue-500' : ''}
-                  ${scenario.color === 'purple' ? 'bg-purple-500' : ''}
-                `}
-              />
-              <span className={`text-sm ${accentColors[scenario.color].text} font-medium`}>
-                {scenario.serviceTitle}
-              </span>
-              <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity ml-auto">
-                →
-              </span>
-            </div>
+            <button
+              onClick={() => handleScenarioClick(scenario.serviceKey)}
+              className={`
+                w-full p-6 rounded-xl text-left
+                bg-white dark:bg-gray-800
+                border-2 border-gray-200 dark:border-gray-700
+                ${accentColors[scenario.color].hoverBorder}
+                hover:shadow-lg
+                transition-all duration-300
+                group
+              `}
+            >
+              {/* Service Badge - at top */}
+              <div className="flex items-center gap-2 mb-4">
+                <span
+                  className={`
+                    inline-block w-2 h-2 rounded-full
+                    ${scenario.color === 'green' ? 'bg-green-500' : ''}
+                    ${scenario.color === 'blue' ? 'bg-blue-500' : ''}
+                    ${scenario.color === 'purple' ? 'bg-purple-500' : ''}
+                  `}
+                />
+                <span className={`text-sm ${accentColors[scenario.color].text} font-medium`}>
+                  {scenario.serviceTitle}
+                </span>
+                <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity ml-auto">
+                  →
+                </span>
+              </div>
 
-            {/* Quotes */}
-            <div className="space-y-3">
-              {scenario.quotes?.map((quote, quoteIndex) => (
-                <p
-                  key={quoteIndex}
-                  className={`${formInputColors.helper} text-sm leading-relaxed pl-2`}
-                >
-                  "{quote}"
-                </p>
-              )) || null}
-            </div>
-          </button>
+              {/* Quotes */}
+              <div className="space-y-3">
+                {scenario.quotes?.map((quote, quoteIndex) => (
+                  <p
+                    key={quoteIndex}
+                    className={`${formInputColors.helper} text-sm leading-relaxed pl-2`}
+                  >
+                    "{quote}"
+                  </p>
+                )) || null}
+              </div>
+            </button>
+          </EditableItem>
         ))}
       </div>
     </div>
