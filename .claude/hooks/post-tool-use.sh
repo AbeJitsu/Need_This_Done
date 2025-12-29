@@ -17,7 +17,16 @@ if [[ "$TOOL_NAME" != "Edit" && "$TOOL_NAME" != "Write" ]]; then
   exit 0
 fi
 
-# Only process TypeScript files in app/
+# ============================================
+# SESSION TRACKING
+# Track all files modified by this session
+# Enables multi-instance parallel work
+# ============================================
+if [[ -n "$FILE_PATH" ]] && [[ -n "$SESSION_CHANGES_FILE" ]]; then
+  track_file "$SESSION_CHANGES_FILE" "$FILE_PATH"
+fi
+
+# Only lint TypeScript files in app/
 if ! is_typescript_file "$FILE_PATH" || ! is_in_app_dir "$FILE_PATH"; then
   exit 0
 fi
