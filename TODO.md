@@ -38,13 +38,16 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
     - [x] Explored home page structure for Puck migration
     - [x] Home page now supports Puck rendering (app/page.tsx)
           → Create page with slug "home" in /admin/pages to use it
+    - [x] InlineEditContext created (app/context/InlineEditContext.tsx)
+    - [x] AdminEditBar component (app/components/InlineEditor/AdminEditBar.tsx)
+    - [x] PropertySidebar component (app/components/InlineEditor/PropertySidebar.tsx)
 
     In Progress:
-    - [→] Create InlineEditContext for edit mode state
+    - [→] Wire components together + live preview
 
     Remaining:
-    - [ ] Build Property Sidebar for component editing
-    - [ ] Live preview with save/discard
+    - [ ] Add InlineEditProvider to layout
+    - [ ] Integrate with Puck page rendering
 
     Done when: Admin can click any component on a page, edit properties in sidebar, save changes
 
