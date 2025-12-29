@@ -31,10 +31,11 @@ export default function AdminSidebarToggle() {
   };
 
   return (
+    // z-[60] is higher than sidebar (z-50) so toggle remains clickable when sidebar is open
     <button
       onClick={handleToggle}
       className={`
-        fixed bottom-24 right-6 z-50
+        fixed bottom-24 right-6 z-[60]
         w-12 h-12 rounded-full
         bg-gray-900 dark:bg-gray-100
         text-white dark:text-gray-900

@@ -46,7 +46,8 @@ export default function EditModeBar() {
   }
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-purple-600 text-white px-4 py-2 flex items-center justify-between shadow-lg">
+    // z-[60] is higher than sidebar (z-50) so the Exit button remains clickable
+    <div className="fixed top-0 left-0 right-0 z-[60] bg-purple-600 text-white px-4 py-2 flex items-center justify-between shadow-lg">
       <div className="flex items-center gap-3">
         <span className="font-semibold">Edit Mode</span>
         <span className="text-purple-200 text-sm hidden sm:inline">|</span>

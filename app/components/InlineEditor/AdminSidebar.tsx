@@ -550,9 +550,11 @@ export default function AdminSidebar() {
   const sections = getSections();
 
   return (
+    // top-10 (40px) accounts for EditModeBar height so sidebar header is below it
+    // h-[calc(100vh-2.5rem)] ensures sidebar doesn't extend beyond viewport
     <div
       className={`
-        fixed top-0 right-0 w-96 h-screen z-50
+        fixed top-10 right-0 w-96 h-[calc(100vh-2.5rem)] z-50
         ${cardBgColors.base} ${cardBorderColors.light}
         border-l shadow-2xl
         flex flex-col
