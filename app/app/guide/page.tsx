@@ -69,7 +69,7 @@ const guides: Guide[] = [
     ],
     screenshot: {
       src: '/screenshots/december-2025-release/shop-desktop-light.png',
-      alt: 'Shop page showing consultation packages',
+      alt: 'Shop page displaying three consultation packages: 15-minute, 30-minute, and 55-minute sessions with pricing and descriptions',
     },
     ctaText: 'Browse Consultations',
     ctaLink: '/shop',
@@ -104,7 +104,7 @@ const guides: Guide[] = [
     ],
     screenshot: {
       src: '/screenshots/december-2025-release/cart-desktop-light.png',
-      alt: 'Shopping cart with consultation',
+      alt: 'Shopping cart page showing a selected consultation with quantity controls and checkout button',
     },
     ctaText: 'Start Shopping',
     ctaLink: '/shop',
@@ -133,7 +133,7 @@ const guides: Guide[] = [
     ],
     screenshot: {
       src: '/screenshots/december-2025-release/get-started-desktop-light.png',
-      alt: 'Get Started page for project authorization',
+      alt: 'Get Started page with a quote number input field and instructions for authorizing a project',
     },
     ctaText: 'Authorize a Project',
     ctaLink: '/get-started',
@@ -162,10 +162,160 @@ const guides: Guide[] = [
     ],
     screenshot: {
       src: '/screenshots/december-2025-release/blog-desktop-light.png',
-      alt: 'Blog page with latest posts',
+      alt: 'Blog page featuring article cards with titles, excerpts, and publication dates',
     },
     ctaText: 'Read the Blog',
     ctaLink: '/blog',
+  },
+  // ============================================================================
+  // Admin Guides - Page Builder & Content Management
+  // ============================================================================
+  {
+    id: 'page-wizard',
+    title: 'Create Pages with the Wizard',
+    description: 'Build custom pages in 5 easy steps using our guided wizard.',
+    icon: '✨',
+    steps: [
+      {
+        number: 1,
+        title: 'Choose a Category',
+        description:
+          'Select from landing, course, shop, content, or utility page types to filter templates.',
+      },
+      {
+        number: 2,
+        title: 'Pick a Template',
+        description: 'Browse pre-built templates designed for your chosen category.',
+      },
+      {
+        number: 3,
+        title: 'Select Your Colors',
+        description: 'Choose an accent color (purple, blue, green, orange, teal, or gray) for your page.',
+      },
+      {
+        number: 4,
+        title: 'Fill in Your Content',
+        description: 'Replace placeholder text with your headline, description, and other details.',
+      },
+      {
+        number: 5,
+        title: 'Preview & Create',
+        description: 'Review your page and click Create to publish it to your site.',
+      },
+    ],
+    ctaText: 'Create a Page',
+    ctaLink: '/admin/pages/new',
+  },
+  {
+    id: 'puck-editor',
+    title: 'Visual Page Builder',
+    description: 'Drag-and-drop editor with 28 components for complete creative control.',
+    icon: '🎨',
+    steps: [
+      {
+        number: 1,
+        title: 'Open the Editor',
+        description: 'Go to Admin > Pages and click "Open Editor" on any page.',
+      },
+      {
+        number: 2,
+        title: 'Browse Components',
+        description:
+          'The left sidebar shows all 28 components: layouts, media, content, interactive elements, and e-commerce blocks.',
+      },
+      {
+        number: 3,
+        title: 'Drag & Drop',
+        description: 'Drag components onto the canvas. Click any component to edit its properties.',
+      },
+      {
+        number: 4,
+        title: 'Customize Settings',
+        description:
+          'The right panel shows settings for spacing, colors, content, and responsive behavior.',
+      },
+      {
+        number: 5,
+        title: 'Save & Publish',
+        description: 'Click Save to update your page. Changes go live immediately.',
+      },
+    ],
+    ctaText: 'Open Page Builder',
+    ctaLink: '/admin/pages',
+  },
+  {
+    id: 'blog-management',
+    title: 'Manage Blog Posts',
+    description: 'Create, edit, and publish articles to share insights with your audience.',
+    icon: '📝',
+    steps: [
+      {
+        number: 1,
+        title: 'Go to Blog Admin',
+        description: 'Navigate to Admin > Blog to see all your posts.',
+      },
+      {
+        number: 2,
+        title: 'Create New Post',
+        description: 'Click "New Post" to open the editor. Enter your title, content, and excerpt.',
+      },
+      {
+        number: 3,
+        title: 'Add Media & Formatting',
+        description: 'Use the rich text editor to add images, links, headings, and lists.',
+      },
+      {
+        number: 4,
+        title: 'Set SEO Details',
+        description: 'Add a slug, meta description, and featured image for search optimization.',
+      },
+      {
+        number: 5,
+        title: 'Publish',
+        description: 'Click Publish to make your post live. Edit anytime from the blog list.',
+      },
+    ],
+    ctaText: 'Manage Blog',
+    ctaLink: '/admin/blog',
+  },
+  {
+    id: 'submit-project',
+    title: 'Submit a Project Inquiry',
+    description: 'Tell us about your project and attach files for a custom quote.',
+    icon: '📋',
+    steps: [
+      {
+        number: 1,
+        title: 'Visit Get Started',
+        description: 'Go to the Get Started page to begin your project inquiry.',
+      },
+      {
+        number: 2,
+        title: 'Describe Your Project',
+        description: 'Fill in details about what you need help with, your timeline, and budget range.',
+      },
+      {
+        number: 3,
+        title: 'Attach Files',
+        description: 'Upload up to 3 files (mockups, specs, or reference documents) to help us understand.',
+      },
+      {
+        number: 4,
+        title: 'Submit',
+        description: 'Click Submit and we will review your inquiry within 24 hours.',
+      },
+      {
+        number: 5,
+        title: 'Receive Your Quote',
+        description: 'You will get an email with a custom quote. Use the quote number to authorize.',
+      },
+    ],
+    screenshot: {
+      src: '/screenshots/december-2025-release/get-started-desktop-light.png',
+      alt: 'Get Started page with project inquiry form and file upload section',
+    },
+    ctaText: 'Start a Project',
+    ctaLink: '/get-started',
   },
 ];
 

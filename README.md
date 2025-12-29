@@ -263,6 +263,8 @@ A modern platform for professional services that combines:
 
 ## Architecture Overview
 
+![NeedThisDone Homepage - Professional services platform with clean, modern interface](app/public/screenshots/december-2025-release/home-desktop-light.png)
+
 ```
 ┌──────────────────────────────────────────┐
 │          Browser / User                  │
@@ -361,6 +363,8 @@ The following diagram shows how all system components interact for major user jo
 
   Checkout Flow
   ═════════════
+
+  ![Checkout page with guest details form and order summary](app/public/screenshots/december-2025-release/checkout-desktop-light.png)
 
   Cart Page       Guest/Auth        Payment          Order Created
       │               │                │                  │
@@ -875,6 +879,8 @@ AI/CHATBOT
 
 ## Shopping Cart & Ecommerce
 
+![Shop page displaying consultation products with pricing and add to cart functionality](app/public/screenshots/december-2025-release/shop-desktop-light.png)
+
 ### How It Works
 
 The cart system is a **three-tier architecture**:
@@ -884,6 +890,8 @@ The cart system is a **three-tier architecture**:
 3. **React CartContext** - Frontend state management with localStorage persistence
 
 ### Cart Data Flow
+
+![Shopping cart with items, quantities, and order summary](app/public/screenshots/december-2025-release/cart-desktop-light.png)
 
 ```
 User clicks "Add to Cart"
@@ -1764,6 +1772,8 @@ supabase db reset
 
 ## Puck Visual Builder
 
+![Get Started page showcasing the visual page building experience](app/public/screenshots/december-2025-release/get-started-desktop-light.png)
+
 Puck enables drag-and-drop page building. Currently **disabled** pending E2E testing.
 
 ### 30+ Available Components
@@ -2069,7 +2079,12 @@ These improvements are **done and working**:
 | **Visual Documentation** | Automated screenshot capture for feature documentation | ✅ Implemented |
 | **User Guide Page** | Public `/guide` with step-by-step platform instructions | ✅ Implemented |
 
+![User guide page with step-by-step platform instructions](app/public/screenshots/december-2025-release/guide-desktop-light.png)
+
 **Blog System** (`/blog`, `/admin/blog`):
+
+![Blog listing page with published articles and featured content](app/public/screenshots/december-2025-release/blog-desktop-light.png)
+
 - Public blog listing and individual post pages
 - Admin dashboard for creating, editing, and managing posts
 - SEO-friendly slugs and metadata
