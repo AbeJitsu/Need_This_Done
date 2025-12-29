@@ -42,8 +42,12 @@ if [[ -f "$TODO_FILE" ]]; then
   # Parse task markers from In Progress section
   # [→] = in progress, [ ] = ready, [x] = done, [!] = blocked
   IN_PROGRESS=$(grep -E '^\[→\].*\*\*' "$TODO_FILE" | head -1)
-  READY_TASKS=$(grep -E '^\[ \].*\*\*' "$TODO_FILE")
-  READY_COUNT=$(echo "$READY_TASKS" | grep -c '^\[ \]' 2>/dev/null || echo 0)
+  READY_TASKS=$(grep -E '^\[ \].*\*\*' "$TODO_FILE" || true)
+  if [[ -z "$READY_TASKS" ]]; then
+    READY_COUNT=0
+  else
+    READY_COUNT=$(echo "$READY_TASKS" | wc -l | tr -d ' ')
+  fi
 
   # Task in progress - keep working
   if [[ -n "$IN_PROGRESS" ]]; then
@@ -57,7 +61,7 @@ if [[ -f "$TODO_FILE" ]]; then
     exit 2
   fi
 
-  # Ready tasks exist - show next one
+  # Ready tasks exist - BLOCK until handled
   if [[ "$READY_COUNT" -gt 0 ]]; then
     NEXT_TASK=$(echo "$READY_TASKS" | head -1)
     TASK_NAME=$(echo "$NEXT_TASK" | sed 's/\[ \] \*\*\([^*]*\)\*\*.*/\1/')
@@ -66,7 +70,7 @@ if [[ -f "$TODO_FILE" ]]; then
     echo "NEXT TASK: $TASK_NAME ($READY_COUNT remaining)" >&2
     echo "═══════════════════════════════════════════════════════" >&2
     echo "" >&2
-    echo "Mark [ ] as [→] in TODO.md and begin work." >&2
+    echo "Mark [ ] as [→] to start, or [!] to skip." >&2
     exit 2
   fi
 fi

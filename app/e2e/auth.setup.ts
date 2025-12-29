@@ -22,14 +22,32 @@ export const ADMIN_AUTH_FILE = path.join(__dirname, '../.auth/admin.json');
 setup('authenticate as admin', async ({ page }) => {
   setup.skip(!adminEmail || !adminPassword, 'Admin credentials required');
 
-  // Login
+  // Navigate to login page
   await page.goto('/login');
-  await page.getByLabel('Email Address').fill(adminEmail!);
-  await page.getByLabel('Password').fill(adminPassword!);
-  await page.getByRole('button', { name: 'Sign In', exact: true }).click();
 
-  // Wait for successful login
-  await page.waitForURL('**/dashboard', { timeout: 15000 });
+  // Wait for either login form or dashboard (if already logged in)
+  // The page may redirect if there's an existing session
+  try {
+    // Try to find login form first (fast check)
+    const emailField = page.getByLabel('Email Address');
+    await emailField.waitFor({ state: 'visible', timeout: 5000 });
+
+    // Login form visible - perform login
+    await emailField.fill(adminEmail!);
+    await page.getByLabel('Password').fill(adminPassword!);
+    await page.getByRole('button', { name: 'Sign In', exact: true }).click();
+
+    // Wait for successful login
+    await page.waitForURL('**/dashboard', { timeout: 15000 });
+  } catch {
+    // Login form not found - check if we're already on dashboard
+    if (!page.url().includes('/dashboard')) {
+      // Wait for possible redirect
+      await page.waitForURL('**/dashboard', { timeout: 10000 });
+    }
+  }
+
+  // Verify we're on the dashboard
   await expect(page.getByRole('heading', { name: 'Project Dashboard' })).toBeVisible({ timeout: 10000 });
 
   // Save session state (cookies, localStorage)
