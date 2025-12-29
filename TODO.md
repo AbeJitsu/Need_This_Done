@@ -186,7 +186,7 @@ _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 - Fixed z-index layering so edit controls stay clickable (z-[60] for bar/toggle, z-50 for sidebar)
 - Fixed infinite re-render in all 5 page clients (useMemo for merged content)
 - Added 5 E2E tests for edit mode exit scenarios
-- Created test-first-bug-fixes.md rule
+- Created TDD rule (`.claude/rules/tdd.md`)
 - Context: EditModeBar.tsx, AdminSidebarToggle.tsx, AdminSidebar.tsx, e2e/edit-mode-exit.spec.ts
 
 **Inline Editing Phase 1: Section Editing** (Dec 29, 2025)

@@ -51,12 +51,14 @@ All rules in `.claude/rules/` are enforced automatically:
 
 | Rule | Purpose |
 |------|---------|
+| **tdd.md** | Test-Driven Development: write tests first, code second, always |
 | **colors.md** | Never hardcode colors, use `lib/colors.ts` |
 | **quality.md** | Fix warnings immediately, zero warnings in production |
 | **design-system.md** | Accessibility standards, dark mode, component patterns |
 | **design-brief.md** | Brand identity, visual style, creative direction |
 | **coding-standards.md** | DRY principle, code organization, naming conventions |
 | **hooks.md** | Reference for Claude Code hooks configuration |
+| **commit-often.md** | Commit early and often, small focused commits |
 
 ## Commands
 
