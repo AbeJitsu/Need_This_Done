@@ -44,9 +44,11 @@ All security issues fixed (Dec 2025):
     - [ ] Test calendar event creation on approval
     - [ ] Deploy to production
 
-[ ] **Template System Testing** - Verify wizard end-to-end
+[x] **Template System Testing** - Verify wizard end-to-end
     Context: lib/templates/, admin/pages/new
     Done when: Page creation and storage works correctly
+    - [x] Fixed auth.setup.ts for existing sessions
+    - [x] 28 wizard E2E tests passing
 
 [x] **Autonomous Workflow System** - Implement task loop
     Context: .claude/hooks/, TODO.md
