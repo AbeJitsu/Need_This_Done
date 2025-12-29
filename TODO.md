@@ -99,18 +99,33 @@ Phase 2.5 Sub-tasks:
 - [ ] Toast feedback for blocked actions
 - [ ] Hover states and tooltips
 
-Code Quality: DRY Page Initialization
-- [ ] Create `usePageContent<T>()` hook in `app/hooks/usePageContent.ts`
-      - Consolidates: setPageSlug, setPageContent, mergeWithDefaults, useMemo
-      - Single source of truth for page initialization pattern
-      - Prevents infinite re-render bugs by design
-- [ ] Create test to catch infinite re-render patterns in page clients
-- [ ] Refactor page clients to use new hook:
-      - [ ] ServicesPageClient.tsx
-      - [ ] HomePageClient.tsx
-      - [ ] FAQPageClient.tsx
-      - [ ] PricingPageClient.tsx
-      - [ ] HowItWorksPageClient.tsx
+**Code Quality: Sustainable Page Content Architecture**
+**Plan:** [.claude/plans/sustainable-page-content.md](.claude/plans/sustainable-page-content.md)
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  PROBLEM: 36+ pages, each repeating 15+ lines of identical boilerplate  │
+│  SOLUTION: Route-aware provider + 1-line registration hook              │
+│  RESULT: New editable page = add slug to config, that's it              │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+Phase 1: Create Infrastructure
+- [ ] Create `lib/editable-routes.ts` (route → slug mapping)
+- [ ] Create `hooks/useEditableContent.ts` (1-line registration)
+- [ ] Update `InlineEditContext` (route-aware, generic merge)
+
+Phase 2: Migrate Pages (remove boilerplate)
+- [ ] ServicesPageClient.tsx
+- [ ] HomePageClient.tsx
+- [ ] FAQPageClient.tsx
+- [ ] PricingPageClient.tsx
+- [ ] HowItWorksPageClient.tsx
+
+Phase 3: Testing & Prevention
+- [ ] Create test for duplicate boilerplate detection
+- [ ] Create test for infinite re-render patterns
+- [ ] Document pattern for new pages
 
 **Visual Builder Polish**
 - [x] Re-enable Puck page builder ✅ DONE
