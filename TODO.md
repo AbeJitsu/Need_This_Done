@@ -144,8 +144,16 @@ Phase 4 Sub-tasks (Universal Click-to-Edit): ✅ DONE
 Phase 5 Sub-tasks (Zero-Config):
 - [x] Auto-discover content JSON files at build time (18 unit tests passing)
 - [x] Generate route manifest from /content/*.json (prebuild hook)
-- [ ] Remove all EditableSection/EditableItem wrappers
-- [ ] Document "add JSON file = page is editable" pattern
+- [!] Remove EditableSection/EditableItem wrappers (BLOCKED: see analysis below)
+- [x] Document "add JSON file = page is editable" pattern (see docs/INLINE_EDITING.md)
+
+**Wrapper Removal Analysis** (Dec 30, 2025):
+Wrappers provide UX/a11y that useUniversalClick doesn't:
+- Visual feedback: ring outlines, hover states, selection highlighting
+- Accessibility: tabIndex, Enter/Space, role="button", aria-label
+- Labels: floating section/item names on hover
+- Accuracy: explicit paths vs. text matching (could fail)
+Universal click is a FALLBACK, not a replacement. Keep wrappers.
 
 **Visual Builder Polish**
 - [x] Re-enable Puck page builder ✅ DONE

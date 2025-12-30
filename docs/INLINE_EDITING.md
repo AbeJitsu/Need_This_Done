@@ -280,13 +280,128 @@ npm run test:e2e -- e2e/field-discovery.spec.ts e2e/field-editability.spec.ts
 - Hook: `hooks/useEditableContent.ts`
 - Tests: `e2e/field-discovery.spec.ts`, `e2e/field-editability.spec.ts`
 
-## Future Roadmap
+## Phase 5: Zero-Config Content Discovery
 
-See [TODO.md](../TODO.md) for Phase 5: Zero-Config Pages
+The content discovery system automatically finds all editable pages at build time.
+
+### How It Works
 
 ```
-Phase 5: Zero-Config Pages
-──────────────────────────
-content/about.json exists? Page is editable.
-No hooks. No wrappers. Just JSON + components.
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    ZERO-CONFIG CONTENT DISCOVERY                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   BUILD TIME                                                            │
+│   ──────────                                                            │
+│   1. prebuild runs: npm run generate:manifest                           │
+│   2. Script scans /content directory for JSON files                     │
+│   3. Generates lib/generated/content-manifest.ts                        │
+│   4. Manifest maps routes → content slugs                               │
+│                                                                         │
+│   RUNTIME                                                               │
+│   ───────                                                               │
+│   5. InlineEditProvider reads manifest                                  │
+│   6. isRouteEditable() checks if current route has content              │
+│   7. Edit mode enabled automatically for discovered routes              │
+│                                                                         │
+│   RESULT: Add JSON file → Page becomes editable                         │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
+
+### Adding a New Editable Page
+
+1. **Create content file** at `content/[page-name].json`:
+
+```json
+{
+  "header": {
+    "title": "Page Title",
+    "description": "Page description goes here"
+  },
+  "sections": {
+    "main": {
+      "title": "Main Section",
+      "content": "Section content..."
+    }
+  }
+}
+```
+
+2. **Run build** (or `npm run generate:manifest`):
+
+```bash
+npm run build
+# prebuild hook auto-generates manifest
+```
+
+3. **Done!** The page is now editable.
+
+### Content Discovery API
+
+Location: `lib/content-discovery.ts`
+
+| Function | Purpose |
+|----------|---------|
+| `discoverContentFiles(dir)` | Scan directory for JSON files |
+| `generateRouteManifest(files)` | Create route → slug mapping |
+| `validateContentFile(content)` | Ensure required fields exist |
+| `getContentForRoute(route, dir)` | Load content for a route |
+| `isRouteEditable(route, manifest)` | Check if route has content |
+| `buildContentManifest(projectRoot)` | Full build-time discovery |
+
+### Manifest Generation
+
+The prebuild script generates `lib/generated/content-manifest.ts`:
+
+```typescript
+// Auto-generated - do not edit manually
+export const contentManifest = {
+  "/": "home",
+  "/services": "services",
+  "/pricing": "pricing",
+  // ... auto-discovered routes
+};
+```
+
+### Test Coverage
+
+Content discovery is validated by **18 unit tests**:
+
+```bash
+npm run test:unit -- content-discovery.test.ts
+```
+
+Tests verify:
+- File discovery in nested directories
+- Route manifest generation
+- Content validation
+- Route editability checks
+- Build-time manifest generation
+
+### Why Keep Wrappers?
+
+While content discovery is automatic, `EditableSection` and `EditableItem` wrappers are **intentionally retained** because they provide:
+
+| Feature | Wrappers | Universal Click Only |
+|---------|----------|---------------------|
+| Visual feedback | ✅ Ring outlines | ❌ None |
+| Hover labels | ✅ Section names | ❌ None |
+| Selection highlight | ✅ Blue/purple rings | ❌ None |
+| Keyboard navigation | ✅ Tab, Enter, Space | ❌ None |
+| Accessibility | ✅ role, aria-label | ❌ None |
+| Path accuracy | ✅ 100% explicit | ⚠️ Text matching |
+
+The `useUniversalClick` hook serves as a **fallback** for content not explicitly wrapped, not as a replacement for wrappers.
+
+## Related Files
+
+- Content types: `lib/page-content-types.ts`
+- Default content: `lib/default-page-content.ts`
+- Route mapping: `lib/editable-routes.ts`
+- Click-to-edit: `lib/content-path-mapper.ts`
+- Hook: `hooks/useEditableContent.ts`
+- **Content discovery: `lib/content-discovery.ts`**
+- **Manifest generation: `scripts/generate-content-manifest.ts`**
+- **Generated manifest: `lib/generated/content-manifest.ts`**
+- Tests: `e2e/field-discovery.spec.ts`, `e2e/field-editability.spec.ts`, `__tests__/lib/content-discovery.test.ts`
