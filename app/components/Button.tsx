@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import { AccentVariant, accentColors, accentBorderWidth, accentFontWeight } from '@/lib/colors';
+import { AccentVariant, solidButtonColors, accentFontWeight } from '@/lib/colors';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 // ============================================================================
 // Button Component - Centralized Button Styling
 // ============================================================================
-// Uses the unified accentColors system from colors.ts for consistent styling
-// with CircleBadge and Navigation. All color definitions are centralized.
+// Uses solidButtonColors from colors.ts for solid action buttons with proper
+// dark mode contrast. All color definitions are centralized.
 // Handles both link buttons (with href) and action buttons (with onClick).
 
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -50,10 +50,11 @@ export default function Button({
   className = '',
   type = 'button',
 }: ButtonProps) {
-  const colors = accentColors[variant];
+  const colors = solidButtonColors[variant];
   const isDisabled = disabled || isLoading;
-  // All color classes come from the centralized accentColors system
-  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-full ${accentBorderWidth} transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:ring-4 focus-visible:ring-blue-300 dark:focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${sizeClasses[size]} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`;
+  // All color classes come from solidButtonColors for proper dark mode contrast
+  // Solid buttons: solid background + white text (no borders needed)
+  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-full transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:ring-4 focus-visible:ring-blue-300 dark:focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${sizeClasses[size]} ${colors.bg} ${colors.hover} ${colors.text}`;
   const disabledClasses = isDisabled ? 'opacity-60 cursor-not-allowed hover:scale-100 active:scale-100' : '';
   const fullClasses = `${baseClasses} ${disabledClasses} ${className}`.trim();
 

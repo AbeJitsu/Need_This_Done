@@ -39,9 +39,18 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [x] Fix Add button in edit mode - dark mode issue not caught by current tests
   - Changed AdminSidebar Add buttons to use solidButtonColors.green (not accentColors.green.bg)
   - accentColors are for light backgrounds; solidButtonColors are for solid buttons with white text
+- [x] Additional dark mode issues still visible - TDD approach to catch all patterns
+  - Created e2e/admin-blog-dark-mode.spec.ts with 8 contrast tests
+  - Fixed Button component to use solidButtonColors (proper dark mode contrast)
+  - Updated solidButtonColors to use -600 shade in dark mode (5.19:1+ contrast with white)
+
+**Dashboard Layout Issues**
+- [ ] Fix dashboard grid layout - 6 items on top row + 1 left-aligned on second row looks bad
+- [ ] Consider 3x3 grid, 4x2 grid, or responsive breakpoints for better visual balance
+- [ ] Ensure cards are evenly distributed with consistent spacing
 
 **Automation & Developer Experience**
-- [ ] Auto-update changelog on every commit/deploy (stop doing this manually)
+- [→] Auto-update changelog on every commit/deploy (stop doing this manually)
 - [ ] Process: git hook or CI step that appends to CHANGELOG.md automatically
 - [ ] Add changelog link to footer/navigation (currently no way to find it)
 - [ ] Design a changelog page for tech users (release notes, version history, API changes)

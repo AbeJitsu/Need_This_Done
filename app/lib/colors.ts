@@ -811,7 +811,7 @@ export const gradientColors = {
 // ============================================================================
 // All accent color variants with background, hover, text, and focus ring states
 // Light mode: -600 shade for backgrounds, -700 on hover
-// Dark mode: -500 shade for backgrounds, -600 on hover (maintains brightness)
+// Dark mode: -600 shade for backgrounds (same as light for 4.5:1+ contrast with white)
 export const solidButtonColors: Record<AccentVariant, {
   bg: string;
   hover: string;
@@ -819,20 +819,20 @@ export const solidButtonColors: Record<AccentVariant, {
   focus: string;
 }> = {
   purple: {
-    bg: 'bg-purple-600 dark:bg-purple-500',
-    hover: 'hover:bg-purple-700 dark:hover:bg-purple-600',
+    bg: 'bg-purple-600 dark:bg-purple-600',
+    hover: 'hover:bg-purple-700 dark:hover:bg-purple-700',
     text: 'text-white',
     focus: 'focus:ring-2 focus:ring-purple-500',
   },
   blue: {
-    bg: 'bg-blue-600 dark:bg-blue-500',
-    hover: 'hover:bg-blue-700 dark:hover:bg-blue-600',
+    bg: 'bg-blue-600 dark:bg-blue-600',
+    hover: 'hover:bg-blue-700 dark:hover:bg-blue-700',
     text: 'text-white',
     focus: 'focus:ring-2 focus:ring-blue-500',
   },
   green: {
-    bg: 'bg-green-600 dark:bg-green-500',
-    hover: 'hover:bg-green-700 dark:hover:bg-green-600',
+    bg: 'bg-green-600 dark:bg-green-600',
+    hover: 'hover:bg-green-700 dark:hover:bg-green-700',
     text: 'text-white',
     focus: 'focus:ring-2 focus:ring-green-500',
   },
@@ -845,20 +845,20 @@ export const solidButtonColors: Record<AccentVariant, {
     focus: 'focus:ring-2 focus:ring-orange-500',
   },
   teal: {
-    bg: 'bg-teal-600 dark:bg-teal-500',
-    hover: 'hover:bg-teal-700 dark:hover:bg-teal-600',
+    bg: 'bg-teal-600 dark:bg-teal-600',
+    hover: 'hover:bg-teal-700 dark:hover:bg-teal-700',
     text: 'text-white',
     focus: 'focus:ring-2 focus:ring-teal-500',
   },
   gray: {
-    bg: 'bg-gray-600 dark:bg-gray-500',
-    hover: 'hover:bg-gray-700 dark:hover:bg-gray-600',
+    bg: 'bg-gray-600 dark:bg-gray-600',
+    hover: 'hover:bg-gray-700 dark:hover:bg-gray-700',
     text: 'text-white',
     focus: 'focus:ring-2 focus:ring-gray-500',
   },
   red: {
-    bg: 'bg-red-600 dark:bg-red-500',
-    hover: 'hover:bg-red-700 dark:hover:bg-red-600',
+    bg: 'bg-red-600 dark:bg-red-600',
+    hover: 'hover:bg-red-700 dark:hover:bg-red-700',
     text: 'text-white',
     focus: 'focus:ring-2 focus:ring-red-500',
   },
