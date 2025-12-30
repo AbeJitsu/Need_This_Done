@@ -168,7 +168,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 - [x] Optimize product queries with pagination
 
 **Analytics Dashboard**
-- [ ] Orders, revenue, trends visualization
+- [x] Orders, revenue, trends visualization
 - [ ] Page view analytics per Puck page
 
 ### Long Term (1-3 Months)
@@ -209,6 +209,16 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Analytics Dashboard** (Dec 30, 2025)
+- Created /admin/analytics page with revenue, orders, and trends visualization
+- API endpoint /api/admin/analytics with date range filtering and trends data
+- Summary metrics: Total Revenue, Total Orders, Average Order Value, Delivered count
+- Orders by status bar chart (pending, processing, shipped, delivered, canceled)
+- Revenue trend chart showing last 14 days with hover tooltips
+- Date range picker for filtering analytics period
+- 5 E2E tests all passing
+- Context: app/admin/analytics/page.tsx, app/api/admin/analytics/route.ts
 
 **Product Query Pagination** (Dec 30, 2025)
 - Added optional pagination support to medusa-client products.list()
