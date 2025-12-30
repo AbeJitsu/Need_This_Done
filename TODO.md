@@ -160,7 +160,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 - [x] Add TipTap WYSIWYG editor ✅ DONE
 - [x] Add "Edit with Puck" after wizard completion (completion modal + 2 E2E tests)
 - [x] Create block-level editor (mid-complexity between wizard and Puck)
-- [ ] Add template preview images
+- [x] Add template preview images (gradient + section icons)
 
 **Performance & Caching**
 - [ ] Define Redis cache invalidation strategy per feature
@@ -209,6 +209,15 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Template Preview Images** (Dec 30, 2025)
+- Added visual preview thumbnails to template picker cards
+- Gradient background using template's default color
+- Section icons show what's in the template (Hero, Features, Testimonials, etc.)
+- Shows section count and category icon
+- Featured badge repositioned to preview area
+- 5 E2E tests in e2e/template-previews.spec.ts
+- Context: components/templates/TemplatePicker.tsx
 
 **Block-Level Editor** (Dec 30, 2025)
 - Created simplified block editor at `/admin/pages/[slug]/blocks`
