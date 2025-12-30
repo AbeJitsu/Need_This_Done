@@ -6,10 +6,26 @@
 # Triggers: startup, resume, compact, clear
 
 # ============================================
+# SOURCE SHARED HELPERS (DRY - single source of truth)
+# This sets $_PROJECT_DIR, LOOP_STATE_FILE, TODO_FILE
+# ============================================
+# Find the script's directory to locate loop-helper.sh
+_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+if [[ -f "$_SCRIPT_DIR/lib/loop-helper.sh" ]]; then
+  source "$_SCRIPT_DIR/lib/loop-helper.sh"
+else
+  # Fallback: try relative to git root
+  _GIT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+  if [[ -f "$_GIT_ROOT/.claude/hooks/lib/loop-helper.sh" ]]; then
+    source "$_GIT_ROOT/.claude/hooks/lib/loop-helper.sh"
+  fi
+fi
+
+# ============================================
 # SESSION ID GENERATION
 # Creates unique ID for multi-instance safety
 # ============================================
-STATE_DIR="$CLAUDE_PROJECT_DIR/.claude/state"
+STATE_DIR="$_PROJECT_DIR/.claude/state"
 mkdir -p "$STATE_DIR" 2>/dev/null
 
 # Generate unique session ID (PID + timestamp)
@@ -23,21 +39,8 @@ rm -f "$STATE_DIR/session-$CLAUDE_SESSION_ID.txt"
 find "$STATE_DIR" -name "session-*.txt" -mtime +1 -delete 2>/dev/null || true
 
 # ============================================
-# LOOP STATUS CHECK
-# Source loop helper if available
-# ============================================
-LOOP_HELPER="$CLAUDE_PROJECT_DIR/.claude/hooks/lib/loop-helper.sh"
-LOOP_STATE_FILE="$CLAUDE_PROJECT_DIR/.claude/loop-state.json"
-
-if [[ -f "$LOOP_HELPER" ]]; then
-  # Temporarily disable recursion guard for sourcing
-  unset CLAUDE_HOOK_RUNNING
-  source "$LOOP_HELPER"
-  export CLAUDE_HOOK_RUNNING=1
-fi
-
-# ============================================
 # DISPLAY LOOP STATUS
+# (loop-helper.sh already sourced at top - provides all functions)
 # ============================================
 if [[ -f "$LOOP_STATE_FILE" ]]; then
   LOOP_ACTIVE=$(jq -r '.active // false' "$LOOP_STATE_FILE" 2>/dev/null)
@@ -50,7 +53,7 @@ if [[ -f "$LOOP_STATE_FILE" ]]; then
     COMPLETED=$(jq -r '.tasksCompleted // 0' "$LOOP_STATE_FILE")
 
     # Get current task info using helper functions (DRY)
-    TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
+    # TODO_FILE already set by loop-helper.sh
     CURRENT_TASK=""
     NEXT_READY=""
     if [[ -f "$TODO_FILE" ]]; then
@@ -111,9 +114,8 @@ fi
 # ============================================
 # NORMAL TASK STATUS (no active loop)
 # Use helper functions for DRY pattern matching
+# TODO_FILE already set by loop-helper.sh
 # ============================================
-TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
-
 if [ ! -f "$TODO_FILE" ]; then
   exit 0
 fi

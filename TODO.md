@@ -22,7 +22,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Email (Resend) | ✅ Working | hello@needthisdone.com verified |
 | Puck Page Builder | ✅ Active | Visual page builder with TipTap WYSIWYG editor |
 | **Inline Editing** | ✅ **VALIDATED** | 12 pages, 52 field tests, click-to-edit working |
-| **Auto-Loop System** | ✅ **WORKING** | Task parsing fixed, stop hook blocks correctly, /auto-loop reliable |
+| **Auto-Loop System** | ✅ **WORKING** | Fixed elapsed time display - DRY project dir detection in loop-helper.sh |
 
 ---
 
@@ -30,13 +30,18 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[x] **Auto-Loop System (TOP PRIORITY)** - Make /auto-loop work reliably for hours of autonomous work
-- [x] Fix task parsing regex to match TODO.md format
-- [x] Verify stop hook blocks exit correctly (exit code 2)
-- [x] Test end-to-end: invoke skill → work → block → continue
-- [x] Ensure time limit and iteration safety work
+[x] **Fix Auto-Loop Elapsed Time Bug** - PRIORITY: Fix before continuing other work
+- [x] Fix CLAUDE_PROJECT_DIR fallback in loop-helper.sh (DRY - single source in loop-helper.sh)
+- [x] Verify get_elapsed_formatted returns correct time (tested: 39 minutes vs expected ~39 minutes)
+- [x] Test session-start.sh displays accurate elapsed time (tested: "0h 39m" displays correctly)
 
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
+
+**Auto-Loop System (Core)**
+[x] Fix task parsing regex to match TODO.md format
+[x] Verify stop hook blocks exit correctly (exit code 2)
+[x] Test end-to-end: invoke skill → work → block → continue
+[x] Ensure time limit and iteration safety work
 
 **Auto-Loop System Improvements**
 [x] Create unit tests for loop-state.json management

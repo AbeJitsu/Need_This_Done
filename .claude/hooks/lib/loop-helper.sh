@@ -8,8 +8,40 @@
 # ============================================================================
 # PATHS
 # ============================================================================
-LOOP_STATE_FILE="$CLAUDE_PROJECT_DIR/.claude/loop-state.json"
-TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
+# Determine project directory with fallback if CLAUDE_PROJECT_DIR not set
+# Priority: 1) CLAUDE_PROJECT_DIR, 2) git root, 3) walk up to find .claude
+_get_project_dir() {
+  # Use CLAUDE_PROJECT_DIR if set
+  if [[ -n "$CLAUDE_PROJECT_DIR" ]]; then
+    echo "$CLAUDE_PROJECT_DIR"
+    return 0
+  fi
+
+  # Try git root (most reliable)
+  local git_root
+  git_root="$(git rev-parse --show-toplevel 2>/dev/null)"
+  if [[ -n "$git_root" && -d "$git_root/.claude" ]]; then
+    echo "$git_root"
+    return 0
+  fi
+
+  # Walk up from current directory to find .claude
+  local dir="$PWD"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -d "$dir/.claude" ]]; then
+      echo "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+
+  # Last resort: current directory
+  echo "$PWD"
+}
+
+_PROJECT_DIR="$(_get_project_dir)"
+LOOP_STATE_FILE="$_PROJECT_DIR/.claude/loop-state.json"
+TODO_FILE="$_PROJECT_DIR/TODO.md"
 
 # ============================================================================
 # STATE MANAGEMENT
