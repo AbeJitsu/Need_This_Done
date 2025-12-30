@@ -16,7 +16,7 @@ import {
   type HowItWorksPageContent,
   type EditablePageSlug,
 } from '@/lib/page-content-types';
-import { alertColors } from '@/lib/colors';
+import { alertColors, uiChromeBg, statusIndicatorBg } from '@/lib/colors';
 
 // ============================================================================
 // Content Editor - Main Editor Component
@@ -160,7 +160,7 @@ export default function ContentEditor({
               Edit {pageName}
             </h1>
             {isDirty && (
-              <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">
+              <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${statusIndicatorBg.modified} text-yellow-700 dark:text-yellow-200`}>
                 Unsaved changes
               </span>
             )}
@@ -201,7 +201,7 @@ export default function ContentEditor({
           </div>
 
           {/* Form Footer */}
-          <div className="flex-shrink-0 p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+          <div className={`flex-shrink-0 p-4 border-t border-gray-200 dark:border-gray-700 ${uiChromeBg.footer}`}>
             {showResetConfirm ? (
               <div className="space-y-2">
                 <p className="text-sm text-gray-600 dark:text-gray-400">

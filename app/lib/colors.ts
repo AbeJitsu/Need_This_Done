@@ -1235,3 +1235,16 @@ export const toggleButtonColors: Record<AccentVariant, {
   },
 };
 
+// ============================================================================
+// Status Indicator Colors - For health/status displays
+// ============================================================================
+// Used for system health, connection status, and similar indicators.
+// Follows the -100/-800 pattern for consistency.
+export const statusIndicatorBg = {
+  healthy: 'bg-green-100 dark:bg-green-800',
+  warning: 'bg-amber-100 dark:bg-amber-800',
+  error: 'bg-red-100 dark:bg-red-800',
+  loading: 'bg-blue-100 dark:bg-blue-800',
+  modified: 'bg-yellow-100 dark:bg-yellow-800',
+};
+

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { uiChromeBg } from '@/lib/colors';
 import HomepagePreview from './previews/HomepagePreview';
 import PricingPreview from './previews/PricingPreview';
 import ServicesPreview from './previews/ServicesPreview';
@@ -67,7 +68,7 @@ export default function PagePreview({ slug, content }: PagePreviewProps) {
   return (
     <div className="h-full flex flex-col">
       {/* Device Toggle Bar */}
-      <div className="flex-shrink-0 flex items-center justify-center gap-2 py-3 px-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+      <div className={`flex-shrink-0 flex items-center justify-center gap-2 py-3 px-4 border-b border-gray-200 dark:border-gray-700 ${uiChromeBg.toolbar}`}>
         {Object.entries(deviceDimensions).map(([key, { label }]) => (
           <button
             key={key}
