@@ -12,6 +12,7 @@ import type {
   HowItWorksPageContent,
   HomePageContent,
   ContactPageContent,
+  GetStartedPageContent,
   PageContent,
   EditablePageSlug,
 } from './page-content-types';
@@ -550,6 +551,60 @@ export const defaultContactContent: ContactPageContent = {
 };
 
 // ============================================================================
+// Get Started Page Defaults
+// ============================================================================
+
+export const defaultGetStartedContent: GetStartedPageContent = {
+  header: {
+    title: 'Ready to Get Started?',
+    description: "Choose the path that's right for you",
+  },
+  paths: [
+    {
+      badge: 'Free',
+      title: 'Get a Quote',
+      description: 'Tell us about your project and get a custom quote',
+      features: [
+        'Free, no obligation',
+        'Response in 2 business days',
+        'Custom pricing for your needs',
+      ],
+      button: { text: 'Get a Quote', variant: 'green', href: '/contact', size: 'lg' },
+      hoverColor: 'green',
+    },
+    {
+      badge: 'Paid Service',
+      title: 'Book a Consultation',
+      description: 'Talk to an expert before you start',
+      features: [
+        'Expert guidance and advice',
+        'Immediate scheduling',
+        'Personalized recommendations',
+      ],
+      button: { text: 'Book a Consultation', variant: 'purple', href: '/shop', size: 'lg' },
+      hoverColor: 'purple',
+    },
+  ],
+  quoteSection: {
+    title: 'Already Have a Quote?',
+    description: 'Enter your quote details below to authorize your project.',
+  },
+  authForm: {
+    title: "Let's Begin Your Project",
+    description: "Enter your details and we'll process your deposit",
+    quoteRefLabel: 'Quote Reference Number',
+    quoteRefPlaceholder: 'e.g., QT-2024-001',
+    quoteRefHelper: "You'll find this in your quote email",
+    emailLabel: 'Email Address',
+    emailPlaceholder: 'your@email.com',
+    emailHelper: 'Use the same email from your quote request',
+    submitButton: 'Authorize & Pay Deposit',
+    processingText: 'Getting everything ready...',
+    securityNote: 'Secure payment processing. Your information is protected.',
+  },
+};
+
+// ============================================================================
 // Default Content Getter
 // ============================================================================
 
@@ -560,6 +615,7 @@ const defaultContentMap: Record<EditablePageSlug, PageContent> = {
   'how-it-works': defaultHowItWorksContent,
   home: defaultHomeContent,
   contact: defaultContactContent,
+  'get-started': defaultGetStartedContent,
 };
 
 /**

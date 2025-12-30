@@ -278,6 +278,42 @@ export interface ContactPageContent {
 }
 
 // ============================================================================
+// Get Started Page Content
+// ============================================================================
+
+/** Path option for the Get Started page */
+export interface GetStartedPath {
+  badge: string;
+  title: string;
+  description: string;
+  features: string[];
+  button: CTAButton & { size?: 'sm' | 'md' | 'lg' };
+  hoverColor: AccentVariant;
+}
+
+export interface GetStartedPageContent {
+  header: PageHeader;
+  paths: GetStartedPath[];
+  quoteSection: {
+    title: string;
+    description: string;
+  };
+  authForm: {
+    title: string;
+    description: string;
+    quoteRefLabel: string;
+    quoteRefPlaceholder: string;
+    quoteRefHelper: string;
+    emailLabel: string;
+    emailPlaceholder: string;
+    emailHelper: string;
+    submitButton: string;
+    processingText: string;
+    securityNote: string;
+  };
+}
+
+// ============================================================================
 // Union Types & Mapping
 // ============================================================================
 
@@ -288,7 +324,8 @@ export type PageContent =
   | ServicesPageContent
   | HowItWorksPageContent
   | HomePageContent
-  | ContactPageContent;
+  | ContactPageContent
+  | GetStartedPageContent;
 
 /** Content type identifiers */
 export type PageContentType =
@@ -297,7 +334,8 @@ export type PageContentType =
   | 'services_page'
   | 'how_it_works_page'
   | 'home_page'
-  | 'contact_page';
+  | 'contact_page'
+  | 'get_started_page';
 
 /** Maps page slugs to their content types */
 export const PAGE_CONTENT_TYPES: Record<string, PageContentType> = {
@@ -307,6 +345,7 @@ export const PAGE_CONTENT_TYPES: Record<string, PageContentType> = {
   'how-it-works': 'how_it_works_page',
   home: 'home_page',
   contact: 'contact_page',
+  'get-started': 'get_started_page',
 };
 
 /** Display names for admin UI */
@@ -317,8 +356,9 @@ export const PAGE_DISPLAY_NAMES: Record<string, string> = {
   'how-it-works': 'How It Works',
   home: 'Homepage',
   contact: 'Contact',
+  'get-started': 'Get Started',
 };
 
 /** All editable page slugs */
-export const EDITABLE_PAGES = ['home', 'pricing', 'services', 'faq', 'how-it-works', 'contact'] as const;
+export const EDITABLE_PAGES = ['home', 'pricing', 'services', 'faq', 'how-it-works', 'contact', 'get-started'] as const;
 export type EditablePageSlug = (typeof EDITABLE_PAGES)[number];

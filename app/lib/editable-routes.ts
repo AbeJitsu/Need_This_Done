@@ -28,6 +28,7 @@ export const editableRoutes: Record<string, EditablePageSlug> = {
   '/faq': 'faq',
   '/how-it-works': 'how-it-works',
   '/contact': 'contact',
+  '/get-started': 'get-started',
 };
 
 // ============================================================================

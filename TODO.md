@@ -28,6 +28,17 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
+[→] **Inline Edit Coverage Gap** - 6 pages missing inline editing support
+    Test: `npm run test:e2e -- e2e/inline-edit-coverage.spec.ts`
+    Done when: All pages pass stricter "content loaded" test
+
+[ ] **Add inline editing to /blog** - Add useEditableContent hook
+[ ] **Add inline editing to /changelog** - Add useEditableContent hook
+[ ] **Add inline editing to /get-started** - Add useEditableContent hook
+[ ] **Add inline editing to /guide** - Add useEditableContent hook
+[ ] **Add inline editing to /privacy** - Add useEditableContent hook
+[ ] **Add inline editing to /terms** - Add useEditableContent hook
+
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
     Context: app/api/appointments/, .env.local credentials
     Done when: OAuth flow works, calendar events created on approval
