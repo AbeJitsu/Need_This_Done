@@ -654,20 +654,39 @@ export const defaultGuideContent: GuidePageContent = {
   },
   sections: [
     {
-      title: 'Welcome',
-      content: 'Welcome to NeedThisDone! This guide will help you understand how to work with us effectively.',
+      title: 'Browse Consultations',
+      content: `Ready to get expert help? Here's how to find the right consultation:
+
+1. Visit our Shop to see all available consultation packages
+2. We offer 15, 30, and 55-minute sessions - choose based on how much time you need
+3. Click any consultation to see the full description and what's included
+4. Add to cart when you're ready to book`,
     },
     {
-      title: 'How It Works',
-      content: 'Submit your project details, receive a quote, approve and pay the deposit, then we get to work.',
+      title: 'Book a Consultation',
+      content: `Complete your purchase and schedule your session:
+
+1. Click "Add to Cart" on your chosen consultation package
+2. Review your cart to confirm your selection
+3. Complete payment securely with Stripe
+4. After payment, select your preferred date and time`,
     },
     {
-      title: 'Communication',
-      content: 'We keep you updated throughout the project. You can reach us via email or the chat widget.',
+      title: 'Authorize a Project',
+      content: `Already have a quote? Here's how to get your project started:
+
+1. Go to the Get Started page
+2. Enter the quote reference number from your email
+3. Confirm the project scope and pricing
+4. Complete payment to kick off your project`,
     },
     {
-      title: 'Delivery',
-      content: 'Once your project is complete, you\'ll review the work. Final payment is due upon approval.',
+      title: 'Stay Updated',
+      content: `Keep track of what's new:
+
+• Check our Changelog for the latest features and improvements
+• Read our Blog for tips, insights, and updates
+• Bookmark this page and come back anytime to learn about new capabilities`,
     },
   ],
 };
@@ -684,24 +703,52 @@ export const defaultPrivacyContent: PrivacyPageContent = {
   lastUpdated: 'January 2025',
   sections: [
     {
-      title: 'Information We Collect',
-      content: 'We collect information you provide directly to us, such as your name, email address, and project details.',
+      title: '1. Information We Collect',
+      content: `When you use NeedThisDone, we collect:
+
+• Account Information: Name, email address, and password when you create an account or sign in with Google.
+• Payment Information: Processed securely through Stripe. We never store your full card number on our servers.
+• Appointment Details: Date, time, and notes you provide when booking services.
+• Usage Information: Pages you visit, features you use, and how you interact with our site (to help us improve).`,
     },
     {
-      title: 'How We Use Your Information',
-      content: 'We use your information to provide our services, communicate with you, and improve our offerings.',
+      title: '2. How We Use Your Information',
+      content: `We use your information to:
+
+• Provide our services and process your requests
+• Process payments and send receipts
+• Schedule and manage your appointments
+• Send confirmations and reminders
+• Respond to your questions and support requests
+• Improve our website and services
+• Send updates about our services (with your consent)
+
+We will never sell your personal information to third parties. Ever.`,
     },
     {
-      title: 'Information Sharing',
-      content: 'We do not sell your personal information. We may share information with service providers who assist us.',
+      title: '3. Third-Party Services',
+      content: `We work with trusted partners to provide our services:
+
+• Stripe - Secure payment processing (stripe.com/privacy)
+• Google - Sign-in and calendar integration (policies.google.com/privacy)
+• Supabase - Secure database and authentication (supabase.com/privacy)`,
     },
     {
-      title: 'Data Security',
-      content: 'We implement appropriate security measures to protect your personal information.',
+      title: '4. Your Rights',
+      content: `You have the right to:
+
+• Access Your Data: Request a copy of the personal information we have about you.
+• Correct Your Data: Update or fix any inaccurate information.
+• Delete Your Data: Request that we delete your personal information.
+
+To exercise these rights, email us at hello@needthisdone.com`,
     },
     {
-      title: 'Contact Us',
-      content: 'If you have questions about this privacy policy, please contact us.',
+      title: '5. Contact Us',
+      content: `Questions or concerns about your privacy?
+
+Email: hello@needthisdone.com
+Website: needthisdone.com/contact`,
     },
   ],
 };
@@ -718,28 +765,56 @@ export const defaultTermsContent: TermsPageContent = {
   lastUpdated: 'January 2025',
   sections: [
     {
-      title: 'Agreement to Terms',
-      content: 'By using our services, you agree to be bound by these terms of service.',
+      title: '1. Acceptance of Terms',
+      content: `By using NeedThisDone.com, you agree to these terms. If you don't agree, please don't use our services.
+
+These terms apply to all visitors, users, and customers of our website and services.`,
     },
     {
-      title: 'Our Services',
-      content: 'We provide virtual assistant, data management, and website services as described on our website.',
+      title: '2. Our Services',
+      content: `NeedThisDone provides personal assistance and errand services. We help you tackle your to-do list through scheduled consultations and task completion.
+
+Service availability may vary. We reserve the right to modify, suspend, or discontinue services at any time with reasonable notice.`,
     },
     {
-      title: 'Payment Terms',
-      content: 'Payment is due as specified in your project quote. We require a 50% deposit to begin work.',
+      title: '3. Payments & Refunds',
+      content: `All payments are processed securely through Stripe.
+
+Refund Policy:
+• Consultation fees: Non-refundable once the consultation is completed
+• Cancellations 24+ hours in advance: Full refund
+• Cancellations less than 24 hours: 50% refund
+• No-shows: No refund
+
+If you have concerns about a charge, please contact us within 7 days.`,
     },
     {
-      title: 'Revisions and Deliverables',
-      content: 'We include reasonable revisions to ensure your satisfaction with the final deliverables.',
+      title: '4. User Responsibilities',
+      content: `When using our services, you agree to:
+
+• Provide accurate information when booking
+• Treat our team with respect and courtesy
+• Not use our services for illegal activities
+• Show up on time for scheduled appointments
+• Pay for services rendered
+• Keep your account credentials secure`,
     },
     {
-      title: 'Limitation of Liability',
-      content: 'Our liability is limited to the amount paid for the specific service in question.',
+      title: '5. Limitation of Liability',
+      content: `NeedThisDone provides services "as is." We do our best to help, but we can't guarantee specific outcomes.
+
+Our total liability is limited to the amount you paid for the specific service in question.`,
     },
     {
-      title: 'Contact',
-      content: 'For questions about these terms, please contact us.',
+      title: '6. Privacy',
+      content: `Your privacy matters to us. Please review our Privacy Policy to understand how we collect, use, and protect your information.`,
+    },
+    {
+      title: '7. Contact Us',
+      content: `Questions about these terms?
+
+Email: hello@needthisdone.com
+Website: needthisdone.com/contact`,
     },
   ],
 };
