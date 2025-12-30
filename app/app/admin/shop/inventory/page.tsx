@@ -12,6 +12,7 @@ import {
   filterButtonColors,
   formInputColors,
   headingColors,
+  verySoftBgColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -359,9 +360,9 @@ export default function AdminInventoryPage() {
                     key={item.id}
                     className={`${
                       item.status === 'out_of_stock'
-                        ? 'bg-red-50 dark:bg-red-900/10'
+                        ? verySoftBgColors.red
                         : item.status === 'low_stock'
-                        ? 'bg-orange-50 dark:bg-orange-900/10'
+                        ? verySoftBgColors.orange
                         : ''
                     }`}
                   >

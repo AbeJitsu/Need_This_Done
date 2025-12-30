@@ -8,6 +8,7 @@ import {
   formInputColors,
   mutedTextColors,
   alertColors,
+  selectedStateColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -177,7 +178,7 @@ export default function QuizBlock({
                   w-full text-left p-4 rounded-lg border-2 transition-all
                   ${quizState === 'submitted' ? 'cursor-default' : 'cursor-pointer hover:border-gray-400 dark:hover:border-gray-500'}
                   ${isSelected && quizState === 'answering'
-                    ? `border-${color}-500 bg-${color}-50 dark:bg-${color}-900/20`
+                    ? `${selectedStateColors[color].border} ${selectedStateColors[color].bg}`
                     : 'border-gray-200 dark:border-gray-700'
                   }
                   ${showCorrect ? `${alertColors.success.border} ${alertColors.success.bg}` : ''}

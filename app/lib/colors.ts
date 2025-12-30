@@ -533,6 +533,12 @@ export const alertColors = {
     text: 'text-orange-800 dark:text-white',
     link: 'text-orange-700 dark:text-white underline hover:text-orange-900 dark:hover:text-gray-200',
   },
+  // Yellow config warnings - softer than orange warning
+  config: {
+    bg: 'bg-yellow-100 dark:bg-yellow-800',
+    border: 'border border-yellow-200 dark:border-yellow-600',
+    text: 'text-yellow-900 dark:text-yellow-100',
+  },
 };
 
 // ============================================================================

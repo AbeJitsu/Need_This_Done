@@ -10,6 +10,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import { selectedStateColors, hoverBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Block Editor Types
@@ -387,7 +388,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
                     className={`
                       group relative p-4 rounded-xl border-2 cursor-pointer transition-all
                       ${isSelected
-                        ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
+                        ? `${selectedStateColors.purple.border} ${selectedStateColors.purple.bg}`
                         : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-purple-300 dark:hover:border-purple-600'
                       }
                     `}
@@ -432,7 +433,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); handleDeleteSection(index); }}
-                          className="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400"
+                          className={`p-2 rounded-lg ${hoverBgColors.red} text-red-600 dark:text-red-400`}
                           title="Delete section"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -522,7 +523,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
                         <button
                           key={blockType}
                           onClick={() => handleAddSection(blockType)}
-                          className="flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors text-left"
+                          className={`flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-purple-500 ${hoverBgColors.purple} transition-colors text-left`}
                         >
                           <span className="text-xl">{info.icon}</span>
                           <span className="text-sm font-medium text-gray-900 dark:text-gray-100">

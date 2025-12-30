@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
+import { alertColors } from '@/lib/colors';
 
 // ============================================================================
 // Stripe Context
@@ -97,8 +98,8 @@ export function StripeElementsWrapper({
   // Don't render if no publishable key
   if (!stripePromise) {
     return (
-      <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-        <p className="text-sm text-yellow-900 dark:text-yellow-200">
+      <div className={`p-4 ${alertColors.config.bg} ${alertColors.config.border} rounded-lg`}>
+        <p className={`text-sm ${alertColors.config.text}`}>
           Payment system not configured. Please add NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.
         </p>
       </div>

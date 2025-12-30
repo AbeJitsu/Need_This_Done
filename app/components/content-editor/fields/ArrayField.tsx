@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { softBgColors, uiChromeBg } from '@/lib/colors';
+import { softBgColors, uiChromeBg, hoverBgColors } from '@/lib/colors';
 
 // ============================================================================
 // ArrayField - Repeatable Item List
@@ -158,12 +158,12 @@ export default function ArrayField<T>({
                   <button
                     type="button"
                     onClick={() => handleRemove(index)}
-                    className="
+                    className={`
                       p-1 rounded text-gray-400 dark:text-gray-500
                       hover:text-red-600 dark:hover:text-red-400
-                      hover:bg-red-50 dark:hover:bg-red-900/30
+                      ${hoverBgColors.red}
                       transition-colors duration-150
-                    "
+                    `}
                     title="Remove item"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

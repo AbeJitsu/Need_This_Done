@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Product } from '@/lib/medusa-client';
-import { uiChromeBg, alertColors } from '@/lib/colors';
+import { uiChromeBg, alertColors, hoverBgColors } from '@/lib/colors';
 
 // ============================================================================
 // ProductPicker - Modal for Selecting Products from Medusa
@@ -368,7 +368,7 @@ export function ProductField({ value, onChange, label }: ProductFieldProps) {
             <button
               type="button"
               onClick={() => setIsOpen(true)}
-              className="p-1.5 text-gray-400 hover:text-purple-600 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
+              className={`p-1.5 text-gray-400 hover:text-purple-600 rounded-lg ${hoverBgColors.purple} transition-colors`}
               title="Change product"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -378,7 +378,7 @@ export function ProductField({ value, onChange, label }: ProductFieldProps) {
             <button
               type="button"
               onClick={handleClear}
-              className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              className={`p-1.5 text-gray-400 hover:text-red-600 rounded-lg ${hoverBgColors.red} transition-colors`}
               title="Remove product"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

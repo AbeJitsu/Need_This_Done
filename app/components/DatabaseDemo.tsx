@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { hoverBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Database Demo Component - Data Storage Demonstration
@@ -323,15 +324,15 @@ export default function DatabaseDemo() {
                 </div>
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="
+                  className={`
                     px-3 py-1
                     text-xs font-medium
                     text-blue-600 dark:text-blue-400
-                    hover:bg-blue-100 dark:hover:bg-blue-900/30
+                    ${hoverBgColors.blue}
                     rounded
                     transition-colors
                     whitespace-nowrap
-                  "
+                  `}
                 >
                   Delete
                 </button>

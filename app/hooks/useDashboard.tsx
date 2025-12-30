@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { mockProjects, isDevPreview } from '@/lib/mockProjects';
+import { alertColors } from '@/lib/colors';
 
 // ============================================================================
 // Dashboard Hook - Shared Logic for Admin and User Dashboards
@@ -173,8 +174,8 @@ export function LoadingSkeleton() {
 
 export function ErrorDisplay({ message }: { message: string }) {
   return (
-    <div className="p-6 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-      <p className="text-red-700 dark:text-red-300">{message}</p>
+    <div className={`p-6 rounded-xl ${alertColors.error.bg} ${alertColors.error.border}`}>
+      <p className={alertColors.error.text}>{message}</p>
     </div>
   );
 }

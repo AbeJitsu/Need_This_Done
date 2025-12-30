@@ -16,7 +16,7 @@ import {
   type HowItWorksPageContent,
   type EditablePageSlug,
 } from '@/lib/page-content-types';
-import { alertColors, uiChromeBg, statusIndicatorBg } from '@/lib/colors';
+import { alertColors, uiChromeBg, statusIndicatorBg, hoverBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Content Editor - Main Editor Component
@@ -211,7 +211,7 @@ export default function ContentEditor({
                   <button
                     type="button"
                     onClick={handleReset}
-                    className="px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
+                    className={`px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 ${hoverBgColors.red} rounded`}
                   >
                     Yes, Reset
                   </button>

@@ -11,6 +11,8 @@ import {
   focusRingClasses,
   accentColors,
   solidButtonColors,
+  uiChromeBg,
+  hoverBgColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -682,7 +684,7 @@ export default function AdminSidebar() {
                   key={`${basePath}.${index}`}
                   className={`
                     relative rounded-lg
-                    bg-gray-50 dark:bg-gray-800/50
+                    ${uiChromeBg.panel}
                     border border-gray-200 dark:border-gray-700
                     hover:border-blue-300 dark:hover:border-blue-600
                     transition-all duration-150 group
@@ -715,7 +717,7 @@ export default function AdminSidebar() {
                     <button
                       type="button"
                       onClick={(e) => { e.stopPropagation(); handleDeleteArrayItem(basePath, index); }}
-                      className="p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400"
+                      className={`p-1 rounded ${hoverBgColors.red} text-red-600 dark:text-red-400`}
                       aria-label="Delete item"
                     >
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">

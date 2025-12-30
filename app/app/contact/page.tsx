@@ -22,6 +22,7 @@ import {
   alertColors,
   cardBgColors,
   fileUploadColors,
+  iconCircleColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -183,7 +184,7 @@ export default function ContactPage() {
         <Card className="mb-10">
           {submitStatus === 'success' ? (
             <div className="text-center py-8">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+              <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${iconCircleColors.green.bg} flex items-center justify-center`}>
                 <span className={`text-3xl ${successCheckmarkColors.icon}`} aria-hidden="true">✓</span>
               </div>
               <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>

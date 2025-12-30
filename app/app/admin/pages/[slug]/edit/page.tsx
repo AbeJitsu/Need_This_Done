@@ -11,6 +11,7 @@ import { Puck } from '@measured/puck';
 import { puckConfig } from '@/lib/puck-config';
 import '@measured/puck/puck.css';
 import { CheckIcon } from '@/components/ui/icons';
+import { statusBadgeColors } from '@/lib/colors';
 
 export default function EditPage({ params }: { params: { slug: string } }) {
   const router = useRouter();
@@ -153,8 +154,8 @@ export default function EditPage({ params }: { params: { slug: string } }) {
                   <span
                     className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                       page.is_published
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                        ? `${statusBadgeColors.published.bg} ${statusBadgeColors.published.text}`
+                        : `${statusBadgeColors.draft.bg} ${statusBadgeColors.draft.text}`
                     }`}
                   >
                     {page.is_published ? 'Published' : 'Draft'}

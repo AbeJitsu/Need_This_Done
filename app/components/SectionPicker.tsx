@@ -9,7 +9,7 @@ import {
   type SectionDefinition,
   type SectionCategory,
 } from '@/lib/sections';
-import { accentColors } from '@/lib/colors';
+import { accentColors, softBgColors, hoverBgColors } from '@/lib/colors';
 
 // ============================================================================
 // SectionPicker Component
@@ -174,7 +174,7 @@ export default function SectionPicker({
                 key={section.id}
                 type="button"
                 onClick={() => handleSelect(section)}
-                className="group p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 bg-gray-50 dark:bg-gray-900 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors text-left"
+                className={`group p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 bg-gray-100 dark:bg-gray-900 ${hoverBgColors.blue} transition-colors text-left`}
                 data-testid="section-card"
               >
                 {/* Icon */}

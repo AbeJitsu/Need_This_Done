@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
-import { alertColors, accentColors } from '@/lib/colors';
+import { alertColors, accentColors, softBgColors, titleTextColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Analytics Dashboard - /admin/analytics
@@ -343,10 +343,10 @@ function MetricCard({
   color: 'green' | 'purple' | 'blue' | 'teal';
 }) {
   const colorClasses = {
-    green: 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400',
-    purple: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
-    blue: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400',
-    teal: 'bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400',
+    green: `${softBgColors.green} ${titleTextColors.green}`,
+    purple: `${softBgColors.purple} ${titleTextColors.purple}`,
+    blue: `${softBgColors.blue} ${titleTextColors.blue}`,
+    teal: `${softBgColors.teal} ${titleTextColors.teal}`,
   };
 
   return (

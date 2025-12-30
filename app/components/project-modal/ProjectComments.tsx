@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { solidButtonColors } from '@/lib/colors';
+import { solidButtonColors, uiChromeBg, statusIndicatorBg } from '@/lib/colors';
 
 // ============================================================================
 // Project Comments Component
@@ -61,7 +61,7 @@ export default function ProjectComments({
       </h3>
 
       {/* Comments List */}
-      <div className="space-y-4 mb-6 max-h-64 overflow-y-auto bg-gray-50 dark:bg-gray-700/30 p-4 rounded-lg">
+      <div className={`space-y-4 mb-6 max-h-64 overflow-y-auto ${uiChromeBg.panel} p-4 rounded-lg`}>
         {comments.length === 0 ? (
           <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
             No comments yet
@@ -72,7 +72,7 @@ export default function ProjectComments({
               key={comment.id}
               className={`p-3 rounded-lg ${
                 comment.is_internal
-                  ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800'
+                  ? `${statusIndicatorBg.modified} border border-yellow-200 dark:border-yellow-600`
                   : 'bg-white dark:bg-gray-800'
               }`}
             >

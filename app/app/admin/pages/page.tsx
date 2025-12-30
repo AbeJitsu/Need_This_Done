@@ -10,7 +10,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import { alertColors, statusBadgeColors } from '@/lib/colors';
+import { alertColors, statusBadgeColors, iconCircleColors } from '@/lib/colors';
 
 interface Page {
   id: string;
@@ -294,7 +294,7 @@ export default function PagesManagement() {
               {/* Feature highlights */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
                 <div className="text-center">
-                  <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <div className={`w-10 h-10 mx-auto mb-3 rounded-lg ${iconCircleColors.blue.bg} flex items-center justify-center`}>
                     <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                     </svg>
@@ -303,7 +303,7 @@ export default function PagesManagement() {
                   <p className="text-sm text-gray-500 dark:text-gray-400">Build layouts visually</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                  <div className={`w-10 h-10 mx-auto mb-3 rounded-lg ${iconCircleColors.green.bg} flex items-center justify-center`}>
                     <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
@@ -312,7 +312,7 @@ export default function PagesManagement() {
                   <p className="text-sm text-gray-500 dark:text-gray-400">Draft or go live instantly</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                  <div className={`w-10 h-10 mx-auto mb-3 rounded-lg ${iconCircleColors.orange.bg} flex items-center justify-center`}>
                     <svg className="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>

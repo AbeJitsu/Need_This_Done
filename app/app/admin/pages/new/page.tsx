@@ -12,7 +12,7 @@ import { puckConfig } from '@/lib/puck-config';
 import { PageWizard } from '@/components/templates';
 import type { PuckPageData } from '@/lib/templates';
 import '@measured/puck/puck.css';
-import { alertColors } from '@/lib/colors';
+import { alertColors, iconCircleColors } from '@/lib/colors';
 import { CheckIcon } from '@/components/ui/icons';
 
 // ============================================================================
@@ -314,7 +314,7 @@ export default function NewPage() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-lg w-full p-8 text-center">
           {/* Success Icon */}
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+          <div className={`w-20 h-20 mx-auto mb-6 rounded-full ${iconCircleColors.green.bg} flex items-center justify-center`}>
             <CheckIcon size="lg" className="text-green-600 dark:text-green-400" />
           </div>
 
