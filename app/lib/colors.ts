@@ -267,13 +267,13 @@ export const cardHoverColors: Record<AccentVariant, string> = {
 // Card Hover Background Tints - Subtle background on hover
 // ============================================================================
 export const cardHoverBgTints: Record<AccentVariant, string> = {
-  purple: 'hover:bg-purple-50/30 dark:hover:bg-purple-900/10',
-  blue: 'hover:bg-blue-50/30 dark:hover:bg-blue-900/10',
-  green: 'hover:bg-green-50/30 dark:hover:bg-green-900/10',
-  orange: 'hover:bg-orange-50/30 dark:hover:bg-orange-900/10',
-  teal: 'hover:bg-teal-50/30 dark:hover:bg-teal-900/10',
-  gray: 'hover:bg-gray-50/30 dark:hover:bg-gray-900/10',
-  red: 'hover:bg-red-50/30 dark:hover:bg-red-900/10',
+  purple: 'hover:bg-purple-100 dark:hover:bg-purple-800',
+  blue: 'hover:bg-blue-100 dark:hover:bg-blue-800',
+  green: 'hover:bg-green-100 dark:hover:bg-green-800',
+  orange: 'hover:bg-orange-100 dark:hover:bg-orange-800',
+  teal: 'hover:bg-teal-100 dark:hover:bg-teal-800',
+  gray: 'hover:bg-gray-100 dark:hover:bg-gray-800',
+  red: 'hover:bg-red-100 dark:hover:bg-red-800',
 };
 
 // ============================================================================
@@ -363,14 +363,14 @@ export const featureCardColors: Record<FeatureCardVariant, {
     hover: 'hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-lg',
   },
   primary: {
-    container: 'border-blue-200 dark:border-blue-800 bg-blue-50/30 dark:bg-gray-700',
+    container: 'border-blue-200 dark:border-blue-800 bg-blue-100 dark:bg-gray-700',
     icon: 'text-blue-600 dark:text-blue-400',
-    hover: 'hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg hover:shadow-blue-500/10 dark:hover:shadow-blue-500/20',
+    hover: 'hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg',
   },
   success: {
-    container: 'border-green-200 dark:border-green-800 bg-green-50/30 dark:bg-gray-700',
+    container: 'border-green-200 dark:border-green-800 bg-green-100 dark:bg-gray-700',
     icon: 'text-green-600 dark:text-green-400',
-    hover: 'hover:border-green-300 dark:hover:border-green-700 hover:shadow-lg hover:shadow-green-500/10 dark:hover:shadow-green-500/20',
+    hover: 'hover:border-green-300 dark:hover:border-green-700 hover:shadow-lg',
   },
 };
 
@@ -607,8 +607,8 @@ export const chipColors = {
 // ============================================================================
 export const cardBgColors = {
   base: 'bg-white dark:bg-gray-800',
-  elevated: 'bg-gray-50 dark:bg-gray-700',
-  interactive: 'hover:bg-gray-50 dark:hover:bg-gray-700/50',
+  elevated: 'bg-gray-100 dark:bg-gray-700',
+  interactive: 'hover:bg-gray-100 dark:hover:bg-gray-700',
 };
 
 // ============================================================================
@@ -788,8 +788,8 @@ export const categoryBadgeColors: Record<string, string> = {
 export const fileUploadColors = {
   border: 'border-2 border-dashed border-gray-300 dark:border-gray-600',
   hoverBorder: 'hover:border-blue-400 dark:hover:border-blue-500',
-  bg: 'bg-gray-50 dark:bg-gray-800',
-  hoverBg: 'hover:bg-gray-100 dark:hover:bg-gray-700',
+  bg: 'bg-gray-100 dark:bg-gray-800',
+  hoverBg: 'hover:bg-gray-200 dark:hover:bg-gray-700',
 };
 
 // ============================================================================
@@ -808,8 +808,8 @@ export const navigationBgColors = {
 // ============================================================================
 export const layoutBgColors = {
   page: 'bg-white dark:bg-gray-900',
-  section: 'bg-gray-50 dark:bg-gray-800',
-  gradient: 'bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800',
+  section: 'bg-gray-100 dark:bg-gray-800',
+  gradient: 'bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800',
 };
 
 // ============================================================================
@@ -818,7 +818,7 @@ export const layoutBgColors = {
 // Centralized gradient definitions to maintain consistency
 export const gradientColors = {
   // Page background gradient for Puck pages
-  pageBackground: 'bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900',
+  pageBackground: 'bg-gradient-to-br from-purple-100 via-blue-100 to-teal-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900',
   // Popular badge gradient
   popularBadge: 'bg-gradient-to-r from-blue-500 to-blue-600',
   // Avatar placeholder gradient
@@ -940,7 +940,7 @@ export const adminSidebarColors = {
   linkHoverText: 'hover:text-gray-900 dark:hover:text-gray-100',
 
   // Navigation links - active (NO opacity in dark mode - solid colors only)
-  activeBg: 'bg-blue-50 dark:bg-blue-800',
+  activeBg: 'bg-blue-100 dark:bg-blue-800',
   activeBorder: 'border-l-4 border-blue-500 dark:border-blue-400',
   activeText: 'text-blue-700 dark:text-blue-300',
 
@@ -1009,7 +1009,7 @@ export const serviceComparisonColors: Record<ServiceType, {
 // Info Banner Colors - For tip boxes, info callouts, and notices
 // ============================================================================
 // Used for informational banners like "💡 Quick Tip" sections.
-// Light mode: -50 bg with -200 border, -800 heading, -700 body text
+// Light mode: -100 bg with -200 border, -800 heading, -700 body text
 // Dark mode: -800 bg with -600 border, white heading, -100 body text
 export const infoBannerColors: Record<AccentVariant, {
   bg: string;
@@ -1018,43 +1018,43 @@ export const infoBannerColors: Record<AccentVariant, {
   text: string;
 }> = {
   blue: {
-    bg: 'bg-blue-50 dark:bg-blue-800',
+    bg: 'bg-blue-100 dark:bg-blue-800',
     border: 'border border-blue-200 dark:border-blue-600',
     heading: 'text-blue-800 dark:text-white',
     text: 'text-blue-700 dark:text-blue-100',
   },
   purple: {
-    bg: 'bg-purple-50 dark:bg-purple-800',
+    bg: 'bg-purple-100 dark:bg-purple-800',
     border: 'border border-purple-200 dark:border-purple-600',
     heading: 'text-purple-800 dark:text-white',
     text: 'text-purple-700 dark:text-purple-100',
   },
   green: {
-    bg: 'bg-green-50 dark:bg-green-800',
+    bg: 'bg-green-100 dark:bg-green-800',
     border: 'border border-green-200 dark:border-green-600',
     heading: 'text-green-800 dark:text-white',
     text: 'text-green-700 dark:text-green-100',
   },
   orange: {
-    bg: 'bg-orange-50 dark:bg-orange-800',
+    bg: 'bg-orange-100 dark:bg-orange-800',
     border: 'border border-orange-200 dark:border-orange-600',
     heading: 'text-orange-800 dark:text-white',
     text: 'text-orange-700 dark:text-orange-100',
   },
   red: {
-    bg: 'bg-red-50 dark:bg-red-800',
+    bg: 'bg-red-100 dark:bg-red-800',
     border: 'border border-red-200 dark:border-red-600',
     heading: 'text-red-800 dark:text-white',
     text: 'text-red-700 dark:text-red-100',
   },
   teal: {
-    bg: 'bg-teal-50 dark:bg-teal-800',
+    bg: 'bg-teal-100 dark:bg-teal-800',
     border: 'border border-teal-200 dark:border-teal-600',
     heading: 'text-teal-800 dark:text-white',
     text: 'text-teal-700 dark:text-teal-100',
   },
   gray: {
-    bg: 'bg-gray-50 dark:bg-gray-800',
+    bg: 'bg-gray-100 dark:bg-gray-800',
     border: 'border border-gray-200 dark:border-gray-600',
     heading: 'text-gray-800 dark:text-white',
     text: 'text-gray-700 dark:text-gray-100',
@@ -1104,44 +1104,44 @@ export const iconCircleColors: Record<AccentVariant, {
 // Selected State Colors - For selected/active items in lists and pickers
 // ============================================================================
 // Used for selected items in template pickers, block editors, etc.
-// Light mode: -50 bg with -500 border, dark mode: -800 bg with -400 border
+// Light mode: -100 bg with -500 border, dark mode: -800 bg with -400 border
 export const selectedStateColors: Record<AccentVariant, {
   bg: string;
   border: string;
   text: string;
 }> = {
   purple: {
-    bg: 'bg-purple-50 dark:bg-purple-800',
+    bg: 'bg-purple-100 dark:bg-purple-800',
     border: 'border-purple-500 dark:border-purple-400',
     text: 'text-purple-700 dark:text-purple-200',
   },
   blue: {
-    bg: 'bg-blue-50 dark:bg-blue-800',
+    bg: 'bg-blue-100 dark:bg-blue-800',
     border: 'border-blue-500 dark:border-blue-400',
     text: 'text-blue-700 dark:text-blue-200',
   },
   green: {
-    bg: 'bg-green-50 dark:bg-green-800',
+    bg: 'bg-green-100 dark:bg-green-800',
     border: 'border-green-500 dark:border-green-400',
     text: 'text-green-700 dark:text-green-200',
   },
   orange: {
-    bg: 'bg-orange-50 dark:bg-orange-800',
+    bg: 'bg-orange-100 dark:bg-orange-800',
     border: 'border-orange-500 dark:border-orange-400',
     text: 'text-orange-700 dark:text-orange-200',
   },
   red: {
-    bg: 'bg-red-50 dark:bg-red-800',
+    bg: 'bg-red-100 dark:bg-red-800',
     border: 'border-red-500 dark:border-red-400',
     text: 'text-red-700 dark:text-red-200',
   },
   teal: {
-    bg: 'bg-teal-50 dark:bg-teal-800',
+    bg: 'bg-teal-100 dark:bg-teal-800',
     border: 'border-teal-500 dark:border-teal-400',
     text: 'text-teal-700 dark:text-teal-200',
   },
   gray: {
-    bg: 'bg-gray-50 dark:bg-gray-700',
+    bg: 'bg-gray-100 dark:bg-gray-700',
     border: 'border-gray-500 dark:border-gray-400',
     text: 'text-gray-700 dark:text-gray-200',
   },
@@ -1252,5 +1252,90 @@ export const statusIndicatorBg = {
   error: 'bg-red-100 dark:bg-red-800',
   loading: 'bg-blue-100 dark:bg-blue-800',
   modified: 'bg-yellow-100 dark:bg-yellow-800',
+};
+
+// ============================================================================
+// Container Backgrounds - Neutral gray patterns for page sections
+// ============================================================================
+// Use for page backgrounds, form containers, and content areas.
+// Pattern B (neutral): Uses gray scale, not accent colors.
+export const containerBg = {
+  // Page backgrounds (light: -100, dark: -900)
+  page: 'bg-gray-100 dark:bg-gray-900',
+  // Elevated sections on page background
+  elevated: 'bg-white dark:bg-gray-800',
+  // Subtle cards within elevated sections
+  subtle: 'bg-gray-200 dark:bg-gray-700',
+};
+
+// ============================================================================
+// Outline Button Colors - Bordered buttons with transparent backgrounds
+// ============================================================================
+// Used for secondary CTAs, outline-style buttons.
+// Light mode: colored border + text, light hover bg
+// Dark mode: colored border + lighter text, solid hover bg
+export const outlineButtonColors: Record<AccentVariant, {
+  base: string;
+  hover: string;
+}> = {
+  purple: {
+    base: 'border-purple-500 text-purple-600 dark:text-purple-300',
+    hover: 'hover:bg-purple-100 dark:hover:bg-purple-800',
+  },
+  blue: {
+    base: 'border-blue-500 text-blue-600 dark:text-blue-300',
+    hover: 'hover:bg-blue-100 dark:hover:bg-blue-800',
+  },
+  green: {
+    base: 'border-green-500 text-green-600 dark:text-green-300',
+    hover: 'hover:bg-green-100 dark:hover:bg-green-800',
+  },
+  orange: {
+    base: 'border-orange-500 text-orange-600 dark:text-orange-300',
+    hover: 'hover:bg-orange-100 dark:hover:bg-orange-800',
+  },
+  teal: {
+    base: 'border-teal-500 text-teal-600 dark:text-teal-300',
+    hover: 'hover:bg-teal-100 dark:hover:bg-teal-800',
+  },
+  gray: {
+    base: 'border-gray-500 text-gray-600 dark:text-gray-300',
+    hover: 'hover:bg-gray-100 dark:hover:bg-gray-700',
+  },
+  red: {
+    base: 'border-red-500 text-red-600 dark:text-red-300',
+    hover: 'hover:bg-red-100 dark:hover:bg-red-800',
+  },
+};
+
+// ============================================================================
+// Colored Link Text - Text colors for interactive links
+// ============================================================================
+// Extends basic linkColors with all accent variants.
+// -600 in light mode (4.5:1 on white), -400 in dark mode (visible on dark bg)
+export const coloredLinkText: Record<AccentVariant, string> = {
+  purple: 'text-purple-600 dark:text-purple-400',
+  blue: 'text-blue-600 dark:text-blue-400',
+  green: 'text-green-600 dark:text-green-400',
+  orange: 'text-orange-600 dark:text-orange-400',
+  teal: 'text-teal-600 dark:text-teal-400',
+  gray: 'text-gray-600 dark:text-gray-400',
+  red: 'text-red-600 dark:text-red-400',
+};
+
+// ============================================================================
+// Status Action Button Colors - For enable/disable toggle buttons
+// ============================================================================
+// Used for action buttons that toggle status (enable/disable user, etc.)
+// Bordered style with hover background.
+export const statusActionColors = {
+  enable: {
+    base: 'border-green-300 text-green-700 dark:border-green-600 dark:text-green-300',
+    hover: 'hover:bg-green-100 dark:hover:bg-green-800',
+  },
+  disable: {
+    base: 'border-red-300 text-red-700 dark:border-red-600 dark:text-red-300',
+    hover: 'hover:bg-red-100 dark:hover:bg-red-800',
+  },
 };
 

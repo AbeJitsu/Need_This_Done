@@ -73,7 +73,7 @@ const { content } = useEditableContent('services', initialContent);
 ```tsx
 // Scattered across codebase
 <div className="text-blue-600 dark:text-blue-400">
-<div className="bg-blue-50 dark:bg-blue-900/20">
+<div className="bg-blue-100 dark:bg-blue-800">
 ```
 
 ### Good: Centralized Colors

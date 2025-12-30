@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { statusBadgeColors, alertColors, filterButtonColors, formInputColors } from '@/lib/colors';
+import { statusBadgeColors, alertColors, filterButtonColors, formInputColors, hoverBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Users Page - User Management
@@ -671,7 +671,7 @@ export default function AdminUsersPage() {
                               }
                               disabled={actionLoading === user.id}
                               aria-label={user.is_admin ? `Remove admin role from ${user.email}` : `Grant admin role to ${user.email}`}
-                              className="text-xs px-3 py-1 rounded-full border border-purple-300 text-purple-700 dark:border-purple-600 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 disabled:opacity-50 transition-colors"
+                              className={`text-xs px-3 py-1 rounded-full border border-purple-300 text-purple-700 dark:border-purple-600 dark:text-purple-300 ${hoverBgColors.purple} disabled:opacity-50 transition-colors`}
                             >
                               {user.is_admin ? 'Remove Admin' : 'Make Admin'}
                             </button>
@@ -685,8 +685,8 @@ export default function AdminUsersPage() {
                               aria-label={user.is_disabled ? `Enable account for ${user.email}` : `Disable account for ${user.email}`}
                               className={`text-xs px-3 py-1 rounded-full border ${
                                 user.is_disabled
-                                  ? 'border-green-300 text-green-700 dark:border-green-600 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20'
-                                  : 'border-red-300 text-red-700 dark:border-red-600 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20'
+                                  ? `border-green-300 text-green-700 dark:border-green-600 dark:text-green-300 ${hoverBgColors.green}`
+                                  : `border-red-300 text-red-700 dark:border-red-600 dark:text-red-300 ${hoverBgColors.red}`
                               } disabled:opacity-50 transition-colors`}
                             >
                               {user.is_disabled ? 'Enable' : 'Disable'}
@@ -697,7 +697,7 @@ export default function AdminUsersPage() {
                               onClick={() => handleAction(user.id, 'resetPassword')}
                               disabled={actionLoading === user.id}
                               aria-label={`Send password reset email to ${user.email}`}
-                              className="text-xs px-3 py-1 rounded-full border border-blue-300 text-blue-700 dark:border-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 disabled:opacity-50 transition-colors"
+                              className={`text-xs px-3 py-1 rounded-full border border-blue-300 text-blue-700 dark:border-blue-600 dark:text-blue-300 ${hoverBgColors.blue} disabled:opacity-50 transition-colors`}
                             >
                               Reset Password
                             </button>

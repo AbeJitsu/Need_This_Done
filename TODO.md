@@ -303,9 +303,8 @@ _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 - Fixed 25 functions with mutable search_path (security vulnerability)
 - Moved pg_trgm extension from public to extensions schema
 - Note: vector extension stays in public (heavy dependencies, acceptable per Supabase)
-- Manual step: Enable leaked password protection in Supabase dashboard
-  - Go to Authentication → Settings → Password → Enable "Leaked password protection"
-- Context: migrations/032_fix_function_search_paths.sql, migrations/033_move_extensions_from_public.sql
+- Note: Leaked password protection requires Pro plan (acceptable for now)
+- Context: migrations/032-034
 
 **Phone-First Wizard Testing** (Dec 30, 2025)
 - Fixed Back button selector to avoid matching "Back to Site" link

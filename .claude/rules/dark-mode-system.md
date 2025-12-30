@@ -18,7 +18,7 @@ We keep having dark mode issues because:
 
 ```tsx
 // BAD - hardcoded dark mode
-<div className="bg-orange-50 dark:bg-gray-800">
+<div className="bg-orange-100 dark:bg-gray-800">
 
 // GOOD - from colors.ts
 <div className={sectionColors.cta.bg}>
@@ -61,7 +61,7 @@ cta: {
 ```typescript
 section: {
   bg: 'bg-white dark:bg-gray-900',
-  card: 'bg-gray-50 dark:bg-gray-800',
+  card: 'bg-gray-100 dark:bg-gray-800',
 }
 ```
 
@@ -82,8 +82,8 @@ export const buttonColors = {
 // SECTIONS - use neutral pattern
 export const sectionColors = {
   default: { bg: 'bg-white dark:bg-gray-900' },
-  elevated: { bg: 'bg-gray-50 dark:bg-gray-800' },
-  accent: { bg: 'bg-orange-50 dark:bg-gray-800' },
+  elevated: { bg: 'bg-gray-100 dark:bg-gray-800' },
+  accent: { bg: 'bg-orange-100 dark:bg-gray-800' },
 }
 
 // TEXT - automatic contrast

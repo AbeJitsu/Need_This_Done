@@ -12,6 +12,7 @@ import {
   topBorderColors,
   iconButtonColors,
   solidButtonColors,
+  outlineButtonColors,
   AccentColor,
 } from '@/lib/colors';
 import type { ServiceType } from '@/lib/service-modal-content';
@@ -158,9 +159,7 @@ export default function ServiceDetailModal() {
                 className={`
                   flex-1 text-center py-3 px-6 rounded-xl font-semibold
                   border-2 transition-all duration-200
-                  ${color === 'green' ? 'border-green-500 text-green-600 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20' : ''}
-                  ${color === 'blue' ? 'border-blue-500 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20' : ''}
-                  ${color === 'purple' ? 'border-purple-500 text-purple-600 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20' : ''}
+                  ${outlineButtonColors[color].base} ${outlineButtonColors[color].hover}
                 `}
               >
                 {activeService.ctas.secondary.text}
