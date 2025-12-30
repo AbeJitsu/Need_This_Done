@@ -42,8 +42,10 @@ const config = {
     // Dark backgrounds - 700 shade for orange/teal accent variants
     'dark:bg-orange-700', 'dark:bg-teal-700',
 
-    // Text colors - light mode (text-700/800/900)
-    'text-purple-700', 'text-blue-700', 'text-green-800', 'text-orange-800', 'text-teal-800', 'text-gray-700', 'text-red-800', 'text-yellow-800',
+    // Text colors - light mode (text-600 for WCAG AA minimum, -700/-800 for emphasis)
+    'text-purple-600', 'text-blue-600', 'text-green-600', 'text-orange-600', 'text-teal-600', 'text-gray-600', 'text-red-600', 'text-yellow-600',
+    'text-purple-700', 'text-blue-700', 'text-green-700', 'text-orange-700', 'text-teal-700', 'text-gray-700', 'text-red-700', 'text-yellow-700',
+    'text-green-800', 'text-orange-800', 'text-teal-800', 'text-red-800', 'text-yellow-800',
     'text-orange-900', 'text-teal-900',
 
     // Border colors - light mode (border-500/700)
@@ -59,8 +61,10 @@ const config = {
     'border-yellow-200',
     'dark:border-white',
 
-    // Hover text colors - light mode
-    'hover:text-purple-800', 'hover:text-blue-800', 'hover:text-green-900', 'hover:text-orange-900', 'hover:text-teal-900', 'hover:text-gray-800', 'hover:text-red-900',
+    // Hover text colors - light mode (-700 for WCAG AA minimum)
+    'hover:text-purple-700', 'hover:text-blue-700', 'hover:text-green-700', 'hover:text-orange-700', 'hover:text-teal-700', 'hover:text-gray-700', 'hover:text-red-700',
+    'hover:text-purple-800', 'hover:text-blue-800', 'hover:text-green-800', 'hover:text-orange-800', 'hover:text-teal-800', 'hover:text-gray-800', 'hover:text-red-800',
+    'hover:text-green-900', 'hover:text-orange-900', 'hover:text-teal-900', 'hover:text-red-900',
     'hover:text-orange-950', 'hover:text-teal-950',
     // Hover text colors - dark mode (white for all, plus specific shades)
     'dark:hover:text-white', 'dark:hover:text-orange-100', 'dark:hover:text-teal-100',

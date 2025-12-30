@@ -18,7 +18,8 @@
 // │  LIGHT MODE              │  DARK MODE                                   │
 // ├─────────────────────────────────────────────────────────────────────────┤
 // │  Background: -100        │  Background: -500                            │
-// │  Text: -600 to -900      │  Text: white                                 │
+// │  Text: -600 (minimum)    │  Text: white                                 │
+// │  Hover: -700             │  Hover: white/gray-100                       │
 // │  Border: -500            │  Border: -100 (light border pops on dark bg) │
 // └─────────────────────────────────────────────────────────────────────────┘
 //
@@ -89,8 +90,8 @@ export const focusRingClasses = {
 // Accent Colors - Unified styling for Button, CircleBadge, and Navigation
 // ============================================================================
 // Single source of truth for all accent-colored interactive elements.
-// Light mode: Light bg (-100), dark text (-700/800), medium border (-500)
-// Dark mode: Vibrant bg (-500), dark text (gray-900) for 5:1+ contrast
+// Light mode: Light bg (-100), text (-600), hover (-700), medium border (-500)
+// Dark mode: Vibrant bg (-500), white text for 4.5:1+ contrast
 //
 // Usage: Import and spread in className, e.g.:
 //   ${accentColors.orange.bg} ${accentColors.orange.text} ${accentColors.orange.border}
@@ -104,52 +105,52 @@ export const accentColors: Record<AccentVariant, {
 }> = {
   purple: {
     bg: 'bg-purple-100 dark:bg-purple-500',
-    text: 'text-purple-700 dark:text-white',
+    text: 'text-purple-600 dark:text-white',
     border: 'border-purple-500 dark:border-purple-100',
-    hoverText: 'hover:text-purple-800 dark:hover:text-gray-100',
+    hoverText: 'hover:text-purple-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-purple-600 dark:hover:border-purple-200',
   },
   blue: {
     bg: 'bg-blue-100 dark:bg-blue-500',
-    text: 'text-blue-700 dark:text-white',
+    text: 'text-blue-600 dark:text-white',
     border: 'border-blue-500 dark:border-blue-100',
-    hoverText: 'hover:text-blue-800 dark:hover:text-gray-100',
+    hoverText: 'hover:text-blue-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-blue-600 dark:hover:border-blue-200',
   },
   green: {
     bg: 'bg-green-100 dark:bg-green-500',
-    text: 'text-green-800 dark:text-white',
+    text: 'text-green-600 dark:text-white',
     border: 'border-green-500 dark:border-green-100',
-    hoverText: 'hover:text-green-900 dark:hover:text-gray-100',
+    hoverText: 'hover:text-green-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-green-600 dark:hover:border-green-200',
   },
   orange: {
     // Dark mode uses orange-500 (#b35a00) - 4.8:1 contrast with white (WCAG AA)
     bg: 'bg-orange-100 dark:bg-orange-500',
-    text: 'text-orange-900 dark:text-white',
+    text: 'text-orange-600 dark:text-white',
     border: 'border-orange-500 dark:border-orange-100',
-    hoverText: 'hover:text-orange-950 dark:hover:text-orange-100',
+    hoverText: 'hover:text-orange-700 dark:hover:text-orange-100',
     hoverBorder: 'hover:border-orange-600 dark:hover:border-orange-200',
   },
   teal: {
     bg: 'bg-teal-100 dark:bg-teal-500',
-    text: 'text-teal-900 dark:text-white',
+    text: 'text-teal-600 dark:text-white',
     border: 'border-teal-500 dark:border-teal-100',
-    hoverText: 'hover:text-teal-950 dark:hover:text-teal-100',
+    hoverText: 'hover:text-teal-700 dark:hover:text-teal-100',
     hoverBorder: 'hover:border-teal-600 dark:hover:border-teal-200',
   },
   gray: {
     bg: 'bg-gray-100 dark:bg-gray-500',
-    text: 'text-gray-700 dark:text-white',
+    text: 'text-gray-600 dark:text-white',
     border: 'border-gray-500 dark:border-gray-100',
-    hoverText: 'hover:text-gray-800 dark:hover:text-gray-100',
+    hoverText: 'hover:text-gray-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-gray-600 dark:hover:border-gray-200',
   },
   red: {
     bg: 'bg-red-100 dark:bg-red-500',
-    text: 'text-red-800 dark:text-white',
+    text: 'text-red-600 dark:text-white',
     border: 'border-red-500 dark:border-red-100',
-    hoverText: 'hover:text-red-900 dark:hover:text-gray-100',
+    hoverText: 'hover:text-red-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-red-600 dark:hover:border-red-200',
   },
 };
@@ -167,28 +168,28 @@ export const linkFontWeight = 'font-medium';
 // Title Colors - Used for headings and labels (generic)
 // ============================================================================
 // Updated to meet WCAG AA (4.5:1 contrast) for normal text in both modes
-// Light mode: -700 shades ensure 4.5:1+ contrast on white
+// Light mode: -600 shades ensure 4.5:1+ contrast on white (minimum)
 // Dark mode: -300 shades ensure 4.5:1+ contrast on gray-800
 export const titleColors: Record<AccentColor, string> = {
-  purple: 'text-purple-700 dark:text-purple-300',
-  blue: 'text-blue-700 dark:text-blue-300',
-  green: 'text-green-700 dark:text-green-300',
+  purple: 'text-purple-600 dark:text-purple-300',
+  blue: 'text-blue-600 dark:text-blue-300',
+  green: 'text-green-600 dark:text-green-300',
 };
 
 // ============================================================================
 // Title Text Colors - For StepCard titles on dark backgrounds
 // ============================================================================
-// Light mode: dark text (700/800) for readability on white cards
+// Light mode: -600 text for minimum WCAG AA contrast
 // Dark mode: light text (100) for readability on dark gray cards
 // Matches CircleBadge number colors for visual cohesion
 export const titleTextColors: Record<AccentVariant, string> = {
-  purple: 'text-purple-700 dark:text-purple-100',
-  blue: 'text-blue-700 dark:text-blue-100',
-  green: 'text-green-800 dark:text-green-100',
+  purple: 'text-purple-600 dark:text-purple-100',
+  blue: 'text-blue-600 dark:text-blue-100',
+  green: 'text-green-600 dark:text-green-100',
   orange: 'text-orange-600 dark:text-orange-100',
-  teal: 'text-teal-800 dark:text-teal-100',
-  gray: 'text-gray-700 dark:text-gray-100',
-  red: 'text-red-800 dark:text-red-100',
+  teal: 'text-teal-600 dark:text-teal-100',
+  gray: 'text-gray-600 dark:text-gray-100',
+  red: 'text-red-600 dark:text-red-100',
 };
 
 // ============================================================================
@@ -236,16 +237,16 @@ export const lightBgColors: Record<AccentColor, string> = {
 };
 
 // ============================================================================
-// Checkmark Colors - High contrast icons for feature lists (5:1 ratio)
+// Checkmark Colors - High contrast icons for feature lists (4.5:1 ratio)
 // ============================================================================
-// Uses -100 bg with -700/-800 text in both modes for maximum contrast
+// Uses -100 bg with -600 text in light mode, -100 text on -500 bg in dark mode
 export const checkmarkColors: Record<AccentColor, {
   bg: string;
   icon: string;
 }> = {
-  purple: { bg: 'bg-purple-100 dark:bg-purple-500', icon: 'text-purple-700 dark:text-purple-100' },
-  blue: { bg: 'bg-blue-100 dark:bg-blue-500', icon: 'text-blue-700 dark:text-blue-100' },
-  green: { bg: 'bg-green-100 dark:bg-green-500', icon: 'text-green-700 dark:text-green-100' },
+  purple: { bg: 'bg-purple-100 dark:bg-purple-500', icon: 'text-purple-600 dark:text-purple-100' },
+  blue: { bg: 'bg-blue-100 dark:bg-blue-500', icon: 'text-blue-600 dark:text-blue-100' },
+  green: { bg: 'bg-green-100 dark:bg-green-500', icon: 'text-green-600 dark:text-green-100' },
 };
 
 // ============================================================================
@@ -317,30 +318,30 @@ export const faqColors: Record<'purple' | 'blue' | 'green' | 'orange', {
 }> = {
   purple: {
     border: 'border-l-purple-500',
-    text: 'text-purple-700 dark:text-purple-300',
+    text: 'text-purple-600 dark:text-purple-300',
     bg: 'bg-purple-100 dark:bg-purple-500',
-    numText: 'text-purple-700 dark:text-white',
+    numText: 'text-purple-600 dark:text-white',
     hover: 'hover:border-purple-400 dark:hover:border-purple-400',
   },
   blue: {
     border: 'border-l-blue-500',
-    text: 'text-blue-700 dark:text-blue-300',
+    text: 'text-blue-600 dark:text-blue-300',
     bg: 'bg-blue-100 dark:bg-blue-500',
-    numText: 'text-blue-700 dark:text-white',
+    numText: 'text-blue-600 dark:text-white',
     hover: 'hover:border-blue-400 dark:hover:border-blue-400',
   },
   green: {
     border: 'border-l-green-500',
-    text: 'text-green-700 dark:text-green-300',
+    text: 'text-green-600 dark:text-green-300',
     bg: 'bg-green-100 dark:bg-green-500',
-    numText: 'text-green-700 dark:text-white',
+    numText: 'text-green-600 dark:text-white',
     hover: 'hover:border-green-400 dark:hover:border-green-400',
   },
   orange: {
     border: 'border-l-orange-500',
-    text: 'text-orange-800 dark:text-orange-300',
+    text: 'text-orange-600 dark:text-orange-300',
     bg: 'bg-orange-100 dark:bg-orange-500',
-    numText: 'text-orange-800 dark:text-white',
+    numText: 'text-orange-600 dark:text-white',
     hover: 'hover:border-orange-400 dark:hover:border-orange-400',
   },
 };
@@ -432,13 +433,13 @@ export const navigationColors = {
 // ============================================================================
 // Used for numbered step indicators in process explanations and forms
 export const stepBadgeColors: Record<AccentVariant, string> = {
-  purple: 'text-purple-700 dark:text-purple-300',
-  blue: 'text-blue-700 dark:text-blue-300',
-  green: 'text-green-700 dark:text-green-300',
-  orange: 'text-orange-700 dark:text-orange-300',
-  teal: 'text-teal-700 dark:text-teal-300',
-  gray: 'text-gray-700 dark:text-gray-300',
-  red: 'text-red-700 dark:text-red-300',
+  purple: 'text-purple-600 dark:text-purple-300',
+  blue: 'text-blue-600 dark:text-blue-300',
+  green: 'text-green-600 dark:text-green-300',
+  orange: 'text-orange-600 dark:text-orange-300',
+  teal: 'text-teal-600 dark:text-teal-300',
+  gray: 'text-gray-600 dark:text-gray-300',
+  red: 'text-red-600 dark:text-red-300',
 };
 
 // ============================================================================
@@ -570,17 +571,17 @@ export const checkmarkBgColors: Record<'green' | 'blue' | 'purple', {
   green: {
     bg: 'bg-green-100 dark:bg-green-500',
     border: 'border-2 border-green-500 dark:border-green-200',
-    icon: 'text-green-800 dark:text-green-100',
+    icon: 'text-green-600 dark:text-green-100',
   },
   blue: {
     bg: 'bg-blue-100 dark:bg-blue-500',
     border: 'border-2 border-blue-500 dark:border-blue-200',
-    icon: 'text-blue-700 dark:text-blue-100',
+    icon: 'text-blue-600 dark:text-blue-100',
   },
   purple: {
     bg: 'bg-purple-100 dark:bg-purple-500',
     border: 'border-2 border-purple-500 dark:border-purple-200',
-    icon: 'text-purple-700 dark:text-purple-100',
+    icon: 'text-purple-600 dark:text-purple-100',
   },
 };
 
@@ -654,111 +655,111 @@ export const statusBadgeColors = {
   pending: {
     // Gray instead of yellow - yellow can't meet 4.5:1 with white without looking brown
     bg: 'bg-gray-100 dark:bg-gray-500',
-    text: 'text-gray-800 dark:text-white',
+    text: 'text-gray-600 dark:text-white',
     border: 'border border-gray-500 dark:border-gray-100',
   },
   approved: {
     bg: 'bg-blue-100 dark:bg-blue-500',
-    text: 'text-blue-800 dark:text-white',
+    text: 'text-blue-600 dark:text-white',
     border: 'border border-blue-500 dark:border-blue-100',
   },
   confirmed: {
     bg: 'bg-green-100 dark:bg-green-500',
-    text: 'text-green-800 dark:text-white',
+    text: 'text-green-600 dark:text-white',
     border: 'border border-green-500 dark:border-green-100',
   },
   completed: {
     bg: 'bg-green-100 dark:bg-green-500',
-    text: 'text-green-800 dark:text-white',
+    text: 'text-green-600 dark:text-white',
     border: 'border border-green-500 dark:border-green-100',
   },
   cancelled: {
     bg: 'bg-red-100 dark:bg-red-500',
-    text: 'text-red-800 dark:text-white',
+    text: 'text-red-600 dark:text-white',
     border: 'border border-red-500 dark:border-red-100',
   },
   rejected: {
     bg: 'bg-red-100 dark:bg-red-500',
-    text: 'text-red-800 dark:text-white',
+    text: 'text-red-600 dark:text-white',
     border: 'border border-red-500 dark:border-red-100',
   },
   paid: {
     bg: 'bg-green-100 dark:bg-green-500',
-    text: 'text-green-800 dark:text-white',
+    text: 'text-green-600 dark:text-white',
     border: 'border border-green-500 dark:border-green-100',
   },
   unpaid: {
     bg: 'bg-gray-100 dark:bg-gray-500',
-    text: 'text-gray-800 dark:text-white',
+    text: 'text-gray-600 dark:text-white',
     border: 'border border-gray-500 dark:border-gray-100',
   },
   refunded: {
     bg: 'bg-purple-100 dark:bg-purple-500',
-    text: 'text-purple-800 dark:text-white',
+    text: 'text-purple-600 dark:text-white',
     border: 'border border-purple-500 dark:border-purple-100',
   },
   // Order-specific statuses
   delivered: {
     bg: 'bg-green-100 dark:bg-green-500',
-    text: 'text-green-800 dark:text-white',
+    text: 'text-green-600 dark:text-white',
     border: 'border border-green-500 dark:border-green-100',
   },
   shipped: {
     bg: 'bg-blue-100 dark:bg-blue-500',
-    text: 'text-blue-800 dark:text-white',
+    text: 'text-blue-600 dark:text-white',
     border: 'border border-blue-500 dark:border-blue-100',
   },
   processing: {
     bg: 'bg-purple-100 dark:bg-purple-500',
-    text: 'text-purple-800 dark:text-white',
+    text: 'text-purple-600 dark:text-white',
     border: 'border border-purple-500 dark:border-purple-100',
   },
   // Appointment-specific statuses
   modified: {
     bg: 'bg-blue-100 dark:bg-blue-500',
-    text: 'text-blue-800 dark:text-white',
+    text: 'text-blue-600 dark:text-white',
     border: 'border border-blue-500 dark:border-blue-100',
   },
   // User role/status badges
   admin: {
     bg: 'bg-purple-100 dark:bg-purple-500',
-    text: 'text-purple-800 dark:text-white',
+    text: 'text-purple-600 dark:text-white',
     border: 'border border-purple-500 dark:border-purple-100',
   },
   user: {
     bg: 'bg-gray-100 dark:bg-gray-500',
-    text: 'text-gray-800 dark:text-white',
+    text: 'text-gray-600 dark:text-white',
     border: 'border border-gray-500 dark:border-gray-100',
   },
   active: {
     bg: 'bg-green-100 dark:bg-green-500',
-    text: 'text-green-800 dark:text-white',
+    text: 'text-green-600 dark:text-white',
     border: 'border border-green-500 dark:border-green-100',
   },
   disabled: {
     bg: 'bg-red-100 dark:bg-red-500',
-    text: 'text-red-800 dark:text-white',
+    text: 'text-red-600 dark:text-white',
     border: 'border border-red-500 dark:border-red-100',
   },
   // Page/content statuses
   published: {
     bg: 'bg-green-100 dark:bg-green-500',
-    text: 'text-green-800 dark:text-white',
+    text: 'text-green-600 dark:text-white',
     border: 'border border-green-500 dark:border-green-100',
   },
   draft: {
     bg: 'bg-gray-100 dark:bg-gray-500',
-    text: 'text-gray-800 dark:text-white',
+    text: 'text-gray-600 dark:text-white',
     border: 'border border-gray-500 dark:border-gray-100',
   },
   customized: {
     bg: 'bg-green-100 dark:bg-green-500',
-    text: 'text-green-800 dark:text-white',
+    text: 'text-green-600 dark:text-white',
     border: 'border border-green-500 dark:border-green-100',
   },
   default: {
     bg: 'bg-gray-100 dark:bg-gray-500',
-    text: 'text-gray-800 dark:text-white',
+    text: 'text-gray-600 dark:text-white',
     border: 'border border-gray-500 dark:border-gray-100',
   },
 };
@@ -767,12 +768,12 @@ export const statusBadgeColors = {
 // Category Badge Colors - For changelog and content categorization
 // ============================================================================
 // Consistent styling for category badges across pages
-// Category badges: -800 backgrounds with white text in dark mode for 6-9:1 contrast
+// Category badges: -600 text in light mode for WCAG AA minimum
 export const categoryBadgeColors: Record<string, string> = {
-  Admin: 'bg-purple-100 text-purple-800 dark:bg-purple-500 dark:text-white',
-  Shop: 'bg-green-100 text-green-800 dark:bg-green-500 dark:text-white',
-  Dashboard: 'bg-blue-100 text-blue-800 dark:bg-blue-500 dark:text-white',
-  Public: 'bg-gray-100 text-gray-800 dark:bg-gray-500 dark:text-white',
+  Admin: 'bg-purple-100 text-purple-600 dark:bg-purple-500 dark:text-white',
+  Shop: 'bg-green-100 text-green-600 dark:bg-green-500 dark:text-white',
+  Dashboard: 'bg-blue-100 text-blue-600 dark:bg-blue-500 dark:text-white',
+  Public: 'bg-gray-100 text-gray-600 dark:bg-gray-500 dark:text-white',
 };
 
 // ============================================================================
@@ -972,29 +973,29 @@ export const serviceComparisonColors: Record<ServiceType, {
   virtualAssistant: {
     border: 'border-2 border-green-200 dark:border-green-400',
     headerBg: 'bg-green-100 dark:bg-green-500',
-    headerText: 'text-green-700 dark:text-white',
+    headerText: 'text-green-600 dark:text-white',
     pricingBg: 'bg-green-100 dark:bg-green-500',
     pricingBorder: 'border-t border-green-200 dark:border-green-400',
-    pricingLabelText: 'text-green-700 dark:text-white',
-    pricingValueText: 'text-green-900 dark:text-white',
+    pricingLabelText: 'text-green-600 dark:text-white',
+    pricingValueText: 'text-green-700 dark:text-white',
   },
   dataDocuments: {
     border: 'border-2 border-blue-200 dark:border-blue-400',
     headerBg: 'bg-blue-100 dark:bg-blue-500',
-    headerText: 'text-blue-700 dark:text-white',
+    headerText: 'text-blue-600 dark:text-white',
     pricingBg: 'bg-blue-100 dark:bg-blue-500',
     pricingBorder: 'border-t border-blue-200 dark:border-blue-400',
-    pricingLabelText: 'text-blue-700 dark:text-white',
-    pricingValueText: 'text-blue-900 dark:text-white',
+    pricingLabelText: 'text-blue-600 dark:text-white',
+    pricingValueText: 'text-blue-700 dark:text-white',
   },
   website: {
     border: 'border-2 border-purple-200 dark:border-purple-400',
     headerBg: 'bg-purple-100 dark:bg-purple-500',
-    headerText: 'text-purple-700 dark:text-white',
+    headerText: 'text-purple-600 dark:text-white',
     pricingBg: 'bg-purple-100 dark:bg-purple-500',
     pricingBorder: 'border-t border-purple-200 dark:border-purple-400',
-    pricingLabelText: 'text-purple-700 dark:text-white',
-    pricingValueText: 'text-purple-900 dark:text-white',
+    pricingLabelText: 'text-purple-600 dark:text-white',
+    pricingValueText: 'text-purple-700 dark:text-white',
   },
 };
 
