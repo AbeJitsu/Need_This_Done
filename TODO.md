@@ -61,7 +61,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 **Admin Workflows**
 - [x] Inventory management interface (11 E2E tests passing)
-- [ ] Bulk product import/export
+- [x] Bulk product import/export (10 E2E tests passing)
 - [ ] Order status updates & fulfillment tracking
 
 ### Medium Term (2-4 Weeks)
