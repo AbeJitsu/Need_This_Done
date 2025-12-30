@@ -10,7 +10,7 @@ import ScenarioMatcher from '@/components/services/ScenarioMatcher';
 import ServiceComparisonTable from '@/components/services/ServiceComparisonTable';
 import ServiceDeepDive from '@/components/services/ServiceDeepDive';
 import { EditableSection, EditableItem } from '@/components/InlineEditor';
-import { useEditableContent } from '@/hooks/useEditableContent';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import type { ServicesPageContent } from '@/lib/page-content-types';
 import {
   formInputColors,
@@ -24,24 +24,19 @@ import {
 } from '@/lib/colors';
 
 // ============================================================================
-// Services Page Client Component - Renders services page with inline editing
+// Services Page Client - Universal Editing Version
 // ============================================================================
-// What: Client-side wrapper that enables inline editing for admins
-// Why: Allows clicking on sections and editing them directly in the sidebar
-// How: Uses useEditableContent hook for automatic context setup and merging
+// Uses universal content loading from InlineEditProvider.
+// EditableSection/EditableItem wrappers provide click-to-select functionality.
 
 interface ServicesPageClientProps {
   content: ServicesPageContent;
 }
 
 export default function ServicesPageClient({ content: initialContent }: ServicesPageClientProps) {
-  // Single hook call replaces 20+ lines of boilerplate:
-  // - Merges with defaults
-  // - Memoizes to prevent infinite re-renders
-  // - Registers with edit context
-  // - Returns live content with pending edits
-  // Auto-detects slug from URL - no need to pass 'services' explicitly
-  const { content } = useEditableContent<ServicesPageContent>(initialContent);
+  // Use content from universal provider (auto-loaded by route)
+  const { pageContent } = useInlineEdit();
+  const content = (pageContent as unknown as ServicesPageContent) || initialContent;
 
   return (
     <ServiceModalProvider>

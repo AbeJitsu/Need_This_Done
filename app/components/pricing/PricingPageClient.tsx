@@ -6,21 +6,24 @@ import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
 import { EditableSection, EditableItem } from '@/components/InlineEditor';
-import { useEditableContent } from '@/hooks/useEditableContent';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import type { PricingPageContent } from '@/lib/page-content-types';
 import { formInputColors, headingColors, dividerColors, accentColors, accentBorderWidth } from '@/lib/colors';
 
 // ============================================================================
-// Pricing Page Client Component - Renders pricing page with inline editing
+// Pricing Page Client - Universal Editing Version
 // ============================================================================
+// Uses universal content loading from InlineEditProvider.
+// EditableSection/EditableItem wrappers provide click-to-select functionality.
 
 interface PricingPageClientProps {
   content: PricingPageContent;
 }
 
 export default function PricingPageClient({ content: initialContent }: PricingPageClientProps) {
-  // Auto-detects slug from URL
-  const { content } = useEditableContent<PricingPageContent>(initialContent);
+  // Use content from universal provider (auto-loaded by route)
+  const { pageContent } = useInlineEdit();
+  const content = (pageContent as unknown as PricingPageContent) || initialContent;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">

@@ -7,7 +7,7 @@ import CTASection from '@/components/CTASection';
 import CircleBadge from '@/components/CircleBadge';
 import Button from '@/components/Button';
 import { EditableSection, EditableItem } from '@/components/InlineEditor';
-import { useEditableContent } from '@/hooks/useEditableContent';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import type { HowItWorksPageContent } from '@/lib/page-content-types';
 import {
   formInputColors,
@@ -17,16 +17,19 @@ import {
 } from '@/lib/colors';
 
 // ============================================================================
-// How It Works Page Client Component - Renders page with inline editing
+// How It Works Page Client - Universal Editing Version
 // ============================================================================
+// Uses universal content loading from InlineEditProvider.
+// EditableSection/EditableItem wrappers provide click-to-select functionality.
 
 interface HowItWorksPageClientProps {
   content: HowItWorksPageContent;
 }
 
 export default function HowItWorksPageClient({ content: initialContent }: HowItWorksPageClientProps) {
-  // Auto-detects slug from URL
-  const { content } = useEditableContent<HowItWorksPageContent>(initialContent);
+  // Use content from universal provider (auto-loaded by route)
+  const { pageContent } = useInlineEdit();
+  const content = (pageContent as unknown as HowItWorksPageContent) || initialContent;
   const [step1, ...remainingSteps] = content.steps;
 
   return (

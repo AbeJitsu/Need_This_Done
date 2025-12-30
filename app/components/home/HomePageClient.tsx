@@ -5,7 +5,7 @@ import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
 import { EditableSection, EditableItem } from '@/components/InlineEditor';
-import { useEditableContent } from '@/hooks/useEditableContent';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import {
   formInputColors,
   titleColors,
@@ -21,22 +21,19 @@ import {
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================
-// Home Page Client Component - Renders home page with inline editing support
+// Home Page Client - Universal Editing Version
 // ============================================================================
-// What: Client-side wrapper for the home page that enables inline editing
-// Why: Allows admins to click on sections and edit them directly
-// How: Uses useEditableContent hook for automatic context setup and merging
-//
-// ALL content comes from the editable pageContent structure, making every
-// component on this page editable via the admin sidebar.
+// Uses universal content loading from InlineEditProvider.
+// EditableSection/EditableItem wrappers provide click-to-select functionality.
 
 interface HomePageClientProps {
   content: HomePageContent;
 }
 
 export default function HomePageClient({ content: initialContent }: HomePageClientProps) {
-  // Auto-detects slug from URL - no need to pass 'home' explicitly
-  const { content } = useEditableContent<HomePageContent>(initialContent);
+  // Use content from universal provider (auto-loaded by route)
+  const { pageContent } = useInlineEdit();
+  const content = (pageContent as unknown as HomePageContent) || initialContent;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">

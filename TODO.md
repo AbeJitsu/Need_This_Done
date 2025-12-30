@@ -30,14 +30,10 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
 [x] **Universal Content Loading** - Auto-load content in InlineEditProvider by route (DONE - 28 tests passing)
-[x] **Simplify Page Pattern (6 pages)** - Migrated simpler pages to useInlineEdit + EditableSection
-    - ✅ privacy, terms, guide, changelog, blog, get-started
-    - Pattern: `useInlineEdit()` for content + `EditableSection` for clicks
-    - Removed: `useEditableContent` hook (context auto-loads now)
-
-[ ] **Migrate Complex Pages (5 remaining)** - Apply same pattern to pages with multiple sections
-    - home, services, pricing, faq, how-it-works
-    - These have EditableItem wrappers for arrays (more work)
+[x] **Simplify All 11 Page Clients** - Migrated all pages to useInlineEdit + EditableSection/EditableItem
+    - ✅ All pages: home, services, pricing, faq, how-it-works, contact, get-started, blog, changelog, guide, privacy, terms
+    - Pattern: `useInlineEdit()` for content + wrappers for clicks
+    - Removed: `useEditableContent` hook from all pages (context auto-loads now)
 
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
 

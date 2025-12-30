@@ -6,12 +6,14 @@ import CircleBadge from '@/components/CircleBadge';
 import PageHeader from '@/components/PageHeader';
 import CTASection from '@/components/CTASection';
 import { EditableSection, EditableItem } from '@/components/InlineEditor';
-import { useEditableContent } from '@/hooks/useEditableContent';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import type { FAQPageContent } from '@/lib/page-content-types';
 
 // ============================================================================
-// FAQ Page Client Component - Renders FAQ page with inline editing
+// FAQ Page Client - Universal Editing Version
 // ============================================================================
+// Uses universal content loading from InlineEditProvider.
+// EditableSection/EditableItem wrappers provide click-to-select functionality.
 
 interface FAQPageClientProps {
   content: FAQPageContent;
@@ -58,8 +60,9 @@ function renderAnswer(answer: string, links?: Array<{ text: string; href: string
 }
 
 export default function FAQPageClient({ content: initialContent }: FAQPageClientProps) {
-  // Auto-detects slug from URL
-  const { content } = useEditableContent<FAQPageContent>(initialContent);
+  // Use content from universal provider (auto-loaded by route)
+  const { pageContent } = useInlineEdit();
+  const content = (pageContent as unknown as FAQPageContent) || initialContent;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
