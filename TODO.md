@@ -29,12 +29,6 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[x] **Universal Content Loading** - Auto-load content in InlineEditProvider by route (DONE - 28 tests passing)
-[x] **Simplify All 11 Page Clients** - Migrated all pages to useInlineEdit + EditableSection/EditableItem
-    - ✅ All pages: home, services, pricing, faq, how-it-works, contact, get-started, blog, changelog, guide, privacy, terms
-    - Pattern: `useInlineEdit()` for content + wrappers for clicks
-    - Removed: `useEditableContent` hook from all pages (context auto-loads now)
-
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
 
 ---
@@ -187,6 +181,14 @@ Phase 5 Sub-tasks (Zero-Config):
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Universal Content Loading + Page Simplification** (Dec 29, 2025)
+- InlineEditProvider now auto-loads content by route (no per-page hooks needed)
+- Migrated all 11 page clients to `useInlineEdit()` pattern
+- Removed `useEditableContent` hook from all marketing pages
+- Pattern: context auto-loads → pages read from `pageContent`
+- All 28 inline editing tests passing
+- Context: context/InlineEditContext.tsx, all page client components
 
 **Inline Editing Vision VALIDATED** (Dec 29, 2025)
 - All 12 pages now support inline editing with full test coverage
