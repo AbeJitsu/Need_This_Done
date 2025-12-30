@@ -142,7 +142,7 @@ Phase 4 Sub-tasks (Universal Click-to-Edit): ✅ DONE
 - [x] Keyboard navigation support
 
 Phase 5 Sub-tasks (Zero-Config):
-- [ ] Auto-discover content JSON files at build time
+- [x] Auto-discover content JSON files at build time (18 unit tests passing)
 - [ ] Generate route manifest from /content/*.json
 - [ ] Remove all EditableSection/EditableItem wrappers
 - [ ] Document "add JSON file = page is editable" pattern
