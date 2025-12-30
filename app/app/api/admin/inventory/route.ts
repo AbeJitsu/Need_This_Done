@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdmin } from '@/lib/api-auth';
 import { handleApiError } from '@/lib/api-errors';
-import { products } from '@/lib/medusa-client';
+import { products, Product } from '@/lib/medusa-client';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,7 +44,9 @@ export async function GET() {
     if (authResult.error) return authResult.error;
 
     // Fetch all products with variants from Medusa
-    const productList = await products.list();
+    const result = await products.list();
+    // Handle both array and paginated response
+    const productList: Product[] = Array.isArray(result) ? result : result.products;
 
     // Transform to inventory items
     const inventory: InventoryItem[] = [];

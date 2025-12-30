@@ -35,7 +35,9 @@ async function getProducts(): Promise<Product[]> {
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const products = await medusaClient.products.list();
+      const result = await medusaClient.products.list();
+      // Handle both array and paginated response
+      const products: Product[] = Array.isArray(result) ? result : result.products;
 
       // If we got products, return them sorted by price
       if (products.length > 0) {

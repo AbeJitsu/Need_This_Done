@@ -165,7 +165,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 **Performance & Caching**
 - [x] Define Redis cache invalidation strategy per feature (docs/CACHE_STRATEGY.md)
 - [x] Monitor cache hit rates
-- [ ] Optimize product queries with pagination
+- [x] Optimize product queries with pagination
 
 **Analytics Dashboard**
 - [ ] Orders, revenue, trends visualization
@@ -209,6 +209,15 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Product Query Pagination** (Dec 30, 2025)
+- Added optional pagination support to medusa-client products.list()
+- API route /api/shop/products accepts ?limit=N&offset=M query params
+- Backwards compatible: no params returns all products (array)
+- With params returns { products, count, pagination: { limit, offset, hasMore } }
+- Paginated responses use cache keys that include limit/offset
+- 5 unit tests for pagination behavior
+- Context: lib/medusa-client.ts, app/api/shop/products/route.ts
 
 **Cache Hit Rate Monitoring** (Dec 30, 2025)
 - Created lib/cache-stats.ts for tracking hits/misses per cache key pattern
