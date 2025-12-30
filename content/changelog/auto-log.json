@@ -1,5 +1,41 @@
 [
   {
+    "hash": "7c85cc1",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "7c85cc1a32cebd3b835b611b0b1cc46eb19a6e02:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor: Eliminate opacity-based dark mode colors in puck-utils",
+    "category": "Refactoring",
+    "filesChanged": 2
+  },
+  {
+    "hash": "8a06b1f",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "8a06b1f167fe745f608ed654c5b78d272257045f:%M",
+    "author": "Abe Reyes",
+    "message": "Docs: Document security hardening in TODO.md",
+    "category": "Documentation",
+    "filesChanged": 1
+  },
+  {
+    "hash": "ac66363",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "ac6636351a107f6cdc3c294441f934d48d63de13:%M",
+    "author": "Abe Reyes",
+    "message": "Security: Fix function search_paths and extension locations",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
+    "hash": "cc5a0c3",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "cc5a0c34b4287c3d1d933479c3591db905b7e0a9:%M",
+    "author": "Abe Reyes",
+    "message": "Docs: Track hardcoded color elimination task",
+    "category": "Documentation",
+    "filesChanged": 2
+  },
+  {
     "hash": "e1183c5",
     "date": "%Y->- (HEAD -> main)",
     "time": "e1183c534ff7a75f62b1ce007a32041f80049b9b:%M",

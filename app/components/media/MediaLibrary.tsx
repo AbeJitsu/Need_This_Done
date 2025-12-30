@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { MediaItem, MediaListResponse, MEDIA_FOLDERS, formatFileSize } from '@/lib/media-types';
 import ImageUpload from './ImageUpload';
-import { alertColors } from '@/lib/colors';
+import { alertColors, uiChromeBg, toggleButtonColors } from '@/lib/colors';
 
 // ============================================================================
 // MediaLibrary Component - Image Browser & Picker Modal
@@ -186,7 +186,7 @@ export default function MediaLibrary({
         {/* ================================================================
             Toolbar
             ================================================================ */}
-        <div className="flex flex-wrap items-center gap-3 px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+        <div className={`flex flex-wrap items-center gap-3 px-6 py-4 ${uiChromeBg.toolbar} border-b border-gray-200 dark:border-gray-700`}>
           {/* Search */}
           <div className="relative flex-1 min-w-[200px]">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,7 +219,7 @@ export default function MediaLibrary({
             className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
               showUpload
                 ? 'bg-purple-600 text-white'
-                : 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 hover:bg-purple-200 dark:hover:bg-purple-900/50'
+                : `${toggleButtonColors.purple.inactive} ${toggleButtonColors.purple.inactiveHover}`
             }`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -341,7 +341,7 @@ export default function MediaLibrary({
                   <button
                     onClick={() => setPage(p => p + 1)}
                     disabled={loading}
-                    className="px-6 py-2 text-sm font-medium text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-lg transition-colors disabled:opacity-50"
+                    className={`px-6 py-2 text-sm font-medium ${toggleButtonColors.purple.inactive} ${toggleButtonColors.purple.inactiveHover} rounded-lg transition-colors disabled:opacity-50`}
                   >
                     {loading ? 'Loading...' : `Load More (${total - media.length} remaining)`}
                   </button>
@@ -354,7 +354,7 @@ export default function MediaLibrary({
         {/* ================================================================
             Footer
             ================================================================ */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+        <div className={`flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700 ${uiChromeBg.footer}`}>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             {selectedIds.size > 0
               ? `${selectedIds.size} selected`
