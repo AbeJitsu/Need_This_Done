@@ -1,5 +1,5 @@
 #!/bin/bash
-# SessionStart Hook: Show current task focus
+# SessionStart Hook: Show current task focus and loop status
 # What: Runs when session starts, resumes, or after compacting
 # Why: Immediately see what to work on - autonomous mode
 #
@@ -22,6 +22,62 @@ rm -f "$STATE_DIR/session-$CLAUDE_SESSION_ID.txt"
 # Cleanup old session files (older than 1 day)
 find "$STATE_DIR" -name "session-*.txt" -mtime +1 -delete 2>/dev/null || true
 
+# ============================================
+# LOOP STATUS CHECK
+# Source loop helper if available
+# ============================================
+LOOP_HELPER="$CLAUDE_PROJECT_DIR/.claude/hooks/lib/loop-helper.sh"
+LOOP_STATE_FILE="$CLAUDE_PROJECT_DIR/.claude/loop-state.json"
+
+if [[ -f "$LOOP_HELPER" ]]; then
+  # Temporarily disable recursion guard for sourcing
+  unset CLAUDE_HOOK_RUNNING
+  source "$LOOP_HELPER"
+  export CLAUDE_HOOK_RUNNING=1
+fi
+
+# ============================================
+# DISPLAY LOOP STATUS
+# ============================================
+if [[ -f "$LOOP_STATE_FILE" ]]; then
+  LOOP_ACTIVE=$(jq -r '.active // false' "$LOOP_STATE_FILE" 2>/dev/null)
+
+  if [[ "$LOOP_ACTIVE" == "true" ]]; then
+    # Active loop - show status
+    ELAPSED=$(get_elapsed_formatted 2>/dev/null || echo "unknown")
+    MAX_HOURS=$(jq -r '.maxHours // 5' "$LOOP_STATE_FILE")
+    ITERATIONS=$(jq -r '.iterationCount // 0' "$LOOP_STATE_FILE")
+    COMPLETED=$(jq -r '.tasksCompleted // 0' "$LOOP_STATE_FILE")
+
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "🔄 LOOP ACTIVE"
+    echo "   Time: $ELAPSED / ${MAX_HOURS}h"
+    echo "   Iterations: $ITERATIONS | Tasks completed: $COMPLETED"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "Continue working on TODO.md tasks."
+    echo ""
+    exit 0
+
+  elif [[ "$LOOP_ACTIVE" == "false" ]]; then
+    # Paused loop - offer resume
+    ITERATIONS=$(jq -r '.iterationCount // 0' "$LOOP_STATE_FILE")
+    COMPLETED=$(jq -r '.tasksCompleted // 0' "$LOOP_STATE_FILE")
+
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "⏸️  LOOP PAUSED"
+    echo "   Previous: $ITERATIONS iterations, $COMPLETED tasks completed"
+    echo "   Run /auto-loop to resume"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+  fi
+fi
+
+# ============================================
+# NORMAL TASK STATUS (no active loop)
+# ============================================
 TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
 
 if [ ! -f "$TODO_FILE" ]; then
@@ -30,8 +86,13 @@ fi
 
 # Parse task markers from TODO.md
 IN_PROGRESS=$(grep -E '^\[→\].*\*\*' "$TODO_FILE" | head -1)
-READY_TASKS=$(grep -E '^\[ \].*\*\*' "$TODO_FILE")
-READY_COUNT=$(echo "$READY_TASKS" | grep -c '^\[ \]' 2>/dev/null || echo 0)
+READY_TASKS=$(grep -E '^\[ \].*\*\*' "$TODO_FILE" 2>/dev/null) || true
+# Count lines directly - wc -l handles empty input correctly
+if [[ -n "$READY_TASKS" ]]; then
+  READY_COUNT=$(echo "$READY_TASKS" | wc -l | tr -d ' ')
+else
+  READY_COUNT=0
+fi
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

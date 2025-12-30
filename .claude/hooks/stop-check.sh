@@ -1,17 +1,30 @@
 #!/bin/bash
-# Stop Hook: Session Status & Gentle Reminders
-# What: Shows helpful status, only blocks on uncommitted changes
-# Why: Keep Claude informed without disrupting flow
+# ============================================================================
+# Stop Hook: Session Status & Auto-Loop Management
+# ============================================================================
+# What: Manages session exit and autonomous loop continuation
+# Why: Enables hours of uninterrupted autonomous work
+#
+# Behavior:
+#   - Blocks on uncommitted changes (always)
+#   - If loop active: checks limits, completion, or re-feeds prompt
+#   - If loop inactive: shows status and exits normally
 
 # Source shared utilities
 source "$CLAUDE_PROJECT_DIR/.claude/hooks/lib/common.sh"
 
+# Source loop helper if it exists
+LOOP_HELPER="$CLAUDE_PROJECT_DIR/.claude/hooks/lib/loop-helper.sh"
+if [[ -f "$LOOP_HELPER" ]]; then
+  source "$LOOP_HELPER"
+fi
+
 TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
 
-# ============================================
+# ============================================================================
 # CHECK 1: Uncommitted Changes (Session-Specific)
 # BLOCKS - only for files THIS session modified
-# ============================================
+# ============================================================================
 if [[ -f "$SESSION_CHANGES_FILE" ]] && [[ -s "$SESSION_CHANGES_FILE" ]]; then
   SESSION_UNCOMMITTED=0
   SESSION_FILES=""
@@ -33,9 +46,93 @@ if [[ -f "$SESSION_CHANGES_FILE" ]] && [[ -s "$SESSION_CHANGES_FILE" ]]; then
   fi
 fi
 
-# ============================================
-# INFO: Quick Status (non-blocking)
-# ============================================
+# ============================================================================
+# CHECK 2: Auto-Loop Mode
+# If loop is active, manage continuation
+# ============================================================================
+if type is_loop_active &>/dev/null && is_loop_active; then
+
+  # Increment iteration count
+  increment_iteration
+
+  # --------------------------------------------
+  # CHECK 2a: Time Limit
+  # --------------------------------------------
+  if is_time_limit_exceeded; then
+    echo "" >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo "⏸️  LOOP PAUSED: TIME LIMIT" >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo "" >&2
+    generate_summary >&2
+    echo "" >&2
+    echo "State saved. Run /auto-loop to resume." >&2
+    echo "" >&2
+
+    # Mark loop as paused (not deleted - can resume)
+    end_loop
+    exit 0
+  fi
+
+  # --------------------------------------------
+  # CHECK 2b: All Tasks Complete
+  # --------------------------------------------
+  if all_tasks_complete; then
+    echo "" >&2
+    echo "All tasks complete. Running E2E tests to verify..." >&2
+
+    # Run E2E tests (with timeout)
+    cd "$CLAUDE_PROJECT_DIR/app"
+    if timeout 300 npm run test:e2e >/dev/null 2>&1; then
+      echo "" >&2
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+      echo "✅ LOOP COMPLETE - ALL TESTS PASS" >&2
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+      echo "" >&2
+      generate_summary >&2
+      echo "" >&2
+      echo "🎉 Great work! All tasks done and verified." >&2
+      echo "" >&2
+
+      # Clean up loop state
+      delete_loop_state
+      exit 0
+    else
+      echo "" >&2
+      echo "⚠️  Tests failed. Continuing to fix..." >&2
+      echo "" >&2
+      # Fall through to continue loop
+    fi
+  fi
+
+  # --------------------------------------------
+  # CHECK 2c: Continue Loop
+  # Block exit and re-feed prompt
+  # --------------------------------------------
+  ITERATION=$(get_iteration_count)
+  ELAPSED=$(get_elapsed_formatted)
+  READY=$(count_ready_tasks)
+  BLOCKED=$(count_blocked_tasks)
+  IN_PROG=$(count_in_progress_tasks)
+
+  echo "" >&2
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+  echo "🔄 LOOP CONTINUING - Iteration $ITERATION ($ELAPSED)" >&2
+  echo "   Tasks: $READY ready, $IN_PROG in progress, $BLOCKED blocked" >&2
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+  echo "" >&2
+  echo "Continue working on TODO.md. Read TODO.md to find your next task." >&2
+  echo "Use TDD: write failing test first, then make it pass." >&2
+  echo "Run /dac after completing each task." >&2
+  echo "" >&2
+
+  # Block exit - Claude will see this message and continue
+  exit 2
+fi
+
+# ============================================================================
+# INFO: Quick Status (non-blocking, when not in loop)
+# ============================================================================
 echo "" >&2
 
 # Git status - one line summary
@@ -61,5 +158,5 @@ if [[ -f "$TODO_FILE" ]]; then
   fi
 fi
 
-# All good
+# All good - normal exit
 exit 0
