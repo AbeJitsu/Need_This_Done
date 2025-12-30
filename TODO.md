@@ -13,7 +13,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Medusa Backend | ✅ Working | Products, carts, checkout functional |
 | Stripe Payments | ✅ Working | Real payment processing (not mock) |
 | E2E Tests | ✅ 100% | 229 tests passing (inline edit + field validation) |
-| Security | ✅ Fixed | All critical issues resolved |
+| Security | ✅ Fixed | RLS, function search_paths, extensions fixed |
 | Google OAuth | ✅ Working | Users see needthisdone.com during sign-in |
 | Google Calendar | 🟡 90% | Backend + Admin UI + credentials complete, needs testing |
 | Admin Approval | 🟡 90% | Dashboard + endpoints + credentials done, needs testing |
@@ -298,6 +298,14 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Supabase Security Hardening** (Dec 30, 2025)
+- Fixed 25 functions with mutable search_path (security vulnerability)
+- Moved pg_trgm extension from public to extensions schema
+- Note: vector extension stays in public (heavy dependencies, acceptable per Supabase)
+- Manual step: Enable leaked password protection in Supabase dashboard
+  - Go to Authentication → Settings → Password → Enable "Leaked password protection"
+- Context: migrations/032_fix_function_search_paths.sql, migrations/033_move_extensions_from_public.sql
 
 **Phone-First Wizard Testing** (Dec 30, 2025)
 - Fixed Back button selector to avoid matching "Back to Site" link
