@@ -196,7 +196,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 - [x] Abandoned cart recovery emails
 - [x] Product recommendations engine
 - [x] Discount/coupon system
-- [ ] Multi-currency support
+- [x] Multi-currency support
 - [ ] Customer reviews & ratings
 
 **Platform Simplicity Layer**
@@ -209,6 +209,16 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Multi-Currency Support** (Dec 30, 2025)
+- Supabase migration with currencies, exchange_rates, user_currency_preferences tables
+- PostgreSQL functions: convert_currency, format_price for server-side conversion
+- API: GET (list, rates, convert, preference), POST (set preference)
+- Seed data: USD, EUR, GBP, CAD, AUD, JPY, CNY, INR, MXN, BRL
+- useCurrency hook with convert, format, formatConverted, setCurrency
+- CurrencySelector component with dropdown, flags, size/color variants
+- 20 E2E tests + 9 Storybook stories
+- Context: migrations/027, app/api/currencies/route.ts, hooks/useCurrency.ts
 
 **Discount/Coupon System** (Dec 30, 2025)
 - Created Supabase migration with coupons, coupon_usage tables, RLS policies
@@ -404,4 +414,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Discount/Coupon System: validation, apply, component*
+*Last Updated: December 30, 2025 - Multi-Currency Support: conversion, formatting, selector*
