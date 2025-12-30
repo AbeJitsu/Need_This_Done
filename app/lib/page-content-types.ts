@@ -360,6 +360,10 @@ export interface GuidePageContent {
 export interface PrivacyPageContent {
   header: PageHeader;
   lastUpdated: string;
+  quickSummary: {
+    title: string;
+    items: string[];
+  };
   sections: Array<{
     title: string;
     content: string;
@@ -373,6 +377,10 @@ export interface PrivacyPageContent {
 export interface TermsPageContent {
   header: PageHeader;
   lastUpdated: string;
+  quickSummary: {
+    title: string;
+    items: string[];
+  };
   sections: Array<{
     title: string;
     content: string;

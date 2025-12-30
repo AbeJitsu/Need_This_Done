@@ -25,7 +25,7 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
   // Check that pageContent has expected structure before using it
-  const hasValidContent = pageContent && 'sections' in pageContent && 'header' in pageContent;
+  const hasValidContent = pageContent && 'sections' in pageContent && 'header' in pageContent && 'quickSummary' in pageContent;
   const content = hasValidContent ? (pageContent as unknown as PrivacyPageContent) : initialContent;
 
   return (
@@ -45,18 +45,19 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
         </p>
       </EditableSection>
 
-      {/* Quick Summary Box */}
-      <div className={`${alertColors.info.bg} ${alertColors.info.border} rounded-xl p-6 mb-10`}>
-        <h2 className={`text-lg font-semibold mb-3 ${alertColors.info.text}`}>
-          Quick Summary
-        </h2>
-        <ul className={`space-y-2 ${alertColors.info.text} list-disc list-inside`}>
-          <li>We only collect what we need to serve you</li>
-          <li>We never sell your personal information</li>
-          <li>You can request deletion of your data anytime</li>
-          <li>We use industry-standard security measures</li>
-        </ul>
-      </div>
+      {/* Quick Summary Box - Editable */}
+      <EditableSection sectionKey="quickSummary" label="Quick Summary">
+        <div className={`${alertColors.info.bg} ${alertColors.info.border} rounded-xl p-6 mb-10`}>
+          <h2 className={`text-lg font-semibold mb-3 ${alertColors.info.text}`}>
+            {content.quickSummary.title}
+          </h2>
+          <ul className={`space-y-2 ${alertColors.info.text} list-disc list-inside`}>
+            {content.quickSummary.items.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </EditableSection>
 
       {/* Dynamic Sections - All from JSON and Editable */}
       <EditableSection sectionKey="sections" label="Content Sections">

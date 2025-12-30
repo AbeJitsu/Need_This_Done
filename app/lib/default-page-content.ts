@@ -701,6 +701,15 @@ export const defaultPrivacyContent: PrivacyPageContent = {
     description: 'How we collect, use, and protect your information.',
   },
   lastUpdated: 'January 2025',
+  quickSummary: {
+    title: 'Quick Summary',
+    items: [
+      'We only collect what we need to serve you',
+      'We never sell your personal information',
+      'You can request deletion of your data anytime',
+      'We use industry-standard security measures',
+    ],
+  },
   sections: [
     {
       title: '1. Information We Collect',
@@ -763,6 +772,15 @@ export const defaultTermsContent: TermsPageContent = {
     description: 'The terms and conditions that govern your use of our services.',
   },
   lastUpdated: 'January 2025',
+  quickSummary: {
+    title: 'The Short Version',
+    items: [
+      'Be respectful and use our services lawfully',
+      'Pay for services you book',
+      "We'll do our best to help you get things done",
+      'Either party can end the relationship anytime',
+    ],
+  },
   sections: [
     {
       title: '1. Acceptance of Terms',
