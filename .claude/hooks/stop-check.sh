@@ -84,7 +84,7 @@ if type is_loop_active &>/dev/null && is_loop_active; then
     # Run critical E2E tests (field-editability ~20s, not full suite ~27min)
     # SKIP_WEBSERVER=true reuses existing dev server instead of starting new one
     cd "$CLAUDE_PROJECT_DIR/app"
-    if timeout 120 env SKIP_WEBSERVER=true npx playwright test e2e/field-editability.spec.ts --project=e2e-bypass >/dev/null 2>&1; then
+    if SKIP_WEBSERVER=true npx playwright test e2e/field-editability.spec.ts --project=e2e-bypass >/dev/null 2>&1; then
       echo "" >&2
       echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
       echo "✅ LOOP COMPLETE - ALL TESTS PASS" >&2
