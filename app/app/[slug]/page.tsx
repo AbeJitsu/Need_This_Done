@@ -3,6 +3,7 @@ import { puckConfig } from '@/lib/puck-config';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import { gradientColors } from '@/lib/colors';
+import { PuckPageClient } from '@/components/PuckPageClient';
 
 // ============================================================================
 // Dynamic Page Viewer
@@ -41,11 +42,13 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
     }
 
     return (
-      <div className={`min-h-screen ${gradientColors.pageBackground}`}>
-        <main>
-          <Render config={puckConfig} data={page.content} />
-        </main>
-      </div>
+      <PuckPageClient slug={slug} pageId={page.id}>
+        <div className={`min-h-screen ${gradientColors.pageBackground}`}>
+          <main>
+            <Render config={puckConfig} data={page.content} />
+          </main>
+        </div>
+      </PuckPageClient>
     );
   } catch (error) {
     console.error('Error loading page:', error);

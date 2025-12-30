@@ -169,7 +169,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 
 **Analytics Dashboard**
 - [x] Orders, revenue, trends visualization
-- [ ] Page view analytics per Puck page
+- [x] Page view analytics per Puck page
 
 ### Long Term (1-3 Months)
 
@@ -209,6 +209,15 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Page View Analytics** (Dec 30, 2025)
+- Created Supabase migration for page_views table with RLS policies
+- API endpoints: POST /api/page-views (track), GET /api/page-views (stats), GET /api/page-views/all (admin)
+- usePageViewTracking hook for client-side tracking with session ID
+- PuckPageClient wrapper integrates tracking into dynamic Puck pages
+- Aggregation view (page_view_stats) for quick statistics
+- 7 unit tests + 6 E2E tests (3 pass, 3 skip awaiting migration)
+- Context: supabase/migrations/022_create_page_views_table.sql, app/api/page-views/route.ts, hooks/usePageViewTracking.ts
 
 **Analytics Dashboard** (Dec 30, 2025)
 - Created /admin/analytics page with revenue, orders, and trends visualization
@@ -349,4 +358,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Auto-Loop System: 10 unit tests, enhanced hooks, context persistence*
+*Last Updated: December 30, 2025 - Page View Analytics: tracking hook, API endpoints, migration ready*

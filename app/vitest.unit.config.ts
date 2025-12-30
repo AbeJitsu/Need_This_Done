@@ -13,6 +13,8 @@ export default defineConfig({
     include: [
       // Unit tests for lib functions
       '__tests__/lib/**/*.test.ts',
+      // Unit tests for API routes
+      '__tests__/api/**/*.test.ts',
     ],
   },
   resolve: {
