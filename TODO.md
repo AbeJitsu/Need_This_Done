@@ -22,6 +22,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Email (Resend) | ✅ Working | hello@needthisdone.com verified |
 | Puck Page Builder | ✅ Active | Visual page builder with TipTap WYSIWYG editor |
 | **Inline Editing** | ✅ **VALIDATED** | 12 pages, 52 field tests, click-to-edit working |
+| **Auto-Loop System** | ✅ **IMPROVED** | lib/loop-state.ts, 10 unit tests, enhanced hooks |
 
 ---
 
@@ -35,7 +36,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 [x] Create unit tests for loop-state.json management
 [x] Add post-Stop hook that shows next task when loop active
 [x] Update session-start hook to reinject auto-loop instructions
-[ ] Document auto-loop testing results
+[x] Document auto-loop testing results
 
 ---
 
@@ -188,6 +189,14 @@ Phase 5 Sub-tasks (Zero-Config):
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+**Auto-Loop System Improvements** (Dec 30, 2025)
+- Created `app/lib/loop-state.ts` - TypeScript API for loop state management
+- 10 unit tests for loop state functions (read, write, start, pause, etc.)
+- Stop hook now shows specific next task when loop is active
+- Session-start hook now reinjects auto-loop context on resume/compact
+- Clear autonomous work instructions: TDD workflow, don't stop between tasks
+- Context: lib/loop-state.ts, .claude/hooks/stop-check.sh, .claude/hooks/session-start.sh
+
 **Universal Content Loading + Page Simplification** (Dec 29, 2025)
 - InlineEditProvider now auto-loads content by route (no per-page hooks needed)
 - Migrated all 11 page clients to `useInlineEdit()` pattern
@@ -267,4 +276,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 29, 2025 - Vision Validated: 12 pages, 52 tests, 100% passing*
+*Last Updated: December 30, 2025 - Auto-Loop System: 10 unit tests, enhanced hooks, context persistence*
