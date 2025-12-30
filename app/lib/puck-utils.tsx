@@ -7,6 +7,7 @@ import {
   gradientColors,
   softBgColors,
   verySoftBgColors,
+  hoverBgColors,
   type AccentVariant,
 } from './colors';
 
@@ -156,16 +157,8 @@ function getSubtleBgClass(color: AccentVariant): string {
  * Get hover background for interactive elements
  */
 function getHoverBgClass(color: AccentVariant): string {
-  const map: Record<AccentVariant, string> = {
-    purple: 'hover:bg-purple-100 dark:hover:bg-purple-900/30',
-    blue: 'hover:bg-blue-100 dark:hover:bg-blue-900/30',
-    green: 'hover:bg-green-100 dark:hover:bg-green-900/30',
-    orange: 'hover:bg-orange-100 dark:hover:bg-orange-900/30',
-    teal: 'hover:bg-teal-100 dark:hover:bg-teal-900/30',
-    gray: 'hover:bg-gray-100 dark:hover:bg-gray-700/50',
-    red: 'hover:bg-red-100 dark:hover:bg-red-900/30',
-  };
-  return map[color] || map.purple;
+  // Uses hoverBgColors for solid hover states (no opacity)
+  return hoverBgColors[color] || hoverBgColors.purple;
 }
 
 /**

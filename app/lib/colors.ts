@@ -504,31 +504,31 @@ export const groupHoverColors = {
 // ============================================================================
 // Alert Colors - Notification and message box styling
 // ============================================================================
-// Light mode: -50 shades (very light backgrounds) with -800 text
-// Dark mode: -800 shades (solid backgrounds) with white text for 6-9:1 contrast
-// Border: 2px width, -400 in dark mode for visibility against -800 backgrounds
+// Light mode: -100 shades (consistent with system) with -800 text
+// Dark mode: -500 shades (4.5:1 with white) with white text
+// Border: 2px width, -400 in dark mode for visibility against -500 backgrounds
 export const alertColors = {
   info: {
-    bg: 'bg-blue-50 dark:bg-blue-500',
+    bg: 'bg-blue-100 dark:bg-blue-500',
     border: 'border-2 border-blue-200 dark:border-blue-400',
     text: 'text-blue-800 dark:text-white',
     link: 'text-blue-700 dark:text-white underline hover:text-blue-900 dark:hover:text-gray-200',
   },
   error: {
-    bg: 'bg-red-50 dark:bg-red-500',
+    bg: 'bg-red-100 dark:bg-red-500',
     border: 'border-2 border-red-200 dark:border-red-400',
     text: 'text-red-800 dark:text-white',
     link: 'text-red-700 dark:text-white underline hover:text-red-900 dark:hover:text-gray-200',
   },
   success: {
-    bg: 'bg-green-50 dark:bg-green-500',
+    bg: 'bg-green-100 dark:bg-green-500',
     border: 'border-2 border-green-200 dark:border-green-400',
     text: 'text-green-800 dark:text-white',
     link: 'text-green-700 dark:text-white underline hover:text-green-900 dark:hover:text-gray-200',
   },
   warning: {
     // Dark mode uses orange-500 (#bd6000) - 4.5:1 contrast with white
-    bg: 'bg-orange-50 dark:bg-orange-500',
+    bg: 'bg-orange-100 dark:bg-orange-500',
     border: 'border-2 border-orange-200 dark:border-orange-400',
     text: 'text-orange-800 dark:text-white',
     link: 'text-orange-700 dark:text-white underline hover:text-orange-900 dark:hover:text-gray-200',
@@ -1169,5 +1169,69 @@ export const verySoftBgColors: Record<AccentVariant, string> = {
   red: 'bg-red-100 dark:bg-red-900',
   teal: 'bg-teal-100 dark:bg-teal-900',
   gray: 'bg-gray-100 dark:bg-gray-800',
+};
+
+// ============================================================================
+// Hover Background Colors - For interactive element hover states
+// ============================================================================
+// Solid hover backgrounds to replace opacity patterns (dark:hover:bg-*/30).
+// Light mode: hover:-200, dark mode: hover:-700 (visible on dark backgrounds)
+export const hoverBgColors: Record<AccentVariant, string> = {
+  purple: 'hover:bg-purple-200 dark:hover:bg-purple-700',
+  blue: 'hover:bg-blue-200 dark:hover:bg-blue-700',
+  green: 'hover:bg-green-200 dark:hover:bg-green-700',
+  orange: 'hover:bg-orange-200 dark:hover:bg-orange-700',
+  red: 'hover:bg-red-200 dark:hover:bg-red-700',
+  teal: 'hover:bg-teal-200 dark:hover:bg-teal-700',
+  gray: 'hover:bg-gray-200 dark:hover:bg-gray-600',
+};
+
+// ============================================================================
+// UI Chrome Colors - For toolbars, footers, panels
+// ============================================================================
+// Neutral backgrounds for UI chrome elements (solid colors, no opacity).
+// Light mode: -100 (consistent with system), dark mode: -800 (visible)
+export const uiChromeBg = {
+  toolbar: 'bg-gray-100 dark:bg-gray-800',
+  footer: 'bg-gray-100 dark:bg-gray-800',
+  panel: 'bg-gray-100 dark:bg-gray-800',
+};
+
+// ============================================================================
+// Toggle Button Colors - For toggle/pill button states
+// ============================================================================
+// Button-like elements that toggle between active/inactive states.
+export const toggleButtonColors: Record<AccentVariant, {
+  inactive: string;
+  inactiveHover: string;
+}> = {
+  purple: {
+    inactive: 'bg-purple-100 dark:bg-purple-800 text-purple-600 dark:text-purple-300',
+    inactiveHover: 'hover:bg-purple-200 dark:hover:bg-purple-700',
+  },
+  blue: {
+    inactive: 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300',
+    inactiveHover: 'hover:bg-blue-200 dark:hover:bg-blue-700',
+  },
+  green: {
+    inactive: 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300',
+    inactiveHover: 'hover:bg-green-200 dark:hover:bg-green-700',
+  },
+  orange: {
+    inactive: 'bg-orange-100 dark:bg-orange-800 text-orange-600 dark:text-orange-300',
+    inactiveHover: 'hover:bg-orange-200 dark:hover:bg-orange-700',
+  },
+  red: {
+    inactive: 'bg-red-100 dark:bg-red-800 text-red-600 dark:text-red-300',
+    inactiveHover: 'hover:bg-red-200 dark:hover:bg-red-700',
+  },
+  teal: {
+    inactive: 'bg-teal-100 dark:bg-teal-800 text-teal-600 dark:text-teal-300',
+    inactiveHover: 'hover:bg-teal-200 dark:hover:bg-teal-700',
+  },
+  gray: {
+    inactive: 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300',
+    inactiveHover: 'hover:bg-gray-200 dark:hover:bg-gray-600',
+  },
 };
 
