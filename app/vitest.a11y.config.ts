@@ -13,10 +13,9 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./vitest.setup.ts'],
     include: [
-      '../__tests__/components/**/*.a11y.test.ts?(x)',
-      '../__tests__/lib/**/*.test.ts',
+      '__tests__/components/**/*.a11y.test.ts?(x)',
       // Hook tests disabled due to jsdom/webidl-conversions compatibility issue
-      // '../__tests__/hooks/**/*.test.ts?(x)',
+      // '__tests__/hooks/**/*.test.ts?(x)',
     ],
     coverage: {
       provider: 'v8',
