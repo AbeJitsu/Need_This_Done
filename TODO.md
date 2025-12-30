@@ -159,7 +159,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 - [x] Re-enable Puck page builder ✅ DONE
 - [x] Add TipTap WYSIWYG editor ✅ DONE
 - [x] Add "Edit with Puck" after wizard completion (completion modal + 2 E2E tests)
-- [ ] Create block-level editor (mid-complexity between wizard and Puck)
+- [x] Create block-level editor (mid-complexity between wizard and Puck)
 - [ ] Add template preview images
 
 **Performance & Caching**
@@ -209,6 +209,15 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Block-Level Editor** (Dec 30, 2025)
+- Created simplified block editor at `/admin/pages/[slug]/blocks`
+- Mid-complexity between wizard (5 steps) and Puck (full drag-drop)
+- Section list view with add, edit, reorder, delete operations
+- Block picker organized by category (Layout, Content, Media, etc.)
+- Property editor sidebar for common fields (title, color, URLs)
+- 14 E2E tests in e2e/block-editor.spec.ts
+- Context: app/admin/pages/[slug]/blocks/page.tsx
 
 **Auto-Loop System Improvements** (Dec 30, 2025)
 - Created `app/lib/loop-state.ts` - TypeScript API for loop state management

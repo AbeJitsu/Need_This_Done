@@ -237,6 +237,13 @@ export default function PagesManagement() {
                     </Button>
                     <Button
                       size="sm"
+                      variant="purple"
+                      href={`/admin/pages/${page.slug}/blocks`}
+                    >
+                      Block Editor
+                    </Button>
+                    <Button
+                      size="sm"
                       variant={page.is_published ? 'orange' : 'green'}
                       onClick={() => handleTogglePublish(page.slug, page.is_published)}
                     >
