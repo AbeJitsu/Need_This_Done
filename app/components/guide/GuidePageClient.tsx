@@ -2,15 +2,17 @@
 
 import PageHeader from '@/components/PageHeader';
 import { EditableSection } from '@/components/InlineEditor';
-import { useEditableContent } from '@/hooks/useEditableContent';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import type { GuidePageContent } from '@/lib/page-content-types';
 import { headingColors, formInputColors, accentColors, focusRingClasses } from '@/lib/colors';
 import Image from 'next/image';
 import Link from 'next/link';
 
 // ============================================================================
-// Guide Page Client - Inline Editable Version
+// Guide Page Client - Universal Editing Version
 // ============================================================================
+// Uses universal content loading from InlineEditProvider.
+// EditableSection wrappers provide click-to-select functionality.
 
 interface GuideStep {
   number: number;
@@ -121,7 +123,9 @@ function QuickLinks({ guides }: { guides: Guide[] }) {
 }
 
 export default function GuidePageClient({ initialContent, guides }: GuidePageClientProps) {
-  const { content } = useEditableContent<GuidePageContent>(initialContent);
+  // Use content from universal provider (auto-loaded by route)
+  const { pageContent } = useInlineEdit();
+  const content = (pageContent as unknown as GuidePageContent) || initialContent;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">

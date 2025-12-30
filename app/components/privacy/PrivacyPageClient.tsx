@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import PageHeader from '@/components/PageHeader';
 import { EditableSection } from '@/components/InlineEditor';
-import { useEditableContent } from '@/hooks/useEditableContent';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import type { PrivacyPageContent } from '@/lib/page-content-types';
 import {
   headingColors,
@@ -16,8 +16,10 @@ import {
 } from '@/lib/colors';
 
 // ============================================================================
-// Privacy Page Client - Inline Editable Version
+// Privacy Page Client - Universal Editing Version
 // ============================================================================
+// Uses universal content loading from InlineEditProvider.
+// EditableSection wrappers provide click-to-select functionality.
 
 interface PrivacyPageClientProps {
   initialContent: PrivacyPageContent;
@@ -48,7 +50,9 @@ function Subsection({ title, children }: { title: string; children: React.ReactN
 }
 
 export default function PrivacyPageClient({ initialContent }: PrivacyPageClientProps) {
-  const { content } = useEditableContent<PrivacyPageContent>(initialContent);
+  // Use content from universal provider (auto-loaded by route)
+  const { pageContent } = useInlineEdit();
+  const content = (pageContent as unknown as PrivacyPageContent) || initialContent;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">

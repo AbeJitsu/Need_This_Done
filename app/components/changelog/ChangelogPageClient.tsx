@@ -2,14 +2,16 @@
 
 import PageHeader from '@/components/PageHeader';
 import { EditableSection } from '@/components/InlineEditor';
-import { useEditableContent } from '@/hooks/useEditableContent';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import type { ChangelogPageContent } from '@/lib/page-content-types';
 import { headingColors, formInputColors, categoryBadgeColors } from '@/lib/colors';
 import Image from 'next/image';
 
 // ============================================================================
-// Changelog Page Client - Inline Editable Version
+// Changelog Page Client - Universal Editing Version
 // ============================================================================
+// Uses universal content loading from InlineEditProvider.
+// EditableSection wrappers provide click-to-select functionality.
 
 interface ChangelogEntry {
   title: string;
@@ -110,7 +112,9 @@ function ChangelogCard({ entry }: { entry: ChangelogEntry }) {
 }
 
 export default function ChangelogPageClient({ initialContent, entries }: ChangelogPageClientProps) {
-  const { content } = useEditableContent<ChangelogPageContent>(initialContent);
+  // Use content from universal provider (auto-loaded by route)
+  const { pageContent } = useInlineEdit();
+  const content = (pageContent as unknown as ChangelogPageContent) || initialContent;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
@@ -122,17 +126,15 @@ export default function ChangelogPageClient({ initialContent, entries }: Changel
       </EditableSection>
 
       {entries.length === 0 ? (
-        <EditableSection sectionKey="emptyState" label="Empty State">
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4" aria-hidden="true">{content.emptyState.emoji}</div>
-            <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
-              {content.emptyState.title}
-            </h2>
-            <p className={`${formInputColors.helper} max-w-md mx-auto`}>
-              {content.emptyState.description}
-            </p>
-          </div>
-        </EditableSection>
+        <div className="text-center py-16">
+          <div className="text-6xl mb-4" aria-hidden="true">{content.emptyState.emoji}</div>
+          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
+            {content.emptyState.title}
+          </h2>
+          <p className={`${formInputColors.helper} max-w-md mx-auto`}>
+            {content.emptyState.description}
+          </p>
+        </div>
       ) : (
         <div className="space-y-8">
           {entries.map((entry) => (

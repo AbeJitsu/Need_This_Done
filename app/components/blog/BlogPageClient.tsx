@@ -4,17 +4,16 @@ import Link from 'next/link';
 import PageHeader from '@/components/PageHeader';
 import BlogPostCard from '@/components/blog/BlogPostCard';
 import { EditableSection } from '@/components/InlineEditor';
-import { useEditableContent } from '@/hooks/useEditableContent';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import type { BlogPageContent } from '@/lib/page-content-types';
 import { BlogPostSummary, BLOG_CATEGORIES } from '@/lib/blog-types';
 import { headingColors, formInputColors, accentColors, focusRingClasses } from '@/lib/colors';
 
 // ============================================================================
-// Blog Page Client - Inline Editable Version
+// Blog Page Client - Universal Editing Version
 // ============================================================================
-// What: Client component for blog listing page with inline editing support
-// Why: Allows admin users to edit static content (header, empty state, titles)
-// How: Uses useEditableContent hook + EditableSection wrappers
+// Uses universal content loading from InlineEditProvider.
+// EditableSection wrappers provide click-to-select functionality.
 
 interface BlogPageClientProps {
   initialContent: BlogPageContent;
@@ -22,15 +21,15 @@ interface BlogPageClientProps {
 }
 
 export default function BlogPageClient({ initialContent, posts }: BlogPageClientProps) {
-  // Inline editing hook - auto-detects slug from URL
-  const { content } = useEditableContent<BlogPageContent>(initialContent);
+  // Use content from universal provider (auto-loaded by route)
+  const { pageContent } = useInlineEdit();
+  const content = (pageContent as unknown as BlogPageContent) || initialContent;
 
   // Separate featured (most recent) from the rest
   const [featuredPost, ...otherPosts] = posts;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-      {/* Header */}
       <EditableSection sectionKey="header" label="Page Header">
         <PageHeader
           title={content.header.title}
@@ -40,17 +39,15 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
 
       {posts.length === 0 ? (
         /* Empty State */
-        <EditableSection sectionKey="emptyState" label="Empty State">
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">{content.emptyState.emoji}</div>
-            <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
-              {content.emptyState.title}
-            </h2>
-            <p className={`${formInputColors.helper} max-w-md mx-auto`}>
-              {content.emptyState.description}
-            </p>
-          </div>
-        </EditableSection>
+        <div className="text-center py-16">
+          <div className="text-6xl mb-4">{content.emptyState.emoji}</div>
+          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
+            {content.emptyState.title}
+          </h2>
+          <p className={`${formInputColors.helper} max-w-md mx-auto`}>
+            {content.emptyState.description}
+          </p>
+        </div>
       ) : (
         <>
           {/* Featured Post */}
@@ -93,18 +90,16 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
 
           {/* Post Grid */}
           {otherPosts.length > 0 && (
-            <EditableSection sectionKey="morePostsTitle" label="More Posts Title">
-              <section>
-                <h2 className={`text-2xl font-bold ${headingColors.primary} mb-6`}>
-                  {content.morePostsTitle}
-                </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {otherPosts.map((post) => (
-                    <BlogPostCard key={post.id} post={post} />
-                  ))}
-                </div>
-              </section>
-            </EditableSection>
+            <section>
+              <h2 className={`text-2xl font-bold ${headingColors.primary} mb-6`}>
+                {content.morePostsTitle}
+              </h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {otherPosts.map((post) => (
+                  <BlogPostCard key={post.id} post={post} />
+                ))}
+              </div>
+            </section>
           )}
         </>
       )}

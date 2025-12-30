@@ -4,8 +4,8 @@ import { useState } from 'react';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { EditableSection, EditableItem } from '@/components/InlineEditor';
-import { useEditableContent } from '@/hooks/useEditableContent';
+import { EditableSection } from '@/components/InlineEditor';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import type { GetStartedPageContent } from '@/lib/page-content-types';
 import {
   accentColors,
@@ -20,19 +20,19 @@ import {
 } from '@/lib/colors';
 
 // ============================================================================
-// Get Started Page Client - Inline Editable Version
+// Get Started Page Client - Universal Editing Version
 // ============================================================================
-// What: Client component for get-started page with inline editing support
-// Why: Allows admin users to edit page content directly via the sidebar
-// How: Uses useEditableContent hook + EditableSection wrappers
+// Uses universal content loading from InlineEditProvider.
+// EditableSection wrappers provide click-to-select functionality.
 
 interface GetStartedPageClientProps {
   content: GetStartedPageContent;
 }
 
 export default function GetStartedPageClient({ content: initialContent }: GetStartedPageClientProps) {
-  // Inline editing hook - auto-detects slug from URL
-  const { content } = useEditableContent<GetStartedPageContent>(initialContent);
+  // Use content from universal provider (auto-loaded by route)
+  const { pageContent } = useInlineEdit();
+  const content = (pageContent as unknown as GetStartedPageContent) || initialContent;
 
   // Form state
   const [quoteRef, setQuoteRef] = useState('');
@@ -165,7 +165,6 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
   // ============================================================================
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-12">
-      {/* Header Section */}
       <EditableSection sectionKey="header" label="Page Header">
         <PageHeader
           title={content.header.title}
@@ -174,73 +173,59 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
       </EditableSection>
 
       {/* Two Main Paths */}
-      <EditableSection sectionKey="paths" label="Path Options">
-        <div className="grid md:grid-cols-2 gap-6 mb-10">
-          {content.paths.map((path, index) => (
-            <EditableItem
-              key={index}
-              sectionKey="paths"
-              arrayField="paths"
-              index={index}
-              label={path.title}
-              content={path as unknown as Record<string, unknown>}
-            >
-              <Card hoverColor={path.hoverColor} hoverEffect="lift" className="h-full">
-                <div className="p-8 h-full grid grid-rows-[auto_auto_auto_1fr_auto]">
-                  <div className="pb-4">
-                    <span className={`inline-block px-4 py-1 ${accentColors[path.hoverColor as AccentVariant].bg} ${accentColors[path.hoverColor as AccentVariant].text} rounded-full text-sm font-semibold`}>
-                      {path.badge}
-                    </span>
-                  </div>
-                  <h2 className={`text-2xl font-bold ${headingColors.primary} pb-3`}>
-                    {path.title}
-                  </h2>
-                  <p className={`${headingColors.secondary} pb-6`}>
-                    {path.description}
-                  </p>
-                  <ul className="space-y-3 self-start">
-                    {path.features.map((feature, idx) => {
-                      // checkmarkColors only has purple, blue, green - fall back to green for other variants
-                      const colorKey = path.hoverColor as keyof typeof checkmarkColors;
-                      const checkmarkClass = checkmarkColors[colorKey]?.icon || checkmarkColors.green.icon;
-                      return (
-                        <li key={idx} className="flex items-center gap-2">
-                          <span className={checkmarkClass}>✓</span>
-                          <span className={headingColors.secondary}>{feature}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                  <Button
-                    variant={path.button.variant}
-                    href={path.button.href}
-                    size={path.button.size || 'lg'}
-                    className="w-full"
-                  >
-                    {path.button.text}
-                  </Button>
-                </div>
-              </Card>
-            </EditableItem>
-          ))}
-        </div>
-      </EditableSection>
+      <div className="grid md:grid-cols-2 gap-6 mb-10">
+        {content.paths.map((path, index) => (
+          <Card key={index} hoverColor={path.hoverColor} hoverEffect="lift" className="h-full">
+            <div className="p-8 h-full grid grid-rows-[auto_auto_auto_1fr_auto]">
+              <div className="pb-4">
+                <span className={`inline-block px-4 py-1 ${accentColors[path.hoverColor as AccentVariant].bg} ${accentColors[path.hoverColor as AccentVariant].text} rounded-full text-sm font-semibold`}>
+                  {path.badge}
+                </span>
+              </div>
+              <h2 className={`text-2xl font-bold ${headingColors.primary} pb-3`}>
+                {path.title}
+              </h2>
+              <p className={`${headingColors.secondary} pb-6`}>
+                {path.description}
+              </p>
+              <ul className="space-y-3 self-start">
+                {path.features.map((feature, idx) => {
+                  // checkmarkColors only has purple, blue, green - fall back to green for other variants
+                  const colorKey = path.hoverColor as keyof typeof checkmarkColors;
+                  const checkmarkClass = checkmarkColors[colorKey]?.icon || checkmarkColors.green.icon;
+                  return (
+                    <li key={idx} className="flex items-center gap-2">
+                      <span className={checkmarkClass}>✓</span>
+                      <span className={headingColors.secondary}>{feature}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <Button
+                variant={path.button.variant}
+                href={path.button.href}
+                size={path.button.size || 'lg'}
+                className="w-full"
+              >
+                {path.button.text}
+              </Button>
+            </div>
+          </Card>
+        ))}
+      </div>
 
       {/* Already Have a Quote Section */}
-      <EditableSection sectionKey="quoteSection" label="Quote Section">
-        <div className="text-center mb-10 py-6">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-            {content.quoteSection.title}
-          </h3>
-          <p className="text-gray-600 dark:text-gray-300">
-            {content.quoteSection.description}
-          </p>
-        </div>
-      </EditableSection>
+      <div className="text-center mb-10 py-6">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          {content.quoteSection.title}
+        </h3>
+        <p className="text-gray-600 dark:text-gray-300">
+          {content.quoteSection.description}
+        </p>
+      </div>
 
       {/* Authorization Form */}
-      <EditableSection sectionKey="authForm" label="Authorization Form">
-        <Card hoverEffect="none" id="authorize" className="mb-8">
+      <Card hoverEffect="none" id="authorize" className="mb-8">
           <form onSubmit={handleSubmit} className="p-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               {content.authForm.title}
@@ -308,7 +293,6 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
             </p>
           </form>
         </Card>
-      </EditableSection>
     </div>
   );
 }
