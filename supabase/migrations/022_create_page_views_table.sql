@@ -4,12 +4,26 @@
 -- Tracks page views for Puck CMS pages to provide analytics insights.
 -- Stores individual view events with timestamps for trend analysis.
 
+-- First ensure pages table exists (may have been dropped)
+CREATE TABLE IF NOT EXISTS pages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL,
+  content JSONB NOT NULL DEFAULT '{}'::jsonb,
+  is_published BOOLEAN DEFAULT false,
+  published_at TIMESTAMP WITH TIME ZONE,
+  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  updated_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
 CREATE TABLE IF NOT EXISTS page_views (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
   -- Page Reference
   page_slug TEXT NOT NULL,
-  page_id UUID REFERENCES pages(id) ON DELETE CASCADE,
+  page_id UUID,  -- Optional reference, no FK constraint for flexibility
 
   -- View Metadata
   user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
