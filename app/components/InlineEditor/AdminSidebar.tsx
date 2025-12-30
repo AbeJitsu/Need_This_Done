@@ -10,6 +10,7 @@ import {
   cardBorderColors,
   focusRingClasses,
   accentColors,
+  solidButtonColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -657,7 +658,8 @@ export default function AdminSidebar() {
               onClick={() => handleAddArrayItem(basePath, getItemTemplate())}
               className={`
                 flex items-center gap-1 px-2 py-1 rounded text-xs font-medium
-                ${accentColors.green.bg} text-white hover:opacity-90 transition-opacity
+                ${solidButtonColors.green.bg} ${solidButtonColors.green.hover} ${solidButtonColors.green.text}
+                transition-colors
               `}
               aria-label={`Add new ${singularLabel}`}
             >
@@ -941,7 +943,8 @@ export default function AdminSidebar() {
                       onClick={handleItemAdd}
                       className={`
                         flex items-center gap-1 px-2 py-1 rounded text-xs font-medium
-                        ${accentColors.green.bg} text-white hover:opacity-90 transition-opacity
+                        ${solidButtonColors.green.bg} ${solidButtonColors.green.hover} ${solidButtonColors.green.text}
+                        transition-colors
                       `}
                       aria-label="Add new item"
                     >
@@ -1073,8 +1076,7 @@ export default function AdminSidebar() {
             disabled={!hasUnsavedChanges || isSaving}
             className={`
               flex-1 px-4 py-2 rounded-lg text-sm font-medium
-              ${accentColors.blue.bg} text-white
-              hover:opacity-90
+              ${solidButtonColors.blue.bg} ${solidButtonColors.blue.hover} ${solidButtonColors.blue.text}
               disabled:opacity-50 disabled:cursor-not-allowed
               transition-colors
             `}

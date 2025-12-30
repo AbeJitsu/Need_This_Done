@@ -34,8 +34,11 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [x] Add E2E tests that catch dark mode visual issues (current tests don't detect rendering problems)
 - [x] Research orange button color - looks brown in dark mode, needs true orange that works
 - [x] Find optimal orange: white text (#FFF) + orange background at 5:1 contrast without looking brown
-  - Solution: #ad4800 (H:25° S:100% L:34%) with 5.67:1 contrast ratio
-  - Updated lib/colors.ts: solidButtonColors, accentColors, alertColors, faqColors
+  - Solution: #ad5700 (H:30° S:100% L:34%) with 5.07:1 contrast ratio (closest to 5:1)
+  - All orange definitions in lib/colors.ts (no duplication in tailwind.config.cjs)
+- [x] Fix Add button in edit mode - dark mode issue not caught by current tests
+  - Changed AdminSidebar Add buttons to use solidButtonColors.green (not accentColors.green.bg)
+  - accentColors are for light backgrounds; solidButtonColors are for solid buttons with white text
 
 **Automation & Developer Experience**
 - [ ] Auto-update changelog on every commit/deploy (stop doing this manually)

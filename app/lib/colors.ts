@@ -122,9 +122,9 @@ export const accentColors: Record<AccentVariant, {
     hoverBorder: 'hover:border-green-600 dark:hover:border-green-300',
   },
   orange: {
-    // Dark mode bg uses custom saturated orange (#ad4800) instead of orange-800
-    // which looks brown. #ad4800 = H:25° S:100% L:34%, 5.67:1 contrast with white
-    bg: 'bg-orange-100 dark:bg-[#ad4800]',
+    // Dark mode uses saturated orange (#ad5700) for true orange look
+    // #ad5700 = H:30° S:100% L:34%, 5.07:1 contrast (closer to 5:1, more orange)
+    bg: 'bg-orange-100 dark:bg-[#ad5700]',
     text: 'text-orange-900 dark:text-white',
     border: 'border-orange-500 dark:border-orange-400',
     hoverText: 'hover:text-orange-950 dark:hover:text-orange-100',
@@ -338,8 +338,8 @@ export const faqColors: Record<'purple' | 'blue' | 'green' | 'orange', {
   orange: {
     border: 'border-l-orange-500',
     text: 'text-orange-800 dark:text-orange-300',
-    // Using custom orange (#ad4800) for bg in dark mode to avoid brown appearance
-    bg: 'bg-orange-100 dark:bg-[#c25500]',
+    // #c76500 for lighter backgrounds, H:30° S:100% L:39%, brighter variant
+    bg: 'bg-orange-100 dark:bg-[#c76500]',
     numText: 'text-orange-800 dark:text-white',
     hover: 'hover:border-orange-400 dark:hover:border-orange-400',
   },
@@ -526,8 +526,8 @@ export const alertColors = {
     link: 'text-green-700 dark:text-white underline hover:text-green-900 dark:hover:text-gray-200',
   },
   warning: {
-    // Dark mode uses #ad4800 (saturated orange) instead of orange-800 (looks brown)
-    bg: 'bg-orange-50 dark:bg-[#ad4800]',
+    // Dark mode uses #ad5700 (5.07:1 contrast) for true orange look
+    bg: 'bg-orange-50 dark:bg-[#ad5700]',
     border: 'border-2 border-orange-200 dark:border-orange-400',
     text: 'text-orange-800 dark:text-white',
     link: 'text-orange-700 dark:text-white underline hover:text-orange-900 dark:hover:text-gray-200',
@@ -837,11 +837,10 @@ export const solidButtonColors: Record<AccentVariant, {
     focus: 'focus:ring-2 focus:ring-green-500',
   },
   orange: {
-    // Dark mode uses custom saturated orange (#ad4800) instead of orange-500
-    // which looks brown due to low saturation. #ad4800 = H:25° S:100% L:34%
-    // with 5.67:1 contrast ratio against white (exceeds WCAG AA 4.5:1)
-    bg: 'bg-orange-600 dark:bg-[#ad4800]',
-    hover: 'hover:bg-orange-700 dark:hover:bg-[#8f3b00]',
+    // Dark mode uses saturated orange (#ad5700) for true orange appearance
+    // #ad5700 = H:30° S:100% L:34% with 5.07:1 contrast (closer to 5:1, more orange hue)
+    bg: 'bg-orange-600 dark:bg-[#ad5700]',
+    hover: 'hover:bg-orange-700 dark:hover:bg-[#954a00]',
     text: 'text-white',
     focus: 'focus:ring-2 focus:ring-orange-500',
   },
