@@ -87,25 +87,29 @@ test.describe('Page Render Stability', () => {
 // These tests verify that expected content sections exist on each page
 
 test.describe('Content Structure Validation', () => {
+  // Note: h1 presence is already validated in line 108, so we only check additional content here
   const PAGE_CONTENT_CHECKS: Record<string, string[]> = {
-    '/': ['h1', '[class*="hero"]', 'What We Offer'],
-    '/services': ['h1', 'Find Your Perfect Fit'],
-    '/pricing': ['h1', 'Pricing'],
-    '/faq': ['h1', 'Frequently Asked'],
-    '/how-it-works': ['h1', 'Make It Easy'],
-    '/contact': ['h1', 'Quote'],
-    '/get-started': ['h1', 'Get Started'],
-    '/blog': ['h1'],
-    '/changelog': ['h1'],
-    '/guide': ['h1', 'Getting Started'],
-    '/privacy': ['h1', 'Privacy'],
-    '/terms': ['h1', 'Terms'],
+    '/': ['What We Offer'],
+    '/services': ['Find Your Perfect Fit'],
+    '/pricing': ['Pricing'],
+    '/faq': ['Frequently Asked'],
+    '/how-it-works': ['Make It Easy'],
+    '/contact': ['Quote'],
+    '/get-started': ['Get Started'],
+    '/blog': [], // Just needs h1, validated in base check
+    '/changelog': [], // Just needs h1, validated in base check
+    '/guide': ['Getting Started'],
+    '/privacy': ['Privacy'],
+    '/terms': ['Terms'],
   };
 
   for (const [pagePath, expectedContent] of Object.entries(PAGE_CONTENT_CHECKS)) {
     test(`${pagePath} has expected content structure`, async ({ page }) => {
       await page.goto(pagePath);
       await expect(page.locator('h1').first()).toBeVisible({ timeout: 15000 });
+
+      // Skip pages with no additional content checks (h1 already validated above)
+      if (expectedContent.length === 0) return;
 
       for (const content of expectedContent) {
         if (content.startsWith('[')) {

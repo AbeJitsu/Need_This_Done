@@ -205,8 +205,11 @@ export function buildSelectionFromMatch(
   // If it's an array item, create an item selection
   if (match.isArrayItem && match.arrayField !== undefined && match.arrayIndex !== undefined) {
     // Get the array and the specific item
-    const pathToArray = match.arrayField;
-    const arrayValue = getValueAtPath(sectionContent, pathToArray);
+    // If sectionKey equals arrayField (e.g., both are "sections"), sectionContent IS the array
+    // Otherwise, navigate to the array within sectionContent
+    const arrayValue = match.sectionKey === match.arrayField
+      ? sectionContent
+      : getValueAtPath(sectionContent, match.arrayField);
     const itemContent = Array.isArray(arrayValue) ? arrayValue[match.arrayIndex] : null;
 
     return {
