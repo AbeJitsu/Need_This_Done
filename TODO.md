@@ -163,7 +163,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 - [x] Add template preview images (gradient + section icons)
 
 **Performance & Caching**
-- [ ] Define Redis cache invalidation strategy per feature
+- [x] Define Redis cache invalidation strategy per feature (docs/CACHE_STRATEGY.md)
 - [ ] Monitor cache hit rates
 - [ ] Optimize product queries with pagination
 
@@ -209,6 +209,13 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Redis Cache Invalidation Strategy** (Dec 30, 2025)
+- Documented cache strategy for all 8 features (Pages, Projects, Cart, Orders, Blog, etc.)
+- TTL reference table (STATIC 1hr → REALTIME 10sec)
+- Invalidation patterns per operation (GET/POST/PUT/DELETE)
+- Best practices: over-invalidate, pattern invalidation, monitoring checklist
+- Context: docs/CACHE_STRATEGY.md
 
 **Template Preview Images** (Dec 30, 2025)
 - Added visual preview thumbnails to template picker cards
