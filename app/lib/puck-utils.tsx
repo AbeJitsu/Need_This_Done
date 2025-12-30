@@ -5,6 +5,8 @@ import {
   cardBorderColors,
   cardBgColors,
   gradientColors,
+  softBgColors,
+  verySoftBgColors,
   type AccentVariant,
 } from './colors';
 
@@ -55,16 +57,8 @@ export function getPuckAccentColors(color: string) {
 
 // Helper functions for derived colors
 function getIconBgClass(color: AccentVariant): string {
-  const map: Record<AccentVariant, string> = {
-    purple: 'bg-purple-100 dark:bg-purple-900/40',
-    blue: 'bg-blue-100 dark:bg-blue-900/40',
-    green: 'bg-green-100 dark:bg-green-900/40',
-    orange: 'bg-orange-100 dark:bg-orange-900/40',
-    teal: 'bg-teal-100 dark:bg-teal-900/40',
-    gray: 'bg-gray-100 dark:bg-gray-700',
-    red: 'bg-red-100 dark:bg-red-900/40',
-  };
-  return map[color] || map.purple;
+  // Uses softBgColors for icon backgrounds (solid colors, no opacity)
+  return softBgColors[color] || softBgColors.purple;
 }
 
 function getLightBorderClass(color: AccentVariant): string {
@@ -154,16 +148,8 @@ function getCardBorderHoverClass(color: AccentVariant): string {
  * Get subtle background for cards/sections
  */
 function getSubtleBgClass(color: AccentVariant): string {
-  const map: Record<AccentVariant, string> = {
-    purple: 'bg-purple-50 dark:bg-purple-900/20',
-    blue: 'bg-blue-50 dark:bg-blue-900/20',
-    green: 'bg-green-50 dark:bg-green-900/20',
-    orange: 'bg-orange-50 dark:bg-orange-900/20',
-    teal: 'bg-teal-50 dark:bg-teal-900/20',
-    gray: 'bg-gray-50 dark:bg-gray-800/50',
-    red: 'bg-red-50 dark:bg-red-900/20',
-  };
-  return map[color] || map.purple;
+  // Uses verySoftBgColors for subtle backgrounds (solid colors, no opacity)
+  return verySoftBgColors[color] || verySoftBgColors.purple;
 }
 
 /**

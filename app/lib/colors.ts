@@ -999,3 +999,175 @@ export const serviceComparisonColors: Record<ServiceType, {
   },
 };
 
+// ============================================================================
+// Info Banner Colors - For tip boxes, info callouts, and notices
+// ============================================================================
+// Used for informational banners like "💡 Quick Tip" sections.
+// Light mode: -50 bg with -200 border, -800 heading, -700 body text
+// Dark mode: -800 bg with -600 border, white heading, -100 body text
+export const infoBannerColors: Record<AccentVariant, {
+  bg: string;
+  border: string;
+  heading: string;
+  text: string;
+}> = {
+  blue: {
+    bg: 'bg-blue-50 dark:bg-blue-800',
+    border: 'border border-blue-200 dark:border-blue-600',
+    heading: 'text-blue-800 dark:text-white',
+    text: 'text-blue-700 dark:text-blue-100',
+  },
+  purple: {
+    bg: 'bg-purple-50 dark:bg-purple-800',
+    border: 'border border-purple-200 dark:border-purple-600',
+    heading: 'text-purple-800 dark:text-white',
+    text: 'text-purple-700 dark:text-purple-100',
+  },
+  green: {
+    bg: 'bg-green-50 dark:bg-green-800',
+    border: 'border border-green-200 dark:border-green-600',
+    heading: 'text-green-800 dark:text-white',
+    text: 'text-green-700 dark:text-green-100',
+  },
+  orange: {
+    bg: 'bg-orange-50 dark:bg-orange-800',
+    border: 'border border-orange-200 dark:border-orange-600',
+    heading: 'text-orange-800 dark:text-white',
+    text: 'text-orange-700 dark:text-orange-100',
+  },
+  red: {
+    bg: 'bg-red-50 dark:bg-red-800',
+    border: 'border border-red-200 dark:border-red-600',
+    heading: 'text-red-800 dark:text-white',
+    text: 'text-red-700 dark:text-red-100',
+  },
+  teal: {
+    bg: 'bg-teal-50 dark:bg-teal-800',
+    border: 'border border-teal-200 dark:border-teal-600',
+    heading: 'text-teal-800 dark:text-white',
+    text: 'text-teal-700 dark:text-teal-100',
+  },
+  gray: {
+    bg: 'bg-gray-50 dark:bg-gray-800',
+    border: 'border border-gray-200 dark:border-gray-600',
+    heading: 'text-gray-800 dark:text-white',
+    text: 'text-gray-700 dark:text-gray-100',
+  },
+};
+
+// ============================================================================
+// Icon Circle Colors - For circular icon containers (empty state, features)
+// ============================================================================
+// Used for decorative icon circles in empty states and feature lists.
+// Light mode: -100 bg, dark mode: -800 bg (not -500, for subtlety)
+export const iconCircleColors: Record<AccentVariant, {
+  bg: string;
+  icon: string;
+}> = {
+  blue: {
+    bg: 'bg-blue-100 dark:bg-blue-800',
+    icon: 'text-blue-600 dark:text-blue-300',
+  },
+  purple: {
+    bg: 'bg-purple-100 dark:bg-purple-800',
+    icon: 'text-purple-600 dark:text-purple-300',
+  },
+  green: {
+    bg: 'bg-green-100 dark:bg-green-800',
+    icon: 'text-green-600 dark:text-green-300',
+  },
+  orange: {
+    bg: 'bg-orange-100 dark:bg-orange-800',
+    icon: 'text-orange-600 dark:text-orange-300',
+  },
+  red: {
+    bg: 'bg-red-100 dark:bg-red-800',
+    icon: 'text-red-600 dark:text-red-300',
+  },
+  teal: {
+    bg: 'bg-teal-100 dark:bg-teal-800',
+    icon: 'text-teal-600 dark:text-teal-300',
+  },
+  gray: {
+    bg: 'bg-gray-100 dark:bg-gray-700',
+    icon: 'text-gray-600 dark:text-gray-300',
+  },
+};
+
+// ============================================================================
+// Selected State Colors - For selected/active items in lists and pickers
+// ============================================================================
+// Used for selected items in template pickers, block editors, etc.
+// Light mode: -50 bg with -500 border, dark mode: -800 bg with -400 border
+export const selectedStateColors: Record<AccentVariant, {
+  bg: string;
+  border: string;
+  text: string;
+}> = {
+  purple: {
+    bg: 'bg-purple-50 dark:bg-purple-800',
+    border: 'border-purple-500 dark:border-purple-400',
+    text: 'text-purple-700 dark:text-purple-200',
+  },
+  blue: {
+    bg: 'bg-blue-50 dark:bg-blue-800',
+    border: 'border-blue-500 dark:border-blue-400',
+    text: 'text-blue-700 dark:text-blue-200',
+  },
+  green: {
+    bg: 'bg-green-50 dark:bg-green-800',
+    border: 'border-green-500 dark:border-green-400',
+    text: 'text-green-700 dark:text-green-200',
+  },
+  orange: {
+    bg: 'bg-orange-50 dark:bg-orange-800',
+    border: 'border-orange-500 dark:border-orange-400',
+    text: 'text-orange-700 dark:text-orange-200',
+  },
+  red: {
+    bg: 'bg-red-50 dark:bg-red-800',
+    border: 'border-red-500 dark:border-red-400',
+    text: 'text-red-700 dark:text-red-200',
+  },
+  teal: {
+    bg: 'bg-teal-50 dark:bg-teal-800',
+    border: 'border-teal-500 dark:border-teal-400',
+    text: 'text-teal-700 dark:text-teal-200',
+  },
+  gray: {
+    bg: 'bg-gray-50 dark:bg-gray-700',
+    border: 'border-gray-500 dark:border-gray-400',
+    text: 'text-gray-700 dark:text-gray-200',
+  },
+};
+
+// ============================================================================
+// Soft Background Colors - For Puck components and subtle accents
+// ============================================================================
+// Replaces opacity backgrounds (dark:bg-*/20) with solid colors.
+// Light mode: -100, dark mode: -800 (not -500, for subtlety)
+export const softBgColors: Record<AccentVariant, string> = {
+  purple: 'bg-purple-100 dark:bg-purple-800',
+  blue: 'bg-blue-100 dark:bg-blue-800',
+  green: 'bg-green-100 dark:bg-green-800',
+  orange: 'bg-orange-100 dark:bg-orange-800',
+  red: 'bg-red-100 dark:bg-red-800',
+  teal: 'bg-teal-100 dark:bg-teal-800',
+  gray: 'bg-gray-100 dark:bg-gray-700',
+};
+
+// ============================================================================
+// Very Soft Background Colors - For subtle section backgrounds
+// ============================================================================
+// Similar to softBgColors but with darker dark mode for more subtlety.
+// Light mode: -100 (consistent with system), dark mode: -900 (very subtle)
+export const verySoftBgColors: Record<AccentVariant, string> = {
+  purple: 'bg-purple-100 dark:bg-purple-900',
+  blue: 'bg-blue-100 dark:bg-blue-900',
+  green: 'bg-green-100 dark:bg-green-900',
+  orange: 'bg-orange-100 dark:bg-orange-900',
+  red: 'bg-red-100 dark:bg-red-900',
+  teal: 'bg-teal-100 dark:bg-teal-900',
+  gray: 'bg-gray-100 dark:bg-gray-800',
+};
+
