@@ -32,7 +32,9 @@ interface GetStartedPageClientProps {
 export default function GetStartedPageClient({ content: initialContent }: GetStartedPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
-  const content = (pageContent as unknown as GetStartedPageContent) || initialContent;
+  // Check that pageContent has expected structure before using it
+  const hasValidContent = pageContent && 'paths' in pageContent && 'header' in pageContent;
+  const content = hasValidContent ? (pageContent as unknown as GetStartedPageContent) : initialContent;
 
   // Form state
   const [quoteRef, setQuoteRef] = useState('');

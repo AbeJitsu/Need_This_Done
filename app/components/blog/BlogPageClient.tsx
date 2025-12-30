@@ -23,7 +23,9 @@ interface BlogPageClientProps {
 export default function BlogPageClient({ initialContent, posts }: BlogPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
-  const content = (pageContent as unknown as BlogPageContent) || initialContent;
+  // Check that pageContent has expected structure before using it
+  const hasValidContent = pageContent && 'header' in pageContent && 'emptyState' in pageContent;
+  const content = hasValidContent ? (pageContent as unknown as BlogPageContent) : initialContent;
 
   // Separate featured (most recent) from the rest
   const [featuredPost, ...otherPosts] = posts;

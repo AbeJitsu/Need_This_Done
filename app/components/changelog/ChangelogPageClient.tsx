@@ -114,7 +114,9 @@ function ChangelogCard({ entry }: { entry: ChangelogEntry }) {
 export default function ChangelogPageClient({ initialContent, entries }: ChangelogPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
-  const content = (pageContent as unknown as ChangelogPageContent) || initialContent;
+  // Check that pageContent has expected structure before using it
+  const hasValidContent = pageContent && 'header' in pageContent && 'emptyState' in pageContent;
+  const content = hasValidContent ? (pageContent as unknown as ChangelogPageContent) : initialContent;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">

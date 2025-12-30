@@ -62,7 +62,9 @@ function renderAnswer(answer: string, links?: Array<{ text: string; href: string
 export default function FAQPageClient({ content: initialContent }: FAQPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
-  const content = (pageContent as unknown as FAQPageContent) || initialContent;
+  // Check that pageContent has expected structure before using it
+  const hasValidContent = pageContent && 'items' in pageContent && 'header' in pageContent;
+  const content = hasValidContent ? (pageContent as unknown as FAQPageContent) : initialContent;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">

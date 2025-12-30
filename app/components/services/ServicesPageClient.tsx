@@ -36,7 +36,9 @@ interface ServicesPageClientProps {
 export default function ServicesPageClient({ content: initialContent }: ServicesPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
-  const content = (pageContent as unknown as ServicesPageContent) || initialContent;
+  // Check that pageContent has expected structure before using it
+  const hasValidContent = pageContent && 'header' in pageContent && 'chooseYourPath' in pageContent;
+  const content = hasValidContent ? (pageContent as unknown as ServicesPageContent) : initialContent;
 
   return (
     <ServiceModalProvider>

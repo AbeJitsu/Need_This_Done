@@ -29,7 +29,9 @@ interface HowItWorksPageClientProps {
 export default function HowItWorksPageClient({ content: initialContent }: HowItWorksPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
-  const content = (pageContent as unknown as HowItWorksPageContent) || initialContent;
+  // Check that pageContent has expected structure before using it
+  const hasValidContent = pageContent && 'steps' in pageContent && 'header' in pageContent;
+  const content = hasValidContent ? (pageContent as unknown as HowItWorksPageContent) : initialContent;
   const [step1, ...remainingSteps] = content.steps;
 
   return (

@@ -23,7 +23,9 @@ interface PricingPageClientProps {
 export default function PricingPageClient({ content: initialContent }: PricingPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
-  const content = (pageContent as unknown as PricingPageContent) || initialContent;
+  // Check that pageContent has expected structure before using it
+  const hasValidContent = pageContent && 'tiers' in pageContent && 'header' in pageContent;
+  const content = hasValidContent ? (pageContent as unknown as PricingPageContent) : initialContent;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
