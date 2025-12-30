@@ -108,7 +108,7 @@ if type is_loop_active &>/dev/null && is_loop_active; then
 
   # --------------------------------------------
   # CHECK 2c: Continue Loop
-  # Block exit and re-feed prompt
+  # Block exit and re-feed prompt with specific next task
   # --------------------------------------------
   ITERATION=$(get_iteration_count)
   ELAPSED=$(get_elapsed_formatted)
@@ -116,15 +116,36 @@ if type is_loop_active &>/dev/null && is_loop_active; then
   BLOCKED=$(count_blocked_tasks)
   IN_PROG=$(count_in_progress_tasks)
 
+  # Get the specific next task to work on
+  CURRENT_TASK=$(get_current_task)
+  NEXT_READY=$(get_first_ready_task)
+
   echo "" >&2
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
-  echo "🔄 LOOP CONTINUING - Iteration $ITERATION ($ELAPSED)" >&2
+  echo "🔄 LOOP ACTIVE - Iteration $ITERATION ($ELAPSED)" >&2
   echo "   Tasks: $READY ready, $IN_PROG in progress, $BLOCKED blocked" >&2
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
   echo "" >&2
-  echo "Continue working on TODO.md. Read TODO.md to find your next task." >&2
-  echo "Use TDD: write failing test first, then make it pass." >&2
-  echo "Run /dac after completing each task." >&2
+
+  # Show the specific next action
+  if [[ -n "$CURRENT_TASK" ]]; then
+    echo "📌 CONTINUE: $CURRENT_TASK" >&2
+    echo "" >&2
+    echo "This task is in progress. Complete it using TDD:" >&2
+    echo "  1. Write/run failing test" >&2
+    echo "  2. Make it pass" >&2
+    echo "  3. Mark [x] in TODO.md and run /dac" >&2
+  elif [[ -n "$NEXT_READY" ]]; then
+    echo "📌 NEXT TASK: $NEXT_READY" >&2
+    echo "" >&2
+    echo "Mark this task [→] in TODO.md and start with TDD:" >&2
+    echo "  1. Write a failing test first" >&2
+    echo "  2. Make it pass" >&2
+    echo "  3. Mark [x] and run /dac when done" >&2
+  else
+    echo "No tasks found. Check TODO.md for blocked [!] items." >&2
+  fi
+
   echo "" >&2
 
   # Block exit - Claude will see this message and continue

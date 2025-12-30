@@ -33,7 +33,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 **Auto-Loop System Improvements**
 [x] Create unit tests for loop-state.json management
-[ ] Add post-Stop hook that shows next task when loop active
+[x] Add post-Stop hook that shows next task when loop active
 [ ] Update session-start hook to reinject auto-loop instructions
 [ ] Document auto-loop testing results
 
