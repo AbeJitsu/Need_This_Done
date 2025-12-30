@@ -60,7 +60,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 <!-- Move items to "In Progress" section when starting work -->
 
 **Admin Workflows**
-- [ ] Inventory management interface
+- [x] Inventory management interface (11 E2E tests passing)
 - [ ] Bulk product import/export
 - [ ] Order status updates & fulfillment tracking
 
