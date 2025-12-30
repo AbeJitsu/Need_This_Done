@@ -114,6 +114,15 @@ async function enableEditMode(page: Page) {
   await editToggle.waitFor({ state: 'visible', timeout: 10000 });
   await editToggle.click();
   await page.getByText('Edit Mode', { exact: true }).waitFor({ state: 'visible', timeout: 5000 });
+
+  // Wait for content to be loaded in the InlineEditContext
+  // This ensures clicking on sections will work properly
+  const sidebar = page.locator('[data-testid="admin-sidebar"]');
+  await sidebar.waitFor({ state: 'visible', timeout: 5000 });
+  await page.waitForFunction(
+    () => document.querySelector('[data-content-loaded="true"]') !== null,
+    { timeout: 5000 }
+  );
 }
 
 async function findInputWithValue(

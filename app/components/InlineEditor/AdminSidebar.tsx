@@ -780,6 +780,7 @@ export default function AdminSidebar() {
     // h-[calc(100vh-2.5rem)] ensures sidebar doesn't extend beyond viewport
     <div
       data-testid="admin-sidebar"
+      data-content-loaded={pageContent ? 'true' : 'false'}
       className={`
         fixed top-10 right-0 w-96 h-[calc(100vh-2.5rem)] z-50
         ${cardBgColors.base} ${cardBorderColors.light}

@@ -29,10 +29,13 @@ export default function EditableSection({
   const handleClick = (e: React.MouseEvent) => {
     if (!isEditMode) return;
 
+    // Don't allow selection until content is loaded
+    if (!pageContent) return;
+
     e.stopPropagation();
 
     // Get section content from page content
-    const sectionContent = pageContent?.[sectionKey];
+    const sectionContent = pageContent[sectionKey];
     const content = typeof sectionContent === 'object' && sectionContent !== null
       ? (sectionContent as Record<string, unknown>)
       : { _value: sectionContent };
