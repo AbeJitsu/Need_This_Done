@@ -173,9 +173,9 @@ fi
 
 # Current task from TODO.md - info only
 if [[ -f "$TODO_FILE" ]]; then
-  IN_PROGRESS=$(grep -E '^\[→\].*\*\*' "$TODO_FILE" | head -1)
+  IN_PROGRESS=$(grep -v '^<!--' "$TODO_FILE" | grep -E '^-?\s*\[→\]' | head -1)
   if [[ -n "$IN_PROGRESS" ]]; then
-    TASK_NAME=$(echo "$IN_PROGRESS" | sed 's/\[→\] \*\*\([^*]*\)\*\*.*/\1/')
+    TASK_NAME=$(echo "$IN_PROGRESS" | sed 's/.*\[→\] //' | sed 's/\*\*//g')
     echo "📌 Task: $TASK_NAME" >&2
   fi
 fi
