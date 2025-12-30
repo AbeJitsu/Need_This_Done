@@ -22,7 +22,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Email (Resend) | ✅ Working | hello@needthisdone.com verified |
 | Puck Page Builder | ✅ Active | Visual page builder with TipTap WYSIWYG editor |
 | **Inline Editing** | ✅ **VALIDATED** | 12 pages, 52 field tests, click-to-edit working |
-| **Auto-Loop System** | ✅ **IMPROVED** | lib/loop-state.ts, 10 unit tests, enhanced hooks |
+| **Auto-Loop System** | ✅ **WORKING** | Task parsing fixed, stop hook blocks correctly, /auto-loop reliable |
 
 ---
 
@@ -30,11 +30,11 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[→] **Auto-Loop System (TOP PRIORITY)** - Make /auto-loop work reliably for hours of autonomous work
-- [ ] Fix task parsing regex to match TODO.md format
-- [ ] Verify stop hook blocks exit correctly (exit code 2)
-- [ ] Test end-to-end: invoke skill → work → block → continue
-- [ ] Ensure time limit and iteration safety work
+[x] **Auto-Loop System (TOP PRIORITY)** - Make /auto-loop work reliably for hours of autonomous work
+- [x] Fix task parsing regex to match TODO.md format
+- [x] Verify stop hook blocks exit correctly (exit code 2)
+- [x] Test end-to-end: invoke skill → work → block → continue
+- [x] Ensure time limit and iteration safety work
 
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
 
