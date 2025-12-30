@@ -200,8 +200,8 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 - [x] Customer reviews & ratings
 
 **Platform Simplicity Layer**
-- [x] Phone-first wizard (answer 5 questions → done) ✅ BUILT
-- [ ] Pre-built page sections (drag whole sections, not components)
+- [ ] Phone-first wizard (answer 5 questions → done) - needs more testing
+- [x] Pre-built page sections (drag whole sections, not components)
 - [ ] Template marketplace (share/sell templates)
 
 ---
@@ -209,6 +209,15 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Pre-built Page Sections** (Dec 30, 2025)
+- Section library with 15+ ready-to-use sections organized by category
+- Categories: Hero, Features, Testimonials, Pricing, CTA, Content, FAQ, Stats, Team, Contact
+- Each section is a complete Puck-compatible component with sensible defaults
+- SectionPicker component with search, category tabs, and preview cards
+- Helper functions: getAllSections, getSectionsByCategory, searchSections
+- 14 E2E tests + 5 Storybook stories
+- Context: lib/sections/index.ts, components/SectionPicker.tsx
 
 **Customer Reviews & Ratings** (Dec 30, 2025)
 - Supabase migration with reviews, review_votes, review_reports tables
@@ -424,4 +433,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Customer Reviews: ratings, voting, moderation*
+*Last Updated: December 30, 2025 - Pre-built Sections: library, picker, categories*
