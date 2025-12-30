@@ -71,12 +71,12 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  All 5 marketing pages migrated to 1-line hook                          │
 │  lib/editable-routes.ts maps routes to slugs                            │
 │                                                                         │
-│  Phase 3: Auto Route Detection ← NEXT                                   │
+│  Phase 3: Auto Route Detection ✅ DONE                                  │
 │  ────────────────────────────────                                       │
 │  useEditableContent() auto-detects slug from URL                        │
-│  New page = just call hook, no config needed                            │
+│  All 5 pages migrated to simpler API (no explicit slug)                 │
 │                                                                         │
-│  Phase 4: Universal Click-to-Edit                                       │
+│  Phase 4: Universal Click-to-Edit ← NEXT                                │
 │  ─────────────────────────────────                                      │
 │  DOM walking + content JSON matching                                    │
 │  Click ANY text → system finds content path → edit                      │
@@ -90,10 +90,10 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-Phase 3 Sub-tasks (Auto Route Detection):
-- [ ] Add `usePathname()` to useEditableContent for auto-detection
-- [ ] Remove slug parameter requirement (infer from route)
-- [ ] Test with new page that doesn't pass slug
+Phase 3 Sub-tasks (Auto Route Detection): ✅ DONE
+- [x] Add `usePathname()` to useEditableContent for auto-detection
+- [x] Remove slug parameter requirement (infer from route)
+- [x] Test with new page that doesn't pass slug (8 E2E tests passing)
 
 Phase 4 Sub-tasks (Universal Click-to-Edit):
 - [ ] Create content path mapper (DOM text → JSON path)
