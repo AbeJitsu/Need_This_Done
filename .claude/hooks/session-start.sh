@@ -49,13 +49,14 @@ if [[ -f "$LOOP_STATE_FILE" ]]; then
     ITERATIONS=$(jq -r '.iterationCount // 0' "$LOOP_STATE_FILE")
     COMPLETED=$(jq -r '.tasksCompleted // 0' "$LOOP_STATE_FILE")
 
-    # Get current task info
+    # Get current task info using helper functions (DRY)
     TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
     CURRENT_TASK=""
     NEXT_READY=""
     if [[ -f "$TODO_FILE" ]]; then
-      CURRENT_TASK=$(grep -E '^\[→\]' "$TODO_FILE" | head -1 | sed 's/\[→\] //')
-      NEXT_READY=$(grep -E '^\[ \]' "$TODO_FILE" | head -1 | sed 's/\[ \] //')
+      # Use helper functions for consistent pattern matching
+      CURRENT_TASK=$(get_current_task 2>/dev/null || echo "")
+      NEXT_READY=$(get_first_ready_task 2>/dev/null || echo "")
     fi
 
     echo ""
@@ -109,6 +110,7 @@ fi
 
 # ============================================
 # NORMAL TASK STATUS (no active loop)
+# Use helper functions for DRY pattern matching
 # ============================================
 TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
 
@@ -116,23 +118,23 @@ if [ ! -f "$TODO_FILE" ]; then
   exit 0
 fi
 
-# Parse task markers from TODO.md
-IN_PROGRESS=$(grep -E '^\[→\].*\*\*' "$TODO_FILE" | head -1)
-READY_TASKS=$(grep -E '^\[ \].*\*\*' "$TODO_FILE" 2>/dev/null) || true
-# Count lines directly - wc -l handles empty input correctly
-if [[ -n "$READY_TASKS" ]]; then
-  READY_COUNT=$(echo "$READY_TASKS" | wc -l | tr -d ' ')
+# Use helper functions if available, fall back to direct grep
+if type -t get_current_task >/dev/null 2>&1; then
+  CURRENT_TASK=$(get_current_task 2>/dev/null || echo "")
+  READY_COUNT=$(count_ready_tasks 2>/dev/null || echo "0")
+  FIRST_READY=$(get_first_ready_task 2>/dev/null || echo "")
 else
-  READY_COUNT=0
+  # Fallback patterns that match loop-helper.sh format
+  CURRENT_TASK=$(grep -v '^<!--' "$TODO_FILE" 2>/dev/null | grep -E '^-?\s*\[→\]' | head -1 | sed 's/.*\[→\] //' | sed 's/\*\*//g')
+  READY_COUNT=$(grep -v '^<!--' "$TODO_FILE" 2>/dev/null | grep -cE '^-?\s*\[ \]' 2>/dev/null || echo "0")
+  FIRST_READY=$(grep -v '^<!--' "$TODO_FILE" 2>/dev/null | grep -E '^-?\s*\[ \]' | head -1 | sed 's/.*\[ \] //')
 fi
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-if [[ -n "$IN_PROGRESS" ]]; then
-  # Extract task name and description
-  TASK_NAME=$(echo "$IN_PROGRESS" | sed 's/\[→\] \*\*\([^*]*\)\*\*.*/\1/')
-  echo "CURRENT TASK: $TASK_NAME"
+if [[ -n "$CURRENT_TASK" ]]; then
+  echo "CURRENT TASK: $CURRENT_TASK"
 else
   echo "NO TASK IN PROGRESS"
 fi
@@ -141,10 +143,9 @@ echo "   $READY_COUNT tasks ready in TODO.md"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Show ready tasks if any
-if [[ "$READY_COUNT" -gt 0 ]] && [[ -z "$IN_PROGRESS" ]]; then
-  echo "Ready tasks:"
-  echo "$READY_TASKS" | head -3 | sed 's/\[ \] \*\*/  → /g' | sed 's/\*\*.*//g'
+# Show first ready task if no current task
+if [[ "$READY_COUNT" -gt 0 ]] && [[ -z "$CURRENT_TASK" ]] && [[ -n "$FIRST_READY" ]]; then
+  echo "Next ready: $FIRST_READY"
   echo ""
 fi
 

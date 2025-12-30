@@ -7,10 +7,11 @@ import * as path from 'path';
 // What: Manages the auto-loop state file (.claude/loop-state.json)
 // Why: Provides a clean API for reading/writing loop state
 // How: Simple file operations with JSON parsing
+// NOTE: startTime uses Unix seconds (not milliseconds) for bash compatibility
 
 export interface LoopState {
   active: boolean;
-  startTime: number;
+  startTime: number; // Unix seconds (not milliseconds)
   maxHours: number;
   maxConsecutiveFailures: number;
   iterationCount: number;
@@ -21,7 +22,7 @@ export interface LoopState {
 
 const DEFAULT_STATE: LoopState = {
   active: true,
-  startTime: Date.now(),
+  startTime: Math.floor(Date.now() / 1000), // Unix seconds
   maxHours: 5,
   maxConsecutiveFailures: 3,
   iterationCount: 0,
@@ -58,7 +59,7 @@ export function writeLoopState(state: LoopState): void {
 export function startLoop(): LoopState {
   const state: LoopState = {
     ...DEFAULT_STATE,
-    startTime: Date.now(),
+    startTime: Math.floor(Date.now() / 1000), // Unix seconds
   };
   writeLoopState(state);
   return state;
@@ -96,19 +97,22 @@ export function isLoopActive(): boolean {
   if (!state) return false;
   if (!state.active) return false;
 
-  // Check if time limit exceeded
-  const elapsed = Date.now() - state.startTime;
-  const maxMs = state.maxHours * 3600000;
+  // Check if time limit exceeded (times in seconds)
+  const now = Math.floor(Date.now() / 1000);
+  const elapsed = now - state.startTime;
+  const maxSeconds = state.maxHours * 3600;
 
-  return elapsed < maxMs;
+  return elapsed < maxSeconds;
 }
 
 export function getTimeRemaining(): number {
   const state = readLoopState();
   if (!state) return 0;
 
-  const elapsed = Date.now() - state.startTime;
-  const maxMs = state.maxHours * 3600000;
+  // Returns seconds remaining (times in seconds for bash compatibility)
+  const now = Math.floor(Date.now() / 1000);
+  const elapsed = now - state.startTime;
+  const maxSeconds = state.maxHours * 3600;
 
-  return Math.max(0, maxMs - elapsed);
+  return Math.max(0, maxSeconds - elapsed);
 }

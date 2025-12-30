@@ -75,6 +75,28 @@ if type is_loop_active &>/dev/null && is_loop_active; then
   fi
 
   # --------------------------------------------
+  # CHECK 2a2: Max Iterations (safety limit)
+  # Prevents runaway loops - 500 iterations is ~8h at 1min/iteration
+  # --------------------------------------------
+  MAX_ITERATIONS=500
+  CURRENT_ITERATIONS=$(get_iteration_count 2>/dev/null || echo "0")
+  if [[ "$CURRENT_ITERATIONS" -ge "$MAX_ITERATIONS" ]]; then
+    echo "" >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo "⏸️  LOOP PAUSED: MAX ITERATIONS ($MAX_ITERATIONS)" >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo "" >&2
+    generate_summary >&2
+    echo "" >&2
+    echo "State saved. Run /auto-loop to resume." >&2
+    echo "" >&2
+
+    # Mark loop as paused (not deleted - can resume)
+    end_loop
+    exit 0
+  fi
+
+  # --------------------------------------------
   # CHECK 2b: All Tasks Complete
   # --------------------------------------------
   if all_tasks_complete; then
