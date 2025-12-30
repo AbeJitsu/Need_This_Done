@@ -186,7 +186,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 
 - [x] CourseCard component (course preview/listing)
 - [x] LessonPlayer component (video + content)
-- [ ] QuizBlock component (interactive quizzes)
+- [x] QuizBlock component (interactive quizzes)
 - [ ] ProgressBar component (course progress tracking)
 - [ ] Certificate component (completion certificates)
 - [ ] Enrollment system (paid/free courses)
