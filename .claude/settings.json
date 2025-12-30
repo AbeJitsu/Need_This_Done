@@ -35,9 +35,22 @@
       "Bash(npm run dev:*)",
       "Bash(npm run build:*)",
       "Bash(npm run lint:*)",
+      "Bash(npm run storybook:*)",
       "Bash(npx playwright:*)",
       "Bash(npx vitest:*)",
-      "Bash(cd app && npm run:*)"
+      "Bash(cd app && npm run:*)",
+      "Bash(SKIP_WEBSERVER=true npx playwright:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(pwd:*)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Glob",
+      "Grep",
+      "TodoWrite",
+      "NotebookEdit"
     ],
     "deny": [
       "Bash(git push origin main:*)",

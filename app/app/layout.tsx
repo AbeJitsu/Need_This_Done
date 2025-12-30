@@ -12,7 +12,7 @@ import { ToastProvider } from '@/context/ToastContext';
 import { InlineEditProvider } from '@/context/InlineEditContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
-import { AdminSidebar, AdminSidebarToggle, EditModeBar } from '@/components/InlineEditor';
+import { AdminSidebar, AdminSidebarToggle, EditModeBar, UniversalClickHandler } from '@/components/InlineEditor';
 
 // ============================================================================
 // Force Dynamic Rendering for All Routes
@@ -154,6 +154,7 @@ export default function RootLayout({
                     {/* Inline editing - floating toggle button + sidebar for admins */}
                     <AdminSidebarToggle />
                     <AdminSidebar />
+                    <UniversalClickHandler />
                   </InlineEditProvider>
                 </ToastProvider>
               </ServiceModalProvider>

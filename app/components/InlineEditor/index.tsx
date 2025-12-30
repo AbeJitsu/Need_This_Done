@@ -9,6 +9,9 @@ export { default as EditableSection } from './EditableSection';
 export { default as EditableItem } from './EditableItem';
 export { default as EditModeBar } from './EditModeBar';
 
+// Universal click-to-edit (Phase 4 - click any text to edit)
+export { default as UniversalClickHandler } from './UniversalClickHandler';
+
 // Puck page rendering (for pages built with Puck visual builder)
 export { default as PuckPageRenderer } from './PuckPageRenderer';
 

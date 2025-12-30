@@ -22,7 +22,7 @@ export default function EditableSection({
   children,
   className = '',
 }: EditableSectionProps) {
-  const { isEditMode, selectedSection, selectSection, pageContent } = useInlineEdit();
+  const { isEditMode, selectedSection, selectSection, pageContent, setSidebarOpen } = useInlineEdit();
 
   const isSelected = selectedSection?.sectionKey === sectionKey;
 
@@ -44,6 +44,8 @@ export default function EditableSection({
     };
 
     selectSection(selection);
+    // Auto-open sidebar when section is clicked (Phase 4 enhancement)
+    setSidebarOpen(true);
   };
 
   // In edit mode, wrap with interactive layer

@@ -285,6 +285,36 @@ export default function AdminSidebar() {
       );
     }
 
+    // Boolean toggle
+    if (typeof value === 'boolean' || fieldName === 'popular' || fieldName === 'enabled') {
+      const boolValue = typeof value === 'boolean' ? value : value === 'true';
+      return (
+        <div key={path} className="mb-3 flex items-center justify-between">
+          <label className={`text-xs font-medium ${formInputColors.label}`}>
+            {label}
+          </label>
+          <button
+            type="button"
+            onClick={() => handleItemFieldChange(path, !boolValue)}
+            className={`
+              relative inline-flex h-6 w-11 items-center rounded-full transition-colors
+              ${boolValue ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'}
+            `}
+            role="switch"
+            aria-checked={boolValue}
+            aria-label={`Toggle ${label}`}
+          >
+            <span
+              className={`
+                inline-block h-4 w-4 transform rounded-full bg-white transition-transform
+                ${boolValue ? 'translate-x-6' : 'translate-x-1'}
+              `}
+            />
+          </button>
+        </div>
+      );
+    }
+
     // Number input
     if (typeof value === 'number' || fieldName === 'number') {
       return (
@@ -417,6 +447,36 @@ export default function AdminSidebar() {
       );
     }
 
+    // Boolean toggle
+    if (typeof value === 'boolean' || fieldName === 'popular' || fieldName === 'enabled') {
+      const boolValue = typeof value === 'boolean' ? value : value === 'true';
+      return (
+        <div key={path} className="mb-3 flex items-center justify-between">
+          <label className={`text-xs font-medium ${formInputColors.label}`}>
+            {label}
+          </label>
+          <button
+            type="button"
+            onClick={() => handleFieldChange(path, !boolValue)}
+            className={`
+              relative inline-flex h-6 w-11 items-center rounded-full transition-colors
+              ${boolValue ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'}
+            `}
+            role="switch"
+            aria-checked={boolValue}
+            aria-label={`Toggle ${label}`}
+          >
+            <span
+              className={`
+                inline-block h-4 w-4 transform rounded-full bg-white transition-transform
+                ${boolValue ? 'translate-x-6' : 'translate-x-1'}
+              `}
+            />
+          </button>
+        </div>
+      );
+    }
+
     // Number input
     if (typeof value === 'number' || fieldName === 'number') {
       return (
@@ -458,6 +518,80 @@ export default function AdminSidebar() {
     );
   };
 
+  // Array operations: add, delete, reorder
+  const handleAddArrayItem = (arrayPath: string, template: unknown) => {
+    if (!selectedSection || !pageContent) return;
+    const sectionContent = pageContent[selectedSection.sectionKey];
+    const pathParts = arrayPath.split('.');
+    let arr: unknown[] = sectionContent as unknown[];
+
+    // Navigate to the array
+    for (const part of pathParts) {
+      if (arr === null || arr === undefined) break;
+      if (Array.isArray(arr)) {
+        arr = arr[parseInt(part, 10)] as unknown[];
+      } else if (typeof arr === 'object') {
+        arr = (arr as Record<string, unknown>)[part] as unknown[];
+      }
+    }
+
+    if (Array.isArray(arr)) {
+      const newArr = [...arr, template];
+      handleFieldChange(arrayPath, newArr);
+    }
+  };
+
+  const handleDeleteArrayItem = (arrayPath: string, index: number) => {
+    if (!selectedSection || !pageContent) return;
+    if (!confirm('Delete this item?')) return;
+
+    const sectionContent = pageContent[selectedSection.sectionKey];
+    const pathParts = arrayPath.split('.');
+    let arr: unknown[] = sectionContent as unknown[];
+
+    // Navigate to the array
+    for (const part of pathParts) {
+      if (arr === null || arr === undefined) break;
+      if (Array.isArray(arr)) {
+        arr = arr[parseInt(part, 10)] as unknown[];
+      } else if (typeof arr === 'object') {
+        arr = (arr as Record<string, unknown>)[part] as unknown[];
+      }
+    }
+
+    if (Array.isArray(arr)) {
+      const newArr = arr.filter((_, i) => i !== index);
+      handleFieldChange(arrayPath, newArr);
+    }
+  };
+
+  const handleMoveArrayItem = (arrayPath: string, fromIndex: number, direction: 'up' | 'down') => {
+    if (!selectedSection || !pageContent) return;
+
+    const sectionContent = pageContent[selectedSection.sectionKey];
+    const pathParts = arrayPath.split('.');
+    let arr: unknown[] = sectionContent as unknown[];
+
+    // Navigate to the array
+    for (const part of pathParts) {
+      if (arr === null || arr === undefined) break;
+      if (Array.isArray(arr)) {
+        arr = arr[parseInt(part, 10)] as unknown[];
+      } else if (typeof arr === 'object') {
+        arr = (arr as Record<string, unknown>)[part] as unknown[];
+      }
+    }
+
+    if (Array.isArray(arr)) {
+      const toIndex = direction === 'up' ? fromIndex - 1 : fromIndex + 1;
+      if (toIndex < 0 || toIndex >= arr.length) return;
+
+      const newArr = [...arr];
+      [newArr[fromIndex], newArr[toIndex]] = [newArr[toIndex], newArr[fromIndex]];
+      handleFieldChange(arrayPath, newArr);
+    }
+  };
+
   // Recursively render fields for any object structure
   const renderFields = (obj: unknown, basePath: string = '', depth: number = 0): React.ReactNode => {
     if (obj === null || obj === undefined) return null;
@@ -468,15 +602,44 @@ export default function AdminSidebar() {
       return renderPrimitiveInput(basePath, obj, fieldName);
     }
 
-    // Array - show as clickable items that zoom in
+    // Array - show as clickable items with add/delete/reorder
     if (Array.isArray(obj)) {
       const itemLabel = basePath.split('.').pop() || 'items';
       const singularLabel = itemLabel.endsWith('s') ? itemLabel.slice(0, -1) : itemLabel;
 
+      // Create template for new items based on first item structure
+      const getItemTemplate = () => {
+        if (obj.length === 0) return {};
+        const first = obj[0];
+        if (typeof first !== 'object' || first === null) return '';
+        // Create empty template with same keys
+        const template: Record<string, unknown> = {};
+        for (const key of Object.keys(first as Record<string, unknown>)) {
+          const val = (first as Record<string, unknown>)[key];
+          if (typeof val === 'string') template[key] = '';
+          else if (typeof val === 'number') template[key] = 0;
+          else if (typeof val === 'boolean') template[key] = false;
+          else if (Array.isArray(val)) template[key] = [];
+          else template[key] = null;
+        }
+        return template;
+      };
+
       return (
         <div key={basePath} className="mb-4">
-          <div className={`text-xs font-medium ${formInputColors.label} mb-2`}>
-            {fieldLabels[itemLabel] || itemLabel} ({obj.length})
+          <div className={`flex items-center justify-between text-xs font-medium ${formInputColors.label} mb-2`}>
+            <span>{fieldLabels[itemLabel] || itemLabel} ({obj.length})</span>
+            <button
+              type="button"
+              onClick={() => handleAddArrayItem(basePath, getItemTemplate())}
+              className={`
+                flex items-center gap-1 px-2 py-1 rounded text-xs font-medium
+                ${accentColors.green.bg} text-white hover:opacity-90 transition-opacity
+              `}
+              aria-label={`Add new ${singularLabel}`}
+            >
+              <span aria-hidden="true">+</span> Add
+            </button>
           </div>
           <div className="space-y-2">
             {obj.map((item, index) => {
@@ -490,40 +653,87 @@ export default function AdminSidebar() {
                 : String(item);
 
               return (
-                <button
+                <div
                   key={`${basePath}.${index}`}
-                  type="button"
-                  onClick={() => handleDrillDown(`${basePath}.${index}`, `${singularLabel} ${index + 1}`)}
                   className={`
-                    w-full text-left px-3 py-2 rounded-lg
+                    relative rounded-lg
                     bg-gray-50 dark:bg-gray-800/50
-                    hover:bg-gray-100 dark:hover:bg-gray-700
                     border border-gray-200 dark:border-gray-700
                     hover:border-blue-300 dark:hover:border-blue-600
                     transition-all duration-150 group
                   `}
                 >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className={`text-xs ${formInputColors.helper}`}>
-                        {singularLabel} {index + 1}
-                      </div>
-                      <div className={`text-sm font-medium ${headingColors.secondary} truncate max-w-[240px]`}>
-                        {String(itemPreview)}
-                      </div>
-                    </div>
-                    <svg
-                      className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                  {/* Reorder and Delete buttons */}
+                  <div className="absolute right-2 top-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); handleMoveArrayItem(basePath, index, 'up'); }}
+                      disabled={index === 0}
+                      className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-30"
+                      aria-label="Move up"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); handleMoveArrayItem(basePath, index, 'down'); }}
+                      disabled={index === obj.length - 1}
+                      className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-30"
+                      aria-label="Move down"
+                    >
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); handleDeleteArrayItem(basePath, index); }}
+                      className="p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400"
+                      aria-label="Delete item"
+                    >
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
                   </div>
-                </button>
+
+                  {/* Clickable content */}
+                  <button
+                    type="button"
+                    onClick={() => handleDrillDown(`${basePath}.${index}`, `${singularLabel} ${index + 1}`)}
+                    className="w-full text-left px-3 py-2"
+                  >
+                    <div className="flex items-center justify-between pr-20">
+                      <div>
+                        <div className={`text-xs ${formInputColors.helper}`}>
+                          {singularLabel} {index + 1}
+                        </div>
+                        <div className={`text-sm font-medium ${headingColors.secondary} truncate max-w-[180px]`}>
+                          {String(itemPreview)}
+                        </div>
+                      </div>
+                      <svg
+                        className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </button>
+                </div>
               );
             })}
+
+            {/* Empty state */}
+            {obj.length === 0 && (
+              <div className={`text-center py-4 text-sm ${formInputColors.helper}`}>
+                No items yet. Click "Add" to create one.
+              </div>
+            )}
           </div>
         </div>
       );
@@ -553,6 +763,7 @@ export default function AdminSidebar() {
     // top-10 (40px) accounts for EditModeBar height so sidebar header is below it
     // h-[calc(100vh-2.5rem)] ensures sidebar doesn't extend beyond viewport
     <div
+      data-testid="admin-sidebar"
       className={`
         fixed top-10 right-0 w-96 h-[calc(100vh-2.5rem)] z-50
         ${cardBgColors.base} ${cardBorderColors.light}
@@ -590,43 +801,147 @@ export default function AdminSidebar() {
       <div className="flex-1 overflow-y-auto p-4">
         {selectedItem ? (
           // Item Editor View (clicked on a specific card/item)
-          <div>
-            {/* Breadcrumb navigation */}
-            <div className="mb-4">
-              <button
-                type="button"
-                onClick={handleNavigateUp}
-                className={`
-                  flex items-center gap-2 text-sm font-medium
-                  ${accentColors.blue.text} hover:underline
-                `}
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                All Sections
-              </button>
-            </div>
+          (() => {
+            // Get array info for operations
+            const sectionContent = pageContent?.[selectedItem.sectionKey];
+            const array = sectionContent && typeof sectionContent === 'object'
+              ? (sectionContent as Record<string, unknown>)[selectedItem.arrayField]
+              : null;
+            const arrayLength = Array.isArray(array) ? array.length : 0;
+            const itemIndex = selectedItem.index;
 
-            {/* Breadcrumb path */}
-            <div className="pb-3 mb-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-1">
-                <span>{sectionLabels[selectedItem.sectionKey] || selectedItem.sectionKey}</span>
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-                <span className="text-purple-600 dark:text-purple-400 font-medium">
-                  {selectedItem.label}
-                </span>
+            // Handler functions for item-level array operations
+            const handleItemDelete = () => {
+              if (!confirm('Delete this item?')) return;
+              if (!pageContent || !Array.isArray(array)) return;
+              const newArr = array.filter((_, i) => i !== itemIndex);
+              updateField(selectedItem.sectionKey, selectedItem.arrayField, newArr);
+              clearItemSelection(); // Go back to section list
+            };
+
+            const handleItemMove = (direction: 'up' | 'down') => {
+              if (!pageContent || !Array.isArray(array)) return;
+              const toIndex = direction === 'up' ? itemIndex - 1 : itemIndex + 1;
+              if (toIndex < 0 || toIndex >= arrayLength) return;
+              const newArr = [...array];
+              [newArr[itemIndex], newArr[toIndex]] = [newArr[toIndex], newArr[itemIndex]];
+              updateField(selectedItem.sectionKey, selectedItem.arrayField, newArr);
+            };
+
+            const handleItemAdd = () => {
+              if (!pageContent || !Array.isArray(array)) return;
+              // Create template from first item or empty object
+              let template: unknown = {};
+              if (array.length > 0) {
+                const first = array[0];
+                if (typeof first === 'object' && first !== null) {
+                  template = {};
+                  for (const key of Object.keys(first as Record<string, unknown>)) {
+                    const val = (first as Record<string, unknown>)[key];
+                    if (typeof val === 'string') (template as Record<string, unknown>)[key] = '';
+                    else if (typeof val === 'number') (template as Record<string, unknown>)[key] = 0;
+                    else if (typeof val === 'boolean') (template as Record<string, unknown>)[key] = false;
+                    else if (Array.isArray(val)) (template as Record<string, unknown>)[key] = [];
+                    else (template as Record<string, unknown>)[key] = null;
+                  }
+                }
+              }
+              const newArr = [...array, template];
+              updateField(selectedItem.sectionKey, selectedItem.arrayField, newArr);
+            };
+
+            return (
+              <div>
+                {/* Breadcrumb navigation */}
+                <div className="mb-4">
+                  <button
+                    type="button"
+                    onClick={handleNavigateUp}
+                    className={`
+                      flex items-center gap-2 text-sm font-medium
+                      ${accentColors.blue.text} hover:underline
+                    `}
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    All Sections
+                  </button>
+                </div>
+
+                {/* Breadcrumb path */}
+                <div className="pb-3 mb-4 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-1">
+                    <span>{sectionLabels[selectedItem.sectionKey] || selectedItem.sectionKey}</span>
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <span className="text-purple-600 dark:text-purple-400 font-medium">
+                      {selectedItem.label}
+                    </span>
+                  </div>
+                  <h3 className={`font-medium ${headingColors.primary}`}>
+                    {selectedItem.label}
+                  </h3>
+                </div>
+
+                {/* Array Operations Bar */}
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleItemMove('up')}
+                      disabled={itemIndex === 0}
+                      className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 transition-colors"
+                      aria-label="Move up"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleItemMove('down')}
+                      disabled={itemIndex === arrayLength - 1}
+                      className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 transition-colors"
+                      aria-label="Move down"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleItemAdd}
+                      className={`
+                        flex items-center gap-1 px-2 py-1 rounded text-xs font-medium
+                        ${accentColors.green.bg} text-white hover:opacity-90 transition-opacity
+                      `}
+                      aria-label="Add new item"
+                    >
+                      <span aria-hidden="true">+</span> Add
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleItemDelete}
+                      className="flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-red-500 text-white hover:opacity-90 transition-opacity"
+                      aria-label="Delete item"
+                    >
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
+                </div>
+
+                {/* Item fields */}
+                {renderItemFields(selectedItem.content)}
               </div>
-              <h3 className={`font-medium ${headingColors.primary}`}>
-                {selectedItem.label}
-              </h3>
-            </div>
-
-            {/* Item fields */}
-            {renderItemFields(selectedItem.content)}
-          </div>
+            );
+          })()
         ) : selectedSection ? (
           // Section Editor View
           <div>

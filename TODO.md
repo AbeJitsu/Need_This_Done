@@ -76,11 +76,11 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  useEditableContent() auto-detects slug from URL                        │
 │  All 5 pages migrated to simpler API (no explicit slug)                 │
 │                                                                         │
-│  Phase 4: Universal Click-to-Edit ← NEXT                                │
+│  Phase 4: Universal Click-to-Edit ✅ DONE                               │
 │  ─────────────────────────────────                                      │
-│  DOM walking + content JSON matching                                    │
+│  content-path-mapper.ts + useUniversalClick hook                        │
 │  Click ANY text → system finds content path → edit                      │
-│  No wrappers needed                                                     │
+│  27 E2E tests, all property types, array operations                     │
 │                                                                         │
 │  Phase 5: Zero-Config Pages                                             │
 │  ──────────────────────────                                             │
@@ -95,11 +95,32 @@ Phase 3 Sub-tasks (Auto Route Detection): ✅ DONE
 - [x] Remove slug parameter requirement (infer from route)
 - [x] Test with new page that doesn't pass slug (8 E2E tests passing)
 
-Phase 4 Sub-tasks (Universal Click-to-Edit):
-- [ ] Create content path mapper (DOM text → JSON path)
-- [ ] Add global click handler for edit mode
-- [ ] Walk up DOM tree to find editable boundary
-- [ ] Match clicked text to content schema
+Phase 4 Sub-tasks (Universal Click-to-Edit): ✅ DONE
+
+**4A. Content Path Discovery** ✅
+- [x] Create lib/content-path-mapper.ts (recursive JSON search)
+- [x] Add global click handler for edit mode (useUniversalClick hook)
+- [x] Walk up DOM tree to find editable boundary
+- [x] Match clicked element to content schema path
+- [x] 16 unit tests for content-path-mapper
+
+**4B. Property Editor (All Field Types)** ✅
+- [x] Text fields (title, description, tagline)
+- [x] Color pickers (color: 'blue' → dropdown)
+- [x] Size/variant selectors (select dropdowns)
+- [x] Link editors (href, button targets)
+- [x] Boolean toggles (popular: true/false, enabled: true)
+
+**4C. Array Operations (Add/Remove/Reorder)** ✅
+- [x] [+ Add Item] button for arrays (cards, steps, FAQs)
+- [x] [🗑 Delete] button on each array item
+- [x] [↑↓ Reorder] up/down arrow buttons
+- [x] Empty state with "Add first item" prompt
+
+**4D. Integration** ✅
+- [x] 27 E2E tests for all 5 editable pages (100% passing)
+- [x] Graceful handling of non-content clicks
+- [x] Keyboard navigation support
 
 Phase 5 Sub-tasks (Zero-Config):
 - [ ] Auto-discover content JSON files at build time
@@ -161,6 +182,14 @@ Phase 5 Sub-tasks (Zero-Config):
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Phase 4: Universal Click-to-Edit** (Dec 30, 2025)
+- Created lib/content-path-mapper.ts for recursive JSON path discovery
+- Added useUniversalClick hook for global click handling in edit mode
+- Property editors: text, color dropdowns, variant selects, href, booleans
+- Array operations: Add, Delete, Move up/down buttons
+- 27 E2E tests + 16 unit tests all passing
+- Context: lib/content-path-mapper.ts, hooks/useUniversalClick.ts, AdminSidebar.tsx
 
 **DRY Consolidation: useEditableContent Hook** (Dec 29, 2025)
 - Created `useEditableContent<T>()` hook replacing 20+ lines of boilerplate per page

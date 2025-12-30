@@ -35,7 +35,7 @@ export default function EditableItem({
   children,
   className = '',
 }: EditableItemProps) {
-  const { isEditMode, selectedItem, selectItem } = useInlineEdit();
+  const { isEditMode, selectedItem, selectItem, setSidebarOpen } = useInlineEdit();
 
   const isSelected =
     selectedItem?.sectionKey === sectionKey &&
@@ -59,6 +59,8 @@ export default function EditableItem({
     };
 
     selectItem(selection);
+    // Auto-open sidebar when item is clicked (Phase 4 enhancement)
+    setSidebarOpen(true);
   };
 
   // In edit mode, wrap with interactive layer
