@@ -200,7 +200,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 - [x] Customer reviews & ratings
 
 **Platform Simplicity Layer**
-- [ ] Phone-first wizard (answer 5 questions → done) - needs more testing
+- [x] Phone-first wizard (answer 5 questions → done) - 14 E2E tests passing
 - [x] Pre-built page sections (drag whole sections, not components)
 - [x] Template marketplace (share/sell templates)
 
@@ -209,6 +209,14 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Phone-First Wizard Testing** (Dec 30, 2025)
+- Fixed Back button selector to avoid matching "Back to Site" link
+- Added viewport tolerance for sticky footer positioning
+- Increased scroll test viewport to avoid sidebar overlay
+- Added 5 new validation tests: disabled states, input persistence, preview verification
+- 14 E2E tests passing (layout, flow, validation, mode selection)
+- Context: e2e/page-wizard.spec.ts
 
 **Template Marketplace** (Dec 30, 2025)
 - Supabase migration with marketplace_templates, template_purchases, template_reviews
@@ -443,4 +451,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Template Marketplace: share, sell, download templates*
+*Last Updated: December 30, 2025 - Phone-first wizard: comprehensive E2E testing (14 tests)*
