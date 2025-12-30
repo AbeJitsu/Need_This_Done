@@ -334,7 +334,39 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
         };
       });
     }
-  }, [pageContent, selectedSection, addPendingChange]);
+
+    // Update selected item content if it's the one being edited
+    // fieldPath for items is like "0.answer" or "items.0.answer"
+    if (selectedItem && selectedItem.sectionKey === sectionKey) {
+      // Parse the fieldPath to extract the index and remaining path
+      // If sectionKey === arrayField, path is "index.field" (e.g., "0.answer")
+      // If not, path is "arrayField.index.field" (e.g., "items.0.answer")
+      const pathParts = fieldPath.split('.');
+      let itemIndex: number;
+      let itemFieldPath: string;
+
+      if (selectedItem.sectionKey === selectedItem.arrayField || selectedItem.arrayField === '') {
+        // Path is "index.field"
+        itemIndex = parseInt(pathParts[0], 10);
+        itemFieldPath = pathParts.slice(1).join('.');
+      } else {
+        // Path is "arrayField.index.field"
+        itemIndex = parseInt(pathParts[1], 10);
+        itemFieldPath = pathParts.slice(2).join('.');
+      }
+
+      // Only update if this edit is for the currently selected item
+      if (itemIndex === selectedItem.index && itemFieldPath) {
+        setSelectedItem(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            content: setNestedValue(prev.content, itemFieldPath, newValue),
+          };
+        });
+      }
+    }
+  }, [pageContent, selectedSection, selectedItem, addPendingChange]);
 
   // Get field value with pending changes applied
   const getFieldValue = useCallback((sectionKey: string, fieldPath: string): unknown => {

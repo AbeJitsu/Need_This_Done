@@ -135,8 +135,15 @@ export default function AdminSidebar() {
   // Handle field change for item editing (cards, FAQ items, etc.)
   const handleItemFieldChange = (fieldPath: string, newValue: unknown) => {
     if (!selectedItem) return;
-    // Build the full path: sectionKey.arrayField.index.fieldPath
-    const fullPath = `${selectedItem.arrayField}.${selectedItem.index}.${fieldPath}`;
+
+    // Build the full path relative to sectionKey
+    // If sectionKey equals arrayField (e.g., both are "items"), sectionKey IS the array
+    // so we skip the arrayField prefix to avoid doubling: "items.items.0.answer" → "0.answer"
+    // If arrayField is empty, the item is a direct array item of the section
+    const fullPath = (selectedItem.sectionKey === selectedItem.arrayField || selectedItem.arrayField === '')
+      ? `${selectedItem.index}.${fieldPath}`
+      : `${selectedItem.arrayField}.${selectedItem.index}.${fieldPath}`;
+
     updateField(selectedItem.sectionKey, fullPath, newValue);
   };
 
