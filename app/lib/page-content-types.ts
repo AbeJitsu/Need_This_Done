@@ -314,6 +314,72 @@ export interface GetStartedPageContent {
 }
 
 // ============================================================================
+// Blog Page Content
+// ============================================================================
+
+export interface BlogPageContent {
+  header: PageHeader;
+  emptyState: {
+    emoji: string;
+    title: string;
+    description: string;
+  };
+  morePostsTitle: string;
+  categoryFilterLabel: string;
+}
+
+// ============================================================================
+// Changelog Page Content
+// ============================================================================
+
+export interface ChangelogPageContent {
+  header: PageHeader;
+  emptyState: {
+    emoji: string;
+    title: string;
+    description: string;
+  };
+}
+
+// ============================================================================
+// Guide Page Content
+// ============================================================================
+
+export interface GuidePageContent {
+  header: PageHeader;
+  sections: Array<{
+    title: string;
+    content: string;
+  }>;
+}
+
+// ============================================================================
+// Privacy Page Content
+// ============================================================================
+
+export interface PrivacyPageContent {
+  header: PageHeader;
+  lastUpdated: string;
+  sections: Array<{
+    title: string;
+    content: string;
+  }>;
+}
+
+// ============================================================================
+// Terms Page Content
+// ============================================================================
+
+export interface TermsPageContent {
+  header: PageHeader;
+  lastUpdated: string;
+  sections: Array<{
+    title: string;
+    content: string;
+  }>;
+}
+
+// ============================================================================
 // Union Types & Mapping
 // ============================================================================
 
@@ -325,7 +391,12 @@ export type PageContent =
   | HowItWorksPageContent
   | HomePageContent
   | ContactPageContent
-  | GetStartedPageContent;
+  | GetStartedPageContent
+  | BlogPageContent
+  | ChangelogPageContent
+  | GuidePageContent
+  | PrivacyPageContent
+  | TermsPageContent;
 
 /** Content type identifiers */
 export type PageContentType =
@@ -335,7 +406,12 @@ export type PageContentType =
   | 'how_it_works_page'
   | 'home_page'
   | 'contact_page'
-  | 'get_started_page';
+  | 'get_started_page'
+  | 'blog_page'
+  | 'changelog_page'
+  | 'guide_page'
+  | 'privacy_page'
+  | 'terms_page';
 
 /** Maps page slugs to their content types */
 export const PAGE_CONTENT_TYPES: Record<string, PageContentType> = {
@@ -346,6 +422,11 @@ export const PAGE_CONTENT_TYPES: Record<string, PageContentType> = {
   home: 'home_page',
   contact: 'contact_page',
   'get-started': 'get_started_page',
+  blog: 'blog_page',
+  changelog: 'changelog_page',
+  guide: 'guide_page',
+  privacy: 'privacy_page',
+  terms: 'terms_page',
 };
 
 /** Display names for admin UI */
@@ -357,8 +438,26 @@ export const PAGE_DISPLAY_NAMES: Record<string, string> = {
   home: 'Homepage',
   contact: 'Contact',
   'get-started': 'Get Started',
+  blog: 'Blog',
+  changelog: 'Changelog',
+  guide: 'Guide',
+  privacy: 'Privacy Policy',
+  terms: 'Terms of Service',
 };
 
 /** All editable page slugs */
-export const EDITABLE_PAGES = ['home', 'pricing', 'services', 'faq', 'how-it-works', 'contact', 'get-started'] as const;
+export const EDITABLE_PAGES = [
+  'home',
+  'pricing',
+  'services',
+  'faq',
+  'how-it-works',
+  'contact',
+  'get-started',
+  'blog',
+  'changelog',
+  'guide',
+  'privacy',
+  'terms',
+] as const;
 export type EditablePageSlug = (typeof EDITABLE_PAGES)[number];

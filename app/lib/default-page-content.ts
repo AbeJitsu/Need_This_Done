@@ -13,6 +13,11 @@ import type {
   HomePageContent,
   ContactPageContent,
   GetStartedPageContent,
+  BlogPageContent,
+  ChangelogPageContent,
+  GuidePageContent,
+  PrivacyPageContent,
+  TermsPageContent,
   PageContent,
   EditablePageSlug,
 } from './page-content-types';
@@ -605,6 +610,141 @@ export const defaultGetStartedContent: GetStartedPageContent = {
 };
 
 // ============================================================================
+// Blog Page Defaults
+// ============================================================================
+
+export const defaultBlogContent: BlogPageContent = {
+  header: {
+    title: 'Blog',
+    description: 'Tips, insights, and behind-the-scenes looks at how we help busy professionals get things done.',
+  },
+  emptyState: {
+    emoji: '📝',
+    title: 'Coming Soon',
+    description: "We're working on some great content for you. Check back soon for tips, insights, and stories about getting things done.",
+  },
+  morePostsTitle: 'More Posts',
+  categoryFilterLabel: 'All Posts',
+};
+
+// ============================================================================
+// Changelog Page Defaults
+// ============================================================================
+
+export const defaultChangelogContent: ChangelogPageContent = {
+  header: {
+    title: 'Changelog',
+    description: 'See what we\'ve been working on. New features, improvements, and fixes.',
+  },
+  emptyState: {
+    emoji: '🚀',
+    title: 'No Updates Yet',
+    description: 'Check back soon for updates on new features and improvements.',
+  },
+};
+
+// ============================================================================
+// Guide Page Defaults
+// ============================================================================
+
+export const defaultGuideContent: GuidePageContent = {
+  header: {
+    title: 'Getting Started Guide',
+    description: 'Everything you need to know to get the most out of our services.',
+  },
+  sections: [
+    {
+      title: 'Welcome',
+      content: 'Welcome to NeedThisDone! This guide will help you understand how to work with us effectively.',
+    },
+    {
+      title: 'How It Works',
+      content: 'Submit your project details, receive a quote, approve and pay the deposit, then we get to work.',
+    },
+    {
+      title: 'Communication',
+      content: 'We keep you updated throughout the project. You can reach us via email or the chat widget.',
+    },
+    {
+      title: 'Delivery',
+      content: 'Once your project is complete, you\'ll review the work. Final payment is due upon approval.',
+    },
+  ],
+};
+
+// ============================================================================
+// Privacy Page Defaults
+// ============================================================================
+
+export const defaultPrivacyContent: PrivacyPageContent = {
+  header: {
+    title: 'Privacy Policy',
+    description: 'How we collect, use, and protect your information.',
+  },
+  lastUpdated: 'January 2025',
+  sections: [
+    {
+      title: 'Information We Collect',
+      content: 'We collect information you provide directly to us, such as your name, email address, and project details.',
+    },
+    {
+      title: 'How We Use Your Information',
+      content: 'We use your information to provide our services, communicate with you, and improve our offerings.',
+    },
+    {
+      title: 'Information Sharing',
+      content: 'We do not sell your personal information. We may share information with service providers who assist us.',
+    },
+    {
+      title: 'Data Security',
+      content: 'We implement appropriate security measures to protect your personal information.',
+    },
+    {
+      title: 'Contact Us',
+      content: 'If you have questions about this privacy policy, please contact us.',
+    },
+  ],
+};
+
+// ============================================================================
+// Terms Page Defaults
+// ============================================================================
+
+export const defaultTermsContent: TermsPageContent = {
+  header: {
+    title: 'Terms of Service',
+    description: 'The terms and conditions that govern your use of our services.',
+  },
+  lastUpdated: 'January 2025',
+  sections: [
+    {
+      title: 'Agreement to Terms',
+      content: 'By using our services, you agree to be bound by these terms of service.',
+    },
+    {
+      title: 'Our Services',
+      content: 'We provide virtual assistant, data management, and website services as described on our website.',
+    },
+    {
+      title: 'Payment Terms',
+      content: 'Payment is due as specified in your project quote. We require a 50% deposit to begin work.',
+    },
+    {
+      title: 'Revisions and Deliverables',
+      content: 'We include reasonable revisions to ensure your satisfaction with the final deliverables.',
+    },
+    {
+      title: 'Limitation of Liability',
+      content: 'Our liability is limited to the amount paid for the specific service in question.',
+    },
+    {
+      title: 'Contact',
+      content: 'For questions about these terms, please contact us.',
+    },
+  ],
+};
+
+// ============================================================================
 // Default Content Getter
 // ============================================================================
 
@@ -616,6 +756,11 @@ const defaultContentMap: Record<EditablePageSlug, PageContent> = {
   home: defaultHomeContent,
   contact: defaultContactContent,
   'get-started': defaultGetStartedContent,
+  blog: defaultBlogContent,
+  changelog: defaultChangelogContent,
+  guide: defaultGuideContent,
+  privacy: defaultPrivacyContent,
+  terms: defaultTermsContent,
 };
 
 /**

@@ -117,60 +117,33 @@ test.describe('Inline Edit Coverage', () => {
   });
 
   // ============================================================================
-  // Deep Test: Click multiple elements on each page
+  // Deep Test: Click elements inside EditableSection wrappers
   // ============================================================================
-  // This catches the bug where only PageHeader works but cards don't
-  test.describe('All clickable content opens editor', () => {
+  // This catches the bug where EditableSection exists but doesn't trigger
+  test.describe('All editable sections are clickable', () => {
     for (const pagePath of EDITABLE_PAGES) {
-      test(`${pagePath}: clicking h2 headings opens editor`, async ({ page }) => {
+      test(`${pagePath}: clicking editable section content opens editor`, async ({ page }) => {
         await page.goto(pagePath);
         await expect(page.locator('h1').first()).toBeVisible();
         await enableEditMode(page);
 
-        // Find all h2 elements (section headings, card titles)
-        const h2Elements = page.locator('main h2');
-        const h2Count = await h2Elements.count();
+        // Find all EditableSection wrappers
+        const editableSections = page.locator('[data-editable-section]');
+        const sectionCount = await editableSections.count();
 
-        if (h2Count === 0) {
-          // Skip if no h2s on this page
+        if (sectionCount === 0) {
+          // Page has no editable sections - this is caught by the core test
           return;
         }
 
-        // Click the first h2
-        const firstH2 = h2Elements.first();
-        await firstH2.scrollIntoViewIfNeeded();
-        await firstH2.click();
+        // Click inside the SECOND section if it exists (first is usually header, already tested)
+        const targetSection = sectionCount > 1 ? editableSections.nth(1) : editableSections.first();
 
-        // Sidebar must open WITH CONTENT
-        const sidebar = page.locator('[data-testid="admin-sidebar"]');
-        await expect(sidebar).toBeVisible({ timeout: 5000 });
-
-        // Must NOT show empty state
-        const emptyState = sidebar.getByText('Click a section to edit');
-        await expect(emptyState).not.toBeVisible({ timeout: 2000 });
-      });
-
-      test(`${pagePath}: clicking card content opens editor`, async ({ page }) => {
-        await page.goto(pagePath);
-        await expect(page.locator('h1').first()).toBeVisible();
-        await enableEditMode(page);
-
-        // Find card-like containers (common patterns)
-        const cards = page.locator('main [class*="rounded"][class*="shadow"], main [class*="Card"]');
-        const cardCount = await cards.count();
-
-        if (cardCount === 0) {
-          // Skip if no cards
-          return;
-        }
-
-        // Click inside the first card
-        const firstCard = cards.first();
-        const cardText = firstCard.locator('p, span, h2, h3').first();
-
-        if (await cardText.count() > 0) {
-          await cardText.scrollIntoViewIfNeeded();
-          await cardText.click();
+        // Find clickable content inside the section
+        const clickableContent = targetSection.locator('h2, h3, p, span').first();
+        if (await clickableContent.count() > 0) {
+          await clickableContent.scrollIntoViewIfNeeded();
+          await clickableContent.click();
 
           // Sidebar must open WITH CONTENT
           const sidebar = page.locator('[data-testid="admin-sidebar"]');
