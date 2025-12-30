@@ -164,7 +164,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 
 **Performance & Caching**
 - [x] Define Redis cache invalidation strategy per feature (docs/CACHE_STRATEGY.md)
-- [ ] Monitor cache hit rates
+- [x] Monitor cache hit rates
 - [ ] Optimize product queries with pagination
 
 **Analytics Dashboard**
@@ -209,6 +209,14 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Cache Hit Rate Monitoring** (Dec 30, 2025)
+- Created lib/cache-stats.ts for tracking hits/misses per cache key pattern
+- Integrated stats recording into cache.wrap() function
+- Added cache.getStats() for retrieving statistics (hit rate, uptime, requests/sec)
+- Admin API endpoint at /api/admin/cache-stats (GET stats, POST reset)
+- 9 unit tests + 2 E2E tests all passing
+- Context: lib/cache-stats.ts, lib/cache.ts, app/api/admin/cache-stats/route.ts
 
 **Redis Cache Invalidation Strategy** (Dec 30, 2025)
 - Documented cache strategy for all 8 features (Pages, Projects, Cart, Orders, Blog, etc.)

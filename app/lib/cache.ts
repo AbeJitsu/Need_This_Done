@@ -1,4 +1,5 @@
 import { redis } from './redis';
+import { cacheStats } from './cache-stats';
 
 // ============================================================================
 // Cache Utility - High-Level Caching with Automatic JSON Serialization
@@ -103,10 +104,12 @@ async function wrap<T>(
     // Step 1: Try to get from cache
     const cached = await get<T>(key);
     if (cached !== null) {
+      cacheStats.recordHit(key);
       return { data: cached, cached: true, source: 'cache' };
     }
 
     // Step 2: Cache miss - fetch from database
+    cacheStats.recordMiss(key);
     const data = await fetcher();
 
     // Step 3: Store in cache for next time (don't block on failure)
@@ -118,6 +121,7 @@ async function wrap<T>(
     return { data, cached: false, source: 'database' };
   } catch (error) {
     console.error(`Cache.wrap error for key ${key}:`, error);
+    cacheStats.recordMiss(key);
     // Fallback: fetch data directly if cache.wrap fails
     return { data: await fetcher(), cached: false, source: 'database' };
   }
@@ -210,6 +214,7 @@ export const cache = {
   set,
   invalidate,
   invalidatePattern,
+  getStats: () => cacheStats.getStats(),
 };
 
 // ============================================================================
