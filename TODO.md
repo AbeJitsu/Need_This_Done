@@ -190,7 +190,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 - [x] ProgressBar component (course progress tracking)
 - [x] Certificate component (completion certificates)
 - [x] Enrollment system (paid/free courses)
-- [ ] Student dashboard (my courses, progress)
+- [x] Student dashboard (my courses, progress)
 
 **Advanced Ecommerce Features**
 - [ ] Abandoned cart recovery emails
@@ -209,6 +209,15 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Student Dashboard - My Learning** (Dec 30, 2025)
+- Added "My Learning" section to UserDashboard component
+- Displays enrolled courses with progress bars and status badges
+- Shows enrollment date, progress percentage, and completion status
+- Empty state with CTA to browse courses
+- Links to continue learning or review completed courses
+- 9 E2E tests for dashboard and enrollment flow
+- Context: components/UserDashboard.tsx, e2e/student-dashboard.spec.ts
 
 **Enrollment System** (Dec 30, 2025)
 - Created Supabase migration for enrollments table with RLS policies
@@ -367,4 +376,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Enrollment System: API, EnrollButton component, migration ready*
+*Last Updated: December 30, 2025 - Student Dashboard: My Learning section with progress tracking*
