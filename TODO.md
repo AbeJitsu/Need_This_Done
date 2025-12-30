@@ -189,7 +189,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 - [x] QuizBlock component (interactive quizzes)
 - [x] ProgressBar component (course progress tracking)
 - [x] Certificate component (completion certificates)
-- [ ] Enrollment system (paid/free courses)
+- [x] Enrollment system (paid/free courses)
 - [ ] Student dashboard (my courses, progress)
 
 **Advanced Ecommerce Features**
@@ -209,6 +209,15 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Enrollment System** (Dec 30, 2025)
+- Created Supabase migration for enrollments table with RLS policies
+- API endpoints: GET /api/enrollments (list/check), POST /api/enrollments (enroll)
+- EnrollButton component for free/paid course enrollment with loading states
+- Free enrollment creates record directly, paid redirects to checkout
+- Color variants (blue/green/purple), size variants (sm/md/lg), full-width option
+- 8 E2E tests + Storybook stories (9 variants)
+- Context: supabase/migrations/023_create_enrollments_table.sql, app/api/enrollments/route.ts, components/EnrollButton.tsx
 
 **Page View Analytics** (Dec 30, 2025)
 - Created Supabase migration for page_views table with RLS policies
@@ -358,4 +367,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Page View Analytics: tracking hook, API endpoints, migration ready*
+*Last Updated: December 30, 2025 - Enrollment System: API, EnrollButton component, migration ready*
