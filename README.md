@@ -28,7 +28,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║  📦 5 Context Providers                  ✅ Email Notifications (Resend)     ║
 ║  🔧 26 Lib Utilities                     ✅ Google OAuth                     ║
 ║  🪝 4 Custom Hooks                       🟡 Google Calendar (90% - needs test)║
-║  🧪 177 E2E Tests Passing                🟡 Puck (28 components, needs E2E)  ║
+║  🧪 229 E2E Tests Passing                🟡 Puck (28 components, needs E2E)  ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
