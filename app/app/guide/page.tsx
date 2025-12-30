@@ -1,4 +1,4 @@
-import { getDefaultContent } from '@/lib/default-page-content';
+import { fetchPageContent } from '@/lib/fetch-page-content';
 import type { GuidePageContent } from '@/lib/page-content-types';
 import GuidePageClient from '@/components/guide/GuidePageClient';
 
@@ -18,33 +18,11 @@ export const metadata = {
 };
 
 // ============================================================================
-// Content Fetching
-// ============================================================================
-
-async function getContent(): Promise<GuidePageContent> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/page-content/guide`, {
-      next: { revalidate: 60 },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.content as GuidePageContent;
-    }
-  } catch (error) {
-    console.error('Failed to fetch guide content:', error);
-  }
-
-  return getDefaultContent('guide') as GuidePageContent;
-}
-
-// ============================================================================
 // Page Component
 // ============================================================================
 
 export default async function GuidePage() {
-  const content = await getContent();
+  const content = await fetchPageContent<GuidePageContent>('guide');
 
   return <GuidePageClient initialContent={content} />;
 }

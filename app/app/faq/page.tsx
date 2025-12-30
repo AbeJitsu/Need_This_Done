@@ -1,4 +1,4 @@
-import { getDefaultContent } from '@/lib/default-page-content';
+import { fetchPageContent } from '@/lib/fetch-page-content';
 import type { FAQPageContent } from '@/lib/page-content-types';
 import FAQPageClient from '@/components/faq/FAQPageClient';
 
@@ -20,33 +20,11 @@ export const metadata = {
 };
 
 // ============================================================================
-// Content Fetching
-// ============================================================================
-
-async function getContent(): Promise<FAQPageContent> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/page-content/faq`, {
-      next: { revalidate: 60 },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.content as FAQPageContent;
-    }
-  } catch (error) {
-    console.error('Failed to fetch FAQ content:', error);
-  }
-
-  return getDefaultContent('faq') as FAQPageContent;
-}
-
-// ============================================================================
 // Page Component
 // ============================================================================
 
 export default async function FAQPage() {
-  const content = await getContent();
+  const content = await fetchPageContent<FAQPageContent>('faq');
 
   return <FAQPageClient content={content} />;
 }

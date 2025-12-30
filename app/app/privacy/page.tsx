@@ -1,4 +1,4 @@
-import { getDefaultContent } from '@/lib/default-page-content';
+import { fetchPageContent } from '@/lib/fetch-page-content';
 import type { PrivacyPageContent } from '@/lib/page-content-types';
 import PrivacyPageClient from '@/components/privacy/PrivacyPageClient';
 
@@ -18,33 +18,11 @@ export const metadata = {
 };
 
 // ============================================================================
-// Content Fetching
-// ============================================================================
-
-async function getContent(): Promise<PrivacyPageContent> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/page-content/privacy`, {
-      next: { revalidate: 60 },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.content as PrivacyPageContent;
-    }
-  } catch (error) {
-    console.error('Failed to fetch privacy content:', error);
-  }
-
-  return getDefaultContent('privacy') as PrivacyPageContent;
-}
-
-// ============================================================================
 // Page Component
 // ============================================================================
 
 export default async function PrivacyPage() {
-  const content = await getContent();
+  const content = await fetchPageContent<PrivacyPageContent>('privacy');
 
   return <PrivacyPageClient initialContent={content} />;
 }

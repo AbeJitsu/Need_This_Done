@@ -1,4 +1,4 @@
-import { getDefaultContent } from '@/lib/default-page-content';
+import { fetchPageContent } from '@/lib/fetch-page-content';
 import type { TermsPageContent } from '@/lib/page-content-types';
 import TermsPageClient from '@/components/terms/TermsPageClient';
 
@@ -18,33 +18,11 @@ export const metadata = {
 };
 
 // ============================================================================
-// Content Fetching
-// ============================================================================
-
-async function getContent(): Promise<TermsPageContent> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/page-content/terms`, {
-      next: { revalidate: 60 },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.content as TermsPageContent;
-    }
-  } catch (error) {
-    console.error('Failed to fetch terms content:', error);
-  }
-
-  return getDefaultContent('terms') as TermsPageContent;
-}
-
-// ============================================================================
 // Page Component
 // ============================================================================
 
 export default async function TermsPage() {
-  const content = await getContent();
+  const content = await fetchPageContent<TermsPageContent>('terms');
 
   return <TermsPageClient initialContent={content} />;
 }
