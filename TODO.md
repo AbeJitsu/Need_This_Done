@@ -194,7 +194,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 
 **Advanced Ecommerce Features**
 - [x] Abandoned cart recovery emails
-- [ ] Product recommendations engine
+- [x] Product recommendations engine
 - [ ] Discount/coupon system
 - [ ] Multi-currency support
 - [ ] Customer reviews & ratings
@@ -209,6 +209,15 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Product Recommendations Engine** (Dec 30, 2025)
+- Created Supabase migrations for product_interactions and product_similarities tables
+- API endpoints: GET (popular/trending/personalized/related), POST (track interactions)
+- useProductTracking hook for auto-tracking views, cart adds, purchases
+- ProductRecommendations component with grid/row layouts, color variants
+- Views for popular_products and trending_products with analytics
+- 22 E2E tests + 8 Storybook stories
+- Context: migrations/025, app/api/recommendations/route.ts, hooks/useProductTracking.ts
 
 **Abandoned Cart Recovery Emails** (Dec 30, 2025)
 - Created Supabase migration for cart_reminders table with RLS and analytics view
@@ -385,4 +394,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Abandoned Cart Recovery: cron job, email reminders, analytics*
+*Last Updated: December 30, 2025 - Product Recommendations: tracking, API, component*
