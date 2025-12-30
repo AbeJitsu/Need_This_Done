@@ -1,7 +1,7 @@
 {
   "title": "Main",
   "slug": "main",
-  "date": "2025-12-29",
+  "date": "2025-12-30",
   "category": "Dashboard",
   "description": "",
   "benefit": "",
@@ -33,7 +33,7 @@
       "caption": ""
     }
   ],
-  "_gitContext": ".claude/rules/etc-easy-to-change.md                | 119 +++++++++++++++++++++\n CLAUDE.md                                          |   1 +\n app/affected-routes.json                           |  37 ++++++-\n app/components/faq/FAQPageClient.tsx               |  32 +-----\n app/components/home/HomePageClient.tsx             |  39 +------\n .../how-it-works/HowItWorksPageClient.tsx          |  35 +-----\n app/components/pricing/PricingPageClient.tsx       |  33 +-----\n app/lib/colors.ts                                  |   2 +\n app/ux-screenshots/09-how-it-works.png             | Bin 8295 -> 306193 bytes\n 9 files changed, 167 insertions(+), 131 deletions(-)",
+  "_gitContext": ".claude/loop-state.json                            |   2 +-\n app/affected-routes.json                           |   2 +-\n app/e2e/screenshots/checkout/03-added-to-cart.png  | Bin 283671 -> 283458 bytes\n .../screenshots/checkout/error-01-empty-cart.png   | Bin 100372 -> 75089 bytes\n app/e2e/screenshots/compare-home.png               | Bin 403351 -> 45244 bytes\n app/e2e/screenshots/compare-pricing.png            | Bin 344800 -> 321589 bytes\n app/lib/colors.ts                                  |   2 ++\n .../service-modal-blue-light-contrast-test.png     | Bin 177425 -> 177106 bytes\n .../service-modal-green-light-contrast-test.png    | Bin 176908 -> 177007 bytes\n .../service-modal-purple-light-contrast-test.png   | Bin 173584 -> 173598 bytes\n .../copy/1-homepage-copy.json                      |  12 +-----------\n .../screenshots/03-pricing.png                     | Bin 358414 -> 321552 bytes\n .../screenshots/08-guide.png                       | Bin 1417218 -> 849552 bytes\n .../screenshots/1-homepage.png                     | Bin 403351 -> 45244 bytes\n .../screenshots/10-dashboard.png                   | Bin 138847 -> 124059 bytes\n .../screenshots/11-admin-blog.png                  | Bin 209941 -> 65955 bytes\n .../screenshots/13-admin-content.png               | Bin 173449 -> 65972 bytes\n content/changelog/main.json                        |   4 ++--\n 18 files changed, 7 insertions(+), 15 deletions(-)",
   "_affectedRoutes": [
     "/",
     "/terms",

@@ -82,8 +82,9 @@ if type is_loop_active &>/dev/null && is_loop_active; then
     echo "All tasks complete. Running E2E tests to verify..." >&2
 
     # Run E2E tests (with timeout)
+    # SKIP_WEBSERVER=true reuses existing dev server instead of starting new one
     cd "$CLAUDE_PROJECT_DIR/app"
-    if timeout 300 npm run test:e2e >/dev/null 2>&1; then
+    if timeout 300 env SKIP_WEBSERVER=true npm run test:e2e >/dev/null 2>&1; then
       echo "" >&2
       echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
       echo "✅ LOOP COMPLETE - ALL TESTS PASS" >&2
