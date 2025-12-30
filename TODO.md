@@ -193,7 +193,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 - [x] Student dashboard (my courses, progress)
 
 **Advanced Ecommerce Features**
-- [ ] Abandoned cart recovery emails
+- [x] Abandoned cart recovery emails
 - [ ] Product recommendations engine
 - [ ] Discount/coupon system
 - [ ] Multi-currency support
@@ -209,6 +209,15 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Abandoned Cart Recovery Emails** (Dec 30, 2025)
+- Created Supabase migration for cart_reminders table with RLS and analytics view
+- Cron job endpoint at /api/cron/abandoned-carts (hourly schedule)
+- Uses existing AbandonedCartEmail template with items, discount support
+- Tracks reminder counts, recovery rates, and cart values
+- Vercel cron configuration in vercel.json
+- 10 E2E tests for API endpoints and recovery flow
+- Context: supabase/migrations/024_create_cart_reminders_table.sql, app/api/cron/abandoned-carts/route.ts
 
 **Student Dashboard - My Learning** (Dec 30, 2025)
 - Added "My Learning" section to UserDashboard component
@@ -376,4 +385,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Student Dashboard: My Learning section with progress tracking*
+*Last Updated: December 30, 2025 - Abandoned Cart Recovery: cron job, email reminders, analytics*
