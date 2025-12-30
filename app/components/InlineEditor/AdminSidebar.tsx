@@ -522,16 +522,22 @@ export default function AdminSidebar() {
   const handleAddArrayItem = (arrayPath: string, template: unknown) => {
     if (!selectedSection || !pageContent) return;
     const sectionContent = pageContent[selectedSection.sectionKey];
-    const pathParts = arrayPath.split('.');
-    let arr: unknown[] = sectionContent as unknown[];
 
-    // Navigate to the array
-    for (const part of pathParts) {
-      if (arr === null || arr === undefined) break;
-      if (Array.isArray(arr)) {
-        arr = arr[parseInt(part, 10)] as unknown[];
-      } else if (typeof arr === 'object') {
-        arr = (arr as Record<string, unknown>)[part] as unknown[];
+    // If sectionKey equals arrayPath, sectionContent IS the array
+    // Otherwise, navigate to the array within sectionContent
+    let arr: unknown[];
+    if (selectedSection.sectionKey === arrayPath) {
+      arr = sectionContent as unknown[];
+    } else {
+      const pathParts = arrayPath.split('.');
+      arr = sectionContent as unknown[];
+      for (const part of pathParts) {
+        if (arr === null || arr === undefined) break;
+        if (Array.isArray(arr)) {
+          arr = arr[parseInt(part, 10)] as unknown[];
+        } else if (typeof arr === 'object') {
+          arr = (arr as Record<string, unknown>)[part] as unknown[];
+        }
       }
     }
 
@@ -546,16 +552,21 @@ export default function AdminSidebar() {
     if (!confirm('Delete this item?')) return;
 
     const sectionContent = pageContent[selectedSection.sectionKey];
-    const pathParts = arrayPath.split('.');
-    let arr: unknown[] = sectionContent as unknown[];
 
-    // Navigate to the array
-    for (const part of pathParts) {
-      if (arr === null || arr === undefined) break;
-      if (Array.isArray(arr)) {
-        arr = arr[parseInt(part, 10)] as unknown[];
-      } else if (typeof arr === 'object') {
-        arr = (arr as Record<string, unknown>)[part] as unknown[];
+    // If sectionKey equals arrayPath, sectionContent IS the array
+    let arr: unknown[];
+    if (selectedSection.sectionKey === arrayPath) {
+      arr = sectionContent as unknown[];
+    } else {
+      const pathParts = arrayPath.split('.');
+      arr = sectionContent as unknown[];
+      for (const part of pathParts) {
+        if (arr === null || arr === undefined) break;
+        if (Array.isArray(arr)) {
+          arr = arr[parseInt(part, 10)] as unknown[];
+        } else if (typeof arr === 'object') {
+          arr = (arr as Record<string, unknown>)[part] as unknown[];
+        }
       }
     }
 
@@ -569,16 +580,21 @@ export default function AdminSidebar() {
     if (!selectedSection || !pageContent) return;
 
     const sectionContent = pageContent[selectedSection.sectionKey];
-    const pathParts = arrayPath.split('.');
-    let arr: unknown[] = sectionContent as unknown[];
 
-    // Navigate to the array
-    for (const part of pathParts) {
-      if (arr === null || arr === undefined) break;
-      if (Array.isArray(arr)) {
-        arr = arr[parseInt(part, 10)] as unknown[];
-      } else if (typeof arr === 'object') {
-        arr = (arr as Record<string, unknown>)[part] as unknown[];
+    // If sectionKey equals arrayPath, sectionContent IS the array
+    let arr: unknown[];
+    if (selectedSection.sectionKey === arrayPath) {
+      arr = sectionContent as unknown[];
+    } else {
+      const pathParts = arrayPath.split('.');
+      arr = sectionContent as unknown[];
+      for (const part of pathParts) {
+        if (arr === null || arr === undefined) break;
+        if (Array.isArray(arr)) {
+          arr = arr[parseInt(part, 10)] as unknown[];
+        } else if (typeof arr === 'object') {
+          arr = (arr as Record<string, unknown>)[part] as unknown[];
+        }
       }
     }
 
