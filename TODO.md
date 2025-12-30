@@ -195,7 +195,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 **Advanced Ecommerce Features**
 - [x] Abandoned cart recovery emails
 - [x] Product recommendations engine
-- [ ] Discount/coupon system
+- [x] Discount/coupon system
 - [ ] Multi-currency support
 - [ ] Customer reviews & ratings
 
@@ -209,6 +209,16 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Discount/Coupon System** (Dec 30, 2025)
+- Created Supabase migration with coupons, coupon_usage tables, RLS policies
+- PostgreSQL functions: validate_coupon (checks constraints), apply_coupon (records usage)
+- API: GET /api/coupons (validate), POST /api/coupons (apply)
+- Discount types: percentage, fixed amount, free shipping
+- Constraints: min cart, expiry, max uses, first order only
+- CouponInput component with loading states, success/error UI, color variants
+- 15 E2E tests + 7 Storybook stories
+- Context: migrations/026, app/api/coupons/route.ts, components/CouponInput.tsx
 
 **Product Recommendations Engine** (Dec 30, 2025)
 - Created Supabase migrations for product_interactions and product_similarities tables
@@ -394,4 +404,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Product Recommendations: tracking, API, component*
+*Last Updated: December 30, 2025 - Discount/Coupon System: validation, apply, component*
