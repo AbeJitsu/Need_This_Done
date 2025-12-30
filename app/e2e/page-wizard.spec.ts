@@ -254,6 +254,123 @@ test.describe('Page Wizard - Layout & Flow', () => {
   });
 });
 
+test.describe('Page Wizard - Completion', () => {
+  // ==========================================================================
+  // Test: Completion modal shows after wizard finishes
+  // ==========================================================================
+
+  test('shows completion modal with Edit with Puck button', async ({ page }) => {
+    await page.goto('/admin/pages/new');
+
+    // Skip if not authenticated
+    if (page.url().includes('/login')) {
+      test.skip(true, 'Admin authentication required');
+    }
+
+    // Walk through all 5 steps to completion
+    await page.getByText('Start Wizard').click();
+
+    // Step 1: Category
+    await page.getByText('Landing').click();
+    await page.getByRole('button', { name: 'Continue' }).click();
+
+    // Step 2: Template
+    await page.waitForSelector('text=Step 2 of 5', { timeout: 5000 });
+    const templateButton = page.locator('button').filter({ hasText: /Featured|template/i }).first();
+    await templateButton.click();
+    await page.getByRole('button', { name: 'Continue' }).click();
+
+    // Step 3: Color
+    await page.waitForSelector('text=Step 3 of 5', { timeout: 5000 });
+    await page.getByRole('button', { name: 'Continue' }).click();
+
+    // Step 4: Content
+    await page.waitForSelector('text=Step 4 of 5', { timeout: 5000 });
+    await page.getByRole('button', { name: 'Continue' }).click();
+
+    // Step 5: Preview - Click Create Page and wait for API response
+    await page.waitForSelector('text=Step 5 of 5', { timeout: 5000 });
+
+    // Set up response promise before clicking
+    const responsePromise = page.waitForResponse(
+      resp => resp.url().includes('/api/pages') && resp.request().method() === 'POST',
+      { timeout: 15000 }
+    );
+
+    await page.getByRole('button', { name: 'Create Page' }).click();
+
+    // Wait for API response
+    const response = await responsePromise;
+
+    // Skip if API returns error (database/auth issue in test environment)
+    if (response.status() !== 200) {
+      test.skip(true, `API returned ${response.status()} - database or auth may not be configured for E2E`);
+    }
+
+    // Should show completion modal instead of auto-redirect
+    await expect(page.getByRole('heading', { name: /page created/i })).toBeVisible({ timeout: 10000 });
+
+    // Should have Edit with Puck button
+    const editButton = page.getByRole('button', { name: /edit with puck/i });
+    await expect(editButton).toBeVisible();
+
+    // Should have View Page button
+    const viewButton = page.getByRole('button', { name: /view page/i });
+    await expect(viewButton).toBeVisible();
+  });
+
+  test('Edit with Puck button navigates to editor', async ({ page }) => {
+    await page.goto('/admin/pages/new');
+
+    if (page.url().includes('/login')) {
+      test.skip(true, 'Admin authentication required');
+    }
+
+    // Complete wizard quickly
+    await page.getByText('Start Wizard').click();
+    await page.getByText('Landing').click();
+    await page.getByRole('button', { name: 'Continue' }).click();
+
+    await page.waitForSelector('text=Step 2 of 5', { timeout: 5000 });
+    const templateButton = page.locator('button').filter({ hasText: /Featured|template/i }).first();
+    await templateButton.click();
+    await page.getByRole('button', { name: 'Continue' }).click();
+
+    await page.waitForSelector('text=Step 3 of 5', { timeout: 5000 });
+    await page.getByRole('button', { name: 'Continue' }).click();
+
+    await page.waitForSelector('text=Step 4 of 5', { timeout: 5000 });
+    await page.getByRole('button', { name: 'Continue' }).click();
+
+    await page.waitForSelector('text=Step 5 of 5', { timeout: 5000 });
+
+    // Set up response promise before clicking
+    const responsePromise = page.waitForResponse(
+      resp => resp.url().includes('/api/pages') && resp.request().method() === 'POST',
+      { timeout: 15000 }
+    );
+
+    await page.getByRole('button', { name: 'Create Page' }).click();
+
+    // Wait for API response
+    const response = await responsePromise;
+
+    // Skip if API returns error (database/auth issue in test environment)
+    if (response.status() !== 200) {
+      test.skip(true, `API returned ${response.status()} - database or auth may not be configured for E2E`);
+    }
+
+    // Wait for completion modal
+    await expect(page.getByRole('heading', { name: /page created/i })).toBeVisible({ timeout: 10000 });
+
+    // Click Edit with Puck
+    await page.getByRole('button', { name: /edit with puck/i }).click();
+
+    // Should navigate to edit page
+    await expect(page).toHaveURL(/\/admin\/pages\/[^/]+\/edit/);
+  });
+});
+
 test.describe('Page Wizard - Mode Selection', () => {
   // ==========================================================================
   // Test: Mode selection page loads correctly

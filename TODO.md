@@ -101,10 +101,10 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Click ANY text → system finds content path → edit                      │
 │  27 E2E tests, all property types, array operations                     │
 │                                                                         │
-│  Phase 5: Zero-Config Pages                                             │
-│  ──────────────────────────                                             │
-│  content/about.json exists? Page is editable.                           │
-│  No hooks. No wrappers. Just JSON + components.                         │
+│  Phase 5: Zero-Config Pages ✅ DONE                                     │
+│  ──────────────────────────────────                                     │
+│  Auto-discovery at build time, manifest generation                      │
+│  Wrappers kept for UX/a11y (universal click is fallback)                │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -158,7 +158,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 **Visual Builder Polish**
 - [x] Re-enable Puck page builder ✅ DONE
 - [x] Add TipTap WYSIWYG editor ✅ DONE
-- [ ] Add "Edit with Puck" after wizard completion
+- [x] Add "Edit with Puck" after wizard completion (completion modal + 2 E2E tests)
 - [ ] Create block-level editor (mid-complexity between wizard and Puck)
 - [ ] Add template preview images
 

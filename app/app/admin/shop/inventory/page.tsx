@@ -3,8 +3,6 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
@@ -47,8 +45,7 @@ interface InventoryStats {
 }
 
 export default function AdminInventoryPage() {
-  const router = useRouter();
-  const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
+  // Auth handled by layout/middleware
 
   // ============================================================================
   // State Management
@@ -203,7 +200,7 @@ export default function AdminInventoryPage() {
     const colorMap = {
       in_stock: statusBadgeColors.active,
       low_stock: statusBadgeColors.pending,
-      out_of_stock: statusBadgeColors.canceled,
+      out_of_stock: statusBadgeColors.cancelled,
     };
     const labelMap = {
       in_stock: 'In Stock',
@@ -307,7 +304,7 @@ export default function AdminInventoryPage() {
                   onClick={() => setStatusFilter(status)}
                   className={`px-3 py-2 text-sm rounded-lg transition-colors ${
                     isActive
-                      ? filterButtonColors.active.blue
+                      ? filterButtonColors.active.purple
                       : filterButtonColors.inactive
                   }`}
                   aria-pressed={isActive}
