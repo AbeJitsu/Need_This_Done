@@ -1,5 +1,32 @@
 [
   {
+    "hash": "e1183c5",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "e1183c534ff7a75f62b1ce007a32041f80049b9b:%M",
+    "author": "Abe Reyes",
+    "message": "Security: Fix remaining RLS issues (47 more tables/views/policies)",
+    "category": "Other",
+    "filesChanged": 1
+  },
+  {
+    "hash": "621b614",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "621b614db71bb6963156c1a46a2f12c1935a223b:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor: Lighten text colors to WCAG AA minimum (-600)",
+    "category": "Refactoring",
+    "filesChanged": 15
+  },
+  {
+    "hash": "f6049c9",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "f6049c9841cf372ce03ef672b2b4ae817dc185ab:%M",
+    "author": "Abe Reyes",
+    "message": "Security: Enable RLS on 73 Medusa e-commerce tables",
+    "category": "Other",
+    "filesChanged": 3
+  },
+  {
     "hash": "6e3f333",
     "date": "%Y->- (HEAD -> main)",
     "time": "6e3f3331b78a4bc6ccb4a7190e41bd26bce7d64d:%M",

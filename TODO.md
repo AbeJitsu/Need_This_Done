@@ -54,11 +54,35 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [x] Override Tailwind color scales in tailwind.config.cjs (500 = 4.5:1 with white for all colors)
 - [x] Update colors.ts to use orange-500 instead of custom hex [#ad5700]
 - [x] Update .claude/rules/colors.md with anchor system documentation
-- [→] Test buttons in light and dark mode
+- [x] Test buttons in light and dark mode
+- [x] Lighten text colors to WCAG AA minimum (-600 base, -700 hover)
 - [ ] Consolidate colors.ts: remove duplicate systems (accentColors vs solidButtonColors)
 - [ ] Add sectionColors for page backgrounds (neutral pattern)
-- [ ] Migrate components: replace hardcoded dark: classes with colors.ts imports
 - [ ] Document which pattern to use when (buttons=inversion, sections=neutral)
+
+**Eliminate Hardcoded Colors** (ETC Refactoring)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    HARDCODED COLOR DEBT                                  │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  Current State (Dec 30, 2025):                                          │
+│  • 104 files with hardcoded dark:text-* classes                         │
+│  • 19 files with opacity backgrounds (dark:bg-*/20 = invisible)         │
+│  • Each file is a potential dark mode bug                               │
+│                                                                         │
+│  Target: ZERO hardcoded colors                                          │
+│  • All colors imported from lib/colors.ts                               │
+│  • One change = one file edit (ETC principle)                           │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Add missing exports to colors.ts (sectionBgColors, infoBannerColors, etc.)
+- [ ] Fix puck-utils.tsx (12 opacity backgrounds → solid colors)
+- [ ] Fix MediaLibrary.tsx + ImageUpload.tsx (5 opacity backgrounds)
+- [ ] Fix admin pages (analytics, pages, appointments, etc.)
+- [ ] Migrate remaining 100+ component files to use colors.ts imports
+- [ ] Add ESLint rule to prevent new hardcoded dark: classes
 
 **Dashboard Layout Issues**
 - [ ] Fix dashboard grid layout - 6 items on top row + 1 left-aligned on second row looks bad
