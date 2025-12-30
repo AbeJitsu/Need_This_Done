@@ -30,6 +30,39 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
+**Dark Mode & Color System Issues**
+- [x] Add E2E tests that catch dark mode visual issues (current tests don't detect rendering problems)
+- [ ] Research orange button color - looks brown in dark mode, needs true orange that works
+- [ ] Find optimal orange: white text (#FFF) + orange background at 5:1 contrast without looking brown
+
+**Automation & Developer Experience**
+- [ ] Auto-update changelog on every commit/deploy (stop doing this manually)
+- [ ] Process: git hook or CI step that appends to CHANGELOG.md automatically
+
+**Building Blocks Vision** 🧱
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    THE BUILDING BLOCKS VISION                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  Just like AI made stunning images accessible to everyone               │
+│  (DALL-E vs decades of Photoshop/After Effects expertise)               │
+│                                                                         │
+│  We make page building feel like playing with blocks:                   │
+│  - Drag sections anywhere                                               │
+│  - Stack, swap, duplicate                                               │
+│  - No code, no config, just create                                      │
+│                                                                         │
+│  The technology has existed (Photoshop, CMS builders).                  │
+│  We're making it EASY - that's the innovation.                          │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Free-form component movement in edit mode (drag anywhere, not just up/down)
+- [ ] Visual drag handles on every section/component
+- [ ] Snap-to-grid system for alignment
+- [ ] Real-time preview while dragging
+
 [x] **Fix Auto-Loop System** - TESTED: E2E verified Dec 30, 2025
 - [x] Fix CLAUDE_PROJECT_DIR fallback in loop-helper.sh (DRY - single _get_project_dir)
 - [x] Fix CLAUDE_PROJECT_DIR fallback in common.sh

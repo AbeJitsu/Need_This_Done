@@ -33,7 +33,7 @@
       "caption": ""
     }
   ],
-  "_gitContext": ".claude/loop-state.json                            |   2 +-\n app/affected-routes.json                           |   2 +-\n app/lib/colors.ts                                  |   2 ++\n app/playwright.config.ts                           |   9 ++++++---\n .../service-modal-blue-dark-contrast-test.png      | Bin 102814 -> 157081 bytes\n .../service-modal-blue-light-contrast-test.png     | Bin 179072 -> 177425 bytes\n content/changelog/main.json                        |   2 +-\n 7 files changed, 11 insertions(+), 6 deletions(-)",
+  "_gitContext": "app/affected-routes.json               |   2 +-\n app/lib/colors.ts                      |   2 ++\n app/ux-screenshots/09-how-it-works.png | Bin 306193 -> 45244 bytes\n 3 files changed, 3 insertions(+), 1 deletion(-)",
   "_affectedRoutes": [
     "/",
     "/terms",
