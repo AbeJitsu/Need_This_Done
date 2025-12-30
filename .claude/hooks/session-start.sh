@@ -43,20 +43,52 @@ if [[ -f "$LOOP_STATE_FILE" ]]; then
   LOOP_ACTIVE=$(jq -r '.active // false' "$LOOP_STATE_FILE" 2>/dev/null)
 
   if [[ "$LOOP_ACTIVE" == "true" ]]; then
-    # Active loop - show status
+    # Active loop - show status and reinject auto-loop context
     ELAPSED=$(get_elapsed_formatted 2>/dev/null || echo "unknown")
     MAX_HOURS=$(jq -r '.maxHours // 5' "$LOOP_STATE_FILE")
     ITERATIONS=$(jq -r '.iterationCount // 0' "$LOOP_STATE_FILE")
     COMPLETED=$(jq -r '.tasksCompleted // 0' "$LOOP_STATE_FILE")
 
+    # Get current task info
+    TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
+    CURRENT_TASK=""
+    NEXT_READY=""
+    if [[ -f "$TODO_FILE" ]]; then
+      CURRENT_TASK=$(grep -E '^\[→\]' "$TODO_FILE" | head -1 | sed 's/\[→\] //')
+      NEXT_READY=$(grep -E '^\[ \]' "$TODO_FILE" | head -1 | sed 's/\[ \] //')
+    fi
+
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "🔄 LOOP ACTIVE"
+    echo "🔄 AUTONOMOUS LOOP ACTIVE"
     echo "   Time: $ELAPSED / ${MAX_HOURS}h"
     echo "   Iterations: $ITERATIONS | Tasks completed: $COMPLETED"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    echo "Continue working on TODO.md tasks."
+
+    # Show specific task to work on
+    if [[ -n "$CURRENT_TASK" ]]; then
+      echo "📌 CONTINUE: $CURRENT_TASK"
+      echo ""
+      echo "Work autonomously using TDD:"
+      echo "  1. Write/run failing test"
+      echo "  2. Make it pass"
+      echo "  3. Mark [x] in TODO.md and run /dac"
+      echo "  4. Continue to next task (don't stop)"
+    elif [[ -n "$NEXT_READY" ]]; then
+      echo "📌 NEXT TASK: $NEXT_READY"
+      echo ""
+      echo "Mark [→] in TODO.md and work autonomously:"
+      echo "  1. Write failing test first"
+      echo "  2. Make it pass"
+      echo "  3. Mark [x] and run /dac"
+      echo "  4. Continue to next task (don't stop)"
+    else
+      echo "All tasks complete! Running final verification..."
+    fi
+
+    echo ""
+    echo "KEY: Work continuously. Don't ask permission. Don't stop between tasks."
     echo ""
     exit 0
 
