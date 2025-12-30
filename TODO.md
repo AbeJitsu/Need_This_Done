@@ -29,18 +29,11 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[x] **Inline Edit Coverage Gap** - 6 pages missing inline editing support (DONE - 37 E2E tests passing)
-
-[x] **Add inline editing to /blog** - BlogPageClient with EditableSection
-[x] **Add inline editing to /changelog** - ChangelogPageClient with EditableSection
-[x] **Add inline editing to /get-started** - GetStartedPageClient with EditableSection
-[x] **Add inline editing to /guide** - GuidePageClient with EditableSection
-[x] **Add inline editing to /privacy** - PrivacyPageClient with EditableSection
-[x] **Add inline editing to /terms** - TermsPageClient with EditableSection
+[→] **Universal Editing (Phase 5)** - Auto-load content in InlineEditProvider by route, no per-page code needed
+[ ] **Test universal editing on all 36 pages** - Verify click-to-edit works without PageClient files
+[ ] **Remove EditableSection wrappers from existing pages** - Clean up now-redundant boilerplate
 
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
-    Context: app/api/appointments/, .env.local credentials
-    Done when: OAuth flow works, calendar events created on approval
 
 ---
 

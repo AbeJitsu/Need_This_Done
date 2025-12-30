@@ -1,6 +1,9 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
+import { getPageSlugFromPath } from '@/lib/editable-routes';
+import { getDefaultContent } from '@/lib/default-page-content';
 
 // ============================================================================
 // Inline Edit Context - Manage inline editing state for all pages
@@ -183,6 +186,7 @@ function setNestedValue(
 // ============================================================================
 
 export function InlineEditProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   const [isEditMode, setIsEditMode] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -196,6 +200,50 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
   // Component-based editing state (Puck - legacy)
   const [selectedComponent, setSelectedComponent] = useState<ComponentSelection | null>(null);
   const [pageData, setPageData] = useState<Record<string, unknown> | null>(null);
+
+  // ============================================================================
+  // Universal Content Loading
+  // ============================================================================
+  // Auto-detect route and load content for editable pages.
+  // This eliminates the need for useEditableContent() in each page.
+  useEffect(() => {
+    const slug = getPageSlugFromPath(pathname);
+
+    // Skip if already loaded for this slug (prevents re-fetching on re-renders)
+    if (slug === pageSlug && pageContent !== null) return;
+
+    if (slug) {
+      setPageSlug(slug);
+
+      // Try to fetch from API first, fall back to defaults
+      fetch(`/api/page-content/${slug}`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data?.content) {
+            setPageContent(data.content);
+          } else {
+            // Use default content as fallback
+            const defaults = getDefaultContent(slug);
+            if (defaults) {
+              setPageContent(defaults as unknown as Record<string, unknown>);
+            }
+          }
+        })
+        .catch(() => {
+          // On error, use default content
+          const defaults = getDefaultContent(slug);
+          if (defaults) {
+            setPageContent(defaults as unknown as Record<string, unknown>);
+          }
+        });
+    } else {
+      // Non-editable route - clear content
+      if (pageContent !== null) {
+        setPageContent(null);
+        setPageSlug(null);
+      }
+    }
+  }, [pathname, pageSlug, pageContent]);
 
   const setEditMode = useCallback((enabled: boolean) => {
     setIsEditMode(enabled);
