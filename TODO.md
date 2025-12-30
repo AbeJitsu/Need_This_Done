@@ -202,13 +202,23 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 **Platform Simplicity Layer**
 - [ ] Phone-first wizard (answer 5 questions → done) - needs more testing
 - [x] Pre-built page sections (drag whole sections, not components)
-- [ ] Template marketplace (share/sell templates)
+- [x] Template marketplace (share/sell templates)
 
 ---
 
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Template Marketplace** (Dec 30, 2025)
+- Supabase migration with marketplace_templates, template_purchases, template_reviews
+- PostgreSQL functions: download_template, update_template_rating triggers
+- API: GET (list, featured, categories, my-templates, my-purchases), POST (create, download, review)
+- Filtering by category, price, search; sorting by popular, recent, rating
+- Author dashboard for template management
+- Review system tied to downloads, moderation workflow
+- 22 E2E tests covering CRUD and authentication
+- Context: migrations/029, app/api/marketplace/route.ts
 
 **Pre-built Page Sections** (Dec 30, 2025)
 - Section library with 15+ ready-to-use sections organized by category
@@ -433,4 +443,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Pre-built Sections: library, picker, categories*
+*Last Updated: December 30, 2025 - Template Marketplace: share, sell, download templates*
