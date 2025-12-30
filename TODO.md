@@ -65,23 +65,60 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                    HARDCODED COLOR DEBT                                  │
 ├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  Current State (Dec 30, 2025):                                          │
-│  • 104 files with hardcoded dark:text-* classes                         │
-│  • 19 files with opacity backgrounds (dark:bg-*/20 = invisible)         │
-│  • Each file is a potential dark mode bug                               │
-│                                                                         │
-│  Target: ZERO hardcoded colors                                          │
-│  • All colors imported from lib/colors.ts                               │
-│  • One change = one file edit (ETC principle)                           │
-│                                                                         │
+│  colors.ts cleaned: ✅ No -50 shades, no opacity in dark mode           │
+│  Scanner: python3 scripts/find-hardcoded-colors.py                      │
+│  Remaining: 75 violations in 36 component files                         │
+│  Rule: -100 minimum for light mode, solid colors in dark mode           │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Add missing exports to colors.ts (sectionBgColors, infoBannerColors, etc.)
-- [ ] Fix puck-utils.tsx (12 opacity backgrounds → solid colors)
-- [ ] Fix MediaLibrary.tsx + ImageUpload.tsx (5 opacity backgrounds)
-- [ ] Fix admin pages (analytics, pages, appointments, etc.)
-- [ ] Migrate remaining 100+ component files to use colors.ts imports
+**Admin Pages (15 files)**
+- [→] app/admin/layout.tsx - bg-gray-50 (2 occurrences)
+- [ ] app/admin/appointments/page.tsx - bg-gray-50
+- [ ] app/admin/blog/page.tsx - bg-gray-50
+- [ ] app/admin/blog/new/page.tsx - bg-gray-50, bg-blue-50
+- [ ] app/admin/blog/[slug]/edit/page.tsx - bg-gray-50 (2)
+- [ ] app/admin/content/[slug]/edit/page.tsx - bg-gray-50 (2)
+- [ ] app/admin/orders/page.tsx - bg-gray-50 (2)
+- [ ] app/admin/pages/page.tsx - bg-gray-50
+- [ ] app/admin/pages/new/page.tsx - bg-gray-50 (3)
+- [ ] app/admin/pages/[slug]/edit/page.tsx - bg-gray-50 (2)
+- [ ] app/admin/pages/[slug]/blocks/page.tsx - bg-gray-50 (2)
+- [ ] app/admin/shop/inventory/page.tsx - bg-gray-50
+- [ ] app/admin/shop/orders/page.tsx - bg-gray-50 (2)
+- [ ] app/admin/shop/products/new/page.tsx - bg-blue-50
+- [ ] app/admin/users/page.tsx - bg-gray-50, hardcoded borders
+
+**Marketing Components (12 files)**
+- [ ] components/AuthDemo.tsx - bg-gray-50 (2)
+- [ ] components/DatabaseDemo.tsx - bg-orange-50, bg-green-50, bg-blue-50 (5)
+- [ ] components/FAQ.tsx - bg-gray-50
+- [ ] components/HealthStatus.tsx - bg-green-50, bg-red-50
+- [ ] components/HowItWorks.tsx - multiple -50 shades
+- [ ] components/SpeedDemo.tsx - bg-green-50
+- [ ] components/WhatCanYouBuild.tsx - bg-green-50, bg-blue-50
+- [ ] components/home/HomePageClient.tsx - bg patterns
+- [ ] components/changelog/ChangelogPageClient.tsx
+- [ ] components/guide/GuidePageClient.tsx
+- [ ] components/blog/MarkdownContent.tsx
+- [ ] components/templates/PageWizard.tsx
+
+**Editor/Puck Components (8 files)**
+- [ ] components/InlineEditor/AdminSidebar.tsx
+- [ ] components/SectionPicker.tsx
+- [ ] components/content-editor/ContentEditor.tsx
+- [ ] components/content-editor/fields/CollapsibleSection.tsx
+- [ ] components/media/ImageUpload.tsx
+- [ ] components/puck/ImageField.tsx
+- [ ] components/puck/ProductPicker.tsx
+- [ ] components/puck/RichTextField.tsx
+- [ ] components/puck/TestimonialsComponent.tsx
+
+**Shop Pages (2 files)**
+- [ ] app/cart/page.tsx
+- [ ] app/checkout/page.tsx
+
+**Post-Migration**
+- [ ] Re-run scanner: verify 0 violations
 - [ ] Add ESLint rule to prevent new hardcoded dark: classes
 
 **Dashboard Layout Issues**
