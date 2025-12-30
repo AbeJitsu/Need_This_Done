@@ -32,12 +32,16 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 **Dark Mode & Color System Issues**
 - [x] Add E2E tests that catch dark mode visual issues (current tests don't detect rendering problems)
-- [ ] Research orange button color - looks brown in dark mode, needs true orange that works
-- [ ] Find optimal orange: white text (#FFF) + orange background at 5:1 contrast without looking brown
+- [x] Research orange button color - looks brown in dark mode, needs true orange that works
+- [x] Find optimal orange: white text (#FFF) + orange background at 5:1 contrast without looking brown
+  - Solution: #ad4800 (H:25° S:100% L:34%) with 5.67:1 contrast ratio
+  - Updated lib/colors.ts: solidButtonColors, accentColors, alertColors, faqColors
 
 **Automation & Developer Experience**
 - [ ] Auto-update changelog on every commit/deploy (stop doing this manually)
 - [ ] Process: git hook or CI step that appends to CHANGELOG.md automatically
+- [ ] Add changelog link to footer/navigation (currently no way to find it)
+- [ ] Design a changelog page for tech users (release notes, version history, API changes)
 
 **Building Blocks Vision** 🧱
 ```
