@@ -7,6 +7,10 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
+import { EditableSection } from '@/components/InlineEditor';
+import { useEditableContent } from '@/hooks/useEditableContent';
+import type { ContactPageContent } from '@/lib/page-content-types';
+import { defaultContactContent } from '@/lib/default-page-content';
 import {
   formInputColors,
   formValidationColors,
@@ -40,6 +44,9 @@ const ALLOWED_TYPES = [
 ];
 
 export default function ContactPage() {
+  // Register with edit context for inline editing
+  const { content } = useEditableContent<ContactPageContent>(defaultContactContent);
+
   const services = getServices();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
@@ -156,17 +163,21 @@ export default function ContactPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
 
         {/* Header */}
-        <PageHeader
-          title="Request a Free Quote"
-          description="Tell us what you need help with and we'll send you a personalized quote within 2 business days. No commitment, no spam. Just a friendly estimate so you know exactly what to expect."
-        />
+        <EditableSection sectionKey="header" label="Page Header">
+          <PageHeader
+            title={content.header.title}
+            description={content.header.description}
+          />
+        </EditableSection>
 
         {/* Quick links */}
-        <p className={`text-center mb-6 ${formInputColors.helper}`}>
-          <Link href="/shop" className={`font-medium hover:underline ${titleColors.purple}`}>
-            Need help now? Book a quick consultation →
-          </Link>
-        </p>
+        <EditableSection sectionKey="quickLink" label="Quick Link">
+          <p className={`text-center mb-6 ${formInputColors.helper}`}>
+            <Link href={content.quickLink.href} className={`font-medium hover:underline ${titleColors.purple}`}>
+              {content.quickLink.text}
+            </Link>
+          </p>
+        </EditableSection>
 
         {/* Contact Form */}
         <Card className="mb-10">
@@ -397,15 +408,14 @@ export default function ContactPage() {
         </Card>
 
         {/* Alternative Contact */}
-        <CTASection
-          title="Want to learn more first?"
-          buttons={[
-            { text: 'View Our Services', variant: 'green', href: '/services' },
-            { text: 'How It Works', variant: 'blue', href: '/how-it-works' },
-            { text: 'Read the FAQ', variant: 'purple', href: '/faq' }
-          ]}
-          hoverColor="green"
-        />
+        <EditableSection sectionKey="cta" label="Call to Action">
+          <CTASection
+            title={content.cta.title}
+            description={content.cta.description}
+            buttons={content.cta.buttons}
+            hoverColor={content.cta.hoverColor || 'green'}
+          />
+        </EditableSection>
     </div>
   );
 }

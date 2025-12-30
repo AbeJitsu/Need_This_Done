@@ -11,6 +11,7 @@ import type {
   ServicesPageContent,
   HowItWorksPageContent,
   HomePageContent,
+  ContactPageContent,
   PageContent,
   EditablePageSlug,
 } from './page-content-types';
@@ -523,6 +524,32 @@ export const defaultHomeContent: HomePageContent = {
 };
 
 // ============================================================================
+// Contact Page Defaults
+// ============================================================================
+
+export const defaultContactContent: ContactPageContent = {
+  header: {
+    title: 'Request a Free Quote',
+    description:
+      "Tell us what you need help with and we'll send you a personalized quote within 2 business days. No commitment, no spam. Just a friendly estimate so you know exactly what to expect.",
+  },
+  quickLink: {
+    text: 'Need help now? Book a quick consultation →',
+    href: '/shop',
+  },
+  cta: {
+    title: 'Want to learn more first?',
+    description: '',
+    buttons: [
+      { text: 'View Our Services', variant: 'green', href: '/services' },
+      { text: 'How It Works', variant: 'blue', href: '/how-it-works' },
+      { text: 'Read the FAQ', variant: 'purple', href: '/faq' },
+    ],
+    hoverColor: 'green',
+  },
+};
+
+// ============================================================================
 // Default Content Getter
 // ============================================================================
 
@@ -532,6 +559,7 @@ const defaultContentMap: Record<EditablePageSlug, PageContent> = {
   services: defaultServicesContent,
   'how-it-works': defaultHowItWorksContent,
   home: defaultHomeContent,
+  contact: defaultContactContent,
 };
 
 /**

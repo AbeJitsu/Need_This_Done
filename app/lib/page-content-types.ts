@@ -265,6 +265,19 @@ export interface HomePageContent {
 }
 
 // ============================================================================
+// Contact Page Content
+// ============================================================================
+
+export interface ContactPageContent {
+  header: PageHeader;
+  quickLink: {
+    text: string;
+    href: string;
+  };
+  cta: CTASection;
+}
+
+// ============================================================================
 // Union Types & Mapping
 // ============================================================================
 
@@ -274,7 +287,8 @@ export type PageContent =
   | FAQPageContent
   | ServicesPageContent
   | HowItWorksPageContent
-  | HomePageContent;
+  | HomePageContent
+  | ContactPageContent;
 
 /** Content type identifiers */
 export type PageContentType =
@@ -282,7 +296,8 @@ export type PageContentType =
   | 'faq_page'
   | 'services_page'
   | 'how_it_works_page'
-  | 'home_page';
+  | 'home_page'
+  | 'contact_page';
 
 /** Maps page slugs to their content types */
 export const PAGE_CONTENT_TYPES: Record<string, PageContentType> = {
@@ -291,6 +306,7 @@ export const PAGE_CONTENT_TYPES: Record<string, PageContentType> = {
   services: 'services_page',
   'how-it-works': 'how_it_works_page',
   home: 'home_page',
+  contact: 'contact_page',
 };
 
 /** Display names for admin UI */
@@ -300,8 +316,9 @@ export const PAGE_DISPLAY_NAMES: Record<string, string> = {
   services: 'Services',
   'how-it-works': 'How It Works',
   home: 'Homepage',
+  contact: 'Contact',
 };
 
 /** All editable page slugs */
-export const EDITABLE_PAGES = ['home', 'pricing', 'services', 'faq', 'how-it-works'] as const;
+export const EDITABLE_PAGES = ['home', 'pricing', 'services', 'faq', 'how-it-works', 'contact'] as const;
 export type EditablePageSlug = (typeof EDITABLE_PAGES)[number];
