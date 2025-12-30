@@ -4,6 +4,33 @@
 # Why: DRY - avoid duplicating logic across hooks
 
 # ============================================
+# PROJECT DIRECTORY DETECTION
+# Works with or without CLAUDE_PROJECT_DIR
+# ============================================
+_get_project_dir() {
+  if [[ -n "$CLAUDE_PROJECT_DIR" ]]; then
+    echo "$CLAUDE_PROJECT_DIR"
+    return 0
+  fi
+  local git_root
+  git_root="$(git rev-parse --show-toplevel 2>/dev/null)"
+  if [[ -n "$git_root" && -d "$git_root/.claude" ]]; then
+    echo "$git_root"
+    return 0
+  fi
+  local dir="$PWD"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -d "$dir/.claude" ]]; then
+      echo "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  echo "$PWD"
+}
+_PROJECT_DIR="$(_get_project_dir)"
+
+# ============================================
 # RECURSION GUARD
 # Prevents hooks from triggering themselves
 # ============================================
@@ -16,7 +43,7 @@ export CLAUDE_HOOK_RUNNING=1
 # STATE FILE PATHS
 # All hook state lives in .claude/state/
 # ============================================
-STATE_DIR="$CLAUDE_PROJECT_DIR/.claude/state"
+STATE_DIR="$_PROJECT_DIR/.claude/state"
 mkdir -p "$STATE_DIR" 2>/dev/null
 
 export FRONTEND_CHANGES_FILE="$STATE_DIR/frontend-changes.txt"

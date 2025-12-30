@@ -10,16 +10,23 @@
 #   - If loop active: checks limits, completion, or re-feeds prompt
 #   - If loop inactive: shows status and exits normally
 
-# Source shared utilities
-source "$CLAUDE_PROJECT_DIR/.claude/hooks/lib/common.sh"
-
-# Source loop helper if it exists
-LOOP_HELPER="$CLAUDE_PROJECT_DIR/.claude/hooks/lib/loop-helper.sh"
-if [[ -f "$LOOP_HELPER" ]]; then
-  source "$LOOP_HELPER"
+# Source shared utilities (sets $_PROJECT_DIR)
+_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+if [[ -f "$_SCRIPT_DIR/lib/common.sh" ]]; then
+  source "$_SCRIPT_DIR/lib/common.sh"
+else
+  _GIT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+  source "$_GIT_ROOT/.claude/hooks/lib/common.sh"
 fi
 
-TODO_FILE="$CLAUDE_PROJECT_DIR/TODO.md"
+# Source loop helper (sets LOOP_STATE_FILE, TODO_FILE)
+if [[ -f "$_SCRIPT_DIR/lib/loop-helper.sh" ]]; then
+  source "$_SCRIPT_DIR/lib/loop-helper.sh"
+elif [[ -f "$_GIT_ROOT/.claude/hooks/lib/loop-helper.sh" ]]; then
+  source "$_GIT_ROOT/.claude/hooks/lib/loop-helper.sh"
+fi
+
+# TODO_FILE already set by loop-helper.sh
 
 # ============================================================================
 # CHECK 1: Uncommitted Changes (Session-Specific)
@@ -30,7 +37,7 @@ if [[ -f "$SESSION_CHANGES_FILE" ]] && [[ -s "$SESSION_CHANGES_FILE" ]]; then
   SESSION_FILES=""
   while read -r file; do
     # Check if this file has uncommitted changes
-    if cd "$CLAUDE_PROJECT_DIR" && git status --porcelain "$file" 2>/dev/null | grep -q .; then
+    if cd "$_PROJECT_DIR" && git status --porcelain "$file" 2>/dev/null | grep -q .; then
       SESSION_UNCOMMITTED=1
       SESSION_FILES="$SESSION_FILES\n  $file"
     fi
@@ -105,7 +112,7 @@ if type is_loop_active &>/dev/null && is_loop_active; then
 
     # Run critical E2E tests (field-editability ~20s, not full suite ~27min)
     # SKIP_WEBSERVER=true reuses existing dev server instead of starting new one
-    cd "$CLAUDE_PROJECT_DIR/app"
+    cd "$_PROJECT_DIR/app"
     if SKIP_WEBSERVER=true npx playwright test e2e/field-editability.spec.ts --project=e2e-bypass >/dev/null 2>&1; then
       echo "" >&2
       echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
@@ -180,7 +187,7 @@ fi
 echo "" >&2
 
 # Git status - one line summary
-cd "$CLAUDE_PROJECT_DIR"
+cd "$_PROJECT_DIR"
 STAGED=$(git diff --cached --stat 2>/dev/null | tail -1 | grep -oE '[0-9]+ file' | head -1 || echo "")
 UNSTAGED=$(git diff --stat 2>/dev/null | tail -1 | grep -oE '[0-9]+ file' | head -1 || echo "")
 UNTRACKED=$(git status --porcelain 2>/dev/null | grep '^??' | wc -l | tr -d ' ')

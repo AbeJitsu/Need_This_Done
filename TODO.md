@@ -22,7 +22,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 | Email (Resend) | ✅ Working | hello@needthisdone.com verified |
 | Puck Page Builder | ✅ Active | Visual page builder with TipTap WYSIWYG editor |
 | **Inline Editing** | ✅ **VALIDATED** | 12 pages, 52 field tests, click-to-edit working |
-| **Auto-Loop System** | ✅ **WORKING** | Fixed elapsed time display - DRY project dir detection in loop-helper.sh |
+| **Auto-Loop System** | ✅ **TESTED** | E2E verified: elapsed time, session-start, stop-check all working |
 
 ---
 
@@ -30,10 +30,12 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[x] **Fix Auto-Loop Elapsed Time Bug** - PRIORITY: Fix before continuing other work
-- [x] Fix CLAUDE_PROJECT_DIR fallback in loop-helper.sh (DRY - single source in loop-helper.sh)
-- [x] Verify get_elapsed_formatted returns correct time (tested: 39 minutes vs expected ~39 minutes)
-- [x] Test session-start.sh displays accurate elapsed time (tested: "0h 39m" displays correctly)
+[x] **Fix Auto-Loop System** - TESTED: E2E verified Dec 30, 2025
+- [x] Fix CLAUDE_PROJECT_DIR fallback in loop-helper.sh (DRY - single _get_project_dir)
+- [x] Fix CLAUDE_PROJECT_DIR fallback in common.sh
+- [x] Fix CLAUDE_PROJECT_DIR fallback in stop-check.sh
+- [x] End-to-end test: stop-check.sh exits code 2 (verified)
+- [x] End-to-end test: session-start.sh shows "0h 43m" (verified)
 
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
 
