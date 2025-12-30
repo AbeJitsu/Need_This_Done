@@ -89,27 +89,29 @@ is_time_limit_exceeded() {
 # Count tasks by status
 # Note: grep -c outputs "0" when no matches but exits with code 1
 # We capture the output and provide default if empty
+# Pattern matches: "- [ ]" at start (bullet) or "[ ]" at start of line
+# Excludes comment lines (starting with <!--)
 count_ready_tasks() {
   local count
-  count=$(grep -cE '^\[ \]' "$TODO_FILE" 2>/dev/null) || true
+  count=$(grep -v '^<!--' "$TODO_FILE" 2>/dev/null | grep -cE '^-?\s*\[ \]' 2>/dev/null) || true
   echo "${count:-0}"
 }
 
 count_in_progress_tasks() {
   local count
-  count=$(grep -cE '^\[→\]' "$TODO_FILE" 2>/dev/null) || true
+  count=$(grep -v '^<!--' "$TODO_FILE" 2>/dev/null | grep -cE '^-?\s*\[→\]' 2>/dev/null) || true
   echo "${count:-0}"
 }
 
 count_completed_tasks() {
   local count
-  count=$(grep -cE '^\[x\]' "$TODO_FILE" 2>/dev/null) || true
+  count=$(grep -v '^<!--' "$TODO_FILE" 2>/dev/null | grep -cE '^-?\s*\[x\]' 2>/dev/null) || true
   echo "${count:-0}"
 }
 
 count_blocked_tasks() {
   local count
-  count=$(grep -cE '^\[!\]' "$TODO_FILE" 2>/dev/null) || true
+  count=$(grep -v '^<!--' "$TODO_FILE" 2>/dev/null | grep -cE '^-?\s*\[!\]' 2>/dev/null) || true
   echo "${count:-0}"
 }
 
@@ -128,12 +130,12 @@ has_nested_tasks() {
 
 # Get first ready task name
 get_first_ready_task() {
-  grep -E '^\[ \]' "$TODO_FILE" | head -1 | sed 's/\[ \] //'
+  grep -v '^<!--' "$TODO_FILE" 2>/dev/null | grep -E '^-?\s*\[ \]' | head -1 | sed 's/.*\[ \] //'
 }
 
 # Get current in-progress task name
 get_current_task() {
-  grep -E '^\[→\]' "$TODO_FILE" | head -1 | sed 's/\[→\] //'
+  grep -v '^<!--' "$TODO_FILE" 2>/dev/null | grep -E '^-?\s*\[→\]' | head -1 | sed 's/.*\[→\] //'
 }
 
 # ============================================================================

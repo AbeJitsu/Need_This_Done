@@ -4,7 +4,7 @@ import { useState } from 'react';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { EditableSection } from '@/components/InlineEditor';
+import { EditableSection, EditableItem } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { GetStartedPageContent } from '@/lib/page-content-types';
 import {
@@ -175,46 +175,57 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
       </EditableSection>
 
       {/* Two Main Paths */}
-      <div className="grid md:grid-cols-2 gap-6 mb-10">
-        {content.paths.map((path, index) => (
-          <Card key={index} hoverColor={path.hoverColor} hoverEffect="lift" className="h-full">
-            <div className="p-8 h-full grid grid-rows-[auto_auto_auto_1fr_auto]">
-              <div className="pb-4">
-                <span className={`inline-block px-4 py-1 ${accentColors[path.hoverColor as AccentVariant].bg} ${accentColors[path.hoverColor as AccentVariant].text} rounded-full text-sm font-semibold`}>
-                  {path.badge}
-                </span>
-              </div>
-              <h2 className={`text-2xl font-bold ${headingColors.primary} pb-3`}>
-                {path.title}
-              </h2>
-              <p className={`${headingColors.secondary} pb-6`}>
-                {path.description}
-              </p>
-              <ul className="space-y-3 self-start">
-                {path.features.map((feature, idx) => {
-                  // checkmarkColors only has purple, blue, green - fall back to green for other variants
-                  const colorKey = path.hoverColor as keyof typeof checkmarkColors;
-                  const checkmarkClass = checkmarkColors[colorKey]?.icon || checkmarkColors.green.icon;
-                  return (
-                    <li key={idx} className="flex items-center gap-2">
-                      <span className={checkmarkClass}>✓</span>
-                      <span className={headingColors.secondary}>{feature}</span>
-                    </li>
-                  );
-                })}
-              </ul>
-              <Button
-                variant={path.button.variant}
-                href={path.button.href}
-                size={path.button.size || 'lg'}
-                className="w-full"
-              >
-                {path.button.text}
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
+      <EditableSection sectionKey="paths" label="Path Options">
+        <div className="grid md:grid-cols-2 gap-6 mb-10">
+          {content.paths.map((path, index) => (
+            <EditableItem
+              key={index}
+              sectionKey="paths"
+              arrayField="paths"
+              index={index}
+              label={path.title}
+              content={path as unknown as Record<string, unknown>}
+            >
+              <Card hoverColor={path.hoverColor} hoverEffect="lift" className="h-full">
+                <div className="p-8 h-full grid grid-rows-[auto_auto_auto_1fr_auto]">
+                  <div className="pb-4">
+                    <span className={`inline-block px-4 py-1 ${accentColors[path.hoverColor as AccentVariant].bg} ${accentColors[path.hoverColor as AccentVariant].text} rounded-full text-sm font-semibold`}>
+                      {path.badge}
+                    </span>
+                  </div>
+                  <h2 className={`text-2xl font-bold ${headingColors.primary} pb-3`}>
+                    {path.title}
+                  </h2>
+                  <p className={`${headingColors.secondary} pb-6`}>
+                    {path.description}
+                  </p>
+                  <ul className="space-y-3 self-start">
+                    {path.features.map((feature, idx) => {
+                      // checkmarkColors only has purple, blue, green - fall back to green for other variants
+                      const colorKey = path.hoverColor as keyof typeof checkmarkColors;
+                      const checkmarkClass = checkmarkColors[colorKey]?.icon || checkmarkColors.green.icon;
+                      return (
+                        <li key={idx} className="flex items-center gap-2">
+                          <span className={checkmarkClass}>✓</span>
+                          <span className={headingColors.secondary}>{feature}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <Button
+                    variant={path.button.variant}
+                    href={path.button.href}
+                    size={path.button.size || 'lg'}
+                    className="w-full"
+                  >
+                    {path.button.text}
+                  </Button>
+                </div>
+              </Card>
+            </EditableItem>
+          ))}
+        </div>
+      </EditableSection>
 
       {/* Already Have a Quote Section */}
       <div className="text-center mb-10 py-6">

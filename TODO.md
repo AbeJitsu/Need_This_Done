@@ -30,6 +30,12 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
+[→] **Auto-Loop System (TOP PRIORITY)** - Make /auto-loop work reliably for hours of autonomous work
+- [ ] Fix task parsing regex to match TODO.md format
+- [ ] Verify stop hook blocks exit correctly (exit code 2)
+- [ ] Test end-to-end: invoke skill → work → block → continue
+- [ ] Ensure time limit and iteration safety work
+
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
 
 **Auto-Loop System Improvements**
