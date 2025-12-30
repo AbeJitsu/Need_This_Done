@@ -155,7 +155,7 @@ export default function BlogManagement() {
           >
             Admin
           </Link>
-          <span className="text-gray-400 dark:text-gray-500">/</span>
+          <span className="text-gray-400">/</span>
           <span className="text-gray-900 dark:text-gray-100 font-medium">Blog</span>
         </nav>
 

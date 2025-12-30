@@ -30,19 +30,35 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-**Dark Mode & Color System Issues**
-- [x] Add E2E tests that catch dark mode visual issues (current tests don't detect rendering problems)
-- [x] Research orange button color - looks brown in dark mode, needs true orange that works
-- [x] Find optimal orange: white text (#FFF) + orange background at 5:1 contrast without looking brown
-  - Solution: #ad5700 (H:30° S:100% L:34%) with 5.07:1 contrast ratio (closest to 5:1)
-  - All orange definitions in lib/colors.ts (no duplication in tailwind.config.cjs)
-- [x] Fix Add button in edit mode - dark mode issue not caught by current tests
-  - Changed AdminSidebar Add buttons to use solidButtonColors.green (not accentColors.green.bg)
-  - accentColors are for light backgrounds; solidButtonColors are for solid buttons with white text
-- [x] Additional dark mode issues still visible - TDD approach to catch all patterns
-  - Created e2e/admin-blog-dark-mode.spec.ts with 8 contrast tests
-  - Fixed Button component to use solidButtonColors (proper dark mode contrast)
-  - Updated solidButtonColors to use -600 shade in dark mode (5.19:1+ contrast with white)
+**Dark Mode System Redesign** (Dec 30, 2025)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    DARK MODE SYSTEM                                      │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  Problem: Too many color systems, inconsistent patterns, opacity bugs   │
+│                                                                         │
+│  Solution: Three principles                                             │
+│  1. ALL colors from colors.ts (no hardcoded dark: classes)              │
+│  2. NO opacity in dark mode (/20, /30, /50 = invisible)                 │
+│  3. TWO patterns only: INVERSION (buttons) or NEUTRAL (sections)        │
+│                                                                         │
+│  See: .claude/rules/dark-mode-system.md                                 │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [x] Fix setDarkMode helper (wrong localStorage key 'theme' → 'darkMode')
+- [x] Fix accentColors.orange to use #ad5700 (true orange at 5.07:1 contrast)
+- [x] Fix Button.tsx to use accentColors (inversion pattern)
+- [x] Fix "Ready to Get Started" section (removed /20 opacity → solid gray-800)
+- [x] Override Tailwind color scales in tailwind.config.cjs (500 = 4.5:1 with white for all colors)
+- [x] Update colors.ts to use orange-500 instead of custom hex [#ad5700]
+- [x] Update .claude/rules/colors.md with anchor system documentation
+- [→] Test buttons in light and dark mode
+- [ ] Consolidate colors.ts: remove duplicate systems (accentColors vs solidButtonColors)
+- [ ] Add sectionColors for page backgrounds (neutral pattern)
+- [ ] Migrate components: replace hardcoded dark: classes with colors.ts imports
+- [ ] Document which pattern to use when (buttons=inversion, sections=neutral)
 
 **Dashboard Layout Issues**
 - [ ] Fix dashboard grid layout - 6 items on top row + 1 left-aligned on second row looks bad

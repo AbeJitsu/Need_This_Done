@@ -126,15 +126,14 @@ export default function Navigation() {
             </button>
 
             {/* Get a Quote CTA - Primary conversion action */}
-            {/* Uses centralized accentColors.orange from colors.ts */}
-            {/* Hidden on mobile to prevent overflow - available in mobile menu */}
+            {/* Uses accentColors.orange with inversion pattern (light bg→dark bg) */}
+            {/* Same pattern as blue navigation links for consistency */}
             <Link
               href="/contact"
               className={`
                 hidden sm:inline-flex items-center px-3 py-2 text-sm ${accentFontWeight} rounded-full whitespace-nowrap transition-all duration-300 hover:scale-105 active:scale-95
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
-                ${accentBorderWidth} ${accentColors.orange.bg} ${accentColors.orange.text} ${accentColors.orange.border}
-                ${accentColors.orange.hoverText} ${accentColors.orange.hoverBorder}
+                ${accentBorderWidth} ${accentColors.orange.bg} ${accentColors.orange.text} ${accentColors.orange.border} ${accentColors.orange.hoverText} ${accentColors.orange.hoverBorder}
               `}
             >
               Get a Quote
@@ -281,7 +280,7 @@ export default function Navigation() {
               );
             })}
 
-            {/* Primary CTA in mobile menu - uses centralized accentColors.orange */}
+            {/* Primary CTA in mobile menu - uses accentColors.orange with inversion pattern */}
             <Link
               href="/contact"
               onClick={() => setMobileMenuOpen(false)}

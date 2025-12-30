@@ -168,14 +168,14 @@ export default function NewBlogPost() {
           >
             Admin
           </Link>
-          <span className="text-gray-400 dark:text-gray-500">/</span>
+          <span className="text-gray-400 dark:text-gray-400">/</span>
           <Link
             href="/admin/blog"
             className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           >
             Blog
           </Link>
-          <span className="text-gray-400 dark:text-gray-500">/</span>
+          <span className="text-gray-400 dark:text-gray-400">/</span>
           <span className="text-gray-900 dark:text-gray-100 font-medium">New Post</span>
         </nav>
 
@@ -191,14 +191,14 @@ export default function NewBlogPost() {
         <div
           className={`
             mb-8 p-4 rounded-xl
-            bg-blue-50 dark:bg-blue-900/20
-            border border-blue-200 dark:border-blue-800
+            bg-blue-50 dark:bg-blue-800
+            border border-blue-200 dark:border-blue-600
           `}
         >
-          <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
+          <h3 className="font-semibold text-blue-800 dark:text-white mb-2">
             💡 Quick Tip: Paste LinkedIn Content
           </h3>
-          <p className="text-sm text-blue-700 dark:text-blue-300">
+          <p className="text-sm text-blue-700 dark:text-blue-100">
             Paste your LinkedIn post into the content field. The first line will become your title,
             and we'll auto-generate the rest. You can then expand it or publish as-is.
           </p>

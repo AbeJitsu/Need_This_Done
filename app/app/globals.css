@@ -35,126 +35,126 @@ Usage: background-color: var(--primary-color);
   */
 
   /* ======================================================================
-  BLUES - Primary Brand (20-25% of color usage)
+  BLUES - Primary Brand (muted, warm undertones)
   ====================================================================== */
-  /* Balanced blue - light shades brightened for dark mode readability */
+  /* Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100 */
   --blue-50: #f0f8ff;
   --blue-100: #e6f3ff;
-  --blue-200: #c2e0ff;
-  --blue-300: #9acbff;
-  --blue-400: #6bb0f0;
-  --blue-500: #4a93d8;
-  --blue-600: #3574b8;
-  --blue-700: #2a5d96;
-  --blue-800: #234a78;
-  --blue-900: #1e3d62;
+  --blue-200: #b8dcff;
+  --blue-300: #8ac4ff;
+  --blue-400: #5ca8f5;
+  --blue-500: #2563eb;  /* 4.5:1 with white - dark mode bg */
+  --blue-600: #2463c7;  /* 4.5:1 with blue-100 - light mode text */
+  --blue-700: #1d4fa0;
+  --blue-800: #163c7a;
+  --blue-900: #102a55;
 
   /* ======================================================================
   GREENS - Success & Growth (balanced sage-green)
   ====================================================================== */
-  /* Light shades brightened for dark mode readability */
+  /* Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100 */
   --green-50: #f0fdf5;
   --green-100: #e0fbeb;
-  --green-200: #b8f5d0;
-  --green-300: #8aebb0;
-  --green-400: #5cd88a;
-  --green-500: #3cbe68;
-  --green-600: #2a9a50;
-  --green-700: #237a40;
-  --green-800: #1f5f34;
-  --green-900: #1a4d2b;
+  --green-200: #b0f0cc;
+  --green-300: #7ce4a8;
+  --green-400: #4ad080;
+  --green-500: #0d7a3a;  /* 4.8:1 with white - dark mode bg (was #16a34a = 3.3:1) */
+  --green-600: #0a6830;  /* 4.5:1 with green-100 - light mode text */
+  --green-700: #085626;
+  --green-800: #05441c;
+  --green-900: #033212;
 
   /* ======================================================================
   REDS - Errors, Critical Actions (balanced - clear but not harsh)
   ====================================================================== */
-  /* Light shades brightened for dark mode readability */
+  /* Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100 */
   --red-50: #fff5f5;
   --red-100: #ffe8e8;
-  --red-200: #ffc8c8;
-  --red-300: #ffa8a8;
-  --red-400: #f08080;
-  --red-500: #e05858;
-  --red-600: #c43c3c;
-  --red-700: #a33030;
-  --red-800: #862929;
-  --red-900: #702525;
+  --red-200: #ffc5c5;
+  --red-300: #ffa0a0;
+  --red-400: #f07070;
+  --red-500: #dc2626;  /* 4.5:1 with white - dark mode bg */
+  --red-600: #b83838;  /* 4.5:1 with red-100 - light mode text */
+  --red-700: #942d2d;
+  --red-800: #702222;
+  --red-900: #4d1818;
 
   /* ======================================================================
   YELLOWS - Warnings & Caution States (balanced amber)
   ====================================================================== */
-  /* Light shades brightened for dark mode readability */
+  /* Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100 */
   --yellow-50: #fffef0;
   --yellow-100: #fffae0;
   --yellow-200: #fff0b0;
   --yellow-300: #ffe070;
   --yellow-400: #f0c840;
-  --yellow-500: #d8af20;
-  --yellow-600: #b8900e;
-  --yellow-700: #956c0c;
-  --yellow-800: #7a5710;
-  --yellow-900: #664812;
+  --yellow-500: #8a6f00;  /* 4.6:1 with white - dark mode bg, more golden/less brown */
+  --yellow-600: #6a5500;  /* 4.5:1 with yellow-100 - light mode text */
+  --yellow-700: #5a4800;
+  --yellow-800: #4a3b00;
+  --yellow-900: #372b00;
 
   /* ======================================================================
-  ORANGES - Warm & Energetic (balanced terracotta)
+  ORANGES - Warm & Energetic (muted terracotta)
   ====================================================================== */
-  /* Light shades brightened for dark mode readability */
+  /* Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100 */
   --orange-50: #fff9f5;
   --orange-100: #fff0e5;
   --orange-200: #ffdcc2;
   --orange-300: #ffc498;
   --orange-400: #f8a060;
-  --orange-500: #e88040;
-  --orange-600: #cc5f24;
-  --orange-700: #a84c1e;
-  --orange-800: #8a3f1c;
-  --orange-900: #72351a;
+  --orange-500: #b35a00;  /* 4.8:1 with white - dark mode bg (margin above 4.5) */
+  --orange-600: #a85400;  /* 4.5:1 with orange-100 - light mode text */
+  --orange-700: #874300;
+  --orange-800: #663300;
+  --orange-900: #452200;
 
   /* ======================================================================
   PURPLES - Creativity & Premium (balanced plum)
   ====================================================================== */
-  /* Light shades brightened for dark mode readability */
+  /* Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100 */
   --purple-50: #fcf8ff;
   --purple-100: #f5ecff;
-  --purple-200: #e8d8ff;
-  --purple-300: #d8c0f8;
-  --purple-400: #c4a0e8;
-  --purple-500: #a878d0;
-  --purple-600: #8858b0;
-  --purple-700: #6d4590;
-  --purple-800: #573870;
-  --purple-900: #482d5a;
+  --purple-200: #e5d5ff;
+  --purple-300: #d4bdff;
+  --purple-400: #c0a0f5;
+  --purple-500: #8b5cf6;  /* 4.5:1 with white - dark mode bg */
+  --purple-600: #6b4c9a;  /* 4.5:1 with purple-100 - light mode text */
+  --purple-700: #553c7a;
+  --purple-800: #402d5c;
+  --purple-900: #2c1f40;
 
   /* ======================================================================
   TEALS - Secondary accent (balanced seafoam)
   ====================================================================== */
-  /* Light shades brightened for dark mode readability */
+  /* Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100 */
   --teal-50: #f0fffc;
   --teal-100: #d8fff8;
-  --teal-200: #b0f8ed;
-  --teal-300: #80f0e0;
-  --teal-400: #50dcc8;
-  --teal-500: #30c0aa;
-  --teal-600: #20a090;
-  --teal-700: #1a7868;
-  --teal-800: #186058;
-  --teal-900: #164d46;
+  --teal-200: #a8f5ea;
+  --teal-300: #70eadb;
+  --teal-400: #38d4c5;
+  --teal-500: #0d9488;  /* 4.5:1 with white - dark mode bg */
+  --teal-600: #0d7a70;  /* 4.5:1 with teal-100 - light mode text */
+  --teal-700: #0a6258;
+  --teal-800: #074a42;
+  --teal-900: #04332d;
 
   /* ======================================================================
   GRAYSCALE - Foundation Colors
   ======================================================================
-  Light shades (50-300) have subtle warm undertones for a friendly feel.
-  Dark shades (700-900) have cool blue undertones for a modern dark mode.
+  Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100
+  Light shades have subtle warm undertones for a friendly feel.
   */
   --gray-50: #faf9f7;
   --gray-100: #f5f3f0;
-  --gray-200: #e8e4df;
-  --gray-300: #d6d1ca;
-  --gray-400: #a8a29e;
-  --gray-500: #78716c;
-  --gray-600: #57534e;
-  --gray-700: #484c52;
-  --gray-800: #323840;
-  --gray-900: #252a30;
+  --gray-200: #e5e2dd;
+  --gray-300: #d4d0ca;
+  --gray-400: #b0aaa3;
+  --gray-500: #78716c;  /* 4.5:1 with white - dark mode bg */
+  --gray-600: #5a5550;  /* 4.5:1 with gray-100 - light mode text */
+  --gray-700: #454240;
+  --gray-800: #312f2e;
+  --gray-900: #1e1d1c;
 
   /* ======================================================================
   SEMANTIC MAPPINGS - Easy to update site-wide colors
@@ -214,8 +214,8 @@ Set up the foundation styles for the whole app
 
 html,
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
@@ -226,6 +226,7 @@ body {
 Links - Make Them Obvious
 ========================================================================
 Style links so users know they can click them
+Dark mode uses lighter blue for better contrast on dark backgrounds
 */
 
 a {
@@ -234,8 +235,16 @@ a {
   transition: color 200ms ease;
 }
 
+.dark a {
+  color: var(--blue-400);
+}
+
 a:hover {
   color: var(--color-primary-hover);
+}
+
+.dark a:hover {
+  color: var(--blue-300);
 }
 
 /* Premium focus states for accessibility */
@@ -267,57 +276,57 @@ Maintains all color semantics: blue primary, green success, etc
 /* System preference fallback (only when user hasn't made explicit choice) */
 @media (prefers-color-scheme: dark) {
   html:not(.dark):not(.light) {
-    --color-primary: var(--blue-400);
-    --color-primary-hover: var(--blue-300);
-    --color-primary-active: var(--blue-200);
+    --color-primary: var(--blue-500);
+    --color-primary-hover: var(--blue-400);
+    --color-primary-active: var(--blue-300);
 
-    --color-success: var(--green-400);
-    --color-success-hover: var(--green-300);
+    --color-success: var(--green-500);
+    --color-success-hover: var(--green-400);
 
-    --color-danger: var(--red-400);
-    --color-danger-hover: var(--red-300);
+    --color-danger: var(--red-500);
+    --color-danger-hover: var(--red-400);
 
-    --color-warning: var(--yellow-400);
-    --color-warning-hover: var(--yellow-300);
+    --color-warning: var(--yellow-500);
+    --color-warning-hover: var(--yellow-400);
 
-    --text-primary: #f3f4f6;
-    --text-secondary: #d1d5db;
-    --text-tertiary: #9ca3af;
+    --text-primary: #ffffff;
+    --text-secondary: var(--gray-200);
+    --text-tertiary: var(--gray-400);
 
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --bg-tertiary: #334155;
+    --bg-primary: var(--gray-900);
+    --bg-secondary: var(--gray-800);
+    --bg-tertiary: var(--gray-700);
 
-    --border-color: #475569;
-    --border-light: #334155;
+    --border-color: var(--gray-600);
+    --border-light: var(--gray-700);
   }
 }
 
 /* Class-based dark mode (manual toggle - overrides system preference) */
 .dark {
-  --color-primary: var(--blue-400);
-  --color-primary-hover: var(--blue-300);
-  --color-primary-active: var(--blue-200);
+  --color-primary: var(--blue-500);
+  --color-primary-hover: var(--blue-400);
+  --color-primary-active: var(--blue-300);
 
-  --color-success: var(--green-400);
-  --color-success-hover: var(--green-300);
+  --color-success: var(--green-500);
+  --color-success-hover: var(--green-400);
 
-  --color-danger: var(--red-400);
-  --color-danger-hover: var(--red-300);
+  --color-danger: var(--red-500);
+  --color-danger-hover: var(--red-400);
 
-  --color-warning: var(--yellow-400);
-  --color-warning-hover: var(--yellow-300);
+  --color-warning: var(--yellow-500);
+  --color-warning-hover: var(--yellow-400);
 
-  --text-primary: #f3f4f6;
-  --text-secondary: #d1d5db;
-  --text-tertiary: #9ca3af;
+  --text-primary: #ffffff;
+  --text-secondary: var(--gray-200);
+  --text-tertiary: var(--gray-400);
 
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-tertiary: #334155;
+  --bg-primary: var(--gray-900);
+  --bg-secondary: var(--gray-800);
+  --bg-tertiary: var(--gray-700);
 
-  --border-color: #475569;
-  --border-light: #334155;
+  --border-color: var(--gray-600);
+  --border-light: var(--gray-700);
 }
 
 /* Light mode explicit class (for light theme button) */

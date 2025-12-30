@@ -183,8 +183,8 @@ export default function CreateProductPage() {
             </div>
 
             {/* Info box */}
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-              <p className="text-sm text-blue-900 dark:text-blue-200">
+            <div className="p-4 bg-blue-50 dark:bg-blue-800 border border-blue-200 dark:border-blue-600 rounded-lg">
+              <p className="text-sm text-blue-900 dark:text-blue-100">
                 Products are created in Medusa and synced to the storefront. You can manage variants and inventory in Medusa admin.
               </p>
             </div>

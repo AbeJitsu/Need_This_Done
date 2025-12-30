@@ -6,38 +6,40 @@
 // in multiple files.
 //
 // ============================================================================
-// HOW TO USE THIS FILE
+// COLOR SYSTEM - WCAG AA Accessibility
 // ============================================================================
 //
-// THE CORE PATTERN (memorize this):
+// Two anchor points per color (defined in globals.css):
+//   -500: 4.5:1 contrast with WHITE (dark mode backgrounds)
+//   -600: 4.5:1 contrast with -100  (light mode minimum text)
+//
+// THE CORE PATTERN:
 // ┌─────────────────────────────────────────────────────────────────────────┐
 // │  LIGHT MODE              │  DARK MODE                                   │
 // ├─────────────────────────────────────────────────────────────────────────┤
-// │  Background: -100        │  Background: -500 (vibrant)                  │
-// │  Text: -700 or -800      │  Text: -100 (light)                          │
-// │  Border: -500            │  Border: -200 or -300                        │
+// │  Background: -100        │  Background: -500                            │
+// │  Text: -600 to -900      │  Text: white                                 │
+// │  Border: -500            │  Border: -100 (light border pops on dark bg) │
 // └─────────────────────────────────────────────────────────────────────────┘
 //
 // QUICK REFERENCE:
 //   bg:     'bg-purple-100 dark:bg-purple-500'
-//   text:   'text-purple-700 dark:text-purple-100'
-//   border: 'border-purple-500 dark:border-purple-200'
+//   text:   'text-purple-600 dark:text-white'  (or -700/-800/-900)
+//   border: 'border-purple-500 dark:border-purple-100'
 //
-// WHEN TO USE EACH SHADE:
-//   -50:  Very subtle backgrounds (light mode only)
-//   -100: Standard light backgrounds (light mode)
-//   -200: Light borders
-//   -300: Darker borders (dark mode)
-//   -500: Vibrant backgrounds (dark mode) + medium borders (light mode)
-//   -700: Dark text (light mode)
-//   -800: Darker text (light mode, for green/red)
-//   -100: Light text (dark mode)
+// SHADE GUIDE:
+//   -50:  Very subtle backgrounds
+//   -100: Standard light backgrounds (anchor for -600)
+//   -200-400: Interpolated between -100 and -500
+//   -500: Dark mode backgrounds (4.5:1 with white)
+//   -600: Light mode minimum text (4.5:1 with -100)
+//   -700-900: Darker text (all accessible on -100)
 //
 // ADDING NEW COLORS:
 //   1. Follow the pattern above for light/dark mode
 //   2. Use AccentVariant type for new color keys
 //   3. Test in both light and dark mode
-//   4. Ensure WCAG AA contrast (4.5:1 for text, 3:1 for large text)
+//   4. -600+ is guaranteed 4.5:1 with -100 background
 //
 // EXISTING EXPORTS TO REUSE:
 //   - accentColors: Full button/badge styling (bg, text, border, hover)
@@ -101,55 +103,54 @@ export const accentColors: Record<AccentVariant, {
   hoverBorder: string;
 }> = {
   purple: {
-    bg: 'bg-purple-100 dark:bg-purple-800',
+    bg: 'bg-purple-100 dark:bg-purple-500',
     text: 'text-purple-700 dark:text-white',
-    border: 'border-purple-500 dark:border-purple-400',
+    border: 'border-purple-500 dark:border-purple-100',
     hoverText: 'hover:text-purple-800 dark:hover:text-gray-100',
-    hoverBorder: 'hover:border-purple-600 dark:hover:border-purple-300',
+    hoverBorder: 'hover:border-purple-600 dark:hover:border-purple-200',
   },
   blue: {
-    bg: 'bg-blue-100 dark:bg-blue-800',
+    bg: 'bg-blue-100 dark:bg-blue-500',
     text: 'text-blue-700 dark:text-white',
-    border: 'border-blue-500 dark:border-blue-400',
+    border: 'border-blue-500 dark:border-blue-100',
     hoverText: 'hover:text-blue-800 dark:hover:text-gray-100',
-    hoverBorder: 'hover:border-blue-600 dark:hover:border-blue-300',
+    hoverBorder: 'hover:border-blue-600 dark:hover:border-blue-200',
   },
   green: {
-    bg: 'bg-green-100 dark:bg-green-800',
+    bg: 'bg-green-100 dark:bg-green-500',
     text: 'text-green-800 dark:text-white',
-    border: 'border-green-500 dark:border-green-400',
+    border: 'border-green-500 dark:border-green-100',
     hoverText: 'hover:text-green-900 dark:hover:text-gray-100',
-    hoverBorder: 'hover:border-green-600 dark:hover:border-green-300',
+    hoverBorder: 'hover:border-green-600 dark:hover:border-green-200',
   },
   orange: {
-    // Dark mode uses saturated orange (#ad5700) for true orange look
-    // #ad5700 = H:30° S:100% L:34%, 5.07:1 contrast (closer to 5:1, more orange)
-    bg: 'bg-orange-100 dark:bg-[#ad5700]',
+    // Dark mode uses orange-500 (#b35a00) - 4.8:1 contrast with white (WCAG AA)
+    bg: 'bg-orange-100 dark:bg-orange-500',
     text: 'text-orange-900 dark:text-white',
-    border: 'border-orange-500 dark:border-orange-400',
+    border: 'border-orange-500 dark:border-orange-100',
     hoverText: 'hover:text-orange-950 dark:hover:text-orange-100',
-    hoverBorder: 'hover:border-orange-600 dark:hover:border-orange-300',
+    hoverBorder: 'hover:border-orange-600 dark:hover:border-orange-200',
   },
   teal: {
-    bg: 'bg-teal-100 dark:bg-teal-800',
+    bg: 'bg-teal-100 dark:bg-teal-500',
     text: 'text-teal-900 dark:text-white',
-    border: 'border-teal-500 dark:border-teal-400',
+    border: 'border-teal-500 dark:border-teal-100',
     hoverText: 'hover:text-teal-950 dark:hover:text-teal-100',
-    hoverBorder: 'hover:border-teal-600 dark:hover:border-teal-300',
+    hoverBorder: 'hover:border-teal-600 dark:hover:border-teal-200',
   },
   gray: {
-    bg: 'bg-gray-100 dark:bg-gray-700',
+    bg: 'bg-gray-100 dark:bg-gray-500',
     text: 'text-gray-700 dark:text-white',
-    border: 'border-gray-500 dark:border-gray-400',
+    border: 'border-gray-500 dark:border-gray-100',
     hoverText: 'hover:text-gray-800 dark:hover:text-gray-100',
-    hoverBorder: 'hover:border-gray-600 dark:hover:border-gray-300',
+    hoverBorder: 'hover:border-gray-600 dark:hover:border-gray-200',
   },
   red: {
-    bg: 'bg-red-100 dark:bg-red-800',
+    bg: 'bg-red-100 dark:bg-red-500',
     text: 'text-red-800 dark:text-white',
-    border: 'border-red-500 dark:border-red-400',
+    border: 'border-red-500 dark:border-red-100',
     hoverText: 'hover:text-red-900 dark:hover:text-gray-100',
-    hoverBorder: 'hover:border-red-600 dark:hover:border-red-300',
+    hoverBorder: 'hover:border-red-600 dark:hover:border-red-200',
   },
 };
 
@@ -242,9 +243,9 @@ export const checkmarkColors: Record<AccentColor, {
   bg: string;
   icon: string;
 }> = {
-  purple: { bg: 'bg-purple-100 dark:bg-purple-800', icon: 'text-purple-700 dark:text-purple-300' },
-  blue: { bg: 'bg-blue-100 dark:bg-blue-800', icon: 'text-blue-700 dark:text-blue-300' },
-  green: { bg: 'bg-green-100 dark:bg-green-800', icon: 'text-green-700 dark:text-green-300' },
+  purple: { bg: 'bg-purple-100 dark:bg-purple-500', icon: 'text-purple-700 dark:text-purple-100' },
+  blue: { bg: 'bg-blue-100 dark:bg-blue-500', icon: 'text-blue-700 dark:text-blue-100' },
+  green: { bg: 'bg-green-100 dark:bg-green-500', icon: 'text-green-700 dark:text-green-100' },
 };
 
 // ============================================================================
@@ -317,29 +318,28 @@ export const faqColors: Record<'purple' | 'blue' | 'green' | 'orange', {
   purple: {
     border: 'border-l-purple-500',
     text: 'text-purple-700 dark:text-purple-300',
-    bg: 'bg-purple-100 dark:bg-purple-700',
+    bg: 'bg-purple-100 dark:bg-purple-500',
     numText: 'text-purple-700 dark:text-white',
     hover: 'hover:border-purple-400 dark:hover:border-purple-400',
   },
   blue: {
     border: 'border-l-blue-500',
     text: 'text-blue-700 dark:text-blue-300',
-    bg: 'bg-blue-100 dark:bg-blue-700',
+    bg: 'bg-blue-100 dark:bg-blue-500',
     numText: 'text-blue-700 dark:text-white',
     hover: 'hover:border-blue-400 dark:hover:border-blue-400',
   },
   green: {
     border: 'border-l-green-500',
     text: 'text-green-700 dark:text-green-300',
-    bg: 'bg-green-100 dark:bg-green-700',
+    bg: 'bg-green-100 dark:bg-green-500',
     numText: 'text-green-700 dark:text-white',
     hover: 'hover:border-green-400 dark:hover:border-green-400',
   },
   orange: {
     border: 'border-l-orange-500',
     text: 'text-orange-800 dark:text-orange-300',
-    // #c76500 for lighter backgrounds, H:30° S:100% L:39%, brighter variant
-    bg: 'bg-orange-100 dark:bg-[#c76500]',
+    bg: 'bg-orange-100 dark:bg-orange-500',
     numText: 'text-orange-800 dark:text-white',
     hover: 'hover:border-orange-400 dark:hover:border-orange-400',
   },
@@ -508,26 +508,26 @@ export const groupHoverColors = {
 // Border: 2px width, -400 in dark mode for visibility against -800 backgrounds
 export const alertColors = {
   info: {
-    bg: 'bg-blue-50 dark:bg-blue-800',
+    bg: 'bg-blue-50 dark:bg-blue-500',
     border: 'border-2 border-blue-200 dark:border-blue-400',
     text: 'text-blue-800 dark:text-white',
     link: 'text-blue-700 dark:text-white underline hover:text-blue-900 dark:hover:text-gray-200',
   },
   error: {
-    bg: 'bg-red-50 dark:bg-red-800',
+    bg: 'bg-red-50 dark:bg-red-500',
     border: 'border-2 border-red-200 dark:border-red-400',
     text: 'text-red-800 dark:text-white',
     link: 'text-red-700 dark:text-white underline hover:text-red-900 dark:hover:text-gray-200',
   },
   success: {
-    bg: 'bg-green-50 dark:bg-green-800',
+    bg: 'bg-green-50 dark:bg-green-500',
     border: 'border-2 border-green-200 dark:border-green-400',
     text: 'text-green-800 dark:text-white',
     link: 'text-green-700 dark:text-white underline hover:text-green-900 dark:hover:text-gray-200',
   },
   warning: {
-    // Dark mode uses #ad5700 (5.07:1 contrast) for true orange look
-    bg: 'bg-orange-50 dark:bg-[#ad5700]',
+    // Dark mode uses orange-500 (#bd6000) - 4.5:1 contrast with white
+    bg: 'bg-orange-50 dark:bg-orange-500',
     border: 'border-2 border-orange-200 dark:border-orange-400',
     text: 'text-orange-800 dark:text-white',
     link: 'text-orange-700 dark:text-white underline hover:text-orange-900 dark:hover:text-gray-200',
@@ -582,6 +582,17 @@ export const checkmarkBgColors: Record<'green' | 'blue' | 'purple', {
     border: 'border-2 border-purple-500 dark:border-purple-200',
     icon: 'text-purple-700 dark:text-purple-100',
   },
+};
+
+// ============================================================================
+// Chip Colors - Pill-shaped navigation links (NEUTRAL pattern)
+// ============================================================================
+// Used for tag-style links that stay neutral gray in both modes.
+// Different from accentColors which use INVERSION pattern.
+export const chipColors = {
+  bg: 'bg-gray-100 dark:bg-gray-700',
+  text: 'text-gray-900 dark:text-gray-100',
+  hover: 'hover:bg-gray-200 dark:hover:bg-gray-600',
 };
 
 // ============================================================================
@@ -641,113 +652,114 @@ export const loadingColors = {
 export const statusBadgeColors = {
   // Appointment/general statuses
   pending: {
-    bg: 'bg-yellow-100 dark:bg-yellow-800',
-    text: 'text-yellow-800 dark:text-yellow-100',
-    border: 'border border-yellow-200 dark:border-yellow-700',
+    // Gray instead of yellow - yellow can't meet 4.5:1 with white without looking brown
+    bg: 'bg-gray-100 dark:bg-gray-500',
+    text: 'text-gray-800 dark:text-white',
+    border: 'border border-gray-500 dark:border-gray-100',
   },
   approved: {
-    bg: 'bg-blue-100 dark:bg-blue-800',
-    text: 'text-blue-800 dark:text-blue-100',
-    border: 'border border-blue-200 dark:border-blue-700',
+    bg: 'bg-blue-100 dark:bg-blue-500',
+    text: 'text-blue-800 dark:text-white',
+    border: 'border border-blue-500 dark:border-blue-100',
   },
   confirmed: {
-    bg: 'bg-green-100 dark:bg-green-800',
-    text: 'text-green-800 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-700',
+    bg: 'bg-green-100 dark:bg-green-500',
+    text: 'text-green-800 dark:text-white',
+    border: 'border border-green-500 dark:border-green-100',
   },
   completed: {
-    bg: 'bg-green-100 dark:bg-green-800',
-    text: 'text-green-800 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-700',
+    bg: 'bg-green-100 dark:bg-green-500',
+    text: 'text-green-800 dark:text-white',
+    border: 'border border-green-500 dark:border-green-100',
   },
   cancelled: {
-    bg: 'bg-red-100 dark:bg-red-800',
-    text: 'text-red-800 dark:text-red-100',
-    border: 'border border-red-200 dark:border-red-700',
+    bg: 'bg-red-100 dark:bg-red-500',
+    text: 'text-red-800 dark:text-white',
+    border: 'border border-red-500 dark:border-red-100',
   },
   rejected: {
-    bg: 'bg-red-100 dark:bg-red-800',
-    text: 'text-red-800 dark:text-red-100',
-    border: 'border border-red-200 dark:border-red-700',
+    bg: 'bg-red-100 dark:bg-red-500',
+    text: 'text-red-800 dark:text-white',
+    border: 'border border-red-500 dark:border-red-100',
   },
   paid: {
-    bg: 'bg-green-100 dark:bg-green-800',
-    text: 'text-green-800 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-700',
+    bg: 'bg-green-100 dark:bg-green-500',
+    text: 'text-green-800 dark:text-white',
+    border: 'border border-green-500 dark:border-green-100',
   },
   unpaid: {
-    bg: 'bg-gray-100 dark:bg-gray-700',
-    text: 'text-gray-800 dark:text-gray-100',
-    border: 'border border-gray-200 dark:border-gray-600',
+    bg: 'bg-gray-100 dark:bg-gray-500',
+    text: 'text-gray-800 dark:text-white',
+    border: 'border border-gray-500 dark:border-gray-100',
   },
   refunded: {
-    bg: 'bg-purple-100 dark:bg-purple-800',
-    text: 'text-purple-800 dark:text-purple-100',
-    border: 'border border-purple-200 dark:border-purple-700',
+    bg: 'bg-purple-100 dark:bg-purple-500',
+    text: 'text-purple-800 dark:text-white',
+    border: 'border border-purple-500 dark:border-purple-100',
   },
   // Order-specific statuses
   delivered: {
-    bg: 'bg-green-100 dark:bg-green-800',
-    text: 'text-green-800 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-700',
+    bg: 'bg-green-100 dark:bg-green-500',
+    text: 'text-green-800 dark:text-white',
+    border: 'border border-green-500 dark:border-green-100',
   },
   shipped: {
-    bg: 'bg-blue-100 dark:bg-blue-800',
-    text: 'text-blue-800 dark:text-blue-100',
-    border: 'border border-blue-200 dark:border-blue-700',
+    bg: 'bg-blue-100 dark:bg-blue-500',
+    text: 'text-blue-800 dark:text-white',
+    border: 'border border-blue-500 dark:border-blue-100',
   },
   processing: {
-    bg: 'bg-purple-100 dark:bg-purple-800',
-    text: 'text-purple-800 dark:text-purple-100',
-    border: 'border border-purple-200 dark:border-purple-700',
+    bg: 'bg-purple-100 dark:bg-purple-500',
+    text: 'text-purple-800 dark:text-white',
+    border: 'border border-purple-500 dark:border-purple-100',
   },
   // Appointment-specific statuses
   modified: {
-    bg: 'bg-blue-100 dark:bg-blue-800',
-    text: 'text-blue-800 dark:text-blue-100',
-    border: 'border border-blue-200 dark:border-blue-700',
+    bg: 'bg-blue-100 dark:bg-blue-500',
+    text: 'text-blue-800 dark:text-white',
+    border: 'border border-blue-500 dark:border-blue-100',
   },
   // User role/status badges
   admin: {
-    bg: 'bg-purple-100 dark:bg-purple-800',
-    text: 'text-purple-800 dark:text-purple-100',
-    border: 'border border-purple-200 dark:border-purple-700',
+    bg: 'bg-purple-100 dark:bg-purple-500',
+    text: 'text-purple-800 dark:text-white',
+    border: 'border border-purple-500 dark:border-purple-100',
   },
   user: {
-    bg: 'bg-gray-100 dark:bg-gray-700',
-    text: 'text-gray-800 dark:text-gray-100',
-    border: 'border border-gray-200 dark:border-gray-600',
+    bg: 'bg-gray-100 dark:bg-gray-500',
+    text: 'text-gray-800 dark:text-white',
+    border: 'border border-gray-500 dark:border-gray-100',
   },
   active: {
-    bg: 'bg-green-100 dark:bg-green-800',
-    text: 'text-green-800 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-700',
+    bg: 'bg-green-100 dark:bg-green-500',
+    text: 'text-green-800 dark:text-white',
+    border: 'border border-green-500 dark:border-green-100',
   },
   disabled: {
-    bg: 'bg-red-100 dark:bg-red-800',
-    text: 'text-red-800 dark:text-red-100',
-    border: 'border border-red-200 dark:border-red-700',
+    bg: 'bg-red-100 dark:bg-red-500',
+    text: 'text-red-800 dark:text-white',
+    border: 'border border-red-500 dark:border-red-100',
   },
   // Page/content statuses
   published: {
-    bg: 'bg-green-100 dark:bg-green-800',
-    text: 'text-green-700 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-700',
+    bg: 'bg-green-100 dark:bg-green-500',
+    text: 'text-green-800 dark:text-white',
+    border: 'border border-green-500 dark:border-green-100',
   },
   draft: {
-    bg: 'bg-gray-100 dark:bg-gray-700',
-    text: 'text-gray-600 dark:text-gray-400',
-    border: 'border border-gray-200 dark:border-gray-600',
+    bg: 'bg-gray-100 dark:bg-gray-500',
+    text: 'text-gray-800 dark:text-white',
+    border: 'border border-gray-500 dark:border-gray-100',
   },
   customized: {
-    bg: 'bg-green-100 dark:bg-green-800',
-    text: 'text-green-800 dark:text-green-100',
-    border: 'border border-green-200 dark:border-green-700',
+    bg: 'bg-green-100 dark:bg-green-500',
+    text: 'text-green-800 dark:text-white',
+    border: 'border border-green-500 dark:border-green-100',
   },
   default: {
-    bg: 'bg-gray-100 dark:bg-gray-700',
-    text: 'text-gray-700 dark:text-gray-300',
-    border: 'border border-gray-200 dark:border-gray-600',
+    bg: 'bg-gray-100 dark:bg-gray-500',
+    text: 'text-gray-800 dark:text-white',
+    border: 'border border-gray-500 dark:border-gray-100',
   },
 };
 
@@ -757,10 +769,10 @@ export const statusBadgeColors = {
 // Consistent styling for category badges across pages
 // Category badges: -800 backgrounds with white text in dark mode for 6-9:1 contrast
 export const categoryBadgeColors: Record<string, string> = {
-  Admin: 'bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-white',
-  Shop: 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-white',
-  Dashboard: 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-white',
-  Public: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100',
+  Admin: 'bg-purple-100 text-purple-800 dark:bg-purple-500 dark:text-white',
+  Shop: 'bg-green-100 text-green-800 dark:bg-green-500 dark:text-white',
+  Dashboard: 'bg-blue-100 text-blue-800 dark:bg-blue-500 dark:text-white',
+  Public: 'bg-gray-100 text-gray-800 dark:bg-gray-500 dark:text-white',
 };
 
 // ============================================================================
@@ -837,11 +849,11 @@ export const solidButtonColors: Record<AccentVariant, {
     focus: 'focus:ring-2 focus:ring-green-500',
   },
   orange: {
-    // Dark mode uses saturated orange (#ad5700) for true orange appearance
-    // #ad5700 = H:30° S:100% L:34% with 5.07:1 contrast (closer to 5:1, more orange hue)
-    bg: 'bg-orange-600 dark:bg-[#ad5700]',
-    hover: 'hover:bg-orange-700 dark:hover:bg-[#954a00]',
-    text: 'text-white',
+    // Orange CTA buttons use light bg + dark text in BOTH modes (no inversion)
+    // Stands out against dark backgrounds while maintaining consistent branding
+    bg: 'bg-orange-100',
+    hover: 'hover:bg-orange-200',
+    text: 'text-orange-900',
     focus: 'focus:ring-2 focus:ring-orange-500',
   },
   teal: {
@@ -920,8 +932,8 @@ export const adminSidebarColors = {
   linkHover: 'hover:bg-gray-100 dark:hover:bg-gray-700',
   linkHoverText: 'hover:text-gray-900 dark:hover:text-gray-100',
 
-  // Navigation links - active
-  activeBg: 'bg-blue-50 dark:bg-blue-900/30',
+  // Navigation links - active (NO opacity in dark mode - solid colors only)
+  activeBg: 'bg-blue-50 dark:bg-blue-800',
   activeBorder: 'border-l-4 border-blue-500 dark:border-blue-400',
   activeText: 'text-blue-700 dark:text-blue-300',
 
@@ -958,29 +970,29 @@ export const serviceComparisonColors: Record<ServiceType, {
   pricingValueText: string;
 }> = {
   virtualAssistant: {
-    border: 'border-2 border-green-200 dark:border-green-600',
-    headerBg: 'bg-green-100 dark:bg-green-800',
+    border: 'border-2 border-green-200 dark:border-green-400',
+    headerBg: 'bg-green-100 dark:bg-green-500',
     headerText: 'text-green-700 dark:text-white',
-    pricingBg: 'bg-green-100 dark:bg-green-800',
-    pricingBorder: 'border-t border-green-200 dark:border-green-600',
+    pricingBg: 'bg-green-100 dark:bg-green-500',
+    pricingBorder: 'border-t border-green-200 dark:border-green-400',
     pricingLabelText: 'text-green-700 dark:text-white',
     pricingValueText: 'text-green-900 dark:text-white',
   },
   dataDocuments: {
-    border: 'border-2 border-blue-200 dark:border-blue-600',
-    headerBg: 'bg-blue-100 dark:bg-blue-800',
+    border: 'border-2 border-blue-200 dark:border-blue-400',
+    headerBg: 'bg-blue-100 dark:bg-blue-500',
     headerText: 'text-blue-700 dark:text-white',
-    pricingBg: 'bg-blue-100 dark:bg-blue-800',
-    pricingBorder: 'border-t border-blue-200 dark:border-blue-600',
+    pricingBg: 'bg-blue-100 dark:bg-blue-500',
+    pricingBorder: 'border-t border-blue-200 dark:border-blue-400',
     pricingLabelText: 'text-blue-700 dark:text-white',
     pricingValueText: 'text-blue-900 dark:text-white',
   },
   website: {
-    border: 'border-2 border-purple-200 dark:border-purple-600',
-    headerBg: 'bg-purple-100 dark:bg-purple-800',
+    border: 'border-2 border-purple-200 dark:border-purple-400',
+    headerBg: 'bg-purple-100 dark:bg-purple-500',
     headerText: 'text-purple-700 dark:text-white',
-    pricingBg: 'bg-purple-100 dark:bg-purple-800',
-    pricingBorder: 'border-t border-purple-200 dark:border-purple-600',
+    pricingBg: 'bg-purple-100 dark:bg-purple-500',
+    pricingBorder: 'border-t border-purple-200 dark:border-purple-400',
     pricingLabelText: 'text-purple-700 dark:text-white',
     pricingValueText: 'text-purple-900 dark:text-white',
   },

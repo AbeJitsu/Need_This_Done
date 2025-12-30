@@ -195,7 +195,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
       {/* CTA Section */}
       <EditableSection sectionKey="cta" label="Call to Action">
-        <div className="text-center py-12 px-6 bg-gradient-to-r from-orange-50 to-blue-50 dark:from-orange-900/20 dark:to-blue-900/20 rounded-2xl">
+        <div className="text-center py-12 px-6 bg-orange-50 dark:bg-gray-800 rounded-2xl">
           <h2 className={`text-3xl font-bold ${headingColors.primary} mb-4`}>
             {content.cta.title}
           </h2>

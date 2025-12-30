@@ -204,7 +204,7 @@ export default function NewPage() {
               onClick={() => setMode('wizard')}
               className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-purple-500 hover:shadow-lg transition-all group"
             >
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-700 dark:to-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <svg className="w-8 h-8 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
@@ -214,7 +214,7 @@ export default function NewPage() {
                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                   Quick Start
                 </h2>
-                <span className="px-2 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
+                <span className="px-2 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-700 text-green-700 dark:text-white rounded-full">
                   Recommended
                 </span>
               </div>
@@ -257,7 +257,7 @@ export default function NewPage() {
               onClick={() => setMode('editor')}
               className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-blue-500 hover:shadow-lg transition-all group"
             >
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-700 dark:to-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                 </svg>

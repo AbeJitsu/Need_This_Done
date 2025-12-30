@@ -1,9 +1,9 @@
 {
-  "active": true,
+  "active": false,
   "startTime": 1767105560,
   "maxHours": 5,
   "maxConsecutiveFailures": 3,
-  "iterationCount": 23,
+  "iterationCount": 24,
   "failureCounts": {},
   "cycleNumber": 1,
   "tasksCompleted": 0

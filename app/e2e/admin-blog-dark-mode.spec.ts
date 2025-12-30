@@ -278,6 +278,34 @@ test.describe('Admin Blog Dark Mode Contrast Tests', () => {
   });
 });
 
+test.describe('Navigation Dark Mode Contrast Tests', () => {
+  test('Get a Quote button has sufficient contrast in dark mode', async ({ page }) => {
+    await page.goto('/admin/blog');
+    await waitForPageReady(page);
+    await setDarkMode(page);
+
+    // Find the "Get a Quote" button in the navigation
+    const ctaButton = page.locator('a:has-text("Get a Quote")').first();
+    const isVisible = await ctaButton.isVisible().catch(() => false);
+
+    if (isVisible) {
+      const textColor = await ctaButton.evaluate((el) => window.getComputedStyle(el).color);
+      const bgColor = await ctaButton.evaluate((el) => window.getComputedStyle(el).backgroundColor);
+
+      const fgRgb = parseRgb(textColor);
+      const bgRgb = parseRgb(bgColor);
+
+      if (fgRgb && bgRgb) {
+        const ratio = getContrastRatio(fgRgb, bgRgb);
+        expect(
+          ratio,
+          `"Get a Quote" button contrast ratio ${ratio.toFixed(2)}:1 is below 4.5:1 minimum. Text: ${textColor}, BG: ${bgColor}`
+        ).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+  });
+});
+
 test.describe('Admin Blog Dark Mode Visual Regression', () => {
   // In e2e-bypass mode, admin pages are accessible without login
 
