@@ -6,6 +6,7 @@ import {
   CollapsibleSection,
   ArrayField,
 } from '../fields';
+import { alertColors } from '@/lib/colors';
 import type { ServicesPageContent, ExpectationItem } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -49,7 +50,7 @@ export default function ServicesForm({ content, onChange }: ServicesFormProps) {
       </CollapsibleSection>
 
       {/* Note about service cards */}
-      <div className="px-4 py-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+      <div className={`px-4 py-3 rounded-lg ${alertColors.info.bg} border border-blue-200 dark:border-blue-400`}>
         <p className="text-sm text-blue-700 dark:text-blue-300">
           <strong>Note:</strong> The service cards (Data Work, Document Handling, etc.) are defined in code and can&apos;t be edited here. Contact a developer to add or modify services.
         </p>

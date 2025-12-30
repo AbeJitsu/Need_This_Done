@@ -10,6 +10,7 @@ import {
   hoverColorOptions,
   colorOptions,
 } from '../fields';
+import { uiChromeBg } from '@/lib/colors';
 import type { PricingPageContent, PricingTier, CTAButton } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -185,7 +186,7 @@ export default function PricingForm({ content, onChange }: PricingFormProps) {
           </label>
         </div>
         {content.paymentNote.enabled && (
-          <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+          <div className={`space-y-4 p-4 ${uiChromeBg.panel} rounded-lg`}>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-3">
                 <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300">Deposit</h4>
