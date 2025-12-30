@@ -197,7 +197,7 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 - [x] Product recommendations engine
 - [x] Discount/coupon system
 - [x] Multi-currency support
-- [ ] Customer reviews & ratings
+- [x] Customer reviews & ratings
 
 **Platform Simplicity Layer**
 - [x] Phone-first wizard (answer 5 questions → done) ✅ BUILT
@@ -209,6 +209,16 @@ Universal click is a FALLBACK, not a replacement. Keep wrappers.
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Customer Reviews & Ratings** (Dec 30, 2025)
+- Supabase migration with reviews, review_votes, review_reports tables
+- PostgreSQL functions: get_product_rating, vote_on_review
+- API: GET (list, rating), POST (create, vote, report), PATCH, DELETE
+- StarRating component (display/input, sizes, colors, interactive)
+- ReviewCard component (content, voting, reporting, verified badge)
+- Moderation support: pending → approved/rejected workflow
+- 25 E2E tests + 16 Storybook stories
+- Context: migrations/028, app/api/reviews/route.ts, components/StarRating.tsx
 
 **Multi-Currency Support** (Dec 30, 2025)
 - Supabase migration with currencies, exchange_rates, user_currency_preferences tables
@@ -414,4 +424,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Multi-Currency Support: conversion, formatting, selector*
+*Last Updated: December 30, 2025 - Customer Reviews: ratings, voting, moderation*
