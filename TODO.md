@@ -78,7 +78,7 @@ All 75 occurrences in 36 files fixed:
 
 **Post-Migration**
 - [x] Re-run scanner: verified 0 violations
-- [ ] Add ESLint rule to prevent new hardcoded dark: classes (future)
+- [x] Add ESLint rule to prevent new hardcoded dark: classes (666 warnings for existing code)
 
 **Dashboard Layout Issues** ✅ FIXED
 - [x] Fix dashboard grid layout - changed from 6-col to 4-col grid, added Analytics link for 8 items (2x4)

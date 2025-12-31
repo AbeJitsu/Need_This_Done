@@ -4,7 +4,18 @@
     "plugin:storybook/recommended"
   ],
   "rules": {
-    "react/no-unescaped-entities": "off"
+    "react/no-unescaped-entities": "off",
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "JSXAttribute[name.name='className'] Literal[value=/dark:/]",
+        "message": "Avoid hardcoded 'dark:' classes. Import colors from '@/lib/colors.ts' instead. See .claude/rules/colors.md"
+      },
+      {
+        "selector": "JSXAttribute[name.name='className'] TemplateLiteral TemplateElement[value.raw=/dark:/]",
+        "message": "Avoid hardcoded 'dark:' classes in template literals. Import colors from '@/lib/colors.ts' instead."
+      }
+    ]
   },
   "overrides": [
     {
