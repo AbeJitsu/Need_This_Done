@@ -337,12 +337,12 @@ All 75 occurrences in 36 files fixed:
 - [ ] Evaluate if v2 features are needed for our use case
 - [ ] Document breaking changes that would affect our code
 
-**Guide Page Cleanup** (Dec 31, 2025)
-- [→] Redesign guide page with visual hierarchy
-- [ ] Add icons to guide sections for scannability
-- [ ] Group sections by category (Getting Started, Account, Explore, Support)
-- [ ] Add cycling accent colors (like FAQ page)
-- [ ] Feature first section as hero with CTA
+**Guide Page Cleanup** ✅ DONE (Dec 31, 2025)
+- [x] Redesign guide page with visual hierarchy
+- [x] Add icons to guide sections for scannability (🔍, 📅, 🚀, 👤, 📊, 📚, 🌙, 💬)
+- [x] Group sections by category (Getting Started, Account, Explore, Support)
+- [x] Add cycling accent colors (using faqColors: green, blue, purple, gold)
+- [x] Feature first section as hero with CTA
 
 **Universal Inline Editing** - Click anything, edit anything, configure nothing
 **Design Principle:** [.claude/rules/etc-easy-to-change.md](.claude/rules/etc-easy-to-change.md)
