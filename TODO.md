@@ -160,7 +160,7 @@ All 75 occurrences in 36 files fixed:
 │  Goal: Extract reusable hooks                                           │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Extract `getNestedValue`/`setNestedValue` to lib/object-utils.ts - duplicated in InlineEditContext:149-182 + templates/utils.ts:59-93
+- [x] Extract `getNestedValue`/`setNestedValue` to lib/object-utils.ts - created lib/object-utils.ts, migrated InlineEditContext + templates/utils.ts
 - [ ] Extract `useAsyncOperation()` hook - error/loading pattern duplicated in CartContext:52-54 + StripeContext:41-42
 - [ ] Extract `useOptimisticUpdate()` hook - rollback pattern duplicated 3x in CartContext (addItem, updateItem, removeItem)
 - [ ] Refactor InlineEditContext (412 lines) - mixing 3 concerns: edit mode, selection state, content loading

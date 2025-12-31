@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useCallback, useEffect, ReactNode 
 import { usePathname } from 'next/navigation';
 import { getPageSlugFromPath } from '@/lib/editable-routes';
 import { getDefaultContent } from '@/lib/default-page-content';
+import { getNestedValue, setNestedValue } from '@/lib/object-utils';
 
 // ============================================================================
 // Inline Edit Context - Manage inline editing state for all pages
@@ -142,44 +143,7 @@ interface InlineEditContextType {
 
 const InlineEditContext = createContext<InlineEditContextType | undefined>(undefined);
 
-// ============================================================================
-// Helper: Get nested value from object by path
-// ============================================================================
-
-function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
-  const keys = path.split('.');
-  let current: unknown = obj;
-  for (const key of keys) {
-    if (current === null || current === undefined) return undefined;
-    current = (current as Record<string, unknown>)[key];
-  }
-  return current;
-}
-
-// ============================================================================
-// Helper: Set nested value in object by path (immutably)
-// ============================================================================
-
-function setNestedValue(
-  obj: Record<string, unknown>,
-  path: string,
-  value: unknown
-): Record<string, unknown> {
-  const keys = path.split('.');
-  const result = JSON.parse(JSON.stringify(obj)); // Deep clone
-  let current: Record<string, unknown> = result;
-
-  for (let i = 0; i < keys.length - 1; i++) {
-    const key = keys[i];
-    if (!current[key] || typeof current[key] !== 'object') {
-      current[key] = {};
-    }
-    current = current[key] as Record<string, unknown>;
-  }
-
-  current[keys[keys.length - 1]] = value;
-  return result;
-}
+// Note: getNestedValue and setNestedValue imported from @/lib/object-utils
 
 // ============================================================================
 // Provider
