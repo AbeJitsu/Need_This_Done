@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { faqColors, titleColors, formInputColors, cardBgColors, cardBorderColors } from '@/lib/colors';
+import { faqColors, titleColors, formInputColors, cardBgColors, cardBorderColors, shadowClasses } from '@/lib/colors';
 import CircleBadge from '@/components/CircleBadge';
 import PageHeader from '@/components/PageHeader';
 import CTASection from '@/components/CTASection';
@@ -94,7 +94,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
                 content={faq as unknown as Record<string, unknown>}
               >
                 <div
-                  className={`${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.subtle} border-l-4 ${styles.border} ${styles.hover} transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}
+                  className={`${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.subtle} border-l-4 ${styles.border} ${styles.hover} transition-all ${shadowClasses.cardHover}`}
                 >
                   <div className="flex items-start gap-4">
                     <CircleBadge number={index + 1} color={color} size="sm" />

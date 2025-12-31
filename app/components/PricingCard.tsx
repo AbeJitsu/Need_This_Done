@@ -9,6 +9,7 @@ import {
   cardBorderColors,
   accentColors,
   gradientColors,
+  shadowClasses,
 } from '@/lib/colors';
 import Button from '@/components/Button';
 import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
@@ -52,8 +53,7 @@ export default function PricingCard({
         ${popular ? `border-2 ${accentColors.blue.border}` : cardBorderColors.light}
         border-t-4 ${topBorderColors[color]}
         transition-all ${cardHoverColors[color]}
-        hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)]
-        dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]
+        ${shadowClasses.cardHover}
         ${popular ? 'scale-105 md:scale-105 z-10 shadow-lg shadow-blue-200/50 dark:shadow-blue-900/30' : ''}
       `}
     >

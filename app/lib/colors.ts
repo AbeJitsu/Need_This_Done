@@ -64,7 +64,7 @@ export const shadowClasses = {
   // Subtle shadow for cards at rest
   card: 'shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:shadow-[0_0_8px_0px_rgba(255,255,255,0.05)]',
   // Elevated shadow for cards on hover
-  cardHover: 'hover:shadow-[0_0_16px_0px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_0_16px_0px_rgba(255,255,255,0.1)]',
+  cardHover: 'hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]',
   // Lift effect for interactive cards
   lift: 'hover:shadow-xl hover:-translate-y-1 transition-all duration-300',
   // Large shadow for modals and overlays

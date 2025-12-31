@@ -8,6 +8,7 @@ import {
   formInputColors,
   mutedTextColors,
   accentColors,
+  shadowClasses,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -85,8 +86,7 @@ export default function CourseCard({
         ${topBorderColors[color]}
         transition-all duration-300
         ${cardHoverColors[color]}
-        hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)]
-        dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]
+        ${shadowClasses.cardHover}
         overflow-hidden
       `}
     >

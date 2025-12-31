@@ -6,6 +6,7 @@ import {
   cardHoverColors,
   formInputColors,
   mutedTextColors,
+  shadowClasses,
 } from '@/lib/colors';
 import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
 
@@ -84,7 +85,7 @@ export default function ServiceCard({
     </div>
   );
 
-  const cardClasses = `p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 border-t-4 ${topBorderColors[color]} transition-all duration-300 ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)] h-full`;
+  const cardClasses = `p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 border-t-4 ${topBorderColors[color]} transition-all duration-300 ${cardHoverColors[color]} ${shadowClasses.cardHover} h-full`;
 
   // Wrap in Link if href is provided
   if (href) {

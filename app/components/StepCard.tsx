@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { AccentVariant, cardHoverColors, titleTextColors, cardBgColors, cardBorderColors, bodyTextColors } from '@/lib/colors';
+import { AccentVariant, cardHoverColors, titleTextColors, cardBgColors, cardBorderColors, bodyTextColors, shadowClasses } from '@/lib/colors';
 import CircleBadge from './CircleBadge';
 
 // ============================================================================
@@ -27,7 +27,7 @@ export default function StepCard({
   color,
   href,
 }: StepCardProps) {
-  const cardClasses = `${cardBgColors.base} rounded-xl p-12 ${cardBorderColors.subtle} transition-all ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`;
+  const cardClasses = `${cardBgColors.base} rounded-xl p-12 ${cardBorderColors.subtle} transition-all ${cardHoverColors[color]} ${shadowClasses.cardHover}`;
 
   const cardContent = (
       <div>

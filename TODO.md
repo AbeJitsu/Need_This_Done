@@ -145,7 +145,7 @@ All 75 occurrences in 36 files fixed:
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 - [x] Extract `CheckmarkCircle` component - duplicated in ServiceCard, PricingCard, ServiceDetailModal, HowItWorksPageClient, ServicesPageClient (5 files)
-- [ ] Use `shadowClasses.cardHover` from colors.ts - hardcoded in ServiceCard:90, StepCard:30, CourseCard:88, PricingCard:55, FAQPageClient:97, FAQPreview:73, ProjectCard:97 (8 files)
+- [x] Use `shadowClasses.cardHover` from colors.ts - migrated ServiceCard, StepCard, CourseCard, PricingCard, FAQPageClient, FAQPreview, LoginClient (7 files)
 - [ ] Extract `CloseButton` component - duplicated in ConfirmDialog, ServiceDetailModal, ChatbotModal (3 files)
 - [ ] Consolidate form field components - TextField.tsx + TextAreaField.tsx share 90% code, extract FormFieldBase
 - [ ] Extract `formatPrice()` to lib/format.ts - duplicated in CourseCard:71-77, EnrollButton, other e-commerce components
