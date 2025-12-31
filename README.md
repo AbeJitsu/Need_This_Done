@@ -2448,6 +2448,72 @@ function MyComponent() {
 
 **Existing contexts:** `AuthContext`, `CartContext`, `ToastContext`, `InlineEditContext`
 
+### How to Add an Inline Editable Page
+
+Make any marketing page click-to-edit by following these 4 steps.
+
+**1. Add route mapping in `lib/editable-routes.ts`:**
+```typescript
+export const editableRoutes: Record<string, EditablePageSlug> = {
+  // ... existing routes
+  '/my-page': 'my-page',  // Add your route
+};
+```
+
+**2. Define content types in `lib/page-content-types.ts`:**
+```typescript
+export interface MyPageContent extends PageContent {
+  hero: {
+    title: string;
+    subtitle: string;
+  };
+  features: Array<{
+    title: string;
+    description: string;
+  }>;
+}
+
+export type EditablePageSlug = 'home' | 'services' | /* ... */ | 'my-page';
+```
+
+**3. Add defaults in `lib/default-page-content.ts`:**
+```typescript
+export const defaultMyPageContent: MyPageContent = {
+  hero: {
+    title: 'Welcome',
+    subtitle: 'Your subtitle here',
+  },
+  features: [
+    { title: 'Feature 1', description: 'Description...' },
+  ],
+};
+```
+
+**4. Use the hook in your page:**
+```typescript
+'use client';
+
+import { useEditableContent } from '@/hooks/useEditableContent';
+import { EditableSection } from '@/components/InlineEditor';
+import type { MyPageContent } from '@/lib/page-content-types';
+import { defaultMyPageContent } from '@/lib/default-page-content';
+
+export default function MyPage() {
+  const { content } = useEditableContent<MyPageContent>(defaultMyPageContent);
+
+  return (
+    <EditableSection sectionKey="hero">
+      <h1>{content.hero.title}</h1>
+      <p>{content.hero.subtitle}</p>
+    </EditableSection>
+  );
+}
+```
+
+**That's it!** The page is now click-to-edit for admins. Content saves to Supabase automatically.
+
+> **Deep Dive**: See [docs/INLINE_EDITING.md](docs/INLINE_EDITING.md) for data flow and architecture details.
+
 ---
 
 ## Getting Help
