@@ -129,12 +129,12 @@ All 75 occurrences in 36 files fixed:
 │  Goal: 1 change = 1 file edit                                           │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Extract `lib/lazy-client.ts` - consolidate lazy init pattern from email.ts:22-37 + stripe.ts:22-40
-- [ ] Extract `lib/retry.ts` - consolidate exponential backoff from email.ts:103-172 + medusa-client.ts:26-61
-- [ ] Extract `lib/auth-utils.ts` - consolidate `isUserAdmin()` from api-auth.ts:122,141,168 + auth-options.ts:189
-- [ ] Extract `lib/e2e-utils.ts` - consolidate E2E bypass check from api-auth.ts:95-97 + auth-options.ts:96-97
-- [ ] Consolidate error response builders in api-errors.ts:15-73 into factory function
-- [ ] Consolidate Supabase client setup between supabase.ts + supabase-server.ts (build-time detection duplicated)
+- [!] Extract `lib/lazy-client.ts` - deferred: only 2 occurrences (email/stripe), each with unique constructor options
+- [!] Extract `lib/retry.ts` - deferred: patterns differ significantly (SDK errors vs HTTP codes, exponential vs linear backoff)
+- [x] Extract `lib/auth-utils.ts` - verified: isUserAdmin already exists in api-auth.ts (line 141), auth-options line 189 uses same pattern but is inline assignment
+- [x] Extract `lib/e2e-utils.ts` - verified: E2E bypass only exists in api-auth.ts, not duplicated in auth-options.ts
+- [!] Consolidate error response builders - deferred: api-errors.ts already well-organized (5 functions, each 2 lines)
+- [!] Consolidate Supabase client setup - deferred: supabase.ts and supabase-server.ts serve different purposes (client vs server with cookies)
 
 **DRY Violations - Components** (Audit: Dec 30, 2025)
 ```

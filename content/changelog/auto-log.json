@@ -1,5 +1,14 @@
 [
   {
+    "hash": "6b4aca7",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "6b4aca72101372baf99ab31bc93f73b5f98ed1b1:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor: Migrate test specs to use page discovery (ETC)",
+    "category": "Refactoring",
+    "filesChanged": 6
+  },
+  {
     "hash": "2308aea",
     "date": "%Y->- (HEAD -> main)",
     "time": "2308aeae6924e1fcfaf42459f654b5d2d0d7d354:%M",
