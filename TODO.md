@@ -31,6 +31,12 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
+[x] **Blue Page Headers** - Add color personality to page titles
+- [x] Update PageHeader.tsx to accept optional `color` prop (default: 'blue')
+- [x] Use titleColors[color] instead of headingColors.primary
+- [x] All pages using PageHeader will get blue titles like homepage
+- [ ] Optional: customize per page (e.g., FAQ=gold, Pricing=purple)
+
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
 
 ---

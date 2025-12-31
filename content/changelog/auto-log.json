@@ -1,5 +1,14 @@
 [
   {
+    "hash": "66f3b9f",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "66f3b9fe308bd29cae24919a6743e02b9e6a9f2b:%M",
+    "author": "Abe Reyes",
+    "message": "Fix hardcoded button text in HowItWorks page",
+    "category": "Other",
+    "filesChanged": 3
+  },
+  {
     "hash": "29a737b",
     "date": "%Y->- (HEAD -> main)",
     "time": "29a737bf1078e30b83283aebc23145c6254845d7:%M",
