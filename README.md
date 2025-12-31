@@ -1188,6 +1188,8 @@ user:projects:{userId}   User's projects (1m)
 admin:projects:all       All projects (5m)
 ```
 
+> **Deep Dive**: For detailed cache invalidation patterns by feature, see [docs/CACHE_STRATEGY.md](docs/CACHE_STRATEGY.md).
+
 ---
 
 ## Email Notifications
@@ -1976,6 +1978,8 @@ Marketing pages support click-to-edit functionality for admins. Click the pencil
 - `EditableItem` - Wrapper for array items (FAQ, pricing tiers)
 - `AdminSidebar` - Field editor UI
 - Content stored in Supabase `page_content` table
+
+> **Deep Dive**: For detailed architecture and data flow diagrams, see [docs/INLINE_EDITING.md](docs/INLINE_EDITING.md).
 
 ---
 

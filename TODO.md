@@ -205,7 +205,7 @@ All 75 occurrences in 36 files fixed:
 - [x] Update README component count (says 87, actually 150+)
 - [x] Document all 8 custom hooks in README (useEditableContent, useUniversalClick, usePageViewTracking, useProductTracking, useComments, useProjectStatus, useBackdropClose, useCurrency)
 - [x] Document all 44 lib utilities in README (expanded from 25 to 44 files documented)
-- [ ] Consolidate /docs/*.md content INTO README.md (ETC: one organized doc, not many scattered)
+- [x] Consolidate /docs/*.md content INTO README.md (added deep-dive references, README already has essential docs)
 - [ ] Add "How to Add a Custom Hook" contributor guide
 - [ ] Add "How to Add a New Context" contributor guide
 - [ ] Add "How to Add an Inline Editable Page" contributor guide
