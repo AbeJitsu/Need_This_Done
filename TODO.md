@@ -210,7 +210,7 @@ All 75 occurrences in 36 files fixed:
 - [x] Add "How to Add a New Context" contributor guide
 - [x] Add "How to Add an Inline Editable Page" contributor guide
 - [x] Document InlineEditContext API (methods, state shape, sync rules)
-- [ ] Update guide page (/guide) with architecture diagrams
+- [!] Update guide page (/guide) with architecture diagrams (blocked: needs design for which diagrams would be most useful - consider data flow, request lifecycle, edit mode flow)
 
 **Building Blocks Vision** 🧱
 ```
