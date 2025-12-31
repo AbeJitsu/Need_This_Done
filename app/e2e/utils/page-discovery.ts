@@ -101,3 +101,50 @@ export function discoverPagesByPattern(
 ): DiscoveredPage[] {
   return discoverAllPages(appDir).filter((p) => pattern.test(p.path));
 }
+
+// ============================================================================
+// Screenshot Test Helpers
+// ============================================================================
+// Transform discovered pages into format needed for screenshot tests.
+// These maintain backwards compatibility with existing screenshot folder structure.
+
+export interface ScreenshotPage {
+  path: string;
+  name: string;
+  folder: string;
+}
+
+/**
+ * Get public pages formatted for screenshot tests.
+ * Excludes dashboard (needs auth variants) and generates folder structure.
+ *
+ * Example: `/pricing` → { path: '/pricing', name: 'pricing', folder: 'public/pricing' }
+ */
+export function getPublicScreenshotPages(appDir?: string): ScreenshotPage[] {
+  return discoverPublicPages(appDir)
+    .filter((p) => !p.path.startsWith('/dashboard')) // Exclude dashboard (needs auth variants)
+    .map((p) => {
+      const slug = p.path === '/' ? 'home' : p.path.slice(1);
+      return {
+        path: p.path,
+        name: slug.replace(/\//g, '-'),
+        folder: `public/${slug}`,
+      };
+    });
+}
+
+/**
+ * Get admin pages formatted for screenshot tests.
+ *
+ * Example: `/admin/products` → { path: '/admin/products', name: 'admin-products', folder: 'admin/products' }
+ */
+export function getAdminScreenshotPages(appDir?: string): ScreenshotPage[] {
+  return discoverAdminPages(appDir).map((p) => {
+    const pathWithoutAdmin = p.path.slice(7); // Remove /admin/
+    return {
+      path: p.path,
+      name: `admin-${pathWithoutAdmin.replace(/\//g, '-')}`,
+      folder: `admin/${pathWithoutAdmin}`,
+    };
+  });
+}

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { discoverPublicPages } from './utils/page-discovery';
 
 // ============================================================================
 // Test 4: Page Render Stability
@@ -16,21 +17,9 @@ import { test, expect } from '@playwright/test';
 // 3. Check console for React errors
 // 4. Verify no "Cannot read properties of undefined" errors
 
-// All editable pages that could have content loading issues
-const EDITABLE_PAGES = [
-  { path: '/', name: 'Home' },
-  { path: '/services', name: 'Services' },
-  { path: '/pricing', name: 'Pricing' },
-  { path: '/faq', name: 'FAQ' },
-  { path: '/how-it-works', name: 'How It Works' },
-  { path: '/contact', name: 'Contact' },
-  { path: '/get-started', name: 'Get Started' },
-  { path: '/blog', name: 'Blog' },
-  { path: '/changelog', name: 'Changelog' },
-  { path: '/guide', name: 'Guide' },
-  { path: '/privacy', name: 'Privacy' },
-  { path: '/terms', name: 'Terms' },
-];
+// Dynamically discover all public pages - no more hardcoded lists!
+// See: .claude/rules/testing-flexibility.md
+const EDITABLE_PAGES = discoverPublicPages();
 
 // ============================================================================
 // Basic Render Test - No Console Errors

@@ -161,8 +161,8 @@ All 75 occurrences in 36 files fixed:
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 - [x] Extract `getNestedValue`/`setNestedValue` to lib/object-utils.ts - created lib/object-utils.ts, migrated InlineEditContext + templates/utils.ts
-- [ ] Extract `useAsyncOperation()` hook - error/loading pattern duplicated in CartContext:52-54 + StripeContext:41-42
-- [ ] Extract `useOptimisticUpdate()` hook - rollback pattern duplicated 3x in CartContext (addItem, updateItem, removeItem)
+- [!] Extract `useAsyncOperation()` hook - deferred: state declarations are only 2-3 lines, CartContext has complex optimistic updates that make abstraction risky
+- [!] Extract `useOptimisticUpdate()` hook - deferred: 3 occurrences in 1 file, each with unique update logic; abstraction would add complexity without simplification
 - [ ] Refactor InlineEditContext (412 lines) - mixing 3 concerns: edit mode, selection state, content loading
 - [x] Fix StripeContext hardcoded colors - added stripeAppearance to colors.ts, migrated StripeContext to use it
 
@@ -174,9 +174,9 @@ All 75 occurrences in 36 files fixed:
 │  Goal: Add page → tests auto-discover it                                │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Migrate screenshots.spec.ts:20-51 to use `discoverAllPages()` instead of hardcoded arrays (24 pages hardcoded)
-- [ ] Migrate page-render-stability.spec.ts:20-33 to use `discoverPublicPages()` instead of EDITABLE_PAGES array
-- [ ] Migrate dark-mode-visual.spec.ts to use page discovery if it has hardcoded lists
+- [x] Migrate screenshots.spec.ts to use page discovery - added getPublicScreenshotPages() and getAdminScreenshotPages() helpers
+- [x] Migrate page-render-stability.spec.ts to use discoverPublicPages() - replaced EDITABLE_PAGES array
+- [x] Migrate dark-mode-visual.spec.ts - no change needed: has targeted 3-page list for specific color tests, not comprehensive scan
 - [ ] Delete duplicate route definitions - editable-routes.ts is source of truth, tests should derive from it
 
 **Documentation Gaps** (Audit: Dec 30, 2025)
