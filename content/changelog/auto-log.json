@@ -1,8 +1,17 @@
 [
   {
+    "hash": "822d53e",
+    "date": "2025-12-30",
+    "time": "22:04",
+    "author": "Abe Reyes",
+    "message": "Docs: Update README and guide page with platform capabilities",
+    "category": "Documentation",
+    "filesChanged": 11
+  },
+  {
     "hash": "fc2be64",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "fc2be6437742afa57e69634f438010b840ea92b1:%M",
+    "date": "2025-12-30",
+    "time": "19:14",
     "author": "Abe Reyes",
     "message": "Docs: Mark hardcoded color migration as complete in TODO.md",
     "category": "Documentation",
@@ -10,8 +19,8 @@
   },
   {
     "hash": "f55e7b8",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "f55e7b8b3e36c9b7519aede2a33e67eb007ac78f:%M",
+    "date": "2025-12-30",
+    "time": "19:13",
     "author": "Abe Reyes",
     "message": "Refactor: Complete ETC color migration - eliminate ALL -50 and opacity patterns",
     "category": "Refactoring",
@@ -19,8 +28,8 @@
   },
   {
     "hash": "c51029b",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "c51029bc6951a4efa5c55feb8d93b621be0e1b95:%M",
+    "date": "2025-12-30",
+    "time": "19:08",
     "author": "Abe Reyes",
     "message": "Refactor: Continue ETC color migration - more components",
     "category": "Refactoring",
@@ -28,8 +37,8 @@
   },
   {
     "hash": "8d9545f",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "8d9545fdb280a73395ea9fd618808e97c59c5a7b:%M",
+    "date": "2025-12-30",
+    "time": "19:05",
     "author": "Abe Reyes",
     "message": "Refactor: Migrate admin pages and components to colors.ts",
     "category": "Refactoring",
@@ -37,8 +46,8 @@
   },
   {
     "hash": "69626e6",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "69626e646c7105365d6dba3990744b453b98bf09:%M",
+    "date": "2025-12-30",
+    "time": "18:54",
     "author": "Abe Reyes",
     "message": "Docs: Add systematic hardcoded color fix plan to TODO.md",
     "category": "Documentation",
@@ -46,8 +55,8 @@
   },
   {
     "hash": "e7d2c90",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "e7d2c90a0bd39be6b38a81e1e2a2b3c61640e9a0:%M",
+    "date": "2025-12-30",
+    "time": "18:53",
     "author": "Abe Reyes",
     "message": "Refactor: Clean colors.ts - enforce -100 minimum, no opacity in dark mode",
     "category": "Refactoring",
@@ -55,8 +64,8 @@
   },
   {
     "hash": "62cc7c1",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "62cc7c12a9cae52d4065f836f11b8f646a685093:%M",
+    "date": "2025-12-30",
+    "time": "18:36",
     "author": "Abe Reyes",
     "message": "Refactor: Centralize opacity backgrounds across 24 files",
     "category": "Refactoring",
@@ -64,8 +73,8 @@
   },
   {
     "hash": "df7eb61",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "df7eb61a18eada43fdae2df7a9d525e05420d5c5:%M",
+    "date": "2025-12-30",
+    "time": "18:23",
     "author": "Abe Reyes",
     "message": "Fix: Continue centralizing opacity backgrounds in content-editor components",
     "category": "Fixes",
@@ -73,8 +82,8 @@
   },
   {
     "hash": "6acb660",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "6acb66091131e6689df7a57f973cd7e3d84b9c1d:%M",
+    "date": "2025-12-30",
+    "time": "18:21",
     "author": "Abe Reyes",
     "message": "Fix: Continue centralizing opacity backgrounds to colors.ts",
     "category": "Fixes",
@@ -82,8 +91,8 @@
   },
   {
     "hash": "eb22014",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "eb22014d746a5c7b32e99a85132a494a298e566b:%M",
+    "date": "2025-12-30",
+    "time": "18:17",
     "author": "Abe Reyes",
     "message": "Refactor: Centralize opacity backgrounds to colors.ts",
     "category": "Refactoring",
@@ -91,35 +100,26 @@
   },
   {
     "hash": "27c97d9",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "27c97d925393345bb1f1a3ef077aa8b30a2d77e7:%M",
+    "date": "2025-12-30",
+    "time": "18:16",
     "author": "Abe Reyes",
     "message": "Security: Fix record_product_interaction search_path",
-    "category": "Other",
+    "category": "Security",
     "filesChanged": 1
   },
   {
     "hash": "113196f",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "113196f52ad13609da97969b9f148a2822230e89:%M",
+    "date": "2025-12-30",
+    "time": "18:09",
     "author": "Abe Reyes",
     "message": "Config: Update auto-log changelog tracking",
     "category": "Configuration",
     "filesChanged": 3
   },
   {
-    "hash": "ff2d19b",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "ff2d19b6195fa3082d5fc72d0abf7979b64233b2:%M",
-    "author": "Abe Reyes",
-    "message": "Config: Update auto-log changelog tracking",
-    "category": "Configuration",
-    "filesChanged": 1
-  },
-  {
     "hash": "7c85cc1",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "7c85cc1a32cebd3b835b611b0b1cc46eb19a6e02:%M",
+    "date": "2025-12-30",
+    "time": "18:09",
     "author": "Abe Reyes",
     "message": "Refactor: Eliminate opacity-based dark mode colors in puck-utils",
     "category": "Refactoring",
@@ -127,8 +127,8 @@
   },
   {
     "hash": "8a06b1f",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "8a06b1f167fe745f608ed654c5b78d272257045f:%M",
+    "date": "2025-12-30",
+    "time": "18:09",
     "author": "Abe Reyes",
     "message": "Docs: Document security hardening in TODO.md",
     "category": "Documentation",
@@ -136,17 +136,17 @@
   },
   {
     "hash": "ac66363",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "ac6636351a107f6cdc3c294441f934d48d63de13:%M",
+    "date": "2025-12-30",
+    "time": "18:09",
     "author": "Abe Reyes",
     "message": "Security: Fix function search_paths and extension locations",
-    "category": "Other",
+    "category": "Security",
     "filesChanged": 2
   },
   {
     "hash": "cc5a0c3",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "cc5a0c34b4287c3d1d933479c3591db905b7e0a9:%M",
+    "date": "2025-12-30",
+    "time": "18:04",
     "author": "Abe Reyes",
     "message": "Docs: Track hardcoded color elimination task",
     "category": "Documentation",
@@ -154,17 +154,17 @@
   },
   {
     "hash": "e1183c5",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "e1183c534ff7a75f62b1ce007a32041f80049b9b:%M",
+    "date": "2025-12-30",
+    "time": "18:03",
     "author": "Abe Reyes",
     "message": "Security: Fix remaining RLS issues (47 more tables/views/policies)",
-    "category": "Other",
+    "category": "Security",
     "filesChanged": 1
   },
   {
     "hash": "621b614",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "621b614db71bb6963156c1a46a2f12c1935a223b:%M",
+    "date": "2025-12-30",
+    "time": "18:01",
     "author": "Abe Reyes",
     "message": "Refactor: Lighten text colors to WCAG AA minimum (-600)",
     "category": "Refactoring",
@@ -172,17 +172,17 @@
   },
   {
     "hash": "f6049c9",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "f6049c9841cf372ce03ef672b2b4ae817dc185ab:%M",
+    "date": "2025-12-30",
+    "time": "17:54",
     "author": "Abe Reyes",
     "message": "Security: Enable RLS on 73 Medusa e-commerce tables",
-    "category": "Other",
+    "category": "Security",
     "filesChanged": 3
   },
   {
     "hash": "6e3f333",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "6e3f3331b78a4bc6ccb4a7190e41bd26bce7d64d:%M",
+    "date": "2025-12-30",
+    "time": "17:46",
     "author": "Abe Reyes",
     "message": "Fix: Implement WCAG AA color system with 4.5:1 contrast anchors",
     "category": "Fixes",
@@ -190,11 +190,38 @@
   },
   {
     "hash": "0210815",
-    "date": "%Y->- (HEAD -> main)",
-    "time": "021081538fb1248d05c8c0815606143d91e50592:%M",
+    "date": "2025-12-30",
+    "time": "14:50",
     "author": "Abe Reyes",
     "message": "Fix: Improve button contrast in dark mode for WCAG AA",
     "category": "Fixes",
     "filesChanged": 17
+  },
+  {
+    "hash": "6879b15",
+    "date": "2025-12-30",
+    "time": "14:37",
+    "author": "Abe Reyes",
+    "message": "Fix: Update dark mode orange to #ad5700 (5.07:1 contrast)",
+    "category": "Fixes",
+    "filesChanged": 5
+  },
+  {
+    "hash": "06aba3e",
+    "date": "2025-12-30",
+    "time": "14:28",
+    "author": "Abe Reyes",
+    "message": "Fix: Replace brown orange-800 with saturated #ad4800 in dark mode",
+    "category": "Fixes",
+    "filesChanged": 4
+  },
+  {
+    "hash": "34fdbeb",
+    "date": "2025-12-30",
+    "time": "14:26",
+    "author": "Abe Reyes",
+    "message": "Test: Add dark mode visual regression tests",
+    "category": "Testing",
+    "filesChanged": 49
   }
 ]

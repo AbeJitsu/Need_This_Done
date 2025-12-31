@@ -115,10 +115,90 @@ All 75 occurrences in 36 files fixed:
 - [ ] Test in light and dark mode
 
 **Automation & Developer Experience**
-- [→] Auto-update changelog on every commit/deploy (stop doing this manually)
-- [ ] Process: git hook or CI step that appends to CHANGELOG.md automatically
+- [x] Auto-update changelog on every commit/deploy (Claude hook in post-tool-use.sh)
+- [x] Process: Claude hook updates content/changelog/auto-log.json after git commits
 - [ ] Add changelog link to footer/navigation (currently no way to find it)
 - [ ] Design a changelog page for tech users (release notes, version history, API changes)
+
+---
+
+**DRY Violations - Library** (Audit: Dec 30, 2025)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Problem: Same patterns repeated across lib/ files                      │
+│  Impact: Bug fix = edit N files, easy to miss one                       │
+│  Goal: 1 change = 1 file edit                                           │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Extract `lib/lazy-client.ts` - consolidate lazy init pattern from email.ts:22-37 + stripe.ts:22-40
+- [ ] Extract `lib/retry.ts` - consolidate exponential backoff from email.ts:103-172 + medusa-client.ts:26-61
+- [ ] Extract `lib/auth-utils.ts` - consolidate `isUserAdmin()` from api-auth.ts:122,141,168 + auth-options.ts:189
+- [ ] Extract `lib/e2e-utils.ts` - consolidate E2E bypass check from api-auth.ts:95-97 + auth-options.ts:96-97
+- [ ] Consolidate error response builders in api-errors.ts:15-73 into factory function
+- [ ] Consolidate Supabase client setup between supabase.ts + supabase-server.ts (build-time detection duplicated)
+
+**DRY Violations - Components** (Audit: Dec 30, 2025)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Problem: Same UI patterns copy-pasted across components                │
+│  Impact: Style change = hunt through 8+ files                           │
+│  Goal: Extract reusable components                                      │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Extract `CheckmarkCircle` component - duplicated in ServiceCard, PricingCard, ServiceDetailModal, SystemOverview, AuthDemo (5 files)
+- [ ] Use `shadowClasses.cardHover` from colors.ts - hardcoded in ServiceCard:90, StepCard:30, CourseCard:88, PricingCard:55, FAQPageClient:97, FAQPreview:73, ProjectCard:97 (8 files)
+- [ ] Extract `CloseButton` component - duplicated in ConfirmDialog, ServiceDetailModal, ChatbotModal (3 files)
+- [ ] Consolidate form field components - TextField.tsx + TextAreaField.tsx share 90% code, extract FormFieldBase
+- [ ] Extract `formatPrice()` to lib/format.ts - duplicated in CourseCard:71-77, EnrollButton, other e-commerce components
+- [ ] Centralize `serviceColorMap` - duplicated in ProjectCard:29-38 + ServiceDetailModal:28-32
+- [ ] Extract feature list parsing - string→array logic duplicated in ServiceCard:44-46, PricingCard, ServiceDetailModal
+
+**DRY Violations - Context** (Audit: Dec 30, 2025)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Problem: State patterns repeated across context providers              │
+│  Impact: Pattern change = edit multiple contexts                        │
+│  Goal: Extract reusable hooks                                           │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Extract `getNestedValue`/`setNestedValue` to lib/object-utils.ts - duplicated in InlineEditContext:149-182 + templates/utils.ts:59-93
+- [ ] Extract `useAsyncOperation()` hook - error/loading pattern duplicated in CartContext:52-54 + StripeContext:41-42
+- [ ] Extract `useOptimisticUpdate()` hook - rollback pattern duplicated 3x in CartContext (addItem, updateItem, removeItem)
+- [ ] Refactor InlineEditContext (412 lines) - mixing 3 concerns: edit mode, selection state, content loading
+- [ ] Fix StripeContext hardcoded colors - #a78bfa at line 175, #111827 at line 186 should use lib/colors.ts
+
+**ETC Violations** (Audit: Dec 30, 2025)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Problem: Adding new pages requires editing multiple files              │
+│  Impact: New page = edit tests + routes + discovery (3+ places)         │
+│  Goal: Add page → tests auto-discover it                                │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Migrate screenshots.spec.ts:20-51 to use `discoverAllPages()` instead of hardcoded arrays (24 pages hardcoded)
+- [ ] Migrate page-render-stability.spec.ts:20-33 to use `discoverPublicPages()` instead of EDITABLE_PAGES array
+- [ ] Migrate dark-mode-visual.spec.ts to use page discovery if it has hardcoded lists
+- [ ] Delete duplicate route definitions - editable-routes.ts is source of truth, tests should derive from it
+
+**Documentation Gaps** (Audit: Dec 30, 2025)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Problem: 50% of utilities invisible to developers                      │
+│  README: 87 components | Actual: 150+                                   │
+│  README: 1 hook documented | Actual: 9 hooks                            │
+│  README: 10 lib files | Actual: 28 files                                │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Update README component count (says 87, actually 150+)
+- [ ] Document all 9 custom hooks in README (currently only 1 mentioned)
+- [ ] Document 18 missing lib utilities in README (content-discovery, content-path-mapper, cache-stats, loop-state, etc.)
+- [ ] Add reference to /docs/INLINE_EDITING.md in README
+- [ ] Add reference to /docs/CACHE_STRATEGY.md in README
+- [ ] Add "How to Add a Custom Hook" contributor guide
+- [ ] Add "How to Add a New Context" contributor guide
+- [ ] Add "How to Add an Inline Editable Page" contributor guide
+- [ ] Document InlineEditContext API (methods, state shape, sync rules)
+- [ ] Update guide page (/guide) with architecture diagrams
 
 **Building Blocks Vision** 🧱
 ```
@@ -572,4 +652,4 @@ _No features currently disabled._
 
 ---
 
-*Last Updated: December 30, 2025 - Phone-first wizard: comprehensive E2E testing (14 tests)*
+*Last Updated: December 30, 2025 - DRY/ETC/Orthogonality audit: 32 new tasks added*
