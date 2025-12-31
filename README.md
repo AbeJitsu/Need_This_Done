@@ -26,7 +26,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║  🔌 49 API Routes                        ✅ Supabase Auth & Database         ║
 ║  🧩 90+ React Components                 ✅ Redis Caching (Upstash)          ║
 ║  📦 6 Context Providers                  ✅ Email Notifications (Resend)     ║
-║  🔧 26 Lib Utilities                     ✅ Google OAuth                     ║
+║  🔧 44 Lib Utilities                     ✅ Google OAuth                     ║
 ║  🪝 8 Custom Hooks                       ✅ Inline Editing (12 pages)        ║
 ║  🧪 229 E2E Tests Passing                ✅ WCAG AA Color System (4.5:1)     ║
 ║                                                                              ║
@@ -837,7 +837,7 @@ STORYBOOK STORIES (8 files)
 └── Button, Card, PageHeader, CTASection, CircleBadge, PricingCard, etc.
 ```
 
-### Lib Utilities (25 files)
+### Lib Utilities (44 files)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -854,25 +854,54 @@ EXTERNAL SERVICE CLIENTS
 ├── email-service.ts     Email notification logic
 └── google-calendar.ts   Google Calendar OAuth + API
 
-AUTHENTICATION
+AUTHENTICATION & API
 ├── auth.ts              NextAuth session helpers
 ├── auth-options.ts      NextAuth config (Google + credentials)
-└── api-auth.ts          API route authentication
+├── api-auth.ts          API route authentication (verifyAdmin, verifyAuth)
+└── api-errors.ts        Standardized error responses (handleApiError, badRequest)
 
-CACHING
-└── cache.ts             Type-safe cache wrapper with TTL
+CACHING & PERFORMANCE
+├── cache.ts             Type-safe cache wrapper with TTL
+└── cache-stats.ts       Cache hit/miss rate monitoring
 
 DESIGN SYSTEM
-└── colors.ts            Central color definitions (WCAG AA)
+├── colors.ts            Central color definitions (WCAG AA anchors)
+├── service-colors.ts    Service type → accent color mapping
+└── wcag-contrast.ts     WCAG contrast ratio calculator
 
-PUCK CONFIG
-└── puck-config.tsx      22 page builder components (2,100+ lines)
+INLINE EDITING SYSTEM
+├── content-discovery.ts     Auto-discover editable content files
+├── content-path-mapper.ts   Click-to-edit JSON path finding
+├── editable-routes.ts       Route → page slug mapping
+├── fetch-page-content.ts    Page content fetching with fallback
+├── default-page-content.ts  Default content templates
+└── page-content-types.ts    TypeScript type definitions
+
+PUCK PAGE BUILDER
+├── puck-config.tsx      22 page builder components (2,100+ lines)
+├── puck-utils.tsx       Shared utilities (getPuckAccentColors, etc.)
+├── puck-editable.tsx    Puck editor integration
+└── sections/index.ts    Pre-built section templates
+
+TEMPLATES SYSTEM
+├── templates/index.ts           Template registry
+├── templates/config.ts          Template configuration
+├── templates/types.ts           Template type definitions
+├── templates/utils.ts           Template utilities
+└── templates/starter-templates.ts  Pre-built starter templates
+
+UTILITIES
+├── format.ts            Price/date formatting (formatPrice)
+├── object-utils.ts      Nested value access (getNestedValue, setNestedValue)
+├── validation.ts        File upload & form validation rules
+├── appointment-utils.ts Appointment scheduling helpers
+├── loop-state.ts        Auto-loop state management (Claude Code)
+└── media-types.ts       Supported media format definitions
 
 CONTENT TYPES
-├── default-page-content.ts   Default templates
-├── page-content-types.ts     Type definitions
-├── service-modal-content.ts  Modal content
-└── media-types.ts            Supported formats
+├── service-modal-content.ts  Service modal content
+├── blog-types.ts             Blog type definitions
+└── generated/content-manifest.ts  Auto-generated route manifest
 
 AI/CHATBOT
 ├── chatbot/index.ts

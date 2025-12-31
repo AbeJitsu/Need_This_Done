@@ -204,7 +204,7 @@ All 75 occurrences in 36 files fixed:
 ```
 - [x] Update README component count (says 87, actually 150+)
 - [x] Document all 8 custom hooks in README (useEditableContent, useUniversalClick, usePageViewTracking, useProductTracking, useComments, useProjectStatus, useBackdropClose, useCurrency)
-- [ ] Document 18 missing lib utilities in README (content-discovery, content-path-mapper, cache-stats, loop-state, etc.)
+- [x] Document all 44 lib utilities in README (expanded from 25 to 44 files documented)
 - [ ] Consolidate /docs/*.md content INTO README.md (ETC: one organized doc, not many scattered)
 - [ ] Add "How to Add a Custom Hook" contributor guide
 - [ ] Add "How to Add a New Context" contributor guide
