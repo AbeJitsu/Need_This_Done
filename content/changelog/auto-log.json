@@ -1,5 +1,14 @@
 [
   {
+    "hash": "e4a2187",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "e4a2187af8ed806a29f3080aeb314954297af5f1:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor: Centralize card hover shadows to colors.ts (DRY)",
+    "category": "Refactoring",
+    "filesChanged": 11
+  },
+  {
     "hash": "d71fda6",
     "date": "%Y->- (HEAD -> main)",
     "time": "d71fda6954c0a89f0f289cd628d837a249de00ff:%M",

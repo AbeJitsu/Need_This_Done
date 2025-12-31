@@ -15,6 +15,7 @@ import {
   AccentColor,
 } from '@/lib/colors';
 import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
+import { CloseIcon } from '@/components/ui/icons';
 import type { ServiceType } from '@/lib/service-modal-content';
 
 // ============================================================================
@@ -86,9 +87,7 @@ export default function ServiceDetailModal() {
             `}
             aria-label="Close modal"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <CloseIcon size="lg" />
           </button>
 
           {/* ================================================================

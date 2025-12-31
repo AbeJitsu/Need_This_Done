@@ -146,7 +146,7 @@ All 75 occurrences in 36 files fixed:
 ```
 - [x] Extract `CheckmarkCircle` component - duplicated in ServiceCard, PricingCard, ServiceDetailModal, HowItWorksPageClient, ServicesPageClient (5 files)
 - [x] Use `shadowClasses.cardHover` from colors.ts - migrated ServiceCard, StepCard, CourseCard, PricingCard, FAQPageClient, FAQPreview, LoginClient (7 files)
-- [ ] Extract `CloseButton` component - duplicated in ConfirmDialog, ServiceDetailModal, ChatbotModal (3 files)
+- [x] Use existing `CloseIcon` component - migrated ServiceDetailModal, ChatbotModal to use CloseIcon (ConfirmDialog already uses it)
 - [ ] Consolidate form field components - TextField.tsx + TextAreaField.tsx share 90% code, extract FormFieldBase
 - [ ] Extract `formatPrice()` to lib/format.ts - duplicated in CourseCard:71-77, EnrollButton, other e-commerce components
 - [ ] Centralize `serviceColorMap` - duplicated in ProjectCard:29-38 + ServiceDetailModal:28-32

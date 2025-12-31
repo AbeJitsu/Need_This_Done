@@ -7,6 +7,7 @@ import type { UIMessage } from '@ai-sdk/react';
 import ChatMessage from './ChatMessage';
 import { useIndexingOptional } from './IndexingContext';
 import { cardBgColors, dividerColors, headingColors, formInputColors, mutedTextColors, alertColors, formValidationColors, solidButtonColors, iconButtonColors, lightBgColors, loadingColors, linkColors } from '@/lib/colors';
+import { CloseIcon } from '@/components/ui/icons';
 
 // ============================================================================
 // Chat Persistence - Keep chat history across page navigations
@@ -228,9 +229,7 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
           aria-label="Close chat"
           title="Close chat"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <CloseIcon size="md" />
         </button>
       </div>
     );
@@ -326,9 +325,7 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
             aria-label="Close chat"
             title="Close chat"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <CloseIcon size="lg" />
           </button>
         </div>
       </div>
