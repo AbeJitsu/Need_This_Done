@@ -86,6 +86,8 @@ export default function Footer() {
             <span>·</span>
             <Link href="/terms" className={`${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}>Terms</Link>
             <span>·</span>
+            <Link href="/changelog" className={`${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}>Changelog</Link>
+            <span>·</span>
             <span>&copy; {currentYear}</span>
           </p>
         </div>
