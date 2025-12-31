@@ -27,7 +27,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║  🧩 90+ React Components                 ✅ Redis Caching (Upstash)          ║
 ║  📦 6 Context Providers                  ✅ Email Notifications (Resend)     ║
 ║  🔧 26 Lib Utilities                     ✅ Google OAuth                     ║
-║  🪝 4 Custom Hooks                       ✅ Inline Editing (12 pages)        ║
+║  🪝 8 Custom Hooks                       ✅ Inline Editing (12 pages)        ║
 ║  🧪 229 E2E Tests Passing                ✅ WCAG AA Color System (4.5:1)     ║
 ║                                                                              ║
 ║  RECENT ADDITIONS (Dec 2025)             VISUAL BUILDER                      ║
@@ -879,6 +879,37 @@ AI/CHATBOT
 ├── chatbot/content-extractor.ts
 ├── chatbot/content-hash.ts
 └── chatbot/text-chunker.ts
+```
+
+### Custom Hooks (8 files)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           REACT HOOKS                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+INLINE EDITING
+├── useEditableContent.ts   Page content initialization for inline editing
+│                           Replaces 15+ lines of boilerplate with one call
+└── useUniversalClick.ts    Global click-to-edit handler for edit mode
+                            Auto-detects JSON paths from clicked text
+
+ANALYTICS
+├── usePageViewTracking.ts  Tracks page views for Puck CMS analytics
+└── useProductTracking.ts   Product interactions for recommendations engine
+                            Events: view, cart_add, purchase, wishlist
+
+PROJECT MANAGEMENT
+├── useComments.ts          Comment CRUD operations for project modals
+│                           Handles fetching, submission, auto-scroll
+└── useProjectStatus.ts     Admin project status updates
+                            Manages status change + optional notes
+
+UI UTILITIES
+├── useBackdropClose.ts     Modal click-outside handler + Escape key
+│                           Consistent close behavior across all modals
+└── useCurrency.ts          Currency conversion and formatting
+                            Fetches rates, caches, converts, formats
 ```
 
 **Feeling overwhelmed?** Don't worry - you don't need to understand everything at once. Most tasks only touch a few files. Start with the feature you're working on and explore outward from there.
