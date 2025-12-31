@@ -43,7 +43,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
           sectionKey="tiers"
           arrayField="tiers"
           itemIds={content.tiers.map((_, i) => `tier-${i}`)}
-          className="grid md:grid-cols-3 gap-6 mb-8"
+          className="grid md:grid-cols-3 gap-6 mb-8 items-stretch"
         >
           {content.tiers.map((tier, index) => {
             const delayClass = index === 0 ? 'motion-safe:animate-fade-in'
@@ -59,8 +59,9 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
                 content={tier as unknown as Record<string, unknown>}
                 sortable
                 sortId={`tier-${index}`}
+                className="h-full"
               >
-                <div className={`opacity-0 translate-x-[-30px] motion-reduce:opacity-100 motion-reduce:translate-x-0 ${delayClass}`}>
+                <div className={`h-full opacity-0 translate-x-[-30px] motion-reduce:opacity-100 motion-reduce:translate-x-0 ${delayClass}`}>
                   <PricingCard {...tier} />
                 </div>
               </EditableItem>
@@ -87,7 +88,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
           sectionKey="ctaPaths"
           arrayField="ctaPaths"
           itemIds={content.ctaPaths.map((_, i) => `path-${i}`)}
-          className="grid md:grid-cols-2 gap-6 mb-10"
+          className="grid md:grid-cols-2 gap-6 mb-10 items-stretch"
         >
           {content.ctaPaths.map((path, index) => {
             const colorKey = path.hoverColor as keyof typeof checkmarkColors;
@@ -103,6 +104,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
                 content={path as unknown as Record<string, unknown>}
                 sortable
                 sortId={`path-${index}`}
+                className="h-full"
               >
                 <Card hoverColor={path.hoverColor} hoverEffect="lift" className="h-full">
                   <div className="p-8 h-full flex flex-col">
