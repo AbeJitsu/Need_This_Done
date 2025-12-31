@@ -10,7 +10,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import { alertColors, statusBadgeColors, iconCircleColors } from '@/lib/colors';
+import { alertColors, statusBadgeColors, iconCircleColors, containerBg } from '@/lib/colors';
 
 interface Page {
   id: string;
@@ -129,7 +129,7 @@ export default function PagesManagement() {
   if (!isAdmin) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className={`min-h-screen ${containerBg.page}`}>
       <div className="container mx-auto px-6 py-8">
         {/* ====================================================================
             Breadcrumb Navigation

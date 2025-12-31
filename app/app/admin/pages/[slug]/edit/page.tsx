@@ -11,7 +11,7 @@ import { Puck } from '@measured/puck';
 import { puckConfig } from '@/lib/puck-config';
 import '@measured/puck/puck.css';
 import { CheckIcon } from '@/components/ui/icons';
-import { statusBadgeColors } from '@/lib/colors';
+import { statusBadgeColors, containerBg } from '@/lib/colors';
 
 export default function EditPage({ params }: { params: { slug: string } }) {
   const router = useRouter();
@@ -94,7 +94,7 @@ export default function EditPage({ params }: { params: { slug: string } }) {
 
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className={`flex items-center justify-center min-h-screen ${containerBg.page}`}>
         <div className="text-center">
           <div className="w-12 h-12 mx-auto mb-4 rounded-full border-4 border-purple-200 border-t-purple-600 animate-spin" />
           <p className="text-gray-600 dark:text-gray-400">Loading page...</p>
@@ -106,7 +106,7 @@ export default function EditPage({ params }: { params: { slug: string } }) {
   if (!isAdmin || !page) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className={`min-h-screen ${containerBg.page}`}>
       {/* ========================================================================
           Header with Breadcrumbs & Page Info
           ======================================================================== */}

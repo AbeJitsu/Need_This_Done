@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { neutralAccentBg } from '@/lib/colors';
 
 // ============================================================================
 // How It Works Component - Simple Visual Diagram
@@ -28,7 +29,7 @@ export default function HowItWorks() {
         <div className="flex items-center justify-between gap-4 mb-8">
           {/* Visitor */}
           <div className="flex-1">
-            <div className="p-4 bg-blue-50 dark:bg-gray-800 border-2 border-blue-200 dark:border-blue-800 rounded-lg text-center">
+            <div className={`p-4 ${neutralAccentBg.blue} border-2 border-blue-200 dark:border-blue-800 rounded-lg text-center`}>
               <div className="text-2xl mb-2" role="img" aria-label="Person visiting">👤</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Your Visitor</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Asks for something</p>
@@ -40,7 +41,7 @@ export default function HowItWorks() {
 
           {/* App */}
           <div className="flex-1">
-            <div className="p-4 bg-purple-50 dark:bg-gray-800 border-2 border-purple-200 dark:border-purple-800 rounded-lg text-center">
+            <div className={`p-4 ${neutralAccentBg.purple} border-2 border-purple-200 dark:border-purple-800 rounded-lg text-center`}>
               <div className="text-2xl mb-2" role="img" aria-label="Your app">🎯</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Your App</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Processes the request</p>
@@ -52,7 +53,7 @@ export default function HowItWorks() {
 
           {/* Quick Memory */}
           <div className="flex-1">
-            <div className="p-4 bg-orange-50 dark:bg-gray-800 border-2 border-orange-200 dark:border-orange-800 rounded-lg text-center">
+            <div className={`p-4 ${neutralAccentBg.orange} border-2 border-orange-200 dark:border-orange-800 rounded-lg text-center`}>
               <div className="text-2xl mb-2" role="img" aria-label="Quick memory">⚡</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Quick Memory</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Recent answers saved here</p>
@@ -64,7 +65,7 @@ export default function HowItWorks() {
 
           {/* Storage */}
           <div className="flex-1">
-            <div className="p-4 bg-green-50 dark:bg-gray-800 border-2 border-green-200 dark:border-green-800 rounded-lg text-center">
+            <div className={`p-4 ${neutralAccentBg.green} border-2 border-green-200 dark:border-green-800 rounded-lg text-center`}>
               <div className="text-2xl mb-2" role="img" aria-label="Permanent storage">💾</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Permanent Storage</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">All your data kept safe</p>
@@ -73,7 +74,7 @@ export default function HowItWorks() {
         </div>
 
         {/* Simple explanation */}
-        <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-lg mt-4">
+        <div className={`p-4 ${neutralAccentBg.blue} border border-blue-200 dark:border-blue-700 rounded-lg mt-4`}>
           <p className="text-sm text-gray-700 dark:text-gray-300 text-center">
             <strong>The Flow:</strong> Your visitor asks → Your app checks Quick Memory → Gets from Permanent Storage if needed → Sends answer back (usually in milliseconds)
           </p>
@@ -95,7 +96,7 @@ export default function HowItWorks() {
         ].map((item, index) => (
           <div key={index} className="text-center">
             {item.title ? (
-              <div className="p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div className={`p-3 ${neutralAccentBg.gray} border border-gray-200 dark:border-gray-700 rounded-lg`}>
                 <div className="text-xl mb-1" role="img" aria-label={item.label}>{item.icon}</div>
                 <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{item.title}</p>
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{item.desc}</p>
@@ -110,7 +111,7 @@ export default function HowItWorks() {
       {/* Explanation Boxes */}
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         {/* What Visitors Experience */}
-        <div className="p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-lg">
+        <div className={`p-4 ${neutralAccentBg.blue} border border-blue-300 dark:border-blue-700 rounded-lg`}>
           <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">What Your Visitors Experience</h3>
           <ul className="text-sm text-blue-900 dark:text-blue-300 space-y-1">
             <li>• Everything loads super fast</li>
@@ -121,7 +122,7 @@ export default function HowItWorks() {
         </div>
 
         {/* What You Create */}
-        <div className="p-4 bg-purple-50 dark:bg-gray-800 border border-purple-300 dark:border-purple-700 rounded-lg">
+        <div className={`p-4 ${neutralAccentBg.purple} border border-purple-300 dark:border-purple-700 rounded-lg`}>
           <h3 className="font-semibold text-purple-900 dark:text-purple-300 mb-2">What You Create</h3>
           <ul className="text-sm text-purple-900 dark:text-purple-300 space-y-1">
             <li>• Your unique features</li>
@@ -133,7 +134,7 @@ export default function HowItWorks() {
       </div>
 
       {/* Key Concept */}
-      <div className="p-4 bg-green-50 dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg mb-6">
+      <div className={`p-4 ${neutralAccentBg.green} border border-green-300 dark:border-green-700 rounded-lg mb-6`}>
         <p className="text-sm text-green-900 dark:text-green-300">
           <strong><span role="img" aria-label="Tip">💡</span> The Key Idea:</strong> All the technical plumbing (how requests travel, how logins work, how your app stays fast) is already built and connected.
           You focus on what matters: your features, your design, and what makes your app special.
@@ -166,7 +167,7 @@ export default function HowItWorks() {
               description: 'Like a temporary ID badge. After login, you get a badge that proves you\'re you. It expires automatically. You don\'t send your password repeatedly. Just the badge.',
             },
           ].map((item, index) => (
-            <div key={index} className="p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
+            <div key={index} className={`p-3 ${neutralAccentBg.gray} border border-gray-200 dark:border-gray-600 rounded-lg`}>
               <div className="flex gap-3">
                 <div className="text-xl flex-shrink-0">{item.icon}</div>
                 <div>
@@ -184,7 +185,7 @@ export default function HowItWorks() {
         <button
           type="button"
           onClick={() => setExpandDeveloper(!expandDeveloper)}
-          className="w-full text-left p-4 bg-purple-50 dark:bg-gray-700 border border-purple-200 dark:border-purple-700 rounded-lg hover:bg-purple-100 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className={`w-full text-left p-4 ${neutralAccentBg.purple} border border-purple-200 dark:border-purple-700 rounded-lg hover:bg-purple-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500`}
         >
           <div className="flex items-center justify-between">
             <p className="font-semibold text-purple-900 dark:text-purple-300">
@@ -197,7 +198,7 @@ export default function HowItWorks() {
         </button>
 
         {expandDeveloper && (
-          <div className="mt-4 space-y-4 p-4 bg-purple-50 dark:bg-gray-700 rounded-lg border border-purple-200 dark:border-purple-700">
+          <div className={`mt-4 space-y-4 p-4 ${neutralAccentBg.purple} rounded-lg border border-purple-200 dark:border-purple-700`}>
             {/* Next.js Explanation */}
             <div>
               <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
@@ -276,7 +277,7 @@ const { data } = await supabase
             </div>
 
             {/* Cloud Services Note */}
-            <div className="p-3 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-blue-700 rounded">
+            <div className={`p-3 ${neutralAccentBg.blue} border border-blue-200 dark:border-blue-700 rounded`}>
               <p className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-1">
                 ☁️ Cloud Infrastructure
               </p>

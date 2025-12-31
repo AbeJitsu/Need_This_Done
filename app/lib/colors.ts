@@ -550,6 +550,26 @@ export const dividerColors = {
 };
 
 // ============================================================================
+// Table Header Background - For table thead elements
+// ============================================================================
+export const tableHeaderBg = 'bg-gray-100 dark:bg-gray-800';
+
+// ============================================================================
+// Neutral Accent Backgrounds - Colored in light mode, neutral gray in dark mode
+// ============================================================================
+// Use for visual elements that should be colorful in light mode but blend into
+// the dark theme without being too saturated. NEUTRAL pattern.
+export const neutralAccentBg: Record<AccentVariant, string> = {
+  purple: 'bg-purple-100 dark:bg-gray-800',
+  blue: 'bg-blue-100 dark:bg-gray-800',
+  green: 'bg-green-100 dark:bg-gray-800',
+  orange: 'bg-orange-100 dark:bg-gray-800',
+  red: 'bg-red-100 dark:bg-gray-800',
+  teal: 'bg-teal-100 dark:bg-gray-800',
+  gray: 'bg-gray-100 dark:bg-gray-700',
+};
+
+// ============================================================================
 // Footer Colors - For site-wide footer
 // ============================================================================
 export const footerColors = {

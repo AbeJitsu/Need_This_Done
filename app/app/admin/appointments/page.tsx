@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors, alertColors, statusBadgeColors, softBgColors } from '@/lib/colors';
+import { filterButtonColors, alertColors, statusBadgeColors, softBgColors, containerBg } from '@/lib/colors';
 
 // ============================================================================
 // Appointments Dashboard - /admin/appointments
@@ -335,7 +335,7 @@ export default function AppointmentsDashboard() {
 
                 {/* Notes (if any) */}
                 {appointment.notes && (
-                  <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className={`mb-4 p-3 ${containerBg.page} rounded-lg`}>
                     <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Customer Notes</p>
                     <p className="text-sm text-gray-700 dark:text-gray-300">{appointment.notes}</p>
                   </div>

@@ -19,7 +19,7 @@ import {
   generateSlug,
   generateExcerpt,
 } from '@/lib/blog-types';
-import { formInputColors, headingColors, accentColors } from '@/lib/colors';
+import { formInputColors, headingColors, accentColors, containerBg } from '@/lib/colors';
 import RichTextEditor from '@/components/editor/RichTextEditor';
 
 // ============================================================================
@@ -163,7 +163,7 @@ export default function EditBlogPost({ params }: PageProps) {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className={`min-h-screen ${containerBg.page} flex items-center justify-center`}>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Error</h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
@@ -176,7 +176,7 @@ export default function EditBlogPost({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6">
+    <div className={`min-h-screen ${containerBg.page} py-6`}>
       <div className="container mx-auto px-6 pb-8 max-w-4xl">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-4">

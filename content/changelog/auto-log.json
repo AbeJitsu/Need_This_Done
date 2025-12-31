@@ -1,5 +1,23 @@
 [
   {
+    "hash": "69626e6",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "69626e646c7105365d6dba3990744b453b98bf09:%M",
+    "author": "Abe Reyes",
+    "message": "Docs: Add systematic hardcoded color fix plan to TODO.md",
+    "category": "Documentation",
+    "filesChanged": 1
+  },
+  {
+    "hash": "e7d2c90",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "e7d2c90a0bd39be6b38a81e1e2a2b3c61640e9a0:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor: Clean colors.ts - enforce -100 minimum, no opacity in dark mode",
+    "category": "Refactoring",
+    "filesChanged": 8
+  },
+  {
     "hash": "62cc7c1",
     "date": "%Y->- (HEAD -> main)",
     "time": "62cc7c12a9cae52d4065f836f11b8f646a685093:%M",

@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors, alertColors, statusBadgeColors } from '@/lib/colors';
+import { filterButtonColors, alertColors, statusBadgeColors, containerBg } from '@/lib/colors';
 
 // ============================================================================
 // Orders Dashboard - /admin/orders
@@ -290,11 +290,11 @@ export default function OrdersDashboard() {
 
                 {/* Order details */}
                 <div className="grid sm:grid-cols-2 gap-4 mb-4">
-                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className={`p-3 ${containerBg.page} rounded-lg`}
                     <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Order ID</p>
                     <p className="text-sm text-gray-700 dark:text-gray-300 font-mono">{order.medusa_order_id}</p>
                   </div>
-                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className={`p-3 ${containerBg.page} rounded-lg`}
                     <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Created</p>
                     <p className="text-sm text-gray-700 dark:text-gray-300">{formatDate(order.created_at)}</p>
                   </div>

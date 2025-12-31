@@ -18,7 +18,7 @@ import {
   generateSlug,
   generateExcerpt,
 } from '@/lib/blog-types';
-import { formInputColors, headingColors, accentColors } from '@/lib/colors';
+import { formInputColors, headingColors, accentColors, containerBg, infoBannerColors } from '@/lib/colors';
 
 // ============================================================================
 // New Blog Post Creator - /admin/blog/new
@@ -158,7 +158,7 @@ export default function NewBlogPost() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-6">
+    <div className={`min-h-screen ${containerBg.page} pt-6`}>
       <div className="container mx-auto px-6 py-8 max-w-4xl">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-6">
@@ -191,14 +191,14 @@ export default function NewBlogPost() {
         <div
           className={`
             mb-8 p-4 rounded-xl
-            bg-blue-50 dark:bg-blue-800
-            border border-blue-200 dark:border-blue-600
+            ${infoBannerColors.blue.bg}
+            ${infoBannerColors.blue.border}
           `}
         >
-          <h3 className="font-semibold text-blue-800 dark:text-white mb-2">
+          <h3 className={`font-semibold ${infoBannerColors.blue.heading} mb-2`}>
             💡 Quick Tip: Paste LinkedIn Content
           </h3>
-          <p className="text-sm text-blue-700 dark:text-blue-100">
+          <p className={`text-sm ${infoBannerColors.blue.text}`}>
             Paste your LinkedIn post into the content field. The first line will become your title,
             and we'll auto-generate the rest. You can then expand it or publish as-is.
           </p>

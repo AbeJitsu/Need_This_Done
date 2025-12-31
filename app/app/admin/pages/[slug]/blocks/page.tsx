@@ -10,7 +10,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import { selectedStateColors, hoverBgColors } from '@/lib/colors';
+import { selectedStateColors, hoverBgColors, containerBg } from '@/lib/colors';
 
 // ============================================================================
 // Block Editor Types
@@ -264,7 +264,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
   // Loading state
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className={`flex items-center justify-center min-h-screen ${containerBg.page}`}>
         <div className="text-center">
           <div className="w-12 h-12 mx-auto mb-4 rounded-full border-4 border-purple-200 border-t-purple-600 animate-spin" />
           <p className="text-gray-600 dark:text-gray-400">Loading page...</p>
@@ -276,7 +276,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
   if (!isAdmin || !page) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className={`min-h-screen ${containerBg.page}`}>
       {/* ====================================================================
           Header
           ==================================================================== */}

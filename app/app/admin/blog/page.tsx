@@ -16,7 +16,7 @@ import {
   BLOG_STATUS_LABELS,
   formatPublishedDate,
 } from '@/lib/blog-types';
-import { statusBadgeColors, alertColors } from '@/lib/colors';
+import { statusBadgeColors, alertColors, containerBg } from '@/lib/colors';
 
 // ============================================================================
 // Admin Blog Dashboard - /admin/blog
@@ -145,7 +145,7 @@ export default function BlogManagement() {
   if (!isAdmin) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-6">
+    <div className={`min-h-screen ${containerBg.page} pt-6`}>
       <div className="container mx-auto px-6 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-6">

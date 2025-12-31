@@ -12,7 +12,7 @@ import {
   type PageContent,
 } from '@/lib/page-content-types';
 import { getDefaultContent } from '@/lib/default-page-content';
-import { iconCircleColors } from '@/lib/colors';
+import { iconCircleColors, containerBg } from '@/lib/colors';
 
 // ============================================================================
 // Admin Content Editor Page
@@ -96,7 +96,7 @@ export default function EditContentPage({
   // Loading state
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className={`flex items-center justify-center min-h-screen ${containerBg.page}`}
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
           <p className="text-gray-600 dark:text-gray-400">Loading editor...</p>
@@ -108,7 +108,7 @@ export default function EditContentPage({
   // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className={`flex items-center justify-center min-h-screen ${containerBg.page}`}
         <div className="text-center max-w-md">
           <div className={`w-12 h-12 ${iconCircleColors.red.bg} rounded-full flex items-center justify-center mx-auto mb-4`}>
             <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

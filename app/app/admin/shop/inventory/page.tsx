@@ -13,6 +13,7 @@ import {
   formInputColors,
   headingColors,
   verySoftBgColors,
+  tableHeaderBg,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -323,7 +324,7 @@ export default function AdminInventoryPage() {
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full" data-testid="inventory-list">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className={tableHeaderBg}>
               <tr>
                 <th className={`px-4 py-3 text-left text-sm font-semibold ${headingColors.secondary}`}>
                   Product
