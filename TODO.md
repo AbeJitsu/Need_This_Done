@@ -177,7 +177,7 @@ All 75 occurrences in 36 files fixed:
 - [x] Extract `getNestedValue`/`setNestedValue` to lib/object-utils.ts - created lib/object-utils.ts, migrated InlineEditContext + templates/utils.ts
 - [!] Extract `useAsyncOperation()` hook - deferred: state declarations are only 2-3 lines, CartContext has complex optimistic updates that make abstraction risky
 - [!] Extract `useOptimisticUpdate()` hook - deferred: 3 occurrences in 1 file, each with unique update logic; abstraction would add complexity without simplification
-- [ ] Refactor InlineEditContext (412 lines) - mixing 3 concerns: edit mode, selection state, content loading
+- [!] Refactor InlineEditContext (388 lines) - DEFERRED: 26 files + 52 tests depend on it, concerns are intentionally coupled for editing UX
 - [x] Fix StripeContext hardcoded colors - added stripeAppearance to colors.ts, migrated StripeContext to use it
 
 **ETC Violations** (Audit: Dec 30, 2025)
@@ -191,7 +191,7 @@ All 75 occurrences in 36 files fixed:
 - [x] Migrate screenshots.spec.ts to use page discovery - added getPublicScreenshotPages() and getAdminScreenshotPages() helpers
 - [x] Migrate page-render-stability.spec.ts to use discoverPublicPages() - replaced EDITABLE_PAGES array
 - [x] Migrate dark-mode-visual.spec.ts - no change needed: has targeted 3-page list for specific color tests, not comprehensive scan
-- [ ] Delete duplicate route definitions - editable-routes.ts is source of truth, tests should derive from it
+- [x] Delete duplicate route definitions - migrated compare-pages.spec.ts to use discoverPublicPages()
 
 **Documentation Gaps** (Audit: Dec 30, 2025)
 ```

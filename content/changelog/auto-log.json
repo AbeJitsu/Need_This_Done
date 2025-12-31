@@ -1,5 +1,14 @@
 [
   {
+    "hash": "3df31b3",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "3df31b33270bbfd4a78a61f59ec12b9369e19474:%M",
+    "author": "Abe Reyes",
+    "message": "Add: Technical changelog page for developers",
+    "category": "Features",
+    "filesChanged": 5
+  },
+  {
     "hash": "a7671e5",
     "date": "%Y->- (HEAD -> main)",
     "time": "a7671e55254e81ccce119207dec51d8ef5e9ebff:%M",
