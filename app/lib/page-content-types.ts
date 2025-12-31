@@ -37,6 +37,8 @@ export type {
   GetStartedPageContent,
   BlogPageContent,
   ChangelogPageContent,
+  GuideGroup,
+  GuideSection,
   GuidePageContent,
   PrivacyPageContent,
   TermsPageContent,

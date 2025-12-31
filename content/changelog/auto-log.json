@@ -1,5 +1,14 @@
 [
   {
+    "hash": "925e521",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "925e521b4ed1f7142816cc6281aedbf5a7a6f555:%M",
+    "author": "Abe Reyes",
+    "message": "Add drag-drop reordering to all editable pages",
+    "category": "Other",
+    "filesChanged": 9
+  },
+  {
     "hash": "580c098",
     "date": "%Y->- (HEAD -> main)",
     "time": "580c098f1e2a99f38ccc6df97563468f892bb261:%M",

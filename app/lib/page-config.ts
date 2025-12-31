@@ -289,9 +289,16 @@ export interface ChangelogPageContent {
 }
 
 // --- Guide Page ---
+export type GuideGroup = 'getting-started' | 'account' | 'explore' | 'support';
+export interface GuideSection {
+  title: string;
+  content: string;
+  icon?: string;
+  group: GuideGroup;
+}
 export interface GuidePageContent {
   header: PageHeader;
-  sections: Array<{ title: string; content: string; icon?: string }>;
+  sections: GuideSection[];
 }
 
 // --- Privacy Page ---
@@ -771,14 +778,14 @@ export const PAGE_CONFIGS = {
     defaults: {
       header: { title: 'Platform Guide', description: 'Everything you need to know about NeedThisDone - from booking consultations to managing your projects.' },
       sections: [
-        { title: 'Browse Our Services', icon: '🔍', content: 'Explore what we offer and find the right fit for your needs:\n\n• Visit the Services page to see our full range of professional services\n• Each service includes detailed descriptions, pricing, and what\'s included\n• Check our Pricing page to compare packages and find the best value\n• Use our FAQ for quick answers to common questions' },
-        { title: 'Book a Consultation', icon: '📅', content: 'Ready for expert guidance? Here\'s how to book:\n\n1. Visit the Shop to see available consultation packages (15, 30, or 55 minutes)\n2. Click any consultation to see full details and add to cart\n3. Review your cart and proceed to checkout\n4. Complete secure payment via Stripe (we accept all major cards)\n5. Select your preferred date and time for the session\n6. You\'ll receive an email confirmation with calendar invite' },
-        { title: 'Start a Project', icon: '🚀', content: 'Already have a quote? Here\'s how to get started:\n\n1. Go to the Get Started page\n2. Enter your quote reference number from our email\n3. Review the project scope and pricing\n4. Complete payment to authorize the project\n5. We\'ll be in touch within 24 hours to kick things off' },
-        { title: 'Create Your Account', icon: '👤', content: 'An account gives you access to your dashboard and order history:\n\n• Sign in with Google for one-click access\n• Or create an account with email and password\n• Your account links all your orders and consultations\n• Access your dashboard anytime to check status and history' },
-        { title: 'Your Dashboard', icon: '📊', content: 'Once logged in, your dashboard is your home base:\n\n• View all your orders and their current status\n• Track consultation bookings and upcoming appointments\n• Access order details and receipts\n• Update your account settings and preferences' },
-        { title: 'Explore Our Content', icon: '📚', content: 'Stay informed with our regularly updated content:\n\n• Blog: Tips, insights, and industry updates\n• Changelog: Latest platform features and improvements\n• How It Works: Step-by-step breakdown of our process\n• FAQ: Quick answers to common questions' },
-        { title: 'Dark Mode', icon: '🌙', content: 'Prefer a darker interface? We\'ve got you covered:\n\n• Click the sun/moon icon in the header to toggle dark mode\n• Your preference is saved automatically\n• All pages are optimized for both light and dark viewing\n• Designed to meet accessibility standards (WCAG AA)' },
-        { title: 'Get in Touch', icon: '💬', content: 'Have questions or need help? We\'re here:\n\n• Visit our Contact page to send us a message\n• Email us directly at hello@needthisdone.com\n• Check our FAQ for immediate answers\n• Book a consultation if you need dedicated time with an expert' },
+        { title: 'Browse Our Services', icon: '🔍', group: 'getting-started', content: 'Explore what we offer and find the right fit for your needs:\n\n• Visit the Services page to see our full range of professional services\n• Each service includes detailed descriptions, pricing, and what\'s included\n• Check our Pricing page to compare packages and find the best value\n• Use our FAQ for quick answers to common questions' },
+        { title: 'Book a Consultation', icon: '📅', group: 'getting-started', content: 'Ready for expert guidance? Here\'s how to book:\n\n1. Visit the Shop to see available consultation packages (15, 30, or 55 minutes)\n2. Click any consultation to see full details and add to cart\n3. Review your cart and proceed to checkout\n4. Complete secure payment via Stripe (we accept all major cards)\n5. Select your preferred date and time for the session\n6. You\'ll receive an email confirmation with calendar invite' },
+        { title: 'Start a Project', icon: '🚀', group: 'getting-started', content: 'Already have a quote? Here\'s how to get started:\n\n1. Go to the Get Started page\n2. Enter your quote reference number from our email\n3. Review the project scope and pricing\n4. Complete payment to authorize the project\n5. We\'ll be in touch within 24 hours to kick things off' },
+        { title: 'Create Your Account', icon: '👤', group: 'account', content: 'An account gives you access to your dashboard and order history:\n\n• Sign in with Google for one-click access\n• Or create an account with email and password\n• Your account links all your orders and consultations\n• Access your dashboard anytime to check status and history' },
+        { title: 'Your Dashboard', icon: '📊', group: 'account', content: 'Once logged in, your dashboard is your home base:\n\n• View all your orders and their current status\n• Track consultation bookings and upcoming appointments\n• Access order details and receipts\n• Update your account settings and preferences' },
+        { title: 'Explore Our Content', icon: '📚', group: 'explore', content: 'Stay informed with our regularly updated content:\n\n• Blog: Tips, insights, and industry updates\n• Changelog: Latest platform features and improvements\n• How It Works: Step-by-step breakdown of our process\n• FAQ: Quick answers to common questions' },
+        { title: 'Dark Mode', icon: '🌙', group: 'explore', content: 'Prefer a darker interface? We\'ve got you covered:\n\n• Click the sun/moon icon in the header to toggle dark mode\n• Your preference is saved automatically\n• All pages are optimized for both light and dark viewing\n• Designed to meet accessibility standards (WCAG AA)' },
+        { title: 'Get in Touch', icon: '💬', group: 'support', content: 'Have questions or need help? We\'re here:\n\n• Visit our Contact page to send us a message\n• Email us directly at hello@needthisdone.com\n• Check our FAQ for immediate answers\n• Book a consultation if you need dedicated time with an expert' },
       ],
     } as GuidePageContent,
   },

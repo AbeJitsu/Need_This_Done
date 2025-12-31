@@ -177,10 +177,14 @@ export const linkFontWeight = 'font-medium';
 // Updated to meet WCAG AA (4.5:1 contrast) for normal text in both modes
 // Light mode: -600 shades ensure 4.5:1+ contrast on white (minimum)
 // Dark mode: -300 shades ensure 4.5:1+ contrast on gray-800
-export const titleColors: Record<AccentColor, string> = {
+export const titleColors: Record<AccentVariant, string> = {
   purple: 'text-purple-600 dark:text-purple-300',
   blue: 'text-blue-600 dark:text-blue-300',
   green: 'text-green-600 dark:text-green-300',
+  gold: 'text-gold-600 dark:text-gold-300',
+  teal: 'text-teal-600 dark:text-teal-300',
+  gray: 'text-gray-600 dark:text-gray-300',
+  red: 'text-red-600 dark:text-red-300',
 };
 
 // ============================================================================
