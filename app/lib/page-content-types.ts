@@ -350,6 +350,7 @@ export interface GuidePageContent {
   sections: Array<{
     title: string;
     content: string;
+    icon?: string; // Emoji for visual anchor
   }>;
 }
 

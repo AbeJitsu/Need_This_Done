@@ -20,6 +20,13 @@ async function enableEditMode(page: Page): Promise<void> {
   await editToggle.waitFor({ state: 'visible', timeout: 10000 });
   await editToggle.click();
   await page.getByText('Edit Mode', { exact: true }).waitFor({ state: 'visible', timeout: 5000 });
+
+  // Dismiss the edit mode tutorial if it appears
+  const tutorialDismiss = page.getByRole('button', { name: 'Got it!' });
+  if (await tutorialDismiss.isVisible({ timeout: 1000 }).catch(() => false)) {
+    await tutorialDismiss.click();
+    await page.waitForTimeout(300); // Wait for tutorial to close
+  }
 }
 
 test.describe('Section Drag and Drop', () => {

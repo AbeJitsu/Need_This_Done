@@ -26,15 +26,16 @@ interface DragHandleProps {
   attributes: DraggableAttributes;
 }
 
-// Drag handle icon (grip dots)
+// Drag handle icon (grip dots) - Always visible in edit mode for discoverability
 function DragHandle({ listeners, attributes }: DragHandleProps) {
   return (
     <button
-      className="absolute -left-3 top-1/2 -translate-y-1/2 p-2 cursor-grab active:cursor-grabbing
-                 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600
-                 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20"
+      className="absolute -left-8 top-4 p-2 cursor-grab active:cursor-grabbing
+                 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 hover:scale-110
+                 transition-all duration-200 z-20"
       data-drag-handle
       aria-label="Drag to reorder section"
+      title="Drag to reorder"
       {...attributes}
       {...listeners}
     >

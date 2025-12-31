@@ -655,6 +655,7 @@ export const defaultGuideContent: GuidePageContent = {
   sections: [
     {
       title: 'Browse Our Services',
+      icon: '🔍',
       content: `Explore what we offer and find the right fit for your needs:
 
 • Visit the Services page to see our full range of professional services
@@ -664,6 +665,7 @@ export const defaultGuideContent: GuidePageContent = {
     },
     {
       title: 'Book a Consultation',
+      icon: '📅',
       content: `Ready for expert guidance? Here's how to book:
 
 1. Visit the Shop to see available consultation packages (15, 30, or 55 minutes)
@@ -675,6 +677,7 @@ export const defaultGuideContent: GuidePageContent = {
     },
     {
       title: 'Start a Project',
+      icon: '🚀',
       content: `Already have a quote? Here's how to get started:
 
 1. Go to the Get Started page
@@ -685,6 +688,7 @@ export const defaultGuideContent: GuidePageContent = {
     },
     {
       title: 'Create Your Account',
+      icon: '👤',
       content: `An account gives you access to your dashboard and order history:
 
 • Sign in with Google for one-click access
@@ -694,6 +698,7 @@ export const defaultGuideContent: GuidePageContent = {
     },
     {
       title: 'Your Dashboard',
+      icon: '📊',
       content: `Once logged in, your dashboard is your home base:
 
 • View all your orders and their current status
@@ -703,6 +708,7 @@ export const defaultGuideContent: GuidePageContent = {
     },
     {
       title: 'Explore Our Content',
+      icon: '📚',
       content: `Stay informed with our regularly updated content:
 
 • Blog: Tips, insights, and industry updates
@@ -712,6 +718,7 @@ export const defaultGuideContent: GuidePageContent = {
     },
     {
       title: 'Dark Mode',
+      icon: '🌙',
       content: `Prefer a darker interface? We've got you covered:
 
 • Click the sun/moon icon in the header to toggle dark mode
@@ -721,6 +728,7 @@ export const defaultGuideContent: GuidePageContent = {
     },
     {
       title: 'Get in Touch',
+      icon: '💬',
       content: `Have questions or need help? We're here:
 
 • Visit our Contact page to send us a message

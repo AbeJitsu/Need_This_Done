@@ -315,6 +315,35 @@ All 75 occurrences in 36 files fixed:
 
 ### Medium Term (2-4 Weeks)
 
+**Consider Medusa v2 Upgrade** (Dec 31, 2025)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    MEDUSA VERSION COMPARISON                             │
+├─────────────────────────────────────────────────────────────────────────┤
+│  Current: v1.20.11 (stable, working)                                    │
+│  Latest: v2.0 (major rewrite, new architecture)                         │
+│                                                                         │
+│  Medusa 2.0 features:                                                   │
+│  - Completely new architecture and plugin system                        │
+│  - Built-in AI features (Bloom assistant)                               │
+│  - New admin dashboard                                                  │
+│  - Breaking API changes                                                 │
+│                                                                         │
+│  Risk: Major migration, not a simple npm update                         │
+│  Decision: Evaluate if new features justify migration effort            │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Research Medusa v2 migration guide
+- [ ] Evaluate if v2 features are needed for our use case
+- [ ] Document breaking changes that would affect our code
+
+**Guide Page Cleanup** (Dec 31, 2025)
+- [→] Redesign guide page with visual hierarchy
+- [ ] Add icons to guide sections for scannability
+- [ ] Group sections by category (Getting Started, Account, Explore, Support)
+- [ ] Add cycling accent colors (like FAQ page)
+- [ ] Feature first section as hero with CTA
+
 **Universal Inline Editing** - Click anything, edit anything, configure nothing
 **Design Principle:** [.claude/rules/etc-easy-to-change.md](.claude/rules/etc-easy-to-change.md)
 
