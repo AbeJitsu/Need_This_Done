@@ -1,10 +1,18 @@
 import { test, expect, Page } from '@playwright/test';
+import { discoverPublicPages } from './utils/page-discovery';
 
 // ============================================================================
 // Section Drag and Drop Tests
 // ============================================================================
 // Tests for dragging sections to reorder them in edit mode.
 // Uses @dnd-kit for accessible drag-and-drop.
+//
+// RULE: Uses page discovery instead of hardcoded paths (ETC principle)
+// See: .claude/rules/testing-flexibility.md
+
+// Get a public page dynamically (any page with editable sections works)
+const publicPages = discoverPublicPages();
+const testPage = publicPages.find(p => p.path !== '/') || publicPages[0];
 
 // Helper to enable edit mode using the correct selector
 async function enableEditMode(page: Page): Promise<void> {
@@ -15,8 +23,8 @@ async function enableEditMode(page: Page): Promise<void> {
 }
 
 test.describe('Section Drag and Drop', () => {
-  test('shows drag handles on sections when edit mode is active', async ({ page }) => {
-    await page.goto('/services');
+  test(`shows drag handles on sections when edit mode is active (${testPage.path})`, async ({ page }) => {
+    await page.goto(testPage.path);
     await enableEditMode(page);
 
     // Should see drag handles on editable sections
@@ -24,8 +32,8 @@ test.describe('Section Drag and Drop', () => {
     await expect(dragHandles.first()).toBeVisible();
   });
 
-  test('drag handles are hidden when edit mode is off', async ({ page }) => {
-    await page.goto('/services');
+  test(`drag handles are hidden when edit mode is off (${testPage.path})`, async ({ page }) => {
+    await page.goto(testPage.path);
 
     // Edit mode should be off by default
     const dragHandles = page.locator('[data-drag-handle]');
@@ -36,7 +44,7 @@ test.describe('Section Drag and Drop', () => {
     // NOTE: This test requires pages to render sections based on sectionOrder from context.
     // Current implementation adds drag handles and tracks order, but DOM reordering
     // requires architectural changes to how pages render their sections.
-    await page.goto('/services');
+    await page.goto(testPage.path);
     await enableEditMode(page);
 
     // Get all section titles in order
@@ -60,16 +68,16 @@ test.describe('Section Drag and Drop', () => {
     expect(newSecondKey).toBe(firstSectionKey);
   });
 
-  test('drag handle has accessible name', async ({ page }) => {
-    await page.goto('/services');
+  test(`drag handle has accessible name (${testPage.path})`, async ({ page }) => {
+    await page.goto(testPage.path);
     await enableEditMode(page);
 
     const dragHandle = page.locator('[data-drag-handle]').first();
     await expect(dragHandle).toHaveAttribute('aria-label', /drag to reorder/i);
   });
 
-  test('supports keyboard reordering', async ({ page }) => {
-    await page.goto('/services');
+  test(`supports keyboard reordering (${testPage.path})`, async ({ page }) => {
+    await page.goto(testPage.path);
     await enableEditMode(page);
 
     // Focus the first drag handle
@@ -85,8 +93,8 @@ test.describe('Section Drag and Drop', () => {
     // (actual assertion depends on implementation)
   });
 
-  test('shows visual feedback while dragging', async ({ page }) => {
-    await page.goto('/services');
+  test(`shows visual feedback while dragging (${testPage.path})`, async ({ page }) => {
+    await page.goto(testPage.path);
     await enableEditMode(page);
 
     const firstDragHandle = page.locator('[data-drag-handle]').first();
@@ -106,7 +114,7 @@ test.describe('Section Drag and Drop', () => {
   test.skip('persists section order after drag', async ({ page }) => {
     // NOTE: Persistence requires saving sectionOrder to backend.
     // Current implementation is client-side only.
-    await page.goto('/services');
+    await page.goto(testPage.path);
     await enableEditMode(page);
 
     const sections = page.locator('[data-editable-section]');

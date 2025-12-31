@@ -1,7 +1,7 @@
 {
   "title": "Main",
   "slug": "main",
-  "date": "2025-12-30",
+  "date": "2025-12-31",
   "category": "Dashboard",
   "description": "",
   "benefit": "",
@@ -33,7 +33,7 @@
       "caption": ""
     }
   ],
-  "_gitContext": "app/affected-routes.json               |   2 +-\n app/lib/colors.ts                      |   2 ++\n app/ux-screenshots/09-how-it-works.png | Bin 306193 -> 45244 bytes\n 3 files changed, 3 insertions(+), 1 deletion(-)",
+  "_gitContext": ".claude/loop-state.json                            |   2 +-\n app/affected-routes.json                           |   2 +-\n app/e2e/visual-regression/admin-blog-dark-mode.png | Bin 353140 -> 212462 bytes\n app/lib/colors.ts                                  |   2 ++\n app/ux-screenshots/09-how-it-works.png             | Bin 306193 -> 306570 bytes\n content/changelog/auto-log.json                    |   9 +++++++++\n 6 files changed, 13 insertions(+), 2 deletions(-)",
   "_affectedRoutes": [
     "/",
     "/terms",
