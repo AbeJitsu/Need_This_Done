@@ -2368,6 +2368,86 @@ describe('useMyHook', () => {
 
 **Reference hooks:** `useBackdropClose`, `useEditableContent`, `useCurrency`
 
+### How to Add a New Context
+
+Use React Context when you need shared state across multiple components without prop drilling.
+
+**1. Create the context file:**
+```bash
+touch app/context/MyContext.tsx
+```
+
+**2. Follow the context pattern:**
+```typescript
+'use client';
+
+import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+
+// ============================================================================
+// MyContext - [Short description of what this manages]
+// ============================================================================
+// What: [What state/functionality it provides]
+// Why: [Why components need shared access to this]
+// How: [Brief usage note]
+
+interface MyContextType {
+  someValue: string;
+  updateValue: (value: string) => void;
+}
+
+const MyContext = createContext<MyContextType | undefined>(undefined);
+
+// ============================================================================
+// MyProvider - Wrap components that need access
+// ============================================================================
+export function MyProvider({ children }: { children: ReactNode }) {
+  const [someValue, setSomeValue] = useState('default');
+
+  const updateValue = useCallback((value: string) => {
+    setSomeValue(value);
+  }, []);
+
+  return (
+    <MyContext.Provider value={{ someValue, updateValue }}>
+      {children}
+    </MyContext.Provider>
+  );
+}
+
+// ============================================================================
+// useMyContext - Hook for consuming the context
+// ============================================================================
+export function useMyContext() {
+  const context = useContext(MyContext);
+  if (!context) {
+    throw new Error('useMyContext must be used within MyProvider');
+  }
+  return context;
+}
+```
+
+**3. Add to the provider tree in `app/layout.tsx`:**
+```typescript
+<MyProvider>
+  <AuthProvider>
+    {/* other providers */}
+    {children}
+  </AuthProvider>
+</MyProvider>
+```
+
+**4. Use in components:**
+```typescript
+import { useMyContext } from '@/context/MyContext';
+
+function MyComponent() {
+  const { someValue, updateValue } = useMyContext();
+  return <button onClick={() => updateValue('new')}>{someValue}</button>;
+}
+```
+
+**Existing contexts:** `AuthContext`, `CartContext`, `ToastContext`, `InlineEditContext`
+
 ---
 
 ## Getting Help

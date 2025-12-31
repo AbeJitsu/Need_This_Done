@@ -207,7 +207,7 @@ All 75 occurrences in 36 files fixed:
 - [x] Document all 44 lib utilities in README (expanded from 25 to 44 files documented)
 - [x] Consolidate /docs/*.md content INTO README.md (added deep-dive references, README already has essential docs)
 - [x] Add "How to Add a Custom Hook" contributor guide
-- [ ] Add "How to Add a New Context" contributor guide
+- [x] Add "How to Add a New Context" contributor guide
 - [ ] Add "How to Add an Inline Editable Page" contributor guide
 - [ ] Document InlineEditContext API (methods, state shape, sync rules)
 - [ ] Update guide page (/guide) with architecture diagrams
