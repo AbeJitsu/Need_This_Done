@@ -244,9 +244,9 @@ export default function WhatCanYouBuild() {
                 <p className="text-xs font-semibold text-green-900 dark:text-green-300 mb-1">✓ We Built</p>
                 <p className="text-xs text-green-800 dark:text-green-200">Infrastructure, auth, database, security, testing, deployment setup</p>
               </div>
-              <div className={`p-3 ${neutralAccentBg.orange} rounded border border-orange-200 dark:border-orange-700`}>
-                <p className="text-xs font-semibold text-orange-900 dark:text-orange-300 mb-1">🏗️ You Build</p>
-                <p className="text-xs text-orange-800 dark:text-orange-200">Your features, your business logic, your design, what makes you unique</p>
+              <div className={`p-3 ${neutralAccentBg.gold} rounded border border-gold-200 dark:border-gold-700`}>
+                <p className="text-xs font-semibold text-gold-900 dark:text-gold-300 mb-1">🏗️ You Build</p>
+                <p className="text-xs text-gold-800 dark:text-gold-200">Your features, your business logic, your design, what makes you unique</p>
               </div>
             </div>
           </div>

@@ -95,20 +95,19 @@ Usage: background-color: var(--primary-color);
   --yellow-900: #372b00;
 
   /* ======================================================================
-  ORANGES - Now using Gold palette (honey-gold warmth)
+  GOLDS - Warm honey-gold accent (replaced orange Dec 30, 2025)
   ====================================================================== */
   /* Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100 */
-  /* Swapped from terracotta orange to rich gold on Dec 30, 2025 */
-  --orange-50: #fffcf5;
-  --orange-100: #fef7e6;
-  --orange-200: #fde9c4;
-  --orange-300: #fbd98f;
-  --orange-400: #d9a030;
-  --orange-500: #a36b00;  /* 4.51:1 with white - dark mode bg ✓ */
-  --orange-600: #7a4f00;  /* 6.67:1 with orange-100 - light mode text ✓ */
-  --orange-700: #5c3c00;
-  --orange-800: #3d2800;
-  --orange-900: #1f1400;
+  --gold-50: #fffcf5;
+  --gold-100: #fef7e6;
+  --gold-200: #fde9c4;
+  --gold-300: #fbd98f;
+  --gold-400: #d9a030;
+  --gold-500: #a36b00;  /* 4.51:1 with white - dark mode bg ✓ */
+  --gold-600: #8d6500;  /* 4.5:1 with gold-100 - light mode text minimum ✓ */
+  --gold-700: #5c3c00;
+  --gold-800: #3d2800;
+  --gold-900: #1f1400;
 
   /* ======================================================================
   PURPLES - Creativity & Premium (balanced plum)

@@ -27,7 +27,7 @@ const colorOptions = [
   { label: 'Purple', value: 'purple' },
   { label: 'Blue', value: 'blue' },
   { label: 'Green', value: 'green' },
-  { label: 'Orange', value: 'orange' },
+  { label: 'Gold', value: 'gold' },
   { label: 'Teal', value: 'teal' },
   { label: 'Gray', value: 'gray' },
 ] as const;
@@ -247,7 +247,7 @@ export const puckConfig: Config = {
       defaultProps: {
         title: 'Ready to get started?',
         buttons: [],
-        hoverColor: 'orange' as AccentVariant,
+        hoverColor: 'gold' as AccentVariant,
       },
       render: ({ title, description, buttons, hoverColor }) => (
         <CTASection

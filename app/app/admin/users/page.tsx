@@ -316,8 +316,8 @@ export default function AdminUsersPage() {
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-300">Active</div>
           </Card>
-          <Card hoverColor="orange" hoverEffect="glow" className="text-center">
-            <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+          <Card hoverColor="gold" hoverEffect="glow" className="text-center">
+            <div className="text-3xl font-bold text-gold-600 dark:text-gold-400">
               {users.filter((u) => u.is_disabled).length}
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-300">Disabled</div>

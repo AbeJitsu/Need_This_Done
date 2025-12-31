@@ -205,7 +205,7 @@ const PREVIEW_GRADIENTS: Record<string, string> = {
   purple: 'from-purple-500 to-purple-600',
   blue: 'from-blue-500 to-blue-600',
   green: 'from-green-500 to-green-600',
-  orange: 'from-orange-500 to-orange-600',
+  gold: 'from-gold-500 to-gold-600',
   teal: 'from-teal-500 to-teal-600',
   gray: 'from-gray-500 to-gray-600',
 };

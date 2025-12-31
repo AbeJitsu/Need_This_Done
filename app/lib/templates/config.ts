@@ -44,7 +44,7 @@ export const COLOR_OPTIONS: ColorOption[] = [
   { id: 'blue', label: 'Blue' },
   { id: 'teal', label: 'Teal' },
   { id: 'green', label: 'Green' },
-  { id: 'orange', label: 'Orange' },
+  { id: 'gold', label: 'Gold' },
 ];
 
 // ============================================================================

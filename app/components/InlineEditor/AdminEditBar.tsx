@@ -165,7 +165,7 @@ export default function AdminEditBar({ pageSlug: propSlug, onSave }: AdminEditBa
             )}
           </span>
           {isEditMode && hasUnsavedChanges && (
-            <span className="text-xs bg-orange-500 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-gold-500 px-2 py-0.5 rounded-full">
               Unsaved changes
             </span>
           )}

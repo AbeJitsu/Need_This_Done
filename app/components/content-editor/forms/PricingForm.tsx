@@ -252,7 +252,7 @@ export default function PricingForm({ content, onChange }: PricingFormProps) {
         />
         <SelectField
           label="Card Hover Color"
-          value={content.customSection.hoverColor || 'orange'}
+          value={content.customSection.hoverColor || 'gold'}
           onChange={(v) => updateField('customSection', { ...content.customSection, hoverColor: v as PricingPageContent['customSection']['hoverColor'] })}
           options={hoverColorOptions}
         />

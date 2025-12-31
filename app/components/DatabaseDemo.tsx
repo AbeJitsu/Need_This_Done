@@ -230,14 +230,14 @@ export default function DatabaseDemo() {
           {flowTrace.map((trace, index) => {
             const sourceColor =
               trace.source === 'cache'
-                ? 'bg-orange-100 dark:bg-gray-700 border-orange-200 dark:border-gray-600'
+                ? 'bg-gold-100 dark:bg-gray-700 border-gold-200 dark:border-gray-600'
                 : trace.source === 'database'
                 ? 'bg-green-100 dark:bg-gray-700 border-green-200 dark:border-gray-600'
                 : 'bg-blue-100 dark:bg-gray-700 border-blue-200 dark:border-gray-600';
 
             const textColor =
               trace.source === 'cache'
-                ? 'text-orange-900 dark:text-orange-300'
+                ? 'text-gold-900 dark:text-gold-300'
                 : trace.source === 'database'
                 ? 'text-green-900 dark:text-green-300'
                 : 'text-blue-900 dark:text-blue-300';

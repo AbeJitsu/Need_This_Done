@@ -159,7 +159,7 @@ export default function SpeedDemo() {
                 p-3 rounded-lg border transition-all
                 ${
                   result.isFromCache
-                    ? `${neutralAccentBg.orange} border-orange-300 dark:border-orange-700`
+                    ? `${neutralAccentBg.gold} border-gold-300 dark:border-gold-700`
                     : `${neutralAccentBg.green} border-green-300 dark:border-green-700`
                 }
               `}
@@ -169,7 +169,7 @@ export default function SpeedDemo() {
                   <div className="flex items-center gap-2 mb-2">
                     <span className={`text-xs font-semibold uppercase tracking-wide ${
                       result.isFromCache
-                        ? 'text-orange-900 dark:text-orange-100'
+                        ? 'text-gold-900 dark:text-gold-100'
                         : 'text-green-900 dark:text-green-100'
                     }`}>
                       {result.isFromCache ? '⚡ REDIS CACHE' : '📡 DATABASE'}
@@ -180,7 +180,7 @@ export default function SpeedDemo() {
                   </p>
                   <p className={`text-xs ${
                     result.isFromCache
-                      ? 'text-orange-800 dark:text-orange-100'
+                      ? 'text-gold-800 dark:text-gold-100'
                       : 'text-green-800 dark:text-green-100'
                   }`}>
                     {result.message}
@@ -189,7 +189,7 @@ export default function SpeedDemo() {
                 <div className="text-right ml-4 flex-shrink-0">
                   <p className={`text-2xl font-bold tabular-nums ${
                     result.isFromCache
-                      ? 'text-orange-900 dark:text-orange-100'
+                      ? 'text-gold-900 dark:text-gold-100'
                       : 'text-green-900 dark:text-green-100'
                   }`}>
                     {result.time}ms

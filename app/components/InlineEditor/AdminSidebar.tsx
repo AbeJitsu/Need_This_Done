@@ -23,7 +23,7 @@ import {
 // How: Recursively renders fields, arrays, and nested objects
 
 // Color variant options for dropdowns
-const colorVariants = ['blue', 'purple', 'green', 'orange', 'gray', 'teal'];
+const colorVariants = ['blue', 'purple', 'green', 'gold', 'gray', 'teal'];
 
 // Human-readable labels for common field names
 const fieldLabels: Record<string, string> = {

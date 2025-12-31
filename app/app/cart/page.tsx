@@ -211,7 +211,7 @@ export default function CartPage() {
                     <button
                       onClick={() => handleRemoveItem(item.id || '')}
                       disabled={isUpdating === item.id}
-                      className={`text-gray-500 ${dangerColors.hover} transition text-xl leading-none rounded ${focusRingClasses.orange}`}
+                      className={`text-gray-500 ${dangerColors.hover} transition text-xl leading-none rounded ${focusRingClasses.gold}`}
                       aria-label="Remove item"
                     >
                       &times;
@@ -291,7 +291,7 @@ export default function CartPage() {
               </div>
 
               <Button
-                variant="orange"
+                variant="gold"
                 href="/checkout"
                 className="w-full mb-3"
               >

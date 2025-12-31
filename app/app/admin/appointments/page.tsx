@@ -319,8 +319,8 @@ export default function AppointmentsDashboard() {
 
                   {/* Alternate slot (if provided) */}
                   {appointment.alternate_date && appointment.alternate_time_start && appointment.alternate_time_end && (
-                    <div className={`p-4 ${softBgColors.orange} rounded-lg border border-orange-200 dark:border-orange-600`}>
-                      <p className="text-xs font-medium text-orange-700 dark:text-orange-300 mb-1">
+                    <div className={`p-4 ${softBgColors.gold} rounded-lg border border-gold-200 dark:border-gold-600`}>
+                      <p className="text-xs font-medium text-gold-700 dark:text-gold-300 mb-1">
                         Alternate Time
                       </p>
                       <p className="font-semibold text-gray-900 dark:text-gray-100">

@@ -88,7 +88,7 @@ export default function HealthStatus() {
         return {
           bg: alertColors.warning.bg,
           border: alertColors.warning.border,
-          badgeBg: 'bg-orange-600',
+          badgeBg: 'bg-gold-600',
           badgeText: alertColors.warning.text,
           statusText: alertColors.warning.text,
           label: 'Error',

@@ -94,7 +94,7 @@ export default function HomepagePreview({ content }: HomepagePreviewProps) {
       </Link>
 
       {/* CTA Section */}
-      <div className="text-center bg-white dark:bg-gray-800 border-2 border-gray-400 dark:border-gray-500 rounded-xl p-8 shadow-lg hover:shadow-xl hover:border-orange-400 dark:hover:border-orange-500 transition-all duration-300">
+      <div className="text-center bg-white dark:bg-gray-800 border-2 border-gray-400 dark:border-gray-500 rounded-xl p-8 shadow-lg hover:shadow-xl hover:border-gold-400 dark:hover:border-gold-500 transition-all duration-300">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           {content.cta.title}
         </h2>

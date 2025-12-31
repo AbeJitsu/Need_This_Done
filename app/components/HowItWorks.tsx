@@ -53,7 +53,7 @@ export default function HowItWorks() {
 
           {/* Quick Memory */}
           <div className="flex-1">
-            <div className={`p-4 ${neutralAccentBg.orange} border-2 border-orange-200 dark:border-orange-800 rounded-lg text-center`}>
+            <div className={`p-4 ${neutralAccentBg.gold} border-2 border-gold-200 dark:border-gold-800 rounded-lg text-center`}>
               <div className="text-2xl mb-2" role="img" aria-label="Quick memory">⚡</div>
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Quick Memory</p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Recent answers saved here</p>

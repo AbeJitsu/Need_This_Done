@@ -383,7 +383,7 @@ export const defaultHowItWorksContent: HowItWorksPageContent = {
         'We address any feedback',
         "Final 50% on approval, then it's yours!",
       ],
-      color: 'orange',
+      color: 'gold',
     },
   ],
   timeline: {
@@ -421,7 +421,7 @@ export const defaultHomeContent: HomePageContent = {
     title: 'Get your tasks done right',
     description: 'Real people helping busy professionals get things done. Book a quick consultation or tell us about your project. We handle the rest.',
     buttons: [
-      { text: 'Book a Consultation', variant: 'orange', href: '/shop' },
+      { text: 'Book a Consultation', variant: 'gold', href: '/shop' },
       { text: 'View Services', variant: 'blue', href: '/services' },
     ],
   },
@@ -508,7 +508,7 @@ export const defaultHomeContent: HomePageContent = {
         number: 4,
         title: 'Delivery',
         description: 'Review and approve',
-        color: 'orange',
+        color: 'gold',
       },
     ],
     linkText: 'Learn more about our process →',
@@ -518,14 +518,14 @@ export const defaultHomeContent: HomePageContent = {
     description:
       'Tell us about your project for a custom quote, or check our pricing to see what fits.',
     buttons: [
-      { text: 'Get a Quote', variant: 'orange', href: '/contact' },
+      { text: 'Get a Quote', variant: 'gold', href: '/contact' },
       { text: 'View Pricing', variant: 'blue', href: '/pricing' },
     ],
     footer: 'Have questions?',
     footerLinkText: 'Check out our FAQ',
     footerLinkHref: '/faq',
     chatbotNote: 'Or use the chat button to talk with us anytime.',
-    hoverColor: 'orange',
+    hoverColor: 'gold',
   },
 };
 

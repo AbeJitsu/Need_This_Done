@@ -80,8 +80,8 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
       <EditableSection sectionKey="items" label="FAQ Items">
         <div className="space-y-6 mb-10">
           {content.items.map((faq, index) => {
-            // Cycle through colors: green, blue, purple, orange
-            const colors = ['green', 'blue', 'purple', 'orange'] as const;
+            // Cycle through colors: green, blue, purple, gold
+            const colors = ['green', 'blue', 'purple', 'gold'] as const;
             const color = colors[index % 4];
             const styles = faqColors[color];
             return (
@@ -120,7 +120,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
           title={content.cta.title}
           description={content.cta.description}
           buttons={content.cta.buttons}
-          hoverColor={content.cta.hoverColor || 'orange'}
+          hoverColor={content.cta.hoverColor || 'gold'}
         />
       </EditableSection>
     </div>

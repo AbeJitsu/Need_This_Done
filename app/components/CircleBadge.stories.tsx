@@ -5,7 +5,7 @@ import CircleBadge from './CircleBadge';
 // CircleBadge Stories
 // ============================================================================
 // Shows all variants of the CircleBadge component:
-// - All 6 color options (purple, blue, green, orange, teal, gray)
+// - All 6 color options (purple, blue, green, gold, teal, gray)
 // - All 3 sizes (sm, md, lg)
 // - Different number values
 // - Complete size/color matrix
@@ -21,7 +21,7 @@ const meta = {
   argTypes: {
     color: {
       control: 'select',
-      options: ['purple', 'blue', 'green', 'orange', 'teal', 'gray'],
+      options: ['purple', 'blue', 'green', 'gold', 'teal', 'gray'],
     },
     size: {
       control: 'radio',
@@ -64,10 +64,10 @@ export const SmallGreen: Story = {
   },
 };
 
-export const SmallOrange: Story = {
+export const SmallGold: Story = {
   args: {
     number: 4,
-    color: 'orange',
+    color: 'gold',
     size: 'sm',
   },
 };
@@ -116,10 +116,10 @@ export const MediumGreen: Story = {
   },
 };
 
-export const MediumOrange: Story = {
+export const MediumGold: Story = {
   args: {
     number: 4,
-    color: 'orange',
+    color: 'gold',
     size: 'md',
   },
 };
@@ -168,10 +168,10 @@ export const LargeGreen: Story = {
   },
 };
 
-export const LargeOrange: Story = {
+export const LargeGold: Story = {
   args: {
     number: 4,
-    color: 'orange',
+    color: 'gold',
     size: 'lg',
   },
 };
@@ -277,8 +277,8 @@ export const AllColorsSmall: Story = {
         <p className="text-xs mt-2 text-gray-600">Green</p>
       </div>
       <div className="text-center">
-        <CircleBadge number={4} color="orange" size="sm" />
-        <p className="text-xs mt-2 text-gray-600">Orange</p>
+        <CircleBadge number={4} color="gold" size="sm" />
+        <p className="text-xs mt-2 text-gray-600">Gold</p>
       </div>
       <div className="text-center">
         <CircleBadge number={5} color="teal" size="sm" />
@@ -309,8 +309,8 @@ export const AllColorsMedium: Story = {
         <p className="text-xs mt-2 text-gray-600">Green</p>
       </div>
       <div className="text-center">
-        <CircleBadge number={4} color="orange" size="md" />
-        <p className="text-xs mt-2 text-gray-600">Orange</p>
+        <CircleBadge number={4} color="gold" size="md" />
+        <p className="text-xs mt-2 text-gray-600">Gold</p>
       </div>
       <div className="text-center">
         <CircleBadge number={5} color="teal" size="md" />
@@ -341,8 +341,8 @@ export const AllColorsLarge: Story = {
         <p className="text-xs mt-2 text-gray-600">Green</p>
       </div>
       <div className="text-center">
-        <CircleBadge number={4} color="orange" size="lg" />
-        <p className="text-xs mt-2 text-gray-600">Orange</p>
+        <CircleBadge number={4} color="gold" size="lg" />
+        <p className="text-xs mt-2 text-gray-600">Gold</p>
       </div>
       <div className="text-center">
         <CircleBadge number={5} color="teal" size="lg" />
@@ -370,7 +370,7 @@ export const CompleteMatrix: Story = {
           <CircleBadge number={1} color="purple" size="sm" />
           <CircleBadge number={2} color="blue" size="sm" />
           <CircleBadge number={3} color="green" size="sm" />
-          <CircleBadge number={4} color="orange" size="sm" />
+          <CircleBadge number={4} color="gold" size="sm" />
           <CircleBadge number={5} color="teal" size="sm" />
           <CircleBadge number={6} color="gray" size="sm" />
         </div>
@@ -381,7 +381,7 @@ export const CompleteMatrix: Story = {
           <CircleBadge number={1} color="purple" size="md" />
           <CircleBadge number={2} color="blue" size="md" />
           <CircleBadge number={3} color="green" size="md" />
-          <CircleBadge number={4} color="orange" size="md" />
+          <CircleBadge number={4} color="gold" size="md" />
           <CircleBadge number={5} color="teal" size="md" />
           <CircleBadge number={6} color="gray" size="md" />
         </div>
@@ -392,7 +392,7 @@ export const CompleteMatrix: Story = {
           <CircleBadge number={1} color="purple" size="lg" />
           <CircleBadge number={2} color="blue" size="lg" />
           <CircleBadge number={3} color="green" size="lg" />
-          <CircleBadge number={4} color="orange" size="lg" />
+          <CircleBadge number={4} color="gold" size="lg" />
           <CircleBadge number={5} color="teal" size="lg" />
           <CircleBadge number={6} color="gray" size="lg" />
         </div>

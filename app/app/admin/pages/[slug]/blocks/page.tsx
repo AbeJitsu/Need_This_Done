@@ -642,7 +642,7 @@ function getEditableFields(sectionType: string): EditableField[] {
     { value: 'purple', label: 'Purple' },
     { value: 'blue', label: 'Blue' },
     { value: 'green', label: 'Green' },
-    { value: 'orange', label: 'Orange' },
+    { value: 'gold', label: 'Gold' },
     { value: 'teal', label: 'Teal' },
     { value: 'gray', label: 'Gray' },
   ];

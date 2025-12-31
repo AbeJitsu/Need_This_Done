@@ -53,7 +53,7 @@
 // ============================================================================
 
 export type AccentColor = 'purple' | 'blue' | 'green';
-export type AccentVariant = 'purple' | 'blue' | 'green' | 'orange' | 'teal' | 'gray' | 'red';
+export type AccentVariant = 'purple' | 'blue' | 'green' | 'gold' | 'teal' | 'gray' | 'red';
 
 // ============================================================================
 // Shadow Classes - Centralized shadow utilities
@@ -82,7 +82,7 @@ export const shadowClasses = {
 export const focusRingClasses = {
   blue: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   purple: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
-  orange: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+  gold: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   green: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
 };
 
@@ -101,7 +101,7 @@ export const focusRingClasses = {
 // For SOLID filled buttons (dark bg + white text), use solidButtonColors instead.
 //
 // Usage: Import and spread in className, e.g.:
-//   ${accentColors.orange.bg} ${accentColors.orange.text} ${accentColors.orange.border}
+//   ${accentColors.gold.bg} ${accentColors.gold.text} ${accentColors.gold.border}
 
 export const accentColors: Record<AccentVariant, {
   bg: string;
@@ -131,13 +131,13 @@ export const accentColors: Record<AccentVariant, {
     hoverText: 'hover:text-green-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-green-600 dark:hover:border-green-200',
   },
-  orange: {
-    // Dark mode uses orange-500 (#b35a00) - 4.8:1 contrast with white (WCAG AA)
-    bg: 'bg-orange-100 dark:bg-orange-500',
-    text: 'text-orange-600 dark:text-white',
-    border: 'border-orange-500 dark:border-orange-100',
-    hoverText: 'hover:text-orange-700 dark:hover:text-orange-100',
-    hoverBorder: 'hover:border-orange-600 dark:hover:border-orange-200',
+  gold: {
+    // Dark mode uses gold-500 (#a36b00) - 4.51:1 contrast with white (WCAG AA)
+    bg: 'bg-gold-100 dark:bg-gold-500',
+    text: 'text-gold-600 dark:text-white',
+    border: 'border-gold-500 dark:border-gold-100',
+    hoverText: 'hover:text-gold-700 dark:hover:text-gold-100',
+    hoverBorder: 'hover:border-gold-600 dark:hover:border-gold-200',
   },
   teal: {
     bg: 'bg-teal-100 dark:bg-teal-500',
@@ -193,7 +193,7 @@ export const titleTextColors: Record<AccentVariant, string> = {
   purple: 'text-purple-600 dark:text-purple-100',
   blue: 'text-blue-600 dark:text-blue-100',
   green: 'text-green-600 dark:text-green-100',
-  orange: 'text-orange-600 dark:text-orange-100',
+  gold: 'text-gold-600 dark:text-gold-100',
   teal: 'text-teal-600 dark:text-teal-100',
   gray: 'text-gray-600 dark:text-gray-100',
   red: 'text-red-600 dark:text-red-100',
@@ -225,7 +225,7 @@ export const statusBorderColors: Record<AccentVariant, string> = {
   purple: 'border-l-4 border-l-purple-500',
   blue: 'border-l-4 border-l-blue-500',
   green: 'border-l-4 border-l-green-500',
-  orange: 'border-l-4 border-l-orange-500',
+  gold: 'border-l-4 border-l-gold-500',
   teal: 'border-l-4 border-l-teal-500',
   gray: 'border-l-4 border-l-gray-300 dark:border-l-gray-600',
   red: 'border-l-4 border-l-red-500 dark:border-l-red-400',
@@ -264,7 +264,7 @@ export const cardHoverColors: Record<AccentVariant, string> = {
   purple: 'hover:border-purple-400 dark:hover:border-purple-500',
   blue: 'hover:border-blue-400 dark:hover:border-blue-500',
   green: 'hover:border-green-400 dark:hover:border-green-500',
-  orange: 'hover:border-orange-400 dark:hover:border-orange-500',
+  gold: 'hover:border-gold-400 dark:hover:border-gold-500',
   teal: 'hover:border-teal-400 dark:hover:border-teal-500',
   gray: 'hover:border-gray-400 dark:hover:border-gray-500',
   red: 'hover:border-red-400 dark:hover:border-red-500',
@@ -277,7 +277,7 @@ export const cardHoverBgTints: Record<AccentVariant, string> = {
   purple: 'hover:bg-purple-100 dark:hover:bg-purple-800',
   blue: 'hover:bg-blue-100 dark:hover:bg-blue-800',
   green: 'hover:bg-green-100 dark:hover:bg-green-800',
-  orange: 'hover:bg-orange-100 dark:hover:bg-orange-800',
+  gold: 'hover:bg-gold-100 dark:hover:bg-gold-800',
   teal: 'hover:bg-teal-100 dark:hover:bg-teal-800',
   gray: 'hover:bg-gray-100 dark:hover:bg-gray-800',
   red: 'hover:bg-red-100 dark:hover:bg-red-800',
@@ -291,7 +291,7 @@ export const tagHoverColors: Record<AccentVariant, string> = {
   purple: 'hover:bg-purple-200 hover:border-purple-600 dark:hover:bg-purple-800 dark:hover:border-purple-300',
   blue: 'hover:bg-blue-200 hover:border-blue-600 dark:hover:bg-blue-800 dark:hover:border-blue-300',
   green: 'hover:bg-green-200 hover:border-green-600 dark:hover:bg-green-800 dark:hover:border-green-300',
-  orange: 'hover:bg-orange-200 hover:border-orange-600 dark:hover:bg-orange-800 dark:hover:border-orange-300',
+  gold: 'hover:bg-gold-200 hover:border-gold-600 dark:hover:bg-gold-800 dark:hover:border-gold-300',
   teal: 'hover:bg-teal-200 hover:border-teal-600 dark:hover:bg-teal-800 dark:hover:border-teal-300',
   gray: 'hover:bg-gray-200 hover:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-300',
   red: 'hover:bg-red-200 hover:border-red-600 dark:hover:bg-red-800 dark:hover:border-red-300',
@@ -306,7 +306,7 @@ export const bodyTextColors: Record<AccentVariant, string> = {
   purple: 'text-gray-600 dark:text-purple-100',
   blue: 'text-gray-600 dark:text-blue-100',
   green: 'text-gray-600 dark:text-green-100',
-  orange: 'text-gray-600 dark:text-orange-100',
+  gold: 'text-gray-600 dark:text-gold-100',
   teal: 'text-gray-600 dark:text-teal-100',
   gray: 'text-gray-600 dark:text-gray-100',
   red: 'text-gray-600 dark:text-red-100',
@@ -316,7 +316,7 @@ export const bodyTextColors: Record<AccentVariant, string> = {
 // FAQ Colors - Numbered badge styling for FAQ items
 // ============================================================================
 // Uses AccentVariant subset for FAQ card left borders and text colors
-export const faqColors: Record<'purple' | 'blue' | 'green' | 'orange', {
+export const faqColors: Record<'purple' | 'blue' | 'green' | 'gold', {
   border: string;
   text: string;
   bg: string;
@@ -344,12 +344,12 @@ export const faqColors: Record<'purple' | 'blue' | 'green' | 'orange', {
     numText: 'text-green-600 dark:text-white',
     hover: 'hover:border-green-400 dark:hover:border-green-400',
   },
-  orange: {
-    border: 'border-l-orange-500',
-    text: 'text-orange-600 dark:text-orange-300',
-    bg: 'bg-orange-100 dark:bg-orange-500',
-    numText: 'text-orange-600 dark:text-white',
-    hover: 'hover:border-orange-400 dark:hover:border-orange-400',
+  gold: {
+    border: 'border-l-gold-500',
+    text: 'text-gold-600 dark:text-gold-300',
+    bg: 'bg-gold-100 dark:bg-gold-500',
+    numText: 'text-gold-600 dark:text-white',
+    hover: 'hover:border-gold-400 dark:hover:border-gold-400',
   },
 };
 
@@ -392,7 +392,7 @@ export const formInputColors = {
   // Placeholder text - subtle but readable
   placeholder: 'placeholder:text-gray-600 dark:placeholder:text-gray-400',
   // Focus state
-  focus: 'focus:ring-2 focus:ring-orange-500 focus:border-orange-500',
+  focus: 'focus:ring-2 focus:ring-gold-500 focus:border-gold-500',
   // Helper text below inputs - 5:1 contrast in both modes
   helper: 'text-gray-600 dark:text-gray-300',
   // Label text - 5:1 contrast in both modes
@@ -408,8 +408,8 @@ export const formValidationColors = {
   error: 'text-red-800 dark:text-white',
   // Success message styling - white text in dark mode for contrast against vibrant bg-green-500
   success: 'text-green-800 dark:text-white',
-  // Warning message styling - white text in dark mode for contrast against vibrant bg-orange-500
-  warning: 'text-orange-800 dark:text-white',
+  // Warning message styling - white text in dark mode for contrast against vibrant bg-gold-500
+  warning: 'text-gold-800 dark:text-white',
   // Info message styling - white text in dark mode for contrast against vibrant bg-blue-500
   info: 'text-blue-800 dark:text-white',
 };
@@ -443,7 +443,7 @@ export const stepBadgeColors: Record<AccentVariant, string> = {
   purple: 'text-purple-600 dark:text-purple-300',
   blue: 'text-blue-600 dark:text-blue-300',
   green: 'text-green-600 dark:text-green-300',
-  orange: 'text-orange-600 dark:text-orange-300',
+  gold: 'text-gold-600 dark:text-gold-300',
   teal: 'text-teal-600 dark:text-teal-300',
   gray: 'text-gray-600 dark:text-gray-300',
   red: 'text-red-600 dark:text-red-300',
@@ -505,7 +505,7 @@ export const linkHoverColors = {
 export const groupHoverColors = {
   blue: 'group-hover:text-blue-600 dark:group-hover:text-blue-300',
   purple: 'group-hover:text-purple-600 dark:group-hover:text-purple-300',
-  orange: 'group-hover:text-orange-600 dark:group-hover:text-orange-300',
+  gold: 'group-hover:text-gold-600 dark:group-hover:text-gold-300',
 };
 
 // ============================================================================
@@ -534,13 +534,13 @@ export const alertColors = {
     link: 'text-green-700 dark:text-white underline hover:text-green-900 dark:hover:text-gray-200',
   },
   warning: {
-    // Dark mode uses orange-500 (#bd6000) - 4.5:1 contrast with white
-    bg: 'bg-orange-100 dark:bg-orange-500',
-    border: 'border-2 border-orange-200 dark:border-orange-400',
-    text: 'text-orange-800 dark:text-white',
-    link: 'text-orange-700 dark:text-white underline hover:text-orange-900 dark:hover:text-gray-200',
+    // Dark mode uses gold-500 (#a36b00) - 4.51:1 contrast with white
+    bg: 'bg-gold-100 dark:bg-gold-500',
+    border: 'border-2 border-gold-200 dark:border-gold-400',
+    text: 'text-gold-800 dark:text-white',
+    link: 'text-gold-700 dark:text-white underline hover:text-gold-900 dark:hover:text-gray-200',
   },
-  // Yellow config warnings - softer than orange warning
+  // Yellow config warnings - softer than gold warning
   config: {
     bg: 'bg-yellow-100 dark:bg-yellow-800',
     border: 'border border-yellow-200 dark:border-yellow-600',
@@ -570,7 +570,7 @@ export const neutralAccentBg: Record<AccentVariant, string> = {
   purple: 'bg-purple-100 dark:bg-gray-800',
   blue: 'bg-blue-100 dark:bg-gray-800',
   green: 'bg-green-100 dark:bg-gray-800',
-  orange: 'bg-orange-100 dark:bg-gray-800',
+  gold: 'bg-gold-100 dark:bg-gray-800',
   red: 'bg-red-100 dark:bg-gray-800',
   teal: 'bg-teal-100 dark:bg-gray-800',
   gray: 'bg-gray-100 dark:bg-gray-700',
@@ -879,13 +879,13 @@ export const solidButtonColors: Record<AccentVariant, {
     text: 'text-white',
     focus: 'focus:ring-2 focus:ring-green-500',
   },
-  orange: {
-    // Orange CTA buttons use light bg + dark text in BOTH modes (no inversion)
+  gold: {
+    // Gold CTA buttons use light bg + dark text in BOTH modes (no inversion)
     // Stands out against dark backgrounds while maintaining consistent branding
-    bg: 'bg-orange-100',
-    hover: 'hover:bg-orange-200',
-    text: 'text-orange-900',
-    focus: 'focus:ring-2 focus:ring-orange-500',
+    bg: 'bg-gold-100',
+    hover: 'hover:bg-gold-200',
+    text: 'text-gold-900',
+    focus: 'focus:ring-2 focus:ring-gold-500',
   },
   teal: {
     bg: 'bg-teal-600 dark:bg-teal-600',
@@ -931,7 +931,7 @@ export const badgeColors: Record<AccentVariant, string> = {
   purple: 'bg-purple-500 text-white',
   blue: 'bg-blue-500 text-white',
   green: 'bg-green-500 text-white',
-  orange: 'bg-orange-500 text-white',
+  gold: 'bg-gold-500 text-white',
   teal: 'bg-teal-500 text-white',
   gray: 'bg-gray-500 text-white',
   red: 'bg-red-600 text-white',
@@ -977,7 +977,7 @@ export const adminSidebarColors = {
     shop: 'text-green-600 dark:text-green-400',
     appointments: 'text-teal-600 dark:text-teal-400',
     users: 'text-pink-600 dark:text-pink-400',
-    dev: 'text-orange-600 dark:text-orange-400',
+    dev: 'text-gold-600 dark:text-gold-400',
   },
 };
 
@@ -1059,11 +1059,11 @@ export const infoBannerColors: Record<AccentVariant, {
     heading: 'text-green-800 dark:text-white',
     text: 'text-green-700 dark:text-green-100',
   },
-  orange: {
-    bg: 'bg-orange-100 dark:bg-orange-800',
-    border: 'border border-orange-200 dark:border-orange-600',
-    heading: 'text-orange-800 dark:text-white',
-    text: 'text-orange-700 dark:text-orange-100',
+  gold: {
+    bg: 'bg-gold-100 dark:bg-gold-800',
+    border: 'border border-gold-200 dark:border-gold-600',
+    heading: 'text-gold-800 dark:text-white',
+    text: 'text-gold-700 dark:text-gold-100',
   },
   red: {
     bg: 'bg-red-100 dark:bg-red-800',
@@ -1106,9 +1106,9 @@ export const iconCircleColors: Record<AccentVariant, {
     bg: 'bg-green-100 dark:bg-green-800',
     icon: 'text-green-600 dark:text-green-300',
   },
-  orange: {
-    bg: 'bg-orange-100 dark:bg-orange-800',
-    icon: 'text-orange-600 dark:text-orange-300',
+  gold: {
+    bg: 'bg-gold-100 dark:bg-gold-800',
+    icon: 'text-gold-600 dark:text-gold-300',
   },
   red: {
     bg: 'bg-red-100 dark:bg-red-800',
@@ -1149,10 +1149,10 @@ export const selectedStateColors: Record<AccentVariant, {
     border: 'border-green-500 dark:border-green-400',
     text: 'text-green-700 dark:text-green-200',
   },
-  orange: {
-    bg: 'bg-orange-100 dark:bg-orange-800',
-    border: 'border-orange-500 dark:border-orange-400',
-    text: 'text-orange-700 dark:text-orange-200',
+  gold: {
+    bg: 'bg-gold-100 dark:bg-gold-800',
+    border: 'border-gold-500 dark:border-gold-400',
+    text: 'text-gold-700 dark:text-gold-200',
   },
   red: {
     bg: 'bg-red-100 dark:bg-red-800',
@@ -1180,7 +1180,7 @@ export const softBgColors: Record<AccentVariant, string> = {
   purple: 'bg-purple-100 dark:bg-purple-800',
   blue: 'bg-blue-100 dark:bg-blue-800',
   green: 'bg-green-100 dark:bg-green-800',
-  orange: 'bg-orange-100 dark:bg-orange-800',
+  gold: 'bg-gold-100 dark:bg-gold-800',
   red: 'bg-red-100 dark:bg-red-800',
   teal: 'bg-teal-100 dark:bg-teal-800',
   gray: 'bg-gray-100 dark:bg-gray-700',
@@ -1195,7 +1195,7 @@ export const verySoftBgColors: Record<AccentVariant, string> = {
   purple: 'bg-purple-100 dark:bg-purple-900',
   blue: 'bg-blue-100 dark:bg-blue-900',
   green: 'bg-green-100 dark:bg-green-900',
-  orange: 'bg-orange-100 dark:bg-orange-900',
+  gold: 'bg-gold-100 dark:bg-gold-900',
   red: 'bg-red-100 dark:bg-red-900',
   teal: 'bg-teal-100 dark:bg-teal-900',
   gray: 'bg-gray-100 dark:bg-gray-800',
@@ -1210,7 +1210,7 @@ export const hoverBgColors: Record<AccentVariant, string> = {
   purple: 'hover:bg-purple-200 dark:hover:bg-purple-700',
   blue: 'hover:bg-blue-200 dark:hover:bg-blue-700',
   green: 'hover:bg-green-200 dark:hover:bg-green-700',
-  orange: 'hover:bg-orange-200 dark:hover:bg-orange-700',
+  gold: 'hover:bg-gold-200 dark:hover:bg-gold-700',
   red: 'hover:bg-red-200 dark:hover:bg-red-700',
   teal: 'hover:bg-teal-200 dark:hover:bg-teal-700',
   gray: 'hover:bg-gray-200 dark:hover:bg-gray-600',
@@ -1247,9 +1247,9 @@ export const toggleButtonColors: Record<AccentVariant, {
     inactive: 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300',
     inactiveHover: 'hover:bg-green-200 dark:hover:bg-green-700',
   },
-  orange: {
-    inactive: 'bg-orange-100 dark:bg-orange-800 text-orange-600 dark:text-orange-300',
-    inactiveHover: 'hover:bg-orange-200 dark:hover:bg-orange-700',
+  gold: {
+    inactive: 'bg-gold-100 dark:bg-gold-800 text-gold-600 dark:text-gold-300',
+    inactiveHover: 'hover:bg-gold-200 dark:hover:bg-gold-700',
   },
   red: {
     inactive: 'bg-red-100 dark:bg-red-800 text-red-600 dark:text-red-300',
@@ -1314,9 +1314,9 @@ export const outlineButtonColors: Record<AccentVariant, {
     base: 'border-green-500 text-green-600 dark:text-green-300',
     hover: 'hover:bg-green-100 dark:hover:bg-green-800',
   },
-  orange: {
-    base: 'border-orange-500 text-orange-600 dark:text-orange-300',
-    hover: 'hover:bg-orange-100 dark:hover:bg-orange-800',
+  gold: {
+    base: 'border-gold-500 text-gold-600 dark:text-gold-300',
+    hover: 'hover:bg-gold-100 dark:hover:bg-gold-800',
   },
   teal: {
     base: 'border-teal-500 text-teal-600 dark:text-teal-300',
@@ -1341,7 +1341,7 @@ export const coloredLinkText: Record<AccentVariant, string> = {
   purple: 'text-purple-600 dark:text-purple-400',
   blue: 'text-blue-600 dark:text-blue-400',
   green: 'text-green-600 dark:text-green-400',
-  orange: 'text-orange-600 dark:text-orange-400',
+  gold: 'text-gold-600 dark:text-gold-400',
   teal: 'text-teal-600 dark:text-teal-400',
   gray: 'text-gray-600 dark:text-gray-400',
   red: 'text-red-600 dark:text-red-400',

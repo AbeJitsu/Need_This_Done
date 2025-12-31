@@ -23,7 +23,7 @@ export default function LowFrictionCTA({
   secondaryButton,
 }: LowFrictionCTAProps) {
   return (
-    <Card hoverColor="orange" hoverEffect="glow" className="mb-10 text-center">
+    <Card hoverColor="gold" hoverEffect="glow" className="mb-10 text-center">
       {/* Title */}
       <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
         {title}

@@ -268,7 +268,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           we're here to help.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
-          <Button variant="orange" href="/get-started" size="lg">
+          <Button variant="gold" href="/get-started" size="lg">
             Get Started
           </Button>
           <Button variant="gray" href="/services" size="lg">

@@ -64,7 +64,7 @@ export default function FAQPreview({ content }: FAQPreviewProps) {
       {/* FAQ List */}
       <div className="space-y-6 mb-10">
         {content.items.map((faq, index) => {
-          const colors = ['green', 'blue', 'purple', 'orange'] as const;
+          const colors = ['green', 'blue', 'purple', 'gold'] as const;
           const color = colors[index % 4];
           const styles = faqColors[color];
           return (
@@ -93,7 +93,7 @@ export default function FAQPreview({ content }: FAQPreviewProps) {
         title={content.cta.title}
         description={content.cta.description}
         buttons={content.cta.buttons}
-        hoverColor={content.cta.hoverColor || 'orange'}
+        hoverColor={content.cta.hoverColor || 'gold'}
       />
     </div>
   );

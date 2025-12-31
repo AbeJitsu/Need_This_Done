@@ -186,7 +186,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
           title={content.cta.title}
           description={content.cta.description}
           buttons={content.cta.buttons}
-          hoverColor={content.cta.hoverColor || 'orange'}
+          hoverColor={content.cta.hoverColor || 'gold'}
         />
       </EditableSection>
     </div>

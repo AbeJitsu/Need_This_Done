@@ -397,7 +397,7 @@ export default function ContactPage() {
               {/* Submit Button */}
               <div className="flex justify-center">
                 <Button
-                  variant="orange"
+                  variant="gold"
                   type="submit"
                   disabled={isSubmitting}
                 >

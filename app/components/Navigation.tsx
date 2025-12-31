@@ -126,14 +126,14 @@ export default function Navigation() {
             </button>
 
             {/* Get a Quote CTA - Primary conversion action */}
-            {/* Uses accentColors.orange with inversion pattern (light bg→dark bg) */}
+            {/* Uses accentColors.gold with inversion pattern (light bg→dark bg) */}
             {/* Same pattern as blue navigation links for consistency */}
             <Link
               href="/contact"
               className={`
                 hidden sm:inline-flex items-center px-3 py-2 text-sm ${accentFontWeight} rounded-full whitespace-nowrap transition-all duration-300 hover:scale-105 active:scale-95
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
-                ${accentBorderWidth} ${accentColors.orange.bg} ${accentColors.orange.text} ${accentColors.orange.border} ${accentColors.orange.hoverText} ${accentColors.orange.hoverBorder}
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
+                ${accentBorderWidth} ${accentColors.gold.bg} ${accentColors.gold.text} ${accentColors.gold.border} ${accentColors.gold.hoverText} ${accentColors.gold.hoverBorder}
               `}
             >
               Get a Quote
@@ -280,11 +280,11 @@ export default function Navigation() {
               );
             })}
 
-            {/* Primary CTA in mobile menu - uses accentColors.orange with inversion pattern */}
+            {/* Primary CTA in mobile menu - uses accentColors.gold with inversion pattern */}
             <Link
               href="/contact"
               onClick={() => setMobileMenuOpen(false)}
-              className={`block px-3 py-2 text-base ${accentFontWeight} rounded-full transition-all duration-300 hover:scale-105 active:scale-95 mt-2 ${accentBorderWidth} ${accentColors.orange.bg} ${accentColors.orange.text} ${accentColors.orange.border} ${accentColors.orange.hoverText} ${accentColors.orange.hoverBorder}`}
+              className={`block px-3 py-2 text-base ${accentFontWeight} rounded-full transition-all duration-300 hover:scale-105 active:scale-95 mt-2 ${accentBorderWidth} ${accentColors.gold.bg} ${accentColors.gold.text} ${accentColors.gold.border} ${accentColors.gold.hoverText} ${accentColors.gold.hoverBorder}`}
             >
               Get a Quote
             </Link>

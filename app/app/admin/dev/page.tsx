@@ -104,7 +104,7 @@ export default function AdminDevPage() {
               <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Shop Admin</div>
             </a>
           </Card>
-          <Card hoverColor="orange" hoverEffect="lift" className="text-center cursor-pointer">
+          <Card hoverColor="gold" hoverEffect="lift" className="text-center cursor-pointer">
             <a href="/dashboard" className="block p-2">
               <div className="text-2xl mb-2" aria-hidden="true">📊</div>
               <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Dashboard</div>

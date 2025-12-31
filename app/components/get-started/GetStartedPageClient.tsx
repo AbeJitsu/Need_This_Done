@@ -139,8 +139,8 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
               </div>
 
               <div className="flex gap-4">
-                <div className={`flex-shrink-0 w-8 h-8 ${accentColors.orange.bg} rounded-full flex items-center justify-center`}>
-                  <span className={`${stepBadgeColors.orange} font-semibold`}>4</span>
+                <div className={`flex-shrink-0 w-8 h-8 ${accentColors.gold.bg} rounded-full flex items-center justify-center`}>
+                  <span className={`${stepBadgeColors.gold} font-semibold`}>4</span>
                 </div>
                 <div>
                   <h3 className={`font-semibold ${headingColors.primary}`}>Review & Delivery</h3>

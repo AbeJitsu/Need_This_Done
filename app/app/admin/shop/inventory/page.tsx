@@ -265,8 +265,8 @@ export default function AdminInventoryPage() {
             <div className="text-3xl font-bold text-green-600 dark:text-green-400">{stats.inStock}</div>
             <div className={`text-sm ${headingColors.secondary}`}>In Stock</div>
           </Card>
-          <Card hoverColor="orange" hoverEffect="glow" className="text-center p-4">
-            <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">{stats.lowStock}</div>
+          <Card hoverColor="gold" hoverEffect="glow" className="text-center p-4">
+            <div className="text-3xl font-bold text-gold-600 dark:text-gold-400">{stats.lowStock}</div>
             <div className={`text-sm ${headingColors.secondary}`}>Low Stock</div>
           </Card>
           <Card hoverColor="red" hoverEffect="glow" className="text-center p-4">
@@ -363,7 +363,7 @@ export default function AdminInventoryPage() {
                       item.status === 'out_of_stock'
                         ? verySoftBgColors.red
                         : item.status === 'low_stock'
-                        ? verySoftBgColors.orange
+                        ? verySoftBgColors.gold
                         : ''
                     }`}
                   >

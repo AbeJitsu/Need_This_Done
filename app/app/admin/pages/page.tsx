@@ -244,7 +244,7 @@ export default function PagesManagement() {
                     </Button>
                     <Button
                       size="sm"
-                      variant={page.is_published ? 'orange' : 'green'}
+                      variant={page.is_published ? 'gold' : 'green'}
                       onClick={() => handleTogglePublish(page.slug, page.is_published)}
                     >
                       {page.is_published ? 'Unpublish' : 'Publish'}
@@ -312,8 +312,8 @@ export default function PagesManagement() {
                   <p className="text-sm text-gray-500 dark:text-gray-400">Draft or go live instantly</p>
                 </div>
                 <div className="text-center">
-                  <div className={`w-10 h-10 mx-auto mb-3 rounded-lg ${iconCircleColors.orange.bg} flex items-center justify-center`}>
-                    <svg className="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className={`w-10 h-10 mx-auto mb-3 rounded-lg ${iconCircleColors.gold.bg} flex items-center justify-center`}>
+                    <svg className="w-5 h-5 text-gold-600 dark:text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
                   </div>

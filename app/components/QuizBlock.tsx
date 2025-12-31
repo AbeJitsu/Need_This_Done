@@ -113,7 +113,7 @@ export default function QuizBlock({
         <div className="text-center py-8">
           <div
             className={`text-6xl font-bold mb-4 ${
-              passed ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'
+              passed ? 'text-green-600 dark:text-green-400' : 'text-gold-600 dark:text-gold-400'
             }`}
           >
             {percentage}%
@@ -123,7 +123,7 @@ export default function QuizBlock({
           </p>
           <p
             className={`text-lg font-medium ${
-              passed ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'
+              passed ? 'text-green-600 dark:text-green-400' : 'text-gold-600 dark:text-gold-400'
             }`}
           >
             {passed ? '🎉 Great job!' : 'Keep practicing!'}

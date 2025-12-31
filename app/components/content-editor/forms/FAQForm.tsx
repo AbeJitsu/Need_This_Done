@@ -156,7 +156,7 @@ export default function FAQForm({ content, onChange }: FAQFormProps) {
         />
         <SelectField
           label="Card Hover Color"
-          value={content.cta.hoverColor || 'orange'}
+          value={content.cta.hoverColor || 'gold'}
           onChange={(v) => updateField('cta', { ...content.cta, hoverColor: v as FAQPageContent['cta']['hoverColor'] })}
           options={hoverColorOptions}
         />

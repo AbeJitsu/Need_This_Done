@@ -317,7 +317,7 @@ export default function BlogManagement() {
                       </Button>
                       <Button
                         size="sm"
-                        variant={post.status === 'published' ? 'orange' : 'green'}
+                        variant={post.status === 'published' ? 'gold' : 'green'}
                         onClick={() => handleToggleStatus(post.slug, post.status)}
                       >
                         {post.status === 'published' ? 'Unpublish' : 'Publish'}

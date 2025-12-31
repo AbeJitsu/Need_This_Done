@@ -88,7 +88,7 @@ export const colorOptions: SelectOption[] = [
   { value: 'blue', label: 'Blue' },
   { value: 'green', label: 'Green' },
   { value: 'purple', label: 'Purple' },
-  { value: 'orange', label: 'Orange' },
+  { value: 'gold', label: 'Gold' },
   { value: 'teal', label: 'Teal' },
   { value: 'gray', label: 'Gray' },
 ];
@@ -97,7 +97,7 @@ export const buttonVariantOptions: SelectOption[] = [
   { value: 'purple', label: 'Purple (Primary)' },
   { value: 'blue', label: 'Blue' },
   { value: 'green', label: 'Green' },
-  { value: 'orange', label: 'Orange' },
+  { value: 'gold', label: 'Gold' },
   { value: 'teal', label: 'Teal' },
   { value: 'gray', label: 'Gray (Secondary)' },
 ];
@@ -106,6 +106,6 @@ export const hoverColorOptions: SelectOption[] = [
   { value: 'blue', label: 'Blue' },
   { value: 'green', label: 'Green' },
   { value: 'purple', label: 'Purple' },
-  { value: 'orange', label: 'Orange' },
+  { value: 'gold', label: 'Gold' },
   { value: 'teal', label: 'Teal' },
 ];

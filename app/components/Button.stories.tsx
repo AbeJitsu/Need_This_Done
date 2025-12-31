@@ -16,7 +16,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['purple', 'blue', 'green', 'orange', 'teal', 'gray'],
+      options: ['purple', 'blue', 'green', 'gold', 'teal', 'gray'],
       description: 'Color variant of the button',
     },
     size: {
@@ -62,11 +62,11 @@ export const Green: Story = {
   },
 };
 
-export const Orange: Story = {
+export const Gold: Story = {
   args: {
-    variant: 'orange',
+    variant: 'gold',
     size: 'lg',
-    children: 'Orange Button',
+    children: 'Gold Button',
   },
 };
 
@@ -151,7 +151,7 @@ export const AllColors: Story = {
         <Button variant="purple" size="md">Purple</Button>
         <Button variant="blue" size="md">Blue</Button>
         <Button variant="green" size="md">Green</Button>
-        <Button variant="orange" size="md">Orange</Button>
+        <Button variant="gold" size="md">Gold</Button>
         <Button variant="teal" size="md">Teal</Button>
         <Button variant="gray" size="md">Gray</Button>
       </div>

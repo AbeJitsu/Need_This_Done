@@ -64,7 +64,7 @@ const componentFields: Record<string, Record<string, FieldConfig>> = {
         { label: 'Blue', value: 'blue' },
         { label: 'Purple', value: 'purple' },
         { label: 'Green', value: 'green' },
-        { label: 'Orange', value: 'orange' },
+        { label: 'Gold', value: 'gold' },
         { label: 'Gray', value: 'gray' },
       ],
     },
