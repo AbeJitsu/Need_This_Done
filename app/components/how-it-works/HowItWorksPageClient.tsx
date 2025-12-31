@@ -13,8 +13,8 @@ import {
   formInputColors,
   titleColors,
   headingColors,
-  checkmarkBgColors,
 } from '@/lib/colors';
+import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
 
 // ============================================================================
 // How It Works Page Client - Universal Editing Version
@@ -60,13 +60,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
                     content={badge as unknown as Record<string, unknown>}
                   >
                     <div className="flex items-center gap-3">
-                      <div
-                        className={`w-8 h-8 rounded-full ${checkmarkBgColors.green.bg} ${checkmarkBgColors.green.border} flex items-center justify-center flex-shrink-0`}
-                      >
-                        <span className={`${checkmarkBgColors.green.icon} font-bold`} aria-hidden="true">
-                          ✓
-                        </span>
-                      </div>
+                      <CheckmarkCircle color="green" size="lg" showBorder />
                       <div>
                         <p className={`font-semibold ${headingColors.primary}`}>
                           {badge.text}

@@ -2,7 +2,6 @@ import {
   AccentColor,
   titleColors,
   topBorderColors,
-  checkmarkColors,
   cardHoverColors,
   formInputColors,
   mutedTextColors,
@@ -12,6 +11,7 @@ import {
   gradientColors,
 } from '@/lib/colors';
 import Button from '@/components/Button';
+import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
 
 // ============================================================================
 // PricingCard Component
@@ -86,11 +86,7 @@ export default function PricingCard({
       <ul className="space-y-3 mb-8">
         {features.map((feature, index) => (
           <li key={index} className="flex items-start gap-3">
-            <div className={`w-6 h-6 rounded-full ${checkmarkColors[color].bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-              <svg className={`w-4 h-4 ${checkmarkColors[color].icon}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
+            <CheckmarkCircle color={color} size="md" className="mt-0.5" />
             <span className={`${formInputColors.helper} text-sm`}>
               {feature}
             </span>

@@ -57,7 +57,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [x] Test buttons in light and dark mode
 - [x] Lighten text colors to WCAG AA minimum (-600 base, -700 hover)
 - [x] Consolidate colors.ts: remove duplicate systems (removed primaryButtonColors, documented accentColors vs solidButtonColors)
-- [ ] Add sectionColors for page backgrounds (neutral pattern)
+- [x] Add sectionColors for page backgrounds (already exists: layoutBgColors, containerBg)
 
 **Eliminate Hardcoded Colors** ✅ DONE (Dec 30, 2025)
 ```
@@ -144,7 +144,7 @@ All 75 occurrences in 36 files fixed:
 │  Goal: Extract reusable components                                      │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Extract `CheckmarkCircle` component - duplicated in ServiceCard, PricingCard, ServiceDetailModal, SystemOverview, AuthDemo (5 files)
+- [x] Extract `CheckmarkCircle` component - duplicated in ServiceCard, PricingCard, ServiceDetailModal, HowItWorksPageClient, ServicesPageClient (5 files)
 - [ ] Use `shadowClasses.cardHover` from colors.ts - hardcoded in ServiceCard:90, StepCard:30, CourseCard:88, PricingCard:55, FAQPageClient:97, FAQPreview:73, ProjectCard:97 (8 files)
 - [ ] Extract `CloseButton` component - duplicated in ConfirmDialog, ServiceDetailModal, ChatbotModal (3 files)
 - [ ] Consolidate form field components - TextField.tsx + TextAreaField.tsx share 90% code, extract FormFieldBase

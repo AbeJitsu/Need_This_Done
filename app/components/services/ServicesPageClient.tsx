@@ -15,13 +15,13 @@ import type { ServicesPageContent } from '@/lib/page-content-types';
 import {
   formInputColors,
   headingColors,
-  checkmarkBgColors,
   groupHoverColors,
   accentColors,
   accentBorderWidth,
   focusRingClasses,
   AccentVariant,
 } from '@/lib/colors';
+import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
 
 // ============================================================================
 // Services Page Client - Universal Editing Version
@@ -152,13 +152,7 @@ export default function ServicesPageClient({ content: initialContent }: Services
               {content.expectations.map((item, index) => {
                 const itemContent = (
                   <>
-                    <div
-                      className={`w-8 h-8 rounded-full ${checkmarkBgColors.green.bg} ${checkmarkBgColors.green.border} flex items-center justify-center flex-shrink-0`}
-                    >
-                      <span className={`${checkmarkBgColors.green.icon} font-bold`} aria-hidden="true">
-                        ✓
-                      </span>
-                    </div>
+                    <CheckmarkCircle color="green" size="lg" showBorder />
                     <div>
                       <h3
                         className={`font-semibold ${headingColors.primary} mb-1 ${

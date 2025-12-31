@@ -4,11 +4,10 @@ import {
   titleColors,
   topBorderColors,
   cardHoverColors,
-  checkmarkColors,
   formInputColors,
   mutedTextColors,
 } from '@/lib/colors';
-import { CheckIcon } from '@/components/ui/icons';
+import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
 
 // ============================================================================
 // ServiceCard Component
@@ -72,9 +71,7 @@ export default function ServiceCard({
             <ul className="space-y-2 mt-auto">
               {detailsList.map((detail, index) => (
                 <li key={index} className="flex items-start gap-2">
-                  <div className={`w-5 h-5 rounded-full ${checkmarkColors[color].bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                    <CheckIcon size="sm" className={`w-3 h-3 ${checkmarkColors[color].icon}`} strokeWidth={2.5} />
-                  </div>
+                  <CheckmarkCircle color={color} size="sm" className="mt-0.5" />
                   <span className={`${mutedTextColors.light} text-sm`}>
                     {detail}
                   </span>
