@@ -1,5 +1,14 @@
 [
   {
+    "hash": "1ed5cdf",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "1ed5cdf59bcb69471eab1ed736290fc2184cf755:%M",
+    "author": "Abe Reyes",
+    "message": "Add drag-drop reordering to Guide page sections",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
     "hash": "925e521",
     "date": "%Y->- (HEAD -> main)",
     "time": "925e521b4ed1f7142816cc6281aedbf5a7a6f555:%M",

@@ -55,9 +55,23 @@ export interface PricingTier {
   popular?: boolean;
 }
 
+export interface PricingCtaPath {
+  badge: string;
+  title: string;
+  description: string;
+  features: string[];
+  button: { text: string; href: string; variant: AccentVariant };
+  hoverColor: AccentVariant;
+}
+
 export interface PricingPageContent {
   header: PageHeader;
   tiers: PricingTier[];
+  ctaSection: {
+    title: string;
+    description: string;
+  };
+  ctaPaths: PricingCtaPath[];
   paymentNote: {
     enabled: boolean;
     depositPercent: string;
@@ -580,6 +594,28 @@ export const PAGE_CONFIGS = {
             'Dedicated point of contact throughout',
           ],
           color: 'purple',
+        },
+      ],
+      ctaSection: {
+        title: 'Ready to Move Forward?',
+        description: "You've seen what we offer. Pick the path that feels right for you.",
+      },
+      ctaPaths: [
+        {
+          badge: 'Free',
+          title: 'Get a Quote',
+          description: 'Tell us about your project and get a custom quote',
+          features: ['Free, no obligation', 'Response in 2 business days', 'Custom pricing for your needs'],
+          button: { text: 'Get a Quote', href: '/contact', variant: 'green' },
+          hoverColor: 'green',
+        },
+        {
+          badge: 'Expert Help',
+          title: 'Book a Consultation',
+          description: 'Talk to an expert before you start',
+          features: ['Expert guidance and advice', 'Immediate scheduling', 'Personalized recommendations'],
+          button: { text: 'Book a Consultation', href: '/shop', variant: 'purple' },
+          hoverColor: 'purple',
         },
       ],
       paymentNote: {

@@ -7,8 +7,8 @@ import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
 import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
-import type { PricingPageContent } from '@/lib/page-content-types';
-import { formInputColors, headingColors, dividerColors, accentColors, accentBorderWidth } from '@/lib/colors';
+import type { PricingPageContent, AccentVariant } from '@/lib/page-content-types';
+import { formInputColors, headingColors, dividerColors, accentColors, accentBorderWidth, checkmarkColors } from '@/lib/colors';
 
 // ============================================================================
 // Pricing Page Client - Universal Editing Version
@@ -24,7 +24,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
   // Check that pageContent has expected structure before using it
-  const hasValidContent = pageContent && 'tiers' in pageContent && 'header' in pageContent;
+  const hasValidContent = pageContent && 'tiers' in pageContent && 'header' in pageContent && 'ctaPaths' in pageContent;
   const content = hasValidContent ? (pageContent as unknown as PricingPageContent) : initialContent;
 
   return (
@@ -69,85 +69,77 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
         </SortableItemsWrapper>
       </EditableSection>
 
-      {/* Choose Your Path - Two clear options */}
-      <div className="text-center mb-8">
-        <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
-          Ready to Move Forward?
-        </h2>
-        <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          You&apos;ve seen what we offer. Pick the path that feels right for you.
-        </p>
-      </div>
+      {/* Choose Your Path - CTA Section Header */}
+      <EditableSection sectionKey="ctaSection" label="CTA Section">
+        <div className="text-center mb-8">
+          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
+            {content.ctaSection.title}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            {content.ctaSection.description}
+          </p>
+        </div>
+      </EditableSection>
 
-      <div className="grid md:grid-cols-2 gap-6 mb-10">
-        {/* Path 1: Get a Quote (FREE) */}
-        <Card hoverColor="green" hoverEffect="lift" className="h-full">
-          <div className="p-8 h-full flex flex-col">
-            <div className="mb-4">
-              <span className={`inline-block px-4 py-1 ${accentColors.green.bg} ${accentColors.green.text} ${accentColors.green.border} ${accentBorderWidth} rounded-full text-sm font-semibold`}>
-                Free
-              </span>
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-              Get a Quote
-            </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Tell us about your project and get a custom quote
-            </p>
-            <ul className="space-y-3 mb-6 flex-grow">
-              <li className="flex items-center gap-2">
-                <span className="text-green-600 dark:text-green-400" aria-hidden="true">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Free, no obligation</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-green-600 dark:text-green-400" aria-hidden="true">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Response in 2 business days</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-green-600 dark:text-green-400" aria-hidden="true">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Custom pricing for your needs</span>
-              </li>
-            </ul>
-            <Button variant="green" href="/contact" size="lg" className="w-full">
-              Get a Quote
-            </Button>
-          </div>
-        </Card>
+      {/* CTA Path Cards */}
+      <EditableSection sectionKey="ctaPaths" label="CTA Paths">
+        <SortableItemsWrapper
+          sectionKey="ctaPaths"
+          arrayField="ctaPaths"
+          itemIds={content.ctaPaths.map((_, i) => `path-${i}`)}
+          className="grid md:grid-cols-2 gap-6 mb-10"
+        >
+          {content.ctaPaths.map((path, index) => {
+            const colorKey = path.hoverColor as keyof typeof checkmarkColors;
+            const checkmarkClass = checkmarkColors[colorKey]?.icon || checkmarkColors.green.icon;
 
-        {/* Path 2: Book a Consultation (PAID) */}
-        <Card hoverColor="purple" hoverEffect="lift" className="h-full">
-          <div className="p-8 h-full flex flex-col">
-            <div className="mb-4">
-              <span className={`inline-block px-4 py-1 ${accentColors.purple.bg} ${accentColors.purple.text} ${accentColors.purple.border} ${accentBorderWidth} rounded-full text-sm font-semibold`}>
-                Expert Help
-              </span>
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-              Book a Consultation
-            </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Talk to an expert before you start
-            </p>
-            <ul className="space-y-3 mb-6 flex-grow">
-              <li className="flex items-center gap-2">
-                <span className="text-purple-600 dark:text-purple-400" aria-hidden="true">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Expert guidance and advice</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-purple-600 dark:text-purple-400" aria-hidden="true">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Immediate scheduling</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-purple-600 dark:text-purple-400" aria-hidden="true">✓</span>
-                <span className="text-gray-700 dark:text-gray-300">Personalized recommendations</span>
-              </li>
-            </ul>
-            <Button variant="purple" href="/shop" size="lg" className="w-full">
-              Book a Consultation
-            </Button>
-          </div>
-        </Card>
-      </div>
+            return (
+              <EditableItem
+                key={`path-${index}`}
+                sectionKey="ctaPaths"
+                arrayField="ctaPaths"
+                index={index}
+                label={path.title}
+                content={path as unknown as Record<string, unknown>}
+                sortable
+                sortId={`path-${index}`}
+              >
+                <Card hoverColor={path.hoverColor} hoverEffect="lift" className="h-full">
+                  <div className="p-8 h-full flex flex-col">
+                    <div className="mb-4">
+                      <span className={`inline-block px-4 py-1 ${accentColors[path.hoverColor as AccentVariant].bg} ${accentColors[path.hoverColor as AccentVariant].text} ${accentColors[path.hoverColor as AccentVariant].border} ${accentBorderWidth} rounded-full text-sm font-semibold`}>
+                        {path.badge}
+                      </span>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                      {path.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">
+                      {path.description}
+                    </p>
+                    <ul className="space-y-3 mb-6 flex-grow">
+                      {path.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-center gap-2">
+                          <span className={checkmarkClass} aria-hidden="true">✓</span>
+                          <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Button
+                      variant={path.button.variant}
+                      href={path.button.href}
+                      size="lg"
+                      className="w-full"
+                    >
+                      {path.button.text}
+                    </Button>
+                  </div>
+                </Card>
+              </EditableItem>
+            );
+          })}
+        </SortableItemsWrapper>
+      </EditableSection>
 
       {/* Payment Structure Note */}
       {content.paymentNote.enabled && (

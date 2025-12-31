@@ -15,6 +15,7 @@ export type {
 
   // Page-specific content types
   PricingTier,
+  PricingCtaPath,
   PricingPageContent,
   FAQItem,
   FAQPageContent,
