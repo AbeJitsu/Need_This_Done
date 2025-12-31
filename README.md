@@ -87,7 +87,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                           NEXT.JS APP (app/)                                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  15 PUBLIC   │  │  13 ADMIN    │  │  49 API      │  │  87 REACT    │      │
+│  │  15 PUBLIC   │  │  13 ADMIN    │  │  49 API      │  │  151 REACT   │      │
 │  │  PAGES       │  │  PAGES       │  │  ROUTES      │  │  COMPONENTS  │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘      │
 │                                                                              │
@@ -132,7 +132,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 
 **Understanding the System**
 - [Current State at a Glance](#current-state-at-a-glance) ← *status dashboard, tech stack, architecture*
-- [Project Structure](#project-structure) ← *complete file map, 35 pages, 49 APIs, 87 components*
+- [Project Structure](#project-structure) ← *complete file map, 35 pages, 49 APIs, 151 components*
 - [Architecture Overview](#architecture-overview) ← *data flow diagrams*
 
 **Core Features**
@@ -647,10 +647,10 @@ supabase db reset
 │
 ├── app/                   ← NEXT.JS APPLICATION
 │   ├── app/               ← Pages & API routes (Next.js App Router)
-│   ├── components/        ← 87 React components
+│   ├── components/        ← 151 React components
 │   ├── context/           ← 5 state providers
-│   ├── lib/               ← 25 utility files
-│   ├── hooks/             ← 4 custom React hooks
+│   ├── lib/               ← 44 utility files
+│   ├── hooks/             ← 8 custom React hooks
 │   ├── emails/            ← Email templates (React Email)
 │   ├── e2e/               ← 25 Playwright test files
 │   └── __tests__/         ← Unit & accessibility tests
@@ -780,7 +780,7 @@ MISC (4 routes)
 └── GET /api/demo/*                  Demo/testing endpoints
 ```
 
-### Component Inventory (87 components)
+### Component Inventory (151 components)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐

@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import { headingColors, formInputColors } from '@/lib/colors';
-import changelogData from '@/../../content/changelog/auto-log.json';
+import changelogData from '../../../../content/changelog/auto-log.json';
 
 // ============================================================================
 // Technical Changelog Page - Developer Release Notes

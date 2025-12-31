@@ -202,7 +202,7 @@ All 75 occurrences in 36 files fixed:
 │  README: 10 lib files | Actual: 28 files                                │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Update README component count (says 87, actually 150+)
+- [x] Update README component count (says 87, actually 150+)
 - [ ] Document all 9 custom hooks in README (currently only 1 mentioned)
 - [ ] Document 18 missing lib utilities in README (content-discovery, content-path-mapper, cache-stats, loop-state, etc.)
 - [ ] Consolidate /docs/*.md content INTO README.md (ETC: one organized doc, not many scattered)
