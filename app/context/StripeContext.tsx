@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import { alertColors } from '@/lib/colors';
+import { alertColors, stripeAppearance } from '@/lib/colors';
 
 // ============================================================================
 // Stripe Context
@@ -172,22 +172,22 @@ export function StripeElementsWrapperDark({
         appearance: {
           theme: 'night',
           variables: {
-            colorPrimary: '#a78bfa', // Lighter purple for dark mode
-            colorBackground: '#1f2937',
-            colorText: '#f9fafb',
-            colorDanger: '#f87171',
+            colorPrimary: stripeAppearance.colorPrimary,
+            colorBackground: stripeAppearance.colorBackground,
+            colorText: stripeAppearance.colorText,
+            colorDanger: stripeAppearance.colorDanger,
             fontFamily: 'system-ui, sans-serif',
             borderRadius: '8px',
             spacingUnit: '4px',
           },
           rules: {
             '.Input': {
-              border: '1px solid #4b5563',
-              backgroundColor: '#111827',
+              border: `1px solid ${stripeAppearance.borderColor}`,
+              backgroundColor: stripeAppearance.inputBackground,
             },
             '.Input:focus': {
-              border: '1px solid #a78bfa',
-              boxShadow: '0 0 0 1px #a78bfa',
+              border: `1px solid ${stripeAppearance.colorPrimary}`,
+              boxShadow: `0 0 0 1px ${stripeAppearance.colorPrimary}`,
             },
             '.Label': {
               fontWeight: '500',

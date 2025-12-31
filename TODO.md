@@ -164,7 +164,7 @@ All 75 occurrences in 36 files fixed:
 - [ ] Extract `useAsyncOperation()` hook - error/loading pattern duplicated in CartContext:52-54 + StripeContext:41-42
 - [ ] Extract `useOptimisticUpdate()` hook - rollback pattern duplicated 3x in CartContext (addItem, updateItem, removeItem)
 - [ ] Refactor InlineEditContext (412 lines) - mixing 3 concerns: edit mode, selection state, content loading
-- [ ] Fix StripeContext hardcoded colors - #a78bfa at line 175, #111827 at line 186 should use lib/colors.ts
+- [x] Fix StripeContext hardcoded colors - added stripeAppearance to colors.ts, migrated StripeContext to use it
 
 **ETC Violations** (Audit: Dec 30, 2025)
 ```

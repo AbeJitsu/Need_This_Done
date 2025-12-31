@@ -1363,3 +1363,24 @@ export const statusActionColors = {
   },
 };
 
+// ============================================================================
+// Stripe Appearance Colors - Hex values for Stripe Elements configuration
+// ============================================================================
+// Stripe Elements requires actual hex values (not CSS classes).
+// These match our Tailwind color scale for consistency.
+// Reference: https://stripe.com/docs/elements/appearance-api
+export const stripeAppearance = {
+  // Matches our purple accent (purple-400)
+  colorPrimary: '#a78bfa',
+  // Dark background (gray-800)
+  colorBackground: '#1f2937',
+  // Light text for dark mode (gray-50)
+  colorText: '#f9fafb',
+  // Error/danger state (red-400)
+  colorDanger: '#f87171',
+  // Input border (gray-600)
+  borderColor: '#4b5563',
+  // Input background darker than container (gray-900)
+  inputBackground: '#111827',
+};
+
