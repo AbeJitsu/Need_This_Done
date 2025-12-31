@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { discoverEditablePages } from './utils/page-discovery';
 
 // ============================================================================
 // Content Mismatch Detection Tests
@@ -13,6 +14,12 @@ import { test, expect } from '@playwright/test';
 // - Every page that shows edit toggle must have useEditableContent() configured
 // - Sidebar "Editing:" label must match the current page URL
 // - Navigating to unconfigured pages should clear or hide the sidebar
+//
+// RULE: Tests must be FLEXIBLE - auto-discover pages.
+// See: .claude/rules/testing-flexibility.md
+
+// Dynamically discover editable pages
+const editablePages = discoverEditablePages();
 
 // Helper to enable edit mode
 async function enableEditMode(page: import('@playwright/test').Page) {
@@ -45,22 +52,12 @@ test.describe('Content Mismatch Detection', () => {
     await expect(editingLabel).toBeVisible();
 
     // Should contain "contact" (case insensitive)
-    // This FAILS because contact page has no useEditableContent() configured
     await expect(editingLabel).toContainText(/contact/i);
   });
 
   test('all editable pages show correct slug', async ({ page }) => {
-    // Pages that SHOULD have editable content
-    const editablePages = [
-      { path: '/', expectedSlug: /home/i },
-      { path: '/services', expectedSlug: /services/i },
-      { path: '/pricing', expectedSlug: /pricing/i },
-      { path: '/faq', expectedSlug: /faq/i },
-      { path: '/how-it-works', expectedSlug: /how.?it.?works/i },
-    ];
-
-    for (const { path, expectedSlug } of editablePages) {
-      await page.goto(path);
+    for (const editablePage of editablePages) {
+      await page.goto(editablePage.path);
       await expect(page.locator('h1').first()).toBeVisible();
 
       await enableEditMode(page);
@@ -72,9 +69,13 @@ test.describe('Content Mismatch Detection', () => {
       await expect(sidebar).toBeVisible();
 
       // Verify correct page slug in sidebar
+      // Convert contentSlug to regex (e.g., "how-it-works" → /how.?it.?works/i)
       const editingLabel = sidebar.locator('p:has-text("Editing:")').first();
       await expect(editingLabel).toBeVisible();
-      await expect(editingLabel).toContainText(expectedSlug);
+
+      // Build flexible regex from slug: "how-it-works" → /how.?it.?works/i
+      const slugPattern = editablePage.contentSlug.replace(/-/g, '.?');
+      await expect(editingLabel).toContainText(new RegExp(slugPattern, 'i'));
 
       // Exit edit mode for next iteration
       await page.keyboard.press('Escape');

@@ -1,6 +1,7 @@
 import { test } from '@playwright/test';
 import * as fs from 'fs';
 import { setDarkMode } from './helpers';
+import { discoverPublicPages, discoverAdminPages } from './utils/page-discovery';
 
 // ============================================================================
 // User Flow Capture - Screenshots + Copy for UX evaluation
@@ -12,8 +13,15 @@ import { setDarkMode } from './helpers';
 // NOTE: This test runs with E2E_ADMIN_BYPASS enabled, meaning user is logged in.
 // Public pages are captured. Admin pages are captured as authenticated user.
 // The /login page redirects to /dashboard when authenticated, so we capture that instead.
+//
+// RULE: Tests must be FLEXIBLE - auto-discover pages.
+// See: .claude/rules/testing-flexibility.md
 
 const OUTPUT_DIR = 'ux-screenshots/services-page-redesign';
+
+// Dynamically discover pages
+const discoveredPublicPages = discoverPublicPages();
+const discoveredAdminPages = discoverAdminPages();
 
 // ============================================================================
 // Public Pages Capture (no auth required)
@@ -21,16 +29,11 @@ const OUTPUT_DIR = 'ux-screenshots/services-page-redesign';
 test('Capture public pages', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
 
-  const publicPages = [
-    { path: '/', name: '01-homepage' },
-    { path: '/services', name: '02-services' },
-    { path: '/pricing', name: '03-pricing' },
-    { path: '/how-it-works', name: '04-how-it-works' },
-    { path: '/shop', name: '05-shop' },
-    { path: '/faq', name: '06-faq' },
-    { path: '/contact', name: '07-contact' },
-    { path: '/guide', name: '08-guide' },
-  ];
+  // Convert discovered pages to capture format
+  const publicPages = discoveredPublicPages.map((p, i) => ({
+    path: p.path,
+    name: `${String(i + 1).padStart(2, '0')}-${p.name.toLowerCase().replace(/\s+/g, '-')}`
+  }));
 
   for (const p of publicPages) {
     await page.goto(p.path);
@@ -49,15 +52,13 @@ test('Capture public pages', async ({ page }) => {
 test('Capture admin pages', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
 
+  // Include dashboard (not in admin discovery) plus discovered admin pages
   const adminPages = [
     { path: '/dashboard', name: '10-dashboard' },
-    { path: '/admin/blog', name: '11-admin-blog' },
-    { path: '/admin/pages', name: '12-admin-pages' },
-    { path: '/admin/content', name: '13-admin-content' },
-    { path: '/admin/shop', name: '14-admin-shop' },
-    { path: '/admin/orders', name: '15-admin-orders' },
-    { path: '/admin/appointments', name: '16-admin-appointments' },
-    { path: '/admin/users', name: '17-admin-users' },
+    ...discoveredAdminPages.map((p, i) => ({
+      path: p.path,
+      name: `${String(i + 11).padStart(2, '0')}-${p.name.toLowerCase().replace(/\s+/g, '-')}`
+    }))
   ];
 
   for (const p of adminPages) {

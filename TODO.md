@@ -192,6 +192,49 @@ All 75 occurrences in 36 files fixed:
 - [x] Migrate page-render-stability.spec.ts to use discoverPublicPages() - replaced EDITABLE_PAGES array
 - [x] Migrate dark-mode-visual.spec.ts - no change needed: has targeted 3-page list for specific color tests, not comprehensive scan
 - [x] Delete duplicate route definitions - migrated compare-pages.spec.ts to use discoverPublicPages()
+- [x] Migrate field-editability.spec.ts to use discoverEditablePages() - replaced hardcoded PAGE_EDIT_TESTS
+- [x] Migrate field-coverage.spec.ts to use discoverEditablePages() - replaced hardcoded PAGES_CONTENT
+- [x] Migrate chatbot.spec.ts to use discoverPublicPages() - replaced hardcoded publicPages array
+- [x] Migrate flow-capture.spec.ts to use discoverPublicPages/discoverAdminPages() - replaced hardcoded arrays
+- [x] Migrate content-mismatch.spec.ts to use discoverEditablePages() - replaced hardcoded editablePages array
+
+**Test Flexibility Rule** (Added Dec 31, 2025)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  PRINCIPLE: Tests should NOT break when adding new pages/features       │
+│  ────────────────────────────────────────────────────────────────────── │
+│  When a test fails, ask: Is the test catching a bug, or is the test     │
+│  poorly designed (hardcoded expectations that go stale)?                │
+│                                                                         │
+│  Use the right test type for the situation:                             │
+│  - Unit tests: isolated logic (lib/, hooks, utilities)                  │
+│  - Integration: component interactions, context providers               │
+│  - E2E: user flows, page rendering, edit mode                           │
+│                                                                         │
+│  All page-iterating tests MUST use page-discovery.ts, never hardcoded   │
+│  arrays. See: .claude/rules/testing-flexibility.md                      │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+**Missing: Universal Edit Mode** (Architectural Issue)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  ISSUE: Not all pages have edit mode enabled                            │
+│  ────────────────────────────────────────────────────────────────────── │
+│  Currently: Only pages with content/*.json files get edit mode          │
+│  Goal: ALL pages should have edit mode (edit anything, configure nothing)│
+│                                                                         │
+│  Pages missing edit mode (no content/*.json):                           │
+│  - /shop, /cart, /checkout (dynamic content from Medusa)                │
+│  - /dashboard (user-specific data)                                      │
+│  - /admin/* pages (database-driven)                                     │
+│                                                                         │
+│  Options:                                                               │
+│  1. Create content/*.json for static parts of dynamic pages             │
+│  2. Extend inline editing to work with database content                 │
+│  3. Accept that truly dynamic pages don't need JSON-based editing       │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
 **Documentation Gaps** (Audit: Dec 30, 2025)
 ```

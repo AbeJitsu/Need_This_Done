@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { navigateToPage, enableDarkMode } from './helpers';
+import { discoverPublicPages } from './utils/page-discovery';
 
 // ============================================================================
 // Chatbot E2E Tests
@@ -10,6 +11,12 @@ import { navigateToPage, enableDarkMode } from './helpers';
 // - Message input and display
 // - Accessibility (keyboard navigation, ARIA)
 // - Dark mode support
+//
+// RULE: Tests must be FLEXIBLE - auto-discover pages.
+// See: .claude/rules/testing-flexibility.md
+
+// Dynamically discover public pages
+const publicPages = discoverPublicPages();
 
 test.describe('Chatbot Widget', () => {
   // ==========================================================================
@@ -25,10 +32,11 @@ test.describe('Chatbot Widget', () => {
   });
 
   test('should display chatbot button on all public pages', async ({ page }) => {
-    const publicPages = ['/', '/services', '/pricing', '/faq', '/how-it-works', '/contact'];
+    // Test a sample of public pages (first 6 to keep test time reasonable)
+    const samplePages = publicPages.slice(0, 6);
 
-    for (const pagePath of publicPages) {
-      await navigateToPage(page, pagePath);
+    for (const publicPage of samplePages) {
+      await navigateToPage(page, publicPage.path);
       const chatButton = page.getByLabel('Open AI chat assistant');
       await expect(chatButton).toBeVisible();
     }

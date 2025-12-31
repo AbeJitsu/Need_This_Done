@@ -148,3 +148,71 @@ export function getAdminScreenshotPages(appDir?: string): ScreenshotPage[] {
     };
   });
 }
+
+// ============================================================================
+// Editable Pages Discovery
+// ============================================================================
+// Pages with inline editing have a defined content type in page-content-types.ts.
+// The source of truth is EDITABLE_PAGES constant, not filesystem content files.
+
+export interface EditablePage extends DiscoveredPage {
+  contentSlug: string;
+}
+
+// Source of truth: EDITABLE_PAGES from lib/page-content-types.ts
+// We duplicate the list here to avoid complex build-time imports in test files.
+// If EDITABLE_PAGES changes, update this list.
+const EDITABLE_PAGE_SLUGS = [
+  'home',
+  'pricing',
+  'services',
+  'faq',
+  'how-it-works',
+  'contact',
+  'get-started',
+  'blog',
+  'changelog',
+  'guide',
+  'privacy',
+  'terms',
+] as const;
+
+// Map content slugs to routes
+const slugToRoute: Record<string, string> = {
+  'home': '/',
+  'services': '/services',
+  'pricing': '/pricing',
+  'faq': '/faq',
+  'how-it-works': '/how-it-works',
+  'contact': '/contact',
+  'get-started': '/get-started',
+  'blog': '/blog',
+  'changelog': '/changelog',
+  'guide': '/guide',
+  'privacy': '/privacy',
+  'terms': '/terms',
+};
+
+/**
+ * Discover pages that have inline editing enabled.
+ * Source of truth: EDITABLE_PAGES from lib/page-content-types.ts
+ */
+export function discoverEditablePages(): EditablePage[] {
+  return EDITABLE_PAGE_SLUGS
+    .filter(slug => slugToRoute[slug])
+    .map(slug => ({
+      path: slugToRoute[slug],
+      name: slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' '),
+      isAdmin: false,
+      isPublic: true,
+      contentSlug: slug,
+    }));
+}
+
+/**
+ * Check if a page has inline editing enabled.
+ */
+export function isPageEditable(pagePath: string): boolean {
+  const editablePages = discoverEditablePages();
+  return editablePages.some(p => p.path === pagePath);
+}
