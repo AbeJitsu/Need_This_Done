@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { alertColors } from '@/lib/colors';
+import { alertColors, neutralAccentBg } from '@/lib/colors';
 
 // ============================================================================
 // Speed Demo Component - Real Redis Caching Demonstration
@@ -111,7 +111,7 @@ export default function SpeedDemo() {
 
       {/* Results Summary */}
       {results.length > 0 && (
-        <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+        <div className={`mb-6 p-4 ${neutralAccentBg.gray} rounded-lg`}>
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-gray-600 dark:text-gray-300 text-xs uppercase tracking-wide mb-1">
@@ -159,8 +159,8 @@ export default function SpeedDemo() {
                 p-3 rounded-lg border transition-all
                 ${
                   result.isFromCache
-                    ? 'bg-orange-50 dark:bg-gray-700 border-orange-300 dark:border-orange-700'
-                    : 'bg-green-50 dark:bg-gray-700 border-green-300 dark:border-green-700'
+                    ? `${neutralAccentBg.orange} border-orange-300 dark:border-orange-700`
+                    : `${neutralAccentBg.green} border-green-300 dark:border-green-700`
                 }
               `}
             >
