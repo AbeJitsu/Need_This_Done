@@ -209,5 +209,15 @@ if [[ -f "$TODO_FILE" ]]; then
   fi
 fi
 
+# Check for incomplete changelog entries that need visual review
+CHANGELOG_DIR="$_PROJECT_DIR/content/changelog"
+if [[ -d "$CHANGELOG_DIR" ]]; then
+  INCOMPLETE=$(grep -l "_needsCompletion" "$CHANGELOG_DIR"/*.json 2>/dev/null | wc -l | tr -d ' ')
+  if [[ "$INCOMPLETE" -gt 0 ]]; then
+    echo "" >&2
+    echo "📸 $INCOMPLETE changelog entry needs /document (visual review)" >&2
+  fi
+fi
+
 # All good - normal exit
 exit 0

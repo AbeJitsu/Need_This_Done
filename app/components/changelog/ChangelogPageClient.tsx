@@ -13,6 +13,12 @@ import Image from 'next/image';
 // Uses universal content loading from InlineEditProvider.
 // EditableSection wrappers provide click-to-select functionality.
 
+interface ChangelogChange {
+  what: string;
+  why: string;
+  where: string;
+}
+
 interface ChangelogEntry {
   title: string;
   slug: string;
@@ -20,6 +26,7 @@ interface ChangelogEntry {
   category: string;
   description: string;
   benefit: string;
+  changes?: ChangelogChange[];
   howToUse: string[];
   screenshots: Array<{
     src: string;
@@ -55,54 +62,70 @@ function ChangelogCard({ entry }: { entry: ChangelogEntry }) {
         <p className={`${formInputColors.helper}`}>{entry.description}</p>
       </div>
 
-      {entry.screenshots.length > 0 && (
-        <div className="p-6 bg-gray-100 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-          <div className="grid gap-4 md:grid-cols-2">
-            {entry.screenshots.map((screenshot, index) => (
-              <figure key={index} className="space-y-2">
-                <div className="relative aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
-                  <Image
-                    src={screenshot.src}
-                    alt={screenshot.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
+      <div className="p-6 space-y-6">
+        {/* Changes - What/Why/Where format */}
+        {entry.changes && entry.changes.length > 0 && (
+          <div className="space-y-4">
+            <h3 className={`font-semibold ${headingColors.secondary}`}>What Changed</h3>
+            <div className="space-y-4">
+              {entry.changes.map((change, index) => (
+                <div
+                  key={index}
+                  className="pl-4 border-l-2 border-blue-500 dark:border-blue-400 space-y-1"
+                >
+                  <p className={`font-medium ${headingColors.primary}`}>{change.what}</p>
+                  <p className={`text-sm ${formInputColors.helper}`}>{change.why}</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500">{change.where}</p>
                 </div>
-                {screenshot.caption && (
-                  <figcaption className={`text-sm ${formInputColors.helper} text-center`}>
-                    {screenshot.caption}
-                  </figcaption>
-                )}
-              </figure>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="p-6 space-y-4">
-        {entry.benefit && (
-          <div className="flex items-start gap-3">
-            <span className="text-2xl" aria-hidden="true">✨</span>
-            <div>
-              <h3 className={`font-semibold ${headingColors.secondary} mb-1`}>Why You&apos;ll Love It</h3>
-              <p className={formInputColors.helper}>{entry.benefit}</p>
+              ))}
             </div>
           </div>
         )}
 
+        {/* Benefit */}
+        {entry.benefit && (
+          <div>
+            <h3 className={`font-semibold ${headingColors.secondary} mb-2`}>Why It Matters</h3>
+            <p className={formInputColors.helper}>{entry.benefit}</p>
+          </div>
+        )}
+
+        {/* How to Use */}
         {entry.howToUse.length > 0 && (
-          <div className="flex items-start gap-3">
-            <span className="text-2xl" aria-hidden="true">📖</span>
-            <div>
-              <h3 className={`font-semibold ${headingColors.secondary} mb-2`}>How to Use</h3>
-              <ol className="list-decimal list-inside space-y-1">
-                {entry.howToUse.map((step, index) => (
-                  <li key={index} className={formInputColors.helper}>
-                    {step}
-                  </li>
-                ))}
-              </ol>
+          <div>
+            <h3 className={`font-semibold ${headingColors.secondary} mb-2`}>Where to See It</h3>
+            <ul className="list-disc list-inside space-y-1">
+              {entry.howToUse.map((step, index) => (
+                <li key={index} className={`${formInputColors.helper} text-sm`}>
+                  {step}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Screenshots - only show if explicitly included */}
+        {entry.screenshots && entry.screenshots.length > 0 && (
+          <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
+            <div className="grid gap-4 md:grid-cols-2">
+              {entry.screenshots.map((screenshot, index) => (
+                <figure key={index} className="space-y-2">
+                  <div className="relative aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                    <Image
+                      src={screenshot.src}
+                      alt={screenshot.alt}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
+                  {screenshot.caption && (
+                    <figcaption className={`text-sm ${formInputColors.helper} text-center`}>
+                      {screenshot.caption}
+                    </figcaption>
+                  )}
+                </figure>
+              ))}
             </div>
           </div>
         )}

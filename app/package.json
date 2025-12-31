@@ -29,6 +29,7 @@
     "test:emails": "npx tsx scripts/test-emails.ts",
     "screenshot:map": "npx tsx scripts/build-component-map.ts",
     "screenshot:affected": "npx tsx scripts/screenshot-affected.ts",
+    "changelog:complete": "npx tsx scripts/complete-changelog.ts",
     "cleanup:e2e": "npx tsx scripts/cleanup-e2e-posts.ts",
     "generate:manifest": "npx tsx scripts/generate-content-manifest.ts",
     "prebuild": "npm run generate:manifest"

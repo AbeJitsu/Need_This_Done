@@ -31,6 +31,14 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
+[x] **Auto-Complete Public Changelog** - Make /changelog automatic like /changelog/technical
+- [x] Create utility `complete-changelog.ts` for template completion
+- [x] Find entries with `_needsCompletion: true`
+- [x] Auto-generate description, benefit, howToUse from `_gitContext`
+- [x] Remove `_` prefixed fields when complete
+- [x] Create `/document` skill with **visual screenshot review**
+- Note: Script generates drafts, but `/document` skill does visual verification
+
 [x] **Blue Page Headers** - Add color personality to page titles
 - [x] Update PageHeader.tsx to accept optional `color` prop (default: 'blue')
 - [x] Use titleColors[color] instead of headingColors.primary

@@ -1,74 +1,30 @@
 {
-  "title": "Main",
+  "title": "Site-Wide Updates",
   "slug": "main",
   "date": "2025-12-31",
-  "category": "Dashboard",
-  "description": "",
-  "benefit": "",
-  "howToUse": [],
-  "screenshots": [
+  "category": "Public",
+  "description": "Various improvements across the site including pricing page card alignment, page header styling, and form label updates.",
+  "benefit": "A more polished, consistent experience across all pages.",
+  "changes": [
     {
-      "src": "/screenshots/main/home-desktop-light.png",
-      "alt": "Screenshot of /",
-      "caption": ""
+      "what": "Pricing card alignment fixed",
+      "why": "Cards now have consistent heights so CTA buttons align across all three tiers",
+      "where": "/pricing"
     },
     {
-      "src": "/screenshots/main/terms-desktop-light.png",
-      "alt": "Screenshot of /terms",
-      "caption": ""
+      "what": "Blue accent color added to page headers",
+      "why": "Adds visual personality and brand consistency to page titles",
+      "where": "All pages with PageHeader component"
     },
     {
-      "src": "/screenshots/main/shop-desktop-light.png",
-      "alt": "Screenshot of /shop",
-      "caption": ""
-    },
-    {
-      "src": "/screenshots/main/services-desktop-light.png",
-      "alt": "Screenshot of /services",
-      "caption": ""
-    },
-    {
-      "src": "/screenshots/main/privacy-desktop-light.png",
-      "alt": "Screenshot of /privacy",
-      "caption": ""
+      "what": "Form labels now editable in admin",
+      "why": "Contact page form fields can be customized without code changes",
+      "where": "/contact"
     }
   ],
-  "_gitContext": ".claude/loop-state.json                            |   2 +-\n app/affected-routes.json                           |   2 +-\n app/e2e/screenshots/checkout/03-added-to-cart.png  | Bin 284080 -> 282375 bytes\n app/e2e/visual-regression/dark-mode-pricing.png    | Bin 345754 -> 354202 bytes\n app/e2e/visual-regression/pricing-light-mode.png   | Bin 322659 -> 322653 bytes\n app/lib/colors.ts                                  |   2 ++\n app/screenshots/proof-01-faq-before-edit.png       | Bin 135673 -> 135934 bytes\n app/screenshots/proof-02-faq-edit-mode.png         | Bin 138342 -> 141803 bytes\n .../proof-03-faq-sidebar-with-fields.png           | Bin 170046 -> 171836 bytes\n .../proof-04-privacy-sidebar-with-fields.png       | Bin 136606 -> 138007 bytes\n .../service-modal-blue-dark-contrast-test.png      | Bin 102814 -> 99339 bytes\n .../service-modal-blue-light-contrast-test.png     | Bin 178815 -> 176951 bytes\n .../service-modal-green-dark-contrast-test.png     | Bin 102814 -> 154271 bytes\n .../service-modal-green-light-contrast-test.png    | Bin 175176 -> 175539 bytes\n .../service-modal-purple-dark-contrast-test.png    | Bin 102814 -> 99339 bytes\n .../service-modal-purple-light-contrast-test.png   | Bin 175327 -> 172311 bytes\n .../copy/1-homepage-copy.json                      |  12 +++++++++++-\n .../screenshots/01-homepage.png                    | Bin 280479 -> 46734 bytes\n .../screenshots/03-pricing.png                     | Bin 348739 -> 322620 bytes\n .../services-page-redesign/screenshots/06-faq.png  | Bin 421012 -> 422346 bytes\n .../screenshots/1-homepage.png                     | Bin 45244 -> 280317 bytes\n .../screenshots/10-dashboard.png                   | Bin 130828 -> 132637 bytes\n .../screenshots/11-admin-blog.png                  | Bin 210904 -> 66963 bytes\n .../screenshots/14-admin-shop.png                  | Bin 65982 -> 66915 bytes\n .../screenshots/2-modal-1-virtual-assistant.png    | Bin 206825 -> 208070 bytes\n content/changelog/auto-log.json                    |  18 ++++++++++++++++++\n content/changelog/main.json                        |   2 +-\n 27 files changed, 34 insertions(+), 4 deletions(-)",
-  "_affectedRoutes": [
-    "/",
-    "/terms",
-    "/shop",
-    "/services",
-    "/privacy",
-    "/pricing",
-    "/login",
-    "/how-it-works",
-    "/get-started",
-    "/faq",
-    "/dashboard",
-    "/contact",
-    "/checkout",
-    "/cart",
-    "/blog",
-    "/[slug]",
-    "/shop/[productId]",
-    "/blog/[slug]",
-    "/admin/users",
-    "/admin/shop",
-    "/admin/products",
-    "/admin/pages",
-    "/admin/orders",
-    "/admin/dev",
-    "/admin/content",
-    "/admin/blog",
-    "/admin/appointments",
-    "/admin/shop/orders",
-    "/admin/pages/new",
-    "/admin/blog/new",
-    "/admin/shop/products/new",
-    "/admin/pages/[slug]/edit",
-    "/admin/content/[slug]/edit",
-    "/admin/blog/[slug]/edit"
+  "howToUse": [
+    "Visit /pricing to see the improved card layout",
+    "Browse any page to see the updated blue headers"
   ],
-  "_needsCompletion": true
+  "screenshots": []
 }

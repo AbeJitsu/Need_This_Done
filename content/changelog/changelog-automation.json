@@ -3,19 +3,28 @@
   "slug": "changelog-automation",
   "date": "2025-12-29",
   "category": "Admin",
-  "description": "The changelog now updates itself. When frontend changes are made, Claude automatically generates documentation with screenshots and user-friendly descriptions.",
-  "benefit": "Stay informed about every improvement without anyone having to remember to write it up. Changes are captured and documented the moment they happen.",
+  "description": "The changelog now updates itself. When frontend changes are made, documentation is generated automatically from git context.",
+  "benefit": "Stay informed about every improvement without anyone having to remember to write it up.",
+  "changes": [
+    {
+      "what": "Automatic entry generation",
+      "why": "Changes are captured the moment they happen",
+      "where": "/changelog"
+    },
+    {
+      "what": "Git context parsing",
+      "why": "Descriptions are based on actual commit messages and file changes",
+      "where": "content/changelog/"
+    },
+    {
+      "what": "/document skill for review",
+      "why": "Claude reviews and completes entries with accurate descriptions",
+      "where": ".claude/skills/document/"
+    }
+  ],
   "howToUse": [
     "Visit /changelog to see all updates",
-    "New entries appear automatically when features ship",
-    "Each entry includes screenshots showing what changed",
-    "Descriptions explain both what changed and why it matters"
+    "New entries appear automatically when features ship"
   ],
-  "screenshots": [
-    {
-      "src": "/screenshots/main/changelog-desktop-light.png",
-      "alt": "Changelog page showing automated entries",
-      "caption": "Entries are generated automatically with context from code changes"
-    }
-  ]
+  "screenshots": []
 }

@@ -390,6 +390,12 @@ async function main() {
   console.log('GIT CONTEXT:');
   console.log(gitContext);
   console.log('═'.repeat(60));
+  console.log('\n📸 NEXT STEP: Run /document to visually review screenshots');
+  console.log('   The /document skill will:');
+  console.log('   - Look at each screenshot image');
+  console.log('   - Write accurate captions based on what is visible');
+  console.log('   - Remove invalid/stale screenshots');
+  console.log('   - Complete the changelog entry');
 }
 
 main().catch(console.error);
