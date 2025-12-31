@@ -148,7 +148,7 @@ All 75 occurrences in 36 files fixed:
 - [x] Use `shadowClasses.cardHover` from colors.ts - migrated ServiceCard, StepCard, CourseCard, PricingCard, FAQPageClient, FAQPreview, LoginClient (7 files)
 - [x] Use existing `CloseIcon` component - migrated ServiceDetailModal, ChatbotModal to use CloseIcon (ConfirmDialog already uses it)
 - [!] Consolidate form field components - TextField.tsx + TextAreaField.tsx (deferred: low-impact, 2 small stable files)
-- [ ] Extract `formatPrice()` to lib/format.ts - duplicated in CourseCard:71-77, EnrollButton, other e-commerce components
+- [x] Extract `formatPrice()` to lib/format.ts - created lib/format.ts, migrated CourseCard + EnrollButton
 - [x] Centralize `serviceColors` - created lib/service-colors.ts, migrated ServiceDetailModal + ServiceDeepDive
 - [ ] Extract feature list parsing - string→array logic duplicated in ServiceCard:44-46, PricingCard, ServiceDetailModal
 

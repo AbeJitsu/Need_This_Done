@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { accentColors } from '@/lib/colors';
+import { formatPrice } from '@/lib/format';
 
 // ============================================================================
 // EnrollButton Component
@@ -129,14 +130,6 @@ export default function EnrollButton({
     );
   }
 
-  // Format price for display
-  const formatPrice = (cents: number) => {
-    const dollars = cents / 100;
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(dollars);
-  };
 
   return (
     <button

@@ -10,6 +10,7 @@ import {
   accentColors,
   shadowClasses,
 } from '@/lib/colors';
+import { formatPriceWhole } from '@/lib/format';
 
 // ============================================================================
 // CourseCard Component
@@ -68,14 +69,6 @@ export default function CourseCard({
   const isFree = price === 0;
   const hasDiscount = originalPrice && originalPrice > (price || 0);
 
-  // Format price from cents to dollars
-  const formatPrice = (cents: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-    }).format(cents / 100);
-  };
 
   return (
     <Link
@@ -184,11 +177,11 @@ export default function CourseCard({
             ) : price !== undefined ? (
               <>
                 <span className={`font-bold text-lg ${titleColors[color]}`}>
-                  {formatPrice(price)}
+                  {formatPriceWhole(price)}
                 </span>
                 {hasDiscount && originalPrice && (
                   <span className={`text-sm line-through ${mutedTextColors.light}`}>
-                    {formatPrice(originalPrice)}
+                    {formatPriceWhole(originalPrice)}
                   </span>
                 )}
               </>
