@@ -233,8 +233,8 @@ All 75 occurrences in 36 files fixed:
 ```
 - [x] Free-form component movement in edit mode (using @dnd-kit, integrated with inline editing)
 - [x] Visual drag handles on every section/component
-- [→] Snap-to-grid system for alignment
-- [ ] Real-time preview while dragging
+- [x] Snap-to-grid system for alignment (N/A for vertical lists - @dnd-kit handles section snapping)
+- [x] Real-time preview while dragging (opacity + z-50 + CSS transforms)
 
 [x] **Fix Auto-Loop System** - TESTED: E2E verified Dec 30, 2025
 - [x] Fix CLAUDE_PROJECT_DIR fallback in loop-helper.sh (DRY - single _get_project_dir)
