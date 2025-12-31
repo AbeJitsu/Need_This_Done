@@ -85,33 +85,47 @@ All 75 occurrences in 36 files fixed:
 - [x] Consider 3x3 grid, 4x2 grid - went with 4x2 for clean 2 rows at desktop
 - [x] Ensure cards are evenly distributed - 8 items in 4 columns = balanced grid
 
-**Replace Orange with Gold** (Dec 30, 2025)
+**Replace Orange with Gold** ✅ DONE (Dec 31, 2025)
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                    ORANGE → GOLD COLOR RENAME                            │
+│                    ORANGE → GOLD COLOR RENAME - COMPLETE                 │
+├─────────────────────────────────────────────────────────────────────────┤
+│  Gold = #a36b00 at 500 (4.51:1 with white - WCAG AA)                    │
+│  53 files updated, all orange references renamed to gold                │
+│  CSS vars, Tailwind config, colors.ts, and all components migrated      │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [x] Rename --orange-* → --gold-* CSS variables in globals.css
+- [x] Update tailwind.config.cjs: gold scale uses --gold-* vars
+- [x] Update tailwind.config.cjs safelist: orange → gold
+- [x] Update colors.ts: AccentVariant type and all exports
+- [x] Update 49+ component files: variant values and class names
+- [x] Update Storybook stories: options and examples
+- [x] Verify no orange references remain (build passes)
+
+**WCAG Color Calculator Admin Page** (Future)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    WCAG COLOR CALCULATOR                                 │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
-│  Problem: Orange looks too brown, gold is more appealing                │
+│  Vision: Admin GUI to find WCAG AA compliant color combos               │
 │                                                                         │
-│  Gold = #a36b00 at 500 (4.51:1 with white - WCAG AA)                    │
-│  Orange = old brown-terracotta color - needs to GO                      │
+│  Features:                                                              │
+│  - Input any base color, calculate 500/600 anchors automatically        │
+│  - Show contrast ratios live as you adjust                              │
+│  - Preview light/dark mode with the selected palette                    │
+│  - Export to CSS variables or colors.ts format                          │
 │                                                                         │
-│  Approach:                                                              │
-│  1. Find all orange-* class usages in components                        │
-│  2. Replace with gold-* classes                                         │
-│  3. Update colors.ts exports (accentColors, etc.)                       │
-│  4. Update safelist in tailwind.config.cjs                              │
-│  5. Remove orange CSS variables from globals.css                        │
+│  Libraries: chroma-js, colorjs.io, or polished for calculations         │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Find all files with orange-* class references
-- [ ] Replace orange-* → gold-* in component files
-- [ ] Update colors.ts: rename orange exports to gold
-- [ ] Update tailwind.config.cjs safelist: orange → gold
-- [ ] Remove --orange-* CSS variables from globals.css (keep only --gold-*)
-- [ ] Verify no orange references remain (grep check)
-- [ ] Test in light and dark mode
+- [ ] Create /admin/colors page with color picker UI
+- [ ] Implement WCAG contrast ratio calculation (4.5:1 minimum)
+- [ ] Auto-calculate 500 shade (4.5:1 with white) and 600 shade (4.5:1 with -100)
+- [ ] Live preview of color combos in light and dark mode
+- [ ] Export functionality for CSS variables
 
 **Automation & Developer Experience**
 - [x] Auto-update changelog on every commit/deploy (Claude hook in post-tool-use.sh)
