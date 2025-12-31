@@ -1,5 +1,23 @@
 [
   {
+    "hash": "fc2be64",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "fc2be6437742afa57e69634f438010b840ea92b1:%M",
+    "author": "Abe Reyes",
+    "message": "Docs: Mark hardcoded color migration as complete in TODO.md",
+    "category": "Documentation",
+    "filesChanged": 1
+  },
+  {
+    "hash": "f55e7b8",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "f55e7b8b3e36c9b7519aede2a33e67eb007ac78f:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor: Complete ETC color migration - eliminate ALL -50 and opacity patterns",
+    "category": "Refactoring",
+    "filesChanged": 19
+  },
+  {
     "hash": "c51029b",
     "date": "%Y->- (HEAD -> main)",
     "time": "c51029bc6951a4efa5c55feb8d93b621be0e1b95:%M",

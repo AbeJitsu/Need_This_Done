@@ -9,7 +9,7 @@ import {
   type SectionDefinition,
   type SectionCategory,
 } from '@/lib/sections';
-import { accentColors, softBgColors, hoverBgColors } from '@/lib/colors';
+import { accentColors, hoverBgColors } from '@/lib/colors';
 
 // ============================================================================
 // SectionPicker Component

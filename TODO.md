@@ -86,6 +86,34 @@ All 75 occurrences in 36 files fixed:
 - [ ] Consider 3x3 grid, 4x2 grid, or responsive breakpoints for better visual balance
 - [ ] Ensure cards are evenly distributed with consistent spacing
 
+**Replace Orange with Gold** (Dec 30, 2025)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    ORANGE → GOLD COLOR RENAME                            │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  Problem: Orange looks too brown, gold is more appealing                │
+│                                                                         │
+│  Gold = #a36b00 at 500 (4.51:1 with white - WCAG AA)                    │
+│  Orange = old brown-terracotta color - needs to GO                      │
+│                                                                         │
+│  Approach:                                                              │
+│  1. Find all orange-* class usages in components                        │
+│  2. Replace with gold-* classes                                         │
+│  3. Update colors.ts exports (accentColors, etc.)                       │
+│  4. Update safelist in tailwind.config.cjs                              │
+│  5. Remove orange CSS variables from globals.css                        │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Find all files with orange-* class references
+- [ ] Replace orange-* → gold-* in component files
+- [ ] Update colors.ts: rename orange exports to gold
+- [ ] Update tailwind.config.cjs safelist: orange → gold
+- [ ] Remove --orange-* CSS variables from globals.css (keep only --gold-*)
+- [ ] Verify no orange references remain (grep check)
+- [ ] Test in light and dark mode
+
 **Automation & Developer Experience**
 - [→] Auto-update changelog on every commit/deploy (stop doing this manually)
 - [ ] Process: git hook or CI step that appends to CHANGELOG.md automatically

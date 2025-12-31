@@ -24,11 +24,18 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║  📄 19 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
 ║  🔐 16 Admin Pages                       ✅ Stripe Payments                  ║
 ║  🔌 49 API Routes                        ✅ Supabase Auth & Database         ║
-║  🧩 87 React Components                  ✅ Redis Caching (Upstash)          ║
-║  📦 5 Context Providers                  ✅ Email Notifications (Resend)     ║
+║  🧩 90+ React Components                 ✅ Redis Caching (Upstash)          ║
+║  📦 6 Context Providers                  ✅ Email Notifications (Resend)     ║
 ║  🔧 26 Lib Utilities                     ✅ Google OAuth                     ║
-║  🪝 4 Custom Hooks                       🟡 Google Calendar (90% - needs test)║
-║  🧪 229 E2E Tests Passing                🟡 Puck (28 components, needs E2E)  ║
+║  🪝 4 Custom Hooks                       ✅ Inline Editing (12 pages)        ║
+║  🧪 229 E2E Tests Passing                ✅ WCAG AA Color System (4.5:1)     ║
+║                                                                              ║
+║  RECENT ADDITIONS (Dec 2025)             VISUAL BUILDER                      ║
+║  ────────────────────────────            ──────────────                       ║
+║  ✨ Inline Click-to-Edit                 ✅ Puck Page Builder (28 components)║
+║  ✨ Pre-built Section Library            ✅ Pre-built Section Templates      ║
+║  ✨ Template Marketplace                 ✅ Template Marketplace             ║
+║  ✨ Dark Mode w/ WCAG AA                 ✅ TipTap Rich Text Editor          ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -136,11 +143,12 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 
 **Operations**
 - [Deployment](#deployment)
-- [Testing](#testing) ← *177 E2E tests*
+- [Testing](#testing) ← *229 E2E tests*
 - [Troubleshooting](#troubleshooting)
 
 **Reference**
 - [Puck Visual Builder](#puck-visual-builder) ← *28 components, color utilities*
+- [Inline Editing](#inline-editing) ← *click-to-edit on 12 marketing pages*
 - [Template System](#template-system) ← *5-step wizard, starter templates*
 - [API Patterns](#api-patterns) ← *auth, error handling*
 - [Design System](#design-system)
@@ -498,7 +506,7 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 | Orders | ✅ Working | 4 E2E tests | Full order objects, linked in Supabase |
 | Email | ✅ Working | 9 unit tests | 4 email types via Resend |
 
-**All 177 E2E tests passing** - See [Testing](#testing) for complete coverage map.
+**All 229 E2E tests passing** - See [Testing](#testing) for complete coverage map.
 
 **Consultation Products** (seeded via `medusa/seed-products.js` using Admin API):
 | Product | Price | Duration | Handle |
@@ -1801,7 +1809,13 @@ supabase db reset
 
 ![Get Started page showcasing the visual page building experience](app/public/screenshots/december-2025-release/get-started-desktop-light.png)
 
-Puck enables drag-and-drop page building. Currently **disabled** pending E2E testing.
+Puck enables drag-and-drop page building with a live preview. Admins can create and edit pages visually without touching code.
+
+**Recent Enhancements (December 2025):**
+- Pre-built section library for rapid page assembly
+- Template marketplace for sharing/selling page designs
+- TipTap WYSIWYG rich text editor integration
+- Inline click-to-edit on 12 marketing pages
 
 ### 30+ Available Components
 
@@ -1864,6 +1878,44 @@ Each component needs:
 - `fields` - Editor inputs (text, select, radio, etc.)
 - `defaultProps` - Default values
 - `render` - React component that renders the output
+
+---
+
+## Inline Editing
+
+Marketing pages support click-to-edit functionality for admins. Click the pencil icon on any page to open the edit sidebar, then click any section or field to edit it.
+
+### Supported Pages (12 total)
+
+| Page | Content Type | Fields |
+|------|--------------|--------|
+| Home | Hero, Features, CTA | All text, colors, buttons |
+| Services | Service cards, CTAs | Titles, descriptions, pricing |
+| Pricing | Tiers, features, FAQ | All tier details, toggle monthly/annual |
+| FAQ | Questions, answers | Add/remove/reorder items |
+| How It Works | Steps, illustrations | Step content, icons, order |
+| Contact | Form, locations, hours | Contact info, form fields |
+| Guide | Getting started sections | Section titles and content |
+| Privacy | Policy sections | Legal text, last updated |
+| Terms | Terms sections | Legal text, last updated |
+| Blog | Posts listing | Post content via CMS |
+| Changelog | Updates listing | Version notes, dates |
+| Get Started | Wizard steps | Wizard configuration |
+
+### How It Works
+
+1. **Admin clicks pencil icon** - Opens edit sidebar
+2. **Click any section** - Fields appear in sidebar
+3. **Edit inline** - Changes update in real-time
+4. **Save/Publish** - Persists to Supabase
+
+### Technical Implementation
+
+- `InlineEditContext` - Global state for edit mode
+- `EditableSection` - Wrapper for editable sections
+- `EditableItem` - Wrapper for array items (FAQ, pricing tiers)
+- `AdminSidebar` - Field editor UI
+- Content stored in Supabase `page_content` table
 
 ---
 

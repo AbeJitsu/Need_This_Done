@@ -649,44 +649,84 @@ export const defaultChangelogContent: ChangelogPageContent = {
 
 export const defaultGuideContent: GuidePageContent = {
   header: {
-    title: 'Getting Started Guide',
-    description: 'Everything you need to know to get the most out of our services.',
+    title: 'Platform Guide',
+    description: 'Everything you need to know about NeedThisDone - from booking consultations to managing your projects.',
   },
   sections: [
     {
-      title: 'Browse Consultations',
-      content: `Ready to get expert help? Here's how to find the right consultation:
+      title: 'Browse Our Services',
+      content: `Explore what we offer and find the right fit for your needs:
 
-1. Visit our Shop to see all available consultation packages
-2. We offer 15, 30, and 55-minute sessions - choose based on how much time you need
-3. Click any consultation to see the full description and what's included
-4. Add to cart when you're ready to book`,
+• Visit the Services page to see our full range of professional services
+• Each service includes detailed descriptions, pricing, and what's included
+• Check our Pricing page to compare packages and find the best value
+• Use our FAQ for quick answers to common questions`,
     },
     {
       title: 'Book a Consultation',
-      content: `Complete your purchase and schedule your session:
+      content: `Ready for expert guidance? Here's how to book:
 
-1. Click "Add to Cart" on your chosen consultation package
-2. Review your cart to confirm your selection
-3. Complete payment securely with Stripe
-4. After payment, select your preferred date and time`,
+1. Visit the Shop to see available consultation packages (15, 30, or 55 minutes)
+2. Click any consultation to see full details and add to cart
+3. Review your cart and proceed to checkout
+4. Complete secure payment via Stripe (we accept all major cards)
+5. Select your preferred date and time for the session
+6. You'll receive an email confirmation with calendar invite`,
     },
     {
-      title: 'Authorize a Project',
-      content: `Already have a quote? Here's how to get your project started:
+      title: 'Start a Project',
+      content: `Already have a quote? Here's how to get started:
 
 1. Go to the Get Started page
-2. Enter the quote reference number from your email
-3. Confirm the project scope and pricing
-4. Complete payment to kick off your project`,
+2. Enter your quote reference number from our email
+3. Review the project scope and pricing
+4. Complete payment to authorize the project
+5. We'll be in touch within 24 hours to kick things off`,
     },
     {
-      title: 'Stay Updated',
-      content: `Keep track of what's new:
+      title: 'Create Your Account',
+      content: `An account gives you access to your dashboard and order history:
 
-• Check our Changelog for the latest features and improvements
-• Read our Blog for tips, insights, and updates
-• Bookmark this page and come back anytime to learn about new capabilities`,
+• Sign in with Google for one-click access
+• Or create an account with email and password
+• Your account links all your orders and consultations
+• Access your dashboard anytime to check status and history`,
+    },
+    {
+      title: 'Your Dashboard',
+      content: `Once logged in, your dashboard is your home base:
+
+• View all your orders and their current status
+• Track consultation bookings and upcoming appointments
+• Access order details and receipts
+• Update your account settings and preferences`,
+    },
+    {
+      title: 'Explore Our Content',
+      content: `Stay informed with our regularly updated content:
+
+• Blog: Tips, insights, and industry updates
+• Changelog: Latest platform features and improvements
+• How It Works: Step-by-step breakdown of our process
+• FAQ: Quick answers to common questions`,
+    },
+    {
+      title: 'Dark Mode',
+      content: `Prefer a darker interface? We've got you covered:
+
+• Click the sun/moon icon in the header to toggle dark mode
+• Your preference is saved automatically
+• All pages are optimized for both light and dark viewing
+• Designed to meet accessibility standards (WCAG AA)`,
+    },
+    {
+      title: 'Get in Touch',
+      content: `Have questions or need help? We're here:
+
+• Visit our Contact page to send us a message
+• Email us directly at hello@needthisdone.com
+• Check our FAQ for immediate answers
+• Book a consultation if you need dedicated time with an expert`,
     },
   ],
 };

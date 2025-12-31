@@ -103,7 +103,7 @@ const config = {
 
     // Body text colors - dark mode (100 shade for unified accent system)
     'dark:text-purple-100', 'dark:text-blue-100', 'dark:text-green-100',
-    'dark:text-orange-100', 'dark:text-teal-100', 'dark:text-gray-100', 'dark:text-red-100',
+    'dark:text-orange-100', 'dark:text-teal-100', 'dark:text-gray-100', 'dark:text-red-100', 'dark:text-gold-100',
 
     // Animation classes
     'animate-fade-in',
@@ -235,6 +235,22 @@ const config = {
           700: 'var(--orange-700)',
           800: 'var(--orange-800)',
           900: 'var(--orange-900)',
+        },
+
+        // ====================================================================
+        // Golds - Warm Accent (PREVIEW - potential orange replacement)
+        // ====================================================================
+        gold: {
+          50: 'var(--gold-50)',
+          100: 'var(--gold-100)',
+          200: 'var(--gold-200)',
+          300: 'var(--gold-300)',
+          400: 'var(--gold-400)',
+          500: 'var(--gold-500)',
+          600: 'var(--gold-600)',
+          700: 'var(--gold-700)',
+          800: 'var(--gold-800)',
+          900: 'var(--gold-900)',
         },
 
         // ====================================================================
