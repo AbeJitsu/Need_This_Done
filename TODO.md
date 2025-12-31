@@ -131,7 +131,7 @@ All 75 occurrences in 36 files fixed:
 - [x] Auto-update changelog on every commit/deploy (Claude hook in post-tool-use.sh)
 - [x] Process: Claude hook updates content/changelog/auto-log.json after git commits
 - [x] Add changelog link to footer/navigation - added to Footer.tsx bottom row with Privacy/Terms
-- [ ] Design a changelog page for tech users (release notes, version history, API changes)
+- [x] Design a changelog page for tech users (/changelog/technical - commit history, filters, stats)
 
 ---
 
