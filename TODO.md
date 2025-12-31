@@ -231,9 +231,9 @@ All 75 occurrences in 36 files fixed:
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [!] Free-form component movement in edit mode (blocked: requires arch decision - @dnd-kit library, CSS positioning strategy, section order persistence)
-- [ ] Visual drag handles on every section/component
-- [ ] Snap-to-grid system for alignment
+- [x] Free-form component movement in edit mode (using @dnd-kit, integrated with inline editing)
+- [x] Visual drag handles on every section/component
+- [→] Snap-to-grid system for alignment
 - [ ] Real-time preview while dragging
 
 [x] **Fix Auto-Loop System** - TESTED: E2E verified Dec 30, 2025

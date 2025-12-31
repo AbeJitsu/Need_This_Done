@@ -1,13 +1,18 @@
 'use client';
 
+import React, { useEffect } from 'react';
 import { useInlineEdit, type SectionSelection } from '@/context/InlineEditContext';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import type { DraggableAttributes } from '@dnd-kit/core';
+import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 
 // ============================================================================
-// Editable Section - Makes page sections clickable in edit mode
+// Editable Section - Makes page sections clickable and draggable in edit mode
 // ============================================================================
-// What: Wraps page sections to make them selectable when edit mode is active
-// Why: Allows admins to click on any section to edit its content
-// How: Shows hover outline, highlights selected section, triggers selection
+// What: Wraps page sections to make them selectable and reorderable
+// Why: Allows admins to click on any section to edit, or drag to reorder
+// How: Shows hover outline, highlights selected section, enables drag handles
 
 interface EditableSectionProps {
   sectionKey: string;
@@ -16,13 +21,76 @@ interface EditableSectionProps {
   className?: string;
 }
 
+interface DragHandleProps {
+  listeners: SyntheticListenerMap | undefined;
+  attributes: DraggableAttributes;
+}
+
+// Drag handle icon (grip dots)
+function DragHandle({ listeners, attributes }: DragHandleProps) {
+  return (
+    <button
+      className="absolute -left-3 top-1/2 -translate-y-1/2 p-2 cursor-grab active:cursor-grabbing
+                 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600
+                 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20"
+      data-drag-handle
+      aria-label="Drag to reorder section"
+      {...attributes}
+      {...listeners}
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <circle cx="4" cy="4" r="1.5" />
+        <circle cx="12" cy="4" r="1.5" />
+        <circle cx="4" cy="8" r="1.5" />
+        <circle cx="12" cy="8" r="1.5" />
+        <circle cx="4" cy="12" r="1.5" />
+        <circle cx="12" cy="12" r="1.5" />
+      </svg>
+    </button>
+  );
+}
+
 export default function EditableSection({
   sectionKey,
   label,
   children,
   className = '',
 }: EditableSectionProps) {
-  const { isEditMode, selectedSection, selectSection, pageContent, setSidebarOpen } = useInlineEdit();
+  const {
+    isEditMode,
+    selectedSection,
+    selectSection,
+    pageContent,
+    setSidebarOpen,
+    registerSection,
+    unregisterSection,
+  } = useInlineEdit();
+
+  // Register this section with the context for DndContext
+  useEffect(() => {
+    if (!isEditMode) return;
+    registerSection(sectionKey);
+    return () => unregisterSection(sectionKey);
+  }, [isEditMode, sectionKey, registerSection, unregisterSection]);
+
+  // Setup sortable drag-and-drop
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: sectionKey,
+    disabled: !isEditMode,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
 
   const isSelected = selectedSection?.sectionKey === sectionKey;
 
@@ -55,6 +123,8 @@ export default function EditableSection({
   if (isEditMode) {
     return (
       <div
+        ref={setNodeRef}
+        style={style}
         onClick={handleClick}
         className={`
           group relative cursor-pointer transition-all duration-150
@@ -62,8 +132,11 @@ export default function EditableSection({
             ? 'ring-2 ring-blue-500 ring-offset-4 rounded-xl'
             : 'hover:ring-2 hover:ring-blue-300 hover:ring-offset-4 hover:rounded-xl'
           }
+          ${isDragging ? 'z-50' : ''}
           ${className}
         `}
+        data-editable-section
+        data-section-key={sectionKey}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
@@ -74,6 +147,9 @@ export default function EditableSection({
         }}
         aria-label={`Edit ${label} section`}
       >
+        {/* Drag handle - visible on hover */}
+        <DragHandle listeners={listeners} attributes={attributes} />
+
         {/* Section label - shown when selected or hovered */}
         <div
           className={`

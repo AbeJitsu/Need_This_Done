@@ -1,5 +1,14 @@
 [
   {
+    "hash": "c34abc6",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "c34abc62b61b4f11de774750f3511cfd7cd1b86d:%M",
+    "author": "Abe Reyes",
+    "message": "Docs: Mark drag-and-drop feature as blocked for architecture review",
+    "category": "Documentation",
+    "filesChanged": 3
+  },
+  {
     "hash": "8722558",
     "date": "%Y->- (HEAD -> main)",
     "time": "872255802342328dbe8cc1ada5e8ca9b49a26e1b:%M",

@@ -5,6 +5,20 @@ import { usePathname } from 'next/navigation';
 import { getPageSlugFromPath } from '@/lib/editable-routes';
 import { getDefaultContent } from '@/lib/default-page-content';
 import { getNestedValue, setNestedValue } from '@/lib/object-utils';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 
 // ============================================================================
 // Inline Edit Context - Manage inline editing state for all pages
@@ -126,6 +140,15 @@ interface InlineEditContextType {
   // Get the current value of a field (with pending changes applied)
   getFieldValue: (sectionKey: string, fieldPath: string) => unknown;
 
+  // Reorder sections (for drag-and-drop)
+  reorderSections: ((oldIndex: number, newIndex: number) => void) | null;
+  sectionOrder: string[];
+  setSectionOrder: (order: string[]) => void;
+
+  // Section registration (for DndContext)
+  registerSection: (sectionKey: string) => void;
+  unregisterSection: (sectionKey: string) => void;
+
   // ========== Component-based editing (Puck - legacy) ==========
 
   // Currently selected component (for Puck pages)
@@ -164,6 +187,9 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
   // Component-based editing state (Puck - legacy)
   const [selectedComponent, setSelectedComponent] = useState<ComponentSelection | null>(null);
   const [pageData, setPageData] = useState<Record<string, unknown> | null>(null);
+
+  // Section ordering for drag-and-drop
+  const [sectionOrder, setSectionOrder] = useState<string[]>([]);
 
   // ============================================================================
   // Universal Content Loading
@@ -339,6 +365,62 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     return getNestedValue(pageContent, fullPath);
   }, [pageContent]);
 
+  // Reorder sections (for drag-and-drop)
+  const reorderSections = useCallback((oldIndex: number, newIndex: number) => {
+    setSectionOrder(prev => {
+      const newOrder = [...prev];
+      const [removed] = newOrder.splice(oldIndex, 1);
+      newOrder.splice(newIndex, 0, removed);
+      return newOrder;
+    });
+
+    // Also add to pending changes to track the reorder
+    addPendingChange({
+      sectionKey: '_sectionOrder',
+      fieldPath: 'order',
+      oldValue: sectionOrder,
+      newValue: null, // Will be computed from new state
+    });
+  }, [sectionOrder, addPendingChange]);
+
+  // Section registration for DndContext
+  const registerSection = useCallback((sectionKey: string) => {
+    setSectionOrder(prev => {
+      if (prev.includes(sectionKey)) return prev;
+      return [...prev, sectionKey];
+    });
+  }, []);
+
+  const unregisterSection = useCallback((sectionKey: string) => {
+    setSectionOrder(prev => prev.filter(key => key !== sectionKey));
+  }, []);
+
+  // DndContext sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Require 8px of movement before starting drag
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // Handle drag end
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = sectionOrder.indexOf(active.id as string);
+      const newIndex = sectionOrder.indexOf(over.id as string);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        reorderSections(oldIndex, newIndex);
+      }
+    }
+  }, [sectionOrder, reorderSections]);
+
   const value: InlineEditContextType = {
     isEditMode,
     setEditMode,
@@ -360,6 +442,13 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     setSidebarOpen: setIsSidebarOpen,
     updateField,
     getFieldValue,
+    // Section reordering
+    reorderSections,
+    sectionOrder,
+    setSectionOrder,
+    // Section registration
+    registerSection,
+    unregisterSection,
     // Component-based (Puck - legacy)
     selectedComponent,
     selectComponent,
@@ -367,9 +456,24 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     setPageData,
   };
 
+  // Wrap children with DndContext only when edit mode is active
+  const content = isEditMode ? (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext items={sectionOrder} strategy={verticalListSortingStrategy}>
+        {children}
+      </SortableContext>
+    </DndContext>
+  ) : (
+    children
+  );
+
   return (
     <InlineEditContext.Provider value={value}>
-      {children}
+      {content}
     </InlineEditContext.Provider>
   );
 }

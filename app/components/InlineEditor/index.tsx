@@ -8,6 +8,7 @@ export { default as AdminSidebarToggle } from './AdminSidebarToggle';
 export { default as EditableSection } from './EditableSection';
 export { default as EditableItem } from './EditableItem';
 export { default as EditModeBar } from './EditModeBar';
+export { default as SortableSections } from './SortableSections';
 
 // Universal click-to-edit (Phase 4 - click any text to edit)
 export { default as UniversalClickHandler } from './UniversalClickHandler';

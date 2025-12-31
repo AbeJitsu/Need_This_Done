@@ -50,6 +50,8 @@
       "Bash(touch:*)",
       "Bash(cp:*)",
       "Bash(mv:*)",
+      "Bash(npm install:*)",
+      "Bash(cd app && npm install:*)",
       "Glob",
       "Grep",
       "TodoWrite",

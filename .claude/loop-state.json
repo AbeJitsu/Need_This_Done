@@ -3,7 +3,7 @@
   "startTime": 1767184253,
   "maxHours": 5,
   "maxConsecutiveFailures": 3,
-  "iterationCount": 6,
+  "iterationCount": 9,
   "failureCounts": {},
   "cycleNumber": 1,
   "tasksCompleted": 0
