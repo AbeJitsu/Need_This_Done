@@ -473,7 +473,9 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
 
   return (
     <InlineEditContext.Provider value={value}>
-      {content}
+      <div data-section-order={JSON.stringify(sectionOrder)}>
+        {content}
+      </div>
     </InlineEditContext.Provider>
   );
 }
