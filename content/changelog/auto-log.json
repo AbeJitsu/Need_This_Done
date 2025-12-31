@@ -1,5 +1,32 @@
 [
   {
+    "hash": "2ace75d",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "2ace75d35647ae32320d51ff156c6dc285b4729c:%M",
+    "author": "Abe Reyes",
+    "message": "Test: Migrate E2E tests to use page discovery",
+    "category": "Testing",
+    "filesChanged": 7
+  },
+  {
+    "hash": "fc64906",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "fc64906b80b47297067f96e35ef8cd50b4aaf84a:%M",
+    "author": "Abe Reyes",
+    "message": "Test: Enable and fix drag-drop reorder verification",
+    "category": "Testing",
+    "filesChanged": 2
+  },
+  {
+    "hash": "ae6e5e9",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "ae6e5e965634ef82e76809516c99d5b0b554ab9a:%M",
+    "author": "Abe Reyes",
+    "message": "Test: Use page discovery for drag-drop tests (ETC)",
+    "category": "Testing",
+    "filesChanged": 38
+  },
+  {
     "hash": "2b2bec4",
     "date": "%Y->- (HEAD -> main)",
     "time": "2b2bec49639ee495cfe70a9c3b6e3a5eb1f5e0ca:%M",
