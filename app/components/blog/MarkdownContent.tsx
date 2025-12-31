@@ -141,7 +141,7 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
             </div>
           ),
           thead: ({ children }) => (
-            <thead className="bg-gray-50 dark:bg-gray-800">{children}</thead>
+            <thead className="bg-gray-100 dark:bg-gray-800">{children}</thead>
           ),
           tbody: ({ children }) => <tbody>{children}</tbody>,
           tr: ({ children }) => (

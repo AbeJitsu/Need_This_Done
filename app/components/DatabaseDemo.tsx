@@ -230,10 +230,10 @@ export default function DatabaseDemo() {
           {flowTrace.map((trace, index) => {
             const sourceColor =
               trace.source === 'cache'
-                ? 'bg-orange-50 dark:bg-gray-700 border-orange-200 dark:border-gray-600'
+                ? 'bg-orange-100 dark:bg-gray-700 border-orange-200 dark:border-gray-600'
                 : trace.source === 'database'
-                ? 'bg-green-50 dark:bg-gray-700 border-green-200 dark:border-gray-600'
-                : 'bg-blue-50 dark:bg-gray-700 border-blue-200 dark:border-gray-600';
+                ? 'bg-green-100 dark:bg-gray-700 border-green-200 dark:border-gray-600'
+                : 'bg-blue-100 dark:bg-gray-700 border-blue-200 dark:border-gray-600';
 
             const textColor =
               trace.source === 'cache'
@@ -270,7 +270,7 @@ export default function DatabaseDemo() {
 
       {/* Stats */}
       {savedItems.length > 0 && (
-        <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+        <div className="mb-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-semibold mb-1">
@@ -309,7 +309,7 @@ export default function DatabaseDemo() {
                 key={item.id}
                 className="
                   p-3 rounded-lg
-                  bg-blue-50 dark:bg-gray-700
+                  bg-blue-100 dark:bg-gray-700
                   border border-blue-200 dark:border-gray-600
                   flex items-start justify-between gap-4
                 "

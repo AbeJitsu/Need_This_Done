@@ -528,7 +528,7 @@ export default function CheckoutPage() {
               )}
 
               {/* Payment form */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700/50`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Payment Details
                 </h2>
@@ -654,7 +654,7 @@ export default function CheckoutPage() {
               )}
 
               {/* Contact Information - Inner rectangle 1 */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700/50`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Contact Information
                 </h2>
@@ -696,7 +696,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Shipping Information - Inner rectangle 2 */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700/50`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Shipping Information
                 </h2>

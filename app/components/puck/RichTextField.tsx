@@ -52,7 +52,7 @@ export default function RichTextField({ value, onChange, label }: RichTextFieldP
       <button
         type="button"
         onClick={handleOpen}
-        className="w-full text-left p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-purple-400 dark:hover:border-purple-500 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+        className="w-full text-left p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-purple-400 dark:hover:border-purple-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
       >
         {previewText ? (
           <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3">

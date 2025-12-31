@@ -151,7 +151,7 @@ export default function ContentEditor({
   const pageName = PAGE_DISPLAY_NAMES[slug] || slug;
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+    <div className="h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
       {/* Header Bar */}
       <header className="flex-shrink-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
         <div className="flex items-center justify-between max-w-[1800px] mx-auto">

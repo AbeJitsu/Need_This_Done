@@ -208,7 +208,7 @@ export default function SectionPicker({
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">
         <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
           {filteredSections.length} section{filteredSections.length !== 1 ? 's' : ''} available
         </p>

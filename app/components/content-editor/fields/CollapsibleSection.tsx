@@ -42,7 +42,7 @@ export default function CollapsibleSection({
         onClick={() => setIsOpen(!isOpen)}
         className="
           w-full px-4 py-3 flex items-center justify-between
-          text-left hover:bg-gray-50 dark:hover:bg-gray-700/50
+          text-left hover:bg-gray-100 dark:hover:bg-gray-700
           transition-colors duration-150
         "
       >

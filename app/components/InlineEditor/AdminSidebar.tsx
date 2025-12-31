@@ -1020,7 +1020,7 @@ export default function AdminSidebar() {
                 className={`
                   w-full text-left px-4 py-3 rounded-lg
                   border border-gray-200 dark:border-gray-700
-                  hover:bg-gray-50 dark:hover:bg-gray-800
+                  hover:bg-gray-100 dark:hover:bg-gray-700
                   hover:border-blue-300 dark:hover:border-blue-600
                   transition-all duration-150
                   group
@@ -1065,7 +1065,7 @@ export default function AdminSidebar() {
             className={`
               flex-1 px-4 py-2 rounded-lg text-sm font-medium
               border border-gray-300 dark:border-gray-600
-              hover:bg-gray-50 dark:hover:bg-gray-800
+              hover:bg-gray-100 dark:hover:bg-gray-700
               disabled:opacity-50 disabled:cursor-not-allowed
               transition-colors
             `}

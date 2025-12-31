@@ -93,7 +93,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
       </EditableSection>
 
       {/* Contact Section */}
-      <div className="mt-12 text-center p-8 bg-gray-50 dark:bg-gray-800 rounded-xl">
+      <div className="mt-12 text-center p-8 bg-gray-100 dark:bg-gray-800 rounded-xl">
         <h2 className={`text-xl font-bold ${headingColors.primary} mb-2`}>Still have questions?</h2>
         <p className={`${formInputColors.helper} mb-4`}>
           We are here to help. Reach out and we will get back to you as soon as possible.

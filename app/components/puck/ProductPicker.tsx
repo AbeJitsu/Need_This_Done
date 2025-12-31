@@ -338,7 +338,7 @@ export function ProductField({ value, onChange, label }: ProductFieldProps) {
       {loading ? (
         <div className="h-20 bg-gray-100 dark:bg-gray-700 rounded-lg animate-pulse" />
       ) : product ? (
-        <div className="relative group flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="relative group flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
           {product.images?.[0]?.url ? (
             <div className="relative w-12 h-12 rounded-lg overflow-hidden">
               <Image
@@ -391,7 +391,7 @@ export function ProductField({ value, onChange, label }: ProductFieldProps) {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="w-full h-20 flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-purple-400 dark:hover:border-purple-500 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+          className="w-full h-20 flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-purple-400 dark:hover:border-purple-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         >
           <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />

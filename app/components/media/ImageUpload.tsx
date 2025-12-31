@@ -277,7 +277,7 @@ export default function ImageUpload({
           relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200
           ${isDragging
             ? `border-purple-500 ${softBgColors.purple}`
-            : 'border-gray-300 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500 hover:bg-gray-50 dark:hover:bg-gray-800'
+            : 'border-gray-300 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500 hover:bg-gray-100 dark:hover:bg-gray-800'
           }
         `}
       >
@@ -317,7 +317,7 @@ export default function ImageUpload({
           {uploadingFiles.map(f => (
             <div
               key={f.id}
-              className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+              className="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg"
             >
               {/* Thumbnail or icon */}
               <div className="relative w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden flex-shrink-0">

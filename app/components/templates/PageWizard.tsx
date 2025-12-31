@@ -110,7 +110,7 @@ export default function PageWizard({ onComplete, onCancel }: PageWizardProps) {
     : [];
 
   return (
-    <div className="min-h-[600px] h-[calc(100dvh-72px)] bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
+    <div className="min-h-[600px] h-[calc(100dvh-72px)] bg-gray-100 dark:bg-gray-900 flex flex-col overflow-hidden">
       {/* Header with progress */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex-shrink-0">
         <div className="max-w-2xl mx-auto">
