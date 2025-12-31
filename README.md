@@ -1979,6 +1979,33 @@ Marketing pages support click-to-edit functionality for admins. Click the pencil
 - `AdminSidebar` - Field editor UI
 - Content stored in Supabase `page_content` table
 
+### InlineEditContext API
+
+The `useInlineEdit()` hook provides access to editing state and functions:
+
+```typescript
+const {
+  // State
+  isEditMode,           // boolean - Is edit mode active?
+  pageContent,          // Record<string, unknown> - Current page content
+  pageSlug,             // string | null - Current page slug
+  selectedSection,      // SectionSelection | null - Selected section
+  selectedItem,         // ItemSelection | null - Selected array item
+  isSidebarOpen,        // boolean - Is sidebar visible?
+  hasUnsavedChanges,    // boolean - Are there pending changes?
+
+  // Actions
+  setEditMode,          // (enabled: boolean) => void
+  selectSection,        // (selection: SectionSelection | null) => void
+  selectItem,           // (selection: ItemSelection | null) => void
+  updateField,          // (sectionKey: string, fieldPath: string, newValue: unknown) => void
+  getFieldValue,        // (sectionKey: string, fieldPath: string) => unknown
+  setSidebarOpen,       // (open: boolean) => void
+} = useInlineEdit();
+```
+
+**State Sync Rule**: When updating fields, both `pageContent` AND `selectedSection/selectedItem.content` must stay in sync. The `updateField` function handles this automatically.
+
 > **Deep Dive**: For detailed architecture and data flow diagrams, see [docs/INLINE_EDITING.md](docs/INLINE_EDITING.md).
 
 ---
