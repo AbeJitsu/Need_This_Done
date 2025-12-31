@@ -181,39 +181,30 @@ export default function ContactPage() {
         </EditableSection>
 
         {/* Contact Form */}
-        <Card className="mb-10">
-          {submitStatus === 'success' ? (
+        <EditableSection sectionKey="form" label="Contact Form">
+          <Card className="mb-10">
+            {submitStatus === 'success' ? (
             <div className="text-center py-8">
               <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${iconCircleColors.green.bg} flex items-center justify-center`}>
                 <span className={`text-3xl ${successCheckmarkColors.icon}`} aria-hidden="true">✓</span>
               </div>
               <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
-                We got your message!
+                {content.success.title}
               </h2>
               <p className={`${formInputColors.helper} mb-4`}>
-                Thanks for reaching out. We&apos;re excited to learn more about what you need.
+                {content.success.description}
               </p>
 
               {/* What happens next */}
               <div className={`${alertColors.info.bg} rounded-lg p-4 mb-6 text-left max-w-md mx-auto`}>
-                <h3 className={`font-semibold ${headingColors.primary} mb-2`}>What happens next:</h3>
+                <h3 className={`font-semibold ${headingColors.primary} mb-2`}>{content.success.nextStepsTitle}</h3>
                 <ol className={`text-sm ${formInputColors.helper} space-y-2`}>
-                  <li className="flex items-start gap-2">
-                    <span className={`font-semibold ${titleColors.blue}`}>1.</span>
-                    We&apos;ll review your request within 2 business days
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className={`font-semibold ${titleColors.blue}`}>2.</span>
-                    You&apos;ll receive a personalized quote via email
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className={`font-semibold ${titleColors.blue}`}>3.</span>
-                    Love it?{' '}
-                    <Link href="/get-started" className={`${titleColors.blue} font-medium hover:underline`}>
-                      Pay 50% to start
-                    </Link>
-                    , 50% on delivery
-                  </li>
+                  {content.success.nextSteps.map((step, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <span className={`font-semibold ${titleColors.blue}`}>{index + 1}.</span>
+                      {step}
+                    </li>
+                  ))}
                 </ol>
               </div>
 
@@ -222,7 +213,7 @@ export default function ContactPage() {
                 onClick={() => setSubmitStatus('idle')}
                 className={`${titleColors.blue} font-medium hover:underline`}
               >
-                Send another message
+                {content.success.sendAnotherLink}
               </button>
             </div>
           ) : (
@@ -231,7 +222,7 @@ export default function ContactPage() {
                 {/* Name */}
                 <div>
                   <label htmlFor="name" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                    What should we call you?
+                    {content.form.nameField.label}
                   </label>
                   <input
                     type="text"
@@ -241,14 +232,14 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
-                    placeholder="Your name"
+                    placeholder={content.form.nameField.placeholder}
                   />
                 </div>
 
                 {/* Email */}
                 <div>
                   <label htmlFor="email" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                    Where can we reach you?
+                    {content.form.emailField.label}
                   </label>
                   <input
                     type="email"
@@ -258,7 +249,7 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
-                    placeholder="your@email.com"
+                    placeholder={content.form.emailField.placeholder}
                   />
                 </div>
               </div>
@@ -267,7 +258,10 @@ export default function ContactPage() {
                 {/* Company */}
                 <div>
                   <label htmlFor="company" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                    Company <span className={`${formInputColors.helper} font-normal`}>(if applicable)</span>
+                    {content.form.companyField.label}{' '}
+                    {content.form.companyField.optional && (
+                      <span className={`${formInputColors.helper} font-normal`}>{content.form.companyField.optional}</span>
+                    )}
                   </label>
                   <input
                     type="text"
@@ -276,14 +270,14 @@ export default function ContactPage() {
                     value={formData.company}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
-                    placeholder="Where you work"
+                    placeholder={content.form.companyField.placeholder}
                   />
                 </div>
 
                 {/* Service Interest */}
                 <div>
                   <label htmlFor="service" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                    What kind of help do you need?
+                    {content.form.serviceField.label}
                   </label>
                   <select
                     id="service"
@@ -292,13 +286,13 @@ export default function ContactPage() {
                     onChange={handleChange}
                     className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
                   >
-                    <option value="">Pick one (or skip this)</option>
+                    <option value="">{content.form.serviceField.defaultOption}</option>
                     {services.map((service, index) => (
                       <option key={index} value={service.title}>
                         {service.title}
                       </option>
                     ))}
-                    <option value="Other">Other / Not Sure</option>
+                    <option value="Other">{content.form.serviceField.otherOption}</option>
                   </select>
                 </div>
               </div>
@@ -306,7 +300,7 @@ export default function ContactPage() {
               {/* Message */}
               <div>
                 <label htmlFor="message" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                  Tell us what&apos;s on your mind
+                  {content.form.messageField.label}
                 </label>
                 <textarea
                   id="message"
@@ -316,14 +310,15 @@ export default function ContactPage() {
                   value={formData.message}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all resize-none`}
-                  placeholder="What's the task? Any details that would help us understand what you're looking for?"
+                  placeholder={content.form.messageField.placeholder}
                 />
               </div>
 
               {/* File Attachments */}
               <div>
                 <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                  Have files to share? <span className={`${formInputColors.helper} font-normal`}>(totally optional)</span>
+                  {content.form.fileUpload.label}{' '}
+                  <span className={`${formInputColors.helper} font-normal`}>{content.form.fileUpload.optional}</span>
                 </label>
                 <div className="space-y-3">
                   {/* File Input Area */}
@@ -343,9 +338,9 @@ export default function ContactPage() {
                     />
                     <div className={formInputColors.helper}>
                       <span className="text-2xl block mb-2" aria-hidden="true">📎</span>
-                      <span className="text-sm">Drop files here or click to browse</span>
+                      <span className="text-sm">{content.form.fileUpload.dropText}</span>
                       <p className={`text-xs mt-1 ${formInputColors.helper}`}>
-                        Images, PDFs, or docs. Up to 3 files, 5MB each
+                        {content.form.fileUpload.helpText}
                       </p>
                     </div>
                   </div>
@@ -371,7 +366,7 @@ export default function ContactPage() {
                             onClick={() => removeFile(index)}
                             className={`${dangerColors.text} ${dangerColors.hoverStrong} ml-2 flex-shrink-0`}
                           >
-                            Remove
+                            {content.form.fileUpload.removeButton}
                           </button>
                         </div>
                       ))}
@@ -389,7 +384,7 @@ export default function ContactPage() {
               {submitStatus === 'error' && (
                 <div className={`p-4 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
                   <p className={`${formValidationColors.error} text-sm`}>
-                    Something went wrong. Please try again, or reach out to us another way - we're here to help.
+                    {content.error.message}
                   </p>
                 </div>
               )}
@@ -401,12 +396,13 @@ export default function ContactPage() {
                   type="submit"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Sending...' : 'Start the Conversation'}
+                  {isSubmitting ? content.form.submitButton.submitting : content.form.submitButton.default}
                 </Button>
               </div>
             </form>
           )}
-        </Card>
+          </Card>
+        </EditableSection>
 
         {/* Alternative Contact */}
         <EditableSection sectionKey="cta" label="Call to Action">

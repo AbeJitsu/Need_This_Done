@@ -253,9 +253,40 @@ export interface HomePageContent {
 }
 
 // --- Contact Page ---
+export interface ContactFormField {
+  label: string;
+  placeholder: string;
+  optional?: string; // e.g., "(if applicable)"
+}
+
 export interface ContactPageContent {
   header: PageHeader;
   quickLink: { text: string; href: string };
+  form: {
+    nameField: ContactFormField;
+    emailField: ContactFormField;
+    companyField: ContactFormField;
+    serviceField: ContactFormField & { defaultOption: string; otherOption: string };
+    messageField: ContactFormField;
+    fileUpload: {
+      label: string;
+      optional: string;
+      dropText: string;
+      helpText: string;
+      removeButton: string;
+    };
+    submitButton: { default: string; submitting: string };
+  };
+  success: {
+    title: string;
+    description: string;
+    nextStepsTitle: string;
+    nextSteps: string[];
+    sendAnotherLink: string;
+  };
+  error: {
+    message: string;
+  };
   cta: CTASection;
 }
 
@@ -727,6 +758,43 @@ export const PAGE_CONFIGS = {
         description: "Tell us what you need help with and we'll send you a personalized quote within 2 business days. No commitment, no spam. Just a friendly estimate so you know exactly what to expect.",
       },
       quickLink: { text: 'Need help now? Book a quick consultation →', href: '/shop' },
+      form: {
+        nameField: { label: 'What should we call you?', placeholder: 'Your name' },
+        emailField: { label: 'Where can we reach you?', placeholder: 'your@email.com' },
+        companyField: { label: 'Company', placeholder: 'Where you work', optional: '(if applicable)' },
+        serviceField: {
+          label: 'What kind of help do you need?',
+          placeholder: '',
+          defaultOption: 'Pick one (or skip this)',
+          otherOption: 'Other / Not Sure',
+        },
+        messageField: {
+          label: "Tell us what's on your mind",
+          placeholder: "What's the task? Any details that would help us understand what you're looking for?",
+        },
+        fileUpload: {
+          label: 'Have files to share?',
+          optional: '(totally optional)',
+          dropText: 'Drop files here or click to browse',
+          helpText: 'Images, PDFs, or docs. Up to 3 files, 5MB each',
+          removeButton: 'Remove',
+        },
+        submitButton: { default: 'Start the Conversation', submitting: 'Sending...' },
+      },
+      success: {
+        title: 'We got your message!',
+        description: "Thanks for reaching out. We're excited to learn more about what you need.",
+        nextStepsTitle: 'What happens next:',
+        nextSteps: [
+          "We'll review your request within 2 business days",
+          "You'll receive a personalized quote via email",
+          'Love it? Pay 50% to start, 50% on delivery',
+        ],
+        sendAnotherLink: 'Send another message',
+      },
+      error: {
+        message: "Something went wrong. Please try again, or reach out to us another way - we're here to help.",
+      },
       cta: {
         title: 'Want to learn more first?',
         description: '',

@@ -17,6 +17,7 @@ export type {
   PricingTier,
   PricingCtaPath,
   PricingPageContent,
+  ContactFormField,
   FAQItem,
   FAQPageContent,
   ExpectationItem,
