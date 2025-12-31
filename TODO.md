@@ -71,6 +71,11 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
 
+**Card Alignment Fix** ✅ (Dec 31, 2025)
+- Fixed pricing CTA cards not aligning buttons consistently
+- Added items-stretch to grids + h-full through EditableItem wrappers
+- Ensures buttons align regardless of content length
+
 **Guide Page Cleanup** ✅ (Dec 31, 2025)
 - Redesign with visual hierarchy, icons, grouped sections
 - Cycling accent colors (green, blue, purple, gold)
