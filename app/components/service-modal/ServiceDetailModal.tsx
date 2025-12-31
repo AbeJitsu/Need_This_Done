@@ -12,11 +12,10 @@ import {
   iconButtonColors,
   solidButtonColors,
   outlineButtonColors,
-  AccentColor,
 } from '@/lib/colors';
 import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
 import { CloseIcon } from '@/components/ui/icons';
-import type { ServiceType } from '@/lib/service-modal-content';
+import { serviceColors } from '@/lib/service-colors';
 
 // ============================================================================
 // Service Detail Modal - Teaser Format
@@ -24,13 +23,6 @@ import type { ServiceType } from '@/lib/service-modal-content';
 // What: Compact overlay modal with brief service preview
 // Why: Sparks curiosity and drives users to the services page for full details
 // How: Uses ServiceModalContext for state, shows headline + 3 bullets + 2 CTAs
-
-// Map service types to accent colors
-const serviceColors: Record<ServiceType, AccentColor> = {
-  'virtual-assistant': 'green',
-  'data-documents': 'blue',
-  'website-services': 'purple',
-};
 
 export default function ServiceDetailModal() {
   const { isOpen, activeService, activeServiceType, closeModal } = useServiceModal();
