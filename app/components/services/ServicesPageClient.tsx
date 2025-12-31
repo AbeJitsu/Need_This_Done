@@ -9,7 +9,7 @@ import ServiceDetailModal from '@/components/service-modal/ServiceDetailModal';
 import ScenarioMatcher from '@/components/services/ScenarioMatcher';
 import ServiceComparisonTable from '@/components/services/ServiceComparisonTable';
 import ServiceDeepDive from '@/components/services/ServiceDeepDive';
-import { EditableSection, EditableItem } from '@/components/InlineEditor';
+import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { ServicesPageContent } from '@/lib/page-content-types';
 import {
@@ -89,15 +89,22 @@ export default function ServicesPageClient({ content: initialContent }: Services
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6 mb-10">
+            <SortableItemsWrapper
+              sectionKey="chooseYourPath"
+              arrayField="paths"
+              itemIds={content.chooseYourPath.paths.map((_, i) => `path-${i}`)}
+              className="grid md:grid-cols-2 gap-6 mb-10"
+            >
               {content.chooseYourPath.paths.map((path, index) => (
                 <EditableItem
-                  key={index}
+                  key={`path-${index}`}
                   sectionKey="chooseYourPath"
                   arrayField="paths"
                   index={index}
                   label={path.title}
                   content={path as unknown as Record<string, unknown>}
+                  sortable
+                  sortId={`path-${index}`}
                 >
                   <Card hoverColor={path.hoverColor} hoverEffect="lift">
                     <div className="p-8">
@@ -136,7 +143,7 @@ export default function ServicesPageClient({ content: initialContent }: Services
                   </Card>
                 </EditableItem>
               ))}
-            </div>
+            </SortableItemsWrapper>
           </EditableSection>
         )}
 
@@ -148,7 +155,12 @@ export default function ServicesPageClient({ content: initialContent }: Services
             >
               {content.expectationsTitle}
             </h2>
-            <div className="grid md:grid-cols-2 gap-6">
+            <SortableItemsWrapper
+              sectionKey="expectations"
+              arrayField="expectations"
+              itemIds={content.expectations.map((_, i) => `expect-${i}`)}
+              className="grid md:grid-cols-2 gap-6"
+            >
               {content.expectations.map((item, index) => {
                 const itemContent = (
                   <>
@@ -177,12 +189,14 @@ export default function ServicesPageClient({ content: initialContent }: Services
                 if (item.link) {
                   return (
                     <EditableItem
-                      key={index}
+                      key={`expect-${index}`}
                       sectionKey="expectations"
-                      arrayField=""
+                      arrayField="expectations"
                       index={index}
                       label={item.title}
                       content={item as unknown as Record<string, unknown>}
+                      sortable
+                      sortId={`expect-${index}`}
                     >
                       <Link href={item.link.href} className={`flex gap-4 group rounded-lg ${focusRingClasses.blue}`}>
                         {itemContent}
@@ -193,12 +207,14 @@ export default function ServicesPageClient({ content: initialContent }: Services
 
                 return (
                   <EditableItem
-                    key={index}
+                    key={`expect-${index}`}
                     sectionKey="expectations"
-                    arrayField=""
+                    arrayField="expectations"
                     index={index}
                     label={item.title}
                     content={item as unknown as Record<string, unknown>}
+                    sortable
+                    sortId={`expect-${index}`}
                   >
                     <div className="flex gap-4">
                       {itemContent}
@@ -206,7 +222,7 @@ export default function ServicesPageClient({ content: initialContent }: Services
                   </EditableItem>
                 );
               })}
-            </div>
+            </SortableItemsWrapper>
           </Card>
         </EditableSection>
       </div>

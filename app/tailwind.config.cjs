@@ -69,6 +69,10 @@ const config = {
     // Hover text colors - dark mode (white for all, plus specific shades)
     'dark:hover:text-white', 'dark:hover:text-gold-100', 'dark:hover:text-teal-100',
 
+    // Group hover text colors - for parent hover effects (light mode 500, dark mode 300)
+    'group-hover:text-green-500', 'group-hover:text-blue-500', 'group-hover:text-purple-500', 'group-hover:text-gold-500',
+    'dark:group-hover:text-green-300', 'dark:group-hover:text-blue-300', 'dark:group-hover:text-purple-300', 'dark:group-hover:text-gold-300',
+
     // Hover border colors - light mode
     'hover:border-purple-600', 'hover:border-blue-600', 'hover:border-green-600', 'hover:border-gold-600', 'hover:border-teal-600', 'hover:border-gray-600', 'hover:border-red-600',
     'hover:border-gold-700', 'hover:border-teal-700',
@@ -85,11 +89,17 @@ const config = {
     'hover:border-l-purple-600', 'hover:border-l-blue-600', 'hover:border-l-green-600',
     'dark:hover:border-l-purple-300', 'dark:hover:border-l-blue-300', 'dark:hover:border-l-green-300',
 
-    // Card hover colors - light mode (for Card component)
+    // Card hover colors - light mode 500 (for Card component)
+    'hover:border-purple-500', 'hover:border-blue-500', 'hover:border-green-500',
+    'hover:border-gold-500', 'hover:border-teal-500', 'hover:border-gray-500', 'hover:border-red-500',
+    // Legacy card hover colors (keep for backward compatibility)
     'hover:border-purple-400', 'hover:border-blue-400', 'hover:border-green-400',
     'hover:border-gold-400', 'hover:border-teal-400', 'hover:border-gray-400',
 
-    // Card hover colors - dark mode
+    // Card hover colors - dark mode 300 (lighter on dark backgrounds)
+    'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300',
+    'dark:hover:border-gold-300', 'dark:hover:border-teal-300', 'dark:hover:border-gray-300', 'dark:hover:border-red-300',
+    // Legacy dark card hover colors (keep for backward compatibility)
     'dark:hover:border-purple-500', 'dark:hover:border-blue-500', 'dark:hover:border-green-500',
     'dark:hover:border-gold-500', 'dark:hover:border-teal-500', 'dark:hover:border-gray-500',
 

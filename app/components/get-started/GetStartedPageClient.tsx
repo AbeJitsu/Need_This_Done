@@ -4,7 +4,7 @@ import { useState } from 'react';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { EditableSection, EditableItem } from '@/components/InlineEditor';
+import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { GetStartedPageContent } from '@/lib/page-content-types';
 import {
@@ -176,15 +176,22 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
 
       {/* Two Main Paths */}
       <EditableSection sectionKey="paths" label="Path Options">
-        <div className="grid md:grid-cols-2 gap-6 mb-10">
+        <SortableItemsWrapper
+          sectionKey="paths"
+          arrayField="paths"
+          itemIds={content.paths.map((_, i) => `path-${i}`)}
+          className="grid md:grid-cols-2 gap-6 mb-10"
+        >
           {content.paths.map((path, index) => (
             <EditableItem
-              key={index}
+              key={`path-${index}`}
               sectionKey="paths"
               arrayField="paths"
               index={index}
               label={path.title}
               content={path as unknown as Record<string, unknown>}
+              sortable
+              sortId={`path-${index}`}
             >
               <Card hoverColor={path.hoverColor} hoverEffect="lift" className="h-full">
                 <div className="p-8 h-full grid grid-rows-[auto_auto_auto_1fr_auto]">
@@ -224,7 +231,7 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
               </Card>
             </EditableItem>
           ))}
-        </div>
+        </SortableItemsWrapper>
       </EditableSection>
 
       {/* Already Have a Quote Section */}

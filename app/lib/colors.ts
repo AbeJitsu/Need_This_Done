@@ -63,9 +63,9 @@ export type AccentVariant = 'purple' | 'blue' | 'green' | 'gold' | 'teal' | 'gra
 export const shadowClasses = {
   // Subtle shadow for cards at rest
   card: 'shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:shadow-[0_0_8px_0px_rgba(255,255,255,0.05)]',
-  // Elevated shadow for cards on hover
-  cardHover: 'hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]',
-  // Lift effect for interactive cards
+  // Elevated shadow for cards on hover (consistent with lift effect)
+  cardHover: 'hover:shadow-xl',
+  // Lift effect for interactive cards (shadow + translate)
   lift: 'hover:shadow-xl hover:-translate-y-1 transition-all duration-300',
   // Large shadow for modals and overlays
   modal: 'shadow-2xl',
@@ -261,13 +261,13 @@ export const checkmarkColors: Record<AccentColor, {
 // ============================================================================
 // Centralized hover border colors for cards with color accents
 export const cardHoverColors: Record<AccentVariant, string> = {
-  purple: 'hover:border-purple-400 dark:hover:border-purple-500',
-  blue: 'hover:border-blue-400 dark:hover:border-blue-500',
-  green: 'hover:border-green-400 dark:hover:border-green-500',
-  gold: 'hover:border-gold-400 dark:hover:border-gold-500',
-  teal: 'hover:border-teal-400 dark:hover:border-teal-500',
-  gray: 'hover:border-gray-400 dark:hover:border-gray-500',
-  red: 'hover:border-red-400 dark:hover:border-red-500',
+  green: 'hover:border-green-500 dark:hover:border-green-300',
+  blue: 'hover:border-blue-500 dark:hover:border-blue-300',
+  purple: 'hover:border-purple-500 dark:hover:border-purple-300',
+  gold: 'hover:border-gold-500 dark:hover:border-gold-300',
+  teal: 'hover:border-teal-500 dark:hover:border-teal-300',
+  gray: 'hover:border-gray-500 dark:hover:border-gray-300',
+  red: 'hover:border-red-500 dark:hover:border-red-300',
 };
 
 // ============================================================================
@@ -503,9 +503,10 @@ export const linkHoverColors = {
 // ============================================================================
 // Used for text that changes color when a parent with group class is hovered
 export const groupHoverColors = {
-  blue: 'group-hover:text-blue-600 dark:group-hover:text-blue-300',
-  purple: 'group-hover:text-purple-600 dark:group-hover:text-purple-300',
-  gold: 'group-hover:text-gold-600 dark:group-hover:text-gold-300',
+  green: 'group-hover:text-green-500 dark:group-hover:text-green-300',
+  blue: 'group-hover:text-blue-500 dark:group-hover:text-blue-300',
+  purple: 'group-hover:text-purple-500 dark:group-hover:text-purple-300',
+  gold: 'group-hover:text-gold-500 dark:group-hover:text-gold-300',
 };
 
 // ============================================================================

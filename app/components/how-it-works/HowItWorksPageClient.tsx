@@ -6,7 +6,7 @@ import Card from '@/components/Card';
 import CTASection from '@/components/CTASection';
 import CircleBadge from '@/components/CircleBadge';
 import Button from '@/components/Button';
-import { EditableSection, EditableItem } from '@/components/InlineEditor';
+import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { HowItWorksPageContent } from '@/lib/page-content-types';
 import {
@@ -49,15 +49,22 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
         <EditableSection sectionKey="trustBadges" label="Trust Badges">
           <Card hoverColor="green" hoverEffect="glow" className="mb-10">
             <div className="flex justify-center">
-              <div className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-6 md:gap-10">
+              <SortableItemsWrapper
+                sectionKey="trustBadges"
+                arrayField="trustBadges"
+                itemIds={content.trustBadges.map((_, i) => `badge-${i}`)}
+                className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-6 md:gap-10"
+              >
                 {content.trustBadges.map((badge, index) => (
                   <EditableItem
-                    key={index}
+                    key={`badge-${index}`}
                     sectionKey="trustBadges"
-                    arrayField=""
+                    arrayField="trustBadges"
                     index={index}
                     label={badge.text}
                     content={badge as unknown as Record<string, unknown>}
+                    sortable
+                    sortId={`badge-${index}`}
                   >
                     <div className="flex items-center gap-3">
                       <CheckmarkCircle color="green" size="lg" showBorder />
@@ -72,7 +79,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
                     </div>
                   </EditableItem>
                 ))}
-              </div>
+              </SortableItemsWrapper>
             </div>
           </Card>
         </EditableSection>
@@ -109,20 +116,27 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
         )}
 
         {/* Steps 2-4 - Horizontal flow showing progression */}
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
+        <SortableItemsWrapper
+          sectionKey="steps"
+          arrayField="steps"
+          itemIds={remainingSteps.map((_, i) => `step-${i + 1}`)}
+          className="grid md:grid-cols-3 gap-6 mb-10"
+        >
           {remainingSteps.map((step, index) => (
             <EditableItem
-              key={step.number}
+              key={`step-${index + 1}`}
               sectionKey="steps"
-              arrayField=""
+              arrayField="steps"
               index={index + 1}
               label={step.title}
               content={step as unknown as Record<string, unknown>}
+              sortable
+              sortId={`step-${index + 1}`}
             >
               <StepCard {...step} />
             </EditableItem>
           ))}
-        </div>
+        </SortableItemsWrapper>
       </EditableSection>
 
       {/* Timeline Note */}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import PageHeader from '@/components/PageHeader';
-import { EditableSection, EditableItem } from '@/components/InlineEditor';
+import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { TermsPageContent } from '@/lib/page-content-types';
 import {
@@ -61,15 +61,22 @@ export default function TermsPageClient({ initialContent }: TermsPageClientProps
 
       {/* Dynamic Sections - All from JSON and Editable */}
       <EditableSection sectionKey="sections" label="Content Sections">
-        <div className="space-y-10">
+        <SortableItemsWrapper
+          sectionKey="sections"
+          arrayField="sections"
+          itemIds={content.sections.map((_, i) => `section-${i}`)}
+          className="space-y-10"
+        >
           {content.sections.map((section, index) => (
             <EditableItem
-              key={index}
+              key={`section-${index}`}
               sectionKey="sections"
               arrayField="sections"
               index={index}
               label={section.title}
               content={section as unknown as Record<string, unknown>}
+              sortable
+              sortId={`section-${index}`}
             >
               <section className="mb-10">
                 <h2 className={`text-2xl font-semibold mb-4 ${headingColors.primary}`}>
@@ -81,7 +88,7 @@ export default function TermsPageClient({ initialContent }: TermsPageClientProps
               </section>
             </EditableItem>
           ))}
-        </div>
+        </SortableItemsWrapper>
       </EditableSection>
 
       {/* Contact Section */}

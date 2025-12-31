@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
-import { EditableSection, EditableItem } from '@/components/InlineEditor';
+import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import {
   formInputColors,
@@ -13,6 +13,7 @@ import {
   groupHoverColors,
   accentColors,
   cardHoverColors,
+  shadowClasses,
   linkColors,
   linkHoverColors,
   linkFontWeight,
@@ -49,22 +50,29 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           <p className={`text-xl ${formInputColors.helper} leading-relaxed mb-6 max-w-3xl mx-auto`}>
             {content.hero.description}
           </p>
-          <div className="flex flex-wrap gap-4 justify-center">
+          <SortableItemsWrapper
+            sectionKey="hero"
+            arrayField="buttons"
+            itemIds={content.hero.buttons.map((_, i) => `hero-btn-${i}`)}
+            className="flex flex-wrap gap-4 justify-center"
+          >
             {content.hero.buttons.map((button, index) => (
               <EditableItem
-                key={index}
+                key={`hero-btn-${index}`}
                 sectionKey="hero"
                 arrayField="buttons"
                 index={index}
                 label={button.text}
                 content={button as unknown as Record<string, unknown>}
+                sortable
+                sortId={`hero-btn-${index}`}
               >
                 <Button variant={button.variant} href={button.href}>
                   {button.text}
                 </Button>
               </EditableItem>
             ))}
-          </div>
+          </SortableItemsWrapper>
         </div>
       </EditableSection>
 
@@ -73,21 +81,28 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
         <div className="mb-10">
           <Link href={content.services.linkHref} className="block group">
             <h2
-              className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center ${groupHoverColors.blue} transition-colors`}
+              className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center ${groupHoverColors.green} transition-colors`}
             >
               {content.services.title}{' '}
               <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
             </h2>
           </Link>
-          <div className="grid lg:grid-cols-3 gap-6">
+          <SortableItemsWrapper
+            sectionKey="services"
+            arrayField="cards"
+            itemIds={content.services.cards.map((_, i) => `service-${i}`)}
+            className="grid lg:grid-cols-3 gap-6"
+          >
             {content.services.cards.map((service, index) => (
               <EditableItem
-                key={index}
+                key={`service-${index}`}
                 sectionKey="services"
                 arrayField="cards"
                 index={index}
                 label={service.title}
                 content={service as unknown as Record<string, unknown>}
+                sortable
+                sortId={`service-${index}`}
               >
                 <ServiceCardWithModal
                   title={service.title}
@@ -99,7 +114,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 />
               </EditableItem>
             ))}
-          </div>
+          </SortableItemsWrapper>
           <p className={`text-center mt-4 ${formInputColors.helper}`}>
             <Link
               href={content.services.linkHref}
@@ -117,7 +132,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           <div className="mb-10">
             <Link href={content.consultations.linkHref} className="block group">
               <h2
-                className={`text-3xl font-bold ${headingColors.primary} mb-2 text-center ${groupHoverColors.purple} transition-colors`}
+                className={`text-3xl font-bold ${headingColors.primary} mb-2 text-center ${groupHoverColors.blue} transition-colors`}
               >
                 {content.consultations.title}{' '}
                 <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
@@ -126,19 +141,26 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             <p className={`text-center ${formInputColors.helper} mb-6`}>
               {content.consultations.description}
             </p>
-            <div className="grid md:grid-cols-3 gap-4">
+            <SortableItemsWrapper
+              sectionKey="consultations"
+              arrayField="options"
+              itemIds={content.consultations.options.map((_, i) => `consult-${i}`)}
+              className="grid md:grid-cols-3 gap-4"
+            >
               {content.consultations.options.map((option, index) => (
                 <EditableItem
-                  key={index}
+                  key={`consult-${index}`}
                   sectionKey="consultations"
                   arrayField="options"
                   index={index}
                   label={option.name}
                   content={option as unknown as Record<string, unknown>}
+                  sortable
+                  sortId={`consult-${index}`}
                 >
                   <Link
                     href={content.consultations!.linkHref}
-                    className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 ${accentColors[option.color].hoverBorder} hover:shadow-lg transition-all duration-300 text-center ${focusRingClasses[option.color as keyof typeof focusRingClasses] || focusRingClasses.blue}`}
+                    className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 ${accentColors[option.color].hoverBorder} ${shadowClasses.cardHover} transition-all duration-300 text-center ${focusRingClasses[option.color as keyof typeof focusRingClasses] || focusRingClasses.blue}`}
                   >
                     <div className={`text-2xl font-bold ${accentColors[option.color].text} mb-1`}>
                       {option.price}
@@ -149,7 +171,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   </Link>
                 </EditableItem>
               ))}
-            </div>
+            </SortableItemsWrapper>
             <p className={`text-center mt-4 ${formInputColors.helper} font-medium hover:underline`}>
               <Link href={content.consultations.linkHref} className={`${focusRingClasses.purple} rounded`}>
                 {content.consultations.linkText}
@@ -163,20 +185,27 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       <EditableSection sectionKey="processPreview" label="Process Preview">
         <Link
           href="/how-it-works"
-          className={`block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 ${cardHoverColors.blue} hover:shadow-xl active:scale-98 group ${focusRingClasses.blue}`}
+          className={`block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 ${cardHoverColors.purple} ${shadowClasses.cardHover} active:scale-98 group ${focusRingClasses.purple}`}
         >
           <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center transition-colors`}>
             {content.processPreview.title}
           </h2>
-          <div className="grid md:grid-cols-4 gap-6 text-center">
+          <SortableItemsWrapper
+            sectionKey="processPreview"
+            arrayField="steps"
+            itemIds={content.processPreview.steps.map((_, i) => `step-${i}`)}
+            className="grid md:grid-cols-4 gap-6 text-center"
+          >
             {content.processPreview.steps.map((step, index) => (
               <EditableItem
-                key={index}
+                key={`step-${index}`}
                 sectionKey="processPreview"
                 arrayField="steps"
                 index={index}
                 label={step.title}
                 content={step as unknown as Record<string, unknown>}
+                sortable
+                sortId={`step-${index}`}
               >
                 <div>
                   <div className="flex justify-center mb-3">
@@ -187,7 +216,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 </div>
               </EditableItem>
             ))}
-          </div>
+          </SortableItemsWrapper>
           <p className={`text-center mt-6 ${formInputColors.helper} font-medium group-hover:underline`}>
             {content.processPreview.linkText}
           </p>
@@ -203,22 +232,29 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           <p className={`text-lg ${formInputColors.helper} mb-6 max-w-2xl mx-auto`}>
             {content.cta.description}
           </p>
-          <div className="flex flex-wrap gap-4 justify-center mb-6">
+          <SortableItemsWrapper
+            sectionKey="cta"
+            arrayField="buttons"
+            itemIds={content.cta.buttons.map((_, i) => `cta-btn-${i}`)}
+            className="flex flex-wrap gap-4 justify-center mb-6"
+          >
             {content.cta.buttons.map((button, index) => (
               <EditableItem
-                key={index}
+                key={`cta-btn-${index}`}
                 sectionKey="cta"
                 arrayField="buttons"
                 index={index}
                 label={button.text}
                 content={button as unknown as Record<string, unknown>}
+                sortable
+                sortId={`cta-btn-${index}`}
               >
                 <Button variant={button.variant} href={button.href}>
                   {button.text}
                 </Button>
               </EditableItem>
             ))}
-          </div>
+          </SortableItemsWrapper>
           {content.cta.footer && (
             <p className={`${formInputColors.helper}`}>
               {content.cta.footer}{' '}
