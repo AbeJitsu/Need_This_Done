@@ -80,10 +80,10 @@ All 75 occurrences in 36 files fixed:
 - [x] Re-run scanner: verified 0 violations
 - [ ] Add ESLint rule to prevent new hardcoded dark: classes (future)
 
-**Dashboard Layout Issues**
-- [ ] Fix dashboard grid layout - 6 items on top row + 1 left-aligned on second row looks bad
-- [ ] Consider 3x3 grid, 4x2 grid, or responsive breakpoints for better visual balance
-- [ ] Ensure cards are evenly distributed with consistent spacing
+**Dashboard Layout Issues** ✅ FIXED
+- [x] Fix dashboard grid layout - changed from 6-col to 4-col grid, added Analytics link for 8 items (2x4)
+- [x] Consider 3x3 grid, 4x2 grid - went with 4x2 for clean 2 rows at desktop
+- [x] Ensure cards are evenly distributed - 8 items in 4 columns = balanced grid
 
 **Replace Orange with Gold** (Dec 30, 2025)
 ```

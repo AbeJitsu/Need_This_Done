@@ -1,5 +1,14 @@
 [
   {
+    "hash": "06d68e8",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "06d68e806817cf0c226fdf51dde8d7a385aeae2f:%M",
+    "author": "Abe Reyes",
+    "message": "Add changelog link to site footer",
+    "category": "Other",
+    "filesChanged": 4
+  },
+  {
     "hash": "f67fb52",
     "date": "%Y->- (HEAD -> main)",
     "time": "f67fb5215b559e8c026dd034121bf8ccdc1fafaf:%M",
