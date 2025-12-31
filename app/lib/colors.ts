@@ -87,11 +87,18 @@ export const focusRingClasses = {
 };
 
 // ============================================================================
-// Accent Colors - Unified styling for Button, CircleBadge, and Navigation
+// Accent Colors - GHOST/OUTLINE style (light bg, colored text)
 // ============================================================================
-// Single source of truth for all accent-colored interactive elements.
-// Light mode: Light bg (-100), text (-600), hover (-700), medium border (-500)
+// For badges, chips, and outline-style buttons.
+// Light mode: Light pastel bg (-100), colored text (-600)
 // Dark mode: Vibrant bg (-500), white text for 4.5:1+ contrast
+//
+// WHEN TO USE:
+//   - CircleBadge, StatusBadge, chips
+//   - Outline/ghost button variants
+//   - Tags and pills
+//
+// For SOLID filled buttons (dark bg + white text), use solidButtonColors instead.
 //
 // Usage: Import and spread in className, e.g.:
 //   ${accentColors.orange.bg} ${accentColors.orange.text} ${accentColors.orange.border}
@@ -641,16 +648,6 @@ export const cardBorderColors = {
 };
 
 // ============================================================================
-// Primary Button Colors - For primary action buttons
-// ============================================================================
-export const primaryButtonColors = {
-  bg: 'bg-blue-600 dark:bg-blue-500',
-  hover: 'hover:bg-blue-700 dark:hover:bg-blue-600',
-  text: 'text-white',
-  focus: 'focus:ring-2 focus:ring-blue-500',
-};
-
-// ============================================================================
 // Icon Button Colors - For icon-only buttons in headers and toolbars
 // ============================================================================
 export const iconButtonColors = {
@@ -846,11 +843,18 @@ export const gradientColors = {
 };
 
 // ============================================================================
-// Solid Button Colors - For solid background action buttons
+// Solid Button Colors - FILLED style (dark bg, white text)
 // ============================================================================
-// All accent color variants with background, hover, text, and focus ring states
+// For primary action buttons, CTAs, and buttons that need to stand out.
 // Light mode: -600 shade for backgrounds, -700 on hover
 // Dark mode: -600 shade for backgrounds (same as light for 4.5:1+ contrast with white)
+//
+// WHEN TO USE:
+//   - Primary action buttons ("Get Started", "Submit", "Send")
+//   - CTAs that need to stand out
+//   - Modal confirm buttons
+//
+// For GHOST/OUTLINE style (light bg, colored text), use accentColors instead.
 export const solidButtonColors: Record<AccentVariant, {
   bg: string;
   hover: string;

@@ -56,9 +56,8 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [x] Update .claude/rules/colors.md with anchor system documentation
 - [x] Test buttons in light and dark mode
 - [x] Lighten text colors to WCAG AA minimum (-600 base, -700 hover)
-- [ ] Consolidate colors.ts: remove duplicate systems (accentColors vs solidButtonColors)
+- [x] Consolidate colors.ts: remove duplicate systems (removed primaryButtonColors, documented accentColors vs solidButtonColors)
 - [ ] Add sectionColors for page backgrounds (neutral pattern)
-- [ ] Document which pattern to use when (buttons=inversion, sections=neutral)
 
 **Eliminate Hardcoded Colors** ✅ DONE (Dec 30, 2025)
 ```
@@ -192,8 +191,7 @@ All 75 occurrences in 36 files fixed:
 - [ ] Update README component count (says 87, actually 150+)
 - [ ] Document all 9 custom hooks in README (currently only 1 mentioned)
 - [ ] Document 18 missing lib utilities in README (content-discovery, content-path-mapper, cache-stats, loop-state, etc.)
-- [ ] Add reference to /docs/INLINE_EDITING.md in README
-- [ ] Add reference to /docs/CACHE_STRATEGY.md in README
+- [ ] Consolidate /docs/*.md content INTO README.md (ETC: one organized doc, not many scattered)
 - [ ] Add "How to Add a Custom Hook" contributor guide
 - [ ] Add "How to Add a New Context" contributor guide
 - [ ] Add "How to Add an Inline Editable Page" contributor guide
