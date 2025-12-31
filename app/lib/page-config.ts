@@ -166,6 +166,7 @@ export interface ProcessStep {
   details: string[];
   color: AccentVariant;
   href?: string;
+  buttonText?: string; // For steps with CTAs (e.g., "Get Started")
 }
 
 export interface TrustBadge {
@@ -717,7 +718,7 @@ export const PAGE_CONFIGS = {
         { text: 'No surprises', description: 'Transparent pricing' },
       ],
       steps: [
-        { number: 1, title: 'Tell Us Your Needs', description: 'No tech speak required. Just describe what\'s on your plate and we\'ll take it from there.', details: ['Fill out our simple contact form', 'Attach any relevant files or documents', 'Let us know your timeline if you have one'], color: 'green', href: '/contact' },
+        { number: 1, title: 'Tell Us Your Needs', description: 'No tech speak required. Just describe what\'s on your plate and we\'ll take it from there.', details: ['Fill out our simple contact form', 'Attach any relevant files or documents', 'Let us know your timeline if you have one'], color: 'green', href: '/contact', buttonText: 'Get Started' },
         { number: 2, title: 'Get Your Quote', description: 'Quote within 2 business days, no obligation. We\'ll ask questions if needed and give you a clear, honest estimate.', details: ['We assess what needs to be done', 'We ask clarifying questions if needed', 'You receive a clear, transparent quote'], color: 'blue' },
         { number: 3, title: 'Authorize & We Begin', description: '50% deposit to begin, progress updates along the way. You\'ll always know where things stand.', details: ['50% deposit to begin work', 'Secure online payment', "We'll keep you updated on progress"], color: 'purple' },
         { number: 4, title: 'Review & Approve', description: 'Review the work, give feedback, and pay the remaining 50% when you\'re happy. Simple as that.', details: ['You review what we have done', 'We address any feedback', "Final 50% on approval, then it's yours!"], color: 'gold' },

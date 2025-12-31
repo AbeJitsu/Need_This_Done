@@ -106,9 +106,11 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
                   <p className={`${formInputColors.helper} mb-4 text-lg`}>
                     {step1.description}
                   </p>
-                  <Button variant="green" href={step1.href || '/contact'} size="lg">
-                    Get Started
-                  </Button>
+                  {step1.buttonText && (
+                    <Button variant="green" href={step1.href || '/contact'} size="lg">
+                      {step1.buttonText}
+                    </Button>
+                  )}
                 </div>
               </div>
             </Card>
