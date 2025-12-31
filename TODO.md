@@ -150,7 +150,7 @@ All 75 occurrences in 36 files fixed:
 - [!] Consolidate form field components - TextField.tsx + TextAreaField.tsx (deferred: low-impact, 2 small stable files)
 - [x] Extract `formatPrice()` to lib/format.ts - created lib/format.ts, migrated CourseCard + EnrollButton
 - [x] Centralize `serviceColors` - created lib/service-colors.ts, migrated ServiceDetailModal + ServiceDeepDive
-- [ ] Extract feature list parsing - string→array logic duplicated in ServiceCard:44-46, PricingCard, ServiceDetailModal
+- [x] Extract feature list parsing - not needed: PricingCard/ServiceDetailModal already use arrays, only ServiceCard has parsing
 
 **DRY Violations - Context** (Audit: Dec 30, 2025)
 ```

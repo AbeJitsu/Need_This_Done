@@ -1,5 +1,14 @@
 [
   {
+    "hash": "fdfa61c",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "fdfa61c0e7fc91e33070827a4c8aafb0bff05b32:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor: Extract formatPrice utility to lib/format.ts (DRY)",
+    "category": "Refactoring",
+    "filesChanged": 6
+  },
+  {
     "hash": "be1c450",
     "date": "%Y->- (HEAD -> main)",
     "time": "be1c45052e98f1d0a59c26714a0e5bbcd863eae2:%M",
