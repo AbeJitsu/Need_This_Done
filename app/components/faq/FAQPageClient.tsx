@@ -5,7 +5,7 @@ import { faqColors, titleColors, formInputColors, cardBgColors, cardBorderColors
 import CircleBadge from '@/components/CircleBadge';
 import PageHeader from '@/components/PageHeader';
 import CTASection from '@/components/CTASection';
-import { EditableSection, EditableItem } from '@/components/InlineEditor';
+import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { FAQPageContent } from '@/lib/page-content-types';
 
@@ -78,7 +78,12 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
 
       {/* FAQ List */}
       <EditableSection sectionKey="items" label="FAQ Items">
-        <div className="space-y-6 mb-10">
+        <SortableItemsWrapper
+          sectionKey="items"
+          arrayField="items"
+          itemIds={content.items.map((_, i) => `faq-item-${i}`)}
+          className="space-y-6 mb-10"
+        >
           {content.items.map((faq, index) => {
             // Cycle through colors: green, blue, purple, gold
             const colors = ['green', 'blue', 'purple', 'gold'] as const;
@@ -86,12 +91,14 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
             const styles = faqColors[color];
             return (
               <EditableItem
-                key={index}
+                key={`faq-item-${index}`}
                 sectionKey="items"
-                arrayField=""
+                arrayField="items"
                 index={index}
                 label={faq.question}
                 content={faq as unknown as Record<string, unknown>}
+                sortable
+                sortId={`faq-item-${index}`}
               >
                 <div
                   className={`${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.subtle} border-l-4 ${styles.border} ${styles.hover} transition-all ${shadowClasses.cardHover}`}
@@ -111,7 +118,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
               </EditableItem>
             );
           })}
-        </div>
+        </SortableItemsWrapper>
       </EditableSection>
 
       {/* Contact Section */}

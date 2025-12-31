@@ -7,7 +7,6 @@ import {
   PAGE_CONTENT_TYPES,
   EDITABLE_PAGES,
   type PageContent,
-  type PageContentType,
   type EditablePageSlug,
 } from '@/lib/page-content-types';
 import { getDefaultContent } from '@/lib/default-page-content';
@@ -62,11 +61,12 @@ export async function GET(
 
         // If no custom content exists, return defaults
         if (!data) {
-          const contentType = PAGE_CONTENT_TYPES[slug];
+          const validSlug = slug as EditablePageSlug;
+          const contentType = PAGE_CONTENT_TYPES[validSlug];
           return {
             page_slug: slug,
             content_type: contentType,
-            content: getDefaultContent(slug as EditablePageSlug),
+            content: getDefaultContent(validSlug),
             is_default: true,
           };
         }
@@ -122,7 +122,8 @@ export async function PUT(
       );
     }
 
-    const contentType: PageContentType = PAGE_CONTENT_TYPES[slug];
+    const validSlug = slug as EditablePageSlug;
+    const contentType = PAGE_CONTENT_TYPES[validSlug];
     const supabaseAdmin = getSupabaseAdmin();
 
     // Upsert: create if doesn't exist, update if it does

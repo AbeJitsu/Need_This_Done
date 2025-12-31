@@ -5,7 +5,7 @@ import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
-import { EditableSection, EditableItem } from '@/components/InlineEditor';
+import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { PricingPageContent } from '@/lib/page-content-types';
 import { formInputColors, headingColors, dividerColors, accentColors, accentBorderWidth } from '@/lib/colors';
@@ -39,19 +39,26 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
 
       {/* Pricing Cards */}
       <EditableSection sectionKey="tiers" label="Pricing Tiers">
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <SortableItemsWrapper
+          sectionKey="tiers"
+          arrayField="tiers"
+          itemIds={content.tiers.map((_, i) => `tier-${i}`)}
+          className="grid md:grid-cols-3 gap-6 mb-8"
+        >
           {content.tiers.map((tier, index) => {
             const delayClass = index === 0 ? 'motion-safe:animate-fade-in'
               : index === 1 ? 'motion-safe:animate-fade-in-delay-100'
               : 'motion-safe:animate-fade-in-delay-200';
             return (
               <EditableItem
-                key={index}
+                key={`tier-${index}`}
                 sectionKey="tiers"
-                arrayField=""
+                arrayField="tiers"
                 index={index}
                 label={tier.name}
                 content={tier as unknown as Record<string, unknown>}
+                sortable
+                sortId={`tier-${index}`}
               >
                 <div className={`opacity-0 translate-x-[-30px] motion-reduce:opacity-100 motion-reduce:translate-x-0 ${delayClass}`}>
                   <PricingCard {...tier} />
@@ -59,7 +66,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
               </EditableItem>
             );
           })}
-        </div>
+        </SortableItemsWrapper>
       </EditableSection>
 
       {/* Choose Your Path - Two clear options */}

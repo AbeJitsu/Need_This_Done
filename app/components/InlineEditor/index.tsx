@@ -10,6 +10,7 @@ export { default as EditableItem } from './EditableItem';
 export { default as EditModeBar } from './EditModeBar';
 export { default as EditModeTutorial } from './EditModeTutorial';
 export { default as SortableSections } from './SortableSections';
+export { default as SortableItemsWrapper } from './SortableItemsWrapper';
 
 // Universal click-to-edit (Phase 4 - click any text to edit)
 export { default as UniversalClickHandler } from './UniversalClickHandler';

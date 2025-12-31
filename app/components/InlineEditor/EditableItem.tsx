@@ -1,13 +1,17 @@
 'use client';
 
 import { useInlineEdit, type ItemSelection } from '@/context/InlineEditContext';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import type { DraggableAttributes } from '@dnd-kit/core';
+import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 
 // ============================================================================
 // Editable Item - Makes individual items (cards, FAQ items, etc.) clickable
 // ============================================================================
-// What: Wraps array items to make them selectable when edit mode is active
-// Why: Allows admins to click on a specific card/item to edit just that item
-// How: Stops click propagation (doesn't bubble to section), shows item editor
+// What: Wraps array items to make them selectable and draggable when edit mode is active
+// Why: Allows admins to click on a specific card/item to edit just that item, or drag to reorder
+// How: Stops click propagation (doesn't bubble to section), shows item editor, supports @dnd-kit sorting
 
 interface EditableItemProps {
   // The section containing this item (e.g., "services")
@@ -24,6 +28,40 @@ interface EditableItemProps {
   children: React.ReactNode;
   // Optional className
   className?: string;
+  // Unique ID for sorting (required when sortable=true)
+  sortId?: string;
+  // Enable drag-and-drop sorting
+  sortable?: boolean;
+}
+
+// Item Drag Handle - small grip icon for reordering
+interface ItemDragHandleProps {
+  listeners: SyntheticListenerMap | undefined;
+  attributes: DraggableAttributes;
+}
+
+function ItemDragHandle({ listeners, attributes }: ItemDragHandleProps) {
+  return (
+    <button
+      className="absolute -left-6 top-1/2 -translate-y-1/2 p-1.5 cursor-grab active:cursor-grabbing
+                 bg-purple-500 text-white rounded shadow-sm hover:bg-purple-600 hover:scale-110
+                 transition-all duration-200 z-20"
+      data-item-drag-handle
+      aria-label="Drag to reorder item"
+      title="Drag to reorder"
+      {...attributes}
+      {...listeners}
+    >
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+        <circle cx="4" cy="4" r="1.5" />
+        <circle cx="12" cy="4" r="1.5" />
+        <circle cx="4" cy="8" r="1.5" />
+        <circle cx="12" cy="8" r="1.5" />
+        <circle cx="4" cy="12" r="1.5" />
+        <circle cx="12" cy="12" r="1.5" />
+      </svg>
+    </button>
+  );
 }
 
 export default function EditableItem({
@@ -34,8 +72,29 @@ export default function EditableItem({
   content,
   children,
   className = '',
+  sortId,
+  sortable = false,
 }: EditableItemProps) {
   const { isEditMode, selectedItem, selectItem, setSidebarOpen } = useInlineEdit();
+
+  // Setup sortable drag-and-drop (only when sortable=true)
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: sortId || `${sectionKey}-${arrayField}-${index}`,
+    disabled: !isEditMode || !sortable,
+  });
+
+  const style = sortable ? {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  } : undefined;
 
   const isSelected =
     selectedItem?.sectionKey === sectionKey &&
@@ -67,6 +126,8 @@ export default function EditableItem({
   if (isEditMode) {
     return (
       <div
+        ref={sortable ? setNodeRef : undefined}
+        style={style}
         onClickCapture={handleClick}
         className={`
           group/item relative cursor-pointer transition-all duration-150
@@ -74,8 +135,10 @@ export default function EditableItem({
             ? 'ring-2 ring-purple-500 ring-offset-2 rounded-lg'
             : 'hover:ring-2 hover:ring-purple-300 hover:ring-dashed hover:ring-offset-2 hover:rounded-lg'
           }
+          ${isDragging ? 'z-50' : ''}
           ${className}
         `}
+        data-sortable-item={sortable ? sortId : undefined}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
@@ -86,6 +149,9 @@ export default function EditableItem({
         }}
         aria-label={`Edit ${label}`}
       >
+        {/* Item drag handle - only shown when sortable */}
+        {sortable && <ItemDragHandle listeners={listeners} attributes={attributes} />}
+
         {/* Item label - shown when selected or hovered */}
         <div
           className={`

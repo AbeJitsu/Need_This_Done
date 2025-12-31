@@ -149,6 +149,9 @@ interface InlineEditContextType {
   registerSection: (sectionKey: string) => void;
   unregisterSection: (sectionKey: string) => void;
 
+  // Reorder items within an array (for nested drag-and-drop)
+  reorderItems: ((sectionKey: string, arrayField: string, oldIndex: number, newIndex: number) => void) | null;
+
   // ========== Component-based editing (Puck - legacy) ==========
 
   // Currently selected component (for Puck pages)
@@ -395,6 +398,63 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     setSectionOrder(prev => prev.filter(key => key !== sectionKey));
   }, []);
 
+  // Reorder items within an array (for nested drag-and-drop)
+  const reorderItems = useCallback((
+    sectionKey: string,
+    arrayField: string,
+    oldIndex: number,
+    newIndex: number
+  ) => {
+    if (!pageContent) return;
+
+    // Determine the path to the array
+    // If sectionKey === arrayField, the section IS the array
+    const arrayPath = sectionKey === arrayField ? sectionKey : `${sectionKey}.${arrayField}`;
+    const currentArray = getNestedValue(pageContent, arrayPath) as unknown[];
+
+    if (!Array.isArray(currentArray)) return;
+
+    // Create new array with reordered items
+    const newArray = [...currentArray];
+    const [removed] = newArray.splice(oldIndex, 1);
+    newArray.splice(newIndex, 0, removed);
+
+    // Update page content
+    setPageContent(prev => {
+      if (!prev) return prev;
+      return setNestedValue(prev, arrayPath, newArray);
+    });
+
+    // Track the change
+    addPendingChange({
+      sectionKey,
+      fieldPath: arrayField === sectionKey ? '_reorder' : `${arrayField}._reorder`,
+      oldValue: { oldIndex, newIndex },
+      newValue: newArray,
+    });
+
+    // Update selected item index if it was affected by the reorder
+    if (selectedItem && selectedItem.sectionKey === sectionKey && selectedItem.arrayField === arrayField) {
+      const currentIndex = selectedItem.index;
+      let newSelectedIndex = currentIndex;
+
+      if (currentIndex === oldIndex) {
+        // The selected item was moved
+        newSelectedIndex = newIndex;
+      } else if (oldIndex < currentIndex && newIndex >= currentIndex) {
+        // Item moved from before to after the selected item
+        newSelectedIndex = currentIndex - 1;
+      } else if (oldIndex > currentIndex && newIndex <= currentIndex) {
+        // Item moved from after to before the selected item
+        newSelectedIndex = currentIndex + 1;
+      }
+
+      if (newSelectedIndex !== currentIndex) {
+        setSelectedItem(prev => prev ? { ...prev, index: newSelectedIndex } : null);
+      }
+    }
+  }, [pageContent, selectedItem, addPendingChange]);
+
   // DndContext sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -449,6 +509,8 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     // Section registration
     registerSection,
     unregisterSection,
+    // Item reordering (nested drag-and-drop)
+    reorderItems,
     // Component-based (Puck - legacy)
     selectedComponent,
     selectComponent,
