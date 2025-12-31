@@ -1,5 +1,14 @@
 [
   {
+    "hash": "7f92284",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "7f922848ba73e34fc7f65fecab2ff0937ac2c74d:%M",
+    "author": "Abe Reyes",
+    "message": "Docs: Add deep-dive references to detailed spec docs",
+    "category": "Documentation",
+    "filesChanged": 3
+  },
+  {
     "hash": "3820ee6",
     "date": "%Y->- (HEAD -> main)",
     "time": "3820ee6f1c686c647724c55acb0e9ff61d867671:%M",

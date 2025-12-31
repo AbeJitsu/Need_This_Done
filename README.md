@@ -2314,6 +2314,60 @@ See [TODO.md](TODO.md) for the current task tracker with prioritized work items.
 6. **Test complete flow** - Run `npm run test:e2e`
 7. **Update this README** - Add to relevant section
 
+### How to Add a Custom Hook
+
+Create reusable hooks in `app/hooks/` when logic is repeated across multiple components.
+
+**1. Create the file:**
+```bash
+touch app/hooks/useMyHook.ts
+```
+
+**2. Follow the documentation pattern:**
+```typescript
+'use client';
+
+import { useState, useEffect } from 'react';
+
+// ============================================================================
+// useMyHook Hook - [Short description]
+// ============================================================================
+// What: [What it does]
+// Why: [Why it exists - what problem it solves]
+// How: [How to use it]
+
+interface UseMyHookOptions {
+  someOption: string;
+  optionalThing?: boolean;
+}
+
+export function useMyHook({ someOption, optionalThing = false }: UseMyHookOptions) {
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Your hook logic here
+
+  return { data, isLoading };
+}
+```
+
+**3. Add tests in `__tests__/hooks/`:**
+```typescript
+import { renderHook } from '@testing-library/react';
+import { useMyHook } from '@/hooks/useMyHook';
+
+describe('useMyHook', () => {
+  it('should initialize with loading false', () => {
+    const { result } = renderHook(() => useMyHook({ someOption: 'test' }));
+    expect(result.current.isLoading).toBe(false);
+  });
+});
+```
+
+**4. Document in README** - Add to the [Custom Hooks](#custom-hooks-8-files) section.
+
+**Reference hooks:** `useBackdropClose`, `useEditableContent`, `useCurrency`
+
 ---
 
 ## Getting Help
