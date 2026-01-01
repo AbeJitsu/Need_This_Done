@@ -210,12 +210,13 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 ```
 
 **Phase 1: Database & API**
-- [ ] Create `quotes` table migration (037)
+- [x] Create `quotes` table migration (037)
   - id, reference_number (unique), project_id, customer_name, customer_email
   - total_amount, deposit_amount (cents), status, expires_at, notes
   - status: 'draft', 'sent', 'authorized', 'deposit_paid', 'balance_paid', 'completed'
-- [ ] Add `quote_id` column to orders table
-- [ ] Create `/api/quotes/authorize` endpoint
+  - Includes generate_quote_reference() function
+- [x] Add `quote_id` column to orders table (038)
+- [→] Create `/api/quotes/authorize` endpoint
   - POST { quoteRef, email } → validates quote, creates Stripe payment intent
 - [ ] Create quote reference generator: `NTD-MMDDYY-HHMM`
 
