@@ -176,7 +176,9 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Fix: Extract focused sub-components                                    │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Refactor RichTextEditor.tsx (580 lines) - extract toolbar, helpers
+- [x] Refactor RichTextEditor.tsx (580 lines) - extract toolbar, helpers
+  - Extracted 15 icons to EditorIcons.tsx (154 lines)
+  - Reduced from 580 → 446 lines (23% reduction)
 - [ ] Refactor PageWizard.tsx (569 lines) - extract step components
 - [ ] Refactor InlineEditContext.tsx (555 lines) - extract helpers to utils
 
