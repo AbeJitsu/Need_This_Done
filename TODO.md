@@ -31,6 +31,24 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
+[→] **SEO Improvements** - Fixes from swarm audit (Jan 1, 2026)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Lighthouse Scores: SEO 100%, Accessibility 100%                        │
+│  Performance 78% (LCP 5.8s - needs optimization)                        │
+│  Best Practices 79%                                                     │
+│                                                                         │
+│  Remaining: og-image.png needed, LCP investigation                      │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Create og-image.png (1200x630px) for social sharing
+- [x] Centralize BASE_URL in lib/seo-config.ts (created seo-config.ts, DRY fixed)
+- [x] Populate FAQ schema with actual questions (8 FAQs now in JsonLd.tsx)
+- [x] Add metadata to contact page (created app/contact/layout.tsx)
+- [x] Remove SearchAction from WebSite schema (was referencing non-existent /search)
+- [x] Add blog posts to sitemap dynamically (sitemap.ts now fetches from API)
+- [!] Fix LCP performance (5.8s → target <2.5s) - needs investigation
+
 [x] **Daily Changelog Auto-Update** - Move changelog to Supabase for automatic daily updates
 - [x] Create `changelog_entries` table migration (036)
 - [x] Migrate existing JSON entries to database

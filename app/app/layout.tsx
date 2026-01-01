@@ -13,6 +13,8 @@ import { InlineEditProvider } from '@/context/InlineEditContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
 import { AdminSidebar, AdminSidebarToggle, EditModeBar, EditModeTutorial, UniversalClickHandler } from '@/components/InlineEditor';
+import { LocalBusinessJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
+import { seoConfig } from '@/lib/seo-config';
 
 // ============================================================================
 // Force Dynamic Rendering for All Routes
@@ -59,19 +61,77 @@ const playfair = Playfair_Display({
 // - Styles and fonts loaded here apply everywhere
 // - Good place for navigation, footer, and other persistent UI
 
-// Define metadata for SEO and browser tab
-// This appears in search results and the browser tab
+// ============================================================================
+// SEO Metadata Configuration
+// ============================================================================
+// Comprehensive metadata for search engines and social media sharing.
+// This appears in search results, browser tabs, and social media previews.
+
 export const metadata: Metadata = {
-  title: 'NeedThisDone - Get Your Projects Done Right',
-  description: 'Professional project services - submit your project, get it done right.',
+  // Basic metadata
+  title: {
+    default: `${seoConfig.siteName} - Get Your Projects Done Right`,
+    template: `%s | ${seoConfig.siteName}`,
+  },
+  description: seoConfig.description,
+  keywords: seoConfig.keywords,
+  authors: [{ name: seoConfig.siteName }],
+  creator: seoConfig.siteName,
+  publisher: seoConfig.siteName,
+
+  // Viewport and robots
   viewport: 'width=device-width, initial-scale=1',
-  robots: 'index, follow',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+
+  // Favicons
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon.ico', sizes: 'any' },
     ],
     apple: '/apple-touch-icon.png',
+  },
+
+  // Open Graph - for Facebook, LinkedIn, etc.
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: seoConfig.baseUrl,
+    siteName: seoConfig.siteName,
+    title: `${seoConfig.siteName} - Get Your Projects Done Right`,
+    description: seoConfig.description,
+    images: [
+      {
+        url: `${seoConfig.baseUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: `${seoConfig.siteName} - Professional Project Services`,
+      },
+    ],
+  },
+
+  // Twitter Card
+  twitter: {
+    card: 'summary_large_image',
+    title: `${seoConfig.siteName} - Get Your Projects Done Right`,
+    description: 'Professional project services for businesses and individuals. Get things done right the first time.',
+    images: [`${seoConfig.baseUrl}/og-image.png`],
+  },
+
+  // Canonical URL
+  metadataBase: new URL(seoConfig.baseUrl),
+  alternates: {
+    canonical: '/',
   },
 };
 
@@ -83,6 +143,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${poppins.variable} ${playfair.variable}`}>
       <head>
+        {/* JSON-LD Structured Data for rich search results */}
+        <LocalBusinessJsonLd />
+        <WebSiteJsonLd />
+
         {/* FOUC Prevention: Apply dark mode immediately before any rendering */}
         {/* This blocking script runs before CSS/content loads to prevent flash */}
         {/* Matches DarkModeToggle logic: check localStorage first, then system preference */}
