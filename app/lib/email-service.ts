@@ -1,4 +1,4 @@
-import { sendEmailWithRetry, getEmailConfig } from "./email";
+import { sendEmailWithRetry, getEmailConfig, EmailAttachment } from "./email";
 
 // ============================================================================
 // Email Service Functions
@@ -340,7 +340,7 @@ export async function sendAppointmentRequestNotification(
 
 /**
  * Send appointment confirmation email when admin approves.
- * Includes meeting details and calendar invite.
+ * Includes meeting details and calendar invite as ICS attachment.
  *
  * @param data - Appointment confirmation data
  * @param icsContent - Optional ICS calendar file content for attachment
@@ -348,19 +348,27 @@ export async function sendAppointmentRequestNotification(
  */
 export async function sendAppointmentConfirmation(
   data: AppointmentConfirmationEmailProps,
-  _icsContent?: string, // TODO: Implement ICS attachment support
+  icsContent?: string,
 ): Promise<string | null> {
   // Dynamic import to prevent bundling during page prerendering
   const { default: AppointmentConfirmationEmail } = await import("../emails/AppointmentConfirmationEmail");
 
   const subject = `📅 Appointment Confirmed: ${data.serviceName} on ${data.appointmentDate}`;
 
-  // Note: ICS attachment would require updating sendEmailWithRetry to support attachments
-  // For now, we include the .ics generation link in the email itself
+  // Build attachments array if ICS content provided
+  const attachments: EmailAttachment[] | undefined = icsContent
+    ? [{
+        filename: 'appointment.ics',
+        content: icsContent,
+        contentType: 'text/calendar',
+      }]
+    : undefined;
+
   return sendEmailWithRetry(
     data.customerEmail,
     subject,
     AppointmentConfirmationEmail(data),
+    { attachments },
   );
 }
 

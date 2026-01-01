@@ -69,6 +69,27 @@ export function isResendError(error: unknown): error is ResendError {
 }
 
 // ============================================================================
+// Email Attachment Types
+// ============================================================================
+// Support for file attachments in emails (ICS calendar files, PDFs, etc.)
+
+export interface EmailAttachment {
+  /** Filename shown to recipient */
+  filename: string;
+  /** File content as Buffer or base64 string */
+  content: Buffer | string;
+  /** MIME type (defaults to application/octet-stream) */
+  contentType?: string;
+}
+
+export interface SendEmailOptions {
+  /** Maximum retry attempts (default: 3) */
+  maxRetries?: number;
+  /** File attachments */
+  attachments?: EmailAttachment[];
+}
+
+// ============================================================================
 // Email Sending Helpers
 // ============================================================================
 // Reusable functions for common email operations with retry logic
@@ -81,15 +102,22 @@ export function isResendError(error: unknown): error is ResendError {
  * @param to - Recipient email address or array of addresses
  * @param subject - Email subject line
  * @param react - React Email component to render
- * @param maxRetries - Maximum number of retry attempts (default: 3)
+ * @param options - Optional settings (maxRetries, attachments)
  * @returns Email ID from Resend or null if failed
  */
 export async function sendEmailWithRetry(
   to: string | string[],
   subject: string,
   react: React.ReactElement,
-  maxRetries: number = 3
+  options?: SendEmailOptions | number // number for backwards compatibility
 ): Promise<string | null> {
+  // Handle backwards compatibility: options can be a number (old maxRetries param)
+  const opts: SendEmailOptions = typeof options === 'number'
+    ? { maxRetries: options }
+    : options || {};
+  const maxRetries = opts.maxRetries ?? 3;
+  const attachments = opts.attachments;
+
   // Skip sending emails in test mode to avoid filling inbox
   // Use SKIP_EMAILS env var since NODE_ENV might be 'development' in containers
   if (process.env.SKIP_EMAILS === 'true' || process.env.NODE_ENV === 'test') {
@@ -115,6 +143,8 @@ export async function sendEmailWithRetry(
         headers: {
           'X-Idempotency-Key': idempotencyKey,
         },
+        // Include attachments if provided
+        ...(attachments && { attachments }),
       });
 
       if (!error && data) {

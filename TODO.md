@@ -159,8 +159,9 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Fix: Resolve or convert to tracked issues                              │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Resolve TODO in get-started/GetStartedPageClient.tsx:66 (payment integration)
-- [ ] Implement ICS attachment in lib/email-service.ts:351
+- [!] Resolve TODO in get-started/GetStartedPageClient.tsx:66 (payment integration)
+  - Blocked: needs quotes system (doesn't exist) + product decisions on deposit flow
+- [x] Implement ICS attachment in lib/email-service.ts:351
 - [ ] Complete Medusa cart integration in api/cron/abandoned-carts/route.ts:203
 - [ ] Add Medusa admin API in api/admin/inventory/route.ts:128
 
