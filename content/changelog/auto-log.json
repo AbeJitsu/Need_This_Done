@@ -1,5 +1,14 @@
 [
   {
+    "hash": "e4e0332",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "e4e033275d21ea7602312da8d7c1c9ab50e3cc4f:%M",
+    "author": "Abe Reyes",
+    "message": "Fix: Match HTML resume Featured Project to Next.js version",
+    "category": "Fixes",
+    "filesChanged": 2
+  },
+  {
     "hash": "3f4fcb9",
     "date": "%Y->- (HEAD -> production)",
     "time": "3f4fcb9a9e3d6c3105cffeeaab6418bef93d4012:%M",
@@ -889,14 +898,5 @@
     "message": "Fix: Continue centralizing opacity backgrounds to colors.ts",
     "category": "Fixes",
     "filesChanged": 6
-  },
-  {
-    "hash": "eb22014",
-    "date": "2025-12-30",
-    "time": "18:17",
-    "author": "Abe Reyes",
-    "message": "Refactor: Centralize opacity backgrounds to colors.ts",
-    "category": "Refactoring",
-    "filesChanged": 8
   }
 ]
