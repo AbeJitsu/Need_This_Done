@@ -59,6 +59,70 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 ## To Do
 
+### DRY/ETC Audit (Dec 31, 2025)
+
+**Hardcoded Card Patterns** - 47+ files use inline card styles instead of Card component or colors.ts
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Pattern: bg-white dark:bg-gray-800 rounded-xl border ...               │
+│  Found in: 47 files with bg-white dark:bg-gray-800                      │
+│           50 files with border-gray-200 dark:border-gray-700            │
+│           44 files with text-gray-600 dark:text-gray-*                  │
+│                                                                         │
+│  Impact: Changing card style = editing 50 files                         │
+│  Fix: Use Card component or cardBgColors/cardBorderColors from colors.ts│
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Audit components not using Card.tsx or colors.ts
+- [ ] Migrate ServiceCard to use cardBgColors.base (line 88)
+- [ ] Add inputBaseClasses to colors.ts for form fields
+- [ ] Update FAQ.tsx, HowItWorks.tsx, and other marketing components
+
+**Form Field DRY Violations** - Identical input styles repeated across 3+ field components
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Files: TextField.tsx, TextAreaField.tsx, SelectField.tsx              │
+│  Duplicated:                                                            │
+│    - Input base classes (bg-white, borders, focus states)              │
+│    - Error state styling                                                │
+│    - Label/hint/error wrapper pattern                                   │
+│                                                                         │
+│  Fix: Extract to formInputClasses in colors.ts + FieldWrapper component│
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Create formInputClasses in colors.ts with base, error, focus states
+- [ ] Create FieldWrapper component for label/hint/error structure
+- [ ] Refactor TextField, TextAreaField, SelectField to use shared code
+
+**AdminSidebar God Object** - 1121 lines, too many responsibilities
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  File: components/InlineEditor/AdminSidebar.tsx (1121 lines)           │
+│  Issues:                                                                │
+│    - Hard to test individual parts                                      │
+│    - Changes risk breaking unrelated functionality                      │
+│    - Difficult to understand at a glance                                │
+│                                                                         │
+│  Fix: Split into focused sub-components                                 │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Extract field editors into separate components
+- [ ] Extract section header/navigation into own component
+- [ ] Extract save/cancel actions into own component
+- [ ] Reduce AdminSidebar to <300 lines coordinator
+
+**FeatureCard Hardcoded Colors** - Uses inline dark mode classes
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  File: components/FeatureCard.tsx (lines 34-35)                        │
+│  Pattern: 'text-gray-900 dark:text-gray-100' inline                    │
+│                                                                         │
+│  Fix: Import from colors.ts like other card components                  │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Add titleColor and descriptionColor to featureCardColors in colors.ts
+- [ ] Update FeatureCard to use centralized colors
+
 ### Short Term
 
 **Consider Medusa v2 Upgrade**
@@ -134,4 +198,4 @@ _Major features fully documented in README.md_
 
 ---
 
-*Last Updated: December 31, 2025*
+*Last Updated: December 31, 2025 (DRY/ETC audit added)*
