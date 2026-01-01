@@ -30,10 +30,6 @@ export default function FeatureCard({
   // Get styles from centralized color system
   const styles = featureCardColors[variant];
 
-  // Text colors are consistent across all variants
-  const titleColor = 'text-gray-900 dark:text-gray-100';
-  const descriptionColor = 'text-gray-600 dark:text-gray-300';
-
   return (
     <div
       className={`
@@ -50,16 +46,16 @@ export default function FeatureCard({
       </div>
 
       {/* Title - Always dark gray for hierarchy */}
-      <h3 className={`text-xl font-semibold mb-2 ${titleColor}`}>{title}</h3>
+      <h3 className={`text-xl font-semibold mb-2 ${styles.title}`}>{title}</h3>
 
       {/* Description - Medium gray for readability */}
-      <p className={`text-sm sm:text-base leading-relaxed ${descriptionColor} mb-3`}>
+      <p className={`text-sm sm:text-base leading-relaxed ${styles.description} mb-3`}>
         {description}
       </p>
 
       {/* Benefit - Why it matters */}
       {benefit && (
-        <p className={`text-xs sm:text-sm ${descriptionColor} mb-3 italic border-l-2 border-current pl-3`}>
+        <p className={`text-xs sm:text-sm ${styles.description} mb-3 italic border-l-2 border-current pl-3`}>
           <span role="img" aria-label="Tip">💡</span> {benefit}
         </p>
       )}
