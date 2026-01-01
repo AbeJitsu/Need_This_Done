@@ -1,8 +1,7 @@
 import { getDefaultContent } from '@/lib/default-page-content';
 import type { ChangelogPageContent } from '@/lib/page-content-types';
 import ChangelogPageClient from '@/components/changelog/ChangelogPageClient';
-import * as fs from 'fs';
-import * as path from 'path';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +9,7 @@ export const dynamic = 'force-dynamic';
 // Changelog Page - Feature Updates and Improvements
 // ============================================================================
 // Displays all feature updates with screenshots, descriptions, and how-to guides.
-// Entries are stored as JSON files in content/changelog/
+// Entries are stored in the changelog_entries Supabase table.
 //
 // INLINE EDITING: This page supports inline editing for admins.
 // Click the floating pencil button to open the edit sidebar,
@@ -33,6 +32,7 @@ interface ChangelogEntry {
   category: string;
   description: string;
   benefit: string;
+  changes?: Array<{ what: string; why: string; where: string }>;
   howToUse: string[];
   screenshots: Array<{
     src: string;
@@ -65,31 +65,34 @@ async function getContent(): Promise<ChangelogPageContent> {
 
 async function getChangelogEntries(): Promise<ChangelogEntry[]> {
   try {
-    const changelogDir = path.join(process.cwd(), '..', 'content', 'changelog');
+    const supabaseAdmin = getSupabaseAdmin();
 
-    if (!fs.existsSync(changelogDir)) {
+    // Fetch from database instead of JSON files
+    const { data, error } = await supabaseAdmin
+      .from('changelog_entries')
+      .select('*')
+      .eq('needs_completion', false)
+      .order('date', { ascending: false });
+
+    if (error) {
+      console.error('Failed to fetch changelog entries:', error);
       return [];
     }
 
-    const files = fs.readdirSync(changelogDir).filter((f) => f.endsWith('.json'));
-
-    const entries: ChangelogEntry[] = [];
-
-    for (const file of files) {
-      try {
-        const content = fs.readFileSync(path.join(changelogDir, file), 'utf-8');
-        const entry = JSON.parse(content) as ChangelogEntry;
-
-        if (entry.title && entry.description) {
-          entries.push(entry);
-        }
-      } catch {
-        // Skip invalid files
-      }
-    }
-
-    return entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  } catch {
+    // Transform to expected format
+    return (data || []).map(entry => ({
+      title: entry.title,
+      slug: entry.slug,
+      date: entry.date,
+      category: entry.category,
+      description: entry.description || '',
+      benefit: entry.benefit || '',
+      changes: entry.changes || [],
+      howToUse: entry.how_to_use || [],
+      screenshots: entry.screenshots || [],
+    }));
+  } catch (error) {
+    console.error('Failed to fetch changelog entries:', error);
     return [];
   }
 }

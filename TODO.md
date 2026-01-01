@@ -31,6 +31,15 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
+[x] **Daily Changelog Auto-Update** - Move changelog to Supabase for automatic daily updates
+- [x] Create `changelog_entries` table migration (036)
+- [x] Migrate existing JSON entries to database
+- [x] Create `/api/changelog` endpoints (GET list, GET single)
+- [x] Update `/changelog` page to fetch from database
+- [x] Create `/api/cron/changelog` for daily processing
+- [x] Add cron to vercel.json (runs at midnight)
+- [x] Test end-to-end flow
+
 [x] **Version History for Client Editing** - Google Docs-like revision history
 - [x] Create `page_content_history` database migration (035)
 - [x] Modify PUT handler to save history before update
@@ -150,6 +159,16 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 ## Recently Completed
 
 _Keep ~5-7 recent wins here, trim periodically once documented in README.md_
+
+**Daily Changelog Auto-Update** ✅ (Dec 31, 2025)
+- Moved changelog from JSON files to Supabase database
+- Created `/api/cron/changelog` for daily processing at midnight
+- Entries with `needs_completion=true` auto-processed via Vercel cron
+
+**Version History for Client Editing** ✅ (Dec 31, 2025)
+- `page_content_history` table stores 20 versions per page
+- History button in admin sidebar with restore functionality
+- Auto-cleanup trigger removes old versions
 
 **Card Alignment Fix** ✅ (Dec 31, 2025)
 - Fixed pricing CTA cards not aligning buttons consistently
