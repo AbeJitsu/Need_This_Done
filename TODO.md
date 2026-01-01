@@ -83,8 +83,8 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Fix: Use Card component or cardBgColors/cardBorderColors from colors.ts│
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Audit components not using Card.tsx or colors.ts
-- [ ] Migrate ServiceCard to use cardBgColors.base (line 88)
+- [x] Audit components not using Card.tsx or colors.ts (30+ instances found, fixes in separate tasks)
+- [x] Migrate ServiceCard to use cardBgColors.base (line 88)
 - [ ] Add inputBaseClasses to colors.ts for form fields
 - [ ] Update FAQ.tsx, HowItWorks.tsx, and other marketing components
 
