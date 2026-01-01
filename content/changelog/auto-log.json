@@ -1,5 +1,14 @@
 [
   {
+    "hash": "fbfd192",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "fbfd192ec2ea73bb7af24ffe299003d1f14a021a:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor AdminSidebar header and navigation",
+    "category": "Other",
+    "filesChanged": 7
+  },
+  {
     "hash": "8fd4444",
     "date": "%Y->- (HEAD -> main)",
     "time": "8fd4444b17422590c7f346cbcad4c0a4a3e84ef7:%M",
