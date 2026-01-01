@@ -302,8 +302,8 @@ export default function Navigation() {
               Get a Quote
             </Link>
 
-            {/* Sign in link for mobile */}
-            {!isAuthenticated && (
+            {/* Auth options for mobile */}
+            {!isAuthenticated ? (
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
@@ -311,6 +311,38 @@ export default function Navigation() {
               >
                 Sign in
               </Link>
+            ) : (
+              <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
+                <div className="px-3 py-2 text-xs text-gray-500 dark:text-gray-400">
+                  Signed in as {user?.email}
+                </div>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block px-3 py-2 text-sm ${navigationColors.link} ${navigationColors.linkHover}`}
+                >
+                  Dashboard
+                </Link>
+                {isAdmin && (
+                  <Link
+                    href="/admin/blog"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block px-3 py-2 text-sm ${navigationColors.link} ${navigationColors.linkHover}`}
+                  >
+                    Manage Blog
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleLogout();
+                  }}
+                  className="block w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Sign out
+                </button>
+              </div>
             )}
           </div>
         </div>

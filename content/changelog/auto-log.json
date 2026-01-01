@@ -1,5 +1,14 @@
 [
   {
+    "hash": "44b8aa5",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "44b8aa59a0b3510d14f4a7d1511dff7d00c0f6ba:%M",
+    "author": "Abe Reyes",
+    "message": "Add visible sign-in icon on mobile navigation",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
     "hash": "fae6183",
     "date": "%Y->- (HEAD -> main)",
     "time": "fae61831ad598391bbdc2025874288ea660c912d:%M",
@@ -889,14 +898,5 @@
     "message": "Docs: Add systematic hardcoded color fix plan to TODO.md",
     "category": "Documentation",
     "filesChanged": 1
-  },
-  {
-    "hash": "e7d2c90",
-    "date": "2025-12-30",
-    "time": "18:53",
-    "author": "Abe Reyes",
-    "message": "Refactor: Clean colors.ts - enforce -100 minimum, no opacity in dark mode",
-    "category": "Refactoring",
-    "filesChanged": 8
   }
 ]
