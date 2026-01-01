@@ -1,5 +1,14 @@
 [
   {
+    "hash": "9ff587d",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "9ff587d731ac6f1ce6265529436c06eb3fa9099a:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor AdminSidebar with view components",
+    "category": "Other",
+    "filesChanged": 8
+  },
+  {
     "hash": "b7454c2",
     "date": "%Y->- (HEAD -> main)",
     "time": "b7454c2c1069d488a27e94957f4a97baac4824f5:%M",

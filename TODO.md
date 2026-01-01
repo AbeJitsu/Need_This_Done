@@ -133,7 +133,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Fix: Import from colors.ts like other card components                  │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Add titleColor and descriptionColor to featureCardColors in colors.ts
+- [→] Add titleColor and descriptionColor to featureCardColors in colors.ts
 - [ ] Update FeatureCard to use centralized colors
 
 ### Pragmatic Programmer Audit (Dec 31, 2025)

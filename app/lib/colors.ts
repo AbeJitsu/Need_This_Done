@@ -367,21 +367,29 @@ export const featureCardColors: Record<FeatureCardVariant, {
   container: string;
   icon: string;
   hover: string;
+  title: string;
+  description: string;
 }> = {
   default: {
     container: 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800',
     icon: 'text-gray-700 dark:text-gray-300',
     hover: 'hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-lg',
+    title: 'text-gray-900 dark:text-gray-100',
+    description: 'text-gray-600 dark:text-gray-300',
   },
   primary: {
     container: 'border-blue-200 dark:border-blue-800 bg-blue-100 dark:bg-gray-700',
     icon: 'text-blue-600 dark:text-blue-400',
     hover: 'hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg',
+    title: 'text-gray-900 dark:text-gray-100',
+    description: 'text-gray-600 dark:text-gray-300',
   },
   success: {
     container: 'border-green-200 dark:border-green-800 bg-green-100 dark:bg-gray-700',
     icon: 'text-green-600 dark:text-green-400',
     hover: 'hover:border-green-300 dark:hover:border-green-700 hover:shadow-lg',
+    title: 'text-gray-900 dark:text-gray-100',
+    description: 'text-gray-600 dark:text-gray-300',
   },
 };
 
