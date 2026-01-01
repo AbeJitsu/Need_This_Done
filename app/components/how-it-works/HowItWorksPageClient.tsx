@@ -41,6 +41,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
         <PageHeader
           title={content.header.title}
           description={content.header.description}
+          color="green"
         />
       </EditableSection>
 

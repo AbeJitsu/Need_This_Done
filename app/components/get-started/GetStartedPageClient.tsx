@@ -171,6 +171,7 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
         <PageHeader
           title={content.header.title}
           description={content.header.description}
+          color="gold"
         />
       </EditableSection>
 

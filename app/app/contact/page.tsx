@@ -168,6 +168,7 @@ export default function ContactPage() {
           <PageHeader
             title={content.header.title}
             description={content.header.description}
+            color="gold"
           />
         </EditableSection>
 

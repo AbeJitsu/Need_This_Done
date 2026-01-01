@@ -1,0 +1,10 @@
+{
+  "active": true,
+  "startTime": 1767238036,
+  "maxHours": 5,
+  "maxConsecutiveFailures": 3,
+  "iterationCount": 0,
+  "failureCounts": {},
+  "cycleNumber": 1,
+  "tasksCompleted": 0
+}
