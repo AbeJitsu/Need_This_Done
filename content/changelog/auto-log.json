@@ -1,5 +1,14 @@
 [
   {
+    "hash": "a81f81d",
+    "date": "%Y->- (HEAD -> production)",
+    "time": "a81f81d94befdad81000b36fc30d92c8261ebcde:%M",
+    "author": "Abe Reyes",
+    "message": "Merge branch 'main' into production",
+    "category": "Other",
+    "filesChanged": 0
+  },
+  {
     "hash": "5115847",
     "date": "%Y->- (HEAD -> main)",
     "time": "51158472c04eb52262270649a2d27fc69fb6e1fd:%M",
@@ -889,14 +898,5 @@
     "message": "Config: Update auto-log changelog tracking",
     "category": "Configuration",
     "filesChanged": 3
-  },
-  {
-    "hash": "7c85cc1",
-    "date": "2025-12-30",
-    "time": "18:09",
-    "author": "Abe Reyes",
-    "message": "Refactor: Eliminate opacity-based dark mode colors in puck-utils",
-    "category": "Refactoring",
-    "filesChanged": 2
   }
 ]

@@ -281,14 +281,16 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
                       );
                     })}
                   </ul>
-                  <Button
-                    variant={path.button.variant}
-                    href={path.button.href}
-                    size={path.button.size || 'lg'}
-                    className="w-full"
-                  >
-                    {path.button.text}
-                  </Button>
+                  <div className="flex justify-center">
+                    <Button
+                      variant={path.button.variant}
+                      href={path.button.href}
+                      size={path.button.size || 'lg'}
+                      className="min-w-56"
+                    >
+                      {path.button.text}
+                    </Button>
+                  </div>
                 </div>
               </Card>
             </EditableItem>
@@ -373,7 +375,7 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
               </div>
             )}
 
-            <div className="space-y-4 mb-6">
+            <div className="space-y-4 mb-6 max-w-sm mx-auto">
               <div>
                 <label htmlFor="quoteRef" className={`block text-sm font-medium mb-2 ${formInputColors.label}`}>
                   {content.authForm.quoteRefLabel}
@@ -411,15 +413,17 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
               </div>
             </div>
 
-            <Button
-              variant="green"
-              type="submit"
-              disabled={isProcessing}
-              className="w-full"
-              size="lg"
-            >
-              {isProcessing ? content.authForm.processingText : content.authForm.submitButton}
-            </Button>
+            <div className="flex justify-center">
+              <Button
+                variant="purple"
+                type="submit"
+                disabled={isProcessing}
+                size="lg"
+                className="min-w-56"
+              >
+                {isProcessing ? content.authForm.processingText : content.authForm.submitButton}
+              </Button>
+            </div>
 
             <p className={`mt-4 text-center text-sm ${mutedTextColors.light}`}>
               {content.authForm.securityNote}
