@@ -1,5 +1,14 @@
 [
   {
+    "hash": "cee47c2",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "cee47c2e064928a536271edc59e92dcf49edae75:%M",
+    "author": "Abe Reyes",
+    "message": "Add blog publishing workflow and JQuery learning post",
+    "category": "Other",
+    "filesChanged": 7
+  },
+  {
     "hash": "6635e67",
     "date": "%Y->- (HEAD -> main)",
     "time": "6635e672de132e5b325cf4487a0b941bcb6c2cd7:%M",
@@ -888,15 +897,6 @@
     "author": "Abe Reyes",
     "message": "Security: Fix function search_paths and extension locations",
     "category": "Security",
-    "filesChanged": 2
-  },
-  {
-    "hash": "cc5a0c3",
-    "date": "2025-12-30",
-    "time": "18:04",
-    "author": "Abe Reyes",
-    "message": "Docs: Track hardcoded color elimination task",
-    "category": "Documentation",
     "filesChanged": 2
   }
 ]
