@@ -1,5 +1,14 @@
 [
   {
+    "hash": "c5bd8b6",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "c5bd8b6f01ad745c3d8d20bd7ad1715c1594c34f:%M",
+    "author": "Abe Reyes",
+    "message": "Add Open Graph image for social sharing",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
     "hash": "ee62414",
     "date": "%Y->- (HEAD -> main)",
     "time": "ee6241474435144232b52cc610e2b211e0faa19c:%M",
@@ -889,14 +898,5 @@
     "message": "Refactor: Clean colors.ts - enforce -100 minimum, no opacity in dark mode",
     "category": "Refactoring",
     "filesChanged": 8
-  },
-  {
-    "hash": "62cc7c1",
-    "date": "2025-12-30",
-    "time": "18:36",
-    "author": "Abe Reyes",
-    "message": "Refactor: Centralize opacity backgrounds across 24 files",
-    "category": "Refactoring",
-    "filesChanged": 24
   }
 ]
