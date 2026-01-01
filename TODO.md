@@ -182,7 +182,9 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [x] Refactor PageWizard.tsx (569 lines) - extract step components
   - Extracted 5 step components to WizardSteps.tsx (320 lines)
   - Reduced from 569 → 224 lines (61% reduction)
-- [ ] Refactor InlineEditContext.tsx (555 lines) - extract helpers to utils
+- [x] Refactor InlineEditContext.tsx (555 lines) - extract helpers to utils
+  - Created inline-edit-utils.ts (103 lines) with reorderArray, calculateNewSelectedIndex, parseItemFieldPath
+  - Reduced from 555 → 525 lines (5% reduction, logic now centralized)
 
 **EMPTY CATCH BLOCK** - Swallowed exceptions hide errors
 - [x] Add proper error handling in app/layout.tsx:111 (empty catch block)
