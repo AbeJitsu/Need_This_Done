@@ -1,5 +1,14 @@
 [
   {
+    "hash": "6635e67",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "6635e672de132e5b325cf4487a0b941bcb6c2cd7:%M",
+    "author": "Abe Reyes",
+    "message": "Add admin quotes dashboard and email system",
+    "category": "Other",
+    "filesChanged": 8
+  },
+  {
     "hash": "dacc0ed",
     "date": "%Y->- (HEAD -> main)",
     "time": "dacc0edcbaaeb3078f35169913fd91cca178aea8:%M",
@@ -889,14 +898,5 @@
     "message": "Docs: Track hardcoded color elimination task",
     "category": "Documentation",
     "filesChanged": 2
-  },
-  {
-    "hash": "e1183c5",
-    "date": "2025-12-30",
-    "time": "18:03",
-    "author": "Abe Reyes",
-    "message": "Security: Fix remaining RLS issues (47 more tables/views/policies)",
-    "category": "Security",
-    "filesChanged": 1
   }
 ]
