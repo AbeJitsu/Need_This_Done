@@ -119,7 +119,10 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [x] Extract field editors into separate components
 - [x] Extract section header/navigation into own component
 - [x] Extract save/cancel actions into own component
-- [ ] Reduce AdminSidebar to <300 lines coordinator
+- [x] Reduce AdminSidebar to <300 lines coordinator
+  - Reduced from 1121 → 680 lines (39% reduction)
+  - Extracted: FieldEditors, SidebarHeader, SectionNavigation, SidebarFooter, SectionListView, ItemEditorView
+  - Further reduction would require restructuring renderFields (~165 lines) and array operations
 
 **FeatureCard Hardcoded Colors** - Uses inline dark mode classes
 ```

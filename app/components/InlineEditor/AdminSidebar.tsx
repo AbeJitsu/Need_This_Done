@@ -7,7 +7,9 @@ import VersionHistoryPanel from './VersionHistoryPanel';
 import { SmartFieldEditor, fieldLabels } from './FieldEditors';
 import SidebarHeader from './SidebarHeader';
 import SidebarFooter from './SidebarFooter';
-import { BackButton, SectionHeader, ItemBreadcrumb } from './SectionNavigation';
+import SectionListView from './SectionListView';
+import ItemEditorView from './ItemEditorView';
+import { BackButton, SectionHeader } from './SectionNavigation';
 import {
   formInputColors,
   headingColors,
@@ -615,72 +617,18 @@ export default function AdminSidebar() {
             };
 
             return (
-              <div>
-                {/* Breadcrumb navigation */}
-                <BackButton onClick={handleNavigateUp} label="All Sections" />
-
-                {/* Breadcrumb path */}
-                <ItemBreadcrumb
-                  sectionLabel={sectionLabels[selectedItem.sectionKey] || selectedItem.sectionKey}
-                  itemLabel={selectedItem.label}
-                />
-
-                {/* Array Operations Bar */}
-                <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex gap-1">
-                    <button
-                      type="button"
-                      onClick={() => handleItemMove('up')}
-                      disabled={itemIndex === 0}
-                      className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 transition-colors"
-                      aria-label="Move up"
-                    >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleItemMove('down')}
-                      disabled={itemIndex === arrayLength - 1}
-                      className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 transition-colors"
-                      aria-label="Move down"
-                    >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={handleItemAdd}
-                      className={`
-                        flex items-center gap-1 px-2 py-1 rounded text-xs font-medium
-                        ${solidButtonColors.green.bg} ${solidButtonColors.green.hover} ${solidButtonColors.green.text}
-                        transition-colors
-                      `}
-                      aria-label="Add new item"
-                    >
-                      <span aria-hidden="true">+</span> Add
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleItemDelete}
-                      className="flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-red-500 text-white hover:opacity-90 transition-opacity"
-                      aria-label="Delete item"
-                    >
-                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                      Delete
-                    </button>
-                  </div>
-                </div>
-
-                {/* Item fields */}
+              <ItemEditorView
+                sectionLabel={sectionLabels[selectedItem.sectionKey] || selectedItem.sectionKey}
+                itemLabel={selectedItem.label}
+                itemIndex={itemIndex}
+                arrayLength={arrayLength}
+                onNavigateUp={handleNavigateUp}
+                onMoveItem={handleItemMove}
+                onAddItem={handleItemAdd}
+                onDeleteItem={handleItemDelete}
+              >
                 {renderItemFields(selectedItem.content)}
-              </div>
+              </ItemEditorView>
             );
           })()
         ) : selectedSection ? (
@@ -703,40 +651,7 @@ export default function AdminSidebar() {
           </div>
         ) : (
           // Section List View
-          <div className="space-y-2">
-            <p className={`text-sm ${formInputColors.helper} mb-4`}>
-              Click a section to edit:
-            </p>
-            {sections.map(({ key, label }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => handleSelectSection(key)}
-                className={`
-                  w-full text-left px-4 py-3 rounded-lg
-                  border border-gray-200 dark:border-gray-700
-                  hover:bg-gray-100 dark:hover:bg-gray-700
-                  hover:border-blue-300 dark:hover:border-blue-600
-                  transition-all duration-150
-                  group
-                `}
-              >
-                <div className="flex items-center justify-between">
-                  <span className={`font-medium text-sm ${headingColors.secondary}`}>
-                    {label}
-                  </span>
-                  <svg
-                    className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </button>
-            ))}
-          </div>
+          <SectionListView sections={sections} onSelectSection={handleSelectSection} />
         )}
       </div>
 

@@ -1,0 +1,57 @@
+// ============================================================================
+// Section List View - Displays clickable list of page sections
+// ============================================================================
+// What: The initial view showing all editable sections for a page
+// Why: Extracted from AdminSidebar to reduce its size
+// How: Renders a list of buttons, each selecting a section to edit
+
+import { formInputColors, headingColors } from '@/lib/colors';
+
+interface Section {
+  key: string;
+  label: string;
+}
+
+interface SectionListViewProps {
+  sections: Section[];
+  onSelectSection: (sectionKey: string) => void;
+}
+
+export default function SectionListView({ sections, onSelectSection }: SectionListViewProps) {
+  return (
+    <div className="space-y-2">
+      <p className={`text-sm ${formInputColors.helper} mb-4`}>
+        Click a section to edit:
+      </p>
+      {sections.map(({ key, label }) => (
+        <button
+          key={key}
+          type="button"
+          onClick={() => onSelectSection(key)}
+          className={`
+            w-full text-left px-4 py-3 rounded-lg
+            border border-gray-200 dark:border-gray-700
+            hover:bg-gray-100 dark:hover:bg-gray-700
+            hover:border-blue-300 dark:hover:border-blue-600
+            transition-all duration-150
+            group
+          `}
+        >
+          <div className="flex items-center justify-between">
+            <span className={`font-medium text-sm ${headingColors.secondary}`}>
+              {label}
+            </span>
+            <svg
+              className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+}
