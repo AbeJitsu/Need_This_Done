@@ -1,5 +1,14 @@
 [
   {
+    "hash": "dacc0ed",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "dacc0edcbaaeb3078f35169913fd91cca178aea8:%M",
+    "author": "Abe Reyes",
+    "message": "Add deposit confirmation email for quote payments",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
     "hash": "1e49058",
     "date": "%Y->- (HEAD -> main)",
     "time": "1e4905868ab9700c6d8dd2c7721b62c178f108fd:%M",
@@ -889,14 +898,5 @@
     "message": "Security: Fix remaining RLS issues (47 more tables/views/policies)",
     "category": "Security",
     "filesChanged": 1
-  },
-  {
-    "hash": "621b614",
-    "date": "2025-12-30",
-    "time": "18:01",
-    "author": "Abe Reyes",
-    "message": "Refactor: Lighten text colors to WCAG AA minimum (-600)",
-    "category": "Refactoring",
-    "filesChanged": 15
   }
 ]

@@ -231,10 +231,19 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
   - Added `sendDepositConfirmation()` to email-service.ts
 
 **Phase 3: Admin Flow**
-- [ ] Add quote creation form in admin (from project inquiry)
-- [ ] Quote list view with status filtering
-- [ ] Send quote email to customer with payment link
-- [ ] Track quote → order conversion
+- [x] Add quote creation form in admin (from project inquiry)
+  - Created `/admin/quotes` page with create form
+  - Created `/api/admin/quotes` endpoints (GET list, POST create)
+- [x] Quote list view with status filtering
+  - Filter by: draft, sent, deposit_paid, balance_paid, completed
+  - Shows reference number, customer, amounts, expiration
+- [x] Send quote email to customer with payment link
+  - Created `QuoteEmail.tsx` template with pricing + payment link
+  - Added `sendQuoteEmail()` to email-service.ts
+  - Created `/api/admin/quotes/[id]/send` endpoint
+- [x] Track quote → order conversion
+  - Quote status flow: draft → sent → deposit_paid → balance_paid → completed
+  - Orders table has `quote_id` column linking to quotes
 
 ### Short Term
 

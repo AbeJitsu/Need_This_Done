@@ -159,6 +159,17 @@ export type DepositConfirmationEmailProps = {
   paidAt: string;
 };
 
+export type QuoteEmailProps = {
+  customerEmail: string;
+  customerName: string;
+  quoteReference: string;
+  projectDescription?: string;
+  totalAmount: number;
+  depositAmount: number;
+  expiresAt: string;
+  paymentUrl: string;
+};
+
 // ============================================================================
 // Project Submission Emails
 // ============================================================================
@@ -506,5 +517,33 @@ export async function sendDepositConfirmation(
     data.customerEmail,
     subject,
     DepositConfirmationEmail(data),
+  );
+}
+
+/**
+ * Send quote email to customer with pricing and payment link.
+ * This is sent when admin marks quote as 'sent'.
+ *
+ * @param data - Quote data (customer info, amounts, payment URL)
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendQuoteEmail(
+  data: QuoteEmailProps,
+): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: QuoteEmail } = await import("../emails/QuoteEmail");
+
+  const firstName = data.customerName.split(' ')[0];
+  const depositFormatted = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(data.depositAmount / 100);
+
+  const subject = `📝 ${firstName}, your quote is ready - ${depositFormatted} to get started`;
+
+  return sendEmailWithRetry(
+    data.customerEmail,
+    subject,
+    QuoteEmail(data),
   );
 }
