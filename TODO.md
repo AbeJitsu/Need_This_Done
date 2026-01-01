@@ -117,7 +117,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 - [x] Extract field editors into separate components
-- [ ] Extract section header/navigation into own component
+- [x] Extract section header/navigation into own component
 - [ ] Extract save/cancel actions into own component
 - [ ] Reduce AdminSidebar to <300 lines coordinator
 

@@ -5,12 +5,13 @@ import { useInlineEdit } from '@/context/InlineEditContext';
 import { useAuth } from '@/context/AuthContext';
 import VersionHistoryPanel from './VersionHistoryPanel';
 import { SmartFieldEditor, fieldLabels } from './FieldEditors';
+import SidebarHeader from './SidebarHeader';
+import { BackButton, SectionHeader, ItemBreadcrumb } from './SectionNavigation';
 import {
   formInputColors,
   headingColors,
   cardBgColors,
   cardBorderColors,
-  accentColors,
   solidButtonColors,
   uiChromeBg,
   hoverBgColors,
@@ -557,28 +558,7 @@ export default function AdminSidebar() {
       `}
     >
       {/* Header */}
-      <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 p-4">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className={`font-semibold ${headingColors.primary}`}>
-            Page Editor
-          </h2>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            aria-label="Close editor"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        {pageSlug && (
-          <p className={`text-xs ${formInputColors.helper}`}>
-            Editing: {pageSlug === 'home' ? 'Homepage' : pageSlug.replace(/-/g, ' ')}
-          </p>
-        )}
-      </div>
+      <SidebarHeader pageSlug={pageSlug} onClose={handleClose} />
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
@@ -636,37 +616,13 @@ export default function AdminSidebar() {
             return (
               <div>
                 {/* Breadcrumb navigation */}
-                <div className="mb-4">
-                  <button
-                    type="button"
-                    onClick={handleNavigateUp}
-                    className={`
-                      flex items-center gap-2 text-sm font-medium
-                      ${accentColors.blue.text} hover:underline
-                    `}
-                  >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                    All Sections
-                  </button>
-                </div>
+                <BackButton onClick={handleNavigateUp} label="All Sections" />
 
                 {/* Breadcrumb path */}
-                <div className="pb-3 mb-4 border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-1">
-                    <span>{sectionLabels[selectedItem.sectionKey] || selectedItem.sectionKey}</span>
-                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                    <span className="text-purple-600 dark:text-purple-400 font-medium">
-                      {selectedItem.label}
-                    </span>
-                  </div>
-                  <h3 className={`font-medium ${headingColors.primary}`}>
-                    {selectedItem.label}
-                  </h3>
-                </div>
+                <ItemBreadcrumb
+                  sectionLabel={sectionLabels[selectedItem.sectionKey] || selectedItem.sectionKey}
+                  itemLabel={selectedItem.label}
+                />
 
                 {/* Array Operations Bar */}
                 <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
@@ -730,33 +686,16 @@ export default function AdminSidebar() {
           // Section Editor View
           <div>
             {/* Breadcrumb navigation */}
-            <div className="mb-4">
-              <button
-                type="button"
-                onClick={handleNavigateUp}
-                className={`
-                  flex items-center gap-2 text-sm font-medium
-                  ${accentColors.blue.text} hover:underline
-                `}
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                {selectedSection.subPath ? selectedSection.label : 'All Sections'}
-              </button>
-            </div>
+            <BackButton
+              onClick={handleNavigateUp}
+              label={selectedSection.subPath ? selectedSection.label : 'All Sections'}
+            />
 
             {/* Current location header */}
-            <div className="pb-3 mb-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 className={`font-medium ${headingColors.primary}`}>
-                {selectedSection.subLabel || selectedSection.label}
-              </h3>
-              {selectedSection.subPath && (
-                <p className={`text-xs ${formInputColors.helper} mt-1`}>
-                  {selectedSection.label} → {selectedSection.subLabel}
-                </p>
-              )}
-            </div>
+            <SectionHeader
+              title={selectedSection.subLabel || selectedSection.label}
+              subtitle={selectedSection.subPath ? `${selectedSection.label} → ${selectedSection.subLabel}` : undefined}
+            />
 
             {/* Dynamic fields */}
             {renderFields(selectedSection.content)}
