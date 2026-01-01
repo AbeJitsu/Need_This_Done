@@ -73,6 +73,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
         <PageHeader
           title={content.header.title}
           description={content.header.description}
+          color="gold"
         />
       </EditableSection>
 

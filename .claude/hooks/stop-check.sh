@@ -54,7 +54,7 @@ if [[ -f "$SESSION_CHANGES_FILE" ]] && [[ -s "$SESSION_CHANGES_FILE" ]]; then
 fi
 
 # ============================================================================
-# CHECK 2: Auto-Loop Mode
+# CHECK 2: Auto-Loop Mode (or Audit Mode)
 # If loop is active, manage continuation
 # ============================================================================
 if type is_loop_active &>/dev/null && is_loop_active; then
@@ -63,7 +63,65 @@ if type is_loop_active &>/dev/null && is_loop_active; then
   increment_iteration
 
   # --------------------------------------------
-  # CHECK 2a: Time Limit
+  # CHECK 2-AUDIT: Pragmatic Audit Mode
+  # Different completion logic - based on patterns scanned, not tasks
+  # --------------------------------------------
+  IS_AUDIT_MODE=$(jq -r '.auditMode // false' "$LOOP_STATE_FILE" 2>/dev/null)
+  if [[ "$IS_AUDIT_MODE" == "true" ]]; then
+    PATTERNS_CHECKED=$(jq -r '.patternsChecked | length' "$LOOP_STATE_FILE" 2>/dev/null || echo "0")
+    TOTAL_PATTERNS=$(jq -r '.totalPatterns // 9' "$LOOP_STATE_FILE" 2>/dev/null)
+    PATTERNS_REMAINING=$((TOTAL_PATTERNS - PATTERNS_CHECKED))
+    ELAPSED=$(get_elapsed_formatted)
+    ITERATION=$(get_iteration_count)
+
+    # Check time limit first
+    if is_time_limit_exceeded; then
+      echo "" >&2
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+      echo "⏸️  AUDIT PAUSED: TIME LIMIT" >&2
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+      echo "" >&2
+      echo "Patterns scanned: $PATTERNS_CHECKED / $TOTAL_PATTERNS" >&2
+      echo "Duration: $ELAPSED" >&2
+      echo "" >&2
+      echo "Run /pragmatic-audit to resume." >&2
+      end_loop
+      exit 0
+    fi
+
+    # Check if all patterns scanned
+    if [[ "$PATTERNS_REMAINING" -le 0 ]]; then
+      echo "" >&2
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+      echo "✅ PRAGMATIC AUDIT COMPLETE" >&2
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+      echo "" >&2
+      echo "All $TOTAL_PATTERNS pattern categories scanned." >&2
+      echo "Duration: $ELAPSED" >&2
+      echo "" >&2
+      echo "Findings added to TODO.md. Run /auto-loop to fix them." >&2
+      delete_loop_state
+      exit 0
+    fi
+
+    # Still patterns to scan - continue
+    CHECKED_LIST=$(jq -r '.patternsChecked | join(", ")' "$LOOP_STATE_FILE" 2>/dev/null || echo "none")
+    echo "" >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo "🔍 AUDIT IN PROGRESS - Iteration $ITERATION ($ELAPSED)" >&2
+    echo "   Patterns: $PATTERNS_CHECKED / $TOTAL_PATTERNS scanned" >&2
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+    echo "" >&2
+    echo "Completed: $CHECKED_LIST" >&2
+    echo "" >&2
+    echo "Continue scanning remaining patterns. When done with each:" >&2
+    echo "  jq '.patternsChecked += [\"PATTERN_NAME\"]' .claude/loop-state.json > tmp && mv tmp .claude/loop-state.json" >&2
+    echo "" >&2
+    exit 2
+  fi
+
+  # --------------------------------------------
+  # CHECK 2a: Time Limit (non-audit mode)
   # --------------------------------------------
   if is_time_limit_exceeded; then
     echo "" >&2

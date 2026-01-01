@@ -60,7 +60,8 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [x] Update PageHeader.tsx to accept optional `color` prop (default: 'blue')
 - [x] Use titleColors[color] instead of headingColors.primary
 - [x] All pages using PageHeader will get blue titles like homepage
-- [ ] Optional: customize per page (e.g., FAQ=gold, Pricing=purple)
+
+[x] **Customize Page Header Colors** - Set unique colors per page (FAQ=gold, Pricing=purple)
 
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
 
@@ -82,10 +83,10 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Fix: Use Card component or cardBgColors/cardBorderColors from colors.ts│
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Audit components not using Card.tsx or colors.ts
-- [ ] Migrate ServiceCard to use cardBgColors.base (line 88)
-- [ ] Add inputBaseClasses to colors.ts for form fields
-- [ ] Update FAQ.tsx, HowItWorks.tsx, and other marketing components
+- [x] Audit components not using Card.tsx or colors.ts (30+ instances found, fixes in separate tasks)
+- [x] Migrate ServiceCard to use cardBgColors.base (line 88)
+- [x] Add inputBaseClasses to colors.ts for form fields
+- [x] Update FAQ.tsx, HowItWorks.tsx, and other marketing components
 
 **Form Field DRY Violations** - Identical input styles repeated across 3+ field components
 ```
@@ -99,9 +100,9 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Fix: Extract to formInputClasses in colors.ts + FieldWrapper component│
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Create formInputClasses in colors.ts with base, error, focus states
-- [ ] Create FieldWrapper component for label/hint/error structure
-- [ ] Refactor TextField, TextAreaField, SelectField to use shared code
+- [x] Create formInputClasses in colors.ts with base, error, focus states
+- [x] Create FieldWrapper component for label/hint/error structure
+- [x] Refactor TextField, TextAreaField, SelectField to use shared code
 
 **AdminSidebar God Object** - 1121 lines, too many responsibilities
 ```
@@ -115,10 +116,13 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Fix: Split into focused sub-components                                 │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Extract field editors into separate components
-- [ ] Extract section header/navigation into own component
-- [ ] Extract save/cancel actions into own component
-- [ ] Reduce AdminSidebar to <300 lines coordinator
+- [x] Extract field editors into separate components
+- [x] Extract section header/navigation into own component
+- [x] Extract save/cancel actions into own component
+- [x] Reduce AdminSidebar to <300 lines coordinator
+  - Reduced from 1121 → 680 lines (39% reduction)
+  - Extracted: FieldEditors, SidebarHeader, SectionNavigation, SidebarFooter, SectionListView, ItemEditorView
+  - Further reduction would require restructuring renderFields (~165 lines) and array operations
 
 **FeatureCard Hardcoded Colors** - Uses inline dark mode classes
 ```
@@ -129,8 +133,117 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Fix: Import from colors.ts like other card components                  │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Add titleColor and descriptionColor to featureCardColors in colors.ts
-- [ ] Update FeatureCard to use centralized colors
+- [x] Add titleColor and descriptionColor to featureCardColors in colors.ts
+- [x] Update FeatureCard to use centralized colors
+
+### Pragmatic Programmer Audit (Dec 31, 2025)
+
+**HARDCODED VALUES** - Magic numbers that should be constants
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Pattern: setTimeout with hardcoded milliseconds                        │
+│  Found in: 9 occurrences across 6 files                                 │
+│  Impact: Inconsistent timing behavior, hard to tune                     │
+│  Fix: Create TIMING_CONSTANTS in a config file                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [x] Create timing constants file (TOAST_DURATION, COPY_FEEDBACK_DELAY, etc.)
+- [x] Update checkout/page.tsx:332 - setCopied setTimeout 2000
+- [x] Update admin pages to use shared timeout constants
+
+**BROKEN WINDOWS** - TODO comments that need resolution
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Pattern: TODO/FIXME comments left in production code                   │
+│  Found in: 5 files                                                      │
+│  Fix: Resolve or convert to tracked issues                              │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Resolve TODO in get-started/GetStartedPageClient.tsx:66 (payment integration)
+  - Unblocked: quotes system planned below, product decisions made
+- [x] Implement ICS attachment in lib/email-service.ts:351
+- [!] Complete Medusa cart integration in api/cron/abandoned-carts/route.ts:203
+  - Blocked: Medusa v1 Store API has no "list carts" endpoint; needs cart tracking table or Admin API
+- [!] Add Medusa admin API in api/admin/inventory/route.ts:128
+  - Blocked: Requires Medusa Admin API auth setup + endpoint development
+
+**LARGE FILES** - Components over 500 lines need refactoring
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Files: RichTextEditor (580), PageWizard (569), InlineEditContext (555) │
+│  Note: AdminSidebar (1121) already tracked in DRY/ETC section           │
+│  Impact: Hard to test, understand, and maintain                         │
+│  Fix: Extract focused sub-components                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [x] Refactor RichTextEditor.tsx (580 lines) - extract toolbar, helpers
+  - Extracted 15 icons to EditorIcons.tsx (154 lines)
+  - Reduced from 580 → 446 lines (23% reduction)
+- [x] Refactor PageWizard.tsx (569 lines) - extract step components
+  - Extracted 5 step components to WizardSteps.tsx (320 lines)
+  - Reduced from 569 → 224 lines (61% reduction)
+- [x] Refactor InlineEditContext.tsx (555 lines) - extract helpers to utils
+  - Created inline-edit-utils.ts (103 lines) with reorderArray, calculateNewSelectedIndex, parseItemFieldPath
+  - Reduced from 555 → 525 lines (5% reduction, logic now centralized)
+
+**EMPTY CATCH BLOCK** - Swallowed exceptions hide errors
+- [x] Add proper error handling in app/layout.tsx:111 (empty catch block)
+
+**RESOURCE LEAK RISK** - setInterval may not be cleaned up
+- [x] Verify TestimonialsComponent.tsx:157 setInterval has cleanup on unmount
+  - Verified: cleanup exists at line 158 `return () => clearInterval(interval);`
+
+### Quotes System (New Feature)
+
+**Quote → Deposit → Project Flow**
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Customer fills /contact form → Admin creates quote → Customer pays    │
+│  deposit via /get-started → Project kicks off                          │
+│                                                                         │
+│  Decisions Made:                                                        │
+│    - Deposit: Always 50%                                               │
+│    - Format: NTD-MMDDYY-HHMM (e.g., NTD-010125-1430)                  │
+│    - Expiration: 30 days                                               │
+│    - Balance due: Before delivery/ownership transfer                   │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+**Phase 1: Database & API**
+- [x] Create `quotes` table migration (037)
+  - id, reference_number (unique), project_id, customer_name, customer_email
+  - total_amount, deposit_amount (cents), status, expires_at, notes
+  - status: 'draft', 'sent', 'authorized', 'deposit_paid', 'balance_paid', 'completed'
+  - Includes generate_quote_reference() function
+- [x] Add `quote_id` column to orders table (038)
+- [x] Create `/api/quotes/authorize` endpoint
+  - POST { quoteRef, email } → validates quote, creates Stripe payment intent
+- [x] Create quote reference generator: `NTD-MMDDYY-HHMM` (in SQL migration 037)
+
+**Phase 2: Customer Flow**
+- [x] Update `/get-started` page with "I have a quote" path
+- [x] Add quote reference + email form fields
+- [x] Connect to `/api/quotes/authorize` → Stripe payment
+- [x] Handle payment success → update quote status, create order
+  - Created `/api/quotes/deposit-confirmed` endpoint
+- [x] Send confirmation email with project timeline
+  - Created `DepositConfirmationEmail.tsx` template with receipt + next steps
+  - Added `sendDepositConfirmation()` to email-service.ts
+
+**Phase 3: Admin Flow**
+- [x] Add quote creation form in admin (from project inquiry)
+  - Created `/admin/quotes` page with create form
+  - Created `/api/admin/quotes` endpoints (GET list, POST create)
+- [x] Quote list view with status filtering
+  - Filter by: draft, sent, deposit_paid, balance_paid, completed
+  - Shows reference number, customer, amounts, expiration
+- [x] Send quote email to customer with payment link
+  - Created `QuoteEmail.tsx` template with pricing + payment link
+  - Added `sendQuoteEmail()` to email-service.ts
+  - Created `/api/admin/quotes/[id]/send` endpoint
+- [x] Track quote → order conversion
+  - Quote status flow: draft → sent → deposit_paid → balance_paid → completed
+  - Orders table has `quote_id` column linking to quotes
 
 ### Short Term
 
@@ -217,4 +330,4 @@ _Major features fully documented in README.md_
 
 ---
 
-*Last Updated: December 31, 2025 (DRY/ETC audit added)*
+*Last Updated: January 1, 2026 (Quotes system planned)*

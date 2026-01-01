@@ -36,6 +36,7 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
         <PageHeader
           title={content.header.title}
           description={content.header.description}
+          color="purple"
         />
       </EditableSection>
 

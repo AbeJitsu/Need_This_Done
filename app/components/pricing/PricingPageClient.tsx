@@ -34,6 +34,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
         <PageHeader
           title={content.header.title}
           description={content.header.description}
+          color="purple"
         />
       </EditableSection>
 

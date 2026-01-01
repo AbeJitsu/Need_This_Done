@@ -77,6 +77,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
         <PageHeader
           title={content.header.title}
           description={content.header.description}
+          color="green"
         />
       </EditableSection>
 

@@ -6,6 +6,13 @@ import { getPageSlugFromPath } from '@/lib/editable-routes';
 import { getDefaultContent } from '@/lib/default-page-content';
 import { getNestedValue, setNestedValue } from '@/lib/object-utils';
 import {
+  reorderArray,
+  calculateNewSelectedIndex,
+  parseItemFieldPath,
+  getArrayPath,
+  getReorderFieldPath,
+} from '@/lib/inline-edit-utils';
+import {
   DndContext,
   closestCenter,
   KeyboardSensor,
@@ -331,30 +338,16 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     // Update selected item content if it's the one being edited
     // fieldPath for items is like "0.answer" or "items.0.answer"
     if (selectedItem && selectedItem.sectionKey === sectionKey) {
-      // Parse the fieldPath to extract the index and remaining path
-      // If sectionKey === arrayField, path is "index.field" (e.g., "0.answer")
-      // If not, path is "arrayField.index.field" (e.g., "items.0.answer")
-      const pathParts = fieldPath.split('.');
-      let itemIndex: number;
-      let itemFieldPath: string;
-
-      if (selectedItem.sectionKey === selectedItem.arrayField || selectedItem.arrayField === '') {
-        // Path is "index.field"
-        itemIndex = parseInt(pathParts[0], 10);
-        itemFieldPath = pathParts.slice(1).join('.');
-      } else {
-        // Path is "arrayField.index.field"
-        itemIndex = parseInt(pathParts[1], 10);
-        itemFieldPath = pathParts.slice(2).join('.');
-      }
+      const isSameAsSection = selectedItem.sectionKey === selectedItem.arrayField || selectedItem.arrayField === '';
+      const parsed = parseItemFieldPath(fieldPath, isSameAsSection);
 
       // Only update if this edit is for the currently selected item
-      if (itemIndex === selectedItem.index && itemFieldPath) {
+      if (parsed && parsed.itemIndex === selectedItem.index && parsed.itemFieldPath) {
         setSelectedItem(prev => {
           if (!prev) return prev;
           return {
             ...prev,
-            content: setNestedValue(prev.content, itemFieldPath, newValue),
+            content: setNestedValue(prev.content, parsed.itemFieldPath, newValue),
           };
         });
       }
@@ -370,12 +363,7 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
 
   // Reorder sections (for drag-and-drop)
   const reorderSections = useCallback((oldIndex: number, newIndex: number) => {
-    setSectionOrder(prev => {
-      const newOrder = [...prev];
-      const [removed] = newOrder.splice(oldIndex, 1);
-      newOrder.splice(newIndex, 0, removed);
-      return newOrder;
-    });
+    setSectionOrder(prev => reorderArray(prev, oldIndex, newIndex));
 
     // Also add to pending changes to track the reorder
     addPendingChange({
@@ -407,17 +395,12 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
   ) => {
     if (!pageContent) return;
 
-    // Determine the path to the array
-    // If sectionKey === arrayField, the section IS the array
-    const arrayPath = sectionKey === arrayField ? sectionKey : `${sectionKey}.${arrayField}`;
+    const arrayPath = getArrayPath(sectionKey, arrayField);
     const currentArray = getNestedValue(pageContent, arrayPath) as unknown[];
 
     if (!Array.isArray(currentArray)) return;
 
-    // Create new array with reordered items
-    const newArray = [...currentArray];
-    const [removed] = newArray.splice(oldIndex, 1);
-    newArray.splice(newIndex, 0, removed);
+    const newArray = reorderArray(currentArray, oldIndex, newIndex);
 
     // Update page content
     setPageContent(prev => {
@@ -428,28 +411,15 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     // Track the change
     addPendingChange({
       sectionKey,
-      fieldPath: arrayField === sectionKey ? '_reorder' : `${arrayField}._reorder`,
+      fieldPath: getReorderFieldPath(sectionKey, arrayField),
       oldValue: { oldIndex, newIndex },
       newValue: newArray,
     });
 
     // Update selected item index if it was affected by the reorder
     if (selectedItem && selectedItem.sectionKey === sectionKey && selectedItem.arrayField === arrayField) {
-      const currentIndex = selectedItem.index;
-      let newSelectedIndex = currentIndex;
-
-      if (currentIndex === oldIndex) {
-        // The selected item was moved
-        newSelectedIndex = newIndex;
-      } else if (oldIndex < currentIndex && newIndex >= currentIndex) {
-        // Item moved from before to after the selected item
-        newSelectedIndex = currentIndex - 1;
-      } else if (oldIndex > currentIndex && newIndex <= currentIndex) {
-        // Item moved from after to before the selected item
-        newSelectedIndex = currentIndex + 1;
-      }
-
-      if (newSelectedIndex !== currentIndex) {
+      const newSelectedIndex = calculateNewSelectedIndex(selectedItem.index, oldIndex, newIndex);
+      if (newSelectedIndex !== null) {
         setSelectedItem(prev => prev ? { ...prev, index: newSelectedIndex } : null);
       }
     }

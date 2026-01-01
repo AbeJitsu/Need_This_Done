@@ -147,6 +147,7 @@ export default function ChangelogPageClient({ initialContent, entries }: Changel
         <PageHeader
           title={content.header.title}
           description={content.header.description}
+          color="teal"
         />
       </EditableSection>
 

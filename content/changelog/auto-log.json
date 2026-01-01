@@ -1,5 +1,293 @@
 [
   {
+    "hash": "cee47c2",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "cee47c2e064928a536271edc59e92dcf49edae75:%M",
+    "author": "Abe Reyes",
+    "message": "Add blog publishing workflow and JQuery learning post",
+    "category": "Other",
+    "filesChanged": 7
+  },
+  {
+    "hash": "6635e67",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "6635e672de132e5b325cf4487a0b941bcb6c2cd7:%M",
+    "author": "Abe Reyes",
+    "message": "Add admin quotes dashboard and email system",
+    "category": "Other",
+    "filesChanged": 8
+  },
+  {
+    "hash": "dacc0ed",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "dacc0edcbaaeb3078f35169913fd91cca178aea8:%M",
+    "author": "Abe Reyes",
+    "message": "Add deposit confirmation email for quote payments",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
+    "hash": "1e49058",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "1e4905868ab9700c6d8dd2c7721b62c178f108fd:%M",
+    "author": "Abe Reyes",
+    "message": "Add customer quote payment flow to get-started page",
+    "category": "Other",
+    "filesChanged": 3
+  },
+  {
+    "hash": "20a7f64",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "20a7f6473ae21959122992cbe1444c4c8ee87798:%M",
+    "author": "Abe Reyes",
+    "message": "Repair missing orders table in Supabase",
+    "category": "Other",
+    "filesChanged": 1
+  },
+  {
+    "hash": "4665789",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "4665789f5f10d179517b6852c36b0ed98a277d34:%M",
+    "author": "Abe Reyes",
+    "message": "Make quote_id migration defensive for missing orders table",
+    "category": "Other",
+    "filesChanged": 1
+  },
+  {
+    "hash": "ccec8c9",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "ccec8c90b1682db2e3d5dc13266e7a0902bf9af1:%M",
+    "author": "Abe Reyes",
+    "message": "Add quotes authorization API endpoint",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
+    "hash": "d073333",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "d073333e3ee81b5c94e7ef3c95f4a2b17de641a7:%M",
+    "author": "Abe Reyes",
+    "message": "Add quotes database schema for deposit-based workflow",
+    "category": "Other",
+    "filesChanged": 3
+  },
+  {
+    "hash": "dc8e6b8",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "dc8e6b8c2619714168b438d0fb552b315e35aa1f:%M",
+    "author": "Abe Reyes",
+    "message": "Add quotes system plan to TODO.md",
+    "category": "Other",
+    "filesChanged": 4
+  },
+  {
+    "hash": "7670e45",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "7670e4592cb93c1e6ba6b8009bd222773131f925:%M",
+    "author": "Abe Reyes",
+    "message": "Extract inline edit utilities for cleaner separation",
+    "category": "Other",
+    "filesChanged": 4
+  },
+  {
+    "hash": "a4ec2aa",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "a4ec2aa394f28e981b98df465f6cb9bba099b24b:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor PageWizard into focused step components",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
+    "hash": "7a52790",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "7a5279000be775dea0675065e81acaee015b0360:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor RichTextEditor to extract icons",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
+    "hash": "4f2cb65",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "4f2cb65b763e84a74b57c9028d7582552c961b2b:%M",
+    "author": "Abe Reyes",
+    "message": "Fix empty catch block in theme initialization",
+    "category": "Other",
+    "filesChanged": 4
+  },
+  {
+    "hash": "573fbb9",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "573fbb9a9484a62085e58f374523541188749a59:%M",
+    "author": "Abe Reyes",
+    "message": "Add ICS calendar attachment to confirmation emails",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
+    "hash": "69e2752",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "69e27528ebeef2d955b44d14f502c6f09ccf0501:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor admin pages to use timing constants",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
+    "hash": "8218685",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "8218685ae1a59037c951fc34715bce1cd919f57e:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor checkout to use COPY_FEEDBACK_DELAY",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
+    "hash": "8a7bb42",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "8a7bb42b0dbc20eccbc9bc462adfce2cfd925e37:%M",
+    "author": "Abe Reyes",
+    "message": "Add centralized timing constants",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
+    "hash": "f535b21",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "f535b2137fc61f9a002173d45ac82ba13bb6dc71:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor FeatureCard to use centralized colors",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
+    "hash": "5251203",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "5251203fed2ef77013d6160e10dca17b56f97518:%M",
+    "author": "Abe Reyes",
+    "message": "Add title and description colors to featureCardColors",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
+    "hash": "9ff587d",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "9ff587d731ac6f1ce6265529436c06eb3fa9099a:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor AdminSidebar with view components",
+    "category": "Other",
+    "filesChanged": 8
+  },
+  {
+    "hash": "b7454c2",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "b7454c2c1069d488a27e94957f4a97baac4824f5:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor AdminSidebar footer into SidebarFooter",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
+    "hash": "fbfd192",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "fbfd192ec2ea73bb7af24ffe299003d1f14a021a:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor AdminSidebar header and navigation",
+    "category": "Other",
+    "filesChanged": 7
+  },
+  {
+    "hash": "8fd4444",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "8fd4444b17422590c7f346cbcad4c0a4a3e84ef7:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor AdminSidebar to extract field editors",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
+    "hash": "a880e28",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "a880e28b7e76987f8c9fffd99c078e804e0f8b96:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor field components to use FieldWrapper",
+    "category": "Other",
+    "filesChanged": 7
+  },
+  {
+    "hash": "5d6fb11",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "5d6fb11f1906a901c01a5dd427b0fb97eab7fee5:%M",
+    "author": "Abe Reyes",
+    "message": "Add FieldWrapper component for DRY form fields",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
+    "hash": "f8ccc44",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "f8ccc449b1b184a148a4fc132813bb645de8b506:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor FAQ and HowItWorks to use centralized colors",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
+    "hash": "77ad4f8",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "77ad4f8cf5add9e6b6d98972a14591f721f35234:%M",
+    "author": "Abe Reyes",
+    "message": "Add formInputClasses to colors.ts for DRY form fields",
+    "category": "Other",
+    "filesChanged": 4
+  },
+  {
+    "hash": "2ca0a62",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "2ca0a623cf6c8e2043034e924167db9e7a35aea7:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor ServiceCard to use centralized color system",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
+    "hash": "1f50358",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "1f50358384e2c05c4a8ffc49c4f93a3a40055f94:%M",
+    "author": "Abe Reyes",
+    "message": "Add unique header colors to marketing pages",
+    "category": "Other",
+    "filesChanged": 13
+  },
+  {
+    "hash": "163a134",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "163a134add6d1617eeaad7a93a9c539551cc5f10:%M",
+    "author": "Abe Reyes",
+    "message": "Add autonomous loop support to pragmatic-audit skill",
+    "category": "Other",
+    "filesChanged": 4
+  },
+  {
+    "hash": "ecef4da",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "ecef4da21a20b46f0bbfa8550dcd2f407cebdaae:%M",
+    "author": "Abe Reyes",
+    "message": "Add pragmatic-audit skill for code quality scanning",
+    "category": "Other",
+    "filesChanged": 3
+  },
+  {
+    "hash": "119ced5",
+    "date": "%Y->- (HEAD -> production)",
+    "time": "119ced5bff5a6bd07d2fc3b35e2dbf2ac8d784ae:%M",
+    "author": "Abe Reyes",
+    "message": "Merge main into production",
+    "category": "Other",
+    "filesChanged": 0
+  },
+  {
     "hash": "622bdb0",
     "date": "2025-12-31",
     "time": "19:38",
@@ -610,86 +898,5 @@
     "message": "Security: Fix function search_paths and extension locations",
     "category": "Security",
     "filesChanged": 2
-  },
-  {
-    "hash": "cc5a0c3",
-    "date": "2025-12-30",
-    "time": "18:04",
-    "author": "Abe Reyes",
-    "message": "Docs: Track hardcoded color elimination task",
-    "category": "Documentation",
-    "filesChanged": 2
-  },
-  {
-    "hash": "e1183c5",
-    "date": "2025-12-30",
-    "time": "18:03",
-    "author": "Abe Reyes",
-    "message": "Security: Fix remaining RLS issues (47 more tables/views/policies)",
-    "category": "Security",
-    "filesChanged": 1
-  },
-  {
-    "hash": "621b614",
-    "date": "2025-12-30",
-    "time": "18:01",
-    "author": "Abe Reyes",
-    "message": "Refactor: Lighten text colors to WCAG AA minimum (-600)",
-    "category": "Refactoring",
-    "filesChanged": 15
-  },
-  {
-    "hash": "f6049c9",
-    "date": "2025-12-30",
-    "time": "17:54",
-    "author": "Abe Reyes",
-    "message": "Security: Enable RLS on 73 Medusa e-commerce tables",
-    "category": "Security",
-    "filesChanged": 3
-  },
-  {
-    "hash": "6e3f333",
-    "date": "2025-12-30",
-    "time": "17:46",
-    "author": "Abe Reyes",
-    "message": "Fix: Implement WCAG AA color system with 4.5:1 contrast anchors",
-    "category": "Fixes",
-    "filesChanged": 71
-  },
-  {
-    "hash": "0210815",
-    "date": "2025-12-30",
-    "time": "14:50",
-    "author": "Abe Reyes",
-    "message": "Fix: Improve button contrast in dark mode for WCAG AA",
-    "category": "Fixes",
-    "filesChanged": 17
-  },
-  {
-    "hash": "6879b15",
-    "date": "2025-12-30",
-    "time": "14:37",
-    "author": "Abe Reyes",
-    "message": "Fix: Update dark mode orange to #ad5700 (5.07:1 contrast)",
-    "category": "Fixes",
-    "filesChanged": 5
-  },
-  {
-    "hash": "06aba3e",
-    "date": "2025-12-30",
-    "time": "14:28",
-    "author": "Abe Reyes",
-    "message": "Fix: Replace brown orange-800 with saturated #ad4800 in dark mode",
-    "category": "Fixes",
-    "filesChanged": 4
-  },
-  {
-    "hash": "34fdbeb",
-    "date": "2025-12-30",
-    "time": "14:26",
-    "author": "Abe Reyes",
-    "message": "Test: Add dark mode visual regression tests",
-    "category": "Testing",
-    "filesChanged": 49
   }
 ]

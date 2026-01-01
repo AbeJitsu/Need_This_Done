@@ -12,6 +12,7 @@ import { puckConfig } from '@/lib/puck-config';
 import '@measured/puck/puck.css';
 import { CheckIcon } from '@/components/ui/icons';
 import { statusBadgeColors, containerBg } from '@/lib/colors';
+import { SAVE_STATUS_DURATION } from '@/lib/timing';
 
 export default function EditPage({ params }: { params: { slug: string } }) {
   const router = useRouter();
@@ -78,8 +79,8 @@ export default function EditPage({ params }: { params: { slug: string } }) {
       setHasUnsavedChanges(false);
       showToast('Page updated successfully', 'success');
 
-      // Reset to idle after 3 seconds so the indicator disappears
-      setTimeout(() => setSaveStatus('idle'), 3000);
+      // Reset to idle after delay so the indicator disappears
+      setTimeout(() => setSaveStatus('idle'), SAVE_STATUS_DURATION);
     } catch (err) {
       setSaveStatus('idle');
       showToast(err instanceof Error ? err.message : 'Failed to update page', 'error');

@@ -48,6 +48,7 @@ export default function ServicesPageClient({ content: initialContent }: Services
           <PageHeader
             title={content.header.title}
             description={content.header.description}
+            color="teal"
           />
         </EditableSection>
 

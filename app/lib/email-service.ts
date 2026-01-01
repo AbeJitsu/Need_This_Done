@@ -1,4 +1,4 @@
-import { sendEmailWithRetry, getEmailConfig } from "./email";
+import { sendEmailWithRetry, getEmailConfig, EmailAttachment } from "./email";
 
 // ============================================================================
 // Email Service Functions
@@ -146,6 +146,28 @@ export type AppointmentCancellationEmailProps = {
   serviceName: string;
   orderId: string;
   reason?: string;
+};
+
+export type DepositConfirmationEmailProps = {
+  customerEmail: string;
+  customerName: string;
+  quoteReference: string;
+  projectDescription?: string;
+  depositAmount: number;
+  totalAmount: number;
+  balanceRemaining: number;
+  paidAt: string;
+};
+
+export type QuoteEmailProps = {
+  customerEmail: string;
+  customerName: string;
+  quoteReference: string;
+  projectDescription?: string;
+  totalAmount: number;
+  depositAmount: number;
+  expiresAt: string;
+  paymentUrl: string;
 };
 
 // ============================================================================
@@ -340,7 +362,7 @@ export async function sendAppointmentRequestNotification(
 
 /**
  * Send appointment confirmation email when admin approves.
- * Includes meeting details and calendar invite.
+ * Includes meeting details and calendar invite as ICS attachment.
  *
  * @param data - Appointment confirmation data
  * @param icsContent - Optional ICS calendar file content for attachment
@@ -348,19 +370,27 @@ export async function sendAppointmentRequestNotification(
  */
 export async function sendAppointmentConfirmation(
   data: AppointmentConfirmationEmailProps,
-  _icsContent?: string, // TODO: Implement ICS attachment support
+  icsContent?: string,
 ): Promise<string | null> {
   // Dynamic import to prevent bundling during page prerendering
   const { default: AppointmentConfirmationEmail } = await import("../emails/AppointmentConfirmationEmail");
 
   const subject = `📅 Appointment Confirmed: ${data.serviceName} on ${data.appointmentDate}`;
 
-  // Note: ICS attachment would require updating sendEmailWithRetry to support attachments
-  // For now, we include the .ics generation link in the email itself
+  // Build attachments array if ICS content provided
+  const attachments: EmailAttachment[] | undefined = icsContent
+    ? [{
+        filename: 'appointment.ics',
+        content: icsContent,
+        contentType: 'text/calendar',
+      }]
+    : undefined;
+
   return sendEmailWithRetry(
     data.customerEmail,
     subject,
     AppointmentConfirmationEmail(data),
+    { attachments },
   );
 }
 
@@ -461,5 +491,59 @@ export async function sendAppointmentCancellation(
     data.customerEmail,
     subject,
     AppointmentCancellationEmail(data),
+  );
+}
+
+// ============================================================================
+// Quote System Emails
+// ============================================================================
+
+/**
+ * Send deposit confirmation email after customer pays quote deposit.
+ * Includes receipt, project timeline, and next steps.
+ *
+ * @param data - Deposit confirmation data (quote details, amounts)
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendDepositConfirmation(
+  data: DepositConfirmationEmailProps,
+): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: DepositConfirmationEmail } = await import("../emails/DepositConfirmationEmail");
+
+  const subject = `🎉 Deposit Received - Project ${data.quoteReference}`;
+
+  return sendEmailWithRetry(
+    data.customerEmail,
+    subject,
+    DepositConfirmationEmail(data),
+  );
+}
+
+/**
+ * Send quote email to customer with pricing and payment link.
+ * This is sent when admin marks quote as 'sent'.
+ *
+ * @param data - Quote data (customer info, amounts, payment URL)
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendQuoteEmail(
+  data: QuoteEmailProps,
+): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: QuoteEmail } = await import("../emails/QuoteEmail");
+
+  const firstName = data.customerName.split(' ')[0];
+  const depositFormatted = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(data.depositAmount / 100);
+
+  const subject = `📝 ${firstName}, your quote is ready - ${depositFormatted} to get started`;
+
+  return sendEmailWithRetry(
+    data.customerEmail,
+    subject,
+    QuoteEmail(data),
   );
 }

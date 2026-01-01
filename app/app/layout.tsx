@@ -108,7 +108,14 @@ export default function RootLayout({
                   } else {
                     document.documentElement.classList.add('light');
                   }
-                } catch (e) {}
+                } catch (e) {
+                  // Intentionally empty: localStorage may throw in incognito/disabled storage.
+                  // Theme detection is non-critical - default light mode is applied via else branch.
+                  // Only log in development to help debugging without cluttering production console.
+                  if (window.location.hostname === 'localhost') {
+                    console.warn('[Theme] localStorage access failed:', e);
+                  }
+                }
               })();
             `,
           }}

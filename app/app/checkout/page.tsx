@@ -22,6 +22,7 @@ import {
   accentColors,
   cardBgColors,
 } from '@/lib/colors';
+import { COPY_FEEDBACK_DELAY } from '@/lib/timing';
 import { CheckIcon } from '@/components/ui/icons';
 
 // ============================================================================
@@ -329,7 +330,7 @@ export default function CheckoutPage() {
                   onClick={() => {
                     navigator.clipboard.writeText(orderId);
                     setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
+                    setTimeout(() => setCopied(false), COPY_FEEDBACK_DELAY);
                   }}
                   className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
                     copied
