@@ -226,7 +226,9 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [x] Connect to `/api/quotes/authorize` → Stripe payment
 - [x] Handle payment success → update quote status, create order
   - Created `/api/quotes/deposit-confirmed` endpoint
-- [ ] Send confirmation email with project timeline
+- [x] Send confirmation email with project timeline
+  - Created `DepositConfirmationEmail.tsx` template with receipt + next steps
+  - Added `sendDepositConfirmation()` to email-service.ts
 
 **Phase 3: Admin Flow**
 - [ ] Add quote creation form in admin (from project inquiry)

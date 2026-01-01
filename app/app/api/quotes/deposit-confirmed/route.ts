@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getPaymentIntent } from '@/lib/stripe';
 import { badRequest, handleApiError } from '@/lib/api-errors';
+import { sendDepositConfirmation } from '@/lib/email-service';
 
 export const dynamic = 'force-dynamic';
 
@@ -89,6 +90,30 @@ export async function POST(request: NextRequest) {
     if (orderError) {
       console.error('Failed to create order:', orderError);
       // Don't fail - the payment was successful
+    }
+
+    // Send confirmation email to customer
+    try {
+      const paidAt = new Date().toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+
+      await sendDepositConfirmation({
+        customerEmail: quote.customer_email,
+        customerName: quote.customer_name,
+        quoteReference: quote.reference_number,
+        projectDescription: quote.notes || undefined,
+        depositAmount: quote.deposit_amount,
+        totalAmount: quote.total_amount,
+        balanceRemaining: quote.total_amount - quote.deposit_amount,
+        paidAt,
+      });
+    } catch (emailError) {
+      console.error('Failed to send deposit confirmation email:', emailError);
+      // Don't fail the request - payment was successful
     }
 
     return NextResponse.json({

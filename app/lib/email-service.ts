@@ -148,6 +148,17 @@ export type AppointmentCancellationEmailProps = {
   reason?: string;
 };
 
+export type DepositConfirmationEmailProps = {
+  customerEmail: string;
+  customerName: string;
+  quoteReference: string;
+  projectDescription?: string;
+  depositAmount: number;
+  totalAmount: number;
+  balanceRemaining: number;
+  paidAt: string;
+};
+
 // ============================================================================
 // Project Submission Emails
 // ============================================================================
@@ -469,5 +480,31 @@ export async function sendAppointmentCancellation(
     data.customerEmail,
     subject,
     AppointmentCancellationEmail(data),
+  );
+}
+
+// ============================================================================
+// Quote System Emails
+// ============================================================================
+
+/**
+ * Send deposit confirmation email after customer pays quote deposit.
+ * Includes receipt, project timeline, and next steps.
+ *
+ * @param data - Deposit confirmation data (quote details, amounts)
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendDepositConfirmation(
+  data: DepositConfirmationEmailProps,
+): Promise<string | null> {
+  // Dynamic import to prevent bundling during page prerendering
+  const { default: DepositConfirmationEmail } = await import("../emails/DepositConfirmationEmail");
+
+  const subject = `🎉 Deposit Received - Project ${data.quoteReference}`;
+
+  return sendEmailWithRetry(
+    data.customerEmail,
+    subject,
+    DepositConfirmationEmail(data),
   );
 }
