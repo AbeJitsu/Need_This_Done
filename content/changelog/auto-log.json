@@ -1,5 +1,14 @@
 [
   {
+    "hash": "3f4fcb9",
+    "date": "%Y->- (HEAD -> production)",
+    "time": "3f4fcb9a9e3d6c3105cffeeaab6418bef93d4012:%M",
+    "author": "Abe Reyes",
+    "message": "Merge branch 'main' into production",
+    "category": "Other",
+    "filesChanged": 0
+  },
+  {
     "hash": "0d7809c",
     "date": "%Y->- (HEAD -> main)",
     "time": "0d7809c40cfc6d9b4f4a1357d9eca0ea28fbedea:%M",
@@ -889,14 +898,5 @@
     "message": "Refactor: Centralize opacity backgrounds to colors.ts",
     "category": "Refactoring",
     "filesChanged": 8
-  },
-  {
-    "hash": "27c97d9",
-    "date": "2025-12-30",
-    "time": "18:16",
-    "author": "Abe Reyes",
-    "message": "Security: Fix record_product_interaction search_path",
-    "category": "Security",
-    "filesChanged": 1
   }
 ]
