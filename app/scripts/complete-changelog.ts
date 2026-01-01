@@ -179,7 +179,7 @@ function getRecentAutoLogCommits(limit: number = 10): AutoLogEntry[] {
  * Find relevant commits from auto-log based on category
  */
 function findRelatedCommits(
-  category: string,
+  _category: string,
   autoLogEntries: AutoLogEntry[]
 ): AutoLogEntry[] {
   // Filter for substantive commits (not just docs/config)
@@ -274,7 +274,7 @@ function generateDescription(
  */
 function generateBenefit(
   commits: ParsedCommit[],
-  routes: string[],
+  _routes: string[],
   category: string
 ): string {
   const hasFeatures = commits.some(c => c.type === 'feature');
@@ -345,85 +345,6 @@ function generateHowToUse(
   return steps;
 }
 
-/**
- * Validate screenshots exist and are recent enough to be relevant
- * Screenshots must be taken AFTER the changelog entry date to be included
- */
-function validateAndCaptionScreenshots(
-  screenshots: ChangelogEntry['screenshots'],
-  entryDate: string,
-  commits: ParsedCommit[],
-  autoLogCommits: AutoLogEntry[]
-): ChangelogEntry['screenshots'] {
-  const publicDir = path.join(process.cwd(), 'public');
-  const entryTimestamp = new Date(entryDate).getTime();
-
-  // Allow screenshots from the same day or later
-  const startOfEntryDay = new Date(entryDate);
-  startOfEntryDay.setHours(0, 0, 0, 0);
-  const dayStart = startOfEntryDay.getTime();
-
-  const validScreenshots = screenshots.filter(screenshot => {
-    const screenshotPath = path.join(publicDir, screenshot.src);
-
-    // Check if file exists
-    if (!fs.existsSync(screenshotPath)) {
-      console.log(`    ⚠️  Screenshot not found: ${screenshot.src}`);
-      return false;
-    }
-
-    // Check if screenshot is recent enough (same day or later)
-    try {
-      const stats = fs.statSync(screenshotPath);
-      const screenshotTime = stats.mtime.getTime();
-
-      if (screenshotTime < dayStart) {
-        const screenshotDate = stats.mtime.toISOString().split('T')[0];
-        console.log(`    ⏰ Screenshot too old: ${screenshot.src} (from ${screenshotDate}, entry is ${entryDate})`);
-        return false;
-      }
-
-      return true;
-    } catch {
-      console.log(`    ⚠️  Cannot read screenshot: ${screenshot.src}`);
-      return false;
-    }
-  });
-
-  if (validScreenshots.length === 0 && screenshots.length > 0) {
-    console.log(`    📸 No valid screenshots - run 'npm run screenshot:affected' to capture fresh ones`);
-  }
-
-  // Add captions to valid screenshots
-  return validScreenshots.map((screenshot, index) => {
-    if (screenshot.caption) return screenshot;
-
-    // Extract route from alt text
-    const routeMatch = screenshot.alt.match(/Screenshot of (.+)/);
-    const route = routeMatch ? routeMatch[1] : 'the page';
-
-    let caption = '';
-
-    // Use auto-log commits for better captions if no parsed commits
-    const relevantCommit = commits.length > 0
-      ? { message: commits[0].message }
-      : autoLogCommits.length > 0
-        ? { message: autoLogCommits[0].message }
-        : null;
-
-    if (index === 0 && relevantCommit) {
-      const cleanMessage = relevantCommit.message
-        .replace(/^(Add|Fix|Refactor|Docs|Test|Config):\s*/i, '')
-        .toLowerCase();
-      caption = `${route === '/' ? 'Homepage' : route} showing ${cleanMessage}`;
-    } else {
-      caption = `View of ${route === '/' ? 'the homepage' : route} with recent updates`;
-    }
-
-    return { ...screenshot, caption };
-  });
-}
-
 // ============================================================================
 // Main Completion Logic
 // ============================================================================
@@ -452,7 +373,8 @@ function completeEntry(entry: ChangelogEntry): ChangelogEntry {
   const description = generateDescription(commits, routes, entry.category, files);
   const benefit = generateBenefit(commits, routes, entry.category);
   const howToUse = generateHowToUse(commits, routes, entry.category);
-  const screenshots = generateCaptions(entry.screenshots, commits, relatedAutoLogCommits);
+  // Screenshots deprecated in favor of text-focused approach
+  const screenshots: ChangelogEntry['screenshots'] = [];
 
   // Return completed entry without internal fields
   const { _gitContext, _affectedRoutes, _needsCompletion, ...cleanEntry } = entry;

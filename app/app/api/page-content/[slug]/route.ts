@@ -92,6 +92,8 @@ export async function GET(
 // ============================================================================
 // PUT - Update Page Content (Admin Only)
 // ============================================================================
+// Saves current content to history before updating.
+// This enables version history / revert functionality.
 
 export async function PUT(
   request: NextRequest,
@@ -126,7 +128,32 @@ export async function PUT(
     const contentType = PAGE_CONTENT_TYPES[validSlug];
     const supabaseAdmin = getSupabaseAdmin();
 
+    // ========================================================================
+    // Save current content to history before updating
+    // ========================================================================
+    const { data: existingContent } = await supabaseAdmin
+      .from('page_content')
+      .select('id, content')
+      .eq('page_slug', slug)
+      .single();
+
+    // If content exists, save it to history before overwriting
+    if (existingContent?.id && existingContent?.content) {
+      await supabaseAdmin
+        .from('page_content_history')
+        .insert({
+          page_content_id: existingContent.id,
+          page_slug: slug,
+          content: existingContent.content,
+          created_by: user.id,
+          version_note: 'Before edit',
+        });
+      // Note: Cleanup trigger automatically removes old versions (keeps last 20)
+    }
+
+    // ========================================================================
     // Upsert: create if doesn't exist, update if it does
+    // ========================================================================
     const { data, error } = await supabaseAdmin
       .from('page_content')
       .upsert(

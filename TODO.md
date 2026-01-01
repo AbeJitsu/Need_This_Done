@@ -31,6 +31,14 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
+[x] **Version History for Client Editing** - Google Docs-like revision history
+- [x] Create `page_content_history` database migration (035)
+- [x] Modify PUT handler to save history before update
+- [x] Create GET endpoint for version history list
+- [x] Create POST endpoint for version restore
+- [x] Build VersionHistoryPanel UI component
+- [x] Add History button to AdminSidebar footer
+
 [x] **Auto-Complete Public Changelog** - Make /changelog automatic like /changelog/technical
 - [x] Create utility `complete-changelog.ts` for template completion
 - [x] Find entries with `_needsCompletion: true`

@@ -1,5 +1,14 @@
 [
   {
+    "hash": "d9abdf0",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "d9abdf0bf3be439bfbc48250ab6e17f0d705644c:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor changelog to text-focused format with what/why/where structure",
+    "category": "Other",
+    "filesChanged": 14
+  },
+  {
     "hash": "d02d5f6",
     "date": "%Y->- (HEAD -> main)",
     "time": "d02d5f64f1d7749fecec1a85850d10a8a6b458e4:%M",

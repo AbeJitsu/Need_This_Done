@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { useAuth } from '@/context/AuthContext';
+import VersionHistoryPanel from './VersionHistoryPanel';
 import {
   formInputColors,
   headingColors,
@@ -95,6 +96,7 @@ export default function AdminSidebar() {
 
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   // Only render for authenticated admins in edit mode
   if (!isAuthenticated || !isAdmin || !isEditMode || !isSidebarOpen) {
@@ -1086,7 +1088,34 @@ export default function AdminSidebar() {
             {isSaving ? 'Saving...' : 'Save Changes'}
           </button>
         </div>
+
+        {/* Version History Button */}
+        <button
+          type="button"
+          onClick={() => setIsHistoryOpen(true)}
+          className={`
+            w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
+            border border-gray-300 dark:border-gray-600
+            hover:bg-gray-100 dark:hover:bg-gray-700
+            transition-colors
+          `}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Version History
+        </button>
       </div>
+
+      {/* Version History Panel */}
+      {pageSlug && (
+        <VersionHistoryPanel
+          pageSlug={pageSlug}
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          onRestore={() => window.location.reload()}
+        />
+      )}
     </div>
   );
 }
