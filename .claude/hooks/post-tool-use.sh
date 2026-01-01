@@ -22,10 +22,12 @@ if [[ "$TOOL_NAME" == "Bash" ]] && [[ "$COMMAND" =~ ^git\ commit ]]; then
   AUTO_LOG="$_PROJECT_DIR/content/changelog/auto-log.json"
 
   # Get latest commit info with proper date formatting
+  # Using %cs (committer date short) and %ci (ISO format) for reliable parsing
+  # Avoids --date=format: which can be unreliable in some shell contexts
   cd "$_PROJECT_DIR"
   HASH=$(git log -1 --format='%h' 2>/dev/null)
-  DATE=$(git log -1 --date=format:'%Y-%m-%d' --format='%ad' 2>/dev/null)
-  TIME=$(git log -1 --date=format:'%H:%M' --format='%ad' 2>/dev/null)
+  DATE=$(git log -1 --format='%cs' 2>/dev/null)
+  TIME=$(git log -1 --format='%ci' 2>/dev/null | cut -d' ' -f2 | cut -d: -f1,2)
   AUTHOR=$(git log -1 --format='%an' 2>/dev/null)
   MESSAGE=$(git log -1 --format='%s' 2>/dev/null)
   FILES_CHANGED=$(git log -1 --stat --format='' 2>/dev/null | tail -1 | grep -oE '[0-9]+' | head -1 || echo "0")
