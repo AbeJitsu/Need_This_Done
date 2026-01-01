@@ -100,8 +100,8 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Fix: Extract to formInputClasses in colors.ts + FieldWrapper component│
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Create formInputClasses in colors.ts with base, error, focus states
-- [ ] Create FieldWrapper component for label/hint/error structure
+- [x] Create formInputClasses in colors.ts with base, error, focus states
+- [x] Create FieldWrapper component for label/hint/error structure
 - [ ] Refactor TextField, TextAreaField, SelectField to use shared code
 
 **AdminSidebar God Object** - 1121 lines, too many responsibilities

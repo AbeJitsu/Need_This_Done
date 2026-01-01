@@ -1,5 +1,14 @@
 [
   {
+    "hash": "f8ccc44",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "f8ccc449b1b184a148a4fc132813bb645de8b506:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor FAQ and HowItWorks to use centralized colors",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
     "hash": "77ad4f8",
     "date": "%Y->- (HEAD -> main)",
     "time": "77ad4f8cf5add9e6b6d98972a14591f721f35234:%M",
