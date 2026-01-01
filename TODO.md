@@ -102,7 +102,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 ```
 - [x] Create formInputClasses in colors.ts with base, error, focus states
 - [x] Create FieldWrapper component for label/hint/error structure
-- [ ] Refactor TextField, TextAreaField, SelectField to use shared code
+- [x] Refactor TextField, TextAreaField, SelectField to use shared code
 
 **AdminSidebar God Object** - 1121 lines, too many responsibilities
 ```

@@ -3,9 +3,10 @@
 // ============================================================================
 // What: A styled select dropdown for choices like colors and variants
 // Why: Used for predefined options (colors, button variants, etc.)
-// How: Controlled select with typed options
+// How: Uses FieldWrapper for structure, formInputClasses for styling
 
-import { formInputColors, formValidationColors } from '@/lib/colors';
+import { formInputClasses } from '@/lib/colors';
+import FieldWrapper from './FieldWrapper';
 
 export interface SelectOption {
   value: string;
@@ -36,31 +37,19 @@ export default function SelectField({
   const inputId = `field-${label.toLowerCase().replace(/\s+/g, '-')}`;
 
   return (
-    <div className={`space-y-1 ${className}`}>
-      <label
-        htmlFor={inputId}
-        className={`block text-sm font-medium ${formInputColors.label}`}
-      >
-        {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
-      </label>
-
+    <FieldWrapper
+      label={label}
+      inputId={inputId}
+      hint={hint}
+      error={error}
+      required={required}
+      className={className}
+    >
       <select
         id={inputId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`
-          w-full px-3 py-2 rounded-lg border-2 text-sm
-          bg-white dark:bg-gray-800
-          text-gray-900 dark:text-gray-100
-          transition-colors duration-200
-          focus:outline-none focus:ring-2 focus:ring-offset-0
-          ${
-            error
-              ? 'border-red-300 dark:border-red-600 focus:border-red-500 focus:ring-red-200 dark:focus:ring-red-900/50'
-              : 'border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/50'
-          }
-        `}
+        className={error ? formInputClasses.inputError : formInputClasses.input}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -68,15 +57,7 @@ export default function SelectField({
           </option>
         ))}
       </select>
-
-      {hint && !error && (
-        <p className={`text-xs ${formInputColors.helper}`}>{hint}</p>
-      )}
-
-      {error && (
-        <p className={`text-xs ${formValidationColors.error}`}>{error}</p>
-      )}
-    </div>
+    </FieldWrapper>
   );
 }
 
