@@ -132,6 +132,53 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [ ] Add titleColor and descriptionColor to featureCardColors in colors.ts
 - [ ] Update FeatureCard to use centralized colors
 
+### Pragmatic Programmer Audit (Dec 31, 2025)
+
+**HARDCODED VALUES** - Magic numbers that should be constants
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Pattern: setTimeout with hardcoded milliseconds                        │
+│  Found in: 9 occurrences across 6 files                                 │
+│  Impact: Inconsistent timing behavior, hard to tune                     │
+│  Fix: Create TIMING_CONSTANTS in a config file                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Create timing constants file (TOAST_DURATION, COPY_FEEDBACK_DELAY, etc.)
+- [ ] Update checkout/page.tsx:332 - setCopied setTimeout 2000
+- [ ] Update admin pages to use shared timeout constants
+
+**BROKEN WINDOWS** - TODO comments that need resolution
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Pattern: TODO/FIXME comments left in production code                   │
+│  Found in: 5 files                                                      │
+│  Fix: Resolve or convert to tracked issues                              │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Resolve TODO in get-started/GetStartedPageClient.tsx:66 (payment integration)
+- [ ] Implement ICS attachment in lib/email-service.ts:351
+- [ ] Complete Medusa cart integration in api/cron/abandoned-carts/route.ts:203
+- [ ] Add Medusa admin API in api/admin/inventory/route.ts:128
+
+**LARGE FILES** - Components over 500 lines need refactoring
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Files: RichTextEditor (580), PageWizard (569), InlineEditContext (555) │
+│  Note: AdminSidebar (1121) already tracked in DRY/ETC section           │
+│  Impact: Hard to test, understand, and maintain                         │
+│  Fix: Extract focused sub-components                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Refactor RichTextEditor.tsx (580 lines) - extract toolbar, helpers
+- [ ] Refactor PageWizard.tsx (569 lines) - extract step components
+- [ ] Refactor InlineEditContext.tsx (555 lines) - extract helpers to utils
+
+**EMPTY CATCH BLOCK** - Swallowed exceptions hide errors
+- [ ] Add proper error handling in app/layout.tsx:111 (empty catch block)
+
+**RESOURCE LEAK RISK** - setInterval may not be cleaned up
+- [ ] Verify TestimonialsComponent.tsx:157 setInterval has cleanup on unmount
+
 ### Short Term
 
 **Consider Medusa v2 Upgrade**

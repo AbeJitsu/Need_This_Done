@@ -7,6 +7,56 @@ description: Scan codebase for Pragmatic Programmer anti-patterns. Adds findings
 
 Scan the codebase for bad programming practices from "The Pragmatic Programmer" and add findings to TODO.md so auto-loop can fix them.
 
+## Autonomous Loop Support
+
+**This skill uses the same loop mechanism as auto-loop.** It will continue scanning until ALL patterns are checked, even if it takes multiple iterations.
+
+### Starting the Audit
+
+When starting, create the loop state file:
+
+```bash
+cat > .claude/loop-state.json << 'EOF'
+{
+  "active": true,
+  "startTime": $(date +%s),
+  "maxHours": 2,
+  "maxConsecutiveFailures": 3,
+  "iterationCount": 0,
+  "failureCounts": {},
+  "cycleNumber": 1,
+  "tasksCompleted": 0,
+  "auditMode": true,
+  "patternsChecked": [],
+  "totalPatterns": 9
+}
+EOF
+```
+
+### Tracking Progress
+
+After completing each pattern category, update `patternsChecked`:
+
+```bash
+# After scanning DRY violations
+jq '.patternsChecked += ["DRY"]' .claude/loop-state.json > tmp && mv tmp .claude/loop-state.json
+
+# Patterns to track: DRY, HARDCODED, BROKEN_WINDOWS, COUPLING, ETC, NAMING, TESTS, EXCEPTIONS, RESOURCES
+```
+
+### Completion Check
+
+The audit is complete when `patternsChecked.length == totalPatterns`. At that point:
+
+```bash
+# Clean up loop state
+rm .claude/loop-state.json
+```
+
+### Stop Hook Behavior
+
+The stop hook will see `active: true` and block exit, prompting you to continue scanning remaining patterns. Check which patterns still need scanning by reading `patternsChecked` from the state file.
+
 ## Workflow
 
 ```
