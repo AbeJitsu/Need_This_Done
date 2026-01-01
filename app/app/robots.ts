@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { seoConfig } from '@/lib/seo-config';
 
 // ============================================================================
 // Robots.txt Configuration
@@ -23,6 +24,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: 'https://needthisdone.com/sitemap.xml',
+    sitemap: `${seoConfig.baseUrl}/sitemap.xml`,
   };
 }

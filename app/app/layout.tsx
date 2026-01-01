@@ -14,6 +14,7 @@ import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
 import { AdminSidebar, AdminSidebarToggle, EditModeBar, EditModeTutorial, UniversalClickHandler } from '@/components/InlineEditor';
 import { LocalBusinessJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
+import { seoConfig } from '@/lib/seo-config';
 
 // ============================================================================
 // Force Dynamic Rendering for All Routes
@@ -66,19 +67,17 @@ const playfair = Playfair_Display({
 // Comprehensive metadata for search engines and social media sharing.
 // This appears in search results, browser tabs, and social media previews.
 
-const BASE_URL = 'https://needthisdone.com';
-
 export const metadata: Metadata = {
   // Basic metadata
   title: {
-    default: 'NeedThisDone - Get Your Projects Done Right',
-    template: '%s | NeedThisDone',
+    default: `${seoConfig.siteName} - Get Your Projects Done Right`,
+    template: `%s | ${seoConfig.siteName}`,
   },
-  description: 'Professional project services for businesses and individuals. From web development to data solutions, we help you get things done right the first time.',
-  keywords: ['project services', 'web development', 'professional services', 'Orlando', 'freelance developer'],
-  authors: [{ name: 'NeedThisDone' }],
-  creator: 'NeedThisDone',
-  publisher: 'NeedThisDone',
+  description: seoConfig.description,
+  keywords: seoConfig.keywords,
+  authors: [{ name: seoConfig.siteName }],
+  creator: seoConfig.siteName,
+  publisher: seoConfig.siteName,
 
   // Viewport and robots
   viewport: 'width=device-width, initial-scale=1',
@@ -107,16 +106,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: BASE_URL,
-    siteName: 'NeedThisDone',
-    title: 'NeedThisDone - Get Your Projects Done Right',
-    description: 'Professional project services for businesses and individuals. From web development to data solutions, we help you get things done right the first time.',
+    url: seoConfig.baseUrl,
+    siteName: seoConfig.siteName,
+    title: `${seoConfig.siteName} - Get Your Projects Done Right`,
+    description: seoConfig.description,
     images: [
       {
-        url: `${BASE_URL}/og-image.png`,
+        url: `${seoConfig.baseUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: 'NeedThisDone - Professional Project Services',
+        alt: `${seoConfig.siteName} - Professional Project Services`,
       },
     ],
   },
@@ -124,13 +123,13 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: 'summary_large_image',
-    title: 'NeedThisDone - Get Your Projects Done Right',
+    title: `${seoConfig.siteName} - Get Your Projects Done Right`,
     description: 'Professional project services for businesses and individuals. Get things done right the first time.',
-    images: [`${BASE_URL}/og-image.png`],
+    images: [`${seoConfig.baseUrl}/og-image.png`],
   },
 
   // Canonical URL
-  metadataBase: new URL(BASE_URL),
+  metadataBase: new URL(seoConfig.baseUrl),
   alternates: {
     canonical: '/',
   },

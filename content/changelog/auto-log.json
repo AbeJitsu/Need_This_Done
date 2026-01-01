@@ -1,5 +1,14 @@
 [
   {
+    "hash": "ee62414",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "ee6241474435144232b52cc610e2b211e0faa19c:%M",
+    "author": "Abe Reyes",
+    "message": "Add SEO fundamentals and FreeCast application materials",
+    "category": "Other",
+    "filesChanged": 9
+  },
+  {
     "hash": "042c3cb",
     "date": "%Y->- (HEAD -> main)",
     "time": "042c3cb4d4e5e4d2c35a097085046fbe6b5cb129:%M",
@@ -889,14 +898,5 @@
     "message": "Refactor: Centralize opacity backgrounds across 24 files",
     "category": "Refactoring",
     "filesChanged": 24
-  },
-  {
-    "hash": "df7eb61",
-    "date": "2025-12-30",
-    "time": "18:23",
-    "author": "Abe Reyes",
-    "message": "Fix: Continue centralizing opacity backgrounds in content-editor components",
-    "category": "Fixes",
-    "filesChanged": 6
   }
 ]
