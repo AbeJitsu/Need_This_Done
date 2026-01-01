@@ -71,3 +71,10 @@ env.md.do
 # Claude Code hook state (ephemeral, session-specific)
 .claude/state/
 .claude/frontend-changes.txt
+
+# Generated mapping files (rebuild on demand)
+app/affected-routes.json
+app/component-route-map.json
+
+# Job search files (personal, not part of the app)
+job-search/
