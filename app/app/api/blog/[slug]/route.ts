@@ -24,23 +24,37 @@ export const dynamic = 'force-dynamic';
 // ============================================================================
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
     const { slug } = await params;
-    const supabase = await createSupabaseServerClient();
+    const { searchParams } = new URL(request.url);
+    const adminView = searchParams.get('admin') === 'true';
 
     // Check if user is admin (optional auth)
     let isAdmin = false;
-    try {
-      const authResult = await verifyAuth();
+
+    // For admin view requests, use verifyAdmin which has E2E bypass
+    if (adminView) {
+      const authResult = await verifyAdmin();
       if (!authResult.error) {
-        isAdmin = authResult.user.user_metadata?.is_admin === true;
+        isAdmin = true;
       }
-    } catch {
-      // Not authenticated - that's OK for published posts
+    } else {
+      // For public requests, check auth normally
+      try {
+        const authResult = await verifyAuth();
+        if (!authResult.error) {
+          isAdmin = authResult.user.user_metadata?.is_admin === true;
+        }
+      } catch {
+        // Not authenticated - that's OK for published posts
+      }
     }
+
+    // Use admin client for admin views, regular for public
+    const supabase = isAdmin ? getSupabaseAdmin() : await createSupabaseServerClient();
 
     const result = await cache.wrap(
       CACHE_KEYS.blogPost(slug),

@@ -4,11 +4,11 @@ import {
   titleColors,
   topBorderColors,
   cardHoverColors,
-  checkmarkColors,
   formInputColors,
   mutedTextColors,
+  shadowClasses,
 } from '@/lib/colors';
-import { CheckIcon } from '@/components/ui/icons';
+import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
 
 // ============================================================================
 // ServiceCard Component
@@ -72,9 +72,7 @@ export default function ServiceCard({
             <ul className="space-y-2 mt-auto">
               {detailsList.map((detail, index) => (
                 <li key={index} className="flex items-start gap-2">
-                  <div className={`w-5 h-5 rounded-full ${checkmarkColors[color].bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                    <CheckIcon size="sm" className={`w-3 h-3 ${checkmarkColors[color].icon}`} strokeWidth={2.5} />
-                  </div>
+                  <CheckmarkCircle color={color} size="sm" className="mt-0.5" />
                   <span className={`${mutedTextColors.light} text-sm`}>
                     {detail}
                   </span>
@@ -87,7 +85,7 @@ export default function ServiceCard({
     </div>
   );
 
-  const cardClasses = `p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 border-t-4 ${topBorderColors[color]} transition-all duration-300 ${cardHoverColors[color]} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)] h-full`;
+  const cardClasses = `p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 border-t-4 ${topBorderColors[color]} transition-all duration-300 ${cardHoverColors[color]} ${shadowClasses.cardHover} h-full`;
 
   // Wrap in Link if href is provided
   if (href) {

@@ -79,7 +79,8 @@ export default defineConfig({
         storageState: ADMIN_AUTH_FILE,
       },
       dependencies: ['setup'],
-      testIgnore: /auth\.setup\.ts/,
+      // Exclude auth setup and accessibility tests (run a11y separately)
+      testIgnore: [/auth\.setup\.ts/, /\.a11y\.test\.ts$/],
     },
 
     // Mobile - uses saved auth session
@@ -91,7 +92,8 @@ export default defineConfig({
         storageState: ADMIN_AUTH_FILE,
       },
       dependencies: ['setup'],
-      testIgnore: /auth\.setup\.ts/,
+      // Exclude auth setup and accessibility tests (run a11y separately)
+      testIgnore: [/auth\.setup\.ts/, /\.a11y\.test\.ts$/],
     },
 
     // E2E Bypass mode - no auth required (for local dev with NEXT_PUBLIC_E2E_ADMIN_BYPASS=true)
@@ -100,7 +102,8 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
       },
-      testIgnore: /auth\.setup\.ts/,
+      // Exclude auth setup and accessibility tests (run a11y separately via test:a11y:e2e)
+      testIgnore: [/auth\.setup\.ts/, /\.a11y\.test\.ts$/],
     },
   ],
 

@@ -12,7 +12,7 @@ import { puckConfig } from '@/lib/puck-config';
 import { PageWizard } from '@/components/templates';
 import type { PuckPageData } from '@/lib/templates';
 import '@measured/puck/puck.css';
-import { alertColors } from '@/lib/colors';
+import { alertColors, iconCircleColors, containerBg } from '@/lib/colors';
 import { CheckIcon } from '@/components/ui/icons';
 
 // ============================================================================
@@ -27,6 +27,12 @@ import { CheckIcon } from '@/components/ui/icons';
 
 type CreationMode = 'choose' | 'wizard' | 'editor';
 
+// Completion state after wizard finishes
+interface CompletedPage {
+  slug: string;
+  title: string;
+}
+
 export default function NewPage() {
   const router = useRouter();
   const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
@@ -34,6 +40,9 @@ export default function NewPage() {
 
   // Which creation mode are we in?
   const [mode, setMode] = useState<CreationMode>('choose');
+
+  // Wizard completion state
+  const [completedPage, setCompletedPage] = useState<CompletedPage | null>(null);
 
   // Editor state (only used in 'editor' mode)
   const [slug, setSlug] = useState('');
@@ -100,11 +109,11 @@ export default function NewPage() {
     const success = await savePage(pageSlug, pageTitle, data);
 
     if (success) {
-      showToast('Page created! Redirecting to editor...', 'success');
-      // Redirect to edit page so they can fine-tune
-      router.push(`/admin/pages/${pageSlug}/edit`);
+      showToast('Page created successfully!', 'success');
+      // Show completion modal instead of redirecting
+      setCompletedPage({ slug: pageSlug, title: pageTitle });
     }
-  }, [savePage, showToast, router]);
+  }, [savePage, showToast]);
 
   // ============================================================================
   // Editor Save Handler
@@ -156,7 +165,7 @@ export default function NewPage() {
 
   if (mode === 'choose') {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+      <div className={`min-h-screen ${containerBg.page} flex flex-col`}>
         {/* Header */}
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-4">
           <div className="max-w-4xl mx-auto">
@@ -195,7 +204,7 @@ export default function NewPage() {
               onClick={() => setMode('wizard')}
               className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-purple-500 hover:shadow-lg transition-all group"
             >
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-700 dark:to-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <svg className="w-8 h-8 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
@@ -205,7 +214,7 @@ export default function NewPage() {
                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                   Quick Start
                 </h2>
-                <span className="px-2 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
+                <span className="px-2 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-700 text-green-700 dark:text-white rounded-full">
                   Recommended
                 </span>
               </div>
@@ -248,7 +257,7 @@ export default function NewPage() {
               onClick={() => setMode('editor')}
               className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-blue-500 hover:shadow-lg transition-all group"
             >
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-700 dark:to-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                 </svg>
@@ -297,6 +306,62 @@ export default function NewPage() {
   }
 
   // ============================================================================
+  // Render: Wizard Completion Modal
+  // ============================================================================
+
+  if (completedPage) {
+    return (
+      <div className={`min-h-screen ${containerBg.page} flex items-center justify-center p-4`}>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-lg w-full p-8 text-center">
+          {/* Success Icon */}
+          <div className={`w-20 h-20 mx-auto mb-6 rounded-full ${iconCircleColors.green.bg} flex items-center justify-center`}>
+            <CheckIcon size="lg" className="text-green-600 dark:text-green-400" />
+          </div>
+
+          {/* Success Heading */}
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            Page Created!
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-8">
+            Your page &ldquo;{completedPage.title}&rdquo; has been created successfully.
+          </p>
+
+          {/* Action Buttons */}
+          <div className="space-y-3">
+            <button
+              onClick={() => router.push(`/admin/pages/${completedPage.slug}/edit`)}
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Edit with Puck
+            </button>
+
+            <button
+              onClick={() => window.open(`/p/${completedPage.slug}`, '_blank')}
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-medium rounded-xl transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              View Page
+            </button>
+
+            <button
+              onClick={() => router.push('/admin/pages')}
+              className="w-full px-6 py-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium transition-colors"
+            >
+              Go to Pages List
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ============================================================================
   // Render: Wizard Mode
   // ============================================================================
 
@@ -314,7 +379,7 @@ export default function NewPage() {
   // ============================================================================
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className={`min-h-screen ${containerBg.page}`}>
       {/* Header with Breadcrumbs & Page Details */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="container mx-auto px-6 py-5">

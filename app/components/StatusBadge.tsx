@@ -31,8 +31,8 @@ export default function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
       label: 'In Review',
     },
     scheduled: {
-      bg: accentColors.orange.bg,
-      text: accentColors.orange.text,
+      bg: accentColors.gold.bg,
+      text: accentColors.gold.text,
       label: 'Scheduled',
     },
     in_progress: {

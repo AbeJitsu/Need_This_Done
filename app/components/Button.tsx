@@ -5,9 +5,9 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 // ============================================================================
 // Button Component - Centralized Button Styling
 // ============================================================================
-// Uses the unified accentColors system from colors.ts for consistent styling
-// with CircleBadge and Navigation. All color definitions are centralized.
-// Handles both link buttons (with href) and action buttons (with onClick).
+// Uses accentColors from colors.ts for all button variants.
+// All buttons have: border + bg + text with proper dark mode inversion.
+// Matches Navigation CTA buttons exactly for consistency.
 
 type ButtonSize = 'sm' | 'md' | 'lg';
 
@@ -52,8 +52,8 @@ export default function Button({
 }: ButtonProps) {
   const colors = accentColors[variant];
   const isDisabled = disabled || isLoading;
-  // All color classes come from the centralized accentColors system
-  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-full ${accentBorderWidth} transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:ring-4 focus-visible:ring-blue-300 dark:focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${sizeClasses[size]} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`;
+  // All buttons use accentColors: border + bg + text with dark mode inversion
+  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-full transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:ring-4 focus-visible:ring-blue-300 dark:focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${sizeClasses[size]} ${accentBorderWidth} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`;
   const disabledClasses = isDisabled ? 'opacity-60 cursor-not-allowed hover:scale-100 active:scale-100' : '';
   const fullClasses = `${baseClasses} ${disabledClasses} ${className}`.trim();
 

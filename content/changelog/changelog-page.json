@@ -3,19 +3,28 @@
   "slug": "changelog-page",
   "date": "2025-12-27",
   "category": "Public",
-  "description": "A dedicated page showing all the latest features and improvements. See what's new at a glance with screenshots and step-by-step guides.",
-  "benefit": "Stay informed about new capabilities without digging through updates. Each entry shows you exactly what changed and how to use it.",
+  "description": "A dedicated page showing all the latest features and improvements. See what's new at a glance.",
+  "benefit": "Stay informed about new capabilities without digging through updates.",
+  "changes": [
+    {
+      "what": "Public changelog page",
+      "why": "Users can see all recent updates in one place",
+      "where": "/changelog"
+    },
+    {
+      "what": "Structured what/why/where format",
+      "why": "Each change is clearly explained with context",
+      "where": "/changelog"
+    },
+    {
+      "what": "Category badges",
+      "why": "Quickly identify update types (Public, Admin, Content)",
+      "where": "/changelog"
+    }
+  ],
   "howToUse": [
     "Visit /changelog to see all updates",
-    "Each entry includes screenshots showing the feature",
-    "Follow the 'How to Use' steps to get started",
-    "Check back regularly for new features"
+    "Each entry explains what changed and why"
   ],
-  "screenshots": [
-    {
-      "src": "/screenshots/december-2025-release/changelog-desktop-light.png",
-      "alt": "Changelog page showing feature updates with screenshots",
-      "caption": "Visual documentation of every new feature"
-    }
-  ]
+  "screenshots": []
 }

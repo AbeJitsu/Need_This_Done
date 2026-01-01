@@ -5,27 +5,31 @@
   "category": "Shop",
   "description": "We've made the shopping experience warmer and more helpful. Error messages now feel like they're from a friend, not a robot.",
   "benefit": "A more human touch throughout checkout. When something goes wrong, you'll get helpful guidance instead of technical jargon.",
+  "changes": [
+    {
+      "what": "Friendlier error messages",
+      "why": "Helpful guidance instead of technical jargon when something goes wrong",
+      "where": "/cart, /checkout"
+    },
+    {
+      "what": "Improved cart layout",
+      "why": "Cleaner display with better spacing and item details",
+      "where": "/cart"
+    },
+    {
+      "what": "Celebratory checkout confirmation",
+      "why": "Positive reinforcement when orders complete successfully",
+      "where": "/checkout"
+    },
+    {
+      "what": "Mobile-optimized spacing",
+      "why": "Better readability and touch targets on phones",
+      "where": "All shop pages"
+    }
+  ],
   "howToUse": [
     "Browse the shop and add items to your cart",
-    "Notice the friendly messaging throughout",
-    "Complete checkout with improved confirmation messages",
-    "Mobile users will see better spacing and layout"
+    "Complete checkout to see the improved flow"
   ],
-  "screenshots": [
-    {
-      "src": "/screenshots/december-2025-release/cart-desktop-light.png",
-      "alt": "Shopping cart with improved messaging",
-      "caption": "Cleaner cart layout with helpful context"
-    },
-    {
-      "src": "/screenshots/december-2025-release/checkout-desktop-light.png",
-      "alt": "Checkout flow with celebratory confirmation",
-      "caption": "A warmer checkout experience from start to finish"
-    },
-    {
-      "src": "/screenshots/december-2025-release/get-started-desktop-light.png",
-      "alt": "Get Started page with conversational messaging",
-      "caption": "Friendly guidance through the project authorization flow"
-    }
-  ]
+  "screenshots": []
 }

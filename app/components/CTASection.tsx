@@ -26,7 +26,7 @@ export default function CTASection({
   title,
   description,
   buttons,
-  hoverColor = 'orange'
+  hoverColor = 'gold'
 }: CTASectionProps) {
   return (
     <Card hoverColor={hoverColor} className="text-center">

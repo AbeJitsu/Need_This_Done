@@ -24,11 +24,18 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║  📄 19 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
 ║  🔐 16 Admin Pages                       ✅ Stripe Payments                  ║
 ║  🔌 49 API Routes                        ✅ Supabase Auth & Database         ║
-║  🧩 87 React Components                  ✅ Redis Caching (Upstash)          ║
-║  📦 5 Context Providers                  ✅ Email Notifications (Resend)     ║
-║  🔧 26 Lib Utilities                     ✅ Google OAuth                     ║
-║  🪝 4 Custom Hooks                       🟡 Google Calendar (90% - needs test)║
-║  🧪 177 E2E Tests Passing                🟡 Puck (28 components, needs E2E)  ║
+║  🧩 90+ React Components                 ✅ Redis Caching (Upstash)          ║
+║  📦 6 Context Providers                  ✅ Email Notifications (Resend)     ║
+║  🔧 44 Lib Utilities                     ✅ Google OAuth                     ║
+║  🪝 8 Custom Hooks                       ✅ Inline Editing (12 pages)        ║
+║  🧪 229 E2E Tests Passing                ✅ WCAG AA Color System (4.5:1)     ║
+║                                                                              ║
+║  RECENT ADDITIONS (Dec 2025)             VISUAL BUILDER                      ║
+║  ────────────────────────────            ──────────────                       ║
+║  ✨ Inline Click-to-Edit                 ✅ Puck Page Builder (28 components)║
+║  ✨ Pre-built Section Library            ✅ Pre-built Section Templates      ║
+║  ✨ Template Marketplace                 ✅ Template Marketplace             ║
+║  ✨ Dark Mode w/ WCAG AA                 ✅ TipTap Rich Text Editor          ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -80,7 +87,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                           NEXT.JS APP (app/)                                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  15 PUBLIC   │  │  13 ADMIN    │  │  49 API      │  │  87 REACT    │      │
+│  │  15 PUBLIC   │  │  13 ADMIN    │  │  49 API      │  │  151 REACT   │      │
 │  │  PAGES       │  │  PAGES       │  │  ROUTES      │  │  COMPONENTS  │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘      │
 │                                                                              │
@@ -125,7 +132,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 
 **Understanding the System**
 - [Current State at a Glance](#current-state-at-a-glance) ← *status dashboard, tech stack, architecture*
-- [Project Structure](#project-structure) ← *complete file map, 35 pages, 49 APIs, 87 components*
+- [Project Structure](#project-structure) ← *complete file map, 35 pages, 49 APIs, 151 components*
 - [Architecture Overview](#architecture-overview) ← *data flow diagrams*
 
 **Core Features**
@@ -136,11 +143,12 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 
 **Operations**
 - [Deployment](#deployment)
-- [Testing](#testing) ← *177 E2E tests*
+- [Testing](#testing) ← *229 E2E tests*
 - [Troubleshooting](#troubleshooting)
 
 **Reference**
 - [Puck Visual Builder](#puck-visual-builder) ← *28 components, color utilities*
+- [Inline Editing](#inline-editing) ← *click-to-edit on 12 marketing pages*
 - [Template System](#template-system) ← *5-step wizard, starter templates*
 - [API Patterns](#api-patterns) ← *auth, error handling*
 - [Design System](#design-system)
@@ -263,6 +271,8 @@ A modern platform for professional services that combines:
 
 ## Architecture Overview
 
+![NeedThisDone Homepage - Professional services platform with clean, modern interface](app/public/screenshots/december-2025-release/home-desktop-light.png)
+
 ```
 ┌──────────────────────────────────────────┐
 │          Browser / User                  │
@@ -361,6 +371,8 @@ The following diagram shows how all system components interact for major user jo
 
   Checkout Flow
   ═════════════
+
+  ![Checkout page with guest details form and order summary](app/public/screenshots/december-2025-release/checkout-desktop-light.png)
 
   Cart Page       Guest/Auth        Payment          Order Created
       │               │                │                  │
@@ -494,7 +506,7 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 | Orders | ✅ Working | 4 E2E tests | Full order objects, linked in Supabase |
 | Email | ✅ Working | 9 unit tests | 4 email types via Resend |
 
-**All 177 E2E tests passing** - See [Testing](#testing) for complete coverage map.
+**All 229 E2E tests passing** - See [Testing](#testing) for complete coverage map.
 
 **Consultation Products** (seeded via `medusa/seed-products.js` using Admin API):
 | Product | Price | Duration | Handle |
@@ -635,10 +647,10 @@ supabase db reset
 │
 ├── app/                   ← NEXT.JS APPLICATION
 │   ├── app/               ← Pages & API routes (Next.js App Router)
-│   ├── components/        ← 87 React components
+│   ├── components/        ← 151 React components
 │   ├── context/           ← 5 state providers
-│   ├── lib/               ← 25 utility files
-│   ├── hooks/             ← 4 custom React hooks
+│   ├── lib/               ← 44 utility files
+│   ├── hooks/             ← 8 custom React hooks
 │   ├── emails/            ← Email templates (React Email)
 │   ├── e2e/               ← 25 Playwright test files
 │   └── __tests__/         ← Unit & accessibility tests
@@ -768,7 +780,7 @@ MISC (4 routes)
 └── GET /api/demo/*                  Demo/testing endpoints
 ```
 
-### Component Inventory (87 components)
+### Component Inventory (151 components)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -825,7 +837,7 @@ STORYBOOK STORIES (8 files)
 └── Button, Card, PageHeader, CTASection, CircleBadge, PricingCard, etc.
 ```
 
-### Lib Utilities (25 files)
+### Lib Utilities (44 files)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -842,25 +854,54 @@ EXTERNAL SERVICE CLIENTS
 ├── email-service.ts     Email notification logic
 └── google-calendar.ts   Google Calendar OAuth + API
 
-AUTHENTICATION
+AUTHENTICATION & API
 ├── auth.ts              NextAuth session helpers
 ├── auth-options.ts      NextAuth config (Google + credentials)
-└── api-auth.ts          API route authentication
+├── api-auth.ts          API route authentication (verifyAdmin, verifyAuth)
+└── api-errors.ts        Standardized error responses (handleApiError, badRequest)
 
-CACHING
-└── cache.ts             Type-safe cache wrapper with TTL
+CACHING & PERFORMANCE
+├── cache.ts             Type-safe cache wrapper with TTL
+└── cache-stats.ts       Cache hit/miss rate monitoring
 
 DESIGN SYSTEM
-└── colors.ts            Central color definitions (WCAG AA)
+├── colors.ts            Central color definitions (WCAG AA anchors)
+├── service-colors.ts    Service type → accent color mapping
+└── wcag-contrast.ts     WCAG contrast ratio calculator
 
-PUCK CONFIG
-└── puck-config.tsx      22 page builder components (2,100+ lines)
+INLINE EDITING SYSTEM
+├── content-discovery.ts     Auto-discover editable content files
+├── content-path-mapper.ts   Click-to-edit JSON path finding
+├── editable-routes.ts       Route → page slug mapping
+├── fetch-page-content.ts    Page content fetching with fallback
+├── default-page-content.ts  Default content templates
+└── page-content-types.ts    TypeScript type definitions
+
+PUCK PAGE BUILDER
+├── puck-config.tsx      22 page builder components (2,100+ lines)
+├── puck-utils.tsx       Shared utilities (getPuckAccentColors, etc.)
+├── puck-editable.tsx    Puck editor integration
+└── sections/index.ts    Pre-built section templates
+
+TEMPLATES SYSTEM
+├── templates/index.ts           Template registry
+├── templates/config.ts          Template configuration
+├── templates/types.ts           Template type definitions
+├── templates/utils.ts           Template utilities
+└── templates/starter-templates.ts  Pre-built starter templates
+
+UTILITIES
+├── format.ts            Price/date formatting (formatPrice)
+├── object-utils.ts      Nested value access (getNestedValue, setNestedValue)
+├── validation.ts        File upload & form validation rules
+├── appointment-utils.ts Appointment scheduling helpers
+├── loop-state.ts        Auto-loop state management (Claude Code)
+└── media-types.ts       Supported media format definitions
 
 CONTENT TYPES
-├── default-page-content.ts   Default templates
-├── page-content-types.ts     Type definitions
-├── service-modal-content.ts  Modal content
-└── media-types.ts            Supported formats
+├── service-modal-content.ts  Service modal content
+├── blog-types.ts             Blog type definitions
+└── generated/content-manifest.ts  Auto-generated route manifest
 
 AI/CHATBOT
 ├── chatbot/index.ts
@@ -869,11 +910,44 @@ AI/CHATBOT
 └── chatbot/text-chunker.ts
 ```
 
+### Custom Hooks (8 files)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           REACT HOOKS                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+INLINE EDITING
+├── useEditableContent.ts   Page content initialization for inline editing
+│                           Replaces 15+ lines of boilerplate with one call
+└── useUniversalClick.ts    Global click-to-edit handler for edit mode
+                            Auto-detects JSON paths from clicked text
+
+ANALYTICS
+├── usePageViewTracking.ts  Tracks page views for Puck CMS analytics
+└── useProductTracking.ts   Product interactions for recommendations engine
+                            Events: view, cart_add, purchase, wishlist
+
+PROJECT MANAGEMENT
+├── useComments.ts          Comment CRUD operations for project modals
+│                           Handles fetching, submission, auto-scroll
+└── useProjectStatus.ts     Admin project status updates
+                            Manages status change + optional notes
+
+UI UTILITIES
+├── useBackdropClose.ts     Modal click-outside handler + Escape key
+│                           Consistent close behavior across all modals
+└── useCurrency.ts          Currency conversion and formatting
+                            Fetches rates, caches, converts, formats
+```
+
 **Feeling overwhelmed?** Don't worry - you don't need to understand everything at once. Most tasks only touch a few files. Start with the feature you're working on and explore outward from there.
 
 ---
 
 ## Shopping Cart & Ecommerce
+
+![Shop page displaying consultation products with pricing and add to cart functionality](app/public/screenshots/december-2025-release/shop-desktop-light.png)
 
 ### How It Works
 
@@ -884,6 +958,8 @@ The cart system is a **three-tier architecture**:
 3. **React CartContext** - Frontend state management with localStorage persistence
 
 ### Cart Data Flow
+
+![Shopping cart with items, quantities, and order summary](app/public/screenshots/december-2025-release/cart-desktop-light.png)
 
 ```
 User clicks "Add to Cart"
@@ -1111,6 +1187,8 @@ order:{orderId}          Order details (5m)
 user:projects:{userId}   User's projects (1m)
 admin:projects:all       All projects (5m)
 ```
+
+> **Deep Dive**: For detailed cache invalidation patterns by feature, see [docs/CACHE_STRATEGY.md](docs/CACHE_STRATEGY.md).
 
 ---
 
@@ -1640,9 +1718,36 @@ Custom skills in `.claude/skills/` provide specialized agent capabilities:
 
 | Skill | Purpose | Trigger |
 |-------|---------|---------|
+| `auto-loop` | Hours of autonomous work through TODO.md tasks | "/auto-loop" or "keep going" |
 | `launch-a-swarm` | Spawn 5 parallel agents for comprehensive code review | "launch a swarm" |
 | `frontend-design` | Generate distinctive, production-grade UI | Building web interfaces |
 | `worktree-swarm` | Orchestrate parallel development with git worktrees | "parallelize", "spawn worktrees" |
+
+#### Auto-Loop Skill (Autonomous Work Mode)
+
+Enables Claude to work autonomously for hours without intervention. Based on the [Ralph Wiggum technique](https://awesomeclaude.ai/ralph-wiggum) - when Claude tries to exit, the stop hook blocks with exit code 2 and feeds the next task back as a prompt.
+
+**How it works:**
+```
+1. /auto-loop or "work through TODO.md"
+2. Claude works on first [ ] task in TODO.md
+3. When done, marks [x] and commits with /dac
+4. Stop hook blocks exit, shows next task
+5. Claude continues automatically
+6. Ends when: all done, 5h limit, or /cancel-loop
+```
+
+**Task markers in TODO.md:**
+- `[ ]` = ready to work
+- `[→]` = in progress (only 1 at a time)
+- `[x]` = completed
+- `[!]` = blocked (needs human)
+
+**Files:**
+- `.claude/hooks/stop-check.sh` - blocks exit, shows next task
+- `.claude/hooks/lib/loop-helper.sh` - task parsing utilities
+- `.claude/loop-state.json` - tracks iterations, time, progress
+- `app/lib/loop-state.ts` - TypeScript API for loop state
 
 #### Launch-a-Swarm Skill
 
@@ -1764,7 +1869,15 @@ supabase db reset
 
 ## Puck Visual Builder
 
-Puck enables drag-and-drop page building. Currently **disabled** pending E2E testing.
+![Get Started page showcasing the visual page building experience](app/public/screenshots/december-2025-release/get-started-desktop-light.png)
+
+Puck enables drag-and-drop page building with a live preview. Admins can create and edit pages visually without touching code.
+
+**Recent Enhancements (December 2025):**
+- Pre-built section library for rapid page assembly
+- Template marketplace for sharing/selling page designs
+- TipTap WYSIWYG rich text editor integration
+- Inline click-to-edit on 12 marketing pages
 
 ### 30+ Available Components
 
@@ -1827,6 +1940,73 @@ Each component needs:
 - `fields` - Editor inputs (text, select, radio, etc.)
 - `defaultProps` - Default values
 - `render` - React component that renders the output
+
+---
+
+## Inline Editing
+
+Marketing pages support click-to-edit functionality for admins. Click the pencil icon on any page to open the edit sidebar, then click any section or field to edit it.
+
+### Supported Pages (12 total)
+
+| Page | Content Type | Fields |
+|------|--------------|--------|
+| Home | Hero, Features, CTA | All text, colors, buttons |
+| Services | Service cards, CTAs | Titles, descriptions, pricing |
+| Pricing | Tiers, features, FAQ | All tier details, toggle monthly/annual |
+| FAQ | Questions, answers | Add/remove/reorder items |
+| How It Works | Steps, illustrations | Step content, icons, order |
+| Contact | Form, locations, hours | Contact info, form fields |
+| Guide | Getting started sections | Section titles and content |
+| Privacy | Policy sections | Legal text, last updated |
+| Terms | Terms sections | Legal text, last updated |
+| Blog | Posts listing | Post content via CMS |
+| Changelog | Updates listing | Version notes, dates |
+| Get Started | Wizard steps | Wizard configuration |
+
+### How It Works
+
+1. **Admin clicks pencil icon** - Opens edit sidebar
+2. **Click any section** - Fields appear in sidebar
+3. **Edit inline** - Changes update in real-time
+4. **Save/Publish** - Persists to Supabase
+
+### Technical Implementation
+
+- `InlineEditContext` - Global state for edit mode
+- `EditableSection` - Wrapper for editable sections
+- `EditableItem` - Wrapper for array items (FAQ, pricing tiers)
+- `AdminSidebar` - Field editor UI
+- Content stored in Supabase `page_content` table
+
+### InlineEditContext API
+
+The `useInlineEdit()` hook provides access to editing state and functions:
+
+```typescript
+const {
+  // State
+  isEditMode,           // boolean - Is edit mode active?
+  pageContent,          // Record<string, unknown> - Current page content
+  pageSlug,             // string | null - Current page slug
+  selectedSection,      // SectionSelection | null - Selected section
+  selectedItem,         // ItemSelection | null - Selected array item
+  isSidebarOpen,        // boolean - Is sidebar visible?
+  hasUnsavedChanges,    // boolean - Are there pending changes?
+
+  // Actions
+  setEditMode,          // (enabled: boolean) => void
+  selectSection,        // (selection: SectionSelection | null) => void
+  selectItem,           // (selection: ItemSelection | null) => void
+  updateField,          // (sectionKey: string, fieldPath: string, newValue: unknown) => void
+  getFieldValue,        // (sectionKey: string, fieldPath: string) => unknown
+  setSidebarOpen,       // (open: boolean) => void
+} = useInlineEdit();
+```
+
+**State Sync Rule**: When updating fields, both `pageContent` AND `selectedSection/selectedItem.content` must stay in sync. The `updateField` function handles this automatically.
+
+> **Deep Dive**: For detailed architecture and data flow diagrams, see [docs/INLINE_EDITING.md](docs/INLINE_EDITING.md).
 
 ---
 
@@ -2069,7 +2249,12 @@ These improvements are **done and working**:
 | **Visual Documentation** | Automated screenshot capture for feature documentation | ✅ Implemented |
 | **User Guide Page** | Public `/guide` with step-by-step platform instructions | ✅ Implemented |
 
+![User guide page with step-by-step platform instructions](app/public/screenshots/december-2025-release/guide-desktop-light.png)
+
 **Blog System** (`/blog`, `/admin/blog`):
+
+![Blog listing page with published articles and featured content](app/public/screenshots/december-2025-release/blog-desktop-light.png)
+
 - Public blog listing and individual post pages
 - Admin dashboard for creating, editing, and managing posts
 - SEO-friendly slugs and metadata
@@ -2155,6 +2340,206 @@ See [TODO.md](TODO.md) for the current task tracker with prioritized work items.
 5. **Test dark mode** - Run `npm run test:a11y`
 6. **Test complete flow** - Run `npm run test:e2e`
 7. **Update this README** - Add to relevant section
+
+### How to Add a Custom Hook
+
+Create reusable hooks in `app/hooks/` when logic is repeated across multiple components.
+
+**1. Create the file:**
+```bash
+touch app/hooks/useMyHook.ts
+```
+
+**2. Follow the documentation pattern:**
+```typescript
+'use client';
+
+import { useState, useEffect } from 'react';
+
+// ============================================================================
+// useMyHook Hook - [Short description]
+// ============================================================================
+// What: [What it does]
+// Why: [Why it exists - what problem it solves]
+// How: [How to use it]
+
+interface UseMyHookOptions {
+  someOption: string;
+  optionalThing?: boolean;
+}
+
+export function useMyHook({ someOption, optionalThing = false }: UseMyHookOptions) {
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Your hook logic here
+
+  return { data, isLoading };
+}
+```
+
+**3. Add tests in `__tests__/hooks/`:**
+```typescript
+import { renderHook } from '@testing-library/react';
+import { useMyHook } from '@/hooks/useMyHook';
+
+describe('useMyHook', () => {
+  it('should initialize with loading false', () => {
+    const { result } = renderHook(() => useMyHook({ someOption: 'test' }));
+    expect(result.current.isLoading).toBe(false);
+  });
+});
+```
+
+**4. Document in README** - Add to the [Custom Hooks](#custom-hooks-8-files) section.
+
+**Reference hooks:** `useBackdropClose`, `useEditableContent`, `useCurrency`
+
+### How to Add a New Context
+
+Use React Context when you need shared state across multiple components without prop drilling.
+
+**1. Create the context file:**
+```bash
+touch app/context/MyContext.tsx
+```
+
+**2. Follow the context pattern:**
+```typescript
+'use client';
+
+import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+
+// ============================================================================
+// MyContext - [Short description of what this manages]
+// ============================================================================
+// What: [What state/functionality it provides]
+// Why: [Why components need shared access to this]
+// How: [Brief usage note]
+
+interface MyContextType {
+  someValue: string;
+  updateValue: (value: string) => void;
+}
+
+const MyContext = createContext<MyContextType | undefined>(undefined);
+
+// ============================================================================
+// MyProvider - Wrap components that need access
+// ============================================================================
+export function MyProvider({ children }: { children: ReactNode }) {
+  const [someValue, setSomeValue] = useState('default');
+
+  const updateValue = useCallback((value: string) => {
+    setSomeValue(value);
+  }, []);
+
+  return (
+    <MyContext.Provider value={{ someValue, updateValue }}>
+      {children}
+    </MyContext.Provider>
+  );
+}
+
+// ============================================================================
+// useMyContext - Hook for consuming the context
+// ============================================================================
+export function useMyContext() {
+  const context = useContext(MyContext);
+  if (!context) {
+    throw new Error('useMyContext must be used within MyProvider');
+  }
+  return context;
+}
+```
+
+**3. Add to the provider tree in `app/layout.tsx`:**
+```typescript
+<MyProvider>
+  <AuthProvider>
+    {/* other providers */}
+    {children}
+  </AuthProvider>
+</MyProvider>
+```
+
+**4. Use in components:**
+```typescript
+import { useMyContext } from '@/context/MyContext';
+
+function MyComponent() {
+  const { someValue, updateValue } = useMyContext();
+  return <button onClick={() => updateValue('new')}>{someValue}</button>;
+}
+```
+
+**Existing contexts:** `AuthContext`, `CartContext`, `ToastContext`, `InlineEditContext`
+
+### How to Add an Inline Editable Page
+
+Make any marketing page click-to-edit by following these 4 steps.
+
+**1. Add route mapping in `lib/editable-routes.ts`:**
+```typescript
+export const editableRoutes: Record<string, EditablePageSlug> = {
+  // ... existing routes
+  '/my-page': 'my-page',  // Add your route
+};
+```
+
+**2. Define content types in `lib/page-content-types.ts`:**
+```typescript
+export interface MyPageContent extends PageContent {
+  hero: {
+    title: string;
+    subtitle: string;
+  };
+  features: Array<{
+    title: string;
+    description: string;
+  }>;
+}
+
+export type EditablePageSlug = 'home' | 'services' | /* ... */ | 'my-page';
+```
+
+**3. Add defaults in `lib/default-page-content.ts`:**
+```typescript
+export const defaultMyPageContent: MyPageContent = {
+  hero: {
+    title: 'Welcome',
+    subtitle: 'Your subtitle here',
+  },
+  features: [
+    { title: 'Feature 1', description: 'Description...' },
+  ],
+};
+```
+
+**4. Use the hook in your page:**
+```typescript
+'use client';
+
+import { useEditableContent } from '@/hooks/useEditableContent';
+import { EditableSection } from '@/components/InlineEditor';
+import type { MyPageContent } from '@/lib/page-content-types';
+import { defaultMyPageContent } from '@/lib/default-page-content';
+
+export default function MyPage() {
+  const { content } = useEditableContent<MyPageContent>(defaultMyPageContent);
+
+  return (
+    <EditableSection sectionKey="hero">
+      <h1>{content.hero.title}</h1>
+      <p>{content.hero.subtitle}</p>
+    </EditableSection>
+  );
+}
+```
+
+**That's it!** The page is now click-to-edit for admins. Content saves to Supabase automatically.
+
+> **Deep Dive**: See [docs/INLINE_EDITING.md](docs/INLINE_EDITING.md) for data flow and architecture details.
 
 ---
 

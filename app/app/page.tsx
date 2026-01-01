@@ -1,19 +1,22 @@
-import Link from 'next/link';
-import { siteConfig } from '@/config/site.config';
-import Button from '@/components/Button';
-import ServiceCardWithModal from '@/components/ServiceCardWithModal';
-import CircleBadge from '@/components/CircleBadge';
 import { getDefaultContent } from '@/lib/default-page-content';
-import { formInputColors, titleColors, headingColors, groupHoverColors, accentColors, cardHoverColors, linkColors, linkHoverColors, linkFontWeight, focusRingClasses } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
+import { headers } from 'next/headers';
+import { PuckPageRenderer } from '@/components/InlineEditor';
+import HomePageClient from '@/components/home/HomePageClient';
 
 // ============================================================================
 // Home Page - NeedThisDone Landing Page
 // ============================================================================
 // The main landing page that introduces the service and invites visitors
 // to learn more or submit a project request.
-// Hero tagline/description come from site.config.ts (developer-controlled).
-// Other content is fetched from the database (if customized) or uses defaults.
+//
+// INLINE EDITING: This page supports inline editing for admins.
+// Click the floating pencil button to open the edit sidebar,
+// then click on any section to edit its content directly.
+//
+// PUCK MIGRATION: This page also checks for a Puck "home" page first.
+// If a published Puck page with slug "home" exists, it renders that.
+// Otherwise, it renders the editable React implementation.
 
 // Force dynamic rendering - content comes from API
 export const dynamic = 'force-dynamic';
@@ -22,6 +25,39 @@ export const metadata = {
   title: 'NeedThisDone - Get Your Projects Done Right',
   description: 'Professional project services - submit your project, get it done right.',
 };
+
+// ============================================================================
+// Puck Page Fetching
+// ============================================================================
+// Check if a published Puck page with slug "home" exists
+
+interface PuckPageData {
+  content: Record<string, unknown>;
+  is_published: boolean;
+}
+
+async function getPuckHomePage(): Promise<PuckPageData | null> {
+  try {
+    const headersList = await headers();
+    const protocol = headersList.get('x-forwarded-proto') || 'http';
+    const host = headersList.get('x-forwarded-host') || headersList.get('host') || 'localhost:3000';
+    const baseUrl = `${protocol}://${host}`;
+
+    const response = await fetch(`${baseUrl}/api/pages/home`, {
+      cache: 'no-store',
+    });
+
+    if (response.ok) {
+      const { page } = await response.json();
+      if (page && page.is_published) {
+        return page;
+      }
+    }
+  } catch {
+    // No Puck home page - fall through to default
+  }
+  return null;
+}
 
 // ============================================================================
 // Content Fetching
@@ -67,126 +103,21 @@ async function prefetchProducts() {
 // ============================================================================
 
 export default async function HomePage() {
+  // Check for Puck-based home page first
+  const puckPage = await getPuckHomePage();
+
+  // If a published Puck home page exists, render it with inline edit support
+  if (puckPage) {
+    return <PuckPageRenderer slug="home" content={puckPage.content} />;
+  }
+
+  // Otherwise, render the editable React implementation
   // Fetch content and prefetch products in parallel for speed
   const [content] = await Promise.all([
     getContent(),
     prefetchProducts(), // Warms cache for instant /shop navigation
   ]);
 
-  return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className={`text-5xl md:text-6xl font-bold tracking-tight ${titleColors.blue} mb-4`}>
-            {siteConfig.project.tagline}
-          </h1>
-          <p className={`text-xl ${formInputColors.helper} leading-relaxed mb-6 max-w-3xl mx-auto`}>
-            {siteConfig.project.description}
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            {content.hero.buttons.map((button, index) => (
-              <Button key={index} variant={button.variant} href={button.href}>
-                {button.text}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {/* Services Preview */}
-        <div className="mb-10">
-          <Link href="/services" className="block group">
-            <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center ${groupHoverColors.blue} transition-colors`}>
-              {content.servicesTitle} <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-            </h2>
-          </Link>
-          <div className="grid lg:grid-cols-3 gap-6">
-            {siteConfig.services.map((service, index) => (
-              <ServiceCardWithModal
-                key={index}
-                title={service.title}
-                tagline={service.tagline}
-                description={service.description}
-                details={service.details}
-                color={service.color}
-                variant="compact"
-              />
-            ))}
-          </div>
-          {/* Cross-page link to services comparison */}
-          <p className={`text-center mt-4 ${formInputColors.helper}`}>
-            <Link href="/services" className={`${linkColors.blue} ${linkHoverColors.blue} hover:underline ${linkFontWeight} ${focusRingClasses.blue} rounded`}>
-              Not sure which service? Compare them all →
-            </Link>
-          </p>
-        </div>
-
-        {/* Quick Consultations Section */}
-        {content.consultations && (
-          <div className="mb-10">
-            <Link href={content.consultations.linkHref} className="block group">
-              <h2 className={`text-3xl font-bold ${headingColors.primary} mb-2 text-center ${groupHoverColors.purple} transition-colors`}>
-                {content.consultations.title} <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-              </h2>
-            </Link>
-            <p className={`text-center ${formInputColors.helper} mb-6`}>
-              {content.consultations.description}
-            </p>
-            <div className="grid md:grid-cols-3 gap-4">
-              {content.consultations.options.map((option, index) => (
-                <Link
-                  key={index}
-                  href={content.consultations!.linkHref}
-                  className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 ${accentColors[option.color].hoverBorder} hover:shadow-lg transition-all duration-300 text-center ${focusRingClasses[option.color as keyof typeof focusRingClasses] || focusRingClasses.blue}`}
-                >
-                  <div className={`text-2xl font-bold ${accentColors[option.color].text} mb-1`}>
-                    {option.price}
-                  </div>
-                  <div className={`font-semibold ${headingColors.primary} mb-1`}>
-                    {option.name}
-                  </div>
-                  <div className={`text-sm ${formInputColors.helper} mb-2`}>
-                    {option.duration}
-                  </div>
-                  <div className={`text-sm ${formInputColors.helper}`}>
-                    {option.description}
-                  </div>
-                </Link>
-              ))}
-            </div>
-            <p className={`text-center mt-4 ${formInputColors.helper} font-medium hover:underline`}>
-              <Link href={content.consultations.linkHref} className={`${focusRingClasses.purple} rounded`}>
-                {content.consultations.linkText}
-              </Link>
-            </p>
-          </div>
-        )}
-
-        {/* How It Works Preview */}
-        <Link
-          href="/how-it-works"
-          className={`block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 ${cardHoverColors.blue} hover:shadow-xl active:scale-98 group ${focusRingClasses.blue}`}
-        >
-          <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center transition-colors`}>
-            {content.processPreview.title}
-          </h2>
-          <div className="grid md:grid-cols-4 gap-6 text-center">
-            {content.processPreview.steps.map((step, index) => (
-              <div key={index}>
-                <div className="flex justify-center mb-3">
-                  <CircleBadge number={step.number} color={step.color} size="md" />
-                </div>
-                <h3 className={`font-semibold ${headingColors.primary} mb-2`}>{step.title}</h3>
-                <p className={`${formInputColors.helper} text-sm`}>
-                  {step.description}
-                </p>
-              </div>
-            ))}
-          </div>
-          <p className={`text-center mt-6 ${formInputColors.helper} font-medium group-hover:underline`}>
-            {content.processPreview.linkText}
-          </p>
-        </Link>
-      </div>
-  );
+  // Render using the client component which supports inline editing
+  return <HomePageClient content={content} />;
 }

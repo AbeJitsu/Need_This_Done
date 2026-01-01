@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { neutralAccentBg } from '@/lib/colors';
 
 // ============================================================================
 // FAQ Component - Common Questions Answered
@@ -114,15 +115,15 @@ export default function FAQ() {
               onClick={() => toggleOpen(faq.id)}
               {...{ 'aria-expanded': openId === faq.id }}
               aria-controls={`faq-answer-${faq.id}`}
-              className="
+              className={`
                 w-full p-4
-                bg-gray-50 dark:bg-gray-800
-                hover:bg-gray-100 dark:hover:bg-gray-700
+                ${neutralAccentBg.gray}
+                hover:bg-gray-200 dark:hover:bg-gray-600
                 text-left
                 font-medium text-gray-900 dark:text-gray-100
                 transition-colors
                 flex items-center justify-between
-              "
+              `}
             >
               <span>{faq.question}</span>
               <span

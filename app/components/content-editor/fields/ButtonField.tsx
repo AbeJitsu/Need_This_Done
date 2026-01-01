@@ -7,7 +7,7 @@
 
 import TextField from './TextField';
 import SelectField, { buttonVariantOptions } from './SelectField';
-import type { AccentVariant } from '@/lib/colors';
+import { uiChromeBg, type AccentVariant } from '@/lib/colors';
 
 export interface ButtonConfig {
   text: string;
@@ -44,7 +44,7 @@ export default function ButtonField({
         {label}
       </label>
 
-      <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 space-y-3">
+      <div className={`p-3 rounded-lg ${uiChromeBg.panel} space-y-3`}>
         <div className="grid grid-cols-2 gap-3">
           <TextField
             label="Button Text"

@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors, alertColors, statusBadgeColors } from '@/lib/colors';
+import { filterButtonColors, alertColors, statusBadgeColors, softBgColors, containerBg } from '@/lib/colors';
 
 // ============================================================================
 // Appointments Dashboard - /admin/appointments
@@ -302,7 +302,7 @@ export default function AppointmentsDashboard() {
                 {/* Date/time details */}
                 <div className="grid sm:grid-cols-2 gap-4 mb-4">
                   {/* Preferred slot */}
-                  <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                  <div className={`p-4 ${softBgColors.green} rounded-lg border border-green-200 dark:border-green-600`}>
                     <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-1">
                       Preferred Time
                     </p>
@@ -319,8 +319,8 @@ export default function AppointmentsDashboard() {
 
                   {/* Alternate slot (if provided) */}
                   {appointment.alternate_date && appointment.alternate_time_start && appointment.alternate_time_end && (
-                    <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
-                      <p className="text-xs font-medium text-orange-700 dark:text-orange-300 mb-1">
+                    <div className={`p-4 ${softBgColors.gold} rounded-lg border border-gold-200 dark:border-gold-600`}>
+                      <p className="text-xs font-medium text-gold-700 dark:text-gold-300 mb-1">
                         Alternate Time
                       </p>
                       <p className="font-semibold text-gray-900 dark:text-gray-100">
@@ -335,7 +335,7 @@ export default function AppointmentsDashboard() {
 
                 {/* Notes (if any) */}
                 {appointment.notes && (
-                  <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className={`mb-4 p-3 ${containerBg.page} rounded-lg`}>
                     <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Customer Notes</p>
                     <p className="text-sm text-gray-700 dark:text-gray-300">{appointment.notes}</p>
                   </div>

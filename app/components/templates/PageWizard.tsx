@@ -12,7 +12,7 @@ import {
   ALL_CATEGORIES,
   COLOR_OPTIONS,
 } from '@/lib/templates';
-import { accentColors, type AccentVariant } from '@/lib/colors';
+import { accentColors, softBgColors, type AccentVariant } from '@/lib/colors';
 
 // ============================================================================
 // PAGE WIZARD COMPONENT
@@ -110,7 +110,7 @@ export default function PageWizard({ onComplete, onCancel }: PageWizardProps) {
     : [];
 
   return (
-    <div className="min-h-[600px] h-[calc(100dvh-72px)] bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
+    <div className="min-h-[600px] h-[calc(100dvh-72px)] bg-gray-100 dark:bg-gray-900 flex flex-col overflow-hidden">
       {/* Header with progress */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex-shrink-0">
         <div className="max-w-2xl mx-auto">
@@ -250,7 +250,7 @@ function StepCategory({
               onClick={() => onSelect(catId)}
               className={`w-full p-4 rounded-xl border-2 text-left transition-all flex items-start gap-4 ${
                 selected === catId
-                  ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
+                  ? `border-purple-500 ${softBgColors.purple}`
                   : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
@@ -311,7 +311,7 @@ function StepTemplate({
               onClick={() => onSelect(template)}
               className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
                 selected?.metadata.id === template.metadata.id
-                  ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
+                  ? `border-purple-500 ${softBgColors.purple}`
                   : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >

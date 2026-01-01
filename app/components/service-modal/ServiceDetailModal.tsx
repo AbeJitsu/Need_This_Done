@@ -8,13 +8,14 @@ import {
   dividerColors,
   headingColors,
   titleColors,
-  checkmarkColors,
   topBorderColors,
   iconButtonColors,
   solidButtonColors,
-  AccentColor,
+  outlineButtonColors,
 } from '@/lib/colors';
-import type { ServiceType } from '@/lib/service-modal-content';
+import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
+import { CloseIcon } from '@/components/ui/icons';
+import { serviceColors } from '@/lib/service-colors';
 
 // ============================================================================
 // Service Detail Modal - Teaser Format
@@ -22,13 +23,6 @@ import type { ServiceType } from '@/lib/service-modal-content';
 // What: Compact overlay modal with brief service preview
 // Why: Sparks curiosity and drives users to the services page for full details
 // How: Uses ServiceModalContext for state, shows headline + 3 bullets + 2 CTAs
-
-// Map service types to accent colors
-const serviceColors: Record<ServiceType, AccentColor> = {
-  'virtual-assistant': 'green',
-  'data-documents': 'blue',
-  'website-services': 'purple',
-};
 
 export default function ServiceDetailModal() {
   const { isOpen, activeService, activeServiceType, closeModal } = useServiceModal();
@@ -85,9 +79,7 @@ export default function ServiceDetailModal() {
             `}
             aria-label="Close modal"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <CloseIcon size="lg" />
           </button>
 
           {/* ================================================================
@@ -120,11 +112,7 @@ export default function ServiceDetailModal() {
               <ul className="space-y-2">
                 {activeService.bulletPoints.map((point, index) => (
                   <li key={index} className={`flex items-start gap-3 ${headingColors.secondary}`}>
-                    <div className={`w-5 h-5 rounded-full ${checkmarkColors[color].bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                      <svg className={`w-3 h-3 ${checkmarkColors[color].icon}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
+                    <CheckmarkCircle color={color} size="sm" className="mt-0.5" />
                     <span>
                       {point}
                     </span>
@@ -158,9 +146,7 @@ export default function ServiceDetailModal() {
                 className={`
                   flex-1 text-center py-3 px-6 rounded-xl font-semibold
                   border-2 transition-all duration-200
-                  ${color === 'green' ? 'border-green-500 text-green-700 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20' : ''}
-                  ${color === 'blue' ? 'border-blue-500 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20' : ''}
-                  ${color === 'purple' ? 'border-purple-500 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20' : ''}
+                  ${outlineButtonColors[color].base} ${outlineButtonColors[color].hover}
                 `}
               >
                 {activeService.ctas.secondary.text}

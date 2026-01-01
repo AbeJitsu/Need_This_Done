@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { uiChromeBg, statusIndicatorBg } from '@/lib/colors';
 
 // ============================================================================
 // SystemOverview Component - Friendly System Health at a Glance
@@ -79,7 +80,7 @@ export default function SystemOverview() {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
         <div className="flex items-center gap-3">
-          <div className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+          <div className={`w-5 h-5 rounded-full ${statusIndicatorBg.loading} flex items-center justify-center`}>
             <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
           </div>
           <span className="text-gray-600 dark:text-gray-300">Checking systems...</span>
@@ -118,8 +119,8 @@ export default function SystemOverview() {
             <div
               className={`w-12 h-12 rounded-full flex items-center justify-center ${
                 isHealthy
-                  ? 'bg-green-100 dark:bg-green-900/30'
-                  : 'bg-amber-100 dark:bg-amber-900/30'
+                  ? statusIndicatorBg.healthy
+                  : statusIndicatorBg.warning
               }`}
             >
               {isHealthy ? (
@@ -202,7 +203,7 @@ export default function SystemOverview() {
 
       {/* Expandable Details Section */}
       {showDetails && (
-        <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4">
+        <div className={`border-t border-gray-200 dark:border-gray-700 ${uiChromeBg.panel} p-4`}>
           <div className="grid sm:grid-cols-2 gap-3">
             {services.map(({ key, status }) => {
               const info = serviceInfo[key as keyof typeof serviceInfo];
@@ -214,7 +215,7 @@ export default function SystemOverview() {
                   className={`p-3 rounded-lg border ${
                     isUp
                       ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
-                      : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800'
+                      : `${statusIndicatorBg.warning} border-amber-200 dark:border-amber-600`
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-1">

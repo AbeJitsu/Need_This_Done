@@ -191,7 +191,7 @@ export default function CartPage() {
               const duration = getDurationLabel(title);
 
               return (
-                <div key={item.id} className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 border-l-4 ${leftBorderColors[color]} dark:bg-gray-700/50`}>
+                <div key={item.id} className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 border-l-4 ${leftBorderColors[color]} dark:bg-gray-700`}>
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex-grow">
                       {/* Consultation title */}
@@ -211,7 +211,7 @@ export default function CartPage() {
                     <button
                       onClick={() => handleRemoveItem(item.id || '')}
                       disabled={isUpdating === item.id}
-                      className={`text-gray-500 ${dangerColors.hover} transition text-xl leading-none rounded ${focusRingClasses.orange}`}
+                      className={`text-gray-500 ${dangerColors.hover} transition text-xl leading-none rounded ${focusRingClasses.gold}`}
                       aria-label="Remove item"
                     >
                       &times;
@@ -291,7 +291,7 @@ export default function CartPage() {
               </div>
 
               <Button
-                variant="orange"
+                variant="gold"
                 href="/checkout"
                 className="w-full mb-3"
               >

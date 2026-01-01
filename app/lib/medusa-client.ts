@@ -115,14 +115,52 @@ interface Product {
   };
 }
 
+// ============================================================================
+// Pagination Types
+// ============================================================================
+
+interface PaginationParams {
+  limit?: number;
+  offset?: number;
+}
+
+interface PaginatedProducts {
+  products: Product[];
+  count: number;
+}
+
 export const products = {
   /**
-   * List all products
+   * List products with optional pagination
    * GET /store/products
+   *
+   * @param params - Optional pagination params (limit, offset)
+   * @returns Products array (for backwards compatibility) or paginated response
+   *
+   * Examples:
+   * - products.list() - returns all products (array)
+   * - products.list({ limit: 10, offset: 0 }) - returns paginated response
    */
-  list: async (): Promise<Product[]> => {
-    const response = await fetchWithRetry(`${MEDUSA_URL}/store/products`);
-    const data = await handleResponse<{ products: Product[] }>(response);
+  list: async (params?: PaginationParams): Promise<Product[] | PaginatedProducts> => {
+    // Build URL with pagination params
+    let url = `${MEDUSA_URL}/store/products`;
+    if (params) {
+      const queryParams = new URLSearchParams();
+      if (params.limit !== undefined) queryParams.append('limit', params.limit.toString());
+      if (params.offset !== undefined) queryParams.append('offset', params.offset.toString());
+      if (queryParams.toString()) url += `?${queryParams.toString()}`;
+    }
+
+    const response = await fetchWithRetry(url);
+    const data = await handleResponse<{ products: Product[]; count?: number }>(response);
+
+    // Return paginated response if params were provided, array otherwise (backwards compatible)
+    if (params) {
+      return {
+        products: data.products || [],
+        count: data.count ?? data.products?.length ?? 0,
+      };
+    }
     return data.products || [];
   },
 
@@ -438,4 +476,4 @@ export const medusaClient = {
   admin,
 };
 
-export type { Product, ProductVariant, Cart, LineItem, Order, AdminProduct, MedusaError };
+export type { Product, ProductVariant, Cart, LineItem, Order, AdminProduct, MedusaError, PaginationParams, PaginatedProducts };

@@ -5,6 +5,9 @@ import {
   cardBorderColors,
   cardBgColors,
   gradientColors,
+  softBgColors,
+  verySoftBgColors,
+  hoverBgColors,
   type AccentVariant,
 } from './colors';
 
@@ -55,16 +58,8 @@ export function getPuckAccentColors(color: string) {
 
 // Helper functions for derived colors
 function getIconBgClass(color: AccentVariant): string {
-  const map: Record<AccentVariant, string> = {
-    purple: 'bg-purple-100 dark:bg-purple-900/40',
-    blue: 'bg-blue-100 dark:bg-blue-900/40',
-    green: 'bg-green-100 dark:bg-green-900/40',
-    orange: 'bg-orange-100 dark:bg-orange-900/40',
-    teal: 'bg-teal-100 dark:bg-teal-900/40',
-    gray: 'bg-gray-100 dark:bg-gray-700',
-    red: 'bg-red-100 dark:bg-red-900/40',
-  };
-  return map[color] || map.purple;
+  // Uses softBgColors for icon backgrounds (solid colors, no opacity)
+  return softBgColors[color] || softBgColors.purple;
 }
 
 function getLightBorderClass(color: AccentVariant): string {
@@ -72,7 +67,7 @@ function getLightBorderClass(color: AccentVariant): string {
     purple: 'border-purple-200 dark:border-purple-800',
     blue: 'border-blue-200 dark:border-blue-800',
     green: 'border-green-200 dark:border-green-800',
-    orange: 'border-orange-200 dark:border-orange-800',
+    gold: 'border-gold-200 dark:border-gold-800',
     teal: 'border-teal-200 dark:border-teal-800',
     gray: 'border-gray-200 dark:border-gray-700',
     red: 'border-red-200 dark:border-red-800',
@@ -85,7 +80,7 @@ function getStarColorClass(color: AccentVariant): string {
     purple: 'text-purple-500',
     blue: 'text-blue-500',
     green: 'text-green-500',
-    orange: 'text-orange-500',
+    gold: 'text-gold-500',
     teal: 'text-teal-500',
     gray: 'text-gray-500',
     red: 'text-red-500',
@@ -98,7 +93,7 @@ function getDotActiveClass(color: AccentVariant): string {
     purple: 'bg-purple-600',
     blue: 'bg-blue-600',
     green: 'bg-green-600',
-    orange: 'bg-orange-600',
+    gold: 'bg-gold-600',
     teal: 'bg-teal-600',
     gray: 'bg-gray-600',
     red: 'bg-red-600',
@@ -126,7 +121,7 @@ function getQuoteColorClass(color: AccentVariant): string {
     purple: 'text-purple-300 dark:text-purple-700',
     blue: 'text-blue-300 dark:text-blue-700',
     green: 'text-green-300 dark:text-green-700',
-    orange: 'text-orange-300 dark:text-orange-700',
+    gold: 'text-gold-300 dark:text-gold-700',
     teal: 'text-teal-300 dark:text-teal-700',
     gray: 'text-gray-300 dark:text-gray-600',
     red: 'text-red-300 dark:text-red-700',
@@ -142,7 +137,7 @@ function getCardBorderHoverClass(color: AccentVariant): string {
     purple: 'border-purple-200 dark:border-purple-800 hover:border-purple-300 dark:hover:border-purple-700',
     blue: 'border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-700',
     green: 'border-green-200 dark:border-green-800 hover:border-green-300 dark:hover:border-green-700',
-    orange: 'border-orange-200 dark:border-orange-800 hover:border-orange-300 dark:hover:border-orange-700',
+    gold: 'border-gold-200 dark:border-gold-800 hover:border-gold-300 dark:hover:border-gold-700',
     teal: 'border-teal-200 dark:border-teal-800 hover:border-teal-300 dark:hover:border-teal-700',
     gray: 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600',
     red: 'border-red-200 dark:border-red-800 hover:border-red-300 dark:hover:border-red-700',
@@ -154,32 +149,16 @@ function getCardBorderHoverClass(color: AccentVariant): string {
  * Get subtle background for cards/sections
  */
 function getSubtleBgClass(color: AccentVariant): string {
-  const map: Record<AccentVariant, string> = {
-    purple: 'bg-purple-50 dark:bg-purple-900/20',
-    blue: 'bg-blue-50 dark:bg-blue-900/20',
-    green: 'bg-green-50 dark:bg-green-900/20',
-    orange: 'bg-orange-50 dark:bg-orange-900/20',
-    teal: 'bg-teal-50 dark:bg-teal-900/20',
-    gray: 'bg-gray-50 dark:bg-gray-800/50',
-    red: 'bg-red-50 dark:bg-red-900/20',
-  };
-  return map[color] || map.purple;
+  // Uses verySoftBgColors for subtle backgrounds (solid colors, no opacity)
+  return verySoftBgColors[color] || verySoftBgColors.purple;
 }
 
 /**
  * Get hover background for interactive elements
  */
 function getHoverBgClass(color: AccentVariant): string {
-  const map: Record<AccentVariant, string> = {
-    purple: 'hover:bg-purple-100 dark:hover:bg-purple-900/30',
-    blue: 'hover:bg-blue-100 dark:hover:bg-blue-900/30',
-    green: 'hover:bg-green-100 dark:hover:bg-green-900/30',
-    orange: 'hover:bg-orange-100 dark:hover:bg-orange-900/30',
-    teal: 'hover:bg-teal-100 dark:hover:bg-teal-900/30',
-    gray: 'hover:bg-gray-100 dark:hover:bg-gray-700/50',
-    red: 'hover:bg-red-100 dark:hover:bg-red-900/30',
-  };
-  return map[color] || map.purple;
+  // Uses hoverBgColors for solid hover states (no opacity)
+  return hoverBgColors[color] || hoverBgColors.purple;
 }
 
 /**
@@ -190,7 +169,7 @@ function getAccentTextClass(color: AccentVariant): string {
     purple: 'text-purple-600 dark:text-purple-400',
     blue: 'text-blue-600 dark:text-blue-400',
     green: 'text-green-600 dark:text-green-400',
-    orange: 'text-orange-600 dark:text-orange-400',
+    gold: 'text-gold-600 dark:text-gold-400',
     teal: 'text-teal-600 dark:text-teal-400',
     gray: 'text-gray-600 dark:text-gray-400',
     red: 'text-red-600 dark:text-red-400',
@@ -206,7 +185,7 @@ function getHighlightBorderClass(color: AccentVariant): string {
     purple: 'border-purple-500',
     blue: 'border-blue-500',
     green: 'border-green-500',
-    orange: 'border-orange-500',
+    gold: 'border-gold-500',
     teal: 'border-teal-500',
     gray: 'border-gray-500',
     red: 'border-red-500',
@@ -222,7 +201,7 @@ function getBadgeBgClass(color: AccentVariant): string {
     purple: 'bg-purple-500',
     blue: 'bg-blue-500',
     green: 'bg-green-500',
-    orange: 'bg-orange-500',
+    gold: 'bg-gold-500',
     teal: 'bg-teal-500',
     gray: 'bg-gray-500',
     red: 'bg-red-500',
@@ -238,7 +217,7 @@ function getDividerBorderClass(color: AccentVariant): string {
     purple: 'border-purple-300 dark:border-purple-700',
     blue: 'border-blue-300 dark:border-blue-700',
     green: 'border-green-300 dark:border-green-700',
-    orange: 'border-orange-300 dark:border-orange-700',
+    gold: 'border-gold-300 dark:border-gold-700',
     teal: 'border-teal-300 dark:border-teal-700',
     gray: 'border-gray-300 dark:border-gray-600',
     red: 'border-red-300 dark:border-red-700',
@@ -254,7 +233,7 @@ function getDividerGradientClass(color: AccentVariant): string {
     purple: 'from-transparent via-purple-400 to-transparent',
     blue: 'from-transparent via-blue-400 to-transparent',
     green: 'from-transparent via-green-400 to-transparent',
-    orange: 'from-transparent via-orange-400 to-transparent',
+    gold: 'from-transparent via-gold-400 to-transparent',
     teal: 'from-transparent via-teal-400 to-transparent',
     gray: 'from-transparent via-gray-400 to-transparent',
     red: 'from-transparent via-red-400 to-transparent',
@@ -270,7 +249,7 @@ function getAccentBorderClass(color: AccentVariant): string {
     purple: 'border-purple-600 dark:border-purple-400',
     blue: 'border-blue-600 dark:border-blue-400',
     green: 'border-green-600 dark:border-green-400',
-    orange: 'border-orange-600 dark:border-orange-400',
+    gold: 'border-gold-600 dark:border-gold-400',
     teal: 'border-teal-600 dark:border-teal-400',
     gray: 'border-gray-600 dark:border-gray-400',
     red: 'border-red-600 dark:border-red-400',
@@ -286,7 +265,7 @@ function getSolidBgClass(color: AccentVariant): string {
     purple: 'bg-purple-600',
     blue: 'bg-blue-600',
     green: 'bg-green-600',
-    orange: 'bg-orange-600',
+    gold: 'bg-gold-600',
     teal: 'bg-teal-600',
     gray: 'bg-gray-600',
     red: 'bg-red-600',
@@ -302,7 +281,7 @@ function getGroupHoverTextClass(color: AccentVariant): string {
     purple: 'group-hover:text-purple-600 dark:group-hover:text-purple-400',
     blue: 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
     green: 'group-hover:text-green-600 dark:group-hover:text-green-400',
-    orange: 'group-hover:text-orange-600 dark:group-hover:text-orange-400',
+    gold: 'group-hover:text-gold-600 dark:group-hover:text-gold-400',
     teal: 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
     gray: 'group-hover:text-gray-600 dark:group-hover:text-gray-400',
     red: 'group-hover:text-red-600 dark:group-hover:text-red-400',
@@ -318,7 +297,7 @@ function getProductHoverBorderClass(color: AccentVariant): string {
     purple: 'hover:border-purple-400 dark:hover:border-purple-500',
     blue: 'hover:border-blue-400 dark:hover:border-blue-500',
     green: 'hover:border-green-400 dark:hover:border-green-500',
-    orange: 'hover:border-orange-400 dark:hover:border-orange-500',
+    gold: 'hover:border-gold-400 dark:hover:border-gold-500',
     teal: 'hover:border-teal-400 dark:hover:border-teal-500',
     gray: 'hover:border-gray-400 dark:hover:border-gray-500',
     red: 'hover:border-red-400 dark:hover:border-red-500',

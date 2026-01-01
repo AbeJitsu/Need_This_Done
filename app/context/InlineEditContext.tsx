@@ -1,0 +1,555 @@
+'use client';
+
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
+import { getPageSlugFromPath } from '@/lib/editable-routes';
+import { getDefaultContent } from '@/lib/default-page-content';
+import { getNestedValue, setNestedValue } from '@/lib/object-utils';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+
+// ============================================================================
+// Inline Edit Context - Manage inline editing state for all pages
+// ============================================================================
+// What: Provides state and functions for inline content editing
+// Why: Allows admins to click on page sections and edit them directly
+// How: Tracks edit mode, selected section, and pending changes
+//
+// Supports two editing modes:
+// 1. Section-based editing (for marketing pages like Home, Services, etc.)
+// 2. Component-based editing (for Puck-built pages)
+
+// ============================================================================
+// Types - Section-based editing (marketing pages)
+// ============================================================================
+
+export interface SectionSelection {
+  // The section key in the page content (e.g., "hero", "consultations")
+  sectionKey: string;
+  // Human-readable label for the section
+  label: string;
+  // The section's current content
+  content: Record<string, unknown>;
+  // Optional: path within the section for nested editing (e.g., "buttons.0")
+  subPath?: string;
+  // Optional: label for the current nested path
+  subLabel?: string;
+}
+
+// Item selection for array items (cards, scenarios, steps, etc.)
+export interface ItemSelection {
+  // The section key containing the array (e.g., "services", "scenarioMatcher")
+  sectionKey: string;
+  // The array field name (e.g., "cards", "scenarios", "items")
+  arrayField: string;
+  // The index in the array
+  index: number;
+  // Human-readable label (e.g., "Data & Documents", "FAQ Item 3")
+  label: string;
+  // The item's current content
+  content: Record<string, unknown>;
+}
+
+export interface PendingChange {
+  // For section-based editing
+  sectionKey: string;
+  fieldPath: string;
+  oldValue: unknown;
+  newValue: unknown;
+}
+
+// ============================================================================
+// Types - Component-based editing (Puck pages) - Legacy support
+// ============================================================================
+
+export interface ComponentSelection {
+  // Path to the component in the Puck content tree
+  path: string;
+  // The component type (e.g., "Hero", "TextBlock")
+  type: string;
+  // The component's current props
+  props: Record<string, unknown>;
+  // The zone the component is in (optional)
+  zone?: string;
+}
+
+export interface LegacyPendingChange {
+  path: string;
+  propName: string;
+  oldValue: unknown;
+  newValue: unknown;
+}
+
+// ============================================================================
+// Context Type
+// ============================================================================
+
+interface InlineEditContextType {
+  // Is edit mode active?
+  isEditMode: boolean;
+  setEditMode: (enabled: boolean) => void;
+
+  // ========== Section-based editing (new) ==========
+
+  // Currently selected section (null if none)
+  selectedSection: SectionSelection | null;
+  selectSection: (selection: SectionSelection | null) => void;
+
+  // Currently selected item within a section (for array items like cards, scenarios)
+  selectedItem: ItemSelection | null;
+  selectItem: (selection: ItemSelection | null) => void;
+
+  // Clear item selection (go back to section level)
+  clearItemSelection: () => void;
+
+  // Pending changes (before save)
+  pendingChanges: PendingChange[];
+  addPendingChange: (change: PendingChange) => void;
+  clearPendingChanges: () => void;
+
+  // Has unsaved changes?
+  hasUnsavedChanges: boolean;
+
+  // Current page content
+  pageContent: Record<string, unknown> | null;
+  setPageContent: (content: Record<string, unknown> | null) => void;
+
+  // Page slug being edited
+  pageSlug: string | null;
+  setPageSlug: (slug: string | null) => void;
+
+  // Is sidebar open?
+  isSidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
+
+  // Update a field and track the change
+  updateField: (sectionKey: string, fieldPath: string, newValue: unknown) => void;
+
+  // Get the current value of a field (with pending changes applied)
+  getFieldValue: (sectionKey: string, fieldPath: string) => unknown;
+
+  // Reorder sections (for drag-and-drop)
+  reorderSections: ((oldIndex: number, newIndex: number) => void) | null;
+  sectionOrder: string[];
+  setSectionOrder: (order: string[]) => void;
+
+  // Section registration (for DndContext)
+  registerSection: (sectionKey: string) => void;
+  unregisterSection: (sectionKey: string) => void;
+
+  // Reorder items within an array (for nested drag-and-drop)
+  reorderItems: ((sectionKey: string, arrayField: string, oldIndex: number, newIndex: number) => void) | null;
+
+  // ========== Component-based editing (Puck - legacy) ==========
+
+  // Currently selected component (for Puck pages)
+  selectedComponent: ComponentSelection | null;
+  selectComponent: (selection: ComponentSelection | null) => void;
+
+  // Puck page data
+  pageData: Record<string, unknown> | null;
+  setPageData: (data: Record<string, unknown> | null) => void;
+}
+
+// ============================================================================
+// Context
+// ============================================================================
+
+const InlineEditContext = createContext<InlineEditContextType | undefined>(undefined);
+
+// Note: getNestedValue and setNestedValue imported from @/lib/object-utils
+
+// ============================================================================
+// Provider
+// ============================================================================
+
+export function InlineEditProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Section-based editing state (new)
+  const [selectedSection, setSelectedSection] = useState<SectionSelection | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ItemSelection | null>(null);
+  const [pendingChanges, setPendingChanges] = useState<PendingChange[]>([]);
+  const [pageContent, setPageContent] = useState<Record<string, unknown> | null>(null);
+  const [pageSlug, setPageSlug] = useState<string | null>(null);
+
+  // Component-based editing state (Puck - legacy)
+  const [selectedComponent, setSelectedComponent] = useState<ComponentSelection | null>(null);
+  const [pageData, setPageData] = useState<Record<string, unknown> | null>(null);
+
+  // Section ordering for drag-and-drop
+  const [sectionOrder, setSectionOrder] = useState<string[]>([]);
+
+  // ============================================================================
+  // Universal Content Loading
+  // ============================================================================
+  // Auto-detect route and load content for editable pages.
+  // This eliminates the need for useEditableContent() in each page.
+  useEffect(() => {
+    const slug = getPageSlugFromPath(pathname);
+
+    // Skip if already loaded for this slug (prevents re-fetching on re-renders)
+    if (slug === pageSlug && pageContent !== null) return;
+
+    if (slug) {
+      setPageSlug(slug);
+
+      // Try to fetch from API first, fall back to defaults
+      fetch(`/api/page-content/${slug}`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data?.content) {
+            setPageContent(data.content);
+          } else {
+            // Use default content as fallback
+            const defaults = getDefaultContent(slug);
+            if (defaults) {
+              setPageContent(defaults as unknown as Record<string, unknown>);
+            }
+          }
+        })
+        .catch(() => {
+          // On error, use default content
+          const defaults = getDefaultContent(slug);
+          if (defaults) {
+            setPageContent(defaults as unknown as Record<string, unknown>);
+          }
+        });
+    } else {
+      // Non-editable route - clear content
+      if (pageContent !== null) {
+        setPageContent(null);
+        setPageSlug(null);
+      }
+    }
+  }, [pathname, pageSlug, pageContent]);
+
+  const setEditMode = useCallback((enabled: boolean) => {
+    setIsEditMode(enabled);
+    if (!enabled) {
+      // Clear all selections when exiting edit mode
+      setSelectedSection(null);
+      setSelectedItem(null);
+      setSelectedComponent(null);
+    }
+  }, []);
+
+  const selectSection = useCallback((selection: SectionSelection | null) => {
+    setSelectedSection(selection);
+    // Clear item selection when selecting a new section
+    setSelectedItem(null);
+  }, []);
+
+  const selectItem = useCallback((selection: ItemSelection | null) => {
+    setSelectedItem(selection);
+  }, []);
+
+  const clearItemSelection = useCallback(() => {
+    setSelectedItem(null);
+  }, []);
+
+  const selectComponent = useCallback((selection: ComponentSelection | null) => {
+    setSelectedComponent(selection);
+  }, []);
+
+  const addPendingChange = useCallback((change: PendingChange) => {
+    setPendingChanges(prev => {
+      // Replace existing change for same section+field or add new
+      const existing = prev.findIndex(
+        c => c.sectionKey === change.sectionKey && c.fieldPath === change.fieldPath
+      );
+      if (existing >= 0) {
+        const updated = [...prev];
+        updated[existing] = change;
+        return updated;
+      }
+      return [...prev, change];
+    });
+  }, []);
+
+  const clearPendingChanges = useCallback(() => {
+    setPendingChanges([]);
+  }, []);
+
+  // Update a field and track the change
+  const updateField = useCallback((sectionKey: string, fieldPath: string, newValue: unknown) => {
+    if (!pageContent) return;
+
+    // Handle primitive sections (wrapped with _value for editing)
+    // When fieldPath is '_value', the original section is a primitive
+    const isPrimitiveSection = fieldPath === '_value';
+    const actualPath = isPrimitiveSection ? sectionKey : `${sectionKey}.${fieldPath}`;
+    const oldValue = getNestedValue(pageContent, actualPath);
+
+    // Add to pending changes
+    addPendingChange({
+      sectionKey,
+      fieldPath,
+      oldValue,
+      newValue,
+    });
+
+    // Update page content with new value
+    setPageContent(prev => {
+      if (!prev) return prev;
+      if (isPrimitiveSection) {
+        // For primitive sections, set the value directly
+        return { ...prev, [sectionKey]: newValue };
+      }
+      return setNestedValue(prev, actualPath, newValue);
+    });
+
+    // Update selected section content if it's the one being edited
+    if (selectedSection && selectedSection.sectionKey === sectionKey) {
+      setSelectedSection(prev => {
+        if (!prev) return prev;
+        if (isPrimitiveSection) {
+          // Keep the _value wrapper for display consistency
+          return { ...prev, content: { _value: newValue } };
+        }
+        return {
+          ...prev,
+          content: setNestedValue(prev.content, fieldPath, newValue),
+        };
+      });
+    }
+
+    // Update selected item content if it's the one being edited
+    // fieldPath for items is like "0.answer" or "items.0.answer"
+    if (selectedItem && selectedItem.sectionKey === sectionKey) {
+      // Parse the fieldPath to extract the index and remaining path
+      // If sectionKey === arrayField, path is "index.field" (e.g., "0.answer")
+      // If not, path is "arrayField.index.field" (e.g., "items.0.answer")
+      const pathParts = fieldPath.split('.');
+      let itemIndex: number;
+      let itemFieldPath: string;
+
+      if (selectedItem.sectionKey === selectedItem.arrayField || selectedItem.arrayField === '') {
+        // Path is "index.field"
+        itemIndex = parseInt(pathParts[0], 10);
+        itemFieldPath = pathParts.slice(1).join('.');
+      } else {
+        // Path is "arrayField.index.field"
+        itemIndex = parseInt(pathParts[1], 10);
+        itemFieldPath = pathParts.slice(2).join('.');
+      }
+
+      // Only update if this edit is for the currently selected item
+      if (itemIndex === selectedItem.index && itemFieldPath) {
+        setSelectedItem(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            content: setNestedValue(prev.content, itemFieldPath, newValue),
+          };
+        });
+      }
+    }
+  }, [pageContent, selectedSection, selectedItem, addPendingChange]);
+
+  // Get field value with pending changes applied
+  const getFieldValue = useCallback((sectionKey: string, fieldPath: string): unknown => {
+    if (!pageContent) return undefined;
+    const fullPath = `${sectionKey}.${fieldPath}`;
+    return getNestedValue(pageContent, fullPath);
+  }, [pageContent]);
+
+  // Reorder sections (for drag-and-drop)
+  const reorderSections = useCallback((oldIndex: number, newIndex: number) => {
+    setSectionOrder(prev => {
+      const newOrder = [...prev];
+      const [removed] = newOrder.splice(oldIndex, 1);
+      newOrder.splice(newIndex, 0, removed);
+      return newOrder;
+    });
+
+    // Also add to pending changes to track the reorder
+    addPendingChange({
+      sectionKey: '_sectionOrder',
+      fieldPath: 'order',
+      oldValue: sectionOrder,
+      newValue: null, // Will be computed from new state
+    });
+  }, [sectionOrder, addPendingChange]);
+
+  // Section registration for DndContext
+  const registerSection = useCallback((sectionKey: string) => {
+    setSectionOrder(prev => {
+      if (prev.includes(sectionKey)) return prev;
+      return [...prev, sectionKey];
+    });
+  }, []);
+
+  const unregisterSection = useCallback((sectionKey: string) => {
+    setSectionOrder(prev => prev.filter(key => key !== sectionKey));
+  }, []);
+
+  // Reorder items within an array (for nested drag-and-drop)
+  const reorderItems = useCallback((
+    sectionKey: string,
+    arrayField: string,
+    oldIndex: number,
+    newIndex: number
+  ) => {
+    if (!pageContent) return;
+
+    // Determine the path to the array
+    // If sectionKey === arrayField, the section IS the array
+    const arrayPath = sectionKey === arrayField ? sectionKey : `${sectionKey}.${arrayField}`;
+    const currentArray = getNestedValue(pageContent, arrayPath) as unknown[];
+
+    if (!Array.isArray(currentArray)) return;
+
+    // Create new array with reordered items
+    const newArray = [...currentArray];
+    const [removed] = newArray.splice(oldIndex, 1);
+    newArray.splice(newIndex, 0, removed);
+
+    // Update page content
+    setPageContent(prev => {
+      if (!prev) return prev;
+      return setNestedValue(prev, arrayPath, newArray);
+    });
+
+    // Track the change
+    addPendingChange({
+      sectionKey,
+      fieldPath: arrayField === sectionKey ? '_reorder' : `${arrayField}._reorder`,
+      oldValue: { oldIndex, newIndex },
+      newValue: newArray,
+    });
+
+    // Update selected item index if it was affected by the reorder
+    if (selectedItem && selectedItem.sectionKey === sectionKey && selectedItem.arrayField === arrayField) {
+      const currentIndex = selectedItem.index;
+      let newSelectedIndex = currentIndex;
+
+      if (currentIndex === oldIndex) {
+        // The selected item was moved
+        newSelectedIndex = newIndex;
+      } else if (oldIndex < currentIndex && newIndex >= currentIndex) {
+        // Item moved from before to after the selected item
+        newSelectedIndex = currentIndex - 1;
+      } else if (oldIndex > currentIndex && newIndex <= currentIndex) {
+        // Item moved from after to before the selected item
+        newSelectedIndex = currentIndex + 1;
+      }
+
+      if (newSelectedIndex !== currentIndex) {
+        setSelectedItem(prev => prev ? { ...prev, index: newSelectedIndex } : null);
+      }
+    }
+  }, [pageContent, selectedItem, addPendingChange]);
+
+  // DndContext sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Require 8px of movement before starting drag
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // Handle drag end
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = sectionOrder.indexOf(active.id as string);
+      const newIndex = sectionOrder.indexOf(over.id as string);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        reorderSections(oldIndex, newIndex);
+      }
+    }
+  }, [sectionOrder, reorderSections]);
+
+  const value: InlineEditContextType = {
+    isEditMode,
+    setEditMode,
+    // Section-based (new)
+    selectedSection,
+    selectSection,
+    selectedItem,
+    selectItem,
+    clearItemSelection,
+    pendingChanges,
+    addPendingChange,
+    clearPendingChanges,
+    hasUnsavedChanges: pendingChanges.length > 0,
+    pageContent,
+    setPageContent,
+    pageSlug,
+    setPageSlug,
+    isSidebarOpen,
+    setSidebarOpen: setIsSidebarOpen,
+    updateField,
+    getFieldValue,
+    // Section reordering
+    reorderSections,
+    sectionOrder,
+    setSectionOrder,
+    // Section registration
+    registerSection,
+    unregisterSection,
+    // Item reordering (nested drag-and-drop)
+    reorderItems,
+    // Component-based (Puck - legacy)
+    selectedComponent,
+    selectComponent,
+    pageData,
+    setPageData,
+  };
+
+  // Wrap children with DndContext only when edit mode is active
+  const content = isEditMode ? (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext items={sectionOrder} strategy={verticalListSortingStrategy}>
+        {children}
+      </SortableContext>
+    </DndContext>
+  ) : (
+    children
+  );
+
+  return (
+    <InlineEditContext.Provider value={value}>
+      <div data-section-order={JSON.stringify(sectionOrder)}>
+        {content}
+      </div>
+    </InlineEditContext.Provider>
+  );
+}
+
+// ============================================================================
+// Hook
+// ============================================================================
+
+export function useInlineEdit() {
+  const context = useContext(InlineEditContext);
+  if (context === undefined) {
+    throw new Error('useInlineEdit must be used within an InlineEditProvider');
+  }
+  return context;
+}

@@ -16,7 +16,7 @@ import {
   type HowItWorksPageContent,
   type EditablePageSlug,
 } from '@/lib/page-content-types';
-import { alertColors } from '@/lib/colors';
+import { alertColors, uiChromeBg, statusIndicatorBg, hoverBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Content Editor - Main Editor Component
@@ -151,7 +151,7 @@ export default function ContentEditor({
   const pageName = PAGE_DISPLAY_NAMES[slug] || slug;
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+    <div className="h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
       {/* Header Bar */}
       <header className="flex-shrink-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
         <div className="flex items-center justify-between max-w-[1800px] mx-auto">
@@ -160,7 +160,7 @@ export default function ContentEditor({
               Edit {pageName}
             </h1>
             {isDirty && (
-              <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">
+              <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${statusIndicatorBg.modified} text-yellow-700 dark:text-yellow-200`}>
                 Unsaved changes
               </span>
             )}
@@ -201,7 +201,7 @@ export default function ContentEditor({
           </div>
 
           {/* Form Footer */}
-          <div className="flex-shrink-0 p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+          <div className={`flex-shrink-0 p-4 border-t border-gray-200 dark:border-gray-700 ${uiChromeBg.footer}`}>
             {showResetConfirm ? (
               <div className="space-y-2">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -211,7 +211,7 @@ export default function ContentEditor({
                   <button
                     type="button"
                     onClick={handleReset}
-                    className="px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
+                    className={`px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 ${hoverBgColors.red} rounded`}
                   >
                     Yes, Reset
                   </button>

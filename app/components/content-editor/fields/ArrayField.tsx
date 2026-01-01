@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { softBgColors, uiChromeBg, hoverBgColors } from '@/lib/colors';
 
 // ============================================================================
 // ArrayField - Repeatable Item List
@@ -79,13 +80,13 @@ export default function ArrayField<T>({
           <button
             type="button"
             onClick={handleAdd}
-            className="
+            className={`
               px-3 py-1 text-xs font-medium rounded-full
-              bg-blue-50 dark:bg-blue-900/30
-              text-blue-600 dark:text-blue-400
-              hover:bg-blue-100 dark:hover:bg-blue-900/50
+              ${softBgColors.blue}
+              text-blue-600 dark:text-blue-200
+              hover:bg-blue-200 dark:hover:bg-blue-700
               transition-colors duration-150
-            "
+            `}
           >
             + Add Item
           </button>
@@ -101,11 +102,11 @@ export default function ArrayField<T>({
         {items.map((item, index) => (
           <div
             key={index}
-            className="
+            className={`
               relative p-4 rounded-lg
-              bg-gray-50 dark:bg-gray-700/50
+              ${uiChromeBg.panel}
               border border-gray-200 dark:border-gray-600
-            "
+            `}
           >
             {/* Item header with controls */}
             <div className="flex items-center justify-between mb-3">
@@ -157,12 +158,12 @@ export default function ArrayField<T>({
                   <button
                     type="button"
                     onClick={() => handleRemove(index)}
-                    className="
+                    className={`
                       p-1 rounded text-gray-400 dark:text-gray-500
                       hover:text-red-600 dark:hover:text-red-400
-                      hover:bg-red-50 dark:hover:bg-red-900/30
+                      ${hoverBgColors.red}
                       transition-colors duration-150
-                    "
+                    `}
                     title="Remove item"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

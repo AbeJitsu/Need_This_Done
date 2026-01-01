@@ -11,8 +11,10 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     include: [
-      // Colors validation test - catches dark mode contrast issues
-      '../__tests__/lib/colors.test.ts',
+      // Unit tests for lib functions
+      '__tests__/lib/**/*.test.ts',
+      // Unit tests for API routes
+      '__tests__/api/**/*.test.ts',
     ],
   },
   resolve: {

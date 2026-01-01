@@ -5,7 +5,7 @@ import StepCard from './StepCard';
 // StepCard Stories
 // ============================================================================
 // Shows all variants of the StepCard component:
-// - All 6 color options (purple, blue, green, orange, teal, gray)
+// - All 6 color options (purple, blue, green, gold, teal, gray)
 // - Different step numbers (1-4 matching typical How It Works flow)
 // - Different detail list lengths
 // - Complete process flow examples
@@ -21,7 +21,7 @@ const meta = {
   argTypes: {
     color: {
       control: 'select',
-      options: ['purple', 'blue', 'green', 'orange', 'teal', 'gray'],
+      options: ['purple', 'blue', 'green', 'gold', 'teal', 'gray'],
     },
     number: {
       control: { type: 'number', min: 1, max: 10 },
@@ -129,7 +129,7 @@ export const Step3Green: Story = {
   },
 };
 
-export const Step3Orange: Story = {
+export const Step3Gold: Story = {
   args: {
     number: 3,
     title: 'Development & Testing',
@@ -140,15 +140,15 @@ export const Step3Orange: Story = {
       'Performance optimization',
       'Security best practices',
     ],
-    color: 'orange',
+    color: 'gold',
   },
 };
 
 // ============================================================================
-// Step 4 - Orange/Teal (Launch/Support)
+// Step 4 - Gold/Teal (Launch/Support)
 // ============================================================================
 
-export const Step4Orange: Story = {
+export const Step4Gold: Story = {
   args: {
     number: 4,
     title: 'Launch & Ongoing Support',
@@ -160,7 +160,7 @@ export const Step4Orange: Story = {
       'Available for updates and improvements',
       'Long-term partnership, not just a transaction',
     ],
-    color: 'orange',
+    color: 'gold',
   },
 };
 
@@ -249,10 +249,10 @@ export const AllColorsStep1: Story = {
       />
       <StepCard
         number={1}
-        title="Orange Step"
-        description="Example using orange color variant for step one."
+        title="Gold Step"
+        description="Example using gold color variant for step one."
         details={['Detail one', 'Detail two', 'Detail three']}
-        color="orange"
+        color="gold"
       />
       <StepCard
         number={1}
@@ -328,7 +328,7 @@ export const CompleteProcess: Story = {
           'Training included',
           'Post-launch support',
         ]}
-        color="orange"
+        color="gold"
       />
     </div>
   ),

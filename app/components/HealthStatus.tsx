@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { alertColors } from '@/lib/colors';
+import { alertColors, neutralAccentBg } from '@/lib/colors';
 
 // ============================================================================
 // HealthStatus Component - Premium Semantic Status Display
@@ -88,14 +88,14 @@ export default function HealthStatus() {
         return {
           bg: alertColors.warning.bg,
           border: alertColors.warning.border,
-          badgeBg: 'bg-orange-600',
+          badgeBg: 'bg-gold-600',
           badgeText: alertColors.warning.text,
           statusText: alertColors.warning.text,
           label: 'Error',
         };
       default:
         return {
-          bg: 'bg-gray-50 dark:bg-gray-800',
+          bg: neutralAccentBg.gray,
           border: 'border-gray-200 dark:border-gray-700',
           badgeBg: 'bg-gray-600',
           badgeText: 'text-gray-900 dark:text-gray-100',

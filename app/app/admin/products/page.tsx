@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import PageHeader from '@/components/PageHeader';
 import AdminProductsClient from '@/components/admin/AdminProductsClient';
-import { medusaClient } from '@/lib/medusa-client';
+import { medusaClient, Product } from '@/lib/medusa-client';
 
 // ============================================================================
 // Admin Products Page
@@ -21,9 +21,12 @@ export const metadata: Metadata = {
 // Data Fetching
 // ============================================================================
 
-async function getProducts() {
+async function getProducts(): Promise<Product[]> {
   try {
-    const products = await medusaClient.products.list();
+    // No pagination params = returns Product[] array
+    const result = await medusaClient.products.list();
+    // Handle both array and paginated response
+    const products: Product[] = Array.isArray(result) ? result : result.products;
     return products.sort((a, b) => {
       const priceA = a.variants?.[0]?.prices?.[0]?.amount ?? 0;
       const priceB = b.variants?.[0]?.prices?.[0]?.amount ?? 0;

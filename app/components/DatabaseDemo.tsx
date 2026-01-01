@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { hoverBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Database Demo Component - Data Storage Demonstration
@@ -229,14 +230,14 @@ export default function DatabaseDemo() {
           {flowTrace.map((trace, index) => {
             const sourceColor =
               trace.source === 'cache'
-                ? 'bg-orange-50 dark:bg-gray-700 border-orange-200 dark:border-gray-600'
+                ? 'bg-gold-100 dark:bg-gray-700 border-gold-200 dark:border-gray-600'
                 : trace.source === 'database'
-                ? 'bg-green-50 dark:bg-gray-700 border-green-200 dark:border-gray-600'
-                : 'bg-blue-50 dark:bg-gray-700 border-blue-200 dark:border-gray-600';
+                ? 'bg-green-100 dark:bg-gray-700 border-green-200 dark:border-gray-600'
+                : 'bg-blue-100 dark:bg-gray-700 border-blue-200 dark:border-gray-600';
 
             const textColor =
               trace.source === 'cache'
-                ? 'text-orange-900 dark:text-orange-300'
+                ? 'text-gold-900 dark:text-gold-300'
                 : trace.source === 'database'
                 ? 'text-green-900 dark:text-green-300'
                 : 'text-blue-900 dark:text-blue-300';
@@ -269,7 +270,7 @@ export default function DatabaseDemo() {
 
       {/* Stats */}
       {savedItems.length > 0 && (
-        <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+        <div className="mb-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-semibold mb-1">
@@ -308,7 +309,7 @@ export default function DatabaseDemo() {
                 key={item.id}
                 className="
                   p-3 rounded-lg
-                  bg-blue-50 dark:bg-gray-700
+                  bg-blue-100 dark:bg-gray-700
                   border border-blue-200 dark:border-gray-600
                   flex items-start justify-between gap-4
                 "
@@ -323,15 +324,15 @@ export default function DatabaseDemo() {
                 </div>
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="
+                  className={`
                     px-3 py-1
                     text-xs font-medium
                     text-blue-600 dark:text-blue-400
-                    hover:bg-blue-100 dark:hover:bg-blue-900/30
+                    ${hoverBgColors.blue}
                     rounded
                     transition-colors
                     whitespace-nowrap
-                  "
+                  `}
                 >
                   Delete
                 </button>

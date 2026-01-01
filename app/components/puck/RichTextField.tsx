@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { uiChromeBg } from '@/lib/colors';
 
 // ============================================================================
 // RichTextField - Custom Puck Field for Rich Text Editing
@@ -51,7 +52,7 @@ export default function RichTextField({ value, onChange, label }: RichTextFieldP
       <button
         type="button"
         onClick={handleOpen}
-        className="w-full text-left p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-purple-400 dark:hover:border-purple-500 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+        className="w-full text-left p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-purple-400 dark:hover:border-purple-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
       >
         {previewText ? (
           <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3">
@@ -104,7 +105,7 @@ export default function RichTextField({ value, onChange, label }: RichTextFieldP
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+            <div className={`flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700 ${uiChromeBg.footer}`}>
               <button
                 onClick={() => setIsOpen(false)}
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"

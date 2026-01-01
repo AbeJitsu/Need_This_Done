@@ -23,7 +23,7 @@ function getStatusColor(status: IndexingStatus): string {
       return 'bg-green-600';
     case 'indexing':
     case 'checking':
-      return 'bg-orange-500 animate-pulse';
+      return 'bg-gold-500 animate-pulse';
     case 'not_indexed':
     case 'error':
       return 'bg-red-600';

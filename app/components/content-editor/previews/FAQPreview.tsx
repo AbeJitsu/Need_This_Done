@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { faqColors } from '@/lib/colors';
+import { faqColors, shadowClasses } from '@/lib/colors';
 import CircleBadge from '@/components/CircleBadge';
 import PageHeader from '@/components/PageHeader';
 import CTASection from '@/components/CTASection';
@@ -64,13 +64,13 @@ export default function FAQPreview({ content }: FAQPreviewProps) {
       {/* FAQ List */}
       <div className="space-y-6 mb-10">
         {content.items.map((faq, index) => {
-          const colors = ['green', 'blue', 'purple', 'orange'] as const;
+          const colors = ['green', 'blue', 'purple', 'gold'] as const;
           const color = colors[index % 4];
           const styles = faqColors[color];
           return (
             <div
               key={index}
-              className={`bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 border-l-4 ${styles.border} ${styles.hover} transition-all hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}
+              className={`bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 border-l-4 ${styles.border} ${styles.hover} transition-all ${shadowClasses.cardHover}`}
             >
               <div className="flex items-start gap-4">
                 <CircleBadge number={index + 1} color={color} size="sm" />
@@ -93,7 +93,7 @@ export default function FAQPreview({ content }: FAQPreviewProps) {
         title={content.cta.title}
         description={content.cta.description}
         buttons={content.cta.buttons}
-        hoverColor={content.cta.hoverColor || 'orange'}
+        hoverColor={content.cta.hoverColor || 'gold'}
       />
     </div>
   );

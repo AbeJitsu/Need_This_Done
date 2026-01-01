@@ -66,7 +66,7 @@ export default function PricingPreview({ content }: PricingPreviewProps) {
       )}
 
       {/* Custom Section */}
-      <Card hoverColor={content.customSection.hoverColor || 'orange'} hoverEffect="glow">
+      <Card hoverColor={content.customSection.hoverColor || 'gold'} hoverEffect="glow">
         <div className="text-center max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             {content.customSection.title}

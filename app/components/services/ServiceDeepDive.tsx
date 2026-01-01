@@ -10,7 +10,6 @@
 import { useState } from 'react';
 import {
   serviceFullContentMap,
-  type ServiceType,
   type ServiceFullContent,
 } from '@/lib/service-modal-content';
 import {
@@ -19,19 +18,13 @@ import {
   titleColors,
   lightBgColors,
   successCheckmarkColors,
+  type AccentColor,
 } from '@/lib/colors';
-import type { AccentColor } from '@/lib/colors';
+import { serviceColors, type ServiceType } from '@/lib/service-colors';
 
 interface ServiceDeepDiveProps {
   defaultExpanded?: ServiceType;
 }
-
-// Map service types to colors
-const serviceColors: Record<ServiceType, AccentColor> = {
-  'virtual-assistant': 'green',
-  'data-documents': 'blue',
-  'website-services': 'purple',
-};
 
 export default function ServiceDeepDive({ defaultExpanded }: ServiceDeepDiveProps) {
   const [expanded, setExpanded] = useState<ServiceType | null>(defaultExpanded || null);

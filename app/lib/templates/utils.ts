@@ -19,6 +19,7 @@ import type {
   TemplateCategory,
   TemplateAudience,
 } from './types';
+import { getNestedValue, setNestedValue } from '@/lib/object-utils';
 
 // ============================================================================
 // Template to Puck Conversion
@@ -52,45 +53,8 @@ export function templateToPuckData(template: PageTemplate): PuckPageData {
 // Placeholder Replacement
 // ============================================================================
 
-/**
- * Gets a nested value from an object using dot notation.
- * Example: getNestedValue(obj, 'sections.0.props.heading')
- */
-export function getNestedValue(obj: unknown, path: string): unknown {
-  return path.split('.').reduce((current: unknown, key: string) => {
-    if (current === null || current === undefined) return undefined;
-    if (typeof current !== 'object') return undefined;
-    return (current as Record<string, unknown>)[key];
-  }, obj);
-}
-
-/**
- * Sets a nested value in an object using dot notation.
- * Creates a new object (immutable) - doesn't modify the original.
- */
-export function setNestedValue<T>(obj: T, path: string, value: unknown): T {
-  const keys = path.split('.');
-  const lastKey = keys.pop()!;
-
-  // Deep clone the object
-  const result = JSON.parse(JSON.stringify(obj)) as T;
-
-  // Navigate to the parent of the target
-  let current: unknown = result;
-  for (const key of keys) {
-    if (current === null || current === undefined || typeof current !== 'object') {
-      return result; // Path doesn't exist, return unchanged
-    }
-    current = (current as Record<string, unknown>)[key];
-  }
-
-  // Set the value
-  if (current !== null && current !== undefined && typeof current === 'object') {
-    (current as Record<string, unknown>)[lastKey] = value;
-  }
-
-  return result;
-}
+// Re-export from centralized object utilities for backwards compatibility (DRY)
+export { getNestedValue, setNestedValue };
 
 /**
  * Applies user content to a template, replacing placeholders.

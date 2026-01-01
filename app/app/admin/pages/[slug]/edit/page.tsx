@@ -11,6 +11,7 @@ import { Puck } from '@measured/puck';
 import { puckConfig } from '@/lib/puck-config';
 import '@measured/puck/puck.css';
 import { CheckIcon } from '@/components/ui/icons';
+import { statusBadgeColors, containerBg } from '@/lib/colors';
 
 export default function EditPage({ params }: { params: { slug: string } }) {
   const router = useRouter();
@@ -93,7 +94,7 @@ export default function EditPage({ params }: { params: { slug: string } }) {
 
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className={`flex items-center justify-center min-h-screen ${containerBg.page}`}>
         <div className="text-center">
           <div className="w-12 h-12 mx-auto mb-4 rounded-full border-4 border-purple-200 border-t-purple-600 animate-spin" />
           <p className="text-gray-600 dark:text-gray-400">Loading page...</p>
@@ -105,7 +106,7 @@ export default function EditPage({ params }: { params: { slug: string } }) {
   if (!isAdmin || !page) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className={`min-h-screen ${containerBg.page}`}>
       {/* ========================================================================
           Header with Breadcrumbs & Page Info
           ======================================================================== */}
@@ -153,8 +154,8 @@ export default function EditPage({ params }: { params: { slug: string } }) {
                   <span
                     className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                       page.is_published
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                        ? `${statusBadgeColors.published.bg} ${statusBadgeColors.published.text}`
+                        : `${statusBadgeColors.draft.bg} ${statusBadgeColors.draft.text}`
                     }`}
                   >
                     {page.is_published ? 'Published' : 'Draft'}

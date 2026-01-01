@@ -32,12 +32,12 @@ export const SingleButton: Story = {
     buttons: [
       {
         text: 'Get Started Today',
-        variant: 'orange',
+        variant: 'gold',
         href: '/signup',
         size: 'lg',
       },
     ],
-    hoverColor: 'orange',
+    hoverColor: 'gold',
   },
 };
 
@@ -53,7 +53,7 @@ export const TwoButtons: Story = {
     buttons: [
       {
         text: 'Get Started',
-        variant: 'orange',
+        variant: 'gold',
         href: '/signup',
         size: 'lg',
       },
@@ -80,7 +80,7 @@ export const ThreeButtons: Story = {
     buttons: [
       {
         text: 'Sign Up Free',
-        variant: 'orange',
+        variant: 'gold',
         href: '/signup',
         size: 'md',
       },
@@ -105,14 +105,14 @@ export const ThreeButtons: Story = {
 // Different Hover Colors
 // ============================================================================
 
-export const OrangeHover: Story = {
+export const GoldHover: Story = {
   args: {
-    title: 'Orange Accent Theme',
-    description: 'This card uses orange as the hover accent color.',
+    title: 'Gold Accent Theme',
+    description: 'This card uses gold as the hover accent color.',
     buttons: [
       {
         text: 'Primary Action',
-        variant: 'orange',
+        variant: 'gold',
         href: '/action',
       },
       {
@@ -121,7 +121,7 @@ export const OrangeHover: Story = {
         href: '/action',
       },
     ],
-    hoverColor: 'orange',
+    hoverColor: 'gold',
   },
 };
 
@@ -157,7 +157,7 @@ export const BlueHover: Story = {
       },
       {
         text: 'Secondary Action',
-        variant: 'orange',
+        variant: 'gold',
         href: '/action',
       },
     ],
@@ -176,11 +176,11 @@ export const WithDescription: Story = {
     buttons: [
       {
         text: 'Get Started',
-        variant: 'orange',
+        variant: 'gold',
         href: '/signup',
       },
     ],
-    hoverColor: 'orange',
+    hoverColor: 'gold',
   },
 };
 
@@ -209,7 +209,7 @@ export const MixedButtonSizes: Story = {
     buttons: [
       {
         text: 'Small Button',
-        variant: 'orange',
+        variant: 'gold',
         href: '/action',
         size: 'sm',
       },
@@ -226,7 +226,7 @@ export const MixedButtonSizes: Story = {
         size: 'lg',
       },
     ],
-    hoverColor: 'orange',
+    hoverColor: 'gold',
   },
 };
 
@@ -241,12 +241,12 @@ export const SignupCTA: Story = {
     buttons: [
       {
         text: 'Create Free Account',
-        variant: 'orange',
+        variant: 'gold',
         href: '/signup',
         size: 'lg',
       },
     ],
-    hoverColor: 'orange',
+    hoverColor: 'gold',
   },
 };
 

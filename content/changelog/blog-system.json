@@ -5,23 +5,27 @@
   "category": "Content",
   "description": "Share your expertise with a full-featured blog. Write posts, add images, and publish content that helps your audience.",
   "benefit": "Build authority and connect with potential clients by sharing valuable insights. Posts are SEO-optimized and easy to repurpose from LinkedIn content.",
+  "changes": [
+    {
+      "what": "Full blog management system",
+      "why": "Create, edit, and publish posts from the admin panel",
+      "where": "/admin/blog"
+    },
+    {
+      "what": "Public blog listing page",
+      "why": "Visitors can browse and read all published content",
+      "where": "/blog"
+    },
+    {
+      "what": "Rich text editor with images",
+      "why": "Format posts with headings, lists, and embedded images",
+      "where": "/admin/blog/new"
+    }
+  ],
   "howToUse": [
     "Go to Admin → Manage Blog to see all posts",
     "Click 'New Post' to create a new article",
-    "Add your title, content, and featured image",
-    "Save as draft to review, or publish immediately",
-    "View your posts at /blog on the public site"
+    "Save as draft to review, or publish immediately"
   ],
-  "screenshots": [
-    {
-      "src": "/screenshots/december-2025-release/blog-desktop-light.png",
-      "alt": "Blog listing page showing published posts",
-      "caption": "Your blog posts displayed in a clean, scannable layout"
-    },
-    {
-      "src": "/screenshots/december-2025-release/blog-mobile-light.png",
-      "alt": "Blog page on mobile devices",
-      "caption": "Fully responsive design for readers on any device"
-    }
-  ]
+  "screenshots": []
 }

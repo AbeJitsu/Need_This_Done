@@ -46,7 +46,7 @@ export default function HowItWorksPreview({ content }: HowItWorksPreviewProps) {
         title={content.cta.title}
         description={content.cta.description}
         buttons={content.cta.buttons}
-        hoverColor={content.cta.hoverColor || 'orange'}
+        hoverColor={content.cta.hoverColor || 'gold'}
       />
     </div>
   );

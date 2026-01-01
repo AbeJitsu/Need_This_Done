@@ -9,7 +9,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import type { Product, Order } from '@/lib/medusa-client';
-import { alertColors, statusBadgeColors } from '@/lib/colors';
+import { alertColors, statusBadgeColors, formInputColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Shop Dashboard - /admin/shop
@@ -28,6 +28,13 @@ export default function AdminShopDashboard() {
   const [orders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Import/Export state
+  const [showExportOptions, setShowExportOptions] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
 
   // ========================================================================
   // Auth protection
@@ -84,6 +91,115 @@ export default function AdminShopDashboard() {
   }
 
   if (!isAdmin) return null;
+
+  // ========================================================================
+  // Export handlers
+  // ========================================================================
+  const handleExport = async (format: 'json' | 'csv') => {
+    try {
+      const response = await fetch(`/api/admin/products/export?format=${format}`);
+      if (!response.ok) throw new Error('Export failed');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `products-${Date.now()}.${format}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      showToast(`Products exported as ${format.toUpperCase()}`, 'success');
+      setShowExportOptions(false);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Export failed', 'error');
+    }
+  };
+
+  // ========================================================================
+  // Import handlers
+  // ========================================================================
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setImportError(null);
+
+    if (!file) {
+      setImportFile(null);
+      return;
+    }
+
+    // Validate file type
+    const validTypes = ['application/json', 'text/csv', 'text/plain'];
+    const validExtensions = ['.json', '.csv'];
+    const hasValidExtension = validExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+
+    if (!validTypes.includes(file.type) && !hasValidExtension) {
+      setImportError('Invalid file format. Please upload a JSON or CSV file.');
+      setImportFile(null);
+      return;
+    }
+
+    setImportFile(file);
+  };
+
+  const handleImport = async () => {
+    if (!importFile) return;
+
+    setImporting(true);
+    setImportError(null);
+
+    try {
+      const text = await importFile.text();
+      let products: unknown[];
+
+      if (importFile.name.endsWith('.csv')) {
+        // Parse CSV
+        const lines = text.split('\n').filter(line => line.trim());
+        const headers = lines[0].split(',').map(h => h.trim());
+
+        products = lines.slice(1).map(line => {
+          const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+          const product: Record<string, unknown> = {};
+          headers.forEach((header, i) => {
+            product[header] = header === 'price' ? Number(values[i]) : values[i];
+          });
+          return product;
+        });
+      } else {
+        // Parse JSON
+        const data = JSON.parse(text);
+        products = Array.isArray(data) ? data : data.products;
+      }
+
+      const response = await fetch('/api/admin/products/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ products }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Import failed');
+      }
+
+      showToast(`Successfully imported ${result.imported} products`, 'success');
+      setShowImportModal(false);
+      setImportFile(null);
+
+      // Refresh products list
+      const productsResponse = await fetch('/api/shop/products');
+      if (productsResponse.ok) {
+        const productsData = await productsResponse.json();
+        setProducts(productsData.products || []);
+      }
+    } catch (err) {
+      setImportError(err instanceof Error ? err.message : 'Import failed');
+    } finally {
+      setImporting(false);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
@@ -145,10 +261,103 @@ export default function AdminShopDashboard() {
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
               Products
             </h2>
-            <Button variant="purple" href="/admin/shop/products/new">
-              Add Product
-            </Button>
+            <div className="flex gap-2">
+              {/* Export Button with Dropdown */}
+              <div className="relative">
+                <Button
+                  variant="gray"
+                  onClick={() => setShowExportOptions(!showExportOptions)}
+                >
+                  Export
+                </Button>
+                {showExportOptions && (
+                  <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10">
+                    <button
+                      onClick={() => handleExport('json')}
+                      className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg"
+                    >
+                      JSON
+                    </button>
+                    <button
+                      onClick={() => handleExport('csv')}
+                      className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg"
+                    >
+                      CSV
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Import Button */}
+              <Button
+                variant="blue"
+                onClick={() => setShowImportModal(true)}
+              >
+                Import
+              </Button>
+
+              <Button variant="purple" href="/admin/shop/products/new">
+                Add Product
+              </Button>
+            </div>
           </div>
+
+          {/* Import Modal */}
+          {showImportModal && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                  Import Products
+                </h3>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Select file (JSON or CSV)
+                  </label>
+                  <input
+                    type="file"
+                    accept=".json,.csv"
+                    onChange={handleFileSelect}
+                    className={`w-full px-3 py-2 border rounded-lg ${formInputColors.base} ${formInputColors.focus}`}
+                  />
+                </div>
+
+                {importError && (
+                  <div className={`mb-4 p-3 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
+                    <p className={`text-sm ${alertColors.error.text}`}>{importError}</p>
+                  </div>
+                )}
+
+                {importFile && !importError && (
+                  <div className={`mb-4 p-3 rounded-lg ${alertColors.info.bg} ${alertColors.info.border}`}>
+                    <p className={`text-sm ${alertColors.info.text}`}>
+                      Ready to import: {importFile.name}
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex gap-2 justify-end">
+                  <Button
+                    variant="gray"
+                    onClick={() => {
+                      setShowImportModal(false);
+                      setImportFile(null);
+                      setImportError(null);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="purple"
+                    onClick={handleImport}
+                    disabled={!importFile || importing}
+                  >
+                    {importing ? 'Importing...' : 'Import'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {products.length === 0 ? (
             <Card hoverEffect="none">

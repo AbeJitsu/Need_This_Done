@@ -247,7 +247,7 @@ export default function AuthDemo() {
             <button
               type="button"
               onClick={() => setShowJourney(!showJourney)}
-              className="w-full p-4 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center justify-between transition-colors"
+              className="w-full p-4 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-between transition-colors"
             >
               <span className="font-semibold text-gray-900 dark:text-gray-100">
                 Why This Matters: See What Happens Behind the Scenes
@@ -338,7 +338,7 @@ export default function AuthDemo() {
           </div>
 
           {/* Session Info */}
-          <div className="space-y-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <div className="space-y-3 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
             <div>
               <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-semibold mb-1">
                 Your Account

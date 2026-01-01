@@ -2,6 +2,7 @@
 
 import ServiceCard from './ServiceCard';
 import { useServiceModal } from '@/context/ServiceModalContext';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import type { AccentColor } from '@/lib/colors';
 
 // ============================================================================
@@ -29,8 +30,11 @@ export default function ServiceCardWithModal({
   variant = 'compact',
 }: ServiceCardWithModalProps) {
   const { openModal } = useServiceModal();
+  const { isEditMode } = useInlineEdit();
 
   const handleClick = () => {
+    // Don't open modal in edit mode - let EditableItem handle the click
+    if (isEditMode) return;
     openModal(title);
   };
 

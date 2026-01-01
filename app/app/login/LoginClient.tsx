@@ -19,6 +19,7 @@ import {
   solidButtonColors,
   statusBorderColors,
   cardHoverColors,
+  shadowClasses,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -190,7 +191,7 @@ export default function LoginClient() {
         </div>
 
         {/* Login Form */}
-        <div className={`${cardBgColors.base} rounded-xl p-8 ${cardBorderColors.light} ${statusBorderColors.gray} shadow-sm transition-all ${cardHoverColors.gray} hover:shadow-[0_0_8px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_8px_0px_rgba(255,255,255,0.15)]`}>
+        <div className={`${cardBgColors.base} rounded-xl p-8 ${cardBorderColors.light} ${statusBorderColors.gray} shadow-sm transition-all ${cardHoverColors.gray} ${shadowClasses.cardHover}`}>
           <form onSubmit={handleAuth} className="space-y-6">
 
             {/* Error Message */}

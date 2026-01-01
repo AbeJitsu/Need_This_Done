@@ -16,7 +16,7 @@ const meta: Meta<typeof Card> = {
   argTypes: {
     hoverColor: {
       control: 'select',
-      options: ['purple', 'blue', 'green', 'orange', 'teal', 'gray'],
+      options: ['purple', 'blue', 'green', 'gold', 'teal', 'gray'],
       description: 'Color variant for hover border',
     },
     hoverEffect: {
@@ -87,9 +87,9 @@ export const GreenHover: Story = {
   },
 };
 
-export const OrangeHover: Story = {
+export const GoldHover: Story = {
   args: {
-    hoverColor: 'orange',
+    hoverColor: 'gold',
     hoverEffect: 'lift',
     children: <SampleContent />,
   },
@@ -141,7 +141,7 @@ export const TintEffect: Story = {
 
 export const NoEffect: Story = {
   args: {
-    hoverColor: 'orange',
+    hoverColor: 'gold',
     hoverEffect: 'none',
     children: <SampleContent />,
   },
@@ -166,9 +166,9 @@ export const AllHoverColors: Story = {
         <h4 className="font-bold text-gray-900 dark:text-gray-100">Green</h4>
         <p className="text-gray-600 dark:text-gray-300 text-sm">Hover to see green border</p>
       </Card>
-      <Card hoverColor="orange" hoverEffect="lift">
-        <h4 className="font-bold text-gray-900 dark:text-gray-100">Orange</h4>
-        <p className="text-gray-600 dark:text-gray-300 text-sm">Hover to see orange border</p>
+      <Card hoverColor="gold" hoverEffect="lift">
+        <h4 className="font-bold text-gray-900 dark:text-gray-100">Gold</h4>
+        <p className="text-gray-600 dark:text-gray-300 text-sm">Hover to see gold border</p>
       </Card>
       <Card hoverColor="teal" hoverEffect="lift">
         <h4 className="font-bold text-gray-900 dark:text-gray-100">Teal</h4>
@@ -204,7 +204,7 @@ export const AllEffects: Story = {
         <h4 className="font-bold text-gray-900 dark:text-gray-100">Tint Effect</h4>
         <p className="text-gray-600 dark:text-gray-300 text-sm">Background tints on hover</p>
       </Card>
-      <Card hoverColor="orange" hoverEffect="none">
+      <Card hoverColor="gold" hoverEffect="none">
         <h4 className="font-bold text-gray-900 dark:text-gray-100">No Effect</h4>
         <p className="text-gray-600 dark:text-gray-300 text-sm">Only border changes</p>
       </Card>

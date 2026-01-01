@@ -1,24 +1,6 @@
-import Link from 'next/link';
-import PageHeader from '@/components/PageHeader';
-import Card from '@/components/Card';
-import Button from '@/components/Button';
-import { ServiceModalProvider } from '@/context/ServiceModalContext';
-import ServiceDetailModal from '@/components/service-modal/ServiceDetailModal';
-import ScenarioMatcher from '@/components/services/ScenarioMatcher';
-import ServiceComparisonTable from '@/components/services/ServiceComparisonTable';
-import ServiceDeepDive from '@/components/services/ServiceDeepDive';
 import { getDefaultContent } from '@/lib/default-page-content';
 import type { ServicesPageContent } from '@/lib/page-content-types';
-import {
-  formInputColors,
-  headingColors,
-  checkmarkBgColors,
-  groupHoverColors,
-  accentColors,
-  accentBorderWidth,
-  focusRingClasses,
-  AccentVariant,
-} from '@/lib/colors';
+import ServicesPageClient from '@/components/services/ServicesPageClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,6 +12,10 @@ export const dynamic = 'force-dynamic';
 // 2. Side-by-side comparison table
 // 3. Deep-dive content (reusing modal content)
 // 4. Low-friction CTA for undecided visitors
+//
+// INLINE EDITING: This page supports inline editing for admins.
+// Click the floating pencil button to open the edit sidebar,
+// then click on any section to edit its content directly.
 
 export const metadata = {
   title: 'Services - NeedThisDone',
@@ -66,151 +52,5 @@ async function getContent(): Promise<ServicesPageContent> {
 export default async function ServicesPage() {
   const content = await getContent();
 
-  return (
-    <ServiceModalProvider>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-        {/* 1. Hero/Header - Decision-focused */}
-        <PageHeader
-          title={content.header.title}
-          description={content.header.description}
-        />
-
-        {/* 2. Scenario Matcher - "Does this sound like you?" */}
-        {content.scenarioMatcher && (
-          <ScenarioMatcher
-            title={content.scenarioMatcher.title}
-            description={content.scenarioMatcher.description}
-            scenarios={content.scenarioMatcher.scenarios}
-          />
-        )}
-
-        {/* 3. Comparison Table - Side-by-side view */}
-        {content.comparison && (
-          <ServiceComparisonTable
-            title={content.comparison.title}
-            description={content.comparison.description}
-            columns={content.comparison.columns}
-            rows={content.comparison.rows}
-          />
-        )}
-
-        {/* 4. Service Deep-Dives - Expandable details */}
-        <ServiceDeepDive />
-
-        {/* 5. Choose Your Path - Two clear options */}
-        {content.chooseYourPath && (
-          <>
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-                {content.chooseYourPath.title}
-              </h2>
-              <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                {content.chooseYourPath.description}
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6 mb-10">
-              {content.chooseYourPath.paths.map((path, index) => (
-                <Card key={index} hoverColor={path.hoverColor} hoverEffect="lift">
-                  <div className="p-8">
-                    {/* Badge - uses centralized accentColors for consistent dark mode */}
-                    <div className="mb-4">
-                      <span className={`inline-block px-4 py-1 ${accentColors[path.hoverColor as AccentVariant].bg} ${accentColors[path.hoverColor as AccentVariant].text} ${accentColors[path.hoverColor as AccentVariant].border} ${accentBorderWidth} rounded-full text-sm font-semibold`}>
-                        {path.badge}
-                      </span>
-                    </div>
-                    {/* Title + Description */}
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-                      {path.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-6">
-                      {path.description}
-                    </p>
-                    {/* Bullets */}
-                    <ul className="space-y-3 mb-6">
-                      {path.bullets.map((bullet, idx) => (
-                        <li key={idx} className="flex items-center gap-2">
-                          <span className={accentColors[path.hoverColor as AccentVariant].text} aria-hidden="true">✓</span>
-                          <span className="text-gray-700 dark:text-gray-300">{bullet}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {/* Button */}
-                    <Button
-                      variant={path.button.variant}
-                      href={path.button.href}
-                      size={path.button.size || 'lg'}
-                      className="w-full"
-                    >
-                      {path.button.text}
-                    </Button>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* 6. Trust Signals - What You Can Expect */}
-        <Card hoverColor="green" hoverEffect="glow" className="mb-10">
-          <h2
-            className={`text-2xl font-bold ${headingColors.primary} mb-6 text-center`}
-          >
-            {content.expectationsTitle}
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {content.expectations.map((item, index) => {
-              const itemContent = (
-                <>
-                  <div
-                    className={`w-8 h-8 rounded-full ${checkmarkBgColors.green.bg} ${checkmarkBgColors.green.border} flex items-center justify-center flex-shrink-0`}
-                  >
-                    <span className={`${checkmarkBgColors.green.icon} font-bold`} aria-hidden="true">
-                      ✓
-                    </span>
-                  </div>
-                  <div>
-                    <h3
-                      className={`font-semibold ${headingColors.primary} mb-1 ${
-                        item.link ? `${groupHoverColors.blue} transition-colors` : ''
-                      }`}
-                    >
-                      {item.title}
-                      {item.link && (
-                        <span className="text-sm opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true">
-                          {' '}
-                          →
-                        </span>
-                      )}
-                    </h3>
-                    <p className={`${formInputColors.helper} text-sm`}>
-                      {item.description}
-                    </p>
-                  </div>
-                </>
-              );
-
-              if (item.link) {
-                return (
-                  <Link key={index} href={item.link.href} className={`flex gap-4 group rounded-lg ${focusRingClasses.blue}`}>
-                    {itemContent}
-                  </Link>
-                );
-              }
-
-              return (
-                <div key={index} className="flex gap-4">
-                  {itemContent}
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-
-      </div>
-
-      {/* Modal for scenario clicks */}
-      <ServiceDetailModal />
-    </ServiceModalProvider>
-  );
+  return <ServicesPageClient content={content} />;
 }

@@ -8,6 +8,7 @@
 // Makes it easy to scan and compare services at a glance.
 
 import { headingColors, formInputColors, serviceComparisonColors, cardBgColors } from '@/lib/colors';
+import { EditableItem } from '@/components/InlineEditor';
 import type { ComparisonRow } from '@/lib/page-content-types';
 import type { ServiceType } from '@/lib/colors';
 
@@ -51,55 +52,72 @@ export default function ServiceComparisonTable({
         {columns.map((serviceName, colIdx) => {
           const colors = serviceComparisonColors[serviceTypes[colIdx]];
 
+          // Build content object for this column (for inline editing)
+          const columnContent: Record<string, unknown> = {
+            name: serviceName,
+          };
+          // Add each row's value for this column
+          rows.forEach((row, rowIdx) => {
+            columnContent[`row_${rowIdx}_${row.label.replace(/\s+/g, '_')}`] = row.values[colIdx];
+          });
+
           return (
-            <div
+            <EditableItem
               key={serviceName}
-              className={`
-                rounded-xl overflow-hidden
-                ${cardBgColors.base} ${colors.border}
-                transition-shadow hover:shadow-lg
-                grid grid-rows-[auto_1fr_auto]
-              `}
+              sectionKey="comparison"
+              arrayField="columns"
+              index={colIdx}
+              label={serviceName}
+              content={columnContent}
             >
-              {/* Card Header - Service Name */}
-              <div className={`px-6 py-4 ${colors.headerBg}`}>
-                <h3 className={`text-xl font-bold ${colors.headerText} text-center`}>
-                  {serviceName}
-                </h3>
-              </div>
-
-              {/* Card Body - Service Details with subgrid for row alignment */}
-              <div className="px-6 py-5 grid content-start gap-4">
-                {infoRows.map((row) => (
-                  <div key={row.label} className="min-h-[4.5rem]">
-                    <p className={`text-xs font-medium uppercase tracking-wide ${headingColors.secondary} mb-1`}>
-                      {row.label}
-                    </p>
-                    <p className={`${headingColors.primary} text-sm leading-relaxed`}>
-                      {row.values[colIdx]}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Card Footer - Pricing Section */}
-              {pricingRows.length > 0 && (
-                <div className={`px-6 py-4 ${colors.pricingBg} ${colors.pricingBorder}`}>
-                  <div className="space-y-2">
-                    {pricingRows.map((row) => (
-                      <div key={row.label} className="flex justify-between items-center">
-                        <span className={`text-sm ${colors.pricingLabelText}`}>
-                          {row.label}
-                        </span>
-                        <span className={`font-semibold ${colors.pricingValueText}`}>
-                          {row.values[colIdx]}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+              <div
+                className={`
+                  rounded-xl overflow-hidden
+                  ${cardBgColors.base} ${colors.border}
+                  transition-shadow hover:shadow-lg
+                  grid grid-rows-[auto_1fr_auto]
+                `}
+              >
+                {/* Card Header - Service Name */}
+                <div className={`px-6 py-4 ${colors.headerBg}`}>
+                  <h3 className={`text-xl font-bold ${colors.headerText} text-center`}>
+                    {serviceName}
+                  </h3>
                 </div>
-              )}
-            </div>
+
+                {/* Card Body - Service Details with subgrid for row alignment */}
+                <div className="px-6 py-5 grid content-start gap-4">
+                  {infoRows.map((row) => (
+                    <div key={row.label} className="min-h-[4.5rem]">
+                      <p className={`text-xs font-medium uppercase tracking-wide ${headingColors.secondary} mb-1`}>
+                        {row.label}
+                      </p>
+                      <p className={`${headingColors.primary} text-sm leading-relaxed`}>
+                        {row.values[colIdx]}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Card Footer - Pricing Section */}
+                {pricingRows.length > 0 && (
+                  <div className={`px-6 py-4 ${colors.pricingBg} ${colors.pricingBorder}`}>
+                    <div className="space-y-2">
+                      {pricingRows.map((row) => (
+                        <div key={row.label} className="flex justify-between items-center">
+                          <span className={`text-sm ${colors.pricingLabelText}`}>
+                            {row.label}
+                          </span>
+                          <span className={`font-semibold ${colors.pricingValueText}`}>
+                            {row.values[colIdx]}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </EditableItem>
           );
         })}
       </div>

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { loginAsAdmin, loginAsUser, waitForPageReady, setDarkMode } from './helpers';
+import { getPublicScreenshotPages, getAdminScreenshotPages } from './utils/page-discovery';
 
 // ============================================================================
 // Visual Regression Testing - All Pages
@@ -14,41 +15,22 @@ import { loginAsAdmin, loginAsUser, waitForPageReady, setDarkMode } from './help
 // Run with: npm run test:e2e -- screenshots.spec.ts --update-snapshots
 
 // ============================================================================
-// Page Configuration
+// Page Configuration - Dynamic Discovery
 // ============================================================================
+// Uses page-discovery utility to automatically find pages.
+// New pages are automatically included in screenshot tests.
+// See: .claude/rules/testing-flexibility.md
 
-const publicPages = [
-  { path: '/', name: 'home', folder: 'public/home' },
-  { path: '/pricing', name: 'pricing', folder: 'public/pricing' },
-  { path: '/services', name: 'services', folder: 'public/services' },
-  { path: '/how-it-works', name: 'how-it-works', folder: 'public/how-it-works' },
-  { path: '/faq', name: 'faq', folder: 'public/faq' },
-  { path: '/get-started', name: 'get-started', folder: 'public/get-started' },
-  { path: '/contact', name: 'contact', folder: 'public/contact' },
-  { path: '/shop', name: 'shop', folder: 'public/shop' },
-  { path: '/cart', name: 'cart', folder: 'public/cart' },
-  { path: '/checkout', name: 'checkout', folder: 'public/checkout' },
-  { path: '/login', name: 'login', folder: 'public/login' },
-];
+const publicPages = getPublicScreenshotPages();
 
+// Dashboard pages need special handling: same path with different auth contexts
+// This cannot be auto-discovered since auth level affects what's rendered
 const dashboardPages = [
   { path: '/dashboard', name: 'dashboard-user', folder: 'dashboard/user', auth: 'user' },
   { path: '/dashboard', name: 'dashboard-admin', folder: 'dashboard/admin', auth: 'admin' },
 ];
 
-const adminPages = [
-  { path: '/admin/products', name: 'admin-products', folder: 'admin/products' },
-  { path: '/admin/orders', name: 'admin-orders', folder: 'admin/orders' },
-  { path: '/admin/appointments', name: 'admin-appointments', folder: 'admin/appointments' },
-  { path: '/admin/users', name: 'admin-users', folder: 'admin/users' },
-  { path: '/admin/pages', name: 'admin-pages', folder: 'admin/pages' },
-  { path: '/admin/pages/new', name: 'admin-pages-new', folder: 'admin/pages-new' },
-  { path: '/admin/content', name: 'admin-content', folder: 'admin/content' },
-  { path: '/admin/shop', name: 'admin-shop', folder: 'admin/shop' },
-  { path: '/admin/shop/orders', name: 'admin-shop-orders', folder: 'admin/shop-orders' },
-  { path: '/admin/shop/products/new', name: 'admin-shop-products-new', folder: 'admin/shop-products-new' },
-  { path: '/admin/dev', name: 'admin-dev', folder: 'admin/dev' },
-];
+const adminPages = getAdminScreenshotPages();
 
 // ============================================================================
 // Helper Functions

@@ -51,20 +51,25 @@ All rules in `.claude/rules/` are enforced automatically:
 
 | Rule | Purpose |
 |------|---------|
+| **etc-easy-to-change.md** | Design for changeability: 1 change = 1 file edit |
+| **tdd.md** | Test-Driven Development: write tests first, code second, always |
 | **colors.md** | Never hardcode colors, use `lib/colors.ts` |
 | **quality.md** | Fix warnings immediately, zero warnings in production |
 | **design-system.md** | Accessibility standards, dark mode, component patterns |
 | **design-brief.md** | Brand identity, visual style, creative direction |
 | **coding-standards.md** | DRY principle, code organization, naming conventions |
 | **hooks.md** | Reference for Claude Code hooks configuration |
+| **commit-often.md** | Commit early and often, small focused commits |
 
 ## Commands
 
 | Command | What It Does |
 |---------|--------------|
 | `/dac` | Draft a commit message following project conventions |
-| `/document` | Screenshot changed pages + generate changelog entry |
+| `/document` | Screenshot changed pages + generate changelog entry (auto-runs on session end) |
 | `/check-work` | Show git status, diffs, and next steps |
+
+**Auto-Documentation**: Frontend changes are tracked automatically. When a session ends, the stop hook runs `npm run screenshot:affected` to capture screenshots and create changelog templates. No manual `/document` needed.
 
 ## Skills
 

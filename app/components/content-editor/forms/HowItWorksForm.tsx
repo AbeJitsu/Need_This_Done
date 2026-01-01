@@ -188,7 +188,7 @@ export default function HowItWorksForm({ content, onChange }: HowItWorksFormProp
         />
         <SelectField
           label="Card Hover Color"
-          value={content.cta.hoverColor || 'orange'}
+          value={content.cta.hoverColor || 'gold'}
           onChange={(v) => updateField('cta', { ...content.cta, hoverColor: v as HowItWorksPageContent['cta']['hoverColor'] })}
           options={hoverColorOptions}
         />
