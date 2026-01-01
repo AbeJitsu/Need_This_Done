@@ -155,6 +155,19 @@ export default function Navigation() {
               )}
             </Link>
 
+            {/* Mobile Sign In Icon - visible on small screens when not authenticated */}
+            {!isAuthenticated && !isLoading && (
+              <Link
+                href="/login"
+                className={`sm:hidden p-2 ${navigationColors.link} ${navigationColors.linkHover} transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
+                aria-label="Sign in"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </Link>
+            )}
+
             {/* Dark Mode Toggle */}
             <DarkModeToggle />
 

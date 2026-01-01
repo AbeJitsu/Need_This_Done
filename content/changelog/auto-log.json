@@ -1,5 +1,14 @@
 [
   {
+    "hash": "fae6183",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "fae61831ad598391bbdc2025874288ea660c912d:%M",
+    "author": "Abe Reyes",
+    "message": "Organize root folder and clean up project structure",
+    "category": "Other",
+    "filesChanged": 9
+  },
+  {
     "hash": "ee62414",
     "date": "%Y->- (HEAD -> main)",
     "time": "ee6241474435144232b52cc610e2b211e0faa19c:%M",
@@ -889,14 +898,5 @@
     "message": "Refactor: Clean colors.ts - enforce -100 minimum, no opacity in dark mode",
     "category": "Refactoring",
     "filesChanged": 8
-  },
-  {
-    "hash": "62cc7c1",
-    "date": "2025-12-30",
-    "time": "18:36",
-    "author": "Abe Reyes",
-    "message": "Refactor: Centralize opacity backgrounds across 24 files",
-    "category": "Refactoring",
-    "filesChanged": 24
   }
 ]
