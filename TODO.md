@@ -149,7 +149,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 ```
 - [x] Create timing constants file (TOAST_DURATION, COPY_FEEDBACK_DELAY, etc.)
 - [x] Update checkout/page.tsx:332 - setCopied setTimeout 2000
-- [ ] Update admin pages to use shared timeout constants
+- [x] Update admin pages to use shared timeout constants
 
 **BROKEN WINDOWS** - TODO comments that need resolution
 ```

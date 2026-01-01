@@ -15,6 +15,7 @@ import {
   verySoftBgColors,
   tableHeaderBg,
 } from '@/lib/colors';
+import { API_REQUEST_TIMEOUT, TOAST_DURATION } from '@/lib/timing';
 
 // ============================================================================
 // Admin Inventory Page - Stock Management
@@ -79,7 +80,7 @@ export default function AdminInventoryPage() {
     try {
       console.log('[Inventory] Fetching from /api/admin/inventory...');
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const timeoutId = setTimeout(() => controller.abort(), API_REQUEST_TIMEOUT);
 
       const res = await fetch('/api/admin/inventory', {
         signal: controller.signal,
@@ -185,7 +186,7 @@ export default function AdminInventoryPage() {
       );
 
       setSuccessMessage('Inventory updated successfully');
-      setTimeout(() => setSuccessMessage(null), 3000);
+      setTimeout(() => setSuccessMessage(null), TOAST_DURATION);
       setEditingId(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update');
