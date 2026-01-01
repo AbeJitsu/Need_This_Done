@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { useAuth } from '@/context/AuthContext';
 import VersionHistoryPanel from './VersionHistoryPanel';
+import { SmartFieldEditor, fieldLabels } from './FieldEditors';
 import {
   formInputColors,
   headingColors,
   cardBgColors,
   cardBorderColors,
-  focusRingClasses,
   accentColors,
   solidButtonColors,
   uiChromeBg,
@@ -21,41 +21,7 @@ import {
 // ============================================================================
 // What: Sidebar that dynamically renders editors for any content structure
 // Why: Allows admins to modify ANY page content directly
-// How: Recursively renders fields, arrays, and nested objects
-
-// Color variant options for dropdowns
-const colorVariants = ['blue', 'purple', 'green', 'gold', 'gray', 'teal'];
-
-// Human-readable labels for common field names
-const fieldLabels: Record<string, string> = {
-  title: 'Title',
-  description: 'Description',
-  text: 'Text',
-  variant: 'Style',
-  href: 'Link URL',
-  name: 'Name',
-  price: 'Price',
-  duration: 'Duration',
-  linkText: 'Link Text',
-  linkHref: 'Link URL',
-  footer: 'Footer Text',
-  footerLinkText: 'Footer Link Text',
-  footerLinkHref: 'Footer Link URL',
-  chatbotNote: 'Chatbot Note',
-  number: 'Step Number',
-  color: 'Color',
-  _value: 'Value',
-  // Service card fields
-  tagline: 'Tagline',
-  details: 'Details',
-  cards: 'Service Cards',
-  // Button fields
-  buttons: 'Buttons',
-  // Consultation fields
-  options: 'Options',
-  // Process fields
-  steps: 'Steps',
-};
+// How: Uses SmartFieldEditor for fields, handles arrays and nested objects
 
 // Section labels for homepage
 const sectionLabels: Record<string, string> = {
@@ -249,122 +215,14 @@ export default function AdminSidebar() {
 
   // Render an input for a primitive value (for item editing)
   const renderItemPrimitiveInput = (path: string, value: unknown, fieldName: string) => {
-    const stringValue = value !== null && value !== undefined ? String(value) : '';
-    const label = fieldLabels[fieldName] || fieldName.replace(/([A-Z])/g, ' $1').trim();
-
-    // Color variant selector
-    if (fieldName === 'variant' || fieldName === 'color') {
-      return (
-        <div key={path} className="mb-3">
-          <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
-            {label}
-          </label>
-          <select
-            value={stringValue}
-            onChange={(e) => handleItemFieldChange(path, e.target.value)}
-            className={`
-              w-full px-2 py-1.5 rounded border text-sm
-              ${formInputColors.base} ${formInputColors.focus}
-              ${focusRingClasses.blue}
-            `}
-          >
-            {colorVariants.map(c => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-        </div>
-      );
-    }
-
-    // Textarea for long text
-    if (fieldName === 'description' || fieldName === 'answer' || fieldName === 'details' || stringValue.length > 80) {
-      return (
-        <div key={path} className="mb-3">
-          <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
-            {label}
-          </label>
-          <textarea
-            value={stringValue}
-            onChange={(e) => handleItemFieldChange(path, e.target.value)}
-            rows={3}
-            className={`
-              w-full px-2 py-1.5 rounded border text-sm resize-y
-              ${formInputColors.base} ${formInputColors.focus}
-              ${focusRingClasses.blue}
-            `}
-          />
-        </div>
-      );
-    }
-
-    // Boolean toggle
-    if (typeof value === 'boolean' || fieldName === 'popular' || fieldName === 'enabled') {
-      const boolValue = typeof value === 'boolean' ? value : value === 'true';
-      return (
-        <div key={path} className="mb-3 flex items-center justify-between">
-          <label className={`text-xs font-medium ${formInputColors.label}`}>
-            {label}
-          </label>
-          <button
-            type="button"
-            onClick={() => handleItemFieldChange(path, !boolValue)}
-            className={`
-              relative inline-flex h-6 w-11 items-center rounded-full transition-colors
-              ${boolValue ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'}
-            `}
-            role="switch"
-            aria-checked={boolValue}
-            aria-label={`Toggle ${label}`}
-          >
-            <span
-              className={`
-                inline-block h-4 w-4 transform rounded-full bg-white transition-transform
-                ${boolValue ? 'translate-x-6' : 'translate-x-1'}
-              `}
-            />
-          </button>
-        </div>
-      );
-    }
-
-    // Number input
-    if (typeof value === 'number' || fieldName === 'number') {
-      return (
-        <div key={path} className="mb-3">
-          <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
-            {label}
-          </label>
-          <input
-            type="number"
-            value={stringValue}
-            onChange={(e) => handleItemFieldChange(path, Number(e.target.value))}
-            className={`
-              w-full px-2 py-1.5 rounded border text-sm
-              ${formInputColors.base} ${formInputColors.focus}
-              ${focusRingClasses.blue}
-            `}
-          />
-        </div>
-      );
-    }
-
-    // Default text input
     return (
-      <div key={path} className="mb-3">
-        <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
-          {label}
-        </label>
-        <input
-          type="text"
-          value={stringValue}
-          onChange={(e) => handleItemFieldChange(path, e.target.value)}
-          className={`
-            w-full px-2 py-1.5 rounded border text-sm
-            ${formInputColors.base} ${formInputColors.focus}
-            ${focusRingClasses.blue}
-          `}
-        />
-      </div>
+      <SmartFieldEditor
+        key={path}
+        path={path}
+        value={value}
+        fieldName={fieldName}
+        onChange={handleItemFieldChange}
+      />
     );
   };
 
@@ -408,125 +266,20 @@ export default function AdminSidebar() {
 
   // Render an input for a primitive value
   const renderPrimitiveInput = (path: string, value: unknown, fieldName: string) => {
-    const stringValue = value !== null && value !== undefined ? String(value) : '';
-    // For _value fields (primitive sections), use the section label
-    const label = fieldName === '_value' && selectedSection
+    // For _value fields (primitive sections), use the section label as custom label
+    const customLabel = fieldName === '_value' && selectedSection
       ? selectedSection.label
-      : (fieldLabels[fieldName] || fieldName.replace(/([A-Z])/g, ' $1').trim());
+      : undefined;
 
-    // Color variant selector
-    if (fieldName === 'variant' || fieldName === 'color') {
-      return (
-        <div key={path} className="mb-3">
-          <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
-            {label}
-          </label>
-          <select
-            value={stringValue}
-            onChange={(e) => handleFieldChange(path, e.target.value)}
-            className={`
-              w-full px-2 py-1.5 rounded border text-sm
-              ${formInputColors.base} ${formInputColors.focus}
-              ${focusRingClasses.blue}
-            `}
-          >
-            {colorVariants.map(c => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-        </div>
-      );
-    }
-
-    // Textarea for long text
-    if (fieldName === 'description' || fieldName === 'chatbotNote' || stringValue.length > 80) {
-      return (
-        <div key={path} className="mb-3">
-          <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
-            {label}
-          </label>
-          <textarea
-            value={stringValue}
-            onChange={(e) => handleFieldChange(path, e.target.value)}
-            rows={3}
-            className={`
-              w-full px-2 py-1.5 rounded border text-sm resize-y
-              ${formInputColors.base} ${formInputColors.focus}
-              ${focusRingClasses.blue}
-            `}
-          />
-        </div>
-      );
-    }
-
-    // Boolean toggle
-    if (typeof value === 'boolean' || fieldName === 'popular' || fieldName === 'enabled') {
-      const boolValue = typeof value === 'boolean' ? value : value === 'true';
-      return (
-        <div key={path} className="mb-3 flex items-center justify-between">
-          <label className={`text-xs font-medium ${formInputColors.label}`}>
-            {label}
-          </label>
-          <button
-            type="button"
-            onClick={() => handleFieldChange(path, !boolValue)}
-            className={`
-              relative inline-flex h-6 w-11 items-center rounded-full transition-colors
-              ${boolValue ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'}
-            `}
-            role="switch"
-            aria-checked={boolValue}
-            aria-label={`Toggle ${label}`}
-          >
-            <span
-              className={`
-                inline-block h-4 w-4 transform rounded-full bg-white transition-transform
-                ${boolValue ? 'translate-x-6' : 'translate-x-1'}
-              `}
-            />
-          </button>
-        </div>
-      );
-    }
-
-    // Number input
-    if (typeof value === 'number' || fieldName === 'number') {
-      return (
-        <div key={path} className="mb-3">
-          <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
-            {label}
-          </label>
-          <input
-            type="number"
-            value={stringValue}
-            onChange={(e) => handleFieldChange(path, Number(e.target.value))}
-            className={`
-              w-full px-2 py-1.5 rounded border text-sm
-              ${formInputColors.base} ${formInputColors.focus}
-              ${focusRingClasses.blue}
-            `}
-          />
-        </div>
-      );
-    }
-
-    // Default text input
     return (
-      <div key={path} className="mb-3">
-        <label className={`block text-xs font-medium ${formInputColors.label} mb-1`}>
-          {label}
-        </label>
-        <input
-          type="text"
-          value={stringValue}
-          onChange={(e) => handleFieldChange(path, e.target.value)}
-          className={`
-            w-full px-2 py-1.5 rounded border text-sm
-            ${formInputColors.base} ${formInputColors.focus}
-            ${focusRingClasses.blue}
-          `}
-        />
-      </div>
+      <SmartFieldEditor
+        key={path}
+        path={path}
+        value={value}
+        fieldName={fieldName}
+        onChange={handleFieldChange}
+        customLabel={customLabel}
+      />
     );
   };
 
