@@ -1,5 +1,23 @@
 [
   {
+    "hash": "5115847",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "51158472c04eb52262270649a2d27fc69fb6e1fd:%M",
+    "author": "Abe Reyes",
+    "message": "Update README with admin quotes system documentation",
+    "category": "Other",
+    "filesChanged": 1
+  },
+  {
+    "hash": "31c02bd",
+    "date": "%Y->- (HEAD -> production)",
+    "time": "31c02bda3616b4139202ab4ecc5f1aa660e9b632:%M",
+    "author": "Abe Reyes",
+    "message": "Merge branch 'main' into production",
+    "category": "Other",
+    "filesChanged": 0
+  },
+  {
     "hash": "cee47c2",
     "date": "%Y->- (HEAD -> main)",
     "time": "cee47c2e064928a536271edc59e92dcf49edae75:%M",
@@ -879,24 +897,6 @@
     "author": "Abe Reyes",
     "message": "Refactor: Eliminate opacity-based dark mode colors in puck-utils",
     "category": "Refactoring",
-    "filesChanged": 2
-  },
-  {
-    "hash": "8a06b1f",
-    "date": "2025-12-30",
-    "time": "18:09",
-    "author": "Abe Reyes",
-    "message": "Docs: Document security hardening in TODO.md",
-    "category": "Documentation",
-    "filesChanged": 1
-  },
-  {
-    "hash": "ac66363",
-    "date": "2025-12-30",
-    "time": "18:09",
-    "author": "Abe Reyes",
-    "message": "Security: Fix function search_paths and extension locations",
-    "category": "Security",
     "filesChanged": 2
   }
 ]

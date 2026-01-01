@@ -12,6 +12,7 @@ import { OPEN_CHATBOT_EVENT } from './chatbot/ChatbotWidget';
 // Contains brand, navigation links, chat trigger, and copyright.
 
 const footerLinks = [
+  { href: '/about', label: 'About' },
   { href: '/how-it-works', label: 'How It Works' },
   { href: '/contact', label: 'Contact' },
   { href: '/pricing', label: 'Pricing' },
