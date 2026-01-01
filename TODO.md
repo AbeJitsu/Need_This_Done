@@ -216,9 +216,9 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
   - status: 'draft', 'sent', 'authorized', 'deposit_paid', 'balance_paid', 'completed'
   - Includes generate_quote_reference() function
 - [x] Add `quote_id` column to orders table (038)
-- [→] Create `/api/quotes/authorize` endpoint
+- [x] Create `/api/quotes/authorize` endpoint
   - POST { quoteRef, email } → validates quote, creates Stripe payment intent
-- [ ] Create quote reference generator: `NTD-MMDDYY-HHMM`
+- [x] Create quote reference generator: `NTD-MMDDYY-HHMM` (in SQL migration 037)
 
 **Phase 2: Customer Flow**
 - [ ] Update `/get-started` page with "I have a quote" path
