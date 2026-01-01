@@ -1,5 +1,14 @@
 [
   {
+    "hash": "0d7809c",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "0d7809c40cfc6d9b4f4a1357d9eca0ea28fbedea:%M",
+    "author": "Abe Reyes",
+    "message": "Improve Get Started page button layout and colors",
+    "category": "Other",
+    "filesChanged": 3
+  },
+  {
     "hash": "a81f81d",
     "date": "%Y->- (HEAD -> production)",
     "time": "a81f81d94befdad81000b36fc30d92c8261ebcde:%M",
@@ -889,14 +898,5 @@
     "message": "Security: Fix record_product_interaction search_path",
     "category": "Security",
     "filesChanged": 1
-  },
-  {
-    "hash": "113196f",
-    "date": "2025-12-30",
-    "time": "18:14",
-    "author": "Abe Reyes",
-    "message": "Config: Update auto-log changelog tracking",
-    "category": "Configuration",
-    "filesChanged": 3
   }
 ]

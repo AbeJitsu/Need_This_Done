@@ -275,8 +275,8 @@ export default function ResumePage() {
         >
           Featured Project
         </h2>
-        <div className="ml-4">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
+        <div className="space-y-3 ml-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
             <h3 className={`font-bold text-xs ${titleColors.blue}`}>needthisdone.com</h3>
             <a
               href="https://needthisdone.com"
@@ -285,16 +285,16 @@ export default function ResumePage() {
               Live at needthisdone.com
             </a>
           </div>
-          <p className={`text-xs ${headingColors.secondary} mb-2 ml-4`}>
-            A responsive, mobile-first e-commerce platform built from the ground up. Features
-            include user authentication, product browsing, shopping cart, secure checkout with
-            Stripe, and order tracking. The admin dashboard provides business management tools. An
-            AI-powered chatbot handles customer questions using semantic search. Comprehensive
-            automated testing ensures reliable deployments.
-          </p>
-          <p className={`text-xs italic ${formInputColors.helper} ml-4`}>
-            React/Next.js • TypeScript • Node.js • PostgreSQL/Supabase • Redis • Stripe • Playwright
-            • Vercel
+          <ul className={`text-xs ${headingColors.secondary} list-disc list-outside ml-4 space-y-1`}>
+            <li>Responsive, mobile-first e-commerce platform built from the ground up</li>
+            <li>User authentication, product browsing, shopping cart, and order tracking</li>
+            <li>Secure checkout integration with Stripe payment processing</li>
+            <li>Admin dashboard with business management tools</li>
+            <li>AI-powered chatbot using semantic search for customer questions</li>
+            <li>Comprehensive automated testing with Playwright for reliable deployments</li>
+          </ul>
+          <p className={`text-xs italic ${formInputColors.helper}`}>
+            React/Next.js • TypeScript • Node.js • PostgreSQL/Supabase • Redis • Stripe • Playwright • Vercel
           </p>
         </div>
       </section>
