@@ -404,6 +404,51 @@ export const formInputColors = {
 };
 
 // ============================================================================
+// Form Input Classes - Complete class strings for DRY form inputs
+// ============================================================================
+// Full class strings to eliminate repeated input styling across components
+// Use these in TextField, TextAreaField, SelectField, etc.
+export const formInputClasses = {
+  // Base styling for all inputs (no border state)
+  base: `
+    w-full px-3 py-2 rounded-lg border-2 text-sm
+    bg-white dark:bg-gray-800
+    text-gray-900 dark:text-gray-100
+    placeholder-gray-400 dark:placeholder-gray-500
+    transition-colors duration-200
+    focus:outline-none focus:ring-2 focus:ring-offset-0
+  `.replace(/\s+/g, ' ').trim(),
+
+  // Normal state border + focus
+  normalBorder: 'border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/50',
+
+  // Error state border + focus
+  errorBorder: 'border-red-300 dark:border-red-600 focus:border-red-500 focus:ring-red-200 dark:focus:ring-red-900/50',
+
+  // Combined: base + normal border
+  input: `
+    w-full px-3 py-2 rounded-lg border-2 text-sm
+    bg-white dark:bg-gray-800
+    text-gray-900 dark:text-gray-100
+    placeholder-gray-400 dark:placeholder-gray-500
+    transition-colors duration-200
+    focus:outline-none focus:ring-2 focus:ring-offset-0
+    border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/50
+  `.replace(/\s+/g, ' ').trim(),
+
+  // Combined: base + error border
+  inputError: `
+    w-full px-3 py-2 rounded-lg border-2 text-sm
+    bg-white dark:bg-gray-800
+    text-gray-900 dark:text-gray-100
+    placeholder-gray-400 dark:placeholder-gray-500
+    transition-colors duration-200
+    focus:outline-none focus:ring-2 focus:ring-offset-0
+    border-red-300 dark:border-red-600 focus:border-red-500 focus:ring-red-200 dark:focus:ring-red-900/50
+  `.replace(/\s+/g, ' ').trim(),
+};
+
+// ============================================================================
 // Form Validation Colors - Error and success messaging
 // ============================================================================
 // High contrast colors for validation feedback - meets WCAG AA (5:1) in both modes
