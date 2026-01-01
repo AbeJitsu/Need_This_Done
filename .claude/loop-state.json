@@ -1,10 +1,11 @@
 {
-  "active": true,
-  "startTime": 1767238205,
+  "active": false,
+  "startTime": null,
   "maxHours": 5,
   "maxConsecutiveFailures": 3,
-  "iterationCount": 16,
+  "iterationCount": 18,
   "failureCounts": {},
   "cycleNumber": 1,
-  "tasksCompleted": 1
+  "tasksCompleted": 3,
+  "reason": "All actionable tasks complete. Remaining items are blocked or research-only."
 }

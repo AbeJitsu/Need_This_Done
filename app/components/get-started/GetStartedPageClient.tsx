@@ -204,7 +204,7 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
                   <h2 className={`text-2xl font-bold ${headingColors.primary} pb-3`}>
                     {path.title}
                   </h2>
-                  <p className={`${headingColors.secondary} pb-6`}>
+                  <p className={`${headingColors.secondary} pb-6 min-h-[4rem]`}>
                     {path.description}
                   </p>
                   <ul className="space-y-3 self-start">

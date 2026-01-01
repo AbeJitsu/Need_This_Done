@@ -159,8 +159,8 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Fix: Resolve or convert to tracked issues                              │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [!] Resolve TODO in get-started/GetStartedPageClient.tsx:66 (payment integration)
-  - Blocked: needs quotes system (doesn't exist) + product decisions on deposit flow
+- [ ] Resolve TODO in get-started/GetStartedPageClient.tsx:66 (payment integration)
+  - Unblocked: quotes system planned below, product decisions made
 - [x] Implement ICS attachment in lib/email-service.ts:351
 - [!] Complete Medusa cart integration in api/cron/abandoned-carts/route.ts:203
   - Blocked: Medusa v1 Store API has no "list carts" endpoint; needs cart tracking table or Admin API
@@ -192,6 +192,45 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 **RESOURCE LEAK RISK** - setInterval may not be cleaned up
 - [x] Verify TestimonialsComponent.tsx:157 setInterval has cleanup on unmount
   - Verified: cleanup exists at line 158 `return () => clearInterval(interval);`
+
+### Quotes System (New Feature)
+
+**Quote → Deposit → Project Flow**
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Customer fills /contact form → Admin creates quote → Customer pays    │
+│  deposit via /get-started → Project kicks off                          │
+│                                                                         │
+│  Decisions Made:                                                        │
+│    - Deposit: Always 50%                                               │
+│    - Format: NTD-MMDDYY-HHMM (e.g., NTD-010125-1430)                  │
+│    - Expiration: 30 days                                               │
+│    - Balance due: Before delivery/ownership transfer                   │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+**Phase 1: Database & API**
+- [ ] Create `quotes` table migration (037)
+  - id, reference_number (unique), project_id, customer_name, customer_email
+  - total_amount, deposit_amount (cents), status, expires_at, notes
+  - status: 'draft', 'sent', 'authorized', 'deposit_paid', 'balance_paid', 'completed'
+- [ ] Add `quote_id` column to orders table
+- [ ] Create `/api/quotes/authorize` endpoint
+  - POST { quoteRef, email } → validates quote, creates Stripe payment intent
+- [ ] Create quote reference generator: `NTD-MMDDYY-HHMM`
+
+**Phase 2: Customer Flow**
+- [ ] Update `/get-started` page with "I have a quote" path
+- [ ] Add quote reference + email form fields
+- [ ] Connect to `/api/quotes/authorize` → Stripe payment
+- [ ] Handle payment success → update quote status, create order
+- [ ] Send confirmation email with project timeline
+
+**Phase 3: Admin Flow**
+- [ ] Add quote creation form in admin (from project inquiry)
+- [ ] Quote list view with status filtering
+- [ ] Send quote email to customer with payment link
+- [ ] Track quote → order conversion
 
 ### Short Term
 
@@ -278,4 +317,4 @@ _Major features fully documented in README.md_
 
 ---
 
-*Last Updated: December 31, 2025 (DRY/ETC audit added)*
+*Last Updated: January 1, 2026 (Quotes system planned)*
