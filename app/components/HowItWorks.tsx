@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { neutralAccentBg } from '@/lib/colors';
+import { neutralAccentBg, cardBgColors, cardBorderColors, headingColors, formInputColors } from '@/lib/colors';
 
 // ============================================================================
 // How It Works Component - Simple Visual Diagram
@@ -13,13 +13,13 @@ export default function HowItWorks() {
   const [expandDeveloper, setExpandDeveloper] = useState(false);
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+    <div className={`${cardBgColors.base} p-6 rounded-xl ${cardBorderColors.light} shadow-sm`}>
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        <h2 className={`text-xl font-semibold ${headingColors.primary} mb-2`}>
           How It Works
         </h2>
-        <p className="text-sm text-gray-600 dark:text-gray-300">
+        <p className={`text-sm ${formInputColors.helper}`}>
           When someone visits, your app checks recent answers first (lightning fast), then looks them up if needed.
         </p>
       </div>
@@ -31,8 +31,8 @@ export default function HowItWorks() {
           <div className="flex-1">
             <div className={`p-4 ${neutralAccentBg.blue} border-2 border-blue-200 dark:border-blue-800 rounded-lg text-center`}>
               <div className="text-2xl mb-2" role="img" aria-label="Person visiting">👤</div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Your Visitor</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Asks for something</p>
+              <p className={`font-semibold ${headingColors.primary} text-sm`}>Your Visitor</p>
+              <p className={`text-xs ${formInputColors.helper} mt-1`}>Asks for something</p>
             </div>
           </div>
 
@@ -43,8 +43,8 @@ export default function HowItWorks() {
           <div className="flex-1">
             <div className={`p-4 ${neutralAccentBg.purple} border-2 border-purple-200 dark:border-purple-800 rounded-lg text-center`}>
               <div className="text-2xl mb-2" role="img" aria-label="Your app">🎯</div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Your App</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Processes the request</p>
+              <p className={`font-semibold ${headingColors.primary} text-sm`}>Your App</p>
+              <p className={`text-xs ${formInputColors.helper} mt-1`}>Processes the request</p>
             </div>
           </div>
 
@@ -55,8 +55,8 @@ export default function HowItWorks() {
           <div className="flex-1">
             <div className={`p-4 ${neutralAccentBg.gold} border-2 border-gold-200 dark:border-gold-800 rounded-lg text-center`}>
               <div className="text-2xl mb-2" role="img" aria-label="Quick memory">⚡</div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Quick Memory</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Recent answers saved here</p>
+              <p className={`font-semibold ${headingColors.primary} text-sm`}>Quick Memory</p>
+              <p className={`text-xs ${formInputColors.helper} mt-1`}>Recent answers saved here</p>
             </div>
           </div>
 
@@ -67,8 +67,8 @@ export default function HowItWorks() {
           <div className="flex-1">
             <div className={`p-4 ${neutralAccentBg.green} border-2 border-green-200 dark:border-green-800 rounded-lg text-center`}>
               <div className="text-2xl mb-2" role="img" aria-label="Permanent storage">💾</div>
-              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Permanent Storage</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">All your data kept safe</p>
+              <p className={`font-semibold ${headingColors.primary} text-sm`}>Permanent Storage</p>
+              <p className={`text-xs ${formInputColors.helper} mt-1`}>All your data kept safe</p>
             </div>
           </div>
         </div>
@@ -96,10 +96,10 @@ export default function HowItWorks() {
         ].map((item, index) => (
           <div key={index} className="text-center">
             {item.title ? (
-              <div className={`p-3 ${neutralAccentBg.gray} border border-gray-200 dark:border-gray-700 rounded-lg`}>
+              <div className={`p-3 ${neutralAccentBg.gray} ${cardBorderColors.light} rounded-lg`}>
                 <div className="text-xl mb-1" role="img" aria-label={item.label}>{item.icon}</div>
-                <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{item.title}</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{item.desc}</p>
+                <p className={`font-semibold ${headingColors.primary} text-sm`}>{item.title}</p>
+                <p className={`text-xs ${formInputColors.helper} mt-1`}>{item.desc}</p>
               </div>
             ) : (
               <p className="text-xl" role="img" aria-label={item.label}>{item.icon}</p>
@@ -143,7 +143,7 @@ export default function HowItWorks() {
 
       {/* Security Layer Explanation */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">How Your Data Stays Safe</h3>
+        <h3 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>How Your Data Stays Safe</h3>
         <div className="space-y-3">
           {[
             {
@@ -167,12 +167,12 @@ export default function HowItWorks() {
               description: 'Like a temporary ID badge. After login, you get a badge that proves you\'re you. It expires automatically. You don\'t send your password repeatedly. Just the badge.',
             },
           ].map((item, index) => (
-            <div key={index} className={`p-3 ${neutralAccentBg.gray} border border-gray-200 dark:border-gray-600 rounded-lg`}>
+            <div key={index} className={`p-3 ${neutralAccentBg.gray} ${cardBorderColors.light} rounded-lg`}>
               <div className="flex gap-3">
                 <div className="text-xl flex-shrink-0">{item.icon}</div>
                 <div>
-                  <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{item.title}</p>
-                  <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">{item.description}</p>
+                  <p className={`font-semibold ${headingColors.primary} text-sm`}>{item.title}</p>
+                  <p className={`text-xs ${formInputColors.helper} mt-1`}>{item.description}</p>
                 </div>
               </div>
             </div>
@@ -291,7 +291,7 @@ const { data } = await supabase
 
       {/* Footer */}
       <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className={`text-xs ${formInputColors.helper}`}>
           <strong>In a nutshell:</strong> When someone visits, your app asks itself "Do I remember this?" If yes, answer instantly. If no, look it up and remember it for next time. Everything is encrypted and protected so only the right person sees their information.
         </p>
       </div>

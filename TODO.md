@@ -85,8 +85,8 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 ```
 - [x] Audit components not using Card.tsx or colors.ts (30+ instances found, fixes in separate tasks)
 - [x] Migrate ServiceCard to use cardBgColors.base (line 88)
-- [→] Add inputBaseClasses to colors.ts for form fields
-- [ ] Update FAQ.tsx, HowItWorks.tsx, and other marketing components
+- [x] Add inputBaseClasses to colors.ts for form fields
+- [x] Update FAQ.tsx, HowItWorks.tsx, and other marketing components
 
 **Form Field DRY Violations** - Identical input styles repeated across 3+ field components
 ```
