@@ -134,7 +134,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 - [x] Add titleColor and descriptionColor to featureCardColors in colors.ts
-- [→] Update FeatureCard to use centralized colors
+- [x] Update FeatureCard to use centralized colors
 
 ### Pragmatic Programmer Audit (Dec 31, 2025)
 
@@ -147,7 +147,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 │  Fix: Create TIMING_CONSTANTS in a config file                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-- [ ] Create timing constants file (TOAST_DURATION, COPY_FEEDBACK_DELAY, etc.)
+- [x] Create timing constants file (TOAST_DURATION, COPY_FEEDBACK_DELAY, etc.)
 - [ ] Update checkout/page.tsx:332 - setCopied setTimeout 2000
 - [ ] Update admin pages to use shared timeout constants
 
