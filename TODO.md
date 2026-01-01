@@ -221,10 +221,11 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [x] Create quote reference generator: `NTD-MMDDYY-HHMM` (in SQL migration 037)
 
 **Phase 2: Customer Flow**
-- [ ] Update `/get-started` page with "I have a quote" path
-- [ ] Add quote reference + email form fields
-- [ ] Connect to `/api/quotes/authorize` → Stripe payment
-- [ ] Handle payment success → update quote status, create order
+- [x] Update `/get-started` page with "I have a quote" path
+- [x] Add quote reference + email form fields
+- [x] Connect to `/api/quotes/authorize` → Stripe payment
+- [x] Handle payment success → update quote status, create order
+  - Created `/api/quotes/deposit-confirmed` endpoint
 - [ ] Send confirmation email with project timeline
 
 **Phase 3: Admin Flow**

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import PaymentForm from '@/components/PaymentForm';
+import { StripeElementsWrapper } from '@/context/StripeContext';
 import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { GetStartedPageContent } from '@/lib/page-content-types';
@@ -18,6 +20,17 @@ import {
   alertColors,
   AccentVariant,
 } from '@/lib/colors';
+
+// Quote data returned from authorization API
+interface AuthorizedQuote {
+  id: string;
+  referenceNumber: string;
+  customerName: string;
+  totalAmount: number;
+  depositAmount: number;
+  lineItems: Array<{ description: string; amount: number }>;
+  expiresAt: string;
+}
 
 // ============================================================================
 // Get Started Page Client - Universal Editing Version
@@ -43,8 +56,12 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
+  // Quote authorization state
+  const [authorizedQuote, setAuthorizedQuote] = useState<AuthorizedQuote | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+
   // ============================================================================
-  // Handle Form Submission
+  // Handle Quote Authorization Form Submission
   // ============================================================================
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,16 +80,60 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
     try {
       setIsProcessing(true);
 
-      // TODO: Integrate with payment processing
-      // For now, simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Call the authorize API
+      const response = await fetch('/api/quotes/authorize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quoteRef: quoteRef.trim(), email: email.trim() }),
+      });
 
-      setSuccess(true);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Something went wrong. Please try again.');
+        return;
+      }
+
+      // Store the quote data and client secret for payment
+      setAuthorizedQuote(data.quote);
+      setClientSecret(data.clientSecret);
     } catch {
       setError("Hmm, something went wrong. Please try again or reach out to us - we're here to help.");
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  // ============================================================================
+  // Handle Payment Success
+  // ============================================================================
+  const handlePaymentSuccess = async (paymentIntentId: string) => {
+    // Update quote status to deposit_paid
+    try {
+      await fetch('/api/quotes/deposit-confirmed', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          quoteId: authorizedQuote?.id,
+          paymentIntentId,
+        }),
+      });
+    } catch (err) {
+      console.error('Failed to update quote status:', err);
+      // Don't fail the user - payment was successful
+    }
+
+    setSuccess(true);
+  };
+
+  // ============================================================================
+  // Format currency for display
+  // ============================================================================
+  const formatCurrency = (cents: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(cents / 100);
   };
 
   // ============================================================================
@@ -195,19 +256,19 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
               sortId={`path-${index}`}
             >
               <Card hoverColor={path.hoverColor} hoverEffect="lift" className="h-full">
-                <div className="p-8 h-full grid grid-rows-[auto_auto_auto_1fr_auto]">
-                  <div className="pb-4">
+                <div className="p-8 h-full flex flex-col">
+                  <div className="mb-4">
                     <span className={`inline-block px-4 py-1 ${accentColors[path.hoverColor as AccentVariant].bg} ${accentColors[path.hoverColor as AccentVariant].text} rounded-full text-sm font-semibold`}>
                       {path.badge}
                     </span>
                   </div>
-                  <h2 className={`text-2xl font-bold ${headingColors.primary} pb-3`}>
+                  <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
                     {path.title}
                   </h2>
-                  <p className={`${headingColors.secondary} pb-6 min-h-[4rem]`}>
+                  <p className={`${headingColors.secondary} mb-6 flex-grow`}>
                     {path.description}
                   </p>
-                  <ul className="space-y-3 self-start">
+                  <ul className="space-y-3 mb-6">
                     {path.features.map((feature, idx) => {
                       // checkmarkColors only has purple, blue, green - fall back to green for other variants
                       const colorKey = path.hoverColor as keyof typeof checkmarkColors;
@@ -245,8 +306,59 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
         </p>
       </div>
 
-      {/* Authorization Form */}
+      {/* Authorization Form or Payment Form */}
       <Card hoverEffect="none" id="authorize" className="mb-8">
+        {clientSecret && authorizedQuote ? (
+          // Show payment form after authorization
+          <div className="p-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              Pay Your Deposit
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Hi {authorizedQuote.customerName.split(' ')[0]}! Your quote is ready. Pay your 50% deposit to get started.
+            </p>
+
+            {/* Quote Summary */}
+            <div className={`mb-6 p-4 ${accentColors.blue.bg} rounded-lg`}>
+              <div className="flex justify-between items-center mb-2">
+                <span className={headingColors.secondary}>Quote Reference</span>
+                <span className={`font-mono font-semibold ${headingColors.primary}`}>{authorizedQuote.referenceNumber}</span>
+              </div>
+              <div className="flex justify-between items-center mb-2">
+                <span className={headingColors.secondary}>Total Project</span>
+                <span className={headingColors.primary}>{formatCurrency(authorizedQuote.totalAmount)}</span>
+              </div>
+              <div className={`flex justify-between items-center pt-2 border-t ${accentColors.blue.border}`}>
+                <span className={`font-semibold ${headingColors.primary}`}>Deposit Due Today</span>
+                <span className={`text-xl font-bold ${accentColors.green.text}`}>{formatCurrency(authorizedQuote.depositAmount)}</span>
+              </div>
+            </div>
+
+            {/* Stripe Payment Form */}
+            <StripeElementsWrapper clientSecret={clientSecret}>
+              <PaymentForm
+                onSuccess={handlePaymentSuccess}
+                onError={(err) => setError(err)}
+                returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/get-started?payment=success`}
+                submitText={`Pay ${formatCurrency(authorizedQuote.depositAmount)} Deposit`}
+                processingText="Processing payment..."
+              />
+            </StripeElementsWrapper>
+
+            {/* Back button */}
+            <button
+              type="button"
+              onClick={() => {
+                setClientSecret(null);
+                setAuthorizedQuote(null);
+              }}
+              className={`mt-4 w-full text-center text-sm ${mutedTextColors.light} hover:underline`}
+            >
+              ← Use a different quote
+            </button>
+          </div>
+        ) : (
+          // Show authorization form
           <form onSubmit={handleSubmit} className="p-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               {content.authForm.title}
@@ -313,7 +425,8 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
               {content.authForm.securityNote}
             </p>
           </form>
-        </Card>
+        )}
+      </Card>
     </div>
   );
 }
