@@ -1,5 +1,14 @@
 [
   {
+    "hash": "573fbb9",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "573fbb9a9484a62085e58f374523541188749a59:%M",
+    "author": "Abe Reyes",
+    "message": "Add ICS calendar attachment to confirmation emails",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
     "hash": "69e2752",
     "date": "%Y->- (HEAD -> main)",
     "time": "69e27528ebeef2d955b44d14f502c6f09ccf0501:%M",

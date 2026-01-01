@@ -162,8 +162,10 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [!] Resolve TODO in get-started/GetStartedPageClient.tsx:66 (payment integration)
   - Blocked: needs quotes system (doesn't exist) + product decisions on deposit flow
 - [x] Implement ICS attachment in lib/email-service.ts:351
-- [ ] Complete Medusa cart integration in api/cron/abandoned-carts/route.ts:203
-- [ ] Add Medusa admin API in api/admin/inventory/route.ts:128
+- [!] Complete Medusa cart integration in api/cron/abandoned-carts/route.ts:203
+  - Blocked: Medusa v1 Store API has no "list carts" endpoint; needs cart tracking table or Admin API
+- [!] Add Medusa admin API in api/admin/inventory/route.ts:128
+  - Blocked: Requires Medusa Admin API auth setup + endpoint development
 
 **LARGE FILES** - Components over 500 lines need refactoring
 ```
@@ -179,10 +181,11 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 - [ ] Refactor InlineEditContext.tsx (555 lines) - extract helpers to utils
 
 **EMPTY CATCH BLOCK** - Swallowed exceptions hide errors
-- [ ] Add proper error handling in app/layout.tsx:111 (empty catch block)
+- [x] Add proper error handling in app/layout.tsx:111 (empty catch block)
 
 **RESOURCE LEAK RISK** - setInterval may not be cleaned up
-- [ ] Verify TestimonialsComponent.tsx:157 setInterval has cleanup on unmount
+- [x] Verify TestimonialsComponent.tsx:157 setInterval has cleanup on unmount
+  - Verified: cleanup exists at line 158 `return () => clearInterval(interval);`
 
 ### Short Term
 
