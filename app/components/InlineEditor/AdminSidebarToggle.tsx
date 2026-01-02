@@ -21,12 +21,15 @@ export default function AdminSidebarToggle() {
   }
 
   const handleToggle = () => {
-    if (isSidebarOpen) {
-      setSidebarOpen(false);
+    if (isEditMode) {
+      // Exit edit mode entirely
       setEditMode(false);
+      setSidebarOpen(false);
     } else {
-      setSidebarOpen(true);
+      // Enter edit mode - DON'T auto-open sidebar
+      // User can click on any text to edit it directly
       setEditMode(true);
+      // Sidebar stays closed - inline editing is primary
     }
   };
 
