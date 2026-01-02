@@ -263,6 +263,21 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
   - Quote status flow: draft → sent → deposit_paid → balance_paid → completed
   - Orders table has `quote_id` column linking to quotes
 
+### Infrastructure
+
+**Claude Code + GitHub Actions Setup** - Enable @claude on PRs/Issues
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Uses Max subscription ($100-200/mo) - no extra cost                    │
+│  Shares usage limits with IDE + Mobile                                  │
+│  Not recommended for repos with many collaborators (use API key instead)│
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Run `/install-github-app` in Claude Code terminal to generate token
+- [ ] Add token to GitHub: Repo → Settings → Secrets → Actions → `CLAUDE_CODE_OAUTH_TOKEN`
+- [ ] Create `.github/workflows/claude.yml` workflow file
+- [ ] Test by commenting `@claude review` on a PR
+
 ### Short Term
 
 **Consider Medusa v2 Upgrade**
