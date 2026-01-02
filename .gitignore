@@ -76,5 +76,3 @@ env.md.do
 app/affected-routes.json
 app/component-route-map.json
 
-# Job search files (personal, not part of the app)
-job-search/
