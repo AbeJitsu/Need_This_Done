@@ -21,21 +21,21 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║                                                                              ║
 ║  CODEBASE METRICS                        PRODUCTION READINESS                ║
 ║  ─────────────────                       ────────────────────                 ║
-║  📄 19 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
-║  🔐 17 Admin Pages                       ✅ Stripe Payments                  ║
-║  🔌 53 API Routes                        ✅ Supabase Auth & Database         ║
-║  🧩 90+ React Components                 ✅ Redis Caching (Upstash)          ║
+║  📄 23 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
+║  🔐 21 Admin Pages                       ✅ Stripe Payments                  ║
+║  🔌 72 API Routes                        ✅ Supabase Auth & Database         ║
+║  🧩 165 React Components                 ✅ Redis Caching (Upstash)          ║
 ║  📦 6 Context Providers                  ✅ Email Notifications (Resend)     ║
-║  🔧 44 Lib Utilities                     ✅ Google OAuth                     ║
+║  🔧 51 Lib Utilities                     ✅ Google OAuth                     ║
 ║  🪝 8 Custom Hooks                       ✅ Inline Editing (12 pages)        ║
-║  🧪 229 E2E Tests Passing                ✅ WCAG AA Color System (4.5:1)     ║
+║  🧪 68 E2E Test Files                    ✅ WCAG AA Color System (4.5:1)     ║
 ║                                                                              ║
-║  RECENT ADDITIONS (Jan 2026)             VISUAL BUILDER                      ║
-║  ────────────────────────────            ──────────────                       ║
-║  ✨ Admin Quotes Dashboard               ✅ Puck Page Builder (28 components)║
-║  ✨ Quote Email System                   ✅ Pre-built Section Templates      ║
-║  ✨ Inline Click-to-Edit                 ✅ Template Marketplace             ║
-║  ✨ Dark Mode w/ WCAG AA                 ✅ TipTap Rich Text Editor          ║
+║  RECENT ADDITIONS (Jan 2026)             LIGHTHOUSE SCORES                   ║
+║  ────────────────────────────            ──────────────────                   ║
+║  ✨ Quotes System (full workflow)        📊 SEO: 100%                        ║
+║  ✨ Version History (20 revisions)       📊 Accessibility: 100%              ║
+║  ✨ Daily Changelog Automation           📊 Performance: 78%                 ║
+║  ✨ Dark Mode w/ WCAG AA                 📊 Best Practices: 79%              ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -87,7 +87,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                           NEXT.JS APP (app/)                                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  15 PUBLIC   │  │  13 ADMIN    │  │  49 API      │  │  151 REACT   │      │
+│  │  23 PUBLIC   │  │  21 ADMIN    │  │  72 API      │  │  165 REACT   │      │
 │  │  PAGES       │  │  PAGES       │  │  ROUTES      │  │  COMPONENTS  │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘      │
 │                                                                              │
@@ -132,23 +132,24 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 
 **Understanding the System**
 - [Current State at a Glance](#current-state-at-a-glance) ← *status dashboard, tech stack, architecture*
-- [Project Structure](#project-structure) ← *complete file map, 35 pages, 49 APIs, 151 components*
+- [Project Structure](#project-structure) ← *complete file map, 44 pages, 72 APIs, 165 components*
 - [Architecture Overview](#architecture-overview) ← *data flow diagrams*
 
 **Core Features**
 - [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
+- [Quotes System](#quotes-system) ← *inquiry → quote → deposit workflow*
 - [Authentication](#authentication)
 - [Email Notifications](#email-notifications)
 - [Caching Strategy](#caching-strategy)
 
 **Operations**
 - [Deployment](#deployment)
-- [Testing](#testing) ← *229 E2E tests*
+- [Testing](#testing) ← *68 E2E test files*
 - [Troubleshooting](#troubleshooting)
 
 **Reference**
 - [Puck Visual Builder](#puck-visual-builder) ← *28 components, color utilities*
-- [Inline Editing](#inline-editing) ← *click-to-edit on 12 marketing pages*
+- [Inline Editing](#inline-editing) ← *click-to-edit on 12 pages + version history*
 - [Template System](#template-system) ← *5-step wizard, starter templates*
 - [API Patterns](#api-patterns) ← *auth, error handling*
 - [Design System](#design-system)
@@ -226,23 +227,13 @@ railway up
 
 ### Product Management
 
-**Products are managed via Medusa Admin API:**
-
-| Product | Price | Duration | Handle |
-|---------|-------|----------|--------|
-| 15-Minute Quick Consultation | $20.00 | 15 min | `consultation-15-min` |
-| 30-Minute Strategy Consultation | $35.00 | 30 min | `consultation-30-min` |
-| 55-Minute Deep Dive Consultation | $50.00 | 55 min | `consultation-55-min` |
+Products are managed via Medusa Admin API. See [Medusa Backend](#medusa-backend-current-state) for product details and credentials.
 
 **Update product images:**
 ```bash
 cd medusa
 MEDUSA_ADMIN_PASSWORD='xxx' node update-product-image.js consultation-15-min "https://example.com/image.jpg"
 ```
-
-**Admin credentials:**
-- Email: Set via `MEDUSA_ADMIN_EMAIL` environment variable
-- Password: Set via `MEDUSA_ADMIN_PASSWORD` environment variable
 
 ---
 
@@ -256,16 +247,7 @@ A modern platform for professional services that combines:
 - **Visual page builder**: Non-technical users can create pages (Puck visual editor)
 - **Component library**: Reusable, accessible React components (Storybook)
 
-**Tech Stack:**
-- **Frontend**: Next.js 14 (React) with TypeScript, deployed on Vercel
-- **Backend**: Next.js API routes + Medusa (ecommerce engine on Railway)
-- **Database**: Supabase (PostgreSQL with pgvector for AI chatbot)
-- **Ecommerce**: Medusa headless commerce engine
-- **Payments**: Stripe (one-time & subscriptions)
-- **Email**: Resend (transactional emails) - sends from hello@needthisdone.com
-- **Cache**: Upstash Redis for performance
-- **Design**: Tailwind CSS with dark mode support
-- **Testing**: Playwright E2E tests + Visual regression testing (screenshot baselines)
+> **Tech Stack**: See [Current State at a Glance](#current-state-at-a-glance) for the complete technology stack.
 
 ---
 
@@ -506,7 +488,7 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 | Orders | ✅ Working | 4 E2E tests | Full order objects, linked in Supabase |
 | Email | ✅ Working | 9 unit tests | 4 email types via Resend |
 
-**All 229 E2E tests passing** - See [Testing](#testing) for complete coverage map.
+**All E2E tests passing** - 68 test files across 7 categories. See [Testing](#testing) for complete coverage map.
 
 **Consultation Products** (seeded via `medusa/seed-products.js` using Admin API):
 | Product | Price | Duration | Handle |
@@ -647,12 +629,12 @@ supabase db reset
 │
 ├── app/                   ← NEXT.JS APPLICATION
 │   ├── app/               ← Pages & API routes (Next.js App Router)
-│   ├── components/        ← 151 React components
-│   ├── context/           ← 5 state providers
-│   ├── lib/               ← 44 utility files
+│   ├── components/        ← 165 React components
+│   ├── context/           ← 6 state providers
+│   ├── lib/               ← 51 utility files
 │   ├── hooks/             ← 8 custom React hooks
 │   ├── emails/            ← Email templates (React Email)
-│   ├── e2e/               ← 25 Playwright test files
+│   ├── e2e/               ← 68 Playwright test files
 │   └── __tests__/         ← Unit & accessibility tests
 │
 ├── supabase/              ← DATABASE
@@ -663,11 +645,11 @@ supabase db reset
     └── seed-products.js   ← Product seeding script
 ```
 
-### Complete Page Inventory (35 pages total)
+### Complete Page Inventory (44 pages total)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                          PUBLIC PAGES (19 pages)                             │
+│                          PUBLIC PAGES (23 pages)                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  MARKETING                    E-COMMERCE                   AUTH             │
@@ -686,25 +668,25 @@ supabase db reset
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                          ADMIN PAGES (17 pages)                              │
+│                          ADMIN PAGES (21 pages)                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  SHOP MANAGEMENT              CONTENT (Puck ⛔)            OTHER            │
+│  SHOP MANAGEMENT              CONTENT                      OTHER            │
 │  /admin/shop                  /admin/pages       (list)    /admin/users     │
 │  /admin/shop/products         /admin/pages/new   (create)  /admin/appointments│
 │  /admin/shop/products/new     /admin/pages/[slug]/edit     /admin/quotes    │
-│  /admin/shop/orders                                        /admin/dev       │
-│  /admin/orders       (legacy) /admin/content     (alt CMS) BLOG             │
-│  /admin/products     (legacy) /admin/content/[slug]/edit   /admin/blog      │
+│  /admin/shop/orders           /admin/pages/[slug]/blocks   /admin/dev       │
+│  /admin/shop/inventory                                     /admin/analytics │
+│  /admin/orders       (legacy) /admin/content     (alt CMS) /admin/colors    │
+│  /admin/products     (legacy) /admin/content/[slug]/edit   BLOG             │
+│                                                            /admin/blog      │
 │                                                            /admin/blog/new  │
 │                                                            /admin/blog/[slug]/edit│
-│                                                                             │
-│  Note: Puck has 28 components ready - needs E2E tests before production     │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Complete API Route Inventory (53 routes)
+### Complete API Route Inventory (72 routes)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -784,7 +766,7 @@ MISC (4 routes)
 └── GET /api/demo/*                  Demo/testing endpoints
 ```
 
-### Component Inventory (151 components)
+### Component Inventory (165 components)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -841,7 +823,7 @@ STORYBOOK STORIES (8 files)
 └── Button, Card, PageHeader, CTASection, CircleBadge, PricingCard, etc.
 ```
 
-### Lib Utilities (44 files)
+### Lib Utilities (51 files)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -1196,6 +1178,49 @@ admin:projects:all       All projects (5m)
 
 ---
 
+## Quotes System
+
+Convert project inquiries into paid work with a structured deposit workflow.
+
+### How It Works
+
+```
+Contact Form → Admin Creates Quote → Customer Pays Deposit → Project Starts
+     │                  │                      │                   │
+     ▼                  ▼                      ▼                   ▼
+  Inquiry saved    Quote email sent     50% deposit via      Balance due
+  in Supabase      with payment link    Stripe checkout      before delivery
+```
+
+### Quote Flow
+
+1. **Customer submits contact form** → Inquiry saved to database
+2. **Admin creates quote** → Set total amount, project details, expiration (30 days)
+3. **Send quote email** → Customer receives email with unique reference (NTD-MMDDYY-HHMM)
+4. **Customer pays deposit** → 50% payment via Stripe, order created
+5. **Project begins** → Remaining balance due before final delivery
+
+### Admin Dashboard
+
+Access at `/admin/quotes` to:
+- Create new quotes from project inquiries
+- Filter by status: draft, sent, deposit_paid, balance_paid, completed
+- Send quote emails with one click
+- Track conversion from quote → order
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `supabase/migrations/037_*.sql` | Quotes table + reference generator |
+| `supabase/migrations/038_*.sql` | Orders.quote_id column |
+| `app/api/quotes/authorize/route.ts` | Customer quote authorization |
+| `app/api/admin/quotes/route.ts` | Admin quote CRUD |
+| `app/emails/QuoteEmail.tsx` | Quote email template |
+| `app/emails/DepositConfirmationEmail.tsx` | Deposit receipt template |
+
+---
+
 ## Email Notifications
 
 ### How It Works
@@ -1221,7 +1246,7 @@ Email is handled by **Resend** with a two-layer architecture:
 ```bash
 RESEND_API_KEY=re_...                    # API key from resend.com
 RESEND_FROM_EMAIL=hello@needthisdone.com # Must match verified domain
-RESEND_ADMIN_EMAIL=abe.raise@gmail.com   # Where admin alerts go
+RESEND_ADMIN_EMAIL=your_admin_email@example.com   # Where admin alerts go
 ```
 
 ### Sending Emails
@@ -1381,7 +1406,7 @@ export async function GET(request: Request) {
 | E2E Accessibility | 10 | ✅ Passing | `npm run test:e2e -- e2e/accessibility.a11y.test.ts` |
 | E2E Visual Regression | 10 | ✅ Passing | `npm run test:e2e -- e2e/checkout-screenshots.spec.ts` |
 | E2E Admin Project Flow | 6 | ✅ Passing | `npm run test:e2e -- e2e/admin-project-flow.spec.ts` |
-| **Total** | **177** | ✅ **All Passing** | `npm run test:e2e` |
+| **Total** | **68 files** | ✅ **All Passing** | `npm run test:e2e` |
 
 ### Feature → Test Coverage Map
 
@@ -1987,6 +2012,21 @@ Marketing pages support click-to-edit functionality for admins. Click the pencil
 - `AdminSidebar` - Field editor UI
 - Content stored in Supabase `page_content` table
 
+### Version History
+
+Google Docs-like revision history for all editable pages:
+
+- **20 versions per page** - Automatic cleanup of older versions
+- **One-click restore** - Revert to any previous version instantly
+- **Auto-save on edit** - Every save creates a new version
+- **Access via History button** - In admin sidebar footer
+
+**Key files:**
+- `supabase/migrations/035_*.sql` - `page_content_history` table
+- `app/api/page-content/[slug]/history/route.ts` - Version list API
+- `app/api/page-content/[slug]/restore/route.ts` - Restore API
+- `components/InlineEditor/VersionHistoryPanel.tsx` - UI component
+
 ### InlineEditContext API
 
 The `useInlineEdit()` hook provides access to editing state and functions:
@@ -2335,219 +2375,15 @@ Plus supporting utilities: MediaPickerField, shared puck-utils.ts
 
 ---
 
-## What's Next?
+## Contributing
 
 See [TODO.md](TODO.md) for the current task tracker with prioritized work items.
 
-### How to Add Features
-
-1. **Understand the architecture** - Review relevant sections above
-2. **Check existing components** - Don't reinvent the wheel (`app/components/`)
-3. **Write tests first** - Add E2E test in `app/e2e/`
-4. **Implement feature** - Follow coding standards
-5. **Test dark mode** - Run `npm run test:a11y`
-6. **Test complete flow** - Run `npm run test:e2e`
-7. **Update this README** - Add to relevant section
-
-### How to Add a Custom Hook
-
-Create reusable hooks in `app/hooks/` when logic is repeated across multiple components.
-
-**1. Create the file:**
-```bash
-touch app/hooks/useMyHook.ts
-```
-
-**2. Follow the documentation pattern:**
-```typescript
-'use client';
-
-import { useState, useEffect } from 'react';
-
-// ============================================================================
-// useMyHook Hook - [Short description]
-// ============================================================================
-// What: [What it does]
-// Why: [Why it exists - what problem it solves]
-// How: [How to use it]
-
-interface UseMyHookOptions {
-  someOption: string;
-  optionalThing?: boolean;
-}
-
-export function useMyHook({ someOption, optionalThing = false }: UseMyHookOptions) {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Your hook logic here
-
-  return { data, isLoading };
-}
-```
-
-**3. Add tests in `__tests__/hooks/`:**
-```typescript
-import { renderHook } from '@testing-library/react';
-import { useMyHook } from '@/hooks/useMyHook';
-
-describe('useMyHook', () => {
-  it('should initialize with loading false', () => {
-    const { result } = renderHook(() => useMyHook({ someOption: 'test' }));
-    expect(result.current.isLoading).toBe(false);
-  });
-});
-```
-
-**4. Document in README** - Add to the [Custom Hooks](#custom-hooks-8-files) section.
-
-**Reference hooks:** `useBackdropClose`, `useEditableContent`, `useCurrency`
-
-### How to Add a New Context
-
-Use React Context when you need shared state across multiple components without prop drilling.
-
-**1. Create the context file:**
-```bash
-touch app/context/MyContext.tsx
-```
-
-**2. Follow the context pattern:**
-```typescript
-'use client';
-
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-
-// ============================================================================
-// MyContext - [Short description of what this manages]
-// ============================================================================
-// What: [What state/functionality it provides]
-// Why: [Why components need shared access to this]
-// How: [Brief usage note]
-
-interface MyContextType {
-  someValue: string;
-  updateValue: (value: string) => void;
-}
-
-const MyContext = createContext<MyContextType | undefined>(undefined);
-
-// ============================================================================
-// MyProvider - Wrap components that need access
-// ============================================================================
-export function MyProvider({ children }: { children: ReactNode }) {
-  const [someValue, setSomeValue] = useState('default');
-
-  const updateValue = useCallback((value: string) => {
-    setSomeValue(value);
-  }, []);
-
-  return (
-    <MyContext.Provider value={{ someValue, updateValue }}>
-      {children}
-    </MyContext.Provider>
-  );
-}
-
-// ============================================================================
-// useMyContext - Hook for consuming the context
-// ============================================================================
-export function useMyContext() {
-  const context = useContext(MyContext);
-  if (!context) {
-    throw new Error('useMyContext must be used within MyProvider');
-  }
-  return context;
-}
-```
-
-**3. Add to the provider tree in `app/layout.tsx`:**
-```typescript
-<MyProvider>
-  <AuthProvider>
-    {/* other providers */}
-    {children}
-  </AuthProvider>
-</MyProvider>
-```
-
-**4. Use in components:**
-```typescript
-import { useMyContext } from '@/context/MyContext';
-
-function MyComponent() {
-  const { someValue, updateValue } = useMyContext();
-  return <button onClick={() => updateValue('new')}>{someValue}</button>;
-}
-```
-
-**Existing contexts:** `AuthContext`, `CartContext`, `ToastContext`, `InlineEditContext`
-
-### How to Add an Inline Editable Page
-
-Make any marketing page click-to-edit by following these 4 steps.
-
-**1. Add route mapping in `lib/editable-routes.ts`:**
-```typescript
-export const editableRoutes: Record<string, EditablePageSlug> = {
-  // ... existing routes
-  '/my-page': 'my-page',  // Add your route
-};
-```
-
-**2. Define content types in `lib/page-content-types.ts`:**
-```typescript
-export interface MyPageContent extends PageContent {
-  hero: {
-    title: string;
-    subtitle: string;
-  };
-  features: Array<{
-    title: string;
-    description: string;
-  }>;
-}
-
-export type EditablePageSlug = 'home' | 'services' | /* ... */ | 'my-page';
-```
-
-**3. Add defaults in `lib/default-page-content.ts`:**
-```typescript
-export const defaultMyPageContent: MyPageContent = {
-  hero: {
-    title: 'Welcome',
-    subtitle: 'Your subtitle here',
-  },
-  features: [
-    { title: 'Feature 1', description: 'Description...' },
-  ],
-};
-```
-
-**4. Use the hook in your page:**
-```typescript
-'use client';
-
-import { useEditableContent } from '@/hooks/useEditableContent';
-import { EditableSection } from '@/components/InlineEditor';
-import type { MyPageContent } from '@/lib/page-content-types';
-import { defaultMyPageContent } from '@/lib/default-page-content';
-
-export default function MyPage() {
-  const { content } = useEditableContent<MyPageContent>(defaultMyPageContent);
-
-  return (
-    <EditableSection sectionKey="hero">
-      <h1>{content.hero.title}</h1>
-      <p>{content.hero.subtitle}</p>
-    </EditableSection>
-  );
-}
-```
-
-**That's it!** The page is now click-to-edit for admins. Content saves to Supabase automatically.
-
-> **Deep Dive**: See [docs/INLINE_EDITING.md](docs/INLINE_EDITING.md) for data flow and architecture details.
+**Adding new features?** Follow the patterns in existing code:
+- **Hooks**: See `app/hooks/` for examples (`useEditableContent`, `useBackdropClose`)
+- **Contexts**: See `app/context/` for patterns (`AuthContext`, `CartContext`)
+- **Inline editing**: See [docs/INLINE_EDITING.md](docs/INLINE_EDITING.md)
+- **Coding standards**: See [.claude/rules/coding-standards.md](.claude/rules/coding-standards.md)
 
 ---
 
