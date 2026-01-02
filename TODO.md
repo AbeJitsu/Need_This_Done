@@ -31,7 +31,24 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[→] **SEO Improvements** - Fixes from swarm audit (Jan 1, 2026)
+[x] **Mobile Header Overflow Fix** - Profile icon clipped on small screens
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Issue: Logged-in profile avatar (the "B" circle) overflows viewport    │
+│  Device: Samsung Galaxy S20 Ultra (412px) and similar mobile widths    │
+│  Location: app/components/Navigation.tsx                                │
+│                                                                         │
+│  Root cause: Too many items in header competing for horizontal space:  │
+│    Logo + Hamburger + Cart + Dark Mode Toggle + Profile Avatar          │
+│    gap-4 (16px) + px-4 padding = overflow on narrow screens            │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [x] Reduce header item gap on mobile (gap-4 → gap-2 sm:gap-4)
+- [x] Move dark mode toggle to mobile menu on screens < 640px
+- [x] Add overflow-x-hidden safety to nav container
+- [ ] Test on 375px, 390px, 412px widths to verify fix
+
+[ ] **SEO Improvements** - Fixes from swarm audit (Jan 1, 2026)
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
 │  Lighthouse Scores: SEO 100%, Accessibility 100%                        │

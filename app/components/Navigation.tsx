@@ -80,7 +80,7 @@ export default function Navigation() {
           </Link>
 
           {/* Navigation Links + Auth */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 overflow-x-hidden">
             {/* Desktop Page Links - hidden on mobile/tablet */}
             <div className="hidden lg:flex gap-1">
               {navigationLinks.map((link) => {
@@ -168,8 +168,10 @@ export default function Navigation() {
               </Link>
             )}
 
-            {/* Dark Mode Toggle */}
-            <DarkModeToggle />
+            {/* Dark Mode Toggle - hidden on mobile, shown in mobile menu instead */}
+            <div className="hidden sm:block">
+              <DarkModeToggle />
+            </div>
 
             {/* Auth Section - Less prominent, for returning customers */}
             <div className="flex-shrink-0">
@@ -301,6 +303,12 @@ export default function Navigation() {
             >
               Get a Quote
             </Link>
+
+            {/* Dark Mode Toggle in mobile menu */}
+            <div className="flex items-center justify-between px-3 py-2 sm:hidden">
+              <span className={`text-sm ${navigationColors.link}`}>Dark Mode</span>
+              <DarkModeToggle />
+            </div>
 
             {/* Auth options for mobile */}
             {!isAuthenticated ? (
