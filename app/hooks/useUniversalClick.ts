@@ -16,13 +16,7 @@ import {
 // Why: Enables true universal editing - no wrappers needed
 // How: Captures clicks in edit mode → finds text in content → opens inline editor
 //
-// NEW: Opens inline TipTap editor for text fields, sidebar for arrays/objects
-
-// Fields that should use single-line input (not multi-line)
-const SINGLE_LINE_FIELDS = ['title', 'name', 'question', 'tagline', 'linkText', 'buttonText'];
-
-// Fields that should always open sidebar (complex nested content)
-const SIDEBAR_ONLY_FIELDS = ['buttons', 'cards', 'items', 'steps', 'options', 'scenarios'];
+// NEW: Sets selection state which opens the BottomEditPanel
 
 export function useUniversalClick() {
   const {
@@ -30,8 +24,6 @@ export function useUniversalClick() {
     pageContent,
     selectSection,
     selectItem,
-    setSidebarOpen,
-    openInlineEditor,
     inlineEditorState,
   } = useInlineEdit();
 
@@ -72,36 +64,8 @@ export function useUniversalClick() {
       event.preventDefault();
       event.stopPropagation();
 
-      // Determine if this is a simple text field or complex content
-      const fieldName = match.path.split('.').pop() || '';
-      const isSimpleTextField = typeof match.value === 'string';
-      const isSidebarOnlyField = SIDEBAR_ONLY_FIELDS.some(f => match.path.includes(f));
-      const isSingleLine = SINGLE_LINE_FIELDS.includes(fieldName);
-
-      // For simple text fields, open inline editor
-      if (isSimpleTextField && !isSidebarOnlyField) {
-        const rect = target.getBoundingClientRect();
-
-        // Extract section key and field path from match.path
-        const pathParts = match.path.split('.');
-        const sectionKey = pathParts[0];
-        const fieldPath = pathParts.slice(1).join('.');
-
-        openInlineEditor({
-          sectionKey,
-          fieldPath: fieldPath || '_value', // Handle root-level primitives
-          position: {
-            x: rect.left,
-            y: rect.top,
-            width: Math.max(rect.width, 300), // Minimum width for editor
-          },
-          content: match.value as string,
-          singleLine: isSingleLine,
-        });
-        return;
-      }
-
-      // For complex content, open sidebar
+      // Build selection from match - this will set selectedSection/selectedItem
+      // which triggers the BottomEditPanel to open
       const { type, selection } = buildSelectionFromMatch(match, pageContent);
 
       if (type === 'item') {
@@ -120,9 +84,9 @@ export function useUniversalClick() {
         });
       }
 
-      setSidebarOpen(true);
+      // Note: BottomEditPanel will automatically open based on selection state
     },
-    [isEditMode, pageContent, selectSection, selectItem, setSidebarOpen, openInlineEditor, inlineEditorState]
+    [isEditMode, pageContent, selectSection, selectItem, inlineEditorState]
   );
 
   useEffect(() => {

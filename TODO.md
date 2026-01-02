@@ -31,38 +31,59 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[→] **Visual Page Editor** - Inline WYSIWYG + drag-to-resize (Jan 2, 2026)
+[→] **Visual Page Editor** - Unified Bottom Panel Editor (Jan 2, 2026)
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  Transform inline editing into full visual page editor                  │
-│  • Click text → TipTap WYSIWYG appears inline (like Notion)             │
-│  • Drag handles → Resize sections, cards, text blocks (like Figma)      │
-│  • Alignment controls → Left, center, right positioning                 │
-│  • Toggle modes → Plain text vs rich text per field                     │
-│  • Security → DOMPurify sanitization for XSS protection                 │
+│  Simple interaction model:                                              │
+│    • CLICK = Edit (opens bottom panel with WYSIWYG)                     │
+│    • PRESS & HOLD = Move (drag to reorder)                              │
+│                                                                         │
+│  Bottom Panel Layout:                                                   │
+│  ┌─────────────────────────────────────────────────────────────────────┐│
+│  │ ══════════════════ drag to resize ═════════════════════════════════ ││
+│  │ Editing: [Section > Field]                    [Discard] [Save]      ││
+│  │ ─────────────────────────────────────────────────────────────────── ││
+│  │ ITEMS (if array)    │  EDITOR                                       ││
+│  │ [≡] Item 1          │  Title: [_______________]                     ││
+│  │ [≡] Item 2 ◀selected│  [B][I][U][Link][Color]                       ││
+│  │ [≡] Item 3          │  Description: [WYSIWYG area]                  ││
+│  │ [+ Add]             │                                               ││
+│  └─────────────────────────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────────────┘
 ```
-**Phase 1: Inline Text Editing** ✅
-- [x] Create InlineTextEditor.tsx (TipTap inline where clicked)
-- [x] Create FloatingToolbar.tsx (integrated in InlineTextEditor)
-- [x] Update UniversalClickHandler to route to inline editor
-- [x] Add inline editor state to InlineEditContext
-- [x] Create sanitize-html.ts (DOMPurify wrapper)
-- [x] Install TipTap color extension + DOMPurify
-- [x] Create InlineEditorOverlay.tsx (renders editor when active)
 
-**Phase 2: Drag Handle Resizing** ✅
-- [x] Create ResizableWrapper.tsx (drag handles using re-resizable)
-- [x] Create AlignmentToolbar.tsx (left/center/right controls)
-- [x] Update EditableSection with resize support
-- [x] Update EditableItem with resize support
-- [x] Add dimension/alignment fields to content schema (SectionStyles, ItemStyles)
+**Phase 1: Bottom Panel Component** ✅
+- [x] Create BottomEditPanel.tsx shell
+- [x] Add resizable height (drag handle at top)
+- [x] Add TipTap WYSIWYG editor integration
+- [x] Add form fields for non-text content (title, tagline, color)
+- [ ] Add item list sidebar for arrays (with drag-to-reorder)
+- [x] Wire panel open/close to selection state
 
-**Phase 3: Testing & Polish**
-- [ ] E2E test: inline editor opens on click
-- [ ] E2E test: formatting saves correctly
-- [ ] E2E test: resize handles work
-- [ ] Visual test: light and dark modes
+**Phase 2: Click Handling → Bottom Panel** ✅
+- [x] Modify click → opens bottom panel (not sidebar)
+- [x] Remove InlineEditorOverlay (floating editor)
+- [x] Remove AdminSidebar (replaced by bottom panel)
+- [x] Keep EditModeBar (top status bar)
+
+**Phase 3: Press & Hold to Drag**
+- [ ] Add 300ms hold detection before drag activates
+- [ ] Section drag: reorder sections on page
+- [ ] Item drag in panel: reorder items within array
+- [ ] Visual feedback: element lifts, drop zones highlight
+
+**Phase 4: Header & Footer Editing**
+- [ ] Add header config to page-config.ts (logo, nav links, CTA)
+- [ ] Add footer config to page-config.ts (links, social, copyright)
+- [ ] Create HeaderEditor view in bottom panel
+- [ ] Create FooterEditor view in bottom panel
+- [ ] Make header/footer clickable in edit mode
+
+**Phase 5: Add/Remove Items**
+- [ ] Add "+" button in panel item list
+- [ ] Add delete button for selected item
+- [ ] Confirmation modal for delete
+- [ ] Add section picker to add new sections to page
 
 [x] **Mobile Header Overflow Fix** - Profile icon clipped on small screens
 ```

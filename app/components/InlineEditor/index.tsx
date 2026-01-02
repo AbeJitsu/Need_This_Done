@@ -19,6 +19,9 @@ export { default as UniversalClickHandler } from './UniversalClickHandler';
 export { default as InlineTextEditor } from './InlineTextEditor';
 export { default as InlineEditorOverlay } from './InlineEditorOverlay';
 
+// Bottom panel editor (unified editing experience)
+export { default as BottomEditPanel } from './BottomEditPanel';
+
 // Visual editing tools (resize, alignment)
 export { default as ResizableWrapper } from './ResizableWrapper';
 export { default as AlignmentToolbar, useAlignment, getTextAlignClass, getFlexAlignClass, getBlockAlignClass } from './AlignmentToolbar';

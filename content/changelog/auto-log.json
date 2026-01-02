@@ -1,5 +1,14 @@
 [
   {
+    "hash": "5ce1226",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "5ce12266f675f06fb9bfb03e5d9f29916466eacc:%M",
+    "author": "Abe Reyes",
+    "message": "Add MongoDB to resume skills",
+    "category": "Other",
+    "filesChanged": 36
+  },
+  {
     "hash": "06e89e0",
     "date": "%Y->- (HEAD -> main)",
     "time": "06e89e051282d07d2f64a30997c05f35ae696ef2:%M",
@@ -889,14 +898,5 @@
     "message": "Refactor: Migrate close buttons to use CloseIcon component (DRY)",
     "category": "Refactoring",
     "filesChanged": 5
-  },
-  {
-    "hash": "e4a2187",
-    "date": "2025-12-31",
-    "time": "07:55",
-    "author": "Abe Reyes",
-    "message": "Refactor: Centralize card hover shadows to colors.ts (DRY)",
-    "category": "Refactoring",
-    "filesChanged": 11
   }
 ]
