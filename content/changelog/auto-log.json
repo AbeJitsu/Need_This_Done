@@ -1,5 +1,32 @@
 [
   {
+    "hash": "1dce065",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "1dce06543f700a091828e7a50dd4413f441595f1:%M",
+    "author": "Abe Reyes",
+    "message": "Add cover letter system and PDF quality settings",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
+    "hash": "258609d",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "258609d66200590724063908e9f854e95e64d54f:%M",
+    "author": "Abe Reyes",
+    "message": "Add Python skills and Acadio experience, balance page 2 spacing",
+    "category": "Other",
+    "filesChanged": 3
+  },
+  {
+    "hash": "da27faa",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "da27faa55cbf3c9661aa5fc5b71ef49686331f8c:%M",
+    "author": "Abe Reyes",
+    "message": "Fix unused variable TypeScript errors in BottomEditPanel",
+    "category": "Other",
+    "filesChanged": 4
+  },
+  {
     "hash": "235a4b4",
     "date": "%Y->- (HEAD -> main)",
     "time": "235a4b4a4b12224832f05d1d6e53d154d95ddedd:%M",
@@ -871,32 +898,5 @@
     "message": "Refactor: Centralize Stripe appearance colors to colors.ts",
     "category": "Refactoring",
     "filesChanged": 5
-  },
-  {
-    "hash": "4210017",
-    "date": "2025-12-31",
-    "time": "08:09",
-    "author": "Abe Reyes",
-    "message": "Refactor: Extract object-utils for nested value operations (DRY)",
-    "category": "Refactoring",
-    "filesChanged": 6
-  },
-  {
-    "hash": "8d7af38",
-    "date": "2025-12-31",
-    "time": "08:04",
-    "author": "Abe Reyes",
-    "message": "Docs: Update TODO.md - all DRY violations section complete",
-    "category": "Documentation",
-    "filesChanged": 2
-  },
-  {
-    "hash": "fdfa61c",
-    "date": "2025-12-31",
-    "time": "08:03",
-    "author": "Abe Reyes",
-    "message": "Refactor: Extract formatPrice utility to lib/format.ts (DRY)",
-    "category": "Refactoring",
-    "filesChanged": 6
   }
 ]

@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import {
   AccentColor,
@@ -11,6 +13,7 @@ import {
   cardBorderColors,
 } from '@/lib/colors';
 import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
+import { Editable } from '@/components/InlineEditor';
 
 // ============================================================================
 // ServiceCard Component
@@ -28,6 +31,8 @@ interface ServiceCardProps {
   variant?: 'compact' | 'full';
   href?: string;
   onClick?: () => void;
+  /** Base path for inline editing, e.g., "services.cards.0" */
+  editBasePath?: string;
 }
 
 export default function ServiceCard({
@@ -39,6 +44,7 @@ export default function ServiceCard({
   variant = 'full',
   href,
   onClick,
+  editBasePath,
 }: ServiceCardProps) {
   const isCompact = variant === 'compact';
 
@@ -47,18 +53,28 @@ export default function ServiceCard({
     ? details.split(',').map(s => s.trim()).filter(s => s.length > 0)
     : [];
 
+  // Helper to wrap content in Editable if editBasePath is provided
+  const editable = (field: string, children: React.ReactNode) => {
+    if (!editBasePath) return children;
+    return <Editable path={`${editBasePath}.${field}`}>{children}</Editable>;
+  };
+
   const cardContent = (
     <div className="flex flex-col h-full">
-      <h2 className={`font-bold mb-3 text-xl ${titleColors[color]}`}>
-        {title}
-      </h2>
+      {editable('title', (
+        <h2 className={`font-bold mb-3 text-xl ${titleColors[color]}`}>
+          {title}
+        </h2>
+      ))}
 
       {isCompact ? (
         // Compact: Just tagline as teaser
         <>
-          <p className={`${formInputColors.helper} text-base`}>
-            {tagline}
-          </p>
+          {editable('tagline', (
+            <p className={`${formInputColors.helper} text-base`}>
+              {tagline}
+            </p>
+          ))}
           <p className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]}`}>
             Learn more →
           </p>
@@ -66,9 +82,11 @@ export default function ServiceCard({
       ) : (
         // Full: Description + bullet points
         <>
-          <p className={`${formInputColors.helper} text-base mb-4`}>
-            {description}
-          </p>
+          {editable('description', (
+            <p className={`${formInputColors.helper} text-base mb-4`}>
+              {description}
+            </p>
+          ))}
 
           {detailsList.length > 0 && (
             <ul className="space-y-2 mt-auto">

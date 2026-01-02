@@ -78,7 +78,27 @@ export interface PendingChange {
 }
 
 // ============================================================================
-// Types - Inline Text Editor State
+// Types - Active Edit State (new simple approach)
+// ============================================================================
+
+export interface ActiveEdit {
+  // The DOM element being edited
+  element: HTMLElement;
+  // Section key (e.g., "hero", "services")
+  sectionKey: string;
+  // Field path within section (e.g., "title", "cards.0.description")
+  fieldPath: string;
+  // Full path for reference (e.g., "hero.title")
+  fullPath: string;
+  // Original content for cancel/undo
+  originalContent: string;
+  // For links: the href field path and original value
+  hrefFieldPath?: string;
+  originalHref?: string;
+}
+
+// ============================================================================
+// Types - Inline Text Editor State (legacy - being replaced)
 // ============================================================================
 
 export interface InlineEditorState {
@@ -180,7 +200,28 @@ interface InlineEditContextType {
   // Reorder items within an array (for nested drag-and-drop)
   reorderItems: ((sectionKey: string, arrayField: string, oldIndex: number, newIndex: number) => void) | null;
 
-  // ========== Inline Text Editor (Notion-style) ==========
+  // ========== Simple Inline Editing (new approach) ==========
+
+  // Current active edit (element being edited)
+  activeEdit: ActiveEdit | null;
+
+  // Start editing an element
+  startEditing: (params: {
+    element: HTMLElement;
+    sectionKey: string;
+    fieldPath: string;
+    fullPath: string;
+    hrefFieldPath?: string;
+    originalHref?: string;
+  }) => void;
+
+  // Save current edit and close (optionally with href for links)
+  saveEdit: (newContent: string, newHref?: string) => void;
+
+  // Cancel edit without saving
+  cancelEdit: () => void;
+
+  // ========== Inline Text Editor (legacy - being replaced) ==========
 
   // State for the inline text editor
   inlineEditorState: InlineEditorState | null;
@@ -242,7 +283,10 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
   const [selectedComponent, setSelectedComponent] = useState<ComponentSelection | null>(null);
   const [pageData, setPageData] = useState<Record<string, unknown> | null>(null);
 
-  // Inline text editor state (Notion-style)
+  // Simple inline editing state (new approach)
+  const [activeEdit, setActiveEdit] = useState<ActiveEdit | null>(null);
+
+  // Inline text editor state (Notion-style) - legacy
   const [inlineEditorState, setInlineEditorState] = useState<InlineEditorState | null>(null);
 
   // Section ordering for drag-and-drop
@@ -473,7 +517,57 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
   }, [pageContent, selectedItem, addPendingChange]);
 
   // ============================================================================
-  // Inline Text Editor Functions
+  // Simple Inline Editing Functions (new approach)
+  // ============================================================================
+
+  const startEditing = useCallback((params: {
+    element: HTMLElement;
+    sectionKey: string;
+    fieldPath: string;
+    fullPath: string;
+    hrefFieldPath?: string;
+    originalHref?: string;
+  }) => {
+    // Get current content from the element or from page content
+    const currentValue = getFieldValue(params.sectionKey, params.fieldPath);
+    const originalContent = typeof currentValue === 'string' ? currentValue : params.element.innerHTML;
+
+    setActiveEdit({
+      element: params.element,
+      sectionKey: params.sectionKey,
+      fieldPath: params.fieldPath,
+      fullPath: params.fullPath,
+      originalContent,
+      hrefFieldPath: params.hrefFieldPath,
+      originalHref: params.originalHref,
+    });
+
+    // Close sidebar when editing inline
+    setIsSidebarOpen(false);
+  }, [getFieldValue]);
+
+  const saveEdit = useCallback((newContent: string, newHref?: string) => {
+    if (!activeEdit) return;
+
+    // Only update if content changed
+    if (newContent !== activeEdit.originalContent) {
+      updateField(activeEdit.sectionKey, activeEdit.fieldPath, newContent);
+    }
+
+    // Also update href if provided and changed
+    if (newHref !== undefined && activeEdit.hrefFieldPath && newHref !== activeEdit.originalHref) {
+      updateField(activeEdit.sectionKey, activeEdit.hrefFieldPath, newHref);
+    }
+
+    setActiveEdit(null);
+  }, [activeEdit, updateField]);
+
+  const cancelEdit = useCallback(() => {
+    setActiveEdit(null);
+  }, []);
+
+  // ============================================================================
+  // Inline Text Editor Functions (legacy - being replaced)
   // ============================================================================
 
   const openInlineEditor = useCallback((params: {
@@ -570,7 +664,12 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     unregisterSection,
     // Item reordering (nested drag-and-drop)
     reorderItems,
-    // Inline text editor (Notion-style)
+    // Simple inline editing (new approach)
+    activeEdit,
+    startEditing,
+    saveEdit,
+    cancelEdit,
+    // Inline text editor (legacy)
     inlineEditorState,
     openInlineEditor,
     closeInlineEditor,

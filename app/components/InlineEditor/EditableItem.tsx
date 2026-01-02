@@ -130,6 +130,14 @@ export default function EditableItem({
   const handleClick = (e: React.MouseEvent) => {
     if (!isEditMode) return;
 
+    // Check if clicking on an inline Editable element - let those pass through
+    const target = e.target as HTMLElement;
+    const editablePath = target.closest('[data-edit-path]');
+    if (editablePath) {
+      // Let Editable handle this click for inline editing
+      return;
+    }
+
     // Stop propagation so section doesn't get selected
     e.stopPropagation();
     // Prevent default to block Link navigation, form submissions, etc.

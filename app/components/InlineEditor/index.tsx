@@ -12,15 +12,15 @@ export { default as EditModeTutorial } from './EditModeTutorial';
 export { default as SortableSections } from './SortableSections';
 export { default as SortableItemsWrapper } from './SortableItemsWrapper';
 
-// Universal click-to-edit (Phase 4 - click any text to edit)
-export { default as UniversalClickHandler } from './UniversalClickHandler';
-
-// Inline text editor (Notion-style - click text to edit in place)
+// Inline text editor (click text to edit in place with TipTap)
 export { default as InlineTextEditor } from './InlineTextEditor';
-export { default as InlineEditorOverlay } from './InlineEditorOverlay';
 
-// Bottom panel editor (unified editing experience)
-export { default as BottomEditPanel } from './BottomEditPanel';
+// Editable wrapper - wrap any element to make it editable
+export { default as Editable } from './Editable';
+
+// Choice menu - context menu for edit mode actions (edit card vs edit modal)
+export { default as ChoiceMenu } from './ChoiceMenu';
+export type { ChoiceOption } from './ChoiceMenu';
 
 // Visual editing tools (resize, alignment)
 export { default as ResizableWrapper } from './ResizableWrapper';

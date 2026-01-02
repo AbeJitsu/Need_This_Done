@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import { serviceModalContentMap, resolveServiceType } from '@/lib/service-modal-content';
 import type { ServiceModalContent, ServiceType } from '@/lib/service-modal-content';
+import type { ServiceModalContent as PageModalContent } from '@/lib/page-config';
 
 // ============================================================================
 // Service Modal Context
@@ -10,12 +11,25 @@ import type { ServiceModalContent, ServiceType } from '@/lib/service-modal-conte
 // What: Manages service detail modal state across the app
 // Why: ServiceCards on any page can open a detailed modal with friendly info
 // How: Context provider pattern (same as CartContext, ChatbotWidget)
+//
+// Modal content priority:
+// 1. Page content passed via openModalWithContent - allows inline editing
+// 2. Static content from service-modal-content.ts - fallback
+
+// Extended modal content with card index for inline editing
+export interface EditableServiceModal extends ServiceModalContent {
+  cardIndex?: number;
+}
 
 interface ServiceModalContextType {
   isOpen: boolean;
-  activeService: ServiceModalContent | null;
+  activeService: EditableServiceModal | null;
   activeServiceType: ServiceType | null;
+  cardIndex: number | null;
+  // Original method - uses static content
   openModal: (serviceIdentifier: string) => void;
+  // New method - uses page content for inline editing
+  openModalWithContent: (title: string, cardIndex: number, modal: PageModalContent) => void;
   closeModal: () => void;
 }
 
@@ -24,25 +38,23 @@ const ServiceModalContext = createContext<ServiceModalContextType | undefined>(u
 // ============================================================================
 // Service Modal Provider
 // ============================================================================
-// Note: Title-to-type mapping moved to lib/service-modal-content.ts (single source of truth)
 
 export function ServiceModalProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeService, setActiveService] = useState<ServiceModalContent | null>(null);
+  const [activeService, setActiveService] = useState<EditableServiceModal | null>(null);
   const [activeServiceType, setActiveServiceType] = useState<ServiceType | null>(null);
+  const [cardIndex, setCardIndex] = useState<number | null>(null);
 
   // ========================================================================
-  // Open modal with service content
+  // Open modal with static content (fallback)
   // ========================================================================
-  // Accepts either service ID ('virtual-assistant') or title ('Virtual Assistant')
   const openModal = useCallback((serviceIdentifier: string) => {
-    // Use centralized resolver from lib/service-modal-content.ts
-    // Handles both title ('Virtual Assistant') and type ('virtual-assistant') lookups
     const serviceType = resolveServiceType(serviceIdentifier);
 
     if (serviceType) {
       setActiveService(serviceModalContentMap[serviceType]);
       setActiveServiceType(serviceType);
+      setCardIndex(null);
       setIsOpen(true);
     } else {
       console.warn(`[ServiceModal] No content found for: ${serviceIdentifier}`);
@@ -50,14 +62,36 @@ export function ServiceModalProvider({ children }: { children: React.ReactNode }
   }, []);
 
   // ========================================================================
+  // Open modal with page content (for inline editing)
+  // ========================================================================
+  const openModalWithContent = useCallback((title: string, index: number, modal: PageModalContent) => {
+    const serviceType = resolveServiceType(title);
+
+    // Convert page modal content to ServiceModalContent format
+    const content: EditableServiceModal = {
+      title,
+      headline: modal.headline,
+      hook: modal.hook,
+      bulletPoints: modal.bulletPoints,
+      ctas: modal.ctas,
+      cardIndex: index,
+    };
+
+    setActiveService(content);
+    setActiveServiceType(serviceType || null);
+    setCardIndex(index);
+    setIsOpen(true);
+  }, []);
+
+  // ========================================================================
   // Close modal
   // ========================================================================
   const closeModal = useCallback(() => {
     setIsOpen(false);
-    // Small delay before clearing content for smooth animation
     setTimeout(() => {
       setActiveService(null);
       setActiveServiceType(null);
+      setCardIndex(null);
     }, 300);
   }, []);
 
@@ -67,7 +101,9 @@ export function ServiceModalProvider({ children }: { children: React.ReactNode }
         isOpen,
         activeService,
         activeServiceType,
+        cardIndex,
         openModal,
+        openModalWithContent,
         closeModal,
       }}
     >

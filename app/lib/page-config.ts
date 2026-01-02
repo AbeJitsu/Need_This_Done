@@ -241,6 +241,17 @@ export interface ConsultationOption {
   color: AccentVariant;
 }
 
+/** Modal content structure for service cards */
+export interface ServiceModalContent {
+  headline: string;
+  hook: string;
+  bulletPoints: string[];
+  ctas: {
+    primary: { text: string; href: string };
+    secondary: { text: string; href: string };
+  };
+}
+
 export interface HomeServiceCard {
   title: string;
   tagline: string;
@@ -249,6 +260,8 @@ export interface HomeServiceCard {
   color: AccentVariant;
   /** Visual editor styles for this service card */
   styles?: ItemStyles;
+  /** Modal content shown when "Learn more" is clicked */
+  modal?: ServiceModalContent;
 }
 
 export interface HomePageContent {
@@ -468,6 +481,20 @@ export const PAGE_CONFIGS = {
             description: 'Let us handle the day-to-day tasks that eat up your time. Email, scheduling, research, bookings, and social media posting.',
             details: 'Email Management, Calendar Coordination, Research & Bookings, Social Media Posting',
             color: 'green',
+            modal: {
+              headline: 'Your time is valuable. Let us handle the tasks that eat up your day.',
+              hook: 'We take care of the details so you can focus on what actually moves your business forward.',
+              bulletPoints: [
+                'Email management and inbox organization',
+                'Calendar coordination and scheduling',
+                'Research projects and data gathering',
+                'Travel planning and booking',
+              ],
+              ctas: {
+                primary: { text: 'See All Services', href: '/services' },
+                secondary: { text: 'Get a Quote', href: '/contact' },
+              },
+            },
           },
           {
             title: 'Data & Documents',
@@ -475,6 +502,20 @@ export const PAGE_CONFIGS = {
             description: 'From messy spreadsheets to polished reports. We organize, format, and prepare your documents so they look professional.',
             details: 'Spreadsheets & Data Entry, Reports & Presentations, Document Formatting, File Organization',
             color: 'blue',
+            modal: {
+              headline: 'Messy spreadsheets and formatting nightmares? We turn chaos into clarity.',
+              hook: 'We make your documents look professional and work better. No judgment, just results.',
+              bulletPoints: [
+                'Spreadsheet cleanup and organization',
+                'Data entry and formatting',
+                'Report and presentation design',
+                'Document templates and file organization',
+              ],
+              ctas: {
+                primary: { text: 'See All Services', href: '/services' },
+                secondary: { text: 'Get a Quote', href: '/contact' },
+              },
+            },
           },
           {
             title: 'Website Services',
@@ -482,6 +523,20 @@ export const PAGE_CONFIGS = {
             description: 'From new builds to updates and maintenance. We handle websites of any size on any platform, so you can focus on your business.',
             details: 'Website Builds & Redesigns, Content Updates, E-commerce Setup, Ongoing Maintenance',
             color: 'purple',
+            modal: {
+              headline: 'Your website should work for you, not give you a headache.',
+              hook: 'You focus on your business. We handle the tech. Plain language, clear answers.',
+              bulletPoints: [
+                'New website builds and redesigns',
+                'Content updates and page edits',
+                'E-commerce setup and product management',
+                'Ongoing maintenance and support',
+              ],
+              ctas: {
+                primary: { text: 'See All Services', href: '/services' },
+                secondary: { text: 'Get a Quote', href: '/contact' },
+              },
+            },
           },
         ],
       },

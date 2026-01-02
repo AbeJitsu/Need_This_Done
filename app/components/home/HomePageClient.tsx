@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
-import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
+import { EditableSection, EditableItem, SortableItemsWrapper, Editable } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import {
   formInputColors,
@@ -44,12 +44,16 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       {/* Hero Section */}
       <EditableSection sectionKey="hero" label="Hero Section">
         <div className="text-center mb-16">
-          <h1 className={`text-5xl md:text-6xl font-bold tracking-tight ${titleColors.blue} mb-4`}>
-            {content.hero.title}
-          </h1>
-          <p className={`text-xl ${formInputColors.helper} leading-relaxed mb-6 max-w-3xl mx-auto`}>
-            {content.hero.description}
-          </p>
+          <Editable path="hero.title">
+            <h1 className={`text-5xl md:text-6xl font-bold tracking-tight ${titleColors.blue} mb-4`}>
+              {content.hero.title}
+            </h1>
+          </Editable>
+          <Editable path="hero.description">
+            <p className={`text-xl ${formInputColors.helper} leading-relaxed mb-6 max-w-3xl mx-auto`}>
+              {content.hero.description}
+            </p>
+          </Editable>
           <SortableItemsWrapper
             sectionKey="hero"
             arrayField="buttons"
@@ -67,9 +71,15 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 sortable
                 sortId={`hero-btn-${index}`}
               >
-                <Button variant={button.variant} href={button.href}>
-                  {button.text}
-                </Button>
+                <Editable
+                  path={`hero.buttons.${index}.text`}
+                  hrefPath={`hero.buttons.${index}.href`}
+                  href={button.href}
+                >
+                  <Button variant={button.variant} href={button.href}>
+                    {button.text}
+                  </Button>
+                </Editable>
               </EditableItem>
             ))}
           </SortableItemsWrapper>
@@ -79,14 +89,16 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       {/* Services Section */}
       <EditableSection sectionKey="services" label="Services">
         <div className="mb-10">
-          <Link href={content.services.linkHref} className="block group">
+          <Editable path="services.title">
             <h2
-              className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center ${groupHoverColors.green} transition-colors`}
+              className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center ${groupHoverColors.green} transition-colors cursor-pointer`}
             >
-              {content.services.title}{' '}
-              <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+              <Link href={content.services.linkHref} className="group">
+                {content.services.title}{' '}
+                <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+              </Link>
             </h2>
-          </Link>
+          </Editable>
           <SortableItemsWrapper
             sectionKey="services"
             arrayField="cards"
@@ -111,6 +123,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   details={service.details}
                   color={service.color as 'blue' | 'purple' | 'green'}
                   variant="compact"
+                  editBasePath={`services.cards.${index}`}
+                  cardIndex={index}
+                  modal={service.modal}
                 />
               </EditableItem>
             ))}
@@ -226,12 +241,16 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       {/* CTA Section */}
       <EditableSection sectionKey="cta" label="Call to Action">
         <div className={`text-center py-12 px-6 ${neutralAccentBg.gray} rounded-2xl`}>
-          <h2 className={`text-3xl font-bold ${headingColors.primary} mb-4`}>
-            {content.cta.title}
-          </h2>
-          <p className={`text-lg ${formInputColors.helper} mb-6 max-w-2xl mx-auto`}>
-            {content.cta.description}
-          </p>
+          <Editable path="cta.title">
+            <h2 className={`text-3xl font-bold ${headingColors.primary} mb-4`}>
+              {content.cta.title}
+            </h2>
+          </Editable>
+          <Editable path="cta.description">
+            <p className={`text-lg ${formInputColors.helper} mb-6 max-w-2xl mx-auto`}>
+              {content.cta.description}
+            </p>
+          </Editable>
           <SortableItemsWrapper
             sectionKey="cta"
             arrayField="buttons"
@@ -249,9 +268,15 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 sortable
                 sortId={`cta-btn-${index}`}
               >
-                <Button variant={button.variant} href={button.href}>
-                  {button.text}
-                </Button>
+                <Editable
+                  path={`cta.buttons.${index}.text`}
+                  hrefPath={`cta.buttons.${index}.href`}
+                  href={button.href}
+                >
+                  <Button variant={button.variant} href={button.href}>
+                    {button.text}
+                  </Button>
+                </Editable>
               </EditableItem>
             ))}
           </SortableItemsWrapper>

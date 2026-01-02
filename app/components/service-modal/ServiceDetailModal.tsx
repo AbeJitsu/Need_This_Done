@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useServiceModal } from '@/context/ServiceModalContext';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import { useBackdropClose } from '@/hooks/useBackdropClose';
 import {
   cardBgColors,
@@ -16,6 +17,7 @@ import {
 import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
 import { CloseIcon } from '@/components/ui/icons';
 import { serviceColors } from '@/lib/service-colors';
+import { Editable } from '@/components/InlineEditor';
 
 // ============================================================================
 // Service Detail Modal - Teaser Format
@@ -23,9 +25,13 @@ import { serviceColors } from '@/lib/service-colors';
 // What: Compact overlay modal with brief service preview
 // Why: Sparks curiosity and drives users to the services page for full details
 // How: Uses ServiceModalContext for state, shows headline + 3 bullets + 2 CTAs
+//
+// Inline Editing: When cardIndex is available, modal content is editable.
+// Editable fields: headline, hook, bulletPoints, CTA text
 
 export default function ServiceDetailModal() {
-  const { isOpen, activeService, activeServiceType, closeModal } = useServiceModal();
+  const { isOpen, activeService, activeServiceType, cardIndex, closeModal } = useServiceModal();
+  const { isEditMode } = useInlineEdit();
   const { handleBackdropClick, modalRef } = useBackdropClose({
     isOpen,
     onClose: closeModal,
@@ -34,6 +40,16 @@ export default function ServiceDetailModal() {
 
   // Get the accent color for current service
   const color = activeServiceType ? serviceColors[activeServiceType] : 'blue';
+
+  // Can we edit this modal? Only if we have a card index (from page content)
+  const canEdit = isEditMode && cardIndex !== null;
+
+  // Helper to wrap content in Editable when editing
+  const editable = (field: string, children: React.ReactNode) => {
+    if (!canEdit) return children;
+    const basePath = `services.cards.${cardIndex}.modal`;
+    return <Editable path={`${basePath}.${field}`}>{children}</Editable>;
+  };
 
   // Don't render if closed or no content
   if (!isOpen || !activeService) return null;
@@ -92,12 +108,16 @@ export default function ServiceDetailModal() {
             >
               {activeService.title}
             </h2>
-            <p className={`text-xl font-medium ${headingColors.primary} mb-2`}>
-              {activeService.headline}
-            </p>
-            <p className={`${headingColors.secondary} text-base`}>
-              {activeService.hook}
-            </p>
+            {editable('headline', (
+              <p className={`text-xl font-medium ${headingColors.primary} mb-2`}>
+                {activeService.headline}
+              </p>
+            ))}
+            {editable('hook', (
+              <p className={`${headingColors.secondary} text-base`}>
+                {activeService.hook}
+              </p>
+            ))}
           </div>
 
           {/* ================================================================
@@ -113,9 +133,9 @@ export default function ServiceDetailModal() {
                 {activeService.bulletPoints.map((point, index) => (
                   <li key={index} className={`flex items-start gap-3 ${headingColors.secondary}`}>
                     <CheckmarkCircle color={color} size="sm" className="mt-0.5" />
-                    <span>
-                      {point}
-                    </span>
+                    {editable(`bulletPoints.${index}`, (
+                      <span>{point}</span>
+                    ))}
                   </li>
                 ))}
               </ul>
@@ -127,30 +147,66 @@ export default function ServiceDetailModal() {
             {/* CTA buttons - Primary goes to services, Secondary to contact */}
             <div className="flex flex-col sm:flex-row gap-3">
               {/* Primary CTA - See All Services */}
-              <Link
-                href={activeService.ctas.primary.href}
-                onClick={closeModal}
-                className={`
-                  flex-1 text-center py-3 px-6 rounded-xl font-semibold
-                  transition-all duration-200
-                  ${solidButtonColors[color].bg} ${solidButtonColors[color].hover} ${solidButtonColors[color].text}
-                `}
-              >
-                {activeService.ctas.primary.text}
-              </Link>
+              {canEdit ? (
+                <Editable
+                  path={`services.cards.${cardIndex}.modal.ctas.primary.text`}
+                  hrefPath={`services.cards.${cardIndex}.modal.ctas.primary.href`}
+                  href={activeService.ctas.primary.href}
+                >
+                  <span
+                    className={`
+                      flex-1 text-center py-3 px-6 rounded-xl font-semibold
+                      transition-all duration-200
+                      ${solidButtonColors[color].bg} ${solidButtonColors[color].hover} ${solidButtonColors[color].text}
+                    `}
+                  >
+                    {activeService.ctas.primary.text}
+                  </span>
+                </Editable>
+              ) : (
+                <Link
+                  href={activeService.ctas.primary.href}
+                  onClick={closeModal}
+                  className={`
+                    flex-1 text-center py-3 px-6 rounded-xl font-semibold
+                    transition-all duration-200
+                    ${solidButtonColors[color].bg} ${solidButtonColors[color].hover} ${solidButtonColors[color].text}
+                  `}
+                >
+                  {activeService.ctas.primary.text}
+                </Link>
+              )}
 
               {/* Secondary CTA - Get a Quote */}
-              <Link
-                href={activeService.ctas.secondary.href}
-                onClick={closeModal}
-                className={`
-                  flex-1 text-center py-3 px-6 rounded-xl font-semibold
-                  border-2 transition-all duration-200
-                  ${outlineButtonColors[color].base} ${outlineButtonColors[color].hover}
-                `}
-              >
-                {activeService.ctas.secondary.text}
-              </Link>
+              {canEdit ? (
+                <Editable
+                  path={`services.cards.${cardIndex}.modal.ctas.secondary.text`}
+                  hrefPath={`services.cards.${cardIndex}.modal.ctas.secondary.href`}
+                  href={activeService.ctas.secondary.href}
+                >
+                  <span
+                    className={`
+                      flex-1 text-center py-3 px-6 rounded-xl font-semibold
+                      border-2 transition-all duration-200
+                      ${outlineButtonColors[color].base} ${outlineButtonColors[color].hover}
+                    `}
+                  >
+                    {activeService.ctas.secondary.text}
+                  </span>
+                </Editable>
+              ) : (
+                <Link
+                  href={activeService.ctas.secondary.href}
+                  onClick={closeModal}
+                  className={`
+                    flex-1 text-center py-3 px-6 rounded-xl font-semibold
+                    border-2 transition-all duration-200
+                    ${outlineButtonColors[color].base} ${outlineButtonColors[color].hover}
+                  `}
+                >
+                  {activeService.ctas.secondary.text}
+                </Link>
+              )}
             </div>
           </div>
         </div>

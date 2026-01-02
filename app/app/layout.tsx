@@ -12,7 +12,7 @@ import { ToastProvider } from '@/context/ToastContext';
 import { InlineEditProvider } from '@/context/InlineEditContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
-import { AdminSidebarToggle, EditModeBar, EditModeTutorial, UniversalClickHandler, BottomEditPanel } from '@/components/InlineEditor';
+import { AdminSidebarToggle, EditModeBar, EditModeTutorial, InlineTextEditor } from '@/components/InlineEditor';
 import { LocalBusinessJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
 import { seoConfig } from '@/lib/seo-config';
 
@@ -222,10 +222,9 @@ export default function RootLayout({
                     {/* Service detail modal - available on all pages */}
                     <ServiceDetailModal />
 
-                    {/* Inline editing - floating toggle button + bottom panel for admins */}
+                    {/* Inline editing - click any text to edit it directly */}
                     <AdminSidebarToggle />
-                    <UniversalClickHandler />
-                    <BottomEditPanel />
+                    <InlineTextEditor />
 
                     {/* Edit mode tutorial - shows on first edit mode activation */}
                     <EditModeTutorial />

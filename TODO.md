@@ -31,59 +31,52 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[→] **Visual Page Editor** - Unified Bottom Panel Editor (Jan 2, 2026)
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│  Simple interaction model:                                              │
-│    • CLICK = Edit (opens bottom panel with WYSIWYG)                     │
-│    • PRESS & HOLD = Move (drag to reorder)                              │
-│                                                                         │
-│  Bottom Panel Layout:                                                   │
-│  ┌─────────────────────────────────────────────────────────────────────┐│
-│  │ ══════════════════ drag to resize ═════════════════════════════════ ││
-│  │ Editing: [Section > Field]                    [Discard] [Save]      ││
-│  │ ─────────────────────────────────────────────────────────────────── ││
-│  │ ITEMS (if array)    │  EDITOR                                       ││
-│  │ [≡] Item 1          │  Title: [_______________]                     ││
-│  │ [≡] Item 2 ◀selected│  [B][I][U][Link][Color]                       ││
-│  │ [≡] Item 3          │  Description: [WYSIWYG area]                  ││
-│  │ [+ Add]             │                                               ││
-│  └─────────────────────────────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────────────────────────────┘
-```
+[→] **Visual Page Editor** - TinyMCE/Puck Hybrid (Jan 2, 2026)
 
-**Phase 1: Bottom Panel Component** ✅
-- [x] Create BottomEditPanel.tsx shell
-- [x] Add resizable height (drag handle at top)
-- [x] Add TipTap WYSIWYG editor integration
-- [x] Add form fields for non-text content (title, tagline, color)
-- [ ] Add item list sidebar for arrays (with drag-to-reorder)
-- [x] Wire panel open/close to selection state
+**10 FEATURES REQUIRED:**
 
-**Phase 2: Click Handling → Bottom Panel** ✅
-- [x] Modify click → opens bottom panel (not sidebar)
-- [x] Remove InlineEditorOverlay (floating editor)
-- [x] Remove AdminSidebar (replaced by bottom panel)
-- [x] Keep EditModeBar (top status bar)
+**1. Click any text → edit inline** [→ BROKEN]
+- CURRENT: Hero title/description show TipTap editor. Buttons do NOT work.
+- WANT: ALL text editable - titles, descriptions, AND button labels
+- ISSUE: Buttons wrapped in EditableItem (sidebar system) not Editable (inline system)
 
-**Phase 3: Press & Hold to Drag**
-- [ ] Add 300ms hold detection before drag activates
-- [ ] Section drag: reorder sections on page
-- [ ] Item drag in panel: reorder items within array
-- [ ] Visual feedback: element lifts, drop zones highlight
+**2. Click button → edit inline**
+- CURRENT: Sidebar is broken/not working. No way to edit button label.
+- WANT: Click "Book a Consultation" button → edit the button text inline → change href too.
 
-**Phase 4: Header & Footer Editing**
-- [ ] Add header config to page-config.ts (logo, nav links, CTA)
-- [ ] Add footer config to page-config.ts (links, social, copyright)
-- [ ] Create HeaderEditor view in bottom panel
-- [ ] Create FooterEditor view in bottom panel
-- [ ] Make header/footer clickable in edit mode
+**3. Add/replace images**
+- CURRENT: No image editing at all.
+- WANT: Click image → option to upload new image or enter URL.
 
-**Phase 5: Add/Remove Items**
-- [ ] Add "+" button in panel item list
-- [ ] Add delete button for selected item
-- [ ] Confirmation modal for delete
-- [ ] Add section picker to add new sections to page
+**4. Click anywhere → add content**
+- CURRENT: Can only edit existing content.
+- WANT: Click empty space → menu appears → choose: text, image, or component → it appears there.
+
+**5. Drag to reorder**
+- CURRENT: Drag handles exist but not working.
+- WANT: Grab any section/card → drag up/down → drops in new position → saves automatically.
+
+**6. Resize by dragging**
+- CURRENT: No resize functionality.
+- WANT: Drag edge of any element → resize it → saves automatically.
+
+**7. Edit header navigation**
+- CURRENT: Header is not editable.
+- WANT: Click nav link → change text/href. Add/remove nav items.
+
+**8. Edit footer**
+- CURRENT: Footer is not editable.
+- WANT: Click footer text → edit inline. Change links, copyright, etc.
+
+**9. Edit mode bar position**
+- CURRENT: Horizontal bar at top covers the header.
+- WANT: Either (a) vertical bar on left side, or (b) push header down below the edit bar.
+
+**10. Simple like TinyMCE**
+- CURRENT: Multiple overlapping systems (EditableSection, EditableItem, Editable, sidebar). Confusing.
+- WANT: ONE system. Click = edit. No modes to understand. Obvious to anyone.
+
+**STATUS: 0/10 working. All code written is scaffolding that doesn't deliver the experience.**
 
 [x] **Mobile Header Overflow Fix** - Profile icon clipped on small screens
 ```
