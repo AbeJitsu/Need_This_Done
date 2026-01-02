@@ -371,7 +371,7 @@ export interface ChangelogPageContent {
 }
 
 // --- Guide Page ---
-export type GuideGroup = 'getting-started' | 'account' | 'explore' | 'support';
+export type GuideGroup = 'getting-started' | 'account' | 'explore' | 'admin' | 'support';
 export interface GuideSection {
   title: string;
   content: string;
@@ -926,6 +926,7 @@ export const PAGE_CONFIGS = {
         { title: 'Your Dashboard', icon: '📊', group: 'account', content: 'Once logged in, your dashboard is your home base:\n\n• View all your orders and their current status\n• Track consultation bookings and upcoming appointments\n• Access order details and receipts\n• Update your account settings and preferences' },
         { title: 'Explore Our Content', icon: '📚', group: 'explore', content: 'Stay informed with our regularly updated content:\n\n• Blog: Tips, insights, and industry updates\n• Changelog: Latest platform features and improvements\n• How It Works: Step-by-step breakdown of our process\n• FAQ: Quick answers to common questions' },
         { title: 'Dark Mode', icon: '🌙', group: 'explore', content: 'Prefer a darker interface? We\'ve got you covered:\n\n• Click the sun/moon icon in the header to toggle dark mode\n• Your preference is saved automatically\n• All pages are optimized for both light and dark viewing\n• Designed to meet accessibility standards (WCAG AA)' },
+        { title: 'Visual Editor (Admin)', icon: '✏️', group: 'admin', content: 'Admins can edit page content directly in the browser:\n\n**Click to Edit**\n• Click any text on a page to edit it inline\n• A formatting toolbar appears with bold, italic, links, and more\n• Changes save automatically when you click away\n\n**Sections & Cards**\n• Hover over sections to see blue outlines\n• Click a section to open the sidebar editor\n• Edit titles, descriptions, and settings in one place\n\n**Drag to Reorder**\n• Grab the drag handle (⋮⋮) on any section\n• Drag up or down to reorder page sections\n• Drop to save the new order instantly\n\n**Tips**\n• Press ESC to cancel without saving\n• Use the sidebar for complex edits\n• All changes are live immediately' },
         { title: 'Get in Touch', icon: '💬', group: 'support', content: 'Have questions or need help? We\'re here:\n\n• Visit our Contact page to send us a message\n• Email us directly at hello@needthisdone.com\n• Check our FAQ for immediate answers\n• Book a consultation if you need dedicated time with an expert' },
       ],
     } as GuidePageContent,

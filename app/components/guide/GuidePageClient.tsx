@@ -33,11 +33,12 @@ const GROUP_CONFIG: Record<GuideGroup, { title: string; color: 'green' | 'blue' 
   'getting-started': { title: 'Getting Started', color: 'green' },
   'account': { title: 'Your Account', color: 'blue' },
   'explore': { title: 'Explore & Customize', color: 'purple' },
+  'admin': { title: 'For Admins', color: 'gold' },
   'support': { title: 'Support', color: 'gold' },
 };
 
 // Order for displaying groups
-const GROUP_ORDER: GuideGroup[] = ['getting-started', 'account', 'explore'];
+const GROUP_ORDER: GuideGroup[] = ['getting-started', 'account', 'explore', 'admin'];
 
 // Helper to group sections by their group field
 function groupSections(sections: GuideSection[]): Map<GuideGroup, Array<{ section: GuideSection; index: number }>> {
