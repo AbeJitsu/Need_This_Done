@@ -26,6 +26,8 @@ interface ServiceCardWithModalProps {
   details?: string;
   color: AccentColor;
   variant?: 'compact' | 'full';
+  /** Text for the action link */
+  linkText?: string;
   /** Base path for inline editing, e.g., "services.cards.0" */
   editBasePath?: string;
   /** Card index in the array (for inline editing) */
@@ -41,6 +43,7 @@ export default function ServiceCardWithModal({
   details,
   color,
   variant = 'compact',
+  linkText = 'Learn more →',
   editBasePath,
   cardIndex,
   modal,
@@ -50,22 +53,28 @@ export default function ServiceCardWithModal({
   const [showChoiceMenu, setShowChoiceMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
-  const handleClick = (e?: React.MouseEvent) => {
-    // In edit mode, show choice menu
-    if (isEditMode) {
-      if (e) {
-        setMenuPosition({ x: e.clientX, y: e.clientY });
-        setShowChoiceMenu(true);
-      }
-      return;
-    }
-
-    // Use page content if available (allows inline editing)
+  // Open modal (called when clicking the card in non-edit mode)
+  const openServiceModal = () => {
     if (modal && cardIndex !== undefined) {
       openModalWithContent(title, cardIndex, modal);
     } else {
-      // Fall back to static content
       openModal(title);
+    }
+  };
+
+  // Handle card click - open modal (non-edit mode only)
+  const handleClick = () => {
+    if (isEditMode) return; // In edit mode, only link triggers action
+    openServiceModal();
+  };
+
+  // Handle link click - show choice menu in edit mode, otherwise open modal
+  const handleLinkClick = (e: React.MouseEvent) => {
+    if (isEditMode) {
+      setMenuPosition({ x: e.clientX, y: e.clientY });
+      setShowChoiceMenu(true);
+    } else {
+      openServiceModal();
     }
   };
 
@@ -105,7 +114,9 @@ export default function ServiceCardWithModal({
         details={details}
         color={color}
         variant={variant}
+        linkText={linkText}
         onClick={handleClick}
+        onLinkClick={handleLinkClick}
         editBasePath={editBasePath}
       />
 

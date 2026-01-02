@@ -1,5 +1,14 @@
 [
   {
+    "hash": "23bec2b",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "23bec2b714b2825b7526a18555f70eada083da2d:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor: Simplify inline editing with Editable wrapper",
+    "category": "Refactoring",
+    "filesChanged": 23
+  },
+  {
     "hash": "1dce065",
     "date": "%Y->- (HEAD -> main)",
     "time": "1dce06543f700a091828e7a50dd4413f441595f1:%M",
@@ -889,14 +898,5 @@
     "message": "Refactor: Migrate test specs to use page discovery (ETC)",
     "category": "Refactoring",
     "filesChanged": 6
-  },
-  {
-    "hash": "2308aea",
-    "date": "2025-12-31",
-    "time": "08:11",
-    "author": "Abe Reyes",
-    "message": "Refactor: Centralize Stripe appearance colors to colors.ts",
-    "category": "Refactoring",
-    "filesChanged": 5
   }
 ]

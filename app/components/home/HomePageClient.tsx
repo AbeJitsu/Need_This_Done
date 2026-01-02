@@ -123,6 +123,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   details={service.details}
                   color={service.color as 'blue' | 'purple' | 'green'}
                   variant="compact"
+                  linkText={service.linkText}
                   editBasePath={`services.cards.${index}`}
                   cardIndex={index}
                   modal={service.modal}

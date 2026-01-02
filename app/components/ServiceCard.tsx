@@ -30,7 +30,11 @@ interface ServiceCardProps {
   color: AccentColor;
   variant?: 'compact' | 'full';
   href?: string;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent) => void;
+  /** Text for the action link (compact variant only) */
+  linkText?: string;
+  /** Handler for when the link text is clicked (separate from card click) */
+  onLinkClick?: (e: React.MouseEvent) => void;
   /** Base path for inline editing, e.g., "services.cards.0" */
   editBasePath?: string;
 }
@@ -44,6 +48,8 @@ export default function ServiceCard({
   variant = 'full',
   href,
   onClick,
+  linkText = 'Learn more →',
+  onLinkClick,
   editBasePath,
 }: ServiceCardProps) {
   const isCompact = variant === 'compact';
@@ -75,9 +81,24 @@ export default function ServiceCard({
               {tagline}
             </p>
           ))}
-          <p className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]}`}>
-            Learn more →
-          </p>
+          {onLinkClick ? (
+            // Separate clickable link (triggers choice menu in edit mode)
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onLinkClick(e);
+              }}
+              className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]} text-left hover:underline`}
+            >
+              {editable('linkText', <span>{linkText}</span>)}
+            </button>
+          ) : (
+            // Static link text (part of card click)
+            <p className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]}`}>
+              {editable('linkText', <span>{linkText}</span>)}
+            </p>
+          )}
         </>
       ) : (
         // Full: Description + bullet points
