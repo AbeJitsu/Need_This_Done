@@ -124,7 +124,8 @@ test.describe('Admin Inventory Management', () => {
     );
 
     // May or may not be present depending on data
-    // Just verify the page structure supports it
+    // Just verify the locator is valid (doesn't throw)
+    await lowStockIndicator.count();
   });
 
   test('should be accessible with keyboard navigation', async ({ page }) => {

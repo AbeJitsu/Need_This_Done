@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { setDarkMode } from './helpers';
 
 test('debug button classes', async ({ page }) => {

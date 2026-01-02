@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test('debug with prefers-color-scheme dark', async ({ browser }) => {
   // Create context with dark color scheme preference
