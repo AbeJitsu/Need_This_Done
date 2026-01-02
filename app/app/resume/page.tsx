@@ -32,7 +32,7 @@ const skills = [
   },
   {
     category: 'Backend & Data',
-    items: 'Node.js, REST APIs, PostgreSQL, MongoDB, Supabase, Redis Caching, Schema Design, Zod Validation',
+    items: 'Node.js, Python, REST APIs, PostgreSQL, MongoDB, Supabase, Redis Caching, Schema Design, Zod Validation',
   },
   {
     category: 'Testing & Quality',
@@ -78,6 +78,7 @@ const experience = [
       'Started as a contractor doing API integration work at an early-stage startup. Proved value quickly and got brought on for expanded responsibilities',
       'Became the person the CEO came to with technical questions because my explanations made sense to him',
       'Automated the repetitive stuff that was slowing the team down so people could focus on work that actually mattered',
+      'Built Python scripts to rescue unusable content - converted entire textbooks from messy PDFs into clean HTML for the learning platform',
       'Handled data migrations during client onboarding. Turned multi-day headaches into same-day completions while improving accuracy',
     ],
   },
