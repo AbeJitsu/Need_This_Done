@@ -227,23 +227,13 @@ railway up
 
 ### Product Management
 
-**Products are managed via Medusa Admin API:**
-
-| Product | Price | Duration | Handle |
-|---------|-------|----------|--------|
-| 15-Minute Quick Consultation | $20.00 | 15 min | `consultation-15-min` |
-| 30-Minute Strategy Consultation | $35.00 | 30 min | `consultation-30-min` |
-| 55-Minute Deep Dive Consultation | $50.00 | 55 min | `consultation-55-min` |
+Products are managed via Medusa Admin API. See [Medusa Backend](#medusa-backend-current-state) for product details and credentials.
 
 **Update product images:**
 ```bash
 cd medusa
 MEDUSA_ADMIN_PASSWORD='xxx' node update-product-image.js consultation-15-min "https://example.com/image.jpg"
 ```
-
-**Admin credentials:**
-- Email: Set via `MEDUSA_ADMIN_EMAIL` environment variable
-- Password: Set via `MEDUSA_ADMIN_PASSWORD` environment variable
 
 ---
 
@@ -257,16 +247,7 @@ A modern platform for professional services that combines:
 - **Visual page builder**: Non-technical users can create pages (Puck visual editor)
 - **Component library**: Reusable, accessible React components (Storybook)
 
-**Tech Stack:**
-- **Frontend**: Next.js 14 (React) with TypeScript, deployed on Vercel
-- **Backend**: Next.js API routes + Medusa (ecommerce engine on Railway)
-- **Database**: Supabase (PostgreSQL with pgvector for AI chatbot)
-- **Ecommerce**: Medusa headless commerce engine
-- **Payments**: Stripe (one-time & subscriptions)
-- **Email**: Resend (transactional emails) - sends from hello@needthisdone.com
-- **Cache**: Upstash Redis for performance
-- **Design**: Tailwind CSS with dark mode support
-- **Testing**: Playwright E2E tests + Visual regression testing (screenshot baselines)
+> **Tech Stack**: See [Current State at a Glance](#current-state-at-a-glance) for the complete technology stack.
 
 ---
 
@@ -2394,219 +2375,15 @@ Plus supporting utilities: MediaPickerField, shared puck-utils.ts
 
 ---
 
-## What's Next?
+## Contributing
 
 See [TODO.md](TODO.md) for the current task tracker with prioritized work items.
 
-### How to Add Features
-
-1. **Understand the architecture** - Review relevant sections above
-2. **Check existing components** - Don't reinvent the wheel (`app/components/`)
-3. **Write tests first** - Add E2E test in `app/e2e/`
-4. **Implement feature** - Follow coding standards
-5. **Test dark mode** - Run `npm run test:a11y`
-6. **Test complete flow** - Run `npm run test:e2e`
-7. **Update this README** - Add to relevant section
-
-### How to Add a Custom Hook
-
-Create reusable hooks in `app/hooks/` when logic is repeated across multiple components.
-
-**1. Create the file:**
-```bash
-touch app/hooks/useMyHook.ts
-```
-
-**2. Follow the documentation pattern:**
-```typescript
-'use client';
-
-import { useState, useEffect } from 'react';
-
-// ============================================================================
-// useMyHook Hook - [Short description]
-// ============================================================================
-// What: [What it does]
-// Why: [Why it exists - what problem it solves]
-// How: [How to use it]
-
-interface UseMyHookOptions {
-  someOption: string;
-  optionalThing?: boolean;
-}
-
-export function useMyHook({ someOption, optionalThing = false }: UseMyHookOptions) {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Your hook logic here
-
-  return { data, isLoading };
-}
-```
-
-**3. Add tests in `__tests__/hooks/`:**
-```typescript
-import { renderHook } from '@testing-library/react';
-import { useMyHook } from '@/hooks/useMyHook';
-
-describe('useMyHook', () => {
-  it('should initialize with loading false', () => {
-    const { result } = renderHook(() => useMyHook({ someOption: 'test' }));
-    expect(result.current.isLoading).toBe(false);
-  });
-});
-```
-
-**4. Document in README** - Add to the [Custom Hooks](#custom-hooks-8-files) section.
-
-**Reference hooks:** `useBackdropClose`, `useEditableContent`, `useCurrency`
-
-### How to Add a New Context
-
-Use React Context when you need shared state across multiple components without prop drilling.
-
-**1. Create the context file:**
-```bash
-touch app/context/MyContext.tsx
-```
-
-**2. Follow the context pattern:**
-```typescript
-'use client';
-
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-
-// ============================================================================
-// MyContext - [Short description of what this manages]
-// ============================================================================
-// What: [What state/functionality it provides]
-// Why: [Why components need shared access to this]
-// How: [Brief usage note]
-
-interface MyContextType {
-  someValue: string;
-  updateValue: (value: string) => void;
-}
-
-const MyContext = createContext<MyContextType | undefined>(undefined);
-
-// ============================================================================
-// MyProvider - Wrap components that need access
-// ============================================================================
-export function MyProvider({ children }: { children: ReactNode }) {
-  const [someValue, setSomeValue] = useState('default');
-
-  const updateValue = useCallback((value: string) => {
-    setSomeValue(value);
-  }, []);
-
-  return (
-    <MyContext.Provider value={{ someValue, updateValue }}>
-      {children}
-    </MyContext.Provider>
-  );
-}
-
-// ============================================================================
-// useMyContext - Hook for consuming the context
-// ============================================================================
-export function useMyContext() {
-  const context = useContext(MyContext);
-  if (!context) {
-    throw new Error('useMyContext must be used within MyProvider');
-  }
-  return context;
-}
-```
-
-**3. Add to the provider tree in `app/layout.tsx`:**
-```typescript
-<MyProvider>
-  <AuthProvider>
-    {/* other providers */}
-    {children}
-  </AuthProvider>
-</MyProvider>
-```
-
-**4. Use in components:**
-```typescript
-import { useMyContext } from '@/context/MyContext';
-
-function MyComponent() {
-  const { someValue, updateValue } = useMyContext();
-  return <button onClick={() => updateValue('new')}>{someValue}</button>;
-}
-```
-
-**Existing contexts:** `AuthContext`, `CartContext`, `ToastContext`, `InlineEditContext`
-
-### How to Add an Inline Editable Page
-
-Make any marketing page click-to-edit by following these 4 steps.
-
-**1. Add route mapping in `lib/editable-routes.ts`:**
-```typescript
-export const editableRoutes: Record<string, EditablePageSlug> = {
-  // ... existing routes
-  '/my-page': 'my-page',  // Add your route
-};
-```
-
-**2. Define content types in `lib/page-content-types.ts`:**
-```typescript
-export interface MyPageContent extends PageContent {
-  hero: {
-    title: string;
-    subtitle: string;
-  };
-  features: Array<{
-    title: string;
-    description: string;
-  }>;
-}
-
-export type EditablePageSlug = 'home' | 'services' | /* ... */ | 'my-page';
-```
-
-**3. Add defaults in `lib/default-page-content.ts`:**
-```typescript
-export const defaultMyPageContent: MyPageContent = {
-  hero: {
-    title: 'Welcome',
-    subtitle: 'Your subtitle here',
-  },
-  features: [
-    { title: 'Feature 1', description: 'Description...' },
-  ],
-};
-```
-
-**4. Use the hook in your page:**
-```typescript
-'use client';
-
-import { useEditableContent } from '@/hooks/useEditableContent';
-import { EditableSection } from '@/components/InlineEditor';
-import type { MyPageContent } from '@/lib/page-content-types';
-import { defaultMyPageContent } from '@/lib/default-page-content';
-
-export default function MyPage() {
-  const { content } = useEditableContent<MyPageContent>(defaultMyPageContent);
-
-  return (
-    <EditableSection sectionKey="hero">
-      <h1>{content.hero.title}</h1>
-      <p>{content.hero.subtitle}</p>
-    </EditableSection>
-  );
-}
-```
-
-**That's it!** The page is now click-to-edit for admins. Content saves to Supabase automatically.
-
-> **Deep Dive**: See [docs/INLINE_EDITING.md](docs/INLINE_EDITING.md) for data flow and architecture details.
+**Adding new features?** Follow the patterns in existing code:
+- **Hooks**: See `app/hooks/` for examples (`useEditableContent`, `useBackdropClose`)
+- **Contexts**: See `app/context/` for patterns (`AuthContext`, `CartContext`)
+- **Inline editing**: See [docs/INLINE_EDITING.md](docs/INLINE_EDITING.md)
+- **Coding standards**: See [.claude/rules/coding-standards.md](.claude/rules/coding-standards.md)
 
 ---
 
