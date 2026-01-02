@@ -11,7 +11,7 @@ async function generateResumePDF() {
 
   // Load the HTML file
   const htmlPath = path.resolve(jobSearchDir, 'resume-dev.html');
-  const pdfPath = path.resolve(jobSearchDir, 'resume-hq.pdf');
+  const pdfPath = path.resolve(jobSearchDir, 'Resume_Abe_Reyes.pdf');
 
   console.log('HTML path:', htmlPath);
   console.log('PDF path:', pdfPath);
@@ -20,7 +20,7 @@ async function generateResumePDF() {
 
   // Generate PDF with high quality settings
   await page.pdf({
-    path: path.resolve(jobSearchDir, 'resume-hq.pdf'),
+    path: pdfPath,
     format: 'Letter',
     printBackground: true, // Include background colors/images
     margin: {
@@ -33,7 +33,7 @@ async function generateResumePDF() {
   });
 
   await browser.close();
-  console.log('PDF generated: job-search/resume-hq.pdf');
+  console.log('PDF generated: job-search/Resume_Abe_Reyes.pdf');
 }
 
 generateResumePDF().catch(console.error);

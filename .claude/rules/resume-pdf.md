@@ -72,7 +72,7 @@ When adding new sections:
 cd app && npx tsx scripts/generate-resume-pdf.ts
 ```
 
-Output: `job-search/resume-hq.pdf`
+Output: `job-search/Resume_Abe_Reyes.pdf`
 
 The script uses Playwright with:
 - Letter format (8.5" x 11")

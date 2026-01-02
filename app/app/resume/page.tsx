@@ -27,28 +27,28 @@ export const metadata: Metadata = {
 
 const skills = [
   {
-    category: 'Frontend Development',
-    items: 'React, Next.js, Vue.js, TypeScript, JavaScript (ES6+), HTML5, CSS3, Tailwind CSS',
+    category: 'Frontend & UI Systems',
+    items: 'React, Next.js, TypeScript, Tailwind, Visual Page Builders (Puck), WYSIWYG Editors (TipTap), Drag-and-Drop',
   },
   {
-    category: 'Backend & Databases',
-    items: 'Node.js, Python, REST APIs, PostgreSQL, Supabase, Redis, MongoDB',
+    category: 'Backend & Data',
+    items: 'Node.js, REST APIs, PostgreSQL, Supabase, Redis Caching, Schema Design, Zod Validation',
   },
   {
-    category: 'Design & Responsive',
-    items: 'Responsive Web Design, Mobile-First Development, Figma, Photoshop, Cross-Browser Testing',
+    category: 'Testing & Quality',
+    items: 'Playwright E2E (68 tests), Vitest, WCAG AA Accessibility, Storybook, CI/CD, Git',
   },
   {
-    category: 'Testing & DevOps',
-    items: 'Git/GitHub, Docker, Nginx, Playwright, Vitest, CI/CD, Vercel',
+    category: 'Integrations',
+    items: 'Stripe Payments, OAuth (Google, NextAuth), React Email, OpenAI/GPT, Vector Embeddings',
   },
   {
-    category: 'E-commerce Systems',
-    items: 'Stripe Payments, Medusa Commerce, Shopping Cart Systems, Checkout Flows, Order Management',
+    category: 'Architecture',
+    items: '165+ Components, Custom Hooks, Context Providers, Optimistic Updates, Cache-Aside Pattern',
   },
   {
-    category: 'AI & Modern Tools',
-    items: 'Claude Code, OpenAI API, AI Chatbots, Workflow Automation, Data Processing',
+    category: 'Design & Process',
+    items: 'Mobile-First, Dark Mode, Figma, Component Libraries, Test-Driven Development',
   },
 ];
 
@@ -63,10 +63,10 @@ const experience = [
     subtitle: 'Professional Services Platform',
     dates: 'November 2025 - Present',
     bullets: [
-      'Built and launched a responsive e-commerce platform that\'s live and handling real customer orders. Designed mobile-first so it works on any device',
-      'Handled the full stack myself: React/Next.js frontend, Node.js backend, PostgreSQL database, and Stripe for payments',
-      'Added an AI chatbot that answers customer questions by searching the actual site content. Saves time for both customers and me',
-      'Set up automated testing with Playwright so I can ship updates confidently without breaking what\'s already working',
+      'Built a visual editor where you drag and drop 30+ building blocks to create pages, edit text directly on the page, and undo changes with version history. Non-technical users can update content without touching code',
+      'Organized the codebase into 165 reusable components and 72 backend endpoints. Cart updates show instantly without loading spinners, and pages load fast thanks to smart caching',
+      'Wrote 68 automated tests that simulate real users clicking through the site. Built a color system that passes accessibility checks so text is readable for everyone, including in dark mode',
+      'Connected the site to AI for a chatbot that understands questions, Google for login and calendar scheduling, Stripe for payments, and automated emails for order confirmations',
     ],
   },
   {
@@ -75,8 +75,8 @@ const experience = [
     subtitle: 'Educational Platform for Financial Certifications',
     dates: 'Spring 2025 - Winter 2025',
     bullets: [
-      'Started as a contractor doing API integration work. Did good work, got brought on for client onboarding',
-      'Became the person the CEO came to with technical questions. Not because I was the only developer, but because I took the time to explain things in a way that made sense to him',
+      'Started as a contractor doing API integration work at an early-stage startup. Proved value quickly and got brought on for expanded responsibilities',
+      'Became the person the CEO came to with technical questions because my explanations made sense to him',
       'Automated the repetitive stuff that was slowing the team down so people could focus on work that actually mattered',
       'Handled data migrations during client onboarding. Turned multi-day headaches into same-day completions while improving accuracy',
     ],
@@ -206,10 +206,9 @@ export default function ResumePage() {
       <section className={`mb-6 p-4 rounded ${cardBgColors.elevated}`}>
         <div className={`text-sm leading-relaxed ${headingColors.secondary} space-y-3`}>
           <p>
-            Three years building production applications, grounded in seven years of learning the
-            craft while working full-time. I started with tutorials in 2016 and kept at it until I
-            was confident enough to go all-in as a developer in 2023. I&apos;m still learning today,
-            currently working through freeCodeCamp&apos;s Full Stack Developer certification.
+            Building software since 2016, shipping to production since 2023. I go deep on fundamentals
+            and stay current on patterns - the engineers I respect most never stop sharpening their
+            tools, and neither do I.
           </p>
           <p>
             Before tech, I led a five-person medic team in the Army and earned three promotions at
@@ -217,7 +216,7 @@ export default function ResumePage() {
           </p>
           <p>
             What&apos;s stayed consistent: I stay calm when things break, I explain technical stuff
-            without making people feel dumb, and I follow through on what I say I&apos;ll do.
+            so it makes sense the first time, and I follow through on what I say I&apos;ll do.
           </p>
         </div>
       </section>
@@ -286,15 +285,15 @@ export default function ResumePage() {
             </a>
           </div>
           <ul className={`text-xs ${headingColors.secondary} list-disc list-outside ml-4 space-y-1`}>
-            <li>Responsive, mobile-first e-commerce platform built from the ground up</li>
-            <li>User authentication, product browsing, shopping cart, and order tracking</li>
-            <li>Secure checkout integration with Stripe payment processing</li>
-            <li>Admin dashboard with business management tools</li>
-            <li>AI-powered chatbot using semantic search for customer questions</li>
-            <li>Comprehensive automated testing with Playwright for reliable deployments</li>
+            <li>Full-stack Next.js application serving real customers in production</li>
+            <li>Designed PostgreSQL database schema for users, products, orders, and payments</li>
+            <li>Type-safe TypeScript throughout with Zod validation on API boundaries</li>
+            <li>Admin dashboard for business operations and order management</li>
+            <li>Stripe payment integration with secure checkout flows</li>
+            <li>Ship reliably with Playwright E2E tests, Vitest unit tests, and CI/CD</li>
           </ul>
           <p className={`text-xs italic ${formInputColors.helper}`}>
-            React/Next.js • TypeScript • Node.js • PostgreSQL/Supabase • Redis • Stripe • Playwright • Vercel
+            React/Next.js • TypeScript • Zod • Node.js • PostgreSQL/Supabase • Redis • Stripe • Playwright • Vercel
           </p>
         </div>
       </section>
@@ -315,6 +314,27 @@ export default function ResumePage() {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Books That Shaped How I Work */}
+      <section className={`mb-6 p-4 rounded ${cardBgColors.elevated}`}>
+        <h2
+          className={`text-sm font-bold uppercase tracking-wide ${titleColors.blue} mb-3 pb-2 border-b ${dividerColors.border}`}
+        >
+          Books That Shaped How I Work
+        </h2>
+        <div className="space-y-3 ml-4">
+          <p className={`text-xs ${headingColors.secondary}`}>
+            <span className="font-semibold">The Pragmatic Programmer</span> by David Thomas &amp; Andrew Hunt
+            — Taught me to write code that&apos;s easy to change later and to fix small problems before
+            they become big ones. I liked the ideas so much I built tools to check my own work against them.
+          </p>
+          <p className={`text-xs ${headingColors.secondary}`}>
+            <span className="font-semibold">Algorithms to Live By</span> by Brian Christian &amp; Tom Griffiths
+            — Shows how the same thinking that solves computer problems can help with everyday decisions.
+            It&apos;s why I focus on understanding how things work instead of just memorizing steps.
+          </p>
         </div>
       </section>
     </div>
