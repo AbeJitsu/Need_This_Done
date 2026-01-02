@@ -32,7 +32,7 @@ const skills = [
   },
   {
     category: 'Backend & Data',
-    items: 'Node.js, REST APIs, PostgreSQL, Supabase, Redis Caching, Schema Design, Zod Validation',
+    items: 'Node.js, REST APIs, PostgreSQL, MongoDB, Supabase, Redis Caching, Schema Design, Zod Validation',
   },
   {
     category: 'Testing & Quality',

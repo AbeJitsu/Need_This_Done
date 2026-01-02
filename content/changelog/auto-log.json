@@ -1,5 +1,86 @@
 [
   {
+    "hash": "06e89e0",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "06e89e051282d07d2f64a30997c05f35ae696ef2:%M",
+    "author": "Abe Reyes",
+    "message": "Simplify edit mode: click pencil → click text → edit inline",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
+    "hash": "aad3a70",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "aad3a700bae27b5f30fc39722d610af4d6639bac:%M",
+    "author": "Abe Reyes",
+    "message": "Fix inline editor click detection to work inside EditableSection",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
+    "hash": "24e2828",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "24e2828ceb519d94311003d2b122af0bc13bef09:%M",
+    "author": "Abe Reyes",
+    "message": "Clean up resume files and sync web version",
+    "category": "Other",
+    "filesChanged": 9
+  },
+  {
+    "hash": "2663f38",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "2663f3830c906dd828859a3706338eeaf65faa63:%M",
+    "author": "Abe Reyes",
+    "message": "Add resume system with PDF generation and print-optimized CSS",
+    "category": "Other",
+    "filesChanged": 9
+  },
+  {
+    "hash": "a1b5009",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "a1b500968aab3d82c45625f437b017eb31c3abb1:%M",
+    "author": "Abe Reyes",
+    "message": "Add visual editor documentation to guide page",
+    "category": "Other",
+    "filesChanged": 3
+  },
+  {
+    "hash": "b134b31",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "b134b318465253bbf23b22df32621ec260806846:%M",
+    "author": "Abe Reyes",
+    "message": "Fix unused variable warnings in test files",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
+    "hash": "4bab060",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "4bab0607d49fd713e675f53bb90ca469b245d6b0:%M",
+    "author": "Abe Reyes",
+    "message": "Add visual page editor with inline WYSIWYG and drag-to-resize",
+    "category": "Other",
+    "filesChanged": 15
+  },
+  {
+    "hash": "c4bf0b1",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "c4bf0b1d70c32982208ab4f079a8c97f823d5a3b:%M",
+    "author": "Abe Reyes",
+    "message": "Fix mobile header overflow - profile icon no longer clipped",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
+    "hash": "ef671f7",
+    "date": "%Y->- (HEAD -> production)",
+    "time": "ef671f763d845b7e166c2f5f005ab7f3b9a67f5a:%M",
+    "author": "Abe Reyes",
+    "message": "Merge branch 'main' into production",
+    "category": "Other",
+    "filesChanged": 0
+  },
+  {
     "hash": "44b8aa5",
     "date": "%Y->- (HEAD -> main)",
     "time": "44b8aa59a0b3510d14f4a7d1511dff7d00c0f6ba:%M",
@@ -817,86 +898,5 @@
     "message": "Refactor: Centralize card hover shadows to colors.ts (DRY)",
     "category": "Refactoring",
     "filesChanged": 11
-  },
-  {
-    "hash": "d71fda6",
-    "date": "2025-12-31",
-    "time": "07:50",
-    "author": "Abe Reyes",
-    "message": "Refactor: Extract CheckmarkCircle component (DRY)",
-    "category": "Refactoring",
-    "filesChanged": 9
-  },
-  {
-    "hash": "64dd6f6",
-    "date": "2025-12-31",
-    "time": "07:40",
-    "author": "Abe Reyes",
-    "message": "Refactor: Remove duplicate primaryButtonColors from colors.ts",
-    "category": "Refactoring",
-    "filesChanged": 5
-  },
-  {
-    "hash": "3cbbfe7",
-    "date": "2025-12-31",
-    "time": "07:36",
-    "author": "Abe Reyes",
-    "message": "Add auto-changelog on git commits via Claude hook",
-    "category": "Other",
-    "filesChanged": 4
-  },
-  {
-    "hash": "822d53e",
-    "date": "2025-12-30",
-    "time": "22:04",
-    "author": "Abe Reyes",
-    "message": "Docs: Update README and guide page with platform capabilities",
-    "category": "Documentation",
-    "filesChanged": 11
-  },
-  {
-    "hash": "fc2be64",
-    "date": "2025-12-30",
-    "time": "19:14",
-    "author": "Abe Reyes",
-    "message": "Docs: Mark hardcoded color migration as complete in TODO.md",
-    "category": "Documentation",
-    "filesChanged": 1
-  },
-  {
-    "hash": "f55e7b8",
-    "date": "2025-12-30",
-    "time": "19:13",
-    "author": "Abe Reyes",
-    "message": "Refactor: Complete ETC color migration - eliminate ALL -50 and opacity patterns",
-    "category": "Refactoring",
-    "filesChanged": 19
-  },
-  {
-    "hash": "c51029b",
-    "date": "2025-12-30",
-    "time": "19:08",
-    "author": "Abe Reyes",
-    "message": "Refactor: Continue ETC color migration - more components",
-    "category": "Refactoring",
-    "filesChanged": 6
-  },
-  {
-    "hash": "8d9545f",
-    "date": "2025-12-30",
-    "time": "19:05",
-    "author": "Abe Reyes",
-    "message": "Refactor: Migrate admin pages and components to colors.ts",
-    "category": "Refactoring",
-    "filesChanged": 17
-  },
-  {
-    "hash": "69626e6",
-    "date": "2025-12-30",
-    "time": "18:54",
-    "author": "Abe Reyes",
-    "message": "Docs: Add systematic hardcoded color fix plan to TODO.md",
-    "category": "Documentation",
-    "filesChanged": 1
   }
 ]
