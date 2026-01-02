@@ -72,6 +72,7 @@ export function ServiceModalProvider({ children }: { children: React.ReactNode }
       title,
       headline: modal.headline,
       hook: modal.hook,
+      bulletHeader: modal.bulletHeader,
       bulletPoints: modal.bulletPoints,
       ctas: modal.ctas,
       cardIndex: index,

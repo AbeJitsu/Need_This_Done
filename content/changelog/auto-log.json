@@ -1,5 +1,14 @@
 [
   {
+    "hash": "f0fc4d4",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "f0fc4d4ed0c578ad6a7b489911e2e5f16f28712a:%M",
+    "author": "Abe Reyes",
+    "message": "Fix inline editor visual feedback and modal editability",
+    "category": "Other",
+    "filesChanged": 14
+  },
+  {
     "hash": "539e088",
     "date": "%Y->- (HEAD -> main)",
     "time": "539e08820edf4b1fb663dfcc5355ebfc2fa84362:%M",
@@ -887,15 +896,6 @@
     "time": "08:23",
     "author": "Abe Reyes",
     "message": "Fix admin dashboard grid layout for balanced 2x4 design",
-    "category": "Other",
-    "filesChanged": 4
-  },
-  {
-    "hash": "06d68e8",
-    "date": "2025-12-31",
-    "time": "08:21",
-    "author": "Abe Reyes",
-    "message": "Add changelog link to site footer",
     "category": "Other",
     "filesChanged": 4
   }
