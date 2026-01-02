@@ -81,24 +81,24 @@ export default function ServiceCard({
               {tagline}
             </p>
           ))}
-          {onLinkClick ? (
-            // Separate clickable link (triggers choice menu in edit mode)
-            <button
-              type="button"
-              onClick={(e) => {
+          {/* Link text - uses span with click handler to avoid nested button issue */}
+          <span
+            role={onLinkClick ? 'button' : undefined}
+            tabIndex={onLinkClick ? 0 : undefined}
+            onClick={onLinkClick ? (e) => {
+              e.stopPropagation();
+              onLinkClick(e);
+            } : undefined}
+            onKeyDown={onLinkClick ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
                 e.stopPropagation();
-                onLinkClick(e);
-              }}
-              className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]} text-left hover:underline`}
-            >
-              {editable('linkText', <span>{linkText}</span>)}
-            </button>
-          ) : (
-            // Static link text (part of card click)
-            <p className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]}`}>
-              {editable('linkText', <span>{linkText}</span>)}
-            </p>
-          )}
+                onLinkClick(e as unknown as React.MouseEvent);
+              }
+            } : undefined}
+            className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]} ${onLinkClick ? 'cursor-pointer hover:underline' : ''}`}
+          >
+            {editable('linkText', <span>{linkText}</span>)}
+          </span>
         </>
       ) : (
         // Full: Description + bullet points

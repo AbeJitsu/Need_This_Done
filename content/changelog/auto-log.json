@@ -1,5 +1,14 @@
 [
   {
+    "hash": "67a2961",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "67a29612b87125a61a71f029429408c3b8cbea22:%M",
+    "author": "Abe Reyes",
+    "message": "Add editable linkText to service cards",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
     "hash": "23bec2b",
     "date": "%Y->- (HEAD -> main)",
     "time": "23bec2b714b2825b7526a18555f70eada083da2d:%M",
@@ -889,14 +898,5 @@
     "message": "Docs: Complete DRY/ETC violations audit in TODO.md",
     "category": "Documentation",
     "filesChanged": 2
-  },
-  {
-    "hash": "6b4aca7",
-    "date": "2025-12-31",
-    "time": "08:17",
-    "author": "Abe Reyes",
-    "message": "Refactor: Migrate test specs to use page discovery (ETC)",
-    "category": "Refactoring",
-    "filesChanged": 6
   }
 ]
