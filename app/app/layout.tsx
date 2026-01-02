@@ -12,7 +12,7 @@ import { ToastProvider } from '@/context/ToastContext';
 import { InlineEditProvider } from '@/context/InlineEditContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
-import { AdminSidebar, AdminSidebarToggle, EditModeBar, EditModeTutorial, UniversalClickHandler } from '@/components/InlineEditor';
+import { AdminSidebar, AdminSidebarToggle, EditModeBar, EditModeTutorial, UniversalClickHandler, InlineEditorOverlay } from '@/components/InlineEditor';
 import { LocalBusinessJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
 import { seoConfig } from '@/lib/seo-config';
 
@@ -226,6 +226,7 @@ export default function RootLayout({
                     <AdminSidebarToggle />
                     <AdminSidebar />
                     <UniversalClickHandler />
+                    <InlineEditorOverlay />
 
                     {/* Edit mode tutorial - shows on first edit mode activation */}
                     <EditModeTutorial />

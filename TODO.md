@@ -31,6 +31,39 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
+[→] **Visual Page Editor** - Inline WYSIWYG + drag-to-resize (Jan 2, 2026)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Transform inline editing into full visual page editor                  │
+│  • Click text → TipTap WYSIWYG appears inline (like Notion)             │
+│  • Drag handles → Resize sections, cards, text blocks (like Figma)      │
+│  • Alignment controls → Left, center, right positioning                 │
+│  • Toggle modes → Plain text vs rich text per field                     │
+│  • Security → DOMPurify sanitization for XSS protection                 │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+**Phase 1: Inline Text Editing** ✅
+- [x] Create InlineTextEditor.tsx (TipTap inline where clicked)
+- [x] Create FloatingToolbar.tsx (integrated in InlineTextEditor)
+- [x] Update UniversalClickHandler to route to inline editor
+- [x] Add inline editor state to InlineEditContext
+- [x] Create sanitize-html.ts (DOMPurify wrapper)
+- [x] Install TipTap color extension + DOMPurify
+- [x] Create InlineEditorOverlay.tsx (renders editor when active)
+
+**Phase 2: Drag Handle Resizing** ✅
+- [x] Create ResizableWrapper.tsx (drag handles using re-resizable)
+- [x] Create AlignmentToolbar.tsx (left/center/right controls)
+- [x] Update EditableSection with resize support
+- [x] Update EditableItem with resize support
+- [x] Add dimension/alignment fields to content schema (SectionStyles, ItemStyles)
+
+**Phase 3: Testing & Polish**
+- [ ] E2E test: inline editor opens on click
+- [ ] E2E test: formatting saves correctly
+- [ ] E2E test: resize handles work
+- [ ] Visual test: light and dark modes
+
 [x] **Mobile Header Overflow Fix** - Profile icon clipped on small screens
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐

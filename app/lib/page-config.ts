@@ -39,6 +39,30 @@ export interface CTASection {
 }
 
 // ============================================================================
+// Visual Editor Style Types (Phase 2)
+// ============================================================================
+
+/** Style configuration for resizable sections */
+export interface SectionStyles {
+  /** Width: preset name or custom value */
+  width?: 'narrow' | 'medium' | 'wide' | 'full' | string | number;
+  /** Text/content alignment within the section */
+  alignment?: 'left' | 'center' | 'right';
+  /** Vertical padding in pixels */
+  padding?: { top?: number; bottom?: number };
+}
+
+/** Style configuration for resizable items (cards, list items, etc.) */
+export interface ItemStyles {
+  /** Width as percentage, pixels, or auto */
+  width?: number | string;
+  /** Height as pixels or auto */
+  height?: number | 'auto';
+  /** Alignment within parent container */
+  alignment?: 'left' | 'center' | 'right';
+}
+
+// ============================================================================
 // Page-Specific Content Types
 // ============================================================================
 
@@ -53,6 +77,8 @@ export interface PricingTier {
   cta?: string;
   href?: string;
   popular?: boolean;
+  /** Visual editor styles for this tier card */
+  styles?: ItemStyles;
 }
 
 export interface PricingCtaPath {
@@ -94,6 +120,8 @@ export interface FAQItem {
   question: string;
   answer: string;
   links?: Array<{ text: string; href: string }>;
+  /** Visual editor styles for this FAQ item */
+  styles?: ItemStyles;
 }
 
 export interface FAQPageContent {
@@ -132,6 +160,8 @@ export interface ChoosePath {
   bullets: string[];
   button: CTAButton & { size?: 'sm' | 'md' | 'lg' };
   hoverColor: AccentVariant;
+  /** Visual editor styles for this path card */
+  styles?: ItemStyles;
 }
 
 export interface ChooseYourPathContent {
@@ -167,6 +197,8 @@ export interface ProcessStep {
   color: AccentVariant;
   href?: string;
   buttonText?: string; // For steps with CTAs (e.g., "Get Started")
+  /** Visual editor styles for this step card */
+  styles?: ItemStyles;
 }
 
 export interface TrustBadge {
@@ -215,6 +247,8 @@ export interface HomeServiceCard {
   description: string;
   details?: string;
   color: AccentVariant;
+  /** Visual editor styles for this service card */
+  styles?: ItemStyles;
 }
 
 export interface HomePageContent {
@@ -299,6 +333,8 @@ export interface GetStartedPath {
   features: string[];
   button: CTAButton & { size?: 'sm' | 'md' | 'lg' };
   hoverColor: AccentVariant;
+  /** Visual editor styles for this path card */
+  styles?: ItemStyles;
 }
 
 export interface GetStartedPageContent {

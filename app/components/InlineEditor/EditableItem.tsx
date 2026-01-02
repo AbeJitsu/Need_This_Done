@@ -5,6 +5,8 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { DraggableAttributes } from '@dnd-kit/core';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+import ResizableWrapper from './ResizableWrapper';
+import type { Enable } from 're-resizable';
 
 // ============================================================================
 // Editable Item - Makes individual items (cards, FAQ items, etc.) clickable
@@ -32,6 +34,22 @@ interface EditableItemProps {
   sortId?: string;
   // Enable drag-and-drop sorting
   sortable?: boolean;
+  /** Enable resize handles for this item */
+  enableResize?: boolean;
+  /** Allow height resizing (default: false) */
+  resizeHeight?: boolean;
+  /** Initial width (default: '100%') */
+  initialWidth?: string | number;
+  /** Initial height (default: 'auto') */
+  initialHeight?: string | number;
+  /** Minimum width constraint */
+  minWidth?: number;
+  /** Maximum width constraint */
+  maxWidth?: number;
+  /** Minimum height constraint */
+  minHeight?: number;
+  /** Custom enabled handles */
+  enabledHandles?: Enable;
 }
 
 // Item Drag Handle - small grip icon for reordering
@@ -74,6 +92,14 @@ export default function EditableItem({
   className = '',
   sortId,
   sortable = false,
+  enableResize = false,
+  resizeHeight = false,
+  initialWidth = '100%',
+  initialHeight = 'auto',
+  minWidth = 150,
+  maxWidth,
+  minHeight = 50,
+  enabledHandles,
 }: EditableItemProps) {
   const { isEditMode, selectedItem, selectItem, setSidebarOpen } = useInlineEdit();
 
@@ -166,7 +192,24 @@ export default function EditableItem({
         >
           {label}
         </div>
-        {children}
+        {/* Wrap children with ResizableWrapper if resize is enabled */}
+        {enableResize ? (
+          <ResizableWrapper
+            sectionKey={sectionKey}
+            fieldPath={`${arrayField}.${index}.styles`}
+            initialWidth={initialWidth}
+            initialHeight={initialHeight}
+            minWidth={minWidth}
+            maxWidth={maxWidth}
+            minHeight={minHeight}
+            resizeHeight={resizeHeight}
+            enabledHandles={enabledHandles}
+          >
+            {children}
+          </ResizableWrapper>
+        ) : (
+          children
+        )}
       </div>
     );
   }

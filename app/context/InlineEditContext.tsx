@@ -78,6 +78,27 @@ export interface PendingChange {
 }
 
 // ============================================================================
+// Types - Inline Text Editor State
+// ============================================================================
+
+export interface InlineEditorState {
+  // Is the inline editor open?
+  isOpen: boolean;
+  // Full path to the field being edited (e.g., "hero.title")
+  fieldPath: string;
+  // Section key for the field
+  sectionKey: string;
+  // Position on screen
+  position: { x: number; y: number; width: number };
+  // Current content value
+  content: string;
+  // Is rich text mode enabled?
+  isRichMode: boolean;
+  // Is this a single-line field (title) or multi-line (description)?
+  singleLine: boolean;
+}
+
+// ============================================================================
 // Types - Component-based editing (Puck pages) - Legacy support
 // ============================================================================
 
@@ -159,6 +180,29 @@ interface InlineEditContextType {
   // Reorder items within an array (for nested drag-and-drop)
   reorderItems: ((sectionKey: string, arrayField: string, oldIndex: number, newIndex: number) => void) | null;
 
+  // ========== Inline Text Editor (Notion-style) ==========
+
+  // State for the inline text editor
+  inlineEditorState: InlineEditorState | null;
+
+  // Open the inline editor at a position
+  openInlineEditor: (params: {
+    sectionKey: string;
+    fieldPath: string;
+    position: { x: number; y: number; width: number };
+    content: string;
+    singleLine?: boolean;
+  }) => void;
+
+  // Close the inline editor (save or cancel handled separately)
+  closeInlineEditor: () => void;
+
+  // Toggle between rich and plain text mode
+  toggleInlineEditorMode: () => void;
+
+  // Update content in the inline editor
+  updateInlineEditorContent: (content: string) => void;
+
   // ========== Component-based editing (Puck - legacy) ==========
 
   // Currently selected component (for Puck pages)
@@ -197,6 +241,9 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
   // Component-based editing state (Puck - legacy)
   const [selectedComponent, setSelectedComponent] = useState<ComponentSelection | null>(null);
   const [pageData, setPageData] = useState<Record<string, unknown> | null>(null);
+
+  // Inline text editor state (Notion-style)
+  const [inlineEditorState, setInlineEditorState] = useState<InlineEditorState | null>(null);
 
   // Section ordering for drag-and-drop
   const [sectionOrder, setSectionOrder] = useState<string[]>([]);
@@ -425,6 +472,48 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     }
   }, [pageContent, selectedItem, addPendingChange]);
 
+  // ============================================================================
+  // Inline Text Editor Functions
+  // ============================================================================
+
+  const openInlineEditor = useCallback((params: {
+    sectionKey: string;
+    fieldPath: string;
+    position: { x: number; y: number; width: number };
+    content: string;
+    singleLine?: boolean;
+  }) => {
+    setInlineEditorState({
+      isOpen: true,
+      sectionKey: params.sectionKey,
+      fieldPath: params.fieldPath,
+      position: params.position,
+      content: params.content,
+      isRichMode: true, // Default to rich mode
+      singleLine: params.singleLine ?? false,
+    });
+    // Close sidebar when inline editor opens
+    setIsSidebarOpen(false);
+  }, []);
+
+  const closeInlineEditor = useCallback(() => {
+    setInlineEditorState(null);
+  }, []);
+
+  const toggleInlineEditorMode = useCallback(() => {
+    setInlineEditorState(prev => {
+      if (!prev) return null;
+      return { ...prev, isRichMode: !prev.isRichMode };
+    });
+  }, []);
+
+  const updateInlineEditorContent = useCallback((content: string) => {
+    setInlineEditorState(prev => {
+      if (!prev) return null;
+      return { ...prev, content };
+    });
+  }, []);
+
   // DndContext sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -481,6 +570,12 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     unregisterSection,
     // Item reordering (nested drag-and-drop)
     reorderItems,
+    // Inline text editor (Notion-style)
+    inlineEditorState,
+    openInlineEditor,
+    closeInlineEditor,
+    toggleInlineEditorMode,
+    updateInlineEditorContent,
     // Component-based (Puck - legacy)
     selectedComponent,
     selectComponent,

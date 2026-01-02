@@ -6,6 +6,8 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { DraggableAttributes } from '@dnd-kit/core';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+import ResizableWrapper from './ResizableWrapper';
+import type { Enable } from 're-resizable';
 
 // ============================================================================
 // Editable Section - Makes page sections clickable and draggable in edit mode
@@ -19,6 +21,22 @@ interface EditableSectionProps {
   label: string;
   children: React.ReactNode;
   className?: string;
+  /** Enable resize handles for this section */
+  enableResize?: boolean;
+  /** Allow height resizing (default: false) */
+  resizeHeight?: boolean;
+  /** Initial width (default: '100%') */
+  initialWidth?: string | number;
+  /** Initial height (default: 'auto') */
+  initialHeight?: string | number;
+  /** Minimum width constraint */
+  minWidth?: number;
+  /** Maximum width constraint */
+  maxWidth?: number;
+  /** Minimum height constraint */
+  minHeight?: number;
+  /** Custom enabled handles */
+  enabledHandles?: Enable;
 }
 
 interface DragHandleProps {
@@ -56,6 +74,14 @@ export default function EditableSection({
   label,
   children,
   className = '',
+  enableResize = false,
+  resizeHeight = false,
+  initialWidth = '100%',
+  initialHeight = 'auto',
+  minWidth = 200,
+  maxWidth,
+  minHeight = 50,
+  enabledHandles,
 }: EditableSectionProps) {
   const {
     isEditMode,
@@ -165,7 +191,24 @@ export default function EditableSection({
         >
           {label}
         </div>
-        {children}
+        {/* Wrap children with ResizableWrapper if resize is enabled */}
+        {enableResize ? (
+          <ResizableWrapper
+            sectionKey={sectionKey}
+            fieldPath="styles"
+            initialWidth={initialWidth}
+            initialHeight={initialHeight}
+            minWidth={minWidth}
+            maxWidth={maxWidth}
+            minHeight={minHeight}
+            resizeHeight={resizeHeight}
+            enabledHandles={enabledHandles}
+          >
+            {children}
+          </ResizableWrapper>
+        ) : (
+          children
+        )}
       </div>
     );
   }
