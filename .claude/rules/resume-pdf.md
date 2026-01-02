@@ -79,6 +79,30 @@ The script uses Playwright with:
 - 0.5" margins (0.3" top on page 1)
 - Full background colors
 - Scale 1 (no shrinking)
+- **deviceScaleFactor: 2** (Retina quality)
+
+## PDF Quality Settings
+
+When generating any PDF with Playwright, always use `deviceScaleFactor: 2` for crisp text:
+
+```typescript
+const page = await browser.newPage({
+  deviceScaleFactor: 2, // Retina quality - good balance of quality vs file size
+});
+```
+
+| Scale Factor | Quality | Use Case |
+|--------------|---------|----------|
+| 1 | Standard (72 DPI) | Draft/preview only |
+| 2 | Retina (144 DPI) | **Default for all PDFs** |
+| 3+ | Excessive | Unnecessary, bloats file size |
+
+## Cover Letters
+
+Cover letters use the same HTML/PDF workflow:
+1. Create `job-search/cover-letter-[company].html` matching resume styling
+2. Generate PDF with same Playwright settings (deviceScaleFactor: 2)
+3. Use 0.75" margins for cover letters (more breathing room than resume)
 
 ## Syncing with /resume Page
 

@@ -7,7 +7,9 @@ const jobSearchDir = path.resolve(__dirname, '../../job-search');
 
 async function generateResumePDF() {
   const browser = await chromium.launch();
-  const page = await browser.newPage();
+  const page = await browser.newPage({
+    deviceScaleFactor: 2, // Retina quality - good balance of quality vs file size
+  });
 
   // Load the HTML file
   const htmlPath = path.resolve(jobSearchDir, 'resume-dev.html');
