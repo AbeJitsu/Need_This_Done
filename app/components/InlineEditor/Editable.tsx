@@ -65,13 +65,13 @@ export default function Editable({ path, children, sectionKey, hrefPath, href }:
     }
   }, [isEditMode, path, sectionKey, hrefPath, href, startEditing]);
 
-  // In edit mode: wrap with click handler and visual indicator
+  // In edit mode: wrap with click handler (no visual indicator - cleaner UI)
   if (isEditMode) {
     return (
-      <div
+      <span
         onClickCapture={handleClick}
         data-edit-path={path}
-        className="relative cursor-pointer group"
+        className="cursor-pointer"
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
@@ -84,9 +84,7 @@ export default function Editable({ path, children, sectionKey, hrefPath, href }:
         <span data-editable-content="true" className="contents">
           {children}
         </span>
-        {/* Hover outline to show this is editable */}
-        <div className="absolute inset-0 ring-2 ring-blue-400 ring-opacity-0 group-hover:ring-opacity-100 rounded pointer-events-none transition-opacity" />
-      </div>
+      </span>
     );
   }
 

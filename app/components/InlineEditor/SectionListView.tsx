@@ -20,8 +20,18 @@ interface SectionListViewProps {
 export default function SectionListView({ sections, onSelectSection }: SectionListViewProps) {
   return (
     <div className="space-y-2">
-      <p className={`text-sm ${formInputColors.helper} mb-4`}>
-        Click a section to edit:
+      {/* Helpful tip for users */}
+      <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-4">
+        <p className="text-sm text-blue-700 dark:text-blue-300 font-medium mb-1">
+          💡 Tip: Click anywhere on the page
+        </p>
+        <p className="text-xs text-blue-600 dark:text-blue-400">
+          Click on text, cards, or buttons to edit them directly. Or choose a section below.
+        </p>
+      </div>
+
+      <p className={`text-sm ${formInputColors.helper} mb-2`}>
+        Sections:
       </p>
       {sections.map(({ key, label }) => (
         <button

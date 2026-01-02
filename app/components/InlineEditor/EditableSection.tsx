@@ -44,13 +44,14 @@ interface DragHandleProps {
   attributes: DraggableAttributes;
 }
 
-// Drag handle icon (grip dots) - Always visible in edit mode for discoverability
-function DragHandle({ listeners, attributes }: DragHandleProps) {
+// Drag handle icon (grip dots) - Only visible when section is selected
+function DragHandle({ listeners, attributes, visible }: DragHandleProps & { visible: boolean }) {
   return (
     <button
-      className="absolute -left-8 top-4 p-2 cursor-grab active:cursor-grabbing
+      className={`absolute -left-8 top-4 p-2 cursor-grab active:cursor-grabbing
                  bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 hover:scale-110
-                 transition-all duration-200 z-20"
+                 transition-all duration-200 z-20
+                 ${visible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
       data-drag-handle
       aria-label="Drag to reorder section"
       title="Drag to reorder"
@@ -155,10 +156,7 @@ export default function EditableSection({
         onClick={handleClick}
         className={`
           group relative cursor-pointer transition-all duration-150
-          ${isSelected
-            ? 'ring-2 ring-blue-500 ring-offset-4 rounded-xl'
-            : 'hover:ring-2 hover:ring-blue-300 hover:ring-offset-4 hover:rounded-xl'
-          }
+          ${isSelected ? 'ring-2 ring-blue-500 ring-offset-4 rounded-xl' : ''}
           ${isDragging ? 'z-50' : ''}
           ${className}
         `}
@@ -174,23 +172,18 @@ export default function EditableSection({
         }}
         aria-label={`Edit ${label} section`}
       >
-        {/* Drag handle - visible on hover */}
-        <DragHandle listeners={listeners} attributes={attributes} />
+        {/* Drag handle - only visible when selected */}
+        <DragHandle listeners={listeners} attributes={attributes} visible={isSelected} />
 
-        {/* Section label - shown when selected or hovered */}
-        <div
-          className={`
-            absolute -top-3 left-4 px-3 py-1 text-xs font-semibold rounded-full
-            bg-blue-500 text-white shadow-md
-            transition-all duration-200 z-10
-            ${isSelected
-              ? 'opacity-100 scale-100'
-              : 'opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100'
-            }
-          `}
-        >
-          {label}
-        </div>
+        {/* Section label - only shown when selected */}
+        {isSelected && (
+          <div
+            className="absolute -top-3 left-4 px-3 py-1 text-xs font-semibold rounded-full
+                       bg-blue-500 text-white shadow-md z-10"
+          >
+            {label}
+          </div>
+        )}
         {/* Wrap children with ResizableWrapper if resize is enabled */}
         {enableResize ? (
           <ResizableWrapper

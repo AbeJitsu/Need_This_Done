@@ -106,7 +106,13 @@ export default function ServiceDetailModal() {
               id="service-modal-title"
               className={`text-2xl md:text-3xl font-bold ${titleColors[color]} mb-2 pr-10`}
             >
-              {activeService.title}
+              {canEdit ? (
+                <Editable path={`services.cards.${cardIndex}.title`}>
+                  <span>{activeService.title}</span>
+                </Editable>
+              ) : (
+                activeService.title
+              )}
             </h2>
             {editable('headline', (
               <p className={`text-xl font-medium ${headingColors.primary} mb-2`}>
@@ -127,7 +133,9 @@ export default function ServiceDetailModal() {
             {/* What we do - bullet points (3 items max) */}
             <div>
               <h3 className={`font-semibold ${headingColors.primary} mb-3`}>
-                What we handle:
+                {editable('bulletHeader', (
+                  <span>{activeService.bulletHeader || 'What we handle:'}</span>
+                ))}
               </h3>
               <ul className="space-y-2">
                 {activeService.bulletPoints.map((point, index) => (

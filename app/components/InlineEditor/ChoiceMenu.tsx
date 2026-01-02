@@ -68,7 +68,8 @@ export default function ChoiceMenu({ options, position, onClose }: ChoiceMenuPro
       {options.map((option, index) => (
         <button
           key={index}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent click from bubbling to EditableSection
             option.action();
             onClose();
           }}

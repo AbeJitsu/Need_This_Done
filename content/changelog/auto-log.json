@@ -1,5 +1,14 @@
 [
   {
+    "hash": "539e088",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "539e08820edf4b1fb663dfcc5355ebfc2fa84362:%M",
+    "author": "Abe Reyes",
+    "message": "Fix: Resolve nested button hydration error in ServiceCard",
+    "category": "Fixes",
+    "filesChanged": 2
+  },
+  {
     "hash": "67a2961",
     "date": "%Y->- (HEAD -> main)",
     "time": "67a29612b87125a61a71f029429408c3b8cbea22:%M",
@@ -889,14 +898,5 @@
     "message": "Add changelog link to site footer",
     "category": "Other",
     "filesChanged": 4
-  },
-  {
-    "hash": "f67fb52",
-    "date": "2025-12-31",
-    "time": "08:20",
-    "author": "Abe Reyes",
-    "message": "Docs: Complete DRY/ETC violations audit in TODO.md",
-    "category": "Documentation",
-    "filesChanged": 2
   }
 ]

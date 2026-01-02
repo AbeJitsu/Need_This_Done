@@ -61,3 +61,71 @@ export function setNestedValue<T>(obj: T, path: string, value: unknown): T {
 
   return result;
 }
+
+/**
+ * Deep merges two objects. Values from source override values from target.
+ * Arrays are replaced entirely (not merged element-by-element).
+ *
+ * @param target - The base object (defaults)
+ * @param source - The object to merge in (saved content)
+ * @returns A new merged object
+ *
+ * @example
+ * deepMerge({ a: 1, b: { c: 2 } }, { b: { c: 3 } })  // { a: 1, b: { c: 3 } }
+ * deepMerge({ items: [1, 2] }, { items: [3] })       // { items: [3] }
+ */
+export function deepMerge<T extends Record<string, unknown>>(
+  target: T,
+  source: Partial<T> | null | undefined
+): T {
+  if (!source) return target;
+
+  const result: Record<string, unknown> = { ...target };
+
+  for (const key of Object.keys(source)) {
+    const sourceValue = source[key as keyof T];
+    const targetValue = target[key as keyof T];
+
+    // If source value is null or undefined, keep target value
+    if (sourceValue === null || sourceValue === undefined) {
+      continue;
+    }
+
+    // If source is an array, replace entirely
+    if (Array.isArray(sourceValue)) {
+      // Deep merge array items if they're objects and same length
+      if (
+        Array.isArray(targetValue) &&
+        sourceValue.length === targetValue.length &&
+        sourceValue.every(item => typeof item === 'object' && item !== null) &&
+        targetValue.every(item => typeof item === 'object' && item !== null)
+      ) {
+        result[key] = sourceValue.map((item, i) =>
+          deepMerge(
+            targetValue[i] as Record<string, unknown>,
+            item as Record<string, unknown>
+          )
+        );
+      } else {
+        result[key] = sourceValue;
+      }
+    }
+    // If both are objects, recursively merge
+    else if (
+      typeof sourceValue === 'object' &&
+      typeof targetValue === 'object' &&
+      targetValue !== null
+    ) {
+      result[key] = deepMerge(
+        targetValue as Record<string, unknown>,
+        sourceValue as Record<string, unknown>
+      );
+    }
+    // Otherwise, source value replaces target value
+    else {
+      result[key] = sourceValue;
+    }
+  }
+
+  return result as T;
+}

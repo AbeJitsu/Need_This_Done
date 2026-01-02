@@ -10,6 +10,7 @@ import {
   type EditablePageSlug,
 } from '@/lib/page-content-types';
 import { getDefaultContent } from '@/lib/default-page-content';
+import { deepMerge } from '@/lib/object-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -59,20 +60,26 @@ export async function GET(
           throw new Error('Failed to load page content');
         }
 
+        const validSlug = slug as EditablePageSlug;
+        const contentType = PAGE_CONTENT_TYPES[validSlug];
+        const defaults = getDefaultContent(validSlug) as unknown as Record<string, unknown>;
+
         // If no custom content exists, return defaults
         if (!data) {
-          const validSlug = slug as EditablePageSlug;
-          const contentType = PAGE_CONTENT_TYPES[validSlug];
           return {
             page_slug: slug,
             content_type: contentType,
-            content: getDefaultContent(validSlug),
+            content: defaults,
             is_default: true,
           };
         }
 
+        // Merge saved content with defaults so new fields are always available
+        const mergedContent = deepMerge(defaults, data.content as Record<string, unknown>);
+
         return {
           ...data,
+          content: mergedContent,
           is_default: false,
         };
       },

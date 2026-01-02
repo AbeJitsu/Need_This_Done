@@ -82,6 +82,7 @@ export default function ServiceCard({
             </p>
           ))}
           {/* Link text - uses span with click handler to avoid nested button issue */}
+          {/* Note: No Editable wrapper here - linkText is edited via sidebar when "Edit Card" is selected */}
           <span
             role={onLinkClick ? 'button' : undefined}
             tabIndex={onLinkClick ? 0 : undefined}
@@ -97,7 +98,7 @@ export default function ServiceCard({
             } : undefined}
             className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]} ${onLinkClick ? 'cursor-pointer hover:underline' : ''}`}
           >
-            {editable('linkText', <span>{linkText}</span>)}
+            {linkText}
           </span>
         </>
       ) : (

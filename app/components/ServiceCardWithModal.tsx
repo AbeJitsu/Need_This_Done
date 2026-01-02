@@ -49,9 +49,10 @@ export default function ServiceCardWithModal({
   modal,
 }: ServiceCardWithModalProps) {
   const { openModal, openModalWithContent } = useServiceModal();
-  const { isEditMode, selectItem } = useInlineEdit();
+  const { isEditMode, startEditing } = useInlineEdit();
   const [showChoiceMenu, setShowChoiceMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [clickedElement, setClickedElement] = useState<HTMLElement | null>(null);
 
   // Open modal (called when clicking the card in non-edit mode)
   const openServiceModal = () => {
@@ -71,6 +72,8 @@ export default function ServiceCardWithModal({
   // Handle link click - show choice menu in edit mode, otherwise open modal
   const handleLinkClick = (e: React.MouseEvent) => {
     if (isEditMode) {
+      // Store the clicked element for inline editing
+      setClickedElement(e.currentTarget as HTMLElement);
       setMenuPosition({ x: e.clientX, y: e.clientY });
       setShowChoiceMenu(true);
     } else {
@@ -78,24 +81,16 @@ export default function ServiceCardWithModal({
     }
   };
 
-  const handleEditCard = () => {
-    // Select the card for sidebar editing
-    if (cardIndex !== undefined) {
-      selectItem({
-        sectionKey: 'services',
-        arrayField: 'cards',
-        index: cardIndex,
-        label: title,
-        content: {
-          title,
-          tagline,
-          description,
-          details,
-          color,
-          modal,
-        } as unknown as Record<string, unknown>,
-      });
-    }
+  // Edit the link text inline using TipTap
+  const handleEditLink = () => {
+    if (!clickedElement || cardIndex === undefined) return;
+
+    startEditing({
+      element: clickedElement,
+      sectionKey: 'services',
+      fieldPath: `cards.${cardIndex}.linkText`,
+      fullPath: `services.cards.${cardIndex}.linkText`,
+    });
   };
 
   const handleEditModal = () => {
@@ -126,9 +121,9 @@ export default function ServiceCardWithModal({
           onClose={() => setShowChoiceMenu(false)}
           options={[
             {
-              label: 'Edit Card',
-              icon: '✏️',
-              action: handleEditCard,
+              label: 'Edit Link Text',
+              icon: '🔗',
+              action: handleEditLink,
             },
             {
               label: 'Edit Modal',

@@ -58,12 +58,13 @@ interface ItemDragHandleProps {
   attributes: DraggableAttributes;
 }
 
-function ItemDragHandle({ listeners, attributes }: ItemDragHandleProps) {
+function ItemDragHandle({ listeners, attributes, visible }: ItemDragHandleProps & { visible: boolean }) {
   return (
     <button
-      className="absolute -left-6 top-1/2 -translate-y-1/2 p-1.5 cursor-grab active:cursor-grabbing
+      className={`absolute -left-6 top-1/2 -translate-y-1/2 p-1.5 cursor-grab active:cursor-grabbing
                  bg-purple-500 text-white rounded shadow-sm hover:bg-purple-600 hover:scale-110
-                 transition-all duration-200 z-20"
+                 transition-all duration-200 z-20
+                 ${visible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
       data-item-drag-handle
       aria-label="Drag to reorder item"
       title="Drag to reorder"
@@ -138,6 +139,13 @@ export default function EditableItem({
       return;
     }
 
+    // Check if clicking on an element with its own click handler (like "Learn more")
+    const hasOwnHandler = target.closest('[role="button"]');
+    if (hasOwnHandler) {
+      // Let the element's own handler run (e.g., choice menu)
+      return;
+    }
+
     // Stop propagation so section doesn't get selected
     e.stopPropagation();
     // Prevent default to block Link navigation, form submissions, etc.
@@ -165,10 +173,7 @@ export default function EditableItem({
         onClickCapture={handleClick}
         className={`
           group/item relative cursor-pointer transition-all duration-150
-          ${isSelected
-            ? 'ring-2 ring-purple-500 ring-offset-2 rounded-lg'
-            : 'hover:ring-2 hover:ring-purple-300 hover:ring-dashed hover:ring-offset-2 hover:rounded-lg'
-          }
+          ${isSelected ? 'ring-2 ring-purple-500 ring-offset-2 rounded-lg' : ''}
           ${isDragging ? 'z-50' : ''}
           ${className}
         `}
@@ -183,23 +188,18 @@ export default function EditableItem({
         }}
         aria-label={`Edit ${label}`}
       >
-        {/* Item drag handle - only shown when sortable */}
-        {sortable && <ItemDragHandle listeners={listeners} attributes={attributes} />}
+        {/* Item drag handle - only shown when sortable AND selected */}
+        {sortable && <ItemDragHandle listeners={listeners} attributes={attributes} visible={isSelected} />}
 
-        {/* Item label - shown when selected or hovered */}
-        <div
-          className={`
-            absolute -top-2 left-2 px-2 py-0.5 text-xs font-medium rounded-full
-            bg-purple-500 text-white shadow-sm
-            transition-all duration-200 z-20
-            ${isSelected
-              ? 'opacity-100 scale-100'
-              : 'opacity-0 scale-95 group-hover/item:opacity-100 group-hover/item:scale-100'
-            }
-          `}
-        >
-          {label}
-        </div>
+        {/* Item label - only shown when selected */}
+        {isSelected && (
+          <div
+            className="absolute -top-2 left-2 px-2 py-0.5 text-xs font-medium rounded-full
+                       bg-purple-500 text-white shadow-sm z-20"
+          >
+            {label}
+          </div>
+        )}
         {/* Wrap children with ResizableWrapper if resize is enabled */}
         {enableResize ? (
           <ResizableWrapper

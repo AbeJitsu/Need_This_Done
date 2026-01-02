@@ -9,6 +9,7 @@ export interface ServiceModalContent {
   title: string;
   headline: string;
   hook: string; // One sentence that answers "why should I care?"
+  bulletHeader?: string; // Header for bullet list, defaults to "What we handle:"
   bulletPoints: string[]; // Keep to 3-4 items - just enough to intrigue
   ctas: {
     primary: {
@@ -30,6 +31,7 @@ export const virtualAssistantModal: ServiceModalContent = {
   title: 'Virtual Assistant',
   headline: 'Your time is valuable. Let us handle the tasks that eat up your day.',
   hook: 'We take care of the details so you can focus on what actually moves your business forward.',
+  bulletHeader: 'What we handle:',
   bulletPoints: [
     'Email management and inbox organization',
     'Calendar coordination and scheduling',
@@ -56,6 +58,7 @@ export const dataDocumentsModal: ServiceModalContent = {
   title: 'Data & Documents',
   headline: 'Messy spreadsheets and formatting nightmares? We turn chaos into clarity.',
   hook: 'We make your documents look professional and work better. No judgment, just results.',
+  bulletHeader: 'What we handle:',
   bulletPoints: [
     'Spreadsheet cleanup and organization',
     'Data entry and formatting',
@@ -82,6 +85,7 @@ export const websiteServicesModal: ServiceModalContent = {
   title: 'Website Services',
   headline: 'Your website should work for you, not give you a headache.',
   hook: 'You focus on your business. We handle the tech. Plain language, clear answers.',
+  bulletHeader: 'What we handle:',
   bulletPoints: [
     'New website builds and redesigns',
     'Content updates and page edits',

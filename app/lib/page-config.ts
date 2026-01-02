@@ -245,6 +245,7 @@ export interface ConsultationOption {
 export interface ServiceModalContent {
   headline: string;
   hook: string;
+  bulletHeader?: string;
   bulletPoints: string[];
   ctas: {
     primary: { text: string; href: string };
@@ -487,6 +488,7 @@ export const PAGE_CONFIGS = {
             modal: {
               headline: 'Your time is valuable. Let us handle the tasks that eat up your day.',
               hook: 'We take care of the details so you can focus on what actually moves your business forward.',
+              bulletHeader: 'What we handle:',
               bulletPoints: [
                 'Email management and inbox organization',
                 'Calendar coordination and scheduling',
@@ -509,6 +511,7 @@ export const PAGE_CONFIGS = {
             modal: {
               headline: 'Messy spreadsheets and formatting nightmares? We turn chaos into clarity.',
               hook: 'We make your documents look professional and work better. No judgment, just results.',
+              bulletHeader: 'What we handle:',
               bulletPoints: [
                 'Spreadsheet cleanup and organization',
                 'Data entry and formatting',
@@ -531,6 +534,7 @@ export const PAGE_CONFIGS = {
             modal: {
               headline: 'Your website should work for you, not give you a headache.',
               hook: 'You focus on your business. We handle the tech. Plain language, clear answers.',
+              bulletHeader: 'What we handle:',
               bulletPoints: [
                 'New website builds and redesigns',
                 'Content updates and page edits',

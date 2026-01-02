@@ -68,8 +68,12 @@ export default function InlineTextEditor() {
       width: Math.max(rect.width, 200),
     });
 
-    // Hide the original element
-    activeEdit.element.style.visibility = 'hidden';
+    // Highlight the original element (don't hide it)
+    activeEdit.element.style.outline = '2px solid #3b82f6';
+    activeEdit.element.style.outlineOffset = '2px';
+    activeEdit.element.style.borderRadius = '4px';
+    activeEdit.element.style.position = 'relative';
+    activeEdit.element.style.zIndex = '51'; // Above the backdrop
 
     // Set content and focus
     editor.commands.setContent(activeEdit.originalContent);
@@ -84,9 +88,13 @@ export default function InlineTextEditor() {
       setHrefValue('');
     }
 
-    // Cleanup: restore element visibility
+    // Cleanup: restore element styles
     return () => {
-      activeEdit.element.style.visibility = 'visible';
+      activeEdit.element.style.outline = '';
+      activeEdit.element.style.outlineOffset = '';
+      activeEdit.element.style.borderRadius = '';
+      activeEdit.element.style.position = '';
+      activeEdit.element.style.zIndex = '';
     };
   }, [activeEdit, editor]);
 
@@ -140,24 +148,34 @@ export default function InlineTextEditor() {
 
   return (
     <>
-      {/* Editor positioned at the original element */}
+      {/* Backdrop to dim surrounding content */}
+      <div
+        className="fixed inset-0 bg-black/30 z-40 pointer-events-none"
+        aria-hidden="true"
+      />
+
+      {/* Editor positioned below the original element */}
       <div
         ref={editorRef}
         data-admin-ui="true"
-        className="fixed z-[9999] bg-white dark:bg-gray-800 border-2 border-blue-500 rounded shadow-lg"
+        className="fixed z-[9999] bg-white dark:bg-gray-800 border-2 border-blue-500 rounded-lg shadow-xl"
         style={{
-          top: position.top,
+          top: position.top + 40, // Position below the highlighted element
           left: position.left,
-          minWidth: position.width,
+          minWidth: Math.max(position.width, 250),
         }}
       >
         <EditorContent editor={editor} />
       </div>
 
-      {/* Floating toolbar */}
+      {/* Floating toolbar - positioned above the highlighted element */}
       <div
         data-admin-ui="true"
-        className="fixed top-4 left-1/2 -translate-x-1/2 z-[10000] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl flex items-center gap-1 px-3 py-2"
+        className="fixed z-[10000] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl flex items-center gap-1 px-3 py-2"
+        style={{
+          top: Math.max(8, position.top - 44),
+          left: position.left,
+        }}
       >
         <span className="text-xs text-gray-500 dark:text-gray-400 mr-2 font-medium">
           {activeEdit.fullPath}
