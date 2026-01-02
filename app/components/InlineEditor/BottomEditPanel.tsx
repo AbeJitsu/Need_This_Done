@@ -8,7 +8,7 @@ import { Color } from '@tiptap/extension-color';
 import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
-import TextStyle from '@tiptap/extension-text-style';
+import { TextStyle } from '@tiptap/extension-text-style';
 
 // ============================================================================
 // Bottom Edit Panel - Unified editing experience
@@ -32,7 +32,6 @@ export default function BottomEditPanel({
     isEditMode,
     selectedSection,
     selectedItem,
-    pageContent,
     updateField,
     selectSection,
     selectItem,
@@ -44,13 +43,6 @@ export default function BottomEditPanel({
   // Get the current selection (section or item)
   const selection = selectedItem || selectedSection;
   const isOpen = isEditMode && selection !== null;
-
-  // Get current field value for editing
-  const getFieldValue = (fieldName: string): string => {
-    if (!selection?.content) return '';
-    const value = selection.content[fieldName];
-    return typeof value === 'string' ? value : '';
-  };
 
   // TipTap editor for rich text
   const editor = useEditor({

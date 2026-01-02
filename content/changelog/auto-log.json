@@ -1,5 +1,23 @@
 [
   {
+    "hash": "235a4b4",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "235a4b4a4b12224832f05d1d6e53d154d95ddedd:%M",
+    "author": "Abe Reyes",
+    "message": "Add README as txt writing sample for job applications",
+    "category": "Other",
+    "filesChanged": 1
+  },
+  {
+    "hash": "a152299",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "a152299f200f7cc616c68332f22c7e9f4bee1b94:%M",
+    "author": "Abe Reyes",
+    "message": "Add unified bottom panel editor for inline editing",
+    "category": "Other",
+    "filesChanged": 7
+  },
+  {
     "hash": "5ce1226",
     "date": "%Y->- (HEAD -> main)",
     "time": "5ce12266f675f06fb9bfb03e5d9f29916466eacc:%M",
@@ -880,23 +898,5 @@
     "message": "Refactor: Extract formatPrice utility to lib/format.ts (DRY)",
     "category": "Refactoring",
     "filesChanged": 6
-  },
-  {
-    "hash": "be1c450",
-    "date": "2025-12-31",
-    "time": "08:00",
-    "author": "Abe Reyes",
-    "message": "Refactor: Centralize service colors to lib/service-colors.ts (DRY)",
-    "category": "Refactoring",
-    "filesChanged": 6
-  },
-  {
-    "hash": "ce4849d",
-    "date": "2025-12-31",
-    "time": "07:57",
-    "author": "Abe Reyes",
-    "message": "Refactor: Migrate close buttons to use CloseIcon component (DRY)",
-    "category": "Refactoring",
-    "filesChanged": 5
   }
 ]

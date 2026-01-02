@@ -13,7 +13,7 @@ import { focusRingClasses } from '@/lib/colors';
 
 export default function AdminSidebarToggle() {
   const { isAdmin, isAuthenticated } = useAuth();
-  const { isSidebarOpen, setSidebarOpen, isEditMode, setEditMode } = useInlineEdit();
+  const { setSidebarOpen, isEditMode, setEditMode } = useInlineEdit();
 
   // Only show for authenticated admins
   if (!isAuthenticated || !isAdmin) {
