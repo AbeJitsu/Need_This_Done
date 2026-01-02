@@ -52,9 +52,10 @@ export function useUniversalClick() {
       if (target.closest('[data-testid="edit-mode-bar"]')) return;
       if (target.closest('[data-admin-ui="true"]')) return;
 
-      // Skip if already handled by EditableSection/EditableItem
-      // (they use stopPropagation, but this is a safety check)
-      if (target.closest('[role="button"][aria-label^="Edit"]')) return;
+      // Skip if clicking directly on EditableSection's role="button" wrapper
+      // But DO allow clicks on content INSIDE the wrapper (like h1, p, span)
+      const editableWrapper = target.closest('[role="button"][aria-label^="Edit"]');
+      if (editableWrapper && editableWrapper === target) return;
 
       // Check if this is an editable element
       if (!isEditableElement(target)) return;

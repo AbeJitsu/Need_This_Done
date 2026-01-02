@@ -1,5 +1,5 @@
-import { test } from '@playwright/test';
-import { waitForPageReady, setDarkMode } from './helpers';
+import { test, expect } from '@playwright/test';
+import { waitForPageReady } from './helpers';
 import * as path from 'path';
 import * as fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -8,135 +8,129 @@ import { fileURLToPath } from 'url';
 // Visual Editor Proof Screenshots
 // ============================================================================
 // Captures screenshots demonstrating the visual page editor features:
-// 1. Edit mode activation via localStorage (simulates admin user)
-// 2. Section highlighting and selection
-// 3. Inline text editing with TipTap
-// 4. Both light and dark mode views
+// 1. InlineTextEditor - Click any text to edit with TipTap + floating toolbar
+// 2. Edit mode sidebar - Section navigation and field editing
+// Light mode only for initial verification
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const SCREENSHOT_DIR = path.join(__dirname, 'screenshots/visual-editor-proof');
 
-// Ensure screenshot directory exists
 test.beforeAll(() => {
   if (!fs.existsSync(SCREENSHOT_DIR)) {
     fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
   }
 });
 
-// Helper to enable edit mode via localStorage (simulates admin without auth)
-async function enableEditModeViaStorage(page: import('@playwright/test').Page) {
+// Helper to enable edit mode
+async function enterEditMode(page: import('@playwright/test').Page) {
+  // Pre-dismiss tutorial modal
   await page.evaluate(() => {
-    localStorage.setItem('inlineEditMode', 'true');
-    localStorage.setItem('isAdmin', 'true');
+    localStorage.setItem('edit-mode-tutorial-dismissed', 'true');
   });
-  await page.reload();
-  await waitForPageReady(page);
+
+  const editButton = page.locator('button[title="Edit this page"]');
+  await editButton.waitFor({ state: 'visible', timeout: 10000 });
+  await editButton.click();
+  await page.waitForTimeout(300);
 }
 
-test.describe('Visual Editor Proof', () => {
+test.describe('Visual Editor Features', () => {
 
-  test('capture homepage before and after edit mode', async ({ page }) => {
-    await page.goto('/');
-    await waitForPageReady(page);
-
-    // Screenshot 1: Normal view (before edit mode)
-    await page.screenshot({
-      path: path.join(SCREENSHOT_DIR, '01-homepage-normal.png'),
-      fullPage: false,
-    });
-
-    // Enable edit mode via localStorage
-    await enableEditModeViaStorage(page);
-
-    // Screenshot 2: Edit mode active (showing section outlines on hover)
-    // Hover over hero to show edit indicators
-    const hero = page.locator('section, [data-editable-section]').first();
-    await hero.hover();
-    await page.waitForTimeout(300);
-
-    await page.screenshot({
-      path: path.join(SCREENSHOT_DIR, '02-edit-mode-hover.png'),
-      fullPage: false,
-    });
-  });
-
-  test('capture section selection and sidebar', async ({ page }) => {
-    await page.goto('/');
-    await waitForPageReady(page);
-    await enableEditModeViaStorage(page);
-
-    // Click to select a section
-    const section = page.locator('[data-editable-section]').first();
-    const sectionCount = await section.count();
-
-    if (sectionCount > 0) {
-      await section.click();
-      await page.waitForTimeout(500);
-
-      // Screenshot 3: Section selected with sidebar open
-      await page.screenshot({
-        path: path.join(SCREENSHOT_DIR, '03-section-selected-sidebar.png'),
-        fullPage: false,
-      });
-    } else {
-      // Fallback: just screenshot the page in edit mode
-      await page.screenshot({
-        path: path.join(SCREENSHOT_DIR, '03-edit-mode-view.png'),
-        fullPage: false,
-      });
-    }
-  });
-
-  test('capture dark mode editing', async ({ page }) => {
-    await page.goto('/');
-    await waitForPageReady(page);
-
-    // Enable dark mode first
-    await setDarkMode(page, true);
-    await page.waitForTimeout(300);
-
-    // Then enable edit mode
-    await enableEditModeViaStorage(page);
-
-    // Screenshot 4: Dark mode with edit mode
-    await page.screenshot({
-      path: path.join(SCREENSHOT_DIR, '04-dark-mode-editing.png'),
-      fullPage: false,
-    });
-
-    // Hover to show edit indicators
-    const section = page.locator('section, [data-editable-section]').first();
-    await section.hover();
-    await page.waitForTimeout(300);
-
-    await page.screenshot({
-      path: path.join(SCREENSHOT_DIR, '05-dark-mode-hover.png'),
-      fullPage: false,
-    });
-  });
-
-  test('capture services page editing', async ({ page }) => {
+  test('1. Inline TipTap Editor with Floating Toolbar', async ({ page }) => {
     await page.goto('/services');
     await waitForPageReady(page);
-    await enableEditModeViaStorage(page);
 
-    // Screenshot 6: Services page in edit mode
+    // Enter edit mode
+    await enterEditMode(page);
+
+    // Click on the main heading to trigger inline editor
+    const heading = page.locator('h1').first();
+    const box = await heading.boundingBox();
+    if (box) {
+      await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+      await page.waitForTimeout(400);
+    }
+
+    // Capture the inline editor with floating toolbar
     await page.screenshot({
-      path: path.join(SCREENSHOT_DIR, '06-services-edit-mode.png'),
+      path: path.join(SCREENSHOT_DIR, '01-inline-tiptap-editor.png'),
       fullPage: false,
     });
 
-    // Click a card/section
-    const card = page.locator('[data-editable-section], .card, section').first();
-    if (await card.count() > 0) {
-      await card.click();
-      await page.waitForTimeout(500);
+    // Verify the formatting toolbar is visible (has Bold button)
+    const toolbar = page.locator('.fixed.z-\\[60\\]').filter({ hasText: 'Aa' });
+    expect(await toolbar.isVisible()).toBe(true);
+  });
 
-      await page.screenshot({
-        path: path.join(SCREENSHOT_DIR, '07-services-section-selected.png'),
-        fullPage: false,
-      });
+  test('2. Section Sidebar Navigation', async ({ page }) => {
+    await page.goto('/');
+    await waitForPageReady(page);
+
+    // Enter edit mode - this opens the sidebar
+    await enterEditMode(page);
+
+    // Wait for sidebar to be visible
+    await page.waitForTimeout(200);
+
+    // Capture edit mode with sidebar showing sections
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, '02-section-sidebar.png'),
+      fullPage: false,
+    });
+  });
+
+  test('3. Edit Different Text Types', async ({ page }) => {
+    await page.goto('/');
+    await waitForPageReady(page);
+    await enterEditMode(page);
+
+    // Click on a description paragraph
+    const description = page.locator('main p').first();
+    const box = await description.boundingBox();
+    if (box) {
+      await page.mouse.click(box.x + 50, box.y + box.height / 2);
+      await page.waitForTimeout(400);
     }
+
+    // Capture multi-line editor
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, '03-multiline-editor.png'),
+      fullPage: false,
+    });
+  });
+
+  test('4. Full Workflow Demo', async ({ page }) => {
+    await page.goto('/pricing');
+    await waitForPageReady(page);
+
+    // Screenshot before editing
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, '04a-before-edit.png'),
+      fullPage: false,
+    });
+
+    // Enter edit mode
+    await enterEditMode(page);
+
+    // Screenshot with sidebar
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, '04b-edit-mode.png'),
+      fullPage: false,
+    });
+
+    // Click on main heading
+    const heading = page.locator('h1').first();
+    const box = await heading.boundingBox();
+    if (box) {
+      await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+      await page.waitForTimeout(400);
+    }
+
+    // Screenshot with inline editor
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, '04c-inline-editing.png'),
+      fullPage: false,
+    });
   });
 });
