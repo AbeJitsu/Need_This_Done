@@ -1,5 +1,14 @@
 [
   {
+    "hash": "825c795",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "825c79572e0ead8d5371fc09470097fb89b7f5e6:%M",
+    "author": "Abe Reyes",
+    "message": "Fix bullet icon editing and add lucide-react",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
     "hash": "00d20bc",
     "date": "%Y->- (HEAD -> main)",
     "time": "00d20bc8583ad547015c2e844cb6df8332fde6fa:%M",
@@ -889,14 +898,5 @@
     "message": "Docs: Mark guide page diagrams as blocked pending design",
     "category": "Documentation",
     "filesChanged": 2
-  },
-  {
-    "hash": "13225c7",
-    "date": "2025-12-31",
-    "time": "09:20",
-    "author": "Abe Reyes",
-    "message": "Docs: Add InlineEditContext API reference",
-    "category": "Documentation",
-    "filesChanged": 3
   }
 ]

@@ -148,8 +148,23 @@ export default function ServiceDetailModal() {
               </h3>
               <ul className="space-y-2">
                 {activeService.bulletPoints.map((point, index) => (
-                  <li key={index} className={`flex items-start gap-3 ${headingColors.secondary}`}>
-                    <CheckmarkCircle color={color} size="sm" className="mt-0.5 flex-shrink-0" />
+                  <li key={index} className={`flex items-center gap-3 ${headingColors.secondary}`}>
+                    {canEdit ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          // Find and click the adjacent Editable element
+                          const sibling = e.currentTarget.nextElementSibling?.querySelector('[data-edit-path]');
+                          if (sibling instanceof HTMLElement) sibling.click();
+                        }}
+                        className="flex-shrink-0 cursor-pointer hover:scale-110 transition-transform"
+                        aria-label={`Edit bullet point ${index + 1}`}
+                      >
+                        <CheckmarkCircle color={color} size="sm" />
+                      </button>
+                    ) : (
+                      <CheckmarkCircle color={color} size="sm" className="flex-shrink-0" />
+                    )}
                     {canEdit ? (
                       <Editable path={`services.cards.${cardIndex}.modal.bulletPoints.${index}`}>
                         <span>{point}</span>
