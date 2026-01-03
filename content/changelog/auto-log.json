@@ -1,5 +1,14 @@
 [
   {
+    "hash": "25429fa",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "25429faf4dc1e49b03bfcbf5a91020277b25217a:%M",
+    "author": "Abe Reyes",
+    "message": "Separate checkmark and text as independent editable elements",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
     "hash": "c1b0258",
     "date": "%Y->- (HEAD -> main)",
     "time": "c1b02588f7107cf7f531529f427da4f96f7f818a:%M",
@@ -889,14 +898,5 @@
     "message": "Add: WCAG Color Calculator admin page",
     "category": "Features",
     "filesChanged": 6
-  },
-  {
-    "hash": "cf0fecd",
-    "date": "2025-12-31",
-    "time": "08:51",
-    "author": "Abe Reyes",
-    "message": "Config: Add ESLint rule to warn on hardcoded dark: classes",
-    "category": "Configuration",
-    "filesChanged": 4
   }
 ]

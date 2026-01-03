@@ -16,7 +16,7 @@ import {
   dividerColors,
   mutedTextColors,
   titleColors,
-  solidButtonColors,
+  getSolidButtonColors,
   statusBorderColors,
   cardHoverColors,
   shadowClasses,
@@ -266,7 +266,7 @@ export default function LoginClient() {
             <button
               type="submit"
               disabled={isSubmitting || !email || (!isForgotPassword && !password)}
-              className={`w-full py-3 px-6 font-semibold rounded-full border disabled:opacity-50 disabled:cursor-not-allowed transition-all ${solidButtonColors.blue.bg} ${solidButtonColors.blue.text} ${solidButtonColors.blue.hover} border-blue-600 dark:border-blue-500`}
+              className={`w-full py-3 px-6 font-semibold rounded-full border disabled:opacity-50 disabled:cursor-not-allowed transition-all ${getSolidButtonColors('blue').bg} ${getSolidButtonColors('blue').text} ${getSolidButtonColors('blue').hover} border-blue-600 dark:border-blue-500`}
             >
               {isSubmitting
                 ? isForgotPassword

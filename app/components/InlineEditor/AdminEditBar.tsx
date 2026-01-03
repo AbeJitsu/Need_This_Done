@@ -7,7 +7,7 @@
 import { useState } from 'react';
 import { useInlineEdit, type PendingChange } from '@/context/InlineEditContext';
 import { useAuth } from '@/context/AuthContext';
-import { solidButtonColors, focusRingClasses } from '@/lib/colors';
+import { getSolidButtonColors, focusRingClasses } from '@/lib/colors';
 
 // ============================================================================
 // Admin Edit Bar - Floating toolbar for inline editing controls
@@ -202,7 +202,7 @@ export default function AdminEditBar({ pageSlug: propSlug, onSave }: AdminEditBa
                 className={`
                   px-3 py-1.5 text-sm font-medium rounded-lg
                   ${hasUnsavedChanges && !isSaving
-                    ? `${solidButtonColors.green.bg} ${solidButtonColors.green.hover} ${solidButtonColors.green.text}`
+                    ? `${getSolidButtonColors('green').bg} ${getSolidButtonColors('green').hover} ${getSolidButtonColors('green').text}`
                     : 'bg-gray-800 text-gray-500 cursor-not-allowed'
                   }
                   transition-colors ${focusRingClasses.green}
@@ -231,7 +231,7 @@ export default function AdminEditBar({ pageSlug: propSlug, onSave }: AdminEditBa
               className={`
                 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors
                 ${currentSlug
-                  ? `${solidButtonColors.blue.bg} ${solidButtonColors.blue.hover} ${solidButtonColors.blue.text}`
+                  ? `${getSolidButtonColors('blue').bg} ${getSolidButtonColors('blue').hover} ${getSolidButtonColors('blue').text}`
                   : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                 }
                 ${focusRingClasses.blue}

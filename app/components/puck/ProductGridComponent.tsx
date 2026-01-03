@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
 import { getPuckFullColors, puckColumnsMap, puckGapMap, PuckEmptyState } from '@/lib/puck-utils';
-import { cardHoverColors, solidButtonColors, type AccentVariant } from '@/lib/colors';
+import { cardHoverColors, getSolidButtonColors, type AccentVariant } from '@/lib/colors';
 
 // ============================================================================
 // LIVE PRODUCT GRID COMPONENT
@@ -51,7 +51,7 @@ export default function ProductGridComponent({
   const colorVariant = accentColor as AccentVariant;
   const colors = getPuckFullColors(accentColor);
   const hoverBorder = cardHoverColors[colorVariant] || cardHoverColors.purple;
-  const buttonColors = solidButtonColors[colorVariant] || solidButtonColors.purple;
+  const buttonColors = getSolidButtonColors(colorVariant);
   const validProductIds = useMemo(
     () => productIds.filter(item => item.id?.trim()),
     [productIds]

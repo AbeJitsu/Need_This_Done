@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
 import { getPuckFullColors, puckAspectMap, PuckEmptyState } from '@/lib/puck-utils';
-import { cardHoverColors, solidButtonColors, type AccentVariant } from '@/lib/colors';
+import { cardHoverColors, getSolidButtonColors, type AccentVariant } from '@/lib/colors';
 
 // ============================================================================
 // LIVE PRODUCT CARD COMPONENT
@@ -52,7 +52,7 @@ export default function ProductCardComponent({
   const colorVariant = accentColor as AccentVariant;
   const colors = getPuckFullColors(accentColor);
   const hoverBorder = cardHoverColors[colorVariant] || cardHoverColors.purple;
-  const buttonColors = solidButtonColors[colorVariant] || solidButtonColors.purple;
+  const buttonColors = getSolidButtonColors(colorVariant);
 
   // Fetch product data
   useEffect(() => {

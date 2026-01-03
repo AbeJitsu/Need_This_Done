@@ -1,7 +1,7 @@
 'use client';
 
 import { useIndexingOptional, IndexingStatus } from './IndexingContext';
-import { solidButtonColors } from '@/lib/colors';
+import { getSolidButtonColors } from '@/lib/colors';
 
 // ============================================================================
 // Chatbot Button Component
@@ -73,8 +73,8 @@ export default function ChatbotButton({ onClick }: ChatbotButtonProps) {
     <button
       onClick={onClick}
       className={`fixed bottom-6 right-6 z-40
-                 ${solidButtonColors.blue.bg} ${solidButtonColors.blue.hover}
-                 ${solidButtonColors.blue.text} rounded-full
+                 ${getSolidButtonColors('blue').bg} ${getSolidButtonColors('blue').hover}
+                 ${getSolidButtonColors('blue').text} rounded-full
                  w-14 h-14 flex items-center justify-center
                  shadow-lg hover:shadow-xl
                  transition-all duration-200 ease-in-out

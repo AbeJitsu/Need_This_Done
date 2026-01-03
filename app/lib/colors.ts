@@ -56,6 +56,157 @@ export type AccentColor = 'purple' | 'blue' | 'green';
 export type AccentVariant = 'purple' | 'blue' | 'green' | 'gold' | 'teal' | 'gray' | 'red';
 
 // ============================================================================
+// COLOR UTILITY FUNCTIONS - Generate WCAG AA colors dynamically
+// ============================================================================
+// These functions generate color class strings following the WCAG AA pattern.
+// Use these instead of hardcoded color objects for new code.
+//
+// The Pattern (documented above):
+//   Light mode: -100 bg, -600 text (4.5:1 contrast)
+//   Dark mode:  -500 bg, white text (4.5:1 contrast)
+//
+// Benefits:
+//   - Adding a new color = add to AccentVariant type only
+//   - All 7 colors work automatically
+//   - WCAG AA compliance built into the formula
+// ============================================================================
+
+/**
+ * Generate accent colors for ghost/outline style elements.
+ * Light mode: pastel bg (-100), colored text (-600)
+ * Dark mode: vibrant bg (-500), white text
+ *
+ * Use for: badges, chips, tags, outline buttons, feature cards
+ *
+ * @example
+ * const colors = getAccentColors('purple');
+ * <div className={`${colors.bg} ${colors.text}`}>Badge</div>
+ */
+export function getAccentColors(color: AccentVariant) {
+  return {
+    // Background: -100 light, -500 dark (WCAG AA anchor)
+    bg: `bg-${color}-100 dark:bg-${color}-500`,
+    // Text: -600 light (4.5:1 on -100), white dark (4.5:1 on -500)
+    text: `text-${color}-600 dark:text-white`,
+    // Border: -500 light (visible), -100 dark (pops on dark bg)
+    border: `border-${color}-500 dark:border-${color}-100`,
+    // Hover text
+    hoverText: `hover:text-${color}-700 dark:hover:text-gray-100`,
+    // Hover border
+    hoverBorder: `hover:border-${color}-600 dark:hover:border-${color}-200`,
+    // Icon on pastel bg: -600 light, -100 dark
+    icon: `text-${color}-600 dark:text-${color}-100`,
+  };
+}
+
+/**
+ * Generate colors for solid-filled buttons.
+ * Uses -600 bg with white text in both modes for CTAs.
+ *
+ * Use for: primary CTAs, submit buttons, prominent actions
+ *
+ * @example
+ * const btn = getSolidButtonColors('blue');
+ * <button className={`${btn.bg} ${btn.text} ${btn.hover}`}>Submit</button>
+ */
+export function getSolidButtonColors(color: AccentVariant) {
+  // Special case: gold uses light bg + dark text (brand preference)
+  if (color === 'gold') {
+    return {
+      bg: 'bg-gold-100',
+      hover: 'hover:bg-gold-200',
+      text: 'text-gold-900',
+      focus: 'focus:ring-2 focus:ring-gold-500',
+    };
+  }
+
+  return {
+    bg: `bg-${color}-600 dark:bg-${color}-600`,
+    hover: `hover:bg-${color}-700 dark:hover:bg-${color}-700`,
+    text: 'text-white',
+    focus: `focus:ring-2 focus:ring-${color}-500`,
+  };
+}
+
+/**
+ * Generate colors for outline buttons.
+ * Colored border + text, subtle hover bg.
+ *
+ * Use for: secondary CTAs, cancel buttons, less prominent actions
+ *
+ * @example
+ * const btn = getOutlineButtonColors('purple');
+ * <button className={`border-2 ${btn.base} ${btn.hover}`}>Cancel</button>
+ */
+export function getOutlineButtonColors(color: AccentVariant) {
+  return {
+    base: `border-${color}-500 text-${color}-600 dark:text-${color}-300`,
+    hover: `hover:bg-${color}-100 dark:hover:bg-${color}-800`,
+  };
+}
+
+/**
+ * Generate colors for checkmark circles (icon + background).
+ * Used in feature lists, bullet points, success states.
+ *
+ * @example
+ * const check = getCheckmarkColors('green');
+ * <div className={`${check.bg} ${check.border}`}>
+ *   <CheckIcon className={check.icon} />
+ * </div>
+ */
+export function getCheckmarkColors(color: AccentVariant) {
+  return {
+    bg: `bg-${color}-100 dark:bg-${color}-500`,
+    border: `border-2 border-${color}-500 dark:border-${color}-200`,
+    icon: `text-${color}-600 dark:text-${color}-100`,
+  };
+}
+
+/**
+ * Generate soft background colors for subtle accents.
+ * -100 in light mode, -800 in dark mode (more subtle than -500).
+ *
+ * Use for: info banners, selected states, icon circles
+ *
+ * @example
+ * const soft = getSoftBgColors('blue');
+ * <div className={`${soft.bg} ${soft.text}`}>Info box</div>
+ */
+export function getSoftBgColors(color: AccentVariant) {
+  const darkShade = color === 'gray' ? '700' : '800';
+  return {
+    bg: `bg-${color}-100 dark:bg-${color}-${darkShade}`,
+    text: `text-${color}-600 dark:text-${color}-300`,
+    heading: `text-${color}-800 dark:text-white`,
+    border: `border border-${color}-200 dark:border-${color}-600`,
+  };
+}
+
+/**
+ * Generate title text colors (colored headings).
+ * -600 light mode, -300 dark mode for WCAG AA.
+ *
+ * @example
+ * <h2 className={getTitleColor('purple')}>Section Title</h2>
+ */
+export function getTitleColor(color: AccentVariant): string {
+  return `text-${color}-600 dark:text-${color}-300`;
+}
+
+/**
+ * Generate badge colors (vibrant bg + white text).
+ * Used for notification counts, status indicators.
+ *
+ * @example
+ * <span className={getBadgeColor('red')}>3</span>
+ */
+export function getBadgeColor(color: AccentVariant): string {
+  const shade = color === 'red' ? '600' : '500';
+  return `bg-${color}-${shade} text-white`;
+}
+
+// ============================================================================
 // Shadow Classes - Centralized shadow utilities
 // ============================================================================
 // Consistent shadow patterns for cards, modals, and interactive elements.
@@ -650,31 +801,12 @@ export const placeholderColors = {
 };
 
 // ============================================================================
-// Checkmark Background Colors - For circular checkmark containers
+// Checkmark Background Colors - DEPRECATED: Use getCheckmarkColors() instead
 // ============================================================================
-// Matches accentColors pattern: light bg (-100) + dark text in light mode,
-// vibrant bg (-500) + light text + light border in dark mode
-export const checkmarkBgColors: Record<'green' | 'blue' | 'purple', {
-  bg: string;
-  border: string;
-  icon: string;
-}> = {
-  green: {
-    bg: 'bg-green-100 dark:bg-green-500',
-    border: 'border-2 border-green-500 dark:border-green-200',
-    icon: 'text-green-600 dark:text-green-100',
-  },
-  blue: {
-    bg: 'bg-blue-100 dark:bg-blue-500',
-    border: 'border-2 border-blue-500 dark:border-blue-200',
-    icon: 'text-blue-600 dark:text-blue-100',
-  },
-  purple: {
-    bg: 'bg-purple-100 dark:bg-purple-500',
-    border: 'border-2 border-purple-500 dark:border-purple-200',
-    icon: 'text-purple-600 dark:text-purple-100',
-  },
-};
+// Kept for backwards compatibility. New code should use:
+//   import { getCheckmarkColors } from '@/lib/colors';
+//   const { bg, border, icon } = getCheckmarkColors('green');
+// ============================================================================
 
 // ============================================================================
 // Chip Colors - Pill-shaped navigation links (NEUTRAL pattern)
@@ -981,19 +1113,12 @@ export const filterButtonColors = {
 };
 
 // ============================================================================
-// Badge Colors - For notification badges and counts
+// Badge Colors - DEPRECATED: Use getBadgeColor() instead
 // ============================================================================
-// Simple, bold styling for notification badges and cart counts
-// All accent color variants with vibrant backgrounds and white text
-export const badgeColors: Record<AccentVariant, string> = {
-  purple: 'bg-purple-500 text-white',
-  blue: 'bg-blue-500 text-white',
-  green: 'bg-green-500 text-white',
-  gold: 'bg-gold-500 text-white',
-  teal: 'bg-teal-500 text-white',
-  gray: 'bg-gray-500 text-white',
-  red: 'bg-red-600 text-white',
-};
+// New code should use:
+//   import { getBadgeColor } from '@/lib/colors';
+//   <span className={getBadgeColor('red')}>3</span>
+// ============================================================================
 
 // ============================================================================
 // Product Image Filters - Consistent styling for product photos

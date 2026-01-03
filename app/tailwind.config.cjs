@@ -35,6 +35,10 @@ const config = {
     // Backgrounds - light mode (bg-100)
     'bg-purple-100', 'bg-blue-100', 'bg-green-100', 'bg-gold-100', 'bg-teal-100', 'bg-gray-100', 'bg-red-100', 'bg-yellow-100',
 
+    // Solid button backgrounds (bg-600 for CTAs) - used by getSolidButtonColors()
+    'bg-purple-600', 'bg-blue-600', 'bg-green-600', 'bg-gold-600', 'bg-teal-600', 'bg-gray-600', 'bg-red-600',
+    'dark:bg-purple-600', 'dark:bg-blue-600', 'dark:bg-green-600', 'dark:bg-gold-600', 'dark:bg-teal-600', 'dark:bg-gray-600', 'dark:bg-red-600',
+
     // Backgrounds - dark mode vibrant (bg-500) for unified accent system
     'dark:bg-purple-500', 'dark:bg-blue-500', 'dark:bg-green-500', 'dark:bg-gold-500', 'dark:bg-teal-500', 'dark:bg-gray-500', 'dark:bg-red-500', 'dark:bg-yellow-500',
     // Legacy dark backgrounds (keep for backward compatibility)
@@ -110,6 +114,18 @@ const config = {
     // Card hover background tints - dark mode
     'dark:hover:bg-purple-900/10', 'dark:hover:bg-blue-900/10', 'dark:hover:bg-green-900/10',
     'dark:hover:bg-gold-900/10', 'dark:hover:bg-teal-900/10', 'dark:hover:bg-gray-900/10',
+
+    // Solid button hover backgrounds (700 shade) - used by getSolidButtonColors()
+    'hover:bg-purple-700', 'hover:bg-blue-700', 'hover:bg-green-700', 'hover:bg-gold-700', 'hover:bg-teal-700', 'hover:bg-gray-700', 'hover:bg-red-700',
+    'dark:hover:bg-purple-700', 'dark:hover:bg-blue-700', 'dark:hover:bg-green-700', 'dark:hover:bg-gold-700', 'dark:hover:bg-teal-700', 'dark:hover:bg-gray-700', 'dark:hover:bg-red-700',
+
+    // Outline button hover backgrounds (100/800 shade) - used by getOutlineButtonColors()
+    'hover:bg-purple-100', 'hover:bg-blue-100', 'hover:bg-green-100', 'hover:bg-gold-100', 'hover:bg-teal-100', 'hover:bg-gray-100', 'hover:bg-red-100',
+    'dark:hover:bg-purple-800', 'dark:hover:bg-blue-800', 'dark:hover:bg-green-800', 'dark:hover:bg-gold-800', 'dark:hover:bg-teal-800', 'dark:hover:bg-gray-800', 'dark:hover:bg-red-800',
+
+    // Focus ring colors - used by getSolidButtonColors()
+    'focus:ring-2',
+    'focus:ring-purple-500', 'focus:ring-blue-500', 'focus:ring-green-500', 'focus:ring-gold-500', 'focus:ring-teal-500', 'focus:ring-gray-500', 'focus:ring-red-500',
 
     // Body text colors - dark mode (100 shade for unified accent system)
     'dark:text-purple-100', 'dark:text-blue-100', 'dark:text-green-100',

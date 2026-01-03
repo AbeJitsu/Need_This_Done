@@ -5,7 +5,7 @@
 // Why: Extracted from AdminSidebar to reduce its size and improve maintainability
 // How: Receives state and callbacks for save/discard operations
 
-import { formInputColors, solidButtonColors } from '@/lib/colors';
+import { formInputColors, getSolidButtonColors } from '@/lib/colors';
 
 interface SidebarFooterProps {
   saveError: string | null;
@@ -59,7 +59,7 @@ export default function SidebarFooter({
           disabled={!hasUnsavedChanges || isSaving}
           className={`
             flex-1 px-4 py-2 rounded-lg text-sm font-medium
-            ${solidButtonColors.blue.bg} ${solidButtonColors.blue.hover} ${solidButtonColors.blue.text}
+            ${getSolidButtonColors('blue').bg} ${getSolidButtonColors('blue').hover} ${getSolidButtonColors('blue').text}
             disabled:opacity-50 disabled:cursor-not-allowed
             transition-colors
           `}

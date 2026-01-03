@@ -6,7 +6,7 @@ import {
   headingColors,
   cardBgColors,
   cardBorderColors,
-  solidButtonColors,
+  getSolidButtonColors,
   accentColors,
 } from '@/lib/colors';
 
@@ -191,7 +191,7 @@ export default function VersionHistoryPanel({
                 onClick={fetchHistory}
                 className={`
                   px-4 py-2 rounded-lg text-sm font-medium
-                  ${solidButtonColors.blue.bg} ${solidButtonColors.blue.hover} ${solidButtonColors.blue.text}
+                  ${getSolidButtonColors('blue').bg} ${getSolidButtonColors('blue').hover} ${getSolidButtonColors('blue').text}
                 `}
               >
                 Try Again
@@ -270,7 +270,7 @@ export default function VersionHistoryPanel({
                       disabled={restoringId !== null}
                       className={`
                         ml-4 px-3 py-1.5 rounded-md text-sm font-medium
-                        ${solidButtonColors.blue.bg} ${solidButtonColors.blue.hover} ${solidButtonColors.blue.text}
+                        ${getSolidButtonColors('blue').bg} ${getSolidButtonColors('blue').hover} ${getSolidButtonColors('blue').text}
                         disabled:opacity-50 disabled:cursor-not-allowed
                         transition-all
                         opacity-0 group-hover:opacity-100 focus:opacity-100

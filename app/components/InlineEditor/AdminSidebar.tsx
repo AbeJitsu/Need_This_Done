@@ -15,7 +15,7 @@ import {
   headingColors,
   cardBgColors,
   cardBorderColors,
-  solidButtonColors,
+  getSolidButtonColors,
   uiChromeBg,
   hoverBgColors,
 } from '@/lib/colors';
@@ -419,7 +419,7 @@ export default function AdminSidebar() {
               onClick={() => handleAddArrayItem(basePath, getItemTemplate())}
               className={`
                 flex items-center gap-1 px-2 py-1 rounded text-xs font-medium
-                ${solidButtonColors.green.bg} ${solidButtonColors.green.hover} ${solidButtonColors.green.text}
+                ${getSolidButtonColors('green').bg} ${getSolidButtonColors('green').hover} ${getSolidButtonColors('green').text}
                 transition-colors
               `}
               aria-label={`Add new ${singularLabel}`}

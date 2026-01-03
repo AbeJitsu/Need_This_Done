@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { solidButtonColors, uiChromeBg, statusIndicatorBg } from '@/lib/colors';
+import { getSolidButtonColors, uiChromeBg, statusIndicatorBg } from '@/lib/colors';
 
 // ============================================================================
 // Project Comments Component
@@ -125,7 +125,7 @@ export default function ProjectComments({
         <button
           type="submit"
           disabled={submittingComment || !newComment.trim()}
-          className={`w-full py-3 px-4 font-semibold rounded-lg transition-all duration-200 hover:shadow-md active:scale-[0.98] focus:ring-4 focus:ring-purple-200 dark:focus:ring-purple-900/50 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:active:scale-100 ${solidButtonColors.purple.bg} ${solidButtonColors.purple.text} ${solidButtonColors.purple.hover}`}
+          className={`w-full py-3 px-4 font-semibold rounded-lg transition-all duration-200 hover:shadow-md active:scale-[0.98] focus:ring-4 focus:ring-purple-200 dark:focus:ring-purple-900/50 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:active:scale-100 ${getSolidButtonColors('purple').bg} ${getSolidButtonColors('purple').text} ${getSolidButtonColors('purple').hover}`}
         >
           {submittingComment ? 'Sending...' : 'Send Comment'}
         </button>

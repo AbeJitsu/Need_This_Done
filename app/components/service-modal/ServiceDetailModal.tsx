@@ -11,7 +11,7 @@ import {
   titleColors,
   topBorderColors,
   iconButtonColors,
-  solidButtonColors,
+  getSolidButtonColors,
   outlineButtonColors,
 } from '@/lib/colors';
 import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
@@ -191,7 +191,7 @@ export default function ServiceDetailModal() {
                     className={`
                       flex-1 text-center py-3 px-6 rounded-xl font-semibold
                       transition-all duration-200
-                      ${solidButtonColors[color].bg} ${solidButtonColors[color].hover} ${solidButtonColors[color].text}
+                      ${getSolidButtonColors(color).bg} ${getSolidButtonColors(color).hover} ${getSolidButtonColors(color).text}
                     `}
                   >
                     {activeService.ctas.primary.text}
@@ -204,7 +204,7 @@ export default function ServiceDetailModal() {
                   className={`
                     flex-1 text-center py-3 px-6 rounded-xl font-semibold
                     transition-all duration-200
-                    ${solidButtonColors[color].bg} ${solidButtonColors[color].hover} ${solidButtonColors[color].text}
+                    ${getSolidButtonColors(color).bg} ${getSolidButtonColors(color).hover} ${getSolidButtonColors(color).text}
                   `}
                 >
                   {activeService.ctas.primary.text}

@@ -31,7 +31,7 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 
 <!-- Task markers: [→] working | [ ] ready | [x] done | [!] blocked -->
 
-[→] **Visual Page Editor** - TinyMCE/Puck Hybrid (Jan 2, 2026)
+[ ] **Visual Page Editor** - TinyMCE/Puck Hybrid (Jan 2, 2026)
 
 **10 FEATURES REQUIRED:**
 
@@ -146,6 +146,49 @@ Central task tracker for NeedThisDone.com. Items move through: **To Do** → **I
 [x] **Customize Page Header Colors** - Set unique colors per page (FAQ=gold, Pricing=purple)
 
 [!] **Google Calendar Testing** - Complete integration testing (needs manual browser testing)
+
+[→] **Color System Consolidation** - ETC fix for 50+ color exports (Jan 2, 2026)
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Problem: 50+ color exports in colors.ts, each manually listing 3-7    │
+│  colors. All follow same WCAG AA pattern but typed out 50 times.       │
+│                                                                         │
+│  Impact: Adding new color = edit 20+ places (not ETC)                  │
+│  Files affected: 139 files import from colors.ts                       │
+│                                                                         │
+│  Solution: One getAccentColors(color) function that knows the pattern  │
+│  Components call function instead of importing hardcoded objects       │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+**Phase 1: Create Utility Functions**
+- [ ] Create `getAccentColors(color: AccentVariant)` in colors.ts
+  - Returns: bg, text, border, hover (with light + dark mode classes)
+  - Follows WCAG AA: -100 bg + -600 text (light), -500 bg + white (dark)
+- [ ] Create `getButtonColors(color, variant)` for solid/outline buttons
+- [ ] Create `getCardColors(color)` for card backgrounds
+- [ ] Add TSDoc comments explaining the WCAG AA formula
+
+**Phase 2: Migrate ALL Files Using Old Pattern** (139 files total)
+For each old export, grep ALL usages and migrate EVERY file:
+
+- [ ] checkmarkBgColors → grep, migrate all 5 files, delete export
+- [ ] badgeColors → grep, migrate all 8 files, delete export
+- [ ] solidButtonColors → grep, migrate all 10 files, delete export
+- [ ] cardBgColors → grep, migrate all 11 files, delete export
+- [ ] statusBadgeColors → grep, migrate all 11 files, delete export
+- [ ] containerBg → grep, migrate all 13 files, delete export
+- [ ] uiChromeBg → grep, migrate all 13 files, delete export
+- [ ] accentColors → grep, migrate all 26 files, delete export
+- [ ] headingColors → grep, migrate all 27 files, delete export
+- [ ] alertColors → grep, migrate all 32 files, delete export
+- [ ] formInputColors → grep, migrate all 37 files, delete export
+
+**Phase 3: Verify Nothing Missed**
+- [ ] Run: `grep -r "from '@/lib/colors'" --include="*.tsx" | wc -l`
+  - Confirm only new function imports remain
+- [ ] Run full test suite: `npm run test:e2e` (must pass 100%)
+- [ ] Visual check: toggle dark mode on homepage, services, pricing, FAQ
 
 ---
 

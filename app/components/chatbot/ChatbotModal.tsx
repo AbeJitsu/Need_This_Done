@@ -6,7 +6,7 @@ import { TextStreamChatTransport } from 'ai';
 import type { UIMessage } from '@ai-sdk/react';
 import ChatMessage from './ChatMessage';
 import { useIndexingOptional } from './IndexingContext';
-import { cardBgColors, dividerColors, headingColors, formInputColors, mutedTextColors, alertColors, formValidationColors, solidButtonColors, iconButtonColors, lightBgColors, loadingColors, linkColors } from '@/lib/colors';
+import { cardBgColors, dividerColors, headingColors, formInputColors, mutedTextColors, alertColors, formValidationColors, getSolidButtonColors, iconButtonColors, lightBgColors, loadingColors, linkColors } from '@/lib/colors';
 import { CloseIcon } from '@/components/ui/icons';
 
 // ============================================================================
@@ -197,8 +197,8 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
         <button
           onClick={() => setIsCollapsed(false)}
           className={`w-12 h-12 rounded-l-xl
-                     ${solidButtonColors.blue.bg} ${solidButtonColors.blue.hover}
-                     ${solidButtonColors.blue.text} shadow-lg
+                     ${getSolidButtonColors('blue').bg} ${getSolidButtonColors('blue').hover}
+                     ${getSolidButtonColors('blue').text} shadow-lg
                      flex items-center justify-center
                      transition-colors`}
           aria-label="Expand chat"
@@ -410,11 +410,11 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
             aria-label="Send message"
             title="Send message"
             className={`px-5 py-3 rounded-xl
-                       ${solidButtonColors.blue.bg} ${solidButtonColors.blue.hover}
-                       ${solidButtonColors.blue.text} font-medium
+                       ${getSolidButtonColors('blue').bg} ${getSolidButtonColors('blue').hover}
+                       ${getSolidButtonColors('blue').text} font-medium
                        transition-colors
                        disabled:opacity-50 disabled:cursor-not-allowed
-                       focus:outline-none ${solidButtonColors.blue.focus} focus:ring-offset-2`}
+                       focus:outline-none ${getSolidButtonColors('blue').focus} focus:ring-offset-2`}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

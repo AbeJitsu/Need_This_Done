@@ -6,7 +6,7 @@ import {
   iconButtonColors,
   headingColors,
   formInputColors,
-  solidButtonColors,
+  getSolidButtonColors,
 } from '@/lib/colors';
 import { CloseIcon } from '@/components/ui/icons';
 
@@ -31,15 +31,18 @@ interface ConfirmDialogProps {
 }
 
 // Variant-specific button styles - using centralized color utilities
+const redBtn = getSolidButtonColors('red');
+const blueBtn = getSolidButtonColors('blue');
+
 const variantStyles: Record<ConfirmDialogVariant, {
   confirmBg: string;
   confirmHover: string;
   confirmText: string;
 }> = {
   danger: {
-    confirmBg: solidButtonColors.red.bg,
-    confirmHover: solidButtonColors.red.hover,
-    confirmText: solidButtonColors.red.text,
+    confirmBg: redBtn.bg,
+    confirmHover: redBtn.hover,
+    confirmText: redBtn.text,
   },
   warning: {
     confirmBg: 'bg-amber-600 dark:bg-amber-500',
@@ -47,9 +50,9 @@ const variantStyles: Record<ConfirmDialogVariant, {
     confirmText: 'text-white',
   },
   info: {
-    confirmBg: solidButtonColors.blue.bg,
-    confirmHover: solidButtonColors.blue.hover,
-    confirmText: solidButtonColors.blue.text,
+    confirmBg: blueBtn.bg,
+    confirmHover: blueBtn.hover,
+    confirmText: blueBtn.text,
   },
 };
 

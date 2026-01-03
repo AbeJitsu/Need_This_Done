@@ -13,7 +13,7 @@ import AccordionComponent from '@/components/puck/AccordionComponent';
 import TestimonialsComponent from '@/components/puck/TestimonialsComponent';
 import VideoEmbedComponent from '@/components/puck/VideoEmbedComponent';
 import StatsCounterComponent from '@/components/puck/StatsCounterComponent';
-import { solidButtonColors, type AccentVariant } from '@/lib/colors';
+import { getSolidButtonColors, type AccentVariant } from '@/lib/colors';
 import { getPuckAccentColors, getPuckFullColors, puckColumnsMap, puckIcons, getDividerColors, getPricingColors, puckContainerWidthMap, puckContainerPaddingMap } from './puck-utils';
 
 // ============================================================================
@@ -762,7 +762,7 @@ export const puckConfig: Config = {
         };
 
         // Use centralized button colors (fixes dynamic Tailwind class issue)
-        const btnColors = solidButtonColors[buttonColor as AccentVariant] || solidButtonColors.purple;
+        const btnColors = getSolidButtonColors(buttonColor as AccentVariant);
 
         return (
           <div
@@ -875,7 +875,7 @@ export const puckConfig: Config = {
         };
 
         // Use centralized button colors (fixes dynamic Tailwind class issue)
-        const btnColors = solidButtonColors[buttonColor as AccentVariant] || solidButtonColors.purple;
+        const btnColors = getSolidButtonColors(buttonColor as AccentVariant);
 
         const imageElement = (
           <div className={`w-full ${imageSizeMap[imageSize]} flex-shrink-0`}>

@@ -6,7 +6,7 @@
 // How: Shows breadcrumb, array operations bar, and item fields
 
 import { BackButton, ItemBreadcrumb } from './SectionNavigation';
-import { solidButtonColors } from '@/lib/colors';
+import { getSolidButtonColors } from '@/lib/colors';
 
 interface ItemEditorViewProps {
   sectionLabel: string;
@@ -71,7 +71,7 @@ export default function ItemEditorView({
             onClick={onAddItem}
             className={`
               flex items-center gap-1 px-2 py-1 rounded text-xs font-medium
-              ${solidButtonColors.green.bg} ${solidButtonColors.green.hover} ${solidButtonColors.green.text}
+              ${getSolidButtonColors('green').bg} ${getSolidButtonColors('green').hover} ${getSolidButtonColors('green').text}
               transition-colors
             `}
             aria-label="Add new item"

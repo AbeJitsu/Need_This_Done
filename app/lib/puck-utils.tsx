@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import {
   accentColors,
-  solidButtonColors,
+  getSolidButtonColors,
   cardBorderColors,
   cardBgColors,
   gradientColors,
@@ -36,7 +36,7 @@ export type PuckAccentColor = AccentVariant;
 export function getPuckAccentColors(color: string) {
   const variant = color as AccentVariant;
   const base = accentColors[variant] || accentColors.purple;
-  const solid = solidButtonColors[variant] || solidButtonColors.purple;
+  const solid = getSolidButtonColors(variant);
 
   return {
     // From accentColors
@@ -324,7 +324,7 @@ export function getTabColors(color: string) {
  */
 export function getPricingColors(color: string) {
   const variant = color as AccentVariant;
-  const solid = solidButtonColors[variant] || solidButtonColors.purple;
+  const solid = getSolidButtonColors(variant);
 
   return {
     border: getHighlightBorderClass(variant),
@@ -341,7 +341,7 @@ export function getPricingColors(color: string) {
 export function getPuckFullColors(color: string) {
   const variant = color as AccentVariant;
   const base = getPuckAccentColors(color);
-  const solid = solidButtonColors[variant] || solidButtonColors.purple;
+  const solid = getSolidButtonColors(variant);
 
   return {
     ...base,
