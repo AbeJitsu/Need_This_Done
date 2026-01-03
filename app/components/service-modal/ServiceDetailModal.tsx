@@ -44,13 +44,6 @@ export default function ServiceDetailModal() {
   // Can we edit this modal? Only if we have a card index (from page content)
   const canEdit = isEditMode && cardIndex !== null;
 
-  // Helper to wrap content in Editable when editing
-  const editable = (field: string, children: React.ReactNode) => {
-    if (!canEdit) return children;
-    const basePath = `services.cards.${cardIndex}.modal`;
-    return <Editable path={`${basePath}.${field}`}>{children}</Editable>;
-  };
-
   // Don't render if closed or no content
   if (!isOpen || !activeService) return null;
 
@@ -98,6 +91,13 @@ export default function ServiceDetailModal() {
             <CloseIcon size="lg" />
           </button>
 
+          {/* Debug info - remove after fixing */}
+          {isEditMode && (
+            <div className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs p-2 m-2 rounded">
+              Debug: isEditMode={String(isEditMode)}, cardIndex={String(cardIndex)}, canEdit={String(canEdit)}
+            </div>
+          )}
+
           {/* ================================================================
               Header section
               ================================================================ */}
@@ -114,16 +114,28 @@ export default function ServiceDetailModal() {
                 activeService.title
               )}
             </h2>
-            {editable('headline', (
+            {canEdit ? (
+              <Editable path={`services.cards.${cardIndex}.modal.headline`}>
+                <p className={`text-xl font-medium ${headingColors.primary} mb-2`}>
+                  {activeService.headline}
+                </p>
+              </Editable>
+            ) : (
               <p className={`text-xl font-medium ${headingColors.primary} mb-2`}>
                 {activeService.headline}
               </p>
-            ))}
-            {editable('hook', (
+            )}
+            {canEdit ? (
+              <Editable path={`services.cards.${cardIndex}.modal.hook`}>
+                <p className={`${headingColors.secondary} text-base`}>
+                  {activeService.hook}
+                </p>
+              </Editable>
+            ) : (
               <p className={`${headingColors.secondary} text-base`}>
                 {activeService.hook}
               </p>
-            ))}
+            )}
           </div>
 
           {/* ================================================================
@@ -133,17 +145,25 @@ export default function ServiceDetailModal() {
             {/* What we do - bullet points (3 items max) */}
             <div>
               <h3 className={`font-semibold ${headingColors.primary} mb-3`}>
-                {editable('bulletHeader', (
+                {canEdit ? (
+                  <Editable path={`services.cards.${cardIndex}.modal.bulletHeader`}>
+                    <span>{activeService.bulletHeader || 'What we handle:'}</span>
+                  </Editable>
+                ) : (
                   <span>{activeService.bulletHeader || 'What we handle:'}</span>
-                ))}
+                )}
               </h3>
               <ul className="space-y-2">
                 {activeService.bulletPoints.map((point, index) => (
                   <li key={index} className={`flex items-start gap-3 ${headingColors.secondary}`}>
                     <CheckmarkCircle color={color} size="sm" className="mt-0.5" />
-                    {editable(`bulletPoints.${index}`, (
+                    {canEdit ? (
+                      <Editable path={`services.cards.${cardIndex}.modal.bulletPoints.${index}`}>
+                        <span>{point}</span>
+                      </Editable>
+                    ) : (
                       <span>{point}</span>
-                    ))}
+                    )}
                   </li>
                 ))}
               </ul>
