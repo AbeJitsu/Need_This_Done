@@ -1,5 +1,14 @@
 [
   {
+    "hash": "00d20bc",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "00d20bc8583ad547015c2e844cb6df8332fde6fa:%M",
+    "author": "Abe Reyes",
+    "message": "Add inline editing for all homepage elements",
+    "category": "Other",
+    "filesChanged": 9
+  },
+  {
     "hash": "cb7e049",
     "date": "%Y->- (HEAD -> main)",
     "time": "cb7e049a2c175bb1ec48deb0289c93e6570dd888:%M",
@@ -887,15 +896,6 @@
     "time": "09:20",
     "author": "Abe Reyes",
     "message": "Docs: Add InlineEditContext API reference",
-    "category": "Documentation",
-    "filesChanged": 3
-  },
-  {
-    "hash": "60e6eba",
-    "date": "2025-12-31",
-    "time": "09:19",
-    "author": "Abe Reyes",
-    "message": "Docs: Add contributor guide for creating inline editable pages",
     "category": "Documentation",
     "filesChanged": 3
   }

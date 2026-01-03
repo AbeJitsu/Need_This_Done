@@ -1,9 +1,11 @@
 // ============================================================================
 // CheckIcon - Reusable checkmark icon component
 // ============================================================================
-// What: Centralized checkmark SVG with consistent styling
-// Why: DRY - eliminates 14+ duplicated SVG definitions across codebase
+// What: Centralized checkmark icon using lucide-react
+// Why: DRY - eliminates duplicated SVG definitions across codebase
 // How: Import and use with optional size/className props
+
+import { Check } from 'lucide-react';
 
 interface CheckIconProps {
   /** Icon size: sm (16px), md (20px), lg (24px), or custom className */
@@ -16,10 +18,10 @@ interface CheckIconProps {
   'aria-hidden'?: boolean;
 }
 
-const sizeClasses = {
-  sm: 'w-4 h-4',
-  md: 'w-5 h-5',
-  lg: 'w-6 h-6',
+const sizeMap = {
+  sm: 16,
+  md: 20,
+  lg: 24,
 };
 
 export function CheckIcon({
@@ -29,20 +31,12 @@ export function CheckIcon({
   'aria-hidden': ariaHidden = true,
 }: CheckIconProps) {
   return (
-    <svg
-      className={`${sizeClasses[size]} ${className}`}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
+    <Check
+      size={sizeMap[size]}
+      strokeWidth={strokeWidth}
+      className={className}
       aria-hidden={ariaHidden}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={strokeWidth}
-        d="M5 13l4 4L19 7"
-      />
-    </svg>
+    />
   );
 }
 
