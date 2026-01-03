@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors, alertColors, statusBadgeColors, containerBg } from '@/lib/colors';
+import { filterButtonColors, alertColors, statusBadgeColors, containerBg, uiChromeBg } from '@/lib/colors';
 
 // ============================================================================
 // Orders Dashboard - /admin/shop/orders
@@ -244,7 +244,7 @@ export default function OrdersDashboard() {
       {filteredOrders.length === 0 ? (
         <Card hoverEffect="none">
           <div className="p-8 text-center">
-            <div className="inline-block p-3 bg-gray-100 dark:bg-gray-800 rounded-full mb-4">
+            <div className={`inline-block p-3 ${uiChromeBg.panel} rounded-full mb-4`}>
               <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
