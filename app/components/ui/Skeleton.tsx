@@ -1,3 +1,5 @@
+import { cardBgColors, cardBorderColors } from '@/lib/colors';
+
 // ============================================================================
 // Skeleton Loading Component - Placeholder content during loading
 // ============================================================================
@@ -60,7 +62,7 @@ export default function Skeleton({
 
 export function SkeletonCard({ className = '' }: { className?: string }) {
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 overflow-hidden ${className}`}>
+    <div className={`${cardBgColors.base} rounded-xl ${cardBorderColors.subtle} overflow-hidden ${className}`}>
       <Skeleton className="aspect-square" />
       <div className="p-4 space-y-3">
         <Skeleton height="20px" width="70%" />

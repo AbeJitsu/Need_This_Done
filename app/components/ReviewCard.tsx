@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import StarRating from './StarRating';
-import { accentColors, alertColors } from '@/lib/colors';
+import { accentColors, alertColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // ReviewCard Component
@@ -91,8 +91,8 @@ export default function ReviewCard({
     <div
       className={`
         p-4 rounded-lg border
-        border-gray-200 dark:border-gray-700
-        bg-white dark:bg-gray-800
+        ${cardBorderColors.light}
+        ${cardBgColors.base}
         ${className}
       `}
       data-testid="review-card"

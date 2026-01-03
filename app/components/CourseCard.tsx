@@ -9,6 +9,8 @@ import {
   mutedTextColors,
   accentColors,
   shadowClasses,
+  cardBgColors,
+  cardBorderColors,
 } from '@/lib/colors';
 import { formatPriceWhole } from '@/lib/format';
 
@@ -74,8 +76,8 @@ export default function CourseCard({
     <Link
       href={href}
       className={`
-        block bg-white dark:bg-gray-800 rounded-xl
-        border border-gray-200 dark:border-gray-700 border-t-4
+        block ${cardBgColors.base} rounded-xl
+        ${cardBorderColors.light} border-t-4
         ${topBorderColors[color]}
         transition-all duration-300
         ${cardHoverColors[color]}

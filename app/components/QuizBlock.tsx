@@ -9,6 +9,8 @@ import {
   mutedTextColors,
   alertColors,
   selectedStateColors,
+  cardBgColors,
+  cardBorderColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -107,7 +109,7 @@ export default function QuizBlock({
     const passed = percentage >= 70;
 
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+      <div className={`${cardBgColors.base} rounded-xl ${cardBorderColors.light} p-6`}>
         <h2 className={`text-xl font-bold mb-6 ${titleColors[color]}`}>{title}</h2>
 
         <div className="text-center py-8">
@@ -144,7 +146,7 @@ export default function QuizBlock({
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+    <div className={`${cardBgColors.base} rounded-xl ${cardBorderColors.light} p-6`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className={`text-xl font-bold ${titleColors[color]}`}>{title}</h2>

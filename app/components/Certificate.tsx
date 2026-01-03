@@ -1,4 +1,4 @@
-import { AccentColor, titleColors, accentColors, mutedTextColors } from '@/lib/colors';
+import { AccentColor, titleColors, accentColors, mutedTextColors, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Certificate Component
@@ -52,7 +52,7 @@ export default function Certificate({
   return (
     <div
       data-testid="certificate"
-      className="bg-white dark:bg-gray-800 border-8 border-double border-gray-300 dark:border-gray-600 p-8 md:p-12 max-w-3xl mx-auto print:border-gray-400"
+      className={`${cardBgColors.base} border-8 border-double border-gray-300 dark:border-gray-600 p-8 md:p-12 max-w-3xl mx-auto print:border-gray-400`}
     >
       {/* Decorative top border */}
       <div className={`h-2 ${accentColors[color].bg} -mx-8 md:-mx-12 -mt-8 md:-mt-12 mb-8`} />

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { neutralAccentBg } from '@/lib/colors';
+import { neutralAccentBg, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // What Can You Build Component - Project Examples
@@ -117,7 +117,7 @@ export default function WhatCanYouBuild() {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+    <div className={`${cardBgColors.base} p-6 rounded-xl ${cardBorderColors.light} shadow-sm`}>
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">

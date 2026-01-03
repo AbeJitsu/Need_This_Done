@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { signOut } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
-import { alertColors } from '@/lib/colors';
+import { alertColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // Authentication Demo Component - Real Sign Up/Login
@@ -106,14 +106,14 @@ export default function AuthDemo() {
   // Show loading state while checking authentication
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+      <div className={`${cardBgColors.base} p-6 rounded-xl ${cardBorderColors.light} shadow-sm`}>
         <p className="text-gray-600 dark:text-gray-300">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+    <div className={`${cardBgColors.base} p-6 rounded-xl ${cardBorderColors.light} shadow-sm`}>
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">

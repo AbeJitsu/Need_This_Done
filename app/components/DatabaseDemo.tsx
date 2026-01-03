@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { hoverBgColors } from '@/lib/colors';
+import { hoverBgColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // Database Demo Component - Data Storage Demonstration
@@ -166,7 +166,7 @@ export default function DatabaseDemo() {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+    <div className={`${cardBgColors.base} p-6 rounded-xl ${cardBorderColors.light} shadow-sm`}>
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">

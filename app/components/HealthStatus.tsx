@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { alertColors, neutralAccentBg } from '@/lib/colors';
+import { alertColors, neutralAccentBg, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // HealthStatus Component - Premium Semantic Status Display
@@ -144,7 +144,7 @@ export default function HealthStatus() {
   // Render: Premium Service Status Display
   // ========================================================================
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+    <div className={`${cardBgColors.base} p-4 rounded-xl ${cardBorderColors.light} shadow-sm`}>
       {/* Header with Overall Status */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">

@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { signOut } from '@/lib/auth';
-import { navigationColors, accentColors, accentBorderWidth, accentFontWeight, getBadgeColor } from '@/lib/colors';
+import { navigationColors, accentColors, accentBorderWidth, accentFontWeight, getBadgeColor, cardBgColors, cardBorderColors } from '@/lib/colors';
 import DarkModeToggle from './DarkModeToggle';
 import { CloseIcon } from '@/components/ui/icons';
 
@@ -191,7 +191,7 @@ export default function Navigation() {
                   </button>
 
                   {showDropdown && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
+                    <div className={`absolute right-0 mt-2 w-48 ${cardBgColors.base} rounded-lg shadow-lg ${cardBorderColors.light} py-1 z-50`}>
                       <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
                         <p className={`text-xs ${navigationColors.dropdownHelper}`}>Signed in as</p>
                         <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">

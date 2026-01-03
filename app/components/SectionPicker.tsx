@@ -9,7 +9,7 @@ import {
   type SectionDefinition,
   type SectionCategory,
 } from '@/lib/sections';
-import { accentColors, hoverBgColors } from '@/lib/colors';
+import { accentColors, hoverBgColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // SectionPicker Component
@@ -60,7 +60,7 @@ export default function SectionPicker({
 
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden ${className}`}
+      className={`${cardBgColors.base} rounded-xl shadow-xl ${cardBorderColors.light} overflow-hidden ${className}`}
       data-testid="section-picker"
     >
       {/* Header */}

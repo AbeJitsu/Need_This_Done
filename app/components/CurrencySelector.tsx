@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useCurrency } from '@/hooks/useCurrency';
-import { accentColors } from '@/lib/colors';
+import { accentColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // CurrencySelector Component
@@ -177,9 +177,9 @@ export default function CurrencySelector({
       {isOpen && (
         <div
           className={`
-            absolute z-50 mt-1 rounded-lg border
-            border-gray-200 dark:border-gray-700
-            bg-white dark:bg-gray-800
+            absolute z-50 mt-1 rounded-lg
+            ${cardBorderColors.light}
+            ${cardBgColors.base}
             shadow-lg
             ${sizes.dropdown}
           `}
