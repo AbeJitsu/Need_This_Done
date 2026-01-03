@@ -12,7 +12,7 @@ import {
   Home, Building, Building2, Store, Warehouse, Factory,
   DollarSign, CreditCard, Wallet, Banknote, PiggyBank, Receipt,
   FileText, File, Folder, FolderOpen, FileCheck, FilePlus,
-  Settings, Wrench, Cog, SlidersHorizontal, Tool,
+  Settings, Wrench, Cog, SlidersHorizontal,
   Search, Eye, Target, Crosshair, Focus, Scan,
   Rocket, Plane, Car, Truck, Ship, Bike,
   Share, Globe, Earth, Link, ExternalLink, Link2,
@@ -55,7 +55,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: 
   Home, Building, Building2, Store, Warehouse, Factory,
   DollarSign, CreditCard, Wallet, Banknote, PiggyBank, Receipt,
   FileText, File, Folder, FolderOpen, FileCheck, FilePlus,
-  Settings, Wrench, Cog, SlidersHorizontal, Tool,
+  Settings, Wrench, Cog, SlidersHorizontal,
   Search, Eye, Target, Crosshair, Focus, Scan,
   Rocket, Plane, Car, Truck, Ship, Bike,
   Share, Globe, Earth, Link, ExternalLink, Link2,
@@ -162,13 +162,13 @@ export default function IconPicker({
           className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-gray-500 dark:text-gray-400"
           aria-label="Close"
         >
-          <LucideIcons.X size={18} />
+          <X size={18} />
         </button>
       </div>
 
       {/* Search */}
       <div className="relative mb-3">
-        <LucideIcons.Search
+        <Search
           size={16}
           className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
         />

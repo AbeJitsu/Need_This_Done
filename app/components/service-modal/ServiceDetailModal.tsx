@@ -68,7 +68,7 @@ function BulletIcon({
 // Editable fields: headline, hook, bulletPoints, CTA text
 
 export default function ServiceDetailModal() {
-  const { isOpen, activeService, activeServiceType, cardIndex, closeModal } = useServiceModal();
+  const { isOpen, activeService, activeServiceType, cardIndex, closeModal, updateBulletIcon } = useServiceModal();
   const { isEditMode, updateField } = useInlineEdit();
   const { handleBackdropClick, modalRef } = useBackdropClose({
     isOpen,
@@ -102,7 +102,13 @@ export default function ServiceDetailModal() {
   // Handle icon selection
   const handleIconSelect = (iconName: string) => {
     if (cardIndex === null) return;
+
+    // Update the modal's local state for immediate UI feedback
+    updateBulletIcon(iconPickerState.bulletIndex, iconName);
+
+    // Update the page content for persistence
     updateField('services', `cards.${cardIndex}.modal.bulletIcons.${iconPickerState.bulletIndex}`, iconName);
+
     setIconPickerState({ isOpen: false, bulletIndex: -1, position: { top: 0, left: 0 } });
   };
 

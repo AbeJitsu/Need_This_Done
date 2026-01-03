@@ -19,6 +19,7 @@ import type { ServiceModalContent as PageModalContent } from '@/lib/page-config'
 // Extended modal content with card index for inline editing
 export interface EditableServiceModal extends ServiceModalContent {
   cardIndex?: number;
+  bulletIcons?: string[];
 }
 
 interface ServiceModalContextType {
@@ -29,7 +30,9 @@ interface ServiceModalContextType {
   // Original method - uses static content
   openModal: (serviceIdentifier: string) => void;
   // New method - uses page content for inline editing
-  openModalWithContent: (title: string, cardIndex: number, modal: PageModalContent) => void;
+  openModalWithContent: (title: string, cardIndex: number, modal: PageModalContent & { bulletIcons?: string[] }) => void;
+  // Update bullet icon in real-time
+  updateBulletIcon: (bulletIndex: number, iconName: string) => void;
   closeModal: () => void;
 }
 
@@ -64,7 +67,7 @@ export function ServiceModalProvider({ children }: { children: React.ReactNode }
   // ========================================================================
   // Open modal with page content (for inline editing)
   // ========================================================================
-  const openModalWithContent = useCallback((title: string, index: number, modal: PageModalContent) => {
+  const openModalWithContent = useCallback((title: string, index: number, modal: PageModalContent & { bulletIcons?: string[] }) => {
     const serviceType = resolveServiceType(title);
 
     // Convert page modal content to ServiceModalContent format
@@ -74,6 +77,7 @@ export function ServiceModalProvider({ children }: { children: React.ReactNode }
       hook: modal.hook,
       bulletHeader: modal.bulletHeader,
       bulletPoints: modal.bulletPoints,
+      bulletIcons: modal.bulletIcons || [],
       ctas: modal.ctas,
       cardIndex: index,
     };
@@ -82,6 +86,18 @@ export function ServiceModalProvider({ children }: { children: React.ReactNode }
     setActiveServiceType(serviceType || null);
     setCardIndex(index);
     setIsOpen(true);
+  }, []);
+
+  // ========================================================================
+  // Update bullet icon in real-time (for icon picker)
+  // ========================================================================
+  const updateBulletIcon = useCallback((bulletIndex: number, iconName: string) => {
+    setActiveService((prev) => {
+      if (!prev) return prev;
+      const newIcons = [...(prev.bulletIcons || [])];
+      newIcons[bulletIndex] = iconName;
+      return { ...prev, bulletIcons: newIcons };
+    });
   }, []);
 
   // ========================================================================
@@ -105,6 +121,7 @@ export function ServiceModalProvider({ children }: { children: React.ReactNode }
         cardIndex,
         openModal,
         openModalWithContent,
+        updateBulletIcon,
         closeModal,
       }}
     >
