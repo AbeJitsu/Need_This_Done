@@ -1,10 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import Button from '@/components/Button';
 import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
-import { EditableSection, EditableItem, SortableItemsWrapper, Editable } from '@/components/InlineEditor';
+import { EditableSection, EditableItem, SortableItemsWrapper, Editable, EditableLink, EditableCard } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import {
   formInputColors,
@@ -91,16 +90,18 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       {/* Services Section */}
       <EditableSection sectionKey="services" label="Services">
         <div className="mb-10">
-          <Editable path="services.title">
-            <h2
-              className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center ${groupHoverColors.green} transition-colors cursor-pointer`}
-            >
-              <Link href={content.services.linkHref} className="group">
-                {content.services.title}{' '}
-                <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-              </Link>
+          <EditableLink
+            href={content.services.linkHref}
+            textPath="services.title"
+            hrefPath="services.linkHref"
+            className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center ${groupHoverColors.green} transition-colors cursor-pointer block`}
+            linkClassName="group"
+          >
+            <h2 className="inline">
+              {content.services.title}{' '}
+              <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
             </h2>
-          </Editable>
+          </EditableLink>
           <SortableItemsWrapper
             sectionKey="services"
             arrayField="cards"
@@ -134,12 +135,14 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             ))}
           </SortableItemsWrapper>
           <p className={`text-center mt-4 ${formInputColors.helper}`}>
-            <Link
+            <EditableLink
               href={content.services.linkHref}
+              textPath="services.linkText"
+              hrefPath="services.linkHref"
               className={`${linkColors.blue} ${linkHoverColors.blue} hover:underline ${linkFontWeight} ${focusRingClasses.blue} rounded`}
             >
               {content.services.linkText}
-            </Link>
+            </EditableLink>
           </p>
         </div>
       </EditableSection>
@@ -148,17 +151,23 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       {content.consultations && (
         <EditableSection sectionKey="consultations" label="Consultations">
           <div className="mb-10">
-            <Link href={content.consultations.linkHref} className="block group">
-              <h2
-                className={`text-3xl font-bold ${headingColors.primary} mb-2 text-center ${groupHoverColors.blue} transition-colors`}
-              >
+            <EditableLink
+              href={content.consultations.linkHref}
+              textPath="consultations.title"
+              hrefPath="consultations.linkHref"
+              className={`text-3xl font-bold ${headingColors.primary} mb-2 text-center ${groupHoverColors.blue} transition-colors block`}
+              linkClassName="group"
+            >
+              <h2 className="inline">
                 {content.consultations.title}{' '}
                 <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </h2>
-            </Link>
-            <p className={`text-center ${formInputColors.helper} mb-6`}>
-              {content.consultations.description}
-            </p>
+            </EditableLink>
+            <Editable path="consultations.description">
+              <p className={`text-center ${formInputColors.helper} mb-6`}>
+                {content.consultations.description}
+              </p>
+            </Editable>
             <SortableItemsWrapper
               sectionKey="consultations"
               arrayField="options"
@@ -176,24 +185,37 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   sortable
                   sortId={`consult-${index}`}
                 >
-                  <Link
+                  <EditableCard
                     href={content.consultations!.linkHref}
                     className={`block p-5 ${cardBgColors.base} rounded-xl ${cardBorderColors.subtle} ${accentColors[option.color].hoverBorder} ${shadowClasses.cardHover} transition-all duration-300 text-center ${focusRingClasses[option.color as keyof typeof focusRingClasses] || focusRingClasses.blue}`}
                   >
-                    <div className={`text-2xl font-bold ${accentColors[option.color].text} mb-1`}>
-                      {option.price}
-                    </div>
-                    <div className={`font-semibold ${headingColors.primary} mb-1`}>{option.name}</div>
-                    <div className={`text-sm ${formInputColors.helper} mb-2`}>{option.duration}</div>
-                    <div className={`text-sm ${formInputColors.helper}`}>{option.description}</div>
-                  </Link>
+                    <Editable path={`consultations.options.${index}.price`}>
+                      <div className={`text-2xl font-bold ${accentColors[option.color].text} mb-1`}>
+                        {option.price}
+                      </div>
+                    </Editable>
+                    <Editable path={`consultations.options.${index}.name`}>
+                      <div className={`font-semibold ${headingColors.primary} mb-1`}>{option.name}</div>
+                    </Editable>
+                    <Editable path={`consultations.options.${index}.duration`}>
+                      <div className={`text-sm ${formInputColors.helper} mb-2`}>{option.duration}</div>
+                    </Editable>
+                    <Editable path={`consultations.options.${index}.description`}>
+                      <div className={`text-sm ${formInputColors.helper}`}>{option.description}</div>
+                    </Editable>
+                  </EditableCard>
                 </EditableItem>
               ))}
             </SortableItemsWrapper>
             <p className={`text-center mt-4 ${formInputColors.helper} font-medium hover:underline`}>
-              <Link href={content.consultations.linkHref} className={`${focusRingClasses.purple} rounded`}>
+              <EditableLink
+                href={content.consultations.linkHref}
+                textPath="consultations.linkText"
+                hrefPath="consultations.linkHref"
+                className={`${focusRingClasses.purple} rounded`}
+              >
                 {content.consultations.linkText}
-              </Link>
+              </EditableLink>
             </p>
           </div>
         </EditableSection>
@@ -201,13 +223,15 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
       {/* How It Works Preview */}
       <EditableSection sectionKey="processPreview" label="Process Preview">
-        <Link
+        <EditableCard
           href="/how-it-works"
           className={`block mb-16 ${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.subtle} transition-all duration-300 ${cardHoverColors.purple} ${shadowClasses.cardHover} active:scale-98 group ${focusRingClasses.purple}`}
         >
-          <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center transition-colors`}>
-            {content.processPreview.title}
-          </h2>
+          <Editable path="processPreview.title">
+            <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center transition-colors`}>
+              {content.processPreview.title}
+            </h2>
+          </Editable>
           <SortableItemsWrapper
             sectionKey="processPreview"
             arrayField="steps"
@@ -229,16 +253,22 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   <div className="flex justify-center mb-3">
                     <CircleBadge number={step.number} color={step.color} size="md" />
                   </div>
-                  <h3 className={`font-semibold ${headingColors.primary} mb-2`}>{step.title}</h3>
-                  <p className={`${formInputColors.helper} text-sm`}>{step.description}</p>
+                  <Editable path={`processPreview.steps.${index}.title`}>
+                    <h3 className={`font-semibold ${headingColors.primary} mb-2`}>{step.title}</h3>
+                  </Editable>
+                  <Editable path={`processPreview.steps.${index}.description`}>
+                    <p className={`${formInputColors.helper} text-sm`}>{step.description}</p>
+                  </Editable>
                 </div>
               </EditableItem>
             ))}
           </SortableItemsWrapper>
-          <p className={`text-center mt-6 ${formInputColors.helper} font-medium group-hover:underline`}>
-            {content.processPreview.linkText}
-          </p>
-        </Link>
+          <Editable path="processPreview.linkText">
+            <p className={`text-center mt-6 ${formInputColors.helper} font-medium group-hover:underline`}>
+              {content.processPreview.linkText}
+            </p>
+          </Editable>
+        </EditableCard>
       </EditableSection>
 
       {/* CTA Section */}
@@ -285,19 +315,25 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </SortableItemsWrapper>
           {content.cta.footer && (
             <p className={`${formInputColors.helper}`}>
-              {content.cta.footer}{' '}
-              <Link
+              <Editable path="cta.footer">
+                <span>{content.cta.footer}</span>
+              </Editable>{' '}
+              <EditableLink
                 href={content.cta.footerLinkHref}
+                textPath="cta.footerLinkText"
+                hrefPath="cta.footerLinkHref"
                 className={`${accentColors.purple.text} hover:opacity-80 hover:underline ${linkFontWeight}`}
               >
                 {content.cta.footerLinkText}
-              </Link>
+              </EditableLink>
             </p>
           )}
           {content.cta.chatbotNote && (
-            <p className={`text-sm ${formInputColors.helper} mt-2`}>
-              {content.cta.chatbotNote}
-            </p>
+            <Editable path="cta.chatbotNote">
+              <p className={`text-sm ${formInputColors.helper} mt-2`}>
+                {content.cta.chatbotNote}
+              </p>
+            </Editable>
           )}
         </div>
       </EditableSection>

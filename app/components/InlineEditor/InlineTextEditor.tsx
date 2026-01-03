@@ -20,7 +20,7 @@ import { cardBgColors, cardBorderColors } from '@/lib/colors';
 export default function InlineTextEditor() {
   const { isEditMode, activeEdit, saveEdit, cancelEdit } = useInlineEdit();
   const editorRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ top: 0, left: 0, width: 200 });
+  const [position, setPosition] = useState({ top: 0, left: 0, width: 200, toolbarTop: 0 });
   const [hrefValue, setHrefValue] = useState('');
 
   // TipTap editor - immediatelyRender: false required for SSR/Next.js
@@ -62,11 +62,35 @@ export default function InlineTextEditor() {
     if (!activeEdit || !editor) return;
 
     // Position editor at the element
+    // Use getBoundingClientRect which gives viewport-relative coords (matches fixed positioning)
     const rect = activeEdit.element.getBoundingClientRect();
+
+    // Calculate best position - try below element first, flip above if near bottom
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const editorHeight = 100; // Approximate editor height
+    const toolbarHeight = 50; // Approximate toolbar height
+
+    // Default: position editor below the element, toolbar above
+    let editorTop = rect.bottom + 8; // 8px gap below element
+    let toolbarTop = rect.top - toolbarHeight - 8; // 8px gap above element
+
+    // If not enough space below, position editor above the element
+    if (spaceBelow < editorHeight && spaceAbove > editorHeight + toolbarHeight) {
+      editorTop = rect.top - editorHeight - 8;
+      toolbarTop = editorTop - toolbarHeight - 8;
+    }
+
+    // If not enough space above for toolbar, put it below element and editor below that
+    if (toolbarTop < 8) {
+      toolbarTop = 8; // Keep toolbar visible at top
+    }
+
     setPosition({
-      top: rect.top + window.scrollY,
-      left: rect.left + window.scrollX,
+      top: editorTop,
+      left: rect.left,
       width: Math.max(rect.width, 200),
+      toolbarTop: Math.max(8, toolbarTop), // Ensure toolbar stays on screen
     });
 
     // Highlight the original element (don't hide it)
@@ -155,13 +179,13 @@ export default function InlineTextEditor() {
         aria-hidden="true"
       />
 
-      {/* Editor positioned below the original element */}
+      {/* Editor positioned near the clicked element */}
       <div
         ref={editorRef}
         data-admin-ui="true"
         className={`fixed z-[9999] ${cardBgColors.base} border-2 border-blue-500 rounded-lg shadow-xl`}
         style={{
-          top: position.top + 40, // Position below the highlighted element
+          top: position.top,
           left: position.left,
           minWidth: Math.max(position.width, 250),
         }}
@@ -169,12 +193,12 @@ export default function InlineTextEditor() {
         <EditorContent editor={editor} />
       </div>
 
-      {/* Floating toolbar - positioned above the highlighted element */}
+      {/* Floating toolbar - positioned above the editor */}
       <div
         data-admin-ui="true"
         className={`fixed z-[10000] ${cardBgColors.base} ${cardBorderColors.light} rounded-lg shadow-xl flex items-center gap-1 px-3 py-2`}
         style={{
-          top: Math.max(8, position.top - 44),
+          top: position.toolbarTop,
           left: position.left,
         }}
       >

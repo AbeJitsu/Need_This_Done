@@ -91,13 +91,6 @@ export default function ServiceDetailModal() {
             <CloseIcon size="lg" />
           </button>
 
-          {/* Debug info - remove after fixing */}
-          {isEditMode && (
-            <div className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs p-2 m-2 rounded">
-              Debug: isEditMode={String(isEditMode)}, cardIndex={String(cardIndex)}, canEdit={String(canEdit)}
-            </div>
-          )}
-
           {/* ================================================================
               Header section
               ================================================================ */}

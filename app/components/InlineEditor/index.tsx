@@ -18,6 +18,12 @@ export { default as InlineTextEditor } from './InlineTextEditor';
 // Editable wrapper - wrap any element to make it editable
 export { default as Editable } from './Editable';
 
+// EditableLink - for elements that are both links and editable (conditional Link wrapper)
+export { default as EditableLink } from './EditableLink';
+
+// EditableCard - for card elements that are links in view mode but editable in edit mode
+export { default as EditableCard } from './EditableCard';
+
 // Choice menu - context menu for edit mode actions (edit card vs edit modal)
 export { default as ChoiceMenu } from './ChoiceMenu';
 export type { ChoiceOption } from './ChoiceMenu';
