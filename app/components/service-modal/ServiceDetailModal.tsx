@@ -1,6 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
+import * as LucideIcons from 'lucide-react';
 import { useServiceModal } from '@/context/ServiceModalContext';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { useBackdropClose } from '@/hooks/useBackdropClose';
@@ -13,11 +15,30 @@ import {
   iconButtonColors,
   getSolidButtonColors,
   outlineButtonColors,
+  getCheckmarkColors,
+  type AccentVariant,
 } from '@/lib/colors';
-import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
 import { CloseIcon } from '@/components/ui/icons';
 import { serviceColors } from '@/lib/service-colors';
-import { Editable } from '@/components/InlineEditor';
+import { Editable, IconPicker } from '@/components/InlineEditor';
+
+// Render a lucide icon by name with colored circle background
+function BulletIcon({
+  iconName = 'Check',
+  color = 'green',
+}: {
+  iconName?: string;
+  color?: AccentVariant;
+}) {
+  const { bg, icon: iconColor } = getCheckmarkColors(color);
+  const IconComponent = (LucideIcons as Record<string, React.ComponentType<{ size?: number; className?: string }>>)[iconName] || LucideIcons.Check;
+
+  return (
+    <div className={`w-5 h-5 rounded-full ${bg} flex items-center justify-center flex-shrink-0`}>
+      <IconComponent size={12} className={iconColor} />
+    </div>
+  );
+}
 
 // ============================================================================
 // Service Detail Modal - Teaser Format
@@ -31,18 +52,42 @@ import { Editable } from '@/components/InlineEditor';
 
 export default function ServiceDetailModal() {
   const { isOpen, activeService, activeServiceType, cardIndex, closeModal } = useServiceModal();
-  const { isEditMode } = useInlineEdit();
+  const { isEditMode, updateField } = useInlineEdit();
   const { handleBackdropClick, modalRef } = useBackdropClose({
     isOpen,
     onClose: closeModal,
     includeEscape: true,
   });
 
+  // State for icon picker
+  const [iconPickerState, setIconPickerState] = useState<{
+    isOpen: boolean;
+    bulletIndex: number;
+    position: { top: number; left: number };
+  }>({ isOpen: false, bulletIndex: -1, position: { top: 0, left: 0 } });
+
   // Get the accent color for current service
   const color = activeServiceType ? serviceColors[activeServiceType] : 'blue';
 
   // Can we edit this modal? Only if we have a card index (from page content)
   const canEdit = isEditMode && cardIndex !== null;
+
+  // Handle icon click - open picker
+  const handleIconClick = (e: React.MouseEvent, bulletIndex: number) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setIconPickerState({
+      isOpen: true,
+      bulletIndex,
+      position: { top: rect.bottom + 8, left: rect.left },
+    });
+  };
+
+  // Handle icon selection
+  const handleIconSelect = (iconName: string) => {
+    if (cardIndex === null) return;
+    updateField('services', `cards.${cardIndex}.modal.bulletIcons.${iconPickerState.bulletIndex}`, iconName);
+    setIconPickerState({ isOpen: false, bulletIndex: -1, position: { top: 0, left: 0 } });
+  };
 
   // Don't render if closed or no content
   if (!isOpen || !activeService) return null;
@@ -147,33 +192,34 @@ export default function ServiceDetailModal() {
                 )}
               </h3>
               <ul className="space-y-2">
-                {activeService.bulletPoints.map((point, index) => (
-                  <li key={index} className={`flex items-center gap-3 ${headingColors.secondary}`}>
-                    {canEdit ? (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          // Find and click the adjacent Editable element
-                          const sibling = e.currentTarget.nextElementSibling?.querySelector('[data-edit-path]');
-                          if (sibling instanceof HTMLElement) sibling.click();
-                        }}
-                        className="flex-shrink-0 cursor-pointer hover:scale-110 transition-transform"
-                        aria-label={`Edit bullet point ${index + 1}`}
-                      >
-                        <CheckmarkCircle color={color} size="sm" />
-                      </button>
-                    ) : (
-                      <CheckmarkCircle color={color} size="sm" className="flex-shrink-0" />
-                    )}
-                    {canEdit ? (
-                      <Editable path={`services.cards.${cardIndex}.modal.bulletPoints.${index}`}>
+                {activeService.bulletPoints.map((point, index) => {
+                  // Get custom icon or default to Check
+                  const iconName = activeService.bulletIcons?.[index] || 'Check';
+                  return (
+                    <li key={index} className={`flex items-center gap-3 ${headingColors.secondary}`}>
+                      {canEdit ? (
+                        <button
+                          type="button"
+                          onClick={(e) => handleIconClick(e, index)}
+                          className="flex-shrink-0 cursor-pointer hover:scale-110 transition-transform"
+                          aria-label={`Change icon for bullet point ${index + 1}`}
+                          title="Click to change icon"
+                        >
+                          <BulletIcon iconName={iconName} color={color} />
+                        </button>
+                      ) : (
+                        <BulletIcon iconName={iconName} color={color} />
+                      )}
+                      {canEdit ? (
+                        <Editable path={`services.cards.${cardIndex}.modal.bulletPoints.${index}`}>
+                          <span>{point}</span>
+                        </Editable>
+                      ) : (
                         <span>{point}</span>
-                      </Editable>
-                    ) : (
-                      <span>{point}</span>
-                    )}
-                  </li>
-                ))}
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
 
@@ -247,6 +293,16 @@ export default function ServiceDetailModal() {
           </div>
         </div>
       </div>
+
+      {/* Icon Picker */}
+      {iconPickerState.isOpen && (
+        <IconPicker
+          currentIcon={activeService.bulletIcons?.[iconPickerState.bulletIndex] || 'Check'}
+          onSelect={handleIconSelect}
+          onClose={() => setIconPickerState({ isOpen: false, bulletIndex: -1, position: { top: 0, left: 0 } })}
+          position={iconPickerState.position}
+        />
+      )}
 
       {/* Animation keyframes - added via style tag */}
       <style jsx>{`

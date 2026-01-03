@@ -5,10 +5,12 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import { signOut } from '@/lib/auth';
 import { navigationColors, accentColors, accentBorderWidth, accentFontWeight, getBadgeColor, cardBgColors, cardBorderColors } from '@/lib/colors';
 import DarkModeToggle from './DarkModeToggle';
 import { CloseIcon } from '@/components/ui/icons';
+import { Editable } from '@/components/InlineEditor';
 
 // ============================================================================
 // Navigation Component - Persistent Site Navigation

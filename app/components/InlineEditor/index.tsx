@@ -28,6 +28,9 @@ export { default as EditableCard } from './EditableCard';
 export { default as ChoiceMenu } from './ChoiceMenu';
 export type { ChoiceOption } from './ChoiceMenu';
 
+// Icon picker - searchable icon selector using lucide-react
+export { default as IconPicker } from './IconPicker';
+
 // Visual editing tools (resize, alignment)
 export { default as ResizableWrapper } from './ResizableWrapper';
 export { default as AlignmentToolbar, useAlignment, getTextAlignClass, getFlexAlignClass, getBlockAlignClass } from './AlignmentToolbar';

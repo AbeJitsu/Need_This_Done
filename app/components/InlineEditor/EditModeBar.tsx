@@ -4,10 +4,10 @@ import { useEffect, useCallback } from 'react';
 import { useInlineEdit } from '@/context/InlineEditContext';
 
 // ============================================================================
-// EditModeBar - Top bar showing edit mode status with exit button
+// EditModeBar - Left vertical bar showing edit mode status with exit button
 // ============================================================================
-// What: Fixed bar at top of viewport when edit mode is active
-// Why: Lets admins know they're in edit mode and provides a way to exit
+// What: Fixed bar on left side of viewport when edit mode is active
+// Why: Lets admins know they're in edit mode without blocking header
 // How: Uses InlineEditContext to check/toggle edit mode
 
 export default function EditModeBar() {
@@ -38,31 +38,51 @@ export default function EditModeBar() {
   if (!isEditMode) return null;
 
   // Build status text
-  let statusText = 'Click any section or item to edit';
+  let statusText = 'Click to edit';
   if (selectedItem) {
-    statusText = `Editing: ${selectedItem.label}`;
+    statusText = selectedItem.label;
   } else if (selectedSection) {
-    statusText = `Editing section: ${selectedSection.label}`;
+    statusText = selectedSection.label;
   }
 
   return (
-    // z-[60] is higher than sidebar (z-50) so the Exit button remains clickable
-    <div className="fixed top-0 left-0 right-0 z-[60] bg-purple-600 text-white px-4 py-2 flex items-center justify-between shadow-lg">
-      <div className="flex items-center gap-3">
-        <span className="font-semibold">Edit Mode</span>
-        <span className="text-purple-200 text-sm hidden sm:inline">|</span>
-        <span className="text-purple-100 text-sm hidden sm:inline">{statusText}</span>
+    // Vertical bar on left side - doesn't block header
+    <div
+      data-admin-ui="true"
+      className="fixed left-0 top-1/2 -translate-y-1/2 z-[60] bg-purple-600 text-white px-2 py-4 flex flex-col items-center gap-4 shadow-lg rounded-r-lg"
+    >
+      {/* Vertical label */}
+      <div
+        className="font-semibold text-sm whitespace-nowrap"
+        style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)' }}
+      >
+        Edit Mode
       </div>
 
-      <div className="flex items-center gap-2">
-        <span className="text-purple-200 text-xs hidden md:inline">Press Esc or</span>
-        <button
-          onClick={handleExitEditMode}
-          className="px-3 py-1 bg-white text-purple-700 rounded-md text-sm font-medium hover:bg-purple-100 transition-colors"
-        >
-          Exit Edit Mode
-        </button>
+      {/* Divider */}
+      <div className="w-6 h-px bg-purple-400" />
+
+      {/* Status text */}
+      <div
+        className="text-purple-100 text-xs max-w-[1.5rem] text-center"
+        style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)' }}
+        title={statusText}
+      >
+        {statusText.length > 20 ? `${statusText.slice(0, 17)}...` : statusText}
       </div>
+
+      {/* Divider */}
+      <div className="w-6 h-px bg-purple-400" />
+
+      {/* Exit button */}
+      <button
+        onClick={handleExitEditMode}
+        className="p-2 bg-white text-purple-700 rounded-md text-sm font-medium hover:bg-purple-100 transition-colors"
+        title="Exit Edit Mode (Esc)"
+        aria-label="Exit Edit Mode"
+      >
+        ✕
+      </button>
     </div>
   );
 }

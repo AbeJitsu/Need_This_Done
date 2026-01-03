@@ -1,5 +1,14 @@
 [
   {
+    "hash": "d2be398",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "d2be3985c7362cd6e5fd970a847a17917eb9e8f4:%M",
+    "author": "Abe Reyes",
+    "message": "Make checkmark icons clickable to edit adjacent text",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
     "hash": "825c795",
     "date": "%Y->- (HEAD -> main)",
     "time": "825c79572e0ead8d5371fc09470097fb89b7f5e6:%M",
@@ -889,14 +898,5 @@
     "message": "Docs: Mark drag-and-drop feature as blocked for architecture review",
     "category": "Documentation",
     "filesChanged": 3
-  },
-  {
-    "hash": "8722558",
-    "date": "2025-12-31",
-    "time": "09:21",
-    "author": "Abe Reyes",
-    "message": "Docs: Mark guide page diagrams as blocked pending design",
-    "category": "Documentation",
-    "filesChanged": 2
   }
 ]
