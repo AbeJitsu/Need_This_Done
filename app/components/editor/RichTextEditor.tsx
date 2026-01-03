@@ -10,7 +10,7 @@ import Underline from '@tiptap/extension-underline';
 import { useState, useCallback, useEffect } from 'react';
 import MediaLibrary from '@/components/media/MediaLibrary';
 import { MediaItem } from '@/lib/media-types';
-import { uiChromeBg, toggleButtonColors, hoverBgColors } from '@/lib/colors';
+import { uiChromeBg, toggleButtonColors, hoverBgColors, cardBgColors } from '@/lib/colors';
 import {
   BoldIcon,
   ItalicIcon,
@@ -142,7 +142,7 @@ export default function RichTextEditor({
   if (!editor) return null;
 
   return (
-    <div className={`border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden bg-white dark:bg-gray-800 ${className}`}>
+    <div className={`border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden ${cardBgColors.base} ${className}`}>
       {/* ====================================================================
           Toolbar
           ==================================================================== */}
@@ -178,7 +178,7 @@ export default function RichTextEditor({
       {isLinkModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsLinkModalOpen(false)} />
-          <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 w-full max-w-md">
+          <div className={`relative ${cardBgColors.base} rounded-xl shadow-xl p-6 w-full max-w-md`}>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               {linkUrl ? 'Edit Link' : 'Add Link'}
             </h3>

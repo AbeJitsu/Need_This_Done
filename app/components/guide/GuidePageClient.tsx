@@ -83,7 +83,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
       </EditableSection>
 
       {/* Quick Navigation - Jump Links */}
-      <nav className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-8">
+      <nav className={`${cardBgColors.base} rounded-xl shadow-sm ${cardBorderColors.light} p-4 mb-8`}>
         <div className="flex flex-wrap items-center gap-3">
           <span className={`text-sm font-medium ${formInputColors.helper}`}>Jump to:</span>
           {GROUP_ORDER.map((groupId) => (

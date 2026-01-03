@@ -8,7 +8,7 @@ import {
   STARTER_TEMPLATES,
   filterByCategory,
 } from '@/lib/templates';
-import type { AccentVariant } from '@/lib/colors';
+import { cardBgColors, type AccentVariant } from '@/lib/colors';
 import {
   StepCategory,
   StepTemplate,
@@ -115,7 +115,7 @@ export default function PageWizard({ onComplete, onCancel }: PageWizardProps) {
   return (
     <div className="min-h-[600px] h-[calc(100dvh-72px)] bg-gray-100 dark:bg-gray-900 flex flex-col overflow-hidden">
       {/* Header with progress */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex-shrink-0">
+      <header className={`${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex-shrink-0`}>
         <div className="max-w-2xl mx-auto">
           {/* Top row: back button and step indicator */}
           <div className="flex items-center justify-between mb-3">
@@ -204,7 +204,7 @@ export default function PageWizard({ onComplete, onCancel }: PageWizardProps) {
       </main>
 
       {/* Footer with action button - flex-shrink-0 keeps it pinned at bottom */}
-      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-4 flex-shrink-0">
+      <footer className={`${cardBgColors.base} border-t border-gray-200 dark:border-gray-700 px-4 py-4 flex-shrink-0`}>
         <div className="max-w-2xl mx-auto">
           <button
             onClick={goForward}

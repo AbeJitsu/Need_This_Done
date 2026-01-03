@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
 import { getPuckFullColors, puckAspectMap, PuckEmptyState } from '@/lib/puck-utils';
-import { cardHoverColors, getSolidButtonColors, type AccentVariant } from '@/lib/colors';
+import { cardHoverColors, getSolidButtonColors, cardBgColors, type AccentVariant } from '@/lib/colors';
 
 // ============================================================================
 // LIVE PRODUCT CARD COMPONENT
@@ -118,7 +118,7 @@ export default function ProductCardComponent({
   // Loading state - use puckAspectMap
   if (loading) {
     return (
-      <div className={`bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 overflow-hidden animate-pulse`}>
+      <div className={`${cardBgColors.base} rounded-xl border-2 border-gray-200 dark:border-gray-700 overflow-hidden animate-pulse`}>
         <div className={`${puckAspectMap[imageAspect]} bg-gray-200 dark:bg-gray-700`} />
         <div className="p-4">
           <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
@@ -133,7 +133,7 @@ export default function ProductCardComponent({
   // Error state
   if (error || !product) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl border-2 border-red-200 dark:border-red-800 p-6 text-center">
+      <div className={`${cardBgColors.base} rounded-xl border-2 border-red-200 dark:border-red-800 p-6 text-center">
         <svg className="w-10 h-10 mx-auto text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
@@ -152,7 +152,7 @@ export default function ProductCardComponent({
   });
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 ${hoverBorder} overflow-hidden transition-all hover:shadow-lg group`}>
+    <div className={`${cardBgColors.base} rounded-xl border-2 border-gray-200 dark:border-gray-700 ${hoverBorder} overflow-hidden transition-all hover:shadow-lg group`}>
       {/* Product Image */}
       <div className={`${puckAspectMap[imageAspect]} bg-gray-100 dark:bg-gray-700 overflow-hidden relative`}>
         {product.thumbnail ? (

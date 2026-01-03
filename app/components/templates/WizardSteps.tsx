@@ -12,7 +12,7 @@ import {
   ALL_CATEGORIES,
   COLOR_OPTIONS,
 } from '@/lib/templates';
-import { accentColors, softBgColors, type AccentVariant } from '@/lib/colors';
+import { accentColors, softBgColors, cardBgColors, type AccentVariant } from '@/lib/colors';
 
 // ============================================================================
 // Step 1: Choose Category
@@ -262,7 +262,7 @@ export function StepContent({ template, content, onChange }: StepContentProps) {
                 onChange={(e) => updateField(field.path, e.target.value)}
                 placeholder={field.hint}
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className={`w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 ${cardBgColors.base} text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
               />
             ) : (
               <input
@@ -270,7 +270,7 @@ export function StepContent({ template, content, onChange }: StepContentProps) {
                 value={content[field.path] || field.defaultValue || ''}
                 onChange={(e) => updateField(field.path, e.target.value)}
                 placeholder={field.hint}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className={`w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 ${cardBgColors.base} text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
               />
             )}
 

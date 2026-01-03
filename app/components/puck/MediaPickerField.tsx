@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import { cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // MEDIA PICKER FIELD FOR PUCK
@@ -119,7 +120,7 @@ export default function MediaPickerField({ value, onChange, label }: MediaPicker
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Or paste image URL..."
-        className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400"
+        className={`w-full px-3 py-2 text-sm ${cardBorderColors.light} rounded-lg ${cardBgColors.base} text-gray-900 dark:text-gray-100 placeholder-gray-400`}
       />
 
       {/* Media Picker Modal */}
@@ -151,7 +152,7 @@ export default function MediaPickerField({ value, onChange, label }: MediaPicker
                   onChange={(e) => setSearch(e.target.value)}
                   onKeyDown={handleSearchKeyDown}
                   placeholder="Search media..."
-                  className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                  className={`flex-1 px-3 py-2 ${cardBorderColors.light} rounded-lg ${cardBgColors.base} text-gray-900 dark:text-gray-100`}
                 />
                 <button
                   type="button"

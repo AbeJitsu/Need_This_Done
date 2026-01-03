@@ -16,7 +16,7 @@ import {
   BLOG_STATUS_LABELS,
   formatPublishedDate,
 } from '@/lib/blog-types';
-import { statusBadgeColors, alertColors, containerBg } from '@/lib/colors';
+import { statusBadgeColors, alertColors, containerBg, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Blog Dashboard - /admin/blog
@@ -334,7 +334,7 @@ export default function BlogManagement() {
 
           {/* Empty State */}
           {filteredPosts.length === 0 && (
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 px-8 py-16 text-center">
+            <div className={`${cardBgColors.base} rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 px-8 py-16 text-center`}>
               <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 flex items-center justify-center">
                 <svg
                   className="w-10 h-10 text-blue-600 dark:text-blue-400"

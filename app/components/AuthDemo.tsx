@@ -258,7 +258,7 @@ export default function AuthDemo() {
             </button>
 
             {showJourney && (
-              <div className="p-4 space-y-4 bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-600">
+              <div className={`p-4 space-y-4 ${cardBgColors.base} border-t border-gray-300 dark:border-gray-600`}>
                 {/* Journey Steps */}
                 <div className="space-y-3">
                   <div className="flex gap-3">

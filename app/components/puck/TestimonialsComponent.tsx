@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { getPuckFullColors, PuckEmptyState } from '@/lib/puck-utils';
+import { cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Testimonials Component - Social Proof Display
@@ -68,7 +69,7 @@ function TestimonialCard({
 }) {
   return (
     <div
-      className={`relative bg-white dark:bg-gray-800 rounded-xl p-6 border ${colors.cardBorderHover} transition-all duration-300 h-full flex flex-col`}
+      className={`relative ${cardBgColors.base} rounded-xl p-6 border ${colors.cardBorderHover} transition-all duration-300 h-full flex flex-col`}
     >
       {/* Quote mark */}
       <svg
@@ -264,7 +265,7 @@ export default function TestimonialsComponent({
         <>
           <button
             onClick={() => setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-lg flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 rounded-full ${cardBgColors.base} shadow-lg flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
             aria-label="Previous testimonial"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -273,7 +274,7 @@ export default function TestimonialsComponent({
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-lg flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 rounded-full ${cardBgColors.base} shadow-lg flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
             aria-label="Next testimonial"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

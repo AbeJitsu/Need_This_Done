@@ -5,6 +5,7 @@ import Link from 'next/link';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
 import { useDashboard, LoadingSkeleton, ErrorDisplay } from '@/hooks/useDashboard';
+import { cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Dashboard Component - View All Projects with Filters
@@ -71,7 +72,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Link
           href="/admin/blog"
-          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all group"
+          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all group`}
         >
           <div className="text-2xl mb-2">📰</div>
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
@@ -81,7 +82,7 @@ export default function AdminDashboard() {
         </Link>
         <Link
           href="/admin/content"
-          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all group"
+          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all group`}
         >
           <div className="text-2xl mb-2">📝</div>
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
@@ -91,7 +92,7 @@ export default function AdminDashboard() {
         </Link>
         <Link
           href="/admin/pages"
-          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-purple-400 dark:hover:border-purple-500 hover:shadow-md transition-all group"
+          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-purple-400 dark:hover:border-purple-500 hover:shadow-md transition-all group`}
         >
           <div className="text-2xl mb-2">🎨</div>
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400">
@@ -101,7 +102,7 @@ export default function AdminDashboard() {
         </Link>
         <Link
           href="/admin/shop"
-          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-500 hover:shadow-md transition-all group"
+          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-green-400 dark:hover:border-green-500 hover:shadow-md transition-all group`}
         >
           <div className="text-2xl mb-2">🛒</div>
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-green-600 dark:group-hover:text-green-400">
@@ -111,7 +112,7 @@ export default function AdminDashboard() {
         </Link>
         <Link
           href="/admin/appointments"
-          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-cyan-400 dark:hover:border-cyan-500 hover:shadow-md transition-all group"
+          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-cyan-400 dark:hover:border-cyan-500 hover:shadow-md transition-all group`}
         >
           <div className="text-2xl mb-2">📅</div>
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
@@ -121,7 +122,7 @@ export default function AdminDashboard() {
         </Link>
         <Link
           href="/admin/users"
-          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-pink-400 dark:hover:border-pink-500 hover:shadow-md transition-all group"
+          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-pink-400 dark:hover:border-pink-500 hover:shadow-md transition-all group`}
         >
           <div className="text-2xl mb-2">👥</div>
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-pink-600 dark:group-hover:text-pink-400">
@@ -131,7 +132,7 @@ export default function AdminDashboard() {
         </Link>
         <Link
           href="/admin/analytics"
-          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all group"
+          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all group`}
         >
           <div className="text-2xl mb-2">📊</div>
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
@@ -141,7 +142,7 @@ export default function AdminDashboard() {
         </Link>
         <Link
           href="/admin/dev"
-          className="bg-white dark:bg-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-gold-400 dark:hover:border-gold-500 hover:shadow-md transition-all group"
+          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-gold-400 dark:hover:border-gold-500 hover:shadow-md transition-all group`}
         >
           <div className="text-2xl mb-2">⚙️</div>
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-gold-600 dark:group-hover:text-gold-400">
@@ -155,7 +156,7 @@ export default function AdminDashboard() {
           Filters
           ==================================================================== */}
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-200 dark:border-gray-700 transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md">
+      <div className={`${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.subtle} transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md`}>
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
           Find what you need
         </h2>
@@ -206,7 +207,7 @@ export default function AdminDashboard() {
       ) : loading ? (
         <LoadingSkeleton />
       ) : projects.length === 0 ? (
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-12 border border-gray-200 dark:border-gray-700 text-center">
+        <div className={`${cardBgColors.base} rounded-xl p-12 ${cardBorderColors.light} text-center`}>
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
             <span className="text-2xl">📋</span>
           </div>

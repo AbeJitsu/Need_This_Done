@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { uiChromeBg } from '@/lib/colors';
+import { uiChromeBg, cardBgColors } from '@/lib/colors';
 import HomepagePreview from './previews/HomepagePreview';
 import PricingPreview from './previews/PricingPreview';
 import ServicesPreview from './previews/ServicesPreview';
@@ -91,7 +91,7 @@ export default function PagePreview({ slug, content }: PagePreviewProps) {
       {/* Preview Container */}
       <div className="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 p-4">
         <div
-          className="mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden transition-all duration-300"
+          className={`mx-auto ${cardBgColors.base} shadow-lg rounded-lg overflow-hidden transition-all duration-300`}
           style={{
             width: device === 'desktop' ? '100%' : targetWidth,
             maxWidth: '100%',

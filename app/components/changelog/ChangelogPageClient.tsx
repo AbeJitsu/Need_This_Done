@@ -4,7 +4,7 @@ import PageHeader from '@/components/PageHeader';
 import { EditableSection } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { ChangelogPageContent } from '@/lib/page-content-types';
-import { headingColors, formInputColors, categoryBadgeColors } from '@/lib/colors';
+import { headingColors, formInputColors, categoryBadgeColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 import Image from 'next/image';
 
 // ============================================================================
@@ -52,7 +52,7 @@ function CategoryBadge({ category }: { category: string }) {
 
 function ChangelogCard({ entry }: { entry: ChangelogEntry }) {
   return (
-    <article className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <article className={`${cardBgColors.base} rounded-xl shadow-sm ${cardBorderColors.light} overflow-hidden`}>
       <div className="p-6 border-b border-gray-100 dark:border-gray-700">
         <div className="flex items-center gap-3 mb-3">
           <CategoryBadge category={entry.category} />

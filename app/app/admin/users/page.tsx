@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { statusBadgeColors, alertColors, filterButtonColors, formInputColors, hoverBgColors } from '@/lib/colors';
+import { statusBadgeColors, alertColors, filterButtonColors, formInputColors, hoverBgColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Users Page - User Management
@@ -497,7 +497,7 @@ export default function AdminUsersPage() {
               {showColumnMenu && (
                 <div
                   role="menu"
-                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-10"
+                  className={`absolute right-0 mt-2 w-48 ${cardBgColors.base} rounded-lg shadow-lg ${cardBorderColors.light} py-2 z-10`}
                 >
                   <div className="px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
                     Show Columns

@@ -6,7 +6,7 @@
 // Helps visitors self-identify which service fits their situation.
 // Clicking a scenario opens the corresponding service modal.
 
-import { accentColors, headingColors, formInputColors } from '@/lib/colors';
+import { accentColors, headingColors, formInputColors, cardBgColors } from '@/lib/colors';
 import { EditableItem } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { ServiceScenario } from '@/lib/page-content-types';
@@ -58,7 +58,7 @@ export default function ScenarioMatcher({
               onClick={() => handleScenarioClick(scenario.serviceKey)}
               className={`
                 w-full p-6 rounded-xl text-left
-                bg-white dark:bg-gray-800
+                ${cardBgColors.base}
                 border-2 border-gray-200 dark:border-gray-700
                 ${accentColors[scenario.color].hoverBorder}
                 hover:shadow-lg

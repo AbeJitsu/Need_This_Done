@@ -9,7 +9,7 @@ import {
   CATEGORY_INFO,
   ALL_CATEGORIES,
 } from '@/lib/templates';
-import { accentColors } from '@/lib/colors';
+import { accentColors, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // TEMPLATE PICKER COMPONENT
@@ -69,7 +69,7 @@ export default function TemplatePicker({
             placeholder="Search templates..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-4 py-3 pl-11 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+            className={`w-full px-4 py-3 pl-11 rounded-xl border border-gray-200 dark:border-gray-700 ${cardBgColors.base} text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all`}
           />
           <svg
             className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
@@ -225,7 +225,7 @@ function TemplateCard({ template, isSelected, onSelect }: TemplateCardProps) {
       className={`w-full text-left rounded-xl border-2 overflow-hidden transition-all ${
         isSelected
           ? `${colors.border} shadow-lg ring-2 ring-offset-2 ring-purple-500`
-          : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md'
+          : `border-gray-200 dark:border-gray-700 ${cardBgColors.base} hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md`
       }`}
     >
       {/* Preview Thumbnail - Visual representation of template */}

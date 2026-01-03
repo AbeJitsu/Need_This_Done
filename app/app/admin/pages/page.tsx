@@ -10,7 +10,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import { alertColors, statusBadgeColors, iconCircleColors, containerBg } from '@/lib/colors';
+import { alertColors, statusBadgeColors, iconCircleColors, containerBg, cardBgColors } from '@/lib/colors';
 
 interface Page {
   id: string;
@@ -266,7 +266,7 @@ export default function PagesManagement() {
               Empty State
               ==================================================================== */}
           {pages.length === 0 && (
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 px-8 py-16 text-center">
+            <div className={`${cardBgColors.base} rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 px-8 py-16 text-center`}>
               <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 flex items-center justify-center">
                 <svg className="w-10 h-10 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />

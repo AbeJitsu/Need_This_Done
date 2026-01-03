@@ -16,7 +16,7 @@ import {
   type HowItWorksPageContent,
   type EditablePageSlug,
 } from '@/lib/page-content-types';
-import { alertColors, uiChromeBg, statusIndicatorBg, hoverBgColors } from '@/lib/colors';
+import { alertColors, uiChromeBg, statusIndicatorBg, hoverBgColors, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Content Editor - Main Editor Component
@@ -153,7 +153,7 @@ export default function ContentEditor({
   return (
     <div className="h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
       {/* Header Bar */}
-      <header className="flex-shrink-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+      <header className={`flex-shrink-0 ${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 px-4 py-3`}>
         <div className="flex items-center justify-between max-w-[1800px] mx-auto">
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -194,7 +194,7 @@ export default function ContentEditor({
       {/* Main Content - Split Panel */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel - Form */}
-        <div className="w-[400px] flex-shrink-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col">
+        <div className={`w-[400px] flex-shrink-0 border-r border-gray-200 dark:border-gray-700 ${cardBgColors.base} flex flex-col`}>
           {/* Form Content */}
           <div className="flex-1 overflow-y-auto p-4">
             {renderForm()}

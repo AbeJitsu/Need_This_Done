@@ -9,7 +9,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import type { Product, Order } from '@/lib/medusa-client';
-import { alertColors, statusBadgeColors, formInputColors } from '@/lib/colors';
+import { alertColors, statusBadgeColors, formInputColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Shop Dashboard - /admin/shop
@@ -271,7 +271,7 @@ export default function AdminShopDashboard() {
                   Export
                 </Button>
                 {showExportOptions && (
-                  <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10">
+                  <div className={`absolute right-0 mt-2 w-32 ${cardBgColors.base} rounded-lg shadow-lg ${cardBorderColors.light} z-10`}>
                     <button
                       onClick={() => handleExport('json')}
                       className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg"
@@ -305,7 +305,7 @@ export default function AdminShopDashboard() {
           {/* Import Modal */}
           {showImportModal && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+              <div className={`${cardBgColors.base} rounded-lg p-6 max-w-md w-full mx-4 shadow-xl`}>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                   Import Products
                 </h3>

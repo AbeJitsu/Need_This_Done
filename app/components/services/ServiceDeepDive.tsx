@@ -18,6 +18,7 @@ import {
   titleColors,
   lightBgColors,
   successCheckmarkColors,
+  cardBgColors,
   type AccentColor,
 } from '@/lib/colors';
 import { serviceColors, type ServiceType } from '@/lib/service-colors';
@@ -96,7 +97,7 @@ function ServiceDetail({ content, color }: ServiceDetailProps) {
     <div
       className={`
         p-6 rounded-xl
-        bg-white dark:bg-gray-800
+        ${cardBgColors.base}
         border-2 border-gray-200 dark:border-gray-700
         border-t-4
         ${color === 'green' ? 'border-t-green-500' : ''}

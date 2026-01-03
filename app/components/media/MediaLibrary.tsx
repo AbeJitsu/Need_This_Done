@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { MediaItem, MediaListResponse, MEDIA_FOLDERS, formatFileSize } from '@/lib/media-types';
 import ImageUpload from './ImageUpload';
-import { alertColors, uiChromeBg, toggleButtonColors } from '@/lib/colors';
+import { alertColors, uiChromeBg, toggleButtonColors, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // MediaLibrary Component - Image Browser & Picker Modal
@@ -165,7 +165,7 @@ export default function MediaLibrary({
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-5xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+      <div className={`relative w-full max-w-5xl max-h-[90vh] ${cardBgColors.base} rounded-2xl shadow-2xl flex flex-col overflow-hidden`}>
         {/* ================================================================
             Header
             ================================================================ */}
@@ -197,7 +197,7 @@ export default function MediaLibrary({
               placeholder="Search images..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className={`w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg ${cardBgColors.base} text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
             />
           </div>
 
@@ -205,7 +205,7 @@ export default function MediaLibrary({
           <select
             value={folder}
             onChange={(e) => setFolder(e.target.value)}
-            className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className={`px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg ${cardBgColors.base} text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
           >
             <option value="all">All Folders</option>
             {MEDIA_FOLDERS.map(f => (

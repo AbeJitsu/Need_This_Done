@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getPuckFullColors, PuckEmptyState } from '@/lib/puck-utils';
+import { cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // INTERACTIVE ACCORDION COMPONENT
@@ -125,7 +126,7 @@ export default function AccordionComponent({
                 isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
-              <div className="px-5 py-4 text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+              <div className={`px-5 py-4 text-gray-600 dark:text-gray-400 ${cardBgColors.base}`}>
                 {item.content || 'No content'}
               </div>
             </div>
