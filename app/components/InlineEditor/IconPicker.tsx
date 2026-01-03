@@ -1,7 +1,39 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
-import * as LucideIcons from 'lucide-react';
+import {
+  Check, CheckCircle, CheckCircle2, CircleCheck, CircleCheckBig,
+  Star, Heart, ThumbsUp, Award, Trophy, Medal, Crown, Gem,
+  Sparkles, Zap, ArrowRight, ChevronRight, MoveRight, ArrowUpRight,
+  Clock, Calendar, Timer, Hourglass, AlarmClock,
+  Shield, ShieldCheck, Lock, Key, KeyRound, Unlock,
+  User, Users, UserCheck, UserPlus, UserCircle,
+  Mail, MessageSquare, Phone, MessageCircle, Send, Inbox,
+  Home, Building, Building2, Store, Warehouse, Factory,
+  DollarSign, CreditCard, Wallet, Banknote, PiggyBank, Receipt,
+  FileText, File, Folder, FolderOpen, FileCheck, FilePlus,
+  Settings, Wrench, Cog, SlidersHorizontal, Tool,
+  Search, Eye, Target, Crosshair, Focus, Scan,
+  Rocket, Plane, Car, Truck, Ship, Bike,
+  Share, Globe, Earth, Link, ExternalLink, Link2,
+  Lightbulb, Flame, Sun, Moon, CloudSun, Sunrise,
+  Package, Box, Gift, ShoppingCart, ShoppingBag, Tag,
+  Bookmark, Flag, Pin, MapPin, Navigation, Compass,
+  Bell, BellRing, Volume2, Music, Headphones, Radio,
+  Camera, Image, Video, Film, Monitor, Tv,
+  Wifi, Signal, Bluetooth, Battery, Power, Plug,
+  Code, Terminal, Database, Server, Cloud, HardDrive,
+  Layers, Grid, LayoutGrid, Table, List, ListChecks,
+  PenTool, Pencil, Edit, Eraser, Highlighter, Brush,
+  Scissors, Copy, Clipboard, ClipboardCheck, Download, Upload,
+  RefreshCw, RotateCcw, Repeat, Shuffle, Play, Pause,
+  Plus, Minus, X, AlertCircle, Info, HelpCircle,
+  Smile, Frown, Meh, PartyPopper, Cake, Coffee,
+  Book, BookOpen, GraduationCap, School, Library, Newspaper,
+  Briefcase, BadgeCheck, IdCard, Stamp, FileSignature, Scale,
+  TreePine, Flower, Leaf, Sprout, Apple, Cherry,
+  Dog, Cat, Bird, Fish, Bug, Rabbit,
+} from 'lucide-react';
 import { cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
@@ -10,6 +42,43 @@ import { cardBgColors, cardBorderColors } from '@/lib/colors';
 // What: Modal picker that displays lucide icons with search
 // Why: Allows users to customize icons throughout the site
 // How: Click icon → opens picker → search/select → saves icon name
+
+// Map of icon names to components (explicit imports for tree-shaking)
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  Check, CheckCircle, CheckCircle2, CircleCheck, CircleCheckBig,
+  Star, Heart, ThumbsUp, Award, Trophy, Medal, Crown, Gem,
+  Sparkles, Zap, ArrowRight, ChevronRight, MoveRight, ArrowUpRight,
+  Clock, Calendar, Timer, Hourglass, AlarmClock,
+  Shield, ShieldCheck, Lock, Key, KeyRound, Unlock,
+  User, Users, UserCheck, UserPlus, UserCircle,
+  Mail, MessageSquare, Phone, MessageCircle, Send, Inbox,
+  Home, Building, Building2, Store, Warehouse, Factory,
+  DollarSign, CreditCard, Wallet, Banknote, PiggyBank, Receipt,
+  FileText, File, Folder, FolderOpen, FileCheck, FilePlus,
+  Settings, Wrench, Cog, SlidersHorizontal, Tool,
+  Search, Eye, Target, Crosshair, Focus, Scan,
+  Rocket, Plane, Car, Truck, Ship, Bike,
+  Share, Globe, Earth, Link, ExternalLink, Link2,
+  Lightbulb, Flame, Sun, Moon, CloudSun, Sunrise,
+  Package, Box, Gift, ShoppingCart, ShoppingBag, Tag,
+  Bookmark, Flag, Pin, MapPin, Navigation, Compass,
+  Bell, BellRing, Volume2, Music, Headphones, Radio,
+  Camera, Image, Video, Film, Monitor, Tv,
+  Wifi, Signal, Bluetooth, Battery, Power, Plug,
+  Code, Terminal, Database, Server, Cloud, HardDrive,
+  Layers, Grid, LayoutGrid, Table, List, ListChecks,
+  PenTool, Pencil, Edit, Eraser, Highlighter, Brush,
+  Scissors, Copy, Clipboard, ClipboardCheck, Download, Upload,
+  RefreshCw, RotateCcw, Repeat, Shuffle, Play, Pause,
+  Plus, Minus, X, AlertCircle, Info, HelpCircle,
+  Smile, Frown, Meh, PartyPopper, Cake, Coffee,
+  Book, BookOpen, GraduationCap, School, Library, Newspaper,
+  Briefcase, BadgeCheck, IdCard, Stamp, FileSignature, Scale,
+  TreePine, Flower, Leaf, Sprout, Apple, Cherry,
+  Dog, Cat, Bird, Fish, Bug, Rabbit,
+};
+
+const ALL_ICON_NAMES = Object.keys(ICON_MAP);
 
 interface IconPickerProps {
   /** Currently selected icon name */
@@ -22,18 +91,6 @@ interface IconPickerProps {
   position?: { top: number; left: number };
 }
 
-// Common/popular icons to show first
-const POPULAR_ICONS = [
-  'Check', 'CheckCircle', 'CheckCircle2', 'CircleCheck',
-  'Star', 'Heart', 'ThumbsUp', 'Award', 'Trophy', 'Medal',
-  'Sparkles', 'Zap', 'ArrowRight', 'ChevronRight', 'MoveRight',
-  'Clock', 'Calendar', 'Timer', 'Shield', 'ShieldCheck', 'Lock', 'Key',
-  'User', 'Users', 'UserCheck', 'Mail', 'MessageSquare', 'Phone',
-  'Home', 'Building', 'Store', 'DollarSign', 'CreditCard', 'Wallet',
-  'FileText', 'File', 'Folder', 'Settings', 'Wrench', 'Search', 'Eye',
-  'Target', 'Rocket', 'Send', 'Share', 'Globe', 'Lightbulb', 'Flame',
-];
-
 export default function IconPicker({
   currentIcon = 'Check',
   onSelect,
@@ -44,22 +101,6 @@ export default function IconPicker({
   const [selectedIcon, setSelectedIcon] = useState(currentIcon);
   const pickerRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-
-  // Get all icon names from lucide (computed once, memoized)
-  const allIconNames = useMemo(() => {
-    const icons = Object.keys(LucideIcons).filter((key) => {
-      // Must start with uppercase
-      if (!/^[A-Z]/.test(key)) return false;
-      // Exclude Icon suffix versions (duplicates like CheckIcon vs Check)
-      if (key.endsWith('Icon')) return false;
-      // Exclude Lucide prefix versions
-      if (key.startsWith('Lucide')) return false;
-      // Must be a function/component
-      const item = (LucideIcons as Record<string, unknown>)[key];
-      return typeof item === 'function';
-    });
-    return icons;
-  }, []);
 
   // Focus search on mount
   useEffect(() => {
@@ -88,15 +129,10 @@ export default function IconPicker({
 
   // Filter icons based on search
   const filteredIcons = useMemo(() => {
+    if (!search) return ALL_ICON_NAMES;
     const searchLower = search.toLowerCase();
-    if (!search) {
-      // Show popular icons first, then all others
-      const popularSet = new Set(POPULAR_ICONS);
-      const others = allIconNames.filter((name) => !popularSet.has(name)).slice(0, 100);
-      return [...POPULAR_ICONS.filter((name) => allIconNames.includes(name)), ...others];
-    }
-    return allIconNames.filter((name) => name.toLowerCase().includes(searchLower)).slice(0, 100);
-  }, [search, allIconNames]);
+    return ALL_ICON_NAMES.filter((name) => name.toLowerCase().includes(searchLower));
+  }, [search]);
 
   const handleSelect = (iconName: string) => {
     setSelectedIcon(iconName);
@@ -106,7 +142,7 @@ export default function IconPicker({
 
   // Render an icon by name
   const renderIcon = (iconName: string) => {
-    const IconComponent = (LucideIcons as Record<string, React.ComponentType<{ size?: number; className?: string }>>)[iconName];
+    const IconComponent = ICON_MAP[iconName];
     if (!IconComponent) return null;
     return <IconComponent size={24} className="text-gray-700 dark:text-gray-300" />;
   };
@@ -168,9 +204,7 @@ export default function IconPicker({
         </div>
         {filteredIcons.length === 0 && (
           <p className="text-center text-gray-500 dark:text-gray-400 py-4">
-            {search
-              ? `No icons found for "${search}"`
-              : `Loading icons... (${allIconNames.length} available)`}
+            No icons found for &quot;{search}&quot;
           </p>
         )}
       </div>

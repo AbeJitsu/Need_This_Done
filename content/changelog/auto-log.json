@@ -1,5 +1,14 @@
 [
   {
+    "hash": "efbb362",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "efbb362864e2a17c416d217ad412652f90bf2701:%M",
+    "author": "Abe Reyes",
+    "message": "Add icon picker and move edit mode bar to left side",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
     "hash": "d2be398",
     "date": "%Y->- (HEAD -> main)",
     "time": "d2be3985c7362cd6e5fd970a847a17917eb9e8f4:%M",
@@ -889,14 +898,5 @@
     "message": "Add drag-and-drop for section reordering in edit mode",
     "category": "Other",
     "filesChanged": 13
-  },
-  {
-    "hash": "c34abc6",
-    "date": "2025-12-31",
-    "time": "09:23",
-    "author": "Abe Reyes",
-    "message": "Docs: Mark drag-and-drop feature as blocked for architecture review",
-    "category": "Documentation",
-    "filesChanged": 3
   }
 ]

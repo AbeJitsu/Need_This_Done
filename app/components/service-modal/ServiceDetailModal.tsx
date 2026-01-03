@@ -2,7 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import * as LucideIcons from 'lucide-react';
+import {
+  Check, CheckCircle, Star, Heart, ThumbsUp, Award, Trophy,
+  Sparkles, Zap, Shield, ShieldCheck, Clock, Calendar,
+  User, Users, Mail, Phone, Home, Building, DollarSign,
+  FileText, Settings, Search, Eye, Target, Rocket, Send,
+  Globe, Lightbulb, Flame, Package, Gift, Bookmark, Flag,
+  Bell, Camera, Code, Layers, Pencil, Plus, AlertCircle, Info,
+} from 'lucide-react';
 import { useServiceModal } from '@/context/ServiceModalContext';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { useBackdropClose } from '@/hooks/useBackdropClose';
@@ -22,6 +29,16 @@ import { CloseIcon } from '@/components/ui/icons';
 import { serviceColors } from '@/lib/service-colors';
 import { Editable, IconPicker } from '@/components/InlineEditor';
 
+// Map of common icon names to components
+const BULLET_ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  Check, CheckCircle, Star, Heart, ThumbsUp, Award, Trophy,
+  Sparkles, Zap, Shield, ShieldCheck, Clock, Calendar,
+  User, Users, Mail, Phone, Home, Building, DollarSign,
+  FileText, Settings, Search, Eye, Target, Rocket, Send,
+  Globe, Lightbulb, Flame, Package, Gift, Bookmark, Flag,
+  Bell, Camera, Code, Layers, Pencil, Plus, AlertCircle, Info,
+};
+
 // Render a lucide icon by name with colored circle background
 function BulletIcon({
   iconName = 'Check',
@@ -31,7 +48,7 @@ function BulletIcon({
   color?: AccentVariant;
 }) {
   const { bg, icon: iconColor } = getCheckmarkColors(color);
-  const IconComponent = (LucideIcons as Record<string, React.ComponentType<{ size?: number; className?: string }>>)[iconName] || LucideIcons.Check;
+  const IconComponent = BULLET_ICON_MAP[iconName] || Check;
 
   return (
     <div className={`w-5 h-5 rounded-full ${bg} flex items-center justify-center flex-shrink-0`}>
