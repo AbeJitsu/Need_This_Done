@@ -1,5 +1,14 @@
 [
   {
+    "hash": "3dd0c23",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "3dd0c23a0ff9b0c3c36f007f6098090753f27ab9:%M",
+    "author": "Abe Reyes",
+    "message": "Fix modal bullet points editable with explicit Editable wrappers",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
     "hash": "0d23f68",
     "date": "%Y->- (HEAD -> main)",
     "time": "0d23f68a8fbf72e3c58899406236183105df4f9b:%M",
@@ -889,14 +898,5 @@
     "message": "Docs: Update TODO with completed gold migration and WCAG tool task",
     "category": "Documentation",
     "filesChanged": 2
-  },
-  {
-    "hash": "440287c",
-    "date": "2025-12-31",
-    "time": "08:47",
-    "author": "Abe Reyes",
-    "message": "Refactor: Rename orange color to gold across codebase",
-    "category": "Refactoring",
-    "filesChanged": 53
   }
 ]

@@ -155,14 +155,19 @@ export default function ServiceDetailModal() {
               </h3>
               <ul className="space-y-2">
                 {activeService.bulletPoints.map((point, index) => (
-                  <li key={index} className={`flex items-start gap-3 ${headingColors.secondary}`}>
-                    <CheckmarkCircle color={color} size="sm" className="mt-0.5" />
+                  <li key={index} className={headingColors.secondary}>
                     {canEdit ? (
                       <Editable path={`services.cards.${cardIndex}.modal.bulletPoints.${index}`}>
-                        <span>{point}</span>
+                        <span className="flex items-start gap-3">
+                          <CheckmarkCircle color={color} size="sm" className="mt-0.5 flex-shrink-0" />
+                          <span>{point}</span>
+                        </span>
                       </Editable>
                     ) : (
-                      <span>{point}</span>
+                      <span className="flex items-start gap-3">
+                        <CheckmarkCircle color={color} size="sm" className="mt-0.5 flex-shrink-0" />
+                        <span>{point}</span>
+                      </span>
                     )}
                   </li>
                 ))}
