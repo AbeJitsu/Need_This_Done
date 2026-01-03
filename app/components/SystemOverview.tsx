@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { uiChromeBg, statusIndicatorBg } from '@/lib/colors';
+import { uiChromeBg, statusIndicatorBg, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // SystemOverview Component - Friendly System Health at a Glance
@@ -78,7 +78,7 @@ export default function SystemOverview() {
   // ========================================================================
   if (loading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+      <div className={`${cardBgColors.base} rounded-xl ${cardBorderColors.light} p-6`}>
         <div className="flex items-center gap-3">
           <div className={`w-5 h-5 rounded-full ${statusIndicatorBg.loading} flex items-center justify-center`}>
             <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
@@ -110,7 +110,7 @@ export default function SystemOverview() {
   // Render
   // ========================================================================
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div className={`${cardBgColors.base} rounded-xl ${cardBorderColors.light} overflow-hidden`}>
       {/* Main Status - The only thing you need to see at a glance */}
       <div className="p-6">
         <div className="flex items-start justify-between">
@@ -214,7 +214,7 @@ export default function SystemOverview() {
                   key={key}
                   className={`p-3 rounded-lg border ${
                     isUp
-                      ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
+                      ? `${cardBgColors.base} border-gray-200 dark:border-gray-700`
                       : `${statusIndicatorBg.warning} border-amber-200 dark:border-amber-600`
                   }`}
                 >

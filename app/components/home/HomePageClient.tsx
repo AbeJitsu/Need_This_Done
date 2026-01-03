@@ -19,6 +19,8 @@ import {
   linkFontWeight,
   focusRingClasses,
   neutralAccentBg,
+  cardBgColors,
+  cardBorderColors,
 } from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
 
@@ -176,7 +178,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 >
                   <Link
                     href={content.consultations!.linkHref}
-                    className={`block p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-300 dark:border-gray-600 ${accentColors[option.color].hoverBorder} ${shadowClasses.cardHover} transition-all duration-300 text-center ${focusRingClasses[option.color as keyof typeof focusRingClasses] || focusRingClasses.blue}`}
+                    className={`block p-5 ${cardBgColors.base} rounded-xl ${cardBorderColors.subtle} ${accentColors[option.color].hoverBorder} ${shadowClasses.cardHover} transition-all duration-300 text-center ${focusRingClasses[option.color as keyof typeof focusRingClasses] || focusRingClasses.blue}`}
                   >
                     <div className={`text-2xl font-bold ${accentColors[option.color].text} mb-1`}>
                       {option.price}
@@ -201,7 +203,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       <EditableSection sectionKey="processPreview" label="Process Preview">
         <Link
           href="/how-it-works"
-          className={`block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 ${cardHoverColors.purple} ${shadowClasses.cardHover} active:scale-98 group ${focusRingClasses.purple}`}
+          className={`block mb-16 ${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.subtle} transition-all duration-300 ${cardHoverColors.purple} ${shadowClasses.cardHover} active:scale-98 group ${focusRingClasses.purple}`}
         >
           <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center transition-colors`}>
             {content.processPreview.title}
