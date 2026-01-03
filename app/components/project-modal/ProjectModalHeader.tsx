@@ -1,3 +1,5 @@
+import { cardBgColors, cardBorderColors } from '@/lib/colors';
+
 // ============================================================================
 // Project Modal Header Component
 // ============================================================================
@@ -17,7 +19,7 @@ export default function ProjectModalHeader({
   onClose,
 }: ProjectModalHeaderProps) {
   return (
-    <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between">
+    <div className={`sticky top-0 ${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between`}>
       <div>
         <h2
           id="project-modal-title"

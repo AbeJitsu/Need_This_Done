@@ -9,7 +9,7 @@ import ProjectModalHeader from './project-modal/ProjectModalHeader';
 import ProjectModalDetails from './project-modal/ProjectModalDetails';
 import AdminStatusSection from './project-modal/AdminStatusSection';
 import ProjectComments from './project-modal/ProjectComments';
-import { alertColors } from '@/lib/colors';
+import { alertColors, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Project Detail Modal Component
@@ -163,7 +163,7 @@ export default function ProjectDetailModal({
           role="dialog"
           aria-modal="true"
           aria-labelledby="project-modal-title"
-          className="bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          className={`${cardBgColors.base} rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto`}
         >
         {/* Header */}
         <ProjectModalHeader

@@ -9,6 +9,7 @@ import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import { TextStyle } from '@tiptap/extension-text-style';
+import { cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // Inline Text Editor - Edit text exactly where it lives
@@ -140,7 +141,7 @@ export default function InlineTextEditor() {
   // Show loading state while editor initializes
   if (!editor) {
     return (
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[10000] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl px-4 py-2">
+      <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[10000] ${cardBgColors.base} ${cardBorderColors.light} rounded-lg shadow-xl px-4 py-2`}>
         <span className="text-sm text-gray-500">Loading editor...</span>
       </div>
     );
@@ -158,7 +159,7 @@ export default function InlineTextEditor() {
       <div
         ref={editorRef}
         data-admin-ui="true"
-        className="fixed z-[9999] bg-white dark:bg-gray-800 border-2 border-blue-500 rounded-lg shadow-xl"
+        className={`fixed z-[9999] ${cardBgColors.base} border-2 border-blue-500 rounded-lg shadow-xl`}
         style={{
           top: position.top + 40, // Position below the highlighted element
           left: position.left,
@@ -171,7 +172,7 @@ export default function InlineTextEditor() {
       {/* Floating toolbar - positioned above the highlighted element */}
       <div
         data-admin-ui="true"
-        className="fixed z-[10000] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl flex items-center gap-1 px-3 py-2"
+        className={`fixed z-[10000] ${cardBgColors.base} ${cardBorderColors.light} rounded-lg shadow-xl flex items-center gap-1 px-3 py-2`}
         style={{
           top: Math.max(8, position.top - 44),
           left: position.left,

@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { getSolidButtonColors, uiChromeBg, statusIndicatorBg } from '@/lib/colors';
+import { getSolidButtonColors, uiChromeBg, statusIndicatorBg, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Project Comments Component
@@ -73,7 +73,7 @@ export default function ProjectComments({
               className={`p-3 rounded-lg ${
                 comment.is_internal
                   ? `${statusIndicatorBg.modified} border border-yellow-200 dark:border-yellow-600`
-                  : 'bg-white dark:bg-gray-800'
+                  : cardBgColors.base
               }`}
             >
               <div className="flex items-center justify-between gap-2 mb-2">

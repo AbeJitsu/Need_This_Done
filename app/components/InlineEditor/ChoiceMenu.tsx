@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // Choice Menu - Context menu for edit mode actions
@@ -59,7 +60,7 @@ export default function ChoiceMenu({ options, position, onClose }: ChoiceMenuPro
     <div
       ref={menuRef}
       data-admin-ui="true"
-      className="fixed z-[9999] bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 min-w-[160px]"
+      className={`fixed z-[9999] ${cardBgColors.base} rounded-lg shadow-xl ${cardBorderColors.light} py-1 min-w-[160px]`}
       style={{
         top: position.y,
         left: position.x,

@@ -1,5 +1,14 @@
 [
   {
+    "hash": "a5a36fe",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "a5a36fe172d97c29e0fb1dde6c5739035c7ea1cb:%M",
+    "author": "Abe Reyes",
+    "message": "Refactor: Migrate cardBgColors in 13 component files",
+    "category": "Refactoring",
+    "filesChanged": 15
+  },
+  {
     "hash": "36bb4b8",
     "date": "%Y->- (HEAD -> main)",
     "time": "36bb4b89565d358c8fffe16daf2d57b363135506:%M",
@@ -888,15 +897,6 @@
     "author": "Abe Reyes",
     "message": "Refactor: Migrate compare-pages.spec.ts to dynamic page discovery",
     "category": "Refactoring",
-    "filesChanged": 5
-  },
-  {
-    "hash": "3df31b3",
-    "date": "2025-12-31",
-    "time": "09:01",
-    "author": "Abe Reyes",
-    "message": "Add: Technical changelog page for developers",
-    "category": "Features",
     "filesChanged": 5
   }
 ]

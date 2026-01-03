@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useInlineEdit } from '@/context/InlineEditContext';
-import { headingColors, formInputColors } from '@/lib/colors';
+import { headingColors, formInputColors, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Edit Mode Tutorial - Shows instructions when entering edit mode
@@ -43,7 +43,7 @@ export default function EditModeTutorial() {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg mx-4 overflow-hidden">
+      <div className={`${cardBgColors.base} rounded-2xl shadow-2xl max-w-lg mx-4 overflow-hidden`}>
         {/* Header */}
         <div className="bg-blue-500 text-white px-6 py-4">
           <h2 className="text-xl font-bold">Welcome to Edit Mode!</h2>
