@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { getPuckFullColors, puckAspectMap } from '@/lib/puck-utils';
+import { cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Video Embed Component - Rich Media Display
@@ -134,7 +135,7 @@ export default function VideoEmbedComponent({
   // Empty/invalid state
   if (!url || videoInfo.provider === 'unknown') {
     return (
-      <div className={`${aspectClasses[aspectRatio]} bg-gray-100 dark:bg-gray-800 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600`}>
+      <div className={`${aspectClasses[aspectRatio]} ${cardBgColors.elevated} rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600`}>
         <svg
           className="w-16 h-16 text-gray-400 mb-3"
           fill="none"

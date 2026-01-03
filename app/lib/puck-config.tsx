@@ -632,7 +632,7 @@ export const puckConfig: Config = {
 
         if (!src) {
           return (
-            <div className={`${sizeMap[size]} mx-auto bg-gray-100 dark:bg-gray-800 ${roundedMap[rounded]} aspect-video flex items-center justify-center`}>
+            <div className={`${sizeMap[size]} mx-auto ${cardBgColors.elevated} ${roundedMap[rounded]} aspect-video flex items-center justify-center`}>
               <span className="text-gray-400 text-sm">Add image URL</span>
             </div>
           );
@@ -882,7 +882,7 @@ export const puckConfig: Config = {
             {image ? (
               <Image src={image} alt={imageAlt || ''} width={0} height={0} sizes="100vw" className="w-full h-auto rounded-xl shadow-lg" unoptimized />
             ) : (
-              <div className="w-full aspect-video bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
+              <div className={`w-full aspect-video ${cardBgColors.elevated} rounded-xl flex items-center justify-center`}>
                 <span className="text-gray-400 text-sm">Add image URL</span>
               </div>
             )}
@@ -1035,7 +1035,7 @@ export const puckConfig: Config = {
                       unoptimized
                     />
                   ) : (
-                    <div className="w-full h-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                    <div className={`w-full h-full ${cardBgColors.elevated} flex items-center justify-center`}>
                       <span className="text-gray-400 text-sm">No image</span>
                     </div>
                   )}

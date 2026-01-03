@@ -338,7 +338,7 @@ export function ProductField({ value, onChange, label }: ProductFieldProps) {
       {loading ? (
         <div className="h-20 bg-gray-100 dark:bg-gray-700 rounded-lg animate-pulse" />
       ) : product ? (
-        <div className="relative group flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className={`relative group flex items-center gap-3 p-3 ${cardBgColors.elevated} rounded-lg border border-gray-200 dark:border-gray-700`}>
           {product.images?.[0]?.url ? (
             <div className="relative w-12 h-12 rounded-lg overflow-hidden">
               <Image

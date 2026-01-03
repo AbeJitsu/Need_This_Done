@@ -9,7 +9,7 @@ import {
   isValidMediaSize,
   formatFileSize,
 } from '@/lib/media-types';
-import { toggleButtonColors, softBgColors } from '@/lib/colors';
+import { toggleButtonColors, softBgColors, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // ImageUpload Component - Drag & Drop File Upload
@@ -317,7 +317,7 @@ export default function ImageUpload({
           {uploadingFiles.map(f => (
             <div
               key={f.id}
-              className="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg"
+              className={`flex items-center gap-3 p-3 ${cardBgColors.elevated} rounded-lg`}
             >
               {/* Thumbnail or icon */}
               <div className="relative w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden flex-shrink-0">

@@ -12,7 +12,7 @@ import {
   ALL_CATEGORIES,
   COLOR_OPTIONS,
 } from '@/lib/templates';
-import { accentColors, softBgColors, cardBgColors, type AccentVariant } from '@/lib/colors';
+import { accentColors, softBgColors, cardBgColors, uiChromeBg, type AccentVariant } from '@/lib/colors';
 
 // ============================================================================
 // Step 1: Choose Category
@@ -315,7 +315,7 @@ export function StepPreview({ template, color, content }: StepPreviewProps) {
       {/* Preview card */}
       <div className={`rounded-xl border-2 ${colorClasses.border} overflow-hidden`}>
         {/* Mock browser header */}
-        <div className="bg-gray-100 dark:bg-gray-800 px-4 py-2 flex items-center gap-2">
+        <div className={`${uiChromeBg.toolbar} px-4 py-2 flex items-center gap-2`}>
           <div className="flex gap-1.5">
             <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
             <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />

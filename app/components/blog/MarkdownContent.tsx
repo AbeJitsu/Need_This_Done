@@ -10,7 +10,7 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
-import { headingColors, formInputColors } from '@/lib/colors';
+import { headingColors, formInputColors, tableHeaderBg } from '@/lib/colors';
 
 // Import highlight.js styles for syntax highlighting
 import 'highlight.js/styles/github-dark.css';
@@ -141,7 +141,7 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
             </div>
           ),
           thead: ({ children }) => (
-            <thead className="bg-gray-100 dark:bg-gray-800">{children}</thead>
+            <thead className={tableHeaderBg}>{children}</thead>
           ),
           tbody: ({ children }) => <tbody>{children}</tbody>,
           tr: ({ children }) => (

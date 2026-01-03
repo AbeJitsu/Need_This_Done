@@ -1,5 +1,14 @@
 [
   {
+    "hash": "4fb675d",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "4fb675d423624557fd6984c4f957d76a1e74b351:%M",
+    "author": "Abe Reyes",
+    "message": "Fix template literal syntax in Puck components",
+    "category": "Other",
+    "filesChanged": 5
+  },
+  {
     "hash": "7ab501b",
     "date": "%Y->- (HEAD -> main)",
     "time": "7ab501b3112544f2db932446d9cd80c4aacce8f9:%M",
@@ -887,15 +896,6 @@
     "time": "09:16",
     "author": "Abe Reyes",
     "message": "Docs: Add contributor guide for creating custom hooks",
-    "category": "Documentation",
-    "filesChanged": 3
-  },
-  {
-    "hash": "7f92284",
-    "date": "2025-12-31",
-    "time": "09:15",
-    "author": "Abe Reyes",
-    "message": "Docs: Add deep-dive references to detailed spec docs",
     "category": "Documentation",
     "filesChanged": 3
   }

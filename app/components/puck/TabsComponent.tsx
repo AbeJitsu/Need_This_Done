@@ -2,6 +2,7 @@
 
 import { useState, ReactNode } from 'react';
 import { getTabColors } from '@/lib/puck-utils';
+import { uiChromeBg } from '@/lib/colors';
 
 // ============================================================================
 // INTERACTIVE TABS COMPONENT
@@ -74,7 +75,7 @@ export default function TabsComponent({ tabs, style, accentColor, fullWidth }: T
   const getContainerClass = () => {
     const baseClass = `flex ${fullWidth === 'yes' ? 'w-full' : ''}`;
     if (style === 'boxed') {
-      return `${baseClass} bg-gray-100 dark:bg-gray-800 p-1 rounded-xl`;
+      return `${baseClass} ${uiChromeBg.panel} p-1 rounded-xl`;
     } else if (style === 'underline') {
       return `${baseClass} border-b border-gray-200 dark:border-gray-700`;
     }
