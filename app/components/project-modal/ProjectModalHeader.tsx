@@ -1,4 +1,4 @@
-import { cardBgColors, cardBorderColors } from '@/lib/colors';
+import { cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Project Modal Header Component

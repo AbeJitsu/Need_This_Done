@@ -1,5 +1,14 @@
 [
   {
+    "hash": "7ab501b",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "7ab501b3112544f2db932446d9cd80c4aacce8f9:%M",
+    "author": "Abe Reyes",
+    "message": "Complete cardBgColors migration across remaining files",
+    "category": "Other",
+    "filesChanged": 13
+  },
+  {
     "hash": "a2a7a9e",
     "date": "%Y->- (HEAD -> main)",
     "time": "a2a7a9e5229715239c7d0623d91921b0ea0e658d:%M",
@@ -887,15 +896,6 @@
     "time": "09:15",
     "author": "Abe Reyes",
     "message": "Docs: Add deep-dive references to detailed spec docs",
-    "category": "Documentation",
-    "filesChanged": 3
-  },
-  {
-    "hash": "3820ee6",
-    "date": "2025-12-31",
-    "time": "09:13",
-    "author": "Abe Reyes",
-    "message": "Docs: Expand lib utilities documentation from 25 to 44 files",
     "category": "Documentation",
     "filesChanged": 3
   }
