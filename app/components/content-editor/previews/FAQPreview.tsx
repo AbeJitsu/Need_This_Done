@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { faqColors, shadowClasses } from '@/lib/colors';
+import { faqColors, shadowClasses, cardBgColors } from '@/lib/colors';
 import CircleBadge from '@/components/CircleBadge';
 import PageHeader from '@/components/PageHeader';
 import CTASection from '@/components/CTASection';
@@ -70,7 +70,7 @@ export default function FAQPreview({ content }: FAQPreviewProps) {
           return (
             <div
               key={index}
-              className={`bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 border-l-4 ${styles.border} ${styles.hover} transition-all ${shadowClasses.cardHover}`}
+              className={`${cardBgColors.base} rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 border-l-4 ${styles.border} ${styles.hover} transition-all ${shadowClasses.cardHover}`}
             >
               <div className="flex items-start gap-4">
                 <CircleBadge number={index + 1} color={color} size="sm" />

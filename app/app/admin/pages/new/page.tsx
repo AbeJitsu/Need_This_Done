@@ -12,7 +12,7 @@ import { puckConfig } from '@/lib/puck-config';
 import { PageWizard } from '@/components/templates';
 import type { PuckPageData } from '@/lib/templates';
 import '@measured/puck/puck.css';
-import { alertColors, iconCircleColors, containerBg } from '@/lib/colors';
+import { alertColors, iconCircleColors, containerBg, cardBgColors } from '@/lib/colors';
 import { CheckIcon } from '@/components/ui/icons';
 
 // ============================================================================
@@ -167,7 +167,7 @@ export default function NewPage() {
     return (
       <div className={`min-h-screen ${containerBg.page} flex flex-col`}>
         {/* Header */}
-        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-4">
+        <header className={`${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 px-4 py-4`}>
           <div className="max-w-4xl mx-auto">
             <nav className="flex items-center gap-2 text-sm mb-4">
               <Link
@@ -202,7 +202,7 @@ export default function NewPage() {
             {/* Wizard Path */}
             <button
               onClick={() => setMode('wizard')}
-              className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-purple-500 hover:shadow-lg transition-all group"
+              className={`${cardBgColors.base} rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-purple-500 hover:shadow-lg transition-all group`}
             >
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-700 dark:to-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <svg className="w-8 h-8 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -255,7 +255,7 @@ export default function NewPage() {
             {/* Full Editor Path */}
             <button
               onClick={() => setMode('editor')}
-              className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-blue-500 hover:shadow-lg transition-all group"
+              className={`${cardBgColors.base} rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-blue-500 hover:shadow-lg transition-all group`}
             >
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-700 dark:to-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -312,7 +312,7 @@ export default function NewPage() {
   if (completedPage) {
     return (
       <div className={`min-h-screen ${containerBg.page} flex items-center justify-center p-4`}>
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-lg w-full p-8 text-center">
+        <div className={`${cardBgColors.base} rounded-2xl shadow-xl max-w-lg w-full p-8 text-center`}>
           {/* Success Icon */}
           <div className={`w-20 h-20 mx-auto mb-6 rounded-full ${iconCircleColors.green.bg} flex items-center justify-center`}>
             <CheckIcon size="lg" className="text-green-600 dark:text-green-400" />
@@ -381,7 +381,7 @@ export default function NewPage() {
   return (
     <div className={`min-h-screen ${containerBg.page}`}>
       {/* Header with Breadcrumbs & Page Details */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+      <div className={`${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 shadow-sm`}>
         <div className="container mx-auto px-6 py-5">
           {/* Breadcrumb Navigation */}
           <nav className="flex items-center gap-2 text-sm mb-4">

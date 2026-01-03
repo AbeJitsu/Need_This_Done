@@ -11,7 +11,7 @@ import { Puck } from '@measured/puck';
 import { puckConfig } from '@/lib/puck-config';
 import '@measured/puck/puck.css';
 import { CheckIcon } from '@/components/ui/icons';
-import { statusBadgeColors, containerBg } from '@/lib/colors';
+import { statusBadgeColors, containerBg, cardBgColors } from '@/lib/colors';
 import { SAVE_STATUS_DURATION } from '@/lib/timing';
 
 export default function EditPage({ params }: { params: { slug: string } }) {
@@ -111,7 +111,7 @@ export default function EditPage({ params }: { params: { slug: string } }) {
       {/* ========================================================================
           Header with Breadcrumbs & Page Info
           ======================================================================== */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+      <div className={`${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 shadow-sm`}>
         <div className="container mx-auto px-6 py-5">
           {/* Breadcrumb Navigation */}
           <nav className="flex items-center gap-2 text-sm mb-4">

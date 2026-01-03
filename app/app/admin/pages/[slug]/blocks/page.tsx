@@ -10,7 +10,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import { selectedStateColors, hoverBgColors, containerBg } from '@/lib/colors';
+import { selectedStateColors, hoverBgColors, containerBg, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Block Editor Types
@@ -280,7 +280,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
       {/* ====================================================================
           Header
           ==================================================================== */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm sticky top-0 z-10">
+      <div className={`${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 shadow-sm sticky top-0 z-10`}>
         <div className="container mx-auto px-6 py-4">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm mb-3">
@@ -389,7 +389,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
                       group relative p-4 rounded-xl border-2 cursor-pointer transition-all
                       ${isSelected
                         ? `${selectedStateColors.purple.border} ${selectedStateColors.purple.bg}`
-                        : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-purple-300 dark:hover:border-purple-600'
+                        : `border-gray-200 dark:border-gray-700 ${cardBgColors.base} hover:border-purple-300 dark:hover:border-purple-600`
                       }
                     `}
                   >
@@ -499,7 +499,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
           onClick={() => setShowBlockPicker(false)}
         >
           <div
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden"
+            className={`${cardBgColors.base} rounded-2xl shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6 border-b border-gray-200 dark:border-gray-700">

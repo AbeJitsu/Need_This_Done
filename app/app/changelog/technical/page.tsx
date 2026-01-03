@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
-import { headingColors, formInputColors } from '@/lib/colors';
+import { headingColors, formInputColors, cardBgColors } from '@/lib/colors';
 import changelogData from '../../../../content/changelog/auto-log.json';
 
 // ============================================================================
@@ -137,7 +137,7 @@ export default function TechnicalChangelogPage() {
                 placeholder="Search commits by message or hash..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 ${cardBgColors.base} text-gray-900 dark:text-gray-100`}
               />
             </div>
 
@@ -238,7 +238,7 @@ function CommitCard({ commit }: { commit: CommitEntry }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:border-purple-300 dark:hover:border-purple-600 transition-colors">
+    <div className={`${cardBgColors.base} rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:border-purple-300 dark:hover:border-purple-600 transition-colors`}>
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           {/* Commit message */}

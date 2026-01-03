@@ -17,6 +17,7 @@ import {
   getContrastLevel,
   formatContrastRatio,
 } from '@/lib/wcag-contrast';
+import { cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Colors Page - WCAG Color Calculator
@@ -190,7 +191,7 @@ ${colorName}: {
                   value={baseColor}
                   onChange={(e) => setBaseColor(e.target.value)}
                   placeholder="#a36b00"
-                  className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-mono"
+                  className={`flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 ${cardBgColors.base} text-gray-900 dark:text-gray-100 font-mono`}
                 />
               </div>
             </div>
@@ -205,7 +206,7 @@ ${colorName}: {
                 value={colorName}
                 onChange={(e) => setColorName(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
                 placeholder="gold"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                className={`w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 ${cardBgColors.base} text-gray-900 dark:text-gray-100`}
               />
             </div>
           </div>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import { formInputColors, formValidationColors, headingColors, alertColors, hoverBgColors } from '@/lib/colors';
+import { formInputColors, formValidationColors, headingColors, alertColors, hoverBgColors, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Appointment Step Form Component
@@ -276,7 +276,7 @@ export default function AppointmentStepForm({
                           className={`py-3 px-2 text-sm font-medium rounded-lg border-2 transition-all ${
                             formData.preferredTimeStart === option.value
                               ? 'bg-purple-600 border-purple-600 text-white'
-                              : `bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 ${hoverBgColors.purple}`
+                              : `${cardBgColors.base} border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 ${hoverBgColors.purple}`
                           }`}
                         >
                           {option.label}
@@ -349,7 +349,7 @@ export default function AppointmentStepForm({
                           className={`py-3 px-2 text-sm font-medium rounded-lg border-2 transition-all ${
                             formData.alternateTimeStart === option.value
                               ? 'bg-purple-600 border-purple-600 text-white'
-                              : `bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 ${hoverBgColors.purple}`
+                              : `${cardBgColors.base} border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 ${hoverBgColors.purple}`
                           }`}
                         >
                           {option.label}

@@ -268,7 +268,7 @@ function TemplateCard({ template, isSelected, onSelect }: TemplateCardProps) {
       </div>
 
       {/* Card content */}
-      <div className={`p-4 ${isSelected ? colors.bg : 'bg-white dark:bg-gray-800'}`}>
+      <div className={`p-4 ${isSelected ? colors.bg : cardBgColors.base}`}>
         {/* Template name */}
         <h3
           data-testid="template-name"

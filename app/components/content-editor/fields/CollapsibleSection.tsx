@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, ReactNode } from 'react';
-import { uiChromeBg } from '@/lib/colors';
+import { uiChromeBg, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // CollapsibleSection - Accordion Wrapper for Form Sections
@@ -32,7 +32,7 @@ export default function CollapsibleSection({
       className={`
         border-2 border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden
         transition-colors duration-200
-        ${isOpen ? 'bg-white dark:bg-gray-800' : uiChromeBg.panel}
+        ${isOpen ? cardBgColors.base : uiChromeBg.panel}
         ${className}
       `}
     >

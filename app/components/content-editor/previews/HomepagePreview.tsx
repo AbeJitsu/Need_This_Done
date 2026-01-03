@@ -3,6 +3,7 @@ import Button from '@/components/Button';
 import ServiceCard from '@/components/ServiceCard';
 import CircleBadge from '@/components/CircleBadge';
 import type { HomePageContent } from '@/lib/page-content-types';
+import { cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Homepage Preview Component
@@ -70,7 +71,7 @@ export default function HomepagePreview({ content }: HomepagePreviewProps) {
       {/* How It Works Preview */}
       <Link
         href="/how-it-works"
-        className="block mb-16 bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 hover:border-blue-400 hover:shadow-xl active:scale-98 dark:hover:border-blue-500 group"
+        className={`block mb-16 ${cardBgColors.base} rounded-xl p-6 border-2 border-gray-400 dark:border-gray-500 transition-all duration-300 hover:border-blue-400 hover:shadow-xl active:scale-98 dark:hover:border-blue-500 group`}
       >
         <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center transition-colors">
           {content.processPreview.title}
@@ -94,7 +95,7 @@ export default function HomepagePreview({ content }: HomepagePreviewProps) {
       </Link>
 
       {/* CTA Section */}
-      <div className="text-center bg-white dark:bg-gray-800 border-2 border-gray-400 dark:border-gray-500 rounded-xl p-8 shadow-lg hover:shadow-xl hover:border-gold-400 dark:hover:border-gold-500 transition-all duration-300">
+      <div className={`text-center ${cardBgColors.base} border-2 border-gray-400 dark:border-gray-500 rounded-xl p-8 shadow-lg hover:shadow-xl hover:border-gold-400 dark:hover:border-gold-500 transition-all duration-300`}>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           {content.cta.title}
         </h2>

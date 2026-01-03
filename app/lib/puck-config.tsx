@@ -13,7 +13,7 @@ import AccordionComponent from '@/components/puck/AccordionComponent';
 import TestimonialsComponent from '@/components/puck/TestimonialsComponent';
 import VideoEmbedComponent from '@/components/puck/VideoEmbedComponent';
 import StatsCounterComponent from '@/components/puck/StatsCounterComponent';
-import { getSolidButtonColors, type AccentVariant } from '@/lib/colors';
+import { getSolidButtonColors, cardBgColors, type AccentVariant } from '@/lib/colors';
 import { getPuckAccentColors, getPuckFullColors, puckColumnsMap, puckIcons, getDividerColors, getPricingColors, puckContainerWidthMap, puckContainerPaddingMap } from './puck-utils';
 
 // ============================================================================
@@ -1327,7 +1327,7 @@ export const puckConfig: Config = {
             {features.map((feature: { icon?: string; title?: string; description?: string }, index: number) => (
               <div
                 key={index}
-                className="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                className={`p-6 ${cardBgColors.base} rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors`}
               >
                 <div className={`w-12 h-12 ${colors.iconBg} ${colors.text} rounded-xl flex items-center justify-center mb-4`} aria-hidden="true">
                   {puckIcons[feature.icon || 'check'] || puckIcons.check}
@@ -1584,7 +1584,7 @@ export const puckConfig: Config = {
 
         if (!productId) {
           return (
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 p-12 text-center">
+            <div className={`${cardBgColors.base} rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 p-12 text-center`}>
               <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
@@ -1594,7 +1594,7 @@ export const puckConfig: Config = {
         }
 
         return (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 md:p-10">
+          <div className={`${cardBgColors.base} rounded-2xl border border-gray-200 dark:border-gray-700 p-6 md:p-10`}>
             <div className="flex flex-col md:flex-row gap-8 md:gap-12">
               {layout === 'left' ? (
                 <>
@@ -1743,7 +1743,7 @@ export const puckConfig: Config = {
                   className={`relative rounded-2xl p-6 ${
                     isHighlighted
                       ? `${colors.bg} border-2 ${colors.border} shadow-lg`
-                      : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700'
+                      : `${cardBgColors.base} border border-gray-200 dark:border-gray-700`
                   }`}
                 >
                   {isHighlighted && (
