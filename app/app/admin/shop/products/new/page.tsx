@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import { alertColors, infoBannerColors } from '@/lib/colors';
+import { alertColors, infoBannerColors, mutedTextColors, headingColors, formInputColors } from '@/lib/colors';
 
 // ============================================================================
 // Create Product Page - /admin/shop/products/new
@@ -85,7 +85,7 @@ export default function CreateProductPage() {
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+        <p className={mutedTextColors.normal}>Loading...</p>
       </div>
     );
   }
@@ -96,10 +96,10 @@ export default function CreateProductPage() {
     <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
           Create Product
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className={mutedTextColors.normal}>
           Add a new product to your catalog
         </p>
       </div>
@@ -117,14 +117,14 @@ export default function CreateProductPage() {
           <div className="space-y-6">
             {/* Title */}
             <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+              <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                 Product Title *
               </label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                className={formInputColors.input}
                 placeholder="e.g., Quick Task"
                 required
               />
@@ -132,50 +132,50 @@ export default function CreateProductPage() {
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+              <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                 Description
               </label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                className={formInputColors.input}
                 placeholder="Describe your product..."
               />
             </div>
 
             {/* Handle */}
             <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+              <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                 Handle (URL slug) *
               </label>
               <input
                 type="text"
                 value={handle}
                 onChange={(e) => setHandle(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                className={formInputColors.input}
                 placeholder="e.g., quick-task"
                 required
               />
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className={`text-xs ${mutedTextColors.normal} mt-1`}>
                 Lowercase letters, numbers, and hyphens only
               </p>
             </div>
 
             {/* Price */}
             <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+              <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                 Price (USD) *
               </label>
               <div className="flex items-center">
-                <span className="text-gray-600 dark:text-gray-400 mr-2">$</span>
+                <span className={`${mutedTextColors.normal} mr-2`}>$</span>
                 <input
                   type="number"
                   step="0.01"
                   min="0"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                  className={`flex-1 px-4 py-2 border rounded-lg ${formInputColors.base} ${formInputColors.focus}`}
                   placeholder="0.00"
                   required
                 />

@@ -17,7 +17,7 @@ import {
   getContrastLevel,
   formatContrastRatio,
 } from '@/lib/wcag-contrast';
-import { cardBgColors } from '@/lib/colors';
+import { cardBgColors, headingColors, mutedTextColors, dividerColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Colors Page - WCAG Color Calculator
@@ -146,7 +146,7 @@ ${colorName}: {
   if (authLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="text-gray-600 dark:text-gray-300">Loading...</div>
+        <div className={mutedTextColors.light}>Loading...</div>
       </div>
     );
   }
@@ -170,13 +170,13 @@ ${colorName}: {
       {/* Color Input Section */}
       <section className="mb-8">
         <Card hoverColor="purple" hoverEffect="none">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
             Base Color Input
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Color picker */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className={`block text-sm font-medium ${headingColors.secondary} mb-2`}>
                 Pick a color or enter hex value
               </label>
               <div className="flex gap-4 items-center">
@@ -184,21 +184,21 @@ ${colorName}: {
                   type="color"
                   value={baseColor}
                   onChange={(e) => setBaseColor(e.target.value)}
-                  className="w-16 h-16 rounded-lg border-2 border-gray-300 dark:border-gray-600 cursor-pointer"
+                  className={`w-16 h-16 rounded-lg ${dividerColors.border} border-2 cursor-pointer`}
                 />
                 <input
                   type="text"
                   value={baseColor}
                   onChange={(e) => setBaseColor(e.target.value)}
                   placeholder="#a36b00"
-                  className={`flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 ${cardBgColors.base} text-gray-900 dark:text-gray-100 font-mono`}
+                  className={`flex-1 px-4 py-3 rounded-lg border ${dividerColors.border} ${cardBgColors.base} ${headingColors.primary} font-mono`}
                 />
               </div>
             </div>
 
             {/* Color name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className={`block text-sm font-medium ${headingColors.secondary} mb-2`}>
                 Color name (for export)
               </label>
               <input
@@ -206,7 +206,7 @@ ${colorName}: {
                 value={colorName}
                 onChange={(e) => setColorName(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
                 placeholder="gold"
-                className={`w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 ${cardBgColors.base} text-gray-900 dark:text-gray-100`}
+                className={`w-full px-4 py-3 rounded-lg border ${dividerColors.border} ${cardBgColors.base} ${headingColors.primary}`}
               />
             </div>
           </div>
@@ -216,7 +216,7 @@ ${colorName}: {
       {/* Contrast Analysis Section */}
       <section className="mb-8">
         <Card hoverColor="blue" hoverEffect="none">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
             Contrast Analysis
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -278,7 +278,7 @@ ${colorName}: {
         <section className="mb-8">
           <Card hoverColor="green" hoverEffect="none">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              <h2 className={`text-lg font-semibold ${headingColors.primary}`}>
                 Generated Color Scale
               </h2>
               <div className="flex gap-2">
@@ -300,10 +300,10 @@ ${colorName}: {
                     style={{ backgroundColor: colorScale[shade] }}
                     title={colorScale[shade]}
                   />
-                  <div className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                  <div className={`text-xs font-medium ${mutedTextColors.normal}`}>
                     {shade}
                   </div>
-                  <div className="text-xs font-mono text-gray-500 dark:text-gray-500 truncate">
+                  <div className={`text-xs font-mono ${mutedTextColors.normal} truncate`}>
                     {colorScale[shade]}
                   </div>
                 </div>
@@ -311,18 +311,18 @@ ${colorName}: {
             </div>
 
             {/* WCAG anchor explanation */}
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
-              <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-2">
+            <div className={`${cardBgColors.elevated} rounded-lg p-4`}>
+              <h3 className={`font-medium ${headingColors.primary} mb-2`}>
                 WCAG Anchor Points
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400">
+              <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 text-sm ${mutedTextColors.normal}`}>
                 <div className="flex items-center gap-3">
                   <div
                     className="w-10 h-10 rounded"
                     style={{ backgroundColor: colorScale[500] }}
                   />
                   <div>
-                    <div className="font-medium text-gray-900 dark:text-gray-100">500</div>
+                    <div className={`font-medium ${headingColors.primary}`}>500</div>
                     <div>4.5:1 with white → Dark mode background</div>
                   </div>
                 </div>
@@ -332,7 +332,7 @@ ${colorName}: {
                     style={{ backgroundColor: colorScale[600] }}
                   />
                   <div>
-                    <div className="font-medium text-gray-900 dark:text-gray-100">600</div>
+                    <div className={`font-medium ${headingColors.primary}`}>600</div>
                     <div>4.5:1 with -100 → Light mode text minimum</div>
                   </div>
                 </div>
@@ -346,7 +346,7 @@ ${colorName}: {
       <section className="mb-8">
         <Card hoverColor="gold" hoverEffect="none">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className={`text-lg font-semibold ${headingColors.primary}`}>
               Live Preview
             </h2>
             <div className="flex gap-2">
@@ -355,7 +355,7 @@ ${colorName}: {
                 className={`px-3 py-1.5 rounded text-sm font-medium ${
                   previewMode === 'light'
                     ? 'bg-gray-900 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                    : `${cardBgColors.elevated} ${headingColors.secondary}`
                 }`}
               >
                 Light Mode
@@ -365,7 +365,7 @@ ${colorName}: {
                 className={`px-3 py-1.5 rounded text-sm font-medium ${
                   previewMode === 'dark'
                     ? 'bg-gray-900 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                    : `${cardBgColors.elevated} ${headingColors.secondary}`
                 }`}
               >
                 Dark Mode

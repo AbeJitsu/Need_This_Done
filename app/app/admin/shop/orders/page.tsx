@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors, alertColors, statusBadgeColors, containerBg, uiChromeBg } from '@/lib/colors';
+import { filterButtonColors, alertColors, statusBadgeColors, containerBg, uiChromeBg, mutedTextColors, headingColors, coloredLinkText, linkHoverColors, dividerColors } from '@/lib/colors';
 
 // ============================================================================
 // Orders Dashboard - /admin/shop/orders
@@ -179,7 +179,7 @@ export default function OrdersDashboard() {
   if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen" role="status" aria-live="polite" aria-busy="true">
-        <p className="text-gray-600 dark:text-gray-400">Loading orders...</p>
+        <p className={mutedTextColors.normal}>Loading orders...</p>
       </div>
     );
   }
@@ -190,10 +190,10 @@ export default function OrdersDashboard() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
           Orders
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className={mutedTextColors.normal}>
           Track and manage customer orders
         </p>
       </div>
@@ -249,7 +249,7 @@ export default function OrdersDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className={mutedTextColors.normal}>
               {orders.length === 0
                 ? 'No orders yet. Orders will appear here when customers make purchases.'
                 : 'No orders match the selected filter.'}
@@ -264,13 +264,13 @@ export default function OrdersDashboard() {
                 {/* Header row */}
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                    <h3 className={`text-lg font-semibold ${headingColors.primary} mb-1`}>
                       Order #{order.medusa_order_id.slice(0, 12)}...
                     </h3>
                     {order.email && (
                       <a
                         href={`mailto:${order.email}`}
-                        className="text-sm text-purple-600 dark:text-purple-400 hover:underline"
+                        className={`text-sm ${coloredLinkText.purple} hover:underline`}
                       >
                         {order.email}
                       </a>
@@ -282,7 +282,7 @@ export default function OrdersDashboard() {
                     >
                       {(order.status || 'pending').charAt(0).toUpperCase() + (order.status || 'pending').slice(1)}
                     </span>
-                    <p className="text-lg font-bold text-gray-900 dark:text-gray-100 mt-2">
+                    <p className={`text-lg font-bold ${headingColors.primary} mt-2`}>
                       {formatCurrency(order.total)}
                     </p>
                   </div>
@@ -291,21 +291,21 @@ export default function OrdersDashboard() {
                 {/* Order details */}
                 <div className="grid sm:grid-cols-2 gap-4 mb-4">
                   <div className={`p-3 ${containerBg.page} rounded-lg`}>
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Order ID</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 font-mono">{order.medusa_order_id}</p>
+                    <p className={`text-xs font-medium ${mutedTextColors.normal} mb-1`}>Order ID</p>
+                    <p className={`text-sm ${headingColors.secondary} font-mono`}>{order.medusa_order_id}</p>
                   </div>
                   <div className={`p-3 ${containerBg.page} rounded-lg`}>
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Created</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{formatDate(order.created_at)}</p>
+                    <p className={`text-xs font-medium ${mutedTextColors.normal} mb-1`}>Created</p>
+                    <p className={`text-sm ${headingColors.secondary}`}>{formatDate(order.created_at)}</p>
                   </div>
                 </div>
 
                 {/* Expandable section for status updates */}
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                <div className={`border-t ${dividerColors.border} pt-4`}>
                   <button
                     onClick={() => setExpandedOrderId(expandedOrderId === order.id ? null : order.id)}
                     aria-expanded={expandedOrderId === order.id}
-                    className="flex items-center gap-2 text-sm text-purple-600 dark:text-purple-400 hover:underline"
+                    className={`flex items-center gap-2 text-sm ${coloredLinkText.purple} hover:underline`}
                   >
                     <svg
                       className={`w-4 h-4 transition-transform ${expandedOrderId === order.id ? 'rotate-90' : ''}`}

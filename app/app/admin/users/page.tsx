@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { statusBadgeColors, alertColors, filterButtonColors, formInputColors, hoverBgColors, cardBgColors, cardBorderColors } from '@/lib/colors';
+import { statusBadgeColors, alertColors, filterButtonColors, formInputColors, hoverBgColors, cardBgColors, cardBorderColors, mutedTextColors, headingColors, coloredLinkText, dividerColors, iconButtonColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Users Page - User Management
@@ -262,7 +262,7 @@ export default function AdminUsersPage() {
   if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center py-20" role="status" aria-live="polite" aria-busy="true">
-        <div className="text-gray-600 dark:text-gray-300">Loading users...</div>
+        <div className={headingColors.secondary}>Loading users...</div>
       </div>
     );
   }
@@ -299,28 +299,28 @@ export default function AdminUsersPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Card hoverColor="blue" hoverEffect="glow" className="text-center">
-            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            <div className={`text-3xl font-bold ${coloredLinkText.blue}`}>
               {users.length}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">Total Users</div>
+            <div className={`text-sm ${headingColors.secondary}`}>Total Users</div>
           </Card>
           <Card hoverColor="purple" hoverEffect="glow" className="text-center">
-            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+            <div className={`text-3xl font-bold ${coloredLinkText.purple}`}>
               {users.filter((u) => u.is_admin).length}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">Admins</div>
+            <div className={`text-sm ${headingColors.secondary}`}>Admins</div>
           </Card>
           <Card hoverColor="green" hoverEffect="glow" className="text-center">
-            <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+            <div className={`text-3xl font-bold ${coloredLinkText.green}`}>
               {users.filter((u) => !u.is_disabled).length}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">Active</div>
+            <div className={`text-sm ${headingColors.secondary}`}>Active</div>
           </Card>
           <Card hoverColor="gold" hoverEffect="glow" className="text-center">
-            <div className="text-3xl font-bold text-gold-600 dark:text-gold-400">
+            <div className={`text-3xl font-bold ${coloredLinkText.gold}`}>
               {users.filter((u) => u.is_disabled).length}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">Disabled</div>
+            <div className={`text-sm ${headingColors.secondary}`}>Disabled</div>
           </Card>
         </div>
 
@@ -332,7 +332,7 @@ export default function AdminUsersPage() {
               Search users by name or email
             </label>
             <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500"
+              className={`absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 ${mutedTextColors.normal}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -359,8 +359,8 @@ export default function AdminUsersPage() {
           <div className="flex flex-wrap items-center gap-4">
             {/* Role Filter */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Role:</span>
-              <div className="flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
+              <span className={`text-sm ${mutedTextColors.normal}`}>Role:</span>
+              <div className={`flex rounded-lg overflow-hidden border ${dividerColors.border}`}>
                 <button
                   onClick={() => setRoleFilter('all')}
                   aria-pressed={roleFilter === 'all'}
@@ -375,7 +375,7 @@ export default function AdminUsersPage() {
                 <button
                   onClick={() => setRoleFilter('admin')}
                   aria-pressed={roleFilter === 'admin'}
-                  className={`px-3 py-1.5 text-sm transition-colors border-l border-gray-300 dark:border-gray-600 ${
+                  className={`px-3 py-1.5 text-sm transition-colors border-l ${dividerColors.border} ${
                     roleFilter === 'admin'
                       ? filterButtonColors.active.purple
                       : filterButtonColors.inactive
@@ -386,7 +386,7 @@ export default function AdminUsersPage() {
                 <button
                   onClick={() => setRoleFilter('user')}
                   aria-pressed={roleFilter === 'user'}
-                  className={`px-3 py-1.5 text-sm transition-colors border-l border-gray-300 dark:border-gray-600 ${
+                  className={`px-3 py-1.5 text-sm transition-colors border-l ${dividerColors.border} ${
                     roleFilter === 'user'
                       ? filterButtonColors.active.purple
                       : filterButtonColors.inactive
@@ -399,8 +399,8 @@ export default function AdminUsersPage() {
 
             {/* Status Filter */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Status:</span>
-              <div className="flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
+              <span className={`text-sm ${mutedTextColors.normal}`}>Status:</span>
+              <div className={`flex rounded-lg overflow-hidden border ${dividerColors.border}`}>
                 <button
                   onClick={() => setStatusFilter('all')}
                   aria-pressed={statusFilter === 'all'}
@@ -415,7 +415,7 @@ export default function AdminUsersPage() {
                 <button
                   onClick={() => setStatusFilter('active')}
                   aria-pressed={statusFilter === 'active'}
-                  className={`px-3 py-1.5 text-sm transition-colors border-l border-gray-300 dark:border-gray-600 ${
+                  className={`px-3 py-1.5 text-sm transition-colors border-l ${dividerColors.border} ${
                     statusFilter === 'active'
                       ? filterButtonColors.active.green
                       : filterButtonColors.inactive
@@ -426,7 +426,7 @@ export default function AdminUsersPage() {
                 <button
                   onClick={() => setStatusFilter('disabled')}
                   aria-pressed={statusFilter === 'disabled'}
-                  className={`px-3 py-1.5 text-sm transition-colors border-l border-gray-300 dark:border-gray-600 ${
+                  className={`px-3 py-1.5 text-sm transition-colors border-l ${dividerColors.border} ${
                     statusFilter === 'disabled'
                       ? filterButtonColors.active.red
                       : filterButtonColors.inactive
@@ -439,7 +439,7 @@ export default function AdminUsersPage() {
 
             {/* Sort Dropdown */}
             <div className="flex items-center gap-2">
-              <label htmlFor="sort-field" className="text-sm text-gray-600 dark:text-gray-400">
+              <label htmlFor="sort-field" className={`text-sm ${mutedTextColors.normal}`}>
                 Sort:
               </label>
               <select
@@ -457,7 +457,7 @@ export default function AdminUsersPage() {
               <button
                 onClick={() => setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')}
                 aria-label={`Sort ${sortDirection === 'asc' ? 'descending' : 'ascending'}`}
-                className={`px-2 py-1.5 text-sm rounded-lg border ${formInputColors.base} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
+                className={`px-2 py-1.5 text-sm rounded-lg border ${formInputColors.base} ${hoverBgColors.gray} transition-colors`}
               >
                 {sortDirection === 'asc' ? '↑ Asc' : '↓ Desc'}
               </button>
@@ -470,10 +470,10 @@ export default function AdminUsersPage() {
                 aria-expanded={showColumnMenu}
                 aria-haspopup="menu"
                 aria-label="Toggle column visibility"
-                className={`p-2 rounded-lg border ${formInputColors.base} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
+                className={`p-2 rounded-lg border ${formInputColors.base} ${hoverBgColors.gray} transition-colors`}
               >
                 <svg
-                  className="h-5 w-5 text-gray-600 dark:text-gray-400"
+                  className={`h-5 w-5 ${mutedTextColors.normal}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

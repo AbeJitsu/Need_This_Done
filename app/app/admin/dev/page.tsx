@@ -12,6 +12,7 @@ import SystemOverview from '@/components/SystemOverview';
 import AuthDemo from '@/components/AuthDemo';
 import DatabaseDemo from '@/components/DatabaseDemo';
 import SpeedDemo from '@/components/SpeedDemo';
+import { headingColors, mutedTextColors, dividerColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Dev Dashboard - Development Tools & System Monitoring
@@ -54,7 +55,7 @@ export default function AdminDevPage() {
   if (authLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="text-gray-600 dark:text-gray-300">Loading...</div>
+        <div className={mutedTextColors.light}>Loading...</div>
       </div>
     );
   }
@@ -82,32 +83,32 @@ export default function AdminDevPage() {
 
       {/* Quick Actions */}
       <section className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+        <h2 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
           Quick Actions
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card hoverColor="blue" hoverEffect="lift" className="text-center cursor-pointer">
             <a href="/admin/users" className="block p-2">
               <div className="text-2xl mb-2" aria-hidden="true">👥</div>
-              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Manage Users</div>
+              <div className={`text-sm font-medium ${headingColors.primary}`}>Manage Users</div>
             </a>
           </Card>
           <Card hoverColor="purple" hoverEffect="lift" className="text-center cursor-pointer">
             <a href="/admin/pages" className="block p-2">
               <div className="text-2xl mb-2" aria-hidden="true">📄</div>
-              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Manage Pages</div>
+              <div className={`text-sm font-medium ${headingColors.primary}`}>Manage Pages</div>
             </a>
           </Card>
           <Card hoverColor="green" hoverEffect="lift" className="text-center cursor-pointer">
             <a href="/admin/shop" className="block p-2">
               <div className="text-2xl mb-2" aria-hidden="true">🛒</div>
-              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Shop Admin</div>
+              <div className={`text-sm font-medium ${headingColors.primary}`}>Shop Admin</div>
             </a>
           </Card>
           <Card hoverColor="gold" hoverEffect="lift" className="text-center cursor-pointer">
             <a href="/dashboard" className="block p-2">
               <div className="text-2xl mb-2" aria-hidden="true">📊</div>
-              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Dashboard</div>
+              <div className={`text-sm font-medium ${headingColors.primary}`}>Dashboard</div>
             </a>
           </Card>
         </div>
@@ -115,10 +116,10 @@ export default function AdminDevPage() {
 
       {/* Development Demos Section */}
       <section className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+        <h2 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
           Development Demos
         </h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <p className={`text-sm ${mutedTextColors.normal} mb-4`}>
           Test and verify system functionality. Click to expand each demo.
         </p>
 
@@ -131,10 +132,10 @@ export default function AdminDevPage() {
               className="w-full flex items-center justify-between text-left"
             >
               <div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+                <h3 className={`font-semibold ${headingColors.primary}`}>
                   Authentication Demo
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className={`text-sm ${mutedTextColors.normal}`}>
                   Test user authentication flows with Supabase
                 </p>
               </div>
@@ -143,7 +144,7 @@ export default function AdminDevPage() {
               </span>
             </button>
             {expandedDemo === 'auth' && (
-              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className={`mt-4 pt-4 border-t ${dividerColors.border}`}>
                 <AuthDemo />
               </div>
             )}
@@ -157,10 +158,10 @@ export default function AdminDevPage() {
               className="w-full flex items-center justify-between text-left"
             >
               <div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+                <h3 className={`font-semibold ${headingColors.primary}`}>
                   Database Demo
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className={`text-sm ${mutedTextColors.normal}`}>
                   Test data persistence with Supabase and Redis caching
                 </p>
               </div>
@@ -169,7 +170,7 @@ export default function AdminDevPage() {
               </span>
             </button>
             {expandedDemo === 'database' && (
-              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className={`mt-4 pt-4 border-t ${dividerColors.border}`}>
                 <DatabaseDemo />
               </div>
             )}
@@ -183,10 +184,10 @@ export default function AdminDevPage() {
               className="w-full flex items-center justify-between text-left"
             >
               <div>
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+                <h3 className={`font-semibold ${headingColors.primary}`}>
                   Speed & Caching Demo
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className={`text-sm ${mutedTextColors.normal}`}>
                   Test Redis caching performance (10-20x faster)
                 </p>
               </div>
@@ -195,7 +196,7 @@ export default function AdminDevPage() {
               </span>
             </button>
             {expandedDemo === 'speed' && (
-              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className={`mt-4 pt-4 border-t ${dividerColors.border}`}>
                 <SpeedDemo />
               </div>
             )}

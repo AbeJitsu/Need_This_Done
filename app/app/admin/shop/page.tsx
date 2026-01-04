@@ -9,7 +9,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import type { Product, Order } from '@/lib/medusa-client';
-import { alertColors, statusBadgeColors, formInputColors, cardBgColors, cardBorderColors } from '@/lib/colors';
+import { alertColors, statusBadgeColors, formInputColors, cardBgColors, cardBorderColors, mutedTextColors, headingColors, coloredLinkText, dividerColors, navigationColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Shop Dashboard - /admin/shop
@@ -85,7 +85,7 @@ export default function AdminShopDashboard() {
   if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+        <p className={mutedTextColors.normal}>Loading...</p>
       </div>
     );
   }
@@ -205,10 +205,10 @@ export default function AdminShopDashboard() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
           Shop Management
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className={mutedTextColors.normal}>
           Manage products and track orders
         </p>
       </div>
@@ -221,7 +221,7 @@ export default function AdminShopDashboard() {
       )}
 
       {/* Tab navigation */}
-      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
+      <div className={`mb-6 border-b ${dividerColors.border}`}>
         <div className="flex gap-1" role="tablist" aria-label="Shop management sections">
           <button
             onClick={() => setActiveTab('products')}
@@ -231,8 +231,8 @@ export default function AdminShopDashboard() {
             id="products-tab"
             className={`px-4 py-3 font-medium border-b-2 transition-colors ${
               activeTab === 'products'
-                ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400'
-                : 'text-gray-600 dark:text-gray-400 border-transparent hover:text-gray-900 dark:hover:text-gray-200'
+                ? `${coloredLinkText.blue} border-blue-600 dark:border-blue-400`
+                : `${navigationColors.link} border-transparent ${navigationColors.linkHover}`
             }`}
           >
             Products ({products.length})
@@ -245,8 +245,8 @@ export default function AdminShopDashboard() {
             id="orders-tab"
             className={`px-4 py-3 font-medium border-b-2 transition-colors ${
               activeTab === 'orders'
-                ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400'
-                : 'text-gray-600 dark:text-gray-400 border-transparent hover:text-gray-900 dark:hover:text-gray-200'
+                ? `${coloredLinkText.blue} border-blue-600 dark:border-blue-400`
+                : `${navigationColors.link} border-transparent ${navigationColors.linkHover}`
             }`}
           >
             Orders ({orders.length})
@@ -258,7 +258,7 @@ export default function AdminShopDashboard() {
       {activeTab === 'products' && (
         <div role="tabpanel" id="products-panel" aria-labelledby="products-tab">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className={`text-xl font-semibold ${headingColors.primary}`}>
               Products
             </h2>
             <div className="flex gap-2">
@@ -306,12 +306,12 @@ export default function AdminShopDashboard() {
           {showImportModal && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
               <div className={`${cardBgColors.base} rounded-lg p-6 max-w-md w-full mx-4 shadow-xl`}>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                <h3 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
                   Import Products
                 </h3>
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className={`block text-sm font-medium ${headingColors.secondary} mb-2`}>
                     Select file (JSON or CSV)
                   </label>
                   <input
@@ -362,7 +362,7 @@ export default function AdminShopDashboard() {
           {products.length === 0 ? (
             <Card hoverEffect="none">
               <div className="p-8 text-center">
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <p className={`${mutedTextColors.normal} mb-4`}>
                   No products yet. Create your first product to get started.
                 </p>
                 <Button variant="purple" href="/admin/shop/products/new">
@@ -377,17 +377,17 @@ export default function AdminShopDashboard() {
                   <div className="p-6">
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                        <h3 className={`text-lg font-semibold ${headingColors.primary} mb-2`}>
                           {product.title}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                        <p className={`text-sm ${mutedTextColors.normal} mb-1`}>
                           ID: {product.id}
                         </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className={`text-sm ${mutedTextColors.normal}`}>
                           Handle: {product.handle}
                         </p>
                         {product.prices && product.prices.length > 0 && (
-                          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100 mt-2">
+                          <p className={`text-lg font-semibold ${headingColors.primary} mt-2`}>
                             ${(product.prices[0].amount / 100).toFixed(2)} {product.prices[0].currency_code}
                           </p>
                         )}
@@ -420,14 +420,14 @@ export default function AdminShopDashboard() {
       {/* Orders Tab */}
       {activeTab === 'orders' && (
         <div role="tabpanel" id="orders-panel" aria-labelledby="orders-tab">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
+          <h2 className={`text-xl font-semibold ${headingColors.primary} mb-6`}>
             Recent Orders
           </h2>
 
           {orders.length === 0 ? (
             <Card hoverEffect="none">
               <div className="p-8 text-center">
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className={mutedTextColors.normal}>
                   No orders yet. Orders will appear here when customers make purchases.
                 </p>
               </div>
@@ -439,13 +439,13 @@ export default function AdminShopDashboard() {
                   <div className="p-6">
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                        <h3 className={`text-lg font-semibold ${headingColors.primary} mb-2`}>
                           Order #{order.id.slice(0, 8)}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                        <p className={`text-sm ${mutedTextColors.normal} mb-1`}>
                           Customer: {order.email}
                         </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className={`text-sm ${mutedTextColors.normal}`}>
                           Items: {order.items?.length || 0}
                         </p>
                         <p className="text-lg font-semibold text-gray-900 dark:text-gray-100 mt-2">

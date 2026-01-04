@@ -19,7 +19,7 @@ import {
   generateSlug,
   generateExcerpt,
 } from '@/lib/blog-types';
-import { formInputColors, headingColors, accentColors, containerBg } from '@/lib/colors';
+import { formInputColors, headingColors, accentColors, containerBg, mutedTextColors, coloredLinkText, dividerColors, cardBgColors } from '@/lib/colors';
 import RichTextEditor from '@/components/editor/RichTextEditor';
 
 // ============================================================================
@@ -165,8 +165,8 @@ export default function EditBlogPost({ params }: PageProps) {
     return (
       <div className={`min-h-screen ${containerBg.page} flex items-center justify-center`}>
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Error</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
+          <h1 className={`text-2xl font-bold ${coloredLinkText.red} mb-4`}>Error</h1>
+          <p className={`${mutedTextColors.normal} mb-6`}>{error}</p>
           <Button variant="blue" href="/admin/blog">
             Back to Blog
           </Button>
@@ -182,19 +182,19 @@ export default function EditBlogPost({ params }: PageProps) {
         <nav className="flex items-center gap-2 text-sm mb-4">
           <Link
             href="/dashboard"
-            className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className={`${mutedTextColors.normal} ${coloredLinkText.blue} hover:underline transition-colors`}
           >
             Admin
           </Link>
-          <span className="text-gray-400 dark:text-gray-500">/</span>
+          <span className={mutedTextColors.normal}>/</span>
           <Link
             href="/admin/blog"
-            className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className={`${mutedTextColors.normal} ${coloredLinkText.blue} hover:underline transition-colors`}
           >
             Blog
           </Link>
-          <span className="text-gray-400 dark:text-gray-500">/</span>
-          <span className="text-gray-900 dark:text-gray-100 font-medium">Edit</span>
+          <span className={mutedTextColors.normal}>/</span>
+          <span className={`${headingColors.primary} font-medium`}>Edit</span>
         </nav>
 
         {/* Header */}
@@ -209,7 +209,7 @@ export default function EditBlogPost({ params }: PageProps) {
             <Link
               href={`/blog/${slug}`}
               target="_blank"
-              className="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 text-sm"
+              className={`${coloredLinkText.blue} hover:underline flex items-center gap-1 text-sm`}
             >
               View live
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -362,7 +362,7 @@ export default function EditBlogPost({ params }: PageProps) {
                         ${
                           source === key
                             ? `${accentColors.blue.bg} ${accentColors.blue.text}`
-                            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
+                            : `${cardBgColors.elevated} ${mutedTextColors.light}`
                         }
                       `}
                     >
@@ -403,7 +403,7 @@ export default function EditBlogPost({ params }: PageProps) {
                   onClick={() => setShowAdvanced(!showAdvanced)}
                   className={`
                     flex items-center gap-2 text-sm font-medium
-                    ${formInputColors.helper} hover:text-gray-900 dark:hover:text-gray-100
+                    ${formInputColors.helper} hover:${headingColors.primary}
                   `}
                 >
                   <svg
@@ -424,7 +424,7 @@ export default function EditBlogPost({ params }: PageProps) {
               </div>
 
               {showAdvanced && (
-                <div className="space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className={`space-y-4 pt-4 border-t ${dividerColors.border}`}>
                   {/* Slug */}
                   <div>
                     <label

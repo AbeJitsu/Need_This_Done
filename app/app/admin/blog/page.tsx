@@ -16,7 +16,7 @@ import {
   BLOG_STATUS_LABELS,
   formatPublishedDate,
 } from '@/lib/blog-types';
-import { statusBadgeColors, alertColors, containerBg, cardBgColors } from '@/lib/colors';
+import { statusBadgeColors, alertColors, containerBg, cardBgColors, coloredLinkText, headingColors, mutedTextColors, dividerColors, iconCircleColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Blog Dashboard - /admin/blog
@@ -151,19 +151,19 @@ export default function BlogManagement() {
         <nav className="flex items-center gap-2 text-sm mb-6">
           <Link
             href="/dashboard"
-            className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className={`${mutedTextColors.normal} ${coloredLinkText.blue} hover:underline transition-colors`}
           >
             Admin
           </Link>
-          <span className="text-gray-400">/</span>
-          <span className="text-gray-900 dark:text-gray-100 font-medium">Blog</span>
+          <span className={mutedTextColors.normal}>/</span>
+          <span className={`${headingColors.primary} font-medium`}>Blog</span>
         </nav>
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Blog Posts</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
+            <h1 className={`text-3xl font-bold ${headingColors.primary}`}>Blog Posts</h1>
+            <p className={`${mutedTextColors.normal} mt-1`}>
               Create and manage your blog content
             </p>
           </div>
@@ -199,7 +199,7 @@ export default function BlogManagement() {
                 ${
                   statusFilter === status
                     ? 'bg-blue-600 text-white'
-                    : `${cardBgColors.base} text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700`
+                    : `${cardBgColors.base} ${mutedTextColors.light} ${cardBgColors.interactive}`
                 }
               `}
             >
@@ -244,7 +244,7 @@ export default function BlogManagement() {
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                        <h2 className={`text-xl font-semibold ${headingColors.primary}`}>
                           {post.title}
                         </h2>
                         <span
@@ -255,15 +255,15 @@ export default function BlogManagement() {
                       </div>
 
                       {post.excerpt && (
-                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-2 line-clamp-2">
+                        <p className={`${mutedTextColors.normal} text-sm mb-2 line-clamp-2`}>
                           {post.excerpt}
                         </p>
                       )}
 
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                        <span className="text-gray-500 dark:text-gray-400">/blog/{post.slug}</span>
+                        <span className={mutedTextColors.normal}>/blog/{post.slug}</span>
                         {post.published_at && (
-                          <span className="text-gray-400 dark:text-gray-500">
+                          <span className={mutedTextColors.normal}>
                             Published {formatPublishedDate(post.published_at)}
                           </span>
                         )}
@@ -271,7 +271,7 @@ export default function BlogManagement() {
                           <Link
                             href={`/blog/${post.slug}`}
                             target="_blank"
-                            className="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                            className={`${coloredLinkText.blue} hover:underline flex items-center gap-1`}
                           >
                             View live
                             <svg
@@ -297,13 +297,13 @@ export default function BlogManagement() {
                           {post.tags.slice(0, 3).map((tag) => (
                             <span
                               key={tag}
-                              className="text-xs px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                              className={`text-xs px-2 py-0.5 rounded ${cardBgColors.elevated} ${mutedTextColors.light}`}
                             >
                               #{tag}
                             </span>
                           ))}
                           {post.tags.length > 3 && (
-                            <span className="text-xs text-gray-400">
+                            <span className={`text-xs ${mutedTextColors.normal}`}>
                               +{post.tags.length - 3}
                             </span>
                           )}
@@ -334,10 +334,10 @@ export default function BlogManagement() {
 
           {/* Empty State */}
           {filteredPosts.length === 0 && (
-            <div className={`${cardBgColors.base} rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 px-8 py-16 text-center`}>
-              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 flex items-center justify-center">
+            <div className={`${cardBgColors.base} rounded-2xl ${cardBorderColors.lightMd} border-dashed px-8 py-16 text-center`}>
+              <div className={`w-20 h-20 mx-auto mb-6 rounded-2xl ${iconCircleColors.blue.bg} flex items-center justify-center`}>
                 <svg
-                  className="w-10 h-10 text-blue-600 dark:text-blue-400"
+                  className={`w-10 h-10 ${iconCircleColors.blue.icon}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -350,12 +350,12 @@ export default function BlogManagement() {
                   />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+              <h3 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
                 {statusFilter === 'all'
                   ? 'Start writing your first post'
                   : `No ${statusFilter} posts yet`}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-8 leading-relaxed">
+              <p className={`${mutedTextColors.normal} max-w-md mx-auto mb-8 leading-relaxed`}>
                 {statusFilter === 'all'
                   ? 'Share your expertise, repurpose LinkedIn content, or tell your story. Getting started takes just a few minutes.'
                   : 'Posts will appear here once you have some.'}
@@ -380,31 +380,31 @@ export default function BlogManagement() {
               </Button>
 
               {/* Quick tips */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+              <div className={`grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 pt-8 border-t ${dividerColors.border}`}>
                 <div className="text-center">
                   <div className="text-2xl mb-2">📱</div>
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                  <h4 className={`font-semibold ${headingColors.primary} mb-1`}>
                     From LinkedIn
                   </h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className={`text-sm ${mutedTextColors.normal}`}>
                     Paste your LinkedIn post and expand it
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl mb-2">✍️</div>
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                  <h4 className={`font-semibold ${headingColors.primary} mb-1`}>
                     Write Fresh
                   </h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className={`text-sm ${mutedTextColors.normal}`}>
                     Create original content from scratch
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl mb-2">🚀</div>
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                  <h4 className={`font-semibold ${headingColors.primary} mb-1`}>
                     Publish Fast
                   </h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className={`text-sm ${mutedTextColors.normal}`}>
                     Draft now, publish when ready
                   </p>
                 </div>

@@ -14,6 +14,9 @@ import {
   headingColors,
   verySoftBgColors,
   tableHeaderBg,
+  coloredLinkText,
+  dividerColors,
+  mutedTextColors,
 } from '@/lib/colors';
 import { API_REQUEST_TIMEOUT, TOAST_DURATION } from '@/lib/timing';
 
@@ -227,7 +230,7 @@ export default function AdminInventoryPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20" role="status" aria-live="polite" aria-busy="true">
-        <div className="text-gray-600 dark:text-gray-300">Loading inventory...</div>
+        <div className={headingColors.secondary}>Loading inventory...</div>
       </div>
     );
   }
@@ -259,19 +262,19 @@ export default function AdminInventoryPage() {
       {stats && (
         <div data-testid="inventory-stats" className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Card hoverColor="blue" hoverEffect="glow" className="text-center p-4">
-            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{stats.total}</div>
+            <div className={`text-3xl font-bold ${coloredLinkText.blue}`}>{stats.total}</div>
             <div className={`text-sm ${headingColors.secondary}`}>Total Variants</div>
           </Card>
           <Card hoverColor="green" hoverEffect="glow" className="text-center p-4">
-            <div className="text-3xl font-bold text-green-600 dark:text-green-400">{stats.inStock}</div>
+            <div className={`text-3xl font-bold ${coloredLinkText.green}`}>{stats.inStock}</div>
             <div className={`text-sm ${headingColors.secondary}`}>In Stock</div>
           </Card>
           <Card hoverColor="gold" hoverEffect="glow" className="text-center p-4">
-            <div className="text-3xl font-bold text-gold-600 dark:text-gold-400">{stats.lowStock}</div>
+            <div className={`text-3xl font-bold ${coloredLinkText.gold}`}>{stats.lowStock}</div>
             <div className={`text-sm ${headingColors.secondary}`}>Low Stock</div>
           </Card>
           <Card hoverColor="red" hoverEffect="glow" className="text-center p-4">
-            <div className="text-3xl font-bold text-red-600 dark:text-red-400">{stats.outOfStock}</div>
+            <div className={`text-3xl font-bold ${coloredLinkText.red}`}>{stats.outOfStock}</div>
             <div className={`text-sm ${headingColors.secondary}`}>Out of Stock</div>
           </Card>
         </div>
@@ -347,10 +350,10 @@ export default function AdminInventoryPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className={`divide-y ${dividerColors.border}`}>
               {filteredInventory.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                  <td colSpan={6} className={`px-4 py-8 text-center ${mutedTextColors.normal}`}>
                     {inventory.length === 0
                       ? 'No inventory items found'
                       : 'No items match your filters'}

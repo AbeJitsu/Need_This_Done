@@ -16,7 +16,7 @@ import {
   type HowItWorksPageContent,
   type EditablePageSlug,
 } from '@/lib/page-content-types';
-import { alertColors, uiChromeBg, statusIndicatorBg, hoverBgColors, cardBgColors } from '@/lib/colors';
+import { alertColors, uiChromeBg, statusIndicatorBg, hoverBgColors, cardBgColors, dividerColors, headingColors, mutedTextColors, dangerColors, navigationColors, layoutBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Content Editor - Main Editor Component
@@ -151,16 +151,16 @@ export default function ContentEditor({
   const pageName = PAGE_DISPLAY_NAMES[slug] || slug;
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
+    <div className={`h-screen flex flex-col ${layoutBgColors.page}`}>
       {/* Header Bar */}
-      <header className={`flex-shrink-0 ${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 px-4 py-3`}>
+      <header className={`flex-shrink-0 ${cardBgColors.base} border-b ${dividerColors.border} px-4 py-3`}>
         <div className="flex items-center justify-between max-w-[1800px] mx-auto">
           <div className="flex items-center gap-4">
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h1 className={`text-lg font-semibold ${headingColors.primary}`}>
               Edit {pageName}
             </h1>
             {isDirty && (
-              <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${statusIndicatorBg.modified} text-yellow-700 dark:text-yellow-200`}>
+              <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${statusIndicatorBg.modified} ${alertColors.warning.text}`}>
                 Unsaved changes
               </span>
             )}
@@ -194,31 +194,31 @@ export default function ContentEditor({
       {/* Main Content - Split Panel */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel - Form */}
-        <div className={`w-[400px] flex-shrink-0 border-r border-gray-200 dark:border-gray-700 ${cardBgColors.base} flex flex-col`}>
+        <div className={`w-[400px] flex-shrink-0 border-r ${dividerColors.border} ${cardBgColors.base} flex flex-col`}>
           {/* Form Content */}
           <div className="flex-1 overflow-y-auto p-4">
             {renderForm()}
           </div>
 
           {/* Form Footer */}
-          <div className={`flex-shrink-0 p-4 border-t border-gray-200 dark:border-gray-700 ${uiChromeBg.footer}`}>
+          <div className={`flex-shrink-0 p-4 border-t ${dividerColors.border} ${uiChromeBg.footer}`}>
             {showResetConfirm ? (
               <div className="space-y-2">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className={`text-sm ${mutedTextColors.normal}`}>
                   Reset all fields to their default values?
                 </p>
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={handleReset}
-                    className={`px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 ${hoverBgColors.red} rounded`}
+                    className={`px-3 py-1.5 text-xs font-medium ${dangerColors.text} ${hoverBgColors.red} rounded`}
                   >
                     Yes, Reset
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowResetConfirm(false)}
-                    className="px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                    className={`px-3 py-1.5 text-xs font-medium ${mutedTextColors.normal} ${hoverBgColors.gray} rounded`}
                   >
                     Cancel
                   </button>
@@ -228,7 +228,7 @@ export default function ContentEditor({
               <button
                 type="button"
                 onClick={() => setShowResetConfirm(true)}
-                className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                className={`text-xs ${mutedTextColors.normal} ${navigationColors.linkHover}`}
               >
                 Reset to Defaults
               </button>

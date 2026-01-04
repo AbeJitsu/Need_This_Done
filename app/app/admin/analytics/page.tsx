@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
-import { alertColors, accentColors, softBgColors, titleTextColors, cardBgColors, cardBorderColors } from '@/lib/colors';
+import { alertColors, accentColors, softBgColors, titleTextColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors, formInputColors, titleColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Analytics Dashboard - /admin/analytics
@@ -145,7 +145,7 @@ export default function AnalyticsDashboard() {
   if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen" role="status" aria-live="polite" aria-busy="true">
-        <p className="text-gray-600 dark:text-gray-400">Loading analytics...</p>
+        <p className={mutedTextColors.normal}>Loading analytics...</p>
       </div>
     );
   }
@@ -156,10 +156,10 @@ export default function AnalyticsDashboard() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
           Analytics
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className={mutedTextColors.normal}>
           Revenue, orders, and trends at a glance
         </p>
       </div>
@@ -180,7 +180,7 @@ export default function AnalyticsDashboard() {
       {/* Date range filters */}
       <div className="mb-6 flex flex-wrap gap-4 items-end">
         <div>
-          <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="startDate" className={`block text-sm font-medium ${headingColors.secondary} mb-1`}>
             Start Date
           </label>
           <input
@@ -188,11 +188,11 @@ export default function AnalyticsDashboard() {
             id="startDate"
             value={dateRange.startDate}
             onChange={(e) => setDateRange((prev) => ({ ...prev, startDate: e.target.value }))}
-            className={`px-3 py-2 ${cardBorderColors.light} rounded-lg ${cardBgColors.base} text-gray-900 dark:text-gray-100`}
+            className={`px-3 py-2 ${cardBorderColors.light} rounded-lg ${formInputColors.base}`}
           />
         </div>
         <div>
-          <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="endDate" className={`block text-sm font-medium ${headingColors.secondary} mb-1`}>
             End Date
           </label>
           <input
@@ -200,7 +200,7 @@ export default function AnalyticsDashboard() {
             id="endDate"
             value={dateRange.endDate}
             onChange={(e) => setDateRange((prev) => ({ ...prev, endDate: e.target.value }))}
-            className={`px-3 py-2 ${cardBorderColors.light} rounded-lg ${cardBgColors.base} text-gray-900 dark:text-gray-100`}
+            className={`px-3 py-2 ${cardBorderColors.light} rounded-lg ${formInputColors.base}`}
           />
         </div>
         <button
@@ -263,7 +263,7 @@ export default function AnalyticsDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <Card hoverEffect="none">
           <div className="p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            <h2 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
               Orders by Status
             </h2>
             {data ? (
@@ -275,7 +275,7 @@ export default function AnalyticsDashboard() {
                 <StatusBar label="Canceled" count={data.summary.ordersByStatus.canceled} total={data.summary.totalOrders} color="red" />
               </div>
             ) : (
-              <p className="text-gray-500 dark:text-gray-400">No data available</p>
+              <p className={mutedTextColors.normal}>No data available</p>
             )}
           </div>
         </Card>
@@ -283,7 +283,7 @@ export default function AnalyticsDashboard() {
         {/* Revenue Trend Chart */}
         <Card hoverEffect="none">
           <div className="p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            <h2 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
               Revenue Trend
             </h2>
             {data?.trends && data.trends.length > 0 ? (
@@ -297,14 +297,14 @@ export default function AnalyticsDashboard() {
                       className="flex-1 flex flex-col items-center group relative"
                     >
                       <div
-                        className="w-full bg-purple-500 dark:bg-purple-400 rounded-t transition-all group-hover:bg-purple-600 dark:group-hover:bg-purple-300"
+                        className={`w-full ${titleColors.purple} rounded-t transition-all`}
                         style={{ height: `${Math.max(height, 2)}%` }}
                       />
-                      <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 hidden md:block">
+                      <span className={`text-xs ${mutedTextColors.normal} mt-1 hidden md:block`}>
                         {new Date(point.date).getDate()}
                       </span>
                       {/* Tooltip */}
-                      <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs px-2 py-1 rounded whitespace-nowrap z-10">
+                      <div className={`absolute bottom-full mb-2 hidden group-hover:block ${cardBgColors.base} ${headingColors.primary} text-xs px-2 py-1 rounded whitespace-nowrap z-10 border ${cardBorderColors.light}`}>
                         {formatCurrency(point.revenue)}
                         <br />
                         {point.orders} orders
@@ -315,7 +315,7 @@ export default function AnalyticsDashboard() {
               </div>
             ) : (
               <div className="h-48 flex items-center justify-center">
-                <p className="text-gray-500 dark:text-gray-400">No trend data available</p>
+                <p className={mutedTextColors.normal}>No trend data available</p>
               </div>
             )}
           </div>
@@ -357,8 +357,8 @@ function MetricCard({
             {icon}
           </div>
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{value}</p>
+            <p className={`text-sm ${mutedTextColors.normal}`}>{label}</p>
+            <p className={`text-2xl font-bold ${headingColors.primary}`}>{value}</p>
           </div>
         </div>
       </div>
@@ -390,10 +390,10 @@ function StatusBar({
   return (
     <div>
       <div className="flex justify-between text-sm mb-1">
-        <span className="text-gray-700 dark:text-gray-300">{label}</span>
-        <span className="text-gray-500 dark:text-gray-400">{count}</span>
+        <span className={headingColors.secondary}>{label}</span>
+        <span className={mutedTextColors.normal}>{count}</span>
       </div>
-      <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+      <div className={`h-2 ${cardBgColors.elevated} rounded-full overflow-hidden`}>
         <div
           className={`h-full ${colorClasses[color]} rounded-full transition-all`}
           style={{ width: `${percentage}%` }}

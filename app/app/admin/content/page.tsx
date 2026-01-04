@@ -12,7 +12,7 @@ import {
   EDITABLE_PAGES,
   PAGE_DISPLAY_NAMES,
 } from '@/lib/page-content-types';
-import { alertColors, statusBadgeColors } from '@/lib/colors';
+import { alertColors, statusBadgeColors, headingColors, mutedTextColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Content Management - List of Editable Marketing Pages
@@ -123,10 +123,10 @@ export default function ContentManagement() {
               <div className="p-6">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h2 className="text-xl font-semibold mb-1 text-gray-900 dark:text-gray-100">
+                    <h2 className={`text-xl font-semibold mb-1 ${headingColors.primary}`}>
                       {displayName}
                     </h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    <p className={`text-sm ${mutedTextColors.normal} mb-2`}>
                       /{slug === 'home' ? '' : slug}
                     </p>
                     <div className="flex gap-2 items-center">
@@ -140,7 +140,7 @@ export default function ContentManagement() {
                         {isCustomized ? 'Customized' : 'Using Defaults'}
                       </span>
                       {isCustomized && info?.updated_at && (
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className={`text-xs ${mutedTextColors.normal}`}>
                           Last updated{' '}
                           {new Date(info.updated_at).toLocaleDateString()}
                         </span>
@@ -173,10 +173,10 @@ export default function ContentManagement() {
       {/* Help Text */}
       <Card hoverColor="purple" hoverEffect="glow" className="mt-8">
         <div className="p-6 text-center">
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          <h3 className={`font-semibold ${headingColors.primary} mb-2`}>
             How Content Editing Works
           </h3>
-          <p className="text-gray-600 dark:text-gray-300 text-sm max-w-xl mx-auto">
+          <p className={`${mutedTextColors.light} text-sm max-w-xl mx-auto`}>
             Each page has its own set of editable content: titles, descriptions,
             button text, colors, and more. The page layout stays the same;
             you&apos;re just updating the words and colors. Changes appear on the

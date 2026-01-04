@@ -496,7 +496,7 @@ export default function QuotesDashboard() {
                         {quote.customer_name}
                       </h3>
                       {isExpired(quote.expires_at) && quote.status === 'sent' && (
-                        <span className="px-2 py-0.5 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 rounded">
+                        <span className={`px-2 py-0.5 text-xs font-medium rounded ${statusBadgeColors.cancelled.bg} ${statusBadgeColors.cancelled.text}`}>
                           Expired
                         </span>
                       )}

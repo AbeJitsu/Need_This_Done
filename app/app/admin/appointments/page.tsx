@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors, alertColors, statusBadgeColors, softBgColors, containerBg, uiChromeBg } from '@/lib/colors';
+import { filterButtonColors, alertColors, statusBadgeColors, softBgColors, containerBg, uiChromeBg, headingColors, mutedTextColors, coloredLinkText, dividerColors, successCheckmarkColors } from '@/lib/colors';
 
 // ============================================================================
 // Appointments Dashboard - /admin/appointments
@@ -178,7 +178,7 @@ export default function AppointmentsDashboard() {
   if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen" role="status" aria-live="polite" aria-busy="true">
-        <p className="text-gray-600 dark:text-gray-400">Loading appointments...</p>
+        <p className={mutedTextColors.normal}>Loading appointments...</p>
       </div>
     );
   }
@@ -189,10 +189,10 @@ export default function AppointmentsDashboard() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
           Appointments
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className={mutedTextColors.normal}>
           Review and manage customer appointment requests
         </p>
       </div>
@@ -267,7 +267,7 @@ export default function AppointmentsDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className={mutedTextColors.normal}>
               {appointments.length === 0
                 ? 'No appointment requests yet. Requests will appear here when customers schedule consultations.'
                 : 'No appointments match the selected filter.'}
@@ -282,12 +282,12 @@ export default function AppointmentsDashboard() {
                 {/* Header row */}
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    <h3 className={`text-lg font-semibold ${headingColors.primary}`}>
                       {appointment.customer_name || 'Customer'}
                     </h3>
                     <a
                       href={`mailto:${appointment.customer_email}`}
-                      className="text-sm text-purple-600 dark:text-purple-400 hover:underline"
+                      className={`text-sm ${coloredLinkText.purple} hover:underline`}
                     >
                       {appointment.customer_email}
                     </a>
@@ -302,31 +302,31 @@ export default function AppointmentsDashboard() {
                 {/* Date/time details */}
                 <div className="grid sm:grid-cols-2 gap-4 mb-4">
                   {/* Preferred slot */}
-                  <div className={`p-4 ${softBgColors.green} rounded-lg border border-green-200 dark:border-green-600`}>
-                    <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-1">
+                  <div className={`p-4 ${softBgColors.green} rounded-lg border ${dividerColors.border}`}>
+                    <p className={`text-xs font-medium ${coloredLinkText.green} mb-1`}>
                       Preferred Time
                     </p>
-                    <p className="font-semibold text-gray-900 dark:text-gray-100">
+                    <p className={`font-semibold ${headingColors.primary}`}>
                       {formatDate(appointment.preferred_date)}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className={`text-sm ${mutedTextColors.normal}`}>
                       {formatTime(appointment.preferred_time_start)} - {formatTime(appointment.preferred_time_end)}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                    <p className={`text-xs ${mutedTextColors.normal} mt-1`}>
                       {appointment.duration_minutes} minutes
                     </p>
                   </div>
 
                   {/* Alternate slot (if provided) */}
                   {appointment.alternate_date && appointment.alternate_time_start && appointment.alternate_time_end && (
-                    <div className={`p-4 ${softBgColors.gold} rounded-lg border border-gold-200 dark:border-gold-600`}>
-                      <p className="text-xs font-medium text-gold-700 dark:text-gold-300 mb-1">
+                    <div className={`p-4 ${softBgColors.gold} rounded-lg border ${dividerColors.border}`}>
+                      <p className={`text-xs font-medium ${coloredLinkText.gold} mb-1`}>
                         Alternate Time
                       </p>
-                      <p className="font-semibold text-gray-900 dark:text-gray-100">
+                      <p className={`font-semibold ${headingColors.primary}`}>
                         {formatDate(appointment.alternate_date)}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className={`text-sm ${mutedTextColors.normal}`}>
                         {formatTime(appointment.alternate_time_start)} - {formatTime(appointment.alternate_time_end)}
                       </p>
                     </div>
@@ -336,14 +336,14 @@ export default function AppointmentsDashboard() {
                 {/* Notes (if any) */}
                 {appointment.notes && (
                   <div className={`mb-4 p-3 ${containerBg.page} rounded-lg`}>
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Customer Notes</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{appointment.notes}</p>
+                    <p className={`text-xs font-medium ${mutedTextColors.normal} mb-1`}>Customer Notes</p>
+                    <p className={`text-sm ${headingColors.secondary}`}>{appointment.notes}</p>
                   </div>
                 )}
 
                 {/* Footer with actions */}
-                <div className="flex flex-wrap justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700 gap-4">
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                <div className={`flex flex-wrap justify-between items-center pt-4 border-t ${dividerColors.border} gap-4`}>
+                  <div className={`text-xs ${mutedTextColors.normal}`}>
                     <p>Order: <span className="font-mono">{appointment.order_id.slice(0, 12)}...</span></p>
                     <p>Requested: {new Date(appointment.created_at).toLocaleDateString()}</p>
                   </div>
@@ -376,7 +376,7 @@ export default function AppointmentsDashboard() {
 
                   {/* Show Google Calendar link for approved appointments */}
                   {appointment.status === 'approved' && appointment.google_event_id && (
-                    <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400" aria-label="This appointment has been added to Google Calendar">
+                    <div className={`flex items-center gap-2 text-sm ${coloredLinkText.green}`} aria-label="This appointment has been added to Google Calendar">
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
                       </svg>

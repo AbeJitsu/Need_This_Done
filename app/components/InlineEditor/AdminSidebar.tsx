@@ -18,6 +18,8 @@ import {
   getSolidButtonColors,
   uiChromeBg,
   hoverBgColors,
+  dividerColors,
+  dangerColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -444,8 +446,8 @@ export default function AdminSidebar() {
                   className={`
                     relative rounded-lg
                     ${uiChromeBg.panel}
-                    border border-gray-200 dark:border-gray-700
-                    hover:border-blue-300 dark:hover:border-blue-600
+                    ${dividerColors.border.replace('border-', 'border ')}
+                    ${cardHoverColors.blue}
                     transition-all duration-150 group
                   `}
                 >
@@ -455,7 +457,7 @@ export default function AdminSidebar() {
                       type="button"
                       onClick={(e) => { e.stopPropagation(); handleMoveArrayItem(basePath, index, 'up'); }}
                       disabled={index === 0}
-                      className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-30"
+                      className={`p-1 rounded ${hoverBgColors.gray} disabled:opacity-30`}
                       aria-label="Move up"
                     >
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -466,7 +468,7 @@ export default function AdminSidebar() {
                       type="button"
                       onClick={(e) => { e.stopPropagation(); handleMoveArrayItem(basePath, index, 'down'); }}
                       disabled={index === obj.length - 1}
-                      className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-30"
+                      className={`p-1 rounded ${hoverBgColors.gray} disabled:opacity-30`}
                       aria-label="Move down"
                     >
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -476,7 +478,7 @@ export default function AdminSidebar() {
                     <button
                       type="button"
                       onClick={(e) => { e.stopPropagation(); handleDeleteArrayItem(basePath, index); }}
-                      className={`p-1 rounded ${hoverBgColors.red} text-red-600 dark:text-red-400`}
+                      className={`p-1 rounded ${hoverBgColors.red} ${dangerColors.text}`}
                       aria-label="Delete item"
                     >
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { adminSidebarColors, focusRingClasses } from '@/lib/colors';
+import { adminSidebarColors, focusRingClasses, dividerColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Sidebar Component - Persistent navigation for admin sections
@@ -146,7 +146,7 @@ export default function AdminSidebar() {
         aria-label="Admin navigation"
       >
         {/* Header */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className={`p-4 border-b ${dividerColors.border}`}>
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
               <span className="text-white font-bold text-sm">N</span>
@@ -176,7 +176,7 @@ export default function AdminSidebar() {
                   transition-all duration-200
                   ${focusRingClasses.blue}
                   ${active
-                    ? `${adminSidebarColors.activeBg} ${adminSidebarColors.activeText} border-l-4 border-blue-500 dark:border-blue-400 -ml-0.5`
+                    ? `${adminSidebarColors.activeBg} ${adminSidebarColors.activeText} ${adminSidebarColors.activeBorder} -ml-0.5`
                     : `${adminSidebarColors.linkText} ${adminSidebarColors.linkHover} ${adminSidebarColors.linkHoverText}`
                   }
                 `}
@@ -192,7 +192,7 @@ export default function AdminSidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
+        <div className={`absolute bottom-0 left-0 right-0 p-4 border-t ${dividerColors.border}`}>
           <Link
             href="/"
             className={`

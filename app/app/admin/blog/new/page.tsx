@@ -18,7 +18,7 @@ import {
   generateSlug,
   generateExcerpt,
 } from '@/lib/blog-types';
-import { formInputColors, headingColors, accentColors, containerBg, infoBannerColors } from '@/lib/colors';
+import { formInputColors, headingColors, accentColors, containerBg, infoBannerColors, coloredLinkText, mutedTextColors, cardBgColors, dividerColors } from '@/lib/colors';
 
 // ============================================================================
 // New Blog Post Creator - /admin/blog/new
@@ -164,19 +164,19 @@ export default function NewBlogPost() {
         <nav className="flex items-center gap-2 text-sm mb-6">
           <Link
             href="/dashboard"
-            className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className={`${mutedTextColors.normal} ${coloredLinkText.blue} hover:underline transition-colors`}
           >
             Admin
           </Link>
-          <span className="text-gray-400 dark:text-gray-400">/</span>
+          <span className={mutedTextColors.normal}>/</span>
           <Link
             href="/admin/blog"
-            className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className={`${mutedTextColors.normal} ${coloredLinkText.blue} hover:underline transition-colors`}
           >
             Blog
           </Link>
-          <span className="text-gray-400 dark:text-gray-400">/</span>
-          <span className="text-gray-900 dark:text-gray-100 font-medium">New Post</span>
+          <span className={mutedTextColors.normal}>/</span>
+          <span className={`${headingColors.primary} font-medium`}>New Post</span>
         </nav>
 
         {/* Header */}
@@ -366,7 +366,7 @@ export default function NewBlogPost() {
                         ${
                           source === key
                             ? `${accentColors.blue.bg} ${accentColors.blue.text}`
-                            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                            : `${cardBgColors.elevated} ${mutedTextColors.light} ${cardBgColors.interactive}`
                         }
                       `}
                     >
@@ -410,7 +410,7 @@ export default function NewBlogPost() {
                   onClick={() => setShowAdvanced(!showAdvanced)}
                   className={`
                     flex items-center gap-2 text-sm font-medium
-                    ${formInputColors.helper} hover:text-gray-900 dark:hover:text-gray-100
+                    ${formInputColors.helper} hover:${headingColors.primary}
                     transition-colors
                   `}
                 >
@@ -433,7 +433,7 @@ export default function NewBlogPost() {
 
               {/* Advanced Options */}
               {showAdvanced && (
-                <div className="space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className={`space-y-4 pt-4 border-t ${dividerColors.border}`}>
                   {/* Slug */}
                   <div>
                     <label

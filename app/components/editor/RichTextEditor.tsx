@@ -10,7 +10,7 @@ import Underline from '@tiptap/extension-underline';
 import { useState, useCallback, useEffect } from 'react';
 import MediaLibrary from '@/components/media/MediaLibrary';
 import { MediaItem } from '@/lib/media-types';
-import { uiChromeBg, toggleButtonColors, hoverBgColors, cardBgColors } from '@/lib/colors';
+import { uiChromeBg, toggleButtonColors, hoverBgColors, cardBgColors, dividerColors, headingColors, mutedTextColors, dangerColors, cardBorderColors, formInputColors, linkColors, linkHoverColors } from '@/lib/colors';
 import {
   BoldIcon,
   ItalicIcon,
@@ -72,7 +72,7 @@ export default function RichTextEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-purple-600 dark:text-purple-400 underline hover:text-purple-800 dark:hover:text-purple-300',
+          class: 'text-purple-600 dark:text-purple-400 underline hover:text-purple-700 dark:hover:text-purple-300',
         },
       }),
       Placeholder.configure({
@@ -142,7 +142,7 @@ export default function RichTextEditor({
   if (!editor) return null;
 
   return (
-    <div className={`border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden ${cardBgColors.base} ${className}`}>
+    <div className={`${cardBorderColors.light} rounded-xl overflow-hidden ${cardBgColors.base} ${className}`}>
       {/* ====================================================================
           Toolbar
           ==================================================================== */}
@@ -179,7 +179,7 @@ export default function RichTextEditor({
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsLinkModalOpen(false)} />
           <div className={`relative ${cardBgColors.base} rounded-xl shadow-xl p-6 w-full max-w-md`}>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            <h3 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
               {linkUrl ? 'Edit Link' : 'Add Link'}
             </h3>
             <input
@@ -187,13 +187,13 @@ export default function RichTextEditor({
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
               placeholder="https://example.com"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className={`w-full px-4 py-2 ${cardBorderColors.light} rounded-lg ${cardBgColors.elevated} ${headingColors.primary} focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
               autoFocus
             />
             <div className="flex justify-end gap-3 mt-4">
               <button
                 onClick={() => setIsLinkModalOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                className={`px-4 py-2 text-sm font-medium ${headingColors.secondary} ${hoverBgColors.gray} rounded-lg transition-colors`}
               >
                 Cancel
               </button>
@@ -203,7 +203,7 @@ export default function RichTextEditor({
                     editor?.chain().focus().unsetLink().run();
                     setIsLinkModalOpen(false);
                   }}
-                  className={`px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 ${hoverBgColors.red} rounded-lg transition-colors`}
+                  className={`px-4 py-2 text-sm font-medium ${dangerColors.text} ${hoverBgColors.red} rounded-lg transition-colors`}
                 >
                   Remove
                 </button>
@@ -234,7 +234,7 @@ interface ToolbarProps {
 
 function Toolbar({ editor, onMediaClick, onLinkClick }: ToolbarProps) {
   return (
-    <div className={`flex flex-wrap items-center gap-1 p-2 border-b border-gray-200 dark:border-gray-700 ${uiChromeBg.toolbar}`}>
+    <div className={`flex flex-wrap items-center gap-1 p-2 border-b ${dividerColors.border} ${uiChromeBg.toolbar}`}>
       {/* Text Formatting */}
       <ToolbarGroup>
         <ToolbarButton
@@ -412,7 +412,7 @@ function ToolbarGroup({ children }: { children: React.ReactNode }) {
 }
 
 function ToolbarDivider() {
-  return <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />;
+  return <div className={`w-px h-6 ${dividerColors.subtle} mx-1`} />;
 }
 
 interface ToolbarButtonProps {
@@ -434,7 +434,7 @@ function ToolbarButton({ onClick, active, disabled, title, children }: ToolbarBu
         p-2 rounded-lg text-sm font-medium transition-colors
         ${active
           ? toggleButtonColors.purple.inactive
-          : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+          : `${mutedTextColors.normal} ${hoverBgColors.gray}`
         }
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
       `}
