@@ -76,3 +76,5 @@ env.md.do
 app/affected-routes.json
 app/component-route-map.json
 
+app/lib/generated/content-manifest.ts
+app/lib/generated/content-manifest.ts

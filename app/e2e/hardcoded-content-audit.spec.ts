@@ -55,7 +55,7 @@ const EXCEPTIONS = [
   { file: 'pricing/PricingPageClient.tsx', pattern: /something intentionally static/i },
 ];
 
-function isException(filePath: string, content: string, pattern: RegExp): boolean {
+function isException(filePath: string, content: string): boolean {
   const fileName = filePath.replace(COMPONENTS_DIR + '/', '');
   return EXCEPTIONS.some(
     (exc) => fileName === exc.file && exc.pattern.test(content)
@@ -76,7 +76,7 @@ test.describe('Hardcoded Content Audit', () => {
       const content = fs.readFileSync(filePath, 'utf-8');
 
       for (const pattern of HARDCODED_PATTERNS) {
-        if (pattern.test(content) && !isException(filePath, content, pattern)) {
+        if (pattern.test(content) && !isException(filePath, content)) {
           violations.push(`${relPath}: Found hardcoded content matching ${pattern}`);
         }
       }

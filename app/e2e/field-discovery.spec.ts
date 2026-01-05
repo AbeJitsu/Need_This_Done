@@ -137,11 +137,6 @@ test.describe('Field Discovery Verification', () => {
         const sidebar = page.locator('[data-testid="admin-sidebar"]');
         await expect(sidebar).toBeVisible({ timeout: 5000 });
 
-        // If sidebar shows "Click a section to edit:", wait for section list
-        const sectionButtons = sidebar.locator('button:has-text("")').filter({
-          has: page.locator('span.font-medium'),
-        });
-
         // Navigate back to section list if needed
         const backButton = sidebar.locator('button:has-text("All Sections")');
         if (await backButton.isVisible()) {

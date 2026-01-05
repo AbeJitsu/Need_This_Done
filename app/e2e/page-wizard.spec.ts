@@ -17,7 +17,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Page Wizard - Layout & Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to admin pages and verify we have access
-    const response = await page.goto('/admin/pages/new');
+    await page.goto('/admin/pages/new');
 
     // If redirected to login, skip these tests (auth not configured)
     if (page.url().includes('/login')) {
@@ -182,9 +182,6 @@ test.describe('Page Wizard - Layout & Flow', () => {
   test('progress bar updates with each step', async ({ page }) => {
     await page.goto('/admin/pages/new');
     await page.getByText('Start Wizard').click();
-
-    // Step 1: Progress should be 20%
-    const progressBar = page.locator('[class*="bg-purple-600"]').first();
 
     // Select and continue
     await page.getByText('Landing').click();
@@ -375,7 +372,7 @@ test.describe('Page Wizard - Completion', () => {
 
 test.describe('Page Wizard - Validation & Edge Cases', () => {
   test.beforeEach(async ({ page }) => {
-    const response = await page.goto('/admin/pages/new');
+    await page.goto('/admin/pages/new');
     if (page.url().includes('/login')) {
       test.skip(true, 'Admin authentication required');
     }

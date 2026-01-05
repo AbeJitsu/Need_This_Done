@@ -97,9 +97,6 @@ test.describe('Item Editing - Typing Updates Content', () => {
     const questionInput = sidebar.locator('input[type="text"]').first();
     await expect(questionInput).toBeVisible({ timeout: 3000 });
 
-    // Get the original value
-    const originalValue = await questionInput.inputValue();
-
     // Clear and type new text
     const testText = 'EDITED_QUESTION';
     await questionInput.fill(testText);

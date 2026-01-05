@@ -1,5 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
-import { discoverEditablePages, discoverPublicPages, isPageEditable } from './utils/page-discovery';
+import { discoverEditablePages, discoverPublicPages } from './utils/page-discovery';
 
 // ============================================================================
 // Test 2: Field Editability Verification
@@ -188,10 +188,6 @@ test.describe('Full Edit Cycle Integration', () => {
     const sidebar = page.locator('[data-testid="admin-sidebar"]');
     await expect(sidebar).toBeVisible({ timeout: 5000 });
 
-    // Look for array indicators (add button, item list)
-    const addButton = sidebar.getByRole('button', { name: /add/i });
-    const arrayItems = sidebar.locator('[data-array-item], .group');
-
     // Just verify the sidebar rendered - don't require specific array structure
     await expect(sidebar.locator('button, input, textarea').first()).toBeVisible({ timeout: 3000 });
   });
@@ -251,7 +247,7 @@ test.describe('Cross-Page Consistency', () => {
       await page.goto(nonEditable.path);
 
       // These pages should NOT have an edit toggle
-      const hasToggle = await hasEditToggle(page);
+      await hasEditToggle(page);
       // Note: Some pages might have edit toggle even without content files
       // This is acceptable - we just want to verify the page loads
     }
