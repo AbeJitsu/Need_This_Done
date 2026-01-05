@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { signOut } from '@/lib/auth';
 import { navigationColors, accentColors, accentBorderWidth, accentFontWeight, getBadgeColor, cardBgColors, cardBorderColors } from '@/lib/colors';
-import DarkModeToggle from './DarkModeToggle';
+// import DarkModeToggle from './DarkModeToggle'; // Temporarily disabled
 import { CloseIcon } from '@/components/ui/icons';
 
 // ============================================================================
