@@ -189,9 +189,9 @@ export async function GET(_request: NextRequest) {
 
 async function findAbandonedCarts(
   _supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
-  thresholdHours: number,
-  maxReminders: number,
-  reminderIntervalHours: number
+  _thresholdHours: number,
+  _maxReminders: number,
+  _reminderIntervalHours: number
 ): Promise<AbandonedCart[]> {
   // For now, return empty array - this would integrate with Medusa
   // In a real implementation, you would:
