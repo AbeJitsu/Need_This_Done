@@ -3,6 +3,7 @@ import { openai } from '@ai-sdk/openai';
 import { embed } from 'ai';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { getEmbeddingLength } from '@/lib/embedding-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,7 +81,7 @@ export async function GET(request: Request) {
       page_type: e.page_type,
       content_length: e.content_chunk?.length || 0,
       has_embedding: !!e.embedding,
-      embedding_length: Array.isArray(e.embedding) ? e.embedding.length : (typeof e.embedding === 'string' ? 'string' : 0),
+      embedding_length: getEmbeddingLength(e.embedding),
       content_preview: showContent
         ? (e.content_chunk?.substring(0, 500) + (e.content_chunk?.length > 500 ? '...' : ''))
         : '[hidden]',

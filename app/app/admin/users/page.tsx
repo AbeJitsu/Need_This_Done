@@ -9,6 +9,7 @@ import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { statusBadgeColors, alertColors, filterButtonColors, formInputColors, hoverBgColors, cardBgColors, cardBorderColors, mutedTextColors, headingColors, coloredLinkText, dividerColors, statusActionColors, outlineButtonColors } from '@/lib/colors';
+import { getAriaSortValue } from '@/lib/aria-utils';
 
 // ============================================================================
 // Admin Users Page - User Management
@@ -554,7 +555,7 @@ export default function AdminUsersPage() {
                     {/* User column (always visible) */}
                     <th
                       onClick={() => handleSort('email')}
-                      aria-sort={sortField === 'email' ? sortDirection === 'asc' ? 'ascending' : 'descending' : undefined}
+                      aria-sort={getAriaSortValue('email', sortField, sortDirection)}
                       className={`text-left py-3 px-4 text-sm font-semibold ${headingColors.secondary} cursor-pointer ${hoverBgColors.gray} transition-colors select-none`}
                     >
                       <span className="flex items-center gap-1">
@@ -567,7 +568,7 @@ export default function AdminUsersPage() {
                     {visibleColumns.role && (
                       <th
                         onClick={() => handleSort('role')}
-                        aria-sort={sortField === 'role' ? sortDirection === 'asc' ? 'ascending' : 'descending' : undefined}
+                        aria-sort={getAriaSortValue('role', sortField, sortDirection)}
                         className={`text-left py-3 px-4 text-sm font-semibold ${headingColors.secondary} cursor-pointer ${hoverBgColors.gray} transition-colors select-none`}
                       >
                         <span className="flex items-center gap-1">
@@ -581,7 +582,7 @@ export default function AdminUsersPage() {
                     {visibleColumns.status && (
                       <th
                         onClick={() => handleSort('status')}
-                        aria-sort={sortField === 'status' ? sortDirection === 'asc' ? 'ascending' : 'descending' : undefined}
+                        aria-sort={getAriaSortValue('status', sortField, sortDirection)}
                         className={`text-left py-3 px-4 text-sm font-semibold ${headingColors.secondary} cursor-pointer ${hoverBgColors.gray} transition-colors select-none`}
                       >
                         <span className="flex items-center gap-1">
@@ -595,7 +596,7 @@ export default function AdminUsersPage() {
                     {visibleColumns.lastSignIn && (
                       <th
                         onClick={() => handleSort('lastSignIn')}
-                        aria-sort={sortField === 'lastSignIn' ? sortDirection === 'asc' ? 'ascending' : 'descending' : undefined}
+                        aria-sort={getAriaSortValue('lastSignIn', sortField, sortDirection)}
                         className={`text-left py-3 px-4 text-sm font-semibold ${headingColors.secondary} cursor-pointer ${hoverBgColors.gray} transition-colors select-none`}
                       >
                         <span className="flex items-center gap-1">
