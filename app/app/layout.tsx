@@ -155,30 +155,15 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  const stored = localStorage.getItem('darkMode');
-                  let isDark = false;
-
-                  if (stored !== null) {
-                    // User has explicitly set a preference - respect it
-                    isDark = stored === 'true';
-                  } else {
-                    // First-time visitor: default to light mode
-                    // (They can toggle to dark if they prefer)
-                    isDark = false;
-                  }
-
-                  if (isDark) {
-                    document.documentElement.classList.add('dark');
-                  } else {
-                    document.documentElement.classList.add('light');
-                  }
+                  // TEMPORARY: Force light mode only until dark mode colors are fixed
+                  // This prevents broken dark mode from appearing in production
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.classList.add('light');
+                  
+                  // Clear any stored dark mode preference to prevent confusion
+                  localStorage.removeItem('darkMode');
                 } catch (e) {
-                  // Intentionally empty: localStorage may throw in incognito/disabled storage.
-                  // Theme detection is non-critical - default light mode is applied via else branch.
-                  // Only log in development to help debugging without cluttering production console.
-                  if (window.location.hostname === 'localhost') {
-                    console.warn('[Theme] localStorage access failed:', e);
-                  }
+                  // Silent fail - light mode will be the default
                 }
               })();
             `,

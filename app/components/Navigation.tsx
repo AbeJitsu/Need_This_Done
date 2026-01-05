@@ -168,10 +168,10 @@ export default function Navigation() {
               </Link>
             )}
 
-            {/* Dark Mode Toggle - hidden on mobile, shown in mobile menu instead */}
-            <div className="hidden sm:block">
+            {/* Dark Mode Toggle - TEMPORARILY HIDDEN until dark mode colors are fixed */}
+            {/* <div className="hidden sm:block">
               <DarkModeToggle />
-            </div>
+            </div> */}
 
             {/* Auth Section - Less prominent, for returning customers */}
             <div className="flex-shrink-0">
@@ -305,10 +305,11 @@ export default function Navigation() {
             </Link>
 
             {/* Dark Mode Toggle in mobile menu */}
-            <div className="flex items-center justify-between px-3 py-2 sm:hidden">
+            {/* Dark Mode Toggle - TEMPORARILY HIDDEN until dark mode colors are fixed */}
+            {/* <div className="flex items-center justify-between px-3 py-2 sm:hidden">
               <span className={`text-sm ${navigationColors.link}`}>Dark Mode</span>
               <DarkModeToggle />
-            </div>
+            </div> */}
 
             {/* Auth options for mobile */}
             {!isAuthenticated ? (

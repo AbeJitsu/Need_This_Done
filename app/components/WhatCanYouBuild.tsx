@@ -130,10 +130,10 @@ export default function WhatCanYouBuild() {
 
       {/* What's Built Now */}
       <div className={`mb-6 p-4 ${neutralAccentBg.green} border border-green-200 dark:border-green-700 rounded-lg`}>
-        <p className="text-sm font-semibold text-green-900 dark:text-green-300 mb-3">
+        <p className="text-sm font-semibold text-green-900 dark:text-white mb-3">
           ✓ What's Built and Working:
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs text-green-800 dark:text-green-200">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs text-green-800 dark:text-gray-200">
           <div>• User Authentication</div>
           <div>• Database (Supabase)</div>
           <div>• Speed Cache (Redis)</div>
@@ -183,7 +183,7 @@ export default function WhatCanYouBuild() {
 
           {/* Time Estimate */}
           <div className={`p-3 ${neutralAccentBg.green} border border-green-200 dark:border-green-700 rounded-lg`}>
-            <p className="text-sm text-green-700 dark:text-green-300">
+            <p className="text-sm text-green-700 dark:text-gray-100">
               <strong><span role="img" aria-label="Timer">⏱️</span> Setup Time:</strong> {selectedProject.timeEstimate}
             </p>
           </div>
@@ -200,7 +200,7 @@ export default function WhatCanYouBuild() {
                 key={index}
                 className={`flex items-center gap-3 p-3 ${neutralAccentBg.gray} rounded-lg`}
               >
-                <span className="text-green-700 dark:text-green-300 font-bold" role="img" aria-label="Included">✓</span>
+                <span className="text-green-700 dark:text-green-400 font-bold" role="img" aria-label="Included">✓</span>
                 <span className="text-gray-900 dark:text-gray-100">{feature}</span>
               </div>
             ))}
@@ -209,10 +209,10 @@ export default function WhatCanYouBuild() {
 
         {/* Why It Matters */}
         <div className={`p-4 ${neutralAccentBg.blue} border border-blue-300 dark:border-blue-700 rounded-lg`}>
-          <p className="text-sm text-blue-900 dark:text-blue-300 mb-2">
+          <p className="text-sm text-blue-900 dark:text-white mb-2">
             <strong><span role="img" aria-label="Tip">💡</span> This Example:</strong>
           </p>
-          <p className="text-xs text-blue-900 dark:text-blue-300 leading-relaxed">
+          <p className="text-xs text-blue-900 dark:text-gray-100 leading-relaxed">
             This shows what you'd build on top of the foundation. The boring infrastructure (user accounts, database, authentication, security)
             is already done. You focus on what makes this specific project unique. The custom features and business logic only you would add.
           </p>
@@ -241,12 +241,12 @@ export default function WhatCanYouBuild() {
             </p>
             <div className="grid md:grid-cols-2 gap-3">
               <div className={`p-3 ${neutralAccentBg.green} rounded border border-green-200 dark:border-green-700`}>
-                <p className="text-xs font-semibold text-green-900 dark:text-green-300 mb-1">✓ We Built</p>
-                <p className="text-xs text-green-800 dark:text-green-200">Infrastructure, auth, database, security, testing, deployment setup</p>
+                <p className="text-xs font-semibold text-green-900 dark:text-white mb-1">✓ We Built</p>
+                <p className="text-xs text-green-800 dark:text-gray-100">Infrastructure, auth, database, security, testing, deployment setup</p>
               </div>
               <div className={`p-3 ${neutralAccentBg.gold} rounded border border-gold-200 dark:border-gold-700`}>
-                <p className="text-xs font-semibold text-gold-900 dark:text-gold-300 mb-1">🏗️ You Build</p>
-                <p className="text-xs text-gold-800 dark:text-gold-200">Your features, your business logic, your design, what makes you unique</p>
+                <p className="text-xs font-semibold text-gold-900 dark:text-white mb-1">🏗️ You Build</p>
+                <p className="text-xs text-gold-800 dark:text-gray-100">Your features, your business logic, your design, what makes you unique</p>
               </div>
             </div>
           </div>
