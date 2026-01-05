@@ -700,10 +700,11 @@ export const linkColors = {
 };
 
 // ============================================================================
-// Link Hover Colors - For blue link hover states
+// Link Hover Colors - For link hover states
 // ============================================================================
 export const linkHoverColors = {
   blue: 'hover:text-blue-700 dark:hover:text-blue-300',
+  purple: 'hover:text-purple-700 dark:hover:text-purple-300',
 };
 
 // ============================================================================

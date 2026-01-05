@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors, alertColors, statusBadgeColors, containerBg, formInputColors, uiChromeBg } from '@/lib/colors';
+import { filterButtonColors, alertColors, statusBadgeColors, containerBg, formInputColors, uiChromeBg, headingColors, mutedTextColors, dividerColors, coloredLinkText } from '@/lib/colors';
 
 // ============================================================================
 // Quotes Dashboard - /admin/quotes
@@ -295,7 +295,7 @@ export default function QuotesDashboard() {
   if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen" role="status" aria-live="polite" aria-busy="true">
-        <p className="text-gray-600 dark:text-gray-400">Loading quotes...</p>
+        <p className={mutedTextColors.normal}>Loading quotes...</p>
       </div>
     );
   }
@@ -307,10 +307,10 @@ export default function QuotesDashboard() {
       {/* Header */}
       <div className="flex justify-between items-start mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
             Quotes
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className={mutedTextColors.normal}>
             Create and manage customer quotes
           </p>
         </div>
@@ -339,7 +339,7 @@ export default function QuotesDashboard() {
       {showCreateForm && (
         <Card hoverEffect="none" className="mb-6">
           <form onSubmit={handleCreateQuote} className="p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            <h2 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
               Create New Quote
             </h2>
 
@@ -476,7 +476,7 @@ export default function QuotesDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className={mutedTextColors.normal}>
               {quotes.length === 0
                 ? 'No quotes yet. Click "+ New Quote" to create one.'
                 : 'No quotes match the selected filter.'}
@@ -492,7 +492,7 @@ export default function QuotesDashboard() {
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                      <h3 className={`text-lg font-semibold ${headingColors.primary}`}>
                         {quote.customer_name}
                       </h3>
                       {isExpired(quote.expires_at) && quote.status === 'sent' && (
@@ -503,7 +503,7 @@ export default function QuotesDashboard() {
                     </div>
                     <a
                       href={`mailto:${quote.customer_email}`}
-                      className="text-sm text-purple-600 dark:text-purple-400 hover:underline"
+                      className={`text-sm ${coloredLinkText.purple} hover:underline`}
                     >
                       {quote.customer_email}
                     </a>
@@ -514,7 +514,7 @@ export default function QuotesDashboard() {
                     >
                       {STATUS_LABELS[quote.status] || quote.status}
                     </span>
-                    <p className="text-lg font-bold text-gray-900 dark:text-gray-100 mt-2">
+                    <p className={`text-lg font-bold ${headingColors.primary} mt-2`}>
                       {formatCurrency(quote.total_amount)}
                     </p>
                   </div>
@@ -523,28 +523,28 @@ export default function QuotesDashboard() {
                 {/* Quote details */}
                 <div className="grid sm:grid-cols-3 gap-4 mb-4">
                   <div className={`p-3 ${containerBg.page} rounded-lg`}>
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Reference</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 font-mono">{quote.reference_number}</p>
+                    <p className={`text-xs font-medium ${mutedTextColors.light} mb-1`}>Reference</p>
+                    <p className={`text-sm ${headingColors.secondary} font-mono`}>{quote.reference_number}</p>
                   </div>
                   <div className={`p-3 ${containerBg.page} rounded-lg`}>
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Deposit (50%)</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{formatCurrency(quote.deposit_amount)}</p>
+                    <p className={`text-xs font-medium ${mutedTextColors.light} mb-1`}>Deposit (50%)</p>
+                    <p className={`text-sm ${headingColors.secondary}`}>{formatCurrency(quote.deposit_amount)}</p>
                   </div>
                   <div className={`p-3 ${containerBg.page} rounded-lg`}>
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Expires</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{formatDate(quote.expires_at)}</p>
+                    <p className={`text-xs font-medium ${mutedTextColors.light} mb-1`}>Expires</p>
+                    <p className={`text-sm ${headingColors.secondary}`}>{formatDate(quote.expires_at)}</p>
                   </div>
                 </div>
 
                 {quote.notes && (
                   <div className={`p-3 ${containerBg.page} rounded-lg mb-4`}>
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Project</p>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{quote.notes}</p>
+                    <p className={`text-xs font-medium ${mutedTextColors.light} mb-1`}>Project</p>
+                    <p className={`text-sm ${headingColors.secondary}`}>{quote.notes}</p>
                   </div>
                 )}
 
                 {/* Actions */}
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-4 flex flex-wrap gap-2">
+                <div className={`border-t ${dividerColors.border} pt-4 flex flex-wrap gap-2`}>
                   {quote.status === 'draft' && (
                     <>
                       <Button
@@ -580,14 +580,14 @@ export default function QuotesDashboard() {
                     </Button>
                   )}
                   {['deposit_paid', 'balance_paid', 'completed'].includes(quote.status) && (
-                    <span className="text-sm text-green-600 dark:text-green-400 flex items-center gap-1">
+                    <span className={`text-sm ${coloredLinkText.green} flex items-center gap-1`}>
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                       Customer paid
                     </span>
                   )}
-                  <span className="text-xs text-gray-500 dark:text-gray-400 ml-auto">
+                  <span className={`text-xs ${mutedTextColors.light} ml-auto`}>
                     Created {formatDate(quote.created_at)}
                   </span>
                 </div>

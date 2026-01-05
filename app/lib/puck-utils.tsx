@@ -8,6 +8,8 @@ import {
   softBgColors,
   verySoftBgColors,
   hoverBgColors,
+  dividerColors,
+  mutedTextColors,
   type AccentVariant,
 } from './colors';
 
@@ -512,9 +514,9 @@ export const puckIcons: Record<string, ReactNode> = {
 
 export function PuckEmptyState({ message, icon }: { message: string; icon?: ReactNode }) {
   return (
-    <div className="text-center py-12 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl">
-      {icon && <div className="w-12 h-12 mx-auto text-gray-400 mb-3">{icon}</div>}
-      <p className="text-gray-500 dark:text-gray-400">{message}</p>
+    <div className={`text-center py-12 border-2 border-dashed ${dividerColors.border} rounded-xl`}>
+      {icon && <div className={`w-12 h-12 mx-auto text-gray-400 mb-3`}>{icon}</div>}
+      <p className={mutedTextColors.normal}>{message}</p>
     </div>
   );
 }

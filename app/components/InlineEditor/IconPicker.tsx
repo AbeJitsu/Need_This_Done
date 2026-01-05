@@ -43,8 +43,11 @@ import { cardBgColors, cardBorderColors } from '@/lib/colors';
 // Why: Allows users to customize icons throughout the site
 // How: Click icon → opens picker → search/select → saves icon name
 
+// Type for lucide icons that accept string | number for size
+type LucideIconComponent = React.ComponentType<{ size?: string | number; className?: string }>;
+
 // Map of icon names to components (explicit imports for tree-shaking)
-const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+const ICON_MAP: Record<string, LucideIconComponent> = {
   Check, CheckCircle, CheckCircle2, CircleCheck, CircleCheckBig,
   Star, Heart, ThumbsUp, Award, Trophy, Medal, Crown, Gem,
   Sparkles, Zap, ArrowRight, ChevronRight, MoveRight, ArrowUpRight,

@@ -442,7 +442,7 @@ export default function CheckoutPage() {
 
             {/* Right column - Order Summary */}
             <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-800`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.base}`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Order Summary
                 </h2>
@@ -529,7 +529,7 @@ export default function CheckoutPage() {
               )}
 
               {/* Payment form */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Payment Details
                 </h2>
@@ -557,7 +557,7 @@ export default function CheckoutPage() {
 
             {/* Right column - Order Summary */}
             <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-800`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.base}`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Order Summary
                 </h2>
@@ -655,7 +655,7 @@ export default function CheckoutPage() {
               )}
 
               {/* Contact Information - Inner rectangle 1 */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Contact Information
                 </h2>
@@ -697,7 +697,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Shipping Information - Inner rectangle 2 */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-700`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Shipping Information
                 </h2>
@@ -822,7 +822,7 @@ export default function CheckoutPage() {
 
             {/* Right column - Order Summary */}
             <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-800`}>
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.base}`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Order Summary
                 </h2>

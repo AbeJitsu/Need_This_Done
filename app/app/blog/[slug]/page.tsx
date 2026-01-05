@@ -17,6 +17,10 @@ import {
   cardBgColors,
   cardBorderColors,
   focusRingClasses,
+  mutedTextColors,
+  hoverBgColors,
+  dividerColors,
+  coloredLinkText,
 } from '@/lib/colors';
 
 export const dynamic = 'force-dynamic';
@@ -104,7 +108,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         href="/blog"
         className={`
           inline-flex items-center gap-2 mb-8 rounded
-          ${formInputColors.helper} hover:text-gray-900 dark:hover:text-gray-100
+          ${formInputColors.helper} hover:${headingColors.primary}
           transition-colors ${focusRingClasses.blue}
         `}
       >
@@ -156,7 +160,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
           {/* Separator */}
           {post.author_name && post.published_at && (
-            <span className="text-gray-300 dark:text-gray-600">•</span>
+            <span className={`${mutedTextColors.light}`}>•</span>
           )}
 
           {/* Date */}
@@ -167,7 +171,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           )}
 
           {/* Reading Time */}
-          <span className="text-gray-300 dark:text-gray-600">•</span>
+          <span className={mutedTextColors.light}>•</span>
           <span className={formInputColors.helper}>{readingTime} min read</span>
         </div>
       </header>
@@ -190,7 +194,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <div className={`mt-12 pt-8 border-t ${dividerColors.border}`}>
           <h3 className={`text-sm font-semibold ${headingColors.secondary} mb-3`}>
             Tags
           </h3>
@@ -201,9 +205,9 @@ export default async function BlogPostPage({ params }: PageProps) {
                 href={`/blog?tag=${tag}`}
                 className={`
                   px-3 py-1 rounded-full text-sm
-                  bg-gray-100 dark:bg-gray-800
-                  text-gray-600 dark:text-gray-300
-                  hover:bg-gray-200 dark:hover:bg-gray-700
+                  ${cardBgColors.elevated}
+                  ${mutedTextColors.normal}
+                  ${hoverBgColors.purple}
                   transition-colors ${focusRingClasses.blue}
                 `}
               >
@@ -216,7 +220,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       {/* Source Attribution */}
       {post.source && post.source !== 'original' && (
-        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div className={`mt-8 pt-6 border-t ${dividerColors.border}`}>
           <p className={`text-sm ${formInputColors.helper}`}>
             Originally shared on{' '}
             {post.source_url ? (
@@ -224,7 +228,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 href={post.source_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-400 hover:underline"
+                className={`${coloredLinkText.blue} hover:underline`}
               >
                 {post.source.charAt(0).toUpperCase() + post.source.slice(1)}
               </a>

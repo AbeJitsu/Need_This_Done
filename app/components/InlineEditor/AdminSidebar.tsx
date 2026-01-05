@@ -15,6 +15,7 @@ import {
   headingColors,
   cardBgColors,
   cardBorderColors,
+  cardHoverColors,
   getSolidButtonColors,
   uiChromeBg,
   hoverBgColors,

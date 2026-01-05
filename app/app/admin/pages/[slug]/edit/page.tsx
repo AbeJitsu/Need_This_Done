@@ -11,7 +11,7 @@ import { Puck } from '@measured/puck';
 import { puckConfig } from '@/lib/puck-config';
 import '@measured/puck/puck.css';
 import { CheckIcon } from '@/components/ui/icons';
-import { statusBadgeColors, containerBg, cardBgColors } from '@/lib/colors';
+import { statusBadgeColors, containerBg, cardBgColors, mutedTextColors, dividerColors, headingColors, coloredLinkText, iconButtonColors, linkHoverColors } from '@/lib/colors';
 import { SAVE_STATUS_DURATION } from '@/lib/timing';
 
 export default function EditPage({ params }: { params: { slug: string } }) {
@@ -98,7 +98,7 @@ export default function EditPage({ params }: { params: { slug: string } }) {
       <div className={`flex items-center justify-center min-h-screen ${containerBg.page}`}>
         <div className="text-center">
           <div className="w-12 h-12 mx-auto mb-4 rounded-full border-4 border-purple-200 border-t-purple-600 animate-spin" />
-          <p className="text-gray-600 dark:text-gray-400">Loading page...</p>
+          <p className={mutedTextColors.light}>Loading page...</p>
         </div>
       </div>
     );
@@ -111,25 +111,25 @@ export default function EditPage({ params }: { params: { slug: string } }) {
       {/* ========================================================================
           Header with Breadcrumbs & Page Info
           ======================================================================== */}
-      <div className={`${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 shadow-sm`}>
+      <div className={`${cardBgColors.base} border-b ${dividerColors.border} shadow-sm`}>
         <div className="container mx-auto px-6 py-5">
           {/* Breadcrumb Navigation */}
           <nav className="flex items-center gap-2 text-sm mb-4">
             <Link
               href="/dashboard"
-              className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              className={`${mutedTextColors.normal} ${linkHoverColors.purple} transition-colors`}
             >
               Admin
             </Link>
-            <span className="text-gray-400 dark:text-gray-500">/</span>
+            <span className={mutedTextColors.normal}>/</span>
             <Link
               href="/admin/pages"
-              className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              className={`${mutedTextColors.normal} ${linkHoverColors.purple} transition-colors`}
             >
               Pages
             </Link>
-            <span className="text-gray-400 dark:text-gray-500">/</span>
-            <span className="text-gray-900 dark:text-gray-100 font-medium">{page.title}</span>
+            <span className={mutedTextColors.normal}>/</span>
+            <span className={`${headingColors.primary} font-medium`}>{page.title}</span>
           </nav>
 
           {/* Header Row */}
@@ -137,19 +137,19 @@ export default function EditPage({ params }: { params: { slug: string } }) {
             <div className="flex items-center gap-4">
               <Link
                 href="/admin/pages"
-                className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                className={`flex items-center justify-center w-10 h-10 rounded-lg ${iconButtonColors.secondary.bg} ${iconButtonColors.secondary.hover} transition-colors`}
                 title="Back to Pages"
               >
-                <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-5 h-5 ${iconButtonColors.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </Link>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <h1 className={`text-2xl font-bold ${headingColors.primary}`}>
                   {page.title}
                 </h1>
                 <div className="flex items-center gap-3 mt-1">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                  <span className={`text-sm ${mutedTextColors.normal}`}>
                     /{page.slug}
                   </span>
                   <span
@@ -165,7 +165,7 @@ export default function EditPage({ params }: { params: { slug: string } }) {
                     <Link
                       href={`/${page.slug}`}
                       target="_blank"
-                      className="text-sm text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1"
+                      className={`text-sm ${coloredLinkText.purple} hover:underline flex items-center gap-1`}
                     >
                       View live
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -180,13 +180,13 @@ export default function EditPage({ params }: { params: { slug: string } }) {
             {/* Save Status Indicator */}
             <div className="flex items-center gap-3">
               {hasUnsavedChanges && saveStatus === 'idle' && (
-                <span className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+                <span className={`flex items-center gap-2 text-sm ${coloredLinkText.gold}`}>
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                   Unsaved changes
                 </span>
               )}
               {saveStatus === 'saving' && (
-                <span className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
+                <span className={`flex items-center gap-2 text-sm ${coloredLinkText.blue}`}>
                   <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -195,7 +195,7 @@ export default function EditPage({ params }: { params: { slug: string } }) {
                 </span>
               )}
               {saveStatus === 'saved' && (
-                <span className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+                <span className={`flex items-center gap-2 text-sm ${coloredLinkText.green}`}>
                   <CheckIcon size="sm" />
                   Saved
                 </span>

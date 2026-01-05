@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
-import { headingColors, formInputColors, cardBgColors } from '@/lib/colors';
+import { headingColors, formInputColors, cardBgColors, mutedTextColors, coloredLinkText, dividerColors, cardHoverColors, verySoftBgColors } from '@/lib/colors';
 import changelogData from '../../../../content/changelog/auto-log.json';
 
 // ============================================================================
@@ -98,25 +98,25 @@ export default function TechnicalChangelogPage() {
       <section className="mb-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card hoverColor="purple" hoverEffect="lift" className="text-center">
-            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+            <div className={`text-3xl font-bold ${coloredLinkText.purple}`}>
               {commits.length}
             </div>
             <div className={`text-sm ${formInputColors.helper}`}>Total Commits</div>
           </Card>
           <Card hoverColor="green" hoverEffect="lift" className="text-center">
-            <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+            <div className={`text-3xl font-bold ${coloredLinkText.green}`}>
               {categoryStats['Features'] || 0}
             </div>
             <div className={`text-sm ${formInputColors.helper}`}>Features Added</div>
           </Card>
           <Card hoverColor="blue" hoverEffect="lift" className="text-center">
-            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            <div className={`text-3xl font-bold ${coloredLinkText.blue}`}>
               {categoryStats['Fixes'] || 0}
             </div>
             <div className={`text-sm ${formInputColors.helper}`}>Bugs Fixed</div>
           </Card>
           <Card hoverColor="gold" hoverEffect="lift" className="text-center">
-            <div className="text-3xl font-bold text-gold-600 dark:text-gold-400">
+            <div className={`text-3xl font-bold ${coloredLinkText.gold}`}>
               {commits.reduce((sum, c) => sum + c.filesChanged, 0)}
             </div>
             <div className={`text-sm ${formInputColors.helper}`}>Files Changed</div>
@@ -137,7 +137,7 @@ export default function TechnicalChangelogPage() {
                 placeholder="Search commits by message or hash..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={`w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 ${cardBgColors.base} text-gray-900 dark:text-gray-100`}
+                className={`w-full px-4 py-2 rounded-lg border ${dividerColors.border} ${cardBgColors.base} ${headingColors.primary}`}
               />
             </div>
 
@@ -150,14 +150,14 @@ export default function TechnicalChangelogPage() {
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
                     selectedCategory === cat.key
                       ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      : `${cardBgColors.elevated} ${headingColors.secondary} ${cardHoverColors.purple}`
                   }`}
                 >
                   <span aria-hidden="true">{cat.icon}</span>
                   <span>{cat.label}</span>
                   {categoryStats[cat.key] !== undefined && (
                     <span className={`ml-1 text-xs ${
-                      selectedCategory === cat.key ? 'text-purple-200' : 'text-gray-500'
+                      selectedCategory === cat.key ? 'text-purple-200' : mutedTextColors.light
                     }`}>
                       ({categoryStats[cat.key]})
                     </span>
@@ -210,7 +210,7 @@ export default function TechnicalChangelogPage() {
               </p>
               <p className={`mt-2 ${formInputColors.helper}`}>
                 For detailed API documentation, see the{' '}
-                <a href="/guide" className="text-blue-600 dark:text-blue-400 underline">
+                <a href="/guide" className={`${coloredLinkText.blue} underline`}>
                   Developer Guide
                 </a>.
               </p>
@@ -228,17 +228,17 @@ export default function TechnicalChangelogPage() {
 
 function CommitCard({ commit }: { commit: CommitEntry }) {
   const categoryColors: Record<string, string> = {
-    Features: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
-    Fixes: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300',
-    Refactoring: 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300',
-    Documentation: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300',
-    Configuration: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300',
-    Other: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300',
-    Testing: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
+    Features: `${verySoftBgColors.green} ${coloredLinkText.green}`,
+    Fixes: `${verySoftBgColors.red} ${coloredLinkText.red}`,
+    Refactoring: `${verySoftBgColors.purple} ${coloredLinkText.purple}`,
+    Documentation: `${verySoftBgColors.blue} ${coloredLinkText.blue}`,
+    Configuration: `${cardBgColors.elevated} ${headingColors.secondary}`,
+    Other: `${cardBgColors.elevated} ${headingColors.secondary}`,
+    Testing: `${verySoftBgColors.gold} ${coloredLinkText.gold}`,
   };
 
   return (
-    <div className={`${cardBgColors.base} rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:border-purple-300 dark:hover:border-purple-600 transition-colors`}>
+    <div className={`${cardBgColors.base} rounded-lg border ${dividerColors.border} p-4 ${cardHoverColors.purple} transition-colors`}>
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           {/* Commit message */}
@@ -256,7 +256,7 @@ function CommitCard({ commit }: { commit: CommitEntry }) {
             </span>
 
             {/* Hash */}
-            <code className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-400 font-mono text-xs">
+            <code className={`px-2 py-0.5 ${cardBgColors.elevated} rounded ${mutedTextColors.light} font-mono text-xs`}>
               {commit.hash}
             </code>
 

@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors, alertColors, statusBadgeColors, softBgColors, containerBg, uiChromeBg, headingColors, mutedTextColors, coloredLinkText, dividerColors, successCheckmarkColors } from '@/lib/colors';
+import { filterButtonColors, alertColors, statusBadgeColors, softBgColors, containerBg, uiChromeBg, headingColors, mutedTextColors, coloredLinkText, dividerColors } from '@/lib/colors';
 
 // ============================================================================
 // Appointments Dashboard - /admin/appointments

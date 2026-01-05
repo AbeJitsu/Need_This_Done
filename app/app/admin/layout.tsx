@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import AdminSidebar from '@/components/AdminSidebar';
-import { containerBg } from '@/lib/colors';
+import { containerBg, mutedTextColors } from '@/lib/colors';
 
 // ============================================================================
 // Shared Admin Layout - Wraps all /admin/* routes
@@ -38,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className={`min-h-screen flex items-center justify-center ${containerBg.page}`}>
         <div className="flex flex-col items-center gap-4">
           <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+          <p className={mutedTextColors.light}>Loading...</p>
         </div>
       </div>
     );

@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { statusBadgeColors, alertColors, filterButtonColors, formInputColors, hoverBgColors, cardBgColors, cardBorderColors, mutedTextColors, headingColors, coloredLinkText, dividerColors, iconButtonColors } from '@/lib/colors';
+import { statusBadgeColors, alertColors, filterButtonColors, formInputColors, hoverBgColors, cardBgColors, cardBorderColors, mutedTextColors, headingColors, coloredLinkText, dividerColors, statusActionColors, outlineButtonColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Users Page - User Management
@@ -499,17 +499,17 @@ export default function AdminUsersPage() {
                   role="menu"
                   className={`absolute right-0 mt-2 w-48 ${cardBgColors.base} rounded-lg shadow-lg ${cardBorderColors.light} py-2 z-10`}
                 >
-                  <div className="px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                  <div className={`px-3 py-2 text-sm font-semibold ${headingColors.secondary} border-b ${dividerColors.border}`}>
                     Show Columns
                   </div>
-                  <label className="flex items-center px-3 py-2 text-sm text-gray-600 dark:text-gray-400 cursor-not-allowed opacity-50">
+                  <label className={`flex items-center px-3 py-2 text-sm ${mutedTextColors.normal} cursor-not-allowed opacity-50`}>
                     <input type="checkbox" checked disabled className="mr-2" />
                     User
                   </label>
                   {(['role', 'status', 'lastSignIn', 'actions'] as const).map((col) => (
                     <label
                       key={col}
-                      className="flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                      className={`flex items-center px-3 py-2 text-sm ${headingColors.secondary} ${hoverBgColors.gray} cursor-pointer`}
                     >
                       <input
                         type="checkbox"
@@ -529,7 +529,7 @@ export default function AdminUsersPage() {
 
           {/* Results Count */}
           {(searchQuery || roleFilter !== 'all' || statusFilter !== 'all') && (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className={`text-sm ${mutedTextColors.normal}`}>
               Showing {filteredUsers.length} of {users.length} users
             </p>
           )}
@@ -537,12 +537,12 @@ export default function AdminUsersPage() {
 
         {/* Users List */}
         <Card hoverColor="gray" hoverEffect="none">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className={`text-xl font-bold ${headingColors.primary} mb-4`}>
             {searchQuery || roleFilter !== 'all' || statusFilter !== 'all' ? 'Filtered Users' : 'All Users'}
           </h2>
 
           {filteredUsers.length === 0 ? (
-            <p className="text-gray-600 dark:text-gray-300 text-center py-8">
+            <p className={`${mutedTextColors.normal} text-center py-8`}>
               {users.length === 0 ? 'No users found.' : 'No users match your filters.'}
             </p>
           ) : (
@@ -550,12 +550,12 @@ export default function AdminUsersPage() {
               <table className="w-full">
                 <caption className="sr-only">User accounts with role, status, and available actions</caption>
                 <thead>
-                  <tr className="border-b border-gray-200 dark:border-gray-700">
+                  <tr className={`border-b ${dividerColors.border}`}>
                     {/* User column (always visible) */}
                     <th
                       onClick={() => handleSort('email')}
                       aria-sort={sortField === 'email' ? sortDirection === 'asc' ? 'ascending' : 'descending' : undefined}
-                      className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors select-none"
+                      className={`text-left py-3 px-4 text-sm font-semibold ${headingColors.secondary} cursor-pointer ${hoverBgColors.gray} transition-colors select-none`}
                     >
                       <span className="flex items-center gap-1">
                         User
@@ -568,7 +568,7 @@ export default function AdminUsersPage() {
                       <th
                         onClick={() => handleSort('role')}
                         aria-sort={sortField === 'role' ? sortDirection === 'asc' ? 'ascending' : 'descending' : undefined}
-                        className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors select-none"
+                        className={`text-left py-3 px-4 text-sm font-semibold ${headingColors.secondary} cursor-pointer ${hoverBgColors.gray} transition-colors select-none`}
                       >
                         <span className="flex items-center gap-1">
                           Role
@@ -582,7 +582,7 @@ export default function AdminUsersPage() {
                       <th
                         onClick={() => handleSort('status')}
                         aria-sort={sortField === 'status' ? sortDirection === 'asc' ? 'ascending' : 'descending' : undefined}
-                        className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors select-none"
+                        className={`text-left py-3 px-4 text-sm font-semibold ${headingColors.secondary} cursor-pointer ${hoverBgColors.gray} transition-colors select-none`}
                       >
                         <span className="flex items-center gap-1">
                           Status
@@ -596,7 +596,7 @@ export default function AdminUsersPage() {
                       <th
                         onClick={() => handleSort('lastSignIn')}
                         aria-sort={sortField === 'lastSignIn' ? sortDirection === 'asc' ? 'ascending' : 'descending' : undefined}
-                        className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors select-none"
+                        className={`text-left py-3 px-4 text-sm font-semibold ${headingColors.secondary} cursor-pointer ${hoverBgColors.gray} transition-colors select-none`}
                       >
                         <span className="flex items-center gap-1">
                           Last Sign In
@@ -607,7 +607,7 @@ export default function AdminUsersPage() {
                       </th>
                     )}
                     {visibleColumns.actions && (
-                      <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      <th className={`text-right py-3 px-4 text-sm font-semibold ${headingColors.secondary}`}>
                         Actions
                       </th>
                     )}
@@ -617,15 +617,15 @@ export default function AdminUsersPage() {
                   {filteredUsers.map((user) => (
                     <tr
                       key={user.id}
-                      className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className={`border-b ${dividerColors.border} ${hoverBgColors.gray}`}
                     >
                       {/* User column (always visible) */}
                       <td className="py-4 px-4">
                         <div>
-                          <div className="font-medium text-gray-900 dark:text-gray-100">
+                          <div className={`font-medium ${headingColors.primary}`}>
                             {user.name || 'No name'}
                           </div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                          <div className={`text-sm ${mutedTextColors.light}`}>
                             {user.email}
                           </div>
                         </div>
@@ -657,7 +657,7 @@ export default function AdminUsersPage() {
                         </td>
                       )}
                       {visibleColumns.lastSignIn && (
-                        <td className="py-4 px-4 text-sm text-gray-600 dark:text-gray-300">
+                        <td className={`py-4 px-4 text-sm ${mutedTextColors.normal}`}>
                           {formatDate(user.last_sign_in_at)}
                         </td>
                       )}
@@ -671,7 +671,7 @@ export default function AdminUsersPage() {
                               }
                               disabled={actionLoading === user.id}
                               aria-label={user.is_admin ? `Remove admin role from ${user.email}` : `Grant admin role to ${user.email}`}
-                              className={`text-xs px-3 py-1 rounded-full border border-purple-300 text-purple-700 dark:border-purple-600 dark:text-purple-300 ${hoverBgColors.purple} disabled:opacity-50 transition-colors`}
+                              className={`text-xs px-3 py-1 rounded-full border ${outlineButtonColors.purple.base} ${outlineButtonColors.purple.hover} disabled:opacity-50 transition-colors`}
                             >
                               {user.is_admin ? 'Remove Admin' : 'Make Admin'}
                             </button>
@@ -685,8 +685,8 @@ export default function AdminUsersPage() {
                               aria-label={user.is_disabled ? `Enable account for ${user.email}` : `Disable account for ${user.email}`}
                               className={`text-xs px-3 py-1 rounded-full border ${
                                 user.is_disabled
-                                  ? `border-green-300 text-green-700 dark:border-green-600 dark:text-green-300 ${hoverBgColors.green}`
-                                  : `border-red-300 text-red-700 dark:border-red-600 dark:text-red-300 ${hoverBgColors.red}`
+                                  ? `${statusActionColors.enable.base} ${statusActionColors.enable.hover}`
+                                  : `${statusActionColors.disable.base} ${statusActionColors.disable.hover}`
                               } disabled:opacity-50 transition-colors`}
                             >
                               {user.is_disabled ? 'Enable' : 'Disable'}
@@ -697,7 +697,7 @@ export default function AdminUsersPage() {
                               onClick={() => handleAction(user.id, 'resetPassword')}
                               disabled={actionLoading === user.id}
                               aria-label={`Send password reset email to ${user.email}`}
-                              className={`text-xs px-3 py-1 rounded-full border border-blue-300 text-blue-700 dark:border-blue-600 dark:text-blue-300 ${hoverBgColors.blue} disabled:opacity-50 transition-colors`}
+                              className={`text-xs px-3 py-1 rounded-full border ${outlineButtonColors.blue.base} ${outlineButtonColors.blue.hover} disabled:opacity-50 transition-colors`}
                             >
                               Reset Password
                             </button>

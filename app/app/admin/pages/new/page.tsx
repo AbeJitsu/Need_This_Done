@@ -12,7 +12,7 @@ import { puckConfig } from '@/lib/puck-config';
 import { PageWizard } from '@/components/templates';
 import type { PuckPageData } from '@/lib/templates';
 import '@measured/puck/puck.css';
-import { alertColors, iconCircleColors, containerBg, cardBgColors } from '@/lib/colors';
+import { alertColors, iconCircleColors, containerBg, cardBgColors, mutedTextColors, dividerColors, headingColors, coloredLinkText, cardBorderColors, iconButtonColors, linkHoverColors, formInputColors, accentColors } from '@/lib/colors';
 import { CheckIcon } from '@/components/ui/icons';
 
 // ============================================================================
@@ -167,30 +167,30 @@ export default function NewPage() {
     return (
       <div className={`min-h-screen ${containerBg.page} flex flex-col`}>
         {/* Header */}
-        <header className={`${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 px-4 py-4`}>
+        <header className={`${cardBgColors.base} border-b ${dividerColors.border} px-4 py-4`}>
           <div className="max-w-4xl mx-auto">
             <nav className="flex items-center gap-2 text-sm mb-4">
               <Link
                 href="/dashboard"
-                className="text-gray-500 dark:text-gray-400 hover:text-purple-600"
+                className={`${mutedTextColors.normal} hover:text-purple-600`}
               >
                 Admin
               </Link>
-              <span className="text-gray-400">/</span>
+              <span className={mutedTextColors.normal}>/</span>
               <Link
                 href="/admin/pages"
-                className="text-gray-500 dark:text-gray-400 hover:text-purple-600"
+                className={`${mutedTextColors.normal} hover:text-purple-600`}
               >
                 Pages
               </Link>
-              <span className="text-gray-400">/</span>
-              <span className="text-gray-900 dark:text-gray-100 font-medium">New</span>
+              <span className={mutedTextColors.normal}>/</span>
+              <span className={`${headingColors.primary} font-medium`}>New</span>
             </nav>
 
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <h1 className={`text-2xl font-bold ${headingColors.primary}`}>
               Create a New Page
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
+            <p className={`${mutedTextColors.light} mt-1`}>
               Choose how you want to build your page
             </p>
           </div>
@@ -202,28 +202,28 @@ export default function NewPage() {
             {/* Wizard Path */}
             <button
               onClick={() => setMode('wizard')}
-              className={`${cardBgColors.base} rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-purple-500 hover:shadow-lg transition-all group`}
+              className={`${cardBgColors.base} rounded-2xl ${cardBorderColors.lightMd} p-8 text-left hover:border-purple-500 hover:shadow-lg transition-all group`}
             >
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-700 dark:to-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <svg className="w-8 h-8 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-800 dark:to-purple-700 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <svg className={`w-8 h-8 ${coloredLinkText.purple}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
 
               <div className="flex items-center gap-2 mb-2">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                <h2 className={`text-xl font-bold ${headingColors.primary}`}>
                   Quick Start
                 </h2>
-                <span className="px-2 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-700 text-green-700 dark:text-white rounded-full">
+                <span className={`px-2 py-0.5 text-xs font-medium ${accentColors.green.bg} ${accentColors.green.text} rounded-full`}>
                   Recommended
                 </span>
               </div>
 
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className={`${mutedTextColors.light} mb-4`}>
                 Answer 5 simple questions and get a professional page in under a minute. Perfect for phones.
               </p>
 
-              <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+              <ul className={`space-y-2 text-sm ${mutedTextColors.normal}`}>
                 <li className="flex items-center gap-2">
                   <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -244,7 +244,7 @@ export default function NewPage() {
                 </li>
               </ul>
 
-              <div className="mt-6 flex items-center text-purple-600 dark:text-purple-400 font-medium group-hover:gap-3 gap-2 transition-all">
+              <div className={`mt-6 flex items-center ${coloredLinkText.purple} font-medium group-hover:gap-3 gap-2 transition-all`}>
                 Start Wizard
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -255,23 +255,23 @@ export default function NewPage() {
             {/* Full Editor Path */}
             <button
               onClick={() => setMode('editor')}
-              className={`${cardBgColors.base} rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 text-left hover:border-blue-500 hover:shadow-lg transition-all group`}
+              className={`${cardBgColors.base} rounded-2xl ${cardBorderColors.lightMd} p-8 text-left hover:border-blue-500 hover:shadow-lg transition-all group`}
             >
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-700 dark:to-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-800 dark:to-blue-700 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <svg className={`w-8 h-8 ${coloredLinkText.blue}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                 </svg>
               </div>
 
-              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              <h2 className={`text-xl font-bold ${headingColors.primary} mb-2`}>
                 Full Editor
               </h2>
 
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className={`${mutedTextColors.light} mb-4`}>
                 Complete control with drag-and-drop. 40+ components, pixel-perfect layouts.
               </p>
 
-              <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+              <ul className={`space-y-2 text-sm ${mutedTextColors.normal}`}>
                 <li className="flex items-center gap-2">
                   <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -292,7 +292,7 @@ export default function NewPage() {
                 </li>
               </ul>
 
-              <div className="mt-6 flex items-center text-blue-600 dark:text-blue-400 font-medium group-hover:gap-3 gap-2 transition-all">
+              <div className={`mt-6 flex items-center ${coloredLinkText.blue} font-medium group-hover:gap-3 gap-2 transition-all`}>
                 Open Editor
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -315,14 +315,14 @@ export default function NewPage() {
         <div className={`${cardBgColors.base} rounded-2xl shadow-xl max-w-lg w-full p-8 text-center`}>
           {/* Success Icon */}
           <div className={`w-20 h-20 mx-auto mb-6 rounded-full ${iconCircleColors.green.bg} flex items-center justify-center`}>
-            <CheckIcon size="lg" className="text-green-600 dark:text-green-400" />
+            <CheckIcon size="lg" className={coloredLinkText.green} />
           </div>
 
           {/* Success Heading */}
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          <h1 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
             Page Created!
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">
+          <p className={`${mutedTextColors.light} mb-8`}>
             Your page &ldquo;{completedPage.title}&rdquo; has been created successfully.
           </p>
 
@@ -340,7 +340,7 @@ export default function NewPage() {
 
             <button
               onClick={() => window.open(`/p/${completedPage.slug}`, '_blank')}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-medium rounded-xl transition-colors"
+              className={`w-full flex items-center justify-center gap-2 px-6 py-3 ${iconButtonColors.secondary.bg} ${iconButtonColors.secondary.hover} ${headingColors.primary} font-medium rounded-xl transition-colors`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -351,7 +351,7 @@ export default function NewPage() {
 
             <button
               onClick={() => router.push('/admin/pages')}
-              className="w-full px-6 py-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium transition-colors"
+              className={`w-full px-6 py-3 ${mutedTextColors.normal} ${iconButtonColors.hover} font-medium transition-colors`}
             >
               Go to Pages List
             </button>
@@ -381,32 +381,32 @@ export default function NewPage() {
   return (
     <div className={`min-h-screen ${containerBg.page}`}>
       {/* Header with Breadcrumbs & Page Details */}
-      <div className={`${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 shadow-sm`}>
+      <div className={`${cardBgColors.base} border-b ${dividerColors.border} shadow-sm`}>
         <div className="container mx-auto px-6 py-5">
           {/* Breadcrumb Navigation */}
           <nav className="flex items-center gap-2 text-sm mb-4">
             <Link
               href="/dashboard"
-              className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              className={`${mutedTextColors.normal} ${linkHoverColors.purple} transition-colors`}
             >
               Admin
             </Link>
-            <span className="text-gray-400 dark:text-gray-500">/</span>
+            <span className={mutedTextColors.normal}>/</span>
             <Link
               href="/admin/pages"
-              className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              className={`${mutedTextColors.normal} ${linkHoverColors.purple} transition-colors`}
             >
               Pages
             </Link>
-            <span className="text-gray-400 dark:text-gray-500">/</span>
+            <span className={mutedTextColors.normal}>/</span>
             <button
               onClick={() => setMode('choose')}
-              className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              className={`${mutedTextColors.normal} ${linkHoverColors.purple} transition-colors`}
             >
               New Page
             </button>
-            <span className="text-gray-400 dark:text-gray-500">/</span>
-            <span className="text-gray-900 dark:text-gray-100 font-medium">Full Editor</span>
+            <span className={mutedTextColors.normal}>/</span>
+            <span className={`${headingColors.primary} font-medium`}>Full Editor</span>
           </nav>
 
           {/* Header Row */}
@@ -414,18 +414,18 @@ export default function NewPage() {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setMode('choose')}
-                className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                className={`flex items-center justify-center w-10 h-10 rounded-lg ${iconButtonColors.secondary.bg} ${iconButtonColors.secondary.hover} transition-colors`}
                 title="Back to options"
               >
-                <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-5 h-5 ${iconButtonColors.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <h1 className={`text-2xl font-bold ${headingColors.primary}`}>
                   Full Editor
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className={`text-sm ${mutedTextColors.normal}`}>
                   Build from scratch with 40+ components
                 </p>
               </div>
@@ -434,13 +434,13 @@ export default function NewPage() {
             {/* Save Status Indicator */}
             <div className="flex items-center gap-3">
               {hasUnsavedChanges && saveStatus === 'idle' && (
-                <span className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+                <span className={`flex items-center gap-2 text-sm ${coloredLinkText.gold}`}>
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                   Unsaved changes
                 </span>
               )}
               {saveStatus === 'saving' && (
-                <span className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
+                <span className={`flex items-center gap-2 text-sm ${coloredLinkText.blue}`}>
                   <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -449,7 +449,7 @@ export default function NewPage() {
                 </span>
               )}
               {saveStatus === 'saved' && (
-                <span className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+                <span className={`flex items-center gap-2 text-sm ${coloredLinkText.green}`}>
                   <CheckIcon size="sm" />
                   Saved
                 </span>
@@ -460,11 +460,11 @@ export default function NewPage() {
           {/* Page Details Form */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                 URL Slug
               </label>
               <div className="flex items-center">
-                <span className="text-gray-400 dark:text-gray-500 mr-1">/</span>
+                <span className={`${mutedTextColors.normal} mr-1`}>/</span>
                 <input
                   type="text"
                   placeholder="my-page-name"
@@ -474,12 +474,12 @@ export default function NewPage() {
                     setValidationError('');
                     setHasUnsavedChanges(true);
                   }}
-                  className="flex-1 border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-4 focus:ring-purple-100 dark:focus:ring-purple-900/30 focus:outline-none transition-all"
+                  className={formInputColors.base}
                 />
               </div>
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
                 Page Title
               </label>
               <input
@@ -491,7 +491,7 @@ export default function NewPage() {
                   setValidationError('');
                   setHasUnsavedChanges(true);
                 }}
-                className="w-full border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-4 focus:ring-purple-100 dark:focus:ring-purple-900/30 focus:outline-none transition-all"
+                className={`w-full ${formInputColors.base}`}
               />
             </div>
           </div>

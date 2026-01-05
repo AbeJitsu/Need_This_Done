@@ -10,7 +10,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import { selectedStateColors, hoverBgColors, containerBg, cardBgColors } from '@/lib/colors';
+import { selectedStateColors, hoverBgColors, containerBg, cardBgColors, mutedTextColors, dividerColors, headingColors, coloredLinkText, iconButtonColors, cardBorderColors, formInputColors, linkHoverColors } from '@/lib/colors';
 
 // ============================================================================
 // Block Editor Types
@@ -267,7 +267,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
       <div className={`flex items-center justify-center min-h-screen ${containerBg.page}`}>
         <div className="text-center">
           <div className="w-12 h-12 mx-auto mb-4 rounded-full border-4 border-purple-200 border-t-purple-600 animate-spin" />
-          <p className="text-gray-600 dark:text-gray-400">Loading page...</p>
+          <p className={mutedTextColors.light}>Loading page...</p>
         </div>
       </div>
     );
@@ -280,27 +280,27 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
       {/* ====================================================================
           Header
           ==================================================================== */}
-      <div className={`${cardBgColors.base} border-b border-gray-200 dark:border-gray-700 shadow-sm sticky top-0 z-10`}>
+      <div className={`${cardBgColors.base} border-b ${dividerColors.border} shadow-sm sticky top-0 z-10`}>
         <div className="container mx-auto px-6 py-4">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm mb-3">
             <Link
               href="/dashboard"
-              className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              className={`${mutedTextColors.normal} ${linkHoverColors.purple} transition-colors`}
             >
               Admin
             </Link>
-            <span className="text-gray-400 dark:text-gray-500">/</span>
+            <span className={mutedTextColors.normal}>/</span>
             <Link
               href="/admin/pages"
-              className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              className={`${mutedTextColors.normal} ${linkHoverColors.purple} transition-colors`}
             >
               Pages
             </Link>
-            <span className="text-gray-400 dark:text-gray-500">/</span>
-            <span className="text-gray-900 dark:text-gray-100 font-medium">{page.title}</span>
-            <span className="text-gray-400 dark:text-gray-500">/</span>
-            <span className="text-purple-600 dark:text-purple-400 font-medium">Block Editor</span>
+            <span className={mutedTextColors.normal}>/</span>
+            <span className={`${headingColors.primary} font-medium`}>{page.title}</span>
+            <span className={mutedTextColors.normal}>/</span>
+            <span className={`${coloredLinkText.purple} font-medium`}>Block Editor</span>
           </nav>
 
           {/* Header Row */}
@@ -308,18 +308,18 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
             <div className="flex items-center gap-4">
               <Link
                 href="/admin/pages"
-                className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                className={`flex items-center justify-center w-10 h-10 rounded-lg ${iconButtonColors.secondary.bg} ${iconButtonColors.secondary.hover} transition-colors`}
                 title="Back to Pages"
               >
-                <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-5 h-5 ${iconButtonColors.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </Link>
               <div>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                <h1 className={`text-xl font-bold ${headingColors.primary}`}>
                   Block Editor: {page.title}
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className={`text-sm ${mutedTextColors.normal}`}>
                   {sections.length} section{sections.length !== 1 ? 's' : ''}
                 </p>
               </div>
@@ -327,14 +327,14 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
 
             <div className="flex items-center gap-3">
               {hasChanges && (
-                <span data-testid="unsaved-indicator" className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+                <span data-testid="unsaved-indicator" className={`flex items-center gap-2 text-sm ${coloredLinkText.gold}`}>
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                   Unsaved changes
                 </span>
               )}
               <Link
                 href={`/admin/pages/${page.slug}/edit`}
-                className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400"
+                className={`text-sm ${mutedTextColors.light} ${linkHoverColors.purple}`}
               >
                 Full Editor
               </Link>
@@ -358,7 +358,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
           {/* Section List */}
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              <h2 className={`text-lg font-semibold ${headingColors.primary}`}>
                 Page Sections
               </h2>
               <Button
@@ -389,7 +389,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
                       group relative p-4 rounded-xl border-2 cursor-pointer transition-all
                       ${isSelected
                         ? `${selectedStateColors.purple.border} ${selectedStateColors.purple.bg}`
-                        : `border-gray-200 dark:border-gray-700 ${cardBgColors.base} hover:border-purple-300 dark:hover:border-purple-600`
+                        : `${cardBorderColors.lightMd} ${cardBgColors.base} hover:border-purple-300`
                       }
                     `}
                   >
@@ -399,11 +399,11 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
                           {info.icon}
                         </div>
                         <div>
-                          <span data-testid="section-type" className="font-medium text-gray-900 dark:text-gray-100">
+                          <span data-testid="section-type" className={`font-medium ${headingColors.primary}`}>
                             {info.name}
                           </span>
                           {typeof section.props.title === 'string' && section.props.title && (
-                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">
+                            <p className={`text-sm ${mutedTextColors.normal} truncate max-w-xs`}>
                               {section.props.title}
                             </p>
                           )}
@@ -414,26 +414,26 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
                         <button
                           onClick={(e) => { e.stopPropagation(); handleMoveUp(index); }}
                           disabled={index === 0}
-                          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
+                          className={`p-2 rounded-lg ${iconButtonColors.bg} disabled:opacity-30 disabled:cursor-not-allowed`}
                           title="Move up"
                         >
-                          <svg className="w-4 h-4 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className={`w-4 h-4 ${iconButtonColors.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                           </svg>
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); handleMoveDown(index); }}
                           disabled={index === sections.length - 1}
-                          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
+                          className={`p-2 rounded-lg ${iconButtonColors.bg} disabled:opacity-30 disabled:cursor-not-allowed`}
                           title="Move down"
                         >
-                          <svg className="w-4 h-4 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className={`w-4 h-4 ${iconButtonColors.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); handleDeleteSection(index); }}
-                          className={`p-2 rounded-lg ${hoverBgColors.red} text-red-600 dark:text-red-400`}
+                          className={`p-2 rounded-lg ${hoverBgColors.red} ${coloredLinkText.red}`}
                           title="Delete section"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -447,9 +447,9 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
               })}
 
               {sections.length === 0 && (
-                <div className="text-center py-12 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl">
+                <div className="text-center py-12 border-2 border-dashed ${cardBorderColors.subtle} rounded-xl">
                   <div className="text-4xl mb-3">📄</div>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  <p className={`${mutedTextColors.light} mb-4`}>
                     No sections yet. Add your first section to get started.
                   </p>
                   <Button
@@ -469,7 +469,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
               <div data-testid="section-editor" className="p-4">
                 {selectedSection !== null && sections[selectedSection] ? (
                   <>
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                    <h3 className={`font-semibold ${headingColors.primary} mb-4`}>
                       Edit: {blockInfo[sections[selectedSection].type]?.name || sections[selectedSection].type}
                     </h3>
                     <SectionEditor
@@ -478,7 +478,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
                     />
                   </>
                 ) : (
-                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  <div className={`text-center py-8 ${mutedTextColors.normal}`}>
                     <div className="text-3xl mb-2">👆</div>
                     <p>Select a section to edit its properties</p>
                   </div>
@@ -502,18 +502,18 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
             className={`${cardBgColors.base} rounded-2xl shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            <div className={`p-6 border-b ${dividerColors.border}`}>
+              <h2 className={`text-xl font-bold ${headingColors.primary}`}>
                 Add Section
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className={`text-sm ${mutedTextColors.normal}`}>
                 Choose a block type to add to your page
               </p>
             </div>
             <div className="p-6 overflow-y-auto max-h-[60vh]">
               {Object.entries(blockCategories).map(([category, blocks]) => (
                 <div key={category} className="mb-6 last:mb-0">
-                  <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
+                  <h3 className={`text-sm font-semibold ${mutedTextColors.normal} uppercase tracking-wide mb-3`}>
                     {category}
                   </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -523,10 +523,10 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
                         <button
                           key={blockType}
                           onClick={() => handleAddSection(blockType)}
-                          className={`flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-purple-500 ${hoverBgColors.purple} transition-colors text-left`}
+                          className={`flex items-center gap-2 p-3 rounded-lg border ${dividerColors.border} hover:border-purple-500 ${hoverBgColors.purple} transition-colors text-left`}
                         >
                           <span className="text-xl">{info.icon}</span>
-                          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                          <span className={`text-sm font-medium ${headingColors.primary}`}>
                             {info.name}
                           </span>
                         </button>
@@ -536,7 +536,7 @@ export default function BlockEditorPage({ params }: { params: { slug: string } }
                 </div>
               ))}
             </div>
-            <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+            <div className={`p-4 border-t ${dividerColors.border} flex justify-end`}>
               <Button variant="gray" onClick={() => setShowBlockPicker(false)}>
                 Cancel
               </Button>
@@ -584,7 +584,7 @@ function SectionEditor({ section, onUpdate }: SectionEditorProps) {
     <div className="space-y-4">
       {editableFields.map((field) => (
         <div key={field.key}>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className={`block text-sm font-medium ${formInputColors.label} mb-1`}>
             {field.label}
           </label>
           {field.type === 'text' && (
@@ -592,7 +592,7 @@ function SectionEditor({ section, onUpdate }: SectionEditorProps) {
               type="text"
               value={String(props[field.key] || '')}
               onChange={(e) => onUpdate({ [field.key]: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className={formInputColors.base}
             />
           )}
           {field.type === 'textarea' && (
@@ -600,14 +600,14 @@ function SectionEditor({ section, onUpdate }: SectionEditorProps) {
               value={String(props[field.key] || '')}
               onChange={(e) => onUpdate({ [field.key]: e.target.value })}
               rows={3}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className={formInputColors.base}
             />
           )}
           {field.type === 'select' && field.options && (
             <select
               value={String(props[field.key] || '')}
               onChange={(e) => onUpdate({ [field.key]: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className={formInputColors.base}
             >
               {field.options.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -620,7 +620,7 @@ function SectionEditor({ section, onUpdate }: SectionEditorProps) {
       ))}
 
       {editableFields.length === 0 && (
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className={`text-sm ${mutedTextColors.normal}`}>
           This section type has no editable properties in simple mode.
           Use the Full Editor for advanced customization.
         </p>

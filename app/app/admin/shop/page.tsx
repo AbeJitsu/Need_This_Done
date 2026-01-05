@@ -9,7 +9,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import type { Product, Order } from '@/lib/medusa-client';
-import { alertColors, statusBadgeColors, formInputColors, cardBgColors, cardBorderColors, mutedTextColors, headingColors, coloredLinkText, dividerColors, navigationColors } from '@/lib/colors';
+import { alertColors, statusBadgeColors, formInputColors, cardBgColors, cardBorderColors, mutedTextColors, headingColors, coloredLinkText, dividerColors, navigationColors, iconButtonColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Shop Dashboard - /admin/shop
@@ -231,7 +231,7 @@ export default function AdminShopDashboard() {
             id="products-tab"
             className={`px-4 py-3 font-medium border-b-2 transition-colors ${
               activeTab === 'products'
-                ? `${coloredLinkText.blue} border-blue-600 dark:border-blue-400`
+                ? `${coloredLinkText.blue} border-blue-600`
                 : `${navigationColors.link} border-transparent ${navigationColors.linkHover}`
             }`}
           >
@@ -245,7 +245,7 @@ export default function AdminShopDashboard() {
             id="orders-tab"
             className={`px-4 py-3 font-medium border-b-2 transition-colors ${
               activeTab === 'orders'
-                ? `${coloredLinkText.blue} border-blue-600 dark:border-blue-400`
+                ? `${coloredLinkText.blue} border-blue-600`
                 : `${navigationColors.link} border-transparent ${navigationColors.linkHover}`
             }`}
           >
@@ -274,13 +274,13 @@ export default function AdminShopDashboard() {
                   <div className={`absolute right-0 mt-2 w-32 ${cardBgColors.base} rounded-lg shadow-lg ${cardBorderColors.light} z-10`}>
                     <button
                       onClick={() => handleExport('json')}
-                      className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg"
+                      className={`w-full px-4 py-2 text-left text-sm ${headingColors.secondary} ${iconButtonColors.bg} rounded-t-lg`}
                     >
                       JSON
                     </button>
                     <button
                       onClick={() => handleExport('csv')}
-                      className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg"
+                      className={`w-full px-4 py-2 text-left text-sm ${headingColors.secondary} ${iconButtonColors.bg} rounded-b-lg`}
                     >
                       CSV
                     </button>
@@ -448,7 +448,7 @@ export default function AdminShopDashboard() {
                         <p className={`text-sm ${mutedTextColors.normal}`}>
                           Items: {order.items?.length || 0}
                         </p>
-                        <p className="text-lg font-semibold text-gray-900 dark:text-gray-100 mt-2">
+                        <p className={`text-lg font-semibold ${headingColors.primary} mt-2`}>
                           ${(order.total / 100).toFixed(2)}
                         </p>
                       </div>

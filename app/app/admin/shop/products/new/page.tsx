@@ -124,7 +124,7 @@ export default function CreateProductPage() {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className={formInputColors.input}
+                className={formInputColors.base}
                 placeholder="e.g., Quick Task"
                 required
               />
@@ -139,7 +139,7 @@ export default function CreateProductPage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
-                className={formInputColors.input}
+                className={formInputColors.base}
                 placeholder="Describe your product..."
               />
             </div>
@@ -153,7 +153,7 @@ export default function CreateProductPage() {
                 type="text"
                 value={handle}
                 onChange={(e) => setHandle(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
-                className={formInputColors.input}
+                className={formInputColors.base}
                 placeholder="e.g., quick-task"
                 required
               />

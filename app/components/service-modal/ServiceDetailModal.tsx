@@ -29,8 +29,11 @@ import { CloseIcon } from '@/components/ui/icons';
 import { serviceColors } from '@/lib/service-colors';
 import { Editable, IconPicker } from '@/components/InlineEditor';
 
+// Type for lucide icons that accept string | number for size
+type LucideIconComponent = React.ComponentType<{ size?: string | number; className?: string }>;
+
 // Map of common icon names to components
-const BULLET_ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+const BULLET_ICON_MAP: Record<string, LucideIconComponent> = {
   Check, CheckCircle, Star, Heart, ThumbsUp, Award, Trophy,
   Sparkles, Zap, Shield, ShieldCheck, Clock, Calendar,
   User, Users, Mail, Phone, Home, Building, DollarSign,

@@ -19,6 +19,7 @@ import {
   accentColors,
   cardBgColors,
   focusRingClasses,
+  mutedTextColors,
   type AccentColor,
 } from '@/lib/colors';
 
@@ -130,7 +131,7 @@ export default function CartPage() {
           <div className="py-8 px-4">
             <div className="flex flex-col items-center justify-center text-center">
               {/* Cart Icon */}
-              <div className="text-gray-300 dark:text-gray-600 mb-6">
+              <div className={`${mutedTextColors.light} mb-6`}>
                 <svg className="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
@@ -191,7 +192,7 @@ export default function CartPage() {
               const duration = getDurationLabel(title);
 
               return (
-                <div key={item.id} className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 border-l-4 ${leftBorderColors[color]} dark:bg-gray-700`}>
+                <div key={item.id} className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 border-l-4 ${leftBorderColors[color]} ${cardBgColors.elevated}`}>
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex-grow">
                       {/* Consultation title */}
@@ -260,7 +261,7 @@ export default function CartPage() {
           {/* Right column - Order summary + Info */}
           <div className="lg:col-span-2 space-y-6 lg:self-start lg:sticky lg:top-20">
             {/* Order Summary - Inner rectangle */}
-            <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 dark:bg-gray-800`}>
+            <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
               <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                 Order Summary
               </h2>

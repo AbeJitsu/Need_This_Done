@@ -10,7 +10,7 @@ import { useToast } from '@/context/ToastContext';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import { alertColors, statusBadgeColors, iconCircleColors, containerBg, cardBgColors } from '@/lib/colors';
+import { alertColors, statusBadgeColors, iconCircleColors, containerBg, cardBgColors, mutedTextColors, dividerColors, headingColors, coloredLinkText, cardBorderColors, linkHoverColors } from '@/lib/colors';
 
 interface Page {
   id: string;
@@ -137,12 +137,12 @@ export default function PagesManagement() {
         <nav className="flex items-center gap-2 text-sm mb-6">
           <Link
             href="/dashboard"
-            className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+            className={`${mutedTextColors.normal} ${linkHoverColors.purple} transition-colors`}
           >
             Admin
           </Link>
-          <span className="text-gray-400 dark:text-gray-500">/</span>
-          <span className="text-gray-900 dark:text-gray-100 font-medium">Pages</span>
+          <span className={mutedTextColors.normal}>/</span>
+          <span className={`${headingColors.primary} font-medium`}>Pages</span>
         </nav>
 
         {/* ====================================================================
@@ -150,10 +150,10 @@ export default function PagesManagement() {
             ==================================================================== */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            <h1 className={`text-3xl font-bold ${headingColors.primary}`}>
               Page Builder
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
+            <p className={`${mutedTextColors.light} mt-1`}>
               Create and manage custom pages with drag-and-drop
             </p>
           </div>
@@ -193,7 +193,7 @@ export default function PagesManagement() {
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                      <h2 className={`text-xl font-semibold ${headingColors.primary}`}>
                         {page.title}
                       </h2>
                       <span
@@ -207,17 +207,17 @@ export default function PagesManagement() {
                       </span>
                     </div>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                      <span className="text-gray-500 dark:text-gray-400">
+                      <span className={mutedTextColors.normal}>
                         /{page.slug}
                       </span>
-                      <span className="text-gray-400 dark:text-gray-500">
+                      <span className={mutedTextColors.normal}>
                         Updated {new Date(page.updated_at).toLocaleDateString()}
                       </span>
                       {page.is_published && (
                         <Link
                           href={`/${page.slug}`}
                           target="_blank"
-                          className="text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1"
+                          className={`${coloredLinkText.purple} hover:underline flex items-center gap-1`}
                         >
                           View live
                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -266,16 +266,16 @@ export default function PagesManagement() {
               Empty State
               ==================================================================== */}
           {pages.length === 0 && (
-            <div className={`${cardBgColors.base} rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 px-8 py-16 text-center`}>
-              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 flex items-center justify-center">
-                <svg className="w-10 h-10 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className={`${cardBgColors.base} rounded-2xl border-2 border-dashed ${cardBorderColors.subtle} px-8 py-16 text-center`}>
+              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-800 dark:to-purple-700 flex items-center justify-center">
+                <svg className={`w-10 h-10 ${coloredLinkText.purple}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+              <h3 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
                 Start building your first page
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-8 leading-relaxed">
+              <p className={`${mutedTextColors.light} max-w-md mx-auto mb-8 leading-relaxed`}>
                 Drag and drop components to create custom landing pages, about pages, and more - no code required.
               </p>
               <Button
@@ -292,33 +292,33 @@ export default function PagesManagement() {
               </Button>
 
               {/* Feature highlights */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+              <div className={`grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 pt-8 border-t ${dividerColors.border}`}>
                 <div className="text-center">
                   <div className={`w-10 h-10 mx-auto mb-3 rounded-lg ${iconCircleColors.blue.bg} flex items-center justify-center`}>
-                    <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className={`w-5 h-5 ${coloredLinkText.blue}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                     </svg>
                   </div>
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Drag & Drop</h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Build layouts visually</p>
+                  <h4 className={`font-semibold ${headingColors.primary} mb-1`}>Drag & Drop</h4>
+                  <p className={`text-sm ${mutedTextColors.normal}`}>Build layouts visually</p>
                 </div>
                 <div className="text-center">
                   <div className={`w-10 h-10 mx-auto mb-3 rounded-lg ${iconCircleColors.green.bg} flex items-center justify-center`}>
-                    <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className={`w-5 h-5 ${coloredLinkText.green}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                   </div>
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Publish Control</h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Draft or go live instantly</p>
+                  <h4 className={`font-semibold ${headingColors.primary} mb-1`}>Publish Control</h4>
+                  <p className={`text-sm ${mutedTextColors.normal}`}>Draft or go live instantly</p>
                 </div>
                 <div className="text-center">
                   <div className={`w-10 h-10 mx-auto mb-3 rounded-lg ${iconCircleColors.gold.bg} flex items-center justify-center`}>
-                    <svg className="w-5 h-5 text-gold-600 dark:text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className={`w-5 h-5 ${coloredLinkText.gold}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Mobile Ready</h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Responsive by default</p>
+                  <h4 className={`font-semibold ${headingColors.primary} mb-1`}>Mobile Ready</h4>
+                  <p className={`text-sm ${mutedTextColors.normal}`}>Responsive by default</p>
                 </div>
               </div>
             </div>

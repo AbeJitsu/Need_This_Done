@@ -10,7 +10,7 @@ import Underline from '@tiptap/extension-underline';
 import { useState, useCallback, useEffect } from 'react';
 import MediaLibrary from '@/components/media/MediaLibrary';
 import { MediaItem } from '@/lib/media-types';
-import { uiChromeBg, toggleButtonColors, hoverBgColors, cardBgColors, dividerColors, headingColors, mutedTextColors, dangerColors, cardBorderColors, formInputColors, linkColors, linkHoverColors } from '@/lib/colors';
+import { uiChromeBg, toggleButtonColors, hoverBgColors, cardBgColors, dividerColors, headingColors, mutedTextColors, dangerColors, cardBorderColors } from '@/lib/colors';
 import {
   BoldIcon,
   ItalicIcon,

@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors, alertColors, statusBadgeColors, containerBg, uiChromeBg, mutedTextColors, headingColors, coloredLinkText, linkHoverColors, dividerColors } from '@/lib/colors';
+import { filterButtonColors, alertColors, statusBadgeColors, containerBg, uiChromeBg, mutedTextColors, headingColors, coloredLinkText, dividerColors } from '@/lib/colors';
 
 // ============================================================================
 // Orders Dashboard - /admin/shop/orders

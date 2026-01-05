@@ -493,7 +493,7 @@ export default function EditBlogPost({ params }: PageProps) {
                     ${
                       status === 'draft'
                         ? 'bg-gray-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
+                        : `${cardBgColors.elevated} ${mutedTextColors.light}`
                     }
                   `}
                 >
@@ -507,7 +507,7 @@ export default function EditBlogPost({ params }: PageProps) {
                     ${
                       status === 'published'
                         ? 'bg-green-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
+                        : `${cardBgColors.elevated} ${mutedTextColors.light}`
                     }
                   `}
                 >
