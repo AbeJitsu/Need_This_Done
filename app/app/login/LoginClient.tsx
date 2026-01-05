@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
+import { getAuthTitle, getAuthDescription } from '@/lib/auth-utils';
 import {
   formInputColors,
   formValidationColors,
@@ -179,14 +180,10 @@ export default function LoginClient() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
-            {isForgotPassword ? 'Reset Your Password' : isSignUpMode ? 'Join Us' : 'Welcome Back'}
+            {getAuthTitle(isForgotPassword, isSignUpMode)}
           </h1>
           <p className={formInputColors.helper}>
-            {isForgotPassword
-              ? "No worries. We'll send you a reset link"
-              : isSignUpMode
-                ? 'Create an account to track your projects and stay in the loop'
-                : 'Good to see you! Sign in to check on your projects'}
+            {getAuthDescription(isForgotPassword, isSignUpMode)}
           </p>
         </div>
 

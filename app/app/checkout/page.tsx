@@ -24,6 +24,7 @@ import {
 } from '@/lib/colors';
 import { COPY_FEEDBACK_DELAY } from '@/lib/timing';
 import { CheckIcon } from '@/components/ui/icons';
+import { convertTo12HourFormat } from '@/lib/time-utils';
 
 // ============================================================================
 // Checkout Page - /checkout
@@ -379,7 +380,7 @@ export default function CheckoutPage() {
                   at {appointmentData.preferredTimeStart.replace(/^(\d{2}):(\d{2})$/, (_, h, m) => {
                     const hour = parseInt(h);
                     const ampm = hour >= 12 ? 'PM' : 'AM';
-                    const hour12 = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+                    const hour12 = convertTo12HourFormat(hour);
                     return `${hour12}:${m} ${ampm}`;
                   })}
                 </p>

@@ -206,10 +206,8 @@ async function findAbandonedCarts(
   // Check for carts that have been tracked in local storage but not completed
   // This would require a separate cart_tracking table or Medusa integration
 
-  console.log(
-    `[Abandoned Carts] Checking for carts older than ${thresholdHours}h, ` +
-    `max ${maxReminders} reminders, ${reminderIntervalHours}h between reminders`
-  );
+  // Removed console.log - consider implementing proper logging service for cron jobs
+  // Would log: Checking for carts older than X hours, max Y reminders, Z hours between reminders
 
   return [];
 }

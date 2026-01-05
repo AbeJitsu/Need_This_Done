@@ -7,6 +7,30 @@ description: Scan codebase for Pragmatic Programmer anti-patterns. Adds findings
 
 Scan the codebase for bad programming practices from "The Pragmatic Programmer" and add findings to TODO.md so auto-loop can fix them.
 
+**📝 OUTPUT**: All detected issues are written to TODO.md, NOT stored in this skill file.
+
+## Enhanced with Modern Principles 🚀
+
+This audit now includes detection for:
+
+**🎯 YAGNI (You Aren't Gonna Need It)**
+- Finds overengineered code built for imaginary future requirements
+- Detects abstractions with single implementations
+- Identifies unused parameters and "just in case" code
+
+**🏗️ SOLID Principles**
+- **S**ingle Responsibility: Finds god objects doing too much
+- **O**pen/Closed: Detects switch statements that need constant updates
+- **L**iskov Substitution: Checks for proper inheritance
+- **I**nterface Segregation: Finds fat interfaces with empty implementations
+- **D**ependency Inversion: Identifies tight coupling to concrete classes
+
+**💋 KISS (Keep It Simple, Stupid)**
+- Detects unnecessarily complex code
+- Finds nested ternaries and deep nesting
+- Identifies functions with too many parameters
+- Catches over-complicated solutions to simple problems
+
 ## Autonomous Loop Support
 
 **This skill uses the same loop mechanism as auto-loop.** It will continue scanning until ALL patterns are checked, even if it takes multiple iterations.
@@ -28,7 +52,7 @@ cat > .claude/loop-state.json << 'EOF'
   "tasksCompleted": 0,
   "auditMode": true,
   "patternsChecked": [],
-  "totalPatterns": 9
+  "totalPatterns": 12
 }
 EOF
 ```
@@ -41,7 +65,7 @@ After completing each pattern category, update `patternsChecked`:
 # After scanning DRY violations
 jq '.patternsChecked += ["DRY"]' .claude/loop-state.json > tmp && mv tmp .claude/loop-state.json
 
-# Patterns to track: DRY, HARDCODED, BROKEN_WINDOWS, COUPLING, ETC, NAMING, TESTS, EXCEPTIONS, RESOURCES
+# Patterns to track: YAGNI, SOLID, KISS, DRY, HARDCODED, BROKEN_WINDOWS, COUPLING, ETC, NAMING, TESTS, EXCEPTIONS, RESOURCES
 ```
 
 ### Completion Check
@@ -69,13 +93,89 @@ The stop hook will see `active: true` and block exit, prompting you to continue 
 └──────────────────────────────────────────────────────────────────┘
 ```
 
+**CRITICAL**: This skill ONLY writes to TODO.md. It does not store example issues.
+When run, it scans the codebase and adds all findings to TODO.md in the proper format.
+
 ## Detection Categories
 
 Scan for these Pragmatic Programmer anti-patterns:
 
-### 1. DRY Violations (Severity: High)
+### 1. YAGNI Violations (Severity: High) 🆕
 
-Repeated code patterns that should be consolidated.
+You Aren't Gonna Need It - overengineered code for imaginary requirements.
+
+**Detect:**
+- Abstract classes/interfaces with single implementation
+- Generic solutions used for only one specific case
+- Unused parameters in function signatures
+- "Future-proof" code with no current use
+
+**Grep patterns:**
+```bash
+# Abstract classes with single implementation
+grep -r "abstract class" app/ --include="*.ts" | cut -d: -f2 | awk '{print $3}' | while read class; do
+  count=$(grep -r "extends $class" app/ --include="*.ts" | wc -l)
+  if [ $count -eq 1 ]; then echo "Single implementation: $class"; fi
+done
+
+# Unused function parameters (look for _, unused prefixes)
+grep -rE "function.*\(.*(_\w+|unused\w+)" app/ --include="*.ts" --include="*.tsx"
+
+# Interfaces with single implementation
+grep -r "interface.*{" app/ --include="*.ts" | grep -v ".d.ts"
+```
+
+### 2. SOLID Violations (Severity: High) 🆕
+
+Breaking Single Responsibility, Open/Closed, Liskov, Interface Segregation, Dependency Inversion.
+
+**Detect:**
+- God classes (files > 500 lines doing multiple things)
+- Classes/functions with "and" in the name (doing multiple things)
+- Switch statements that need updating for new types
+- Fat interfaces forcing empty implementations
+
+**Grep patterns:**
+```bash
+# God objects - files over 500 lines
+find app -name "*.tsx" -o -name "*.ts" | xargs wc -l | awk '$1 > 500 {print $0}'
+
+# Multiple responsibilities - "and" in names
+grep -rE "(function|class|interface).*And" app/ --include="*.ts" --include="*.tsx"
+
+# Switch statements (often violate Open/Closed)
+grep -rE "switch\s*\(" app/ --include="*.ts" --include="*.tsx" -A 10 | grep -E "case\s+" | wc -l
+
+# Empty method implementations (Interface Segregation violation)
+grep -rE "{\s*(//.*)?}" app/ --include="*.ts" --include="*.tsx"
+```
+
+### 3. KISS Violations (Severity: Medium) 🆕
+
+Keep It Simple, Stupid - unnecessarily complex code.
+
+**Detect:**
+- Nested ternary operators
+- Functions with > 4 parameters
+- Deeply nested conditionals (> 3 levels)
+- Complex regex when simple string methods work
+
+**Grep patterns:**
+```bash
+# Nested ternaries
+grep -rE "\?.*\?.*:" app/ --include="*.ts" --include="*.tsx"
+
+# Functions with many parameters
+grep -rE "function.*\([^)]{100,}\)" app/ --include="*.ts" --include="*.tsx"
+
+# Deep nesting (look for multiple indentation levels)
+grep -rE "^[ \t]{16,}" app/ --include="*.ts" --include="*.tsx"
+
+# Complex regex
+grep -rE "RegExp\(.*{10,}" app/ --include="*.ts" --include="*.tsx"
+```
+
+### 4. DRY Violations (Severity: High)
 
 **Detect:**
 - Repeated inline styles (e.g., `bg-white dark:bg-gray-800 rounded` in multiple files)
@@ -94,7 +194,7 @@ grep -r "border-gray-300 dark:border-gray-600 focus:" app/ --include="*.tsx"
 grep -r "catch.*console.error" app/ --include="*.ts" --include="*.tsx"
 ```
 
-### 2. Hardcoded Values (Severity: Medium)
+### 5. Hardcoded Values (Severity: Medium)
 
 Magic numbers and inline constants that should be configurable.
 
@@ -115,7 +215,7 @@ grep -rE "#[0-9a-fA-F]{6}" app/ --include="*.tsx" | grep -v "colors.ts"
 grep -rE "'https?://[^']+'" app/ --include="*.ts" --include="*.tsx" | grep -v ".test." | grep -v "localhost"
 ```
 
-### 3. Broken Windows (Severity: Low-Medium)
+### 6. Broken Windows (Severity: Low-Medium)
 
 Code quality debt that signals neglect.
 
@@ -136,7 +236,7 @@ grep -r "console.log(" app/ --include="*.ts" --include="*.tsx" | grep -v ".test.
 grep -r "eslint-disable" app/ --include="*.ts" --include="*.tsx"
 ```
 
-### 4. Tight Coupling (Severity: High)
+### 7. Tight Coupling (Severity: High)
 
 Components that are too interdependent.
 
@@ -154,7 +254,7 @@ grep -rE "from\s+['\"]\.\.\/\.\.\/\.\.\/" app/ --include="*.ts" --include="*.tsx
 find app -name "*.tsx" -o -name "*.ts" | xargs wc -l | sort -rn | head -20
 ```
 
-### 5. ETC Violations (Severity: Medium)
+### 8. ETC Violations (Severity: Medium)
 
 Code that's hard to change.
 
@@ -172,7 +272,7 @@ grep -rE "dark:(bg|text|border)-[a-z]+-[0-9]+" app/ --include="*.tsx" | grep -v 
 grep -rE "(bg|text|border)-(red|blue|green|orange|purple)-[0-9]+" app/components --include="*.tsx" | grep -v "colors.ts"
 ```
 
-### 6. Poor Naming (Severity: Low)
+### 9. Poor Naming (Severity: Low)
 
 Unclear or too-short identifiers.
 
@@ -190,7 +290,7 @@ grep -rE "(const|let|var)\s+[a-z]\s*=" app/ --include="*.ts" --include="*.tsx" |
 grep -rE "function\s+[a-z]{1,3}\(" app/ --include="*.ts" --include="*.tsx"
 ```
 
-### 7. Missing Tests (Severity: Medium)
+### 10. Missing Tests (Severity: Medium)
 
 Components without corresponding test files.
 
@@ -206,7 +306,7 @@ For each .tsx file in app/components:
   If not, flag as missing tests
 ```
 
-### 8. Exception Issues (Severity: High)
+### 11. Exception Issues (Severity: High)
 
 Poor error handling practices.
 
@@ -227,7 +327,7 @@ grep -rE "catch\s*\(\s*\w+:\s*any\s*\)" app/ --include="*.ts" --include="*.tsx"
 grep -rE "catch.*\{[^}]*console\.(log|error)[^}]*\}" app/ --include="*.ts" --include="*.tsx"
 ```
 
-### 9. Resource Leaks (Severity: High)
+### 12. Resource Leaks (Severity: High)
 
 Potential memory leaks and cleanup issues.
 
@@ -284,29 +384,19 @@ Tasks MUST be **leaf-level** (no nested sub-items under them).
 ```markdown
 ### Pragmatic Programmer Audit (Mon DD, YYYY)
 
-**DRY VIOLATIONS** - Repeated code patterns that should be consolidated
+**CATEGORY_NAME** - Brief description of the pattern type
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  Pattern: Repeated card/container styles across components              │
-│  Found in: 12 files                                                     │
-│  Impact: Changing style = editing 12 files                              │
-│  Fix: Use Card component or cardBgColors from colors.ts                 │
+│  Pattern: Description of what was found                                 │
+│  Found in: X files                                                      │
+│  Impact: Why this matters                                               │
+│  Fix: High-level approach to fix                                        │
 └─────────────────────────────────────────────────────────────────────────┘
-- [ ] Extract shared card styles in AdminSidebar.tsx (line 45)
-- [ ] Consolidate error handling in api/checkout/route.ts
-
-**BROKEN WINDOWS** - Code quality debt that signals neglect
-┌─────────────────────────────────────────────────────────────────────────┐
-│  Pattern: TODO/FIXME comments and console.log left in code              │
-│  Found in: 8 files                                                      │
-│  Fix: Address or remove each item                                       │
-└─────────────────────────────────────────────────────────────────────────┘
-- [ ] Remove console.log in PaymentForm.tsx:42
-- [ ] Address TODO comment in utils.ts:15 - "refactor this later"
-
-**MISSING TESTS** - Components without corresponding test files
-- [ ] Add tests for CouponInput.tsx (no .test.tsx or .a11y.test.tsx found)
-- [ ] Add tests for PriceDisplay.tsx
+- [ ] Specific actionable task with file:line reference
+- [ ] Another specific task that can be completed in one session
 ```
+
+**IMPORTANT**: The audit skill writes findings to TODO.md. It does NOT contain example issues.
+All detected issues are added to TODO.md in the format above.
 
 **Key Format Rules:**
 1. Section header with full date: `### Pragmatic Programmer Audit (Dec 31, 2025)`
@@ -431,3 +521,67 @@ Always exclude from scans:
 - Focus on actionable issues, not style preferences
 - Each finding should be fixable in one task
 - Prefer fewer high-quality findings over many low-priority ones
+
+## Quick Reference: Principles
+
+### 🎯 YAGNI (You Aren't Gonna Need It)
+**Red Flags:**
+- `abstract class` with one implementation
+- `interface IFoo { }` used by only `class Foo`
+- Generic `DataProcessor<T>` that only ever uses `string`
+- Parameters like `options?: never` or `_unused`
+
+**Fix:** Delete the abstraction, use concrete implementation
+
+### 🏗️ SOLID
+**S - Single Responsibility**
+- Files > 500 lines
+- Classes with "Manager" or "Handler" in name
+- Methods named `validateAndSaveAndNotify()`
+
+**O - Open/Closed**
+- Switch statements updated for each new type
+- If/else chains checking `instanceof`
+
+**L - Liskov Substitution**
+- Subclasses that throw "Not Implemented"
+- Overrides that change method behavior completely
+
+**I - Interface Segregation**
+- Interfaces forcing empty method implementations
+- Fat interfaces with 10+ methods
+
+**D - Dependency Inversion**
+- Direct instantiation: `new ConcreteClass()`
+- Imports from `../../infrastructure/database`
+
+### 💋 KISS (Keep It Simple)
+**Too Complex:**
+```typescript
+// ❌ Nested ternary hell
+const status = user ? (user.active ? (user.verified ? 'ready' : 'pending') : 'inactive') : 'none';
+
+// ✅ Simple and clear
+function getUserStatus(user) {
+  if (!user) return 'none';
+  if (!user.active) return 'inactive';
+  if (!user.verified) return 'pending';
+  return 'ready';
+}
+```
+
+**Simplification Checklist:**
+- Can a junior dev understand this?
+- Could you explain it without "and then"?
+- Does it need a comment to be clear?
+- Are there more than 3 levels of nesting?
+
+### 🔍 How to Spot Violations
+
+| Principle | Quick Check | Command |
+|-----------|------------|---------|
+| YAGNI | "What if we need..." in comments | `grep -r "TODO.*might need" app/` |
+| SOLID-S | File does 2+ unrelated things | `wc -l *.tsx \| sort -rn` |
+| SOLID-O | Adding features = modifying existing | `git log --oneline file.ts` |
+| KISS | Needs diagram to explain | `grep -r "?.*?.*:" app/` |
+| DRY | Copy-paste coding | `grep -r "exact same string" app/` |

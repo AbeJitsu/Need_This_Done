@@ -292,6 +292,91 @@ For each old export, grep ALL usages and migrate EVERY file:
 - [!] Add Medusa admin API in api/admin/inventory/route.ts:128
   - Blocked: Requires Medusa Admin API auth setup + endpoint development
 
+**SOLID VIOLATIONS** - Files over 500 lines violating Single Responsibility
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Pattern: God objects - components doing too much                       │
+│  Found in: 10 files over 500 lines                                      │
+│  Impact: Hard to test, understand, and maintain                         │
+│  Fix: Extract focused sub-components                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Refactor checkout/page.tsx (892 lines) - extract payment form, address form components
+- [ ] Refactor admin/users/page.tsx (723 lines) - extract user table, filters, actions
+- [ ] Refactor admin/pages/[slug]/blocks/page.tsx (693 lines) - extract block editor components
+- [ ] Refactor admin/quotes/page.tsx (601 lines) - extract quote form and list components
+- [ ] Refactor api/marketplace/route.ts (584 lines) - split into separate route handlers
+- [ ] Refactor admin/blog/[slug]/edit/page.tsx (533 lines) - extract editor components
+- [ ] Refactor admin/blog/new/page.tsx (528 lines) - share components with edit page
+- [ ] Refactor admin/pages/new/page.tsx (520 lines) - extract wizard steps
+- [ ] Refactor admin/colors/page.tsx (513 lines) - extract color preview components
+- [ ] Refactor api/reviews/route.ts (506 lines) - split handlers into service layer
+
+**KISS VIOLATIONS** - Unnecessarily complex code patterns
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Pattern: Nested ternary operators making code hard to read             │
+│  Found in: 14 occurrences                                               │
+│  Impact: Difficult to understand logic flow, error-prone                │
+│  Fix: Replace with if/else or extract to readable functions            │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [x] Simplify nested ternary in checkout/page.tsx:382 (hour conversion logic)
+- [x] Simplify nested ternary in login/LoginClient.tsx:182 (title selection)
+- [ ] Simplify quadruple nested ternaries in admin/users/page.tsx:557,570,584,598 (aria-sort)
+- [ ] Simplify nested ternary in api/embeddings/debug/route.ts:83 (embedding_length)
+
+**CONSOLE.LOG IN PRODUCTION** - Debug statements left in code
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Pattern: console.log statements that should be proper logging          │
+│  Found in: 10 occurrences across 4 files                                │
+│  Impact: Exposes internal data, clutters production logs                │
+│  Fix: Replace with proper logging service or remove                     │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [x] Remove console.log from api/cron/abandoned-carts/route.ts:209
+- [ ] Replace console.log with proper logging in api/email-forward/route.ts (3 instances)
+- [ ] Replace console.log with proper logging in api/stripe/webhook/route.ts (6 instances)
+
+**POOR NAMING** - Single-letter and ambiguous variable names
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Pattern: Variables with unclear names                                  │
+│  Found in: 2 files                                                      │
+│  Impact: Code is harder to understand and maintain                      │
+│  Fix: Use descriptive variable names                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Rename single-letter variable 'a' to 'anchorElement' in admin/shop/page.tsx:105
+- [ ] Rename single-letter variable 'p' to 'productRecord' in api/admin/products/import/route.ts:34
+
+**MISSING TESTS** - Components without test coverage
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Pattern: Components without corresponding test files                    │
+│  Found in: 40+ component files                                          │
+│  Impact: No automated verification of component behavior                │
+│  Fix: Add unit tests or integration tests for critical components      │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Add tests for LessonPlayer.tsx component
+- [ ] Add tests for InlineEditor components (Editable, EditableWrapper, etc.)
+- [ ] Add tests for PageWizard related components
+- [ ] Add tests for form field components (PhoneField, CreditCardFields)
+- [ ] Add tests for navigation components (AdminNavigation)
+
+**TIGHT COUPLING** - Deep import chains and cross-dependencies
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  Pattern: Deep relative imports indicating poor module boundaries       │
+│  Found in: 1 file                                                       │
+│  Impact: Changes in directory structure break imports                   │
+│  Fix: Use absolute imports or reorganize module structure               │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+- [ ] Replace deep relative import in changelog/technical/page.tsx:7 with absolute import
+
 **LARGE FILES** - Components over 500 lines need refactoring
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
