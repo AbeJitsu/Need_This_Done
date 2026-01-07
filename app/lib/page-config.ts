@@ -380,12 +380,6 @@ export interface BlogPageContent {
   categoryFilterLabel: string;
 }
 
-// --- Changelog Page ---
-export interface ChangelogPageContent {
-  header: PageHeader;
-  emptyState: { emoji: string; title: string; description: string };
-}
-
 // --- Guide Page ---
 export type GuideGroup = 'getting-started' | 'account' | 'explore' | 'admin' | 'support';
 export interface GuideSection {
@@ -489,7 +483,6 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
     legalLinks: [
       { href: '/privacy', label: 'Privacy' },
       { href: '/terms', label: 'Terms' },
-      { href: '/changelog', label: 'Changelog' },
     ],
   },
 };
@@ -1023,17 +1016,6 @@ export const PAGE_CONFIGS = {
     } as BlogPageContent,
   },
 
-  changelog: {
-    route: '/changelog',
-    slug: 'changelog',
-    displayName: 'Changelog',
-    contentType: 'changelog_page',
-    defaults: {
-      header: { title: 'Changelog', description: 'See what we\'ve been working on. New features, improvements, and fixes.' },
-      emptyState: { emoji: '🚀', title: 'No Updates Yet', description: 'Check back soon for updates on new features and improvements.' },
-    } as ChangelogPageContent,
-  },
-
   guide: {
     route: '/guide',
     slug: 'guide',
@@ -1047,7 +1029,7 @@ export const PAGE_CONFIGS = {
         { title: 'Start a Project', icon: '🚀', group: 'getting-started', content: 'Already have a quote? Here\'s how to get started:\n\n1. Go to the Get Started page\n2. Enter your quote reference number from our email\n3. Review the project scope and pricing\n4. Complete payment to authorize the project\n5. We\'ll be in touch within 24 hours to kick things off' },
         { title: 'Create Your Account', icon: '👤', group: 'account', content: 'An account gives you access to your dashboard and order history:\n\n• Sign in with Google for one-click access\n• Or create an account with email and password\n• Your account links all your orders and consultations\n• Access your dashboard anytime to check status and history' },
         { title: 'Your Dashboard', icon: '📊', group: 'account', content: 'Once logged in, your dashboard is your home base:\n\n• View all your orders and their current status\n• Track consultation bookings and upcoming appointments\n• Access order details and receipts\n• Update your account settings and preferences' },
-        { title: 'Explore Our Content', icon: '📚', group: 'explore', content: 'Stay informed with our regularly updated content:\n\n• Blog: Tips, insights, and industry updates\n• Changelog: Latest platform features and improvements\n• How It Works: Step-by-step breakdown of our process\n• FAQ: Quick answers to common questions' },
+        { title: 'Explore Our Content', icon: '📚', group: 'explore', content: 'Stay informed with our regularly updated content:\n\n• Blog: Tips, insights, and industry updates\n• How It Works: Step-by-step breakdown of our process\n• FAQ: Quick answers to common questions' },
         { title: 'Dark Mode', icon: '🌙', group: 'explore', content: 'Prefer a darker interface? We\'ve got you covered:\n\n• Click the sun/moon icon in the header to toggle dark mode\n• Your preference is saved automatically\n• All pages are optimized for both light and dark viewing\n• Designed to meet accessibility standards (WCAG AA)' },
         { title: 'Visual Editor (Admin)', icon: '✏️', group: 'admin', content: 'Admins can edit page content directly in the browser:\n\n**Click to Edit**\n• Click any text on a page to edit it inline\n• A formatting toolbar appears with bold, italic, links, and more\n• Changes save automatically when you click away\n\n**Sections & Cards**\n• Hover over sections to see blue outlines\n• Click a section to open the sidebar editor\n• Edit titles, descriptions, and settings in one place\n\n**Drag to Reorder**\n• Grab the drag handle (⋮⋮) on any section\n• Drag up or down to reorder page sections\n• Drop to save the new order instantly\n\n**Tips**\n• Press ESC to cancel without saving\n• Use the sidebar for complex edits\n• All changes are live immediately' },
         { title: 'Get in Touch', icon: '💬', group: 'support', content: 'Have questions or need help? We\'re here:\n\n• Visit our Contact page to send us a message\n• Email us directly at hello@needthisdone.com\n• Check our FAQ for immediate answers\n• Book a consultation if you need dedicated time with an expert' },
@@ -1132,7 +1114,6 @@ export type PageContent =
   | ContactPageContent
   | GetStartedPageContent
   | BlogPageContent
-  | ChangelogPageContent
   | GuidePageContent
   | PrivacyPageContent
   | TermsPageContent

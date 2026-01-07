@@ -987,7 +987,7 @@ export const statusBadgeColors = {
 };
 
 // ============================================================================
-// Category Badge Colors - For changelog and content categorization
+// Category Badge Colors - For content categorization
 // ============================================================================
 // Consistent styling for category badges across pages
 // Category badges: -600 text in light mode for WCAG AA minimum

@@ -38,7 +38,6 @@ export type {
   GetStartedPath,
   GetStartedPageContent,
   BlogPageContent,
-  ChangelogPageContent,
   GuideGroup,
   GuideSection,
   GuidePageContent,

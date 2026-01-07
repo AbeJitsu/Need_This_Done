@@ -21,7 +21,6 @@ export const defaultHomeContent = PAGE_CONFIGS.home.defaults;
 export const defaultContactContent = PAGE_CONFIGS.contact.defaults;
 export const defaultGetStartedContent = PAGE_CONFIGS['get-started'].defaults;
 export const defaultBlogContent = PAGE_CONFIGS.blog.defaults;
-export const defaultChangelogContent = PAGE_CONFIGS.changelog.defaults;
 export const defaultGuideContent = PAGE_CONFIGS.guide.defaults;
 export const defaultPrivacyContent = PAGE_CONFIGS.privacy.defaults;
 export const defaultTermsContent = PAGE_CONFIGS.terms.defaults;
