@@ -10,7 +10,7 @@ import { sendWelcomeEmail } from '@/lib/email-service';
 const SignupSchema = z.object({
   email: z.string().min(1, 'Email is required').refine(isValidEmail, 'Invalid email format'),
   password: z.string().min(1, 'Password is required').refine(isValidPassword, `Password must be at least ${PASSWORD_REQUIREMENTS.MIN_LENGTH} characters`),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export const dynamic = 'force-dynamic';
