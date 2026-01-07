@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useCallback, useEffect, ReactNode 
 import { usePathname } from 'next/navigation';
 import { getPageSlugFromPath } from '@/lib/editable-routes';
 import { getDefaultContent } from '@/lib/default-page-content';
+import { DEFAULT_LAYOUT_CONTENT } from '@/lib/page-config';
 import { getNestedValue, setNestedValue } from '@/lib/object-utils';
 import {
   reorderArray,
@@ -253,6 +254,18 @@ interface InlineEditContextType {
   // Puck page data
   pageData: Record<string, unknown> | null;
   setPageData: (data: Record<string, unknown> | null) => void;
+
+  // ========== Layout Content (Header/Footer) ==========
+
+  // Layout content for header/footer editing
+  layoutContent: Record<string, unknown> | null;
+  setLayoutContent: (content: Record<string, unknown> | null) => void;
+
+  // Update a layout field and track the change
+  updateLayoutField: (section: 'header' | 'footer', fieldPath: string, newValue: unknown) => void;
+
+  // Get the current value of a layout field
+  getLayoutFieldValue: (section: 'header' | 'footer', fieldPath: string) => unknown;
 }
 
 // ============================================================================
@@ -282,6 +295,10 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
   // Component-based editing state (Puck - legacy)
   const [selectedComponent, setSelectedComponent] = useState<ComponentSelection | null>(null);
   const [pageData, setPageData] = useState<Record<string, unknown> | null>(null);
+
+  // Layout content state (header/footer - global)
+  const [layoutContent, setLayoutContent] = useState<Record<string, unknown> | null>(null);
+  const [layoutLoaded, setLayoutLoaded] = useState(false);
 
   // Simple inline editing state (new approach)
   const [activeEdit, setActiveEdit] = useState<ActiveEdit | null>(null);
@@ -335,6 +352,31 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [pathname, pageSlug, pageContent]);
+
+  // ============================================================================
+  // Layout Content Loading (Header/Footer - Global)
+  // ============================================================================
+  // Load layout content once on mount. This is global, not route-specific.
+  useEffect(() => {
+    if (layoutLoaded) return;
+
+    setLayoutLoaded(true);
+
+    fetch('/api/layout-content')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.content) {
+          setLayoutContent(data.content);
+        } else {
+          // Use default content as fallback
+          setLayoutContent(DEFAULT_LAYOUT_CONTENT as unknown as Record<string, unknown>);
+        }
+      })
+      .catch(() => {
+        // On error, use default content
+        setLayoutContent(DEFAULT_LAYOUT_CONTENT as unknown as Record<string, unknown>);
+      });
+  }, [layoutLoaded]);
 
   const setEditMode = useCallback((enabled: boolean) => {
     setIsEditMode(enabled);
@@ -452,6 +494,46 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     return getNestedValue(pageContent, fullPath);
   }, [pageContent]);
 
+  // ============================================================================
+  // Layout Content Functions (Header/Footer)
+  // ============================================================================
+
+  // Update a layout field (header or footer)
+  const updateLayoutField = useCallback((
+    section: 'header' | 'footer',
+    fieldPath: string,
+    newValue: unknown
+  ) => {
+    if (!layoutContent) return;
+
+    const fullPath = `${section}.${fieldPath}`;
+    const oldValue = getNestedValue(layoutContent, fullPath);
+
+    // Add to pending changes (tracked as _layout section)
+    addPendingChange({
+      sectionKey: '_layout',
+      fieldPath: fullPath,
+      oldValue,
+      newValue,
+    });
+
+    // Update layout content
+    setLayoutContent(prev => {
+      if (!prev) return prev;
+      return setNestedValue(prev, fullPath, newValue);
+    });
+  }, [layoutContent, addPendingChange]);
+
+  // Get a layout field value
+  const getLayoutFieldValue = useCallback((
+    section: 'header' | 'footer',
+    fieldPath: string
+  ): unknown => {
+    if (!layoutContent) return undefined;
+    const fullPath = `${section}.${fieldPath}`;
+    return getNestedValue(layoutContent, fullPath);
+  }, [layoutContent]);
+
   // Reorder sections (for drag-and-drop)
   const reorderSections = useCallback((oldIndex: number, newIndex: number) => {
     setSectionOrder(prev => reorderArray(prev, oldIndex, newIndex));
@@ -528,8 +610,21 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     hrefFieldPath?: string;
     originalHref?: string;
   }) => {
-    // Get current content from the element or from page content
-    const currentValue = getFieldValue(params.sectionKey, params.fieldPath);
+    // Check if this is a layout field
+    const isLayoutField = params.sectionKey === '_layout';
+
+    // Get current content from the appropriate source
+    let currentValue: unknown;
+    if (isLayoutField) {
+      // Layout fields: fieldPath is like "header.brand"
+      const parts = params.fieldPath.split('.');
+      const layoutSection = parts[0] as 'header' | 'footer';
+      const layoutFieldPath = parts.slice(1).join('.');
+      currentValue = getLayoutFieldValue(layoutSection, layoutFieldPath);
+    } else {
+      currentValue = getFieldValue(params.sectionKey, params.fieldPath);
+    }
+
     const originalContent = typeof currentValue === 'string' ? currentValue : params.element.innerHTML;
 
     setActiveEdit({
@@ -544,23 +639,41 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
 
     // Close sidebar when editing inline
     setIsSidebarOpen(false);
-  }, [getFieldValue]);
+  }, [getFieldValue, getLayoutFieldValue]);
 
   const saveEdit = useCallback((newContent: string, newHref?: string) => {
     if (!activeEdit) return;
 
+    // Check if this is a layout field (header/footer)
+    const isLayoutField = activeEdit.sectionKey === '_layout';
+
     // Only update if content changed
     if (newContent !== activeEdit.originalContent) {
-      updateField(activeEdit.sectionKey, activeEdit.fieldPath, newContent);
+      if (isLayoutField) {
+        // Layout fields: "_layout" section with fieldPath like "header.brand"
+        const parts = activeEdit.fieldPath.split('.');
+        const layoutSection = parts[0] as 'header' | 'footer';
+        const layoutFieldPath = parts.slice(1).join('.');
+        updateLayoutField(layoutSection, layoutFieldPath, newContent);
+      } else {
+        updateField(activeEdit.sectionKey, activeEdit.fieldPath, newContent);
+      }
     }
 
     // Also update href if provided and changed
     if (newHref !== undefined && activeEdit.hrefFieldPath && newHref !== activeEdit.originalHref) {
-      updateField(activeEdit.sectionKey, activeEdit.hrefFieldPath, newHref);
+      if (isLayoutField) {
+        const parts = activeEdit.hrefFieldPath.split('.');
+        const layoutSection = parts[0] as 'header' | 'footer';
+        const layoutFieldPath = parts.slice(1).join('.');
+        updateLayoutField(layoutSection, layoutFieldPath, newHref);
+      } else {
+        updateField(activeEdit.sectionKey, activeEdit.hrefFieldPath, newHref);
+      }
     }
 
     setActiveEdit(null);
-  }, [activeEdit, updateField]);
+  }, [activeEdit, updateField, updateLayoutField]);
 
   const cancelEdit = useCallback(() => {
     setActiveEdit(null);
@@ -680,6 +793,11 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     selectComponent,
     pageData,
     setPageData,
+    // Layout content (header/footer)
+    layoutContent,
+    setLayoutContent,
+    updateLayoutField,
+    getLayoutFieldValue,
   };
 
   // Wrap children with DndContext only when edit mode is active

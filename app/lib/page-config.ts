@@ -435,6 +435,65 @@ export interface LoginPageContent {
   };
 }
 
+// --- Layout Content (Header/Footer - Global) ---
+export interface NavLink {
+  href: string;
+  label: string;
+}
+
+export interface FooterLink {
+  href: string;
+  label: string;
+}
+
+export interface LayoutContent {
+  header: {
+    brand: string;
+    navLinks: NavLink[];
+    ctaButton: { text: string; href: string };
+    signInText: string;
+  };
+  footer: {
+    brand: string;
+    tagline: string;
+    links: FooterLink[];
+    legalLinks: Array<{ href: string; label: string }>;
+  };
+}
+
+/** Default layout content for header/footer */
+export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
+  header: {
+    brand: 'Need This Done',
+    navLinks: [
+      { href: '/services', label: 'Services' },
+      { href: '/shop', label: 'Shop' },
+      { href: '/blog', label: 'Blog' },
+      { href: '/guide', label: 'Guide' },
+      { href: '/pricing', label: 'Pricing' },
+    ],
+    ctaButton: { text: 'Get a Quote', href: '/contact' },
+    signInText: 'Sign in',
+  },
+  footer: {
+    brand: 'Need This Done',
+    tagline: 'Real people helping busy professionals get things done.',
+    links: [
+      { href: '/about', label: 'About' },
+      { href: '/how-it-works', label: 'How It Works' },
+      { href: '/contact', label: 'Contact' },
+      { href: '/pricing', label: 'Pricing' },
+      { href: '/faq', label: 'FAQ' },
+      { href: '/get-started', label: 'Get Started' },
+    ],
+    legalLinks: [
+      { href: '/privacy', label: 'Privacy' },
+      { href: '/terms', label: 'Terms' },
+      { href: '/changelog', label: 'Changelog' },
+    ],
+  },
+};
+
 // ============================================================================
 // Page Configuration Type
 // ============================================================================
