@@ -1,17 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { siteConfig } from '@/config/site.config';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import { formInputColors, headingColors, footerColors, dividerColors, linkHoverColors } from '@/lib/colors';
+import { DEFAULT_LAYOUT_CONTENT, type LayoutContent, type FooterLink } from '@/lib/page-config';
 import { OPEN_CHATBOT_EVENT } from './chatbot/ChatbotWidget';
+import { Editable } from '@/components/InlineEditor';
 
 // ============================================================================
 // Footer Component - Compact Site-wide Footer
 // ============================================================================
 // Single-row layout with all links inline for minimal vertical footprint.
 // Contains brand, navigation links, chat trigger, and copyright.
+// In edit mode, brand, tagline, and link labels can be edited inline.
 
-const footerLinks = [
+// Fallback footer links (used if layout content not loaded)
+const defaultFooterLinks: FooterLink[] = [
   { href: '/about', label: 'About' },
   { href: '/how-it-works', label: 'How It Works' },
   { href: '/contact', label: 'Contact' },
@@ -22,6 +26,12 @@ const footerLinks = [
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { layoutContent } = useInlineEdit();
+
+  // Get footer content from layoutContent or use defaults
+  const footerContent = (layoutContent as LayoutContent | null)?.footer || DEFAULT_LAYOUT_CONTENT.footer;
+  const footerLinks = footerContent.links || defaultFooterLinks;
+  const legalLinks = footerContent.legalLinks || DEFAULT_LAYOUT_CONTENT.footer.legalLinks;
 
   const openChatbot = () => {
     window.dispatchEvent(new CustomEvent(OPEN_CHATBOT_EVENT));
@@ -32,24 +42,28 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-5">
         {/* Main row: Brand + Links */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          {/* Brand */}
+          {/* Brand - Editable */}
           <Link
             href="/"
             className={`font-semibold ${headingColors.primary} ${linkHoverColors.blue} transition-colors`}
             style={{ fontFamily: 'var(--font-poppins)' }}
           >
-            {siteConfig.project.name}
+            <Editable path="_layout.footer.brand">
+              <span>{footerContent.brand}</span>
+            </Editable>
           </Link>
 
           {/* Navigation links - inline with dot separators */}
           <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-x-1 gap-y-1">
-            {footerLinks.map((link) => (
+            {footerLinks.map((link, index) => (
               <span key={link.href} className="flex items-center">
                 <Link
                   href={link.href}
                   className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}
                 >
-                  {link.label}
+                  <Editable path={`_layout.footer.links.${index}.label`}>
+                    <span>{link.label}</span>
+                  </Editable>
                 </Link>
                 <span className={`mx-2 text-sm ${formInputColors.helper}`}>·</span>
               </span>
@@ -81,13 +95,23 @@ export default function Footer() {
 
         {/* Bottom row: Tagline + Legal + Copyright */}
         <div className={`mt-3 pt-3 border-t ${dividerColors.border} flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-sm ${formInputColors.helper}`}>
-          <p>Real people helping busy professionals get things done.</p>
+          {/* Tagline - Editable */}
+          <Editable path="_layout.footer.tagline">
+            <p>{footerContent.tagline}</p>
+          </Editable>
+
+          {/* Legal links - Editable labels */}
           <p className="flex items-center gap-2">
-            <Link href="/privacy" className={`${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}>Privacy</Link>
-            <span>·</span>
-            <Link href="/terms" className={`${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}>Terms</Link>
-            <span>·</span>
-            <Link href="/changelog" className={`${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}>Changelog</Link>
+            {legalLinks.map((link, index) => (
+              <span key={link.href} className="flex items-center gap-2">
+                <Link href={link.href} className={`${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}>
+                  <Editable path={`_layout.footer.legalLinks.${index}.label`}>
+                    <span>{link.label}</span>
+                  </Editable>
+                </Link>
+                {index < legalLinks.length - 1 && <span>·</span>}
+              </span>
+            ))}
             <span>·</span>
             <span>&copy; {currentYear}</span>
           </p>

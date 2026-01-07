@@ -5,10 +5,13 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
+import { useInlineEdit } from '@/context/InlineEditContext';
 import { signOut } from '@/lib/auth';
 import { navigationColors, accentColors, accentBorderWidth, accentFontWeight, getBadgeColor, cardBgColors, cardBorderColors } from '@/lib/colors';
+import { DEFAULT_LAYOUT_CONTENT, type LayoutContent, type NavLink } from '@/lib/page-config';
 // import DarkModeToggle from './DarkModeToggle'; // Temporarily disabled
 import { CloseIcon } from '@/components/ui/icons';
+import { Editable } from '@/components/InlineEditor';
 
 // ============================================================================
 // Navigation Component - Persistent Site Navigation
@@ -17,9 +20,10 @@ import { CloseIcon } from '@/components/ui/icons';
 // Uses Next.js Link for fast client-side navigation.
 // Active link is highlighted based on current URL.
 // Shows login link or user dropdown based on auth state.
+// In edit mode, brand, nav links, and CTA can be edited inline.
 
-// Main navigation links (action-oriented only - informational pages moved to footer)
-const navigationLinks = [
+// Fallback navigation links (used if layout content not loaded)
+const defaultNavLinks: NavLink[] = [
   { href: '/services', label: 'Services' },
   { href: '/shop', label: 'Shop' },
   { href: '/blog', label: 'Blog' },
@@ -32,9 +36,14 @@ export default function Navigation() {
   const router = useRouter();
   const { user, isAuthenticated, isAdmin, isLoading } = useAuth();
   const { itemCount } = useCart();
+  const { layoutContent } = useInlineEdit();
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Get header content from layoutContent or use defaults
+  const headerContent = (layoutContent as LayoutContent | null)?.header || DEFAULT_LAYOUT_CONTENT.header;
+  const navigationLinks = headerContent.navLinks || defaultNavLinks;
 
   // ============================================================================
   // Close Dropdown When Clicking Outside
@@ -70,20 +79,22 @@ export default function Navigation() {
     <nav aria-label="Main navigation" className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo / Home Link */}
+          {/* Logo / Home Link - Editable in edit mode */}
           <Link
             href="/"
             className="flex-shrink-0 font-semibold text-xl text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mr-6"
             style={{ fontFamily: 'var(--font-poppins)' }}
           >
-            Need This Done
+            <Editable path="_layout.header.brand">
+              <span>{headerContent.brand}</span>
+            </Editable>
           </Link>
 
           {/* Navigation Links + Auth */}
           <div className="flex items-center gap-2 sm:gap-4 overflow-x-hidden">
             {/* Desktop Page Links - hidden on mobile/tablet */}
             <div className="hidden lg:flex gap-1">
-              {navigationLinks.map((link) => {
+              {navigationLinks.map((link, index) => {
                 const isActive =
                   pathname === link.href ||
                   (link.href !== '/' && pathname.startsWith(link.href));
@@ -102,7 +113,9 @@ export default function Navigation() {
                       }
                     `}
                   >
-                    {link.label}
+                    <Editable path={`_layout.header.navLinks.${index}.label`}>
+                      <span>{link.label}</span>
+                    </Editable>
                   </Link>
                 );
               })}
@@ -129,14 +142,20 @@ export default function Navigation() {
             {/* Uses accentColors.gold with inversion pattern (light bg→dark bg) */}
             {/* Same pattern as blue navigation links for consistency */}
             <Link
-              href="/contact"
+              href={headerContent.ctaButton.href}
               className={`
                 hidden sm:inline-flex items-center px-3 py-2 text-sm ${accentFontWeight} rounded-full whitespace-nowrap transition-all duration-300 hover:scale-105 active:scale-95
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                 ${accentBorderWidth} ${accentColors.gold.bg} ${accentColors.gold.text} ${accentColors.gold.border} ${accentColors.gold.hoverText} ${accentColors.gold.hoverBorder}
               `}
             >
-              Get a Quote
+              <Editable
+                path="_layout.header.ctaButton.text"
+                hrefPath="_layout.header.ctaButton.href"
+                href={headerContent.ctaButton.href}
+              >
+                <span>{headerContent.ctaButton.text}</span>
+              </Editable>
             </Link>
 
             {/* Cart Icon */}
@@ -259,7 +278,9 @@ export default function Navigation() {
                   href="/login"
                   className={`hidden sm:inline-flex text-xs ${navigationColors.signIn} ${navigationColors.signInHover} transition-colors`}
                 >
-                  Sign in
+                  <Editable path="_layout.header.signInText">
+                    <span>{headerContent.signInText}</span>
+                  </Editable>
                 </Link>
               )}
             </div>
@@ -271,7 +292,7 @@ export default function Navigation() {
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
           <div className="px-4 py-3 space-y-1">
-            {navigationLinks.map((link) => {
+            {navigationLinks.map((link, index) => {
               const isActive =
                 pathname === link.href ||
                 (link.href !== '/' && pathname.startsWith(link.href));
@@ -290,18 +311,22 @@ export default function Navigation() {
                     }
                   `}
                 >
-                  {link.label}
+                  <Editable path={`_layout.header.navLinks.${index}.label`}>
+                    <span>{link.label}</span>
+                  </Editable>
                 </Link>
               );
             })}
 
             {/* Primary CTA in mobile menu - uses accentColors.gold with inversion pattern */}
             <Link
-              href="/contact"
+              href={headerContent.ctaButton.href}
               onClick={() => setMobileMenuOpen(false)}
               className={`block px-3 py-2 text-base ${accentFontWeight} rounded-full transition-all duration-300 hover:scale-105 active:scale-95 mt-2 ${accentBorderWidth} ${accentColors.gold.bg} ${accentColors.gold.text} ${accentColors.gold.border} ${accentColors.gold.hoverText} ${accentColors.gold.hoverBorder}`}
             >
-              Get a Quote
+              <Editable path="_layout.header.ctaButton.text">
+                <span>{headerContent.ctaButton.text}</span>
+              </Editable>
             </Link>
 
             {/* Dark Mode Toggle in mobile menu */}
@@ -318,7 +343,9 @@ export default function Navigation() {
                 onClick={() => setMobileMenuOpen(false)}
                 className={`block px-3 py-2 text-sm ${navigationColors.signIn} ${navigationColors.signInHover}`}
               >
-                Sign in
+                <Editable path="_layout.header.signInText">
+                  <span>{headerContent.signInText}</span>
+                </Editable>
               </Link>
             ) : (
               <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
