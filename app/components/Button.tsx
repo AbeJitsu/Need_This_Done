@@ -53,7 +53,7 @@ export default function Button({
   const colors = accentColors[variant];
   const isDisabled = disabled || isLoading;
   // All buttons use accentColors: border + bg + text with dark mode inversion
-  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-full transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:ring-4 focus-visible:ring-blue-300 dark:focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${sizeClasses[size]} ${accentBorderWidth} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`;
+  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-full transition-all duration-300 hover:scale-105 active:scale-95 ${colors.focusVisible} ${sizeClasses[size]} ${accentBorderWidth} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`;
   const disabledClasses = isDisabled ? 'opacity-60 cursor-not-allowed hover:scale-100 active:scale-100' : '';
   const fullClasses = `${baseClasses} ${disabledClasses} ${className}`.trim();
 

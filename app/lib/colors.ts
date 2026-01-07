@@ -260,6 +260,7 @@ export const accentColors: Record<AccentVariant, {
   border: string;
   hoverText: string;
   hoverBorder: string;
+  focusVisible: string;
 }> = {
   purple: {
     bg: 'bg-purple-100 dark:bg-purple-500',
@@ -267,6 +268,7 @@ export const accentColors: Record<AccentVariant, {
     border: 'border-purple-500 dark:border-purple-100',
     hoverText: 'hover:text-purple-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-purple-600 dark:hover:border-purple-200',
+    focusVisible: 'focus-visible:ring-4 focus-visible:ring-purple-300 dark:focus-visible:ring-purple-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   },
   blue: {
     bg: 'bg-blue-100 dark:bg-blue-500',
@@ -274,6 +276,7 @@ export const accentColors: Record<AccentVariant, {
     border: 'border-blue-500 dark:border-blue-100',
     hoverText: 'hover:text-blue-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-blue-600 dark:hover:border-blue-200',
+    focusVisible: 'focus-visible:ring-4 focus-visible:ring-blue-300 dark:focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   },
   green: {
     bg: 'bg-green-100 dark:bg-green-500',
@@ -281,6 +284,7 @@ export const accentColors: Record<AccentVariant, {
     border: 'border-green-500 dark:border-green-100',
     hoverText: 'hover:text-green-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-green-600 dark:hover:border-green-200',
+    focusVisible: 'focus-visible:ring-4 focus-visible:ring-green-300 dark:focus-visible:ring-green-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   },
   gold: {
     // Dark mode uses gold-500 (#a36b00) - 4.51:1 contrast with white (WCAG AA)
@@ -289,6 +293,7 @@ export const accentColors: Record<AccentVariant, {
     border: 'border-gold-500 dark:border-gold-100',
     hoverText: 'hover:text-gold-700 dark:hover:text-gold-100',
     hoverBorder: 'hover:border-gold-600 dark:hover:border-gold-200',
+    focusVisible: 'focus-visible:ring-4 focus-visible:ring-gold-300 dark:focus-visible:ring-gold-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   },
   teal: {
     bg: 'bg-teal-100 dark:bg-teal-500',
@@ -296,6 +301,7 @@ export const accentColors: Record<AccentVariant, {
     border: 'border-teal-500 dark:border-teal-100',
     hoverText: 'hover:text-teal-700 dark:hover:text-teal-100',
     hoverBorder: 'hover:border-teal-600 dark:hover:border-teal-200',
+    focusVisible: 'focus-visible:ring-4 focus-visible:ring-teal-300 dark:focus-visible:ring-teal-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   },
   gray: {
     bg: 'bg-gray-100 dark:bg-gray-500',
@@ -303,6 +309,7 @@ export const accentColors: Record<AccentVariant, {
     border: 'border-gray-500 dark:border-gray-100',
     hoverText: 'hover:text-gray-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-gray-600 dark:hover:border-gray-200',
+    focusVisible: 'focus-visible:ring-4 focus-visible:ring-gray-300 dark:focus-visible:ring-gray-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   },
   red: {
     bg: 'bg-red-100 dark:bg-red-500',
@@ -310,6 +317,7 @@ export const accentColors: Record<AccentVariant, {
     border: 'border-red-500 dark:border-red-100',
     hoverText: 'hover:text-red-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-red-600 dark:hover:border-red-200',
+    focusVisible: 'focus-visible:ring-4 focus-visible:ring-red-300 dark:focus-visible:ring-red-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   },
 };
 
