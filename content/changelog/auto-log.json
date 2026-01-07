@@ -1,5 +1,14 @@
 [
   {
+    "hash": "c9ba247",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "c9ba2472d8dc33a149632a16c5bce7a3e0ead951:%M",
+    "author": "Abe Reyes",
+    "message": "Refine resume to highlight 25+ years tech experience",
+    "category": "Other",
+    "filesChanged": 3
+  },
+  {
     "hash": "693fb43",
     "date": "%Y->- (HEAD -> main)",
     "time": "693fb434f00adfa777de14042936fbc6f4441372:%M",
@@ -889,14 +898,5 @@
     "message": "Test: Use page discovery for drag-drop tests (ETC)",
     "category": "Testing",
     "filesChanged": 38
-  },
-  {
-    "hash": "2b2bec4",
-    "date": "2025-12-31",
-    "time": "09:49",
-    "author": "Abe Reyes",
-    "message": "Docs: Mark Building Blocks drag-and-drop tasks complete",
-    "category": "Documentation",
-    "filesChanged": 2
   }
 ]
