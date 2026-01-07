@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { createPaymentIntent } from '@/lib/stripe';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { badRequest, notFound, handleApiError } from '@/lib/api-errors';
+
+// Schema validates and transforms input in one step
+const AuthorizeSchema = z.object({
+  quoteRef: z.string().min(1, 'Quote reference is required').transform((s: string) => s.trim().toUpperCase()),
+  email: z.string().email('Valid email is required').transform((s: string) => s.trim().toLowerCase()),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -15,11 +22,6 @@ export const dynamic = 'force-dynamic';
 // POST /api/quotes/authorize
 // Body: { quoteRef: string, email: string }
 // Returns: { clientSecret: string, paymentIntentId: string, quote: {...} }
-
-interface AuthorizeRequest {
-  quoteRef: string;
-  email: string;
-}
 
 interface QuoteRecord {
   id: string;
@@ -37,28 +39,19 @@ interface QuoteRecord {
 
 export async function POST(request: NextRequest) {
   try {
-    const body: AuthorizeRequest = await request.json();
-    const { quoteRef, email } = body;
-
-    // Validate required fields
-    if (!quoteRef || typeof quoteRef !== 'string') {
-      return badRequest('Quote reference is required');
+    // Validate and transform input with Zod
+    const parsed = AuthorizeSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return badRequest(parsed.error.issues[0].message);
     }
-
-    if (!email || typeof email !== 'string') {
-      return badRequest('Email is required');
-    }
-
-    // Normalize inputs
-    const normalizedRef = quoteRef.trim().toUpperCase();
-    const normalizedEmail = email.trim().toLowerCase();
+    const { quoteRef, email } = parsed.data; // Already normalized by schema transforms
 
     // Look up the quote
     const supabase = getSupabaseAdmin();
     const { data: quote, error: fetchError } = await supabase
       .from('quotes')
       .select('*')
-      .eq('reference_number', normalizedRef)
+      .eq('reference_number', quoteRef)
       .single<QuoteRecord>();
 
     if (fetchError || !quote) {
@@ -66,7 +59,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate email matches
-    if (quote.customer_email.toLowerCase() !== normalizedEmail) {
+    if (quote.customer_email.toLowerCase() !== email) {
       return badRequest('Email does not match the quote. Please use the email the quote was sent to.');
     }
 
