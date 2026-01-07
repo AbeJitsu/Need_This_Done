@@ -1,5 +1,14 @@
 [
   {
+    "hash": "693fb43",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "693fb434f00adfa777de14042936fbc6f4441372:%M",
+    "author": "Abe Reyes",
+    "message": "Tailor resume for AI Workflow Specialist role",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
     "hash": "efbb362",
     "date": "%Y->- (HEAD -> main)",
     "time": "efbb362864e2a17c416d217ad412652f90bf2701:%M",
@@ -889,14 +898,5 @@
     "message": "Docs: Mark Building Blocks drag-and-drop tasks complete",
     "category": "Documentation",
     "filesChanged": 2
-  },
-  {
-    "hash": "784df6f",
-    "date": "2025-12-31",
-    "time": "09:47",
-    "author": "Abe Reyes",
-    "message": "Add drag-and-drop for section reordering in edit mode",
-    "category": "Other",
-    "filesChanged": 13
   }
 ]
