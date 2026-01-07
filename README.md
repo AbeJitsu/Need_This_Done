@@ -624,7 +624,6 @@ supabase db reset
 
 /home/user/Need_This_Done/
 ├── README.md              ← You are here (single source of truth)
-├── TODO.md                ← Task tracker (In Progress / Done)
 ├── CLAUDE.md              ← AI assistant instructions
 │
 ├── app/                   ← NEXT.JS APPLICATION
@@ -1751,36 +1750,9 @@ Custom skills in `.claude/skills/` provide specialized agent capabilities:
 
 | Skill | Purpose | Trigger |
 |-------|---------|---------|
-| `auto-loop` | Hours of autonomous work through TODO.md tasks | "/auto-loop" or "keep going" |
 | `launch-a-swarm` | Spawn 5 parallel agents for comprehensive code review | "launch a swarm" |
 | `frontend-design` | Generate distinctive, production-grade UI | Building web interfaces |
 | `worktree-swarm` | Orchestrate parallel development with git worktrees | "parallelize", "spawn worktrees" |
-
-#### Auto-Loop Skill (Autonomous Work Mode)
-
-Enables Claude to work autonomously for hours without intervention. Based on the [Ralph Wiggum technique](https://awesomeclaude.ai/ralph-wiggum) - when Claude tries to exit, the stop hook blocks with exit code 2 and feeds the next task back as a prompt.
-
-**How it works:**
-```
-1. /auto-loop or "work through TODO.md"
-2. Claude works on first [ ] task in TODO.md
-3. When done, marks [x] and commits with /dac
-4. Stop hook blocks exit, shows next task
-5. Claude continues automatically
-6. Ends when: all done, 5h limit, or /cancel-loop
-```
-
-**Task markers in TODO.md:**
-- `[ ]` = ready to work
-- `[→]` = in progress (only 1 at a time)
-- `[x]` = completed
-- `[!]` = blocked (needs human)
-
-**Files:**
-- `.claude/hooks/stop-check.sh` - blocks exit, shows next task
-- `.claude/hooks/lib/loop-helper.sh` - task parsing utilities
-- `.claude/loop-state.json` - tracks iterations, time, progress
-- `app/lib/loop-state.ts` - TypeScript API for loop state
 
 #### Launch-a-Swarm Skill
 
@@ -2376,8 +2348,6 @@ Plus supporting utilities: MediaPickerField, shared puck-utils.ts
 ---
 
 ## Contributing
-
-See [TODO.md](TODO.md) for the current task tracker with prioritized work items.
 
 **Adding new features?** Follow the patterns in existing code:
 - **Hooks**: See `app/hooks/` for examples (`useEditableContent`, `useBackdropClose`)

@@ -32,40 +32,15 @@ Speak like a friend over coffee. Easy to understand.
 | Run all tests | `cd app && npm run test:e2e` |
 | Run accessibility tests | `cd app && npm run test:a11y` |
 | Start Storybook | `cd app && npm run storybook` |
-| Check priorities | Read `TODO.md` |
 | Understand codebase | Read `README.md` |
 | Draft a commit | Run `/dac` |
-| Document changes | Run `/document` |
 | Check work status | Run `/check-work` |
 
 ## How to Work
 
-1. Check **TODO.md** for priorities
-2. Check **README.md** for how things work
-3. Run `cd app && npm run dev` to start
-4. Run `/dac` to draft commits (never commit directly)
-
-## Autonomous Mode
-
-Claude works through TODO.md tasks until complete. The stop hook blocks until all tasks are done.
-
-**Task markers in TODO.md:**
-- `[→]` = in progress (only 1 at a time)
-- `[ ]` = ready to work
-- `[x]` = completed
-- `[!]` = blocked (skipped)
-
-**Workflow:**
-1. Mark a task `[→]` to start working
-2. Complete the task
-3. Mark it `[x]` and run `/dac`
-4. Stop hook shows next task
-5. Repeat until all done
-
-**Override commands:**
-- "stop for now" - Pause autonomous work
-- "skip this task" - Mark current as `[!]` blocked
-- "take a break" - Clean stop regardless of tasks
+1. Check **README.md** for how things work
+2. Run `cd app && npm run dev` to start
+3. Run `/dac` to draft commits (never commit directly)
 
 ## Rules (Auto-Loaded)
 
@@ -88,10 +63,7 @@ All rules in `.claude/rules/` are enforced automatically:
 | Command | What It Does |
 |---------|--------------|
 | `/dac` | Draft a commit message following project conventions |
-| `/document` | Screenshot changed pages + generate changelog entry (auto-runs on session end) |
-| `/check-work` | Show git status, diffs, and next steps |
-
-**Auto-Documentation**: Frontend changes are tracked automatically. When a session ends, the stop hook runs `npm run screenshot:affected` to capture screenshots and create changelog templates. No manual `/document` needed.
+| `/check-work` | Show git status and recent commits |
 
 ## Skills
 
@@ -103,6 +75,7 @@ Specialized agents available via `.claude/skills/`:
 | **frontend-design** | Building distinctive UI with high design quality |
 | **worktree-swarm** | Parallelizing work across git worktrees |
 | **screenshot-workflow** | Capturing baseline screenshots for visual regression |
+| **pragmatic-audit** | Scan codebase for code quality issues |
 
 ## Git Safety
 

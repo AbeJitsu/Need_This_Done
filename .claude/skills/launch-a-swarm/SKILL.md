@@ -90,31 +90,6 @@ Checks:
 - Is it simple or over-engineered?
 - Can we deliver when users need it?
 
-## Documentation Workflow
-
-The swarm integrates with the project's documentation flow:
-
-```
-TODO.md (incomplete) → test & verify → README.md (production-ready)
-```
-
-**TODO.md** - Track incomplete, in-progress work:
-- Current priorities and blockers
-- In Progress items
-- Recently Completed (before battle-testing)
-- Known Issues
-
-**README.md** - Document production-ready features:
-- Only features that are complete AND tested
-- Battle-tested, working functionality
-- Never include failing tests or incomplete work
-
-**Swarm uses this workflow:**
-1. **Before review**: Read TODO.md to understand current priorities
-2. **During review**: Check if work matches TODO.md items
-3. **After validation**: Recommend moving completed items to README.md
-4. **If issues found**: Recommend adding to TODO.md Known Issues
-
 ## How It Works
 
 ### Step 1: Understand Context
@@ -123,7 +98,6 @@ Before spawning agents, determine:
 - What the user is working on
 - The phase (planning, building, or validating)
 - What files/areas are relevant
-- **Read TODO.md** to understand current priorities and blockers
 
 **Phase Detection & Focus:**
 
@@ -184,8 +158,6 @@ Report findings as:
 **Evolution Agent** - copy checks from "4. EVOLUTION" section above
 
 **Value Agent** - copy checks from "5. VALUE" section above, plus:
-- Check TODO.md for current priorities and tracked work
-- Recommend items to move from TODO.md → README.md when battle-tested
 - Flag outdated documentation in README.md
 
 **Important:** The orchestrator must embed the full checks in each prompt. Agents cannot access this skill file—they only receive their prompt text.
@@ -217,16 +189,6 @@ Overall: [1-sentence assessment]
 
 ## Positive Patterns
 - [what's working well] - [domain]
-
-## Documentation Updates
-**Add to TODO.md:**
-- [ ] [new issue or blocker found during review]
-
-**Move to README.md (battle-tested):**
-- [ ] [feature that passed validation, ready for production docs]
-
-**Update in README.md:**
-- [ ] [outdated documentation to refresh]
 
 ## Next Steps
 1. [prioritized action]
@@ -283,10 +245,10 @@ Result:
 - Evolution: Payment gateway is swappable (✓)
 - Value: Meets user requirements, ready after fixes
 
-Documentation Updates:
-- Add to TODO.md: "Fix hardcoded API keys in payment.ts:47" (Critical)
-- Add to TODO.md: "Add refund edge case tests"
-- After fixes: Move "Payment flow" from TODO.md → README.md
+Next Steps:
+1. Fix hardcoded API keys in payment.ts:47 (Critical)
+2. Add refund edge case tests
+3. Update README.md with payment flow docs
 ```
 
 ## Glossary

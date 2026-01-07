@@ -23,7 +23,6 @@ Get a quick overview of what's being worked on—perfect for understanding progr
    - How does this fit with recent commits?
 
 3. **Check for context clues:**
-   - Look at TODO.md to see what was planned
    - Check if tests were added alongside feature changes
    - Look at commit messages to understand the direction
 
