@@ -78,3 +78,4 @@ app/component-route-map.json
 
 app/lib/generated/content-manifest.ts
 app/lib/generated/content-manifest.ts
+content/changelog/auto-log.json

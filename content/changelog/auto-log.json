@@ -1,5 +1,23 @@
 [
   {
+    "hash": "b305279",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "b305279830c1c4a0bce8bea9f091d6a4bb4a6d82:%M",
+    "author": "Abe Reyes",
+    "message": "Add Vue.js to resume technical skills",
+    "category": "Other",
+    "filesChanged": 2
+  },
+  {
+    "hash": "41af07c",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "41af07c014b387132eb1ac83b7317acb48c3e86d:%M",
+    "author": "Abe Reyes",
+    "message": "Clean up job-search folder with single cover letter template",
+    "category": "Other",
+    "filesChanged": 10
+  },
+  {
     "hash": "c9ba247",
     "date": "%Y->- (HEAD -> main)",
     "time": "c9ba2472d8dc33a149632a16c5bce7a3e0ead951:%M",
@@ -880,23 +898,5 @@
     "message": "Test: Migrate E2E tests to use page discovery",
     "category": "Testing",
     "filesChanged": 7
-  },
-  {
-    "hash": "fc64906",
-    "date": "2025-12-31",
-    "time": "10:22",
-    "author": "Abe Reyes",
-    "message": "Test: Enable and fix drag-drop reorder verification",
-    "category": "Testing",
-    "filesChanged": 2
-  },
-  {
-    "hash": "ae6e5e9",
-    "date": "2025-12-31",
-    "time": "09:58",
-    "author": "Abe Reyes",
-    "message": "Test: Use page discovery for drag-drop tests (ETC)",
-    "category": "Testing",
-    "filesChanged": 38
   }
 ]
