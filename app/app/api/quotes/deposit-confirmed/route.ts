@@ -7,8 +7,8 @@ import { sendDepositConfirmation } from '@/lib/email-service';
 
 // Schema validates deposit confirmation payload
 const DepositConfirmedSchema = z.object({
-  quoteId: z.string().min(1, 'Quote ID is required'),
-  paymentIntentId: z.string().min(1, 'Payment Intent ID is required'),
+  quoteId: z.string().min(1, 'Quote ID is required').transform((s: string) => s.trim()),
+  paymentIntentId: z.string().min(1, 'Payment Intent ID is required').transform((s: string) => s.trim()),
 });
 
 export const dynamic = 'force-dynamic';
