@@ -1,8 +1,15 @@
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { NextRequest, NextResponse } from 'next/server';
-import { isValidEmail, isValidPassword } from '@/lib/validation';
+import { z } from 'zod';
+import { isValidEmail, isValidPassword, PASSWORD_REQUIREMENTS } from '@/lib/validation';
 import { badRequest, unauthorized, handleApiError } from '@/lib/api-errors';
 import { sendLoginNotification } from '@/lib/email-service';
+
+// Schema uses existing validation helpers for consistency with forms
+const LoginSchema = z.object({
+  email: z.string().min(1, 'Email is required').refine(isValidEmail, 'Invalid email format'),
+  password: z.string().min(1, 'Password is required').refine(isValidPassword, `Password must be at least ${PASSWORD_REQUIREMENTS.MIN_LENGTH} characters`),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -28,29 +35,15 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { email, password } = body;
+    // Validate input with Zod schema
+    const parsed = LoginSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return badRequest(parsed.error.issues[0].message);
+    }
+    const { email, password } = parsed.data;
 
     // ========================================================================
-    // Step 1: Validate Input
-    // ========================================================================
-    // Check that both email and password were provided.
-    // We do this validation SERVER-SIDE because we never trust the client.
-
-    if (!email || !password) {
-      return badRequest('Email and password are required');
-    }
-
-    if (!isValidEmail(email)) {
-      return badRequest('Invalid email format');
-    }
-
-    if (!isValidPassword(password)) {
-      return badRequest('Password must be at least 6 characters');
-    }
-
-    // ========================================================================
-    // Step 2: Authenticate with Supabase
+    // Authenticate with Supabase
     // ========================================================================
     // Uses the server client which automatically handles cookies.
     // This ensures the session is stored in cookies for subsequent requests.

@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import {
   createSubscription,
   getOrCreateStripeCustomer,
 } from '@/lib/stripe';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { badRequest, unauthorized, handleApiError } from '@/lib/api-errors';
+
+// Schema validates subscription price ID
+const SubscriptionSchema = z.object({
+  price_id: z.string().min(1, 'price_id is required'),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -37,13 +43,12 @@ export async function POST(request: NextRequest) {
       return badRequest('User email is required for subscriptions');
     }
 
-    // Parse request body
-    const body = await request.json();
-    const { price_id } = body;
-
-    if (!price_id) {
-      return badRequest('price_id is required');
+    // Validate input with Zod schema
+    const parsed = SubscriptionSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return badRequest(parsed.error.issues[0].message);
     }
+    const { price_id } = parsed.data;
 
     // Get or create Stripe customer for this user
     const customerId = await getOrCreateStripeCustomer(user.id, user.email);

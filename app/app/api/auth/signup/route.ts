@@ -1,9 +1,17 @@
 // eslint-disable-next-line no-restricted-imports -- signup creates new users, no existing session needed
 import { supabase } from '@/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
-import { isValidEmail, isValidPassword } from '@/lib/validation';
+import { z } from 'zod';
+import { isValidEmail, isValidPassword, PASSWORD_REQUIREMENTS } from '@/lib/validation';
 import { badRequest, handleApiError } from '@/lib/api-errors';
 import { sendWelcomeEmail } from '@/lib/email-service';
+
+// Schema uses existing validation helpers for consistency with forms
+const SignupSchema = z.object({
+  email: z.string().min(1, 'Email is required').refine(isValidEmail, 'Invalid email format'),
+  password: z.string().min(1, 'Password is required').refine(isValidPassword, `Password must be at least ${PASSWORD_REQUIREMENTS.MIN_LENGTH} characters`),
+  metadata: z.record(z.string(), z.unknown()).optional(),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -28,33 +36,15 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { email, password, metadata } = body;
+    // Validate input with Zod schema
+    const parsed = SignupSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return badRequest(parsed.error.issues[0].message);
+    }
+    const { email, password, metadata } = parsed.data;
 
     // ========================================================================
-    // Step 1: Validate Input
-    // ========================================================================
-    // Never trust the client. Always validate input on the server.
-    // This prevents malformed requests and protects the database.
-    // We check:
-    // - Email and password are present (not null/undefined)
-    // - Password meets minimum length requirement
-    // These checks happen BEFORE we touch the database.
-
-    if (!email || !password) {
-      return badRequest('Email and password are required');
-    }
-
-    if (!isValidEmail(email)) {
-      return badRequest('Invalid email format');
-    }
-
-    if (!isValidPassword(password)) {
-      return badRequest('Password must be at least 6 characters');
-    }
-
-    // ========================================================================
-    // Step 2: Create User Account in Supabase Auth
+    // Create User Account in Supabase Auth
     // ========================================================================
     // Supabase handles the heavy lifting:
     // - Hashes the password using bcrypt (one-way encryption)
@@ -89,7 +79,7 @@ export async function POST(request: NextRequest) {
     if (data.user?.email) {
       sendWelcomeEmail({
         email: data.user.email,
-        name: metadata?.name || metadata?.full_name,
+        name: (metadata?.name || metadata?.full_name) as string | undefined,
       }).catch((err) => {
         console.error('[Signup] Welcome email failed:', err);
       });
