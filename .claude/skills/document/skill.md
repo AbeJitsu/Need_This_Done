@@ -124,4 +124,3 @@ Location: content/changelog/[slug].json
 ## File Locations
 
 - **Entries**: `content/changelog/[slug].json`
-- **Technical log**: `content/changelog/auto-log.json`

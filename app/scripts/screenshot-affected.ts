@@ -3,7 +3,7 @@
  * Screenshot Affected Routes
  *
  * Detects which files have changed, maps them to affected routes,
- * runs Playwright to capture screenshots, and generates a changelog entry.
+ * and runs Playwright to capture screenshots.
  *
  * Usage:
  *   npm run screenshot:affected
@@ -11,7 +11,6 @@
  *
  * Output:
  *   - Screenshots in public/screenshots/<branch-name>/
- *   - Changelog template at content/changelog/<branch-name>.json
  */
 
 import * as fs from 'fs';
@@ -21,7 +20,6 @@ import { execSync } from 'child_process';
 // Configuration
 const COMPONENT_MAP_FILE = path.join(process.cwd(), 'component-route-map.json');
 const SCREENSHOTS_DIR = path.join(process.cwd(), 'public', 'screenshots');
-const CHANGELOG_DIR = path.join(process.cwd(), '..', 'content', 'changelog');
 const AFFECTED_ROUTES_FILE = path.join(process.cwd(), 'affected-routes.json');
 
 // Types
@@ -30,25 +28,6 @@ interface ComponentRouteMap {
   routes: Array<{ path: string; file: string; imports: string[] }>;
   componentToRoutes: { [key: string]: string[] };
   globalFiles: string[];
-}
-
-interface ChangelogEntry {
-  title: string;
-  slug: string;
-  date: string;
-  category: string;
-  description: string;
-  benefit: string;
-  howToUse: string[];
-  screenshots: Array<{
-    src: string;
-    alt: string;
-    caption: string;
-  }>;
-  // Internal fields for automation (not displayed on changelog page)
-  _gitContext?: string;
-  _affectedRoutes?: string[];
-  _needsCompletion?: boolean;
 }
 
 /**
@@ -95,38 +74,6 @@ function getChangedFiles(): string[] {
 }
 
 /**
- * Get git diff summary for changelog context
- * Returns a human-readable summary of what changed
- */
-function getGitDiffSummary(): string {
-  try {
-    const repoRoot = path.join(process.cwd(), '..');
-    const execOptions = { encoding: 'utf-8' as const, cwd: repoRoot, maxBuffer: 10 * 1024 * 1024 };
-
-    // Get diff stat (shows files changed with +/- lines)
-    const diffStat = execSync('git diff --stat HEAD 2>/dev/null || git diff --stat', execOptions).trim();
-
-    // Get commit messages on this branch (if not main)
-    let commitMessages = '';
-    try {
-      const branch = execSync('git branch --show-current', execOptions).trim();
-      if (branch && branch !== 'main' && branch !== 'master') {
-        const messages = execSync(`git log main..HEAD --oneline 2>/dev/null || echo ""`, execOptions).trim();
-        if (messages) {
-          commitMessages = `\nCommit messages:\n${messages}`;
-        }
-      }
-    } catch {
-      // Ignore if can't get commit messages
-    }
-
-    return diffStat + commitMessages;
-  } catch {
-    return 'Unable to get diff summary';
-  }
-}
-
-/**
  * Check if a file is a frontend file that could affect visuals
  */
 function isFrontendFile(file: string): boolean {
@@ -136,7 +83,6 @@ function isFrontendFile(file: string): boolean {
   }
 
   // Frontend patterns - match against the full path from repo root
-  // Paths look like: app/app/page.tsx, app/components/Button.tsx, etc.
   const frontendPatterns = [
     /^app\/app\/.*\.tsx$/,          // Pages (app/app/**/page.tsx)
     /^app\/components\/.*\.tsx$/,   // Components
@@ -191,67 +137,6 @@ function getAffectedRoutes(changedFiles: string[], map: ComponentRouteMap): stri
   }
 
   return [...affectedRoutes];
-}
-
-/**
- * Determine category from affected routes
- */
-function getCategory(routes: string[]): string {
-  const adminRoutes = routes.filter((r) => r.startsWith('/admin'));
-  const shopRoutes = routes.filter((r) => r.includes('shop') || r.includes('cart') || r.includes('checkout'));
-  const dashboardRoutes = routes.filter((r) => r.startsWith('/dashboard'));
-  const contentRoutes = routes.filter((r) => r.includes('blog') || r.includes('changelog'));
-  const designRoutes = routes.filter((r) => r.includes('design') || r.includes('style') || r.includes('theme'));
-
-  if (adminRoutes.length > routes.length / 2) return 'Admin';
-  if (shopRoutes.length > routes.length / 2) return 'Shop';
-  if (dashboardRoutes.length > 0) return 'Dashboard';
-  if (contentRoutes.length > routes.length / 2) return 'Content';
-  if (designRoutes.length > routes.length / 2) return 'Design';
-  return 'Public';
-}
-
-/**
- * Generate changelog entry template
- */
-function generateChangelogEntry(
-  branchName: string,
-  routes: string[],
-  _screenshotDir: string,
-  gitContext: string
-): ChangelogEntry {
-  const date = new Date().toISOString().split('T')[0];
-  const category = getCategory(routes);
-
-  // Generate screenshot entries
-  const screenshots: ChangelogEntry['screenshots'] = [];
-  for (const route of routes.slice(0, 5)) {
-    // Limit to first 5 routes
-    const routeName = route === '/' ? 'home' : route.replace(/\//g, '-').replace(/^-/, '');
-    screenshots.push({
-      src: `/screenshots/${branchName}/${routeName}-desktop-light.png`,
-      alt: `Screenshot of ${route}`,
-      caption: '', // Claude fills this in
-    });
-  }
-
-  return {
-    title: branchName
-      .replace('claude/', '')
-      .replace(/-/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase()),
-    slug: branchName.replace('claude/', ''),
-    date,
-    category,
-    description: '', // Claude fills this in
-    benefit: '', // Claude fills this in
-    howToUse: [], // Claude fills this in
-    screenshots,
-    // Internal fields for automation
-    _gitContext: gitContext,
-    _affectedRoutes: routes,
-    _needsCompletion: true,
-  };
 }
 
 /**
@@ -334,22 +219,6 @@ async function main() {
   console.log(`\n📷 Routes saved to affected-routes.json`);
   console.log(`   Screenshots will be saved to: public/screenshots/${safebranchName}/`);
 
-  // Generate changelog entry with git context
-  console.log('\n📝 Generating changelog template...');
-  const gitContext = getGitDiffSummary();
-
-  // Ensure changelog directory exists
-  if (!fs.existsSync(CHANGELOG_DIR)) {
-    fs.mkdirSync(CHANGELOG_DIR, { recursive: true });
-  }
-
-  const changelogEntry = generateChangelogEntry(safebranchName, affectedRoutes, screenshotDir, gitContext);
-  const changelogFile = path.join(CHANGELOG_DIR, `${safebranchName}.json`);
-
-  fs.writeFileSync(changelogFile, JSON.stringify(changelogEntry, null, 2));
-
-  console.log(`   Changelog template: content/changelog/${safebranchName}.json`);
-
   // Run Playwright (if spec exists and not skipped)
   if (skipPlaywright) {
     console.log('\n⏭️  Skipping Playwright (--skip-playwright flag)');
@@ -377,25 +246,6 @@ async function main() {
   console.log(`   Branch: ${branchName}`);
   console.log(`   Routes: ${affectedRoutes.length}`);
   console.log(`   Screenshots: public/screenshots/${safebranchName}/`);
-  console.log(`   Changelog: content/changelog/${safebranchName}.json`);
-
-  // Output completion marker for Claude automation
-  // This special format tells Claude to complete the changelog entry
-  console.log('\n' + '═'.repeat(60));
-  console.log('CHANGELOG_NEEDS_COMPLETION');
-  console.log('═'.repeat(60));
-  console.log(`FILE: content/changelog/${safebranchName}.json`);
-  console.log(`ROUTES: ${affectedRoutes.join(', ')}`);
-  console.log('─'.repeat(60));
-  console.log('GIT CONTEXT:');
-  console.log(gitContext);
-  console.log('═'.repeat(60));
-  console.log('\n📸 NEXT STEP: Run /document to visually review screenshots');
-  console.log('   The /document skill will:');
-  console.log('   - Look at each screenshot image');
-  console.log('   - Write accurate captions based on what is visible');
-  console.log('   - Remove invalid/stale screenshots');
-  console.log('   - Complete the changelog entry');
 }
 
 main().catch(console.error);
