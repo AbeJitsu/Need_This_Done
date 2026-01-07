@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getPaymentIntent } from '@/lib/stripe';
 import { badRequest, handleApiError } from '@/lib/api-errors';
 import { sendDepositConfirmation } from '@/lib/email-service';
+
+// Schema validates deposit confirmation payload
+const DepositConfirmedSchema = z.object({
+  quoteId: z.string().min(1, 'Quote ID is required'),
+  paymentIntentId: z.string().min(1, 'Payment Intent ID is required'),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -17,24 +24,14 @@ export const dynamic = 'force-dynamic';
 // Body: { quoteId: string, paymentIntentId: string }
 // Returns: { success: true, orderId: string }
 
-interface DepositConfirmedRequest {
-  quoteId: string;
-  paymentIntentId: string;
-}
-
 export async function POST(request: NextRequest) {
   try {
-    const body: DepositConfirmedRequest = await request.json();
-    const { quoteId, paymentIntentId } = body;
-
-    // Validate required fields
-    if (!quoteId || typeof quoteId !== 'string') {
-      return badRequest('Quote ID is required');
+    // Validate input with Zod schema
+    const parsed = DepositConfirmedSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return badRequest(parsed.error.issues[0].message);
     }
-
-    if (!paymentIntentId || typeof paymentIntentId !== 'string') {
-      return badRequest('Payment Intent ID is required');
-    }
+    const { quoteId, paymentIntentId } = parsed.data;
 
     // Verify the payment was successful with Stripe
     const paymentIntent = await getPaymentIntent(paymentIntentId);

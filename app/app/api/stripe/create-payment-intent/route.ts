@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import {
   createPaymentIntent,
   getOrCreateStripeCustomer,
 } from '@/lib/stripe';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { badRequest, handleApiError } from '@/lib/api-errors';
+
+// Schema validates payment amount and optional metadata
+const PaymentIntentSchema = z.object({
+  amount: z.number({ message: 'Amount must be a number' }).min(50, 'Amount must be at least 50 cents ($0.50)'),
+  order_id: z.string().optional(),
+  email: z.string().email().optional(),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -21,17 +29,12 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { amount, order_id, email } = body;
-
-    // Validate amount (Stripe requires minimum 50 cents)
-    if (!amount || typeof amount !== 'number') {
-      return badRequest('Amount is required and must be a number');
+    // Validate input with Zod schema
+    const parsed = PaymentIntentSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return badRequest(parsed.error.issues[0].message);
     }
-
-    if (amount < 50) {
-      return badRequest('Amount must be at least 50 cents ($0.50)');
-    }
+    const { amount, order_id, email } = parsed.data;
 
     // Check if user is authenticated (optional - supports guest checkout)
     let customerId: string | undefined;
