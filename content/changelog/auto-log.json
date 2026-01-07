@@ -1,5 +1,14 @@
 [
   {
+    "hash": "cc03e2d",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "cc03e2dcb2961bca81ce06cb329a75499f8dd8e8:%M",
+    "author": "Abe Reyes",
+    "message": "Docs: Update Full Sail education description in resume",
+    "category": "Documentation",
+    "filesChanged": 2
+  },
+  {
     "hash": "f8179b6",
     "date": "%Y->- (HEAD -> main)",
     "time": "f8179b6603a800e5d3001fa2672b9dd7258ac871:%M",
@@ -889,14 +898,5 @@
     "message": "Add edit mode tutorial and redesign guide page",
     "category": "Other",
     "filesChanged": 12
-  },
-  {
-    "hash": "cd4403f",
-    "date": "2025-12-31",
-    "time": "11:41",
-    "author": "Abe Reyes",
-    "message": "Update visual regression baselines and screenshots",
-    "category": "Other",
-    "filesChanged": 133
   }
 ]

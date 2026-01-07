@@ -28,23 +28,23 @@ export const metadata: Metadata = {
 const skills = [
   {
     category: 'Frontend & UI Systems',
-    items: 'React, Next.js, TypeScript, Tailwind, Visual Page Builders (Puck), WYSIWYG Editors (TipTap), Drag-and-Drop',
+    items: 'React, Next.js, Vue.js, TypeScript, Tailwind, Visual Page Builders (Puck), WYSIWYG Editors (TipTap), Drag-and-Drop',
   },
   {
     category: 'Backend & Data',
-    items: 'Node.js, Python, REST APIs, PostgreSQL, MongoDB, Supabase, Redis Caching, Schema Design, Zod Validation',
+    items: 'Node.js, Python, REST APIs, GraphQL, PostgreSQL, MongoDB, Supabase, Redis Caching, Schema Design, Zod Validation',
   },
   {
     category: 'Testing & Quality',
-    items: 'Playwright E2E (68 tests), Vitest, WCAG AA Accessibility, Storybook, CI/CD, Git',
+    items: 'Playwright E2E, Vitest, WCAG AA Accessibility, Storybook, CI/CD, Git',
   },
   {
-    category: 'Integrations',
-    items: 'Stripe Payments, OAuth (Google, NextAuth), React Email, OpenAI/GPT, Vector Embeddings',
+    category: 'AI & Automation',
+    items: 'Claude Code, Prompt Engineering, Vector Embeddings, Zapier, n8n, Workflow Design',
   },
   {
     category: 'Architecture',
-    items: '165+ Components, Custom Hooks, Context Providers, Optimistic Updates, Cache-Aside Pattern',
+    items: 'Modular Components, Custom Hooks, Context Providers, Optimistic Updates, Cache-Aside Pattern',
   },
   {
     category: 'Design & Process',
@@ -63,10 +63,10 @@ const experience = [
     subtitle: 'Professional Services Platform',
     dates: 'November 2025 - Present',
     bullets: [
-      'Built a visual editor where you drag and drop 30+ building blocks to create pages, edit text directly on the page, and undo changes with version history. Non-technical users can update content without touching code',
-      'Organized the codebase into 165 reusable components and 72 backend endpoints. Cart updates show instantly without loading spinners, and pages load fast thanks to smart caching',
-      'Wrote 68 automated tests that simulate real users clicking through the site. Built a color system that passes accessibility checks so text is readable for everyone, including in dark mode',
-      'Connected the site to AI for a chatbot that understands questions, Google for login and calendar scheduling, Stripe for payments, and automated emails for order confirmations',
+      'Built a visual editor where you drag and drop building blocks to create pages, edit text directly on the page, and undo changes with version history. Non-technical users can update content without touching code',
+      'Organized the codebase into reusable components and API endpoints. Cart updates show instantly without loading spinners, and pages load fast thanks to smart caching',
+      'Wrote automated tests that simulate real users clicking through the site. Built a color system that passes accessibility checks so text is readable for everyone, including in dark mode',
+      'Built AI automation including an LLM chatbot with custom prompts, OAuth flows, Stripe payments, and automated emails',
     ],
   },
   {
@@ -77,9 +77,10 @@ const experience = [
     bullets: [
       'Started as a contractor doing API integration work at an early-stage startup. Proved value quickly and got brought on for expanded responsibilities',
       'Became the person the CEO came to with technical questions because my explanations made sense to him',
-      'Automated the repetitive stuff that was slowing the team down so people could focus on work that actually mattered',
+      'Designed automated workflows to eliminate manual processes and improve team efficiency',
       'Built Python scripts to rescue unusable content - converted entire textbooks from messy PDFs into clean HTML for the learning platform',
       'Handled data migrations during client onboarding. Turned multi-day headaches into same-day completions while improving accuracy',
+      'Built Excel macros and VBA scripts for clients to automate repetitive data tasks',
     ],
   },
   {
@@ -134,7 +135,7 @@ const education = [
     institution: 'Full Sail University',
     dates: '2016 - 2017',
     description:
-      'Web Design & Development coursework, 4.0 GPA. Started learning web development here and haven\'t stopped since.',
+      'Web Design & Development coursework. After teaching myself web technologies since the early 2000s, this program provided the structure to take those skills to a professional level. Straight A\'s while working full-time.',
   },
   {
     institution: 'Self-Directed Learning',
@@ -207,9 +208,10 @@ export default function ResumePage() {
       <section className={`mb-6 p-4 rounded ${cardBgColors.elevated}`}>
         <div className={`text-sm leading-relaxed ${headingColors.secondary} space-y-3`}>
           <p>
-            Building software since 2016, shipping to production since 2023. I go deep on fundamentals
-            and stay current on patterns - the engineers I respect most never stop sharpening their
-            tools, and neither do I.
+            Over 25 years working with technology in business environments, shipping production
+            software since 2023. I design systems that work, from AI automation to scalable
+            architectures. The engineers I respect most never stop sharpening their tools, and
+            neither do I.
           </p>
           <p>
             Before tech, I led a five-person medic team in the Army and earned three promotions at
