@@ -1,5 +1,14 @@
 [
   {
+    "hash": "affcab9",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "affcab9880af8209faaacfa5b0ba3c9cb8ee0bcb:%M",
+    "author": "Abe Reyes",
+    "message": "Docs: Sync resume page with HTML version",
+    "category": "Documentation",
+    "filesChanged": 3
+  },
+  {
     "hash": "cc03e2d",
     "date": "%Y->- (HEAD -> main)",
     "time": "cc03e2dcb2961bca81ce06cb329a75499f8dd8e8:%M",
@@ -889,14 +898,5 @@
     "message": "Add nested drag-drop for items and consolidate page config (ETC)",
     "category": "Other",
     "filesChanged": 13
-  },
-  {
-    "hash": "6d5533f",
-    "date": "2025-12-31",
-    "time": "12:15",
-    "author": "Abe Reyes",
-    "message": "Add edit mode tutorial and redesign guide page",
-    "category": "Other",
-    "filesChanged": 12
   }
 ]
