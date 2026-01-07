@@ -91,7 +91,7 @@ export default function Navigation() {
           </Link>
 
           {/* Navigation Links + Auth */}
-          <div className="flex items-center gap-2 sm:gap-4 overflow-x-hidden">
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Desktop Page Links - hidden on mobile/tablet */}
             <div className="hidden lg:flex gap-1">
               {navigationLinks.map((link, index) => {
