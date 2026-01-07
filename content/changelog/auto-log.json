@@ -1,5 +1,14 @@
 [
   {
+    "hash": "f8179b6",
+    "date": "%Y->- (HEAD -> main)",
+    "time": "f8179b6603a800e5d3001fa2672b9dd7258ac871:%M",
+    "author": "Abe Reyes",
+    "message": "Add GraphQL API endpoint for services data",
+    "category": "Other",
+    "filesChanged": 6
+  },
+  {
     "hash": "b305279",
     "date": "%Y->- (HEAD -> main)",
     "time": "b305279830c1c4a0bce8bea9f091d6a4bb4a6d82:%M",
@@ -889,14 +898,5 @@
     "message": "Update visual regression baselines and screenshots",
     "category": "Other",
     "filesChanged": 133
-  },
-  {
-    "hash": "2ace75d",
-    "date": "2025-12-31",
-    "time": "11:10",
-    "author": "Abe Reyes",
-    "message": "Test: Migrate E2E tests to use page discovery",
-    "category": "Testing",
-    "filesChanged": 7
   }
 ]
