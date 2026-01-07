@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     if (data.user?.email) {
       sendWelcomeEmail({
         email: data.user.email,
-        name: metadata?.name || metadata?.full_name,
+        name: (metadata?.name || metadata?.full_name) as string | undefined,
       }).catch((err) => {
         console.error('[Signup] Welcome email failed:', err);
       });
