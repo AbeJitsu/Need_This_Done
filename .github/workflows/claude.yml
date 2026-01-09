@@ -19,16 +19,16 @@ jobs:
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      pull-requests: read
-      issues: read
+      contents: write      # Allow Claude to push code and create branches
+      pull-requests: write # Allow Claude to create and update PRs
+      issues: write        # Allow Claude to update issues
       id-token: write
-      actions: read # Required for Claude to read CI results on PRs
+      actions: read        # Required for Claude to read CI results on PRs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0 # Full history for proper git operations
 
       - name: Run Claude Code
         id: claude
@@ -49,8 +49,8 @@ jobs:
           # Optional: Trigger when specific user is assigned to an issue
           # assignee_trigger: "claude-bot"
           
-          # Optional: Allow Claude to run specific commands
-          # allowed_tools: "Bash(npm install),Bash(npm run build),Bash(npm run test:*),Bash(npm run lint:*)"
+          # Allow Claude to run build and test commands
+          allowed_tools: "Bash(cd app && npm install),Bash(cd app && npm run build),Bash(cd app && npm run test:*),Bash(cd app && npm run lint:*)"
           
           # Optional: Add custom instructions for Claude to customize its behavior for your project
           # custom_instructions: |
