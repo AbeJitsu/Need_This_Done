@@ -9,7 +9,7 @@ USER_PROMPT=$(echo "$INPUT" | jq -r '.prompt // empty' 2>/dev/null)
 
 # Check for testing-related keywords (case-insensitive)
 if echo "$USER_PROMPT" | grep -qiE '\b(test|spec|e2e|playwright|a11y|vitest)\b'; then
-  echo "Testing detected - run tests before committing (see CLAUDE.md)" >&2
+  echo "Testing detected - run tests before committing (see CLAUDE.md)"
 fi
 
 exit 0

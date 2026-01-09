@@ -23,12 +23,12 @@ fi
 HAS_FRONTEND=$(echo "$STAGED" | grep -E 'components/.*\.tsx$|\.css$|colors\.ts$|app/.*page\.tsx$|globals\.css$')
 
 if [[ -n "$HAS_FRONTEND" ]]; then
-  echo "" >&2
-  echo "Frontend files staged for commit:" >&2
-  echo "$HAS_FRONTEND" | sed 's/^/  → /' >&2
-  echo "" >&2
-  echo "Consider: cd app && npm run test:a11y" >&2
-  echo "" >&2
+  echo ""
+  echo "Frontend files staged for commit:"
+  echo "$HAS_FRONTEND" | sed 's/^/  → /'
+  echo ""
+  echo "Consider: cd app && npm run test:a11y"
+  echo ""
 fi
 
 # Non-blocking - just a reminder

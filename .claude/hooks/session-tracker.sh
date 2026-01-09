@@ -3,12 +3,14 @@
 # What: Tracks all files modified by this session
 # Why: Enables multi-instance parallel work, uncommitted change detection
 
+echo "SESSION TRACKER FIRED"
+
 # Source shared utilities
 source "$CLAUDE_PROJECT_DIR/.claude/hooks/lib/common.sh"
 
 # Read JSON input
 INPUT=$(cat)
-TOOL_NAME=$(echo "$INPUT" | jq -r '.tool // empty')
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // .tool // empty')
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .parameters.file_path // empty')
 
 # Only process Edit and Write tools

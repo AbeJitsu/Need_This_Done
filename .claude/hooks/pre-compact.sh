@@ -18,12 +18,12 @@ cat > "$WORK_STATE_FILE" << EOF
 }
 EOF
 
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
-echo "💾 WORK STATE SAVED BEFORE COMPACTION" >&2
-echo "   Branch: $GIT_BRANCH" >&2
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "WORK STATE SAVED BEFORE COMPACTION"
+echo "   Branch: $GIT_BRANCH"
 if [ "$UNCOMMITTED_FILES" -gt 0 ]; then
-  echo "   Uncommitted: $UNCOMMITTED_FILES files" >&2
+  echo "   Uncommitted: $UNCOMMITTED_FILES files"
 fi
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >&2
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 exit 0
