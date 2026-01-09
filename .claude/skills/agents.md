@@ -14,7 +14,6 @@ Tested Jan 8, 2025. All skills verified for functionality.
 | launch-a-swarm | Skill | "launch a swarm" | **WORKS** | 5 parallel quality agents |
 | think-ahead | Skill | "think ahead" | **WORKS** | Strategic planning |
 | worktree-swarm | Skill | Parallelize task | **WORKS** | Git worktree orchestration |
-| screenshot-workflow | Skill | "screenshot workflow" | **PARTIAL** | Missing sub-commands |
 | pragmatic-audit | Skill | "pragmatic audit" | **WORKS** | Code quality scanner |
 
 ---
@@ -80,18 +79,6 @@ Tested Jan 8, 2025. All skills verified for functionality.
 **What it does:** Orchestrates parallel Claude Code agents using git worktrees.
 **Tested:** Jan 8, 2025 - skill loaded, git worktree support confirmed
 
-### screenshot-workflow
-**Trigger:** "screenshot workflow"
-**Status:** PARTIAL - NOT FULLY IMPLEMENTED
-**What it does:** Describes 150+ page screenshot workflow for visual regression.
-**Issue:** References sub-commands that don't exist:
-- `/screenshot-branch` - missing
-- `/screenshot-setup` - missing
-- `/screenshot-test` - missing
-- `/screenshot-view` - missing
-- `/screenshot-merge` - missing
-**Recommendation:** Either implement sub-commands or remove skill
-
 ---
 
 ## Duplicates Resolved
@@ -145,12 +132,7 @@ Tested Jan 8, 2025. All skills verified for functionality.
 - **Result:** WORKS
 - **Notes:** Guidance skill loaded with design philosophy
 
-### Test 9: screenshot-workflow
-- **Date:** Jan 8, 2025
-- **Result:** PARTIAL
-- **Notes:** Skill loads but references 5 missing sub-commands
-
-### Test 10: worktree-swarm
+### Test 9: worktree-swarm
 - **Date:** Jan 8, 2025
 - **Result:** WORKS
 - **Notes:** Skill loaded, git worktree support confirmed
@@ -166,8 +148,8 @@ Tested Jan 8, 2025. All skills verified for functionality.
 - Task tool can spawn parallel agents (launch-a-swarm)
 
 ### Issues Found
-- screenshot-workflow references non-existent sub-commands
 - auto-log.json has date parsing issues (`%Y->-` format)
+- screenshot-workflow was removed (referenced non-existent sub-commands)
 
 ### Rules for Skills
 1. Test before deploying
