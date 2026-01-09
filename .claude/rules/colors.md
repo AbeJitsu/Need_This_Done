@@ -2,31 +2,6 @@
 
 **NEVER hardcode colors.** All colors come from `lib/colors.ts`.
 
-## The Anchor System (WCAG AA)
-
-Every color scale has two mathematically-defined anchor points:
-
-| Shade | Contrast With | Purpose |
-|-------|---------------|---------|
-| **-500** | 4.5:1 with white | Dark mode backgrounds |
-| **-600** | 4.5:1 with -100 | Light mode minimum accessible text |
-
-This makes the system **predictable**:
-- In dark mode: use -500 background + white text
-- In light mode: use -100 background + -600 to -900 text
-
-## Light Mode vs Dark Mode
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  LIGHT MODE              │  DARK MODE                          │
-├─────────────────────────────────────────────────────────────────┤
-│  Background: -100        │  Background: -500                   │
-│  Text: -600 to -900      │  Text: white                        │
-│  Border: -500            │  Border: -400                       │
-└─────────────────────────────────────────────────────────────────┘
-```
-
 ## Usage
 
 ```typescript
@@ -51,4 +26,8 @@ const fullColors = getPuckFullColors(accentColor);
 - Dynamic Tailwind classes break in production (purged at build time)
 - Centralized colors enable theme changes
 - Consistent brand across all components
-- WCAG AA compliance is built into the scale (500 difference = 4.5:1)
+- WCAG AA compliance built into the color scale
+
+## Note
+
+Dark mode is currently disabled. Light mode only.
