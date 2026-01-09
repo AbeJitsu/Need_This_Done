@@ -12,12 +12,24 @@ This folder contains Claude Code hooks - shell scripts that run at specific poin
 
 **Key insight:** Use `echo` (stdout) with `exit 0` for Claude to see output. Using `>&2` (stderr) without `exit 2` means output is invisible.
 
-## Known Issues (as of Jan 2025)
+## Known Issues (Tested Jan 2025)
 
-**PostToolUse hooks may not trigger.** Multiple GitHub issues report this bug:
+**Most hook types don't fire reliably:**
+
+| Hook Type | Status | Notes |
+|-----------|--------|-------|
+| SessionStart | **Works** | Output visible at session start |
+| PreCompact | Likely works | Uses same pattern as SessionStart |
+| PreToolUse | **NOT FIRING** | Tested with debug output, no response |
+| PostToolUse | **Broken** | GitHub issues #6403, #6305, #3148 |
+| Stop | Unknown | Uses stderr + exit 2 |
+
+**GitHub issues:**
 - [#6403](https://github.com/anthropics/claude-code/issues/6403) - PostToolUse completely non-functional
 - [#6305](https://github.com/anthropics/claude-code/issues/6305) - Selective failure on tool-related hooks
-- [#3148](https://github.com/anthropics/claude-code/issues/3148) - Matcher issues (try empty string `""`)
+- [#3148](https://github.com/anthropics/claude-code/issues/3148) - Matcher issues
+
+**Bottom line:** Only SessionStart hooks work reliably. Don't depend on PreToolUse or PostToolUse for critical functionality.
 
 ## Hook Types
 
