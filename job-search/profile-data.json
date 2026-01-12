@@ -323,11 +323,11 @@
   "skills": {
     "frontend_ui": {
       "label": "Frontend & UI Systems",
-      "items": ["React", "Next.js", "Vue.js", "TypeScript", "Tailwind", "Visual Page Builders (Puck)", "WYSIWYG Editors (TipTap)", "Drag-and-Drop"]
+      "items": ["React", "Next.js", "Vue.js", "TypeScript", "Tailwind", "Liquid (Shopify)", "Visual Page Builders (Puck)", "WYSIWYG Editors (TipTap)"]
     },
     "backend_data": {
       "label": "Backend & Data",
-      "items": ["Node.js", "Python", "REST APIs", "GraphQL", "PostgreSQL", "MongoDB", "Supabase", "Redis Caching", "Schema Design", "Zod Validation"]
+      "items": ["Node.js", "Python", "REST APIs", "GraphQL", "PostgreSQL", "MongoDB", "Supabase", "Medusa", "Redis", "Schema Design", "Zod"]
     },
     "testing_quality": {
       "label": "Testing & Quality",
