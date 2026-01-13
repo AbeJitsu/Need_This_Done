@@ -54,9 +54,14 @@ function getRedisUrl() {
   return url
 }
 
+// Debug: Check DISABLE_MEDUSA_ADMIN value
+console.log('DISABLE_MEDUSA_ADMIN env:', process.env.DISABLE_MEDUSA_ADMIN)
+const adminDisabled = process.env.DISABLE_MEDUSA_ADMIN === "true"
+console.log('admin.disable evaluated to:', adminDisabled)
+
 module.exports = defineConfig({
   admin: {
-    disable: process.env.DISABLE_MEDUSA_ADMIN === "true",
+    disable: adminDisabled,
   },
   projectConfig: {
     databaseUrl: DATABASE_URL,
