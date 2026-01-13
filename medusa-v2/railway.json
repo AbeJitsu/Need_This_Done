@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "npm run build && medusa db:migrate && medusa start",
+    "startCommand": "npm run build && ls -la .medusa/ && ls -la .medusa/admin/ 2>/dev/null || echo 'No admin folder' && medusa db:migrate && medusa start",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 120,
     "restartPolicyType": "ON_FAILURE"

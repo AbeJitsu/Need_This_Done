@@ -9,4 +9,4 @@ cmds = ["npm install --legacy-peer-deps"]
 cmds = ["echo 'Build at runtime to preserve output'"]
 
 [start]
-cmd = "npm run build && medusa db:migrate && medusa start"
+cmd = "npm run build && ls -la .medusa/ && ls -la .medusa/admin/ 2>/dev/null || echo 'No admin folder' && medusa db:migrate && medusa start"
