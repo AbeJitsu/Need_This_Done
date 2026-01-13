@@ -1,3 +1,4 @@
+# Railway deployment config for Medusa v2
 [phases.setup]
 nixPkgs = ["nodejs_20", "npm-9_x"]
 
