@@ -9,4 +9,4 @@ cmds = ["npm install --legacy-peer-deps"]
 cmds = ["npm run build"]
 
 [start]
-cmd = "medusa db:migrate && medusa start"
+cmd = "medusa db:migrate && medusa build && medusa start"
