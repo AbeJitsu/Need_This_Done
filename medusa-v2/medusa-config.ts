@@ -55,6 +55,9 @@ function getRedisUrl() {
 }
 
 module.exports = defineConfig({
+  admin: {
+    disable: process.env.DISABLE_MEDUSA_ADMIN === "true",
+  },
   projectConfig: {
     databaseUrl: DATABASE_URL,
     redisUrl: getRedisUrl(),
