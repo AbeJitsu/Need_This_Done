@@ -6,7 +6,7 @@ nixPkgs = ["nodejs_20", "npm-9_x"]
 cmds = ["npm install --legacy-peer-deps"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["echo 'No build step needed - admin disabled'"]
 
 [start]
-cmd = "medusa db:migrate && medusa build && medusa start"
+cmd = "medusa db:migrate && medusa start"
