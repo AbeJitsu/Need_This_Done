@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "npm run build && echo '=== .medusa contents ===' && ls -la .medusa/ && echo '=== .medusa/server contents ===' && ls -la .medusa/server/ 2>/dev/null && echo '=== checking for admin ===' && find .medusa -name 'index.html' 2>/dev/null && medusa db:migrate && medusa start",
+    "startCommand": "cd .medusa/server && npm install && npx medusa db:migrate && npm run start",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 120,
     "restartPolicyType": "ON_FAILURE"

@@ -1,4 +1,5 @@
 # Railway deployment config for Medusa v2
+# Based on official Medusa docs: build outputs to .medusa/server
 [phases.setup]
 nixPkgs = ["nodejs_20", "npm-9_x"]
 
@@ -6,7 +7,7 @@ nixPkgs = ["nodejs_20", "npm-9_x"]
 cmds = ["npm install --legacy-peer-deps"]
 
 [phases.build]
-cmds = ["echo 'Build at runtime to preserve output'"]
+cmds = ["npm run build"]
 
 [start]
-cmd = "npm run build && echo '=== .medusa contents ===' && ls -la .medusa/ && echo '=== .medusa/server contents ===' && ls -la .medusa/server/ 2>/dev/null && echo '=== checking for admin ===' && find .medusa -name 'index.html' 2>/dev/null && medusa db:migrate && medusa start"
+cmd = "cd .medusa/server && npm install && npx medusa db:migrate && npm run start"
