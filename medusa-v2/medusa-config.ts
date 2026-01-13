@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs'
 
 // Load from root .env.local (same pattern as v1)
+// Note: HOST=0.0.0.0 must be set in Railway for external access
 const envPath = path.resolve(__dirname, '../.env.local')
 if (fs.existsSync(envPath)) {
   dotenv.config({ path: envPath })
