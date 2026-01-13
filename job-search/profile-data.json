@@ -101,7 +101,7 @@
         "resume_bullets": [
           "Built a visual editor where you drag and drop building blocks to create pages, edit text directly on the page, and undo changes with version history. Non-technical users can update content without touching code",
           "Organized the codebase into reusable components and API endpoints. Cart updates show instantly without loading spinners, and pages load fast thanks to smart caching",
-          "Wrote automated tests that simulate real users clicking through the site. Built a color system that passes accessibility checks so text is readable for everyone, including in dark mode",
+          "Wrote automated tests that simulate real users clicking through the site. Built a color system that passes accessibility checks so text is readable for everyone",
           "Built AI automation including an LLM chatbot with custom prompts, OAuth flows, Stripe payments, and automated emails"
         ],
         "resume_summary": "E-commerce platform: Complete system with shopping flows, user authentication, order management, admin dashboard, and component-based page builder so non-technical users can create pages without code. Built with a layered architecture that handles traffic, business logic, and data separately, making the system faster and easier to maintain. Smart indexing ensures pages load quickly by only updating what's changed.",
@@ -343,7 +343,7 @@
     },
     "design_process": {
       "label": "Design & Process",
-      "items": ["Mobile-First", "Dark Mode", "Figma", "Component Libraries", "Test-Driven Development"]
+      "items": ["Mobile-First", "Figma", "Component Libraries", "Test-Driven Development"]
     }
   },
 
@@ -429,7 +429,7 @@
     "role_specific_intros": {
       "backend_architecture": "During my time at Acadio (an EdTech LMS platform), I demonstrated the problem-solving and architectural thinking your team needs. I built an automated flashcard generation system that reduced manual content creation from weeks to minutes—not through shortcuts, but through thoughtful system design and modern tooling integration.",
       "fullstack_devops": "My experience building needthisdone.com demonstrates the full-stack and DevOps expertise your team is seeking. The architecture uses Next.js with Supabase and Redis for data and caching.",
-      "frontend_design": "I have built responsive React and Vue.js applications demonstrating strong front-end fundamentals. In my work at needthisdone.com, I implemented WCAG AA accessibility compliance across all components, comprehensive E2E testing with Playwright, and dark mode cross-compatibility.",
+      "frontend_design": "I have built responsive React and Vue.js applications demonstrating strong front-end fundamentals. In my work at needthisdone.com, I implemented WCAG AA accessibility compliance across all components and comprehensive E2E testing with Playwright.",
       "ai_integration": "I have successfully integrated modern AI tooling into production applications. At Acadio, I used Claude Code to build systems that dramatically reduced manual work. On needthisdone.com, I implemented context-aware chatbots using Supabase pgvector semantic search and OpenAI embeddings, demonstrating practical understanding of RAG patterns and LLM integration."
     }
   },
