@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { accentColors, headingColors } from '@/lib/colors';
 import Button from '@/components/Button';
 
 // ============================================================================
