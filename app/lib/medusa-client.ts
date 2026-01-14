@@ -150,11 +150,8 @@ export const products = {
    * - products.list({ limit: 10, offset: 0 }) - returns paginated response
    */
   list: async (params?: PaginationParams): Promise<Product[] | PaginatedProducts> => {
-    // Build URL with pagination params and Medusa v2 pricing fields
+    // Build URL with pagination params
     const queryParams = new URLSearchParams();
-
-    // REQUIRED for Medusa v2: Include calculated prices
-    queryParams.append('fields', '*variants.calculated_price');
 
     // Get default region for pricing context
     const regionsResponse = await fetchWithRetry(`${MEDUSA_URL}/store/regions`);
