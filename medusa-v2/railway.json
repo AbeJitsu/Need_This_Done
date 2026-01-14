@@ -6,7 +6,7 @@
   "deploy": {
     "startCommand": "npm run build && medusa db:migrate && npm run seed && medusa start",
     "healthcheckPath": "/health",
-    "healthcheckTimeout": 120,
+    "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE"
   }
 }
