@@ -41,7 +41,7 @@ export default function ShopClient({ products }: ShopClientProps) {
 
       // Pass product info for instant optimistic display
       const firstVariant = product.variants?.[0];
-      const unitPrice = firstVariant?.calculated_price?.amount ?? firstVariant?.metadata?.base_price_usd ?? firstVariant?.prices?.[0]?.amount ?? 0;
+      const unitPrice = firstVariant?.calculated_price?.calculated_amount ?? firstVariant?.metadata?.base_price_usd ?? firstVariant?.prices?.[0]?.amount ?? 0;
 
       await addItem(variant.id, 1, {
         title: product.title,
@@ -121,9 +121,9 @@ export default function ShopClient({ products }: ShopClientProps) {
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => {
-            // Get price from first variant - Medusa v2 uses calculated_price, fallback to metadata or prices array
+            // Get price from first variant - Medusa v2 uses calculated_price.calculated_amount
             const variant = product.variants?.[0];
-            const price = variant?.calculated_price?.amount ?? variant?.metadata?.base_price_usd ?? variant?.prices?.[0]?.amount ?? 0;
+            const price = variant?.calculated_price?.calculated_amount ?? variant?.metadata?.base_price_usd ?? variant?.prices?.[0]?.amount ?? 0;
             const image = product.images?.[0]?.url;
 
             // Map consultation product handles to color tiers

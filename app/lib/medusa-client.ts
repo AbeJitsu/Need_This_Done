@@ -96,7 +96,11 @@ interface ProductVariant {
   title: string;
   product_id: string;
   prices?: { amount: number; currency_code: string }[];
-  calculated_price?: { amount: number; currency_code: string };
+  calculated_price?: {
+    calculated_amount: number;
+    currency_code: string;
+    original_amount: number;
+  };
   inventory_quantity?: number;
   manage_inventory?: boolean;
   allow_backorder?: boolean;
@@ -151,6 +155,13 @@ export const products = {
 
     // REQUIRED for Medusa v2: Include calculated prices
     queryParams.append('fields', '*variants.calculated_price');
+
+    // Get default region for pricing context
+    const regionsResponse = await fetchWithRetry(`${MEDUSA_URL}/store/regions`);
+    const regionsData = await handleResponse<{ regions: { id: string }[] }>(regionsResponse);
+    if (regionsData.regions?.[0]) {
+      queryParams.append('region_id', regionsData.regions[0].id);
+    }
 
     // Add pagination if provided
     if (params) {
