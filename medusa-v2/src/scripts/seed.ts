@@ -108,48 +108,79 @@ export default async function seedDemoData({ container }: ExecArgs) {
   });
 
   logger.info("Seeding region data...");
-  const { result: regionResult } = await createRegionsWorkflow(container).run({
-    input: {
-      regions: [
-        {
-          name: "United States",
-          currency_code: "usd",
-          countries,
-          payment_providers: ["pp_system_default"],
-        },
-      ],
-    },
+  const regionModuleService = container.resolve(Modules.REGION);
+  let existingRegions = await regionModuleService.listRegions({
+    currency_code: "usd",
   });
-  const region = regionResult[0];
+
+  let region;
+  if (existingRegions.length) {
+    region = existingRegions[0];
+    logger.info("Region already exists, skipping creation.");
+  } else {
+    const { result: regionResult } = await createRegionsWorkflow(container).run({
+      input: {
+        regions: [
+          {
+            name: "United States",
+            currency_code: "usd",
+            countries,
+            payment_providers: ["pp_system_default"],
+          },
+        ],
+      },
+    });
+    region = regionResult[0];
+  }
   logger.info("Finished seeding regions.");
 
   logger.info("Seeding tax regions...");
-  await createTaxRegionsWorkflow(container).run({
-    input: countries.map((country_code) => ({
-      country_code,
-      provider_id: "tp_system",
-    })),
+  const taxModuleService = container.resolve(Modules.TAX);
+  const existingTaxRegions = await taxModuleService.listTaxRegions({
+    country_code: "us",
   });
+
+  if (!existingTaxRegions.length) {
+    await createTaxRegionsWorkflow(container).run({
+      input: countries.map((country_code) => ({
+        country_code,
+        provider_id: "tp_system",
+      })),
+    });
+  } else {
+    logger.info("Tax regions already exist, skipping creation.");
+  }
   logger.info("Finished seeding tax regions.");
 
   logger.info("Seeding stock location data...");
-  const { result: stockLocationResult } = await createStockLocationsWorkflow(
-    container
-  ).run({
-    input: {
-      locations: [
-        {
-          name: "Need This Done HQ",
-          address: {
-            city: "New York",
-            country_code: "US",
-            address_1: "",
-          },
-        },
-      ],
-    },
+  const stockLocationModuleService = container.resolve(Modules.STOCK_LOCATION);
+  let existingStockLocations = await stockLocationModuleService.listStockLocations({
+    name: "Need This Done HQ",
   });
-  const stockLocation = stockLocationResult[0];
+
+  let stockLocation;
+  if (existingStockLocations.length) {
+    stockLocation = existingStockLocations[0];
+    logger.info("Stock location already exists, skipping creation.");
+  } else {
+    const { result: stockLocationResult } = await createStockLocationsWorkflow(
+      container
+    ).run({
+      input: {
+        locations: [
+          {
+            name: "Need This Done HQ",
+            address: {
+              city: "New York",
+              country_code: "US",
+              address_1: "",
+            },
+          },
+        ],
+      },
+    });
+    stockLocation = stockLocationResult[0];
+  }
 
   await updateStoresWorkflow(container).run({
     input: {
@@ -190,69 +221,80 @@ export default async function seedDemoData({ container }: ExecArgs) {
     shippingProfile = shippingProfileResult[0];
   }
 
-  const fulfillmentSet = await fulfillmentModuleService.createFulfillmentSets({
+  const existingFulfillmentSets = await fulfillmentModuleService.listFulfillmentSets({
     name: "US Service Delivery",
-    type: "shipping",
-    service_zones: [
-      {
-        name: "United States",
-        geo_zones: [
-          {
-            country_code: "us",
-            type: "country",
-          },
-        ],
-      },
-    ],
   });
 
-  await link.create({
-    [Modules.STOCK_LOCATION]: {
-      stock_location_id: stockLocation.id,
-    },
-    [Modules.FULFILLMENT]: {
-      fulfillment_set_id: fulfillmentSet.id,
-    },
-  });
-
-  await createShippingOptionsWorkflow(container).run({
-    input: [
-      {
-        name: "Digital Delivery",
-        price_type: "flat",
-        provider_id: "manual_manual",
-        service_zone_id: fulfillmentSet.service_zones[0].id,
-        shipping_profile_id: shippingProfile.id,
-        type: {
-          label: "Digital",
-          description: "Instant access after booking.",
-          code: "digital",
+  let fulfillmentSet;
+  if (existingFulfillmentSets.length) {
+    fulfillmentSet = existingFulfillmentSets[0];
+    logger.info("Fulfillment set already exists, skipping creation.");
+  } else {
+    fulfillmentSet = await fulfillmentModuleService.createFulfillmentSets({
+      name: "US Service Delivery",
+      type: "shipping",
+      service_zones: [
+        {
+          name: "United States",
+          geo_zones: [
+            {
+              country_code: "us",
+              type: "country",
+            },
+          ],
         },
-        prices: [
-          {
-            currency_code: "usd",
-            amount: 0,
-          },
-          {
-            region_id: region.id,
-            amount: 0,
-          },
-        ],
-        rules: [
-          {
-            attribute: "enabled_in_store",
-            value: "true",
-            operator: "eq",
-          },
-          {
-            attribute: "is_return",
-            value: "false",
-            operator: "eq",
-          },
-        ],
+      ],
+    });
+
+    await link.create({
+      [Modules.STOCK_LOCATION]: {
+        stock_location_id: stockLocation.id,
       },
-    ],
-  });
+      [Modules.FULFILLMENT]: {
+        fulfillment_set_id: fulfillmentSet.id,
+      },
+    });
+
+    // Only create shipping options if fulfillment set is new
+    await createShippingOptionsWorkflow(container).run({
+      input: [
+        {
+          name: "Digital Delivery",
+          price_type: "flat",
+          provider_id: "manual_manual",
+          service_zone_id: fulfillmentSet.service_zones[0].id,
+          shipping_profile_id: shippingProfile.id,
+          type: {
+            label: "Digital",
+            description: "Instant access after booking.",
+            code: "digital",
+          },
+          prices: [
+            {
+              currency_code: "usd",
+              amount: 0,
+            },
+            {
+              region_id: region.id,
+              amount: 0,
+            },
+          ],
+          rules: [
+            {
+              attribute: "enabled_in_store",
+              value: "true",
+              operator: "eq",
+            },
+            {
+              attribute: "is_return",
+              value: "false",
+              operator: "eq",
+            },
+          ],
+        },
+      ],
+    });
+  }
   logger.info("Finished seeding fulfillment data.");
 
   await linkSalesChannelsToStockLocationWorkflow(container).run({
@@ -303,22 +345,41 @@ export default async function seedDemoData({ container }: ExecArgs) {
 
   logger.info("Seeding product data...");
 
-  const { result: categoryResult } = await createProductCategoriesWorkflow(
-    container
-  ).run({
-    input: {
-      product_categories: [
-        {
-          name: "Consultations",
-          is_active: true,
-        },
-      ],
-    },
+  // Check if category exists
+  const productModuleService = container.resolve(Modules.PRODUCT);
+  const existingCategories = await productModuleService.listProductCategories({
+    name: "Consultations",
   });
 
-  const consultationsCategory = categoryResult.find((cat) => cat.name === "Consultations")!;
+  let consultationsCategory;
+  if (existingCategories.length) {
+    consultationsCategory = existingCategories[0];
+    logger.info("Category already exists, skipping creation.");
+  } else {
+    const { result: categoryResult } = await createProductCategoriesWorkflow(
+      container
+    ).run({
+      input: {
+        product_categories: [
+          {
+            name: "Consultations",
+            is_active: true,
+          },
+        ],
+      },
+    });
+    consultationsCategory = categoryResult.find((cat) => cat.name === "Consultations")!;
+  }
 
-  await createProductsWorkflow(container).run({
+  // Check if products exist
+  const existingProducts = await productModuleService.listProducts({
+    handle: ["15-min-consultation", "30-min-consultation", "55-min-consultation"],
+  });
+
+  if (existingProducts.length >= 3) {
+    logger.info("Products already exist, skipping creation.");
+  } else {
+    await createProductsWorkflow(container).run({
     input: {
       products: [
         {
@@ -336,11 +397,18 @@ export default async function seedDemoData({ container }: ExecArgs) {
             availability: "weekdays",
             timezone: "America/New_York",
           },
+          options: [
+            {
+              title: "Type",
+              values: ["Standard"],
+            },
+          ],
           variants: [
             {
-              title: "Default",
+              title: "Standard",
               sku: "CONSULT-15",
               manage_inventory: false,
+              options: { Type: "Standard" },
               prices: [
                 {
                   amount: 2000,
@@ -370,11 +438,18 @@ export default async function seedDemoData({ container }: ExecArgs) {
             availability: "weekdays",
             timezone: "America/New_York",
           },
+          options: [
+            {
+              title: "Type",
+              values: ["Standard"],
+            },
+          ],
           variants: [
             {
-              title: "Default",
+              title: "Standard",
               sku: "CONSULT-30",
               manage_inventory: false,
+              options: { Type: "Standard" },
               prices: [
                 {
                   amount: 3500,
@@ -404,11 +479,18 @@ export default async function seedDemoData({ container }: ExecArgs) {
             availability: "weekdays",
             timezone: "America/New_York",
           },
+          options: [
+            {
+              title: "Type",
+              values: ["Standard"],
+            },
+          ],
           variants: [
             {
-              title: "Default",
+              title: "Standard",
               sku: "CONSULT-55",
               manage_inventory: false,
+              options: { Type: "Standard" },
               prices: [
                 {
                   amount: 5000,
@@ -426,6 +508,7 @@ export default async function seedDemoData({ container }: ExecArgs) {
       ],
     },
   });
+  }
   logger.info("Finished seeding product data.");
 
   logger.info("Seeding inventory levels.");

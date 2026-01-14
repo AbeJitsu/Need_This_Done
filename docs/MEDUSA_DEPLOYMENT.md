@@ -33,7 +33,7 @@ cmd = "npm run build && medusa db:migrate && medusa start"
   "deploy": {
     "startCommand": "npm run build && medusa db:migrate && medusa start",
     "healthcheckPath": "/health",
-    "healthcheckTimeout": 120,
+    "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE"
   }
 }
@@ -57,6 +57,102 @@ Set via Railway CLI:
 ```bash
 railway variables --set "HOST=0.0.0.0"
 railway variables --set "DISABLE_MEDUSA_ADMIN=true"
+```
+
+## Seeding Products (IMPORTANT!)
+
+### The Simple Explanation
+
+Think of it like setting up a new store:
+
+1. **Deploy** = Opening the store doors (happens every time you push code)
+2. **Seed** = Putting products on the shelves (only do this ONCE)
+
+Once products are on the shelves (in the database), they stay there. You don't need to put them back every time you open the doors.
+
+### Why We DON'T Seed on Every Deploy
+
+```
+❌ BAD: npm run build && medusa db:migrate && npm run seed && medusa start
+✅ GOOD: npm run build && medusa db:migrate && medusa start
+```
+
+**Why?**
+
+1. `npm run seed` uses `medusa exec` which starts up the ENTIRE Medusa application
+2. This adds 30+ seconds to startup time
+3. Railway's healthcheck says "are you alive?" and if you don't answer fast enough, it kills you
+4. Products only need to be created ONCE - they live in the database forever
+
+### How to Seed Products (First Time Setup)
+
+After your deployment succeeds:
+
+```bash
+cd medusa-v2
+railway run npm run seed
+```
+
+This runs the seed script against your production database. The products get created and stay there permanently.
+
+**What the seed creates:**
+- Default sales channel
+- Default region (United States)
+- Default shipping profile
+- Stock location
+- Publishable API key
+- Your products (consultations)
+
+### How to Add Products in the Future
+
+The seed script is only for initial setup. After that:
+
+| Method | When to Use |
+|--------|-------------|
+| Admin UI | Day-to-day product management |
+| Admin API | Programmatic updates |
+| One-time script | Bulk imports or special migrations |
+
+**Using Admin UI:**
+1. Go to your app's `/admin/products` page
+2. Create, edit, delete products through the interface
+
+**Using Admin API:**
+```bash
+curl -X POST https://your-medusa.railway.app/admin/products \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "New Product", ...}'
+```
+
+### Seed Script Location
+
+The seed script lives at: `medusa-v2/src/scripts/seed.ts`
+
+If you need to modify what gets seeded:
+1. Edit the seed script
+2. Run it manually: `railway run npm run seed`
+
+### Quick Reference
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ FIRST TIME SETUP                                                │
+│                                                                 │
+│ 1. Deploy (push code)                                           │
+│ 2. Wait for "Deployment successful"                             │
+│ 3. Run seed ONCE: cd medusa-v2 && railway run npm run seed      │
+│ 4. Done! Products are in database forever                       │
+├─────────────────────────────────────────────────────────────────┤
+│ FUTURE DEPLOYS                                                  │
+│                                                                 │
+│ 1. Push code                                                    │
+│ 2. That's it! Products already exist                            │
+├─────────────────────────────────────────────────────────────────┤
+│ ADDING NEW PRODUCTS                                             │
+│                                                                 │
+│ Use Admin UI or API - NOT the seed script                       │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ## What Works
@@ -115,7 +211,7 @@ cmds = ["npm run build"]
 │    medusa db:migrate → Runs migrations (~10s)                   │
 │    medusa start      → Starts server (immediate)                │
 ├─────────────────────────────────────────────────────────────────┤
-│ 4. Healthcheck hits /health within 120s timeout                 │
+│ 4. Healthcheck hits /health within 300s timeout                 │
 │    Total startup: ~45 seconds ✓                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
