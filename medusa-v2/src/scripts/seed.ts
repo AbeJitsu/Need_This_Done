@@ -391,6 +391,12 @@ export default async function seedDemoData({ container }: ExecArgs) {
           weight: 0,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
+          thumbnail: "https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-15min.jpg",
+          images: [
+            {
+              url: "https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-15min.jpg",
+            },
+          ],
           metadata: {
             requires_appointment: true,
             duration_minutes: 15,
@@ -432,6 +438,12 @@ export default async function seedDemoData({ container }: ExecArgs) {
           weight: 0,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
+          thumbnail: "https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-30min.jpg",
+          images: [
+            {
+              url: "https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-30min.jpg",
+            },
+          ],
           metadata: {
             requires_appointment: true,
             duration_minutes: 30,
@@ -473,6 +485,12 @@ export default async function seedDemoData({ container }: ExecArgs) {
           weight: 0,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
+          thumbnail: "https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-55min.jpg",
+          images: [
+            {
+              url: "https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-55min.jpg",
+            },
+          ],
           metadata: {
             requires_appointment: true,
             duration_minutes: 55,
