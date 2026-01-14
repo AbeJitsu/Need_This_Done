@@ -95,11 +95,13 @@ interface ProductVariant {
   id: string;
   title: string;
   product_id: string;
-  prices: { amount: number; currency_code: string }[];
+  prices?: { amount: number; currency_code: string }[];
+  calculated_price?: { amount: number; currency_code: string };
   inventory_quantity?: number;
   manage_inventory?: boolean;
   allow_backorder?: boolean;
   options?: any[];
+  metadata?: { base_price_usd?: number; [key: string]: any };
 }
 
 interface Product {
@@ -144,14 +146,19 @@ export const products = {
    * - products.list({ limit: 10, offset: 0 }) - returns paginated response
    */
   list: async (params?: PaginationParams): Promise<Product[] | PaginatedProducts> => {
-    // Build URL with pagination params
-    let url = `${MEDUSA_URL}/store/products`;
+    // Build URL with pagination params and Medusa v2 pricing fields
+    const queryParams = new URLSearchParams();
+
+    // REQUIRED for Medusa v2: Include calculated prices
+    queryParams.append('fields', '*variants.calculated_price');
+
+    // Add pagination if provided
     if (params) {
-      const queryParams = new URLSearchParams();
       if (params.limit !== undefined) queryParams.append('limit', params.limit.toString());
       if (params.offset !== undefined) queryParams.append('offset', params.offset.toString());
-      if (queryParams.toString()) url += `?${queryParams.toString()}`;
     }
+
+    const url = `${MEDUSA_URL}/store/products?${queryParams.toString()}`;
 
     const response = await fetchWithRetry(url);
     const data = await handleResponse<{ products: Product[]; count?: number }>(response);

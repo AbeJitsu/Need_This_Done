@@ -415,6 +415,9 @@ export default async function seedDemoData({ container }: ExecArgs) {
               sku: "CONSULT-15",
               manage_inventory: false,
               options: { Type: "Standard" },
+              metadata: {
+                base_price_usd: 2000,
+              },
               prices: [
                 {
                   amount: 2000,
@@ -462,6 +465,9 @@ export default async function seedDemoData({ container }: ExecArgs) {
               sku: "CONSULT-30",
               manage_inventory: false,
               options: { Type: "Standard" },
+              metadata: {
+                base_price_usd: 3500,
+              },
               prices: [
                 {
                   amount: 3500,
@@ -509,6 +515,9 @@ export default async function seedDemoData({ container }: ExecArgs) {
               sku: "CONSULT-55",
               manage_inventory: false,
               options: { Type: "Standard" },
+              metadata: {
+                base_price_usd: 5000,
+              },
               prices: [
                 {
                   amount: 5000,
