@@ -1,0 +1,178 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdmin } from '@/lib/api-auth';
+import { badRequest, handleApiError, notFound } from '@/lib/api-errors';
+import { cache, CACHE_KEYS } from '@/lib/cache';
+import {
+  getMedusaAdminToken,
+  formatProductUpdateForMedusa,
+} from '@/lib/medusa-helpers';
+
+export const dynamic = 'force-dynamic';
+
+const MEDUSA_BACKEND_URL = process.env.MEDUSA_BACKEND_URL || process.env.NEXT_PUBLIC_MEDUSA_URL;
+
+// ============================================================================
+// Admin Product by ID API Route - /api/admin/products/[id]
+// ============================================================================
+// PUT: Update existing product (admin only)
+// DELETE: Delete product (admin only)
+//
+// What: Admin endpoints for managing individual products via Medusa API
+// Why: Admins need to edit and delete products without Medusa admin dashboard
+// How: Authenticates with Medusa, calls admin API endpoints
+
+// ============================================================================
+// PUT - Update Product (Admin Only)
+// ============================================================================
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const authResult = await verifyAdmin();
+    if (authResult.error) return authResult.error;
+
+    const { id } = params;
+
+    if (!id) {
+      return badRequest('Product ID is required');
+    }
+
+    const body = await request.json();
+    const { title, description, handle, price, thumbnail, category_ids } = body;
+
+    // Validate that at least one field is being updated
+    if (!title && !description && !handle && price === undefined && !thumbnail && !category_ids) {
+      return badRequest('At least one field must be provided for update');
+    }
+
+    // Validate price if provided
+    if (price !== undefined && (typeof price !== 'number' || price < 0)) {
+      return badRequest('Price must be a non-negative number');
+    }
+
+    // Get Medusa admin token
+    const token = await getMedusaAdminToken();
+
+    // Format update data
+    const { productUpdate, priceUpdate } = formatProductUpdateForMedusa({
+      title,
+      description,
+      handle,
+      price,
+      thumbnail,
+      category_ids,
+    });
+
+    // Update product in Medusa
+    const response = await fetch(`${MEDUSA_BACKEND_URL}/admin/products/${id}`, {
+      method: 'POST', // Medusa v2 uses POST for updates
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(productUpdate),
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return notFound('Product not found');
+      }
+      const error = await response.json().catch(() => ({ message: 'Failed to update product' }));
+      throw new Error(error.message || 'Failed to update product in Medusa');
+    }
+
+    const data = await response.json();
+
+    // If price was updated, we need to update the variant price separately
+    // For simplicity, we'll update the first variant's first price
+    if (priceUpdate !== undefined && data.product?.variants?.[0]?.id) {
+      const variantId = data.product.variants[0].id;
+      const variantPrices = data.product.variants[0].prices || [];
+      const usdPrice = variantPrices.find((p: { currency_code: string }) => p.currency_code === 'usd');
+
+      if (usdPrice) {
+        // Update existing price
+        await fetch(
+          `${MEDUSA_BACKEND_URL}/admin/products/${id}/variants/${variantId}`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              prices: variantPrices.map((p: { id: string; currency_code: string; amount: number }) =>
+                p.currency_code === 'usd'
+                  ? { ...p, amount: priceUpdate }
+                  : p
+              ),
+            }),
+          }
+        );
+      }
+    }
+
+    // Invalidate products cache
+    await cache.invalidate(CACHE_KEYS.products());
+
+    return NextResponse.json({
+      success: true,
+      product: data.product,
+      message: 'Product updated successfully',
+    });
+  } catch (error) {
+    return handleApiError(error, 'Admin Product PUT');
+  }
+}
+
+// ============================================================================
+// DELETE - Delete Product (Admin Only)
+// ============================================================================
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const authResult = await verifyAdmin();
+    if (authResult.error) return authResult.error;
+
+    const { id } = params;
+
+    if (!id) {
+      return badRequest('Product ID is required');
+    }
+
+    // Get Medusa admin token
+    const token = await getMedusaAdminToken();
+
+    // Delete product from Medusa
+    const response = await fetch(`${MEDUSA_BACKEND_URL}/admin/products/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return notFound('Product not found');
+      }
+      const error = await response.json().catch(() => ({ message: 'Failed to delete product' }));
+      throw new Error(error.message || 'Failed to delete product from Medusa');
+    }
+
+    // Invalidate products cache
+    await cache.invalidate(CACHE_KEYS.products());
+
+    return NextResponse.json({
+      success: true,
+      message: 'Product deleted successfully',
+    });
+  } catch (error) {
+    return handleApiError(error, 'Admin Product DELETE');
+  }
+}

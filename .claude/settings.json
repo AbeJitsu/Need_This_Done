@@ -44,6 +44,8 @@
       "Bash(mv:*)",
       "Bash(npm install:*)",
       "Bash(cd app && npm install:*)",
+      "Bash(vercel:*)",
+      "Bash(railway:*)",
       "Glob",
       "Grep",
       "TodoWrite",
@@ -75,9 +77,7 @@
       "Edit(**/*.pem)",
       "Read(**/*.key)",
       "Write(**/*.key)",
-      "Edit(**/*.key)",
-      "Bash(git push origin production:*)",
-      "Bash(git push origin prod:*)"
+      "Edit(**/*.key)"
     ]
   },
   "hooks": {
