@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abiezer Reyes - Sales Professional Resume</title>
+    <style>
+/* ============================================================================
+   Reset and Base Styles
+   ============================================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: #ffffff;
+    color: #1a202c;
+    line-height: 1.5;
+    padding: 16px;
+}
+
+/* ============================================================================
+   Skip Link (Accessibility)
+   ============================================================================ */
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #1d4ed8;
+    color: #ffffff;
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 100;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* ============================================================================
+   Container and Layout
+   ============================================================================ */
+
+.container {
+    max-width: 850px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 24px;
+    line-height: 1.4;
+}
+
+/* ============================================================================
+   Header Section
+   ============================================================================ */
+
+header {
+    text-align: center;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #1d4ed8;
+    padding-bottom: 12px;
+}
+
+.name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1d4ed8;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+
+.title {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.contact {
+    font-size: 11px;
+    color: #64748b;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    row-gap: 6px;
+}
+
+.contact span:not(:last-child)::after {
+    content: " • ";
+    color: #64748b;
+    margin-left: 8px;
+}
+
+.contact a {
+    color: #1d4ed8;
+    text-decoration: none;
+    word-break: break-word;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.contact a:hover {
+    text-decoration: underline;
+    color: #1d4ed8;
+}
+
+.contact a:focus-visible {
+    outline: 2px solid #1d4ed8;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+.contact a:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.contact a:active {
+    outline: 2px solid #1d4ed8;
+    outline-offset: 2px;
+}
+
+/* ============================================================================
+   Sections
+   ============================================================================ */
+
+section {
+    margin-bottom: 24px;
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 4px;
+}
+
+.section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1d4ed8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #1d4ed8;
+}
+
+/* ============================================================================
+   Summary Section
+   ============================================================================ */
+
+.summary-refined {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #1a202c;
+}
+
+.summary-paragraph {
+    margin-bottom: 14px;
+}
+
+.summary-paragraph:last-child {
+    margin-bottom: 0;
+}
+
+.summary-highlight {
+    color: #1d4ed8;
+    font-weight: 600;
+    font-style: normal;
+}
+
+/* ============================================================================
+   Skills Section
+   ============================================================================ */
+
+.skills {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-left: 20px;
+}
+
+.skill-category {
+    font-size: 11px;
+}
+
+.skill-category strong {
+    color: #16a34a;
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.skill-category p {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #1a202c;
+}
+
+/* ============================================================================
+   Experience Section
+   ============================================================================ */
+
+.job {
+    margin-bottom: 14px;
+    margin-left: 20px;
+}
+
+.job-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 6px;
+}
+
+.job-title {
+    font-weight: 700;
+    font-size: 12px;
+    color: #dc2626;
+}
+
+.job-meta {
+    display: flex;
+    gap: 6px;
+    font-size: 11px;
+    color: #64748b;
+    flex-wrap: wrap;
+}
+
+.job-company {
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 8px;
+    margin-left: 8px;
+}
+
+.job-bullets {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #1a202c;
+    margin-left: 14px;
+    list-style-position: outside;
+}
+
+.job-bullets li {
+    margin-bottom: 6px;
+}
+
+/* ============================================================================
+   Education Section
+   ============================================================================ */
+
+.education {
+    font-size: 11px;
+    line-height: 1.7;
+    margin-left: 20px;
+}
+
+.education strong {
+    color: #1a202c;
+}
+
+/* ============================================================================
+   Responsive Design: Small Mobile (under 480px)
+   ============================================================================ */
+
+@media (max-width: 479px) {
+    .name {
+        font-size: 18px;
+    }
+
+    .contact {
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .contact span:not(:last-child)::after {
+        display: none;
+    }
+
+    .section-title {
+        font-size: 12px;
+    }
+
+    .summary-refined {
+        font-size: 13px;
+    }
+}
+
+/* ============================================================================
+   Responsive Design: Tablet (480px - 768px)
+   ============================================================================ */
+
+@media (min-width: 480px) {
+    body {
+        padding: 20px;
+    }
+
+    .container {
+        padding: 30px;
+    }
+
+    .name {
+        font-size: 22px;
+    }
+
+    .title {
+        font-size: 12px;
+    }
+
+    .contact {
+        font-size: 11px;
+        gap: 10px;
+    }
+
+    section {
+        margin-bottom: 24px;
+    }
+
+    .section-title {
+        font-size: 15px;
+        margin-bottom: 14px;
+        padding-left: 14px;
+        padding-bottom: 10px;
+    }
+
+    .summary-refined {
+        font-size: 13px;
+    }
+
+    .summary-paragraph {
+        margin-bottom: 12px;
+    }
+
+    .skills {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 11px;
+    }
+
+    .skill-category {
+        font-size: 11px;
+    }
+
+    .skill-category p {
+        font-size: 12px;
+    }
+
+    .job-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .job-title {
+        font-size: 12px;
+    }
+
+    .job-meta {
+        font-size: 12px;
+        flex-wrap: nowrap;
+    }
+
+    .job-company {
+        font-size: 11px;
+    }
+
+    .job-bullets {
+        font-size: 13px;
+        line-height: 1.7;
+        margin-left: 16px;
+    }
+
+    .education {
+        font-size: 11px;
+    }
+}
+
+/* ============================================================================
+   Responsive Design: Desktop (769px+)
+   ============================================================================ */
+
+@media (min-width: 769px) {
+    body {
+        padding: 20px;
+    }
+
+    .container {
+        padding: 40px;
+    }
+
+    .name {
+        font-size: 28px;
+        margin-bottom: 5px;
+    }
+
+    .title {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .contact {
+        font-size: 12px;
+        gap: 12px;
+    }
+
+    section {
+        margin-bottom: 24px;
+    }
+
+    .section-title {
+        font-size: 16px;
+        margin-bottom: 16px;
+        padding-left: 14px;
+        padding-bottom: 12px;
+    }
+
+    .summary-refined {
+        font-size: 14px;
+    }
+
+    .summary-paragraph {
+        margin-bottom: 14px;
+    }
+
+    .skills {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .skill-category {
+        font-size: 12px;
+    }
+
+    .skill-category p {
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .job {
+        margin-bottom: 12px;
+    }
+
+    .job-header {
+        gap: 0;
+    }
+
+    .job-title {
+        font-size: 12px;
+    }
+
+    .job-meta {
+        font-size: 11px;
+    }
+
+    .job-company {
+        font-size: 11px;
+    }
+
+    .job-bullets {
+        font-size: 13px;
+        line-height: 1.7;
+        margin-left: 16px;
+    }
+
+    .job-bullets li {
+        margin-bottom: 5px;
+    }
+
+    .education {
+        font-size: 11px;
+    }
+}
+
+/* ============================================================================
+   Print Styles (PDF/Physical Printing)
+   ============================================================================ */
+
+@media print {
+    body {
+        background: white;
+        color: #1e293b;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 0.3in 0.5in 0.5in 0.5in;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        border-left: none !important;
+        padding-left: 0.5in !important;
+    }
+
+    .job {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* Page 2 starts here if needed */
+    .page-2-start {
+        page-break-before: always;
+        padding-top: 0.5in;
+    }
+
+    /* Page 3 starts here */
+    .page-3-start {
+        page-break-before: always;
+        padding-top: 0.3in;
+    }
+
+    .skip-link {
+        display: none;
+    }
+
+    section {
+        margin-bottom: 12px;
+        padding: 8px;
+    }
+
+    .section-title {
+        font-size: 12px;
+        background: white !important;
+        color: #1a202c !important;
+        border-bottom: 2px solid #1a202c;
+        border-radius: 0;
+        padding: 6px 0px !important;
+        margin-bottom: 8px;
+    }
+
+    .summary-refined {
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .summary-paragraph {
+        margin-bottom: 10px;
+    }
+
+    .summary-highlight {
+        color: inherit;
+        font-weight: 600;
+    }
+
+    .skills {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .skill-category {
+        font-size: 10px;
+    }
+
+    .skill-category p {
+        font-size: 11px;
+    }
+
+    .job-bullets {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .job-bullets li {
+        margin-bottom: 4px;
+    }
+
+    .job {
+        margin-bottom: 14px;
+    }
+
+    .job-title {
+        font-size: 12px;
+    }
+
+    .name {
+        font-size: 24px;
+    }
+
+    header {
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+        background: white !important;
+        border-radius: 0;
+    }
+
+    section,
+    section:nth-child(even),
+    section:nth-child(odd) {
+        background: white !important;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Skip to main content link for keyboard users (WCAG 2.4.1) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="container">
+        <!-- Header: Name, Title, Contact Information -->
+        <header class="header">
+            <div class="name">ABIEZER "ABE" REYES</div>
+            <div class="title">Sales Professional</div>
+            <div class="contact">
+                <span>Orlando, FL</span>
+                <span><a href="mailto:abe.raise@gmail.com">abe.raise@gmail.com</a></span>
+                <span>407-873-6713</span>
+                <span><a href="https://www.linkedin.com/in/weneedthisdone">linkedin.com/in/weneedthisdone</a></span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Professional Summary Section -->
+            <section class="summary-section">
+                <div class="summary-refined">
+                    <p class="summary-paragraph">
+                        <strong>20+ years in customer-facing sales roles</strong>, including B2B, financial services, and relationship-based selling. Seven years at Toyota advancing to Finance Manager proved I hit targets consistently. I build pipelines, earn trust quickly, and explain complex products so customers say yes with confidence.
+                    </p>
+                    <p class="summary-paragraph">
+                        What sets me apart: I translate technical details into clear benefits. Whether selling protection products, educational programs, or business solutions, I focus on understanding what the customer actually needs and showing them exactly how we solve it.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Core Competencies Section -->
+            <section class="skills-section">
+                <h2 class="section-title">Core Competencies</h2>
+                <div class="skills">
+                    <div class="skill-category">
+                        <strong>Sales Execution</strong>
+                        <p>Pipeline Building, Target Achievement, Consultative Selling, Objection Handling, Closing</p>
+                    </div>
+                    <div class="skill-category">
+                        <strong>Prospecting</strong>
+                        <p>Outbound Campaigns, Phone/Email/Social Outreach, Lead Qualification, Account Targeting</p>
+                    </div>
+                    <div class="skill-category">
+                        <strong>Customer Acquisition</strong>
+                        <p>Needs Assessment, Solution Presentation, Relationship Building, Trust Development</p>
+                    </div>
+                    <div class="skill-category">
+                        <strong>Product Knowledge</strong>
+                        <p>Complex Product Sales, Technical Translation, Explaining Benefits, Competitive Positioning</p>
+                    </div>
+                    <div class="skill-category">
+                        <strong>Tools & Process</strong>
+                        <p>CRM Systems, Sales Intelligence Tools, Pipeline Management, Activity Tracking</p>
+                    </div>
+                    <div class="skill-category">
+                        <strong>Communication</strong>
+                        <p>Elevator Pitch Refinement, Executive Presence, Active Listening, Clear Explanation</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Professional Experience Section -->
+            <section class="experience-section">
+                <h2 class="section-title">Professional Experience</h2>
+
+                <div class="job">
+                    <div class="job-header">
+                        <div class="job-title">Finance and Insurance Manager</div>
+                        <div class="job-meta">2017 - 2023 (7 years)</div>
+                    </div>
+                    <div class="job-company">Toyota of Orlando | Salesperson → Sales Manager → F&I Manager</div>
+                    <ul class="job-bullets">
+                        <li>Seven years at a high-volume dealership (300-600+ units monthly), advancing from sales floor to Finance Manager by consistently exceeding targets</li>
+                        <li>Closed 3-7 deals daily, presenting extended warranties, gap insurance, maintenance plans, and add-on products while maintaining high customer satisfaction</li>
+                        <li>Structured financing across multiple lenders, matching customer needs with the right solutions while ensuring compliance</li>
+                        <li>Became the go-to person when teammates had complicated deals because I could find creative solutions that worked for everyone</li>
+                        <li>Built trust by explaining options clearly instead of pushing products. Customers left my office confident in their decisions</li>
+                        <li>Trained and mentored new sales staff on product presentation and objection handling techniques</li>
+                    </ul>
+                </div>
+
+                <div class="job page-2-start">
+                    <div class="job-header">
+                        <div class="job-title">Admissions Representative & Military Student Liaison</div>
+                        <div class="job-meta">2012 - 2017 (5 years)</div>
+                    </div>
+                    <div class="job-company">Full Sail University | International Admissions → Military Student Services</div>
+                    <ul class="job-bullets">
+                        <li>Consistently met enrollment targets by guiding prospective students through the decision-making process with honest, relationship-based selling</li>
+                        <li>Moved to Military department where my Army background gave me instant credibility with veterans navigating their transition</li>
+                        <li>Translated complex GI Bill benefits, program costs, and financing options so families could make confident enrollment decisions</li>
+                        <li>No high-pressure tactics. Built pipeline through genuine support and follow-up, converting leads to enrolled students</li>
+                    </ul>
+                </div>
+
+                <div class="job">
+                    <div class="job-header">
+                        <div class="job-title">B2B Sales Representative</div>
+                        <div class="job-meta">2009 - 2011</div>
+                    </div>
+                    <div class="job-company">Quill.com (Staples) | Office Products B2B Sales</div>
+                    <ul class="job-bullets">
+                        <li>Prospected and acquired business accounts through outbound phone campaigns and relationship building</li>
+                        <li>Managed sales pipeline, tracked activity metrics, and hit weekly/monthly targets in a fast-paced sales environment</li>
+                    </ul>
+                </div>
+
+                <div class="job">
+                    <div class="job-header">
+                        <div class="job-title">Licensed Mortgage Broker</div>
+                        <div class="job-meta">2007 - 2008</div>
+                    </div>
+                    <div class="job-company">Florida Home Equity | Orlando, FL</div>
+                    <ul class="job-bullets">
+                        <li>Evaluated homeowners' financial situations and structured refinancing solutions including debt consolidation and cash-out options</li>
+                        <li>Walked customers through loan terms, monthly payment impacts, and long-term cost implications so they could make confident decisions</li>
+                    </ul>
+                </div>
+
+                <div class="job">
+                    <div class="job-header">
+                        <div class="job-title">Combat Medic, Corporal (E-4)</div>
+                        <div class="job-meta">1996 - 2001</div>
+                    </div>
+                    <div class="job-company">U.S. Army | Fort Hood, TX & Fort Bragg, NC</div>
+                    <ul class="job-bullets">
+                        <li>Led a team of 3 medics and 2 combat lifesavers. Delivered emergency care where mistakes cost lives and hesitation wasn't an option</li>
+                        <li>Foundation for everything since: staying calm under pressure, following through on commitments, earning trust through action</li>
+                    </ul>
+                </div>
+
+                <div class="job">
+                    <div class="job-header">
+                        <div class="job-title">Technology Consultant / Developer</div>
+                        <div class="job-meta">2023 - Present</div>
+                    </div>
+                    <div class="job-company">Freelance & Acadio (EdTech Startup) | Orlando, FL</div>
+                    <ul class="job-bullets">
+                        <li>Transitioned into technology consulting, building web applications and automation systems for clients</li>
+                        <li>At Acadio: Became the CEO's go-to person for technical questions because I could explain complex concepts in terms that made sense to him</li>
+                        <li>This technical background allows me to speak credibly with technical buyers and translate product features into business value</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Technical Background Section -->
+            <section class="tech-section page-3-start">
+                <h2 class="section-title">Technical Background</h2>
+                <div class="summary-refined">
+                    <p class="summary-paragraph">
+                        Hands-on experience with web development, APIs, databases, and automation tools. Comfortable learning new platforms quickly and speaking credibly about technical products with both technical and non-technical audiences.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Education Section -->
+            <section class="education-section">
+                <h2 class="section-title">Education</h2>
+                <div class="education">
+                    <strong>Full Sail University</strong> (2016 - 2017): Web Design & Development coursework. Straight A's while working full-time.
+                    <br><br>
+                    <strong>U.S. Army Medical Department Center & School</strong> (1996 - 2001): Combat Medic certification. Graduated top 10% of class.
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

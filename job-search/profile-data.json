@@ -201,6 +201,62 @@
       }
     },
     {
+      "id": "quill",
+      "company": "Quill.com",
+      "company_description": "Staples Company - Office Products B2B",
+      "title": "B2B Sales Representative",
+      "employment_type": "Full-time",
+      "location": "Orlando, FL",
+      "location_type": "On-site",
+      "dates": {
+        "start": "2009-01",
+        "end": "2011-12",
+        "display": "2009 - 2011"
+      },
+      "current": false,
+      "descriptions": {
+        "resume_bullets": [
+          "Prospected and acquired business accounts through outbound phone campaigns and relationship building",
+          "Managed sales pipeline, tracked activity metrics, and hit weekly/monthly targets in a fast-paced sales environment"
+        ],
+        "linkedin": "B2B sales role focused on acquiring business accounts for office products. Built pipeline through outbound prospecting, managed accounts, and consistently hit performance targets.",
+        "brief": "B2B sales prospecting and account acquisition"
+      },
+      "key_accomplishments": [
+        "Outbound B2B prospecting",
+        "Pipeline management",
+        "Weekly/monthly target achievement"
+      ]
+    },
+    {
+      "id": "mortgage",
+      "company": "Florida Home Equity",
+      "company_description": "Mortgage Brokerage",
+      "title": "Licensed Mortgage Broker",
+      "employment_type": "Full-time",
+      "location": "Orlando, FL",
+      "location_type": "On-site",
+      "dates": {
+        "start": "2007-01",
+        "end": "2008-12",
+        "display": "2007 - 2008"
+      },
+      "current": false,
+      "descriptions": {
+        "resume_bullets": [
+          "Evaluated homeowners' financial situations and structured refinancing solutions including debt consolidation and cash-out options",
+          "Walked customers through loan terms, monthly payment impacts, and long-term cost implications so they could make confident decisions"
+        ],
+        "linkedin": "Originated mortgage loans and refinancing solutions. Evaluated financial situations, structured deals, and guided homeowners through complex lending decisions.",
+        "brief": "Mortgage origination and refinancing solutions"
+      },
+      "key_accomplishments": [
+        "Financial needs assessment",
+        "Complex product explanation",
+        "Consultative selling"
+      ]
+    },
+    {
       "id": "army",
       "company": "U.S. Army",
       "company_description": "Military Service",
