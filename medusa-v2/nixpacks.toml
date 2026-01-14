@@ -10,4 +10,4 @@ cmds = ["npm install --legacy-peer-deps"]
 cmds = ["echo 'Build at runtime'"]
 
 [start]
-cmd = "npm run build && medusa db:migrate && medusa start"
+cmd = "npm run build && medusa db:migrate && npm run seed && medusa start"
