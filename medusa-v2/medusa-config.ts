@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs'
 
 // Load from root .env.local (same pattern as v1)
+// Note: HOST=0.0.0.0 must be set in Railway for external access
 const envPath = path.resolve(__dirname, '../.env.local')
 if (fs.existsSync(envPath)) {
   dotenv.config({ path: envPath })
@@ -43,10 +44,23 @@ function getDatabaseUrl() {
 const DATABASE_URL = getDatabaseUrl()
 const JWT_SECRET = process.env.JWT_SECRET || process.env.MEDUSA_JWT_SECRET
 
+// Only use Redis if URL is valid (not docker hostname)
+function getRedisUrl() {
+  const url = process.env.REDIS_URL
+  if (!url || url.includes('redis:6379') || url.includes('redis://redis')) {
+    console.log('⚠ Redis disabled (invalid URL for local dev)')
+    return undefined
+  }
+  return url
+}
+
 module.exports = defineConfig({
+  admin: {
+    disable: process.env.DISABLE_MEDUSA_ADMIN === "true",
+  },
   projectConfig: {
     databaseUrl: DATABASE_URL,
-    redisUrl: process.env.REDIS_URL,
+    redisUrl: getRedisUrl(),
     http: {
       storeCors: process.env.STORE_CORS || process.env.ADMIN_CORS!,
       adminCors: process.env.ADMIN_CORS!,

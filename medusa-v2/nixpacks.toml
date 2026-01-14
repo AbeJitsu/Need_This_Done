@@ -1,0 +1,13 @@
+# Railway deployment config for Medusa v2
+# Working pattern: build at runtime, admin disabled
+[phases.setup]
+nixPkgs = ["nodejs_20", "npm-9_x"]
+
+[phases.install]
+cmds = ["npm install --legacy-peer-deps"]
+
+[phases.build]
+cmds = ["echo 'Build at runtime'"]
+
+[start]
+cmd = "npm run build && medusa db:migrate && npm run seed && medusa start"
