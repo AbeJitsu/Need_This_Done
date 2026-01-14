@@ -14,7 +14,7 @@ const MEDUSA_ADMIN_PASSWORD = process.env.MEDUSA_ADMIN_PASSWORD;
 // ============================================================================
 // What: Get JWT token for Medusa admin API access
 // Why: All admin endpoints require authentication
-// How: POST to /auth/user/emailpass with credentials
+// How: POST to /admin/auth with credentials (Medusa v2)
 
 export async function getMedusaAdminToken(): Promise<string> {
   if (!MEDUSA_BACKEND_URL) {
@@ -25,7 +25,7 @@ export async function getMedusaAdminToken(): Promise<string> {
     throw new Error('MEDUSA_ADMIN_EMAIL and MEDUSA_ADMIN_PASSWORD must be set');
   }
 
-  const response = await fetch(`${MEDUSA_BACKEND_URL}/auth/user/emailpass`, {
+  const response = await fetch(`${MEDUSA_BACKEND_URL}/admin/auth`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
