@@ -35,9 +35,9 @@ export async function GET() {
     // Get Medusa admin token
     const token = await getMedusaAdminToken();
 
-    // Fetch products from Medusa with calculated prices and images
+    // Fetch products from Medusa
     const response = await fetch(
-      `${MEDUSA_BACKEND_URL}/admin/products?fields=*variants.calculated_price,*images`,
+      `${MEDUSA_BACKEND_URL}/admin/products`,
       {
         headers: {
           'Authorization': `Bearer ${token}`,

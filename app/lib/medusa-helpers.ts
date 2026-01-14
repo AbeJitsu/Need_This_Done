@@ -25,7 +25,7 @@ export async function getMedusaAdminToken(): Promise<string> {
     throw new Error('MEDUSA_ADMIN_EMAIL and MEDUSA_ADMIN_PASSWORD must be set');
   }
 
-  const response = await fetch(`${MEDUSA_BACKEND_URL}/admin/auth`, {
+  const response = await fetch(`${MEDUSA_BACKEND_URL}/auth/user/emailpass`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
