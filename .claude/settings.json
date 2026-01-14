@@ -46,6 +46,7 @@
       "Bash(cd app && npm install:*)",
       "Bash(vercel:*)",
       "Bash(railway:*)",
+      "Bash(supabase:*)",
       "Glob",
       "Grep",
       "TodoWrite",
