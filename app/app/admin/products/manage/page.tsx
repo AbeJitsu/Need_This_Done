@@ -94,69 +94,142 @@ export default function ProductManagePage() {
     setSubmitting(true);
     setError('');
 
-    try {
-      const payload = {
-        title: formData.title,
-        description: formData.description,
-        handle: formData.handle,
-        price: parseFloat(formData.price),
-        sku: formData.sku,
-        thumbnail: formData.thumbnail,
+    const payload = {
+      title: formData.title,
+      description: formData.description,
+      handle: formData.handle,
+      price: parseFloat(formData.price),
+      sku: formData.sku,
+      thumbnail: formData.thumbnail,
+    };
+
+    const url = editingProduct
+      ? `/api/admin/products/${editingProduct.id}`
+      : '/api/admin/products';
+
+    const method = editingProduct ? 'PUT' : 'POST';
+
+    // Optimistic update
+    if (editingProduct) {
+      // Update existing product immediately
+      const previousProduct = editingProduct;
+      const updatedProduct = {
+        ...editingProduct,
+        title: payload.title,
+        description: payload.description,
+        handle: payload.handle,
+        thumbnail: payload.thumbnail,
+        variants: editingProduct.variants?.map(v => ({
+          ...v,
+          sku: payload.sku,
+          prices: [{ amount: payload.price * 100 }],
+        })),
       };
+      setProducts(prev => prev.map(p => p.id === editingProduct.id ? updatedProduct : p));
+      setIsModalOpen(false);
+      resetForm();
+      showNotification('success', 'Product updated successfully');
 
-      const url = editingProduct
-        ? `/api/admin/products/${editingProduct.id}`
-        : '/api/admin/products';
+      // Background: Make the actual API call
+      try {
+        const response = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
 
-      const method = editingProduct ? 'PUT' : 'POST';
+        const data = await response.json();
 
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        showNotification('success', data.message || 'Product saved successfully');
-        setIsModalOpen(false);
-        resetForm();
-        fetchProducts();
-      } else {
-        setError(data.message || 'Failed to save product');
+        if (data.success) {
+          // Replace optimistic update with real data
+          setProducts(prev => prev.map(p => p.id === editingProduct.id ? data.product : p));
+        } else {
+          // Rollback: Restore previous product
+          setProducts(prev => prev.map(p => p.id === editingProduct.id ? previousProduct : p));
+          showNotification('error', data.message || 'Failed to update product');
+        }
+      } catch (err) {
+        // Rollback on network error
+        setProducts(prev => prev.map(p => p.id === editingProduct.id ? previousProduct : p));
+        showNotification('error', 'Network error updating product');
+      } finally {
+        setSubmitting(false);
       }
-    } catch (err) {
-      setError('Network error saving product');
-    } finally {
-      setSubmitting(false);
+    } else {
+      // Create new product - add optimistic placeholder
+      const tempId = `temp-${Date.now()}`;
+      const optimisticProduct: Product = {
+        id: tempId,
+        title: payload.title,
+        description: payload.description,
+        handle: payload.handle,
+        thumbnail: payload.thumbnail,
+        variants: [{
+          id: tempId,
+          sku: payload.sku,
+          prices: [{ amount: payload.price * 100 }],
+        }],
+      };
+      setProducts(prev => [...prev, optimisticProduct]);
+      setIsModalOpen(false);
+      resetForm();
+      showNotification('success', 'Product created successfully');
+
+      // Background: Make the actual API call
+      try {
+        const response = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Replace temp product with real product from API
+          setProducts(prev => prev.map(p => p.id === tempId ? data.product : p));
+        } else {
+          // Remove temp product if creation failed
+          setProducts(prev => prev.filter(p => p.id !== tempId));
+          showNotification('error', data.message || 'Failed to create product');
+        }
+      } catch (err) {
+        // Remove temp product on network error
+        setProducts(prev => prev.filter(p => p.id !== tempId));
+        showNotification('error', 'Network error creating product');
+      } finally {
+        setSubmitting(false);
+      }
     }
   };
 
   const handleDelete = async () => {
     if (!deletingProduct) return;
 
-    setSubmitting(true);
+    // Optimistic update: Remove product from UI immediately
+    const productToDelete = deletingProduct;
+    setProducts(prev => prev.filter(p => p.id !== productToDelete.id));
+    setIsDeleteModalOpen(false);
+    setDeletingProduct(null);
+    showNotification('success', 'Product deleted successfully');
 
+    // Background: Make the actual API call
     try {
-      const response = await fetch(`/api/admin/products/${deletingProduct.id}`, {
+      const response = await fetch(`/api/admin/products/${productToDelete.id}`, {
         method: 'DELETE',
       });
 
       const data = await response.json();
 
-      if (data.success) {
-        showNotification('success', 'Product deleted successfully');
-        setIsDeleteModalOpen(false);
-        setDeletingProduct(null);
-        fetchProducts();
-      } else {
-        setError(data.message || 'Failed to delete product');
+      if (!data.success) {
+        // Rollback: Add product back if deletion failed
+        setProducts(prev => [...prev, productToDelete]);
+        showNotification('error', data.message || 'Failed to delete product');
       }
     } catch (err) {
-      setError('Network error deleting product');
-    } finally {
-      setSubmitting(false);
+      // Rollback: Add product back on network error
+      setProducts(prev => [...prev, productToDelete]);
+      showNotification('error', 'Network error deleting product');
     }
   };
 

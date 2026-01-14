@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { verifyAdmin } from '@/lib/api-auth';
 import { badRequest, handleApiError, notFound } from '@/lib/api-errors';
 import { cache, CACHE_KEYS } from '@/lib/cache';
@@ -117,6 +118,9 @@ export async function PUT(
     // Invalidate products cache
     await cache.invalidate(CACHE_KEYS.products());
 
+    // Revalidate shop page so updated product appears immediately
+    revalidatePath('/shop');
+
     return NextResponse.json({
       success: true,
       product: data.product,
@@ -167,6 +171,9 @@ export async function DELETE(
 
     // Invalidate products cache
     await cache.invalidate(CACHE_KEYS.products());
+
+    // Revalidate shop page so deleted product is removed immediately
+    revalidatePath('/shop');
 
     return NextResponse.json({
       success: true,

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { verifyAdmin } from '@/lib/api-auth';
 import { badRequest, handleApiError } from '@/lib/api-errors';
 import { cache, CACHE_KEYS } from '@/lib/cache';
@@ -132,6 +133,9 @@ export async function POST(request: NextRequest) {
 
     // Invalidate products cache
     await cache.invalidate(CACHE_KEYS.products());
+
+    // Revalidate shop page so new product appears immediately
+    revalidatePath('/shop');
 
     return NextResponse.json(
       {
