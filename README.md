@@ -570,6 +570,8 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...  # Get from: s
 
 # Medusa (Railway)
 MEDUSA_BACKEND_URL=https://need-this-done-production.up.railway.app
+NEXT_PUBLIC_MEDUSA_URL=https://need-this-done-production.up.railway.app  # Same as MEDUSA_BACKEND_URL for client-side access
+NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_...  # Get from Medusa admin dashboard
 MEDUSA_ADMIN_EMAIL=your_admin_email  # Required for Medusa admin authentication
 MEDUSA_ADMIN_PASSWORD=your_admin_password  # Required for product management scripts
 

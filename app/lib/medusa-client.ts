@@ -7,6 +7,7 @@
 
 // NEXT_PUBLIC_MEDUSA_URL is your Railway Medusa backend URL
 const MEDUSA_URL = process.env.NEXT_PUBLIC_MEDUSA_URL || process.env.MEDUSA_BACKEND_URL;
+const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY;
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 
@@ -34,6 +35,7 @@ async function fetchWithRetry(
       // Removed credentials: "include" to test if it's causing response filtering
       headers: {
         "Content-Type": "application/json",
+        ...(PUBLISHABLE_KEY && { "x-publishable-api-key": PUBLISHABLE_KEY }),
         ...options.headers,
       },
     };
