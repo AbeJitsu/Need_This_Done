@@ -37,36 +37,36 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   project: {
     name: 'NeedThisDone',
-    tagline: 'Get your tasks done right',
-    description: 'Real people helping busy professionals get things done. Book a quick consultation or tell us about your project. We handle the rest.',
+    tagline: 'Websites. Automation. AI.',
+    description: 'From your first website to fully automated operations. We build the technology that lets you focus on what matters.',
     url: 'https://needthisdone.com',
   },
 
   // ========================================================================
   // Services
   // ========================================================================
-  // Core service offerings - ordered to match pricing tier colors (purple, blue, green)
+  // Core service offerings - ordered to match pricing tier colors (blue, purple, green)
   services: [
     {
-      title: 'Virtual Assistant',
-      tagline: 'Free up your time for what matters',
-      description: 'Let us handle the day-to-day tasks that eat up your time. Email, scheduling, research, bookings, and social media posting.',
-      details: 'Email Management, Calendar Coordination, Research & Bookings, Social Media Posting',
-      color: 'green',
-    },
-    {
-      title: 'Data & Documents',
-      tagline: 'From messy data to polished documents',
-      description: 'From messy spreadsheets to polished reports. We organize, format, and prepare your documents so they look professional.',
-      details: 'Spreadsheets & Data Entry, Reports & Presentations, Document Formatting, File Organization',
+      title: 'Website Build',
+      tagline: 'Your digital foundation',
+      description: 'Professional websites that work. From landing pages to full e-commerce, built to convert visitors into customers.',
+      details: 'Custom Design, Mobile-First, SEO-Ready, Easy to Update',
       color: 'blue',
     },
     {
-      title: 'Website Services',
-      tagline: 'Websites that work while you focus on business',
-      description: 'From new builds to updates and maintenance. We handle websites of any size on any platform, so you can focus on your business.',
-      details: 'Website Builds & Redesigns, Content Updates, E-commerce Setup, Ongoing Maintenance',
+      title: 'Automation Setup',
+      tagline: 'Stop doing repetitive work',
+      description: 'Connect your tools, automate your workflows, and reclaim hours every week. We set it up, you reap the benefits.',
+      details: 'Workflow Design, Tool Integration, Testing, Training',
       color: 'purple',
+    },
+    {
+      title: 'Managed AI Services',
+      tagline: 'AI that runs while you sleep',
+      description: 'We build, deploy, and maintain AI agents that handle your operations. You get the results without the complexity.',
+      details: 'Custom AI Agents, Monitoring, Optimization, Support',
+      color: 'green',
     },
   ],
 
@@ -75,7 +75,7 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   metadata: {
     siteName: 'NeedThisDone',
-    siteDescription: 'Real people helping busy professionals get tasks done. Websites, virtual assistant tasks, data, and documents.',
+    siteDescription: 'Professional website builds, automation setup, and managed AI services for growing businesses.',
     author: 'NeedThisDone',
   },
 };

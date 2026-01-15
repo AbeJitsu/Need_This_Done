@@ -3,9 +3,7 @@
 import Link from 'next/link';
 import {
   AccentColor,
-  titleColors,
-  topBorderColors,
-  cardHoverColors,
+  accentColors,
   formInputColors,
   mutedTextColors,
   shadowClasses,
@@ -68,7 +66,7 @@ export default function ServiceCard({
   const cardContent = (
     <div className="flex flex-col h-full">
       {editable('title', (
-        <h2 className={`font-bold mb-3 text-xl ${titleColors[color]}`}>
+        <h2 className={`font-bold mb-3 text-xl ${accentColors[color].titleText}`}>
           {title}
         </h2>
       ))}
@@ -96,7 +94,7 @@ export default function ServiceCard({
                 onLinkClick(e as unknown as React.MouseEvent);
               }
             } : undefined}
-            className={`text-sm font-medium mt-auto pt-4 ${titleColors[color]} ${onLinkClick ? 'cursor-pointer hover:underline' : ''}`}
+            className={`text-sm font-medium mt-auto pt-4 ${accentColors[color].titleText} ${onLinkClick ? 'cursor-pointer hover:underline' : ''}`}
           >
             {linkText}
           </span>
@@ -127,7 +125,7 @@ export default function ServiceCard({
     </div>
   );
 
-  const cardClasses = `p-6 ${cardBgColors.base} rounded-xl ${cardBorderColors.light} border-t-4 ${topBorderColors[color]} transition-all duration-300 ${cardHoverColors[color]} ${shadowClasses.cardHover} h-full`;
+  const cardClasses = `p-6 ${cardBgColors.base} rounded-xl ${cardBorderColors.light} ${accentColors[color].topBorder} transition-all duration-300 ${accentColors[color].cardHover} ${shadowClasses.cardHover} h-full`;
 
   // Wrap in Link if href is provided
   if (href) {

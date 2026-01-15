@@ -27,14 +27,16 @@ export default function StepCard({
   color,
   href,
 }: StepCardProps) {
-  const cardClasses = `${cardBgColors.base} rounded-xl p-12 ${cardBorderColors.subtle} transition-all ${cardHoverColors[color]} ${shadowClasses.cardHover}`;
+  // Fallback to blue if color is undefined or invalid
+  const safeColor = color && cardHoverColors[color] ? color : 'blue';
+  const cardClasses = `${cardBgColors.base} rounded-xl p-12 ${cardBorderColors.subtle} transition-all ${cardHoverColors[safeColor]} ${shadowClasses.cardHover}`;
 
   const cardContent = (
       <div>
         {/* Title row with badge - centered */}
         <div className="flex items-start justify-center gap-4 mb-6">
-          <CircleBadge number={number} color={color} size="sm" />
-          <h2 className={`text-xl font-bold ${titleTextColors[color]}`}>
+          <CircleBadge number={number} color={safeColor} size="sm" />
+          <h2 className={`text-xl font-bold ${titleTextColors[safeColor]}`}>
             {title}
           </h2>
         </div>
@@ -48,7 +50,7 @@ export default function StepCard({
             <ul className="space-y-3">
           {details.map((detail, index) => (
             <li key={index} className={`flex items-start gap-2 text-sm ${bodyTextColors.gray}`}>
-              <span className={titleTextColors[color]}>•</span>
+              <span className={titleTextColors[safeColor]}>•</span>
               {detail}
             </li>
           ))}
@@ -56,7 +58,7 @@ export default function StepCard({
           </div>
         </div>
         {href && (
-          <p className={`text-sm font-medium mt-4 ${titleTextColors[color]}`}>
+          <p className={`text-sm font-medium mt-4 ${titleTextColors[safeColor]}`}>
             Learn more →
           </p>
         )}

@@ -104,6 +104,24 @@ export default function AboutPage() {
         </ul>
       </section>
 
+      {/* AI Philosophy */}
+      <section className="mb-10">
+        <h2 className={`text-xl font-bold ${titleColors.blue} mb-4`}>
+          How I Use AI
+        </h2>
+        <div className={`space-y-4 ${headingColors.secondary}`}>
+          <p>
+            I use AI tools to deliver better work faster. But AI doesn&apos;t replace
+            expertise—it amplifies it. The strategy, quality control, and client
+            relationships are 100% human.
+          </p>
+          <p>
+            When you work with me, you get cutting-edge technology guided by real
+            experience. That&apos;s the combination that actually gets results.
+          </p>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className={`p-6 rounded-lg ${cardBgColors.elevated} text-center`}>
         <h2 className={`text-xl font-bold ${headingColors.primary} mb-3`}>
@@ -113,10 +131,10 @@ export default function AboutPage() {
           Check out my full professional background or get in touch about your project.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
-          <Button variant="blue" href="/resume" size="lg">
-            View My Resume
+          <Button variant="blue" href="/services" size="lg">
+            See What I Build
           </Button>
-          <Button variant="gold" href="/get-started" size="lg">
+          <Button variant="gold" href="/contact" size="lg">
             Start a Project
           </Button>
         </div>

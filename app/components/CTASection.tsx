@@ -6,7 +6,7 @@
 
 import Card from './Card';
 import Button from './Button';
-import { AccentVariant } from '@/lib/colors';
+import { AccentVariant, headingColors, formInputColors } from '@/lib/colors';
 
 interface CTAButton {
   text: string;
@@ -30,11 +30,11 @@ export default function CTASection({
 }: CTASectionProps) {
   return (
     <Card hoverColor={hoverColor} className="text-center">
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+      <h2 className={`text-2xl font-bold ${headingColors.primary} mb-4`}>
         {title}
       </h2>
       {description && (
-        <p className="text-gray-600 dark:text-gray-300 mb-6">
+        <p className={`${formInputColors.helper} mb-6`}>
           {description}
         </p>
       )}

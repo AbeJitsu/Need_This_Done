@@ -184,21 +184,123 @@ export async function waitForElement(page: Page, selector: string) {
 // ============================================================================
 
 /**
- * Wait for page to be fully ready (DOM + network requests settled)
+ * Wait for page to be fully ready (DOM + network requests settled + content visible)
  * @param page Playwright page object
- * @param waitForNetwork Whether to wait for network idle (default: false for screenshots)
+ * @param options Configuration options
  */
-export async function waitForPageReady(page: Page, waitForNetwork: boolean = false) {
+export async function waitForPageReady(
+  page: Page,
+  options: { waitForNetwork?: boolean; waitForContent?: boolean } = {}
+) {
+  const { waitForNetwork = true, waitForContent = true } = options;
+
+  // Wait for DOM to be ready
   await page.waitForLoadState('domcontentloaded');
+
+  // Wait for network to settle (API calls, images, etc.)
   if (waitForNetwork) {
     try {
-      await page.waitForLoadState('networkidle', { timeout: 5000 });
+      await page.waitForLoadState('networkidle', { timeout: 10000 });
     } catch {
       // Ignore timeout - some pages continuously fetch data
     }
   }
-  // Wait a bit for rendering to complete
-  await page.waitForTimeout(500);
+
+  // Wait for actual content to be visible (not just blank page)
+  if (waitForContent) {
+    try {
+      // Wait for either h1, main content, or specific page markers
+      await page.waitForSelector('h1, main, [data-page-ready], .page-content', {
+        state: 'visible',
+        timeout: 10000,
+      });
+    } catch {
+      // Fall back to waiting for any visible text content
+      try {
+        await page.waitForSelector('body:not(:empty)', { timeout: 5000 });
+      } catch {
+        // Page might genuinely be empty, continue anyway
+      }
+    }
+  }
+
+  // Final wait for React hydration and animations to settle
+  await page.waitForTimeout(1000);
+}
+
+// ============================================================================
+// Page Validation - Fail fast on error pages
+// ============================================================================
+
+/**
+ * Validate that a page loaded successfully (not an error page).
+ * Call this BEFORE taking screenshots to avoid capturing error pages.
+ *
+ * @param page Playwright page object
+ * @param pagePath The path being tested (for error messages)
+ * @throws Error if page shows 404, error, or "not found" content
+ */
+export async function validatePageLoaded(page: Page, pagePath: string) {
+  // Check for common error indicators in the page content
+  const errorPatterns = [
+    'file not found',
+    'page not found',
+    'not found',
+    '404',
+    'error occurred',
+    'something went wrong',
+    'this page doesn\'t exist',
+    'could not be found',
+  ];
+
+  const bodyText = await page.locator('body').textContent() || '';
+  const bodyLower = bodyText.toLowerCase();
+
+  for (const pattern of errorPatterns) {
+    if (bodyLower.includes(pattern)) {
+      // Check if it's actually an error page, not just content mentioning these words
+      const title = await page.title();
+      const h1Text = await page.locator('h1').first().textContent().catch(() => '');
+
+      // If the h1 or title contains error indicators, it's definitely an error page
+      const titleLower = (title + ' ' + h1Text).toLowerCase();
+      if (titleLower.includes('404') ||
+          titleLower.includes('not found') ||
+          titleLower.includes('error')) {
+        throw new Error(
+          `❌ Page "${pagePath}" failed to load!\n` +
+          `   Title: "${title}"\n` +
+          `   H1: "${h1Text}"\n` +
+          `   Found error pattern: "${pattern}"\n` +
+          `   This would result in a broken screenshot. Fix the page before running tests.`
+        );
+      }
+    }
+  }
+
+  // Check that there's actual content (not just a blank page)
+  const hasContent = await page.locator('h1, h2, p, main').first().isVisible().catch(() => false);
+  if (!hasContent) {
+    throw new Error(
+      `❌ Page "${pagePath}" appears to be blank!\n` +
+      `   No h1, h2, p, or main elements found.\n` +
+      `   This would result in a blank screenshot. Fix the page before running tests.`
+    );
+  }
+}
+
+/**
+ * Navigate to page, wait for it to be ready, and validate it loaded correctly.
+ * Use this instead of separate goto + waitForPageReady + validatePageLoaded calls.
+ *
+ * @param page Playwright page object
+ * @param path URL path to navigate to
+ * @throws Error if page fails to load or shows error content
+ */
+export async function gotoAndValidate(page: Page, path: string) {
+  await page.goto(path);
+  await waitForPageReady(page);
+  await validatePageLoaded(page, path);
 }
 
 /**

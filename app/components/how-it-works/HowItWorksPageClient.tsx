@@ -150,7 +150,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
           className="mb-10"
         >
           <div className="flex items-center gap-4">
-            <span className="text-2xl text-gray-700 dark:text-gray-200" aria-hidden="true">⏱</span>
+            <span className={`text-2xl ${headingColors.secondary}`} aria-hidden="true">⏱</span>
             <div>
               <h3 className={`font-semibold ${titleColors.green} mb-1`}>
                 {content.timeline.title}

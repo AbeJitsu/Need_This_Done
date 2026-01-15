@@ -41,6 +41,8 @@ const config = {
 
     // Backgrounds - dark mode vibrant (bg-500) for unified accent system
     'dark:bg-purple-500', 'dark:bg-blue-500', 'dark:bg-green-500', 'dark:bg-gold-500', 'dark:bg-teal-500', 'dark:bg-gray-500', 'dark:bg-red-500', 'dark:bg-yellow-500',
+    // Gold backgrounds - all shades for easy testing
+    'dark:bg-gold-100', 'dark:bg-gold-200', 'dark:bg-gold-300', 'dark:bg-gold-400', 'dark:bg-gold-500', 'dark:bg-gold-600', 'dark:bg-gold-700', 'dark:bg-gold-800', 'dark:bg-gold-900',
     // Legacy dark backgrounds (keep for backward compatibility)
     'dark:bg-purple-800', 'dark:bg-blue-800', 'dark:bg-green-800', 'dark:bg-gold-800', 'dark:bg-teal-800', 'dark:bg-gray-800', 'dark:bg-red-800',
     // Dark backgrounds - 700 shade for gold/teal accent variants
@@ -52,8 +54,10 @@ const config = {
     'text-green-800', 'text-gold-800', 'text-teal-800', 'text-red-800', 'text-yellow-800',
     'text-gold-900', 'text-teal-900',
 
-    // Border colors - light mode (border-500/700)
+    // Border colors - light mode
     'border-purple-500', 'border-blue-500', 'border-green-500', 'border-gold-500', 'border-teal-500', 'border-gray-500', 'border-red-500', 'border-yellow-500', 'border-yellow-700',
+    // Gold borders - all shades for easy testing
+    'border-gold-100', 'border-gold-200', 'border-gold-300', 'border-gold-400', 'border-gold-500', 'border-gold-600', 'border-gold-700', 'border-gold-800', 'border-gold-900',
 
     // Border colors - dark mode (border-100 for status badges - light border pops against -500 bg)
     'dark:border-purple-100', 'dark:border-blue-100', 'dark:border-green-100', 'dark:border-gold-100', 'dark:border-teal-100', 'dark:border-gray-100', 'dark:border-red-100', 'dark:border-yellow-100',
@@ -61,6 +65,8 @@ const config = {
     'dark:border-purple-300', 'dark:border-blue-300', 'dark:border-green-300', 'dark:border-gold-300', 'dark:border-teal-300', 'dark:border-gray-300', 'dark:border-red-300', 'dark:border-yellow-300',
     'dark:border-purple-200', 'dark:border-blue-200', 'dark:border-green-200', 'dark:border-gold-200', 'dark:border-teal-200', 'dark:border-gray-200', 'dark:border-red-200', 'dark:border-yellow-200',
     'dark:border-purple-400', 'dark:border-blue-400', 'dark:border-green-400', 'dark:border-gold-400', 'dark:border-teal-400', 'dark:border-gray-400', 'dark:border-yellow-400',
+    // Gold dark borders - all shades for easy testing
+    'dark:border-gold-100', 'dark:border-gold-200', 'dark:border-gold-300', 'dark:border-gold-400', 'dark:border-gold-500', 'dark:border-gold-600', 'dark:border-gold-700', 'dark:border-gold-800', 'dark:border-gold-900',
     // Yellow light mode borders
     'border-yellow-200',
     'dark:border-white',
@@ -71,7 +77,9 @@ const config = {
     'hover:text-green-900', 'hover:text-gold-900', 'hover:text-teal-900', 'hover:text-red-900',
     'hover:text-gold-950', 'hover:text-teal-950',
     // Hover text colors - dark mode (white for all, plus specific shades)
-    'dark:hover:text-white', 'dark:hover:text-gold-100', 'dark:hover:text-teal-100',
+    'dark:hover:text-white', 'dark:hover:text-teal-100',
+    // Gold dark hover text - all shades for easy testing
+    'dark:hover:text-gold-100', 'dark:hover:text-gold-200', 'dark:hover:text-gold-300', 'dark:hover:text-gold-400', 'dark:hover:text-gold-500', 'dark:hover:text-gold-600', 'dark:hover:text-gold-700', 'dark:hover:text-gold-800', 'dark:hover:text-gold-900',
 
     // Group hover text colors - for parent hover effects (light mode 500, dark mode 300)
     'group-hover:text-green-500', 'group-hover:text-blue-500', 'group-hover:text-purple-500', 'group-hover:text-gold-500',
@@ -86,6 +94,8 @@ const config = {
     // Legacy dark hover borders
     'dark:hover:border-purple-100', 'dark:hover:border-blue-100', 'dark:hover:border-green-100', 'dark:hover:border-gold-100', 'dark:hover:border-teal-100', 'dark:hover:border-gray-100', 'dark:hover:border-red-100',
     'dark:hover:border-purple-300', 'dark:hover:border-blue-300', 'dark:hover:border-green-300', 'dark:hover:border-gold-300', 'dark:hover:border-teal-300', 'dark:hover:border-gray-300',
+    // Gold dark hover borders - all shades for easy testing
+    'dark:hover:border-gold-100', 'dark:hover:border-gold-200', 'dark:hover:border-gold-300', 'dark:hover:border-gold-400', 'dark:hover:border-gold-500', 'dark:hover:border-gold-600', 'dark:hover:border-gold-700', 'dark:hover:border-gold-800', 'dark:hover:border-gold-900',
 
     // Left border colors - for cart items and accent cards
     'border-l-purple-500', 'border-l-blue-500', 'border-l-green-500',
@@ -128,8 +138,13 @@ const config = {
     'focus:ring-purple-500', 'focus:ring-blue-500', 'focus:ring-green-500', 'focus:ring-gold-500', 'focus:ring-teal-500', 'focus:ring-gray-500', 'focus:ring-red-500',
 
     // Body text colors - dark mode (100 shade for unified accent system)
+    'dark:text-white',
     'dark:text-purple-100', 'dark:text-blue-100', 'dark:text-green-100',
     'dark:text-gold-100', 'dark:text-teal-100', 'dark:text-gray-100', 'dark:text-red-100',
+    // Title colors - dark mode (for accentColors.titleText - all using -200 for consistency)
+    'dark:text-purple-200', 'dark:text-blue-200', 'dark:text-green-200',
+    // Gold dark text - all shades for easy testing
+    'dark:text-gold-100', 'dark:text-gold-200', 'dark:text-gold-300', 'dark:text-gold-400', 'dark:text-gold-500', 'dark:text-gold-600', 'dark:text-gold-700', 'dark:text-gold-800', 'dark:text-gold-900',
 
     // Animation classes
     'animate-fade-in',

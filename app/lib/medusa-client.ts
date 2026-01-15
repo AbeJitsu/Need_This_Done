@@ -153,7 +153,7 @@ export const products = {
     // Build URL with pagination params
     const queryParams = new URLSearchParams();
 
-    // Get default region for pricing context
+    // Get default region for pricing context (Medusa v2 requires this)
     const regionsResponse = await fetchWithRetry(`${MEDUSA_URL}/store/regions`);
     const regionsData = await handleResponse<{ regions: { id: string }[] }>(regionsResponse);
     if (regionsData.regions?.[0]) {

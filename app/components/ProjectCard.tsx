@@ -27,14 +27,18 @@ import {
 // Service to Color Mapping - Match service types to theme colors
 // ============================================================================
 const serviceColorMap: Record<string, AccentVariant> = {
-  // Contact form service types
-  'Virtual Assistant': 'purple',
+  // Current service types
+  'Website Build': 'green',
+  'Automation Setup': 'blue',
+  'Managed AI Services': 'purple',
+  'Managed AI': 'purple',
+  // Legacy service types (for backwards compatibility)
+  'Virtual Assistant': 'green',
   'Data & Documents': 'blue',
-  'Website Services': 'green',
-  // Pricing tier names (legacy/alternate)
-  'Quick Task': 'purple',
+  'Website Services': 'purple',
+  'Quick Task': 'green',
   'Standard Task': 'blue',
-  'Premium Service': 'green',
+  'Premium Service': 'purple',
 };
 
 function getServiceColor(service: string): AccentVariant {

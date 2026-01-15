@@ -23,20 +23,26 @@ interface PricingPageClientProps {
 export default function PricingPageClient({ content: initialContent }: PricingPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
-  // Check that pageContent has expected structure before using it
-  const hasValidContent = pageContent && 'tiers' in pageContent && 'header' in pageContent && 'ctaPaths' in pageContent;
+  // Check that pageContent has expected structure and non-null values before using it
+  const hasValidContent = pageContent &&
+    'tiers' in pageContent && pageContent.tiers != null &&
+    'header' in pageContent && pageContent.header != null &&
+    'ctaPaths' in pageContent && pageContent.ctaPaths != null &&
+    'ctaSection' in pageContent && pageContent.ctaSection != null;
   const content = hasValidContent ? (pageContent as unknown as PricingPageContent) : initialContent;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header */}
-      <EditableSection sectionKey="header" label="Page Header">
-        <PageHeader
-          title={content.header.title}
-          description={content.header.description}
-          color="purple"
-        />
-      </EditableSection>
+      {content.header && (
+        <EditableSection sectionKey="header" label="Page Header">
+          <PageHeader
+            title={content.header.title}
+            description={content.header.description}
+            color="purple"
+          />
+        </EditableSection>
+      )}
 
       {/* Pricing Cards */}
       <EditableSection sectionKey="tiers" label="Pricing Tiers">
@@ -72,18 +78,21 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
       </EditableSection>
 
       {/* Choose Your Path - CTA Section Header */}
-      <EditableSection sectionKey="ctaSection" label="CTA Section">
-        <div className="text-center mb-8">
-          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
-            {content.ctaSection.title}
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            {content.ctaSection.description}
-          </p>
-        </div>
-      </EditableSection>
+      {content.ctaSection && (
+        <EditableSection sectionKey="ctaSection" label="CTA Section">
+          <div className="text-center mb-8">
+            <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
+              {content.ctaSection.title}
+            </h2>
+            <p className={`${formInputColors.helper} max-w-2xl mx-auto`}>
+              {content.ctaSection.description}
+            </p>
+          </div>
+        </EditableSection>
+      )}
 
       {/* CTA Path Cards */}
+      {content.ctaPaths && content.ctaPaths.length > 0 && (
       <EditableSection sectionKey="ctaPaths" label="CTA Paths">
         <SortableItemsWrapper
           sectionKey="ctaPaths"
@@ -114,17 +123,17 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
                         {path.badge}
                       </span>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                    <h3 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
                       {path.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-6">
+                    <p className={`${formInputColors.helper} mb-6`}>
                       {path.description}
                     </p>
                     <ul className="space-y-3 mb-6 flex-grow">
                       {path.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-center gap-2">
                           <span className={checkmarkClass} aria-hidden="true">✓</span>
-                          <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                          <span className={headingColors.secondary}>{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -143,9 +152,10 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
           })}
         </SortableItemsWrapper>
       </EditableSection>
+      )}
 
       {/* Payment Structure Note */}
-      {content.paymentNote.enabled && (
+      {content.paymentNote?.enabled && (
         <EditableSection sectionKey="paymentNote" label="Payment Structure">
           <Card hoverColor="purple" hoverEffect="glow" className="mb-10">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">

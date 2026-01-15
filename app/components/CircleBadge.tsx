@@ -39,7 +39,9 @@ export default function CircleBadge({
   size = 'md',
   shape = 'circle',
 }: CircleBadgeProps) {
-  const colors = accentColors[color];
+  // Fallback to blue if color is undefined or invalid
+  const safeColor = color && accentColors[color] ? color : 'blue';
+  const colors = accentColors[safeColor];
   const sizeClass = shape === 'pill' ? pillSizeClasses[size] : circleSizeClasses[size];
 
   // Uses centralized accentColors and accentBorderWidth from colors.ts
