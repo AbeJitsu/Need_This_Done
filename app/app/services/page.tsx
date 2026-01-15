@@ -20,7 +20,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Services - NeedThisDone',
   description:
-    'Three ways to grow: Website Builds, Automation Setup, and Managed AI Services. Each tier builds on the last.',
+    'Find the right service for your needs. Compare our Virtual Assistant, Data & Documents, and Website Services.',
 };
 
 // ============================================================================

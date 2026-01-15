@@ -29,9 +29,6 @@ export const metadata = {
 // ============================================================================
 
 async function getContent(): Promise<HowItWorksPageContent> {
-  // Get defaults first to ensure we always have valid content
-  const defaults = getDefaultContent('how-it-works') as HowItWorksPageContent;
-
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/page-content/how-it-works`, {
@@ -40,16 +37,13 @@ async function getContent(): Promise<HowItWorksPageContent> {
 
     if (response.ok) {
       const data = await response.json();
-      // Ensure the fetched content has all required fields
-      if (data?.content?.steps && data.content.header) {
-        return data.content as HowItWorksPageContent;
-      }
+      return data.content as HowItWorksPageContent;
     }
   } catch (error) {
     console.error('Failed to fetch how-it-works content:', error);
   }
 
-  return defaults;
+  return getDefaultContent('how-it-works') as HowItWorksPageContent;
 }
 
 // ============================================================================

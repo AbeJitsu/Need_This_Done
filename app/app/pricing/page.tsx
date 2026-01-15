@@ -24,9 +24,6 @@ export const metadata = {
 // ============================================================================
 
 async function getContent(): Promise<PricingPageContent> {
-  // Get defaults first to ensure we always have valid content
-  const defaults = getDefaultContent('pricing') as PricingPageContent;
-
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/page-content/pricing`, {
@@ -35,16 +32,13 @@ async function getContent(): Promise<PricingPageContent> {
 
     if (response.ok) {
       const data = await response.json();
-      // Ensure the fetched content has all required fields
-      if (data?.content?.ctaSection) {
-        return data.content as PricingPageContent;
-      }
+      return data.content as PricingPageContent;
     }
   } catch (error) {
     console.error('Failed to fetch pricing content:', error);
   }
 
-  return defaults;
+  return getDefaultContent('pricing') as PricingPageContent;
 }
 
 // ============================================================================
