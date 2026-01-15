@@ -23,8 +23,12 @@ interface PricingPageClientProps {
 export default function PricingPageClient({ content: initialContent }: PricingPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
-  // Check that pageContent has expected structure before using it
-  const hasValidContent = pageContent && 'tiers' in pageContent && 'header' in pageContent && 'ctaPaths' in pageContent;
+  // Check that pageContent has expected structure and non-null values before using it
+  const hasValidContent = pageContent &&
+    'tiers' in pageContent && pageContent.tiers != null &&
+    'header' in pageContent && pageContent.header != null &&
+    'ctaPaths' in pageContent && pageContent.ctaPaths != null &&
+    'ctaSection' in pageContent && pageContent.ctaSection != null;
   const content = hasValidContent ? (pageContent as unknown as PricingPageContent) : initialContent;
 
   return (
