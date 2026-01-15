@@ -45,7 +45,18 @@ export async function GET(request: Request) {
       .eq('content_hash', contentHash)
       .limit(1);
 
+    // Handle gracefully: PGRST205 = table doesn't exist
+    // If embeddings feature isn't set up, just return not indexed
     if (error) {
+      if (error.code === 'PGRST205') {
+        // Table doesn't exist - embeddings feature not set up
+        return NextResponse.json({
+          indexed: false,
+          page_url: pageUrl,
+          content_hash: contentHash,
+          reason: 'embeddings_not_configured',
+        });
+      }
       console.error('Error checking embeddings:', error);
       return NextResponse.json(
         { error: 'Database error while checking embeddings' },

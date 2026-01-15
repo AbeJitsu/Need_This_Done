@@ -55,8 +55,10 @@ export async function GET(
           .eq('page_slug', slug)
           .single();
 
-        if (error && error.code !== 'PGRST116') {
-          // PGRST116 = no rows returned (not an error, just no custom content)
+        // Handle gracefully: PGRST116 = no rows, PGRST205 = table doesn't exist
+        // In both cases, we return defaults so the app works without DB setup
+        if (error && !['PGRST116', 'PGRST205'].includes(error.code || '')) {
+          console.error('Unexpected Supabase error:', error);
           throw new Error('Failed to load page content');
         }
 
@@ -64,8 +66,8 @@ export async function GET(
         const contentType = PAGE_CONTENT_TYPES[validSlug];
         const defaults = getDefaultContent(validSlug) as unknown as Record<string, unknown>;
 
-        // If no custom content exists, return defaults
-        if (!data) {
+        // If no custom content exists (or table doesn't exist), return defaults
+        if (!data || error?.code === 'PGRST205') {
           return {
             page_slug: slug,
             content_type: contentType,
