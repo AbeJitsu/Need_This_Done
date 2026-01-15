@@ -11,7 +11,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 const testEmail = 'e2e-admin-test@e2e-test.com';
 const testName = 'E2E Admin Test Project';
 const testMessage = 'Test project for E2E admin dashboard verification.';
-const testService = 'Virtual Assistant';
+const testService = 'Website Builds';
 
 // Supabase client created lazily (after env vars are loaded)
 let supabase: SupabaseClient;

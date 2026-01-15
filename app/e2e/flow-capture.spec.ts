@@ -141,9 +141,9 @@ test('Capture service modals with copy', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 1400 });
 
   const services = [
-    { name: 'Virtual Assistant', slug: 'virtual-assistant' },
-    { name: 'Data & Documents', slug: 'data-documents' },
-    { name: 'Website Services', slug: 'website-services' },
+    { name: 'Website Builds', slug: 'website-services' },
+    { name: 'Automation Setup', slug: 'data-documents' },
+    { name: 'Managed AI', slug: 'virtual-assistant' },
   ];
 
   const allModalCopy: Record<string, Record<string, string | string[]>> = {};

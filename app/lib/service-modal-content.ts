@@ -24,19 +24,19 @@ export interface ServiceModalContent {
 }
 
 // ============================================================================
-// Virtual Assistant Modal Content
+// Managed AI Modal Content
 // ============================================================================
 
 export const virtualAssistantModal: ServiceModalContent = {
-  title: 'Virtual Assistant',
-  headline: 'Your time is valuable. Let us handle the tasks that eat up your day.',
-  hook: 'We take care of the details so you can focus on what actually moves your business forward.',
+  title: 'Managed AI',
+  headline: 'AI that runs while you sleep. We handle the complexity.',
+  hook: 'We build, deploy, and maintain AI agents that handle your operations. You get the results without the complexity.',
   bulletHeader: 'What we handle:',
   bulletPoints: [
-    'Email management and inbox organization',
-    'Calendar coordination and scheduling',
-    'Research projects and data gathering',
-    'Travel planning and booking',
+    'Custom AI agent development',
+    '24/7 monitoring and optimization',
+    'Continuous improvement and updates',
+    'Dedicated support and training',
   ],
   ctas: {
     primary: {
@@ -51,19 +51,19 @@ export const virtualAssistantModal: ServiceModalContent = {
 };
 
 // ============================================================================
-// Data & Documents Modal Content
+// Automation Setup Modal Content
 // ============================================================================
 
 export const dataDocumentsModal: ServiceModalContent = {
-  title: 'Data & Documents',
-  headline: 'Messy spreadsheets and formatting nightmares? We turn chaos into clarity.',
-  hook: 'We make your documents look professional and work better. No judgment, just results.',
+  title: 'Automation Setup',
+  headline: 'Stop doing the same manual tasks every single day.',
+  hook: 'We connect your tools and automate your workflows. You reclaim hours every week.',
   bulletHeader: 'What we handle:',
   bulletPoints: [
-    'Spreadsheet cleanup and organization',
-    'Data entry and formatting',
-    'Report and presentation design',
-    'Document templates and file organization',
+    'Workflow design and optimization',
+    'Tool integration and connection',
+    'Automated task sequences',
+    'Training and documentation',
   ],
   ctas: {
     primary: {
@@ -78,19 +78,19 @@ export const dataDocumentsModal: ServiceModalContent = {
 };
 
 // ============================================================================
-// Website Services Modal Content
+// Website Builds Modal Content
 // ============================================================================
 
 export const websiteServicesModal: ServiceModalContent = {
-  title: 'Website Services',
-  headline: 'Your website should work for you, not give you a headache.',
-  hook: 'You focus on your business. We handle the tech. Plain language, clear answers.',
+  title: 'Website Builds',
+  headline: 'Your digital foundation. Built to convert visitors into customers.',
+  hook: 'Professional websites that work. From landing pages to full e-commerce, built right from the start.',
   bulletHeader: 'What we handle:',
   bulletPoints: [
-    'New website builds and redesigns',
-    'Content updates and page edits',
-    'E-commerce setup and product management',
-    'Ongoing maintenance and support',
+    'Custom website design and development',
+    'Mobile-first, SEO-optimized builds',
+    'E-commerce setup and configuration',
+    '30 days of post-launch support',
   ],
   ctas: {
     primary: {
@@ -123,6 +123,10 @@ export const serviceModalContentMap: Record<ServiceType, ServiceModalContent> = 
 // Used by ServiceModalContext and any component that needs to resolve titles
 
 export const TITLE_TO_SERVICE_TYPE: Record<string, ServiceType> = {
+  'Managed AI': 'virtual-assistant',
+  'Automation Setup': 'data-documents',
+  'Website Builds': 'website-services',
+  // Legacy names for backwards compatibility
   'Virtual Assistant': 'virtual-assistant',
   'Data & Documents': 'data-documents',
   'Website Services': 'website-services',
@@ -185,76 +189,77 @@ export interface ServiceFullContent {
 }
 
 export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
-  'virtual-assistant': {
-    title: 'Virtual Assistant',
-    headline: 'Your time is valuable. Let us handle the tasks that eat up your day.',
-    subtitle: 'We handle the details so you can focus on what matters.',
+  // Order: green, blue, purple (Website Builds, Automation Setup, Managed AI)
+  'website-services': {
+    title: 'Website Builds',
+    headline: 'Your digital foundation. Built to convert visitors into customers.',
+    subtitle: 'Professional websites that work, from landing pages to full e-commerce.',
     bulletPoints: [
-      'Email management and inbox organization',
-      'Calendar coordination and scheduling',
-      'Travel planning and booking',
-      'Research and data gathering',
+      'Custom website design and development',
+      'Mobile-first, SEO-optimized builds',
+      'E-commerce setup and configuration',
+      '30 days of post-launch support',
     ],
     examples: {
       title: 'What we do:',
       items: [
-        'Tame your inbox',
-        'Book your next trip',
-        'Research done for you',
-        'Meetings scheduled, headaches avoided',
+        'Custom design, built for you',
+        'Mobile-ready from day one',
+        'SEO foundation included',
+        'Easy updates after launch',
       ],
     },
-    reassurance: 'You stay in control. We keep things moving.',
+    reassurance: 'Your site, your way. Built right.',
     ctas: {
       primary: { text: 'Book a Consultation', href: '/shop' },
       secondary: { text: 'Get a Quote', href: '/contact' },
     },
   },
   'data-documents': {
-    title: 'Data & Documents',
-    headline: 'Messy spreadsheets and formatting nightmares? We turn chaos into clarity.',
-    subtitle: 'We turn messy files into polished, professional work.',
+    title: 'Automation Setup',
+    headline: 'Stop doing the same manual tasks every single day.',
+    subtitle: 'We connect your tools and automate your workflows.',
     bulletPoints: [
-      'Spreadsheet cleanup and organization',
-      'Data entry and formatting',
-      'Report and presentation design',
-      'Document templates and file organization',
+      'Workflow design and optimization',
+      'Tool integration and connection',
+      'Automated task sequences',
+      'Training and documentation',
     ],
     examples: {
       title: 'What we do:',
       items: [
-        'Messy spreadsheets → organized data',
-        'Reports that look the part',
-        'Data entry, handled',
-        'Templates you will actually use',
+        'Connect your tools seamlessly',
+        'Automate repetitive tasks',
+        'Save hours every week',
+        'Training included',
       ],
     },
-    reassurance: 'No judgment. Just results.',
+    reassurance: 'Set it up once. Benefit forever.',
     ctas: {
       primary: { text: 'Book a Consultation', href: '/shop' },
       secondary: { text: 'Get a Quote', href: '/contact' },
     },
   },
-  'website-services': {
-    title: 'Website Services',
-    headline: 'Your website should work for you, not give you a headache.',
-    subtitle: 'You focus on your business. We handle the tech.',
+  'virtual-assistant': {
+    title: 'Managed AI',
+    headline: 'AI that runs while you sleep. We handle the complexity.',
+    subtitle: 'We build, deploy, and maintain AI agents that handle your operations.',
     bulletPoints: [
-      'New website builds and redesigns',
-      'Content updates and page edits',
-      'E-commerce setup and management',
-      'Ongoing maintenance and support',
+      'Custom AI agent development',
+      '24/7 monitoring and optimization',
+      'Continuous improvement and updates',
+      'Dedicated support and training',
     ],
     examples: {
       title: 'What we do:',
       items: [
-        'Fresh site, built for you',
-        'Content updates and fixes',
-        'Online store, ready to sell',
-        'Monthly care and maintenance',
+        'AI agents that work around the clock',
+        'Automated customer interactions',
+        'Data processing and analysis',
+        'Workflow automation with intelligence',
       ],
     },
-    reassurance: 'Plain language. Clear answers.',
+    reassurance: 'You get the results without the complexity.',
     ctas: {
       primary: { text: 'Book a Consultation', href: '/shop' },
       secondary: { text: 'Get a Quote', href: '/contact' },

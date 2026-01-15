@@ -91,7 +91,7 @@ test.describe('Contact Form Submission Flow', () => {
     );
 
     // Select a service
-    await page.getByLabel(/What kind of help do you need/).selectOption('Virtual Assistant');
+    await page.getByLabel(/What kind of help do you need/).selectOption('Website Builds');
 
     // Submit the form
     await page.getByRole('button', { name: 'Start the Conversation' }).click();
@@ -103,7 +103,7 @@ test.describe('Contact Form Submission Flow', () => {
     const project = await getProjectByEmail(testEmails.noAttachments);
     expect(project).toBeTruthy();
     expect(project.name).toBe('Test User No Files');
-    expect(project.service).toBe('Virtual Assistant');
+    expect(project.service).toBe('Website Builds');
     // API stores null (not []) when no files attached
     expect(project.attachments).toBeNull();
     expect(project.status).toBe('submitted');
@@ -124,7 +124,7 @@ test.describe('Contact Form Submission Flow', () => {
     );
 
     // Select a service
-    await page.getByLabel(/What kind of help do you need/).selectOption('Data & Documents');
+    await page.getByLabel(/What kind of help do you need/).selectOption('Automation Setup');
 
     // Upload 1 file
     const fileInput = page.locator('input[type="file"]');
@@ -144,7 +144,7 @@ test.describe('Contact Form Submission Flow', () => {
     const project = await getProjectByEmail(testEmails.oneAttachment);
     expect(project).toBeTruthy();
     expect(project.name).toBe('Test User One File');
-    expect(project.service).toBe('Data & Documents');
+    expect(project.service).toBe('Automation Setup');
     expect(project.attachments).toHaveLength(1);
     // File path format: {sanitized_email}/{timestamp}_{random}.{ext}
     expect(project.attachments[0]).toMatch(/\.txt$/);
@@ -165,7 +165,7 @@ test.describe('Contact Form Submission Flow', () => {
     );
 
     // Select a service
-    await page.getByLabel(/What kind of help do you need/).selectOption('Website Services');
+    await page.getByLabel(/What kind of help do you need/).selectOption('Website Builds');
 
     // Upload 2 files
     const fileInput = page.locator('input[type="file"]');
@@ -192,7 +192,7 @@ test.describe('Contact Form Submission Flow', () => {
     const project = await getProjectByEmail(testEmails.twoAttachments);
     expect(project).toBeTruthy();
     expect(project.name).toBe('Test User Two Files');
-    expect(project.service).toBe('Website Services');
+    expect(project.service).toBe('Website Builds');
     expect(project.attachments).toHaveLength(2);
   });
 
@@ -211,7 +211,7 @@ test.describe('Contact Form Submission Flow', () => {
     );
 
     // Select a service (using same service as test 1 for consistency)
-    await page.getByLabel(/What kind of help do you need/).selectOption('Virtual Assistant');
+    await page.getByLabel(/What kind of help do you need/).selectOption('Website Builds');
 
     // Upload 3 files (the maximum allowed)
     const fileInput = page.locator('input[type="file"]');
@@ -243,7 +243,7 @@ test.describe('Contact Form Submission Flow', () => {
     const project = await getProjectByEmail(testEmails.threeAttachments);
     expect(project).toBeTruthy();
     expect(project.name).toBe('Test User Three Files');
-    expect(project.service).toBe('Virtual Assistant');
+    expect(project.service).toBe('Website Builds');
     expect(project.attachments).toHaveLength(3);
     expect(project.status).toBe('submitted');
   });
@@ -265,7 +265,7 @@ test.describe('Contact Form Submission Flow', () => {
     );
 
     // Select a service
-    await page.getByLabel(/What kind of help do you need/).selectOption('Virtual Assistant');
+    await page.getByLabel(/What kind of help do you need/).selectOption('Website Builds');
 
     // Upload a file
     const fileInput = page.locator('input[type="file"]');

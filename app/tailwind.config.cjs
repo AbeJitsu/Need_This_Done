@@ -179,6 +179,22 @@ const config = {
     'from-purple-400',
     'to-blue-500',
 
+    // ServiceDeepDive gradients and colors
+    'from-green-500', 'to-emerald-600',
+    'from-purple-500', 'to-violet-600',
+    'to-indigo-600',
+    'bg-green-50', 'bg-blue-50', 'bg-purple-50',
+    'dark:bg-green-950', 'dark:bg-blue-950', 'dark:bg-purple-950',
+    'border-green-200', 'border-blue-200', 'border-purple-200',
+    'dark:border-green-800', 'dark:border-blue-800', 'dark:border-purple-800',
+    'text-green-400', 'text-blue-400', 'text-purple-400',
+    'dark:text-green-400', 'dark:text-blue-400', 'dark:text-purple-400',
+
+    // Animation classes
+    'animate-slideDown',
+    'hover:scale-102',
+    'hover:-translate-y-0.5',
+
   ],
 
   // ========================================================================
@@ -391,11 +407,16 @@ const config = {
         'fade-in': 'fadeInLeft 2s ease-out forwards',
         'fade-in-delay-100': 'fadeInLeft 2s ease-out 100ms forwards',
         'fade-in-delay-200': 'fadeInLeft 2s ease-out 200ms forwards',
+        'slideDown': 'slideDown 0.4s ease-out forwards',
       },
       keyframes: {
         fadeInLeft: {
           '0%': { opacity: '0', transform: 'translateX(-30px)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        slideDown: {
+          '0%': { opacity: '0', transform: 'translateY(-10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
     },
