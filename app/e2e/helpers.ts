@@ -228,6 +228,81 @@ export async function waitForPageReady(
   await page.waitForTimeout(1000);
 }
 
+// ============================================================================
+// Page Validation - Fail fast on error pages
+// ============================================================================
+
+/**
+ * Validate that a page loaded successfully (not an error page).
+ * Call this BEFORE taking screenshots to avoid capturing error pages.
+ *
+ * @param page Playwright page object
+ * @param pagePath The path being tested (for error messages)
+ * @throws Error if page shows 404, error, or "not found" content
+ */
+export async function validatePageLoaded(page: Page, pagePath: string) {
+  // Check for common error indicators in the page content
+  const errorPatterns = [
+    'file not found',
+    'page not found',
+    'not found',
+    '404',
+    'error occurred',
+    'something went wrong',
+    'this page doesn\'t exist',
+    'could not be found',
+  ];
+
+  const bodyText = await page.locator('body').textContent() || '';
+  const bodyLower = bodyText.toLowerCase();
+
+  for (const pattern of errorPatterns) {
+    if (bodyLower.includes(pattern)) {
+      // Check if it's actually an error page, not just content mentioning these words
+      const title = await page.title();
+      const h1Text = await page.locator('h1').first().textContent().catch(() => '');
+
+      // If the h1 or title contains error indicators, it's definitely an error page
+      const titleLower = (title + ' ' + h1Text).toLowerCase();
+      if (titleLower.includes('404') ||
+          titleLower.includes('not found') ||
+          titleLower.includes('error')) {
+        throw new Error(
+          `❌ Page "${pagePath}" failed to load!\n` +
+          `   Title: "${title}"\n` +
+          `   H1: "${h1Text}"\n` +
+          `   Found error pattern: "${pattern}"\n` +
+          `   This would result in a broken screenshot. Fix the page before running tests.`
+        );
+      }
+    }
+  }
+
+  // Check that there's actual content (not just a blank page)
+  const hasContent = await page.locator('h1, h2, p, main').first().isVisible().catch(() => false);
+  if (!hasContent) {
+    throw new Error(
+      `❌ Page "${pagePath}" appears to be blank!\n` +
+      `   No h1, h2, p, or main elements found.\n` +
+      `   This would result in a blank screenshot. Fix the page before running tests.`
+    );
+  }
+}
+
+/**
+ * Navigate to page, wait for it to be ready, and validate it loaded correctly.
+ * Use this instead of separate goto + waitForPageReady + validatePageLoaded calls.
+ *
+ * @param page Playwright page object
+ * @param path URL path to navigate to
+ * @throws Error if page fails to load or shows error content
+ */
+export async function gotoAndValidate(page: Page, path: string) {
+  await page.goto(path);
+  await waitForPageReady(page);
+  await validatePageLoaded(page, path);
+}
+
 /**
  * Log in as admin user using E2E test credentials
  * @param page Playwright page object

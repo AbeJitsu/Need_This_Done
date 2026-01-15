@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 import * as fs from 'fs';
-import { setDarkMode } from './helpers';
+import { setDarkMode, validatePageLoaded, waitForPageReady } from './helpers';
 import { discoverPublicPages, discoverAdminPages } from './utils/page-discovery';
 
 // ============================================================================
@@ -37,8 +37,8 @@ test('Capture public pages', async ({ page }) => {
 
   for (const p of publicPages) {
     await page.goto(p.path);
-    await page.waitForLoadState('load');
-    await page.waitForTimeout(400);
+    await waitForPageReady(page);
+    await validatePageLoaded(page, p.path); // Fail fast if page shows error
     await page.screenshot({
       path: `${OUTPUT_DIR}/screenshots/${p.name}.png`,
       fullPage: true
@@ -63,8 +63,8 @@ test('Capture admin pages', async ({ page }) => {
 
   for (const p of adminPages) {
     await page.goto(p.path);
-    await page.waitForLoadState('load');
-    await page.waitForTimeout(400);
+    await waitForPageReady(page);
+    await validatePageLoaded(page, p.path); // Fail fast if page shows error
     await page.screenshot({
       path: `${OUTPUT_DIR}/screenshots/${p.name}.png`,
       fullPage: true

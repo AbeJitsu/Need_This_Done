@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginAsAdmin, loginAsUser, waitForPageReady, setDarkMode } from './helpers';
+import { loginAsAdmin, loginAsUser, waitForPageReady, setDarkMode, validatePageLoaded } from './helpers';
 import { getPublicScreenshotPages, getAdminScreenshotPages } from './utils/page-discovery';
 
 // ============================================================================
@@ -67,6 +67,7 @@ test.describe('Public Pages - Light Mode', () => {
     test(`${name} - light mode`, async ({ page }, testInfo) => {
       await page.goto(path);
       await waitForPageReady(page);
+      await validatePageLoaded(page, path); // Fail fast if page shows error
       await captureScreenshot(page, folder, 'light', testInfo.project.name);
     });
   });
@@ -78,6 +79,7 @@ test.describe('Public Pages - Dark Mode', () => {
       await page.goto(path);
       await setDarkMode(page);
       await waitForPageReady(page);
+      await validatePageLoaded(page, path); // Fail fast if page shows error
       await captureScreenshot(page, folder, 'dark', testInfo.project.name);
     });
   });
@@ -97,6 +99,7 @@ test.describe('Dashboard Pages - Light Mode', () => {
       }
       await page.goto(path);
       await waitForPageReady(page);
+      await validatePageLoaded(page, path); // Fail fast if page shows error
       await captureScreenshot(page, folder, 'light', testInfo.project.name);
     });
   });
@@ -113,6 +116,7 @@ test.describe('Dashboard Pages - Dark Mode', () => {
       await page.goto(path);
       await setDarkMode(page);
       await waitForPageReady(page);
+      await validatePageLoaded(page, path); // Fail fast if page shows error
       await captureScreenshot(page, folder, 'dark', testInfo.project.name);
     });
   });
@@ -128,6 +132,7 @@ test.describe('Admin Pages - Light Mode', () => {
       await loginAsAdmin(page);
       await page.goto(path);
       await waitForPageReady(page);
+      await validatePageLoaded(page, path); // Fail fast if page shows error
       await captureScreenshot(page, folder, 'light', testInfo.project.name);
     });
   });
@@ -140,6 +145,7 @@ test.describe('Admin Pages - Dark Mode', () => {
       await page.goto(path);
       await setDarkMode(page);
       await waitForPageReady(page);
+      await validatePageLoaded(page, path); // Fail fast if page shows error
       await captureScreenshot(page, folder, 'dark', testInfo.project.name);
     });
   });
