@@ -28,17 +28,17 @@ import {
 // ============================================================================
 const serviceColorMap: Record<string, AccentVariant> = {
   // Current service types
-  'Website Build': 'blue',
-  'Automation Setup': 'purple',
-  'Managed AI Services': 'green',
-  'Managed AI': 'green',
+  'Website Build': 'green',
+  'Automation Setup': 'blue',
+  'Managed AI Services': 'purple',
+  'Managed AI': 'purple',
   // Legacy service types (for backwards compatibility)
-  'Virtual Assistant': 'purple',
+  'Virtual Assistant': 'green',
   'Data & Documents': 'blue',
-  'Website Services': 'green',
-  'Quick Task': 'purple',
+  'Website Services': 'purple',
+  'Quick Task': 'green',
   'Standard Task': 'blue',
-  'Premium Service': 'green',
+  'Premium Service': 'purple',
 };
 
 function getServiceColor(service: string): AccentVariant {

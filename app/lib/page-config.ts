@@ -536,7 +536,7 @@ export const PAGE_CONFIGS = {
             tagline: 'Your digital foundation',
             description: 'Professional websites that work. From landing pages to full e-commerce, built to convert visitors into customers.',
             details: 'Custom Design, Mobile-First, SEO-Ready, Easy to Update',
-            color: 'blue',
+            color: 'green',
             linkText: 'Learn more →',
             modal: {
               headline: 'A website that actually works for your business.',
@@ -560,7 +560,7 @@ export const PAGE_CONFIGS = {
             tagline: 'Stop doing repetitive work',
             description: 'Connect your tools, automate your workflows, and reclaim hours every week. We set it up, you reap the benefits.',
             details: 'Workflow Design, Tool Integration, Testing, Training',
-            color: 'purple',
+            color: 'blue',
             linkText: 'Learn more →',
             modal: {
               headline: 'Automate the work you keep putting off.',
@@ -584,7 +584,7 @@ export const PAGE_CONFIGS = {
             tagline: 'AI that runs while you sleep',
             description: 'We build, deploy, and maintain AI agents that handle your operations. You get the results without the complexity.',
             details: 'Custom AI Agents, Monitoring, Optimization, Support',
-            color: 'green',
+            color: 'purple',
             linkText: 'Learn more →',
             modal: {
               headline: 'AI that actually does the work.',
@@ -609,9 +609,9 @@ export const PAGE_CONFIGS = {
         title: 'Not Sure Where to Start?',
         description: 'Book a quick call. We\'ll figure out the best approach for your situation.',
         options: [
-          { name: 'Quick Chat', duration: '15 min', price: '$20', description: 'Got a quick question?', color: 'blue' },
-          { name: 'Strategy Call', duration: '30 min', price: '$35', description: 'Let\'s map out your needs', color: 'purple' },
-          { name: 'Deep Dive', duration: '55 min', price: '$50', description: 'Full project consultation', color: 'green' },
+          { name: 'Quick Chat', duration: '15 min', price: '$20', description: 'Got a quick question?', color: 'green' },
+          { name: 'Strategy Call', duration: '30 min', price: '$35', description: 'Let\'s map out your needs', color: 'blue' },
+          { name: 'Deep Dive', duration: '55 min', price: '$50', description: 'Full project consultation', color: 'purple' },
         ],
         linkText: 'Book a consultation →',
         linkHref: '/shop',
@@ -619,9 +619,9 @@ export const PAGE_CONFIGS = {
       processPreview: {
         title: 'How It Works',
         steps: [
-          { number: 1, title: 'Tell Us', description: 'What do you need built?', color: 'blue' },
-          { number: 2, title: 'We Scope', description: 'Clear quote, no surprises', color: 'purple' },
-          { number: 3, title: 'We Build', description: 'You stay in the loop', color: 'green' },
+          { number: 1, title: 'Tell Us', description: 'What do you need built?', color: 'green' },
+          { number: 2, title: 'We Scope', description: 'Clear quote, no surprises', color: 'blue' },
+          { number: 3, title: 'We Build', description: 'You stay in the loop', color: 'purple' },
           { number: 4, title: 'You Launch', description: 'Go live with confidence', color: 'gold' },
         ],
         linkText: 'See the full process →',
@@ -664,7 +664,7 @@ export const PAGE_CONFIGS = {
             ],
             serviceKey: 'website-services',
             serviceTitle: 'Website Builds',
-            color: 'blue',
+            color: 'green',
           },
           {
             quotes: [
@@ -674,7 +674,7 @@ export const PAGE_CONFIGS = {
             ],
             serviceKey: 'data-documents',
             serviceTitle: 'Automation Setup',
-            color: 'purple',
+            color: 'blue',
           },
           {
             quotes: [
@@ -684,7 +684,7 @@ export const PAGE_CONFIGS = {
             ],
             serviceKey: 'virtual-assistant',
             serviceTitle: 'Managed AI Services',
-            color: 'green',
+            color: 'purple',
           },
         ],
       },
@@ -755,7 +755,7 @@ export const PAGE_CONFIGS = {
             'Content management training',
             '30 days of support',
           ],
-          color: 'blue',
+          color: 'green',
           cta: 'Get a Website Quote',
           href: '/contact?service=website',
         },
@@ -771,7 +771,7 @@ export const PAGE_CONFIGS = {
             'Training session included',
             'Email support for questions',
           ],
-          color: 'purple',
+          color: 'blue',
           popular: true,
           cta: 'Explore Automation',
           href: '/contact?service=automation',
@@ -788,7 +788,7 @@ export const PAGE_CONFIGS = {
             'Priority support',
             'Continuous improvements',
           ],
-          color: 'green',
+          color: 'purple',
           cta: 'Learn About Managed AI',
           href: '/contact?service=managed-ai',
         },
@@ -881,9 +881,9 @@ export const PAGE_CONFIGS = {
         { text: 'No Surprises', description: 'Transparent pricing' },
       ],
       steps: [
-        { number: 1, title: 'Tell Us What You Need', description: 'Fill out our simple form. No tech jargon required—just tell us what you\'re trying to accomplish.', details: ['Describe your project in plain English', 'Attach any relevant files or examples', 'Let us know your timeline if you have one'], color: 'blue', href: '/contact', buttonText: 'Start Here' },
-        { number: 2, title: 'Get a Clear Quote', description: 'Within 2 business days, you\'ll have a detailed quote. No hidden fees, no hourly surprises.', details: ['We assess what needs to be built', 'We ask questions if needed', 'You get a fixed price quote'], color: 'purple' },
-        { number: 3, title: 'We Build It', description: '50% deposit to start. We keep you updated throughout so you\'re never wondering what\'s happening.', details: ['Regular progress updates', 'Review checkpoints along the way', 'Revisions until you\'re happy'], color: 'green' },
+        { number: 1, title: 'Tell Us What You Need', description: 'Fill out our simple form. No tech jargon required—just tell us what you\'re trying to accomplish.', details: ['Describe your project in plain English', 'Attach any relevant files or examples', 'Let us know your timeline if you have one'], color: 'green', href: '/contact', buttonText: 'Start Here' },
+        { number: 2, title: 'Get a Clear Quote', description: 'Within 2 business days, you\'ll have a detailed quote. No hidden fees, no hourly surprises.', details: ['We assess what needs to be built', 'We ask questions if needed', 'You get a fixed price quote'], color: 'blue' },
+        { number: 3, title: 'We Build It', description: '50% deposit to start. We keep you updated throughout so you\'re never wondering what\'s happening.', details: ['Regular progress updates', 'Review checkpoints along the way', 'Revisions until you\'re happy'], color: 'purple' },
         { number: 4, title: 'You Launch', description: 'Final 50% on approval. We help you go live and stick around to make sure everything works.', details: ['Final review and approval', 'Launch support included', 'Post-launch questions welcome'], color: 'gold' },
       ],
       timeline: {
