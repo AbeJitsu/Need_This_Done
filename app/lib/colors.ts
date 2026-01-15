@@ -1192,7 +1192,6 @@ export const adminSidebarColors = {
     dashboard: 'text-blue-600 dark:text-blue-400',
     blog: 'text-blue-600 dark:text-blue-400',
     content: 'text-blue-600 dark:text-blue-400',
-    pages: 'text-purple-600 dark:text-purple-400',
     shop: 'text-green-600 dark:text-green-400',
     appointments: 'text-teal-600 dark:text-teal-400',
     users: 'text-pink-600 dark:text-pink-400',
