@@ -335,7 +335,7 @@ export default function ServiceDetailModal() {
             </div>
 
             {/* CTA buttons */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-stretch gap-3">
               {/* Primary CTA */}
               {canEdit ? (
                 <Editable
@@ -386,6 +386,7 @@ export default function ServiceDetailModal() {
                       bg-white border-2 ${theme.outlineBorder} ${theme.outlineText}
                       ${theme.outlineHover}
                       transition-all duration-200
+                      flex items-center justify-center
                     `}
                   >
                     {activeService.ctas.secondary.text}
@@ -400,6 +401,7 @@ export default function ServiceDetailModal() {
                     bg-white border-2 ${theme.outlineBorder} ${theme.outlineText}
                     ${theme.outlineHover}
                     transition-all duration-200
+                    flex items-center justify-center
                   `}
                 >
                   {activeService.ctas.secondary.text}
