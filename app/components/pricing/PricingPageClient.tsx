@@ -77,7 +77,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
           <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
             {content.ctaSection.title}
           </h2>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className={`${formInputColors.helper} max-w-2xl mx-auto`}>
             {content.ctaSection.description}
           </p>
         </div>
@@ -114,17 +114,17 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
                         {path.badge}
                       </span>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                    <h3 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
                       {path.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-6">
+                    <p className={`${formInputColors.helper} mb-6`}>
                       {path.description}
                     </p>
                     <ul className="space-y-3 mb-6 flex-grow">
                       {path.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-center gap-2">
                           <span className={checkmarkClass} aria-hidden="true">✓</span>
-                          <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                          <span className={headingColors.secondary}>{feature}</span>
                         </li>
                       ))}
                     </ul>

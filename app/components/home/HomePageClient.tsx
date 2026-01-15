@@ -7,11 +7,9 @@ import { EditableSection, EditableItem, SortableItemsWrapper, Editable, Editable
 import { useInlineEdit } from '@/context/InlineEditContext';
 import {
   formInputColors,
-  titleColors,
   headingColors,
   groupHoverColors,
   accentColors,
-  cardHoverColors,
   shadowClasses,
   linkColors,
   linkHoverColors,
@@ -46,7 +44,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       <EditableSection sectionKey="hero" label="Hero Section">
         <div className="text-center mb-16">
           <Editable path="hero.title">
-            <h1 className={`text-5xl md:text-6xl font-bold tracking-tight ${titleColors.blue} mb-4`}>
+            <h1 className={`text-5xl md:text-6xl font-bold tracking-tight ${accentColors.blue.titleText} mb-4`}>
               {content.hero.title}
             </h1>
           </Editable>
@@ -225,7 +223,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       <EditableSection sectionKey="processPreview" label="Process Preview">
         <EditableCard
           href="/how-it-works"
-          className={`block mb-16 ${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.subtle} transition-all duration-300 ${cardHoverColors.purple} ${shadowClasses.cardHover} active:scale-98 group ${focusRingClasses.purple}`}
+          className={`block mb-16 ${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.subtle} transition-all duration-300 ${accentColors.purple.cardHover} ${shadowClasses.cardHover} active:scale-98 group ${focusRingClasses.purple}`}
         >
           <Editable path="processPreview.title">
             <h2 className={`text-3xl font-bold ${headingColors.primary} mb-6 text-center transition-colors`}>

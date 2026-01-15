@@ -261,6 +261,9 @@ export const accentColors: Record<AccentVariant, {
   hoverText: string;
   hoverBorder: string;
   focusVisible: string;
+  titleText: string;
+  topBorder: string;
+  cardHover: string;
 }> = {
   purple: {
     bg: 'bg-purple-100 dark:bg-purple-500',
@@ -269,6 +272,9 @@ export const accentColors: Record<AccentVariant, {
     hoverText: 'hover:text-purple-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-purple-600 dark:hover:border-purple-200',
     focusVisible: 'focus-visible:ring-4 focus-visible:ring-purple-300 dark:focus-visible:ring-purple-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+    titleText: 'text-purple-600 dark:text-purple-200',
+    topBorder: 'border-t-4 border-t-purple-500 dark:border-t-purple-400',
+    cardHover: 'hover:border-purple-500 dark:hover:border-purple-300',
   },
   blue: {
     bg: 'bg-blue-100 dark:bg-blue-500',
@@ -277,6 +283,9 @@ export const accentColors: Record<AccentVariant, {
     hoverText: 'hover:text-blue-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-blue-600 dark:hover:border-blue-200',
     focusVisible: 'focus-visible:ring-4 focus-visible:ring-blue-300 dark:focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+    titleText: 'text-blue-600 dark:text-blue-200',
+    topBorder: 'border-t-4 border-t-blue-500 dark:border-t-blue-400',
+    cardHover: 'hover:border-blue-500 dark:hover:border-blue-300',
   },
   green: {
     bg: 'bg-green-100 dark:bg-green-500',
@@ -285,15 +294,21 @@ export const accentColors: Record<AccentVariant, {
     hoverText: 'hover:text-green-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-green-600 dark:hover:border-green-200',
     focusVisible: 'focus-visible:ring-4 focus-visible:ring-green-300 dark:focus-visible:ring-green-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+    titleText: 'text-green-600 dark:text-green-200',
+    topBorder: 'border-t-4 border-t-green-500 dark:border-t-green-400',
+    cardHover: 'hover:border-green-500 dark:hover:border-green-300',
   },
   gold: {
-    // Dark mode uses gold-500 (#a36b00) - 4.51:1 contrast with white (WCAG AA)
-    bg: 'bg-gold-100 dark:bg-gold-500',
-    text: 'text-gold-600 dark:text-white',
+    // Dark mode uses light bg (300) + darker text (800) + light border (100)
+    bg: 'bg-gold-100 dark:bg-gold-300',
+    text: 'text-gold-600 dark:text-gold-800',
     border: 'border-gold-500 dark:border-gold-100',
-    hoverText: 'hover:text-gold-700 dark:hover:text-gold-100',
+    hoverText: 'hover:text-gold-700 dark:hover:text-gold-900',
     hoverBorder: 'hover:border-gold-600 dark:hover:border-gold-200',
     focusVisible: 'focus-visible:ring-4 focus-visible:ring-gold-300 dark:focus-visible:ring-gold-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+    titleText: 'text-gold-600 dark:text-gold-300',
+    topBorder: 'border-t-4 border-t-gold-500 dark:border-t-gold-400',
+    cardHover: 'hover:border-gold-500 dark:hover:border-gold-300',
   },
   teal: {
     bg: 'bg-teal-100 dark:bg-teal-500',
@@ -302,6 +317,9 @@ export const accentColors: Record<AccentVariant, {
     hoverText: 'hover:text-teal-700 dark:hover:text-teal-100',
     hoverBorder: 'hover:border-teal-600 dark:hover:border-teal-200',
     focusVisible: 'focus-visible:ring-4 focus-visible:ring-teal-300 dark:focus-visible:ring-teal-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+    titleText: 'text-teal-600 dark:text-teal-300',
+    topBorder: 'border-t-4 border-t-teal-500 dark:border-t-teal-400',
+    cardHover: 'hover:border-teal-500 dark:hover:border-teal-300',
   },
   gray: {
     bg: 'bg-gray-100 dark:bg-gray-500',
@@ -310,6 +328,9 @@ export const accentColors: Record<AccentVariant, {
     hoverText: 'hover:text-gray-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-gray-600 dark:hover:border-gray-200',
     focusVisible: 'focus-visible:ring-4 focus-visible:ring-gray-300 dark:focus-visible:ring-gray-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+    titleText: 'text-gray-600 dark:text-gray-300',
+    topBorder: 'border-t-4 border-t-gray-500 dark:border-t-gray-400',
+    cardHover: 'hover:border-gray-500 dark:hover:border-gray-300',
   },
   red: {
     bg: 'bg-red-100 dark:bg-red-500',
@@ -318,6 +339,9 @@ export const accentColors: Record<AccentVariant, {
     hoverText: 'hover:text-red-700 dark:hover:text-gray-100',
     hoverBorder: 'hover:border-red-600 dark:hover:border-red-200',
     focusVisible: 'focus-visible:ring-4 focus-visible:ring-red-300 dark:focus-visible:ring-red-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+    titleText: 'text-red-600 dark:text-red-300',
+    topBorder: 'border-t-4 border-t-red-500 dark:border-t-red-400',
+    cardHover: 'hover:border-red-500 dark:hover:border-red-300',
   },
 };
 
@@ -333,9 +357,10 @@ export const linkFontWeight = 'font-medium';
 // ============================================================================
 // Title Colors - Used for headings and labels (generic)
 // ============================================================================
-// Updated to meet WCAG AA (4.5:1 contrast) for normal text in both modes
+// @deprecated Use accentColors[color].titleText instead for better consolidation
+// Unified pattern for all accent colors:
 // Light mode: -600 shades ensure 4.5:1+ contrast on white (minimum)
-// Dark mode: -300 shades ensure 4.5:1+ contrast on gray-800
+// Dark mode: -300 shades ensure 4.5:1+ contrast on gray-800 (lighter, readable as text)
 export const titleColors: Record<AccentVariant, string> = {
   purple: 'text-purple-600 dark:text-purple-300',
   blue: 'text-blue-600 dark:text-blue-300',
@@ -365,6 +390,7 @@ export const titleTextColors: Record<AccentVariant, string> = {
 // ============================================================================
 // Border Colors - Top border accent for cards
 // ============================================================================
+// @deprecated Use accentColors[color].topBorder instead for better consolidation
 export const topBorderColors: Record<AccentColor, string> = {
   purple: 'border-t-purple-500',
   blue: 'border-t-blue-500',
@@ -422,6 +448,7 @@ export const checkmarkColors: Record<AccentColor, {
 // ============================================================================
 // Card Hover Colors - For Card component hover states
 // ============================================================================
+// @deprecated Use accentColors[color].cardHover instead for better consolidation
 // Centralized hover border colors for cards with color accents
 export const cardHoverColors: Record<AccentVariant, string> = {
   green: 'hover:border-green-500 dark:hover:border-green-300',
