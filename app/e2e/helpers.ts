@@ -184,21 +184,48 @@ export async function waitForElement(page: Page, selector: string) {
 // ============================================================================
 
 /**
- * Wait for page to be fully ready (DOM + network requests settled)
+ * Wait for page to be fully ready (DOM + network requests settled + content visible)
  * @param page Playwright page object
- * @param waitForNetwork Whether to wait for network idle (default: false for screenshots)
+ * @param options Configuration options
  */
-export async function waitForPageReady(page: Page, waitForNetwork: boolean = false) {
+export async function waitForPageReady(
+  page: Page,
+  options: { waitForNetwork?: boolean; waitForContent?: boolean } = {}
+) {
+  const { waitForNetwork = true, waitForContent = true } = options;
+
+  // Wait for DOM to be ready
   await page.waitForLoadState('domcontentloaded');
+
+  // Wait for network to settle (API calls, images, etc.)
   if (waitForNetwork) {
     try {
-      await page.waitForLoadState('networkidle', { timeout: 5000 });
+      await page.waitForLoadState('networkidle', { timeout: 10000 });
     } catch {
       // Ignore timeout - some pages continuously fetch data
     }
   }
-  // Wait a bit for rendering to complete
-  await page.waitForTimeout(500);
+
+  // Wait for actual content to be visible (not just blank page)
+  if (waitForContent) {
+    try {
+      // Wait for either h1, main content, or specific page markers
+      await page.waitForSelector('h1, main, [data-page-ready], .page-content', {
+        state: 'visible',
+        timeout: 10000,
+      });
+    } catch {
+      // Fall back to waiting for any visible text content
+      try {
+        await page.waitForSelector('body:not(:empty)', { timeout: 5000 });
+      } catch {
+        // Page might genuinely be empty, continue anyway
+      }
+    }
+  }
+
+  // Final wait for React hydration and animations to settle
+  await page.waitForTimeout(1000);
 }
 
 /**
