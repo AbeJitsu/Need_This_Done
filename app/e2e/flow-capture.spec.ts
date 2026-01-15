@@ -27,6 +27,7 @@ const discoveredAdminPages = discoverAdminPages();
 // Public Pages Capture (no auth required)
 // ============================================================================
 test('Capture public pages', async ({ page }) => {
+  test.setTimeout(120000); // 2 minutes - capturing many pages
   await page.setViewportSize({ width: 1280, height: 900 });
 
   // Convert discovered pages to capture format
@@ -37,7 +38,10 @@ test('Capture public pages', async ({ page }) => {
 
   for (const p of publicPages) {
     await page.goto(p.path);
-    await waitForPageReady(page);
+    // Use faster waits for screenshot capture - skip network idle (too slow)
+    await page.waitForLoadState('domcontentloaded');
+    await page.waitForSelector('h1, main', { state: 'visible', timeout: 5000 }).catch(() => {});
+    await page.waitForTimeout(500); // Brief settle time
     await validatePageLoaded(page, p.path); // Fail fast if page shows error
     await page.screenshot({
       path: `${OUTPUT_DIR}/screenshots/${p.name}.png`,
@@ -50,6 +54,7 @@ test('Capture public pages', async ({ page }) => {
 // Admin Pages Capture (requires auth - uses E2E_ADMIN_BYPASS)
 // ============================================================================
 test('Capture admin pages', async ({ page }) => {
+  test.setTimeout(120000); // 2 minutes - capturing many pages
   await page.setViewportSize({ width: 1280, height: 900 });
 
   // Include dashboard (not in admin discovery) plus discovered admin pages
