@@ -56,7 +56,12 @@ export async function GET(
 
         const { data: pages, error } = await query;
 
+        // Handle gracefully: PGRST205 = table doesn't exist
+        // Pages feature may not be set up yet
         if (error) {
+          if (error.code === 'PGRST205') {
+            return null; // Table doesn't exist - feature not configured
+          }
           throw new Error('Failed to load page');
         }
 

@@ -52,9 +52,9 @@ const WCAG_AA_NORMAL_TEXT = 4.5;
 
 test.describe('Service Modals - Contrast & Accessibility', () => {
   const services = [
-    { name: 'Virtual Assistant', color: 'green' },
-    { name: 'Data & Documents', color: 'blue' },
-    { name: 'Website Services', color: 'purple' },
+    { name: 'Website Builds', color: 'green' },
+    { name: 'Automation Setup', color: 'blue' },
+    { name: 'Managed AI', color: 'purple' },
   ];
 
   test.beforeEach(async ({ page }) => {
@@ -228,8 +228,8 @@ test.describe('Service Modals - Contrast & Accessibility', () => {
     await page.goto('/');
     await page.waitForLoadState('load');
 
-    // Click Virtual Assistant card
-    const serviceCard = page.getByRole('button', { name: /virtual assistant/i });
+    // Click Website Builds card
+    const serviceCard = page.getByRole('button', { name: /website builds/i });
     await serviceCard.click();
 
     // Modal should be visible
@@ -237,7 +237,7 @@ test.describe('Service Modals - Contrast & Accessibility', () => {
     await expect(modal).toBeVisible();
 
     // Title should match
-    await expect(modal.getByRole('heading', { name: /virtual assistant/i })).toBeVisible();
+    await expect(modal.getByRole('heading', { name: /website builds/i })).toBeVisible();
 
     // Close with X button
     const closeButton = modal.getByRole('button', { name: /close/i });

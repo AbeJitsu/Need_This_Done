@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
@@ -79,8 +79,7 @@ export const metadata: Metadata = {
   creator: seoConfig.siteName,
   publisher: seoConfig.siteName,
 
-  // Viewport and robots
-  viewport: 'width=device-width, initial-scale=1',
+  // Robots crawling configuration
   robots: {
     index: true,
     follow: true,
@@ -133,6 +132,15 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+};
+
+// ============================================================================
+// Viewport Configuration
+// ============================================================================
+// Separate export for viewport settings (Next.js 14+ requirement)
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({

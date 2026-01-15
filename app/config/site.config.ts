@@ -45,28 +45,28 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   // Services
   // ========================================================================
-  // Core service offerings - ordered to match pricing tier colors (blue, purple, green)
+  // Core service offerings - colors match page-config.ts: Website=green, Automation=blue, AI=purple
   services: [
     {
-      title: 'Website Build',
+      title: 'Website Builds',
       tagline: 'Your digital foundation',
       description: 'Professional websites that work. From landing pages to full e-commerce, built to convert visitors into customers.',
       details: 'Custom Design, Mobile-First, SEO-Ready, Easy to Update',
-      color: 'blue',
+      color: 'green',
     },
     {
       title: 'Automation Setup',
       tagline: 'Stop doing repetitive work',
       description: 'Connect your tools, automate your workflows, and reclaim hours every week. We set it up, you reap the benefits.',
       details: 'Workflow Design, Tool Integration, Testing, Training',
-      color: 'purple',
+      color: 'blue',
     },
     {
-      title: 'Managed AI Services',
+      title: 'Managed AI',
       tagline: 'AI that runs while you sleep',
       description: 'We build, deploy, and maintain AI agents that handle your operations. You get the results without the complexity.',
       details: 'Custom AI Agents, Monitoring, Optimization, Support',
-      color: 'green',
+      color: 'purple',
     },
   ],
 

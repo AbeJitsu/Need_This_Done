@@ -9,30 +9,29 @@ import {
   FileText, Settings, Search, Eye, Target, Rocket, Send,
   Globe, Lightbulb, Flame, Package, Gift, Bookmark, Flag,
   Bell, Camera, Code, Layers, Pencil, Plus, AlertCircle, Info,
+  ArrowRight, X,
 } from 'lucide-react';
 import { useServiceModal } from '@/context/ServiceModalContext';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { useBackdropClose } from '@/hooks/useBackdropClose';
-import {
-  cardBgColors,
-  dividerColors,
-  headingColors,
-  titleColors,
-  topBorderColors,
-  iconButtonColors,
-  getSolidButtonColors,
-  outlineButtonColors,
-  getCheckmarkColors,
-  type AccentVariant,
-} from '@/lib/colors';
-import { CloseIcon } from '@/components/ui/icons';
-import { serviceColors } from '@/lib/service-colors';
+import { type AccentVariant } from '@/lib/colors';
 import { Editable, IconPicker } from '@/components/InlineEditor';
+import { serviceColors } from '@/lib/service-colors';
 
-// Type for lucide icons that accept string | number for size
+// ============================================================================
+// Service Detail Modal - Premium Editorial Design
+// ============================================================================
+// Redesigned with:
+// - Glass morphism backdrop
+// - Strong typography hierarchy
+// - Elegant bullet treatment with subtle backgrounds
+// - Refined button styling
+// - Smooth animations
+
+// Type for lucide icons
 type LucideIconComponent = React.ComponentType<{ size?: string | number; className?: string }>;
 
-// Map of common icon names to components
+// Icon map
 const BULLET_ICON_MAP: Record<string, LucideIconComponent> = {
   Check, CheckCircle, Star, Heart, ThumbsUp, Award, Trophy,
   Sparkles, Zap, Shield, ShieldCheck, Clock, Calendar,
@@ -42,33 +41,121 @@ const BULLET_ICON_MAP: Record<string, LucideIconComponent> = {
   Bell, Camera, Code, Layers, Pencil, Plus, AlertCircle, Info,
 };
 
-// Render a lucide icon by name with colored circle background
+// Color configurations for each service type
+const SERVICE_THEMES: Record<AccentVariant, {
+  gradient: string;
+  accentBg: string;
+  accentText: string;
+  iconBg: string;
+  iconText: string;
+  buttonBg: string;
+  buttonHover: string;
+  outlineBorder: string;
+  outlineText: string;
+  outlineHover: string;
+}> = {
+  green: {
+    gradient: 'from-emerald-50 via-white to-teal-50/30',
+    accentBg: 'bg-emerald-100',
+    accentText: 'text-emerald-700',
+    iconBg: 'bg-emerald-100',
+    iconText: 'text-emerald-600',
+    buttonBg: 'bg-emerald-500',
+    buttonHover: 'hover:bg-emerald-600',
+    outlineBorder: 'border-emerald-300',
+    outlineText: 'text-emerald-600',
+    outlineHover: 'hover:bg-emerald-50',
+  },
+  purple: {
+    gradient: 'from-violet-50 via-white to-purple-50/30',
+    accentBg: 'bg-violet-100',
+    accentText: 'text-violet-700',
+    iconBg: 'bg-violet-100',
+    iconText: 'text-violet-600',
+    buttonBg: 'bg-violet-500',
+    buttonHover: 'hover:bg-violet-600',
+    outlineBorder: 'border-violet-300',
+    outlineText: 'text-violet-600',
+    outlineHover: 'hover:bg-violet-50',
+  },
+  gold: {
+    gradient: 'from-amber-50 via-white to-orange-50/30',
+    accentBg: 'bg-amber-100',
+    accentText: 'text-amber-700',
+    iconBg: 'bg-amber-100',
+    iconText: 'text-amber-600',
+    buttonBg: 'bg-amber-500',
+    buttonHover: 'hover:bg-amber-600',
+    outlineBorder: 'border-amber-300',
+    outlineText: 'text-amber-600',
+    outlineHover: 'hover:bg-amber-50',
+  },
+  blue: {
+    gradient: 'from-blue-50 via-white to-sky-50/30',
+    accentBg: 'bg-blue-100',
+    accentText: 'text-blue-700',
+    iconBg: 'bg-blue-100',
+    iconText: 'text-blue-600',
+    buttonBg: 'bg-blue-500',
+    buttonHover: 'hover:bg-blue-600',
+    outlineBorder: 'border-blue-300',
+    outlineText: 'text-blue-600',
+    outlineHover: 'hover:bg-blue-50',
+  },
+  teal: {
+    gradient: 'from-teal-50 via-white to-cyan-50/30',
+    accentBg: 'bg-teal-100',
+    accentText: 'text-teal-700',
+    iconBg: 'bg-teal-100',
+    iconText: 'text-teal-600',
+    buttonBg: 'bg-teal-500',
+    buttonHover: 'hover:bg-teal-600',
+    outlineBorder: 'border-teal-300',
+    outlineText: 'text-teal-600',
+    outlineHover: 'hover:bg-teal-50',
+  },
+  red: {
+    gradient: 'from-rose-50 via-white to-pink-50/30',
+    accentBg: 'bg-rose-100',
+    accentText: 'text-rose-700',
+    iconBg: 'bg-rose-100',
+    iconText: 'text-rose-600',
+    buttonBg: 'bg-rose-500',
+    buttonHover: 'hover:bg-rose-600',
+    outlineBorder: 'border-rose-300',
+    outlineText: 'text-rose-600',
+    outlineHover: 'hover:bg-rose-50',
+  },
+  gray: {
+    gradient: 'from-gray-50 via-white to-slate-50/30',
+    accentBg: 'bg-gray-100',
+    accentText: 'text-gray-700',
+    iconBg: 'bg-gray-100',
+    iconText: 'text-gray-600',
+    buttonBg: 'bg-gray-600',
+    buttonHover: 'hover:bg-gray-700',
+    outlineBorder: 'border-gray-300',
+    outlineText: 'text-gray-600',
+    outlineHover: 'hover:bg-gray-50',
+  },
+};
+
+// Bullet icon with refined styling
 function BulletIcon({
   iconName = 'Check',
-  color = 'green',
+  theme,
 }: {
   iconName?: string;
-  color?: AccentVariant;
+  theme: typeof SERVICE_THEMES.blue;
 }) {
-  const { bg, icon: iconColor } = getCheckmarkColors(color);
   const IconComponent = BULLET_ICON_MAP[iconName] || Check;
 
   return (
-    <div className={`w-5 h-5 rounded-full ${bg} flex items-center justify-center flex-shrink-0`}>
-      <IconComponent size={12} className={iconColor} />
+    <div className={`w-8 h-8 rounded-lg ${theme.iconBg} flex items-center justify-center flex-shrink-0`}>
+      <IconComponent size={16} className={theme.iconText} />
     </div>
   );
 }
-
-// ============================================================================
-// Service Detail Modal - Teaser Format
-// ============================================================================
-// What: Compact overlay modal with brief service preview
-// Why: Sparks curiosity and drives users to the services page for full details
-// How: Uses ServiceModalContext for state, shows headline + 3 bullets + 2 CTAs
-//
-// Inline Editing: When cardIndex is available, modal content is editable.
-// Editable fields: headline, hook, bulletPoints, CTA text
 
 export default function ServiceDetailModal() {
   const { isOpen, activeService, activeServiceType, cardIndex, closeModal, updateBulletIcon } = useServiceModal();
@@ -79,20 +166,21 @@ export default function ServiceDetailModal() {
     includeEscape: true,
   });
 
-  // State for icon picker
+  // Icon picker state
   const [iconPickerState, setIconPickerState] = useState<{
     isOpen: boolean;
     bulletIndex: number;
     position: { top: number; left: number };
   }>({ isOpen: false, bulletIndex: -1, position: { top: 0, left: 0 } });
 
-  // Get the accent color for current service
+  // Get theme for current service
   const color = activeServiceType ? serviceColors[activeServiceType] : 'blue';
+  const theme = SERVICE_THEMES[color] || SERVICE_THEMES.blue;
 
-  // Can we edit this modal? Only if we have a card index (from page content)
+  // Can we edit?
   const canEdit = isEditMode && cardIndex !== null;
 
-  // Handle icon click - open picker
+  // Handle icon click
   const handleIconClick = (e: React.MouseEvent, bulletIndex: number) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setIconPickerState({
@@ -105,28 +193,22 @@ export default function ServiceDetailModal() {
   // Handle icon selection
   const handleIconSelect = (iconName: string) => {
     if (cardIndex === null) return;
-
-    // Update the modal's local state for immediate UI feedback
     updateBulletIcon(iconPickerState.bulletIndex, iconName);
-
-    // Update the page content for persistence
     updateField('services', `cards.${cardIndex}.modal.bulletIcons.${iconPickerState.bulletIndex}`, iconName);
-
     setIconPickerState({ isOpen: false, bulletIndex: -1, position: { top: 0, left: 0 } });
   };
 
-  // Don't render if closed or no content
   if (!isOpen || !activeService) return null;
 
   return (
     <>
-      {/* Backdrop overlay - visual layer */}
+      {/* Backdrop with blur */}
       <div
-        className="fixed inset-0 bg-black/50 dark:bg-black/70 z-40 transition-opacity"
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300"
         aria-hidden="true"
       />
 
-      {/* Modal container - centered, handles clicks outside modal */}
+      {/* Modal container */}
       <div
         onClick={handleBackdropClick}
         className="fixed inset-0 z-50 flex items-center justify-center p-4 cursor-pointer"
@@ -134,127 +216,127 @@ export default function ServiceDetailModal() {
         aria-modal="true"
         aria-labelledby="service-modal-title"
       >
-        {/* Modal panel - stops click propagation so outside clicks close modal */}
+        {/* Modal panel */}
         <div
           ref={modalRef}
           onClick={(e) => e.stopPropagation()}
           tabIndex={-1}
           className={`
-            relative w-full max-w-2xl max-h-[90vh] overflow-y-auto
-            ${cardBgColors.base} rounded-2xl shadow-2xl
-            border-t-4 ${topBorderColors[color]}
+            relative w-full max-w-xl max-h-[90vh] overflow-y-auto cursor-default
+            bg-gradient-to-br ${theme.gradient}
+            rounded-3xl shadow-2xl
+            border border-white/60
             transition-all duration-300 ease-out
             animate-modal-enter
           `}
         >
-          {/* ================================================================
-              Close button
-              ================================================================ */}
+          {/* Close button - minimal floating style */}
           <button
             onClick={closeModal}
-            className={`
-              absolute top-4 right-4 z-10
-              ${iconButtonColors.text} ${iconButtonColors.hover}
-              p-2 rounded-lg ${iconButtonColors.bg} transition-colors
-            `}
+            className="
+              absolute top-5 right-5 z-10
+              w-10 h-10 rounded-full
+              bg-white/80 hover:bg-white
+              text-gray-500 hover:text-gray-700
+              flex items-center justify-center
+              transition-all duration-200
+              shadow-sm hover:shadow-md
+            "
             aria-label="Close modal"
           >
-            <CloseIcon size="lg" />
+            <X size={20} strokeWidth={2} />
           </button>
 
-          {/* ================================================================
-              Header section
-              ================================================================ */}
-          <div className="p-6 pb-4">
-            <h2
-              id="service-modal-title"
-              className={`text-2xl md:text-3xl font-bold ${titleColors[color]} mb-2 pr-10`}
-            >
-              {canEdit ? (
-                <Editable path={`services.cards.${cardIndex}.title`}>
-                  <span>{activeService.title}</span>
-                </Editable>
-              ) : (
-                activeService.title
-              )}
-            </h2>
-            {canEdit ? (
-              <Editable path={`services.cards.${cardIndex}.modal.headline`}>
-                <p className={`text-xl font-medium ${headingColors.primary} mb-2`}>
-                  {activeService.headline}
-                </p>
-              </Editable>
-            ) : (
-              <p className={`text-xl font-medium ${headingColors.primary} mb-2`}>
-                {activeService.headline}
-              </p>
-            )}
-            {canEdit ? (
-              <Editable path={`services.cards.${cardIndex}.modal.hook`}>
-                <p className={`${headingColors.secondary} text-base`}>
-                  {activeService.hook}
-                </p>
-              </Editable>
-            ) : (
-              <p className={`${headingColors.secondary} text-base`}>
-                {activeService.hook}
-              </p>
-            )}
-          </div>
-
-          {/* ================================================================
-              Content section - Teaser format (brief, drives to services page)
-              ================================================================ */}
-          <div className="px-6 pb-6 space-y-5">
-            {/* What we do - bullet points (3 items max) */}
-            <div>
-              <h3 className={`font-semibold ${headingColors.primary} mb-3`}>
+          {/* Content */}
+          <div className="p-8 md:p-10">
+            {/* Header */}
+            <div className="mb-8">
+              <h2
+                id="service-modal-title"
+                className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 pr-12 tracking-tight"
+              >
                 {canEdit ? (
-                  <Editable path={`services.cards.${cardIndex}.modal.bulletHeader`}>
-                    <span>{activeService.bulletHeader || 'What we handle:'}</span>
+                  <Editable path={`services.cards.${cardIndex}.title`}>
+                    <span>{activeService.title}</span>
                   </Editable>
                 ) : (
-                  <span>{activeService.bulletHeader || 'What we handle:'}</span>
+                  activeService.title
+                )}
+              </h2>
+
+              {canEdit ? (
+                <Editable path={`services.cards.${cardIndex}.modal.headline`}>
+                  <p className="text-xl text-gray-700 font-medium mb-3">
+                    {activeService.headline}
+                  </p>
+                </Editable>
+              ) : (
+                <p className="text-xl text-gray-700 font-medium mb-3">
+                  {activeService.headline}
+                </p>
+              )}
+
+              {canEdit ? (
+                <Editable path={`services.cards.${cardIndex}.modal.hook`}>
+                  <p className="text-gray-500 text-base leading-relaxed">
+                    {activeService.hook}
+                  </p>
+                </Editable>
+              ) : (
+                <p className="text-gray-500 text-base leading-relaxed">
+                  {activeService.hook}
+                </p>
+              )}
+            </div>
+
+            {/* Bullet points - card style */}
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
+                {canEdit ? (
+                  <Editable path={`services.cards.${cardIndex}.modal.bulletHeader`}>
+                    <span>{activeService.bulletHeader || 'What we handle'}</span>
+                  </Editable>
+                ) : (
+                  <span>{activeService.bulletHeader || 'What we handle'}</span>
                 )}
               </h3>
-              <ul className="space-y-2">
+
+              <div className="space-y-3">
                 {activeService.bulletPoints.map((point, index) => {
-                  // Get custom icon or default to Check
                   const iconName = activeService.bulletIcons?.[index] || 'Check';
                   return (
-                    <li key={index} className={`flex items-center gap-3 ${headingColors.secondary}`}>
+                    <div
+                      key={index}
+                      className="flex items-center gap-4 p-3 rounded-xl bg-white/60 border border-white/80"
+                    >
                       {canEdit ? (
                         <button
                           type="button"
                           onClick={(e) => handleIconClick(e, index)}
                           className="flex-shrink-0 cursor-pointer hover:scale-110 transition-transform"
                           aria-label={`Change icon for bullet point ${index + 1}`}
-                          title="Click to change icon"
                         >
-                          <BulletIcon iconName={iconName} color={color} />
+                          <BulletIcon iconName={iconName} theme={theme} />
                         </button>
                       ) : (
-                        <BulletIcon iconName={iconName} color={color} />
+                        <BulletIcon iconName={iconName} theme={theme} />
                       )}
                       {canEdit ? (
                         <Editable path={`services.cards.${cardIndex}.modal.bulletPoints.${index}`}>
-                          <span>{point}</span>
+                          <span className="text-gray-700 font-medium">{point}</span>
                         </Editable>
                       ) : (
-                        <span>{point}</span>
+                        <span className="text-gray-700 font-medium">{point}</span>
                       )}
-                    </li>
+                    </div>
                   );
                 })}
-              </ul>
+              </div>
             </div>
 
-            {/* Divider */}
-            <div className={`${dividerColors.subtle} h-px`} />
-
-            {/* CTA buttons - Primary goes to services, Secondary to contact */}
+            {/* CTA buttons */}
             <div className="flex flex-col sm:flex-row gap-3">
-              {/* Primary CTA - See All Services */}
+              {/* Primary CTA */}
               {canEdit ? (
                 <Editable
                   path={`services.cards.${cardIndex}.modal.ctas.primary.text`}
@@ -263,12 +345,15 @@ export default function ServiceDetailModal() {
                 >
                   <span
                     className={`
-                      flex-1 text-center py-3 px-6 rounded-xl font-semibold
+                      flex-1 text-center py-4 px-6 rounded-2xl font-semibold
+                      ${theme.buttonBg} ${theme.buttonHover} text-white
                       transition-all duration-200
-                      ${getSolidButtonColors(color).bg} ${getSolidButtonColors(color).hover} ${getSolidButtonColors(color).text}
+                      flex items-center justify-center gap-2
+                      shadow-lg hover:shadow-xl
                     `}
                   >
                     {activeService.ctas.primary.text}
+                    <ArrowRight size={18} />
                   </span>
                 </Editable>
               ) : (
@@ -276,16 +361,19 @@ export default function ServiceDetailModal() {
                   href={activeService.ctas.primary.href}
                   onClick={closeModal}
                   className={`
-                    flex-1 text-center py-3 px-6 rounded-xl font-semibold
+                    flex-1 text-center py-4 px-6 rounded-2xl font-semibold
+                    ${theme.buttonBg} ${theme.buttonHover} text-white
                     transition-all duration-200
-                    ${getSolidButtonColors(color).bg} ${getSolidButtonColors(color).hover} ${getSolidButtonColors(color).text}
+                    flex items-center justify-center gap-2
+                    shadow-lg hover:shadow-xl
                   `}
                 >
                   {activeService.ctas.primary.text}
+                  <ArrowRight size={18} />
                 </Link>
               )}
 
-              {/* Secondary CTA - Get a Quote */}
+              {/* Secondary CTA */}
               {canEdit ? (
                 <Editable
                   path={`services.cards.${cardIndex}.modal.ctas.secondary.text`}
@@ -294,9 +382,10 @@ export default function ServiceDetailModal() {
                 >
                   <span
                     className={`
-                      flex-1 text-center py-3 px-6 rounded-xl font-semibold
-                      border-2 transition-all duration-200
-                      ${outlineButtonColors[color].base} ${outlineButtonColors[color].hover}
+                      flex-1 text-center py-4 px-6 rounded-2xl font-semibold
+                      bg-white border-2 ${theme.outlineBorder} ${theme.outlineText}
+                      ${theme.outlineHover}
+                      transition-all duration-200
                     `}
                   >
                     {activeService.ctas.secondary.text}
@@ -307,9 +396,10 @@ export default function ServiceDetailModal() {
                   href={activeService.ctas.secondary.href}
                   onClick={closeModal}
                   className={`
-                    flex-1 text-center py-3 px-6 rounded-xl font-semibold
-                    border-2 transition-all duration-200
-                    ${outlineButtonColors[color].base} ${outlineButtonColors[color].hover}
+                    flex-1 text-center py-4 px-6 rounded-2xl font-semibold
+                    bg-white border-2 ${theme.outlineBorder} ${theme.outlineText}
+                    ${theme.outlineHover}
+                    transition-all duration-200
                   `}
                 >
                   {activeService.ctas.secondary.text}
@@ -330,12 +420,12 @@ export default function ServiceDetailModal() {
         />
       )}
 
-      {/* Animation keyframes - added via style tag */}
+      {/* Animation */}
       <style jsx>{`
         @keyframes modal-enter {
           from {
             opacity: 0;
-            transform: scale(0.95) translateY(10px);
+            transform: scale(0.95) translateY(20px);
           }
           to {
             opacity: 1;
@@ -343,7 +433,7 @@ export default function ServiceDetailModal() {
           }
         }
         .animate-modal-enter {
-          animation: modal-enter 0.2s ease-out;
+          animation: modal-enter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
       `}</style>
     </>

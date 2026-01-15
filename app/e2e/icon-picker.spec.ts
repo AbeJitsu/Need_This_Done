@@ -18,7 +18,7 @@ test.describe('Icon Picker', () => {
   test('icon picker opens and displays icons when clicking bullet icon', async ({ page }) => {
     // Find and click a service card to open the modal
     // Service cards are buttons with service names
-    const serviceCard = page.locator('button:has-text("Virtual Assistant")').first();
+    const serviceCard = page.locator('button:has-text("Website Builds")').first();
     await serviceCard.click();
 
     // Wait for modal to appear
@@ -76,7 +76,7 @@ test.describe('Icon Picker', () => {
     }
 
     // Click a service card to open modal
-    const serviceCard = page.locator('button:has-text("Virtual Assistant")').first();
+    const serviceCard = page.locator('button:has-text("Website Builds")').first();
     if (await serviceCard.count() > 0) {
       await serviceCard.click();
 
@@ -113,7 +113,7 @@ test.describe('Icon Picker', () => {
     }
 
     // Open a service modal
-    const serviceCard = page.locator('button:has-text("Virtual Assistant")').first();
+    const serviceCard = page.locator('button:has-text("Website Builds")').first();
     if (await serviceCard.count() === 0) {
       console.log('No service card found - skipping test');
       return;

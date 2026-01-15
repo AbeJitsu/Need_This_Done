@@ -147,7 +147,7 @@ async function main() {
       name: "John Smith",
       email: "john.smith@example.com",
       company: "Acme Corporation",
-      service: "Website Services",
+      service: "Website Builds",
       message:
         "Hi! I need help building a new e-commerce website for my business. We sell handmade crafts and want a modern, mobile-friendly design with payment processing.",
       attachmentCount: 2,
@@ -168,7 +168,7 @@ async function main() {
   try {
     const result = await sendClientConfirmation(TEST_EMAIL, {
       name: "Jane Doe",
-      service: "Virtual Assistant",
+      service: "Managed AI",
     });
     console.log(`   ✅ Client confirmation sent! ID: ${result}\n`);
   } catch (error) {

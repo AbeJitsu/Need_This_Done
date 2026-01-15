@@ -28,6 +28,18 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
+    // Check if Medusa is configured
+    if (!process.env.NEXT_PUBLIC_MEDUSA_URL && !process.env.MEDUSA_BACKEND_URL) {
+      return NextResponse.json({
+        products: [],
+        count: 0,
+        total: 0,
+        cached: false,
+        source: 'fallback',
+        warning: 'Medusa backend not configured. Set NEXT_PUBLIC_MEDUSA_URL in .env.local',
+      });
+    }
+
     const { searchParams } = new URL(request.url);
     const limit = searchParams.get('limit');
     const offset = searchParams.get('offset');
@@ -94,7 +106,19 @@ export async function GET(request: NextRequest) {
         },
       }
     );
-  } catch (error) {
+  } catch (error: unknown) {
+    // Handle missing publishable API key gracefully
+    const medusaError = error as { message?: string; status?: number };
+    if (medusaError.message?.includes('Publishable API key required') || medusaError.status === 400) {
+      return NextResponse.json({
+        products: [],
+        count: 0,
+        total: 0,
+        cached: false,
+        source: 'fallback',
+        warning: 'Medusa API key not configured. Set NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY in .env.local',
+      });
+    }
     return handleApiError(error, 'Products GET');
   }
 }

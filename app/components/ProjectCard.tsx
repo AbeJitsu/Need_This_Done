@@ -26,16 +26,19 @@ import {
 // ============================================================================
 // Service to Color Mapping - Match service types to theme colors
 // ============================================================================
+// Colors: Website=green, Automation=blue, AI=purple
 const serviceColorMap: Record<string, AccentVariant> = {
   // Current service types
-  'Website Build': 'green',
+  'Website Builds': 'green',
   'Automation Setup': 'blue',
-  'Managed AI Services': 'purple',
   'Managed AI': 'purple',
-  // Legacy service types (for backwards compatibility)
-  'Virtual Assistant': 'green',
+  // Legacy service types (for backwards compatibility with old data)
+  'Virtual Assistant': 'purple',
   'Data & Documents': 'blue',
-  'Website Services': 'purple',
+  'Website Services': 'green',
+  'Website Build': 'green',
+  'Managed AI Services': 'purple',
+  // Very old legacy types
   'Quick Task': 'green',
   'Standard Task': 'blue',
   'Premium Service': 'purple',

@@ -79,6 +79,15 @@ export async function POST(request: Request) {
       .eq('page_url', page_url);
 
     if (deleteError) {
+      // PGRST205 = table doesn't exist - embeddings feature not configured
+      if (deleteError.code === 'PGRST205') {
+        return NextResponse.json({
+          success: false,
+          skipped: true,
+          reason: 'embeddings_not_configured',
+          message: 'Embeddings table not found. Run Supabase migrations to enable this feature.',
+        });
+      }
       console.error('Error deleting existing embeddings:', deleteError);
       // Continue anyway - might be a new page
     }

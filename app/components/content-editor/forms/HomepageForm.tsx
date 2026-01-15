@@ -100,7 +100,7 @@ export default function HomepageForm({ content, onChange }: HomepageFormProps) {
                 label="Title"
                 value={card.title}
                 onChange={(v) => onCardChange({ ...card, title: v })}
-                placeholder="e.g., Virtual Assistant"
+                placeholder="e.g., Website Builds"
               />
               <TextField
                 label="Tagline"

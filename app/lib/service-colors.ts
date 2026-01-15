@@ -12,10 +12,11 @@ import type { ServiceType } from './service-modal-content';
 export type { ServiceType };
 
 // Map service types to accent colors
+// Colors match page-config.ts: Website=green, Automation=blue, AI=purple
 export const serviceColors: Record<ServiceType, AccentColor> = {
-  'virtual-assistant': 'green',
+  'website-services': 'green',
   'data-documents': 'blue',
-  'website-services': 'purple',
+  'virtual-assistant': 'purple',
 };
 
 // Helper function for safe color lookup with fallback

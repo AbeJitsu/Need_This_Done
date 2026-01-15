@@ -400,6 +400,19 @@
     "design_process": {
       "label": "Design & Process",
       "items": ["Mobile-First", "Figma", "Component Libraries", "Test-Driven Development"]
+    },
+    "it_support": {
+      "label": "IT & Technical Support",
+      "items": [
+        "TeamViewer",
+        "Remote Desktop (RDP)",
+        "Windows Administration",
+        "Hardware Troubleshooting",
+        "Software Installation & Configuration",
+        "Network Diagnostics",
+        "Technical Documentation"
+      ],
+      "context": "Years of solo development required self-sufficient troubleshooting across software, hardware, networking, and system administration"
     }
   },
 
@@ -486,12 +499,13 @@
       "backend_architecture": "During my time at Acadio (an EdTech LMS platform), I demonstrated the problem-solving and architectural thinking your team needs. I built an automated flashcard generation system that reduced manual content creation from weeks to minutes—not through shortcuts, but through thoughtful system design and modern tooling integration.",
       "fullstack_devops": "My experience building needthisdone.com demonstrates the full-stack and DevOps expertise your team is seeking. The architecture uses Next.js with Supabase and Redis for data and caching.",
       "frontend_design": "I have built responsive React and Vue.js applications demonstrating strong front-end fundamentals. In my work at needthisdone.com, I implemented WCAG AA accessibility compliance across all components and comprehensive E2E testing with Playwright.",
-      "ai_integration": "I have successfully integrated modern AI tooling into production applications. At Acadio, I used Claude Code to build systems that dramatically reduced manual work. On needthisdone.com, I implemented context-aware chatbots using Supabase pgvector semantic search and OpenAI embeddings, demonstrating practical understanding of RAG patterns and LLM integration."
+      "ai_integration": "I have successfully integrated modern AI tooling into production applications. At Acadio, I used Claude Code to build systems that dramatically reduced manual work. On needthisdone.com, I implemented context-aware chatbots using Supabase pgvector semantic search and OpenAI embeddings, demonstrating practical understanding of RAG patterns and LLM integration.",
+      "it_support_helpdesk": "Years of solo development have made me a self-sufficient troubleshooter across software, hardware, and systems. When something breaks, I diagnose and fix it. I have hands-on experience with remote support tools like TeamViewer and Remote Desktop, and my background explaining complex technical concepts to non-technical audiences (7 years in automotive finance, 5 years in admissions) means I can communicate clearly with end users while resolving their issues efficiently."
     }
   },
 
   "metadata": {
-    "last_updated": "2026-01-07",
+    "last_updated": "2026-01-15",
     "tone_guidelines": {
       "style": "inviting, focused, considerate, supportive, influential",
       "language": "relatable language most adults can easily understand",

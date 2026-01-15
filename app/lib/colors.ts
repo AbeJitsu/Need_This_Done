@@ -346,7 +346,8 @@ export const accentColors: Record<AccentVariant, {
 };
 
 // Border width constant - change once to update all buttons/badges globally
-export const accentBorderWidth = 'border-2';
+// Using border (1px) for a refined, polished look vs border-2 (2px) which feels heavy
+export const accentBorderWidth = 'border';
 
 // Font weight constant - change once to update all buttons/badges globally
 export const accentFontWeight = 'font-semibold';
