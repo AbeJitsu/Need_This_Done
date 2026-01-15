@@ -14,10 +14,7 @@ import {
 import { useServiceModal } from '@/context/ServiceModalContext';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { useBackdropClose } from '@/hooks/useBackdropClose';
-import {
-  headingColors,
-  type AccentVariant,
-} from '@/lib/colors';
+import { type AccentVariant } from '@/lib/colors';
 import { Editable, IconPicker } from '@/components/InlineEditor';
 import { serviceColors } from '@/lib/service-colors';
 

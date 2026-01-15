@@ -17,7 +17,6 @@ import {
   linkHoverColors,
   linkFontWeight,
   focusRingClasses,
-  neutralAccentBg,
   cardBgColors,
   cardBorderColors,
 } from '@/lib/colors';

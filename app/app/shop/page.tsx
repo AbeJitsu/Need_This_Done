@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRight, Check } from 'lucide-react';
 import Button from '@/components/Button';
 import { medusaClient, type Product } from '@/lib/medusa-client';
@@ -117,15 +116,6 @@ const packageFeatures: Record<string, string[]> = {
     'Enhanced SEO',
     '60 days support',
   ],
-};
-
-// ============================================================================
-// Package images - placeholders until real images are created
-// ============================================================================
-
-const packageImages: Record<string, { src: string; alt: string } | null> = {
-  'launch-site': null, // TODO: Add /images/products/launch-site.png
-  'growth-site': null, // TODO: Add /images/products/growth-site.png
 };
 
 // ============================================================================

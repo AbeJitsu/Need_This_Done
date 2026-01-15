@@ -166,18 +166,73 @@ export default function UnifiedPricingPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-12">
-      {/* Header */}
-      <div className="text-center mb-8 animate-slide-up">
-        <h1 className={`text-4xl md:text-5xl font-bold ${headingColors.primary} mb-4`}>
+      {/* ================================================================== */}
+      {/* CONSULTATION SECTION - First thing visitors see */}
+      {/* ================================================================== */}
+      <section className="mb-16 animate-slide-up">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+          {/* Decorative elements */}
+          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+
+          <div className="relative px-8 py-14 md:py-16 text-center">
+            {/* Eyebrow */}
+            <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-blue-300 text-sm font-medium mb-5 backdrop-blur-sm">
+              Free • No Commitment
+            </span>
+
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
+              Not sure what you need?
+            </h1>
+            <p className="text-lg text-slate-300 mb-8 max-w-xl mx-auto">
+              Book a free consultation. We&apos;ll help you figure out the right solution.
+            </p>
+
+            {/* Primary CTA */}
+            <a
+              href="/contact"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-white text-slate-900 font-semibold text-lg rounded-2xl hover:bg-slate-100 transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-100"
+            >
+              <Calendar className="w-5 h-5" />
+              Book a Free Consultation
+            </a>
+
+            {/* Trust indicators */}
+            <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-slate-400">
+              <span className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                15-30 minutes
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                Get a clear next step
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                No pressure
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* PRICING HEADER - For those who know what they want */}
+      {/* ================================================================== */}
+      <div className="text-center mb-8 animate-slide-up animate-delay-100">
+        <p className={`text-sm font-semibold uppercase tracking-wider text-gray-400 mb-2`}>
+          Already know what you need?
+        </p>
+        <h2 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-4`}>
           Simple Pricing
-        </h1>
-        <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
+        </h2>
+        <p className={`text-lg ${formInputColors.helper} max-w-2xl mx-auto`}>
           Pick a service. Pay 50% to start. No surprises.
         </p>
       </div>
 
       {/* Email Input */}
-      <div className="max-w-md mx-auto mb-12 animate-slide-up animate-delay-100">
+      <div className="max-w-md mx-auto mb-12 animate-slide-up animate-delay-200">
         <label className={`block text-sm font-medium ${formInputColors.helper} mb-2 text-center`}>
           Enter your email to get started
         </label>
@@ -188,7 +243,7 @@ export default function UnifiedPricingPage() {
           onChange={(e) => setEmail(e.target.value)}
           className={`
             w-full px-4 py-3 rounded-xl border text-center transition-colors text-lg
-            ${formInputColors.bg} ${formInputColors.text}
+            bg-white text-gray-900
             ${email && !isValidEmail ? 'border-red-300' : `${cardBorderColors.subtle} focus:border-blue-400`}
             focus:outline-none focus:ring-2 focus:ring-blue-500/20
           `}
