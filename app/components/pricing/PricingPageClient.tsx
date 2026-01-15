@@ -34,13 +34,15 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header */}
-      <EditableSection sectionKey="header" label="Page Header">
-        <PageHeader
-          title={content.header.title}
-          description={content.header.description}
-          color="purple"
-        />
-      </EditableSection>
+      {content.header && (
+        <EditableSection sectionKey="header" label="Page Header">
+          <PageHeader
+            title={content.header.title}
+            description={content.header.description}
+            color="purple"
+          />
+        </EditableSection>
+      )}
 
       {/* Pricing Cards */}
       <EditableSection sectionKey="tiers" label="Pricing Tiers">
@@ -76,18 +78,21 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
       </EditableSection>
 
       {/* Choose Your Path - CTA Section Header */}
-      <EditableSection sectionKey="ctaSection" label="CTA Section">
-        <div className="text-center mb-8">
-          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
-            {content.ctaSection.title}
-          </h2>
-          <p className={`${formInputColors.helper} max-w-2xl mx-auto`}>
-            {content.ctaSection.description}
-          </p>
-        </div>
-      </EditableSection>
+      {content.ctaSection && (
+        <EditableSection sectionKey="ctaSection" label="CTA Section">
+          <div className="text-center mb-8">
+            <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
+              {content.ctaSection.title}
+            </h2>
+            <p className={`${formInputColors.helper} max-w-2xl mx-auto`}>
+              {content.ctaSection.description}
+            </p>
+          </div>
+        </EditableSection>
+      )}
 
       {/* CTA Path Cards */}
+      {content.ctaPaths && content.ctaPaths.length > 0 && (
       <EditableSection sectionKey="ctaPaths" label="CTA Paths">
         <SortableItemsWrapper
           sectionKey="ctaPaths"
@@ -147,9 +152,10 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
           })}
         </SortableItemsWrapper>
       </EditableSection>
+      )}
 
       {/* Payment Structure Note */}
-      {content.paymentNote.enabled && (
+      {content.paymentNote?.enabled && (
         <EditableSection sectionKey="paymentNote" label="Payment Structure">
           <Card hoverColor="purple" hoverEffect="glow" className="mb-10">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">

@@ -23,14 +23,11 @@ export const metadata: Metadata = {
 // ============================================================================
 
 async function getProducts(): Promise<Product[]> {
-  // Retry logic with exponential backoff for startup timing issues
-  // Handles both:
-  // 1. Network errors (Medusa not ready yet)
-  // 2. Empty results (Medusa running but not seeded yet)
+  // Fast-fail retry logic - don't block page render waiting for Medusa
+  // If Medusa is down, show empty products quickly and let user see the page
   //
-  // Pure exponential backoff: 1s, 2s, 4s, 8s, 16s, 32s, 64s, 128s, 256s, 512s
-  // Total wait time: ~17 minutes max (if Medusa takes that long, bigger issues exist)
-  const maxRetries = 10;
+  // 3 retries with 1s base delay = ~7 seconds max wait time
+  const maxRetries = 3;
   const baseDelay = 1000;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {

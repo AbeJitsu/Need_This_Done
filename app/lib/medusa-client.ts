@@ -7,6 +7,7 @@
 
 // NEXT_PUBLIC_MEDUSA_URL is your Railway Medusa backend URL
 const MEDUSA_URL = process.env.NEXT_PUBLIC_MEDUSA_URL || process.env.MEDUSA_BACKEND_URL;
+const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY;
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 
@@ -34,6 +35,7 @@ async function fetchWithRetry(
       // Removed credentials: "include" to test if it's causing response filtering
       headers: {
         "Content-Type": "application/json",
+        ...(PUBLISHABLE_KEY && { "x-publishable-api-key": PUBLISHABLE_KEY }),
         ...options.headers,
       },
     };
@@ -93,11 +95,17 @@ interface ProductVariant {
   id: string;
   title: string;
   product_id: string;
-  prices: { amount: number; currency_code: string }[];
+  prices?: { amount: number; currency_code: string }[];
+  calculated_price?: {
+    calculated_amount: number;
+    currency_code: string;
+    original_amount: number;
+  };
   inventory_quantity?: number;
   manage_inventory?: boolean;
   allow_backorder?: boolean;
   options?: any[];
+  metadata?: { base_price_usd?: number; [key: string]: any };
 }
 
 interface Product {
@@ -143,13 +151,22 @@ export const products = {
    */
   list: async (params?: PaginationParams): Promise<Product[] | PaginatedProducts> => {
     // Build URL with pagination params
-    let url = `${MEDUSA_URL}/store/products`;
+    const queryParams = new URLSearchParams();
+
+    // Get default region for pricing context (Medusa v2 requires this)
+    const regionsResponse = await fetchWithRetry(`${MEDUSA_URL}/store/regions`);
+    const regionsData = await handleResponse<{ regions: { id: string }[] }>(regionsResponse);
+    if (regionsData.regions?.[0]) {
+      queryParams.append('region_id', regionsData.regions[0].id);
+    }
+
+    // Add pagination if provided
     if (params) {
-      const queryParams = new URLSearchParams();
       if (params.limit !== undefined) queryParams.append('limit', params.limit.toString());
       if (params.offset !== undefined) queryParams.append('offset', params.offset.toString());
-      if (queryParams.toString()) url += `?${queryParams.toString()}`;
     }
+
+    const url = `${MEDUSA_URL}/store/products?${queryParams.toString()}`;
 
     const response = await fetchWithRetry(url);
     const data = await handleResponse<{ products: Product[]; count?: number }>(response);
