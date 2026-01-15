@@ -50,7 +50,6 @@
       "NotebookEdit"
     ],
     "deny": [
-      "Bash(git push origin main:*)",
       "Bash(git push --force:*)",
       "Bash(git rebase:*)",
       "Bash(git reset --hard:*)",
