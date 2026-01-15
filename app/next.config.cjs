@@ -58,6 +58,30 @@ const nextConfig = {
   compress: true,
 
   // ========================================================================
+  // Redirects - Consolidate pages
+  // ========================================================================
+  // Redirect old pages to unified pricing page
+  async redirects() {
+    return [
+      {
+        source: '/shop',
+        destination: '/pricing',
+        permanent: true,
+      },
+      {
+        source: '/build',
+        destination: '/pricing',
+        permanent: true,
+      },
+      {
+        source: '/build/success',
+        destination: '/pricing/success',
+        permanent: true,
+      },
+    ];
+  },
+
+  // ========================================================================
   // Headers for Security and Performance
   // ========================================================================
   // Add security headers to all responses

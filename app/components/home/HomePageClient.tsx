@@ -183,52 +183,121 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
         </div>
       </EditableSection>
 
-      {/* Consultation CTA - Refined single-action section */}
+      {/* Consultation & Pricing Section - Premium Design */}
       {content.consultations && (
         <EditableSection sectionKey="consultations" label="Consultations">
           <div className="mb-16 animate-slide-up">
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 border border-gray-200 dark:border-gray-700">
-              {/* Subtle decorative element */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-blue-100/50 to-transparent dark:from-blue-900/20 rounded-full -translate-y-1/2 translate-x-1/2" />
+            {/* Main Consultation Card - Hero treatment */}
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 mb-8">
+              {/* Decorative elements */}
+              <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+              <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-transparent via-white/5 to-transparent" />
 
-              <div className="relative px-8 py-12 md:py-16 text-center">
+              <div className="relative px-8 py-16 md:py-20 text-center">
+                {/* Eyebrow */}
+                <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-blue-300 text-sm font-medium mb-6 backdrop-blur-sm">
+                  Free • No Commitment
+                </span>
+
                 <Editable path="consultations.title">
-                  <h2 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-3`}>
+                  <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
                     {content.consultations.title}
                   </h2>
                 </Editable>
                 <Editable path="consultations.description">
-                  <p className={`text-lg ${formInputColors.helper} mb-8 max-w-xl mx-auto`}>
+                  <p className="text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
                     {content.consultations.description}
                   </p>
                 </Editable>
 
-                {/* Single prominent CTA */}
-                <Button variant="blue" href={content.consultations.linkHref} size="lg">
+                {/* Primary CTA - Prominent white button */}
+                <a
+                  href={content.consultations.linkHref}
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-white text-slate-900 font-semibold text-lg rounded-2xl hover:bg-slate-100 transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-100"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
                   Book a Free Consultation
-                </Button>
+                </a>
 
-                {/* Trust indicators */}
-                <div className={`mt-8 flex flex-wrap justify-center gap-6 text-sm ${formInputColors.helper}`}>
+                {/* Trust indicators - refined */}
+                <div className="mt-10 flex flex-wrap justify-center gap-8 text-sm text-slate-400">
                   <span className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    No commitment required
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                     15-30 minute call
                   </span>
                   <span className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                     Get a clear next step
                   </span>
+                  <span className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    No pressure, ever
+                  </span>
                 </div>
+              </div>
+            </div>
+
+            {/* Pricing Preview - Clean, understated */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8">
+              <div className="text-center mb-8">
+                <h3 className={`text-sm font-semibold uppercase tracking-wider text-gray-400 mb-2`}>
+                  If you already know what you need
+                </h3>
+                <p className={`text-2xl font-bold ${headingColors.primary}`}>
+                  Transparent Pricing
+                </p>
+              </div>
+
+              {/* Quick pricing cards */}
+              <div className="grid md:grid-cols-3 gap-4 mb-8">
+                {/* Websites */}
+                <div className="p-5 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-center">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                    </svg>
+                  </div>
+                  <p className="font-semibold text-gray-900 dark:text-white mb-1">Websites</p>
+                  <p className="text-gray-500 text-sm">From $500</p>
+                </div>
+
+                {/* Automation */}
+                <div className="p-5 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-center">
+                  <div className="w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-5 h-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <p className="font-semibold text-gray-900 dark:text-white mb-1">Automation</p>
+                  <p className="text-gray-500 text-sm">$150/workflow</p>
+                </div>
+
+                {/* Managed AI */}
+                <div className="p-5 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-center">
+                  <div className="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <p className="font-semibold text-gray-900 dark:text-white mb-1">Managed AI</p>
+                  <p className="text-gray-500 text-sm">$500/month</p>
+                </div>
+              </div>
+
+              {/* View pricing link */}
+              <div className="text-center">
+                <a
+                  href="/pricing"
+                  className={`inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white font-medium transition-colors`}
+                >
+                  View full pricing
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
               </div>
             </div>
           </div>

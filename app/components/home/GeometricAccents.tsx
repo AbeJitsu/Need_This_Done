@@ -32,14 +32,14 @@ export default function GeometricAccents({ variant = 'hero' }: GeometricAccentsP
           style={{ animationDelay: '0.5s' }}
         />
 
-        {/* Floating geometric shape - right side */}
+        {/* Floating geometric shape - lower right corner */}
         <svg
-          className="absolute top-1/3 right-10 w-24 h-24 text-purple-200 dark:text-purple-800/50 animate-float"
+          className="absolute bottom-16 right-12 w-16 h-16 text-purple-200 dark:text-purple-800/50 animate-float"
           style={{ animationDelay: '1s' }}
           viewBox="0 0 100 100"
           fill="currentColor"
         >
-          <polygon points="50,0 100,87 0,87" opacity="0.5" />
+          <polygon points="50,0 100,87 0,87" opacity="0.4" />
         </svg>
 
         {/* Small floating square - left side */}
