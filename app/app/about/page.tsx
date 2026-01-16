@@ -25,24 +25,23 @@ export default function AboutPage() {
       {/* ================================================================
           Hero Section - Centered gradient like homepage
           ================================================================ */}
-      <section className="py-16 md:py-20">
-        {/* Gradient container: full-width on mobile, centered on desktop */}
-        <div className="relative overflow-hidden py-8 md:max-w-3xl md:mx-auto">
-          {/* Gradient orbs - left color → white middle → right color */}
-          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-cyan-100 blur-2xl" />
+      <section className="py-8 md:py-12">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 md:px-8">
+          {/* Gradient container with rounded edges and centered content */}
+          <div className="relative overflow-hidden rounded-2xl py-12 md:py-16 flex items-center justify-center min-h-[200px]">
+            {/* Gradient orbs */}
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-cyan-100 blur-2xl" />
 
-          {/* Content - always has padding */}
-          <div className="relative z-10 px-6 sm:px-10 md:px-12">
-            {/* Header */}
-            <header className="text-center">
+            {/* Text container - centered */}
+            <div className="relative z-10 text-center">
               <h1 className={`text-3xl md:text-4xl font-bold italic ${headingColors.primary} mb-3`}>
                 About the Founder
               </h1>
               <p className={`text-lg ${formInputColors.helper}`}>
                 The person behind Need This Done
               </p>
-            </header>
+            </div>
           </div>
         </div>
       </section>
@@ -52,8 +51,8 @@ export default function AboutPage() {
           ================================================================ */}
       <section className="pb-12">
         <div className="max-w-3xl mx-auto px-6 sm:px-10 md:px-12">
-          <div className={`p-6 rounded-2xl ${cardBgColors.elevated} border border-gray-200/60`}>
-            <h2 className={`text-2xl font-bold ${titleColors.blue} mb-4`}>
+          <div className="p-6 rounded-2xl bg-gradient-to-r from-gray-100 to-white shadow-xl border border-gray-100">
+            <h2 className={`text-2xl font-bold ${titleColors.green} mb-4`}>
               Hey, I&apos;m Abe
             </h2>
             <div className={`space-y-4 ${headingColors.secondary} leading-relaxed`}>
@@ -80,7 +79,7 @@ export default function AboutPage() {
       <section className="py-12">
         <div className="max-w-3xl mx-auto px-6 sm:px-10 md:px-12">
           {/* Personal Side */}
-          <div className={`mb-10 p-6 rounded-2xl ${cardBgColors.elevated} border border-gray-200/60`}>
+          <div className="mb-10 p-6 rounded-2xl bg-gradient-to-r from-gray-100 to-white shadow-xl border border-gray-100">
             <h2 className={`text-xl font-bold ${titleColors.blue} mb-4`}>
               Beyond the Code
             </h2>
@@ -101,26 +100,26 @@ export default function AboutPage() {
 
           {/* Values */}
           <div className="mb-10">
-            <h2 className={`text-xl font-bold ${titleColors.blue} mb-4`}>
+            <h2 className={`text-xl font-bold ${titleColors.purple} mb-4`}>
               How I Work
             </h2>
             <ul className={`space-y-3 ${headingColors.secondary}`}>
               <li className="flex items-start gap-3">
-                <span className={`font-bold ${titleColors.green}`}>•</span>
+                <span className={`font-bold ${titleColors.purple}`}>•</span>
                 <span>
                   <strong>Clear communication.</strong> I explain what I&apos;m doing and why,
                   without the jargon.
                 </span>
               </li>
               <li className="flex items-start gap-3">
-                <span className={`font-bold ${titleColors.green}`}>•</span>
+                <span className={`font-bold ${titleColors.purple}`}>•</span>
                 <span>
                   <strong>Reliable follow-through.</strong> When I say I&apos;ll do something,
                   it gets done.
                 </span>
               </li>
               <li className="flex items-start gap-3">
-                <span className={`font-bold ${titleColors.green}`}>•</span>
+                <span className={`font-bold ${titleColors.purple}`}>•</span>
                 <span>
                   <strong>Calm under pressure.</strong> Deadlines and bugs don&apos;t rattle me.
                   I&apos;ve dealt with higher stakes.
@@ -131,7 +130,7 @@ export default function AboutPage() {
 
           {/* AI Philosophy */}
           <div className="mb-0">
-            <h2 className={`text-xl font-bold ${titleColors.blue} mb-4`}>
+            <h2 className={`text-xl font-bold ${titleColors.gold} mb-4`}>
               How I Use AI
             </h2>
             <div className={`space-y-4 ${headingColors.secondary}`}>
@@ -154,7 +153,7 @@ export default function AboutPage() {
           ================================================================ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-green-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
 
         <div className="relative max-w-3xl mx-auto px-6 sm:px-10 md:px-12 py-16 md:py-20">
@@ -166,13 +165,13 @@ export default function AboutPage() {
               Check out my full professional background or get in touch about your project.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button variant="gray" href="/resume" size="lg">
+              <Button variant="green" href="/resume" size="lg" className="shadow-lg shadow-green-500/25">
                 View Full Resume
               </Button>
-              <Button variant="blue" href="/services" size="lg">
+              <Button variant="blue" href="/services" size="lg" className="shadow-lg shadow-blue-500/25">
                 See What I Build
               </Button>
-              <Button variant="gold" href="/contact" size="lg">
+              <Button variant="purple" href="/contact" size="lg" className="shadow-lg shadow-purple-500/25">
                 Start a Project
               </Button>
             </div>

@@ -74,9 +74,7 @@
       "Edit(**/*.pem)",
       "Read(**/*.key)",
       "Write(**/*.key)",
-      "Edit(**/*.key)",
-      "Bash(git push origin production:*)",
-      "Bash(git push origin prod:*)"
+      "Edit(**/*.key)"
     ]
   },
   "hooks": {
