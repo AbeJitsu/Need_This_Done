@@ -50,7 +50,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
             {/* Content */}
             <div className="relative z-10">
               <EditableSection sectionKey="header" label="Page Header">
-                <div className="text-center mb-12">
+                <div className="text-center">
                   <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6 ${titleColors.green}`}>
                     {content.header.title}
                   </h1>
@@ -59,49 +59,55 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
                   </p>
                 </div>
               </EditableSection>
-
-              {/* Trust Badges - Glass effect like homepage */}
-              {content.trustBadges && content.trustBadges.length > 0 && (
-                <EditableSection sectionKey="trustBadges" label="Trust Badges">
-                  <div className="bg-white/70 backdrop-blur-xl rounded-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.06)] p-6">
-                    <SortableItemsWrapper
-                      sectionKey="trustBadges"
-                      arrayField="trustBadges"
-                      itemIds={content.trustBadges.map((_, i) => `badge-${i}`)}
-                      className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-8 md:gap-12"
-                    >
-                      {content.trustBadges.map((badge, index) => (
-                        <EditableItem
-                          key={`badge-${index}`}
-                          sectionKey="trustBadges"
-                          arrayField="trustBadges"
-                          index={index}
-                          label={badge.text}
-                          content={badge as unknown as Record<string, unknown>}
-                          sortable
-                          sortId={`badge-${index}`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <CheckmarkCircle color="green" size="lg" showBorder />
-                            <div>
-                              <p className={`font-semibold ${headingColors.primary}`}>
-                                {badge.text}
-                              </p>
-                              <p className={`text-sm ${formInputColors.helper}`}>
-                                {badge.description}
-                              </p>
-                            </div>
-                          </div>
-                        </EditableItem>
-                      ))}
-                    </SortableItemsWrapper>
-                  </div>
-                </EditableSection>
-              )}
             </div>
           </div>
         </div>
       </section>
+
+      {/* ================================================================
+          Trust Badges - Separate section below hero
+          ================================================================ */}
+      {content.trustBadges && content.trustBadges.length > 0 && (
+        <section className="pb-12">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+            <EditableSection sectionKey="trustBadges" label="Trust Badges">
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
+                <SortableItemsWrapper
+                  sectionKey="trustBadges"
+                  arrayField="trustBadges"
+                  itemIds={content.trustBadges.map((_, i) => `badge-${i}`)}
+                  className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-8 md:gap-12"
+                >
+                  {content.trustBadges.map((badge, index) => (
+                    <EditableItem
+                      key={`badge-${index}`}
+                      sectionKey="trustBadges"
+                      arrayField="trustBadges"
+                      index={index}
+                      label={badge.text}
+                      content={badge as unknown as Record<string, unknown>}
+                      sortable
+                      sortId={`badge-${index}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <CheckmarkCircle color="green" size="lg" showBorder />
+                        <div>
+                          <p className={`font-semibold ${headingColors.primary}`}>
+                            {badge.text}
+                          </p>
+                          <p className={`text-sm ${formInputColors.helper}`}>
+                            {badge.description}
+                          </p>
+                        </div>
+                      </div>
+                    </EditableItem>
+                  ))}
+                </SortableItemsWrapper>
+              </div>
+            </EditableSection>
+          </div>
+        </section>
+      )}
 
       {/* ================================================================
           Process Steps - Clean horizontal flow with subtle background
