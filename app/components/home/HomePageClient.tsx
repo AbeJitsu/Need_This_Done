@@ -113,23 +113,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             </h2>
           </EditableLink>
 
-          {/* Service icons row */}
-          <div className="grid lg:grid-cols-3 gap-6 mb-4">
-            {content.services.cards.map((service, index) => {
-              const delayClass = index === 0 ? 'animate-delay-100' : index === 1 ? 'animate-delay-200' : 'animate-delay-300';
-              return (
-                <div key={`icon-${index}`} className={`flex justify-center animate-slide-up ${delayClass}`}>
-                  <ServiceIcon
-                    type={getServiceIconType(service.title)}
-                    color={service.color as 'blue' | 'purple' | 'green'}
-                    size="lg"
-                  />
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Service cards grid - equal heights */}
+          {/* Service cards grid */}
           <SortableItemsWrapper
             sectionKey="services"
             arrayField="cards"
@@ -137,7 +121,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             className="grid lg:grid-cols-3 gap-6"
           >
             {content.services.cards.map((service, index) => {
-              const delayClass = index === 0 ? 'animate-delay-150' : index === 1 ? 'animate-delay-250' : 'animate-delay-350';
+              const delayClass = index === 0 ? 'animate-delay-100' : index === 1 ? 'animate-delay-200' : 'animate-delay-300';
               return (
                 <EditableItem
                   key={`service-${index}`}
@@ -161,6 +145,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                       editBasePath={`services.cards.${index}`}
                       cardIndex={index}
                       modal={service.modal}
+                      icon={<ServiceIcon
+                        type={getServiceIconType(service.title)}
+                        color={service.color as 'blue' | 'purple' | 'green'}
+                        size="sm"
+                      />}
                     />
                   </div>
                 </EditableItem>
