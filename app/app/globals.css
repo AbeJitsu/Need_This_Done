@@ -24,6 +24,16 @@ Usage: background-color: var(--primary-color);
 
 :root {
   /* ======================================================================
+  Font Configuration (System Fonts)
+  ======================================================================
+  Using system font stacks for reliable builds without network dependency.
+  These fonts closely match the original Google Fonts aesthetic.
+  */
+  --font-inter: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-poppins: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-playfair: Georgia, Cambria, 'Times New Roman', Times, serif;
+
+  /* ======================================================================
   Premium Color Palette - Professional SaaS Aesthetic
   ======================================================================
   This palette features:

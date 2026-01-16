@@ -13,15 +13,10 @@ import { EditableSection, EditableItem, SortableItemsWrapper } from '@/component
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { ServicesPageContent } from '@/lib/page-content-types';
 import {
-  formInputColors,
-  headingColors,
-  groupHoverColors,
   accentColors,
   accentBorderWidth,
-  focusRingClasses,
   AccentVariant,
 } from '@/lib/colors';
-import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
 import { Sparkles } from 'lucide-react';
 
 // ============================================================================

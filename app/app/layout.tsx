@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Poppins, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -25,28 +24,13 @@ import { seoConfig } from '@/lib/seo-config';
 // all pages are rendered at request time with proper context.
 export const dynamic = 'force-dynamic';
 
-// Inter font - modern, trustworthy, highly readable (body text)
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-// Poppins font - geometric, authoritative (logo/brand)
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['600', '700'],
-  variable: '--font-poppins',
-  display: 'swap',
-});
-
-// Playfair Display - elegant serif for logo
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  weight: ['700'],
-  variable: '--font-playfair',
-  display: 'swap',
-});
+// ============================================================================
+// Font Configuration (System Fonts)
+// ============================================================================
+// Using system font stacks via CSS variables defined in globals.css.
+// This approach works without network access and provides similar aesthetics
+// to the original Google Fonts (Inter, Poppins, Playfair Display).
+// CSS variables --font-inter, --font-poppins, --font-playfair are defined in globals.css
 
 // ============================================================================
 // Root Layout Component
@@ -149,7 +133,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${poppins.variable} ${playfair.variable}`}>
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* JSON-LD Structured Data for rich search results */}
         <LocalBusinessJsonLd />

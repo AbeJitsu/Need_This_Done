@@ -9,7 +9,7 @@
 import { headingColors, formInputColors, cardBgColors } from '@/lib/colors';
 import { EditableItem } from '@/components/InlineEditor';
 import type { ComparisonRow } from '@/lib/page-content-types';
-import { Target, Package, Clock, DollarSign, HeadphonesIcon, Globe, Cog, Sparkles } from 'lucide-react';
+import { Globe, Cog, Sparkles } from 'lucide-react';
 
 interface ServiceComparisonTableProps {
   title: string;
@@ -17,15 +17,6 @@ interface ServiceComparisonTableProps {
   columns: [string, string, string];
   rows: ComparisonRow[];
 }
-
-// Icon mapping for row labels
-const rowIcons: Record<string, React.ComponentType<{ className?: string }>> = {
-  'Best for': Target,
-  'What you get': Package,
-  'Timeline': Clock,
-  'Starting at': DollarSign,
-  'Support included': HeadphonesIcon,
-};
 
 // Service icons and colors
 const serviceConfig: Record<number, {

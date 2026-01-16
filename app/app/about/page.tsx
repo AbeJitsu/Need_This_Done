@@ -5,7 +5,6 @@ import {
   formInputColors,
   titleColors,
   cardBgColors,
-  dividerColors,
 } from '@/lib/colors';
 
 // ============================================================================

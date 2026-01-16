@@ -334,7 +334,7 @@ export default function BlogManagement() {
 
           {/* Empty State */}
           {filteredPosts.length === 0 && (
-            <div className={`${cardBgColors.base} rounded-2xl ${cardBorderColors.lightMd} border-dashed px-8 py-16 text-center`}>
+            <div className={`${cardBgColors.base} rounded-2xl ${cardBorderColors.light} border-dashed px-8 py-16 text-center`}>
               <div className={`w-20 h-20 mx-auto mb-6 rounded-2xl ${iconCircleColors.blue.bg} flex items-center justify-center`}>
                 <svg
                   className={`w-10 h-10 ${iconCircleColors.blue.icon}`}

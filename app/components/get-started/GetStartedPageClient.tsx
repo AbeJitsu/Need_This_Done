@@ -16,9 +16,7 @@ import {
   stepBadgeColors,
   mutedTextColors,
   headingColors,
-  checkmarkColors,
   alertColors,
-  AccentVariant,
 } from '@/lib/colors';
 import { FileText, Video, Check, Sparkles } from 'lucide-react';
 

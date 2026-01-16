@@ -1,6 +1,5 @@
 'use client';
 
-import StepCard from '@/components/StepCard';
 import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
 import Button from '@/components/Button';
