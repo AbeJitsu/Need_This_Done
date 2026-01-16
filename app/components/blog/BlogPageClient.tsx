@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import PageHeader from '@/components/PageHeader';
 import BlogPostCard from '@/components/blog/BlogPostCard';
 import { EditableSection } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';

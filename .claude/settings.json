@@ -44,6 +44,8 @@
       "Bash(mv:*)",
       "Bash(npm install:*)",
       "Bash(cd app && npm install:*)",
+      "Bash(rm -rf .next:*)",
+      "Bash(rm -rf node_modules/.cache:*)",
       "Glob",
       "Grep",
       "TodoWrite",

@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';

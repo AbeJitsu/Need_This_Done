@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import PaymentForm from '@/components/PaymentForm';
