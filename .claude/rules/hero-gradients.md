@@ -31,11 +31,11 @@ WRONG - Edge-to-edge:
 The gradient orbs MUST be inside the max-width container, not the full-width section:
 
 ```tsx
-{/* CORRECT - Orbs inside max-w container */}
+{/* CORRECT - Orbs inside max-w container with overflow-hidden */}
 <section className="py-16 md:py-20">
   <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
     <div className="relative overflow-hidden py-8">
-      {/* Gradient orbs - constrained to max-w container */}
+      {/* Gradient orbs - full saturation colors with standard blur */}
       <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-{color}-100 to-{shade}-100 blur-3xl" />
       <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-{accent}-100 to-{shade}-100 blur-2xl" />
       <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-{color}-100 blur-xl" />
@@ -69,10 +69,11 @@ The gradient orbs MUST be inside the max-width container, not the full-width sec
 | Rule | Correct | Wrong |
 |------|---------|-------|
 | Container | Orbs inside `max-w-6xl` | Orbs in full-width section |
+| Overflow | `overflow-hidden` on inner `py-8` div | `overflow-hidden` on section |
 | Base gradient | None needed | `absolute inset-0 bg-gradient-to-br...` |
 | Positioning | `-top-32 -right-32` | `top-0 right-0` |
-| **Opacity** | **NEVER use opacity** | `opacity-60`, `opacity-50` |
-| Colors | Full saturation `-100` | Muted `-50` |
+| Blur values | `blur-3xl`, `blur-2xl`, `blur-xl` | Too large: `blur-[100px]` |
+| Colors | Full saturation `-100` | Muted with opacity `/80` |
 | Content wrapper | `relative z-10` | No z-index |
 
 ## Color Themes by Page

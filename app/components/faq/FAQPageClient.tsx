@@ -85,10 +85,9 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
       <section className="py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           <div className="relative overflow-hidden py-8">
-            {/* Gradient orbs - constrained to max-w container like homepage */}
+            {/* Gradient orbs - left color → white middle → right color */}
             <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
             <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-purple-100 to-violet-100 blur-2xl" />
-            <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-amber-100 blur-xl" />
 
             {/* Content */}
             <div className="relative z-10">

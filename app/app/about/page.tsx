@@ -28,15 +28,14 @@ export default function AboutPage() {
       <section className="py-16 md:py-20">
         <div className="max-w-3xl mx-auto px-6 sm:px-10 md:px-12">
           <div className="relative overflow-hidden py-8">
-            {/* Gradient orbs - constrained to max-w container like homepage */}
+            {/* Gradient orbs - left color → white middle → right color */}
             <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-teal-100 blur-2xl" />
-            <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-amber-100 blur-xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-cyan-100 blur-2xl" />
 
             {/* Content */}
             <div className="relative z-10">
               {/* Header */}
-              <header className="text-center mb-10">
+              <header className="text-center">
                 <h1 className={`text-3xl md:text-4xl font-bold italic ${headingColors.primary} mb-3`}>
                   About the Founder
                 </h1>
@@ -44,27 +43,33 @@ export default function AboutPage() {
                   The person behind Need This Done
                 </p>
               </header>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              {/* Introduction */}
-              <div className="mb-0">
-                <h2 className={`text-2xl font-bold ${titleColors.blue} mb-4`}>
-                  Hey, I&apos;m Abe
-                </h2>
-                <div className={`space-y-4 ${headingColors.secondary} leading-relaxed`}>
-                  <p>
-                    I&apos;m a full-stack developer based in Orlando, Florida. I built Need This Done
-                    to help people get their projects across the finish line, whether that&apos;s a
-                    website, data organization, or those tasks that keep falling to the bottom of
-                    the to-do list.
-                  </p>
-                  <p>
-                    Before I wrote code for a living, I spent five years as a Combat Medic in the
-                    U.S. Army and seven years in automotive finance at Toyota. Those experiences
-                    taught me how to stay calm under pressure, explain complicated things clearly,
-                    and follow through on commitments.
-                  </p>
-                </div>
-              </div>
+      {/* ================================================================
+          Introduction Section - Separate from hero
+          ================================================================ */}
+      <section className="pb-12">
+        <div className="max-w-3xl mx-auto px-6 sm:px-10 md:px-12">
+          <div className={`p-6 rounded-2xl ${cardBgColors.elevated} border border-gray-200/60`}>
+            <h2 className={`text-2xl font-bold ${titleColors.blue} mb-4`}>
+              Hey, I&apos;m Abe
+            </h2>
+            <div className={`space-y-4 ${headingColors.secondary} leading-relaxed`}>
+              <p>
+                I&apos;m a full-stack developer based in Orlando, Florida. I built Need This Done
+                to help people get their projects across the finish line, whether that&apos;s a
+                website, data organization, or those tasks that keep falling to the bottom of
+                the to-do list.
+              </p>
+              <p>
+                Before I wrote code for a living, I spent five years as a Combat Medic in the
+                U.S. Army and seven years in automotive finance at Toyota. Those experiences
+                taught me how to stay calm under pressure, explain complicated things clearly,
+                and follow through on commitments.
+              </p>
             </div>
           </div>
         </div>
