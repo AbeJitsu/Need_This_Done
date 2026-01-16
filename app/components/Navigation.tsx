@@ -28,7 +28,6 @@ const defaultNavLinks: NavLink[] = [
   { href: '/pricing', label: 'Pricing' },
   { href: '/how-it-works', label: 'How It Works' },
   { href: '/about', label: 'About' },
-  { href: '/blog', label: 'Blog' },
 ];
 
 export default function Navigation() {
