@@ -52,9 +52,12 @@ Every hero section needs:
 | Rule | Correct | Wrong |
 |------|---------|-------|
 | Positioning | `-top-32 -right-32` | `top-0 right-0` |
-| Opacity | No opacity class | `opacity-60` |
+| **Opacity** | **NEVER use opacity** | `opacity-60`, `opacity-50` |
 | Colors | Full saturation `-100` | Muted `-50` |
 | Blur levels | `blur-3xl`, `blur-2xl`, `blur-xl` | `blur-lg` |
+| Spot 2 size | `w-64 h-64` | `w-72 h-72` |
+
+**IMPORTANT:** Adding opacity to gradient orbs makes them nearly invisible. The homepage uses NO opacity classes on its gradient orbs - they are full saturation colors with only blur applied.
 
 ## Color Themes by Page
 
