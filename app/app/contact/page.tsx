@@ -1,35 +1,28 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import Link from 'next/link';
 import { getServices } from '@/config/site.config';
-import Button from '@/components/Button';
-import PageHeader from '@/components/PageHeader';
-import Card from '@/components/Card';
-import CTASection from '@/components/CTASection';
-import { EditableSection } from '@/components/InlineEditor';
 import { useEditableContent } from '@/hooks/useEditableContent';
 import type { ContactPageContent } from '@/lib/page-content-types';
 import { defaultContactContent } from '@/lib/default-page-content';
 import {
-  formInputColors,
-  formValidationColors,
-  titleColors,
-  successCheckmarkColors,
-  dangerColors,
-  mutedTextColors,
-  headingColors,
-  alertColors,
-  cardBgColors,
-  fileUploadColors,
-  iconCircleColors,
-} from '@/lib/colors';
+  Clock,
+  MessageSquare,
+  Lightbulb,
+  Calendar,
+  Upload,
+  X,
+  Check,
+  Send,
+  ArrowRight,
+  Sparkles,
+} from 'lucide-react';
 
 // ============================================================================
-// Contact Page - Inquiry / Booking Form
+// Contact Page - Premium Consultation Booking
 // ============================================================================
-// Allows visitors to submit project inquiries or book consultations.
-// Supports optional file attachments (max 3 files, 5MB each).
+// Redesigned with luxury aesthetic that continues the dark premium card
+// from the home page. Two-zone layout: dark hero → bright form.
 
 const MAX_FILES = 3;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -44,12 +37,41 @@ const ALLOWED_TYPES = [
   'text/plain',
 ];
 
-export default function ContactPage() {
-  // Register with edit context for inline editing
-  const { content } = useEditableContent<ContactPageContent>(defaultContactContent);
+// Consultation types with styling
+const CONSULTATION_TYPES = [
+  {
+    id: 'quick',
+    name: 'Quick Chat',
+    duration: '15 min',
+    description: 'Got a quick question? Let\'s sort it out.',
+    icon: MessageSquare,
+    color: 'emerald',
+  },
+  {
+    id: 'strategy',
+    name: 'Strategy Call',
+    duration: '30 min',
+    description: 'Map out your project needs together.',
+    icon: Lightbulb,
+    color: 'blue',
+    popular: true,
+  },
+  {
+    id: 'deep-dive',
+    name: 'Deep Dive',
+    duration: '55 min',
+    description: 'Full consultation for complex projects.',
+    icon: Sparkles,
+    color: 'violet',
+  },
+];
 
+export default function ContactPage() {
+  const { content } = useEditableContent<ContactPageContent>(defaultContactContent);
   const services = getServices();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [selectedConsultation, setSelectedConsultation] = useState('strategy');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -62,25 +84,18 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  // ============================================================================
-  // Form Field Handlers
-  // ============================================================================
-
+  // Form handlers
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // ============================================================================
-  // File Upload Handlers
-  // ============================================================================
-
   const validateFile = (file: File): string | null => {
     if (!ALLOWED_TYPES.includes(file.type)) {
-      return `Oops! "${file.name}" isn't a file type we can accept. Try an image, PDF, or Word doc instead.`;
+      return `"${file.name}" isn't a supported file type. Try an image, PDF, or Word doc.`;
     }
     if (file.size > MAX_FILE_SIZE) {
-      return `"${file.name}" is a bit too large (max 5MB). Could you try a smaller version?`;
+      return `"${file.name}" is too large (max 5MB).`;
     }
     return null;
   };
@@ -93,7 +108,7 @@ export default function ContactPage() {
     const totalFiles = files.length + newFiles.length;
 
     if (totalFiles > MAX_FILES) {
-      setFileError(`Whoops! You can only attach up to ${MAX_FILES} files at a time.`);
+      setFileError(`You can attach up to ${MAX_FILES} files.`);
       return;
     }
 
@@ -119,10 +134,6 @@ export default function ContactPage() {
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   };
 
-  // ============================================================================
-  // Form Submission
-  // ============================================================================
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -135,6 +146,7 @@ export default function ContactPage() {
       submitData.append('company', formData.company);
       submitData.append('service', formData.service);
       submitData.append('message', formData.message);
+      submitData.append('consultationType', selectedConsultation);
 
       files.forEach(file => {
         submitData.append('files', file);
@@ -145,9 +157,7 @@ export default function ContactPage() {
         body: submitData,
       });
 
-      if (!response.ok) {
-        throw new Error('Submission failed');
-      }
+      if (!response.ok) throw new Error('Submission failed');
 
       setSubmitStatus('success');
       setFormData({ name: '', email: '', company: '', service: '', message: '' });
@@ -160,260 +170,429 @@ export default function ContactPage() {
     }
   };
 
-  return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-
-        {/* Header */}
-        <EditableSection sectionKey="header" label="Page Header">
-          <PageHeader
-            title={content.header.title}
-            description={content.header.description}
-            color="gold"
-          />
-        </EditableSection>
-
-        {/* Quick links */}
-        <EditableSection sectionKey="quickLink" label="Quick Link">
-          <p className={`text-center mb-6 ${formInputColors.helper}`}>
-            <Link href={content.quickLink.href} className={`font-medium hover:underline ${titleColors.purple}`}>
-              {content.quickLink.text}
-            </Link>
-          </p>
-        </EditableSection>
-
-        {/* Contact Form */}
-        <EditableSection sectionKey="form" label="Contact Form">
-          <Card className="mb-10">
-            {submitStatus === 'success' ? (
-            <div className="text-center py-8">
-              <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${iconCircleColors.green.bg} flex items-center justify-center`}>
-                <span className={`text-3xl ${successCheckmarkColors.icon}`} aria-hidden="true">✓</span>
-              </div>
-              <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
-                {content.success.title}
-              </h2>
-              <p className={`${formInputColors.helper} mb-4`}>
-                {content.success.description}
-              </p>
-
-              {/* What happens next */}
-              <div className={`${alertColors.info.bg} rounded-lg p-4 mb-6 text-left max-w-md mx-auto`}>
-                <h3 className={`font-semibold ${headingColors.primary} mb-2`}>{content.success.nextStepsTitle}</h3>
-                <ol className={`text-sm ${formInputColors.helper} space-y-2`}>
-                  {content.success.nextSteps.map((step, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <span className={`font-semibold ${titleColors.blue}`}>{index + 1}.</span>
-                      {step}
-                    </li>
-                  ))}
-                </ol>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setSubmitStatus('idle')}
-                className={`${titleColors.blue} font-medium hover:underline`}
-              >
-                {content.success.sendAnotherLink}
-              </button>
+  // Success state
+  if (submitStatus === 'success') {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center px-4">
+        <div className="max-w-lg w-full text-center animate-scale-in">
+          {/* Success icon */}
+          <div className="relative mx-auto w-24 h-24 mb-8">
+            <div className="absolute inset-0 bg-emerald-500/20 rounded-full animate-ping" />
+            <div className="relative w-full h-full bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/30">
+              <Check className="w-12 h-12 text-white" strokeWidth={3} />
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Name */}
-                <div>
-                  <label htmlFor="name" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                    {content.form.nameField.label}
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
-                    placeholder={content.form.nameField.placeholder}
-                  />
-                </div>
+          </div>
 
-                {/* Email */}
-                <div>
-                  <label htmlFor="email" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                    {content.form.emailField.label}
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
-                    placeholder={content.form.emailField.placeholder}
-                  />
-                </div>
-              </div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+            {content.success.title}
+          </h1>
+          <p className="text-xl text-gray-600 mb-8">
+            {content.success.description}
+          </p>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Company */}
-                <div>
-                  <label htmlFor="company" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                    {content.form.companyField.label}{' '}
-                    {content.form.companyField.optional && (
-                      <span className={`${formInputColors.helper} font-normal`}>{content.form.companyField.optional}</span>
-                    )}
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
-                    placeholder={content.form.companyField.placeholder}
-                  />
-                </div>
+          {/* What happens next */}
+          <div className="bg-slate-50 rounded-2xl p-6 text-left mb-8">
+            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-blue-500" />
+              {content.success.nextStepsTitle}
+            </h3>
+            <ol className="space-y-3">
+              {content.success.nextSteps.map((step, index) => (
+                <li key={index} className="flex items-start gap-3 text-gray-600">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-sm font-semibold flex items-center justify-center">
+                    {index + 1}
+                  </span>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </div>
 
-                {/* Service Interest */}
-                <div>
-                  <label htmlFor="service" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                    {content.form.serviceField.label}
-                  </label>
-                  <select
-                    id="service"
-                    name="service"
-                    value={formData.service}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all`}
-                  >
-                    <option value="">{content.form.serviceField.defaultOption}</option>
-                    {services.map((service, index) => (
-                      <option key={index} value={service.title}>
-                        {service.title}
-                      </option>
-                    ))}
-                    <option value="Other">{content.form.serviceField.otherOption}</option>
-                  </select>
-                </div>
-              </div>
+          <button
+            type="button"
+            onClick={() => setSubmitStatus('idle')}
+            className="text-blue-600 font-medium hover:text-blue-700 transition-colors inline-flex items-center gap-2"
+          >
+            {content.success.sendAnotherLink}
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-              {/* Message */}
-              <div>
-                <label htmlFor="message" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                  {content.form.messageField.label}
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  rows={5}
-                  value={formData.message}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 rounded-lg border ${formInputColors.base} ${formInputColors.focus} focus:border-transparent transition-all resize-none`}
-                  placeholder={content.form.messageField.placeholder}
-                />
-              </div>
+  return (
+    <div className="min-h-screen">
+      {/* ================================================================== */}
+      {/* Hero Section - Premium Dark (continues home page aesthetic) */}
+      {/* ================================================================== */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        {/* Decorative blurs */}
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-violet-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-transparent via-white/[0.02] to-transparent" />
 
-              {/* File Attachments */}
-              <div>
-                <label className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                  {content.form.fileUpload.label}{' '}
-                  <span className={`${formInputColors.helper} font-normal`}>{content.form.fileUpload.optional}</span>
-                </label>
-                <div className="space-y-3">
-                  {/* File Input Area */}
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className={`rounded-lg p-6 text-center cursor-pointer transition-colors ${fileUploadColors.border} ${fileUploadColors.hoverBorder}`}
-                  >
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      multiple
-                      accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.txt"
-                      onChange={(e) => handleFileSelect(e.target.files)}
-                      className="hidden"
-                      title="Upload files"
-                      aria-label="Upload files"
-                    />
-                    <div className={formInputColors.helper}>
-                      <span className="text-2xl block mb-2" aria-hidden="true">📎</span>
-                      <span className="text-sm">{content.form.fileUpload.dropText}</span>
-                      <p className={`text-xs mt-1 ${formInputColors.helper}`}>
-                        {content.form.fileUpload.helpText}
-                      </p>
-                    </div>
+        {/* Grid pattern overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                             linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px',
+          }}
+        />
+
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+          {/* Eyebrow badge */}
+          <div className="flex justify-center mb-8 animate-slide-up">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-blue-300 text-sm font-medium backdrop-blur-sm border border-white/10">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              Free Consultation • No Commitment
+            </span>
+          </div>
+
+          {/* Main heading */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white text-center mb-6 tracking-tight animate-slide-up animate-delay-100">
+            Let&apos;s Build Something
+            <span className="block mt-2 bg-gradient-to-r from-blue-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
+              Together
+            </span>
+          </h1>
+
+          <p className="text-xl text-slate-300 text-center max-w-2xl mx-auto mb-12 leading-relaxed animate-slide-up animate-delay-200">
+            Pick a consultation type that fits your needs. We&apos;ll figure out the best approach for your project.
+          </p>
+
+          {/* Consultation Type Cards */}
+          <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto animate-slide-up animate-delay-300">
+            {CONSULTATION_TYPES.map((type) => {
+              const Icon = type.icon;
+              const isSelected = selectedConsultation === type.id;
+
+              return (
+                <button
+                  key={type.id}
+                  type="button"
+                  onClick={() => setSelectedConsultation(type.id)}
+                  className={`
+                    relative p-6 rounded-2xl text-left transition-all duration-300
+                    ${isSelected
+                      ? 'bg-white text-slate-900 shadow-2xl shadow-white/20 scale-[1.02]'
+                      : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}
+                  `}
+                >
+                  {type.popular && (
+                    <span className={`
+                      absolute -top-2 left-4 px-2 py-0.5 text-xs font-semibold rounded-full
+                      ${isSelected ? 'bg-blue-500 text-white' : 'bg-blue-400/20 text-blue-300'}
+                    `}>
+                      Popular
+                    </span>
+                  )}
+
+                  <div className={`
+                    w-10 h-10 rounded-xl flex items-center justify-center mb-4
+                    ${isSelected
+                      ? type.color === 'emerald' ? 'bg-emerald-100 text-emerald-600'
+                        : type.color === 'blue' ? 'bg-blue-100 text-blue-600'
+                        : 'bg-violet-100 text-violet-600'
+                      : 'bg-white/10 text-white'}
+                  `}>
+                    <Icon className="w-5 h-5" />
                   </div>
 
-                  {/* Selected Files List */}
-                  {files.length > 0 && (
-                    <div className="space-y-2">
-                      {files.map((file, index) => (
-                        <div
-                          key={index}
-                          className={`flex items-center justify-between px-3 py-2 ${cardBgColors.elevated} rounded-lg`}
-                        >
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className={`text-sm ${formInputColors.helper} truncate`}>
-                              {file.name}
-                            </span>
-                            <span className={`text-xs ${mutedTextColors.normal} flex-shrink-0`}>
-                              ({formatFileSize(file.size)})
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeFile(index)}
-                            className={`${dangerColors.text} ${dangerColors.hoverStrong} ml-2 flex-shrink-0`}
-                          >
-                            {content.form.fileUpload.removeButton}
-                          </button>
-                        </div>
-                      ))}
+                  <h3 className="font-semibold text-lg mb-1">{type.name}</h3>
+                  <p className={`text-sm mb-2 ${isSelected ? 'text-slate-600' : 'text-slate-400'}`}>
+                    {type.description}
+                  </p>
+                  <p className={`text-sm font-medium ${isSelected ? 'text-blue-600' : 'text-blue-400'}`}>
+                    {type.duration}
+                  </p>
+
+                  {/* Selection indicator */}
+                  {isSelected && (
+                    <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+                      <Check className="w-4 h-4 text-white" strokeWidth={3} />
                     </div>
                   )}
+                </button>
+              );
+            })}
+          </div>
 
-                  {/* File Error */}
-                  {fileError && (
-                    <p className={`text-sm ${formValidationColors.error}`}>{fileError}</p>
-                  )}
-                </div>
+          {/* Trust indicators */}
+          <div className="flex flex-wrap justify-center gap-6 mt-12 text-sm text-slate-400 animate-slide-up animate-delay-400">
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              Response within 24 hours
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              Get a clear next step
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              No pressure, ever
+            </span>
+          </div>
+        </div>
+
+        {/* Curved transition to form */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-white" style={{
+          clipPath: 'ellipse(70% 100% at 50% 100%)'
+        }} />
+      </section>
+
+      {/* ================================================================== */}
+      {/* Form Section - Clean, Bright */}
+      {/* ================================================================== */}
+      <section className="bg-white py-16 md:py-20">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6">
+          {/* Form header */}
+          <div className="text-center mb-10 animate-slide-up">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+              Tell us about your project
+            </h2>
+            <p className="text-gray-600">
+              Share some details and we&apos;ll get back to you with ideas.
+            </p>
+          </div>
+
+          {/* The Form */}
+          <form onSubmit={handleSubmit} className="space-y-6 animate-slide-up animate-delay-100">
+            {/* Name & Email row */}
+            <div className="grid md:grid-cols-2 gap-5">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  Your name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Jane Smith"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="jane@example.com"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                />
+              </div>
+            </div>
+
+            {/* Company & Service row */}
+            <div className="grid md:grid-cols-2 gap-5">
+              <div>
+                <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+                  Company <span className="text-gray-400 font-normal">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  id="company"
+                  name="company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  placeholder="Acme Inc"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                />
+              </div>
+              <div>
+                <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-2">
+                  What interests you?
+                </label>
+                <select
+                  id="service"
+                  name="service"
+                  value={formData.service}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all appearance-none cursor-pointer"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 1rem center',
+                    backgroundSize: '1.25rem',
+                  }}
+                >
+                  <option value="">Select a service...</option>
+                  {services.map((service, index) => (
+                    <option key={index} value={service.title}>
+                      {service.title}
+                    </option>
+                  ))}
+                  <option value="Other">Something else</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Message */}
+            <div>
+              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                What&apos;s on your mind?
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows={5}
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Tell us about your project, goals, timeline, or any questions you have..."
+                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all resize-none"
+              />
+            </div>
+
+            {/* File Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Attachments <span className="text-gray-400 font-normal">(optional)</span>
+              </label>
+
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-blue-300 hover:bg-blue-50/30 transition-all group"
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.txt"
+                  onChange={(e) => handleFileSelect(e.target.files)}
+                  className="hidden"
+                  aria-label="Upload files"
+                />
+                <Upload className="w-8 h-8 mx-auto mb-3 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                <p className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+                  Drop files here or click to browse
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Images, PDFs, or docs up to 5MB each
+                </p>
               </div>
 
-              {/* Error Message */}
-              {submitStatus === 'error' && (
-                <div className={`p-4 rounded-lg ${alertColors.error.bg} ${alertColors.error.border}`}>
-                  <p className={`${formValidationColors.error} text-sm`}>
-                    {content.error.message}
-                  </p>
+              {/* Selected files */}
+              {files.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  {files.map((file, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between px-4 py-2.5 bg-gray-50 rounded-lg"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                          <Calendar className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm text-gray-700 truncate">{file.name}</p>
+                          <p className="text-xs text-gray-400">{formatFileSize(file.size)}</p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeFile(index)}
+                        className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
 
-              {/* Submit Button */}
-              <div className="flex justify-center">
-                <Button
-                  variant="gold"
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? content.form.submitButton.submitting : content.form.submitButton.default}
-                </Button>
-              </div>
-            </form>
-          )}
-          </Card>
-        </EditableSection>
+              {fileError && (
+                <p className="mt-2 text-sm text-red-600">{fileError}</p>
+              )}
+            </div>
 
-        {/* Alternative Contact */}
-        <EditableSection sectionKey="cta" label="Call to Action">
-          <CTASection
-            title={content.cta.title}
-            description={content.cta.description}
-            buttons={content.cta.buttons}
-            hoverColor={content.cta.hoverColor || 'green'}
-          />
-        </EditableSection>
+            {/* Error state */}
+            {submitStatus === 'error' && (
+              <div className="p-4 rounded-xl bg-red-50 border border-red-100">
+                <p className="text-sm text-red-600">
+                  {content.error.message}
+                </p>
+              </div>
+            )}
+
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`
+                w-full py-4 px-6 rounded-2xl font-semibold text-lg
+                transition-all duration-200
+                flex items-center justify-center gap-3
+                ${isSubmitting
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-slate-800 to-slate-900 text-white hover:from-slate-700 hover:to-slate-800 shadow-lg shadow-slate-900/20 hover:shadow-xl hover:shadow-slate-900/30 active:scale-[0.98]'}
+              `}
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Send className="w-5 h-5" />
+                  Send Message
+                </>
+              )}
+            </button>
+
+            {/* Privacy note */}
+            <p className="text-center text-sm text-gray-400">
+              We&apos;ll never share your info. Read our{' '}
+              <a href="/privacy" className="text-blue-500 hover:text-blue-600 underline-offset-2 hover:underline">
+                privacy policy
+              </a>
+              .
+            </p>
+          </form>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* Alternative Contact Section */}
+      {/* ================================================================== */}
+      <section className="bg-gray-50 py-16 md:py-20">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
+          <h3 className="text-xl font-semibold text-gray-900 mb-3">
+            Prefer a different way to connect?
+          </h3>
+          <p className="text-gray-600 mb-6">
+            Check out our pricing or browse services to learn more.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href="/pricing"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:border-gray-300 hover:shadow-sm transition-all"
+            >
+              View Pricing
+              <ArrowRight className="w-4 h-4" />
+            </a>
+            <a
+              href="/services"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:border-gray-300 hover:shadow-sm transition-all"
+            >
+              Browse Services
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

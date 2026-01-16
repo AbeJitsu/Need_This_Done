@@ -613,7 +613,7 @@ export const PAGE_CONFIGS = {
           { name: 'Deep Dive', duration: '55 min', price: '$50', description: 'Full project consultation', color: 'purple' },
         ],
         linkText: 'Book a consultation →',
-        linkHref: '/shop',
+        linkHref: '/contact',
       },
       processPreview: {
         title: 'How It Works',
