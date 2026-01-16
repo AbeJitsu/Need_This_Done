@@ -5,7 +5,6 @@ import {
   formInputColors,
   titleColors,
   cardBgColors,
-  dividerColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -24,45 +23,48 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen">
       {/* ================================================================
-          Hero Section - Gradient background
+          Hero Section - Centered gradient like homepage
           ================================================================ */}
-      <section className="relative overflow-hidden">
-        {/* Gradient background mesh - Gold/Blue theme for About */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/80 via-white to-blue-50/50" />
-        {/* Framing gradient orbs - homepage style (sides darker, middle lighter) */}
-        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-teal-100 blur-2xl" />
-        <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-amber-100 blur-xl" />
+      <section className="py-16 md:py-20">
+        <div className="max-w-3xl mx-auto px-6 sm:px-10 md:px-12">
+          <div className="relative overflow-hidden py-8">
+            {/* Gradient orbs - constrained to max-w container like homepage */}
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-teal-100 blur-2xl" />
+            <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-amber-100 blur-xl" />
 
-        <div className="relative max-w-3xl mx-auto px-6 sm:px-10 md:px-12 py-16 md:py-20">
-          {/* Header */}
-          <header className="text-center mb-10">
-            <h1 className={`text-3xl md:text-4xl font-bold italic ${headingColors.primary} mb-3`}>
-              About the Founder
-            </h1>
-            <p className={`text-lg ${formInputColors.helper}`}>
-              The person behind Need This Done
-            </p>
-          </header>
+            {/* Content */}
+            <div className="relative z-10">
+              {/* Header */}
+              <header className="text-center mb-10">
+                <h1 className={`text-3xl md:text-4xl font-bold italic ${headingColors.primary} mb-3`}>
+                  About the Founder
+                </h1>
+                <p className={`text-lg ${formInputColors.helper}`}>
+                  The person behind Need This Done
+                </p>
+              </header>
 
-          {/* Introduction */}
-          <div className="mb-0">
-            <h2 className={`text-2xl font-bold ${titleColors.blue} mb-4`}>
-              Hey, I&apos;m Abe
-            </h2>
-            <div className={`space-y-4 ${headingColors.secondary} leading-relaxed`}>
-              <p>
-                I&apos;m a full-stack developer based in Orlando, Florida. I built Need This Done
-                to help people get their projects across the finish line, whether that&apos;s a
-                website, data organization, or those tasks that keep falling to the bottom of
-                the to-do list.
-              </p>
-              <p>
-                Before I wrote code for a living, I spent five years as a Combat Medic in the
-                U.S. Army and seven years in automotive finance at Toyota. Those experiences
-                taught me how to stay calm under pressure, explain complicated things clearly,
-                and follow through on commitments.
-              </p>
+              {/* Introduction */}
+              <div className="mb-0">
+                <h2 className={`text-2xl font-bold ${titleColors.blue} mb-4`}>
+                  Hey, I&apos;m Abe
+                </h2>
+                <div className={`space-y-4 ${headingColors.secondary} leading-relaxed`}>
+                  <p>
+                    I&apos;m a full-stack developer based in Orlando, Florida. I built Need This Done
+                    to help people get their projects across the finish line, whether that&apos;s a
+                    website, data organization, or those tasks that keep falling to the bottom of
+                    the to-do list.
+                  </p>
+                  <p>
+                    Before I wrote code for a living, I spent five years as a Combat Medic in the
+                    U.S. Army and seven years in automotive finance at Toyota. Those experiences
+                    taught me how to stay calm under pressure, explain complicated things clearly,
+                    and follow through on commitments.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -129,25 +129,28 @@ export default async function ShopPage() {
   return (
     <div className="min-h-screen">
       {/* ================================================================
-          Hero Section - Gradient background
+          Hero Section - Centered gradient like homepage
           ================================================================ */}
-      <section className="relative overflow-hidden">
-        {/* Gradient background mesh - Purple/Blue theme for Shop */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/80 via-white to-blue-50/50" />
-        {/* Framing gradient orbs - homepage style (sides darker, middle lighter) */}
-        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-indigo-100 blur-2xl" />
-        <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-purple-100 blur-xl" />
+      <section className="py-16 md:py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="relative overflow-hidden py-8">
+            {/* Gradient orbs - constrained to max-w container like homepage */}
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-indigo-100 blur-2xl" />
+            <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-purple-100 blur-xl" />
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
-          {/* Header */}
-          <div className="text-center mb-0 animate-slide-up">
-            <h1 className={`text-4xl md:text-5xl font-bold italic ${headingColors.primary} mb-4`}>
-              Simple Pricing
-            </h1>
-            <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
-              Pick a package or build exactly what you need. No hidden fees.
-            </p>
+            {/* Content */}
+            <div className="relative z-10">
+              {/* Header */}
+              <div className="text-center mb-0 animate-slide-up">
+                <h1 className={`text-4xl md:text-5xl font-bold italic ${headingColors.primary} mb-4`}>
+                  Simple Pricing
+                </h1>
+                <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
+                  Pick a package or build exactly what you need. No hidden fees.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

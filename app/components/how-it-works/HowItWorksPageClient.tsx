@@ -1,6 +1,5 @@
 'use client';
 
-import StepCard from '@/components/StepCard';
 import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
 import Button from '@/components/Button';
@@ -38,67 +37,69 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
   return (
     <div className="min-h-screen">
       {/* ================================================================
-          Hero Section - Gradient background like homepage
+          Hero Section - Centered gradient like homepage
           ================================================================ */}
-      <section className="relative overflow-hidden">
-        {/* Gradient background mesh */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-teal-50/50" />
+      <section className="py-16 md:py-24">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="relative overflow-hidden py-8">
+            {/* Gradient orbs - constrained to max-w container like homepage */}
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-teal-100 to-cyan-100 blur-2xl" />
+            <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-emerald-100 blur-xl" />
 
-        {/* Framing gradient orbs - homepage style (no opacity, full saturation) */}
-        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-teal-100 to-cyan-100 blur-2xl" />
-        <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-emerald-100 blur-xl" />
+            {/* Content */}
+            <div className="relative z-10">
+              <EditableSection sectionKey="header" label="Page Header">
+                <div className="text-center mb-12">
+                  <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6 ${titleColors.green}`}>
+                    {content.header.title}
+                  </h1>
+                  <p className={`text-xl md:text-2xl max-w-3xl mx-auto ${formInputColors.helper}`}>
+                    {content.header.description}
+                  </p>
+                </div>
+              </EditableSection>
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-24">
-          <EditableSection sectionKey="header" label="Page Header">
-            <div className="text-center mb-12">
-              <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6 ${titleColors.green}`}>
-                {content.header.title}
-              </h1>
-              <p className={`text-xl md:text-2xl max-w-3xl mx-auto ${formInputColors.helper}`}>
-                {content.header.description}
-              </p>
-            </div>
-          </EditableSection>
-
-          {/* Trust Badges - Glass effect like homepage */}
-          {content.trustBadges && content.trustBadges.length > 0 && (
-            <EditableSection sectionKey="trustBadges" label="Trust Badges">
-              <div className="bg-white/70 backdrop-blur-xl rounded-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.06)] p-6">
-                <SortableItemsWrapper
-                  sectionKey="trustBadges"
-                  arrayField="trustBadges"
-                  itemIds={content.trustBadges.map((_, i) => `badge-${i}`)}
-                  className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-8 md:gap-12"
-                >
-                  {content.trustBadges.map((badge, index) => (
-                    <EditableItem
-                      key={`badge-${index}`}
+              {/* Trust Badges - Glass effect like homepage */}
+              {content.trustBadges && content.trustBadges.length > 0 && (
+                <EditableSection sectionKey="trustBadges" label="Trust Badges">
+                  <div className="bg-white/70 backdrop-blur-xl rounded-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.06)] p-6">
+                    <SortableItemsWrapper
                       sectionKey="trustBadges"
                       arrayField="trustBadges"
-                      index={index}
-                      label={badge.text}
-                      content={badge as unknown as Record<string, unknown>}
-                      sortable
-                      sortId={`badge-${index}`}
+                      itemIds={content.trustBadges.map((_, i) => `badge-${i}`)}
+                      className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center sm:gap-8 md:gap-12"
                     >
-                      <div className="flex items-center gap-3">
-                        <CheckmarkCircle color="green" size="lg" showBorder />
-                        <div>
-                          <p className={`font-semibold ${headingColors.primary}`}>
-                            {badge.text}
-                          </p>
-                          <p className={`text-sm ${formInputColors.helper}`}>
-                            {badge.description}
-                          </p>
-                        </div>
-                      </div>
-                    </EditableItem>
-                  ))}
-                </SortableItemsWrapper>
-              </div>
-            </EditableSection>
-          )}
+                      {content.trustBadges.map((badge, index) => (
+                        <EditableItem
+                          key={`badge-${index}`}
+                          sectionKey="trustBadges"
+                          arrayField="trustBadges"
+                          index={index}
+                          label={badge.text}
+                          content={badge as unknown as Record<string, unknown>}
+                          sortable
+                          sortId={`badge-${index}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <CheckmarkCircle color="green" size="lg" showBorder />
+                            <div>
+                              <p className={`font-semibold ${headingColors.primary}`}>
+                                {badge.text}
+                              </p>
+                              <p className={`text-sm ${formInputColors.helper}`}>
+                                {badge.description}
+                              </p>
+                            </div>
+                          </div>
+                        </EditableItem>
+                      ))}
+                    </SortableItemsWrapper>
+                  </div>
+                </EditableSection>
+              )}
+            </div>
+          </div>
         </div>
       </section>
 
