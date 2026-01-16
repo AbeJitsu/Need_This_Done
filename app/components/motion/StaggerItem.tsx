@@ -54,7 +54,7 @@ export function StaggerItem({
   }, [distance]);
 
   const variants = useMemo(
-    () => createFadeVariants(direction, effectiveDistance, prefersReducedMotion),
+    () => createFadeVariants(direction, effectiveDistance, prefersReducedMotion ?? false),
     [direction, effectiveDistance, prefersReducedMotion]
   );
 

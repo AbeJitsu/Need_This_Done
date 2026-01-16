@@ -73,7 +73,7 @@ export function FadeIn({
 
   // Create variants based on settings
   const variants = useMemo(
-    () => createFadeVariants(direction, effectiveDistance, prefersReducedMotion),
+    () => createFadeVariants(direction, effectiveDistance, prefersReducedMotion ?? false),
     [direction, effectiveDistance, prefersReducedMotion]
   );
 
