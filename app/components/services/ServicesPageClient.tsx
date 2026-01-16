@@ -43,14 +43,14 @@ export default function ServicesPageClient({ content: initialContent }: Services
             Hero Section - Centered gradient like homepage
             ================================================================ */}
         <section className="py-16 md:py-24">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-            <div className="relative overflow-hidden py-8">
-              {/* Gradient orbs - left color → white middle → right color */}
-              <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
-              <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-teal-100 to-cyan-100 blur-2xl" />
+          {/* Gradient container: full-width on mobile, centered on desktop */}
+          <div className="relative overflow-hidden py-8 md:max-w-6xl md:mx-auto">
+            {/* Gradient orbs - left color → white middle → right color */}
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-teal-100 to-cyan-100 blur-2xl" />
 
-              {/* Content */}
-              <div className="relative z-10">
+            {/* Content - always has padding */}
+            <div className="relative z-10 px-4 sm:px-6 md:px-8">
                 {/* 1. Hero/Header - Decision-focused */}
                 <EditableSection sectionKey="header" label="Page Header">
                   <PageHeader
@@ -59,7 +59,6 @@ export default function ServicesPageClient({ content: initialContent }: Services
                     color="teal"
                   />
                 </EditableSection>
-              </div>
             </div>
           </div>
         </section>

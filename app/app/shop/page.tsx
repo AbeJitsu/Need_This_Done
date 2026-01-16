@@ -132,23 +132,22 @@ export default async function ShopPage() {
           Hero Section - Centered gradient like homepage
           ================================================================ */}
       <section className="py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          <div className="relative overflow-hidden py-8">
-            {/* Gradient orbs - left color → white middle → right color */}
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-cyan-100 blur-2xl" />
+        {/* Gradient container: full-width on mobile, centered on desktop */}
+        <div className="relative overflow-hidden py-8 md:max-w-4xl md:mx-auto">
+          {/* Gradient orbs - left color → white middle → right color */}
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-cyan-100 blur-2xl" />
 
-            {/* Content */}
-            <div className="relative z-10">
-              {/* Header */}
-              <div className="text-center mb-0 animate-slide-up">
-                <h1 className={`text-4xl md:text-5xl font-bold italic ${headingColors.primary} mb-4`}>
-                  Simple Pricing
-                </h1>
-                <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
-                  Pick a package or build exactly what you need. No hidden fees.
-                </p>
-              </div>
+          {/* Content - always has padding */}
+          <div className="relative z-10 px-4 sm:px-6 md:px-8">
+            {/* Header */}
+            <div className="text-center mb-0 animate-slide-up">
+              <h1 className={`text-4xl md:text-5xl font-bold italic ${headingColors.primary} mb-4`}>
+                Simple Pricing
+              </h1>
+              <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
+                Pick a package or build exactly what you need. No hidden fees.
+              </p>
             </div>
           </div>
         </div>
