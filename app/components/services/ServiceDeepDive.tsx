@@ -143,24 +143,25 @@ const colorConfigs: Record<ServiceType, ServiceColorConfig> = {
 // ============================================================================
 
 export default function ServiceDeepDive({ defaultExpanded }: ServiceDeepDiveProps) {
-  const [expanded, setExpanded] = useState<ServiceType | null>(defaultExpanded || null);
+  // Default to first service expanded - avoids empty placeholder state
+  const [expanded, setExpanded] = useState<ServiceType | null>(defaultExpanded || 'website-services');
 
   const services = Object.entries(serviceFullContentMap) as [ServiceType, ServiceFullContent][];
 
   return (
-    <div className="mb-16">
-      {/* Section Header */}
-      <div className="text-center mb-10">
-        <h2 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-3 tracking-tight`}>
-          Dive Deeper
+    <div className="mb-12">
+      {/* Section Header - Subtle, not prominent */}
+      <div className="text-center mb-6">
+        <h2 className={`text-xl md:text-2xl font-semibold ${headingColors.primary} mb-2`}>
+          Explore Services
         </h2>
-        <p className={`${formInputColors.helper} text-lg max-w-2xl mx-auto`}>
-          Click a service to explore what&apos;s included
+        <p className={`${formInputColors.helper} text-sm max-w-xl mx-auto`}>
+          Click to see what&apos;s included
         </p>
       </div>
 
-      {/* Service Tab Buttons - Pill style */}
-      <div className="flex flex-wrap justify-center gap-3 mb-8">
+      {/* Service Tab Buttons - Compact pills */}
+      <div className="flex flex-wrap justify-center gap-2 mb-6">
         {services.map(([key, content]) => {
           const colors = colorConfigs[key];
           const isActive = expanded === key;
@@ -171,24 +172,18 @@ export default function ServiceDeepDive({ defaultExpanded }: ServiceDeepDiveProp
               key={key}
               onClick={() => setExpanded(isActive ? null : key)}
               className={`
-                group relative px-6 py-3 rounded-full font-semibold text-sm
-                transition-all duration-300 ease-out
-                flex items-center gap-2.5
+                group relative px-4 py-2 rounded-full font-medium text-sm
+                transition-all duration-200
+                flex items-center gap-2
                 ${isActive
-                  ? `${colors.tabActive} ${colors.tabActiveText} shadow-lg scale-105`
-                  : `bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300
-                     hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-102`
+                  ? `${colors.tabActive} ${colors.tabActiveText} shadow-sm`
+                  : `bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300
+                     hover:bg-gray-200 dark:hover:bg-gray-700`
                 }
               `}
             >
-              <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+              <Icon className="w-4 h-4" />
               <span>{content.title}</span>
-              <span className={`
-                ml-1 text-xs transition-transform duration-300
-                ${isActive ? 'rotate-180' : ''}
-              `}>
-                ▼
-              </span>
             </button>
           );
         })}
@@ -208,16 +203,19 @@ export default function ServiceDeepDive({ defaultExpanded }: ServiceDeepDiveProp
         )}
       </div>
 
-      {/* Hint when nothing expanded */}
+      {/* Hint when nothing expanded - Premium empty state */}
       {!expanded && (
-        <div className="text-center py-12 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-            <svg className="w-8 h-8 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M12 5v14M5 12h14" />
+        <div className="text-center py-16 rounded-2xl bg-gradient-to-br from-gray-50 to-slate-50/50 dark:from-gray-800/50 dark:to-slate-800/30 border border-gray-200/60 dark:border-gray-700/60">
+          <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+            <svg className="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
             </svg>
           </div>
-          <p className={`${formInputColors.helper} text-lg`}>
+          <p className={`${formInputColors.helper} text-base mb-1`}>
             Select a service above to see the details
+          </p>
+          <p className="text-sm text-gray-400 dark:text-gray-500">
+            Click any tab to explore what&apos;s included
           </p>
         </div>
       )}

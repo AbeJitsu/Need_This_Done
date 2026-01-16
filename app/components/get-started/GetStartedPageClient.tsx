@@ -16,10 +16,9 @@ import {
   stepBadgeColors,
   mutedTextColors,
   headingColors,
-  checkmarkColors,
   alertColors,
-  AccentVariant,
 } from '@/lib/colors';
+import { FileText, Video, Check, Sparkles } from 'lucide-react';
 
 // Quote data returned from authorization API
 interface AuthorizedQuote {
@@ -224,92 +223,164 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
   }
 
   // ============================================================================
+  // Path Icons Configuration
+  // ============================================================================
+  const pathIcons = [FileText, Video];
+  const pathIconColors = [
+    { bg: 'bg-gradient-to-br from-green-500 to-emerald-600', text: 'text-white' },
+    { bg: 'bg-gradient-to-br from-purple-500 to-violet-600', text: 'text-white' },
+  ];
+
+  // ============================================================================
   // Main Page Content
   // ============================================================================
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-12">
-      <EditableSection sectionKey="header" label="Page Header">
-        <PageHeader
-          title={content.header.title}
-          description={content.header.description}
-          color="gold"
-        />
-      </EditableSection>
+    <div className="min-h-screen">
+      {/* ================================================================
+          Hero Section - Centered gradient like homepage
+          ================================================================ */}
+      <section className="py-16 md:py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="relative overflow-hidden py-8">
+            {/* Gradient orbs - left color → white middle → right color */}
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-teal-100 blur-2xl" />
 
-      {/* Two Main Paths */}
-      <EditableSection sectionKey="paths" label="Path Options">
-        <SortableItemsWrapper
-          sectionKey="paths"
-          arrayField="paths"
-          itemIds={content.paths.map((_, i) => `path-${i}`)}
-          className="grid md:grid-cols-2 gap-6 mb-10"
-        >
-          {content.paths.map((path, index) => (
-            <EditableItem
-              key={`path-${index}`}
+            {/* Content */}
+            <div className="relative z-10">
+              <EditableSection sectionKey="header" label="Page Header">
+                <PageHeader
+                  title={content.header.title}
+                  description={content.header.description}
+                  color="gold"
+                />
+              </EditableSection>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================
+          Path Options Section - Separate from hero
+          ================================================================ */}
+      <section className="pb-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+          {/* Two Main Paths - Premium Card Design */}
+          <EditableSection sectionKey="paths" label="Path Options">
+            <SortableItemsWrapper
               sectionKey="paths"
               arrayField="paths"
-              index={index}
-              label={path.title}
-              content={path as unknown as Record<string, unknown>}
-              sortable
-              sortId={`path-${index}`}
+              itemIds={content.paths.map((_, i) => `path-${i}`)}
+              className="grid md:grid-cols-2 gap-8"
             >
-              <Card hoverColor={path.hoverColor} hoverEffect="lift" className="h-full">
-                <div className="p-8 h-full flex flex-col">
-                  <div className="mb-4">
-                    <span className={`inline-block px-4 py-1 ${accentColors[path.hoverColor as AccentVariant].bg} ${accentColors[path.hoverColor as AccentVariant].text} rounded-full text-sm font-semibold`}>
-                      {path.badge}
-                    </span>
-                  </div>
-                  <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
-                    {path.title}
-                  </h2>
-                  <p className={`${headingColors.secondary} mb-6 flex-grow`}>
-                    {path.description}
-                  </p>
-                  <ul className="space-y-3 mb-6">
-                    {path.features.map((feature, idx) => {
-                      // checkmarkColors only has purple, blue, green - fall back to green for other variants
-                      const colorKey = path.hoverColor as keyof typeof checkmarkColors;
-                      const checkmarkClass = checkmarkColors[colorKey]?.icon || checkmarkColors.green.icon;
-                      return (
-                        <li key={idx} className="flex items-center gap-2">
-                          <span className={checkmarkClass}>✓</span>
-                          <span className={headingColors.secondary}>{feature}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                  <div className="flex justify-center">
-                    <Button
-                      variant={path.button.variant}
-                      href={path.button.href}
-                      size={path.button.size || 'lg'}
-                      className="min-w-56"
-                    >
-                      {path.button.text}
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </EditableItem>
-          ))}
-        </SortableItemsWrapper>
-      </EditableSection>
+              {content.paths.map((path, index) => {
+                const IconComponent = pathIcons[index] || Sparkles;
+                const iconStyle = pathIconColors[index] || pathIconColors[0];
 
-      {/* Already Have a Quote Section */}
-      <div className="text-center mb-10 py-6">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-          {content.quoteSection.title}
-        </h3>
-        <p className="text-gray-600 dark:text-gray-300">
-          {content.quoteSection.description}
-        </p>
-      </div>
+                return (
+                  <EditableItem
+                    key={`path-${index}`}
+                    sectionKey="paths"
+                    arrayField="paths"
+                    index={index}
+                    label={path.title}
+                    content={path as unknown as Record<string, unknown>}
+                    sortable
+                    sortId={`path-${index}`}
+                  >
+                    <div className="group h-full">
+                      <div className={`
+                        h-full flex flex-col
+                        bg-white dark:bg-gray-900
+                        rounded-2xl overflow-hidden
+                        border-2 border-gray-100 dark:border-gray-800
+                        shadow-lg hover:shadow-xl
+                        transition-all duration-300
+                        hover:-translate-y-1
+                      `}>
+                        {/* Colored Top Accent Bar */}
+                        <div className={`h-1.5 ${index === 0 ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 'bg-gradient-to-r from-purple-500 to-violet-500'}`} />
 
-      {/* Authorization Form or Payment Form */}
-      <Card hoverEffect="none" id="authorize" className="mb-8">
+                        <div className="p-8 flex flex-col flex-grow">
+                          {/* Icon + Badge Row */}
+                          <div className="flex items-center justify-between mb-6">
+                            <div className={`w-14 h-14 rounded-xl ${iconStyle.bg} flex items-center justify-center shadow-lg`}>
+                              <IconComponent className={`w-7 h-7 ${iconStyle.text}`} />
+                            </div>
+                            <span className={`
+                              px-4 py-1.5 rounded-full text-sm font-bold
+                              ${index === 0 ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}
+                            `}>
+                              {path.badge}
+                            </span>
+                          </div>
+
+                          {/* Title + Description */}
+                          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
+                            {path.title}
+                          </h2>
+                          <p className={`${headingColors.secondary} mb-6`}>
+                            {path.description}
+                          </p>
+
+                          {/* Features List with Premium Checkmarks */}
+                          <ul className="space-y-3 mb-8 flex-grow">
+                            {path.features.map((feature, idx) => (
+                              <li key={idx} className="flex items-start gap-3">
+                                <div className={`
+                                  flex-shrink-0 w-5 h-5 rounded-full mt-0.5
+                                  flex items-center justify-center
+                                  ${index === 0 ? 'bg-green-100 text-green-600' : 'bg-purple-100 text-purple-600'}
+                                `}>
+                                  <Check className="w-3 h-3" strokeWidth={3} />
+                                </div>
+                                <span className={headingColors.secondary}>{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+
+                          {/* CTA Button */}
+                          <Button
+                            variant={path.button.variant}
+                            href={path.button.href}
+                            size="lg"
+                            className="w-full"
+                          >
+                            {path.button.text}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </EditableItem>
+                );
+              })}
+            </SortableItemsWrapper>
+          </EditableSection>
+        </div>
+      </section>
+
+      {/* ================================================================
+          Quote Authorization Section - Dark background for contrast
+          ================================================================ */}
+      <section className="relative overflow-hidden">
+        {/* Dark gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-green-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
+          {/* Already Have a Quote Section */}
+          <div className="text-center mb-10">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+              {content.quoteSection.title}
+            </h3>
+            <p className="text-slate-300 text-lg max-w-xl mx-auto">
+              {content.quoteSection.description}
+            </p>
+          </div>
+
+          {/* Authorization Form or Payment Form */}
+          <Card hoverEffect="none" id="authorize" className="mb-8">
         {clientSecret && authorizedQuote ? (
           // Show payment form after authorization
           <div className="p-6">
@@ -430,7 +501,9 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
             </p>
           </form>
         )}
-      </Card>
+          </Card>
+        </div>
+      </section>
     </div>
   );
 }

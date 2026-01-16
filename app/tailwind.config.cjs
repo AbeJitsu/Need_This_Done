@@ -97,11 +97,11 @@ const config = {
     // Gold dark hover borders - all shades for easy testing
     'dark:hover:border-gold-100', 'dark:hover:border-gold-200', 'dark:hover:border-gold-300', 'dark:hover:border-gold-400', 'dark:hover:border-gold-500', 'dark:hover:border-gold-600', 'dark:hover:border-gold-700', 'dark:hover:border-gold-800', 'dark:hover:border-gold-900',
 
-    // Left border colors - for cart items and accent cards
-    'border-l-purple-500', 'border-l-blue-500', 'border-l-green-500',
-    'dark:border-l-purple-400', 'dark:border-l-blue-400', 'dark:border-l-green-400',
-    'hover:border-l-purple-600', 'hover:border-l-blue-600', 'hover:border-l-green-600',
-    'dark:hover:border-l-purple-300', 'dark:hover:border-l-blue-300', 'dark:hover:border-l-green-300',
+    // Left border colors - for cart items and accent cards (BJJ belt colors: blue, green, purple, gold/brown)
+    'border-l-purple-500', 'border-l-blue-500', 'border-l-green-500', 'border-l-gold-500', 'border-l-gold-600',
+    'dark:border-l-purple-400', 'dark:border-l-blue-400', 'dark:border-l-green-400', 'dark:border-l-gold-400',
+    'hover:border-l-purple-600', 'hover:border-l-blue-600', 'hover:border-l-green-600', 'hover:border-l-gold-600',
+    'dark:hover:border-l-purple-300', 'dark:hover:border-l-blue-300', 'dark:hover:border-l-green-300', 'dark:hover:border-l-gold-300',
 
     // Card hover colors - light mode 500 (for Card component)
     'hover:border-purple-500', 'hover:border-blue-500', 'hover:border-green-500',
