@@ -131,6 +131,9 @@ export default function AboutPage() {
           Check out my full professional background or get in touch about your project.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
+          <Button variant="gray" href="/resume" size="lg">
+            View Full Resume
+          </Button>
           <Button variant="blue" href="/services" size="lg">
             See What I Build
           </Button>

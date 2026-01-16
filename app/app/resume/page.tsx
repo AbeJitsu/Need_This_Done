@@ -28,11 +28,11 @@ export const metadata: Metadata = {
 const skills = [
   {
     category: 'Frontend & UI Systems',
-    items: 'React, Next.js, Vue.js, TypeScript, Tailwind, Visual Page Builders (Puck), WYSIWYG Editors (TipTap), Drag-and-Drop',
+    items: 'React, Next.js, Vue.js, TypeScript, Tailwind, Liquid (Shopify), Visual Page Builders (Puck), WYSIWYG Editors (TipTap)',
   },
   {
     category: 'Backend & Data',
-    items: 'Node.js, Python, REST APIs, GraphQL, PostgreSQL, MongoDB, Supabase, Redis Caching, Schema Design, Zod Validation',
+    items: 'Node.js, Python, REST APIs, GraphQL, PostgreSQL, MongoDB, Supabase, Medusa, Redis, Schema Design, Zod',
   },
   {
     category: 'Testing & Quality',
@@ -40,15 +40,15 @@ const skills = [
   },
   {
     category: 'AI & Automation',
-    items: 'Claude Code, Prompt Engineering, Vector Embeddings, Zapier, n8n, Workflow Design',
+    items: 'LLM Integration (OpenAI, Claude), Prompt Engineering, RAG Systems, Chatbots, Vector Embeddings',
   },
   {
     category: 'Architecture',
-    items: 'Modular Components, Custom Hooks, Context Providers, Optimistic Updates, Cache-Aside Pattern',
+    items: 'Modular Components, Custom Hooks, Context Providers, Optimistic Updates, Cache-Aside Pattern, Turborepo, pnpm Workspaces',
   },
   {
     category: 'Design & Process',
-    items: 'Mobile-First, Dark Mode, Figma, Component Libraries, Test-Driven Development',
+    items: 'Mobile-First, Figma, Component Libraries, Test-Driven Development',
   },
 ];
 
@@ -63,17 +63,18 @@ const experience = [
     subtitle: 'Professional Services Platform',
     dates: 'November 2025 - Present',
     bullets: [
-      'Built a visual editor where you drag and drop building blocks to create pages, edit text directly on the page, and undo changes with version history. Non-technical users can update content without touching code',
-      'Organized the codebase into reusable components and API endpoints. Cart updates show instantly without loading spinners, and pages load fast thanks to smart caching',
-      'Wrote automated tests that simulate real users clicking through the site. Built a color system that passes accessibility checks so text is readable for everyone, including in dark mode',
-      'Built AI automation including an LLM chatbot with custom prompts, OAuth flows, Stripe payments, and automated emails',
+      'Integrated five services (Vercel, Railway, Supabase, Redis, Stripe) with graceful degradation so one failure doesn\'t take down the whole system',
+      'Built optimistic cart updates. Click add to cart and it appears instantly, syncs in the background, rolls back automatically if something fails',
+      'Created a quotes-to-payment workflow with status tracking at every step: quote request, pricing, deposit, and project kickoff',
+      'Wired up Stripe webhooks to update the database, clear caches, and log transactions. Handles edge cases like failed charges and renewals',
+      'Evolved the schema through dozens of migrations, adding features incrementally and fixing security gaps while keeping data intact',
     ],
   },
   {
     title: 'Technical Operations Specialist',
     company: 'Acadio',
     subtitle: 'Educational Platform for Financial Certifications',
-    dates: 'Spring 2025 - Winter 2025',
+    dates: 'April 2025 - December 2025',
     bullets: [
       'Started as a contractor doing API integration work at an early-stage startup. Proved value quickly and got brought on for expanded responsibilities',
       'Became the person the CEO came to with technical questions because my explanations made sense to him',
@@ -94,9 +95,9 @@ const experience = [
     ],
   },
   {
-    title: 'Finance Manager',
+    title: 'Finance and Insurance Manager',
     company: 'Toyota of Orlando',
-    subtitle: 'Salesperson → Sales Manager → Finance Manager',
+    subtitle: 'Salesperson → Sales Manager → F&I Manager',
     dates: 'Spring 2017 - Winter 2023',
     bullets: [
       'Earned three promotions over seven years at a high-volume dealership moving 10-30 cars daily',
@@ -296,7 +297,7 @@ export default function ResumePage() {
             <li>Ship reliably with Playwright E2E tests, Vitest unit tests, and CI/CD</li>
           </ul>
           <p className={`text-xs italic ${formInputColors.helper}`}>
-            React/Next.js • TypeScript • Zod • Node.js • PostgreSQL/Supabase • Redis • Stripe • Playwright • Vercel
+            React/Next.js • TypeScript • Medusa (Headless Commerce) • PostgreSQL/Supabase • Redis • Stripe • Playwright • Vercel
           </p>
         </div>
       </section>
@@ -330,13 +331,19 @@ export default function ResumePage() {
         <div className="space-y-3 ml-4">
           <p className={`text-xs ${headingColors.secondary}`}>
             <span className="font-semibold">The Pragmatic Programmer</span> by David Thomas &amp; Andrew Hunt
-            — Taught me to write code that&apos;s easy to change later and to fix small problems before
-            they become big ones. I liked the ideas so much I built tools to check my own work against them.
+            — Why I fix the small stuff before it becomes big stuff. Broken windows invite more broken windows.
           </p>
           <p className={`text-xs ${headingColors.secondary}`}>
             <span className="font-semibold">Algorithms to Live By</span> by Brian Christian &amp; Tom Griffiths
-            — Shows how the same thinking that solves computer problems can help with everyday decisions.
-            It&apos;s why I focus on understanding how things work instead of just memorizing steps.
+            — Sometimes good enough now beats perfect later. Knowing when to stop optimizing is its own skill.
+          </p>
+          <p className={`text-xs ${headingColors.secondary}`}>
+            <span className="font-semibold">Never Split the Difference</span> by Chris Voss
+            — Hard conversations get easier when you stop trying to win and start trying to understand.
+          </p>
+          <p className={`text-xs ${headingColors.secondary}`}>
+            <span className="font-semibold">Seven Principles for Making Marriage Work</span> by John Gottman
+            — What keeps marriages together keeps teams together: fix things fast, assume good intent, stay curious about the people you work with.
           </p>
         </div>
       </section>
