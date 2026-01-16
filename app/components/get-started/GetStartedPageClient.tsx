@@ -240,22 +240,21 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
           Hero Section - Centered gradient like homepage
           ================================================================ */}
       <section className="py-16 md:py-20">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-          <div className="relative overflow-hidden py-8">
-            {/* Gradient orbs - left color → white middle → right color */}
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-teal-100 blur-2xl" />
+        {/* Gradient container: full-width on mobile, centered on desktop */}
+        <div className="relative overflow-hidden py-8 md:max-w-5xl md:mx-auto">
+          {/* Gradient orbs - left color → white middle → right color */}
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-teal-100 blur-2xl" />
 
-            {/* Content */}
-            <div className="relative z-10">
-              <EditableSection sectionKey="header" label="Page Header">
-                <PageHeader
-                  title={content.header.title}
-                  description={content.header.description}
-                  color="gold"
-                />
-              </EditableSection>
-            </div>
+          {/* Content - always has padding */}
+          <div className="relative z-10 px-4 sm:px-6 md:px-8">
+            <EditableSection sectionKey="header" label="Page Header">
+              <PageHeader
+                title={content.header.title}
+                description={content.header.description}
+                color="gold"
+              />
+            </EditableSection>
           </div>
         </div>
       </section>

@@ -26,24 +26,23 @@ export default function AboutPage() {
           Hero Section - Centered gradient like homepage
           ================================================================ */}
       <section className="py-16 md:py-20">
-        <div className="max-w-3xl mx-auto px-6 sm:px-10 md:px-12">
-          <div className="relative overflow-hidden py-8">
-            {/* Gradient orbs - left color → white middle → right color */}
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-cyan-100 blur-2xl" />
+        {/* Gradient container: full-width on mobile, centered on desktop */}
+        <div className="relative overflow-hidden py-8 md:max-w-3xl md:mx-auto">
+          {/* Gradient orbs - left color → white middle → right color */}
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-cyan-100 blur-2xl" />
 
-            {/* Content */}
-            <div className="relative z-10">
-              {/* Header */}
-              <header className="text-center">
-                <h1 className={`text-3xl md:text-4xl font-bold italic ${headingColors.primary} mb-3`}>
-                  About the Founder
-                </h1>
-                <p className={`text-lg ${formInputColors.helper}`}>
-                  The person behind Need This Done
-                </p>
-              </header>
-            </div>
+          {/* Content - always has padding */}
+          <div className="relative z-10 px-6 sm:px-10 md:px-12">
+            {/* Header */}
+            <header className="text-center">
+              <h1 className={`text-3xl md:text-4xl font-bold italic ${headingColors.primary} mb-3`}>
+                About the Founder
+              </h1>
+              <p className={`text-lg ${formInputColors.helper}`}>
+                The person behind Need This Done
+              </p>
+            </header>
           </div>
         </div>
       </section>
