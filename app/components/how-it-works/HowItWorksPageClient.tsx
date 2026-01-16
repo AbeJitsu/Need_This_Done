@@ -44,10 +44,10 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
         {/* Gradient background mesh */}
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-teal-50/50" />
 
-        {/* Framing gradient orbs - positioned to surround content */}
-        <div className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full blur-3xl opacity-60" />
-        <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-gradient-to-tr from-teal-100 to-cyan-100 rounded-full blur-2xl opacity-60" />
-        <div className="absolute top-20 left-1/4 w-32 h-32 bg-emerald-100 rounded-full blur-xl opacity-50" />
+        {/* Framing gradient orbs - homepage style (no opacity, full saturation) */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-teal-100 to-cyan-100 blur-2xl" />
+        <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-emerald-100 blur-xl" />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-24">
           <EditableSection sectionKey="header" label="Page Header">
