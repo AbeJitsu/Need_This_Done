@@ -13,6 +13,26 @@ All colors are centralized. Import from `@/lib/colors`:
 
 **Rule:** Extend the existing palette, don't replace it.
 
+### BJJ Belt Color Hierarchy
+
+When using multiple colors together, follow the BJJ belt progression:
+
+```
+Green (1st) → Blue (2nd) → Purple (3rd) → Gold (4th)
+```
+
+**Avoid orange/amber for text.** Use gold for warm accents.
+
+### Color-Specific Usage
+
+| Color | Use For |
+|-------|---------|
+| Green | Primary CTAs, success states, first in sequences |
+| Blue | Links, secondary buttons, professional elements |
+| Purple | Tertiary accents, creativity, special emphasis |
+| Gold | Warm highlights, links on dark backgrounds |
+| Gray | Neutral buttons, secondary actions |
+
 ## Accessibility Standards (WCAG AA)
 
 | Element | Minimum Ratio |
@@ -24,6 +44,30 @@ All colors are centralized. Import from `@/lib/colors`:
 We target **5:1 minimum** for all text.
 
 **Verify with:** [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
+
+## Visual Effects
+
+### Glassmorphism Cards (on light backgrounds)
+
+```tsx
+<div className="p-6 rounded-2xl bg-gradient-to-r from-gray-100 to-white shadow-xl border border-gray-100">
+```
+
+### Backlight Glow (on dark backgrounds)
+
+```tsx
+style={{
+  boxShadow: '0 0 40px rgba(255,255,255,0.18), 0 0 70px rgba(255,255,255,0.1)',
+}}
+```
+
+### Floating Buttons (colored shadows)
+
+```tsx
+<Button variant="green" className="shadow-lg shadow-green-500/25">
+<Button variant="blue" className="shadow-lg shadow-blue-500/25">
+<Button variant="purple" className="shadow-lg shadow-purple-500/25">
+```
 
 ## Component Patterns
 
@@ -38,8 +82,9 @@ Check `app/components/` before building new ones:
 
 1. Check for similar existing components
 2. Import colors from `@/lib/colors`
-3. Add `.a11y.test.tsx` file if interactive
-4. Consider adding a Storybook story
+3. Follow BJJ belt color hierarchy for multi-color elements
+4. Add `.a11y.test.tsx` file if interactive
+5. Consider adding a Storybook story
 
 ## Running Tests
 

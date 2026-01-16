@@ -464,7 +464,6 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
       { href: '/pricing', label: 'Pricing' },
       { href: '/how-it-works', label: 'How It Works' },
       { href: '/about', label: 'About' },
-      { href: '/blog', label: 'Blog' },
     ],
     ctaButton: { text: 'Get a Quote', href: '/contact' },
     signInText: 'Sign in',
@@ -478,6 +477,7 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
       { href: '/contact', label: 'Contact' },
       { href: '/pricing', label: 'Pricing' },
       { href: '/faq', label: 'FAQ' },
+      { href: '/blog', label: 'Blog' },
       { href: '/get-started', label: 'Get Started' },
     ],
     legalLinks: [

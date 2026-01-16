@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import PageHeader from '@/components/PageHeader';
 import BlogPostCard from '@/components/blog/BlogPostCard';
 import { EditableSection } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
@@ -35,22 +34,25 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
       {/* ================================================================
           Hero Section - Centered gradient like homepage
           ================================================================ */}
-      <section className="py-16 md:py-20">
-        {/* Gradient container: full-width on mobile, centered on desktop */}
-        <div className="relative overflow-hidden py-8 md:max-w-6xl md:mx-auto">
-          {/* Gradient orbs - left color → white middle → right color */}
-          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-amber-100 to-gold-100 blur-2xl" />
+      <section className="py-8 md:py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+          {/* Gradient container with rounded edges and centered content */}
+          <div className="relative overflow-hidden rounded-2xl flex items-center justify-center min-h-[220px]">
+            {/* Gradient orbs */}
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-amber-100 to-gold-100 blur-2xl" />
 
-          {/* Content - always has padding */}
-          <div className="relative z-10 px-4 sm:px-6 md:px-8">
+            {/* Text container - centered */}
+            <div className="relative z-10 text-center">
               <EditableSection sectionKey="header" label="Page Header">
-                <PageHeader
-                  title={content.header.title}
-                  description={content.header.description}
-                  color="purple"
-                />
+                <h1 className={`text-4xl md:text-5xl font-bold tracking-tight text-purple-700 mb-4`}>
+                  {content.header.title}
+                </h1>
+                <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
+                  {content.header.description}
+                </p>
               </EditableSection>
+            </div>
           </div>
         </div>
       </section>

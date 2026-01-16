@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';
@@ -42,23 +41,25 @@ export default function ServicesPageClient({ content: initialContent }: Services
         {/* ================================================================
             Hero Section - Centered gradient like homepage
             ================================================================ */}
-        <section className="py-16 md:py-24">
-          {/* Gradient container: full-width on mobile, centered on desktop */}
-          <div className="relative overflow-hidden py-8 md:max-w-6xl md:mx-auto">
-            {/* Gradient orbs - left color → white middle → right color */}
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-teal-100 to-cyan-100 blur-2xl" />
+        <section className="py-8 md:py-12">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+            {/* Gradient container with centered content */}
+            <div className="relative overflow-hidden rounded-2xl py-12 md:py-16 flex items-center justify-center min-h-[200px]">
+              {/* Gradient orbs */}
+              <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
+              <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-teal-100 to-cyan-100 blur-2xl" />
 
-            {/* Content - always has padding */}
-            <div className="relative z-10 px-4 sm:px-6 md:px-8">
-                {/* 1. Hero/Header - Decision-focused */}
+              {/* Text container - centered */}
+              <div className="relative z-10 text-center">
                 <EditableSection sectionKey="header" label="Page Header">
-                  <PageHeader
-                    title={content.header.title}
-                    description={content.header.description}
-                    color="teal"
-                  />
+                  <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-teal-700 mb-4">
+                    {content.header.title}
+                  </h1>
+                  <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                    {content.header.description}
+                  </p>
                 </EditableSection>
+              </div>
             </div>
           </div>
         </section>
@@ -66,7 +67,7 @@ export default function ServicesPageClient({ content: initialContent }: Services
         {/* ================================================================
             Main Content - White background sections
             ================================================================ */}
-        <section className="py-16">
+        <section className="py-8">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
             {/* 2. Scenario Matcher - "Does this sound like you?" */}
             {content.scenarioMatcher && (

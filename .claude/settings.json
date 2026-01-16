@@ -47,6 +47,8 @@
       "Bash(vercel:*)",
       "Bash(railway:*)",
       "Bash(supabase:*)",
+      "Bash(rm -rf .next:*)",
+      "Bash(rm -rf node_modules/.cache:*)",
       "Glob",
       "Grep",
       "TodoWrite",

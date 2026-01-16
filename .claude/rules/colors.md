@@ -2,11 +2,32 @@
 
 **NEVER hardcode colors.** All colors come from `lib/colors.ts`.
 
+## BJJ Belt Color Progression
+
+The founder is a Brazilian Jiu-Jitsu purple belt. Use the BJJ belt progression as the primary color hierarchy:
+
+| Order | Color | Usage |
+|-------|-------|-------|
+| 1st | **Green** | Primary actions, success states, main CTAs |
+| 2nd | **Blue** | Secondary elements, links, professional tone |
+| 3rd | **Purple** | Tertiary accents, creativity, special emphasis |
+| 4th | **Gold** | Warm highlights, links on dark backgrounds |
+
+**Important**: Avoid orange/amber for text. Use gold instead for warm accents.
+
+When multiple colored elements appear together (buttons, headings, sections), follow this progression top-to-bottom or left-to-right.
+
 ## Usage
 
 ```typescript
-import { formInputColors, accentColors } from '@/lib/colors';
+import { formInputColors, accentColors, titleColors } from '@/lib/colors';
 
+// For text colors
+<h2 className={titleColors.green}>Primary Heading</h2>
+<h3 className={titleColors.blue}>Secondary Heading</h3>
+<h4 className={titleColors.purple}>Tertiary Heading</h4>
+
+// For helper text
 <p className={formInputColors.helper}>Helper text</p>
 ```
 

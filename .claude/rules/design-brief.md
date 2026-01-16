@@ -12,11 +12,26 @@
 - Creative and energetic (not boring or generic)
 - Supportive and capable (inspires confidence)
 
+## Color Philosophy - BJJ Belt Progression
+
+The founder is a Brazilian Jiu-Jitsu purple belt. The brand colors follow the BJJ belt progression:
+
+| Priority | Color | Meaning | Usage |
+|----------|-------|---------|-------|
+| 1st | **Green** | Growth, action | Primary CTAs, success states, main buttons |
+| 2nd | **Blue** | Trust, professionalism | Links, secondary buttons, professional tone |
+| 3rd | **Purple** | Creativity, mastery | Special emphasis, tertiary accents |
+| 4th | **Gold** | Achievement, warmth | Warm highlights, links on dark backgrounds |
+
+**Avoid**: Orange/amber for text (use gold instead). Gray for neutral elements only.
+
+When arranging multiple colored elements, follow this progression top-to-bottom or left-to-right.
+
 ## Current Design Language
 
 **Color Palette**:
-- **Primary**: Blue (professional, trustworthy)
-- **Accents**: Purple (creativity), Green (success), Orange (energy), Teal (modern), Gray (foundation)
+- **Primary progression**: Green → Blue → Purple → Gold (BJJ belt order)
+- **Neutral**: Gray (foundation, secondary buttons)
 - **Approach**: Soft gradients, warm grayscale undertones
 
 **Typography**:
@@ -25,9 +40,28 @@
 
 **Visual Style**:
 - Clean, spacious layouts
-- Card-based interfaces
-- Subtle shadows and borders
-- Currently minimal animation
+- Card-based interfaces with glassmorphism effects
+- Floating elements with soft shadows/glows
+- Subtle animations on interactions
+
+## Visual Effects
+
+**Glassmorphism Cards** (light backgrounds):
+```css
+bg-gradient-to-r from-gray-100 to-white shadow-xl border border-gray-100
+```
+
+**Backlight Glow** (dark backgrounds):
+```css
+box-shadow: 0 0 40px rgba(255,255,255,0.18), 0 0 70px rgba(255,255,255,0.1)
+```
+
+**Floating Buttons** (colored shadows matching button):
+```css
+shadow-lg shadow-green-500/25  /* for green buttons */
+shadow-lg shadow-blue-500/25   /* for blue buttons */
+shadow-lg shadow-purple-500/25 /* for purple buttons */
+```
 
 ## Design Constraints (Non-Negotiable)
 
@@ -35,7 +69,7 @@ See [docs/DESIGN_SYSTEM.md](../docs/DESIGN_SYSTEM.md) for complete technical sta
 
 Summary:
 - **Accessibility**: 5:1 contrast minimum (WCAG AA)
-- **Dark Mode**: All designs must work in both themes
+- **Dark Mode**: Currently disabled, light mode only
 - **Color System**: Extend `app/lib/colors.ts` (don't replace)
 - **Testing**: New components need `.a11y.test.tsx` files
 
@@ -47,17 +81,19 @@ Summary:
 - Creative layouts (asymmetry, grid-breaking, overlapping elements)
 - Visual interest (textures, patterns, gradient overlays)
 - Distinctive hover states and focus indicators
+- Glassmorphism and floating effects
 
 **Preserve**:
 - Professional, trustworthy tone (avoid overly playful aesthetics)
+- BJJ belt color progression
 - Existing component APIs and patterns
 - Accessibility standards
-- Dark mode support
 
 ## Plugin Guidance Philosophy
 
 Let the frontend-design plugin suggest aesthetic directions that:
 - Add warmth and energy to the professional foundation
 - Create distinctive, memorable interfaces
+- Respect the BJJ belt color hierarchy
 - Avoid generic "AI slop" design patterns
 - Maintain accessibility and usability standards
