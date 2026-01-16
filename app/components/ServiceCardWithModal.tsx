@@ -34,6 +34,8 @@ interface ServiceCardWithModalProps {
   cardIndex?: number;
   /** Modal content from page JSON (for inline editing) */
   modal?: ServiceModalContent;
+  /** Optional icon to display in the card */
+  icon?: React.ReactNode;
 }
 
 export default function ServiceCardWithModal({
@@ -47,6 +49,7 @@ export default function ServiceCardWithModal({
   editBasePath,
   cardIndex,
   modal,
+  icon,
 }: ServiceCardWithModalProps) {
   const { openModal, openModalWithContent } = useServiceModal();
   const { isEditMode, startEditing } = useInlineEdit();
@@ -113,6 +116,7 @@ export default function ServiceCardWithModal({
         onClick={handleClick}
         onLinkClick={handleLinkClick}
         editBasePath={editBasePath}
+        icon={icon}
       />
 
       {showChoiceMenu && (

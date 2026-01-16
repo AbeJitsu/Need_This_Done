@@ -35,6 +35,8 @@ interface ServiceCardProps {
   onLinkClick?: (e: React.MouseEvent) => void;
   /** Base path for inline editing, e.g., "services.cards.0" */
   editBasePath?: string;
+  /** Optional icon to display next to the title */
+  icon?: React.ReactNode;
 }
 
 export default function ServiceCard({
@@ -49,6 +51,7 @@ export default function ServiceCard({
   linkText = 'Learn more →',
   onLinkClick,
   editBasePath,
+  icon,
 }: ServiceCardProps) {
   const isCompact = variant === 'compact';
 
@@ -65,11 +68,15 @@ export default function ServiceCard({
 
   const cardContent = (
     <div className="flex flex-col h-full">
-      {editable('title', (
-        <h2 className={`font-bold mb-3 text-xl ${accentColors[color].titleText}`}>
-          {title}
-        </h2>
-      ))}
+      {/* Title row with optional icon */}
+      <div className="flex items-center gap-3 mb-3">
+        {icon && <div className="flex-shrink-0">{icon}</div>}
+        {editable('title', (
+          <h2 className={`font-bold text-xl ${accentColors[color].titleText}`}>
+            {title}
+          </h2>
+        ))}
+      </div>
 
       {isCompact ? (
         // Compact: Just tagline as teaser

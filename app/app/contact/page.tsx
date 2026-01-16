@@ -242,7 +242,7 @@ export default function ContactPage() {
           }}
         />
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-16 md:pt-24 pb-24 md:pb-32">
           {/* Eyebrow badge */}
           <div className="flex justify-center mb-8 animate-slide-up">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-blue-300 text-sm font-medium backdrop-blur-sm border border-white/10">
@@ -254,7 +254,7 @@ export default function ContactPage() {
           {/* Main heading */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white text-center mb-6 tracking-tight animate-slide-up animate-delay-100">
             Let&apos;s Build Something
-            <span className="block mt-2 bg-gradient-to-r from-blue-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
+            <span className="block mt-2 pb-2 bg-gradient-to-r from-blue-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
               Together
             </span>
           </h1>
