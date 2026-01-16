@@ -50,8 +50,11 @@ export default function ServicesPageClient({ content: initialContent }: Services
         <section className="relative overflow-hidden">
           {/* Gradient background mesh */}
           <div className="absolute inset-0 bg-gradient-to-br from-teal-50 via-white to-cyan-50/50" />
-          <div className="absolute top-0 right-0 w-96 h-96 bg-teal-200/30 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-cyan-200/30 rounded-full blur-3xl" />
+
+          {/* Framing gradient orbs - homepage style (no opacity, full saturation) */}
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-teal-100 to-cyan-100 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-cyan-100 to-blue-100 blur-2xl" />
+          <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-teal-100 blur-xl" />
 
           <div className="relative max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-24">
             {/* 1. Hero/Header - Decision-focused */}

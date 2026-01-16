@@ -38,8 +38,11 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
       <section className="relative overflow-hidden">
         {/* Gradient background mesh - Purple/Gold theme for Blog */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-50/80 via-white to-amber-50/50" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-200/30 rounded-full blur-3xl" />
+
+        {/* Framing gradient orbs - homepage style (no opacity, full saturation) */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-amber-100 to-gold-100 blur-2xl" />
+        <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-purple-100 blur-xl" />
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
           <EditableSection sectionKey="header" label="Page Header">

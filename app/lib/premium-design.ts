@@ -585,12 +585,15 @@ export const glass = {
 //     <div className="relative">{content}</div>
 //   </section>
 
+// Homepage-style framing gradients (sides darker, middle lighter)
+// Uses negative margins to position orbs outside viewport edges
 export const heroGradient = {
   // Homepage & Get Started - Growth, success (brand primary)
   green: {
     bg: 'absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-teal-50/50',
-    spot1: 'absolute top-0 right-0 w-96 h-96 bg-green-200/30 rounded-full blur-3xl',
-    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-teal-200/30 rounded-full blur-3xl',
+    spot1: 'absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 blur-3xl',
+    spot2: 'absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-teal-100 to-cyan-100 blur-2xl',
+    spot3: 'absolute top-20 left-1/4 w-32 h-32 rounded-full bg-emerald-100 blur-xl',
     darkGlow1: 'bg-emerald-500/10',
     darkGlow2: 'bg-teal-500/10',
   },
@@ -598,8 +601,9 @@ export const heroGradient = {
   // Services - Technical, professional
   teal: {
     bg: 'absolute inset-0 bg-gradient-to-br from-teal-50 via-white to-cyan-50/50',
-    spot1: 'absolute top-0 right-0 w-96 h-96 bg-teal-200/30 rounded-full blur-3xl',
-    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-cyan-200/30 rounded-full blur-3xl',
+    spot1: 'absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-teal-100 to-cyan-100 blur-3xl',
+    spot2: 'absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-cyan-100 to-blue-100 blur-2xl',
+    spot3: 'absolute top-20 left-1/4 w-32 h-32 rounded-full bg-teal-100 blur-xl',
     darkGlow1: 'bg-teal-500/10',
     darkGlow2: 'bg-cyan-500/10',
   },
@@ -607,8 +611,9 @@ export const heroGradient = {
   // Contact - Connection, communication
   blue: {
     bg: 'absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-sky-50/50',
-    spot1: 'absolute top-0 right-0 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl',
-    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-sky-200/30 rounded-full blur-3xl',
+    spot1: 'absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-blue-100 to-sky-100 blur-3xl',
+    spot2: 'absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-sky-100 to-indigo-100 blur-2xl',
+    spot3: 'absolute top-20 left-1/4 w-32 h-32 rounded-full bg-blue-100 blur-xl',
     darkGlow1: 'bg-blue-500/10',
     darkGlow2: 'bg-sky-500/10',
   },
@@ -616,8 +621,9 @@ export const heroGradient = {
   // FAQ - Knowledge, wisdom
   purple: {
     bg: 'absolute inset-0 bg-gradient-to-br from-violet-50 via-white to-purple-50/50',
-    spot1: 'absolute top-0 right-0 w-96 h-96 bg-violet-200/30 rounded-full blur-3xl',
-    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-purple-200/30 rounded-full blur-3xl',
+    spot1: 'absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-violet-100 to-purple-100 blur-3xl',
+    spot2: 'absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-purple-100 to-pink-100 blur-2xl',
+    spot3: 'absolute top-20 left-1/4 w-32 h-32 rounded-full bg-violet-100 blur-xl',
     darkGlow1: 'bg-violet-500/10',
     darkGlow2: 'bg-purple-500/10',
   },
@@ -625,8 +631,9 @@ export const heroGradient = {
   // About - Personal, warm, approachable
   gold: {
     bg: 'absolute inset-0 bg-gradient-to-br from-amber-50 via-white to-orange-50/50',
-    spot1: 'absolute top-0 right-0 w-96 h-96 bg-amber-200/30 rounded-full blur-3xl',
-    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-orange-200/30 rounded-full blur-3xl',
+    spot1: 'absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl',
+    spot2: 'absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-orange-100 to-amber-100 blur-2xl',
+    spot3: 'absolute top-20 left-1/4 w-32 h-32 rounded-full bg-amber-100 blur-xl',
     darkGlow1: 'bg-amber-500/10',
     darkGlow2: 'bg-orange-500/10',
   },
@@ -634,8 +641,9 @@ export const heroGradient = {
   // Blog - Information, neutral, professional
   slate: {
     bg: 'absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-gray-50/50',
-    spot1: 'absolute top-0 right-0 w-96 h-96 bg-slate-200/30 rounded-full blur-3xl',
-    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-gray-200/30 rounded-full blur-3xl',
+    spot1: 'absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-slate-100 to-gray-100 blur-3xl',
+    spot2: 'absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-gray-100 to-slate-100 blur-2xl',
+    spot3: 'absolute top-20 left-1/4 w-32 h-32 rounded-full bg-slate-100 blur-xl',
     darkGlow1: 'bg-slate-500/10',
     darkGlow2: 'bg-gray-500/10',
   },
@@ -643,8 +651,9 @@ export const heroGradient = {
   // Build/Shop - Creative, energetic
   rose: {
     bg: 'absolute inset-0 bg-gradient-to-br from-rose-50 via-white to-pink-50/50',
-    spot1: 'absolute top-0 right-0 w-96 h-96 bg-rose-200/30 rounded-full blur-3xl',
-    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-pink-200/30 rounded-full blur-3xl',
+    spot1: 'absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-rose-100 to-pink-100 blur-3xl',
+    spot2: 'absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-pink-100 to-fuchsia-100 blur-2xl',
+    spot3: 'absolute top-20 left-1/4 w-32 h-32 rounded-full bg-rose-100 blur-xl',
     darkGlow1: 'bg-rose-500/10',
     darkGlow2: 'bg-pink-500/10',
   },
