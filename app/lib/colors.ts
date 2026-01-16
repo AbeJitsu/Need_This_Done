@@ -158,7 +158,7 @@ export function getOutlineButtonColors(color: AccentVariant) {
 export function getCheckmarkColors(color: AccentVariant) {
   return {
     bg: `bg-${color}-100 dark:bg-${color}-500`,
-    border: `border-2 border-${color}-500 dark:border-${color}-200`,
+    border: `border border-${color}-300 dark:border-${color}-400`,
     icon: `text-${color}-600 dark:text-${color}-100`,
   };
 }
@@ -536,11 +536,11 @@ export const faqColors: Record<'purple' | 'blue' | 'green' | 'gold', {
     hover: 'hover:border-green-400 dark:hover:border-green-400',
   },
   gold: {
-    border: 'border-l-gold-500',
+    border: 'border-l-gold-600',
     text: 'text-gold-600 dark:text-gold-300',
     bg: 'bg-gold-100 dark:bg-gold-500',
     numText: 'text-gold-600 dark:text-white',
-    hover: 'hover:border-gold-400 dark:hover:border-gold-400',
+    hover: 'hover:border-gold-500 dark:hover:border-gold-400',
   },
 };
 
@@ -869,9 +869,14 @@ export const cardBgColors = {
 // Card Border Colors - For card container borders
 // ============================================================================
 export const cardBorderColors = {
-  subtle: 'border-2 border-gray-400 dark:border-gray-500',
+  // Subtle: barely visible border for premium cards (use with shadows for depth)
+  subtle: 'border border-gray-200/60 dark:border-gray-700/60',
+  // Light: slightly more visible border
   light: 'border border-gray-200 dark:border-gray-700',
-  lightMd: 'border-2 border-gray-300 dark:border-gray-600',
+  // Medium: visible border for emphasis
+  medium: 'border border-gray-300 dark:border-gray-600',
+  // Strong: prominent border (use sparingly)
+  strong: 'border-2 border-gray-400 dark:border-gray-500',
 };
 
 // ============================================================================
@@ -1220,31 +1225,31 @@ export const serviceComparisonColors: Record<ServiceType, {
   pricingValueText: string;
 }> = {
   virtualAssistant: {
-    border: 'border-2 border-green-200 dark:border-green-400',
-    headerBg: 'bg-green-100 dark:bg-green-500',
-    headerText: 'text-green-600 dark:text-white',
-    pricingBg: 'bg-green-100 dark:bg-green-500',
-    pricingBorder: 'border-t border-green-200 dark:border-green-400',
-    pricingLabelText: 'text-green-600 dark:text-white',
-    pricingValueText: 'text-green-700 dark:text-white',
+    border: 'border border-green-200/60 dark:border-green-700/60',
+    headerBg: 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/50 dark:to-emerald-900/50',
+    headerText: 'text-green-700 dark:text-green-300',
+    pricingBg: 'bg-green-50/50 dark:bg-green-900/30',
+    pricingBorder: 'border-t border-green-200/60 dark:border-green-700/60',
+    pricingLabelText: 'text-green-600 dark:text-green-400',
+    pricingValueText: 'text-green-700 dark:text-green-300',
   },
   dataDocuments: {
-    border: 'border-2 border-blue-200 dark:border-blue-400',
-    headerBg: 'bg-blue-100 dark:bg-blue-500',
-    headerText: 'text-blue-600 dark:text-white',
-    pricingBg: 'bg-blue-100 dark:bg-blue-500',
-    pricingBorder: 'border-t border-blue-200 dark:border-blue-400',
-    pricingLabelText: 'text-blue-600 dark:text-white',
-    pricingValueText: 'text-blue-700 dark:text-white',
+    border: 'border border-blue-200/60 dark:border-blue-700/60',
+    headerBg: 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/50 dark:to-indigo-900/50',
+    headerText: 'text-blue-700 dark:text-blue-300',
+    pricingBg: 'bg-blue-50/50 dark:bg-blue-900/30',
+    pricingBorder: 'border-t border-blue-200/60 dark:border-blue-700/60',
+    pricingLabelText: 'text-blue-600 dark:text-blue-400',
+    pricingValueText: 'text-blue-700 dark:text-blue-300',
   },
   website: {
-    border: 'border-2 border-purple-200 dark:border-purple-400',
-    headerBg: 'bg-purple-100 dark:bg-purple-500',
-    headerText: 'text-purple-600 dark:text-white',
-    pricingBg: 'bg-purple-100 dark:bg-purple-500',
-    pricingBorder: 'border-t border-purple-200 dark:border-purple-400',
-    pricingLabelText: 'text-purple-600 dark:text-white',
-    pricingValueText: 'text-purple-700 dark:text-white',
+    border: 'border border-purple-200/60 dark:border-purple-700/60',
+    headerBg: 'bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/50 dark:to-violet-900/50',
+    headerText: 'text-purple-700 dark:text-purple-300',
+    pricingBg: 'bg-purple-50/50 dark:bg-purple-900/30',
+    pricingBorder: 'border-t border-purple-200/60 dark:border-purple-700/60',
+    pricingLabelText: 'text-purple-600 dark:text-purple-400',
+    pricingValueText: 'text-purple-700 dark:text-purple-300',
   },
 };
 

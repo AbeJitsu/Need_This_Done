@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { faqColors, titleColors, formInputColors, cardBgColors, cardBorderColors, shadowClasses } from '@/lib/colors';
 import CircleBadge from '@/components/CircleBadge';
@@ -8,6 +9,7 @@ import CTASection from '@/components/CTASection';
 import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { FAQPageContent } from '@/lib/page-content-types';
+import { ChevronDown, MessageCircleQuestion } from 'lucide-react';
 
 // ============================================================================
 // FAQ Page Client - Universal Editing Version
@@ -61,76 +63,169 @@ function renderAnswer(answer: string, links?: Array<{ text: string; href: string
 
 export default function FAQPageClient({ content: initialContent }: FAQPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
-  const { pageContent } = useInlineEdit();
+  const { pageContent, isEditMode } = useInlineEdit();
   // Check that pageContent has expected structure before using it
   const hasValidContent = pageContent && 'items' in pageContent && 'header' in pageContent;
   const content = hasValidContent ? (pageContent as unknown as FAQPageContent) : initialContent;
 
+  // Track which FAQ item is expanded
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+
+  const toggleExpanded = (index: number) => {
+    // Don't toggle in edit mode - let the click-to-edit work
+    if (isEditMode) return;
+    setExpandedIndex(expandedIndex === index ? null : index);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-      {/* Header */}
-      <EditableSection sectionKey="header" label="Page Header">
-        <PageHeader
-          title={content.header.title}
-          description={content.header.description}
-          color="gold"
-        />
-      </EditableSection>
+    <div className="min-h-screen">
+      {/* ================================================================
+          Hero Section - Framed gradient background like homepage
+          ================================================================ */}
+      <section className="relative overflow-hidden">
+        {/* Gradient background mesh - Purple/Gold theme for FAQ */}
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/80 via-white to-purple-50/50" />
 
-      {/* FAQ List */}
-      <EditableSection sectionKey="items" label="FAQ Items">
-        <SortableItemsWrapper
-          sectionKey="items"
-          arrayField="items"
-          itemIds={content.items.map((_, i) => `faq-item-${i}`)}
-          className="space-y-6 mb-10"
-        >
-          {content.items.map((faq, index) => {
-            // Cycle through colors: green, blue, purple, gold
-            const colors = ['green', 'blue', 'purple', 'gold'] as const;
-            const color = colors[index % 4];
-            const styles = faqColors[color];
-            return (
-              <EditableItem
-                key={`faq-item-${index}`}
-                sectionKey="items"
-                arrayField="items"
-                index={index}
-                label={faq.question}
-                content={faq as unknown as Record<string, unknown>}
-                sortable
-                sortId={`faq-item-${index}`}
-              >
-                <div
-                  className={`${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.subtle} border-l-4 ${styles.border} ${styles.hover} transition-all ${shadowClasses.cardHover}`}
-                >
-                  <div className="flex items-start gap-4">
-                    <CircleBadge number={index + 1} color={color} size="sm" />
-                    <div>
-                      <h2 className={`text-xl font-semibold mb-2 ${styles.text}`}>
-                        {faq.question}
-                      </h2>
-                      <p className={formInputColors.helper}>
-                        {renderAnswer(faq.answer, faq.links)}
-                      </p>
+        {/* Framing gradient orbs - positioned to surround content, not pushed to corners */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-amber-100 to-gold-100 rounded-full blur-3xl opacity-60" />
+        <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-gradient-to-tr from-purple-100 to-violet-100 rounded-full blur-2xl opacity-60" />
+        <div className="absolute top-20 left-1/4 w-32 h-32 bg-amber-100 rounded-full blur-xl opacity-50" />
+
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
+          {/* Header */}
+          <EditableSection sectionKey="header" label="Page Header">
+            <PageHeader
+              title={content.header.title}
+              description={content.header.description}
+              color="gold"
+            />
+          </EditableSection>
+        </div>
+      </section>
+
+      {/* ================================================================
+          FAQ List - White background section with premium cards
+          ================================================================ */}
+      <section className="py-12 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+          {/* Section intro */}
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-purple-100 mb-4">
+              <MessageCircleQuestion className="w-6 h-6 text-amber-600" />
+            </div>
+            <p className={`${formInputColors.helper} max-w-lg mx-auto`}>
+              Click any question to reveal the answer
+            </p>
+          </div>
+
+          {/* FAQ List */}
+          <EditableSection sectionKey="items" label="FAQ Items">
+            <SortableItemsWrapper
+              sectionKey="items"
+              arrayField="items"
+              itemIds={content.items.map((_, i) => `faq-item-${i}`)}
+              className="space-y-4 mb-10"
+            >
+              {content.items.map((faq, index) => {
+                // Cycle through colors: green, blue, purple, gold
+                const colors = ['green', 'blue', 'purple', 'gold'] as const;
+                const color = colors[index % 4];
+                const styles = faqColors[color];
+                const isExpanded = expandedIndex === index;
+
+                return (
+                  <EditableItem
+                    key={`faq-item-${index}`}
+                    sectionKey="items"
+                    arrayField="items"
+                    index={index}
+                    label={faq.question}
+                    content={faq as unknown as Record<string, unknown>}
+                    sortable
+                    sortId={`faq-item-${index}`}
+                  >
+                    <div
+                      className={`
+                        group
+                        ${cardBgColors.base} rounded-2xl
+                        border ${isExpanded ? 'border-gray-300 dark:border-gray-600' : cardBorderColors.subtle}
+                        border-l-4 ${styles.border}
+                        shadow-sm hover:shadow-md
+                        transition-all duration-300 ease-out
+                        ${isExpanded ? 'shadow-lg' : ''}
+                      `}
+                    >
+                      {/* Question - clickable header */}
+                      <button
+                        onClick={() => toggleExpanded(index)}
+                        className={`
+                          w-full p-5 md:p-6
+                          flex items-center gap-4
+                          text-left
+                          cursor-pointer
+                          transition-colors duration-200
+                          ${isExpanded ? 'bg-gray-50/50 dark:bg-gray-800/50' : 'hover:bg-gray-50/50 dark:hover:bg-gray-800/30'}
+                          rounded-t-2xl
+                          ${!isExpanded && 'rounded-b-2xl'}
+                        `}
+                        aria-expanded={isExpanded}
+                      >
+                        <CircleBadge number={index + 1} color={color} size="sm" />
+                        <h2 className={`flex-1 text-lg md:text-xl font-semibold ${styles.text}`}>
+                          {faq.question}
+                        </h2>
+                        <ChevronDown
+                          className={`
+                            w-5 h-5 text-gray-400
+                            transition-transform duration-300 ease-out
+                            ${isExpanded ? 'rotate-180' : ''}
+                            group-hover:text-gray-600
+                          `}
+                        />
+                      </button>
+
+                      {/* Answer - expandable content */}
+                      <div
+                        className={`
+                          overflow-hidden
+                          transition-all duration-300 ease-out
+                          ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
+                        `}
+                      >
+                        <div className="px-5 md:px-6 pb-5 md:pb-6 pt-2 ml-12 md:ml-14 border-t border-gray-100 dark:border-gray-800">
+                          <p className={`${formInputColors.helper} leading-relaxed`}>
+                            {renderAnswer(faq.answer, faq.links)}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </EditableItem>
-            );
-          })}
-        </SortableItemsWrapper>
-      </EditableSection>
+                  </EditableItem>
+                );
+              })}
+            </SortableItemsWrapper>
+          </EditableSection>
+        </div>
+      </section>
 
-      {/* Contact Section */}
-      <EditableSection sectionKey="cta" label="Call to Action">
-        <CTASection
-          title={content.cta.title}
-          description={content.cta.description}
-          buttons={content.cta.buttons}
-          hoverColor={content.cta.hoverColor || 'gold'}
-        />
-      </EditableSection>
+      {/* ================================================================
+          CTA Section - Dark background for contrast
+          ================================================================ */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
+          <EditableSection sectionKey="cta" label="Call to Action">
+            <CTASection
+              title={content.cta.title}
+              description={content.cta.description}
+              buttons={content.cta.buttons}
+              hoverColor={content.cta.hoverColor || 'gold'}
+            />
+          </EditableSection>
+        </div>
+      </section>
     </div>
   );
 }

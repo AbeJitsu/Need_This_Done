@@ -506,6 +506,190 @@ export const combo = {
 };
 
 // ============================================================================
+// GLASS MORPHISM - Premium Glass Effects
+// ============================================================================
+// Glass effects create depth and premium feel, inspired by the modals.
+// Use sparingly for hero sections, overlays, and premium cards.
+//
+// Usage:
+//   <div className={glass.card}>Glass card content</div>
+//   <div className={glass.overlay}>Overlay content</div>
+
+export const glass = {
+  // Glass card with blur backdrop (for use over colored backgrounds)
+  card: `
+    bg-white/80 dark:bg-gray-800/80
+    backdrop-blur-xl
+    rounded-2xl
+    border border-white/60 dark:border-gray-700/60
+    shadow-[0_8px_32px_rgba(0,0,0,0.08)]
+  `.replace(/\s+/g, ' ').trim(),
+
+  // Interactive glass card with hover
+  cardInteractive: `
+    bg-white/80 dark:bg-gray-800/80
+    backdrop-blur-xl
+    rounded-2xl
+    border border-white/60 dark:border-gray-700/60
+    shadow-[0_8px_32px_rgba(0,0,0,0.08)]
+    hover:shadow-[0_16px_48px_rgba(0,0,0,0.12)]
+    hover:-translate-y-1
+    hover:bg-white/90 dark:hover:bg-gray-800/90
+    transition-all duration-300
+    cursor-pointer
+  `.replace(/\s+/g, ' ').trim(),
+
+  // Glass overlay (for modal backdrops)
+  overlay: 'bg-black/40 backdrop-blur-sm',
+
+  // Glass panel (for modals and floating UI)
+  panel: `
+    bg-white/95 dark:bg-gray-800/95
+    backdrop-blur-xl
+    rounded-3xl
+    border border-white/60 dark:border-gray-700/60
+    shadow-2xl
+  `.replace(/\s+/g, ' ').trim(),
+
+  // Subtle glass effect (for cards on light backgrounds)
+  subtle: `
+    bg-white/60 dark:bg-gray-800/60
+    backdrop-blur-md
+    rounded-xl
+    border border-white/80 dark:border-gray-700/60
+  `.replace(/\s+/g, ' ').trim(),
+
+  // Gradient glass backgrounds (color-themed)
+  gradient: {
+    blue: 'bg-gradient-to-br from-blue-50/80 via-white/80 to-sky-50/80 backdrop-blur-xl',
+    green: 'bg-gradient-to-br from-emerald-50/80 via-white/80 to-teal-50/80 backdrop-blur-xl',
+    purple: 'bg-gradient-to-br from-violet-50/80 via-white/80 to-purple-50/80 backdrop-blur-xl',
+    gold: 'bg-gradient-to-br from-amber-50/80 via-white/80 to-orange-50/80 backdrop-blur-xl',
+    teal: 'bg-gradient-to-br from-teal-50/80 via-white/80 to-cyan-50/80 backdrop-blur-xl',
+  },
+};
+
+// ============================================================================
+// HERO GRADIENT PRESETS - Page-Specific Color Personalities
+// ============================================================================
+// Each page gets its own color theme using the same premium technique:
+// - Gradient mesh background
+// - Soft blur spots for depth
+// - Consistent structure, unique personality
+//
+// Usage (in a page component):
+//   <section className="relative overflow-hidden">
+//     <div className={heroGradient.green.bg} />
+//     <div className={heroGradient.green.spot1} />
+//     <div className={heroGradient.green.spot2} />
+//     <div className="relative">{content}</div>
+//   </section>
+
+export const heroGradient = {
+  // Homepage & Get Started - Growth, success (brand primary)
+  green: {
+    bg: 'absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-teal-50/50',
+    spot1: 'absolute top-0 right-0 w-96 h-96 bg-green-200/30 rounded-full blur-3xl',
+    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-teal-200/30 rounded-full blur-3xl',
+    darkGlow1: 'bg-emerald-500/10',
+    darkGlow2: 'bg-teal-500/10',
+  },
+
+  // Services - Technical, professional
+  teal: {
+    bg: 'absolute inset-0 bg-gradient-to-br from-teal-50 via-white to-cyan-50/50',
+    spot1: 'absolute top-0 right-0 w-96 h-96 bg-teal-200/30 rounded-full blur-3xl',
+    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-cyan-200/30 rounded-full blur-3xl',
+    darkGlow1: 'bg-teal-500/10',
+    darkGlow2: 'bg-cyan-500/10',
+  },
+
+  // Contact - Connection, communication
+  blue: {
+    bg: 'absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-sky-50/50',
+    spot1: 'absolute top-0 right-0 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl',
+    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-sky-200/30 rounded-full blur-3xl',
+    darkGlow1: 'bg-blue-500/10',
+    darkGlow2: 'bg-sky-500/10',
+  },
+
+  // FAQ - Knowledge, wisdom
+  purple: {
+    bg: 'absolute inset-0 bg-gradient-to-br from-violet-50 via-white to-purple-50/50',
+    spot1: 'absolute top-0 right-0 w-96 h-96 bg-violet-200/30 rounded-full blur-3xl',
+    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-purple-200/30 rounded-full blur-3xl',
+    darkGlow1: 'bg-violet-500/10',
+    darkGlow2: 'bg-purple-500/10',
+  },
+
+  // About - Personal, warm, approachable
+  gold: {
+    bg: 'absolute inset-0 bg-gradient-to-br from-amber-50 via-white to-orange-50/50',
+    spot1: 'absolute top-0 right-0 w-96 h-96 bg-amber-200/30 rounded-full blur-3xl',
+    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-orange-200/30 rounded-full blur-3xl',
+    darkGlow1: 'bg-amber-500/10',
+    darkGlow2: 'bg-orange-500/10',
+  },
+
+  // Blog - Information, neutral, professional
+  slate: {
+    bg: 'absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-gray-50/50',
+    spot1: 'absolute top-0 right-0 w-96 h-96 bg-slate-200/30 rounded-full blur-3xl',
+    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-gray-200/30 rounded-full blur-3xl',
+    darkGlow1: 'bg-slate-500/10',
+    darkGlow2: 'bg-gray-500/10',
+  },
+
+  // Build/Shop - Creative, energetic
+  rose: {
+    bg: 'absolute inset-0 bg-gradient-to-br from-rose-50 via-white to-pink-50/50',
+    spot1: 'absolute top-0 right-0 w-96 h-96 bg-rose-200/30 rounded-full blur-3xl',
+    spot2: 'absolute bottom-0 left-0 w-80 h-80 bg-pink-200/30 rounded-full blur-3xl',
+    darkGlow1: 'bg-rose-500/10',
+    darkGlow2: 'bg-pink-500/10',
+  },
+};
+
+// Dark section glow presets (match hero gradients)
+export const darkSectionGlow = {
+  green: {
+    glow1: 'absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2',
+    glow2: 'absolute bottom-0 right-0 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3',
+    dot: 'bg-emerald-400',
+    icon: 'text-emerald-400',
+    iconBg: 'bg-emerald-500/20',
+  },
+  teal: {
+    glow1: 'absolute top-0 left-0 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2',
+    glow2: 'absolute bottom-0 right-0 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3',
+    dot: 'bg-teal-400',
+    icon: 'text-teal-400',
+    iconBg: 'bg-teal-500/20',
+  },
+  blue: {
+    glow1: 'absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2',
+    glow2: 'absolute bottom-0 right-0 w-80 h-80 bg-sky-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3',
+    dot: 'bg-blue-400',
+    icon: 'text-blue-400',
+    iconBg: 'bg-blue-500/20',
+  },
+  purple: {
+    glow1: 'absolute top-0 left-0 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2',
+    glow2: 'absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3',
+    dot: 'bg-violet-400',
+    icon: 'text-violet-400',
+    iconBg: 'bg-violet-500/20',
+  },
+  gold: {
+    glow1: 'absolute top-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2',
+    glow2: 'absolute bottom-0 right-0 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3',
+    dot: 'bg-amber-400',
+    icon: 'text-amber-400',
+    iconBg: 'bg-amber-500/20',
+  },
+};
+
+// ============================================================================
 // CSS ANIMATION KEYFRAMES - Add to globals.css
 // ============================================================================
 // Copy these to your globals.css if not already present:

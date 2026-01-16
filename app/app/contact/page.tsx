@@ -463,7 +463,7 @@ export default function ContactPage() {
 
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-blue-300 hover:bg-blue-50/30 transition-all group"
+                className="border border-gray-200/60 rounded-xl p-6 text-center cursor-pointer bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/50 transition-all group"
               >
                 <input
                   ref={fileInputRef}

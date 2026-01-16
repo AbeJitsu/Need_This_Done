@@ -555,6 +555,20 @@ Used for hero, cards, and section reveals.
   animation: pulse-soft 3s ease-in-out infinite;
 }
 
+/* Float variations for decorative orbs */
+.animate-float-slow {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slower {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float 5s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
 /* Staggered delay utilities (for card grids) */
 .animate-delay-50 { animation-delay: 50ms; }
 .animate-delay-100 { animation-delay: 100ms; }

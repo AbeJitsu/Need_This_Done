@@ -31,81 +31,100 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
   const [featuredPost, ...otherPosts] = posts;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-      <EditableSection sectionKey="header" label="Page Header">
-        <PageHeader
-          title={content.header.title}
-          description={content.header.description}
-          color="purple"
-        />
-      </EditableSection>
+    <div className="min-h-screen">
+      {/* ================================================================
+          Hero Section - Gradient background
+          ================================================================ */}
+      <section className="relative overflow-hidden">
+        {/* Gradient background mesh - Purple/Gold theme for Blog */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/80 via-white to-amber-50/50" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-200/30 rounded-full blur-3xl" />
 
-      {posts.length === 0 ? (
-        /* Empty State */
-        <div className="text-center py-16">
-          <div className="text-6xl mb-4">{content.emptyState.emoji}</div>
-          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
-            {content.emptyState.title}
-          </h2>
-          <p className={`${formInputColors.helper} max-w-md mx-auto`}>
-            {content.emptyState.description}
-          </p>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
+          <EditableSection sectionKey="header" label="Page Header">
+            <PageHeader
+              title={content.header.title}
+              description={content.header.description}
+              color="purple"
+            />
+          </EditableSection>
         </div>
-      ) : (
-        <>
-          {/* Featured Post */}
-          {featuredPost && (
-            <section className="mb-12">
-              <BlogPostCard post={featuredPost} featured />
-            </section>
-          )}
+      </section>
 
-          {/* Category Filter (if we have posts) */}
-          {otherPosts.length > 0 && (
-            <section className="mb-8">
-              <div className="flex flex-wrap gap-2 justify-center">
-                <Link
-                  href="/blog"
-                  className={`
-                    px-4 py-2 rounded-full text-sm font-medium transition-colors
-                    ${accentColors.gray.bg} ${accentColors.gray.text}
-                    hover:opacity-80 ${focusRingClasses.blue}
-                  `}
-                >
-                  {content.categoryFilterLabel}
-                </Link>
-                {Object.entries(BLOG_CATEGORIES).slice(0, 5).map(([key, label]) => (
-                  <Link
-                    key={key}
-                    href={`/blog?category=${key}`}
-                    className={`
-                      px-4 py-2 rounded-full text-sm font-medium transition-colors
-                      bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300
-                      hover:bg-gray-200 dark:hover:bg-gray-700 ${focusRingClasses.blue}
-                    `}
-                  >
-                    {label}
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* Post Grid */}
-          {otherPosts.length > 0 && (
-            <section>
-              <h2 className={`text-2xl font-bold ${headingColors.primary} mb-6`}>
-                {content.morePostsTitle}
+      {/* ================================================================
+          Main Content Section - White background
+          ================================================================ */}
+      <section className="py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+          {posts.length === 0 ? (
+            /* Empty State */
+            <div className="text-center py-16">
+              <div className="text-6xl mb-4">{content.emptyState.emoji}</div>
+              <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
+                {content.emptyState.title}
               </h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {otherPosts.map((post) => (
-                  <BlogPostCard key={post.id} post={post} />
-                ))}
-              </div>
-            </section>
+              <p className={`${formInputColors.helper} max-w-md mx-auto`}>
+                {content.emptyState.description}
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Featured Post */}
+              {featuredPost && (
+                <div className="mb-12">
+                  <BlogPostCard post={featuredPost} featured />
+                </div>
+              )}
+
+              {/* Category Filter (if we have posts) */}
+              {otherPosts.length > 0 && (
+                <div className="mb-8">
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    <Link
+                      href="/blog"
+                      className={`
+                        px-4 py-2 rounded-full text-sm font-medium transition-colors
+                        ${accentColors.gray.bg} ${accentColors.gray.text}
+                        hover:opacity-80 ${focusRingClasses.blue}
+                      `}
+                    >
+                      {content.categoryFilterLabel}
+                    </Link>
+                    {Object.entries(BLOG_CATEGORIES).slice(0, 5).map(([key, label]) => (
+                      <Link
+                        key={key}
+                        href={`/blog?category=${key}`}
+                        className={`
+                          px-4 py-2 rounded-full text-sm font-medium transition-colors
+                          bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300
+                          hover:bg-gray-200 dark:hover:bg-gray-700 ${focusRingClasses.blue}
+                        `}
+                      >
+                        {label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Post Grid */}
+              {otherPosts.length > 0 && (
+                <div>
+                  <h2 className={`text-2xl font-bold ${headingColors.primary} mb-6`}>
+                    {content.morePostsTitle}
+                  </h2>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {otherPosts.map((post) => (
+                      <BlogPostCard key={post.id} post={post} />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
-        </>
-      )}
+        </div>
+      </section>
     </div>
   );
 }

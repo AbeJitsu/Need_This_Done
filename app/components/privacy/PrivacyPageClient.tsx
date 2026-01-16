@@ -29,76 +29,95 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
   const content = hasValidContent ? (pageContent as unknown as PrivacyPageContent) : initialContent;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-      {/* Header Section - Editable */}
-      <EditableSection sectionKey="header" label="Page Header">
-        <PageHeader
-          title={content.header.title}
-          description={content.header.description}
-        />
-      </EditableSection>
+    <div className="min-h-screen">
+      {/* ================================================================
+          Hero Section - Gradient background
+          ================================================================ */}
+      <section className="relative overflow-hidden">
+        {/* Gradient background mesh - Neutral Gray/Blue for legal pages */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-50/80 via-white to-blue-50/30" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-slate-200/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-200/20 rounded-full blur-3xl" />
 
-      {/* Last Updated - Editable */}
-      <EditableSection sectionKey="lastUpdated" label="Last Updated">
-        <p className={`text-center mb-10 ${formInputColors.helper}`}>
-          Last updated: {content.lastUpdated}
-        </p>
-      </EditableSection>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
+          {/* Header Section - Editable */}
+          <EditableSection sectionKey="header" label="Page Header">
+            <PageHeader
+              title={content.header.title}
+              description={content.header.description}
+            />
+          </EditableSection>
 
-      {/* Quick Summary Box - Editable */}
-      <EditableSection sectionKey="quickSummary" label="Quick Summary">
-        <div className={`${alertColors.info.bg} ${alertColors.info.border} rounded-xl p-6 mb-10`}>
-          <h2 className={`text-lg font-semibold mb-3 ${alertColors.info.text}`}>
-            {content.quickSummary.title}
-          </h2>
-          <ul className={`space-y-2 ${alertColors.info.text} list-disc list-inside`}>
-            {content.quickSummary.items.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
+          {/* Last Updated - Editable */}
+          <EditableSection sectionKey="lastUpdated" label="Last Updated">
+            <p className={`text-center mb-0 ${formInputColors.helper}`}>
+              Last updated: {content.lastUpdated}
+            </p>
+          </EditableSection>
         </div>
-      </EditableSection>
+      </section>
 
-      {/* Dynamic Sections - All from JSON and Editable */}
-      <EditableSection sectionKey="sections" label="Content Sections">
-        <SortableItemsWrapper
-          sectionKey="sections"
-          arrayField="sections"
-          itemIds={content.sections.map((_, i) => `section-${i}`)}
-          className="space-y-10"
-        >
-          {content.sections.map((section, index) => (
-            <EditableItem
-              key={`section-${index}`}
+      {/* ================================================================
+          Main Content Section - White background
+          ================================================================ */}
+      <section className="py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+          {/* Quick Summary Box - Editable */}
+          <EditableSection sectionKey="quickSummary" label="Quick Summary">
+            <div className={`${alertColors.info.bg} ${alertColors.info.border} rounded-xl p-6 mb-10`}>
+              <h2 className={`text-lg font-semibold mb-3 ${alertColors.info.text}`}>
+                {content.quickSummary.title}
+              </h2>
+              <ul className={`space-y-2 ${alertColors.info.text} list-disc list-inside`}>
+                {content.quickSummary.items.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </EditableSection>
+
+          {/* Dynamic Sections - All from JSON and Editable */}
+          <EditableSection sectionKey="sections" label="Content Sections">
+            <SortableItemsWrapper
               sectionKey="sections"
               arrayField="sections"
-              index={index}
-              label={section.title}
-              content={section as unknown as Record<string, unknown>}
-              sortable
-              sortId={`section-${index}`}
+              itemIds={content.sections.map((_, i) => `section-${i}`)}
+              className="space-y-10"
             >
-              <section className="mb-10">
-                <h2 className={`text-2xl font-semibold mb-4 ${headingColors.primary}`}>
-                  {section.title}
-                </h2>
-                <div className={`space-y-4 ${formInputColors.helper} whitespace-pre-line`}>
-                  {section.content}
-                </div>
-              </section>
-            </EditableItem>
-          ))}
-        </SortableItemsWrapper>
-      </EditableSection>
+              {content.sections.map((section, index) => (
+                <EditableItem
+                  key={`section-${index}`}
+                  sectionKey="sections"
+                  arrayField="sections"
+                  index={index}
+                  label={section.title}
+                  content={section as unknown as Record<string, unknown>}
+                  sortable
+                  sortId={`section-${index}`}
+                >
+                  <div className="mb-10">
+                    <h2 className={`text-2xl font-semibold mb-4 ${headingColors.primary}`}>
+                      {section.title}
+                    </h2>
+                    <div className={`space-y-4 ${formInputColors.helper} whitespace-pre-line`}>
+                      {section.content}
+                    </div>
+                  </div>
+                </EditableItem>
+              ))}
+            </SortableItemsWrapper>
+          </EditableSection>
 
-      {/* Contact Section */}
-      <section className="mt-10 pt-10 border-t border-gray-200 dark:border-gray-700">
-        <p className={formInputColors.helper}>
-          Questions or concerns about your privacy? Email us at{' '}
-          <Link href="mailto:hello@needthisdone.com" className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-            hello@needthisdone.com
-          </Link>
-        </p>
+          {/* Contact Section */}
+          <div className="mt-10 pt-10 border-t border-gray-200 dark:border-gray-700">
+            <p className={formInputColors.helper}>
+              Questions or concerns about your privacy? Email us at{' '}
+              <Link href="mailto:hello@needthisdone.com" className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                hello@needthisdone.com
+              </Link>
+            </p>
+          </div>
+        </div>
       </section>
     </div>
   );
