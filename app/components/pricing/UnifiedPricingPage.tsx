@@ -178,17 +178,17 @@ export default function UnifiedPricingPage() {
   return (
     <div className="min-h-screen">
       {/* ================================================================== */}
-      {/* HERO SECTION - Warm, inviting, inspired by shop page */}
+      {/* HERO SECTION - Full-bleed gradient background */}
       {/* ================================================================== */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-          <div className="relative overflow-hidden py-12 md:py-16 rounded-3xl">
-            {/* Gradient orbs - purple/blue/cyan for warmth */}
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-cyan-100 blur-2xl" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-gradient-to-br from-amber-50 to-orange-50 blur-2xl opacity-60" />
+      <section className="relative overflow-hidden py-16 md:py-20">
+        {/* Full-bleed gradient orbs - positioned relative to viewport edges */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-cyan-100 blur-2xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-gradient-to-r from-purple-50/60 via-white/40 to-blue-50/60 blur-3xl" />
 
-            <div className="relative z-10 text-center">
+        {/* Content container - padded text stays readable */}
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="text-center">
               {/* Headline - bold, unified hero style */}
               <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold ${headingColors.primary} mb-4 animate-slide-up`}>
                 Simple Pricing
@@ -236,10 +236,9 @@ export default function UnifiedPricingPage() {
                 </button>
               </div>
 
-              {/* Scroll hint */}
-              <div className="mt-8 animate-bounce">
-                <ChevronDown size={24} className="mx-auto text-gray-400" />
-              </div>
+            {/* Scroll hint */}
+            <div className="mt-8 animate-bounce">
+              <ChevronDown size={24} className="mx-auto text-gray-400" />
             </div>
           </div>
         </div>

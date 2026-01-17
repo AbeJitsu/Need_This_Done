@@ -37,18 +37,18 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
   return (
     <div className="min-h-screen">
       {/* ================================================================
-          Hero Section - Centered gradient with rounded edges
+          Hero Section - Full-bleed gradient background
           ================================================================ */}
-      <section className="py-8 md:py-12">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-          {/* Gradient container with rounded edges and centered content */}
-          <div className="relative overflow-hidden rounded-2xl flex items-center justify-center min-h-[220px]">
-            {/* Gradient orbs */}
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-emerald-100 blur-2xl" />
+      <section className="relative overflow-hidden py-12 md:py-16">
+        {/* Full-bleed gradient orbs - positioned relative to viewport edges */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-emerald-100 blur-2xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-gradient-to-r from-amber-50/60 via-white/40 to-green-50/60 blur-3xl" />
 
-            {/* Text container - centered */}
-            <div className="relative z-10 text-center">
+        {/* Content container - padded text stays readable */}
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="flex items-center justify-center min-h-[180px]">
+            <div className="text-center">
               <EditableSection sectionKey="header" label="Page Header">
                 <h1 className={`text-4xl md:text-5xl font-bold tracking-tight mb-4 ${titleColors.green}`}>
                   {content.header.title}
