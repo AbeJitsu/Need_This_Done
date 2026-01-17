@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import {
   Check,
@@ -107,8 +107,15 @@ export default function UnifiedPricingPage() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkingOutPackage, setCheckingOutPackage] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState('');
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  // Scroll to email input and focus it
+  const scrollToEmail = () => {
+    emailInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => emailInputRef.current?.focus(), 300);
+  };
 
   const toggleAddon = (id: string) => {
     setSelectedAddons((prev) => {
@@ -237,6 +244,7 @@ export default function UnifiedPricingPage() {
           Enter your email to get started
         </label>
         <input
+          ref={emailInputRef}
           type="email"
           placeholder="you@example.com"
           value={email}
@@ -269,10 +277,14 @@ export default function UnifiedPricingPage() {
             return (
               <div
                 key={pkg.id}
+                onClick={() => {
+                  if (!isValidEmail) scrollToEmail();
+                }}
                 className={`
                   relative ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle}
                   p-8 transition-all hover:shadow-lg
                   ${pkg.popular ? 'ring-2 ring-blue-500' : ''}
+                  ${!isValidEmail ? 'cursor-pointer' : ''}
                 `}
               >
                 {pkg.popular && (
@@ -304,8 +316,15 @@ export default function UnifiedPricingPage() {
                 </ul>
 
                 <button
-                  onClick={() => handlePackageCheckout(pkg.id, pkg.price)}
-                  disabled={!isValidEmail || checkingOutPackage !== null}
+                  onClick={(e) => {
+                    if (!isValidEmail) {
+                      scrollToEmail();
+                      return;
+                    }
+                    e.stopPropagation();
+                    handlePackageCheckout(pkg.id, pkg.price);
+                  }}
+                  disabled={checkingOutPackage !== null && checkingOutPackage !== pkg.id}
                   className={`
                     w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2
                     ${isValidEmail && !checkingOutPackage
@@ -319,7 +338,7 @@ export default function UnifiedPricingPage() {
                   {isLoading ? (
                     <><Loader2 size={18} className="animate-spin" /> Processing...</>
                   ) : (
-                    <>Pay ${deposit} to Start <ArrowRight size={18} /></>
+                    <>Start with ${deposit} <ArrowRight size={18} /></>
                   )}
                 </button>
               </div>
@@ -451,7 +470,7 @@ export default function UnifiedPricingPage() {
                 {isCheckingOut ? (
                   <><Loader2 size={18} className="animate-spin" /> Processing...</>
                 ) : (
-                  <>Pay ${customDeposit} to Start <ArrowRight size={18} /></>
+                  <>Start with ${customDeposit} <ArrowRight size={18} /></>
                 )}
               </button>
             </div>
