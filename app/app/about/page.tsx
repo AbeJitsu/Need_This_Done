@@ -35,7 +35,7 @@ export default function AboutPage() {
 
             {/* Text container - centered */}
             <div className="relative z-10 text-center">
-              <h1 className={`text-3xl md:text-4xl font-bold italic ${headingColors.primary} mb-3`}>
+              <h1 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-3`}>
                 About the Founder
               </h1>
               <p className={`text-lg ${formInputColors.helper}`}>

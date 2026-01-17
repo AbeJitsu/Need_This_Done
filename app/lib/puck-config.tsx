@@ -1523,8 +1523,8 @@ export const puckConfig: Config = {
       defaultProps: {
         productId: '',
         layout: 'left',
-        buttonText: 'Shop Now',
-        buttonLink: '/shop',
+        buttonText: 'View Pricing',
+        buttonLink: '/pricing',
         accentColor: 'purple' as AccentVariant,
         showBadge: 'none',
       },
@@ -1572,7 +1572,7 @@ export const puckConfig: Config = {
               </span>
               {buttonText && (
                 <a
-                  href={buttonLink || '/shop'}
+                  href={buttonLink || '/pricing'}
                   className={`px-6 py-3 text-white font-medium rounded-lg ${colors.buttonBg} transition-colors`}
                 >
                   {buttonText}

@@ -211,7 +211,7 @@ export default function UserDashboard() {
               <p className={`${formInputColors.helper} mb-6`}>
                 When you make purchases, they&apos;ll appear here so you can track them.
               </p>
-              <Button variant="purple" href="/shop" size="md">
+              <Button variant="purple" href="/pricing" size="md">
                 Browse Consultations
               </Button>
             </div>

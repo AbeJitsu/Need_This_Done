@@ -400,7 +400,7 @@ export default function CheckoutPage() {
         </Card>
 
         <div className="flex gap-3">
-          <Button variant="purple" href="/shop" className="flex-1">
+          <Button variant="purple" href="/pricing" className="flex-1">
             Continue Shopping
           </Button>
           {isAuthenticated && (
@@ -638,8 +638,8 @@ export default function CheckoutPage() {
             <p className={`${formInputColors.helper} mb-4`}>
               Your cart is empty.
             </p>
-            <Button variant="purple" href="/shop">
-              Back to Shop
+            <Button variant="purple" href="/pricing">
+              Browse Services
             </Button>
           </div>
         </Card>
