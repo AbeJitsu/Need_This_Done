@@ -197,7 +197,7 @@ export default function UnifiedPricingPage() {
                 Pick a package or build exactly what you need. No hidden fees.
               </p>
 
-              {/* Quick navigation cards */}
+              {/* Quick navigation cards - BJJ belt progression: green → blue → purple → gold */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto animate-slide-up animate-delay-200">
                 <button
                   onClick={() => scrollToSection(websitesRef)}
@@ -210,29 +210,29 @@ export default function UnifiedPricingPage() {
 
                 <button
                   onClick={() => scrollToSection(automationRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all"
                 >
-                  <Zap size={24} className={`${accentColors.purple.text} group-hover:scale-110 transition-transform`} />
+                  <Zap size={24} className={`${accentColors.blue.text} group-hover:scale-110 transition-transform`} />
                   <span className={`font-medium ${headingColors.primary}`}>Automation</span>
-                  <span className={`text-sm ${accentColors.purple.text}`}>$150/workflow</span>
+                  <span className={`text-sm ${accentColors.blue.text}`}>$150/workflow</span>
                 </button>
 
                 <button
                   onClick={() => scrollToSection(automationRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-amber-300 hover:shadow-lg transition-all"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all"
                 >
-                  <Bot size={24} className={`${accentColors.gold.text} group-hover:scale-110 transition-transform`} />
+                  <Bot size={24} className={`${accentColors.purple.text} group-hover:scale-110 transition-transform`} />
                   <span className={`font-medium ${headingColors.primary}`}>AI Agents</span>
-                  <span className={`text-sm ${accentColors.gold.text}`}>$500/month</span>
+                  <span className={`text-sm ${accentColors.purple.text}`}>$500/month</span>
                 </button>
 
                 <button
                   onClick={() => scrollToSection(customRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-amber-300 hover:shadow-lg transition-all"
                 >
-                  <Puzzle size={24} className={`${accentColors.blue.text} group-hover:scale-110 transition-transform`} />
+                  <Puzzle size={24} className={`${accentColors.gold.text} group-hover:scale-110 transition-transform`} />
                   <span className={`font-medium ${headingColors.primary}`}>Custom</span>
-                  <span className={`text-sm ${accentColors.blue.text}`}>you decide</span>
+                  <span className={`text-sm ${accentColors.gold.text}`}>you decide</span>
                 </button>
               </div>
 
