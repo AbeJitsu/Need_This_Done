@@ -1,9 +1,12 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import Link from 'next/link';
 import {
   Check,
+  Globe,
+  Zap,
+  Bot,
+  Puzzle,
   FileText,
   PenTool,
   Upload,
@@ -12,8 +15,7 @@ import {
   Edit3,
   Loader2,
   ArrowRight,
-  Zap,
-  Bot,
+  ChevronDown,
 } from 'lucide-react';
 import Button from '@/components/Button';
 import {
@@ -25,12 +27,13 @@ import {
 } from '@/lib/colors';
 
 // ============================================================================
-// Unified Pricing Page - All Services with Checkout
+// Unified Pricing Page - Warm, inviting design with smooth scroll navigation
 // ============================================================================
-// Single page for all pricing:
-// - Website packages (Launch/Growth) with 50% deposit checkout
-// - Automation and Managed AI (book a call)
-// - Custom build configurator with checkout
+// Design: Inspired by the shop page's welcoming aesthetic
+// - Hero with gradient orbs + bold headline
+// - Clear service categories with smooth scroll
+// - No email required upfront (collected at Stripe)
+// - Consultation CTA at bottom
 
 // ============================================================================
 // Data Definitions
@@ -40,6 +43,7 @@ interface Package {
   id: string;
   name: string;
   price: number;
+  deposit: number;
   description: string;
   features: string[];
   color: 'green' | 'blue';
@@ -59,6 +63,7 @@ const PACKAGES: Package[] = [
     id: 'launch-site',
     name: 'Launch Site',
     price: 500,
+    deposit: 250,
     description: 'Get online fast with a professional site.',
     color: 'green',
     features: [
@@ -74,6 +79,7 @@ const PACKAGES: Package[] = [
     id: 'growth-site',
     name: 'Growth Site',
     price: 1200,
+    deposit: 600,
     description: 'Scale your online presence.',
     color: 'blue',
     popular: true,
@@ -89,12 +95,12 @@ const PACKAGES: Package[] = [
 ];
 
 const ADDONS: Addon[] = [
-  { id: 'additional-page', name: 'Additional Page', price: 100, description: 'Add another page', icon: FileText },
-  { id: 'blog-setup', name: 'Blog Setup', price: 300, description: 'Full blog with SEO', icon: PenTool },
-  { id: 'contact-form-files', name: 'File Upload Form', price: 150, description: 'Accept attachments', icon: Upload },
-  { id: 'calendar-booking', name: 'Calendar Booking', price: 200, description: 'Scheduling integration', icon: Calendar },
-  { id: 'payment-integration', name: 'Payments', price: 400, description: 'Stripe integration', icon: CreditCard },
-  { id: 'cms-integration', name: 'CMS', price: 500, description: 'Edit content yourself', icon: Edit3 },
+  { id: 'additional-page', name: 'Extra Page', price: 100, description: 'Add another page to your site', icon: FileText },
+  { id: 'blog-setup', name: 'Blog', price: 300, description: 'Full blog with SEO optimization', icon: PenTool },
+  { id: 'contact-form-files', name: 'File Uploads', price: 150, description: 'Accept file attachments', icon: Upload },
+  { id: 'calendar-booking', name: 'Booking', price: 200, description: 'Calendar scheduling integration', icon: Calendar },
+  { id: 'payment-integration', name: 'Payments', price: 400, description: 'Stripe payment integration', icon: CreditCard },
+  { id: 'cms-integration', name: 'CMS', price: 500, description: 'Edit your content yourself', icon: Edit3 },
 ];
 
 // ============================================================================
@@ -102,19 +108,18 @@ const ADDONS: Addon[] = [
 // ============================================================================
 
 export default function UnifiedPricingPage() {
-  const [email, setEmail] = useState('');
   const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkingOutPackage, setCheckingOutPackage] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState('');
-  const emailInputRef = useRef<HTMLInputElement>(null);
 
-  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  // Section refs for smooth scrolling
+  const websitesRef = useRef<HTMLElement>(null);
+  const automationRef = useRef<HTMLElement>(null);
+  const customRef = useRef<HTMLElement>(null);
 
-  // Scroll to email input and focus it
-  const scrollToEmail = () => {
-    emailInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(() => emailInputRef.current?.focus(), 300);
+  const scrollToSection = (ref: React.RefObject<HTMLElement | null>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const toggleAddon = (id: string) => {
@@ -129,9 +134,8 @@ export default function UnifiedPricingPage() {
   const customTotal = ADDONS.filter((a) => selectedAddons.has(a.id)).reduce((sum, a) => sum + a.price, 0);
   const customDeposit = Math.round(customTotal / 2);
 
-  // Package checkout
+  // Package checkout - redirects to Stripe (email collected there)
   const handlePackageCheckout = async (packageId: string, price: number) => {
-    if (!isValidEmail) return;
     setCheckingOutPackage(packageId);
     setCheckoutError('');
 
@@ -139,7 +143,7 @@ export default function UnifiedPricingPage() {
       const response = await fetch('/api/stripe/create-build-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'package', packageId, total: price, email }),
+        body: JSON.stringify({ type: 'package', packageId, total: price }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Failed to create checkout');
@@ -152,7 +156,7 @@ export default function UnifiedPricingPage() {
 
   // Custom build checkout
   const handleCustomCheckout = async () => {
-    if (!isValidEmail || selectedAddons.size === 0) return;
+    if (selectedAddons.size === 0) return;
     setIsCheckingOut(true);
     setCheckoutError('');
 
@@ -160,7 +164,7 @@ export default function UnifiedPricingPage() {
       const response = await fetch('/api/stripe/create-build-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'custom', features: Array.from(selectedAddons), total: customTotal, email }),
+        body: JSON.stringify({ type: 'custom', features: Array.from(selectedAddons), total: customTotal }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Failed to create checkout');
@@ -172,247 +176,224 @@ export default function UnifiedPricingPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-12">
+    <div className="min-h-screen">
       {/* ================================================================== */}
-      {/* CONSULTATION SECTION - First thing visitors see */}
+      {/* HERO SECTION - Warm, inviting, inspired by shop page */}
       {/* ================================================================== */}
-      <section className="mb-16 animate-slide-up">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-          {/* Decorative elements */}
-          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+      <section className="py-16 md:py-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="relative overflow-hidden py-12 md:py-16 rounded-3xl">
+            {/* Gradient orbs - purple/blue/cyan for warmth */}
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-cyan-100 blur-2xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-gradient-to-br from-amber-50 to-orange-50 blur-2xl opacity-60" />
 
-          <div className="relative px-8 py-14 md:py-16 text-center">
-            {/* Eyebrow */}
-            <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-blue-300 text-sm font-medium mb-5 backdrop-blur-sm">
-              Free • No Commitment
-            </span>
+            <div className="relative z-10 text-center">
+              {/* Headline - bold, unified hero style */}
+              <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold ${headingColors.primary} mb-4 animate-slide-up`}>
+                Simple Pricing
+              </h1>
+              <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto mb-10 animate-slide-up animate-delay-100`}>
+                Pick a package or build exactly what you need. No hidden fees.
+              </p>
 
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
-              Not sure what you need?
-            </h1>
-            <p className="text-lg text-slate-300 mb-8 max-w-xl mx-auto">
-              Book a free consultation. We&apos;ll help you figure out the right solution.
-            </p>
-
-            {/* Primary CTA */}
-            <a
-              href="/contact"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-white text-slate-900 font-semibold text-lg rounded-2xl hover:bg-slate-100 transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-100"
-            >
-              <Calendar className="w-5 h-5" />
-              Book a Free Consultation
-            </a>
-
-            {/* Trust indicators */}
-            <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-slate-400">
-              <span className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                15-30 minutes
-              </span>
-              <span className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                Get a clear next step
-              </span>
-              <span className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                No pressure
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ================================================================== */}
-      {/* PRICING HEADER - For those who know what they want */}
-      {/* ================================================================== */}
-      <div className="text-center mb-8 animate-slide-up animate-delay-100">
-        <p className={`text-sm font-semibold uppercase tracking-wider text-gray-400 mb-2`}>
-          Already know what you need?
-        </p>
-        <h2 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-4`}>
-          Simple Pricing
-        </h2>
-        <p className={`text-lg ${formInputColors.helper} max-w-2xl mx-auto`}>
-          Pick a service. Pay 50% to start. No surprises.
-        </p>
-      </div>
-
-      {/* Email Input */}
-      <div className="max-w-md mx-auto mb-12 animate-slide-up animate-delay-200">
-        <label className={`block text-sm font-medium ${formInputColors.helper} mb-2 text-center`}>
-          Enter your email to get started
-        </label>
-        <input
-          ref={emailInputRef}
-          type="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={`
-            w-full px-4 py-3 rounded-xl border text-center transition-colors text-lg
-            bg-white text-gray-900
-            ${email && !isValidEmail ? 'border-red-300' : `${cardBorderColors.subtle} focus:border-blue-400`}
-            focus:outline-none focus:ring-2 focus:ring-blue-500/20
-          `}
-        />
-        {checkoutError && (
-          <p className="mt-2 text-sm text-red-600 text-center">{checkoutError}</p>
-        )}
-      </div>
-
-      {/* ================================================================== */}
-      {/* WEBSITES Section */}
-      {/* ================================================================== */}
-      <section className="mb-16 animate-slide-up animate-delay-200">
-        <h2 className={`text-sm font-semibold uppercase tracking-wider ${formInputColors.helper} mb-6`}>
-          Websites
-        </h2>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          {PACKAGES.map((pkg) => {
-            const deposit = Math.round(pkg.price / 2);
-            const isLoading = checkingOutPackage === pkg.id;
-
-            return (
-              <div
-                key={pkg.id}
-                onClick={() => {
-                  if (!isValidEmail) scrollToEmail();
-                }}
-                className={`
-                  relative ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle}
-                  p-8 transition-all hover:shadow-lg
-                  ${pkg.popular ? 'ring-2 ring-blue-500' : ''}
-                  ${!isValidEmail ? 'cursor-pointer' : ''}
-                `}
-              >
-                {pkg.popular && (
-                  <div className="absolute -top-3 left-6">
-                    <span className={`${accentColors.blue.bg} ${accentColors.blue.text} text-xs font-medium px-3 py-1 rounded-full`}>
-                      Most Popular
-                    </span>
-                  </div>
-                )}
-
-                <h3 className={`text-2xl font-bold ${accentColors[pkg.color].titleText} mb-1`}>
-                  {pkg.name}
-                </h3>
-                <p className={`${formInputColors.helper} mb-4`}>{pkg.description}</p>
-
-                <div className="mb-6">
-                  <span className={`text-4xl font-bold ${headingColors.primary}`}>
-                    ${pkg.price.toLocaleString()}
-                  </span>
-                </div>
-
-                <ul className="space-y-2 mb-6">
-                  {pkg.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <Check size={16} className={accentColors[pkg.color].text} />
-                      <span className={`text-sm ${formInputColors.helper}`}>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+              {/* Quick navigation cards - BJJ belt progression: green → blue → purple → gold */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto animate-slide-up animate-delay-200">
+                <button
+                  onClick={() => scrollToSection(websitesRef)}
+                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-green-300 hover:shadow-lg transition-all"
+                >
+                  <Globe size={24} className={`${accentColors.green.text} group-hover:scale-110 transition-transform`} />
+                  <span className={`font-medium ${headingColors.primary}`}>Websites</span>
+                  <span className={`text-sm ${accentColors.green.text}`}>from $500</span>
+                </button>
 
                 <button
-                  onClick={(e) => {
-                    if (!isValidEmail) {
-                      scrollToEmail();
-                      return;
-                    }
-                    e.stopPropagation();
-                    handlePackageCheckout(pkg.id, pkg.price);
-                  }}
-                  disabled={checkingOutPackage !== null && checkingOutPackage !== pkg.id}
-                  className={`
-                    w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2
-                    ${isValidEmail && !checkingOutPackage
-                      ? pkg.color === 'blue'
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                        : 'bg-emerald-500 hover:bg-emerald-600 text-white'
-                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    }
-                  `}
+                  onClick={() => scrollToSection(automationRef)}
+                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all"
                 >
-                  {isLoading ? (
-                    <><Loader2 size={18} className="animate-spin" /> Processing...</>
-                  ) : (
-                    <>Start with ${deposit} <ArrowRight size={18} /></>
-                  )}
+                  <Zap size={24} className={`${accentColors.blue.text} group-hover:scale-110 transition-transform`} />
+                  <span className={`font-medium ${headingColors.primary}`}>Automation</span>
+                  <span className={`text-sm ${accentColors.blue.text}`}>$150/workflow</span>
+                </button>
+
+                <button
+                  onClick={() => scrollToSection(automationRef)}
+                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all"
+                >
+                  <Bot size={24} className={`${accentColors.purple.text} group-hover:scale-110 transition-transform`} />
+                  <span className={`font-medium ${headingColors.primary}`}>AI Agents</span>
+                  <span className={`text-sm ${accentColors.purple.text}`}>$500/month</span>
+                </button>
+
+                <button
+                  onClick={() => scrollToSection(customRef)}
+                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-amber-300 hover:shadow-lg transition-all"
+                >
+                  <Puzzle size={24} className={`${accentColors.gold.text} group-hover:scale-110 transition-transform`} />
+                  <span className={`font-medium ${headingColors.primary}`}>Custom</span>
+                  <span className={`text-sm ${accentColors.gold.text}`}>you decide</span>
                 </button>
               </div>
-            );
-          })}
-        </div>
-      </section>
 
-      {/* ================================================================== */}
-      {/* AUTOMATION & AI Section */}
-      {/* ================================================================== */}
-      <section className="mb-16 animate-slide-up animate-delay-300">
-        <h2 className={`text-sm font-semibold uppercase tracking-wider ${formInputColors.helper} mb-6`}>
-          Automation & AI
-        </h2>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Automation */}
-          <div className={`${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8`}>
-            <div className={`w-12 h-12 rounded-xl ${accentColors.purple.bg} flex items-center justify-center mb-4`}>
-              <Zap size={24} className={accentColors.purple.text} />
+              {/* Scroll hint */}
+              <div className="mt-8 animate-bounce">
+                <ChevronDown size={24} className="mx-auto text-gray-400" />
+              </div>
             </div>
-            <h3 className={`text-2xl font-bold ${accentColors.purple.titleText} mb-1`}>
-              Automation Setup
-            </h3>
-            <p className={`${formInputColors.helper} mb-4`}>
-              Connect your tools. Stop doing repetitive work.
-            </p>
-            <div className="mb-6">
-              <span className={`text-3xl font-bold ${headingColors.primary}`}>$150</span>
-              <span className={`text-sm ${formInputColors.helper} ml-2`}>per workflow</span>
-            </div>
-            <Button variant="purple" href="/contact" className="w-full">
-              Book a Call
-            </Button>
-          </div>
-
-          {/* Managed AI */}
-          <div className={`${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8`}>
-            <div className={`w-12 h-12 rounded-xl ${accentColors.gold.bg} flex items-center justify-center mb-4`}>
-              <Bot size={24} className={accentColors.gold.text} />
-            </div>
-            <h3 className={`text-2xl font-bold ${accentColors.gold.titleText} mb-1`}>
-              Managed AI
-            </h3>
-            <p className={`${formInputColors.helper} mb-4`}>
-              AI agents that work while you sleep.
-            </p>
-            <div className="mb-6">
-              <span className={`text-3xl font-bold ${headingColors.primary}`}>$500</span>
-              <span className={`text-sm ${formInputColors.helper} ml-2`}>per month</span>
-            </div>
-            <Button variant="gold" href="/contact" className="w-full">
-              Book a Call
-            </Button>
           </div>
         </div>
       </section>
 
       {/* ================================================================== */}
-      {/* CUSTOM BUILD Section */}
+      {/* WEBSITES SECTION */}
       {/* ================================================================== */}
-      <section className="animate-slide-up animate-delay-400">
-        <h2 className={`text-sm font-semibold uppercase tracking-wider ${formInputColors.helper} mb-6`}>
-          Need Something Custom?
-        </h2>
+      <section ref={websitesRef} id="websites" className="py-16 scroll-mt-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+          <h2 className={`text-sm font-semibold uppercase tracking-wider ${formInputColors.helper} mb-6`}>
+            Packages
+          </h2>
 
-        <div className={`${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8`}>
-          <p className={`${formInputColors.helper} mb-6`}>
-            Build exactly what you need with add-ons:
-          </p>
+          <div className="grid md:grid-cols-2 gap-6">
+            {PACKAGES.map((pkg, index) => {
+              const isLoading = checkingOutPackage === pkg.id;
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
-            {ADDONS.map((addon) => {
+              return (
+                <div
+                  key={pkg.id}
+                  className={`
+                    relative ${cardBgColors.base} rounded-2xl border transition-all
+                    p-8 hover:shadow-lg
+                    ${pkg.popular ? 'ring-2 ring-blue-200' : cardBorderColors.subtle}
+                    animate-slide-up animate-delay-${(index + 1) * 100}
+                  `}
+                >
+                  {pkg.popular && (
+                    <div className="absolute -top-3 left-6">
+                      <span className={`${accentColors.blue.bg} ${accentColors.blue.text} text-xs font-medium px-3 py-1 rounded-full`}>
+                        Most Popular
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="mb-6">
+                    <h3 className={`text-2xl font-bold ${accentColors[pkg.color].titleText} mb-1`}>
+                      {pkg.name}
+                    </h3>
+                    <div className={`text-3xl font-bold ${headingColors.primary}`}>
+                      ${pkg.price.toLocaleString()}
+                      <span className={`text-base font-normal ${formInputColors.helper} ml-2`}>
+                        one-time
+                      </span>
+                    </div>
+                  </div>
+
+                  <ul className="space-y-3 mb-8">
+                    {pkg.features.map((feature, i) => (
+                      <li key={i} className="flex items-center gap-3">
+                        <Check size={18} className={accentColors[pkg.color].text} strokeWidth={2.5} />
+                        <span className={formInputColors.helper}>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button
+                    onClick={() => handlePackageCheckout(pkg.id, pkg.price)}
+                    disabled={checkingOutPackage !== null}
+                    className={`
+                      w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2
+                      ${pkg.color === 'blue'
+                        ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/25'
+                        : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/25'
+                      }
+                      disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl
+                    `}
+                  >
+                    {isLoading ? (
+                      <><Loader2 size={18} className="animate-spin" /> Processing...</>
+                    ) : (
+                      <>Start for ${pkg.deposit} <ArrowRight size={18} /></>
+                    )}
+                  </button>
+                  <p className={`text-center text-sm ${formInputColors.helper} mt-2`}>
+                    50% deposit, remainder on delivery
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {checkoutError && (
+            <p className="mt-4 text-center text-red-600">{checkoutError}</p>
+          )}
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* AUTOMATION & AI SECTION */}
+      {/* ================================================================== */}
+      <section ref={automationRef} id="automation" className="py-16 scroll-mt-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+          <h2 className={`text-sm font-semibold uppercase tracking-wider ${formInputColors.helper} mb-6`}>
+            Automation & AI
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Automation */}
+            <div className={`${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-lg transition-all`}>
+              <div className={`w-12 h-12 rounded-xl ${accentColors.purple.bg} flex items-center justify-center mb-4`}>
+                <Zap size={24} className={accentColors.purple.text} />
+              </div>
+              <h3 className={`text-2xl font-bold ${accentColors.purple.titleText} mb-1`}>
+                Automation Setup
+              </h3>
+              <p className={`${formInputColors.helper} mb-4`}>
+                Connect your tools. Stop doing repetitive work.
+              </p>
+              <div className="mb-6">
+                <span className={`text-3xl font-bold ${headingColors.primary}`}>$150</span>
+                <span className={`text-sm ${formInputColors.helper} ml-2`}>per workflow</span>
+              </div>
+              <Button variant="purple" href="/contact#consultation" className="w-full">
+                Book a Call
+              </Button>
+            </div>
+
+            {/* Managed AI */}
+            <div className={`${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-lg transition-all`}>
+              <div className={`w-12 h-12 rounded-xl ${accentColors.gold.bg} flex items-center justify-center mb-4`}>
+                <Bot size={24} className={accentColors.gold.text} />
+              </div>
+              <h3 className={`text-2xl font-bold ${accentColors.gold.titleText} mb-1`}>
+                Managed AI
+              </h3>
+              <p className={`${formInputColors.helper} mb-4`}>
+                AI agents that work while you sleep.
+              </p>
+              <div className="mb-6">
+                <span className={`text-3xl font-bold ${headingColors.primary}`}>$500</span>
+                <span className={`text-sm ${formInputColors.helper} ml-2`}>per month</span>
+              </div>
+              <Button variant="gold" href="/contact#consultation" className="w-full">
+                Book a Call
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* CUSTOM BUILD SECTION - Like shop page "Add-ons" */}
+      {/* ================================================================== */}
+      <section ref={customRef} id="custom" className="py-16 scroll-mt-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+          <h2 className={`text-sm font-semibold uppercase tracking-wider ${formInputColors.helper} mb-6`}>
+            Build Your Own
+          </h2>
+
+          {/* Add-ons list - clean table style like shop page */}
+          <div className={`${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} divide-y ${cardBorderColors.subtle} overflow-hidden`}>
+            {ADDONS.map((addon, index) => {
               const isSelected = selectedAddons.has(addon.id);
               const Icon = addon.icon;
 
@@ -421,71 +402,123 @@ export default function UnifiedPricingPage() {
                   key={addon.id}
                   onClick={() => toggleAddon(addon.id)}
                   className={`
-                    flex items-center gap-3 p-4 rounded-xl border text-left transition-all
-                    ${isSelected
-                      ? 'bg-gray-50 border-gray-400 dark:bg-gray-800'
-                      : `bg-white dark:bg-gray-800 ${cardBorderColors.subtle} hover:border-gray-300`
-                    }
+                    w-full flex items-center justify-between p-5 text-left transition-colors
+                    ${isSelected ? 'bg-blue-50' : 'hover:bg-gray-50'}
+                    ${index === 0 ? 'rounded-t-2xl' : ''}
+                    ${index === ADDONS.length - 1 ? 'rounded-b-2xl' : ''}
                   `}
                 >
-                  <div className={`
-                    w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0
-                    ${isSelected ? 'bg-gray-800 border-gray-800 text-white' : 'border-gray-300'}
-                  `}>
-                    {isSelected && <Check size={12} strokeWidth={3} />}
+                  <div className="flex items-center gap-4">
+                    {/* Checkbox */}
+                    <div className={`
+                      w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors
+                      ${isSelected ? 'bg-blue-500 border-blue-500 text-white' : 'border-gray-300'}
+                    `}>
+                      {isSelected && <Check size={12} strokeWidth={3} />}
+                    </div>
+
+                    {/* Icon */}
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isSelected ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                      <Icon size={20} className={isSelected ? 'text-blue-600' : 'text-gray-500'} />
+                    </div>
+
+                    {/* Text */}
+                    <div>
+                      <h3 className={`font-semibold ${headingColors.primary}`}>
+                        {addon.name}
+                      </h3>
+                      <p className={`text-sm ${formInputColors.helper}`}>
+                        {addon.description}
+                      </p>
+                    </div>
                   </div>
-                  <Icon size={18} className="text-gray-400" />
-                  <div className="flex-1 min-w-0">
-                    <span className={`font-medium ${headingColors.primary}`}>{addon.name}</span>
-                  </div>
-                  <span className={`font-semibold ${headingColors.primary}`}>
+
+                  {/* Price */}
+                  <div className={`text-xl font-bold ${isSelected ? accentColors.blue.text : accentColors.purple.text} whitespace-nowrap ml-4`}>
                     ${addon.price}
-                  </span>
+                  </div>
                 </button>
               );
             })}
           </div>
 
-          {/* Custom Total - only show when addons selected */}
+          {/* Total & Checkout - appears when items selected */}
           {selectedAddons.size > 0 && (
-            <div className={`flex items-center justify-between mt-6 p-6 rounded-xl bg-gray-50 dark:bg-gray-800 border ${cardBorderColors.subtle}`}>
-              <div>
-                <span className={`text-lg ${formInputColors.helper}`}>Total: </span>
-                <span className={`text-3xl font-bold ${headingColors.primary}`}>${customTotal}</span>
-                <span className={`text-sm ${formInputColors.helper} ml-3`}>
-                  (${customDeposit} deposit to start)
-                </span>
+            <div className="mt-6 p-6 rounded-2xl bg-gradient-to-br from-purple-50 via-white to-blue-50 border border-gray-200 animate-slide-up">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <p className={`text-sm ${formInputColors.helper} mb-1`}>
+                    {selectedAddons.size} item{selectedAddons.size > 1 ? 's' : ''} selected
+                  </p>
+                  <div className="flex items-baseline gap-2">
+                    <span className={`text-3xl font-bold ${headingColors.primary}`}>
+                      ${customTotal.toLocaleString()}
+                    </span>
+                    <span className={`${formInputColors.helper}`}>
+                      total
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={handleCustomCheckout}
+                  disabled={isCheckingOut}
+                  className="
+                    px-8 py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2
+                    bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600
+                    text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-100
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                  "
+                >
+                  {isCheckingOut ? (
+                    <><Loader2 size={18} className="animate-spin" /> Processing...</>
+                  ) : (
+                    <>Start for ${customDeposit} <ArrowRight size={18} /></>
+                  )}
+                </button>
               </div>
-              <button
-                onClick={handleCustomCheckout}
-                disabled={!isValidEmail || isCheckingOut}
-                className={`
-                  px-8 py-4 rounded-xl font-semibold transition-all flex items-center gap-2
-                  ${isValidEmail && !isCheckingOut
-                    ? 'bg-violet-600 hover:bg-violet-700 text-white shadow-lg hover:shadow-xl'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  }
-                `}
-              >
-                {isCheckingOut ? (
-                  <><Loader2 size={18} className="animate-spin" /> Processing...</>
-                ) : (
-                  <>Start with ${customDeposit} <ArrowRight size={18} /></>
-                )}
-              </button>
+              <p className={`text-sm ${formInputColors.helper} mt-3`}>
+                50% deposit to start, remainder on delivery
+              </p>
             </div>
           )}
         </div>
       </section>
 
-      {/* Bottom Note */}
-      <p className={`text-center mt-12 ${formInputColors.helper}`}>
-        Questions?{' '}
-        <Link href="/contact" className={`${accentColors.blue.text} hover:underline font-medium`}>
-          Book a free consultation
-        </Link>
-        {' '}— no commitment required.
-      </p>
+      {/* ================================================================== */}
+      {/* CONSULTATION CTA - At bottom, warm dark section */}
+      {/* ================================================================== */}
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-50 via-white to-blue-50 border border-gray-200 p-8 md:p-12 text-center">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-100/50 to-transparent rounded-full -translate-y-1/2 translate-x-1/2" />
+
+            <div className="relative">
+              <h2 className={`text-2xl md:text-3xl font-bold ${headingColors.primary} mb-3`}>
+                Not sure what you need?
+              </h2>
+              <p className={`text-lg ${formInputColors.helper} mb-8 max-w-xl mx-auto`}>
+                Book a free consultation. We&apos;ll help you figure out the right solution — no pressure.
+              </p>
+
+              <a
+                href="/contact#consultation"
+                className={`
+                  inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold
+                  ${accentColors.purple.bg} ${accentColors.purple.text} border ${accentColors.purple.border}
+                  hover:scale-105 transition-transform shadow-lg shadow-purple-500/20
+                `}
+              >
+                <Calendar size={20} />
+                Book a Free Consultation
+              </a>
+
+              <p className={`text-sm ${formInputColors.helper} mt-6`}>
+                15, 30, or 45 minute sessions • No commitment required
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

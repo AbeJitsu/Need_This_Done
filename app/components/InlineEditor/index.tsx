@@ -36,9 +36,5 @@ export { default as ResizableWrapper } from './ResizableWrapper';
 export { default as AlignmentToolbar, useAlignment, getTextAlignClass, getFlexAlignClass, getBlockAlignClass } from './AlignmentToolbar';
 export type { Alignment } from './AlignmentToolbar';
 
-// Puck page rendering (for pages built with Puck visual builder)
-export { default as PuckPageRenderer } from './PuckPageRenderer';
-
-// Note: AdminEditBar, PropertySidebar, PuckPageWrapper, and EditableWrapper
-// are deprecated in favor of the new section-based editing system above.
-// They remain in the codebase but are no longer exported.
+// Note: AdminEditBar, PropertySidebar, and EditableWrapper
+// are internal components used by the section-based editing system above.

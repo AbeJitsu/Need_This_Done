@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { getServices } from '@/config/site.config';
 import { useEditableContent } from '@/hooks/useEditableContent';
 import type { ContactPageContent } from '@/lib/page-content-types';
@@ -61,7 +61,7 @@ const CONSULTATION_TYPES = [
   {
     id: 'deep-dive',
     name: 'Deep Dive',
-    duration: '55 min',
+    duration: '45 min',
     description: 'Full consultation for complex projects.',
     icon: Sparkles,
     color: 'violet',
@@ -73,20 +73,51 @@ export default function ContactPage() {
   const services = getServices();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formSectionRef = useRef<HTMLElement>(null);
+  const consultationPickerRef = useRef<HTMLDivElement>(null);
 
   const [selectedConsultation, setSelectedConsultation] = useState('strategy');
   const [contactPath, setContactPath] = useState<'none' | 'quote' | 'consultation'>('none');
 
+  // Track if we should scroll to picker (from hash navigation)
+  const [shouldScrollToPicker, setShouldScrollToPicker] = useState(false);
+
+  // Auto-select consultation path when coming from #consultation link
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash === '#consultation') {
+      setContactPath('consultation');
+      setShouldScrollToPicker(true);
+    }
+  }, []);
+
+  // Scroll to consultation picker after it renders
+  useEffect(() => {
+    if (contactPath === 'consultation' && shouldScrollToPicker) {
+      // Wait for the picker to render, then scroll
+      const scrollToPicker = () => {
+        if (consultationPickerRef.current) {
+          consultationPickerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setShouldScrollToPicker(false); // Reset after scrolling
+        }
+      };
+      // Use requestAnimationFrame to ensure DOM has updated
+      requestAnimationFrame(() => {
+        requestAnimationFrame(scrollToPicker);
+      });
+    }
+  }, [contactPath, shouldScrollToPicker]);
+
   // Handle path selection (Quote vs Consultation)
   const handlePathSelect = (path: 'quote' | 'consultation') => {
     setContactPath(path);
-    // Smooth scroll to form/consultation picker after selection
-    setTimeout(() => {
-      if (path === 'quote') {
+    if (path === 'quote') {
+      // Scroll to form after selection
+      setTimeout(() => {
         formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      // For consultation, they'll see the type picker which is still in the hero
-    }, 150);
+      }, 150);
+    } else if (path === 'consultation') {
+      // Trigger scroll to consultation picker
+      setShouldScrollToPicker(true);
+    }
   };
 
   // Handle consultation type selection with smooth scroll to form
@@ -355,7 +386,7 @@ export default function ContactPage() {
               <ul className={`space-y-2 text-sm ${contactPath === 'consultation' ? 'text-slate-500' : 'text-slate-400'}`}>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-blue-500" />
-                  15, 30, or 55 minute sessions
+                  15, 30, or 45 minute sessions
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-blue-500" />
@@ -373,7 +404,7 @@ export default function ContactPage() {
 
           {/* Consultation Type Cards - Only show when consultation path selected */}
           {contactPath === 'consultation' && (
-            <div className="mt-10 animate-slide-up">
+            <div ref={consultationPickerRef} className="mt-10 animate-slide-up">
               <p className="text-center text-slate-300 mb-6">Pick a consultation length:</p>
               <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
                 {CONSULTATION_TYPES.map((type) => {
