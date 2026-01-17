@@ -346,8 +346,8 @@ export default function ServiceDetailModal() {
                   <span
                     className={`
                       flex-1 text-center py-4 px-6 rounded-2xl font-semibold
-                      ${theme.buttonBg} ${theme.buttonHover} text-white
-                      transition-all duration-200
+                      ${theme.buttonBg} ${theme.buttonHover} text-white hover:text-white
+                      transition-all duration-200 hover:scale-[1.02] hover:brightness-110
                       flex items-center justify-center gap-2
                       shadow-lg hover:shadow-xl
                     `}
@@ -362,8 +362,8 @@ export default function ServiceDetailModal() {
                   onClick={closeModal}
                   className={`
                     flex-1 text-center py-4 px-6 rounded-2xl font-semibold
-                    ${theme.buttonBg} ${theme.buttonHover} text-white
-                    transition-all duration-200
+                    ${theme.buttonBg} ${theme.buttonHover} text-white hover:text-white
+                    transition-all duration-200 hover:scale-[1.02] hover:brightness-110
                     flex items-center justify-center gap-2
                     shadow-lg hover:shadow-xl
                   `}
