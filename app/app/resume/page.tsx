@@ -33,7 +33,7 @@ const skills = [
   },
   {
     category: 'AI & Automation',
-    items: ['OpenAI', 'Claude', 'RAG Systems', 'Prompt Engineering', 'Chatbots'],
+    items: ['OpenAI', 'Claude', 'RAG Systems', 'Prompting', 'Chatbots'],
     color: 'purple',
   },
   {
@@ -372,21 +372,13 @@ export default function ResumePage() {
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl" />
 
             <div className="relative">
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
-                <div>
-                  <h3 className="font-playfair text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3">
-                    needthisdone.com
-                  </h3>
-                  <p className="text-lg text-stone-300">
-                    Full-stack Next.js application serving real customers in production
-                  </p>
-                </div>
-                <a
-                  href="https://needthisdone.com"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/20 text-base text-white font-medium hover:bg-white/20 transition-colors"
-                >
-                  Visit Live Site →
-                </a>
+              <div className="mb-8">
+                <h3 className="font-playfair text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3">
+                  needthisdone.com
+                </h3>
+                <p className="text-lg text-stone-300">
+                  Full-stack Next.js application serving real customers in production
+                </p>
               </div>
 
               {/* Feature grid */}

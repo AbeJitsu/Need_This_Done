@@ -229,31 +229,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ========================================================================
-Links - Make Them Obvious
-========================================================================
-Style links so users know they can click them
-Dark mode uses lighter blue for better contrast on dark backgrounds
-*/
-
-a {
-  color: var(--color-primary);
-  text-decoration: none;
-  transition: color 200ms ease;
-}
-
-.dark a {
-  color: var(--blue-400);
-}
-
-a:hover {
-  color: var(--color-primary-hover);
-}
-
-.dark a:hover {
-  color: var(--blue-300);
-}
-
 /* Premium focus states for accessibility */
 *:focus-visible {
   outline: 2px solid var(--color-primary);
