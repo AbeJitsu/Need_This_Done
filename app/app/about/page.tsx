@@ -1,8 +1,6 @@
 import { Metadata } from 'next';
 import Button from '@/components/Button';
 import {
-  headingColors,
-  formInputColors,
   titleColors,
   accentColors,
 } from '@/lib/colors';
