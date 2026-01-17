@@ -95,7 +95,7 @@ export default function AppointmentCancellationEmail({
 
             {/* CTA */}
             <Section style={ctaSection}>
-              <Button style={primaryButton} href={`${siteUrl}/shop`}>
+              <Button style={primaryButton} href={`${siteUrl}/pricing`}>
                 Book a New Appointment
               </Button>
               <Text style={ctaHelper}>

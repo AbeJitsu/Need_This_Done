@@ -70,8 +70,8 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Back link */}
-      <Link href="/shop" className={`${titleColors.blue} hover:underline mb-6 inline-block rounded ${focusRingClasses.blue}`}>
-        ← Back to Shop
+      <Link href="/pricing" className={`${titleColors.blue} hover:underline mb-6 inline-block rounded ${focusRingClasses.blue}`}>
+        ← Back to Pricing
       </Link>
 
       {/* Main content */}

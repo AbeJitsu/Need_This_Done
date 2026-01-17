@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
-import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
+import PageHeader from '@/components/PageHeader';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import {
   formInputColors,
@@ -19,7 +19,6 @@ import {
   accentColors,
   cardBgColors,
   focusRingClasses,
-  mutedTextColors,
   type AccentColor,
 } from '@/lib/colors';
 
@@ -52,6 +51,148 @@ function getDurationLabel(title: string): string {
     return `${minutes} minutes`;
   }
   return 'Consultation';
+}
+
+// ============================================================================
+// Empty Cart State Component - Editorial, warm invitation design
+// ============================================================================
+function EmptyCartState() {
+  return (
+    <section className="min-h-[70vh] flex items-center py-16 md:py-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 w-full">
+        <div className="relative overflow-hidden py-12 md:py-16">
+          {/* Gradient orbs - purple/violet for pricing/cart theme (matching site pattern) */}
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-indigo-100 blur-2xl" />
+          <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-teal-100 blur-xl" />
+
+          {/* Content with z-10 to stay above gradients */}
+          <div className="relative z-10">
+            {/* Asymmetric two-column layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+
+              {/* Left column - Decorative illustration (5 cols) */}
+              <div className="lg:col-span-5 flex justify-center lg:justify-end order-2 lg:order-1">
+                <div
+                  className="relative animate-fade-in-up"
+                  style={{ animationDelay: '200ms', animationFillMode: 'both' }}
+                >
+                  {/* Decorative abstract shape - represents an empty space waiting to be filled */}
+                  <div className="relative w-64 h-64 md:w-80 md:h-80">
+                    {/* Outer ring */}
+                    <div className="absolute inset-0 rounded-full border-2 border-dashed border-purple-300/60 animate-spin-slow" />
+
+                    {/* Inner gradient circle */}
+                    <div className="absolute inset-8 rounded-full bg-gradient-to-br from-purple-50 via-white to-blue-50 shadow-xl shadow-purple-200/30" />
+
+                    {/* Center icon - sparkle/star representing potential */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="relative">
+                        {/* Pulsing background */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-purple-400 to-blue-400 rounded-2xl blur-xl opacity-20 animate-pulse" />
+
+                        {/* Sparkle SVG */}
+                        <svg
+                          className="w-16 h-16 md:w-20 md:h-20 text-purple-500"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M12 2L13.09 8.26L19 6L14.74 10.91L21 12L14.74 13.09L19 18L13.09 15.74L12 22L10.91 15.74L5 18L9.26 13.09L3 12L9.26 10.91L5 6L10.91 8.26L12 2Z" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Floating accent dots */}
+                    <div
+                      className="absolute top-4 right-8 w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-emerald-400 animate-float"
+                      style={{ animationDelay: '0s' }}
+                    />
+                    <div
+                      className="absolute bottom-12 left-4 w-2 h-2 rounded-full bg-gradient-to-br from-blue-400 to-indigo-400 animate-float"
+                      style={{ animationDelay: '0.5s' }}
+                    />
+                    <div
+                      className="absolute top-1/2 -right-4 w-4 h-4 rounded-full bg-gradient-to-br from-purple-400 to-violet-400 animate-float"
+                      style={{ animationDelay: '1s' }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Right column - Content (7 cols) */}
+              <div className="lg:col-span-7 order-1 lg:order-2 text-center lg:text-left">
+                {/* Eyebrow label */}
+                <div
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: '0ms', animationFillMode: 'both' }}
+                >
+                  <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-100 text-purple-700 text-sm font-medium tracking-wide mb-6">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Your Cart
+                  </span>
+                </div>
+
+                {/* Main headline - editorial serif style */}
+                <h1
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: '100ms', animationFillMode: 'both' }}
+                >
+                  <span className="block text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-[1.1] mb-2">
+                    A fresh start
+                  </span>
+                  <span className="block text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 bg-clip-text text-transparent tracking-tight leading-[1.1]">
+                    awaits.
+                  </span>
+                </h1>
+
+                {/* Supporting copy */}
+                <p
+                  className="mt-6 text-lg md:text-xl text-gray-600 max-w-lg mx-auto lg:mx-0 leading-relaxed animate-fade-in-up"
+                  style={{ animationDelay: '200ms', animationFillMode: 'both' }}
+                >
+                  Your cart is ready for something great. Explore our consultations to get expert guidance tailored to your needs.
+                </p>
+
+                {/* CTA buttons */}
+                <div
+                  className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up"
+                  style={{ animationDelay: '300ms', animationFillMode: 'both' }}
+                >
+                  <Button variant="purple" href="/pricing" size="lg">
+                    Explore Consultations
+                  </Button>
+                  <Button variant="gray" href="/contact" size="lg">
+                    Get in Touch
+                  </Button>
+                </div>
+
+                {/* Trust indicators */}
+                <div
+                  className="mt-10 flex items-center gap-6 justify-center lg:justify-start text-sm text-gray-500 animate-fade-in-up"
+                  style={{ animationDelay: '400ms', animationFillMode: 'both' }}
+                >
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>No commitment required</span>
+                  </div>
+                  <div className="hidden sm:flex items-center gap-2">
+                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Expert guidance</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default function CartPage() {
@@ -117,46 +258,10 @@ export default function CartPage() {
   };
 
   // ========================================================================
-  // Empty cart state - Friendly and helpful with EmptyState component
+  // Empty cart state - Editorial, warm invitation design
   // ========================================================================
   if (!cartId || !cart || cart.items.length === 0) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-        <PageHeader
-          title="Your Cart is Empty"
-          description="Nothing here yet, but that's easy to fix!"
-        />
-
-        <Card hoverEffect="none">
-          <div className="py-8 px-4">
-            <div className="flex flex-col items-center justify-center text-center">
-              {/* Cart Icon */}
-              <div className={`${mutedTextColors.light} mb-6`}>
-                <svg className="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-
-              {/* Message */}
-              <h3 className={`text-xl font-semibold ${headingColors.primary} mb-2`}>
-                Your cart is waiting
-              </h3>
-              <p className={`${formInputColors.helper} max-w-sm mb-2`}>
-                Looking for expert guidance?
-              </p>
-              <p className={`${formInputColors.helper} max-w-sm mb-6`}>
-                Our consultations are a great way to get personalized help before committing to a project.
-              </p>
-
-              {/* CTA */}
-              <Button variant="blue" href="/shop">
-                Browse Consultations
-              </Button>
-            </div>
-          </div>
-        </Card>
-      </div>
-    );
+    return <EmptyCartState />;
   }
 
   // Calculate totals
@@ -252,7 +357,7 @@ export default function CartPage() {
 
             {/* Continue shopping link */}
             <div className="pt-2">
-              <Link href="/shop" className={`${titleColors.blue} hover:underline rounded ${focusRingClasses.blue}`}>
+              <Link href="/pricing" className={`${titleColors.blue} hover:underline rounded ${focusRingClasses.blue}`}>
                 &larr; Browse More Consultations
               </Link>
             </div>
@@ -301,10 +406,10 @@ export default function CartPage() {
 
               <Button
                 variant="gray"
-                href="/shop"
+                href="/pricing"
                 className="w-full"
               >
-                Shop
+                Browse More
               </Button>
             </div>
 

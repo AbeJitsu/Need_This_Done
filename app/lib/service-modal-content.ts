@@ -211,8 +211,8 @@ export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
     },
     reassurance: 'Your site, your way. Built right.',
     ctas: {
-      primary: { text: 'Book a Consultation', href: '/shop' },
-      secondary: { text: 'Get a Quote', href: '/contact' },
+      primary: { text: 'See Pricing', href: '/pricing' },
+      secondary: { text: 'Get a Free Quote', href: '/contact' },
     },
   },
   'data-documents': {
@@ -236,8 +236,8 @@ export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
     },
     reassurance: 'Set it up once. Benefit forever.',
     ctas: {
-      primary: { text: 'Book a Consultation', href: '/shop' },
-      secondary: { text: 'Get a Quote', href: '/contact' },
+      primary: { text: 'See Pricing', href: '/pricing' },
+      secondary: { text: 'Get a Free Quote', href: '/contact' },
     },
   },
   'virtual-assistant': {
@@ -261,8 +261,8 @@ export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
     },
     reassurance: 'You get the results without the complexity.',
     ctas: {
-      primary: { text: 'Book a Consultation', href: '/shop' },
-      secondary: { text: 'Get a Quote', href: '/contact' },
+      primary: { text: 'See Pricing', href: '/pricing' },
+      secondary: { text: 'Get a Free Quote', href: '/contact' },
     },
   },
 };

@@ -1066,7 +1066,7 @@ export const layoutBgColors = {
 // ============================================================================
 // Centralized gradient definitions to maintain consistency
 export const gradientColors = {
-  // Page background gradient for Puck pages
+  // Page background gradient
   pageBackground: 'bg-gradient-to-br from-purple-100 via-blue-100 to-teal-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900',
   // Popular badge gradient
   popularBadge: 'bg-gradient-to-r from-blue-500 to-blue-600',
@@ -1396,7 +1396,7 @@ export const selectedStateColors: Record<AccentVariant, {
 };
 
 // ============================================================================
-// Soft Background Colors - For Puck components and subtle accents
+// Soft Background Colors - For components and subtle accents
 // ============================================================================
 // Replaces opacity backgrounds (dark:bg-*/20) with solid colors.
 // Light mode: -100, dark mode: -800 (not -500, for subtlety)

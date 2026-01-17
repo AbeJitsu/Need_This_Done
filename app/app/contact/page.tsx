@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { getServices } from '@/config/site.config';
 import { useEditableContent } from '@/hooks/useEditableContent';
 import type { ContactPageContent } from '@/lib/page-content-types';
@@ -16,6 +16,8 @@ import {
   Send,
   ArrowRight,
   Sparkles,
+  FileText,
+  Users,
 } from 'lucide-react';
 
 // ============================================================================
@@ -59,7 +61,7 @@ const CONSULTATION_TYPES = [
   {
     id: 'deep-dive',
     name: 'Deep Dive',
-    duration: '55 min',
+    duration: '45 min',
     description: 'Full consultation for complex projects.',
     icon: Sparkles,
     color: 'violet',
@@ -70,8 +72,62 @@ export default function ContactPage() {
   const { content } = useEditableContent<ContactPageContent>(defaultContactContent);
   const services = getServices();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const formSectionRef = useRef<HTMLElement>(null);
+  const consultationPickerRef = useRef<HTMLDivElement>(null);
 
   const [selectedConsultation, setSelectedConsultation] = useState('strategy');
+  const [contactPath, setContactPath] = useState<'none' | 'quote' | 'consultation'>('none');
+
+  // Track if we should scroll to picker (from hash navigation)
+  const [shouldScrollToPicker, setShouldScrollToPicker] = useState(false);
+
+  // Auto-select consultation path when coming from #consultation link
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash === '#consultation') {
+      setContactPath('consultation');
+      setShouldScrollToPicker(true);
+    }
+  }, []);
+
+  // Scroll to consultation picker after it renders
+  useEffect(() => {
+    if (contactPath === 'consultation' && shouldScrollToPicker) {
+      // Wait for the picker to render, then scroll
+      const scrollToPicker = () => {
+        if (consultationPickerRef.current) {
+          consultationPickerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setShouldScrollToPicker(false); // Reset after scrolling
+        }
+      };
+      // Use requestAnimationFrame to ensure DOM has updated
+      requestAnimationFrame(() => {
+        requestAnimationFrame(scrollToPicker);
+      });
+    }
+  }, [contactPath, shouldScrollToPicker]);
+
+  // Handle path selection (Quote vs Consultation)
+  const handlePathSelect = (path: 'quote' | 'consultation') => {
+    setContactPath(path);
+    if (path === 'quote') {
+      // Scroll to form after selection
+      setTimeout(() => {
+        formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
+    } else if (path === 'consultation') {
+      // Trigger scroll to consultation picker
+      setShouldScrollToPicker(true);
+    }
+  };
+
+  // Handle consultation type selection with smooth scroll to form
+  const handleConsultationSelect = (typeId: string) => {
+    setSelectedConsultation(typeId);
+    // Smooth scroll to form after a brief delay for visual feedback
+    setTimeout(() => {
+      formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
+  };
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -247,7 +303,7 @@ export default function ContactPage() {
           <div className="flex justify-center mb-8 animate-slide-up">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-blue-300 text-sm font-medium backdrop-blur-sm border border-white/10">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Free Consultation • No Commitment
+              Free Quote • No Commitment
             </span>
           </div>
 
@@ -260,65 +316,152 @@ export default function ContactPage() {
           </h1>
 
           <p className="text-xl text-slate-300 text-center max-w-2xl mx-auto mb-12 leading-relaxed animate-slide-up animate-delay-200">
-            Pick a consultation type that fits your needs. We&apos;ll figure out the best approach for your project.
+            Choose how you&apos;d like to get started. Both options are completely free.
           </p>
 
-          {/* Consultation Type Cards */}
-          <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto animate-slide-up animate-delay-300">
-            {CONSULTATION_TYPES.map((type) => {
-              const Icon = type.icon;
-              const isSelected = selectedConsultation === type.id;
+          {/* Two Path Cards */}
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto animate-slide-up animate-delay-300">
+            {/* Get a Free Quote */}
+            <button
+              type="button"
+              onClick={() => handlePathSelect('quote')}
+              className={`
+                relative p-8 rounded-2xl text-left transition-all duration-300
+                ${contactPath === 'quote'
+                  ? 'bg-white text-slate-900 shadow-2xl shadow-white/20 scale-[1.02]'
+                  : 'bg-white/5 text-white hover:bg-white/10 hover:scale-[1.02] border border-white/10 hover:border-emerald-400/40'}
+              `}
+            >
+              <div className={`
+                w-14 h-14 rounded-2xl flex items-center justify-center mb-5
+                ${contactPath === 'quote' ? 'bg-emerald-100 text-emerald-600' : 'bg-white/10 text-emerald-400'}
+              `}>
+                <FileText className="w-7 h-7" />
+              </div>
 
-              return (
-                <button
-                  key={type.id}
-                  type="button"
-                  onClick={() => setSelectedConsultation(type.id)}
-                  className={`
-                    relative p-6 rounded-2xl text-left transition-all duration-300
-                    ${isSelected
-                      ? 'bg-white text-slate-900 shadow-2xl shadow-white/20 scale-[1.02]'
-                      : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}
-                  `}
-                >
-                  {type.popular && (
-                    <span className={`
-                      absolute -top-2 left-4 px-2 py-0.5 text-xs font-semibold rounded-full
-                      ${isSelected ? 'bg-blue-500 text-white' : 'bg-blue-400/20 text-blue-300'}
-                    `}>
-                      Popular
-                    </span>
-                  )}
+              <h3 className="font-bold text-2xl mb-2">Get a Free Quote</h3>
+              <p className={`text-base mb-4 ${contactPath === 'quote' ? 'text-slate-600' : 'text-slate-400'}`}>
+                Tell us what you need and we&apos;ll send you a detailed quote within 2 business days.
+              </p>
+              <ul className={`space-y-2 text-sm ${contactPath === 'quote' ? 'text-slate-500' : 'text-slate-400'}`}>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-500" />
+                  No commitment required
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-500" />
+                  Clear pricing upfront
+                </li>
+              </ul>
 
-                  <div className={`
-                    w-10 h-10 rounded-xl flex items-center justify-center mb-4
-                    ${isSelected
-                      ? type.color === 'emerald' ? 'bg-emerald-100 text-emerald-600'
-                        : type.color === 'blue' ? 'bg-blue-100 text-blue-600'
-                        : 'bg-violet-100 text-violet-600'
-                      : 'bg-white/10 text-white'}
-                  `}>
-                    <Icon className="w-5 h-5" />
-                  </div>
+              {contactPath === 'quote' && (
+                <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
+                  <Check className="w-4 h-4 text-white" strokeWidth={3} />
+                </div>
+              )}
+            </button>
 
-                  <h3 className="font-semibold text-lg mb-1">{type.name}</h3>
-                  <p className={`text-sm mb-2 ${isSelected ? 'text-slate-600' : 'text-slate-400'}`}>
-                    {type.description}
-                  </p>
-                  <p className={`text-sm font-medium ${isSelected ? 'text-blue-600' : 'text-blue-400'}`}>
-                    {type.duration}
-                  </p>
+            {/* Book a Consultation */}
+            <button
+              type="button"
+              onClick={() => handlePathSelect('consultation')}
+              className={`
+                relative p-8 rounded-2xl text-left transition-all duration-300
+                ${contactPath === 'consultation'
+                  ? 'bg-white text-slate-900 shadow-2xl shadow-white/20 scale-[1.02]'
+                  : 'bg-white/5 text-white hover:bg-white/10 hover:scale-[1.02] border border-white/10 hover:border-blue-400/40'}
+              `}
+            >
+              <div className={`
+                w-14 h-14 rounded-2xl flex items-center justify-center mb-5
+                ${contactPath === 'consultation' ? 'bg-blue-100 text-blue-600' : 'bg-white/10 text-blue-400'}
+              `}>
+                <Users className="w-7 h-7" />
+              </div>
 
-                  {/* Selection indicator */}
-                  {isSelected && (
-                    <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
-                      <Check className="w-4 h-4 text-white" strokeWidth={3} />
-                    </div>
-                  )}
-                </button>
-              );
-            })}
+              <h3 className="font-bold text-2xl mb-2">Book a Consultation</h3>
+              <p className={`text-base mb-4 ${contactPath === 'consultation' ? 'text-slate-600' : 'text-slate-400'}`}>
+                Talk through your project with an expert. We&apos;ll help you figure out the best approach.
+              </p>
+              <ul className={`space-y-2 text-sm ${contactPath === 'consultation' ? 'text-slate-500' : 'text-slate-400'}`}>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-blue-500" />
+                  15, 30, or 45 minute sessions
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-blue-500" />
+                  Personalized recommendations
+                </li>
+              </ul>
+
+              {contactPath === 'consultation' && (
+                <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+                  <Check className="w-4 h-4 text-white" strokeWidth={3} />
+                </div>
+              )}
+            </button>
           </div>
+
+          {/* Consultation Type Cards - Only show when consultation path selected */}
+          {contactPath === 'consultation' && (
+            <div ref={consultationPickerRef} className="mt-10 animate-slide-up">
+              <p className="text-center text-slate-300 mb-6">Pick a consultation length:</p>
+              <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                {CONSULTATION_TYPES.map((type) => {
+                  const Icon = type.icon;
+                  const isSelected = selectedConsultation === type.id;
+
+                  return (
+                    <button
+                      key={type.id}
+                      type="button"
+                      onClick={() => handleConsultationSelect(type.id)}
+                      className={`
+                        relative p-5 rounded-2xl text-left transition-all duration-300
+                        ${isSelected
+                          ? 'bg-white text-slate-900 shadow-xl shadow-white/20 scale-[1.02]'
+                          : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}
+                      `}
+                    >
+                      {type.popular && (
+                        <span className={`
+                          absolute -top-2 left-4 px-2 py-0.5 text-xs font-semibold rounded-full
+                          ${isSelected ? 'bg-blue-500 text-white' : 'bg-blue-400/20 text-blue-300'}
+                        `}>
+                          Popular
+                        </span>
+                      )}
+
+                      <div className={`
+                        w-9 h-9 rounded-lg flex items-center justify-center mb-3
+                        ${isSelected
+                          ? type.color === 'emerald' ? 'bg-emerald-100 text-emerald-600'
+                            : type.color === 'blue' ? 'bg-blue-100 text-blue-600'
+                            : 'bg-violet-100 text-violet-600'
+                          : 'bg-white/10 text-white'}
+                      `}>
+                        <Icon className="w-4 h-4" />
+                      </div>
+
+                      <h3 className="font-semibold mb-1">{type.name}</h3>
+                      <p className={`text-xs mb-1 ${isSelected ? 'text-slate-500' : 'text-slate-400'}`}>
+                        {type.description}
+                      </p>
+                      <p className={`text-sm font-medium ${isSelected ? 'text-blue-600' : 'text-blue-400'}`}>
+                        {type.duration}
+                      </p>
+
+                      {isSelected && (
+                        <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                          <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Trust indicators */}
           <div className="flex flex-wrap justify-center gap-6 mt-12 text-sm text-slate-400 animate-slide-up animate-delay-400">
@@ -346,7 +489,7 @@ export default function ContactPage() {
       {/* ================================================================== */}
       {/* Form Section - Clean, Bright */}
       {/* ================================================================== */}
-      <section className="bg-white py-16 md:py-20">
+      <section ref={formSectionRef} className="bg-white py-16 md:py-20 scroll-mt-4">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           {/* Form header */}
           <div className="text-center mb-10 animate-slide-up">

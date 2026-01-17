@@ -345,9 +345,9 @@ export default function ServiceDetailModal() {
                 >
                   <span
                     className={`
-                      flex-1 text-center py-4 px-6 rounded-2xl font-semibold
-                      ${theme.buttonBg} ${theme.buttonHover} text-white
-                      transition-all duration-200
+                      w-full sm:flex-1 text-center py-4 px-6 rounded-2xl font-semibold
+                      ${theme.buttonBg} ${theme.buttonHover} text-white hover:text-white
+                      transition-all duration-200 hover:scale-[1.02] hover:brightness-110
                       flex items-center justify-center gap-2
                       shadow-lg hover:shadow-xl
                     `}
@@ -361,9 +361,9 @@ export default function ServiceDetailModal() {
                   href={activeService.ctas.primary.href}
                   onClick={closeModal}
                   className={`
-                    flex-1 text-center py-4 px-6 rounded-2xl font-semibold
-                    ${theme.buttonBg} ${theme.buttonHover} text-white
-                    transition-all duration-200
+                    w-full sm:flex-1 text-center py-4 px-6 rounded-2xl font-semibold
+                    ${theme.buttonBg} ${theme.buttonHover} text-white hover:text-white
+                    transition-all duration-200 hover:scale-[1.02] hover:brightness-110
                     flex items-center justify-center gap-2
                     shadow-lg hover:shadow-xl
                   `}
@@ -382,7 +382,7 @@ export default function ServiceDetailModal() {
                 >
                   <span
                     className={`
-                      flex-1 text-center py-4 px-6 rounded-2xl font-semibold
+                      w-full sm:flex-1 text-center py-4 px-6 rounded-2xl font-semibold
                       bg-white border-2 ${theme.outlineBorder} ${theme.outlineText}
                       ${theme.outlineHover}
                       transition-all duration-200
@@ -397,7 +397,7 @@ export default function ServiceDetailModal() {
                   href={activeService.ctas.secondary.href}
                   onClick={closeModal}
                   className={`
-                    flex-1 text-center py-4 px-6 rounded-2xl font-semibold
+                    w-full sm:flex-1 text-center py-4 px-6 rounded-2xl font-semibold
                     bg-white border-2 ${theme.outlineBorder} ${theme.outlineText}
                     ${theme.outlineHover}
                     transition-all duration-200

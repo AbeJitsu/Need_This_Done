@@ -79,18 +79,18 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
   return (
     <div className="min-h-screen">
       {/* ================================================================
-          Hero Section - Centered gradient like homepage
+          Hero Section - Full-bleed gradient background
           ================================================================ */}
-      <section className="py-8 md:py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          {/* Gradient container with rounded edges and centered content */}
-          <div className="relative overflow-hidden rounded-2xl flex items-center justify-center min-h-[220px]">
-            {/* Gradient orbs */}
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-purple-100 to-violet-100 blur-2xl" />
+      <section className="relative overflow-hidden py-12 md:py-16">
+        {/* Full-bleed gradient orbs - positioned relative to viewport edges */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-purple-100 to-violet-100 blur-2xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-gradient-to-r from-amber-50/60 via-white/40 to-purple-50/60 blur-3xl" />
 
-            {/* Text container - centered */}
-            <div className="relative z-10 text-center">
+        {/* Content container - padded text stays readable */}
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="flex items-center justify-center min-h-[180px]">
+            <div className="text-center">
               <EditableSection sectionKey="header" label="Page Header">
                 <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${titleColors.gold} mb-4`}>
                   {content.header.title}
@@ -107,10 +107,10 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
       {/* ================================================================
           FAQ List - White background section with premium cards
           ================================================================ */}
-      <section className="py-12 md:py-16">
+      <section className="pt-0 pb-12 md:pt-0 md:pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           {/* Section intro */}
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-purple-100 mb-4">
               <MessageCircleQuestion className="w-6 h-6 text-amber-600" />
             </div>

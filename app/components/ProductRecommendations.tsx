@@ -100,7 +100,7 @@ export default function ProductRecommendations({
           {displayTitle}
         </h2>
         <Link
-          href="/shop"
+          href="/pricing"
           className={`text-sm font-medium ${colors.text} ${colors.hoverText}`}
         >
           View All →
@@ -149,7 +149,7 @@ export default function ProductRecommendations({
           {recommendations.map((rec) => (
             <Link
               key={rec.product_id}
-              href={`/shop/${rec.product_id}`}
+              href="/pricing"
               className="group"
             >
               <Card hoverEffect="lift">

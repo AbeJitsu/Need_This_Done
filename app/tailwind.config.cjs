@@ -371,9 +371,14 @@ const config = {
         // 'gutter': '2rem',
       },
 
-      // Custom fonts - Inter for modern, trustworthy typography
+      // Custom fonts - Typography hierarchy
+      // - Inter: Modern, trustworthy (body text)
+      // - Playfair Display: Elegant serif (editorial headlines)
+      // - Poppins: Geometric, authoritative (logo/brand)
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        playfair: ['var(--font-playfair)', 'Georgia', 'serif'],
+        poppins: ['var(--font-poppins)', 'system-ui', 'sans-serif'],
       },
 
       // ======================================================================

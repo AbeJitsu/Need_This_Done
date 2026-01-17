@@ -35,9 +35,8 @@ import {
 // Why: Allows admins to click on page sections and edit them directly
 // How: Tracks edit mode, selected section, and pending changes
 //
-// Supports two editing modes:
-// 1. Section-based editing (for marketing pages like Home, Services, etc.)
-// 2. Component-based editing (for Puck-built pages)
+// Uses section-based editing for marketing pages (Home, Services, etc.)
+// Note: Legacy component-based editing state remains for backward compatibility
 
 // ============================================================================
 // Types - Section-based editing (marketing pages)
@@ -120,11 +119,11 @@ export interface InlineEditorState {
 }
 
 // ============================================================================
-// Types - Component-based editing (Puck pages) - Legacy support
+// Types - Component-based editing (Legacy - unused)
 // ============================================================================
 
 export interface ComponentSelection {
-  // Path to the component in the Puck content tree
+  // Path to the component in the content tree (legacy)
   path: string;
   // The component type (e.g., "Hero", "TextBlock")
   type: string;
@@ -245,13 +244,13 @@ interface InlineEditContextType {
   // Update content in the inline editor
   updateInlineEditorContent: (content: string) => void;
 
-  // ========== Component-based editing (Puck - legacy) ==========
+  // ========== Component-based editing (Legacy - unused) ==========
 
-  // Currently selected component (for Puck pages)
+  // Currently selected component (legacy - unused)
   selectedComponent: ComponentSelection | null;
   selectComponent: (selection: ComponentSelection | null) => void;
 
-  // Puck page data
+  // Legacy page data (unused)
   pageData: Record<string, unknown> | null;
   setPageData: (data: Record<string, unknown> | null) => void;
 
@@ -292,7 +291,7 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
   const [pageContent, setPageContent] = useState<Record<string, unknown> | null>(null);
   const [pageSlug, setPageSlug] = useState<string | null>(null);
 
-  // Component-based editing state (Puck - legacy)
+  // Component-based editing state (Legacy - unused)
   const [selectedComponent, setSelectedComponent] = useState<ComponentSelection | null>(null);
   const [pageData, setPageData] = useState<Record<string, unknown> | null>(null);
 
@@ -788,7 +787,7 @@ export function InlineEditProvider({ children }: { children: ReactNode }) {
     closeInlineEditor,
     toggleInlineEditorMode,
     updateInlineEditorContent,
-    // Component-based (Puck - legacy)
+    // Component-based (Legacy - unused)
     selectedComponent,
     selectComponent,
     pageData,

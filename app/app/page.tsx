@@ -1,7 +1,5 @@
 import { getDefaultContent } from '@/lib/default-page-content';
 import type { HomePageContent } from '@/lib/page-content-types';
-import { headers } from 'next/headers';
-import { PuckPageRenderer } from '@/components/InlineEditor';
 import HomePageClient from '@/components/home/HomePageClient';
 
 // ============================================================================
@@ -13,10 +11,6 @@ import HomePageClient from '@/components/home/HomePageClient';
 // INLINE EDITING: This page supports inline editing for admins.
 // Click the floating pencil button to open the edit sidebar,
 // then click on any section to edit its content directly.
-//
-// PUCK MIGRATION: This page also checks for a Puck "home" page first.
-// If a published Puck page with slug "home" exists, it renders that.
-// Otherwise, it renders the editable React implementation.
 
 // Force dynamic rendering - content comes from API
 export const dynamic = 'force-dynamic';
@@ -25,39 +19,6 @@ export const metadata = {
   title: 'NeedThisDone - Get Your Projects Done Right',
   description: 'Professional project services - submit your project, get it done right.',
 };
-
-// ============================================================================
-// Puck Page Fetching
-// ============================================================================
-// Check if a published Puck page with slug "home" exists
-
-interface PuckPageData {
-  content: Record<string, unknown>;
-  is_published: boolean;
-}
-
-async function getPuckHomePage(): Promise<PuckPageData | null> {
-  try {
-    const headersList = await headers();
-    const protocol = headersList.get('x-forwarded-proto') || 'http';
-    const host = headersList.get('x-forwarded-host') || headersList.get('host') || 'localhost:3000';
-    const baseUrl = `${protocol}://${host}`;
-
-    const response = await fetch(`${baseUrl}/api/pages/home`, {
-      cache: 'no-store',
-    });
-
-    if (response.ok) {
-      const { page } = await response.json();
-      if (page && page.is_published) {
-        return page;
-      }
-    }
-  } catch {
-    // No Puck home page - fall through to default
-  }
-  return null;
-}
 
 // ============================================================================
 // Content Fetching
@@ -82,9 +43,9 @@ async function getContent(): Promise<HomePageContent> {
 }
 
 // ============================================================================
-// Prefetch Shop Products (for instant navigation)
+// Prefetch Products (for instant navigation)
 // ============================================================================
-// Warms the cache so /shop loads instantly when users click "Book a Consultation"
+// Warms the cache so /pricing loads instantly when users click CTAs
 
 async function prefetchProducts() {
   try {
@@ -103,19 +64,10 @@ async function prefetchProducts() {
 // ============================================================================
 
 export default async function HomePage() {
-  // Check for Puck-based home page first
-  const puckPage = await getPuckHomePage();
-
-  // If a published Puck home page exists, render it with inline edit support
-  if (puckPage) {
-    return <PuckPageRenderer slug="home" content={puckPage.content} />;
-  }
-
-  // Otherwise, render the editable React implementation
   // Fetch content and prefetch products in parallel for speed
   const [content] = await Promise.all([
     getContent(),
-    prefetchProducts(), // Warms cache for instant /shop navigation
+    prefetchProducts(), // Warms cache for instant /pricing navigation
   ]);
 
   // Render using the client component which supports inline editing
