@@ -205,7 +205,7 @@ export default function LoginClient() {
       {/* ================================================================
           Main Content
           ================================================================ */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-12">
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-12">
         {/* Back to home link */}
         <Link
           href="/"
