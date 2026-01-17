@@ -205,25 +205,25 @@ export default function ResumePage() {
             </span>
             <a
               href="mailto:abe.raise@gmail.com"
-              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
             >
               abe.raise@gmail.com
             </a>
             <a
               href="https://needthisdone.com"
-              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
             >
               needthisdone.com
             </a>
             <a
               href="https://github.com/AbeJitsu"
-              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
             >
               GitHub
             </a>
             <a
               href="https://www.linkedin.com/in/weneedthisdone"
-              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
             >
               LinkedIn
             </a>
@@ -235,7 +235,7 @@ export default function ResumePage() {
               <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-6xl font-playfair text-stone-200 leading-none">
                 &ldquo;
               </span>
-              <p className="font-playfair text-xl md:text-2xl lg:text-3xl text-stone-700 leading-relaxed italic pt-6">
+              <p className="font-playfair text-lg md:text-xl text-stone-700 leading-relaxed italic pt-6">
                 Over 25 years working with technology in business environments. I stay calm when things break,
                 explain technical stuff so it makes sense the first time, and follow through on what I say I&apos;ll do.
               </p>
