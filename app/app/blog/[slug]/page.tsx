@@ -29,7 +29,6 @@ export const dynamic = 'force-dynamic';
 // Single Blog Post Page - /blog/[slug]
 // ============================================================================
 // Displays a full blog post with rich formatting, author info, and sharing.
-// Supports both plain text content and future Puck-based rich layouts.
 
 // ============================================================================
 // Metadata Generation
