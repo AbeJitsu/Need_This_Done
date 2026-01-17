@@ -107,10 +107,10 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
       {/* ================================================================
           FAQ List - White background section with premium cards
           ================================================================ */}
-      <section className="py-12 md:py-16">
+      <section className="pt-0 pb-12 md:pt-0 md:pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           {/* Section intro */}
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-purple-100 mb-4">
               <MessageCircleQuestion className="w-6 h-6 text-amber-600" />
             </div>
