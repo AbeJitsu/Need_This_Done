@@ -70,8 +70,18 @@ export default function ContactPage() {
   const { content } = useEditableContent<ContactPageContent>(defaultContactContent);
   const services = getServices();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const formSectionRef = useRef<HTMLElement>(null);
 
   const [selectedConsultation, setSelectedConsultation] = useState('strategy');
+
+  // Handle consultation type selection with smooth scroll to form
+  const handleConsultationSelect = (typeId: string) => {
+    setSelectedConsultation(typeId);
+    // Smooth scroll to form after a brief delay for visual feedback
+    setTimeout(() => {
+      formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
+  };
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -273,12 +283,14 @@ export default function ContactPage() {
                 <button
                   key={type.id}
                   type="button"
-                  onClick={() => setSelectedConsultation(type.id)}
+                  onClick={() => handleConsultationSelect(type.id)}
                   className={`
                     relative p-6 rounded-2xl text-left transition-all duration-300
                     ${isSelected
                       ? 'bg-white text-slate-900 shadow-2xl shadow-white/20 scale-[1.02]'
-                      : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}
+                      : type.popular
+                        ? 'bg-white/5 text-white hover:bg-white/15 hover:scale-[1.03] hover:shadow-lg hover:shadow-blue-500/20 border border-white/20 hover:border-blue-400/40'
+                        : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}
                   `}
                 >
                   {type.popular && (
@@ -346,7 +358,7 @@ export default function ContactPage() {
       {/* ================================================================== */}
       {/* Form Section - Clean, Bright */}
       {/* ================================================================== */}
-      <section className="bg-white py-16 md:py-20">
+      <section ref={formSectionRef} className="bg-white py-16 md:py-20 scroll-mt-4">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           {/* Form header */}
           <div className="text-center mb-10 animate-slide-up">
