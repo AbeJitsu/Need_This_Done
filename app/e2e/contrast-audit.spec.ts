@@ -275,3 +275,70 @@ test.describe('Quick Contrast Check', () => {
     expect(violations.length).toBe(0);
   });
 });
+
+// ============================================================================
+// Accent Color Computed Value Test
+// ============================================================================
+// Catches CSS variable override bugs like [class*="from-gray-900"] matching
+// dark:from-gray-900 and applying wrong accent colors in light mode.
+//
+// The bug: CSS selectors that match Tailwind dark mode variants incorrectly
+// override accent colors even when not in dark mode.
+
+test.describe('Accent Color Verification', () => {
+  // Expected CSS variable accent colors on light backgrounds
+  // These use text-accent-* classes which resolve via CSS variables
+  const ACCENT_VAR_COLORS: Record<string, { rgb: string; hex: string; name: string }> = {
+    gold: { rgb: 'rgb(139, 107, 84)', hex: '#8b6b54', name: 'gold-500 (accent var)' },
+    emerald: { rgb: 'rgb(16, 185, 129)', hex: '#10b981', name: 'emerald-500 (accent var)' },
+    blue: { rgb: 'rgb(59, 130, 246)', hex: '#3b82f6', name: 'blue-500 (accent var)' },
+    purple: { rgb: 'rgb(168, 85, 247)', hex: '#a855f7', name: 'purple-500 (accent var)' },
+  };
+
+  // Expected direct Tailwind colors (text-gold-600, etc.)
+  const DIRECT_COLORS: Record<string, { rgb: string; hex: string; name: string }> = {
+    'gold-600': { rgb: 'rgb(111, 80, 61)', hex: '#6f503d', name: 'gold-600' },
+    'emerald-700': { rgb: 'rgb(4, 120, 87)', hex: '#047857', name: 'emerald-700' },
+  };
+
+  // Pages using text-accent-* classes (CSS variable based)
+  // This specifically catches CSS variable override bugs
+  const ACCENT_VAR_PAGES = [
+    { path: '/get-started', selector: 'h1', expectedColor: 'gold', description: 'Get Started hero (text-accent-gold)' },
+  ];
+
+  for (const testCase of ACCENT_VAR_PAGES) {
+    test(`${testCase.description} uses correct accent color`, async ({ page }) => {
+      await page.goto(testCase.path);
+      await page.waitForLoadState('domcontentloaded');
+      await page.waitForTimeout(2000); // Wait for CSS to fully apply
+
+      // Get computed color of the element
+      const computedColor = await page.evaluate((selector) => {
+        const el = document.querySelector(selector);
+        if (!el) return null;
+        return window.getComputedStyle(el).color;
+      }, testCase.selector);
+
+      const expected = ACCENT_VAR_COLORS[testCase.expectedColor];
+
+      // Check if computed color matches expected
+      const colorMatches = computedColor === expected.rgb;
+
+      if (!colorMatches) {
+        console.log(`\n❌ ACCENT COLOR MISMATCH on ${testCase.path}`);
+        console.log(`   Element: ${testCase.selector}`);
+        console.log(`   Expected: ${expected.rgb} (${expected.name})`);
+        console.log(`   Actual: ${computedColor}`);
+        console.log(`   This may indicate a CSS variable override bug.`);
+        console.log(`   Check globals.css for selectors matching dark mode variants.`);
+      }
+
+      expect(
+        colorMatches,
+        `${testCase.description}: Expected ${expected.name} (${expected.rgb}) but got ${computedColor}. ` +
+        `This may indicate a CSS variable override bug in globals.css.`
+      ).toBe(true);
+    });
+  }
+});
