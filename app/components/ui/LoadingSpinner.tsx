@@ -5,6 +5,7 @@
 // Matches the accent color system from colors.ts.
 
 import { AccentVariant } from '@/lib/colors';
+import { accentText } from '@/lib/contrast';
 
 interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg';
@@ -19,13 +20,13 @@ const sizeClasses = {
 };
 
 const colorClasses: Record<string, string> = {
-  purple: 'text-purple-600 dark:text-purple-400',
-  blue: 'text-blue-600 dark:text-blue-400',
-  green: 'text-green-600 dark:text-green-400',
-  gold: 'text-gold-600 dark:text-gold-400',
-  teal: 'text-teal-600 dark:text-teal-400',
-  gray: 'text-gray-600 dark:text-gray-400',
-  red: 'text-red-600 dark:text-red-400',
+  purple: accentText.purple,
+  blue: accentText.blue,
+  green: accentText.emerald,
+  gold: accentText.gold,
+  teal: accentText.teal,
+  gray: accentText.gray,
+  red: accentText.red,
   white: 'text-white',
   current: 'text-current',
 };

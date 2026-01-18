@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import type { UIMessage } from 'ai';
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Chat Message Component
@@ -72,7 +73,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
             isUser
               ? 'prose-invert'
               : 'dark:prose-invert'
-          } prose-a:text-blue-500 dark:prose-a:text-blue-400 prose-a:underline hover:prose-a:text-blue-600`}
+          } prose-a:${accentText.blue} prose-a:underline`}
           dangerouslySetInnerHTML={{
             __html: sanitizeHtml(formatMessageContent(content)),
           }}
@@ -90,9 +91,10 @@ export default function ChatMessage({ message }: ChatMessageProps) {
  */
 function formatMessageContent(content: string): string {
   // Convert markdown links: [text](url) → <a href="url">text</a>
+  // Using text-accent-blue class for background-aware color switching
   let formatted = content.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
-    '<a href="$2" class="text-blue-500 dark:text-blue-400 underline hover:text-blue-600">$1</a>'
+    '<a href="$2" class="text-accent-blue underline">$1</a>'
   );
 
   // Convert line breaks to <br> for proper display

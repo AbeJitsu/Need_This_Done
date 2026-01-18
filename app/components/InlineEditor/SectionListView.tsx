@@ -6,6 +6,7 @@
 // How: Renders a list of buttons, each selecting a section to edit
 
 import { formInputColors, headingColors } from '@/lib/colors';
+import { accentText } from '@/lib/contrast';
 
 interface Section {
   key: string;
@@ -22,10 +23,10 @@ export default function SectionListView({ sections, onSelectSection }: SectionLi
     <div className="space-y-2">
       {/* Helpful tip for users */}
       <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-4">
-        <p className="text-sm text-blue-700 dark:text-blue-300 font-medium mb-1">
+        <p className={`text-sm ${accentText.blue} font-medium mb-1`}>
           💡 Tip: Click anywhere on the page
         </p>
-        <p className="text-xs text-blue-600 dark:text-blue-400">
+        <p className={`text-xs ${accentText.blue}`}>
           Click on text, cards, or buttons to edit them directly. Or choose a section below.
         </p>
       </div>
@@ -52,7 +53,7 @@ export default function SectionListView({ sections, onSelectSection }: SectionLi
               {label}
             </span>
             <svg
-              className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors"
+              className="w-4 h-4 text-gray-400 group-hover:text-accent-blue transition-colors"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
