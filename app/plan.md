@@ -1,5 +1,7 @@
 # Color Compliance Plan
 
+**STATUS: COMPLETE** - Merged to production on 2026-01-18
+
 Fix non-text contrast violations and consolidate to approved color palette.
 
 ## Approved Palette
@@ -17,7 +19,7 @@ Fix non-text contrast violations and consolidate to approved color palette.
 - [x] Change `border-gray-200` → `border-gray-400` (37 occurrences)
 - [x] Change `border-gray-300` → `border-gray-400` (4 occurrences)
 - [x] Change `border-stone-200` → `border-stone-400` (9 occurrences)
-- [ ] Run non-text contrast test to verify
+- [x] Run non-text contrast test to verify
 
 ---
 
@@ -26,7 +28,7 @@ Fix non-text contrast violations and consolidate to approved color palette.
 - [x] Change light green icons (`green-300`, `emerald-300`) → `-500` or `-600` (mostly decorative, OK)
 - [x] Change light blue icons (`sky-200`, `sky-300`) → `blue-500` or `-600` (handled in Phase 6)
 - [x] Change light purple icons (`purple-200`, `violet-200`) → `purple-500` or `-600` (handled in Phase 5)
-- [ ] Run non-text contrast test to verify
+- [x] Run non-text contrast test to verify
 
 ---
 
@@ -81,7 +83,7 @@ Fix non-text contrast violations and consolidate to approved color palette.
 - [x] Add border-t-* variants for card top accents
 - [x] Run `npm run test:e2e -- contrast-audit` (text contrast) - 21 passed
 - [x] Run `npm run test:e2e -- non-text-contrast` (icons/borders) - reports only, passes
-- [ ] Run `npm run dev` and visually check key pages
+- [x] Run `npm run dev` and visually check key pages
 - [x] Commit all changes (excluding this plan.md)
 
 ---
@@ -95,6 +97,18 @@ Fix non-text contrast violations and consolidate to approved color palette.
 - [x] Remove opacity modifiers (border-gray-400/60 → border-gray-400)
 - [x] Fix lib/premium-design.ts border values
 - [x] Create color-contrast-viewer.html for reference
+
+---
+
+## Phase 10: Documentation & Deployment (Session 3)
+
+- [x] Fix build errors (missing accentText imports)
+- [x] Update .claude/rules/colors.md with contrast compliance table
+- [x] Update .claude/rules/design-system.md with minimum shades table
+- [x] Add dark backgrounds section to color-contrast-viewer.html
+- [x] Verify production build works
+- [x] Merge main → production branch
+- [x] Update plan.md with completion status
 
 ---
 
