@@ -32,6 +32,15 @@ const config = {
   // This ensures Button and CircleBadge colors are always compiled.
 
   safelist: [
+    // ====================================================================
+    // ACCENT COLORS - Background-aware (auto-switch on dark sections)
+    // ====================================================================
+    // These are the primary classes for accessible colors on any background.
+    // Use text-accent-* instead of text-emerald-500 for auto-switching.
+    'text-accent-emerald', 'text-accent-blue', 'text-accent-purple', 'text-accent-gold', 'text-accent-teal', 'text-accent-gray', 'text-accent-red',
+    'border-accent-emerald', 'border-accent-blue', 'border-accent-purple', 'border-accent-gold', 'border-accent-teal', 'border-accent-gray', 'border-accent-red',
+    'bg-accent-emerald', 'bg-accent-blue', 'bg-accent-purple', 'bg-accent-gold', 'bg-accent-teal', 'bg-accent-gray', 'bg-accent-red',
+
     // Backgrounds - light mode (bg-100)
     'bg-purple-100', 'bg-blue-100', 'bg-green-100', 'bg-emerald-100', 'bg-gold-100', 'bg-teal-100', 'bg-gray-100', 'bg-red-100', 'bg-yellow-100',
 
@@ -373,6 +382,33 @@ const config = {
         'success': 'var(--color-success)',
         'danger': 'var(--color-danger)',
         'warning': 'var(--color-warning)',
+
+        // ====================================================================
+        // ACCENT COLORS - Background-Aware (ETC Architecture)
+        // ====================================================================
+        // These automatically switch between light/dark shades based on
+        // the parent background. Use these for text/icons that need to
+        // be accessible on ANY background.
+        //
+        // Usage:
+        //   <span className="text-accent-emerald">Always accessible</span>
+        //
+        // How it works:
+        //   - On light backgrounds: Uses darker shades (500)
+        //   - On dark backgrounds: Uses lighter shades (300)
+        //   - CSS cascade handles the switch automatically
+        //
+        // No more checking "am I on a dark section?" - just use accent-*
+        // ====================================================================
+        accent: {
+          emerald: 'var(--accent-emerald)',
+          blue: 'var(--accent-blue)',
+          purple: 'var(--accent-purple)',
+          gold: 'var(--accent-gold)',
+          teal: 'var(--accent-teal)',
+          gray: 'var(--accent-gray)',
+          red: 'var(--accent-red)',
+        },
       },
 
       // Add custom spacing values

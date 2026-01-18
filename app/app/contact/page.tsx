@@ -25,6 +25,7 @@ import {
   iconCircleColors,
   coloredLinkText,
 } from '@/lib/colors';
+import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Contact Page - Premium Consultation Booking
@@ -351,11 +352,11 @@ export default function ContactPage() {
               </p>
               <ul className={`space-y-2 text-sm ${contactPath === 'quote' ? 'text-slate-500' : 'text-slate-400'}`}>
                 <li className="flex items-center gap-2">
-                  <Check className={`w-4 h-4 ${titleColors.green}`} />
+                  <Check className={`w-4 h-4 ${accentText.emerald}`} />
                   No commitment required
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className={`w-4 h-4 ${titleColors.green}`} />
+                  <Check className={`w-4 h-4 ${accentText.emerald}`} />
                   Clear pricing upfront
                 </li>
               </ul>
@@ -391,11 +392,11 @@ export default function ContactPage() {
               </p>
               <ul className={`space-y-2 text-sm ${contactPath === 'consultation' ? 'text-slate-500' : 'text-slate-400'}`}>
                 <li className="flex items-center gap-2">
-                  <Check className={`w-4 h-4 ${titleColors.blue}`} />
+                  <Check className={`w-4 h-4 ${accentText.blue}`} />
                   15, 30, or 45 minute sessions
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className={`w-4 h-4 ${titleColors.blue}`} />
+                  <Check className={`w-4 h-4 ${accentText.blue}`} />
                   Personalized recommendations
                 </li>
               </ul>

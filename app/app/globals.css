@@ -183,6 +183,33 @@ Usage: background-color: var(--primary-color);
   --border-color: var(--gray-200);
   --border-light: var(--gray-100);
 
+  /* ======================================================================
+  ACCENT COLOR SYSTEM - Background-Aware Colors (ETC Architecture)
+  ======================================================================
+  These variables automatically adjust based on the parent background.
+  Components use var(--accent-*) and get the correct shade for their context.
+
+  Usage:
+    <span className="text-[var(--accent-emerald)]">Always accessible</span>
+
+  Light backgrounds (default):
+    - Uses darker shades that meet 4.5:1 contrast on white
+
+  Dark backgrounds (auto-detected via CSS selectors below):
+    - Uses lighter shades that meet 4.5:1 contrast on dark
+
+  TO CHANGE: Update the shade numbers here. All components update automatically.
+  ====================================================================== */
+
+  /* Text colors - for use on LIGHT backgrounds (default) */
+  --accent-emerald: var(--green-500);
+  --accent-blue: var(--blue-500);
+  --accent-purple: var(--purple-500);
+  --accent-gold: var(--gold-500);
+  --accent-teal: var(--teal-500);
+  --accent-gray: var(--gray-600);
+  --accent-red: var(--red-500);
+
   /* ======================================
   Spacing System - 8px Units
   ====================================== */
@@ -204,6 +231,80 @@ Usage: background-color: var(--primary-color);
   ====================================== */
   --transition-speed: 300ms;
   --transition-timing: ease;
+}
+
+/* ========================================================================
+DARK SECTION AUTO-SWITCHING - Background-Aware Accent Colors
+========================================================================
+When a parent element has a dark background class, all accent colors
+automatically switch to lighter shades for proper contrast.
+
+This is the CSS cascade doing the work - no JavaScript needed.
+Children inherit these values from any dark ancestor.
+
+Supported dark backgrounds:
+  - bg-slate-900, bg-slate-800 (common dark sections)
+  - bg-gray-900, bg-gray-800 (neutral dark sections)
+  - [data-dark-bg] attribute (explicit marker)
+
+Add more selectors here as needed for other dark backgrounds.
+======================================================================== */
+
+/* Slate dark backgrounds (most common for dark sections) */
+.bg-slate-900,
+.bg-slate-800,
+[class*="from-slate-900"],
+[class*="from-slate-800"] {
+  --accent-emerald: var(--green-300);
+  --accent-blue: var(--blue-300);
+  --accent-purple: var(--purple-300);
+  --accent-gold: var(--gold-300);
+  --accent-teal: var(--teal-300);
+  --accent-gray: var(--gray-300);
+  --accent-red: var(--red-300);
+}
+
+/* Gray dark backgrounds */
+.bg-gray-900,
+.bg-gray-800,
+[class*="from-gray-900"],
+[class*="from-gray-800"] {
+  --accent-emerald: var(--green-300);
+  --accent-blue: var(--blue-300);
+  --accent-purple: var(--purple-300);
+  --accent-gold: var(--gold-300);
+  --accent-teal: var(--teal-300);
+  --accent-gray: var(--gray-300);
+  --accent-red: var(--red-300);
+}
+
+/* Explicit dark section marker (for complex cases) */
+[data-dark-bg="true"] {
+  --accent-emerald: var(--green-300);
+  --accent-blue: var(--blue-300);
+  --accent-purple: var(--purple-300);
+  --accent-gold: var(--gold-300);
+  --accent-teal: var(--teal-300);
+  --accent-gray: var(--gray-300);
+  --accent-red: var(--red-300);
+}
+
+/* ========================================================================
+WHITE BACKGROUND RESET - For nested white cards inside dark sections
+========================================================================
+When a white card is placed inside a dark section, reset accent colors
+back to dark shades for proper contrast on the white background.
+======================================================================== */
+
+.bg-white,
+[data-dark-bg="false"] {
+  --accent-emerald: var(--green-500);
+  --accent-blue: var(--blue-500);
+  --accent-purple: var(--purple-500);
+  --accent-gold: var(--gold-500);
+  --accent-teal: var(--teal-500);
+  --accent-gray: var(--gray-600);
+  --accent-red: var(--red-500);
 }
 
 /* ========================================================================

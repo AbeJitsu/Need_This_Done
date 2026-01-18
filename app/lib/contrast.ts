@@ -271,6 +271,68 @@ export const computedShades = {
 } as const;
 
 // ============================================================================
+// BACKGROUND-AWARE ACCENT COLORS - The Primary API
+// ============================================================================
+// These classes automatically switch between light/dark shades based on
+// the parent background. Use these instead of hardcoded color classes.
+//
+// Usage:
+//   import { accentText, accentBorder } from '@/lib/contrast';
+//
+//   <span className={accentText.emerald}>Always accessible</span>
+//   <div className={accentBorder.blue}>Card with auto border</div>
+//
+// How it works:
+//   - globals.css defines --accent-* variables (default for light backgrounds)
+//   - Dark background selectors (.bg-slate-900, etc.) override the variables
+//   - CSS cascade handles the switch automatically - no JS needed
+//
+// This is the ETC approach: components don't need to know their background.
+// ============================================================================
+
+export const accentText = {
+  emerald: 'text-accent-emerald',
+  blue: 'text-accent-blue',
+  purple: 'text-accent-purple',
+  gold: 'text-accent-gold',
+  teal: 'text-accent-teal',
+  gray: 'text-accent-gray',
+  red: 'text-accent-red',
+} as const;
+
+export const accentBorder = {
+  emerald: 'border-accent-emerald',
+  blue: 'border-accent-blue',
+  purple: 'border-accent-purple',
+  gold: 'border-accent-gold',
+  teal: 'border-accent-teal',
+  gray: 'border-accent-gray',
+  red: 'border-accent-red',
+} as const;
+
+export const accentBg = {
+  emerald: 'bg-accent-emerald',
+  blue: 'bg-accent-blue',
+  purple: 'bg-accent-purple',
+  gold: 'bg-accent-gold',
+  teal: 'bg-accent-teal',
+  gray: 'bg-accent-gray',
+  red: 'bg-accent-red',
+} as const;
+
+// Type for accent color names (for function parameters)
+export type AccentColorName = keyof typeof accentText;
+
+// Helper to get all accent classes for a color
+export function getAccentClasses(color: AccentColorName) {
+  return {
+    text: accentText[color],
+    border: accentBorder[color],
+    bg: accentBg[color],
+  };
+}
+
+// ============================================================================
 // UTILITY EXPORTS - For edge cases or debugging
 // ============================================================================
 
