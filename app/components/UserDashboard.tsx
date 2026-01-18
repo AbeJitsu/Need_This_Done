@@ -121,7 +121,7 @@ export default function UserDashboard() {
       ) : loading ? (
         <LoadingSkeleton />
       ) : projects.length === 0 ? (
-        <div className={`${cardBgColors.base} rounded-xl p-12 border border-gray-200 dark:border-gray-700 text-center`}>
+        <div className={`${cardBgColors.base} rounded-xl p-12 border border-gray-400 dark:border-gray-700 text-center`}>
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
             <span className="text-2xl">📋</span>
           </div>

@@ -277,7 +277,7 @@ export default function ImageUpload({
           relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200
           ${isDragging
             ? `border-purple-500 ${softBgColors.purple}`
-            : 'border-gray-300 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500 hover:bg-gray-100 dark:hover:bg-gray-800'
+            : 'border-gray-400 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500 hover:bg-gray-100 dark:hover:bg-gray-800'
           }
         `}
       >

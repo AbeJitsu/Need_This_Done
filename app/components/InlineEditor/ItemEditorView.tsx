@@ -40,7 +40,7 @@ export default function ItemEditorView({
       <ItemBreadcrumb sectionLabel={sectionLabel} itemLabel={itemLabel} />
 
       {/* Array Operations Bar */}
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-400 dark:border-gray-700">
         <div className="flex gap-1">
           <button
             type="button"

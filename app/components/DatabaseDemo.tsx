@@ -188,7 +188,7 @@ export default function DatabaseDemo() {
             placeholder="Type something you want to save..."
             className="
               flex-1 px-4 py-3
-              border border-gray-300 dark:border-gray-600
+              border border-gray-400 dark:border-gray-600
               bg-white dark:bg-gray-700
               text-gray-900 dark:text-gray-100
               rounded-lg
@@ -343,7 +343,7 @@ export default function DatabaseDemo() {
       </div>
 
       {/* Educational Footer */}
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 space-y-3">
+      <div className="mt-6 pt-6 border-t border-gray-400 dark:border-gray-700 space-y-3">
         <div>
           <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">
             What's Happening:

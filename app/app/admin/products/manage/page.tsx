@@ -385,7 +385,7 @@ export default function ProductManagePage() {
             </Button>
           </div>
         ) : (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-400/50 overflow-hidden animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-400 overflow-hidden animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>

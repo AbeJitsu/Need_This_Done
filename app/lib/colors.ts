@@ -361,11 +361,11 @@ export const accentColors: Record<AccentVariant, {
     text: 'text-gray-600 dark:text-white',
     border: 'border-gray-500 dark:border-gray-100',
     hoverText: 'hover:text-gray-700 dark:hover:text-gray-100',
-    hoverBorder: 'hover:border-gray-600 dark:hover:border-gray-200',
+    hoverBorder: 'hover:border-gray-600 dark:hover:border-gray-400',
     focusVisible: 'focus-visible:ring-4 focus-visible:ring-gray-300 dark:focus-visible:ring-gray-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
     titleText: 'text-gray-600 dark:text-gray-300',
     topBorder: 'border-t-4 border-t-gray-500 dark:border-t-gray-400',
-    cardHover: 'hover:border-gray-500 dark:hover:border-gray-300',
+    cardHover: 'hover:border-gray-500 dark:hover:border-gray-400',
   },
   red: {
     bg: 'bg-red-100 dark:bg-red-500',
@@ -452,7 +452,7 @@ export const statusBorderColors: Record<AccentVariant, string> = {
   green: 'border-l-4 border-l-emerald-500',
   gold: 'border-l-4 border-l-gold-500',
   teal: 'border-l-4 border-l-emerald-500',
-  gray: 'border-l-4 border-l-gray-300 dark:border-l-gray-600',
+  gray: 'border-l-4 border-l-gray-400 dark:border-l-gray-500',
   red: 'border-l-4 border-l-red-500 dark:border-l-red-400',
 };
 
@@ -492,7 +492,7 @@ export const cardHoverColors: Record<AccentVariant, string> = {
   purple: 'hover:border-purple-500 dark:hover:border-purple-300',
   gold: 'hover:border-gold-500 dark:hover:border-gold-300',
   teal: 'hover:border-emerald-500 dark:hover:border-emerald-300',
-  gray: 'hover:border-gray-500 dark:hover:border-gray-300',
+  gray: 'hover:border-gray-500 dark:hover:border-gray-400',
   red: 'hover:border-red-500 dark:hover:border-red-300',
 };
 
@@ -519,7 +519,7 @@ export const tagHoverColors: Record<AccentVariant, string> = {
   green: 'hover:bg-emerald-200 hover:border-emerald-600 dark:hover:bg-emerald-800 dark:hover:border-emerald-300',
   gold: 'hover:bg-gold-200 hover:border-gold-600 dark:hover:bg-gold-800 dark:hover:border-gold-300',
   teal: 'hover:bg-emerald-200 hover:border-emerald-600 dark:hover:bg-emerald-800 dark:hover:border-emerald-300',
-  gray: 'hover:bg-gray-200 hover:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-300',
+  gray: 'hover:bg-gray-200 hover:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-400',
   red: 'hover:bg-red-200 hover:border-red-600 dark:hover:bg-red-800 dark:hover:border-red-300',
 };
 
@@ -593,9 +593,9 @@ export const featureCardColors: Record<FeatureCardVariant, {
   description: string;
 }> = {
   default: {
-    container: 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800',
+    container: 'border-gray-400 dark:border-gray-700 bg-white dark:bg-gray-800',
     icon: 'text-gray-700 dark:text-gray-300',
-    hover: 'hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-lg',
+    hover: 'hover:border-gray-400 dark:hover:border-gray-600 hover:shadow-lg',
     title: 'text-gray-900 dark:text-gray-100',
     description: 'text-gray-600 dark:text-gray-300',
   },
@@ -622,7 +622,7 @@ export const featureCardColors: Record<FeatureCardVariant, {
 // Placeholder text meets WCAG contrast requirements in both modes
 export const formInputColors = {
   // Base input styling
-  base: 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100',
+  base: 'border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100',
   // Placeholder text - subtle but readable
   placeholder: 'placeholder:text-gray-600 dark:placeholder:text-gray-400',
   // Focus state
@@ -650,7 +650,7 @@ export const formInputClasses = {
   `.replace(/\s+/g, ' ').trim(),
 
   // Normal state border + focus
-  normalBorder: 'border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/50',
+  normalBorder: 'border-gray-400 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/50',
 
   // Error state border + focus
   errorBorder: 'border-red-300 dark:border-red-600 focus:border-red-500 focus:ring-red-200 dark:focus:ring-red-900/50',
@@ -663,7 +663,7 @@ export const formInputClasses = {
     placeholder-gray-400 dark:placeholder-gray-500
     transition-colors duration-200
     focus:outline-none focus:ring-2 focus:ring-offset-0
-    border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/50
+    border-gray-400 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-200 dark:focus:ring-blue-900/50
   `.replace(/\s+/g, ' ').trim(),
 
   // Combined: base + error border
@@ -834,7 +834,7 @@ export const alertColors = {
 // ============================================================================
 export const dividerColors = {
   subtle: 'bg-gray-300 dark:bg-gray-600',
-  border: 'border-gray-200 dark:border-gray-700',
+  border: 'border-gray-400 dark:border-gray-700',
 };
 
 // ============================================================================
@@ -862,7 +862,7 @@ export const neutralAccentBg: Record<AccentVariant, string> = {
 // ============================================================================
 export const footerColors = {
   bg: 'bg-white dark:bg-gray-900',
-  border: 'border-t border-gray-200 dark:border-gray-800',
+  border: 'border-t border-gray-400 dark:border-gray-800',
 };
 
 // ============================================================================
@@ -904,14 +904,14 @@ export const cardBgColors = {
 // Card Border Colors - For card container borders
 // ============================================================================
 export const cardBorderColors = {
-  // Subtle: barely visible border for premium cards (use with shadows for depth)
-  subtle: 'border border-gray-200/60 dark:border-gray-700/60',
-  // Light: slightly more visible border
-  light: 'border border-gray-200 dark:border-gray-700',
+  // Subtle: light but WCAG 3:1 compliant border (gray-400 = 3.5:1 on white)
+  subtle: 'border border-gray-400 dark:border-gray-600',
+  // Light: same as subtle (gray-400 minimum for compliance)
+  light: 'border border-gray-400 dark:border-gray-600',
   // Medium: visible border for emphasis
-  medium: 'border border-gray-300 dark:border-gray-600',
+  medium: 'border border-gray-400 dark:border-gray-600',
   // Strong: prominent border (use sparingly)
-  strong: 'border-2 border-gray-400 dark:border-gray-500',
+  strong: 'border-2 border-gray-500 dark:border-gray-500',
 };
 
 // ============================================================================
@@ -1070,7 +1070,7 @@ export const categoryBadgeColors: Record<string, string> = {
 // File Upload Colors - For file upload dropzones
 // ============================================================================
 export const fileUploadColors = {
-  border: 'border-2 border-dashed border-gray-300 dark:border-gray-600',
+  border: 'border-2 border-dashed border-gray-400 dark:border-gray-600',
   hoverBorder: 'hover:border-blue-400 dark:hover:border-blue-500',
   bg: 'bg-gray-100 dark:bg-gray-800',
   hoverBg: 'hover:bg-gray-200 dark:hover:bg-gray-700',
@@ -1081,9 +1081,9 @@ export const fileUploadColors = {
 // ============================================================================
 export const navigationBgColors = {
   base: 'bg-white dark:bg-gray-900',
-  border: 'border-b border-gray-200 dark:border-gray-800',
+  border: 'border-b border-gray-400 dark:border-gray-800',
   dropdown: 'bg-white dark:bg-gray-800',
-  dropdownBorder: 'border border-gray-200 dark:border-gray-700',
+  dropdownBorder: 'border border-gray-400 dark:border-gray-700',
   dropdownHover: 'hover:bg-gray-100 dark:hover:bg-gray-700',
 };
 
@@ -1212,7 +1212,7 @@ export const productImageStyles = {
 export const adminSidebarColors = {
   // Sidebar container
   bg: 'bg-white dark:bg-gray-800',
-  border: 'border-r border-gray-200 dark:border-gray-700',
+  border: 'border-r border-gray-400 dark:border-gray-700',
 
   // Header section
   headerText: 'text-gray-900 dark:text-gray-100',
@@ -1338,7 +1338,7 @@ export const infoBannerColors: Record<AccentVariant, {
   },
   gray: {
     bg: 'bg-gray-100 dark:bg-gray-800',
-    border: 'border border-gray-200 dark:border-gray-600',
+    border: 'border border-gray-400 dark:border-gray-600',
     heading: 'text-gray-800 dark:text-white',
     text: 'text-gray-700 dark:text-gray-100',
   },

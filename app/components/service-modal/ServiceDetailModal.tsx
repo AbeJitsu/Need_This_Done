@@ -135,7 +135,7 @@ const SERVICE_THEMES: Record<AccentVariant, {
     iconText: accentText.gray,
     buttonBg: 'bg-gray-600',
     buttonHover: 'hover:bg-gray-700',
-    outlineBorder: 'border-gray-300',
+    outlineBorder: 'border-gray-400',
     outlineText: accentText.gray,
     outlineHover: 'hover:bg-gray-50',
   },

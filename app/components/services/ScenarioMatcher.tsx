@@ -105,8 +105,8 @@ export default function ScenarioMatcher({
                 className={`
                   w-full p-6 rounded-2xl text-left
                   ${cardBgColors.base}
-                  border border-gray-200/60 dark:border-gray-700/60
-                  hover:border-gray-300 dark:hover:border-gray-600
+                  border border-gray-400 dark:border-gray-700/60
+                  hover:border-gray-400 dark:hover:border-gray-600
                   hover:shadow-lg hover:-translate-y-1
                   transition-all duration-300
                   group

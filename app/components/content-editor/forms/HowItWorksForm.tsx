@@ -111,7 +111,7 @@ export default function HowItWorksForm({ content, onChange }: HowItWorksFormProp
                         onStepChange({ ...step, details: newDetails });
                       }}
                       placeholder="Detail point"
-                      className="flex-1 px-2 py-1 text-sm rounded border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700"
+                      className="flex-1 px-2 py-1 text-sm rounded border border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-700"
                     />
                     <button
                       type="button"

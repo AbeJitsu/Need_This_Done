@@ -233,7 +233,7 @@ export default function WhatCanYouBuild() {
       </div>
 
       {/* Footer Note */}
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-6 pt-6 border-t border-gray-400 dark:border-gray-700">
         <div className="space-y-3">
           <div>
             <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">

@@ -101,7 +101,7 @@ export default function ServiceComparisonTable({
                   h-full flex flex-col
                   rounded-2xl overflow-hidden
                   ${cardBgColors.base}
-                  border border-gray-200/60 dark:border-gray-700/60
+                  border border-gray-400 dark:border-gray-700/60
                   shadow-sm hover:shadow-lg hover:-translate-y-1
                   transition-all duration-300
                 `}
@@ -155,7 +155,7 @@ export default function ServiceComparisonTable({
                 </div>
 
                 {/* Pricing Footer - always at bottom */}
-                <div className={`px-6 py-4 ${config.lightBg} border-t border-gray-200/60 mt-auto`}>
+                <div className={`px-6 py-4 ${config.lightBg} border-t border-gray-400 mt-auto`}>
                   <div className="flex items-center justify-between">
                     <span className={`text-sm font-medium ${formInputColors.helper}`}>
                       Starting at

@@ -53,7 +53,7 @@ export default function AboutPage() {
 
             {/* Location badge - takes 5 columns, aligned right */}
             <div className="md:col-span-5 md:text-right">
-              <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-stone-100 border border-stone-400">
+              <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-stone-100 border border-stone-500">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-sm font-medium text-stone-600">
                   Orlando, Florida
@@ -84,7 +84,7 @@ export default function AboutPage() {
             {/* Army */}
             <div className="group relative">
               <div className="absolute -inset-1 bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative p-6 md:p-8 rounded-2xl bg-white border border-stone-400 hover:border-emerald-300 transition-colors duration-300">
+              <div className="relative p-6 md:p-8 rounded-2xl bg-white border border-stone-500 hover:border-emerald-300 transition-colors duration-300">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">🎖️</span>
                   <span className={`text-xs font-bold tracking-wider uppercase ${accentColors.green.text}`}>
@@ -104,7 +104,7 @@ export default function AboutPage() {
             {/* Toyota */}
             <div className="group relative md:translate-y-8">
               <div className="absolute -inset-1 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative p-6 md:p-8 rounded-2xl bg-white border border-stone-400 hover:border-blue-300 transition-colors duration-300">
+              <div className="relative p-6 md:p-8 rounded-2xl bg-white border border-stone-500 hover:border-blue-300 transition-colors duration-300">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">🚗</span>
                   <span className={`text-xs font-bold tracking-wider uppercase ${accentColors.blue.text}`}>
@@ -124,7 +124,7 @@ export default function AboutPage() {
             {/* Developer */}
             <div className="group relative">
               <div className="absolute -inset-1 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative p-6 md:p-8 rounded-2xl bg-white border border-stone-400 hover:border-purple-300 transition-colors duration-300">
+              <div className="relative p-6 md:p-8 rounded-2xl bg-white border border-stone-500 hover:border-purple-300 transition-colors duration-300">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">💻</span>
                   <span className={`text-xs font-bold tracking-wider uppercase ${accentColors.purple.text}`}>

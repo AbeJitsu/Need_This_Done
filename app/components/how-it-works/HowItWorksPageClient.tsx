@@ -68,7 +68,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
         <section className="pb-12">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
             <EditableSection sectionKey="trustBadges" label="Trust Badges">
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
+              <div className="bg-white rounded-2xl border border-gray-400 shadow-lg p-6">
                 <SortableItemsWrapper
                   sectionKey="trustBadges"
                   arrayField="trustBadges"

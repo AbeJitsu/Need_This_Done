@@ -205,7 +205,7 @@ export default function ServiceDeepDive({ defaultExpanded }: ServiceDeepDiveProp
 
       {/* Hint when nothing expanded - Premium empty state */}
       {!expanded && (
-        <div className="text-center py-16 rounded-2xl bg-gradient-to-br from-gray-50 to-slate-50/50 dark:from-gray-800/50 dark:to-slate-800/30 border border-gray-200/60 dark:border-gray-700/60">
+        <div className="text-center py-16 rounded-2xl bg-gradient-to-br from-gray-50 to-slate-50/50 dark:from-gray-800/50 dark:to-slate-800/30 border border-gray-400 dark:border-gray-700/60">
           <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
             <svg className="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
@@ -240,7 +240,7 @@ function ServiceShowcase({ serviceType, content, colors }: ServiceShowcaseProps)
     <div className={`
       relative rounded-3xl overflow-hidden
       ${cardBgColors.base}
-      border border-gray-200 dark:border-gray-700
+      border border-gray-400 dark:border-gray-700
       shadow-xl
       animate-slideDown
     `}>
@@ -380,8 +380,8 @@ function FeatureCard({ text, index, colors }: FeatureCardProps) {
     <div className={`
       group relative rounded-xl p-4
       ${cardBgColors.base}
-      border border-gray-200 dark:border-gray-700
-      hover:border-gray-300 dark:hover:border-gray-600
+      border border-gray-400 dark:border-gray-700
+      hover:border-gray-400 dark:hover:border-gray-600
       transition-all duration-300
       hover:shadow-md hover:-translate-y-0.5
     `}>

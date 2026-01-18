@@ -161,7 +161,7 @@ export default function AdminDashboard() {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               title="Filter by project status"
-              className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none"
+              className="w-full px-4 py-3 rounded-lg border-2 border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none"
             >
               <option value="">All statuses</option>
               <option value="submitted">Submitted</option>
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
               value={emailFilter}
               onChange={(e) => setEmailFilter(e.target.value)}
               placeholder="Name or email..."
-              className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none"
+              className="w-full px-4 py-3 rounded-lg border-2 border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none"
             />
           </div>
         </div>

@@ -41,7 +41,7 @@ export default function SectionListView({ sections, onSelectSection }: SectionLi
           onClick={() => onSelectSection(key)}
           className={`
             w-full text-left px-4 py-3 rounded-lg
-            border border-gray-200 dark:border-gray-700
+            border border-gray-400 dark:border-gray-700
             hover:bg-gray-100 dark:hover:bg-gray-700
             hover:border-blue-300 dark:hover:border-blue-600
             transition-all duration-150

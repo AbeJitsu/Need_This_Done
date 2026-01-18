@@ -113,7 +113,7 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
           </EditableSection>
 
           {/* Contact Section */}
-          <div className="mt-10 pt-10 border-t border-gray-200 dark:border-gray-700">
+          <div className="mt-10 pt-10 border-t border-gray-400 dark:border-gray-700">
             <p className={formInputColors.helper}>
               Questions or concerns about your privacy? Email us at{' '}
               <Link href="mailto:hello@needthisdone.com" className={`${accentText.blue} hover:underline`}>

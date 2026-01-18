@@ -148,7 +148,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
                       className={`
                         group
                         ${cardBgColors.base} rounded-2xl
-                        border ${isExpanded ? 'border-gray-300 dark:border-gray-600' : cardBorderColors.subtle}
+                        border ${isExpanded ? 'border-gray-400 dark:border-gray-600' : cardBorderColors.subtle}
                         border-l-4 ${styles.border}
                         shadow-sm hover:shadow-md
                         transition-all duration-300 ease-out

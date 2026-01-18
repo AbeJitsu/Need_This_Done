@@ -140,7 +140,7 @@ export default function FAQ() {
 
             {/* Answer */}
             {openId === faq.id && (
-              <div id={`faq-answer-${faq.id}`} className={`p-4 ${cardBgColors.base} border-t border-gray-200 dark:border-gray-700`}>
+              <div id={`faq-answer-${faq.id}`} className={`p-4 ${cardBgColors.base} border-t border-gray-400 dark:border-gray-700`}>
                 <p className={`${formInputColors.helper} text-sm leading-relaxed`}>
                   {faq.answer}
                 </p>
@@ -151,7 +151,7 @@ export default function FAQ() {
       </div>
 
       {/* Footer */}
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-6 pt-6 border-t border-gray-400 dark:border-gray-700">
         <p className={`text-xs ${formInputColors.helper}`}>
           Still have questions? The best way to learn is to try it. Clone this template, explore the code,
           and build something. You'll understand how it all works faster than reading explanations.

@@ -14,7 +14,7 @@ interface SidebarHeaderProps {
 
 export default function SidebarHeader({ pageSlug, onClose }: SidebarHeaderProps) {
   return (
-    <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 p-4">
+    <div className="flex-shrink-0 border-b border-gray-400 dark:border-gray-700 p-4">
       <div className="flex items-center justify-between mb-2">
         <h2 className={`font-semibold ${headingColors.primary}`}>
           Page Editor

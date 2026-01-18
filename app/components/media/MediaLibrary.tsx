@@ -169,7 +169,7 @@ export default function MediaLibrary({
         {/* ================================================================
             Header
             ================================================================ */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-400 dark:border-gray-700">
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             {title}
           </h2>
@@ -186,7 +186,7 @@ export default function MediaLibrary({
         {/* ================================================================
             Toolbar
             ================================================================ */}
-        <div className={`flex flex-wrap items-center gap-3 px-6 py-4 ${uiChromeBg.toolbar} border-b border-gray-200 dark:border-gray-700`}>
+        <div className={`flex flex-wrap items-center gap-3 px-6 py-4 ${uiChromeBg.toolbar} border-b border-gray-400 dark:border-gray-700`}>
           {/* Search */}
           <div className="relative flex-1 min-w-[200px]">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -197,7 +197,7 @@ export default function MediaLibrary({
               placeholder="Search images..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className={`w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg ${cardBgColors.base} text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+              className={`w-full pl-10 pr-4 py-2 text-sm border border-gray-400 dark:border-gray-600 rounded-lg ${cardBgColors.base} text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
             />
           </div>
 
@@ -205,7 +205,7 @@ export default function MediaLibrary({
           <select
             value={folder}
             onChange={(e) => setFolder(e.target.value)}
-            className={`px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg ${cardBgColors.base} text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+            className={`px-4 py-2 text-sm border border-gray-400 dark:border-gray-600 rounded-lg ${cardBgColors.base} text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
           >
             <option value="all">All Folders</option>
             {MEDIA_FOLDERS.map(f => (
@@ -233,7 +233,7 @@ export default function MediaLibrary({
             Upload Zone (collapsible)
             ================================================================ */}
         {showUpload && (
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="px-6 py-4 border-b border-gray-400 dark:border-gray-700">
             <ImageUpload
               folder={folder === 'all' ? 'general' : folder}
               onUpload={handleUpload}
@@ -354,7 +354,7 @@ export default function MediaLibrary({
         {/* ================================================================
             Footer
             ================================================================ */}
-        <div className={`flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700 ${uiChromeBg.footer}`}>
+        <div className={`flex items-center justify-between px-6 py-4 border-t border-gray-400 dark:border-gray-700 ${uiChromeBg.footer}`}>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             {selectedIds.size > 0
               ? `${selectedIds.size} selected`

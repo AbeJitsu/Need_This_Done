@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Need This Done - Color Contrast Viewer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; padding: 2rem; }
+    h1 { margin-bottom: 1rem; color: #1a1a1a; }
+    h2 { margin: 2rem 0 1rem; color: #333; border-bottom: 2px solid #e5e5e5; padding-bottom: 0.5rem; }
+    h3 { margin: 1.5rem 0 0.5rem; color: #666; font-size: 1rem; }
+    .palette { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.5rem; margin-bottom: 1rem; }
+    .swatch { padding: 0.75rem 0.5rem; border-radius: 8px; text-align: center; font-size: 0.7rem; }
+    .swatch-name { font-weight: 600; margin-bottom: 0.25rem; }
+    .swatch-hex { opacity: 0.8; margin-bottom: 0.25rem; font-size: 0.65rem; }
+    .swatch-ratio { font-weight: 600; padding: 2px 6px; border-radius: 4px; display: inline-block; font-size: 0.65rem; }
+    .ratio-pass { background: #22c55e; color: white; }
+    .ratio-fail { background: #ef4444; color: white; }
+    .ratio-aa-large { background: #f59e0b; color: white; }
+    .section { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .legend { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
+    .legend-badge { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e5e5e5; }
+    th { background: #f9f9f9; font-weight: 600; }
+    .note { background: #fef3c7; padding: 1rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid #f59e0b; }
+    .good { color: #16a34a; }
+    .bad { color: #dc2626; }
+    .color-header { display: flex; align-items: center; gap: 0.5rem; }
+    .color-dot { width: 16px; height: 16px; border-radius: 50%; }
+    .min-shade { background: #dcfce7; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; color: #166534; margin-left: auto; }
+  </style>
+</head>
+<body>
+  <h1>Need This Done - Color Contrast Viewer</h1>
+  <p style="margin-bottom: 2rem; color: #666;">
+    WCAG AA requires <strong>4.5:1</strong> for normal text, <strong>3:1</strong> for large text (18pt+) and UI components (borders, icons).
+  </p>
+
+  <div class="legend">
+    <div class="legend-item">
+      <span class="legend-badge ratio-pass">≥4.5:1</span> Passes AA (all text)
+    </div>
+    <div class="legend-item">
+      <span class="legend-badge ratio-aa-large">3:1 - 4.5:1</span> Passes AA (large text/borders only)
+    </div>
+    <div class="legend-item">
+      <span class="legend-badge ratio-fail">&lt;3:1</span> Fails (insufficient contrast)
+    </div>
+  </div>
+
+  <!-- EMERALD (Green) -->
+  <div class="section">
+    <div class="color-header">
+      <div class="color-dot" style="background: #10b981;"></div>
+      <h2 style="margin: 0; border: none;">Emerald (Primary Green)</h2>
+      <span class="min-shade">Min border: emerald-500 | Min text: emerald-600</span>
+    </div>
+    <p style="margin: 0.5rem 0 1rem; color: #666;">Primary CTAs, success states, BJJ belt progression #1</p>
+    <div class="palette">
+      <div class="swatch" style="background: #ecfdf5; color: #111;">
+        <div class="swatch-name">emerald-50</div>
+        <div class="swatch-hex">#ecfdf5</div>
+        <div class="swatch-ratio ratio-fail">1.04:1</div>
+      </div>
+      <div class="swatch" style="background: #d1fae5; color: #111;">
+        <div class="swatch-name">emerald-100</div>
+        <div class="swatch-hex">#d1fae5</div>
+        <div class="swatch-ratio ratio-fail">1.14:1</div>
+      </div>
+      <div class="swatch" style="background: #a7f3d0; color: #111;">
+        <div class="swatch-name">emerald-200</div>
+        <div class="swatch-hex">#a7f3d0</div>
+        <div class="swatch-ratio ratio-fail">1.34:1</div>
+      </div>
+      <div class="swatch" style="background: #6ee7b7; color: #111;">
+        <div class="swatch-name">emerald-300</div>
+        <div class="swatch-hex">#6ee7b7</div>
+        <div class="swatch-ratio ratio-fail">1.65:1</div>
+      </div>
+      <div class="swatch" style="background: #34d399; color: #111;">
+        <div class="swatch-name">emerald-400</div>
+        <div class="swatch-hex">#34d399</div>
+        <div class="swatch-ratio ratio-fail">2.15:1</div>
+      </div>
+      <div class="swatch" style="background: #10b981; color: #fff;">
+        <div class="swatch-name">emerald-500</div>
+        <div class="swatch-hex">#10b981</div>
+        <div class="swatch-ratio ratio-aa-large">3.4:1 ✓</div>
+      </div>
+      <div class="swatch" style="background: #059669; color: #fff;">
+        <div class="swatch-name">emerald-600</div>
+        <div class="swatch-hex">#059669</div>
+        <div class="swatch-ratio ratio-pass">4.53:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #047857; color: #fff;">
+        <div class="swatch-name">emerald-700</div>
+        <div class="swatch-hex">#047857</div>
+        <div class="swatch-ratio ratio-pass">5.92:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #065f46; color: #fff;">
+        <div class="swatch-name">emerald-800</div>
+        <div class="swatch-hex">#065f46</div>
+        <div class="swatch-ratio ratio-pass">7.83:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #064e3b; color: #fff;">
+        <div class="swatch-name">emerald-900</div>
+        <div class="swatch-hex">#064e3b</div>
+        <div class="swatch-ratio ratio-pass">9.42:1 ✓✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLUE -->
+  <div class="section">
+    <div class="color-header">
+      <div class="color-dot" style="background: #3b82f6;"></div>
+      <h2 style="margin: 0; border: none;">Blue</h2>
+      <span class="min-shade">Min border: blue-500 | Min text: blue-600</span>
+    </div>
+    <p style="margin: 0.5rem 0 1rem; color: #666;">Links, secondary buttons, professional tone, BJJ belt progression #2</p>
+    <div class="palette">
+      <div class="swatch" style="background: #eff6ff; color: #111;">
+        <div class="swatch-name">blue-50</div>
+        <div class="swatch-hex">#eff6ff</div>
+        <div class="swatch-ratio ratio-fail">1.05:1</div>
+      </div>
+      <div class="swatch" style="background: #dbeafe; color: #111;">
+        <div class="swatch-name">blue-100</div>
+        <div class="swatch-hex">#dbeafe</div>
+        <div class="swatch-ratio ratio-fail">1.15:1</div>
+      </div>
+      <div class="swatch" style="background: #bfdbfe; color: #111;">
+        <div class="swatch-name">blue-200</div>
+        <div class="swatch-hex">#bfdbfe</div>
+        <div class="swatch-ratio ratio-fail">1.36:1</div>
+      </div>
+      <div class="swatch" style="background: #93c5fd; color: #111;">
+        <div class="swatch-name">blue-300</div>
+        <div class="swatch-hex">#93c5fd</div>
+        <div class="swatch-ratio ratio-fail">1.72:1</div>
+      </div>
+      <div class="swatch" style="background: #60a5fa; color: #111;">
+        <div class="swatch-name">blue-400</div>
+        <div class="swatch-hex">#60a5fa</div>
+        <div class="swatch-ratio ratio-fail">2.28:1</div>
+      </div>
+      <div class="swatch" style="background: #3b82f6; color: #fff;">
+        <div class="swatch-name">blue-500</div>
+        <div class="swatch-hex">#3b82f6</div>
+        <div class="swatch-ratio ratio-aa-large">3.24:1 ✓</div>
+      </div>
+      <div class="swatch" style="background: #2563eb; color: #fff;">
+        <div class="swatch-name">blue-600</div>
+        <div class="swatch-hex">#2563eb</div>
+        <div class="swatch-ratio ratio-pass">4.68:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #1d4ed8; color: #fff;">
+        <div class="swatch-name">blue-700</div>
+        <div class="swatch-hex">#1d4ed8</div>
+        <div class="swatch-ratio ratio-pass">6.16:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #1e40af; color: #fff;">
+        <div class="swatch-name">blue-800</div>
+        <div class="swatch-hex">#1e40af</div>
+        <div class="swatch-ratio ratio-pass">8.07:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #1e3a8a; color: #fff;">
+        <div class="swatch-name">blue-900</div>
+        <div class="swatch-hex">#1e3a8a</div>
+        <div class="swatch-ratio ratio-pass">9.67:1 ✓✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PURPLE -->
+  <div class="section">
+    <div class="color-header">
+      <div class="color-dot" style="background: #a855f7;"></div>
+      <h2 style="margin: 0; border: none;">Purple</h2>
+      <span class="min-shade">Min border: purple-500 | Min text: purple-600</span>
+    </div>
+    <p style="margin: 0.5rem 0 1rem; color: #666;">Tertiary accents, creativity, special emphasis, BJJ belt progression #3</p>
+    <div class="palette">
+      <div class="swatch" style="background: #faf5ff; color: #111;">
+        <div class="swatch-name">purple-50</div>
+        <div class="swatch-hex">#faf5ff</div>
+        <div class="swatch-ratio ratio-fail">1.03:1</div>
+      </div>
+      <div class="swatch" style="background: #f3e8ff; color: #111;">
+        <div class="swatch-name">purple-100</div>
+        <div class="swatch-hex">#f3e8ff</div>
+        <div class="swatch-ratio ratio-fail">1.1:1</div>
+      </div>
+      <div class="swatch" style="background: #e9d5ff; color: #111;">
+        <div class="swatch-name">purple-200</div>
+        <div class="swatch-hex">#e9d5ff</div>
+        <div class="swatch-ratio ratio-fail">1.27:1</div>
+      </div>
+      <div class="swatch" style="background: #d8b4fe; color: #111;">
+        <div class="swatch-name">purple-300</div>
+        <div class="swatch-hex">#d8b4fe</div>
+        <div class="swatch-ratio ratio-fail">1.55:1</div>
+      </div>
+      <div class="swatch" style="background: #c084fc; color: #111;">
+        <div class="swatch-name">purple-400</div>
+        <div class="swatch-hex">#c084fc</div>
+        <div class="swatch-ratio ratio-fail">2.03:1</div>
+      </div>
+      <div class="swatch" style="background: #a855f7; color: #fff;">
+        <div class="swatch-name">purple-500</div>
+        <div class="swatch-hex">#a855f7</div>
+        <div class="swatch-ratio ratio-aa-large">3.36:1 ✓</div>
+      </div>
+      <div class="swatch" style="background: #9333ea; color: #fff;">
+        <div class="swatch-name">purple-600</div>
+        <div class="swatch-hex">#9333ea</div>
+        <div class="swatch-ratio ratio-pass">5.18:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #7e22ce; color: #fff;">
+        <div class="swatch-name">purple-700</div>
+        <div class="swatch-hex">#7e22ce</div>
+        <div class="swatch-ratio ratio-pass">6.97:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #6b21a8; color: #fff;">
+        <div class="swatch-name">purple-800</div>
+        <div class="swatch-hex">#6b21a8</div>
+        <div class="swatch-ratio ratio-pass">8.67:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #581c87; color: #fff;">
+        <div class="swatch-name">purple-900</div>
+        <div class="swatch-hex">#581c87</div>
+        <div class="swatch-ratio ratio-pass">10.64:1 ✓✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOLD -->
+  <div class="section">
+    <div class="color-header">
+      <div class="color-dot" style="background: #eab308;"></div>
+      <h2 style="margin: 0; border: none;">Gold</h2>
+      <span class="min-shade">Min border: gold-500 | Min text: gold-700</span>
+    </div>
+    <p style="margin: 0.5rem 0 1rem; color: #666;">Warm highlights, achievement, links on dark backgrounds, BJJ belt progression #4</p>
+    <div class="palette">
+      <div class="swatch" style="background: #fefce8; color: #111;">
+        <div class="swatch-name">gold-50</div>
+        <div class="swatch-hex">#fefce8</div>
+        <div class="swatch-ratio ratio-fail">1.03:1</div>
+      </div>
+      <div class="swatch" style="background: #fef9c3; color: #111;">
+        <div class="swatch-name">gold-100</div>
+        <div class="swatch-hex">#fef9c3</div>
+        <div class="swatch-ratio ratio-fail">1.1:1</div>
+      </div>
+      <div class="swatch" style="background: #fef08a; color: #111;">
+        <div class="swatch-name">gold-200</div>
+        <div class="swatch-hex">#fef08a</div>
+        <div class="swatch-ratio ratio-fail">1.22:1</div>
+      </div>
+      <div class="swatch" style="background: #fde047; color: #111;">
+        <div class="swatch-name">gold-300</div>
+        <div class="swatch-hex">#fde047</div>
+        <div class="swatch-ratio ratio-fail">1.38:1</div>
+      </div>
+      <div class="swatch" style="background: #facc15; color: #111;">
+        <div class="swatch-name">gold-400</div>
+        <div class="swatch-hex">#facc15</div>
+        <div class="swatch-ratio ratio-fail">1.62:1</div>
+      </div>
+      <div class="swatch" style="background: #eab308; color: #111;">
+        <div class="swatch-name">gold-500</div>
+        <div class="swatch-hex">#eab308</div>
+        <div class="swatch-ratio ratio-aa-large">3.09:1 ✓</div>
+      </div>
+      <div class="swatch" style="background: #ca8a04; color: #fff;">
+        <div class="swatch-name">gold-600</div>
+        <div class="swatch-hex">#ca8a04</div>
+        <div class="swatch-ratio ratio-aa-large">3.82:1 ✓</div>
+      </div>
+      <div class="swatch" style="background: #a16207; color: #fff;">
+        <div class="swatch-name">gold-700</div>
+        <div class="swatch-hex">#a16207</div>
+        <div class="swatch-ratio ratio-pass">4.86:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #854d0e; color: #fff;">
+        <div class="swatch-name">gold-800</div>
+        <div class="swatch-hex">#854d0e</div>
+        <div class="swatch-ratio ratio-pass">6.11:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #713f12; color: #fff;">
+        <div class="swatch-name">gold-900</div>
+        <div class="swatch-hex">#713f12</div>
+        <div class="swatch-ratio ratio-pass">7.37:1 ✓✓</div>
+      </div>
+    </div>
+    <div class="note">
+      <strong>Note:</strong> Gold text on white requires <strong>gold-700</strong> minimum (4.86:1). Gold-500/600 only work for borders/large text.
+    </div>
+  </div>
+
+  <!-- GRAY -->
+  <div class="section">
+    <div class="color-header">
+      <div class="color-dot" style="background: #6b7280;"></div>
+      <h2 style="margin: 0; border: none;">Gray (Primary Neutral)</h2>
+      <span class="min-shade">Min border: gray-400 | Min text: gray-600</span>
+    </div>
+    <p style="margin: 0.5rem 0 1rem; color: #666;">Primary neutral palette, cool blue undertones. Most used (1,776 instances).</p>
+    <div class="palette">
+      <div class="swatch" style="background: #f9fafb; color: #111;">
+        <div class="swatch-name">gray-50</div>
+        <div class="swatch-hex">#f9fafb</div>
+        <div class="swatch-ratio ratio-fail">1.07:1</div>
+      </div>
+      <div class="swatch" style="background: #f3f4f6; color: #111;">
+        <div class="swatch-name">gray-100</div>
+        <div class="swatch-hex">#f3f4f6</div>
+        <div class="swatch-ratio ratio-fail">1.13:1</div>
+      </div>
+      <div class="swatch" style="background: #e5e7eb; color: #111;">
+        <div class="swatch-name">gray-200</div>
+        <div class="swatch-hex">#e5e7eb</div>
+        <div class="swatch-ratio ratio-fail">1.34:1</div>
+      </div>
+      <div class="swatch" style="background: #d1d5db; color: #111;">
+        <div class="swatch-name">gray-300</div>
+        <div class="swatch-hex">#d1d5db</div>
+        <div class="swatch-ratio ratio-fail">1.75:1</div>
+      </div>
+      <div class="swatch" style="background: #9ca3af; color: #fff;">
+        <div class="swatch-name">gray-400</div>
+        <div class="swatch-hex">#9ca3af</div>
+        <div class="swatch-ratio ratio-aa-large">3.03:1 ✓</div>
+      </div>
+      <div class="swatch" style="background: #6b7280; color: #fff;">
+        <div class="swatch-name">gray-500</div>
+        <div class="swatch-hex">#6b7280</div>
+        <div class="swatch-ratio ratio-pass">5.03:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #4b5563; color: #fff;">
+        <div class="swatch-name">gray-600</div>
+        <div class="swatch-hex">#4b5563</div>
+        <div class="swatch-ratio ratio-pass">7.52:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #374151; color: #fff;">
+        <div class="swatch-name">gray-700</div>
+        <div class="swatch-hex">#374151</div>
+        <div class="swatch-ratio ratio-pass">10.31:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #1f2937; color: #fff;">
+        <div class="swatch-name">gray-800</div>
+        <div class="swatch-hex">#1f2937</div>
+        <div class="swatch-ratio ratio-pass">13.95:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #111827; color: #fff;">
+        <div class="swatch-name">gray-900</div>
+        <div class="swatch-hex">#111827</div>
+        <div class="swatch-ratio ratio-pass">17.04:1 ✓✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STONE -->
+  <div class="section">
+    <div class="color-header">
+      <div class="color-dot" style="background: #78716c;"></div>
+      <h2 style="margin: 0; border: none;">Stone (Warm Neutral)</h2>
+      <span class="min-shade">Min border: stone-500 | Min text: stone-600</span>
+    </div>
+    <p style="margin: 0.5rem 0 1rem; color: #666;">Warm neutral with brown undertones. Used on /about, /resume for premium feel.</p>
+    <div class="palette">
+      <div class="swatch" style="background: #fafaf9; color: #111;">
+        <div class="swatch-name">stone-50</div>
+        <div class="swatch-hex">#fafaf9</div>
+        <div class="swatch-ratio ratio-fail">1.05:1</div>
+      </div>
+      <div class="swatch" style="background: #f5f5f4; color: #111;">
+        <div class="swatch-name">stone-100</div>
+        <div class="swatch-hex">#f5f5f4</div>
+        <div class="swatch-ratio ratio-fail">1.1:1</div>
+      </div>
+      <div class="swatch" style="background: #e7e5e4; color: #111;">
+        <div class="swatch-name">stone-200</div>
+        <div class="swatch-hex">#e7e5e4</div>
+        <div class="swatch-ratio ratio-fail">1.29:1</div>
+      </div>
+      <div class="swatch" style="background: #d6d3d1; color: #111;">
+        <div class="swatch-name">stone-300</div>
+        <div class="swatch-hex">#d6d3d1</div>
+        <div class="swatch-ratio ratio-fail">1.65:1</div>
+      </div>
+      <div class="swatch" style="background: #a8a29e; color: #fff;">
+        <div class="swatch-name">stone-400</div>
+        <div class="swatch-hex">#a8a29e</div>
+        <div class="swatch-ratio ratio-fail">2.52:1 ✗</div>
+      </div>
+      <div class="swatch" style="background: #78716c; color: #fff;">
+        <div class="swatch-name">stone-500</div>
+        <div class="swatch-hex">#78716c</div>
+        <div class="swatch-ratio ratio-pass">4.25:1 ✓</div>
+      </div>
+      <div class="swatch" style="background: #57534e; color: #fff;">
+        <div class="swatch-name">stone-600</div>
+        <div class="swatch-hex">#57534e</div>
+        <div class="swatch-ratio ratio-pass">6.59:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #44403c; color: #fff;">
+        <div class="swatch-name">stone-700</div>
+        <div class="swatch-hex">#44403c</div>
+        <div class="swatch-ratio ratio-pass">8.96:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #292524; color: #fff;">
+        <div class="swatch-name">stone-800</div>
+        <div class="swatch-hex">#292524</div>
+        <div class="swatch-ratio ratio-pass">13.28:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #1c1917; color: #fff;">
+        <div class="swatch-name">stone-900</div>
+        <div class="swatch-hex">#1c1917</div>
+        <div class="swatch-ratio ratio-pass">16.35:1 ✓✓</div>
+      </div>
+    </div>
+    <div class="note">
+      <strong>Warning:</strong> stone-400 (2.52:1) does NOT meet 3:1 contrast. Use <strong>stone-500</strong> minimum for borders.
+    </div>
+  </div>
+
+  <!-- SLATE -->
+  <div class="section">
+    <div class="color-header">
+      <div class="color-dot" style="background: #64748b;"></div>
+      <h2 style="margin: 0; border: none;">Slate (Cool Neutral)</h2>
+      <span class="min-shade">Min border: slate-400 | Min text: slate-600</span>
+    </div>
+    <p style="margin: 0.5rem 0 1rem; color: #666;">Cool neutral with stronger blue undertones than gray. Used sparingly.</p>
+    <div class="palette">
+      <div class="swatch" style="background: #f8fafc; color: #111;">
+        <div class="swatch-name">slate-50</div>
+        <div class="swatch-hex">#f8fafc</div>
+        <div class="swatch-ratio ratio-fail">1.06:1</div>
+      </div>
+      <div class="swatch" style="background: #f1f5f9; color: #111;">
+        <div class="swatch-name">slate-100</div>
+        <div class="swatch-hex">#f1f5f9</div>
+        <div class="swatch-ratio ratio-fail">1.12:1</div>
+      </div>
+      <div class="swatch" style="background: #e2e8f0; color: #111;">
+        <div class="swatch-name">slate-200</div>
+        <div class="swatch-hex">#e2e8f0</div>
+        <div class="swatch-ratio ratio-fail">1.31:1</div>
+      </div>
+      <div class="swatch" style="background: #cbd5e1; color: #111;">
+        <div class="swatch-name">slate-300</div>
+        <div class="swatch-hex">#cbd5e1</div>
+        <div class="swatch-ratio ratio-fail">1.68:1</div>
+      </div>
+      <div class="swatch" style="background: #94a3b8; color: #fff;">
+        <div class="swatch-name">slate-400</div>
+        <div class="swatch-hex">#94a3b8</div>
+        <div class="swatch-ratio ratio-aa-large">3.02:1 ✓</div>
+      </div>
+      <div class="swatch" style="background: #64748b; color: #fff;">
+        <div class="swatch-name">slate-500</div>
+        <div class="swatch-hex">#64748b</div>
+        <div class="swatch-ratio ratio-pass">4.96:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #475569; color: #fff;">
+        <div class="swatch-name">slate-600</div>
+        <div class="swatch-hex">#475569</div>
+        <div class="swatch-ratio ratio-pass">7.39:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #334155; color: #fff;">
+        <div class="swatch-name">slate-700</div>
+        <div class="swatch-hex">#334155</div>
+        <div class="swatch-ratio ratio-pass">10.2:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #1e293b; color: #fff;">
+        <div class="swatch-name">slate-800</div>
+        <div class="swatch-hex">#1e293b</div>
+        <div class="swatch-ratio ratio-pass">13.86:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #0f172a; color: #fff;">
+        <div class="swatch-name">slate-900</div>
+        <div class="swatch-hex">#0f172a</div>
+        <div class="swatch-ratio ratio-pass">17.32:1 ✓✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RED (Errors Only) -->
+  <div class="section">
+    <div class="color-header">
+      <div class="color-dot" style="background: #ef4444;"></div>
+      <h2 style="margin: 0; border: none;">Red (Errors Only)</h2>
+      <span class="min-shade">Min border: red-500 | Min text: red-600</span>
+    </div>
+    <p style="margin: 0.5rem 0 1rem; color: #666;">Reserved for error states, warnings, and destructive actions only.</p>
+    <div class="palette">
+      <div class="swatch" style="background: #fef2f2; color: #111;">
+        <div class="swatch-name">red-50</div>
+        <div class="swatch-hex">#fef2f2</div>
+        <div class="swatch-ratio ratio-fail">1.04:1</div>
+      </div>
+      <div class="swatch" style="background: #fee2e2; color: #111;">
+        <div class="swatch-name">red-100</div>
+        <div class="swatch-hex">#fee2e2</div>
+        <div class="swatch-ratio ratio-fail">1.13:1</div>
+      </div>
+      <div class="swatch" style="background: #fecaca; color: #111;">
+        <div class="swatch-name">red-200</div>
+        <div class="swatch-hex">#fecaca</div>
+        <div class="swatch-ratio ratio-fail">1.29:1</div>
+      </div>
+      <div class="swatch" style="background: #fca5a5; color: #111;">
+        <div class="swatch-name">red-300</div>
+        <div class="swatch-hex">#fca5a5</div>
+        <div class="swatch-ratio ratio-fail">1.68:1</div>
+      </div>
+      <div class="swatch" style="background: #f87171; color: #111;">
+        <div class="swatch-name">red-400</div>
+        <div class="swatch-hex">#f87171</div>
+        <div class="swatch-ratio ratio-fail">2.25:1</div>
+      </div>
+      <div class="swatch" style="background: #ef4444; color: #fff;">
+        <div class="swatch-name">red-500</div>
+        <div class="swatch-hex">#ef4444</div>
+        <div class="swatch-ratio ratio-aa-large">3.06:1 ✓</div>
+      </div>
+      <div class="swatch" style="background: #dc2626; color: #fff;">
+        <div class="swatch-name">red-600</div>
+        <div class="swatch-hex">#dc2626</div>
+        <div class="swatch-ratio ratio-pass">4.62:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #b91c1c; color: #fff;">
+        <div class="swatch-name">red-700</div>
+        <div class="swatch-hex">#b91c1c</div>
+        <div class="swatch-ratio ratio-pass">6.05:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #991b1b; color: #fff;">
+        <div class="swatch-name">red-800</div>
+        <div class="swatch-hex">#991b1b</div>
+        <div class="swatch-ratio ratio-pass">7.61:1 ✓✓</div>
+      </div>
+      <div class="swatch" style="background: #7f1d1d; color: #fff;">
+        <div class="swatch-name">red-900</div>
+        <div class="swatch-hex">#7f1d1d</div>
+        <div class="swatch-ratio ratio-pass">9.26:1 ✓✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Reference -->
+  <div class="section">
+    <h2>Quick Reference - Minimum Compliant Shades</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Color</th>
+          <th>Min Text (4.5:1)</th>
+          <th>Min Border/Icon (3:1)</th>
+          <th>Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color: #059669;">Emerald</strong></td>
+          <td>emerald-600</td>
+          <td>emerald-500</td>
+          <td>Primary CTAs, success</td>
+        </tr>
+        <tr>
+          <td><strong style="color: #2563eb;">Blue</strong></td>
+          <td>blue-600</td>
+          <td>blue-500</td>
+          <td>Links, secondary buttons</td>
+        </tr>
+        <tr>
+          <td><strong style="color: #9333ea;">Purple</strong></td>
+          <td>purple-600</td>
+          <td>purple-500</td>
+          <td>Tertiary accents</td>
+        </tr>
+        <tr>
+          <td><strong style="color: #a16207;">Gold</strong></td>
+          <td>gold-700</td>
+          <td>gold-500</td>
+          <td>Warm highlights</td>
+        </tr>
+        <tr>
+          <td><strong style="color: #4b5563;">Gray</strong></td>
+          <td>gray-600</td>
+          <td>gray-400</td>
+          <td>Primary neutral</td>
+        </tr>
+        <tr>
+          <td><strong style="color: #57534e;">Stone</strong></td>
+          <td>stone-600</td>
+          <td>stone-500</td>
+          <td>Warm neutral</td>
+        </tr>
+        <tr>
+          <td><strong style="color: #475569;">Slate</strong></td>
+          <td>slate-600</td>
+          <td>slate-400</td>
+          <td>Cool neutral</td>
+        </tr>
+        <tr>
+          <td><strong style="color: #dc2626;">Red</strong></td>
+          <td>red-600</td>
+          <td>red-500</td>
+          <td>Errors only</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BJJ Belt Order -->
+  <div class="section">
+    <h2>BJJ Belt Color Progression</h2>
+    <p style="margin-bottom: 1rem; color: #666;">When multiple colored elements appear together, follow this order (top-to-bottom or left-to-right):</p>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <div style="padding: 1rem 2rem; background: #10b981; color: white; border-radius: 8px; font-weight: 600;">1. Emerald (Green)</div>
+      <div style="padding: 1rem 2rem; background: #3b82f6; color: white; border-radius: 8px; font-weight: 600;">2. Blue</div>
+      <div style="padding: 1rem 2rem; background: #a855f7; color: white; border-radius: 8px; font-weight: 600;">3. Purple</div>
+      <div style="padding: 1rem 2rem; background: #eab308; color: #111; border-radius: 8px; font-weight: 600;">4. Gold</div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -95,7 +95,7 @@ export default function CTASection({
   const theme = themeColors[hoverColor];
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-sm">
+    <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-400 dark:border-gray-700 shadow-sm">
       {/* Top accent bar - bold color stripe */}
       <div className={`h-1.5 ${theme.accentBg}`} />
 

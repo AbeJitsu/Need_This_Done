@@ -105,7 +105,7 @@ export default function ArrayField<T>({
             className={`
               relative p-4 rounded-lg
               ${uiChromeBg.panel}
-              border border-gray-200 dark:border-gray-600
+              border border-gray-400 dark:border-gray-600
             `}
           >
             {/* Item header with controls */}
@@ -182,7 +182,7 @@ export default function ArrayField<T>({
 
       {/* Empty state */}
       {items.length === 0 && (
-        <div className="p-6 text-center rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-700">
+        <div className="p-6 text-center rounded-lg border-2 border-dashed border-gray-400 dark:border-gray-700">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             No items yet. Click &ldquo;Add Item&rdquo; to get started.
           </p>

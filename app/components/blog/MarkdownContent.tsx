@@ -135,7 +135,7 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
           // ============================================
           table: ({ children }) => (
             <div className="overflow-x-auto mb-4">
-              <table className="min-w-full border-collapse border border-gray-200 dark:border-gray-700">
+              <table className="min-w-full border-collapse border border-gray-400 dark:border-gray-700">
                 {children}
               </table>
             </div>
@@ -145,7 +145,7 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
           ),
           tbody: ({ children }) => <tbody>{children}</tbody>,
           tr: ({ children }) => (
-            <tr className="border-b border-gray-200 dark:border-gray-700">{children}</tr>
+            <tr className="border-b border-gray-400 dark:border-gray-700">{children}</tr>
           ),
           th: ({ children }) => (
             <th className="px-4 py-2 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -171,7 +171,7 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
           // Horizontal Rules
           // ============================================
           hr: () => (
-            <hr className="my-8 border-gray-200 dark:border-gray-700" />
+            <hr className="my-8 border-gray-400 dark:border-gray-700" />
           ),
 
           // ============================================

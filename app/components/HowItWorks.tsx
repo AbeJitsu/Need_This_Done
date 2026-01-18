@@ -182,7 +182,7 @@ export default function HowItWorks() {
       </div>
 
       {/* For Developers Section */}
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-6 pt-6 border-t border-gray-400 dark:border-gray-700">
         <button
           type="button"
           onClick={() => setExpandDeveloper(!expandDeveloper)}
@@ -291,7 +291,7 @@ const { data } = await supabase
       </div>
 
       {/* Footer */}
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-6 pt-6 border-t border-gray-400 dark:border-gray-700">
         <p className={`text-xs ${formInputColors.helper}`}>
           <strong>In a nutshell:</strong> When someone visits, your app asks itself "Do I remember this?" If yes, answer instantly. If no, look it up and remember it for next time. Everything is encrypted and protected so only the right person sees their information.
         </p>

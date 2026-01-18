@@ -30,7 +30,7 @@ export default function CollapsibleSection({
   return (
     <div
       className={`
-        border-2 border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden
+        border-2 border-gray-400 dark:border-gray-700 rounded-xl overflow-hidden
         transition-colors duration-200
         ${isOpen ? cardBgColors.base : uiChromeBg.panel}
         ${className}

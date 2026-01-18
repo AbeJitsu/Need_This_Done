@@ -132,7 +132,7 @@ export default function LessonPlayer({
       />
 
       {/* Action Bar */}
-      <div className="flex items-center justify-between gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between gap-4 pt-6 border-t border-gray-400 dark:border-gray-700">
         {/* Navigation */}
         <div className="flex gap-2">
           <button

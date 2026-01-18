@@ -203,7 +203,7 @@ export default function SystemOverview() {
 
       {/* Expandable Details Section */}
       {showDetails && (
-        <div className={`border-t border-gray-200 dark:border-gray-700 ${uiChromeBg.panel} p-4`}>
+        <div className={`border-t border-gray-400 dark:border-gray-700 ${uiChromeBg.panel} p-4`}>
           <div className="grid sm:grid-cols-2 gap-3">
             {services.map(({ key, status }) => {
               const info = serviceInfo[key as keyof typeof serviceInfo];
@@ -214,7 +214,7 @@ export default function SystemOverview() {
                   key={key}
                   className={`p-3 rounded-lg border ${
                     isUp
-                      ? `${cardBgColors.base} border-gray-200 dark:border-gray-700`
+                      ? `${cardBgColors.base} border-gray-400 dark:border-gray-700`
                       : `${statusIndicatorBg.warning} border-gold-200 dark:border-gold-600`
                   }`}
                 >

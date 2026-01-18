@@ -181,7 +181,7 @@ export default function QuizBlock({
                   ${quizState === 'submitted' ? 'cursor-default' : 'cursor-pointer hover:border-gray-400 dark:hover:border-gray-500'}
                   ${isSelected && quizState === 'answering'
                     ? `${selectedStateColors[color].border} ${selectedStateColors[color].bg}`
-                    : 'border-gray-200 dark:border-gray-700'
+                    : 'border-gray-400 dark:border-gray-700'
                   }
                   ${showCorrect ? `${alertColors.success.border} ${alertColors.success.bg}` : ''}
                   ${showIncorrect ? `${alertColors.error.border} ${alertColors.error.bg}` : ''}

@@ -68,7 +68,7 @@ export default function PagePreview({ slug, content }: PagePreviewProps) {
   return (
     <div className="h-full flex flex-col">
       {/* Device Toggle Bar */}
-      <div className={`flex-shrink-0 flex items-center justify-center gap-2 py-3 px-4 border-b border-gray-200 dark:border-gray-700 ${uiChromeBg.toolbar}`}>
+      <div className={`flex-shrink-0 flex items-center justify-center gap-2 py-3 px-4 border-b border-gray-400 dark:border-gray-700 ${uiChromeBg.toolbar}`}>
         {Object.entries(deviceDimensions).map(([key, { label }]) => (
           <button
             key={key}
@@ -79,7 +79,7 @@ export default function PagePreview({ slug, content }: PagePreviewProps) {
               ${
                 device === key
                   ? 'bg-blue-600 text-white'
-                  : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'
+                  : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-400 dark:border-gray-600'
               }
             `}
           >
@@ -99,7 +99,7 @@ export default function PagePreview({ slug, content }: PagePreviewProps) {
           }}
         >
           {/* Simulated Browser Chrome */}
-          <div className="bg-gray-200 dark:bg-gray-700 px-4 py-2 flex items-center gap-2 border-b border-gray-300 dark:border-gray-600">
+          <div className="bg-gray-200 dark:bg-gray-700 px-4 py-2 flex items-center gap-2 border-b border-gray-400 dark:border-gray-600">
             <div className="flex gap-1.5">
               <div className="w-3 h-3 rounded-full bg-red-400"></div>
               <div className="w-3 h-3 rounded-full bg-gold-400"></div>

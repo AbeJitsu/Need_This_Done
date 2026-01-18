@@ -203,7 +203,7 @@ export default function UnifiedPricingPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto animate-slide-up animate-delay-200">
                 <button
                   onClick={() => scrollToSection(websitesRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-green-300 hover:shadow-lg transition-all"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-400 hover:border-green-300 hover:shadow-lg transition-all"
                 >
                   <Globe size={24} className={`${accentColors.green.text} group-hover:scale-110 transition-transform`} />
                   <span className={`font-medium ${headingColors.primary}`}>Websites</span>
@@ -212,7 +212,7 @@ export default function UnifiedPricingPage() {
 
                 <button
                   onClick={() => scrollToSection(automationRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-400 hover:border-blue-300 hover:shadow-lg transition-all"
                 >
                   <Zap size={24} className={`${accentColors.blue.text} group-hover:scale-110 transition-transform`} />
                   <span className={`font-medium ${headingColors.primary}`}>Automation</span>
@@ -221,7 +221,7 @@ export default function UnifiedPricingPage() {
 
                 <button
                   onClick={() => scrollToSection(automationRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-400 hover:border-purple-300 hover:shadow-lg transition-all"
                 >
                   <Bot size={24} className={`${accentColors.purple.text} group-hover:scale-110 transition-transform`} />
                   <span className={`font-medium ${headingColors.primary}`}>AI Agents</span>
@@ -230,7 +230,7 @@ export default function UnifiedPricingPage() {
 
                 <button
                   onClick={() => scrollToSection(customRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-gold-300 hover:shadow-lg transition-all"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-400 hover:border-gold-300 hover:shadow-lg transition-all"
                 >
                   <Puzzle size={24} className={`${accentColors.gold.text} group-hover:scale-110 transition-transform`} />
                   <span className={`font-medium ${headingColors.primary}`}>Custom</span>
@@ -413,7 +413,7 @@ export default function UnifiedPricingPage() {
                     {/* Checkbox */}
                     <div className={`
                       w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors
-                      ${isSelected ? 'bg-blue-500 border-blue-500 text-white' : 'border-gray-300'}
+                      ${isSelected ? 'bg-blue-500 border-blue-500 text-white' : 'border-gray-400'}
                     `}>
                       {isSelected && <Check size={12} strokeWidth={3} />}
                     </div>
@@ -445,7 +445,7 @@ export default function UnifiedPricingPage() {
 
           {/* Total & Checkout - appears when items selected */}
           {selectedAddons.size > 0 && (
-            <div className="mt-6 p-6 rounded-2xl bg-gradient-to-br from-purple-50 via-white to-blue-50 border border-gray-200 animate-slide-up">
+            <div className="mt-6 p-6 rounded-2xl bg-gradient-to-br from-purple-50 via-white to-blue-50 border border-gray-400 animate-slide-up">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <p className={`text-sm ${formInputColors.helper} mb-1`}>
@@ -490,7 +490,7 @@ export default function UnifiedPricingPage() {
       {/* ================================================================== */}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-50 via-white to-blue-50 border border-gray-200 p-8 md:p-12 text-center">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-50 via-white to-blue-50 border border-gray-400 p-8 md:p-12 text-center">
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-100/50 to-transparent rounded-full -translate-y-1/2 translate-x-1/2" />
 
             <div className="relative">

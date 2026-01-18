@@ -110,19 +110,19 @@ export const accentGlow = {
 
 export const borders = {
   // Standard card border - nearly invisible, provides structure
-  card: 'border border-gray-200/60 dark:border-gray-700/60',
+  card: 'border border-gray-400 dark:border-gray-700/60',
 
   // Section container border - same as card for consistency
-  section: 'border border-gray-200/60 dark:border-gray-700/60',
+  section: 'border border-gray-400 dark:border-gray-700/60',
 
   // Slightly more visible border (use sparingly)
-  visible: 'border border-gray-200 dark:border-gray-700',
+  visible: 'border border-gray-400 dark:border-gray-700',
 
   // Input field border
-  input: 'border border-gray-300 dark:border-gray-600',
+  input: 'border border-gray-400 dark:border-gray-600',
 
   // Divider line
-  divider: 'border-t border-gray-200 dark:border-gray-700',
+  divider: 'border-t border-gray-400 dark:border-gray-700',
 
   // No border (for cards that rely solely on shadow)
   none: 'border-0',
@@ -194,7 +194,7 @@ export const premiumCard = {
   base: `
     bg-white dark:bg-gray-800
     rounded-2xl
-    border border-gray-200/60 dark:border-gray-700/60
+    border border-gray-400 dark:border-gray-700/60
     shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.06)]
   `.replace(/\s+/g, ' ').trim(),
 
@@ -202,7 +202,7 @@ export const premiumCard = {
   interactive: `
     bg-white dark:bg-gray-800
     rounded-2xl
-    border border-gray-200/60 dark:border-gray-700/60
+    border border-gray-400 dark:border-gray-700/60
     shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.06)]
     hover:shadow-[0_14px_20px_rgba(0,0,0,0.06),0_6px_8px_rgba(0,0,0,0.08)]
     hover:-translate-y-1
@@ -214,7 +214,7 @@ export const premiumCard = {
   featured: `
     bg-white dark:bg-gray-800
     rounded-2xl
-    border border-gray-200/60 dark:border-gray-700/60
+    border border-gray-400 dark:border-gray-700/60
     shadow-[0_4px_6px_rgba(0,0,0,0.04),0_2px_4px_rgba(0,0,0,0.06)]
     hover:shadow-[0_14px_20px_rgba(0,0,0,0.06),0_6px_8px_rgba(0,0,0,0.08)]
     hover:-translate-y-1
@@ -225,7 +225,7 @@ export const premiumCard = {
   flat: `
     bg-white dark:bg-gray-800
     rounded-xl
-    border border-gray-200 dark:border-gray-700
+    border border-gray-400 dark:border-gray-700
   `.replace(/\s+/g, ' ').trim(),
 
   // Inner card (nested inside sections) - subtle bg difference
@@ -257,7 +257,7 @@ export const sectionContainer = {
   base: `
     bg-white dark:bg-gray-800
     rounded-2xl
-    border border-gray-200/60 dark:border-gray-700/60
+    border border-gray-400 dark:border-gray-700/60
     shadow-[0_1px_3px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.06)]
     p-8
   `.replace(/\s+/g, ' ').trim(),
@@ -269,7 +269,7 @@ export const sectionContainer = {
   elevated: `
     bg-white dark:bg-gray-800
     rounded-2xl
-    border border-gray-200/60 dark:border-gray-700/60
+    border border-gray-400 dark:border-gray-700/60
     shadow-[0_4px_6px_rgba(0,0,0,0.04),0_2px_4px_rgba(0,0,0,0.06)]
     p-8
   `.replace(/\s+/g, ' ').trim(),
@@ -420,7 +420,7 @@ export const buttonStyles = {
   primary: 'bg-gold-100 text-gold-900 hover:bg-gold-200 focus:ring-gold-500',
 
   // Secondary (outline)
-  secondary: 'border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-gray-500',
+  secondary: 'border-2 border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-gray-500',
 
   // Ghost (minimal)
   ghost: 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white',

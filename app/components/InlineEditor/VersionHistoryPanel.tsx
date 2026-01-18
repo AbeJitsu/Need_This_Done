@@ -151,7 +151,7 @@ export default function VersionHistoryPanel({
         aria-labelledby="history-title"
       >
         {/* Header */}
-        <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+        <div className="flex-shrink-0 border-b border-gray-400 dark:border-gray-700 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h2
@@ -228,7 +228,7 @@ export default function VersionHistoryPanel({
                   key={version.id}
                   className={`
                     relative p-4 rounded-lg
-                    border border-gray-200 dark:border-gray-700
+                    border border-gray-400 dark:border-gray-700
                     hover:border-blue-300 dark:hover:border-blue-600
                     transition-colors group
                   `}
@@ -308,7 +308,7 @@ export default function VersionHistoryPanel({
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 px-6 py-4">
+        <div className="flex-shrink-0 border-t border-gray-400 dark:border-gray-700 px-6 py-4">
           <p className={`text-xs ${formInputColors.helper} text-center`}>
             Up to 20 versions are kept. Older versions are automatically removed.
           </p>
