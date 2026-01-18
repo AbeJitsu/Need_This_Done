@@ -3,6 +3,7 @@
 import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import type { UIMessage } from 'ai';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 // ============================================================================
 // Chat Message Component
@@ -73,7 +74,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
               : 'dark:prose-invert'
           } prose-a:text-blue-500 dark:prose-a:text-blue-400 prose-a:underline hover:prose-a:text-blue-600`}
           dangerouslySetInnerHTML={{
-            __html: formatMessageContent(content),
+            __html: sanitizeHtml(formatMessageContent(content)),
           }}
         />
       </div>

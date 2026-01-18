@@ -14,6 +14,10 @@
       {
         "selector": "JSXAttribute[name.name='className'] TemplateLiteral TemplateElement[value.raw=/dark:/]",
         "message": "Avoid hardcoded 'dark:' classes in template literals. Import colors from '@/lib/colors.ts' instead."
+      },
+      {
+        "selector": "JSXAttribute[name.name='className'] Literal[value=/(?:bg|text|border|ring|shadow)-(blue|purple|green|gold|teal|gray|red|amber|emerald|violet|cyan|slate)-(50|100|200|300|400|500|600|700|800|900)/]",
+        "message": "Avoid hardcoded color classes. Import color utilities from '@/lib/colors.ts' instead. See .claude/rules/colors.md"
       }
     ]
   },

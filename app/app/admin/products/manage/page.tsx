@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Button from '@/components/Button';
+import { titleColors, alertColors, accentColors } from '@/lib/colors';
 
 // ============================================================================
 // PRODUCT MANAGEMENT INTERFACE
@@ -308,8 +309,8 @@ export default function ProductManagePage() {
         <div
           className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-2xl border-2 transform transition-all duration-500 ${
             notification.type === 'success'
-              ? 'bg-green-50 border-green-500 text-green-800'
-              : 'bg-red-50 border-red-500 text-red-800'
+              ? `${alertColors.success.bg} ${alertColors.success.border} ${alertColors.success.text}`
+              : `${alertColors.error.bg} ${alertColors.error.border} ${alertColors.error.text}`
           }`}
           style={{
             animation: 'slideInRight 0.5s ease-out, fadeOut 0.5s ease-in 3.5s',
@@ -327,7 +328,7 @@ export default function ProductManagePage() {
 
           <div className="flex items-end justify-between mb-6 animate-fadeInUp">
             <div>
-              <p className="text-sm font-semibold text-purple-600 mb-2 tracking-wider uppercase">
+              <p className={`text-sm font-semibold ${titleColors.purple} mb-2 tracking-wider uppercase`}>
                 Admin Dashboard
               </p>
               <h1 className="text-5xl font-serif font-bold text-gray-900 mb-3">
@@ -367,14 +368,14 @@ export default function ProductManagePage() {
           </div>
         ) : error && products.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-red-600 text-lg">{error}</p>
+            <p className={`${titleColors.red} text-lg`}>{error}</p>
             <Button variant="purple" onClick={fetchProducts} className="mt-4">
               Retry
             </Button>
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-32 animate-fadeInUp">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-purple-100 flex items-center justify-center">
+            <div className={`w-24 h-24 mx-auto mb-6 rounded-full ${accentColors.purple.bg} flex items-center justify-center`}>
               <span className="text-4xl">📦</span>
             </div>
             <h2 className="text-2xl font-serif font-bold text-gray-900 mb-3">No Products Yet</h2>
@@ -445,13 +446,13 @@ export default function ProductManagePage() {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => openEditModal(product)}
-                            className="px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                            className={`px-4 py-2 text-sm font-semibold ${accentColors.blue.text} ${accentColors.blue.hoverText} hover:bg-blue-50 rounded-lg transition-colors duration-200`}
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => openDeleteModal(product)}
-                            className="px-4 py-2 text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                            className={`px-4 py-2 text-sm font-semibold ${accentColors.red.text} ${accentColors.red.hoverText} hover:bg-red-50 rounded-lg transition-colors duration-200`}
                           >
                             Delete
                           </button>
@@ -487,7 +488,7 @@ export default function ProductManagePage() {
 
             <form onSubmit={handleCreateOrUpdate} className="p-8 space-y-6">
               {error && (
-                <div className="bg-red-50 border-2 border-red-200 text-red-800 px-4 py-3 rounded-lg">
+                <div className={`${alertColors.error.bg} ${alertColors.error.border} ${alertColors.error.text} px-4 py-3 rounded-lg`}>
                   {error}
                 </div>
               )}

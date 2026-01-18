@@ -8,6 +8,7 @@ import {
   formInputColors,
   mutedTextColors,
 } from '@/lib/colors';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 // ============================================================================
 // LessonPlayer Component
@@ -127,7 +128,7 @@ export default function LessonPlayer({
       {/* Lesson Content */}
       <div
         className={`prose dark:prose-invert max-w-none mb-8 ${formInputColors.helper}`}
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
       />
 
       {/* Action Bar */}
