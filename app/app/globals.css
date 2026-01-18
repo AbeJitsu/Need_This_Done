@@ -251,10 +251,9 @@ Add more selectors here as needed for other dark backgrounds.
 ======================================================================== */
 
 /* Slate dark backgrounds (most common for dark sections) */
+/* NOTE: Removed [class*="from-*"] selectors - they incorrectly match dark:from-* variants */
 .bg-slate-900,
-.bg-slate-800,
-[class*="from-slate-900"],
-[class*="from-slate-800"] {
+.bg-slate-800 {
   --accent-emerald: var(--green-300);
   --accent-blue: var(--blue-300);
   --accent-purple: var(--purple-300);
@@ -266,9 +265,7 @@ Add more selectors here as needed for other dark backgrounds.
 
 /* Gray dark backgrounds */
 .bg-gray-900,
-.bg-gray-800,
-[class*="from-gray-900"],
-[class*="from-gray-800"] {
+.bg-gray-800 {
   --accent-emerald: var(--green-300);
   --accent-blue: var(--blue-300);
   --accent-purple: var(--purple-300);
