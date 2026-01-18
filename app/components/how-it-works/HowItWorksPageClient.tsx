@@ -117,7 +117,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
               </h2>
 
               {/* Simple horizontal flow with circles and arrows */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-4">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-6 sm:gap-4">
                 {content.steps.map((step, index) => (
                   <EditableItem
                     key={`step-${index}`}
