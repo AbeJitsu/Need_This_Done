@@ -31,11 +31,11 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
   return (
     <div className="min-h-screen">
       {/* ================================================================
-          Hero Section - Centered gradient like homepage
+          Hero Section - Edge-to-edge on mobile, contained on desktop
           ================================================================ */}
-      <section className="py-16 md:py-20">
-        {/* Gradient container: full-width on mobile, centered on desktop */}
-        <div className="relative overflow-hidden py-8 md:max-w-4xl md:mx-auto">
+      <section className="py-8 md:py-12">
+        {/* Gradient container - full width on mobile, contained on desktop */}
+        <div className="relative overflow-hidden py-8 md:max-w-4xl md:mx-auto md:rounded-2xl">
           {/* Gradient orbs - left color → white middle → right color */}
           <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-slate-200 to-gray-200 blur-3xl" />
           <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-slate-100 blur-2xl" />

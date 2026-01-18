@@ -178,17 +178,18 @@ export default function UnifiedPricingPage() {
   return (
     <div className="min-h-screen">
       {/* ================================================================== */}
-      {/* HERO SECTION - Warm, inviting, inspired by shop page */}
+      {/* HERO SECTION - Edge-to-edge on mobile, contained on desktop */}
       {/* ================================================================== */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-          <div className="relative overflow-hidden py-12 md:py-16 rounded-3xl">
+      <section className="py-8 md:py-12">
+        {/* Gradient container - full width on mobile, contained on desktop */}
+        <div className="relative overflow-hidden py-12 md:py-16 md:max-w-6xl md:mx-auto md:rounded-3xl">
             {/* Gradient orbs - purple/blue/cyan for warmth */}
             <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
             <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-cyan-100 blur-2xl" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-gradient-to-br from-amber-50 to-orange-50 blur-2xl opacity-60" />
 
-            <div className="relative z-10 text-center">
+            {/* Text container - always padded */}
+            <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
               {/* Headline - bold, unified hero style */}
               <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold ${headingColors.primary} mb-4 animate-slide-up`}>
                 Simple Pricing
@@ -242,7 +243,6 @@ export default function UnifiedPricingPage() {
               </div>
             </div>
           </div>
-        </div>
       </section>
 
       {/* ================================================================== */}

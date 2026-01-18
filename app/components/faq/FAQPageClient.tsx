@@ -79,25 +79,24 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
   return (
     <div className="min-h-screen">
       {/* ================================================================
-          Hero Section - Centered gradient like homepage
+          Hero Section - Edge-to-edge on mobile, contained on desktop
           ================================================================ */}
       <section className="py-8 md:py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          {/* Gradient container with rounded edges and centered content */}
-          <div className="relative overflow-hidden rounded-2xl flex items-center justify-center min-h-[220px]">
-            {/* Gradient orbs */}
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-purple-100 to-violet-100 blur-2xl" />
+        {/* Gradient container - full width on mobile, contained on desktop */}
+        <div className="relative overflow-hidden md:max-w-4xl md:mx-auto md:rounded-2xl flex items-center justify-center min-h-[220px]">
+          {/* Gradient orbs */}
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-purple-100 to-violet-100 blur-2xl" />
 
-            {/* Text container - centered */}
-            <div className="relative z-10 text-center">
-              <EditableSection sectionKey="header" label="Page Header">
-                <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${titleColors.gold} mb-4`}>
-                  {content.header.title}
-                </h1>
-                <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
-                  {content.header.description}
-                </p>
+          {/* Text container - always padded */}
+          <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
+            <EditableSection sectionKey="header" label="Page Header">
+              <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${titleColors.gold} mb-4`}>
+                {content.header.title}
+              </h1>
+              <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
+                {content.header.description}
+              </p>
               </EditableSection>
             </div>
           </div>
