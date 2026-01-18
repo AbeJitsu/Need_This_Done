@@ -37,8 +37,8 @@ interface RevealSectionProps {
 
 export function RevealSection({
   children,
-  threshold = 0.2,
-  margin = '-50px',
+  threshold = 0.05,
+  margin = '0px 0px -100px 0px',
   once = true,
   delay = 0,
   className = '',

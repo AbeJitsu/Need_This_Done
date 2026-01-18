@@ -159,6 +159,6 @@ export const staggerContainerVariants: Variants = createStaggerContainerVariants
 
 export const defaultViewport = {
   once: true, // Only animate the first time element enters viewport
-  margin: '-50px', // Start animation slightly before element is fully visible
-  amount: 0.2, // Trigger when 20% of element is visible
+  margin: '0px 0px -100px 0px', // Trigger 100px before element reaches bottom of viewport
+  amount: 0.05, // Trigger when just 5% of element is visible
 };
