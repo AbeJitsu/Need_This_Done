@@ -97,8 +97,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
               <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
                 {content.header.description}
               </p>
-              </EditableSection>
-            </div>
+            </EditableSection>
           </div>
         </div>
       </section>
