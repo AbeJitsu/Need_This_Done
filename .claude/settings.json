@@ -102,5 +102,10 @@
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "static-analysis@trailofbits": true,
+    "example-skills@anthropic-agent-skills": true
   }
 }
