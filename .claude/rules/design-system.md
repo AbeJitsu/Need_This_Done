@@ -21,17 +21,19 @@ When using multiple colors together, follow the BJJ belt progression:
 Green (1st) → Blue (2nd) → Purple (3rd) → Gold (4th)
 ```
 
+**Note:** "Green" in the color system uses Tailwind's `emerald-*` palette for a refined, professional look.
+
 **Avoid orange/amber for text.** Use gold for warm accents.
 
 ### Color-Specific Usage
 
-| Color | Use For |
-|-------|---------|
-| Green | Primary CTAs, success states, first in sequences |
-| Blue | Links, secondary buttons, professional elements |
-| Purple | Tertiary accents, creativity, special emphasis |
-| Gold | Warm highlights, links on dark backgrounds |
-| Gray | Neutral buttons, secondary actions |
+| Color | Tailwind Palette | Use For |
+|-------|------------------|---------|
+| Green | `emerald-*` | Primary CTAs, success states, first in sequences |
+| Blue | `blue-*` | Links, secondary buttons, professional elements |
+| Purple | `purple-*` | Tertiary accents, creativity, special emphasis |
+| Gold | `gold-*` | Warm highlights, links on dark backgrounds |
+| Gray | `gray-*` | Neutral buttons, secondary actions |
 
 ## Accessibility Standards (WCAG AA)
 
@@ -64,7 +66,7 @@ style={{
 ### Floating Buttons (colored shadows)
 
 ```tsx
-<Button variant="green" className="shadow-lg shadow-green-500/25">
+<Button variant="green" className="shadow-lg shadow-emerald-500/25">
 <Button variant="blue" className="shadow-lg shadow-blue-500/25">
 <Button variant="purple" className="shadow-lg shadow-purple-500/25">
 ```

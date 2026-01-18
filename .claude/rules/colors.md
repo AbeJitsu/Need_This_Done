@@ -6,12 +6,12 @@
 
 The founder is a Brazilian Jiu-Jitsu purple belt. Use the BJJ belt progression as the primary color hierarchy:
 
-| Order | Color | Usage |
-|-------|-------|-------|
-| 1st | **Green** | Primary actions, success states, main CTAs |
-| 2nd | **Blue** | Secondary elements, links, professional tone |
-| 3rd | **Purple** | Tertiary accents, creativity, special emphasis |
-| 4th | **Gold** | Warm highlights, links on dark backgrounds |
+| Order | Color | Tailwind Palette | Usage |
+|-------|-------|------------------|-------|
+| 1st | **Green** | `emerald-*` | Primary actions, success states, main CTAs |
+| 2nd | **Blue** | `blue-*` | Secondary elements, links, professional tone |
+| 3rd | **Purple** | `purple-*` | Tertiary accents, creativity, special emphasis |
+| 4th | **Gold** | `gold-*` | Warm highlights, links on dark backgrounds |
 
 **Important**: Avoid orange/amber for text. Use gold instead for warm accents.
 
