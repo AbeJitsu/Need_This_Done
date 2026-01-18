@@ -1,43 +1,47 @@
 # Hero Gradient Pattern Rule
 
-Hero sections use a "full-bleed" gradient pattern where colorful orbs extend edge-to-edge across the viewport, creating an immersive background. The text content stays properly padded within a max-width container.
+Hero sections use a "centered" gradient pattern where colorful orbs are constrained to a max-width container, leaving white margins on the sides. This creates visual framing around the content.
 
 ## The Pattern (ASCII)
 
 ```
-CORRECT - Full-bleed gradient (edge-to-edge):
-┌─────────────────────────────────────────────────────────────────────────────┐
-│▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
-│▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  TEXT STAYS PADDED  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
-│▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
-└─────────────────────────────────────────────────────────────────────────────┘
-
-WRONG - Centered with white margins:
+CORRECT - Centered with white margins:
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                                                                             │
 │  white    ┌─────────────────────────────────────────────────────┐   white   │
-│  gaps     │   gradient background with content                  │   gaps    │
+│  ~25%     │                                                     │   ~25%    │
+│           │   ╭──────╮                              ╭──────╮    │           │
+│           │  ( color1 )       CONTENT HERE        ( color2 )    │           │
+│           │   ╰──────╯                              ╰──────╯    │           │
+│           │                                                     │           │
 │           └─────────────────────────────────────────────────────┘           │
 │                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+WRONG - Edge-to-edge:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+│▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  CONTENT  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+│▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Required Structure
 
-The gradient orbs MUST be at the section level (full viewport width), with content inside a max-width container:
+The gradient orbs MUST be inside the max-width container, not the full-width section:
 
 ```tsx
-{/* CORRECT - Full-bleed gradient with padded content */}
-<section className="relative overflow-hidden py-12 md:py-16">
-  {/* Full-bleed gradient orbs - positioned relative to viewport edges */}
-  <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-{color}-100 to-{shade}-100 blur-3xl" />
-  <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-{accent}-100 to-{shade}-100 blur-2xl" />
-  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-gradient-to-r from-{color}-50/60 via-white/40 to-{accent}-50/60 blur-3xl" />
+{/* CORRECT - Orbs inside max-w container with overflow-hidden */}
+<section className="py-16 md:py-20">
+  <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+    <div className="relative overflow-hidden py-8">
+      {/* Gradient orbs - full saturation colors with standard blur */}
+      <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-{color}-100 to-{shade}-100 blur-3xl" />
+      <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-{accent}-100 to-{shade}-100 blur-2xl" />
+      <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-{color}-100 blur-xl" />
 
-  {/* Content container - padded text stays readable */}
-  <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-    <div className="flex items-center justify-center min-h-[180px]">
-      <div className="text-center">
+      {/* Content with z-10 to stay above gradients */}
+      <div className="relative z-10">
         {/* Page content here */}
       </div>
     </div>
@@ -48,15 +52,14 @@ The gradient orbs MUST be at the section level (full viewport width), with conte
 ## What NOT To Do
 
 ```tsx
-{/* WRONG - Orbs inside max-w container (creates white margins) */}
-<section className="py-8 md:py-12">
-  <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-    <div className="relative overflow-hidden rounded-2xl">
-      {/* These orbs are constrained to the max-w container! */}
-      <div className="absolute -top-32 -right-32 ..." />
-      <div className="absolute -bottom-20 -left-20 ..." />
-      {/* Content */}
-    </div>
+{/* WRONG - Full-width section with orbs at viewport edges */}
+<section className="relative overflow-hidden">
+  <div className="absolute inset-0 bg-gradient-to-br from-{color}-50 via-white to-{accent}-50/50" />
+  <div className="absolute -top-32 -right-32 ..." />  {/* These are relative to full viewport! */}
+  <div className="absolute -bottom-20 -left-20 ..." />
+
+  <div className="relative max-w-6xl mx-auto px-4">
+    {/* Content */}
   </div>
 </section>
 ```
@@ -65,38 +68,27 @@ The gradient orbs MUST be at the section level (full viewport width), with conte
 
 | Rule | Correct | Wrong |
 |------|---------|-------|
-| Container | Orbs at section level | Orbs inside `max-w-6xl` |
-| Overflow | `overflow-hidden` on section | `overflow-hidden` on inner div |
-| Section class | `relative overflow-hidden py-12` | `py-8` with inner overflow div |
-| Center fill | Add centered gradient orb | No center fill |
-| Content wrapper | `relative z-10 max-w-6xl` | Content in same div as orbs |
-| Rounded corners | None (full-bleed) | `rounded-2xl` (boxed) |
-
-## Three-Orb Pattern
-
-For consistent full-bleed heroes, use three gradient orbs:
-
-1. **Top-right orb** (primary color): `-top-32 -right-32 w-96 h-96 blur-3xl`
-2. **Bottom-left orb** (accent color): `-bottom-20 -left-20 w-64 h-64 blur-2xl`
-3. **Center fill** (blended): `top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] blur-3xl`
-
-The center fill orb uses both colors with transparency to create smooth blending.
+| Container | Orbs inside `max-w-6xl` | Orbs in full-width section |
+| Overflow | `overflow-hidden` on inner `py-8` div | `overflow-hidden` on section |
+| Base gradient | None needed | `absolute inset-0 bg-gradient-to-br...` |
+| Positioning | `-top-32 -right-32` | `top-0 right-0` |
+| Blur values | `blur-3xl`, `blur-2xl`, `blur-xl` | Too large: `blur-[100px]` |
+| Colors | Full saturation `-100` | Muted with opacity `/80` |
+| Content wrapper | `relative z-10` | No z-index |
 
 ## Color Themes by Page
 
 | Page | Theme | Primary Colors |
 |------|-------|----------------|
-| Homepage | Blue/Purple | `blue-100`, `purple-100`, `green-100` |
-| Services | Purple/Teal | `purple-100`, `teal-100`, `cyan-100` |
-| Pricing | Purple/Blue | `purple-100`, `blue-100` |
-| FAQ | Amber/Purple | `amber-100`, `purple-100` |
-| How It Works | Amber/Green | `amber-100`, `green-100` |
-| Get Started | Amber/Green | `amber-100`, `green-100` |
-| Blog | Purple/Amber | `purple-100`, `amber-100` |
-| Legal pages | Slate/Blue | `slate-200`, `blue-100` |
+| Homepage | Blue/Purple | `blue-100`, `purple-100` |
+| Services | Teal/Cyan | `teal-100`, `cyan-100` |
+| Shop/Pricing | Purple/Blue | `purple-100`, `violet-100` |
+| About | Amber/Blue | `amber-100`, `gold-100` |
+| Blog | Purple/Gold | `purple-100`, `amber-100` |
+| Legal pages | Slate/Gray | `slate-100`, `gray-100` |
 
 ## Why This Works
 
-By placing gradient orbs at the section level with `relative overflow-hidden`, the gradients extend to the viewport edges on all screen sizes. The `overflow-hidden` clips the orbs at the viewport boundary while allowing the negative positioning to create soft edges that fade into the page background.
+The homepage wraps everything in `max-w-6xl mx-auto`. The gradient orbs are positioned with negative margins (`-top-32 -right-32`) which pulls them slightly outside their container, but since the container is centered with margins, the orbs create color in the center area while leaving white space at the viewport edges.
 
-The content stays readable because it's inside a separate `max-w-6xl mx-auto` container with `relative z-10` to stay above the gradients.
+When orbs are in a full-width section, those same negative margins just push them to the viewport edges, making the entire background colored with no white margins.

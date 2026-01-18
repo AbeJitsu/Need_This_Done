@@ -5,7 +5,7 @@ import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import CircleBadge from '@/components/CircleBadge';
 import { EditableSection, EditableItem, SortableItemsWrapper, Editable, EditableLink, EditableCard } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
-import { StepConnector } from '@/components/home/GeometricAccents';
+import GeometricAccents, { StepConnector } from '@/components/home/GeometricAccents';
 import ServiceIcon, { getServiceIconType } from '@/components/home/ServiceIcons';
 import {
   formInputColors,
@@ -44,65 +44,57 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
   const content = hasValidContent ? (pageContent as unknown as HomePageContent) : initialContent;
 
   return (
-    <div>
-      {/* Hero Section - Full-bleed gradient background */}
-      <section className="relative overflow-hidden py-12 md:py-16 mb-12">
-        {/* Full-bleed gradient orbs - positioned relative to viewport edges */}
-        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 blur-3xl animate-pulse-soft" />
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-teal-100 blur-2xl animate-pulse-soft" style={{ animationDelay: '1.5s' }} />
-        <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-gold-100 blur-xl animate-float" style={{ animationDelay: '0.5s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-gradient-to-r from-blue-50/60 via-white/40 to-purple-50/60 blur-3xl" />
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      {/* Hero Section - Enhanced with geometric accents */}
+      <EditableSection sectionKey="hero" label="Hero Section">
+        <div className="relative text-center mb-20 py-8">
+          {/* Geometric background accents */}
+          <GeometricAccents variant="hero" />
 
-        {/* Content container - padded text stays readable */}
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-          <EditableSection sectionKey="hero" label="Hero Section">
-            <div className="text-center py-8">
-              <Editable path="hero.title">
-                <h1 className={`text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight ${accentColors.blue.titleText} mb-6 animate-scale-in`}>
-                  {content.hero.title}
-                </h1>
-              </Editable>
-              <Editable path="hero.description">
-                <p className={`text-xl md:text-2xl ${formInputColors.helper} leading-relaxed mb-8 max-w-3xl mx-auto animate-slide-up animate-delay-150`}>
-                  {content.hero.description}
-                </p>
-              </Editable>
-              <SortableItemsWrapper
-                sectionKey="hero"
-                arrayField="buttons"
-                itemIds={content.hero.buttons.map((_, i) => `hero-btn-${i}`)}
-                className="flex flex-wrap gap-4 justify-center animate-slide-up animate-delay-300"
-              >
-                {content.hero.buttons.map((button, index) => (
-                  <EditableItem
-                    key={`hero-btn-${index}`}
-                    sectionKey="hero"
-                    arrayField="buttons"
-                    index={index}
-                    label={button.text}
-                    content={button as unknown as Record<string, unknown>}
-                    sortable
-                    sortId={`hero-btn-${index}`}
+          {/* Hero content with staggered animations */}
+          <div className="relative z-10">
+            <Editable path="hero.title">
+              <h1 className={`text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight ${accentColors.blue.titleText} mb-6 animate-scale-in`}>
+                {content.hero.title}
+              </h1>
+            </Editable>
+            <Editable path="hero.description">
+              <p className={`text-xl md:text-2xl ${formInputColors.helper} leading-relaxed mb-8 max-w-3xl mx-auto animate-slide-up animate-delay-150`}>
+                {content.hero.description}
+              </p>
+            </Editable>
+            <SortableItemsWrapper
+              sectionKey="hero"
+              arrayField="buttons"
+              itemIds={content.hero.buttons.map((_, i) => `hero-btn-${i}`)}
+              className="flex flex-wrap gap-4 justify-center animate-slide-up animate-delay-300"
+            >
+              {content.hero.buttons.map((button, index) => (
+                <EditableItem
+                  key={`hero-btn-${index}`}
+                  sectionKey="hero"
+                  arrayField="buttons"
+                  index={index}
+                  label={button.text}
+                  content={button as unknown as Record<string, unknown>}
+                  sortable
+                  sortId={`hero-btn-${index}`}
+                >
+                  <Editable
+                    path={`hero.buttons.${index}.text`}
+                    hrefPath={`hero.buttons.${index}.href`}
+                    href={button.href}
                   >
-                    <Editable
-                      path={`hero.buttons.${index}.text`}
-                      hrefPath={`hero.buttons.${index}.href`}
-                      href={button.href}
-                    >
-                      <Button variant={button.variant} href={button.href}>
-                        {button.text}
-                      </Button>
-                    </Editable>
-                  </EditableItem>
-                ))}
-              </SortableItemsWrapper>
-            </div>
-          </EditableSection>
+                    <Button variant={button.variant} href={button.href}>
+                      {button.text}
+                    </Button>
+                  </Editable>
+                </EditableItem>
+              ))}
+            </SortableItemsWrapper>
+          </div>
         </div>
-      </section>
-
-      {/* Main content wrapper with max-width */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pb-8">
+      </EditableSection>
 
       {/* Services Section - Enhanced with icons and animations */}
       <EditableSection sectionKey="services" label="Services">
@@ -432,7 +424,6 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </div>
         </div>
       </EditableSection>
-      </div>
     </div>
   );
 }

@@ -31,30 +31,32 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
   return (
     <div className="min-h-screen">
       {/* ================================================================
-          Hero Section - Full-bleed gradient background
+          Hero Section - Centered gradient like homepage
           ================================================================ */}
-      <section className="relative overflow-hidden py-12 md:py-16">
-        {/* Full-bleed gradient orbs - positioned relative to viewport edges */}
-        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-slate-200 to-gray-200 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-slate-100 blur-2xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-gradient-to-r from-slate-100/60 via-white/40 to-blue-50/60 blur-3xl" />
+      <section className="py-16 md:py-20">
+        {/* Gradient container: full-width on mobile, centered on desktop */}
+        <div className="relative overflow-hidden py-8 md:max-w-4xl md:mx-auto">
+          {/* Gradient orbs - left color → white middle → right color */}
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-slate-200 to-gray-200 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-slate-100 blur-2xl" />
 
-        {/* Content container - padded text stays readable */}
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          {/* Header Section - Editable */}
-          <EditableSection sectionKey="header" label="Page Header">
-            <PageHeader
-              title={content.header.title}
-              description={content.header.description}
-            />
-          </EditableSection>
+          {/* Content - always has padding */}
+          <div className="relative z-10 px-4 sm:px-6 md:px-8">
+              {/* Header Section - Editable */}
+              <EditableSection sectionKey="header" label="Page Header">
+                <PageHeader
+                  title={content.header.title}
+                  description={content.header.description}
+                />
+              </EditableSection>
 
-          {/* Last Updated - Editable */}
-          <EditableSection sectionKey="lastUpdated" label="Last Updated">
-            <p className={`text-center mb-0 ${formInputColors.helper}`}>
-              Last updated: {content.lastUpdated}
-            </p>
-          </EditableSection>
+              {/* Last Updated - Editable */}
+              <EditableSection sectionKey="lastUpdated" label="Last Updated">
+                <p className={`text-center mb-0 ${formInputColors.helper}`}>
+                  Last updated: {content.lastUpdated}
+                </p>
+              </EditableSection>
+          </div>
         </div>
       </section>
 
