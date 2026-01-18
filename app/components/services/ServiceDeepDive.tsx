@@ -110,7 +110,7 @@ const colorConfigs: Record<ServiceType, ServiceColorConfig> = {
   },
   'data-documents': {
     gradientFrom: 'from-blue-500',
-    gradientTo: 'to-indigo-600',
+    gradientTo: 'to-blue-600',
     accent: 'bg-blue-500',
     accentLight: 'bg-blue-100 dark:bg-blue-900',
     accentDark: 'bg-blue-600',
@@ -124,7 +124,7 @@ const colorConfigs: Record<ServiceType, ServiceColorConfig> = {
   },
   'virtual-assistant': {
     gradientFrom: 'from-purple-500',
-    gradientTo: 'to-violet-600',
+    gradientTo: 'to-purple-600',
     accent: 'bg-purple-500',
     accentLight: 'bg-purple-100 dark:bg-purple-900',
     accentDark: 'bg-purple-600',

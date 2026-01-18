@@ -346,15 +346,15 @@ export const accentColors: Record<AccentVariant, {
     cardHover: 'hover:border-gold-500 dark:hover:border-gold-300',
   },
   teal: {
-    bg: 'bg-teal-100 dark:bg-teal-500',
-    text: 'text-teal-600 dark:text-white',
-    border: 'border-teal-500 dark:border-teal-100',
-    hoverText: 'hover:text-teal-700 dark:hover:text-teal-100',
-    hoverBorder: 'hover:border-teal-600 dark:hover:border-teal-200',
-    focusVisible: 'focus-visible:ring-4 focus-visible:ring-teal-300 dark:focus-visible:ring-teal-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
-    titleText: 'text-teal-600 dark:text-teal-300',
-    topBorder: 'border-t-4 border-t-teal-500 dark:border-t-teal-400',
-    cardHover: 'hover:border-teal-500 dark:hover:border-teal-300',
+    bg: 'bg-emerald-100 dark:bg-emerald-500',
+    text: 'text-emerald-600 dark:text-white',
+    border: 'border-emerald-500 dark:border-emerald-100',
+    hoverText: 'hover:text-emerald-700 dark:hover:text-emerald-100',
+    hoverBorder: 'hover:border-emerald-600 dark:hover:border-emerald-200',
+    focusVisible: 'focus-visible:ring-4 focus-visible:ring-emerald-300 dark:focus-visible:ring-emerald-700 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+    titleText: 'text-emerald-600 dark:text-emerald-300',
+    topBorder: 'border-t-4 border-t-emerald-500 dark:border-t-emerald-400',
+    cardHover: 'hover:border-emerald-500 dark:hover:border-emerald-300',
   },
   gray: {
     bg: 'bg-gray-100 dark:bg-gray-500',
@@ -402,7 +402,7 @@ export const titleColors: Record<AccentVariant, string> = {
   blue: 'text-blue-600 dark:text-blue-300',
   green: 'text-emerald-600 dark:text-emerald-300',
   gold: 'text-gold-600 dark:text-gold-300',
-  teal: 'text-teal-600 dark:text-teal-300',
+  teal: 'text-emerald-600 dark:text-emerald-300',
   gray: 'text-gray-600 dark:text-gray-300',
   red: 'text-red-600 dark:text-red-300',
 };
@@ -418,7 +418,7 @@ export const titleTextColors: Record<AccentVariant, string> = {
   blue: 'text-blue-600 dark:text-blue-100',
   green: 'text-emerald-600 dark:text-emerald-100',
   gold: 'text-gold-600 dark:text-gold-100',
-  teal: 'text-teal-600 dark:text-teal-100',
+  teal: 'text-emerald-600 dark:text-emerald-100',
   gray: 'text-gray-600 dark:text-gray-100',
   red: 'text-red-600 dark:text-red-100',
 };
@@ -451,7 +451,7 @@ export const statusBorderColors: Record<AccentVariant, string> = {
   blue: 'border-l-4 border-l-blue-500',
   green: 'border-l-4 border-l-emerald-500',
   gold: 'border-l-4 border-l-gold-500',
-  teal: 'border-l-4 border-l-teal-500',
+  teal: 'border-l-4 border-l-emerald-500',
   gray: 'border-l-4 border-l-gray-300 dark:border-l-gray-600',
   red: 'border-l-4 border-l-red-500 dark:border-l-red-400',
 };
@@ -491,7 +491,7 @@ export const cardHoverColors: Record<AccentVariant, string> = {
   blue: 'hover:border-blue-500 dark:hover:border-blue-300',
   purple: 'hover:border-purple-500 dark:hover:border-purple-300',
   gold: 'hover:border-gold-500 dark:hover:border-gold-300',
-  teal: 'hover:border-teal-500 dark:hover:border-teal-300',
+  teal: 'hover:border-emerald-500 dark:hover:border-emerald-300',
   gray: 'hover:border-gray-500 dark:hover:border-gray-300',
   red: 'hover:border-red-500 dark:hover:border-red-300',
 };
@@ -504,7 +504,7 @@ export const cardHoverBgTints: Record<AccentVariant, string> = {
   blue: 'hover:bg-blue-100 dark:hover:bg-blue-800',
   green: 'hover:bg-emerald-100 dark:hover:bg-emerald-800',
   gold: 'hover:bg-gold-100 dark:hover:bg-gold-800',
-  teal: 'hover:bg-teal-100 dark:hover:bg-teal-800',
+  teal: 'hover:bg-emerald-100 dark:hover:bg-emerald-800',
   gray: 'hover:bg-gray-100 dark:hover:bg-gray-800',
   red: 'hover:bg-red-100 dark:hover:bg-red-800',
 };
@@ -518,7 +518,7 @@ export const tagHoverColors: Record<AccentVariant, string> = {
   blue: 'hover:bg-blue-200 hover:border-blue-600 dark:hover:bg-blue-800 dark:hover:border-blue-300',
   green: 'hover:bg-emerald-200 hover:border-emerald-600 dark:hover:bg-emerald-800 dark:hover:border-emerald-300',
   gold: 'hover:bg-gold-200 hover:border-gold-600 dark:hover:bg-gold-800 dark:hover:border-gold-300',
-  teal: 'hover:bg-teal-200 hover:border-teal-600 dark:hover:bg-teal-800 dark:hover:border-teal-300',
+  teal: 'hover:bg-emerald-200 hover:border-emerald-600 dark:hover:bg-emerald-800 dark:hover:border-emerald-300',
   gray: 'hover:bg-gray-200 hover:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-300',
   red: 'hover:bg-red-200 hover:border-red-600 dark:hover:bg-red-800 dark:hover:border-red-300',
 };
@@ -533,7 +533,7 @@ export const bodyTextColors: Record<AccentVariant, string> = {
   blue: 'text-gray-600 dark:text-blue-100',
   green: 'text-gray-600 dark:text-emerald-100',
   gold: 'text-gray-600 dark:text-gold-100',
-  teal: 'text-gray-600 dark:text-teal-100',
+  teal: 'text-gray-600 dark:text-emerald-100',
   gray: 'text-gray-600 dark:text-gray-100',
   red: 'text-gray-600 dark:text-red-100',
 };
@@ -723,7 +723,7 @@ export const stepBadgeColors: Record<AccentVariant, string> = {
   blue: 'text-blue-600 dark:text-blue-300',
   green: 'text-emerald-600 dark:text-emerald-300',
   gold: 'text-gold-600 dark:text-gold-300',
-  teal: 'text-teal-600 dark:text-teal-300',
+  teal: 'text-emerald-600 dark:text-emerald-300',
   gray: 'text-gray-600 dark:text-gray-300',
   red: 'text-red-600 dark:text-red-300',
 };
@@ -823,9 +823,9 @@ export const alertColors = {
   },
   // Yellow config warnings - softer than gold warning
   config: {
-    bg: 'bg-yellow-100 dark:bg-yellow-800',
-    border: 'border border-yellow-200 dark:border-yellow-600',
-    text: 'text-yellow-900 dark:text-yellow-100',
+    bg: 'bg-gold-100 dark:bg-gold-800',
+    border: 'border border-gold-200 dark:border-gold-600',
+    text: 'text-gold-900 dark:text-gold-100',
   },
 };
 
@@ -853,7 +853,7 @@ export const neutralAccentBg: Record<AccentVariant, string> = {
   green: 'bg-emerald-100 dark:bg-gray-800',
   gold: 'bg-gold-100 dark:bg-gray-800',
   red: 'bg-red-100 dark:bg-gray-800',
-  teal: 'bg-teal-100 dark:bg-gray-800',
+  teal: 'bg-emerald-100 dark:bg-gray-800',
   gray: 'bg-gray-100 dark:bg-gray-700',
 };
 
@@ -1102,7 +1102,7 @@ export const layoutBgColors = {
 // Centralized gradient definitions to maintain consistency
 export const gradientColors = {
   // Page background gradient
-  pageBackground: 'bg-gradient-to-br from-purple-100 via-blue-100 to-teal-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900',
+  pageBackground: 'bg-gradient-to-br from-purple-100 via-blue-100 to-emerald-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900',
   // Popular badge gradient
   popularBadge: 'bg-gradient-to-r from-blue-500 to-blue-600',
   // Avatar placeholder gradient
@@ -1155,10 +1155,10 @@ export const solidButtonColors: Record<AccentVariant, {
     focus: 'focus:ring-2 focus:ring-gold-500',
   },
   teal: {
-    bg: 'bg-teal-600 dark:bg-teal-600',
-    hover: 'hover:bg-teal-700 dark:hover:bg-teal-700',
+    bg: 'bg-emerald-600 dark:bg-emerald-600',
+    hover: 'hover:bg-emerald-700 dark:hover:bg-emerald-700',
     text: 'text-white',
-    focus: 'focus:ring-2 focus:ring-teal-500',
+    focus: 'focus:ring-2 focus:ring-emerald-500',
   },
   gray: {
     bg: 'bg-gray-600 dark:bg-gray-600',
@@ -1234,8 +1234,8 @@ export const adminSidebarColors = {
     blog: 'text-blue-600 dark:text-blue-400',
     content: 'text-blue-600 dark:text-blue-400',
     shop: 'text-emerald-600 dark:text-emerald-400',
-    appointments: 'text-teal-600 dark:text-teal-400',
-    users: 'text-pink-600 dark:text-pink-400',
+    appointments: 'text-emerald-600 dark:text-emerald-400',
+    users: 'text-purple-600 dark:text-purple-400',
     dev: 'text-gold-600 dark:text-gold-400',
   },
 };
@@ -1270,7 +1270,7 @@ export const serviceComparisonColors: Record<ServiceType, {
   },
   dataDocuments: {
     border: 'border border-blue-200/60 dark:border-blue-700/60',
-    headerBg: 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/50 dark:to-indigo-900/50',
+    headerBg: 'bg-gradient-to-r from-blue-50 to-blue-50 dark:from-blue-900/50 dark:to-blue-900/50',
     headerText: 'text-blue-700 dark:text-blue-300',
     pricingBg: 'bg-blue-50/50 dark:bg-blue-900/30',
     pricingBorder: 'border-t border-blue-200/60 dark:border-blue-700/60',
@@ -1279,7 +1279,7 @@ export const serviceComparisonColors: Record<ServiceType, {
   },
   website: {
     border: 'border border-purple-200/60 dark:border-purple-700/60',
-    headerBg: 'bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/50 dark:to-violet-900/50',
+    headerBg: 'bg-gradient-to-r from-purple-50 to-purple-50 dark:from-purple-900/50 dark:to-purple-900/50',
     headerText: 'text-purple-700 dark:text-purple-300',
     pricingBg: 'bg-purple-50/50 dark:bg-purple-900/30',
     pricingBorder: 'border-t border-purple-200/60 dark:border-purple-700/60',
@@ -1331,10 +1331,10 @@ export const infoBannerColors: Record<AccentVariant, {
     text: 'text-red-700 dark:text-red-100',
   },
   teal: {
-    bg: 'bg-teal-100 dark:bg-teal-800',
-    border: 'border border-teal-200 dark:border-teal-600',
-    heading: 'text-teal-800 dark:text-white',
-    text: 'text-teal-700 dark:text-teal-100',
+    bg: 'bg-emerald-100 dark:bg-emerald-800',
+    border: 'border border-emerald-200 dark:border-emerald-600',
+    heading: 'text-emerald-800 dark:text-white',
+    text: 'text-emerald-700 dark:text-emerald-100',
   },
   gray: {
     bg: 'bg-gray-100 dark:bg-gray-800',
@@ -1374,8 +1374,8 @@ export const iconCircleColors: Record<AccentVariant, {
     icon: 'text-red-600 dark:text-red-300',
   },
   teal: {
-    bg: 'bg-teal-100 dark:bg-teal-800',
-    icon: 'text-teal-600 dark:text-teal-300',
+    bg: 'bg-emerald-100 dark:bg-emerald-800',
+    icon: 'text-emerald-600 dark:text-emerald-300',
   },
   gray: {
     bg: 'bg-gray-100 dark:bg-gray-700',
@@ -1419,9 +1419,9 @@ export const selectedStateColors: Record<AccentVariant, {
     text: 'text-red-700 dark:text-red-200',
   },
   teal: {
-    bg: 'bg-teal-100 dark:bg-teal-800',
-    border: 'border-teal-500 dark:border-teal-400',
-    text: 'text-teal-700 dark:text-teal-200',
+    bg: 'bg-emerald-100 dark:bg-emerald-800',
+    border: 'border-emerald-500 dark:border-emerald-400',
+    text: 'text-emerald-700 dark:text-emerald-200',
   },
   gray: {
     bg: 'bg-gray-100 dark:bg-gray-700',
@@ -1441,7 +1441,7 @@ export const softBgColors: Record<AccentVariant, string> = {
   green: 'bg-emerald-100 dark:bg-emerald-800',
   gold: 'bg-gold-100 dark:bg-gold-800',
   red: 'bg-red-100 dark:bg-red-800',
-  teal: 'bg-teal-100 dark:bg-teal-800',
+  teal: 'bg-emerald-100 dark:bg-emerald-800',
   gray: 'bg-gray-100 dark:bg-gray-700',
 };
 
@@ -1456,7 +1456,7 @@ export const verySoftBgColors: Record<AccentVariant, string> = {
   green: 'bg-emerald-100 dark:bg-emerald-900',
   gold: 'bg-gold-100 dark:bg-gold-900',
   red: 'bg-red-100 dark:bg-red-900',
-  teal: 'bg-teal-100 dark:bg-teal-900',
+  teal: 'bg-emerald-100 dark:bg-emerald-900',
   gray: 'bg-gray-100 dark:bg-gray-800',
 };
 
@@ -1471,7 +1471,7 @@ export const hoverBgColors: Record<AccentVariant, string> = {
   green: 'hover:bg-emerald-200 dark:hover:bg-emerald-700',
   gold: 'hover:bg-gold-200 dark:hover:bg-gold-700',
   red: 'hover:bg-red-200 dark:hover:bg-red-700',
-  teal: 'hover:bg-teal-200 dark:hover:bg-teal-700',
+  teal: 'hover:bg-emerald-200 dark:hover:bg-emerald-700',
   gray: 'hover:bg-gray-200 dark:hover:bg-gray-600',
 };
 
@@ -1515,8 +1515,8 @@ export const toggleButtonColors: Record<AccentVariant, {
     inactiveHover: 'hover:bg-red-200 dark:hover:bg-red-700',
   },
   teal: {
-    inactive: 'bg-teal-100 dark:bg-teal-800 text-teal-600 dark:text-teal-300',
-    inactiveHover: 'hover:bg-teal-200 dark:hover:bg-teal-700',
+    inactive: 'bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300',
+    inactiveHover: 'hover:bg-emerald-200 dark:hover:bg-emerald-700',
   },
   gray: {
     inactive: 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300',
@@ -1531,10 +1531,10 @@ export const toggleButtonColors: Record<AccentVariant, {
 // Follows the -100/-800 pattern for consistency.
 export const statusIndicatorBg = {
   healthy: 'bg-emerald-100 dark:bg-emerald-800',
-  warning: 'bg-amber-100 dark:bg-amber-800',
+  warning: 'bg-gold-100 dark:bg-gold-800',
   error: 'bg-red-100 dark:bg-red-800',
   loading: 'bg-blue-100 dark:bg-blue-800',
-  modified: 'bg-yellow-100 dark:bg-yellow-800',
+  modified: 'bg-gold-100 dark:bg-gold-800',
 };
 
 // ============================================================================
@@ -1578,8 +1578,8 @@ export const outlineButtonColors: Record<AccentVariant, {
     hover: 'hover:bg-gold-100 dark:hover:bg-gold-800',
   },
   teal: {
-    base: 'border-teal-500 text-teal-600 dark:text-teal-300',
-    hover: 'hover:bg-teal-100 dark:hover:bg-teal-800',
+    base: 'border-emerald-500 text-emerald-600 dark:text-emerald-300',
+    hover: 'hover:bg-emerald-100 dark:hover:bg-emerald-800',
   },
   gray: {
     base: 'border-gray-500 text-gray-600 dark:text-gray-300',
@@ -1601,7 +1601,7 @@ export const coloredLinkText: Record<AccentVariant, string> = {
   blue: 'text-blue-600 dark:text-blue-400',
   green: 'text-emerald-600 dark:text-emerald-400',
   gold: 'text-gold-600 dark:text-gold-400',
-  teal: 'text-teal-600 dark:text-teal-400',
+  teal: 'text-emerald-600 dark:text-emerald-400',
   gray: 'text-gray-600 dark:text-gray-400',
   red: 'text-red-600 dark:text-red-400',
 };

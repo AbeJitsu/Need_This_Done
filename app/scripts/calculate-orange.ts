@@ -185,10 +185,10 @@ console.log('='.repeat(70));
 
 // Current Tailwind orange shades
 const tailwindOranges = [
-  { name: 'orange-500', hex: '#f97316', r: 249, g: 115, b: 22 },
-  { name: 'orange-600', hex: '#ea580c', r: 234, g: 88, b: 12 },
-  { name: 'orange-700', hex: '#c2410c', r: 194, g: 65, b: 12 },
-  { name: 'orange-800', hex: '#9a3412', r: 154, g: 52, b: 18 },
+  { name: 'gold-500', hex: '#f97316', r: 249, g: 115, b: 22 },
+  { name: 'gold-600', hex: '#ea580c', r: 234, g: 88, b: 12 },
+  { name: 'gold-700', hex: '#c2410c', r: 194, g: 65, b: 12 },
+  { name: 'gold-800', hex: '#9a3412', r: 154, g: 52, b: 18 },
 ];
 
 console.log('\nTailwind Default Orange Shades:');
@@ -246,10 +246,10 @@ module.exports = {
 Or in lib/colors.ts, update solidButtonColors.orange:
 
 orange: {
-  bg: 'bg-orange-600 dark:bg-[${recommended.hex}]',
-  hover: 'hover:bg-orange-700 dark:hover:bg-orange-700',
+  bg: 'bg-gold-600 dark:bg-[${recommended.hex}]',
+  hover: 'hover:bg-gold-700 dark:hover:bg-gold-700',
   text: 'text-white',
-  focus: 'focus:ring-2 focus:ring-orange-500',
+  focus: 'focus:ring-2 focus:ring-gold-500',
 },
 `);
 }

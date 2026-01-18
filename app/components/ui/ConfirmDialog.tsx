@@ -45,8 +45,8 @@ const variantStyles: Record<ConfirmDialogVariant, {
     confirmText: redBtn.text,
   },
   warning: {
-    confirmBg: 'bg-amber-600 dark:bg-amber-500',
-    confirmHover: 'hover:bg-amber-700 dark:hover:bg-amber-600',
+    confirmBg: 'bg-gold-600 dark:bg-gold-500',
+    confirmHover: 'hover:bg-gold-700 dark:hover:bg-gold-600',
     confirmText: 'text-white',
   },
   info: {

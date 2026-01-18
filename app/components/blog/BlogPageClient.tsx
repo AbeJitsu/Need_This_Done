@@ -38,8 +38,8 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
         {/* Gradient container - full width on mobile, contained on desktop */}
         <div className="relative overflow-hidden md:max-w-6xl md:mx-auto md:rounded-2xl flex items-center justify-center min-h-[220px]">
           {/* Gradient orbs */}
-          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-amber-100 to-gold-100 blur-2xl" />
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-purple-100 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-gold-100 to-gold-100 blur-2xl" />
 
           {/* Text container - always padded */}
           <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">

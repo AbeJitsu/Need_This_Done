@@ -102,30 +102,30 @@ export default function AdminDashboard() {
         </Link>
         <Link
           href="/admin/appointments"
-          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-cyan-400 dark:hover:border-cyan-500 hover:shadow-md transition-all group`}
+          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all group`}
         >
           <div className="text-2xl mb-2">📅</div>
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
             Appointments
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">Booking requests</p>
         </Link>
         <Link
           href="/admin/users"
-          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-pink-400 dark:hover:border-pink-500 hover:shadow-md transition-all group`}
+          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-purple-400 dark:hover:border-purple-500 hover:shadow-md transition-all group`}
         >
           <div className="text-2xl mb-2">👥</div>
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-pink-600 dark:group-hover:text-pink-400">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400">
             Users
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">Manage accounts</p>
         </Link>
         <Link
           href="/admin/analytics"
-          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all group`}
+          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all group`}
         >
           <div className="text-2xl mb-2">📊</div>
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
             Analytics
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">Revenue & trends</p>

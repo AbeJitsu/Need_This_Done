@@ -37,51 +37,54 @@ const config = {
     // ====================================================================
     // These are the primary classes for accessible colors on any background.
     // Use text-accent-* instead of text-emerald-500 for auto-switching.
-    'text-accent-emerald', 'text-accent-blue', 'text-accent-purple', 'text-accent-gold', 'text-accent-teal', 'text-accent-gray', 'text-accent-red',
-    'border-accent-emerald', 'border-accent-blue', 'border-accent-purple', 'border-accent-gold', 'border-accent-teal', 'border-accent-gray', 'border-accent-red',
-    'bg-accent-emerald', 'bg-accent-blue', 'bg-accent-purple', 'bg-accent-gold', 'bg-accent-teal', 'bg-accent-gray', 'bg-accent-red',
+    'text-accent-emerald', 'text-accent-blue', 'text-accent-purple', 'text-accent-gold', 'text-accent-gray', 'text-accent-red',
+    'border-accent-emerald', 'border-accent-blue', 'border-accent-purple', 'border-accent-gold', 'border-accent-gray', 'border-accent-red',
+    'bg-accent-emerald', 'bg-accent-blue', 'bg-accent-purple', 'bg-accent-gold', 'bg-accent-gray', 'bg-accent-red',
 
     // Backgrounds - light mode (bg-100)
-    'bg-purple-100', 'bg-blue-100', 'bg-green-100', 'bg-emerald-100', 'bg-gold-100', 'bg-teal-100', 'bg-gray-100', 'bg-red-100', 'bg-yellow-100',
+    'bg-purple-100', 'bg-blue-100', 'bg-green-100', 'bg-emerald-100', 'bg-gold-100', 'bg-gray-100', 'bg-red-100', ,
 
     // Solid button backgrounds (bg-600 for CTAs) - used by getSolidButtonColors()
-    'bg-purple-600', 'bg-blue-600', 'bg-green-600', 'bg-emerald-600', 'bg-gold-600', 'bg-teal-600', 'bg-gray-600', 'bg-red-600',
-    'dark:bg-purple-600', 'dark:bg-blue-600', 'dark:bg-green-600', 'dark:bg-emerald-600', 'dark:bg-gold-600', 'dark:bg-teal-600', 'dark:bg-gray-600', 'dark:bg-red-600',
+    'bg-purple-600', 'bg-blue-600', 'bg-green-600', 'bg-emerald-600', 'bg-gold-600', 'bg-gray-600', 'bg-red-600',
+    'dark:bg-purple-600', 'dark:bg-blue-600', 'dark:bg-green-600', 'dark:bg-emerald-600', 'dark:bg-gold-600', 'dark:bg-gray-600', 'dark:bg-red-600',
 
     // Backgrounds - dark mode vibrant (bg-500) for unified accent system
-    'dark:bg-purple-500', 'dark:bg-blue-500', 'dark:bg-green-500', 'dark:bg-emerald-500', 'dark:bg-gold-500', 'dark:bg-teal-500', 'dark:bg-gray-500', 'dark:bg-red-500', 'dark:bg-yellow-500',
+    'dark:bg-purple-500', 'dark:bg-blue-500', 'dark:bg-green-500', 'dark:bg-emerald-500', 'dark:bg-gold-500', 'dark:bg-gray-500', 'dark:bg-red-500',
     // Gold backgrounds - all shades for easy testing
     'dark:bg-gold-100', 'dark:bg-gold-200', 'dark:bg-gold-300', 'dark:bg-gold-400', 'dark:bg-gold-500', 'dark:bg-gold-600', 'dark:bg-gold-700', 'dark:bg-gold-800', 'dark:bg-gold-900',
     // Legacy dark backgrounds (keep for backward compatibility)
-    'dark:bg-purple-800', 'dark:bg-blue-800', 'dark:bg-green-800', 'dark:bg-gold-800', 'dark:bg-teal-800', 'dark:bg-gray-800', 'dark:bg-red-800',
+    'dark:bg-purple-800', 'dark:bg-blue-800', 'dark:bg-green-800', 'dark:bg-gold-800', 'dark:bg-gray-800', 'dark:bg-red-800',
     // Dark backgrounds - 700 shade for gold/teal accent variants
-    'dark:bg-gold-700', 'dark:bg-teal-700',
+    'dark:bg-gold-700', 
 
     // Text colors - light mode (text-600 for WCAG AA minimum, -700/-800 for emphasis)
-    'text-purple-600', 'text-blue-600', 'text-green-600', 'text-emerald-600', 'text-gold-600', 'text-teal-600', 'text-gray-600', 'text-red-600', 'text-yellow-600',
-    'text-purple-700', 'text-blue-700', 'text-green-700', 'text-emerald-700', 'text-gold-700', 'text-teal-700', 'text-gray-700', 'text-red-700', 'text-yellow-700',
-    'text-green-800', 'text-emerald-800', 'text-gold-800', 'text-teal-800', 'text-red-800', 'text-yellow-800',
-    'text-gold-900', 'text-teal-900',
+    'text-purple-600', 'text-blue-600', 'text-green-600', 'text-emerald-600', 'text-gold-600', 'text-gray-600', 'text-red-600',
+    'text-purple-700', 'text-blue-700', 'text-green-700', 'text-emerald-700', 'text-gold-700', 'text-gray-700', 'text-red-700',
+    'text-green-800', 'text-emerald-800', 'text-gold-800', 'text-red-800',
+    'text-gold-900',
 
     // Border colors - light mode
-    'border-purple-500', 'border-blue-500', 'border-green-500', 'border-emerald-500', 'border-gold-500', 'border-teal-500', 'border-gray-500', 'border-red-500', 'border-yellow-500', 'border-yellow-700',
+    'border-purple-500', 'border-blue-500', 'border-green-500', 'border-emerald-500', 'border-gold-500', 'border-gray-500', 'border-red-500',
+    // Top border colors for card accents (border-t-4)
+    'border-t-purple-500', 'border-t-blue-500', 'border-t-green-500', 'border-t-emerald-500', 'border-t-gold-500', 'border-t-gray-500', 'border-t-red-500',
+    'dark:border-t-purple-400', 'dark:border-t-blue-400', 'dark:border-t-green-400', 'dark:border-t-emerald-400', 'dark:border-t-gold-400', 'dark:border-t-gray-400', 'dark:border-t-red-400',
     // Gold borders - all shades for easy testing
     'border-gold-100', 'border-gold-200', 'border-gold-300', 'border-gold-400', 'border-gold-500', 'border-gold-600', 'border-gold-700', 'border-gold-800', 'border-gold-900',
 
     // Border colors - dark mode (border-100 for status badges - light border pops against -500 bg)
-    'dark:border-purple-100', 'dark:border-blue-100', 'dark:border-green-100', 'dark:border-emerald-100', 'dark:border-gold-100', 'dark:border-teal-100', 'dark:border-gray-100', 'dark:border-red-100', 'dark:border-yellow-100',
+    'dark:border-purple-100', 'dark:border-blue-100', 'dark:border-green-100', 'dark:border-emerald-100', 'dark:border-gold-100', 'dark:border-gray-100', 'dark:border-red-100',
     // Legacy dark borders (keep for backward compatibility)
-    'dark:border-purple-300', 'dark:border-blue-300', 'dark:border-green-300', 'dark:border-emerald-300', 'dark:border-gold-300', 'dark:border-teal-300', 'dark:border-gray-300', 'dark:border-red-300', 'dark:border-yellow-300',
-    'dark:border-purple-200', 'dark:border-blue-200', 'dark:border-green-200', 'dark:border-emerald-200', 'dark:border-gold-200', 'dark:border-teal-200', 'dark:border-gray-200', 'dark:border-red-200', 'dark:border-yellow-200',
-    'dark:border-purple-400', 'dark:border-blue-400', 'dark:border-green-400', 'dark:border-emerald-400', 'dark:border-gold-400', 'dark:border-teal-400', 'dark:border-gray-400', 'dark:border-yellow-400',
+    'dark:border-purple-300', 'dark:border-blue-300', 'dark:border-green-300', 'dark:border-emerald-300', 'dark:border-gold-300', 'dark:border-gray-300', 'dark:border-red-300',
+    'dark:border-purple-200', 'dark:border-blue-200', 'dark:border-green-200', 'dark:border-emerald-200', 'dark:border-gold-200', 'dark:border-gray-200', 'dark:border-red-200',
+    'dark:border-purple-400', 'dark:border-blue-400', 'dark:border-green-400', 'dark:border-emerald-400', 'dark:border-gold-400', 'dark:border-gray-400',
     // Gold dark borders - all shades for easy testing
     'dark:border-gold-100', 'dark:border-gold-200', 'dark:border-gold-300', 'dark:border-gold-400', 'dark:border-gold-500', 'dark:border-gold-600', 'dark:border-gold-700', 'dark:border-gold-800', 'dark:border-gold-900',
     // Yellow light mode borders
-    'border-yellow-200',
+    
     'dark:border-white',
 
     // Hover text colors - light mode (-700 for WCAG AA minimum)
-    'hover:text-purple-700', 'hover:text-blue-700', 'hover:text-green-700', 'hover:text-emerald-700', 'hover:text-gold-700', 'hover:text-teal-700', 'hover:text-gray-700', 'hover:text-red-700',
+    'hover:text-purple-700', 'hover:text-blue-700', 'hover:text-green-700', 'hover:text-emerald-700', 'hover:text-gold-700', 'hover:text-gray-700', 'hover:text-red-700',
     'hover:text-purple-800', 'hover:text-blue-800', 'hover:text-green-800', 'hover:text-emerald-800', 'hover:text-gold-800', 'hover:text-teal-800', 'hover:text-gray-800', 'hover:text-red-800',
     'hover:text-green-900', 'hover:text-emerald-900', 'hover:text-gold-900', 'hover:text-teal-900', 'hover:text-red-900',
     'hover:text-gold-950', 'hover:text-teal-950',

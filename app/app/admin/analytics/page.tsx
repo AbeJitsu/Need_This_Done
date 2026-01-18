@@ -380,7 +380,7 @@ function StatusBar({
   const percentage = total > 0 ? (count / total) * 100 : 0;
 
   const colorClasses = {
-    yellow: 'bg-yellow-500',
+    yellow: 'bg-gold-500',
     blue: 'bg-blue-500',
     purple: 'bg-purple-500',
     green: 'bg-green-500',

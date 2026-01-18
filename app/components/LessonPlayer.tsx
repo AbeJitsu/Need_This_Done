@@ -127,7 +127,7 @@ export default function LessonPlayer({
 
       {/* Lesson Content */}
       <div
-        className={`prose dark:prose-invert max-w-none mb-8 ${formInputColors.helper}`}
+        className={`prose dark:ppurple-invert max-w-none mb-8 ${formInputColors.helper}`}
         dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
       />
 

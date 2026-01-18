@@ -72,7 +72,7 @@ export default function ProjectComments({
               key={comment.id}
               className={`p-3 rounded-lg ${
                 comment.is_internal
-                  ? `${statusIndicatorBg.modified} border border-yellow-200 dark:border-yellow-600`
+                  ? `${statusIndicatorBg.modified} border border-gold-200 dark:border-gold-600`
                   : cardBgColors.base
               }`}
             >
@@ -80,7 +80,7 @@ export default function ProjectComments({
                 <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                   {comment.user.email}
                   {comment.is_internal && (
-                    <span className="ml-2 text-xs bg-yellow-200 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 px-2 py-1 rounded">
+                    <span className="ml-2 text-xs bg-gold-200 dark:bg-gold-800 text-gold-900 dark:text-gold-100 px-2 py-1 rounded">
                       Internal
                     </span>
                   )}

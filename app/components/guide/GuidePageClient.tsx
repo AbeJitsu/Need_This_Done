@@ -33,8 +33,8 @@ const GROUP_CONFIG: Record<GuideGroup, { title: string; color: 'green' | 'blue' 
   'getting-started': { title: 'Getting Started', color: 'green', dotBg: 'bg-green-500' },
   'account': { title: 'Your Account', color: 'blue', dotBg: 'bg-blue-500' },
   'explore': { title: 'Explore & Customize', color: 'purple', dotBg: 'bg-purple-500' },
-  'admin': { title: 'For Admins', color: 'gold', dotBg: 'bg-amber-500' },
-  'support': { title: 'Support', color: 'gold', dotBg: 'bg-amber-500' },
+  'admin': { title: 'For Admins', color: 'gold', dotBg: 'bg-gold-500' },
+  'support': { title: 'Support', color: 'gold', dotBg: 'bg-gold-500' },
 };
 
 // Order for displaying groups

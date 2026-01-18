@@ -292,7 +292,7 @@ export default function ContactPage() {
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         {/* Decorative blurs */}
         <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-violet-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-transparent via-white/[0.02] to-transparent" />
 
         {/* Grid pattern overlay */}
@@ -317,7 +317,7 @@ export default function ContactPage() {
           {/* Main heading */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white text-center mb-6 tracking-tight animate-slide-up animate-delay-100">
             Let&apos;s Build Something
-            <span className="block mt-2 pb-2 bg-gradient-to-r from-blue-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
+            <span className="block mt-2 pb-2 bg-gradient-to-r from-blue-400 via-purple-400 to-purple-400 bg-clip-text text-transparent">
               Together
             </span>
           </h1>
@@ -524,7 +524,7 @@ export default function ContactPage() {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Jane Smith"
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                 />
               </div>
               <div>
@@ -539,7 +539,7 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="jane@example.com"
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                 />
               </div>
             </div>
@@ -557,7 +557,7 @@ export default function ContactPage() {
                   value={formData.company}
                   onChange={handleChange}
                   placeholder="Acme Inc"
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                 />
               </div>
               <div>
@@ -569,7 +569,7 @@ export default function ContactPage() {
                   name="service"
                   value={formData.service}
                   onChange={handleChange}
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all appearance-none cursor-pointer"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all appearance-none cursor-pointer"
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
                     backgroundRepeat: 'no-repeat',
@@ -601,7 +601,7 @@ export default function ContactPage() {
                 value={formData.message}
                 onChange={handleChange}
                 placeholder="Tell us about your project, goals, timeline, or any questions you have..."
-                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all resize-none"
+                className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all resize-none"
               />
             </div>
 
@@ -613,7 +613,7 @@ export default function ContactPage() {
 
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border border-gray-200/60 rounded-xl p-6 text-center cursor-pointer bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/50 transition-all group"
+                className="border border-gray-400/60 rounded-xl p-6 text-center cursor-pointer bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/50 transition-all group"
               >
                 <input
                   ref={fileInputRef}
@@ -691,7 +691,7 @@ export default function ContactPage() {
             >
               {isSubmitting ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-gray-400 border-t-gray-500 rounded-full animate-spin" />
                   Sending...
                 </>
               ) : (
@@ -728,14 +728,14 @@ export default function ContactPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <a
               href="/pricing"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:border-gray-300 hover:shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-400 rounded-xl font-medium text-gray-700 hover:border-gray-400 hover:shadow-sm transition-all"
             >
               View Pricing
               <ArrowRight className="w-4 h-4" />
             </a>
             <a
               href="/services"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:border-gray-300 hover:shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-400 rounded-xl font-medium text-gray-700 hover:border-gray-400 hover:shadow-sm transition-all"
             >
               Browse Services
               <ArrowRight className="w-4 h-4" />

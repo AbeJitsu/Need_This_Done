@@ -69,11 +69,11 @@ export default function ChatMessage({ message }: ChatMessageProps) {
         {/* Message content with markdown link support */}
         <div
           onClick={handleClick}
-          className={`prose prose-sm max-w-none ${
+          className={`prose ppurple-sm max-w-none ${
             isUser
-              ? 'prose-invert'
-              : 'dark:prose-invert'
-          } prose-a:${accentText.blue} prose-a:underline`}
+              ? 'ppurple-invert'
+              : 'dark:ppurple-invert'
+          } ppurple-a:${accentText.blue} ppurple-a:underline`}
           dangerouslySetInnerHTML={{
             __html: sanitizeHtml(formatMessageContent(content)),
           }}

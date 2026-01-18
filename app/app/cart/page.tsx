@@ -63,9 +63,9 @@ function EmptyCartState() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 w-full">
         <div className="relative overflow-hidden py-12 md:py-16">
           {/* Gradient orbs - purple/violet for pricing/cart theme (matching site pattern) */}
-          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-indigo-100 blur-2xl" />
-          <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-teal-100 blur-xl" />
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-purple-100 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-blue-100 blur-2xl" />
+          <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-emerald-100 blur-xl" />
 
           {/* Content with z-10 to stay above gradients */}
           <div className="relative z-10">
@@ -109,11 +109,11 @@ function EmptyCartState() {
                       style={{ animationDelay: '0s' }}
                     />
                     <div
-                      className="absolute bottom-12 left-4 w-2 h-2 rounded-full bg-gradient-to-br from-blue-400 to-indigo-400 animate-float"
+                      className="absolute bottom-12 left-4 w-2 h-2 rounded-full bg-gradient-to-br from-blue-400 to-blue-400 animate-float"
                       style={{ animationDelay: '0.5s' }}
                     />
                     <div
-                      className="absolute top-1/2 -right-4 w-4 h-4 rounded-full bg-gradient-to-br from-purple-400 to-violet-400 animate-float"
+                      className="absolute top-1/2 -right-4 w-4 h-4 rounded-full bg-gradient-to-br from-purple-400 to-purple-400 animate-float"
                       style={{ animationDelay: '1s' }}
                     />
                   </div>

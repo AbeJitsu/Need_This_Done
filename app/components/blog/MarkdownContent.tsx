@@ -109,7 +109,7 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
             if (isInline) {
               return (
                 <code
-                  className="px-1.5 py-0.5 rounded text-sm font-mono bg-gray-100 dark:bg-gray-800 text-pink-600 dark:text-pink-400"
+                  className="px-1.5 py-0.5 rounded text-sm font-mono bg-gray-100 dark:bg-gray-800 text-purple-600 dark:text-purple-400"
                   {...props}
                 >
                   {children}

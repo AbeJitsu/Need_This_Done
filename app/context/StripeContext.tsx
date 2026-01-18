@@ -156,8 +156,8 @@ export function StripeElementsWrapperDark({
 }: StripeElementsWrapperProps) {
   if (!stripePromise) {
     return (
-      <div className="p-4 bg-yellow-900/20 border border-yellow-800 rounded-lg">
-        <p className="text-sm text-yellow-200">
+      <div className="p-4 bg-gold-900/20 border border-gold-800 rounded-lg">
+        <p className="text-sm text-gold-200">
           Payment system not configured. Please add NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.
         </p>
       </div>

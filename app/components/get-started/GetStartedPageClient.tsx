@@ -228,7 +228,7 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
   const pathIcons = [FileText, Video];
   const pathIconColors = [
     { bg: 'bg-gradient-to-br from-green-500 to-emerald-600', text: 'text-white' },
-    { bg: 'bg-gradient-to-br from-purple-500 to-violet-600', text: 'text-white' },
+    { bg: 'bg-gradient-to-br from-purple-500 to-purple-600', text: 'text-white' },
   ];
 
   // ============================================================================
@@ -243,8 +243,8 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
         {/* Gradient container - full width on mobile, contained on desktop */}
         <div className="relative overflow-hidden md:max-w-5xl md:mx-auto md:rounded-2xl flex items-center justify-center min-h-[220px]">
           {/* Gradient orbs */}
-          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-teal-100 blur-2xl" />
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-gold-100 to-gold-100 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-emerald-100 blur-2xl" />
 
           {/* Text container - always padded */}
           <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
@@ -299,7 +299,7 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
                         hover:-translate-y-1
                       `}>
                         {/* Colored Top Accent Bar */}
-                        <div className={`h-1.5 ${index === 0 ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 'bg-gradient-to-r from-purple-500 to-violet-500'}`} />
+                        <div className={`h-1.5 ${index === 0 ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 'bg-gradient-to-r from-purple-500 to-purple-500'}`} />
 
                         <div className="p-8 flex flex-col flex-grow">
                           {/* Icon + Badge Row */}
@@ -365,7 +365,7 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
       <section className="relative overflow-hidden">
         {/* Dark gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-green-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">

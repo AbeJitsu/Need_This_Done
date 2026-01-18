@@ -36,11 +36,11 @@ const themeColors: Record<AccentVariant, {
   dotColor: string;
 }> = {
   gold: {
-    accentBg: 'bg-amber-500',
-    accentBorder: 'border-amber-200',
+    accentBg: 'bg-gold-500',
+    accentBorder: 'border-gold-200',
     textColor: accentText.gold,
-    cornerAccent: 'bg-amber-100',
-    dotColor: 'bg-amber-400',
+    cornerAccent: 'bg-gold-100',
+    dotColor: 'bg-gold-400',
   },
   blue: {
     accentBg: 'bg-blue-500',
@@ -64,11 +64,11 @@ const themeColors: Record<AccentVariant, {
     dotColor: 'bg-green-400',
   },
   teal: {
-    accentBg: 'bg-teal-500',
-    accentBorder: 'border-teal-200',
+    accentBg: 'bg-emerald-500',
+    accentBorder: 'border-emerald-200',
     textColor: accentText.teal,
-    cornerAccent: 'bg-teal-100',
-    dotColor: 'bg-teal-400',
+    cornerAccent: 'bg-emerald-100',
+    dotColor: 'bg-emerald-400',
   },
   gray: {
     accentBg: 'bg-slate-500',

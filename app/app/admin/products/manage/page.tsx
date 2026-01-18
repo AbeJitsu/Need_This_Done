@@ -385,11 +385,11 @@ export default function ProductManagePage() {
             </Button>
           </div>
         ) : (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-400/50 overflow-hidden animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b-2 border-gray-200 bg-gradient-to-r from-purple-50/50 to-blue-50/50">
+                  <tr className="border-b-2 border-gray-400 bg-gradient-to-r from-purple-50/50 to-blue-50/50">
                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                       Product
                     </th>
@@ -502,7 +502,7 @@ export default function ProductManagePage() {
                   value={formData.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
+                  className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
                   placeholder="15-Minute Consultation"
                 />
               </div>
@@ -515,7 +515,7 @@ export default function ProductManagePage() {
                   type="text"
                   value={formData.handle}
                   onChange={(e) => setFormData(prev => ({ ...prev, handle: e.target.value }))}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200 font-mono text-sm"
+                  className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200 font-mono text-sm"
                   placeholder="15-min-consultation"
                 />
                 <p className="text-xs text-gray-500 mt-1">Auto-generated from title if left empty</p>
@@ -529,7 +529,7 @@ export default function ProductManagePage() {
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   rows={3}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
+                  className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
                   placeholder="Quick consultation session to discuss your project needs..."
                 />
               </div>
@@ -545,7 +545,7 @@ export default function ProductManagePage() {
                     value={formData.price}
                     onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
+                    className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
                     placeholder="20.00"
                   />
                 </div>
@@ -558,7 +558,7 @@ export default function ProductManagePage() {
                     type="text"
                     value={formData.sku}
                     onChange={(e) => setFormData(prev => ({ ...prev, sku: e.target.value }))}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200 font-mono text-sm"
+                    className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200 font-mono text-sm"
                     placeholder="CONSULT-15"
                   />
                 </div>
@@ -572,7 +572,7 @@ export default function ProductManagePage() {
                   type="url"
                   value={formData.thumbnail}
                   onChange={(e) => setFormData(prev => ({ ...prev, thumbnail: e.target.value }))}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
+                  className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
                   placeholder="https://example.com/image.jpg"
                 />
                 {formData.thumbnail && (
@@ -581,7 +581,7 @@ export default function ProductManagePage() {
                     <img
                       src={formData.thumbnail}
                       alt="Preview"
-                      className="w-32 h-32 object-cover rounded-lg border-2 border-gray-200"
+                      className="w-32 h-32 object-cover rounded-lg border-2 border-gray-400"
                     />
                   </div>
                 )}
@@ -621,7 +621,7 @@ export default function ProductManagePage() {
             className="bg-white rounded-2xl shadow-2xl max-w-md w-full animate-scaleIn"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-gradient-to-r from-red-600 to-orange-600 px-8 py-6 text-white rounded-t-2xl">
+            <div className="bg-gradient-to-r from-red-600 to-gold-600 px-8 py-6 text-white rounded-t-2xl">
               <h2 className="text-2xl font-serif font-bold">Delete Product?</h2>
             </div>
 
