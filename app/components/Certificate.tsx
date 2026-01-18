@@ -52,7 +52,7 @@ export default function Certificate({
   return (
     <div
       data-testid="certificate"
-      className={`${cardBgColors.base} border-8 border-double border-gray-300 dark:border-gray-600 p-8 md:p-12 max-w-3xl mx-auto print:border-gray-400`}
+      className={`${cardBgColors.base} border-8 border-double border-gray-400 dark:border-gray-600 p-8 md:p-12 max-w-3xl mx-auto print:border-gray-400`}
     >
       {/* Decorative top border */}
       <div className={`h-2 ${accentColors[color].bg} -mx-8 md:-mx-12 -mt-8 md:-mt-12 mb-8`} />
@@ -91,7 +91,7 @@ export default function Certificate({
       </div>
 
       {/* Date and Signature Row */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-8 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-8 mt-12 pt-8 border-t border-gray-400 dark:border-gray-700">
         {/* Date */}
         <div className="text-center">
           <p className="text-lg font-medium text-gray-900 dark:text-gray-100">

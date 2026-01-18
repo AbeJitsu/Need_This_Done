@@ -1,4 +1,5 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useState } from 'react';
 import { neutralAccentBg, cardBgColors, cardBorderColors, headingColors, formInputColors } from '@/lib/colors';
@@ -112,8 +113,8 @@ export default function HowItWorks() {
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         {/* What Visitors Experience */}
         <div className={`p-4 ${neutralAccentBg.blue} border border-blue-300 dark:border-blue-700 rounded-lg`}>
-          <h3 className="font-semibold text-blue-900 dark:text-white mb-2">What Your Visitors Experience</h3>
-          <ul className="text-sm text-blue-900 dark:text-gray-100 space-y-1">
+          <h3 className={`font-semibold ${accentText.blue} dark:text-white mb-2`}>What Your Visitors Experience</h3>
+          <ul className={`text-sm ${accentText.blue} dark:text-gray-100 space-y-1`}>
             <li>• Everything loads super fast</li>
             <li>• Login is simple and safe</li>
             <li>• Their information appears instantly</li>
@@ -123,8 +124,8 @@ export default function HowItWorks() {
 
         {/* What You Create */}
         <div className={`p-4 ${neutralAccentBg.purple} border border-purple-300 dark:border-purple-700 rounded-lg`}>
-          <h3 className="font-semibold text-purple-900 dark:text-white mb-2">What You Create</h3>
-          <ul className="text-sm text-purple-900 dark:text-gray-100 space-y-1">
+          <h3 className={`font-semibold ${accentText.purple} dark:text-white mb-2`}>What You Create</h3>
+          <ul className={`text-sm ${accentText.purple} dark:text-gray-100 space-y-1`}>
             <li>• Your unique features</li>
             <li>• How your app works</li>
             <li>• Your special rules</li>
@@ -135,7 +136,7 @@ export default function HowItWorks() {
 
       {/* Key Concept */}
       <div className={`p-4 ${neutralAccentBg.green} border border-green-300 dark:border-green-700 rounded-lg mb-6`}>
-        <p className="text-sm text-green-900 dark:text-gray-100">
+        <p className={`text-sm ${accentText.emerald} dark:text-gray-100`}>
           <strong><span role="img" aria-label="Tip">💡</span> The Key Idea:</strong> All the technical plumbing (how requests travel, how logins work, how your app stays fast) is already built and connected.
           You focus on what matters: your features, your design, and what makes your app special.
         </p>
@@ -181,14 +182,14 @@ export default function HowItWorks() {
       </div>
 
       {/* For Developers Section */}
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-6 pt-6 border-t border-gray-400 dark:border-gray-700">
         <button
           type="button"
           onClick={() => setExpandDeveloper(!expandDeveloper)}
           className={`w-full text-left p-4 ${neutralAccentBg.purple} border border-purple-200 dark:border-purple-700 rounded-lg hover:bg-purple-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500`}
         >
           <div className="flex items-center justify-between">
-            <p className="font-semibold text-purple-900 dark:text-white">
+            <p className={`font-semibold ${accentText.purple} dark:text-white`}>
               For Developers: Technical Details
             </p>
             <span className={`text-lg transition-transform ${expandDeveloper ? 'rotate-180' : ''}`}>
@@ -201,13 +202,13 @@ export default function HowItWorks() {
           <div className={`mt-4 space-y-4 p-4 ${neutralAccentBg.purple} rounded-lg border border-purple-200 dark:border-purple-700`}>
             {/* Next.js Explanation */}
             <div>
-              <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
+              <p className={`font-semibold ${accentText.purple} dark:text-purple-300 mb-2`}>
                 1. Next.js: Frontend & Backend in One
               </p>
-              <p className="text-sm text-purple-900 dark:text-gray-100 mb-2">
+              <p className={`text-sm ${accentText.purple} dark:text-gray-100 mb-2`}>
                 Your app runs on a single server. The <code className="bg-purple-200 dark:bg-purple-800 px-1 rounded text-xs">/app</code> directory contains:
               </p>
-              <ul className="text-xs text-purple-900 dark:text-gray-100 space-y-1 ml-4">
+              <ul className={`text-xs ${accentText.purple} dark:text-gray-100 space-y-1 ml-4`}>
                 <li>• <strong>Pages</strong> (like <code className="bg-purple-200 dark:bg-purple-800 px-1 rounded">page.tsx</code>): What visitors see in their browser</li>
                 <li>• <strong>API Routes</strong> (like <code className="bg-purple-200 dark:bg-purple-800 px-1 rounded">/api/demo/items/route.ts</code>): Server-side code that runs when clients make requests</li>
                 <li>• <strong>Middleware</strong>: Code that checks authentication before requests reach API routes</li>
@@ -216,10 +217,10 @@ export default function HowItWorks() {
 
             {/* Redis Explanation */}
             <div>
-              <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
+              <p className={`font-semibold ${accentText.purple} dark:text-purple-300 mb-2`}>
                 2. Quick Memory (Redis): Keep Recent Answers Ready
               </p>
-              <p className="text-sm text-purple-900 dark:text-gray-100 mb-2">
+              <p className={`text-sm ${accentText.purple} dark:text-gray-100 mb-2`}>
                 Instead of going to the permanent storage every time, we keep frequently-requested answers on a fast "counter" so people don't wait:
               </p>
               <pre className="bg-gray-900 dark:bg-gray-950 text-gray-100 p-3 rounded text-xs overflow-x-auto mb-2">
@@ -233,17 +234,17 @@ const data = await supabase.from('table').select();
 // Save for next time
 await redis.setEx('cache-key', 60, data);`}</code>
               </pre>
-              <p className="text-xs text-purple-900 dark:text-gray-100">
+              <p className={`text-xs ${accentText.purple} dark:text-gray-100`}>
                 This pattern means 90% of requests are instant because they hit the cache.
               </p>
             </div>
 
             {/* Database Explanation */}
             <div>
-              <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
+              <p className={`font-semibold ${accentText.purple} dark:text-purple-300 mb-2`}>
                 3. Permanent Storage (Supabase): Long-Term Memory
               </p>
-              <p className="text-sm text-purple-900 dark:text-gray-100 mb-2">
+              <p className={`text-sm ${accentText.purple} dark:text-gray-100 mb-2`}>
                 This is where all your actual data lives, organized and protected. When Quick Memory doesn't have something, we fetch it here:
               </p>
               <pre className="bg-gray-900 dark:bg-gray-950 text-gray-100 p-3 rounded text-xs overflow-x-auto mb-2">
@@ -255,17 +256,17 @@ const { data } = await supabase
 
 // This is slower (~200ms) but the data is fresh`}</code>
               </pre>
-              <p className="text-xs text-purple-900 dark:text-gray-100">
+              <p className={`text-xs ${accentText.purple} dark:text-gray-100`}>
                 Security is built-in: Each user automatically sees only their own data. Your mom's information stays separate from your information.
               </p>
             </div>
 
             {/* Request Lifecycle */}
             <div>
-              <p className="font-semibold text-purple-900 dark:text-purple-300 mb-2">
+              <p className={`font-semibold ${accentText.purple} dark:text-purple-300 mb-2`}>
                 4. What Happens When Someone Requests Something
               </p>
-              <ol className="text-xs text-purple-900 dark:text-gray-100 space-y-1 ml-4">
+              <ol className={`text-xs ${accentText.purple} dark:text-gray-100 space-y-1 ml-4`}>
                 <li>1. Your visitor asks your app for something</li>
                 <li>2. Your app checks Quick Memory: "Do I remember this?"</li>
                 <li>3. If yes: Instant answer (2 milliseconds)</li>
@@ -278,10 +279,10 @@ const { data } = await supabase
 
             {/* Cloud Services Note */}
             <div className={`p-3 ${neutralAccentBg.blue} border border-blue-200 dark:border-blue-700 rounded`}>
-              <p className="text-xs font-semibold text-blue-900 dark:text-white mb-1">
+              <p className={`text-xs font-semibold ${accentText.blue} dark:text-white mb-1`}>
                 ☁️ Cloud Infrastructure
               </p>
-              <p className="text-xs text-blue-900 dark:text-gray-100">
+              <p className={`text-xs ${accentText.blue} dark:text-gray-100`}>
                 Redis (Upstash) and Supabase run as managed cloud services. The app communicates securely with these services over encrypted connections.
               </p>
             </div>
@@ -290,7 +291,7 @@ const { data } = await supabase
       </div>
 
       {/* Footer */}
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-6 pt-6 border-t border-gray-400 dark:border-gray-700">
         <p className={`text-xs ${formInputColors.helper}`}>
           <strong>In a nutshell:</strong> When someone visits, your app asks itself "Do I remember this?" If yes, answer instantly. If no, look it up and remember it for next time. Everything is encrypted and protected so only the right person sees their information.
         </p>

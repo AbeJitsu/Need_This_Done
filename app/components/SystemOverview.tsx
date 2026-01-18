@@ -139,7 +139,7 @@ export default function SystemOverview() {
                 </svg>
               ) : (
                 <svg
-                  className="w-6 h-6 text-amber-600 dark:text-amber-400"
+                  className="w-6 h-6 text-gold-600 dark:text-gold-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -203,7 +203,7 @@ export default function SystemOverview() {
 
       {/* Expandable Details Section */}
       {showDetails && (
-        <div className={`border-t border-gray-200 dark:border-gray-700 ${uiChromeBg.panel} p-4`}>
+        <div className={`border-t border-gray-400 dark:border-gray-700 ${uiChromeBg.panel} p-4`}>
           <div className="grid sm:grid-cols-2 gap-3">
             {services.map(({ key, status }) => {
               const info = serviceInfo[key as keyof typeof serviceInfo];
@@ -214,14 +214,14 @@ export default function SystemOverview() {
                   key={key}
                   className={`p-3 rounded-lg border ${
                     isUp
-                      ? `${cardBgColors.base} border-gray-200 dark:border-gray-700`
-                      : `${statusIndicatorBg.warning} border-amber-200 dark:border-amber-600`
+                      ? `${cardBgColors.base} border-gray-400 dark:border-gray-700`
+                      : `${statusIndicatorBg.warning} border-gold-200 dark:border-gold-600`
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <div
                       className={`w-2 h-2 rounded-full ${
-                        isUp ? 'bg-green-500' : 'bg-amber-500'
+                        isUp ? 'bg-green-500' : 'bg-gold-500'
                       }`}
                     />
                     <span className="font-medium text-gray-900 dark:text-gray-100 text-sm">

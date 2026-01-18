@@ -96,7 +96,7 @@ export default function HealthStatus() {
       default:
         return {
           bg: neutralAccentBg.gray,
-          border: 'border-gray-200 dark:border-gray-700',
+          border: 'border-gray-400 dark:border-gray-700',
           badgeBg: 'bg-gray-600',
           badgeText: 'text-gray-900 dark:text-gray-100',
           statusText: 'text-gray-700 dark:text-gray-300',
@@ -118,7 +118,7 @@ export default function HealthStatus() {
   // ========================================================================
   if (loading) {
     return (
-      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+      <div className="bg-white p-6 rounded-xl border border-gray-400 shadow-sm">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
           <h2 className="text-xl font-semibold text-gray-900">System Status</h2>
@@ -133,7 +133,7 @@ export default function HealthStatus() {
   // ========================================================================
   if (!health) {
     return (
-      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+      <div className="bg-white p-6 rounded-xl border border-gray-400 shadow-sm">
         <h2 className="text-xl font-semibold text-gray-900 mb-2">System Status</h2>
         <p className="text-gray-600">Unable to fetch service status</p>
       </div>
@@ -196,7 +196,7 @@ export default function HealthStatus() {
       </div>
 
       {/* Footer: Last Updated Info */}
-      <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+      <div className="pt-3 border-t border-gray-400 dark:border-gray-700">
         <p className="text-xs text-gray-500 dark:text-gray-400">
           Last checked: {lastUpdated ? formatTime(health.timestamp) : 'Never'}
         </p>

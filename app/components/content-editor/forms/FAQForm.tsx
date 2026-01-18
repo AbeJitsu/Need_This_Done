@@ -98,7 +98,7 @@ export default function FAQForm({ content, onChange }: FAQFormProps) {
                         onItemChange({ ...item, links: newLinks });
                       }}
                       placeholder="Link text"
-                      className="flex-1 px-2 py-1 text-xs rounded border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700"
+                      className="flex-1 px-2 py-1 text-xs rounded border border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-700"
                     />
                     <input
                       type="text"
@@ -109,7 +109,7 @@ export default function FAQForm({ content, onChange }: FAQFormProps) {
                         onItemChange({ ...item, links: newLinks });
                       }}
                       placeholder="/path"
-                      className="w-24 px-2 py-1 text-xs rounded border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700"
+                      className="w-24 px-2 py-1 text-xs rounded border border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-700"
                     />
                     <button
                       type="button"

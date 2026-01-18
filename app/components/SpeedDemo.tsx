@@ -200,7 +200,7 @@ export default function SpeedDemo() {
                 </div>
               </div>
               {index === 0 && results.length > 1 && (
-                <p className="text-xs text-gray-700 dark:text-gray-300 border-t pt-2 border-gray-300 dark:border-gray-600">
+                <p className="text-xs text-gray-700 dark:text-gray-300 border-t pt-2 border-gray-400 dark:border-gray-600">
                   💡 Tip: Try clicking again within 30 seconds to see the cache hit
                 </p>
               )}
@@ -210,7 +210,7 @@ export default function SpeedDemo() {
       </div>
 
       {/* Educational Footer */}
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 space-y-3">
+      <div className="mt-6 pt-6 border-t border-gray-400 dark:border-gray-700 space-y-3">
         <div>
           <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">
             What's Happening:

@@ -234,7 +234,7 @@ export default function AppointmentStepForm({
                   min={minDate}
                   max={maxDateStr}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                  className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                 />
               </div>
               <div>
@@ -256,7 +256,7 @@ export default function AppointmentStepForm({
                       name="preferredTimeStart"
                       value={formData.preferredTimeStart}
                       onChange={handleChange}
-                      className="hidden md:block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className="hidden md:block w-full px-4 py-3 border border-gray-400 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                     >
                       <option value="">Select a time</option>
                       {availableTimeOptions.map((option) => (
@@ -276,7 +276,7 @@ export default function AppointmentStepForm({
                           className={`py-3 px-2 text-sm font-medium rounded-lg border-2 transition-all ${
                             formData.preferredTimeStart === option.value
                               ? 'bg-purple-600 border-purple-600 text-white'
-                              : `${cardBgColors.base} border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 ${hoverBgColors.purple}`
+                              : `${cardBgColors.base} border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 ${hoverBgColors.purple}`
                           }`}
                         >
                           {option.label}
@@ -307,7 +307,7 @@ export default function AppointmentStepForm({
                   onChange={handleChange}
                   min={minDate}
                   max={maxDateStr}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                  className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                 />
               </div>
               <div>
@@ -329,7 +329,7 @@ export default function AppointmentStepForm({
                       name="alternateTimeStart"
                       value={formData.alternateTimeStart}
                       onChange={handleChange}
-                      className="hidden md:block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                      className="hidden md:block w-full px-4 py-3 border border-gray-400 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                     >
                       <option value="">Select a time</option>
                       {availableAlternateTimeOptions.map((option) => (
@@ -349,7 +349,7 @@ export default function AppointmentStepForm({
                           className={`py-3 px-2 text-sm font-medium rounded-lg border-2 transition-all ${
                             formData.alternateTimeStart === option.value
                               ? 'bg-purple-600 border-purple-600 text-white'
-                              : `${cardBgColors.base} border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 ${hoverBgColors.purple}`
+                              : `${cardBgColors.base} border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 ${hoverBgColors.purple}`
                           }`}
                         >
                           {option.label}
@@ -374,7 +374,7 @@ export default function AppointmentStepForm({
               onChange={handleChange}
               rows={3}
               placeholder="Any specific topics you'd like to discuss or questions you have..."
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 resize-none"
+              className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 resize-none"
             />
           </div>
 

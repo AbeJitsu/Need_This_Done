@@ -1,4 +1,5 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useEffect, useCallback } from 'react';
 import { useInlineEdit } from '@/context/InlineEditContext';
@@ -77,7 +78,7 @@ export default function EditModeBar() {
       {/* Exit button */}
       <button
         onClick={handleExitEditMode}
-        className="p-2 bg-white text-purple-700 rounded-md text-sm font-medium hover:bg-purple-100 transition-colors"
+        className={`p-2 bg-white ${accentText.purple} rounded-md text-sm font-medium hover:bg-purple-100 transition-colors`}
         title="Exit Edit Mode (Esc)"
         aria-label="Exit Edit Mode"
       >

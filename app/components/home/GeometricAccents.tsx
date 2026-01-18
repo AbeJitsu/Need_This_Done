@@ -22,7 +22,7 @@ export default function GeometricAccents({ variant = 'hero' }: GeometricAccentsP
 
         {/* Medium circle - bottom left */}
         <div
-          className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-teal-100 dark:from-green-900/30 dark:to-teal-900/30 blur-2xl animate-pulse-soft"
+          className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 blur-2xl animate-pulse-soft"
           style={{ animationDelay: '1.5s' }}
         />
 

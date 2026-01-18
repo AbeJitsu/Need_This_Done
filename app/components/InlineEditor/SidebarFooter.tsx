@@ -27,7 +27,7 @@ export default function SidebarFooter({
   onOpenHistory,
 }: SidebarFooterProps) {
   return (
-    <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 p-4 space-y-3">
+    <div className="flex-shrink-0 border-t border-gray-400 dark:border-gray-700 p-4 space-y-3">
       {saveError && (
         <p className="text-sm text-red-600 dark:text-red-400">{saveError}</p>
       )}
@@ -45,7 +45,7 @@ export default function SidebarFooter({
           disabled={!hasUnsavedChanges || isSaving}
           className={`
             flex-1 px-4 py-2 rounded-lg text-sm font-medium
-            border border-gray-300 dark:border-gray-600
+            border border-gray-400 dark:border-gray-600
             hover:bg-gray-100 dark:hover:bg-gray-700
             disabled:opacity-50 disabled:cursor-not-allowed
             transition-colors
@@ -74,7 +74,7 @@ export default function SidebarFooter({
         onClick={onOpenHistory}
         className={`
           w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
-          border border-gray-300 dark:border-gray-600
+          border border-gray-400 dark:border-gray-600
           hover:bg-gray-100 dark:hover:bg-gray-700
           transition-colors
         `}

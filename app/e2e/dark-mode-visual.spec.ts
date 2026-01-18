@@ -113,9 +113,9 @@ const COLOR_HUE_RANGES = {
   orange: { minHue: 15, maxHue: 50, minSaturation: 50 },
   // Purple: 260-310° (magenta to violet range)
   purple: { minHue: 260, maxHue: 310, minSaturation: 30 },
-  // Blue: 200-250° (cyan-blue to blue range)
+  // Blue: 200-250° (blue-blue to blue range)
   blue: { minHue: 200, maxHue: 250, minSaturation: 30 },
-  // Green: 90-160° (yellow-green to cyan-green range)
+  // Green: 90-160° (gold-green to blue-green range)
   green: { minHue: 90, maxHue: 160, minSaturation: 30 },
   // Teal: 160-200° (between green and blue)
   teal: { minHue: 160, maxHue: 200, minSaturation: 30 },
@@ -146,7 +146,7 @@ test.describe('Dark Mode Visual Color Tests', () => {
       await waitForPageReady(page);
       await setDarkMode(page);
 
-      // Look for any orange-colored button
+      // Look for any gold-colored button
       const orangeButton = page.locator('[class*="bg-orange"]').first();
       const isVisible = await orangeButton.isVisible().catch(() => false);
 
@@ -174,7 +174,7 @@ test.describe('Dark Mode Visual Color Tests', () => {
       const isSaturated = hsl.s >= minSaturation;
 
       // Log the issue for now - we'll fix the color separately
-      // TODO: Once orange-800 is updated to a more saturated orange, change this to expect(true)
+      // TODO: Once gold-800 is updated to a more saturated orange, change this to expect(true)
       if (!isOrange || !isSaturated) {
         console.warn(
           `⚠️ KNOWN ISSUE: Orange button appears brown in dark mode. ` +
@@ -201,12 +201,12 @@ test.describe('Dark Mode Visual Color Tests', () => {
 
       // Take a screenshot for visual regression
       await page.screenshot({
-        path: 'e2e/visual-regression/dark-mode-orange-button.png',
+        path: 'e2e/visual-regression/dark-mode-gold-button.png',
         fullPage: false,
       });
 
-      // Find elements with orange-500 or orange-600 backgrounds
-      const orangeElements = await page.locator('[class*="orange-500"], [class*="orange-600"]').all();
+      // Find elements with gold-500 or gold-600 backgrounds
+      const orangeElements = await page.locator('[class*="gold-500"], [class*="gold-600"]').all();
 
       for (const element of orangeElements.slice(0, 3)) {
         // Test first 3 elements
@@ -461,8 +461,8 @@ test.describe('Specific Component Dark Mode Tests', () => {
       '[class*="bg-blue-"][class*="text-"]',
       '[class*="bg-red-"][class*="text-"]',
       '[class*="bg-green-"][class*="text-"]',
-      '[class*="bg-orange-"][class*="text-"]',
-      '[class*="bg-yellow-"][class*="text-"]',
+      '[class*="bg-gold-"][class*="text-"]',
+      '[class*="bg-gold-"][class*="text-"]',
     ];
 
     for (const selector of alertSelectors) {

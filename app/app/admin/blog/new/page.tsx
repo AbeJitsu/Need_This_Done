@@ -502,7 +502,7 @@ export default function NewBlogPost() {
                 type="checkbox"
                 checked={publishImmediately}
                 onChange={(e) => setPublishImmediately(e.target.checked)}
-                className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="w-5 h-5 rounded border-gray-400 text-blue-600 focus:ring-blue-500"
               />
               <span className={formInputColors.label}>Publish immediately</span>
             </label>

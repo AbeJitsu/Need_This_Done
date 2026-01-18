@@ -493,7 +493,7 @@ function ContrastBadge({ ratio }: { ratio: number }) {
 
   const colors = {
     fail: 'bg-red-500 text-white',
-    'aa-large': 'bg-yellow-500 text-black',
+    'aa-large': 'bg-gold-500 text-black',
     aa: 'bg-green-500 text-white',
     aaa: 'bg-blue-500 text-white',
   };

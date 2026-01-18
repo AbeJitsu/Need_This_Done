@@ -15,6 +15,7 @@ import {
   accentColors,
   accentBorderWidth,
   AccentVariant,
+  titleColors,
 } from '@/lib/colors';
 import { Sparkles } from 'lucide-react';
 
@@ -45,13 +46,13 @@ export default function ServicesPageClient({ content: initialContent }: Services
           {/* Gradient container - full width on mobile, contained on desktop */}
           <div className="relative overflow-hidden md:max-w-6xl md:mx-auto md:rounded-2xl py-12 md:py-16 flex items-center justify-center min-h-[200px]">
             {/* Gradient orbs */}
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-violet-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-teal-100 to-cyan-100 blur-2xl" />
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-purple-100 blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-emerald-100 to-blue-100 blur-2xl" />
 
             {/* Text container - always padded */}
             <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
               <EditableSection sectionKey="header" label="Page Header">
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-teal-700 mb-4">
+                <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${titleColors.green} mb-4`}>
                   {content.header.title}
                 </h1>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -177,14 +178,14 @@ export default function ServicesPageClient({ content: initialContent }: Services
             ================================================================ */}
         <section className="relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-          <div className="absolute top-0 left-0 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+          <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
 
           <div className="relative max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
             <EditableSection sectionKey="expectations" label="What You Can Expect">
               <div className="text-center mb-10">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-teal-500/20 mb-6">
-                  <Sparkles className="w-8 h-8 text-teal-400" />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/20 mb-6">
+                  <Sparkles className="w-8 h-8 text-emerald-400" />
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                   {content.expectationsTitle}
@@ -200,12 +201,12 @@ export default function ServicesPageClient({ content: initialContent }: Services
                 {content.expectations.map((item, index) => {
                   const itemContent = (
                     <div className="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
-                      <div className="w-10 h-10 rounded-lg bg-teal-500/20 flex items-center justify-center flex-shrink-0">
-                        <span className="text-teal-400 font-bold">✓</span>
+                      <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                        <span className="text-emerald-400 font-bold">✓</span>
                       </div>
                       <div>
                         <h3 className={`font-semibold text-white mb-1 ${
-                          item.link ? 'group-hover:text-teal-400 transition-colors' : ''
+                          item.link ? 'group-hover:text-emerald-400 transition-colors' : ''
                         }`}>
                           {item.title}
                           {item.link && (
@@ -261,15 +262,15 @@ export default function ServicesPageClient({ content: initialContent }: Services
               {/* Trust indicators like homepage */}
               <div className="flex flex-wrap items-center justify-center gap-6 mt-10 text-sm text-slate-400">
                 <span className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                   Every project, every time
                 </span>
                 <span className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                   No surprises
                 </span>
                 <span className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                   Built for trust
                 </span>
               </div>

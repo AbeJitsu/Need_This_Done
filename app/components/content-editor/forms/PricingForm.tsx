@@ -120,7 +120,7 @@ export default function PricingForm({ content, onChange }: PricingFormProps) {
                   id={`popular-${tier.name}`}
                   checked={tier.popular || false}
                   onChange={(e) => onTierChange({ ...tier, popular: e.target.checked })}
-                  className="rounded border-gray-300 dark:border-gray-600"
+                  className="rounded border-gray-400 dark:border-gray-600"
                 />
                 <label htmlFor={`popular-${tier.name}`} className="text-sm text-gray-600 dark:text-gray-400">
                   Show &quot;Most Popular&quot; badge
@@ -142,7 +142,7 @@ export default function PricingForm({ content, onChange }: PricingFormProps) {
                         onTierChange({ ...tier, features: newFeatures });
                       }}
                       placeholder="Feature item"
-                      className="flex-1 px-2 py-1 text-sm rounded border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700"
+                      className="flex-1 px-2 py-1 text-sm rounded border border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-700"
                     />
                     <button
                       type="button"
@@ -179,7 +179,7 @@ export default function PricingForm({ content, onChange }: PricingFormProps) {
             id="payment-note-enabled"
             checked={content.paymentNote.enabled}
             onChange={(e) => updateField('paymentNote', { ...content.paymentNote, enabled: e.target.checked })}
-            className="rounded border-gray-300 dark:border-gray-600"
+            className="rounded border-gray-400 dark:border-gray-600"
           />
           <label htmlFor="payment-note-enabled" className="text-sm text-gray-600 dark:text-gray-400">
             Show payment structure section

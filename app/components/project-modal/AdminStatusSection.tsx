@@ -29,7 +29,7 @@ export default function AdminStatusSection({
   return (
     <form
       onSubmit={handleUpdateStatus}
-      className="border-t border-gray-200 dark:border-gray-700 pt-6 space-y-4"
+      className="border-t border-gray-400 dark:border-gray-700 pt-6 space-y-4"
     >
       <h3 className="font-semibold text-gray-900 dark:text-gray-100">
         Update Status
@@ -42,7 +42,7 @@ export default function AdminStatusSection({
         <select
           value={newStatus}
           onChange={(e) => setNewStatus(e.target.value)}
-          className="mt-2 w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none"
+          className="mt-2 w-full px-4 py-3 rounded-lg border-2 border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none"
         >
           <option value="submitted">Submitted</option>
           <option value="in_review">In Review</option>
@@ -60,7 +60,7 @@ export default function AdminStatusSection({
           value={statusNote}
           onChange={(e) => setStatusNote(e.target.value)}
           placeholder="Add a note that will be visible to the client..."
-          className="mt-2 w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none resize-none"
+          className="mt-2 w-full px-4 py-3 rounded-lg border-2 border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900/50 focus:outline-none resize-none"
           rows={3}
         />
       </div>

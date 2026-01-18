@@ -504,7 +504,7 @@ export default function AdminSidebar() {
                         </div>
                       </div>
                       <svg
-                        className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors"
+                        className="w-4 h-4 text-gray-400 group-hover:text-accent-blue transition-colors"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"

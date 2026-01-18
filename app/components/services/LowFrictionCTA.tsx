@@ -64,7 +64,7 @@ export default function LowFrictionCTA({
             px-6 py-4 rounded-xl
             bg-white dark:bg-gray-700
             ${headingColors.primary}
-            border-2 border-gray-300 dark:border-gray-600
+            border-2 border-gray-400 dark:border-gray-600
             ${accentColors[secondaryButton.variant].hoverBorder}
             hover:shadow-lg hover:scale-105
             transition-all duration-300

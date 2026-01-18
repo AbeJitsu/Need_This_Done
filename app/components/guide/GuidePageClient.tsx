@@ -29,12 +29,12 @@ interface GuidePageClientProps {
 }
 
 // Group configuration - maps group IDs to display info
-const GROUP_CONFIG: Record<GuideGroup, { title: string; color: 'green' | 'blue' | 'purple' | 'gold' }> = {
-  'getting-started': { title: 'Getting Started', color: 'green' },
-  'account': { title: 'Your Account', color: 'blue' },
-  'explore': { title: 'Explore & Customize', color: 'purple' },
-  'admin': { title: 'For Admins', color: 'gold' },
-  'support': { title: 'Support', color: 'gold' },
+const GROUP_CONFIG: Record<GuideGroup, { title: string; color: 'green' | 'blue' | 'purple' | 'gold'; dotBg: string }> = {
+  'getting-started': { title: 'Getting Started', color: 'green', dotBg: 'bg-green-500' },
+  'account': { title: 'Your Account', color: 'blue', dotBg: 'bg-blue-500' },
+  'explore': { title: 'Explore & Customize', color: 'purple', dotBg: 'bg-purple-500' },
+  'admin': { title: 'For Admins', color: 'gold', dotBg: 'bg-gold-500' },
+  'support': { title: 'Support', color: 'gold', dotBg: 'bg-gold-500' },
 };
 
 // Order for displaying groups
@@ -158,7 +158,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
             return (
               <section key={groupId} id={groupId} className="mb-0">
                 <h2 className={`text-lg font-semibold ${titleColors[config.color]} mb-4 flex items-center gap-2`}>
-                  <span className={`w-2 h-2 rounded-full bg-${config.color}-500`} aria-hidden="true" />
+                  <span className={`w-2 h-2 rounded-full ${config.dotBg}`} aria-hidden="true" />
                   {config.title}
                 </h2>
                 <div className="space-y-4">

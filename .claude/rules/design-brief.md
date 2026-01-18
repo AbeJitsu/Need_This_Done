@@ -16,12 +16,12 @@
 
 The founder is a Brazilian Jiu-Jitsu purple belt. The brand colors follow the BJJ belt progression:
 
-| Priority | Color | Meaning | Usage |
-|----------|-------|---------|-------|
-| 1st | **Green** | Growth, action | Primary CTAs, success states, main buttons |
-| 2nd | **Blue** | Trust, professionalism | Links, secondary buttons, professional tone |
-| 3rd | **Purple** | Creativity, mastery | Special emphasis, tertiary accents |
-| 4th | **Gold** | Achievement, warmth | Warm highlights, links on dark backgrounds |
+| Priority | Color | Tailwind Palette | Meaning | Usage |
+|----------|-------|------------------|---------|-------|
+| 1st | **Green** | `emerald-*` | Growth, action | Primary CTAs, success states, main buttons |
+| 2nd | **Blue** | `blue-*` | Trust, professionalism | Links, secondary buttons, professional tone |
+| 3rd | **Purple** | `purple-*` | Creativity, mastery | Special emphasis, tertiary accents |
+| 4th | **Gold** | `gold-*` | Achievement, warmth | Warm highlights, links on dark backgrounds |
 
 **Avoid**: Orange/amber for text (use gold instead). Gray for neutral elements only.
 
@@ -58,9 +58,9 @@ box-shadow: 0 0 40px rgba(255,255,255,0.18), 0 0 70px rgba(255,255,255,0.1)
 
 **Floating Buttons** (colored shadows matching button):
 ```css
-shadow-lg shadow-green-500/25  /* for green buttons */
-shadow-lg shadow-blue-500/25   /* for blue buttons */
-shadow-lg shadow-purple-500/25 /* for purple buttons */
+shadow-lg shadow-emerald-500/25  /* for green buttons */
+shadow-lg shadow-blue-500/25     /* for blue buttons */
+shadow-lg shadow-purple-500/25   /* for purple buttons */
 ```
 
 ## Design Constraints (Non-Negotiable)

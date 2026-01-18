@@ -9,6 +9,55 @@ import { supabase } from '@/lib/supabase';
 import { getAuthTitle, getAuthDescription } from '@/lib/auth-utils';
 
 // ============================================================================
+// Color Constants - Dark theme colors for glassmorphism login
+// ============================================================================
+// This page uses a fixed dark theme (slate-900 background) so we define
+// specific colors that work on dark backgrounds rather than using the
+// light/dark mode switching from the centralized color system.
+
+const loginColors = {
+  // Page background - fixed dark theme
+  pageBg: 'bg-slate-900',
+  // Loading state
+  loadingText: 'text-slate-400',
+  // Back link and navigation
+  backLink: 'text-slate-400 hover:text-white',
+  // Description/helper text
+  description: 'text-slate-400',
+  // Muted text (footer links)
+  mutedText: 'text-slate-500',
+  // Form label
+  label: 'text-slate-300',
+  // Divider background
+  dividerBg: 'bg-slate-800',
+  // Error alert - red on dark translucent background
+  error: {
+    bg: 'bg-red-500/10',
+    border: 'border-red-500/20',
+    text: 'text-red-300',
+  },
+  // Success alert - emerald on dark translucent background
+  success: {
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/20',
+    text: 'text-emerald-300',
+  },
+  // Form input focus state - purple accent
+  inputFocus: 'focus:ring-purple-500/50 focus:border-purple-500/50',
+  // Link colors
+  link: {
+    blue: 'text-blue-400 hover:text-blue-300',
+    gold: 'text-gold-400 hover:text-gold-300',
+  },
+  // Primary CTA button - green gradient (BJJ belt hierarchy: green is primary)
+  primaryButton: {
+    base: 'bg-gradient-to-r from-green-500 to-green-600',
+    hover: 'hover:from-green-600 hover:to-green-700',
+    shadow: 'shadow-lg shadow-green-500/25 hover:shadow-green-500/40',
+  },
+};
+
+// ============================================================================
 // Login Client Component - Glassmorphism Design
 // ============================================================================
 // Premium sign-in experience with frosted glass aesthetic and animated
@@ -144,8 +193,8 @@ export default function LoginClient() {
   // Show loading while checking auth state
   if (isLoading) {
     return (
-      <div className="fixed inset-0 bg-slate-900 flex items-center justify-center">
-        <div className="text-slate-400 animate-pulse">Loading...</div>
+      <div className={`fixed inset-0 ${loginColors.pageBg} flex items-center justify-center`}>
+        <div className={`${loginColors.loadingText} animate-pulse`}>Loading...</div>
       </div>
     );
   }
@@ -156,7 +205,7 @@ export default function LoginClient() {
   }
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-slate-900">
+    <div className={`fixed inset-0 overflow-hidden ${loginColors.pageBg}`}>
       {/* ================================================================
           Animated Gradient Background
           ================================================================ */}
@@ -209,7 +258,7 @@ export default function LoginClient() {
         {/* Back to home link */}
         <Link
           href="/"
-          className="absolute top-6 left-6 text-slate-400 hover:text-white transition-colors text-sm flex items-center gap-2 group"
+          className={`absolute top-6 left-6 ${loginColors.backLink} transition-colors text-sm flex items-center gap-2 group`}
         >
           <span className="group-hover:-translate-x-1 transition-transform">&larr;</span>
           Back to Home
@@ -228,7 +277,7 @@ export default function LoginClient() {
             >
               {getAuthTitle(isForgotPassword, isSignUpMode)}
             </h1>
-            <p className="text-slate-400">
+            <p className={loginColors.description}>
               {getAuthDescription(isForgotPassword, isSignUpMode)}
             </p>
           </div>
@@ -245,21 +294,21 @@ export default function LoginClient() {
 
               {/* Error Message */}
               {error && (
-                <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-sm">
-                  <p className="text-sm text-red-300">{error}</p>
+                <div className={`p-4 rounded-xl ${loginColors.error.bg} border ${loginColors.error.border} backdrop-blur-sm`}>
+                  <p className={`text-sm ${loginColors.error.text}`}>{error}</p>
                 </div>
               )}
 
               {/* Success Message */}
               {successMessage && (
-                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-sm">
-                  <p className="text-sm text-emerald-300">{successMessage}</p>
+                <div className={`p-4 rounded-xl ${loginColors.success.bg} border ${loginColors.success.border} backdrop-blur-sm`}>
+                  <p className={`text-sm ${loginColors.success.text}`}>{successMessage}</p>
                 </div>
               )}
 
               {/* Email */}
               <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium text-slate-300">
+                <label htmlFor="email" className={`block text-sm font-medium ${loginColors.label}`}>
                   Email Address
                 </label>
                 <input
@@ -269,7 +318,7 @@ export default function LoginClient() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl bg-white/[0.05] border border-white/[0.1] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
+                  className={`w-full px-4 py-3.5 rounded-xl bg-white/[0.05] border border-white/[0.1] text-white placeholder-slate-500 focus:outline-none focus:ring-2 ${loginColors.inputFocus} transition-all`}
                   placeholder="you@example.com"
                   disabled={isSubmitting}
                 />
@@ -278,7 +327,7 @@ export default function LoginClient() {
               {/* Password - Hidden in forgot password mode */}
               {!isForgotPassword && (
                 <div className="space-y-2">
-                  <label htmlFor="password" className="block text-sm font-medium text-slate-300">
+                  <label htmlFor="password" className={`block text-sm font-medium ${loginColors.label}`}>
                     Password
                   </label>
                   <input
@@ -288,7 +337,7 @@ export default function LoginClient() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3.5 rounded-xl bg-white/[0.05] border border-white/[0.1] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
+                    className={`w-full px-4 py-3.5 rounded-xl bg-white/[0.05] border border-white/[0.1] text-white placeholder-slate-500 focus:outline-none focus:ring-2 ${loginColors.inputFocus} transition-all`}
                     placeholder={isSignUpMode ? 'Min 6 characters' : 'Your password'}
                     disabled={isSubmitting}
                   />
@@ -302,7 +351,7 @@ export default function LoginClient() {
                           setError('');
                           setSuccessMessage('');
                         }}
-                        className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                        className={`text-sm ${loginColors.link.blue} transition-colors`}
                       >
                         Forgot your password?
                       </button>
@@ -315,7 +364,7 @@ export default function LoginClient() {
               <button
                 type="submit"
                 disabled={isSubmitting || !email || (!isForgotPassword && !password)}
-                className="w-full py-3.5 px-6 font-semibold rounded-xl text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-green-500/25 hover:shadow-green-500/40"
+                className={`w-full py-3.5 px-6 font-semibold rounded-xl text-white ${loginColors.primaryButton.base} ${loginColors.primaryButton.hover} disabled:opacity-50 disabled:cursor-not-allowed transition-all ${loginColors.primaryButton.shadow}`}
               >
                 {isSubmitting
                   ? isForgotPassword
@@ -337,7 +386,7 @@ export default function LoginClient() {
                     <div className="w-full border-t border-white/[0.1]"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-4 bg-slate-800 text-slate-400">
+                    <span className={`px-4 ${loginColors.dividerBg} ${loginColors.description}`}>
                       or continue with
                     </span>
                   </div>
@@ -386,7 +435,7 @@ export default function LoginClient() {
                       setSuccessMessage('');
                     }}
                     disabled={isSubmitting}
-                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                    className={`text-sm ${loginColors.backLink} transition-colors`}
                   >
                     &larr; Back to Sign In
                   </button>
@@ -399,7 +448,7 @@ export default function LoginClient() {
                       setSuccessMessage('');
                     }}
                     disabled={isSubmitting}
-                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                    className={`text-sm ${loginColors.backLink} transition-colors`}
                   >
                     {isSignUpMode
                       ? 'Already have an account? Sign in'
@@ -415,13 +464,13 @@ export default function LoginClient() {
             className="text-center mt-8 animate-fadeIn"
             style={{ animationDelay: '0.4s' }}
           >
-            <p className="text-sm text-slate-500">
+            <p className={`text-sm ${loginColors.mutedText}`}>
               New here?{' '}
-              <Link href="/services" className="text-gold-400 hover:text-gold-300 transition-colors">
+              <Link href="/services" className={`${loginColors.link.gold} transition-colors`}>
                 See what we do
               </Link>
               {' · '}
-              <Link href="/contact" className="text-gold-400 hover:text-gold-300 transition-colors">
+              <Link href="/contact" className={`${loginColors.link.gold} transition-colors`}>
                 Get a free quote
               </Link>
             </p>

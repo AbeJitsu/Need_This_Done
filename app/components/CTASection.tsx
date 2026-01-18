@@ -5,6 +5,7 @@
 // No muddy blurs - just refined visual hierarchy and elegant simplicity.
 
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import Button from './Button';
 import { AccentVariant, headingColors, formInputColors } from '@/lib/colors';
@@ -30,56 +31,56 @@ interface CTASectionProps {
 const themeColors: Record<AccentVariant, {
   accentBg: string;
   accentBorder: string;
-  accentText: string;
+  textColor: string;
   cornerAccent: string;
   dotColor: string;
 }> = {
   gold: {
-    accentBg: 'bg-amber-500',
-    accentBorder: 'border-amber-200',
-    accentText: 'text-amber-600',
-    cornerAccent: 'bg-amber-100',
-    dotColor: 'bg-amber-400',
+    accentBg: 'bg-gold-500',
+    accentBorder: 'border-gold-200',
+    textColor: accentText.gold,
+    cornerAccent: 'bg-gold-100',
+    dotColor: 'bg-gold-400',
   },
   blue: {
     accentBg: 'bg-blue-500',
     accentBorder: 'border-blue-200',
-    accentText: 'text-blue-600',
+    textColor: accentText.blue,
     cornerAccent: 'bg-blue-100',
     dotColor: 'bg-blue-400',
   },
   purple: {
     accentBg: 'bg-purple-500',
     accentBorder: 'border-purple-200',
-    accentText: 'text-purple-600',
+    textColor: accentText.purple,
     cornerAccent: 'bg-purple-100',
     dotColor: 'bg-purple-400',
   },
   green: {
     accentBg: 'bg-green-500',
     accentBorder: 'border-green-200',
-    accentText: 'text-green-600',
+    textColor: accentText.emerald,
     cornerAccent: 'bg-green-100',
     dotColor: 'bg-green-400',
   },
   teal: {
-    accentBg: 'bg-teal-500',
-    accentBorder: 'border-teal-200',
-    accentText: 'text-teal-600',
-    cornerAccent: 'bg-teal-100',
-    dotColor: 'bg-teal-400',
+    accentBg: 'bg-emerald-500',
+    accentBorder: 'border-emerald-200',
+    textColor: accentText.teal,
+    cornerAccent: 'bg-emerald-100',
+    dotColor: 'bg-emerald-400',
   },
   gray: {
     accentBg: 'bg-slate-500',
     accentBorder: 'border-slate-200',
-    accentText: 'text-slate-600',
+    textColor: accentText.gray,
     cornerAccent: 'bg-slate-100',
     dotColor: 'bg-slate-400',
   },
   red: {
     accentBg: 'bg-red-500',
     accentBorder: 'border-red-200',
-    accentText: 'text-red-600',
+    textColor: accentText.red,
     cornerAccent: 'bg-red-100',
     dotColor: 'bg-red-400',
   },
@@ -94,7 +95,7 @@ export default function CTASection({
   const theme = themeColors[hoverColor];
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-sm">
+    <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-400 dark:border-gray-700 shadow-sm">
       {/* Top accent bar - bold color stripe */}
       <div className={`h-1.5 ${theme.accentBg}`} />
 

@@ -112,7 +112,7 @@ export default function CurrencySelector({
       <div
         className={`
           inline-flex items-center rounded-lg border
-          border-gray-300 dark:border-gray-600
+          border-gray-400 dark:border-gray-600
           bg-white dark:bg-gray-900
           ${sizes.button}
           ${className}
@@ -136,7 +136,7 @@ export default function CurrencySelector({
         onClick={() => setIsOpen(!isOpen)}
         className={`
           inline-flex items-center gap-2 rounded-lg border
-          border-gray-300 dark:border-gray-600
+          border-gray-400 dark:border-gray-600
           bg-white dark:bg-gray-900
           text-gray-900 dark:text-gray-100
           hover:border-gray-400 dark:hover:border-gray-500

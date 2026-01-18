@@ -1,4 +1,5 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -85,8 +86,8 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
         {/* Gradient container - full width on mobile, contained on desktop */}
         <div className="relative overflow-hidden md:max-w-4xl md:mx-auto md:rounded-2xl flex items-center justify-center min-h-[220px]">
           {/* Gradient orbs */}
-          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-amber-100 to-gold-100 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-purple-100 to-violet-100 blur-2xl" />
+          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-gold-100 to-gold-100 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-purple-100 to-purple-100 blur-2xl" />
 
           {/* Text container - always padded */}
           <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
@@ -109,8 +110,8 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           {/* Section intro */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-purple-100 mb-4">
-              <MessageCircleQuestion className="w-6 h-6 text-amber-600" />
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-gold-100 to-purple-100 mb-4">
+              <MessageCircleQuestion className={`w-6 h-6 ${accentText.gold}`} />
             </div>
             <p className={`${formInputColors.helper} max-w-lg mx-auto`}>
               Click any question to reveal the answer
@@ -147,7 +148,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
                       className={`
                         group
                         ${cardBgColors.base} rounded-2xl
-                        border ${isExpanded ? 'border-gray-300 dark:border-gray-600' : cardBorderColors.subtle}
+                        border ${isExpanded ? 'border-gray-400 dark:border-gray-600' : cardBorderColors.subtle}
                         border-l-4 ${styles.border}
                         shadow-sm hover:shadow-md
                         transition-all duration-300 ease-out
@@ -211,7 +212,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
           ================================================================ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">

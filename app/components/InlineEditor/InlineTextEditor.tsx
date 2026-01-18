@@ -240,7 +240,7 @@ export default function InlineTextEditor() {
               value={hrefValue}
               onChange={(e) => setHrefValue(e.target.value)}
               placeholder="/path or https://..."
-              className="px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 w-40"
+              className="px-2 py-1 text-xs border border-gray-400 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 w-40"
             />
           </>
         )}

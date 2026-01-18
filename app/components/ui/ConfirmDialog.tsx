@@ -45,8 +45,8 @@ const variantStyles: Record<ConfirmDialogVariant, {
     confirmText: redBtn.text,
   },
   warning: {
-    confirmBg: 'bg-amber-600 dark:bg-amber-500',
-    confirmHover: 'hover:bg-amber-700 dark:hover:bg-amber-600',
+    confirmBg: 'bg-gold-600 dark:bg-gold-500',
+    confirmHover: 'hover:bg-gold-700 dark:hover:bg-gold-600',
     confirmText: 'text-white',
   },
   info: {
@@ -143,7 +143,7 @@ export default function ConfirmDialog({
                 onClick={onCancel}
                 className={`
                   flex-1 py-2.5 px-4 rounded-lg font-medium
-                  border-2 border-gray-300 dark:border-gray-600
+                  border-2 border-gray-400 dark:border-gray-600
                   ${headingColors.primary}
                   hover:bg-gray-100 dark:hover:bg-gray-700
                   transition-colors

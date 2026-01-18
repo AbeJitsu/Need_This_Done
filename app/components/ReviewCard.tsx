@@ -142,7 +142,7 @@ export default function ReviewCard({
               key={index}
               src={image}
               alt={`Review image ${index + 1}`}
-              className="w-20 h-20 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+              className="w-20 h-20 object-cover rounded-lg border border-gray-400 dark:border-gray-700"
             />
           ))}
         </div>

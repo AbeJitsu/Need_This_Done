@@ -103,7 +103,7 @@ export default function ServicesForm({ content, onChange }: ServicesFormProps) {
                       onItemChange(rest as ExpectationItem);
                     }
                   }}
-                  className="rounded border-gray-300 dark:border-gray-600"
+                  className="rounded border-gray-400 dark:border-gray-600"
                 />
                 <label htmlFor={`link-enabled-${item.title}`} className="text-sm text-gray-600 dark:text-gray-400">
                   Make this item clickable

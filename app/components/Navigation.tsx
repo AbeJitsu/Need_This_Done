@@ -75,7 +75,7 @@ export default function Navigation() {
   };
 
   return (
-    <nav aria-label="Main navigation" className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
+    <nav aria-label="Main navigation" className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-400 dark:border-gray-800 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo / Home Link - Editable in edit mode */}
@@ -210,7 +210,7 @@ export default function Navigation() {
 
                   {showDropdown && (
                     <div className={`absolute right-0 mt-2 w-48 ${cardBgColors.base} rounded-lg shadow-lg ${cardBorderColors.light} py-1 z-50`}>
-                      <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                      <div className="px-4 py-2 border-b border-gray-400 dark:border-gray-700">
                         <p className={`text-xs ${navigationColors.dropdownHelper}`}>Signed in as</p>
                         <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                           {user?.email}
@@ -289,7 +289,7 @@ export default function Navigation() {
 
       {/* Mobile Menu Dropdown - slides down when hamburger is clicked */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+        <div className="lg:hidden border-t border-gray-400 dark:border-gray-700 bg-white dark:bg-gray-900">
           <div className="px-4 py-3 space-y-1">
             {navigationLinks.map((link, index) => {
               const isActive =
@@ -347,7 +347,7 @@ export default function Navigation() {
                 </Editable>
               </Link>
             ) : (
-              <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
+              <div className="pt-2 mt-2 border-t border-gray-400 dark:border-gray-700">
                 <div className="px-3 py-2 text-xs text-gray-500 dark:text-gray-400">
                   Signed in as {user?.email}
                 </div>

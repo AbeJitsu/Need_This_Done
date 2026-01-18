@@ -1,4 +1,5 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useState, useRef, useEffect } from 'react';
 import { getServices } from '@/config/site.config';
@@ -19,6 +20,12 @@ import {
   FileText,
   Users,
 } from 'lucide-react';
+import {
+  titleColors,
+  accentColors,
+  iconCircleColors,
+  coloredLinkText,
+} from '@/lib/colors';
 
 // ============================================================================
 // Contact Page - Premium Consultation Booking
@@ -233,8 +240,8 @@ export default function ContactPage() {
         <div className="max-w-lg w-full text-center animate-scale-in">
           {/* Success icon */}
           <div className="relative mx-auto w-24 h-24 mb-8">
-            <div className="absolute inset-0 bg-emerald-500/20 rounded-full animate-ping" />
-            <div className="relative w-full h-full bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/30">
+            <div className="absolute inset-0 bg-green-500/20 rounded-full animate-ping" />
+            <div className="relative w-full h-full bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg shadow-green-500/30">
               <Check className="w-12 h-12 text-white" strokeWidth={3} />
             </div>
           </div>
@@ -249,13 +256,13 @@ export default function ContactPage() {
           {/* What happens next */}
           <div className="bg-slate-50 rounded-2xl p-6 text-left mb-8">
             <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Clock className="w-5 h-5 text-blue-500" />
+              <Clock className={`w-5 h-5 ${iconCircleColors.blue.icon}`} />
               {content.success.nextStepsTitle}
             </h3>
             <ol className="space-y-3">
               {content.success.nextSteps.map((step, index) => (
                 <li key={index} className="flex items-start gap-3 text-gray-600">
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-sm font-semibold flex items-center justify-center">
+                  <span className={`flex-shrink-0 w-6 h-6 rounded-full ${accentColors.blue.bg} ${accentColors.blue.text} text-sm font-semibold flex items-center justify-center`}>
                     {index + 1}
                   </span>
                   {step}
@@ -267,7 +274,7 @@ export default function ContactPage() {
           <button
             type="button"
             onClick={() => setSubmitStatus('idle')}
-            className="text-blue-600 font-medium hover:text-blue-700 transition-colors inline-flex items-center gap-2"
+            className={`${coloredLinkText.blue} font-medium hover:text-blue-700 transition-colors inline-flex items-center gap-2`}
           >
             {content.success.sendAnotherLink}
             <ArrowRight className="w-4 h-4" />
@@ -285,7 +292,7 @@ export default function ContactPage() {
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         {/* Decorative blurs */}
         <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-violet-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-transparent via-white/[0.02] to-transparent" />
 
         {/* Grid pattern overlay */}
@@ -302,7 +309,7 @@ export default function ContactPage() {
           {/* Eyebrow badge */}
           <div className="flex justify-center mb-8 animate-slide-up">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-blue-300 text-sm font-medium backdrop-blur-sm border border-white/10">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
               Free Quote • No Commitment
             </span>
           </div>
@@ -310,7 +317,7 @@ export default function ContactPage() {
           {/* Main heading */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white text-center mb-6 tracking-tight animate-slide-up animate-delay-100">
             Let&apos;s Build Something
-            <span className="block mt-2 pb-2 bg-gradient-to-r from-blue-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
+            <span className="block mt-2 pb-2 bg-gradient-to-r from-blue-400 via-purple-400 to-purple-400 bg-clip-text text-transparent">
               Together
             </span>
           </h1>
@@ -329,12 +336,12 @@ export default function ContactPage() {
                 relative p-8 rounded-2xl text-left transition-all duration-300
                 ${contactPath === 'quote'
                   ? 'bg-white text-slate-900 shadow-2xl shadow-white/20 scale-[1.02]'
-                  : 'bg-white/5 text-white hover:bg-white/10 hover:scale-[1.02] border border-white/10 hover:border-emerald-400/40'}
+                  : 'bg-white/5 text-white hover:bg-white/10 hover:scale-[1.02] border border-white/10 hover:border-green-400/40'}
               `}
             >
               <div className={`
                 w-14 h-14 rounded-2xl flex items-center justify-center mb-5
-                ${contactPath === 'quote' ? 'bg-emerald-100 text-emerald-600' : 'bg-white/10 text-emerald-400'}
+                ${contactPath === 'quote' ? `${iconCircleColors.green.bg} ${iconCircleColors.green.icon}` : 'bg-white/10 text-green-400'}
               `}>
                 <FileText className="w-7 h-7" />
               </div>
@@ -345,17 +352,17 @@ export default function ContactPage() {
               </p>
               <ul className={`space-y-2 text-sm ${contactPath === 'quote' ? 'text-slate-500' : 'text-slate-400'}`}>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-emerald-500" />
+                  <Check className={`w-4 h-4 ${accentText.emerald}`} />
                   No commitment required
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-emerald-500" />
+                  <Check className={`w-4 h-4 ${accentText.emerald}`} />
                   Clear pricing upfront
                 </li>
               </ul>
 
               {contactPath === 'quote' && (
-                <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
+                <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
                   <Check className="w-4 h-4 text-white" strokeWidth={3} />
                 </div>
               )}
@@ -374,7 +381,7 @@ export default function ContactPage() {
             >
               <div className={`
                 w-14 h-14 rounded-2xl flex items-center justify-center mb-5
-                ${contactPath === 'consultation' ? 'bg-blue-100 text-blue-600' : 'bg-white/10 text-blue-400'}
+                ${contactPath === 'consultation' ? `${iconCircleColors.blue.bg} ${iconCircleColors.blue.icon}` : 'bg-white/10 text-blue-400'}
               `}>
                 <Users className="w-7 h-7" />
               </div>
@@ -385,11 +392,11 @@ export default function ContactPage() {
               </p>
               <ul className={`space-y-2 text-sm ${contactPath === 'consultation' ? 'text-slate-500' : 'text-slate-400'}`}>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-blue-500" />
+                  <Check className={`w-4 h-4 ${accentText.blue}`} />
                   15, 30, or 45 minute sessions
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-blue-500" />
+                  <Check className={`w-4 h-4 ${accentText.blue}`} />
                   Personalized recommendations
                 </li>
               </ul>
@@ -435,9 +442,9 @@ export default function ContactPage() {
                       <div className={`
                         w-9 h-9 rounded-lg flex items-center justify-center mb-3
                         ${isSelected
-                          ? type.color === 'emerald' ? 'bg-emerald-100 text-emerald-600'
-                            : type.color === 'blue' ? 'bg-blue-100 text-blue-600'
-                            : 'bg-violet-100 text-violet-600'
+                          ? type.color === 'emerald' ? `${iconCircleColors.green.bg} ${iconCircleColors.green.icon}`
+                            : type.color === 'blue' ? `${iconCircleColors.blue.bg} ${iconCircleColors.blue.icon}`
+                            : `${iconCircleColors.purple.bg} ${iconCircleColors.purple.icon}`
                           : 'bg-white/10 text-white'}
                       `}>
                         <Icon className="w-4 h-4" />
@@ -447,7 +454,7 @@ export default function ContactPage() {
                       <p className={`text-xs mb-1 ${isSelected ? 'text-slate-500' : 'text-slate-400'}`}>
                         {type.description}
                       </p>
-                      <p className={`text-sm font-medium ${isSelected ? 'text-blue-600' : 'text-blue-400'}`}>
+                      <p className={`text-sm font-medium ${isSelected ? titleColors.blue : 'text-blue-400'}`}>
                         {type.duration}
                       </p>
 
@@ -466,15 +473,15 @@ export default function ContactPage() {
           {/* Trust indicators */}
           <div className="flex flex-wrap justify-center gap-6 mt-12 text-sm text-slate-400 animate-slide-up animate-delay-400">
             <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
               Response within 24 hours
             </span>
             <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
               Get a clear next step
             </span>
             <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
               No pressure, ever
             </span>
           </div>
@@ -517,7 +524,7 @@ export default function ContactPage() {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Jane Smith"
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                 />
               </div>
               <div>
@@ -532,7 +539,7 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="jane@example.com"
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                 />
               </div>
             </div>
@@ -541,7 +548,7 @@ export default function ContactPage() {
             <div className="grid md:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-                  Company <span className="text-gray-400 font-normal">(optional)</span>
+                  Company <span className="text-gray-500 font-normal">(optional)</span>
                 </label>
                 <input
                   type="text"
@@ -550,7 +557,7 @@ export default function ContactPage() {
                   value={formData.company}
                   onChange={handleChange}
                   placeholder="Acme Inc"
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                 />
               </div>
               <div>
@@ -562,7 +569,7 @@ export default function ContactPage() {
                   name="service"
                   value={formData.service}
                   onChange={handleChange}
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all appearance-none cursor-pointer"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all appearance-none cursor-pointer"
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
                     backgroundRepeat: 'no-repeat',
@@ -594,19 +601,19 @@ export default function ContactPage() {
                 value={formData.message}
                 onChange={handleChange}
                 placeholder="Tell us about your project, goals, timeline, or any questions you have..."
-                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all resize-none"
+                className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all resize-none"
               />
             </div>
 
             {/* File Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Attachments <span className="text-gray-400 font-normal">(optional)</span>
+                Attachments <span className="text-gray-500 font-normal">(optional)</span>
               </label>
 
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border border-gray-200/60 rounded-xl p-6 text-center cursor-pointer bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/50 transition-all group"
+                className="border border-gray-400 rounded-xl p-6 text-center cursor-pointer bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/50 transition-all group"
               >
                 <input
                   ref={fileInputRef}
@@ -621,7 +628,7 @@ export default function ContactPage() {
                 <p className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
                   Drop files here or click to browse
                 </p>
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   Images, PDFs, or docs up to 5MB each
                 </p>
               </div>
@@ -635,8 +642,8 @@ export default function ContactPage() {
                       className="flex items-center justify-between px-4 py-2.5 bg-gray-50 rounded-lg"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
-                          <Calendar className="w-4 h-4 text-blue-600" />
+                        <div className={`w-8 h-8 rounded-lg ${iconCircleColors.blue.bg} flex items-center justify-center flex-shrink-0`}>
+                          <Calendar className={`w-4 h-4 ${iconCircleColors.blue.icon}`} />
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm text-gray-700 truncate">{file.name}</p>
@@ -684,7 +691,7 @@ export default function ContactPage() {
             >
               {isSubmitting ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-gray-400 border-t-gray-500 rounded-full animate-spin" />
                   Sending...
                 </>
               ) : (
@@ -696,9 +703,9 @@ export default function ContactPage() {
             </button>
 
             {/* Privacy note */}
-            <p className="text-center text-sm text-gray-400">
+            <p className="text-center text-sm text-gray-500">
               We&apos;ll never share your info. Read our{' '}
-              <a href="/privacy" className="text-blue-500 hover:text-blue-600 underline-offset-2 hover:underline">
+              <a href="/privacy" className={`${coloredLinkText.blue} underline-offset-2 hover:underline`}>
                 privacy policy
               </a>
               .
@@ -721,14 +728,14 @@ export default function ContactPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <a
               href="/pricing"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:border-gray-300 hover:shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-400 rounded-xl font-medium text-gray-700 hover:border-gray-400 hover:shadow-sm transition-all"
             >
               View Pricing
               <ArrowRight className="w-4 h-4" />
             </a>
             <a
               href="/services"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:border-gray-300 hover:shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-400 rounded-xl font-medium text-gray-700 hover:border-gray-400 hover:shadow-sm transition-all"
             >
               Browse Services
               <ArrowRight className="w-4 h-4" />

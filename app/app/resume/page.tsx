@@ -26,22 +26,26 @@ const skills = [
   {
     category: 'Frontend & UI',
     items: ['React', 'Next.js', 'Vue.js', 'TypeScript', 'Tailwind CSS', 'TipTap'],
-    color: 'emerald',
+    color: 'emerald' as const,
+    hoverGlow: 'from-emerald-500/10 to-emerald-600/10',
   },
   {
     category: 'Backend & Data',
     items: ['Node.js', 'Python', 'PostgreSQL', 'Supabase', 'Redis', 'GraphQL'],
-    color: 'blue',
+    color: 'blue' as const,
+    hoverGlow: 'from-blue-500/10 to-blue-600/10',
   },
   {
     category: 'AI & Automation',
     items: ['OpenAI', 'Claude', 'RAG Systems', 'Prompting', 'Chatbots'],
-    color: 'purple',
+    color: 'purple' as const,
+    hoverGlow: 'from-purple-500/10 to-purple-600/10',
   },
   {
     category: 'Quality & Process',
     items: ['Playwright', 'Vitest', 'WCAG AA', 'TDD', 'CI/CD', 'Git'],
-    color: 'amber',
+    color: 'amber' as const,
+    hoverGlow: 'from-gold-500/10 to-gold-600/10',
   },
 ];
 
@@ -153,14 +157,14 @@ const timelineColors: Record<string, { dot: string; line: string; badge: string 
     badge: 'bg-purple-50 text-purple-800 border-purple-200',
   },
   amber: {
-    dot: 'bg-amber-500',
-    line: 'from-amber-500',
-    badge: 'bg-amber-50 text-amber-800 border-amber-200',
+    dot: 'bg-gold-500',
+    line: 'from-gold-500',
+    badge: 'bg-gold-50 text-gold-800 border-gold-200',
   },
   stone: {
     dot: 'bg-stone-500',
     line: 'from-stone-500',
-    badge: 'bg-stone-100 text-stone-800 border-stone-300',
+    badge: 'bg-stone-100 text-stone-800 border-stone-500',
   },
 };
 
@@ -201,31 +205,31 @@ export default function ResumePage() {
 
           {/* Contact info - horizontal pills */}
           <div className="flex flex-wrap justify-center gap-3 mb-8">
-            <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm">
+            <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-stone-500 text-base text-stone-700 shadow-sm">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
               Orlando, FL
             </span>
             <a
               href="mailto:abe.raise@gmail.com"
-              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-500 text-base text-stone-700 shadow-sm hover:border-stone-500 hover:shadow-md transition-all"
             >
               abe.raise@gmail.com
             </a>
             <a
               href="https://needthisdone.com"
-              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-500 text-base text-stone-700 shadow-sm hover:border-stone-500 hover:shadow-md transition-all"
             >
               needthisdone.com
             </a>
             <a
               href="https://github.com/AbeJitsu"
-              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-500 text-base text-stone-700 shadow-sm hover:border-stone-500 hover:shadow-md transition-all"
             >
               GitHub
             </a>
             <a
               href="https://www.linkedin.com/in/weneedthisdone"
-              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-500 text-base text-stone-700 shadow-sm hover:border-stone-500 hover:shadow-md transition-all"
             >
               LinkedIn
             </a>
@@ -263,10 +267,10 @@ export default function ResumePage() {
           <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-4 gap-5" triggerOnScroll={false}>
             {skills.map((skill) => (
               <StaggerItem key={skill.category}>
-                <div className="group relative p-6 rounded-2xl bg-white border border-stone-200 hover:border-stone-300 transition-all duration-300 hover:shadow-lg h-full">
+                <div className="group relative p-6 rounded-2xl bg-white border border-stone-500 hover:border-stone-500 transition-all duration-300 hover:shadow-lg h-full">
                   {/* Hover glow */}
                   <div
-                    className={`absolute -inset-px rounded-2xl bg-gradient-to-br from-${skill.color}-500/10 to-${skill.color}-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl`}
+                    className={`absolute -inset-px rounded-2xl bg-gradient-to-br ${skill.hoverGlow} opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl`}
                   />
 
                   <h3
@@ -330,7 +334,7 @@ export default function ResumePage() {
                       />
 
                       {/* Content card */}
-                      <div className="group relative p-6 md:p-8 rounded-2xl bg-white border border-stone-200 hover:border-stone-300 transition-all duration-300 hover:shadow-lg">
+                      <div className="group relative p-6 md:p-8 rounded-2xl bg-white border border-stone-500 hover:border-stone-500 transition-all duration-300 hover:shadow-lg">
                         {/* Header row */}
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
                           <div>
@@ -451,7 +455,7 @@ export default function ResumePage() {
               <StaggerContainer className="space-y-5" triggerOnScroll={false}>
                 {education.map((edu) => (
                   <StaggerItem key={edu.institution}>
-                    <div className="p-6 rounded-2xl bg-white border border-stone-200">
+                    <div className="p-6 rounded-2xl bg-white border border-stone-500">
                       <div className="flex items-start justify-between gap-3 mb-2">
                         <h3 className="font-bold text-lg text-stone-900">{edu.institution}</h3>
                         <span className="text-sm text-stone-500 font-medium">{edu.period}</span>
@@ -508,7 +512,7 @@ export default function ResumePage() {
                   },
                 ].map((book) => (
                   <StaggerItem key={book.title}>
-                    <div className="p-6 rounded-2xl bg-white border border-stone-200">
+                    <div className="p-6 rounded-2xl bg-white border border-stone-500">
                       <h3 className="font-bold text-base text-stone-900">{book.title}</h3>
                       <p className="text-sm text-stone-500 mb-2">by {book.author}</p>
                       <p className="text-base text-stone-700 italic leading-relaxed">

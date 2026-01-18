@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Button from '@/components/Button';
+import { titleColors, alertColors, accentColors } from '@/lib/colors';
 
 // ============================================================================
 // PRODUCT MANAGEMENT INTERFACE
@@ -308,8 +309,8 @@ export default function ProductManagePage() {
         <div
           className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-2xl border-2 transform transition-all duration-500 ${
             notification.type === 'success'
-              ? 'bg-green-50 border-green-500 text-green-800'
-              : 'bg-red-50 border-red-500 text-red-800'
+              ? `${alertColors.success.bg} ${alertColors.success.border} ${alertColors.success.text}`
+              : `${alertColors.error.bg} ${alertColors.error.border} ${alertColors.error.text}`
           }`}
           style={{
             animation: 'slideInRight 0.5s ease-out, fadeOut 0.5s ease-in 3.5s',
@@ -327,7 +328,7 @@ export default function ProductManagePage() {
 
           <div className="flex items-end justify-between mb-6 animate-fadeInUp">
             <div>
-              <p className="text-sm font-semibold text-purple-600 mb-2 tracking-wider uppercase">
+              <p className={`text-sm font-semibold ${titleColors.purple} mb-2 tracking-wider uppercase`}>
                 Admin Dashboard
               </p>
               <h1 className="text-5xl font-serif font-bold text-gray-900 mb-3">
@@ -367,14 +368,14 @@ export default function ProductManagePage() {
           </div>
         ) : error && products.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-red-600 text-lg">{error}</p>
+            <p className={`${titleColors.red} text-lg`}>{error}</p>
             <Button variant="purple" onClick={fetchProducts} className="mt-4">
               Retry
             </Button>
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-32 animate-fadeInUp">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-purple-100 flex items-center justify-center">
+            <div className={`w-24 h-24 mx-auto mb-6 rounded-full ${accentColors.purple.bg} flex items-center justify-center`}>
               <span className="text-4xl">📦</span>
             </div>
             <h2 className="text-2xl font-serif font-bold text-gray-900 mb-3">No Products Yet</h2>
@@ -384,11 +385,11 @@ export default function ProductManagePage() {
             </Button>
           </div>
         ) : (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-400 overflow-hidden animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b-2 border-gray-200 bg-gradient-to-r from-purple-50/50 to-blue-50/50">
+                  <tr className="border-b-2 border-gray-400 bg-gradient-to-r from-purple-50/50 to-blue-50/50">
                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                       Product
                     </th>
@@ -445,13 +446,13 @@ export default function ProductManagePage() {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => openEditModal(product)}
-                            className="px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                            className={`px-4 py-2 text-sm font-semibold ${accentColors.blue.text} ${accentColors.blue.hoverText} hover:bg-blue-50 rounded-lg transition-colors duration-200`}
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => openDeleteModal(product)}
-                            className="px-4 py-2 text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                            className={`px-4 py-2 text-sm font-semibold ${accentColors.red.text} ${accentColors.red.hoverText} hover:bg-red-50 rounded-lg transition-colors duration-200`}
                           >
                             Delete
                           </button>
@@ -487,7 +488,7 @@ export default function ProductManagePage() {
 
             <form onSubmit={handleCreateOrUpdate} className="p-8 space-y-6">
               {error && (
-                <div className="bg-red-50 border-2 border-red-200 text-red-800 px-4 py-3 rounded-lg">
+                <div className={`${alertColors.error.bg} ${alertColors.error.border} ${alertColors.error.text} px-4 py-3 rounded-lg`}>
                   {error}
                 </div>
               )}
@@ -501,7 +502,7 @@ export default function ProductManagePage() {
                   value={formData.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
+                  className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
                   placeholder="15-Minute Consultation"
                 />
               </div>
@@ -514,7 +515,7 @@ export default function ProductManagePage() {
                   type="text"
                   value={formData.handle}
                   onChange={(e) => setFormData(prev => ({ ...prev, handle: e.target.value }))}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200 font-mono text-sm"
+                  className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200 font-mono text-sm"
                   placeholder="15-min-consultation"
                 />
                 <p className="text-xs text-gray-500 mt-1">Auto-generated from title if left empty</p>
@@ -528,7 +529,7 @@ export default function ProductManagePage() {
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   rows={3}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
+                  className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
                   placeholder="Quick consultation session to discuss your project needs..."
                 />
               </div>
@@ -544,7 +545,7 @@ export default function ProductManagePage() {
                     value={formData.price}
                     onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
+                    className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
                     placeholder="20.00"
                   />
                 </div>
@@ -557,7 +558,7 @@ export default function ProductManagePage() {
                     type="text"
                     value={formData.sku}
                     onChange={(e) => setFormData(prev => ({ ...prev, sku: e.target.value }))}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200 font-mono text-sm"
+                    className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200 font-mono text-sm"
                     placeholder="CONSULT-15"
                   />
                 </div>
@@ -571,7 +572,7 @@ export default function ProductManagePage() {
                   type="url"
                   value={formData.thumbnail}
                   onChange={(e) => setFormData(prev => ({ ...prev, thumbnail: e.target.value }))}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
+                  className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-200"
                   placeholder="https://example.com/image.jpg"
                 />
                 {formData.thumbnail && (
@@ -580,7 +581,7 @@ export default function ProductManagePage() {
                     <img
                       src={formData.thumbnail}
                       alt="Preview"
-                      className="w-32 h-32 object-cover rounded-lg border-2 border-gray-200"
+                      className="w-32 h-32 object-cover rounded-lg border-2 border-gray-400"
                     />
                   </div>
                 )}
@@ -620,7 +621,7 @@ export default function ProductManagePage() {
             className="bg-white rounded-2xl shadow-2xl max-w-md w-full animate-scaleIn"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-gradient-to-r from-red-600 to-orange-600 px-8 py-6 text-white rounded-t-2xl">
+            <div className="bg-gradient-to-r from-red-600 to-gold-600 px-8 py-6 text-white rounded-t-2xl">
               <h2 className="text-2xl font-serif font-bold">Delete Product?</h2>
             </div>
 

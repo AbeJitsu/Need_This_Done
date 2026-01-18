@@ -5,6 +5,7 @@
 // Why: Extracted from AdminSidebar to reduce duplication and improve maintainability
 // How: Provides BackButton and BreadcrumbPath components
 
+import { accentText } from '@/lib/contrast';
 import { accentColors, headingColors, formInputColors } from '@/lib/colors';
 
 // ============================================================================
@@ -45,7 +46,7 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ title, subtitle }: SectionHeaderProps) {
   return (
-    <div className="pb-3 mb-4 border-b border-gray-200 dark:border-gray-700">
+    <div className="pb-3 mb-4 border-b border-gray-400 dark:border-gray-700">
       <h3 className={`font-medium ${headingColors.primary}`}>
         {title}
       </h3>
@@ -68,13 +69,13 @@ interface ItemBreadcrumbProps {
 
 export function ItemBreadcrumb({ sectionLabel, itemLabel }: ItemBreadcrumbProps) {
   return (
-    <div className="pb-3 mb-4 border-b border-gray-200 dark:border-gray-700">
+    <div className="pb-3 mb-4 border-b border-gray-400 dark:border-gray-700">
       <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-1">
         <span>{sectionLabel}</span>
         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
-        <span className="text-purple-600 dark:text-purple-400 font-medium">
+        <span className={`${accentText.purple} font-medium`}>
           {itemLabel}
         </span>
       </div>

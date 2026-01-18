@@ -8,6 +8,7 @@ import {
   formInputColors,
   mutedTextColors,
 } from '@/lib/colors';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 // ============================================================================
 // LessonPlayer Component
@@ -126,12 +127,12 @@ export default function LessonPlayer({
 
       {/* Lesson Content */}
       <div
-        className={`prose dark:prose-invert max-w-none mb-8 ${formInputColors.helper}`}
-        dangerouslySetInnerHTML={{ __html: content }}
+        className={`prose dark:ppurple-invert max-w-none mb-8 ${formInputColors.helper}`}
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
       />
 
       {/* Action Bar */}
-      <div className="flex items-center justify-between gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between gap-4 pt-6 border-t border-gray-400 dark:border-gray-700">
         {/* Navigation */}
         <div className="flex gap-2">
           <button

@@ -157,7 +157,7 @@ export default function AuthDemo() {
               placeholder="you@example.com"
               className="
                 w-full px-4 py-2
-                border border-gray-300 dark:border-gray-600
+                border border-gray-400 dark:border-gray-600
                 bg-white dark:bg-gray-700
                 text-gray-900 dark:text-gray-100
                 rounded-lg
@@ -182,7 +182,7 @@ export default function AuthDemo() {
               placeholder="••••••••"
               className="
                 w-full px-4 py-2
-                border border-gray-300 dark:border-gray-600
+                border border-gray-400 dark:border-gray-600
                 bg-white dark:bg-gray-700
                 text-gray-900 dark:text-gray-100
                 rounded-lg
@@ -243,7 +243,7 @@ export default function AuthDemo() {
           </div>
 
           {/* Journey Explainer - Collapsible */}
-          <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+          <div className="border border-gray-400 dark:border-gray-600 rounded-lg overflow-hidden">
             <button
               type="button"
               onClick={() => setShowJourney(!showJourney)}
@@ -258,7 +258,7 @@ export default function AuthDemo() {
             </button>
 
             {showJourney && (
-              <div className={`p-4 space-y-4 ${cardBgColors.base} border-t border-gray-300 dark:border-gray-600`}>
+              <div className={`p-4 space-y-4 ${cardBgColors.base} border-t border-gray-400 dark:border-gray-600`}>
                 {/* Journey Steps */}
                 <div className="space-y-3">
                   <div className="flex gap-3">
@@ -299,7 +299,7 @@ export default function AuthDemo() {
                 </div>
 
                 {/* Threat Scenarios */}
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                <div className="border-t border-gray-400 dark:border-gray-700 pt-4">
                   <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-3">Without this protection, here's what could happen:</p>
                   <div className="space-y-2 text-xs">
                     <div className={`p-2 ${alertColors.error.bg} ${alertColors.error.border} rounded ${alertColors.error.text}`}>
@@ -315,7 +315,7 @@ export default function AuthDemo() {
                 </div>
 
                 {/* Summary */}
-                <div className={`border-t border-gray-200 dark:border-gray-700 pt-4 ${alertColors.success.bg} -mx-4 -mb-4 px-4 py-4 rounded-b`}>
+                <div className={`border-t border-gray-400 dark:border-gray-700 pt-4 ${alertColors.success.bg} -mx-4 -mb-4 px-4 py-4 rounded-b`}>
                   <p className={`text-xs ${alertColors.success.text}`}>
                     <strong>✓ With this system:</strong> Your password never travels as plain text. It can't be intercepted. It can't be stolen. Your data is safe even if our systems are breached. This is what your users deserve.
                   </p>
@@ -357,7 +357,7 @@ export default function AuthDemo() {
               </div>
             </div>
 
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
+            <div className="border-t border-gray-400 dark:border-gray-700 pt-3">
               <div className="flex items-center gap-2">
                 <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
                 <span className="text-sm text-gray-600 dark:text-gray-300">Active Session</span>
@@ -384,7 +384,7 @@ export default function AuthDemo() {
             disabled={isSubmitting}
             className="
               w-full px-4 py-3
-              border-2 border-gray-300 dark:border-gray-600
+              border-2 border-gray-400 dark:border-gray-600
               hover:border-gray-400 dark:hover:border-gray-500
               text-gray-700 dark:text-gray-300
               font-semibold
@@ -400,7 +400,7 @@ export default function AuthDemo() {
       )}
 
       {/* Educational Footer */}
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-6 pt-6 border-t border-gray-400 dark:border-gray-700">
         <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
           <strong>Why this matters:</strong> Handling authentication securely is hard. This system does it right so your users' data is protected.
         </p>
