@@ -1,8 +1,8 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useEffect, useCallback } from 'react';
 import { useInlineEdit } from '@/context/InlineEditContext';
-import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // EditModeBar - Left vertical bar showing edit mode status with exit button

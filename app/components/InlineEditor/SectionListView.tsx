@@ -5,8 +5,8 @@
 // Why: Extracted from AdminSidebar to reduce its size
 // How: Renders a list of buttons, each selecting a section to edit
 
-import { formInputColors, headingColors } from '@/lib/colors';
 import { accentText } from '@/lib/contrast';
+import { formInputColors, headingColors } from '@/lib/colors';
 
 interface Section {
   key: string;

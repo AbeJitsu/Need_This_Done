@@ -1,10 +1,10 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import type { UIMessage } from 'ai';
 import { sanitizeHtml } from '@/lib/sanitize-html';
-import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Chat Message Component

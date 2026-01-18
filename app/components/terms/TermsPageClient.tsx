@@ -1,4 +1,5 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import Link from 'next/link';
 import PageHeader from '@/components/PageHeader';
@@ -10,7 +11,6 @@ import {
   formInputColors,
   alertColors,
 } from '@/lib/colors';
-import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Terms Page Client - Universal Editing Version

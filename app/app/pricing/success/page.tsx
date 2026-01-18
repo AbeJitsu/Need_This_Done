@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { accentText } from '@/lib/contrast';
 import Link from 'next/link';
 import { CheckCircle2, ArrowRight, Mail } from 'lucide-react';
 import { getStripe } from '@/lib/stripe';
@@ -9,7 +10,6 @@ import {
   cardBgColors,
   cardBorderColors,
 } from '@/lib/colors';
-import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Pricing Success Page - Deposit Confirmation

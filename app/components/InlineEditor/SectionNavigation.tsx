@@ -5,8 +5,8 @@
 // Why: Extracted from AdminSidebar to reduce duplication and improve maintainability
 // How: Provides BackButton and BreadcrumbPath components
 
-import { accentColors, headingColors, formInputColors } from '@/lib/colors';
 import { accentText } from '@/lib/contrast';
+import { accentColors, headingColors, formInputColors } from '@/lib/colors';
 
 // ============================================================================
 // Back Button - Consistent back navigation

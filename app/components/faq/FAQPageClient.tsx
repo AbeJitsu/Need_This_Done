@@ -1,9 +1,9 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { faqColors, titleColors, formInputColors, cardBgColors, cardBorderColors } from '@/lib/colors';
-import { accentText } from '@/lib/contrast';
 import CircleBadge from '@/components/CircleBadge';
 import CTASection from '@/components/CTASection';
 import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';

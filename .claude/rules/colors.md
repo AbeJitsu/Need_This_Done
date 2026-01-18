@@ -15,6 +15,25 @@ The founder is a Brazilian Jiu-Jitsu purple belt. Use the BJJ belt progression a
 
 **Important**: Avoid orange/amber for text. Use gold instead for warm accents.
 
+## Contrast Compliance (WCAG AA)
+
+Minimum compliant shades on white backgrounds:
+
+| Color | Min Text (4.5:1) | Min Border (3:1) |
+|-------|------------------|------------------|
+| Emerald | emerald-600 | emerald-500 |
+| Blue | blue-600 | blue-500 |
+| Purple | purple-600 | purple-500 |
+| Gold | gold-700 | gold-500 |
+| Gray | gray-600 | gray-400 |
+| Stone | stone-600 | stone-500 |
+| Slate | slate-600 | slate-400 |
+| Red | red-600 | red-500 |
+
+**Warning:** `stone-400` (2.52:1) does NOT meet 3:1 contrast. Use `stone-500` minimum.
+
+**Reference:** See `app/color-contrast-viewer.html` for full palette with ratios.
+
 When multiple colored elements appear together (buttons, headings, sections), follow this progression top-to-bottom or left-to-right.
 
 ## Usage

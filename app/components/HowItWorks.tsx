@@ -1,8 +1,8 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useState } from 'react';
 import { neutralAccentBg, cardBgColors, cardBorderColors, headingColors, formInputColors } from '@/lib/colors';
-import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // How It Works Component - Simple Visual Diagram

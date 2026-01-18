@@ -20,7 +20,6 @@ import {
   cardBgColors,
   cardBorderColors,
 } from '@/lib/colors';
-import { accentText } from '@/lib/contrast';
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================

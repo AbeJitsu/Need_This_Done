@@ -21,7 +21,6 @@ import {
   focusRingClasses,
   type AccentColor,
 } from '@/lib/colors';
-import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Shopping Cart Page - /cart

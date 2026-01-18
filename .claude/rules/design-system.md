@@ -34,6 +34,8 @@ Green (1st) → Blue (2nd) → Purple (3rd) → Gold (4th)
 | Purple | `purple-*` | Tertiary accents, creativity, special emphasis |
 | Gold | `gold-*` | Warm highlights, links on dark backgrounds |
 | Gray | `gray-*` | Neutral buttons, secondary actions |
+| Stone | `stone-*` | Warm neutrals (used on /about, /resume) |
+| Slate | `slate-*` | Cool neutrals (used sparingly) |
 
 ## Accessibility Standards (WCAG AA)
 
@@ -41,9 +43,25 @@ Green (1st) → Blue (2nd) → Purple (3rd) → Gold (4th)
 |---------|---------------|
 | Normal text | 4.5:1 |
 | Large text (18pt+) | 3:1 |
-| UI components | 3:1 |
+| UI components (borders, icons) | 3:1 |
 
 We target **5:1 minimum** for all text.
+
+### Minimum Compliant Shades (on white)
+
+| Color | Min Text | Min Border |
+|-------|----------|------------|
+| Emerald | -600 | -500 |
+| Blue | -600 | -500 |
+| Purple | -600 | -500 |
+| Gold | -700 | -500 |
+| Gray | -600 | -400 |
+| Stone | -600 | -500 |
+| Slate | -600 | -400 |
+
+**Critical:** `stone-400` (2.52:1) fails 3:1 - use `stone-500` minimum for borders.
+
+**Reference:** `app/color-contrast-viewer.html` - Full palette with contrast ratios
 
 **Verify with:** [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
 

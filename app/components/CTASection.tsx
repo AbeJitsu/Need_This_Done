@@ -5,10 +5,10 @@
 // No muddy blurs - just refined visual hierarchy and elegant simplicity.
 
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import Button from './Button';
 import { AccentVariant, headingColors, formInputColors } from '@/lib/colors';
-import { accentText } from '@/lib/contrast';
 
 interface CTAButton {
   text: string;

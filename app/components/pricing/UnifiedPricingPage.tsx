@@ -1,4 +1,5 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useState, useRef } from 'react';
 import {
@@ -25,7 +26,6 @@ import {
   cardBgColors,
   cardBorderColors,
 } from '@/lib/colors';
-import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Unified Pricing Page - Warm, inviting design with smooth scroll navigation

@@ -1,4 +1,5 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useState } from 'react';
 import Card from '@/components/Card';
@@ -17,7 +18,6 @@ import {
   headingColors,
   alertColors,
 } from '@/lib/colors';
-import { accentText } from '@/lib/contrast';
 import { FileText, Video, Check, Sparkles } from 'lucide-react';
 
 // Quote data returned from authorization API

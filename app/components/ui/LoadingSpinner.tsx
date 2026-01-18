@@ -4,8 +4,8 @@
 // Reusable spinner for buttons, cards, and any loading state.
 // Matches the accent color system from colors.ts.
 
-import { AccentVariant } from '@/lib/colors';
 import { accentText } from '@/lib/contrast';
+import { AccentVariant } from '@/lib/colors';
 
 interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg';

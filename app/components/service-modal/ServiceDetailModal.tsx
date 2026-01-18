@@ -1,4 +1,5 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -15,7 +16,6 @@ import { useServiceModal } from '@/context/ServiceModalContext';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { useBackdropClose } from '@/hooks/useBackdropClose';
 import { type AccentVariant } from '@/lib/colors';
-import { accentText } from '@/lib/contrast';
 import { Editable, IconPicker } from '@/components/InlineEditor';
 import { serviceColors } from '@/lib/service-colors';
 

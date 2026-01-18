@@ -1,4 +1,5 @@
 'use client';
+import { accentText } from '@/lib/contrast';
 
 import { useState, useRef, useEffect } from 'react';
 import { getServices } from '@/config/site.config';
@@ -25,7 +26,6 @@ import {
   iconCircleColors,
   coloredLinkText,
 } from '@/lib/colors';
-import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Contact Page - Premium Consultation Booking
