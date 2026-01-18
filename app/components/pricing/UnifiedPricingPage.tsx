@@ -25,6 +25,7 @@ import {
   cardBgColors,
   cardBorderColors,
 } from '@/lib/colors';
+import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Unified Pricing Page - Warm, inviting design with smooth scroll navigation
@@ -419,7 +420,7 @@ export default function UnifiedPricingPage() {
 
                     {/* Icon */}
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isSelected ? 'bg-blue-100' : 'bg-gray-100'}`}>
-                      <Icon size={20} className={isSelected ? 'text-blue-600' : 'text-gray-500'} />
+                      <Icon size={20} className={isSelected ? accentText.blue : 'text-gray-500'} />
                     </div>
 
                     {/* Text */}

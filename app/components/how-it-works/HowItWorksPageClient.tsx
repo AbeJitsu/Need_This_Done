@@ -11,6 +11,7 @@ import {
   titleColors,
   headingColors,
 } from '@/lib/colors';
+import { accent } from '@/lib/contrast';
 import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
 import { ArrowRight, Calendar } from 'lucide-react';
 
@@ -171,7 +172,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
           <EditableSection sectionKey="timeline" label="Timeline">
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/20 mb-6">
-                <Calendar className="w-8 h-8 text-emerald-400" />
+                <Calendar className={`w-8 h-8 ${accent.emerald.textOnDark}`} />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 {content.timeline.title}

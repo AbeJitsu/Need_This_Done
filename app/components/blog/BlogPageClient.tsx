@@ -7,6 +7,7 @@ import { useInlineEdit } from '@/context/InlineEditContext';
 import type { BlogPageContent } from '@/lib/page-content-types';
 import { BlogPostSummary, BLOG_CATEGORIES } from '@/lib/blog-types';
 import { headingColors, formInputColors, accentColors, focusRingClasses } from '@/lib/colors';
+import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Blog Page Client - Universal Editing Version
@@ -44,7 +45,7 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
           {/* Text container - always padded */}
           <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
             <EditableSection sectionKey="header" label="Page Header">
-              <h1 className={`text-4xl md:text-5xl font-bold tracking-tight text-purple-700 mb-4`}>
+              <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${accentText.purple} mb-4`}>
                 {content.header.title}
               </h1>
               <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>

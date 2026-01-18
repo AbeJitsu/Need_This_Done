@@ -15,6 +15,7 @@ import { useServiceModal } from '@/context/ServiceModalContext';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import { useBackdropClose } from '@/hooks/useBackdropClose';
 import { type AccentVariant } from '@/lib/colors';
+import { accentText } from '@/lib/contrast';
 import { Editable, IconPicker } from '@/components/InlineEditor';
 import { serviceColors } from '@/lib/service-colors';
 
@@ -45,7 +46,7 @@ const BULLET_ICON_MAP: Record<string, LucideIconComponent> = {
 const SERVICE_THEMES: Record<AccentVariant, {
   gradient: string;
   accentBg: string;
-  accentText: string;
+  textColor: string;
   iconBg: string;
   iconText: string;
   buttonBg: string;
@@ -57,85 +58,85 @@ const SERVICE_THEMES: Record<AccentVariant, {
   green: {
     gradient: 'from-emerald-50 via-white to-teal-50/30',
     accentBg: 'bg-emerald-100',
-    accentText: 'text-emerald-700',
+    textColor: accentText.emerald,
     iconBg: 'bg-emerald-100',
-    iconText: 'text-emerald-600',
+    iconText: accentText.emerald,
     buttonBg: 'bg-emerald-500',
     buttonHover: 'hover:bg-emerald-600',
     outlineBorder: 'border-emerald-300',
-    outlineText: 'text-emerald-600',
+    outlineText: accentText.emerald,
     outlineHover: 'hover:bg-emerald-50',
   },
   purple: {
     gradient: 'from-violet-50 via-white to-purple-50/30',
     accentBg: 'bg-violet-100',
-    accentText: 'text-violet-700',
+    textColor: accentText.purple,
     iconBg: 'bg-violet-100',
-    iconText: 'text-violet-600',
+    iconText: accentText.purple,
     buttonBg: 'bg-violet-500',
     buttonHover: 'hover:bg-violet-600',
     outlineBorder: 'border-violet-300',
-    outlineText: 'text-violet-600',
+    outlineText: accentText.purple,
     outlineHover: 'hover:bg-violet-50',
   },
   gold: {
     gradient: 'from-amber-50 via-white to-orange-50/30',
     accentBg: 'bg-amber-100',
-    accentText: 'text-amber-700',
+    textColor: accentText.gold,
     iconBg: 'bg-amber-100',
-    iconText: 'text-amber-600',
+    iconText: accentText.gold,
     buttonBg: 'bg-amber-500',
     buttonHover: 'hover:bg-amber-600',
     outlineBorder: 'border-amber-300',
-    outlineText: 'text-amber-600',
+    outlineText: accentText.gold,
     outlineHover: 'hover:bg-amber-50',
   },
   blue: {
     gradient: 'from-blue-50 via-white to-sky-50/30',
     accentBg: 'bg-blue-100',
-    accentText: 'text-blue-700',
+    textColor: accentText.blue,
     iconBg: 'bg-blue-100',
-    iconText: 'text-blue-600',
+    iconText: accentText.blue,
     buttonBg: 'bg-blue-500',
     buttonHover: 'hover:bg-blue-600',
     outlineBorder: 'border-blue-300',
-    outlineText: 'text-blue-600',
+    outlineText: accentText.blue,
     outlineHover: 'hover:bg-blue-50',
   },
   teal: {
     gradient: 'from-teal-50 via-white to-cyan-50/30',
     accentBg: 'bg-teal-100',
-    accentText: 'text-teal-700',
+    textColor: accentText.teal,
     iconBg: 'bg-teal-100',
-    iconText: 'text-teal-600',
+    iconText: accentText.teal,
     buttonBg: 'bg-teal-500',
     buttonHover: 'hover:bg-teal-600',
     outlineBorder: 'border-teal-300',
-    outlineText: 'text-teal-600',
+    outlineText: accentText.teal,
     outlineHover: 'hover:bg-teal-50',
   },
   red: {
     gradient: 'from-rose-50 via-white to-pink-50/30',
     accentBg: 'bg-rose-100',
-    accentText: 'text-rose-700',
+    textColor: accentText.red,
     iconBg: 'bg-rose-100',
-    iconText: 'text-rose-600',
+    iconText: accentText.red,
     buttonBg: 'bg-rose-500',
     buttonHover: 'hover:bg-rose-600',
     outlineBorder: 'border-rose-300',
-    outlineText: 'text-rose-600',
+    outlineText: accentText.red,
     outlineHover: 'hover:bg-rose-50',
   },
   gray: {
     gradient: 'from-gray-50 via-white to-slate-50/30',
     accentBg: 'bg-gray-100',
-    accentText: 'text-gray-700',
+    textColor: accentText.gray,
     iconBg: 'bg-gray-100',
-    iconText: 'text-gray-600',
+    iconText: accentText.gray,
     buttonBg: 'bg-gray-600',
     buttonHover: 'hover:bg-gray-700',
     outlineBorder: 'border-gray-300',
-    outlineText: 'text-gray-600',
+    outlineText: accentText.gray,
     outlineHover: 'hover:bg-gray-50',
   },
 };

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { faqColors, titleColors, formInputColors, cardBgColors, cardBorderColors } from '@/lib/colors';
+import { accentText } from '@/lib/contrast';
 import CircleBadge from '@/components/CircleBadge';
 import CTASection from '@/components/CTASection';
 import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
@@ -110,7 +111,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
           {/* Section intro */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-purple-100 mb-4">
-              <MessageCircleQuestion className="w-6 h-6 text-amber-600" />
+              <MessageCircleQuestion className={`w-6 h-6 ${accentText.gold}`} />
             </div>
             <p className={`${formInputColors.helper} max-w-lg mx-auto`}>
               Click any question to reveal the answer

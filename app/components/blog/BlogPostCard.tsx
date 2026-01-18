@@ -9,6 +9,8 @@ import Image from 'next/image';
 import Card from '@/components/Card';
 import { BlogPostSummary, formatPublishedDate, BLOG_CATEGORIES } from '@/lib/blog-types';
 import { headingColors, formInputColors, accentColors } from '@/lib/colors';
+// Note: Using 'group-hover:text-accent-blue' directly because Tailwind's class purging
+// requires full class names to be visible at build time (can't use template interpolation)
 
 interface BlogPostCardProps {
   post: BlogPostSummary;
@@ -63,7 +65,7 @@ export default function BlogPostCard({ post, featured = false }: BlogPostCardPro
               className={`
                 ${featured ? 'text-2xl' : 'text-xl'} font-bold mb-2
                 ${headingColors.primary}
-                group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors
+                group-hover:text-accent-blue transition-colors
               `}
             >
               {post.title}

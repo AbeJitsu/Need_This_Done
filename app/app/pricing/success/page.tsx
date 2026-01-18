@@ -9,6 +9,7 @@ import {
   cardBgColors,
   cardBorderColors,
 } from '@/lib/colors';
+import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Pricing Success Page - Deposit Confirmation
@@ -91,7 +92,7 @@ export default async function PricingSuccessPage({ searchParams }: Props) {
       {/* Success Icon */}
       <div className="text-center mb-8 animate-slide-up">
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 mb-6">
-          <CheckCircle2 size={40} className="text-green-600 dark:text-green-400" />
+          <CheckCircle2 size={40} className={accentText.emerald} />
         </div>
         <h1 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-3`}>
           Deposit Received!

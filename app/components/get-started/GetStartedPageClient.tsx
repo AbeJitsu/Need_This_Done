@@ -17,6 +17,7 @@ import {
   headingColors,
   alertColors,
 } from '@/lib/colors';
+import { accentText } from '@/lib/contrast';
 import { FileText, Video, Check, Sparkles } from 'lucide-react';
 
 // Quote data returned from authorization API
@@ -248,7 +249,7 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
           {/* Text container - always padded */}
           <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
               <EditableSection sectionKey="header" label="Page Header">
-                <h1 className={`text-4xl md:text-5xl font-bold tracking-tight text-amber-600 mb-4`}>
+                <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${accentText.gold} mb-4`}>
                   {content.header.title}
                 </h1>
                 <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
@@ -308,7 +309,7 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
                             </div>
                             <span className={`
                               px-4 py-1.5 rounded-full text-sm font-bold
-                              ${index === 0 ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}
+                              ${index === 0 ? `${accentColors.green.bg} ${accentColors.green.text}` : `${accentColors.purple.bg} ${accentColors.purple.text}`}
                             `}>
                               {path.badge}
                             </span>
@@ -329,7 +330,7 @@ export default function GetStartedPageClient({ content: initialContent }: GetSta
                                 <div className={`
                                   flex-shrink-0 w-5 h-5 rounded-full mt-0.5
                                   flex items-center justify-center
-                                  ${index === 0 ? 'bg-green-100 text-green-600' : 'bg-purple-100 text-purple-600'}
+                                  ${index === 0 ? `${accentColors.green.bg} ${accentColors.green.text}` : `${accentColors.purple.bg} ${accentColors.purple.text}`}
                                 `}>
                                   <Check className="w-3 h-3" strokeWidth={3} />
                                 </div>

@@ -26,22 +26,26 @@ const skills = [
   {
     category: 'Frontend & UI',
     items: ['React', 'Next.js', 'Vue.js', 'TypeScript', 'Tailwind CSS', 'TipTap'],
-    color: 'emerald',
+    color: 'emerald' as const,
+    hoverGlow: 'from-emerald-500/10 to-emerald-600/10',
   },
   {
     category: 'Backend & Data',
     items: ['Node.js', 'Python', 'PostgreSQL', 'Supabase', 'Redis', 'GraphQL'],
-    color: 'blue',
+    color: 'blue' as const,
+    hoverGlow: 'from-blue-500/10 to-blue-600/10',
   },
   {
     category: 'AI & Automation',
     items: ['OpenAI', 'Claude', 'RAG Systems', 'Prompting', 'Chatbots'],
-    color: 'purple',
+    color: 'purple' as const,
+    hoverGlow: 'from-purple-500/10 to-purple-600/10',
   },
   {
     category: 'Quality & Process',
     items: ['Playwright', 'Vitest', 'WCAG AA', 'TDD', 'CI/CD', 'Git'],
-    color: 'amber',
+    color: 'amber' as const,
+    hoverGlow: 'from-amber-500/10 to-amber-600/10',
   },
 ];
 
@@ -266,7 +270,7 @@ export default function ResumePage() {
                 <div className="group relative p-6 rounded-2xl bg-white border border-stone-200 hover:border-stone-300 transition-all duration-300 hover:shadow-lg h-full">
                   {/* Hover glow */}
                   <div
-                    className={`absolute -inset-px rounded-2xl bg-gradient-to-br from-${skill.color}-500/10 to-${skill.color}-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl`}
+                    className={`absolute -inset-px rounded-2xl bg-gradient-to-br ${skill.hoverGlow} opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl`}
                   />
 
                   <h3

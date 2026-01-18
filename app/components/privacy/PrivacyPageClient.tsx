@@ -10,6 +10,7 @@ import {
   formInputColors,
   alertColors,
 } from '@/lib/colors';
+import { accentText } from '@/lib/contrast';
 
 // ============================================================================
 // Privacy Page Client - Universal Editing Version
@@ -115,7 +116,7 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
           <div className="mt-10 pt-10 border-t border-gray-200 dark:border-gray-700">
             <p className={formInputColors.helper}>
               Questions or concerns about your privacy? Email us at{' '}
-              <Link href="mailto:hello@needthisdone.com" className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+              <Link href="mailto:hello@needthisdone.com" className={`${accentText.blue} hover:underline`}>
                 hello@needthisdone.com
               </Link>
             </p>
