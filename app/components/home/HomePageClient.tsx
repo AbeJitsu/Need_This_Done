@@ -44,15 +44,15 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
   const content = hasValidContent ? (pageContent as unknown as HomePageContent) : initialContent;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-      {/* Hero Section - Enhanced with geometric accents */}
+    <div className="py-8">
+      {/* Hero Section - edge-to-edge on mobile, contained on desktop */}
       <EditableSection sectionKey="hero" label="Hero Section">
-        <div className="relative text-center mb-20 py-8">
+        <div className="relative text-center mb-20 py-8 overflow-hidden md:max-w-6xl md:mx-auto md:rounded-2xl">
           {/* Geometric background accents */}
           <GeometricAccents variant="hero" />
 
-          {/* Hero content with staggered animations */}
-          <div className="relative z-10">
+          {/* Hero content - always padded */}
+          <div className="relative z-10 px-4 sm:px-6 md:px-8">
             <Editable path="hero.title">
               <h1 className={`text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight ${accentColors.blue.titleText} mb-6 animate-scale-in`}>
                 {content.hero.title}
@@ -96,8 +96,10 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
         </div>
       </EditableSection>
 
-      {/* Services Section - Enhanced with icons and animations */}
-      <EditableSection sectionKey="services" label="Services">
+      {/* Rest of content in max-w container */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+        {/* Services Section - Enhanced with icons and animations */}
+        <EditableSection sectionKey="services" label="Services">
         <div className="mb-16">
           {/* Section title */}
           <EditableLink
@@ -424,6 +426,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </div>
         </div>
       </EditableSection>
+      </div>{/* End max-w container */}
     </div>
   );
 }

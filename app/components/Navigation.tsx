@@ -81,7 +81,7 @@ export default function Navigation() {
           {/* Logo / Home Link - Editable in edit mode */}
           <Link
             href="/"
-            className="flex-shrink-0 font-semibold text-xl text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mr-6"
+            className="flex-shrink-0 font-semibold text-xl text-gray-900 dark:text-gray-100 hover:opacity-80 transition-opacity mr-6"
             style={{ fontFamily: 'var(--font-poppins)' }}
           >
             <Editable path="_layout.header.brand">

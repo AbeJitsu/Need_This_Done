@@ -1,6 +1,13 @@
-import { Metadata } from 'next';
+'use client';
+
 import Button from '@/components/Button';
 import { titleColors } from '@/lib/colors';
+import {
+  FadeIn,
+  StaggerContainer,
+  StaggerItem,
+  RevealSection,
+} from '@/components/motion';
 
 // ============================================================================
 // Resume Page - /resume
@@ -8,12 +15,8 @@ import { titleColors } from '@/lib/colors';
 // Executive portfolio document style resume for Abe Reyes.
 // Design: Refined document aesthetic with timeline spine and BJJ belt color accents.
 // Typography: Playfair Display for headlines, Inter for body text.
-
-export const metadata: Metadata = {
-  title: 'Resume - Abe Reyes | Full-Stack Developer',
-  description:
-    'Full-stack developer with 3 years building production applications. React, Next.js, TypeScript, Node.js, PostgreSQL.',
-};
+// Accessibility: Minimum 14px (text-sm) for all text, 16px (text-base) for body copy.
+// Animations: Framer Motion scroll-triggered reveals and staggered entries.
 
 // ============================================================================
 // Skills Data
@@ -32,7 +35,7 @@ const skills = [
   },
   {
     category: 'AI & Automation',
-    items: ['OpenAI', 'Claude', 'RAG Systems', 'Prompt Engineering', 'Chatbots'],
+    items: ['OpenAI', 'Claude', 'RAG Systems', 'Prompting', 'Chatbots'],
     color: 'purple',
   },
   {
@@ -119,7 +122,7 @@ const education = [
     institution: 'Full Sail University',
     focus: 'Web Design & Development',
     period: '2016 - 2017',
-    note: 'Straight A\'s while working full-time',
+    note: "Straight A's while working full-time",
   },
   {
     institution: 'U.S. Army Medical Center',
@@ -137,27 +140,27 @@ const timelineColors: Record<string, { dot: string; line: string; badge: string 
   emerald: {
     dot: 'bg-emerald-500',
     line: 'from-emerald-500',
-    badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    badge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
   },
   blue: {
     dot: 'bg-blue-500',
     line: 'from-blue-500',
-    badge: 'bg-blue-50 text-blue-700 border-blue-200',
+    badge: 'bg-blue-50 text-blue-800 border-blue-200',
   },
   purple: {
     dot: 'bg-purple-500',
     line: 'from-purple-500',
-    badge: 'bg-purple-50 text-purple-700 border-purple-200',
+    badge: 'bg-purple-50 text-purple-800 border-purple-200',
   },
   amber: {
     dot: 'bg-amber-500',
     line: 'from-amber-500',
-    badge: 'bg-amber-50 text-amber-700 border-amber-200',
+    badge: 'bg-amber-50 text-amber-800 border-amber-200',
   },
   stone: {
     dot: 'bg-stone-500',
     line: 'from-stone-500',
-    badge: 'bg-stone-100 text-stone-700 border-stone-300',
+    badge: 'bg-stone-100 text-stone-800 border-stone-300',
   },
 };
 
@@ -171,12 +174,12 @@ export default function ResumePage() {
       {/* ================================================================
           Header - Name Card Style
           ================================================================ */}
-      <header className="pt-12 pb-8 md:pt-16 md:pb-12">
+      <FadeIn triggerOnScroll={false} as="header" className="pt-12 pb-8 md:pt-16 md:pb-12">
         <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
           {/* Decorative top border */}
           <div className="flex items-center gap-4 mb-10">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-stone-300 to-transparent" />
-            <span className="text-xs tracking-[0.3em] uppercase text-stone-400 font-medium">
+            <span className="text-sm tracking-[0.2em] uppercase text-stone-500 font-medium">
               Curriculum Vitae
             </span>
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-stone-300 to-transparent" />
@@ -191,38 +194,38 @@ export default function ResumePage() {
               </span>{' '}
               Reyes
             </h1>
-            <p className="text-lg md:text-xl text-stone-600 font-medium tracking-wide">
+            <p className="text-xl md:text-2xl text-stone-600 font-medium tracking-wide">
               Full-Stack Developer
             </p>
           </div>
 
           {/* Contact info - horizontal pills */}
           <div className="flex flex-wrap justify-center gap-3 mb-8">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-stone-200 text-sm text-stone-600 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
               Orlando, FL
             </span>
             <a
               href="mailto:abe.raise@gmail.com"
-              className="inline-flex items-center px-4 py-2 rounded-full bg-white border border-stone-200 text-sm text-stone-600 shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
             >
               abe.raise@gmail.com
             </a>
             <a
               href="https://needthisdone.com"
-              className="inline-flex items-center px-4 py-2 rounded-full bg-white border border-stone-200 text-sm text-stone-600 shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
             >
               needthisdone.com
             </a>
             <a
               href="https://github.com/AbeJitsu"
-              className="inline-flex items-center px-4 py-2 rounded-full bg-white border border-stone-200 text-sm text-stone-600 shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
             >
               GitHub
             </a>
             <a
               href="https://www.linkedin.com/in/weneedthisdone"
-              className="inline-flex items-center px-4 py-2 rounded-full bg-white border border-stone-200 text-sm text-stone-600 shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors"
+              className="inline-flex items-center px-4 py-2.5 rounded-full bg-white border border-stone-200 text-base text-stone-700 shadow-sm hover:border-stone-400 hover:shadow-md transition-all"
             >
               LinkedIn
             </a>
@@ -231,73 +234,79 @@ export default function ResumePage() {
           {/* Summary quote */}
           <div className="max-w-3xl mx-auto">
             <blockquote className="relative text-center">
-              <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-5xl font-playfair text-stone-200 leading-none">
+              <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-6xl font-playfair text-stone-200 leading-none">
                 &ldquo;
               </span>
-              <p className="font-playfair text-xl md:text-2xl text-stone-700 leading-relaxed italic pt-4">
+              <p className="font-playfair text-lg md:text-xl text-stone-700 leading-relaxed italic pt-6">
                 Over 25 years working with technology in business environments. I stay calm when things break,
                 explain technical stuff so it makes sense the first time, and follow through on what I say I&apos;ll do.
               </p>
             </blockquote>
           </div>
         </div>
-      </header>
+      </FadeIn>
 
       {/* ================================================================
           Skills Section - Horizontal Cards
           ================================================================ */}
-      <section className="py-10 md:py-14">
+      <RevealSection as="section" className="py-12 md:py-16">
         <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
           {/* Section header */}
           <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs tracking-[0.2em] uppercase text-stone-400 font-medium">
+            <span className="text-sm tracking-[0.15em] uppercase text-stone-500 font-semibold">
               Technical Skills
             </span>
             <div className="h-px flex-1 bg-gradient-to-r from-stone-300 to-transparent" />
           </div>
 
           {/* Skills grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-4 gap-5" triggerOnScroll={false}>
             {skills.map((skill) => (
-              <div
-                key={skill.category}
-                className="group relative p-5 rounded-2xl bg-white border border-stone-200 hover:border-stone-300 transition-all duration-300 hover:shadow-lg"
-              >
-                {/* Hover glow */}
-                <div className={`absolute -inset-px rounded-2xl bg-gradient-to-br from-${skill.color}-500/10 to-${skill.color}-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl`} />
+              <StaggerItem key={skill.category}>
+                <div className="group relative p-6 rounded-2xl bg-white border border-stone-200 hover:border-stone-300 transition-all duration-300 hover:shadow-lg h-full">
+                  {/* Hover glow */}
+                  <div
+                    className={`absolute -inset-px rounded-2xl bg-gradient-to-br from-${skill.color}-500/10 to-${skill.color}-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl`}
+                  />
 
-                <h3 className={`font-bold text-sm mb-3 ${
-                  skill.color === 'emerald' ? titleColors.green :
-                  skill.color === 'blue' ? titleColors.blue :
-                  skill.color === 'purple' ? titleColors.purple :
-                  titleColors.gold
-                }`}>
-                  {skill.category}
-                </h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {skill.items.map((item) => (
-                    <span
-                      key={item}
-                      className="inline-block px-2 py-0.5 text-xs rounded-md bg-stone-100 text-stone-600"
-                    >
-                      {item}
-                    </span>
-                  ))}
+                  <h3
+                    className={`font-bold text-base mb-4 ${
+                      skill.color === 'emerald'
+                        ? titleColors.green
+                        : skill.color === 'blue'
+                          ? titleColors.blue
+                          : skill.color === 'purple'
+                            ? titleColors.purple
+                            : titleColors.gold
+                    }`}
+                  >
+                    {skill.category}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {skill.items.map((item) => (
+                      <span
+                        key={item}
+                        className="inline-block px-3 py-1 text-sm rounded-lg bg-stone-100 text-stone-700 font-medium"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ================================================================
           Experience Section - Timeline
           ================================================================ */}
-      <section className="py-10 md:py-14">
+      <RevealSection as="section" className="py-12 md:py-16">
         <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
           {/* Section header */}
           <div className="flex items-center gap-4 mb-10">
-            <span className="text-xs tracking-[0.2em] uppercase text-stone-400 font-medium">
+            <span className="text-sm tracking-[0.15em] uppercase text-stone-500 font-semibold">
               Experience
             </span>
             <div className="h-px flex-1 bg-gradient-to-r from-stone-300 to-transparent" />
@@ -309,87 +318,88 @@ export default function ResumePage() {
             <div className="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-gradient-to-b from-emerald-300 via-blue-300 via-purple-300 to-stone-300" />
 
             {/* Experience items */}
-            <div className="space-y-8 md:space-y-10">
+            <StaggerContainer className="space-y-8 md:space-y-10" triggerOnScroll={false}>
               {experience.map((job) => {
                 const colors = timelineColors[job.color];
                 return (
-                  <div key={`${job.company}-${job.title}`} className="relative pl-12 md:pl-16">
-                    {/* Timeline dot */}
-                    <div className={`absolute left-2 md:left-4 top-1.5 w-4 h-4 rounded-full ${colors.dot} ring-4 ring-white shadow-lg`} />
+                  <StaggerItem key={`${job.company}-${job.title}`}>
+                    <div className="relative pl-14 md:pl-18">
+                      {/* Timeline dot */}
+                      <div
+                        className={`absolute left-2 md:left-4 top-2 w-5 h-5 rounded-full ${colors.dot} ring-4 ring-white shadow-lg`}
+                      />
 
-                    {/* Content card */}
-                    <div className="group relative p-6 rounded-2xl bg-white border border-stone-200 hover:border-stone-300 transition-all duration-300 hover:shadow-lg">
-                      {/* Header row */}
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4">
-                        <div>
-                          <h3 className="font-playfair text-xl font-bold text-stone-900 mb-1">
-                            {job.title}
-                          </h3>
-                          <p className="text-stone-600 font-medium">{job.company}</p>
-                          <p className="text-sm text-stone-500">{job.type}</p>
+                      {/* Content card */}
+                      <div className="group relative p-6 md:p-8 rounded-2xl bg-white border border-stone-200 hover:border-stone-300 transition-all duration-300 hover:shadow-lg">
+                        {/* Header row */}
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
+                          <div>
+                            <h3 className="font-playfair text-xl md:text-2xl font-bold text-stone-900 mb-1">
+                              {job.title}
+                            </h3>
+                            <p className="text-lg text-stone-700 font-medium">{job.company}</p>
+                            <p className="text-base text-stone-500">{job.type}</p>
+                          </div>
+                          <span
+                            className={`inline-flex self-start px-4 py-1.5 text-sm font-semibold rounded-full border ${colors.badge}`}
+                          >
+                            {job.period}
+                          </span>
                         </div>
-                        <span className={`inline-flex self-start px-3 py-1 text-xs font-medium rounded-full border ${colors.badge}`}>
-                          {job.period}
-                        </span>
-                      </div>
 
-                      {/* Highlights */}
-                      <ul className="space-y-2">
-                        {job.highlights.map((highlight, i) => (
-                          <li key={i} className="flex items-start gap-3 text-sm text-stone-600">
-                            <span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full mt-2 ${colors.dot}`} />
-                            {highlight}
-                          </li>
-                        ))}
-                      </ul>
+                        {/* Highlights */}
+                        <ul className="space-y-3">
+                          {job.highlights.map((highlight, i) => (
+                            <li
+                              key={i}
+                              className="flex items-start gap-3 text-base text-stone-600 leading-relaxed"
+                            >
+                              <span className={`flex-shrink-0 w-2 h-2 rounded-full mt-2 ${colors.dot}`} />
+                              {highlight}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                  </div>
+                  </StaggerItem>
                 );
               })}
-            </div>
+            </StaggerContainer>
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ================================================================
           Featured Project - Highlighted Card
           ================================================================ */}
-      <section className="py-10 md:py-14">
+      <FadeIn as="section" className="py-12 md:py-16">
         <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
           {/* Section header */}
           <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs tracking-[0.2em] uppercase text-stone-400 font-medium">
+            <span className="text-sm tracking-[0.15em] uppercase text-stone-500 font-semibold">
               Featured Project
             </span>
             <div className="h-px flex-1 bg-gradient-to-r from-stone-300 to-transparent" />
           </div>
 
           {/* Project card */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 p-8 md:p-10">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 p-8 md:p-12">
             {/* Decorative gradient orbs */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl" />
 
             <div className="relative">
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
-                <div>
-                  <h3 className="font-playfair text-2xl md:text-3xl font-bold text-white mb-2">
-                    needthisdone.com
-                  </h3>
-                  <p className="text-stone-400">
-                    Full-stack Next.js application serving real customers in production
-                  </p>
-                </div>
-                <a
-                  href="https://needthisdone.com"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm text-white hover:bg-white/20 transition-colors"
-                >
-                  Visit Live Site →
-                </a>
+              <div className="mb-8">
+                <h3 className="font-playfair text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3">
+                  needthisdone.com
+                </h3>
+                <p className="text-lg text-stone-300">
+                  Full-stack Next.js application serving real customers in production
+                </p>
               </div>
 
               {/* Feature grid */}
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                 {[
                   'PostgreSQL schema design',
                   'Type-safe TypeScript + Zod',
@@ -398,80 +408,83 @@ export default function ResumePage() {
                   'Playwright E2E tests',
                   'Vitest unit tests',
                 ].map((feature) => (
-                  <div key={feature} className="flex items-center gap-2 text-sm text-stone-300">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <div key={feature} className="flex items-center gap-3 text-base text-stone-200">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
                     {feature}
                   </div>
                 ))}
               </div>
 
               {/* Tech stack */}
-              <div className="flex flex-wrap gap-2">
-                {['React', 'Next.js', 'TypeScript', 'Medusa', 'PostgreSQL', 'Redis', 'Stripe', 'Vercel'].map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-3 py-1 text-xs font-medium rounded-full bg-white/10 text-stone-300 border border-white/10"
-                  >
-                    {tech}
-                  </span>
-                ))}
+              <div className="flex flex-wrap gap-2.5">
+                {['React', 'Next.js', 'TypeScript', 'Medusa', 'PostgreSQL', 'Redis', 'Stripe', 'Vercel'].map(
+                  (tech) => (
+                    <span
+                      key={tech}
+                      className="px-4 py-1.5 text-sm font-medium rounded-full bg-white/10 text-stone-200 border border-white/10"
+                    >
+                      {tech}
+                    </span>
+                  )
+                )}
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </FadeIn>
 
       {/* ================================================================
           Education & Reading - Two Column
           ================================================================ */}
-      <section className="py-10 md:py-14">
+      <RevealSection as="section" className="py-12 md:py-16">
         <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-10">
             {/* Education */}
             <div>
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-xs tracking-[0.2em] uppercase text-stone-400 font-medium">
+                <span className="text-sm tracking-[0.15em] uppercase text-stone-500 font-semibold">
                   Education
                 </span>
                 <div className="h-px flex-1 bg-gradient-to-r from-stone-300 to-transparent" />
               </div>
 
-              <div className="space-y-4">
+              <StaggerContainer className="space-y-5" triggerOnScroll={false}>
                 {education.map((edu) => (
-                  <div
-                    key={edu.institution}
-                    className="p-5 rounded-2xl bg-white border border-stone-200"
-                  >
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <h3 className="font-bold text-stone-900">{edu.institution}</h3>
-                      <span className="text-xs text-stone-500">{edu.period}</span>
+                  <StaggerItem key={edu.institution}>
+                    <div className="p-6 rounded-2xl bg-white border border-stone-200">
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <h3 className="font-bold text-lg text-stone-900">{edu.institution}</h3>
+                        <span className="text-sm text-stone-500 font-medium">{edu.period}</span>
+                      </div>
+                      <p className="text-base text-stone-700 mb-1">{edu.focus}</p>
+                      <p className="text-sm text-stone-500 italic">{edu.note}</p>
                     </div>
-                    <p className="text-sm text-stone-600 mb-1">{edu.focus}</p>
-                    <p className="text-xs text-stone-500 italic">{edu.note}</p>
-                  </div>
+                  </StaggerItem>
                 ))}
 
                 {/* Ongoing learning */}
-                <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100">
-                  <h3 className="font-bold text-stone-900 mb-2">Continuous Learning</h3>
-                  <p className="text-sm text-stone-600">
-                    freeCodeCamp Full Stack (in progress), Khan Academy CS Principles (100% mastery),
-                    Vue.js Complete Guide, 100 Days of Code
-                  </p>
-                </div>
-              </div>
+                <StaggerItem>
+                  <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100">
+                    <h3 className="font-bold text-lg text-stone-900 mb-2">Continuous Learning</h3>
+                    <p className="text-base text-stone-700 leading-relaxed">
+                      freeCodeCamp Full Stack (in progress), Khan Academy CS Principles (100% mastery),
+                      Vue.js Complete Guide, 100 Days of Code
+                    </p>
+                  </div>
+                </StaggerItem>
+              </StaggerContainer>
             </div>
 
             {/* Books */}
             <div>
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-xs tracking-[0.2em] uppercase text-stone-400 font-medium">
+                <span className="text-sm tracking-[0.15em] uppercase text-stone-500 font-semibold">
                   Influential Reading
                 </span>
                 <div className="h-px flex-1 bg-gradient-to-r from-stone-300 to-transparent" />
               </div>
 
-              <div className="space-y-4">
+              <StaggerContainer className="space-y-5" triggerOnScroll={false}>
                 {[
                   {
                     title: 'The Pragmatic Programmer',
@@ -494,40 +507,41 @@ export default function ResumePage() {
                     lesson: 'What keeps marriages together keeps teams together.',
                   },
                 ].map((book) => (
-                  <div
-                    key={book.title}
-                    className="p-5 rounded-2xl bg-white border border-stone-200"
-                  >
-                    <h3 className="font-bold text-stone-900 text-sm">{book.title}</h3>
-                    <p className="text-xs text-stone-500 mb-2">by {book.author}</p>
-                    <p className="text-sm text-stone-600 italic">&ldquo;{book.lesson}&rdquo;</p>
-                  </div>
+                  <StaggerItem key={book.title}>
+                    <div className="p-6 rounded-2xl bg-white border border-stone-200">
+                      <h3 className="font-bold text-base text-stone-900">{book.title}</h3>
+                      <p className="text-sm text-stone-500 mb-2">by {book.author}</p>
+                      <p className="text-base text-stone-700 italic leading-relaxed">
+                        &ldquo;{book.lesson}&rdquo;
+                      </p>
+                    </div>
+                  </StaggerItem>
                 ))}
-              </div>
+              </StaggerContainer>
             </div>
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ================================================================
           CTA Section
           ================================================================ */}
-      <section className="py-16 md:py-20">
+      <FadeIn as="section" className="py-16 md:py-20">
         <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
           <div className="text-center">
             {/* Decorative line */}
             <div className="flex items-center justify-center gap-4 mb-8">
               <div className="h-px w-16 bg-gradient-to-r from-transparent to-stone-300" />
-              <span className="text-xs tracking-[0.3em] uppercase text-stone-400 font-medium">
+              <span className="text-sm tracking-[0.2em] uppercase text-stone-500 font-semibold">
                 Let&apos;s Connect
               </span>
               <div className="h-px w-16 bg-gradient-to-l from-transparent to-stone-300" />
             </div>
 
-            <h2 className="font-playfair text-3xl md:text-4xl font-bold text-stone-900 mb-4">
+            <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-stone-900 mb-5">
               Ready to work together?
             </h2>
-            <p className="text-lg text-stone-600 mb-10 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-stone-600 mb-10 max-w-2xl mx-auto leading-relaxed">
               Learn more about who I am, see what services I offer, or start a conversation about your project.
             </p>
 
@@ -545,7 +559,7 @@ export default function ResumePage() {
             </div>
           </div>
         </div>
-      </section>
+      </FadeIn>
     </div>
   );
 }
