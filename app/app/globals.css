@@ -35,19 +35,19 @@ Usage: background-color: var(--primary-color);
   */
 
   /* ======================================================================
-  BLUES - Primary Brand (muted, warm undertones)
+  BLUES - Sky Blue (cool, cyan-ish - flows naturally from emerald)
   ====================================================================== */
-  /* Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100 */
-  --blue-50: #f0f8ff;
-  --blue-100: #e6f3ff;
-  --blue-200: #b8dcff;
-  --blue-300: #8ac4ff;
-  --blue-400: #5ca8f5;
-  --blue-500: #2563eb;  /* 4.5:1 with white - dark mode bg */
-  --blue-600: #2463c7;  /* 4.5:1 with blue-100 - light mode text */
-  --blue-700: #1d4fa0;
-  --blue-800: #163c7a;
-  --blue-900: #102a55;
+  /* Anchors: 500 = 5.8:1 with white, 600 = 7.0:1 with 100 */
+  --blue-50: #f0f9ff;   /* Very light sky */
+  --blue-100: #e0f2fe;  /* Tailwind sky-100 - light bg */
+  --blue-200: #bae6fd;  /* Tailwind sky-200 */
+  --blue-300: #7dd3fc;  /* Tailwind sky-300 */
+  --blue-400: #38bdf8;  /* Tailwind sky-400 - bright sky */
+  --blue-500: #0369a1;  /* Tailwind sky-700 - 5.8:1 with white ✓ dark mode bg */
+  --blue-600: #075985;  /* Tailwind sky-800 - 7.0:1 with blue-100 ✓ light mode text */
+  --blue-700: #0c4a6e;  /* Tailwind sky-900 */
+  --blue-800: #083344;
+  --blue-900: #042330;
 
   /* ======================================================================
   GREENS - Success & Growth (balanced sage-green)
@@ -95,34 +95,34 @@ Usage: background-color: var(--primary-color);
   --yellow-900: #372b00;
 
   /* ======================================================================
-  GOLDS - Warm honey-gold accent (replaced orange Dec 30, 2025)
+  BROWNS - True chocolate/coffee brown (BJJ brown belt - earthy, grounding)
   ====================================================================== */
-  /* Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100 */
-  --gold-50: #fffcf5;
-  --gold-100: #fef7e6;
-  --gold-200: #fde9c4;
-  --gold-300: #fbd98f;
-  --gold-400: #d9a030;
-  --gold-500: #a36b00;  /* 4.51:1 with white - dark mode bg ✓ */
-  --gold-600: #8d6500;  /* 4.5:1 with gold-100 - light mode text minimum ✓ */
-  --gold-700: #5c3c00;
-  --gold-800: #3d2800;
-  --gold-900: #1f1400;
+  /* Anchors: 500 = 5.0:1 with white, 600 = 6.2:1 with 100 */
+  --gold-50: #fdf8f6;   /* Warm cream */
+  --gold-100: #f5ebe6;  /* Light tan - light bg */
+  --gold-200: #e8d5c9;  /* Tan */
+  --gold-300: #d4b8a5;  /* Light brown */
+  --gold-400: #b8917a;  /* Medium brown */
+  --gold-500: #8b6b54;  /* Coffee brown - 5.0:1 with white ✓ dark mode bg */
+  --gold-600: #6f503d;  /* Dark brown - 6.2:1 with gold-100 ✓ light mode text */
+  --gold-700: #5c3f2e;  /* Chocolate */
+  --gold-800: #4a3123;  /* Espresso */
+  --gold-900: #3d2518;  /* Dark chocolate */
 
   /* ======================================================================
-  PURPLES - Creativity & Premium (balanced plum)
+  PURPLES - Violet (warmer, pinker - complements emerald)
   ====================================================================== */
-  /* Anchors: 500 = 4.5:1 with white, 600 = 4.5:1 with 100 */
-  --purple-50: #fcf8ff;
-  --purple-100: #f5ecff;
-  --purple-200: #e5d5ff;
-  --purple-300: #d4bdff;
-  --purple-400: #c0a0f5;
-  --purple-500: #8b5cf6;  /* 4.5:1 with white - dark mode bg */
-  --purple-600: #6b4c9a;  /* 4.5:1 with purple-100 - light mode text */
-  --purple-700: #553c7a;
-  --purple-800: #402d5c;
-  --purple-900: #2c1f40;
+  /* Anchors: 500 = 5.5:1 with white, 600 = 6.5:1 with 100 */
+  --purple-50: #f5f3ff;   /* Tailwind violet-50 */
+  --purple-100: #ede9fe;  /* Tailwind violet-100 - light bg */
+  --purple-200: #ddd6fe;  /* Tailwind violet-200 */
+  --purple-300: #c4b5fd;  /* Tailwind violet-300 */
+  --purple-400: #a78bfa;  /* Tailwind violet-400 */
+  --purple-500: #6d28d9;  /* Tailwind violet-700 - 5.5:1 with white ✓ dark mode bg */
+  --purple-600: #5b21b6;  /* Tailwind violet-800 - 6.5:1 with purple-100 ✓ light mode text */
+  --purple-700: #4c1d95;  /* Tailwind violet-900 */
+  --purple-800: #3b1578;
+  --purple-900: #2a105a;
 
   /* ======================================================================
   TEALS - Secondary accent (balanced seafoam)
