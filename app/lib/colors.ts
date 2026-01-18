@@ -1,46 +1,33 @@
 // ============================================================================
-// Shared Color Utilities - Last verified: Dec 2025
+// Shared Color Utilities - WCAG AA Compliant
 // ============================================================================
 // Centralized color class definitions used across cards and components.
 // This keeps our styling consistent and avoids duplicating color schemes
 // in multiple files.
 //
 // ============================================================================
-// COLOR SYSTEM - WCAG AA Accessibility
+// COLOR SYSTEM - WCAG AA Accessibility (ETC Architecture)
 // ============================================================================
 //
-// Two anchor points per color (defined in globals.css):
-//   -500: 4.5:1 contrast with WHITE (dark mode backgrounds)
-//   -600: 4.5:1 contrast with -100  (light mode minimum text)
+// PRINCIPLE: Change here, works everywhere.
+//
+// Shades are computed dynamically by contrast.ts based on actual hex values.
+// This ensures we always use the LIGHTEST shade that meets WCAG AA (4.5:1).
 //
 // THE CORE PATTERN:
 // ┌─────────────────────────────────────────────────────────────────────────┐
 // │  LIGHT MODE              │  DARK MODE                                   │
 // ├─────────────────────────────────────────────────────────────────────────┤
 // │  Background: -100        │  Background: -500                            │
-// │  Text: -600 (minimum)    │  Text: white                                 │
-// │  Hover: -700             │  Hover: white/gray-100                       │
+// │  Text: computed shade    │  Text: white                                 │
+// │  Hover: shade + 100      │  Hover: white/gray-100                       │
 // │  Border: -500            │  Border: -100 (light border pops on dark bg) │
 // └─────────────────────────────────────────────────────────────────────────┘
 //
-// QUICK REFERENCE:
-//   bg:     'bg-purple-100 dark:bg-purple-500'
-//   text:   'text-purple-600 dark:text-white'  (or -700/-800/-900)
-//   border: 'border-purple-500 dark:border-purple-100'
-//
-// SHADE GUIDE:
-//   -50:  Very subtle backgrounds
-//   -100: Standard light backgrounds (anchor for -600)
-//   -200-400: Interpolated between -100 and -500
-//   -500: Dark mode backgrounds (4.5:1 with white)
-//   -600: Light mode minimum text (4.5:1 with -100)
-//   -700-900: Darker text (all accessible on -100)
-//
-// ADDING NEW COLORS:
-//   1. Follow the pattern above for light/dark mode
-//   2. Use AccentVariant type for new color keys
-//   3. Test in both light and dark mode
-//   4. -600+ is guaranteed 4.5:1 with -100 background
+// TO CHANGE COLORS:
+//   1. Update hex values in contrast.ts colorPalette (synced with globals.css)
+//   2. The system auto-calculates the lightest WCAG AA compliant shade
+//   3. All pages get the update automatically (ETC)
 //
 // EXISTING EXPORTS TO REUSE:
 //   - accentColors: Full button/badge styling (bg, text, border, hover)
@@ -52,8 +39,49 @@
 //
 // ============================================================================
 
+// Import computed shades from the WCAG contrast system
+import { computedShades } from './contrast';
+
 export type AccentColor = 'purple' | 'blue' | 'green';
 export type AccentVariant = 'purple' | 'blue' | 'green' | 'gold' | 'teal' | 'gray' | 'red';
+
+// ============================================================================
+// COLOR MAPPINGS - Translate between semantic names and Tailwind prefixes
+// ============================================================================
+// 'green' in our system → 'emerald' in Tailwind (for a refined look)
+// This mapping enables the ETC pattern: one change cascades everywhere.
+
+const colorToTailwind: Record<AccentVariant, string> = {
+  purple: 'purple',
+  blue: 'blue',
+  green: 'emerald',
+  gold: 'gold',
+  teal: 'teal',
+  gray: 'gray',
+  red: 'red',
+};
+
+// Map to contrast.ts color names (same as Tailwind except green → emerald)
+type ContrastColor = 'emerald' | 'blue' | 'purple' | 'gold' | 'teal' | 'gray' | 'red';
+const colorToContrast: Record<AccentVariant, ContrastColor> = {
+  purple: 'purple',
+  blue: 'blue',
+  green: 'emerald',
+  gold: 'gold',
+  teal: 'teal',
+  gray: 'gray',
+  red: 'red',
+};
+
+// ============================================================================
+// COMPUTED SHADE HELPER - Get the lightest WCAG AA compliant shade
+// ============================================================================
+// Use this for new code to get automatically computed shades.
+// Example: getComputedShade('green', 'onWhite') → '500' (or whatever passes 4.5:1)
+
+export function getComputedShade(color: AccentVariant, background: 'onWhite' | 'onGray100' | 'onDark' = 'onWhite'): string {
+  return computedShades[background][colorToContrast[color]];
+}
 
 // ============================================================================
 // COLOR UTILITY FUNCTIONS - Generate WCAG AA colors dynamically
@@ -61,19 +89,20 @@ export type AccentVariant = 'purple' | 'blue' | 'green' | 'gold' | 'teal' | 'gra
 // These functions generate color class strings following the WCAG AA pattern.
 // Use these instead of hardcoded color objects for new code.
 //
-// The Pattern (documented above):
-//   Light mode: -100 bg, -600 text (4.5:1 contrast)
+// The Pattern (ETC Architecture):
+//   Light mode: -100 bg, computed text shade (lightest that meets 4.5:1)
 //   Dark mode:  -500 bg, white text (4.5:1 contrast)
 //
 // Benefits:
 //   - Adding a new color = add to AccentVariant type only
 //   - All 7 colors work automatically
 //   - WCAG AA compliance built into the formula
+//   - Shades auto-calculated from hex values (ETC)
 // ============================================================================
 
 /**
  * Generate accent colors for ghost/outline style elements.
- * Light mode: pastel bg (-100), colored text (-600)
+ * Light mode: pastel bg (-100), colored text (computed WCAG AA shade)
  * Dark mode: vibrant bg (-500), white text
  *
  * Use for: badges, chips, tags, outline buttons, feature cards
@@ -83,19 +112,23 @@ export type AccentVariant = 'purple' | 'blue' | 'green' | 'gold' | 'teal' | 'gra
  * <div className={`${colors.bg} ${colors.text}`}>Badge</div>
  */
 export function getAccentColors(color: AccentVariant) {
+  const tw = colorToTailwind[color];
+  const shade = computedShades.onWhite[colorToContrast[color]];
+  const hoverShade = String(Math.min(Number(shade) + 100, 900));
+
   return {
     // Background: -100 light, -500 dark (WCAG AA anchor)
-    bg: `bg-${color}-100 dark:bg-${color}-500`,
-    // Text: -600 light (4.5:1 on -100), white dark (4.5:1 on -500)
-    text: `text-${color}-600 dark:text-white`,
+    bg: `bg-${tw}-100 dark:bg-${tw}-500`,
+    // Text: computed shade light (4.5:1 on white), white dark (4.5:1 on -500)
+    text: `text-${tw}-${shade} dark:text-white`,
     // Border: -500 light (visible), -100 dark (pops on dark bg)
-    border: `border-${color}-500 dark:border-${color}-100`,
+    border: `border-${tw}-500 dark:border-${tw}-100`,
     // Hover text
-    hoverText: `hover:text-${color}-700 dark:hover:text-gray-100`,
+    hoverText: `hover:text-${tw}-${hoverShade} dark:hover:text-gray-100`,
     // Hover border
-    hoverBorder: `hover:border-${color}-600 dark:hover:border-${color}-200`,
-    // Icon on pastel bg: -600 light, -100 dark
-    icon: `text-${color}-600 dark:text-${color}-100`,
+    hoverBorder: `hover:border-${tw}-${hoverShade} dark:hover:border-${tw}-200`,
+    // Icon on pastel bg: computed shade light, -100 dark
+    icon: `text-${tw}-${shade} dark:text-${tw}-100`,
   };
 }
 
@@ -185,13 +218,15 @@ export function getSoftBgColors(color: AccentVariant) {
 
 /**
  * Generate title text colors (colored headings).
- * -600 light mode, -300 dark mode for WCAG AA.
+ * Computed shade light mode (lightest WCAG AA), -300 dark mode.
  *
  * @example
  * <h2 className={getTitleColor('purple')}>Section Title</h2>
  */
 export function getTitleColor(color: AccentVariant): string {
-  return `text-${color}-600 dark:text-${color}-300`;
+  const tw = colorToTailwind[color];
+  const shade = computedShades.onWhite[colorToContrast[color]];
+  return `text-${tw}-${shade} dark:text-${tw}-300`;
 }
 
 /**
