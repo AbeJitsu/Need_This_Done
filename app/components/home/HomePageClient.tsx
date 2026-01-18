@@ -234,7 +234,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             {/* Pricing Preview - Clean, understated */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8">
               <div className="text-center mb-8">
-                <h3 className={`text-sm font-semibold uppercase tracking-wider text-gray-400 mb-2`}>
+                <h3 className={`text-sm font-semibold uppercase tracking-wider text-gray-500 mb-2`}>
                   If you already know what you need
                 </h3>
                 <p className={`text-2xl font-bold ${headingColors.primary}`}>

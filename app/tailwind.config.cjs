@@ -266,6 +266,24 @@ const config = {
         },
 
         // ====================================================================
+        // Emerald - Alias for Green (BJJ Green Belt - Primary)
+        // ====================================================================
+        // Many components use emerald-* classes but our palette is --green-*
+        // This maps emerald to our custom green for WCAG AA compliance
+        emerald: {
+          50: 'var(--green-50)',
+          100: 'var(--green-100)',
+          200: 'var(--green-200)',
+          300: 'var(--green-300)',
+          400: 'var(--green-400)',
+          500: 'var(--green-500)',
+          600: 'var(--green-600)',
+          700: 'var(--green-700)',
+          800: 'var(--green-800)',
+          900: 'var(--green-900)',
+        },
+
+        // ====================================================================
         // Reds - Errors & Critical Actions
         // ====================================================================
         red: {

@@ -548,7 +548,7 @@ export default function ContactPage() {
             <div className="grid md:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-                  Company <span className="text-gray-400 font-normal">(optional)</span>
+                  Company <span className="text-gray-500 font-normal">(optional)</span>
                 </label>
                 <input
                   type="text"
@@ -608,7 +608,7 @@ export default function ContactPage() {
             {/* File Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Attachments <span className="text-gray-400 font-normal">(optional)</span>
+                Attachments <span className="text-gray-500 font-normal">(optional)</span>
               </label>
 
               <div
@@ -628,7 +628,7 @@ export default function ContactPage() {
                 <p className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
                   Drop files here or click to browse
                 </p>
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   Images, PDFs, or docs up to 5MB each
                 </p>
               </div>
@@ -703,7 +703,7 @@ export default function ContactPage() {
             </button>
 
             {/* Privacy note */}
-            <p className="text-center text-sm text-gray-400">
+            <p className="text-center text-sm text-gray-500">
               We&apos;ll never share your info. Read our{' '}
               <a href="/privacy" className={`${coloredLinkText.blue} underline-offset-2 hover:underline`}>
                 privacy policy
