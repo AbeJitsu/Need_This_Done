@@ -344,7 +344,7 @@ function ServiceShowcase({ serviceType, content, colors }: ServiceShowcaseProps)
         </p>
 
         {/* CTA Buttons */}
-        <div className="flex gap-3 flex-shrink-0">
+        <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0 w-full sm:w-auto">
           <Button
             href={content.ctas.secondary.href}
             variant="gray"
