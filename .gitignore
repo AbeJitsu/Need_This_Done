@@ -75,7 +75,4 @@ env.md.do
 # Generated mapping files (rebuild on demand)
 app/affected-routes.json
 app/component-route-map.json
-
-app/lib/generated/content-manifest.ts
-app/lib/generated/content-manifest.ts
 content/changelog/auto-log.json
