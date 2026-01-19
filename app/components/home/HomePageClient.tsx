@@ -216,7 +216,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 <div className="mt-10 flex flex-wrap justify-center gap-8 text-sm text-slate-400">
                   <span className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                    15-30 minute call
+                    15, 30, or 45 minute call
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
