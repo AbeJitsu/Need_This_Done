@@ -121,9 +121,6 @@ export async function PATCH(
           updatedAt: new Date().toISOString(),
         });
         emailSent = emailResult !== null;
-        if (emailSent) {
-          console.log(`[Update Order Status] Email sent to ${order.email} for order ${id}`);
-        }
       } catch (emailError) {
         console.error('[Update Order Status] Email failed:', emailError);
         // Continue - email failure shouldn't block the response
