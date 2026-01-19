@@ -398,7 +398,7 @@ export default function CheckoutPage() {
           </div>
         </Card>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <Button variant="purple" href="/pricing" className="flex-1">
             Continue Shopping
           </Button>

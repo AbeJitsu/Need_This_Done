@@ -180,7 +180,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           )}
 
           {/* Action buttons */}
-          <div className="flex gap-3 mt-auto">
+          <div className="flex flex-col sm:flex-row gap-3 mt-auto">
             <Button
               variant="purple"
               size="lg"
