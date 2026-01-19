@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import {
   AccentColor,
-  titleColors,
   accentColors,
   formInputColors,
   mutedTextColors,
@@ -110,7 +109,7 @@ export default function QuizBlock({
 
     return (
       <div className={`${cardBgColors.base} rounded-xl ${cardBorderColors.light} p-6`}>
-        <h2 className={`text-xl font-bold mb-6 ${titleColors[color]}`}>{title}</h2>
+        <h2 className={`text-xl font-bold mb-6 ${accentColors[color].titleText}`}>{title}</h2>
 
         <div className="text-center py-8">
           <div
@@ -149,7 +148,7 @@ export default function QuizBlock({
     <div className={`${cardBgColors.base} rounded-xl ${cardBorderColors.light} p-6`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className={`text-xl font-bold ${titleColors[color]}`}>{title}</h2>
+        <h2 className={`text-xl font-bold ${accentColors[color].titleText}`}>{title}</h2>
         <span className={`text-sm ${mutedTextColors.light}`}>
           Question {currentIndex + 1} of {questions.length}
         </span>

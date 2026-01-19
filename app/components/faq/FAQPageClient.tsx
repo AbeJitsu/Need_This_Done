@@ -3,7 +3,7 @@ import { accentText } from '@/lib/contrast';
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { faqColors, titleColors, formInputColors, cardBgColors, cardBorderColors } from '@/lib/colors';
+import { faqColors, accentColors, formInputColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 import CircleBadge from '@/components/CircleBadge';
 import CTASection from '@/components/CTASection';
 import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
@@ -44,7 +44,7 @@ function renderAnswer(answer: string, links?: Array<{ text: string; href: string
         <Link
           key={idx}
           href={link.href}
-          className={`${titleColors.blue} font-medium hover:underline`}
+          className={`${accentColors.blue.titleText} font-medium hover:underline`}
         >
           {link.text}
         </Link>
@@ -92,7 +92,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
           {/* Text container - always padded */}
           <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
             <EditableSection sectionKey="header" label="Page Header">
-              <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${titleColors.gold} mb-4`}>
+              <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${accentColors.gold.titleText} mb-4`}>
                 {content.header.title}
               </h1>
               <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>

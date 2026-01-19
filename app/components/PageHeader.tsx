@@ -1,4 +1,4 @@
-import { titleColors, formInputColors } from '@/lib/colors';
+import { accentColors, formInputColors } from '@/lib/colors';
 import type { AccentVariant } from '@/lib/colors';
 
 // ============================================================================
@@ -18,7 +18,7 @@ interface PageHeaderProps {
 export default function PageHeader({ title, description, className = '', color = 'blue' }: PageHeaderProps) {
   return (
     <div className={`text-center mb-12 ${className}`}>
-      <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${titleColors[color]} mb-4`}>
+      <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${accentColors[color].titleText} mb-4`}>
         {title}
       </h1>
       {description && (

@@ -8,7 +8,7 @@ import { useInlineEdit } from '@/context/InlineEditContext';
 import type { HowItWorksPageContent } from '@/lib/page-content-types';
 import {
   formInputColors,
-  titleColors,
+  accentColors,
   headingColors,
 } from '@/lib/colors';
 import { accent } from '@/lib/contrast';
@@ -50,7 +50,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
           {/* Text container - always padded */}
           <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
             <EditableSection sectionKey="header" label="Page Header">
-              <h1 className={`text-4xl md:text-5xl font-bold tracking-tight mb-4 ${titleColors.green}`}>
+              <h1 className={`text-4xl md:text-5xl font-bold tracking-tight mb-4 ${accentColors.green.titleText}`}>
                 {content.header.title}
               </h1>
               <p className={`text-xl max-w-2xl mx-auto ${formInputColors.helper}`}>
@@ -132,7 +132,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
                       {/* Step circle and text */}
                       <div className="flex flex-col items-center text-center">
                         <CircleBadge number={step.number} color={stepColors[index % stepColors.length]} size="md" />
-                        <h3 className={`mt-3 font-semibold ${titleColors[stepColors[index % stepColors.length]]}`}>
+                        <h3 className={`mt-3 font-semibold ${accentColors[stepColors[index % stepColors.length]].titleText}`}>
                           {step.title}
                         </h3>
                         <p className={`text-sm ${formInputColors.helper} mt-1 max-w-[140px]`}>

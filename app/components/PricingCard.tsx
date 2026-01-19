@@ -1,8 +1,5 @@
 import {
   AccentColor,
-  titleColors,
-  topBorderColors,
-  cardHoverColors,
   formInputColors,
   mutedTextColors,
   cardBgColors,
@@ -51,8 +48,8 @@ export default function PricingCard({
         ${cardBgColors.base} rounded-xl p-6
         ${popular ? 'pt-8' : ''}
         ${popular ? `border-2 ${accentColors.blue.border}` : cardBorderColors.light}
-        border-t-4 ${topBorderColors[color]}
-        transition-all ${cardHoverColors[color]}
+        ${accentColors[color].topBorder}
+        transition-all ${accentColors[color].cardHover}
         ${shadowClasses.cardHover}
         ${popular ? 'scale-105 md:scale-105 z-10 shadow-lg shadow-blue-200/50 dark:shadow-blue-900/30' : ''}
       `}
@@ -66,11 +63,11 @@ export default function PricingCard({
 
       {/* Header section with name, price, and description */}
       <div className="text-center mb-6">
-        <h2 className={`text-xl font-bold mb-3 ${titleColors[color]}`}>
+        <h2 className={`text-xl font-bold mb-3 ${accentColors[color].titleText}`}>
           {name}
         </h2>
         <div className="mb-3">
-          <span className={`text-5xl font-bold ${titleColors[color]}`}>
+          <span className={`text-5xl font-bold ${accentColors[color].titleText}`}>
             {price.replace('From ', '')}
           </span>
           <span className={`block text-sm ${mutedTextColors.light} mt-1`}>

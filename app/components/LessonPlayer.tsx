@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import {
   AccentColor,
-  titleColors,
   accentColors,
   formInputColors,
   mutedTextColors,
@@ -122,7 +121,7 @@ export default function LessonPlayer({
             </span>
           )}
         </div>
-        <h1 className={`text-2xl font-bold ${titleColors[color]}`}>{title}</h1>
+        <h1 className={`text-2xl font-bold ${accentColors[color].titleText}`}>{title}</h1>
       </div>
 
       {/* Lesson Content */}

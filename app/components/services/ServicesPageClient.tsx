@@ -15,7 +15,6 @@ import {
   accentColors,
   accentBorderWidth,
   AccentVariant,
-  titleColors,
 } from '@/lib/colors';
 import { Sparkles } from 'lucide-react';
 
@@ -52,7 +51,7 @@ export default function ServicesPageClient({ content: initialContent }: Services
             {/* Text container - always padded */}
             <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
               <EditableSection sectionKey="header" label="Page Header">
-                <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${titleColors.green} mb-4`}>
+                <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${accentColors.green.titleText} mb-4`}>
                   {content.header.title}
                 </h1>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">

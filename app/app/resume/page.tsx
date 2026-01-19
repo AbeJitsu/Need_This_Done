@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@/components/Button';
-import { titleColors } from '@/lib/colors';
+import { accentColors } from '@/lib/colors';
 import {
   FadeIn,
   StaggerContainer,
@@ -276,12 +276,12 @@ export default function ResumePage() {
                   <h3
                     className={`font-bold text-base mb-4 ${
                       skill.color === 'emerald'
-                        ? titleColors.green
+                        ? accentColors.green.titleText
                         : skill.color === 'blue'
-                          ? titleColors.blue
+                          ? accentColors.blue.titleText
                           : skill.color === 'purple'
-                            ? titleColors.purple
-                            : titleColors.gold
+                            ? accentColors.purple.titleText
+                            : accentColors.gold.titleText
                     }`}
                   >
                     {skill.category}
