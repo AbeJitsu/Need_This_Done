@@ -41,7 +41,7 @@ export default function AboutPage() {
             <div className="md:col-span-7">
               <h1 className="font-playfair text-5xl md:text-6xl lg:text-7xl font-bold text-stone-900 leading-[1.1] mb-6">
                 Hey, I&apos;m{' '}
-                <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Abe
                 </span>
               </h1>
@@ -54,7 +54,7 @@ export default function AboutPage() {
             {/* Location badge - takes 5 columns, aligned right */}
             <div className="md:col-span-5 md:text-right">
               <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-stone-100 border border-stone-500">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-sm font-medium text-stone-600">
                   Orlando, Florida
                 </span>
@@ -83,8 +83,8 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-3 gap-6 md:gap-8">
             {/* Army */}
             <div className="group relative">
-              <div className="absolute -inset-1 bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative p-6 md:p-8 rounded-2xl bg-white border border-stone-500 hover:border-emerald-300 transition-colors duration-300">
+              <div className="absolute -inset-1 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative p-6 md:p-8 rounded-2xl bg-white border border-stone-500 hover:border-green-300 transition-colors duration-300">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">🎖️</span>
                   <span className={`text-xs font-bold tracking-wider uppercase ${accentColors.green.text}`}>
@@ -217,7 +217,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-3 gap-8 md:gap-10">
             {/* Clear Communication */}
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-50 border border-emerald-200 flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-green-100 to-green-50 border border-green-200 flex items-center justify-center">
                 <span className="text-2xl">💬</span>
               </div>
               <h3 className={`font-bold text-lg ${titleColors.green} mb-2`}>
@@ -295,7 +295,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900" />
 
         {/* Decorative gradient orbs */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
 
         <div className="relative max-w-4xl mx-auto px-6 sm:px-10 md:px-12 text-center">

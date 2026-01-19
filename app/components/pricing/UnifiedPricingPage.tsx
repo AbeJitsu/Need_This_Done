@@ -305,7 +305,7 @@ export default function UnifiedPricingPage() {
                       w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2
                       ${pkg.color === 'blue'
                         ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/25'
-                        : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/25'
+                        : 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/25'
                       }
                       disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl
                     `}

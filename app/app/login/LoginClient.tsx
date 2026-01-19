@@ -38,9 +38,9 @@ const loginColors = {
   },
   // Success alert - emerald on dark translucent background
   success: {
-    bg: 'bg-emerald-500/10',
-    border: 'border-emerald-500/20',
-    text: 'text-emerald-300',
+    bg: 'bg-green-500/10',
+    border: 'border-green-500/20',
+    text: 'text-green-300',
   },
   // Form input focus state - purple accent
   inputFocus: 'focus:ring-purple-500/50 focus:border-purple-500/50',
