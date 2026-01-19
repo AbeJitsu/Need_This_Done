@@ -49,7 +49,7 @@ export const Step1Purple: Story = {
     title: 'Tell Us What You Need',
     description: 'Start with a free consultation where we learn about your business, goals, and vision for your project.',
     details: [
-      'Quick 15-30 minute discovery call',
+      'Quick 15, 30, or 45 minute discovery call',
       'Discuss your business goals and challenges',
       'Explore ideas and possibilities',
       'Get honest advice about what you actually need',
@@ -291,7 +291,7 @@ export const CompleteProcess: Story = {
         title="Tell Us What You Need"
         description="Start with a free consultation where we learn about your business, goals, and vision."
         details={[
-          'Quick 15-30 minute discovery call',
+          'Quick 15, 30, or 45 minute discovery call',
           'Discuss your business goals',
           'Get honest advice',
         ]}
