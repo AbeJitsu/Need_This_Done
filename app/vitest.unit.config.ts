@@ -16,6 +16,10 @@ export default defineConfig({
       // Unit tests for API routes
       '__tests__/api/**/*.test.ts',
     ],
+    exclude: [
+      // Integration tests run separately with vitest.integration.config.ts
+      '**/*.integration.test.ts',
+    ],
   },
   resolve: {
     alias: {
