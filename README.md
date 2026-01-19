@@ -22,20 +22,20 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║  CODEBASE METRICS                        PRODUCTION READINESS                ║
 ║  ─────────────────                       ────────────────────                 ║
 ║  📄 23 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
-║  🔐 21 Admin Pages                       ✅ Stripe Payments                  ║
+║  🔐 18 Admin Pages                       ✅ Stripe Payments                  ║
 ║  🔌 72 API Routes                        ✅ Supabase Auth & Database         ║
-║  🧩 165 React Components                 ✅ Redis Caching (Upstash)          ║
+║  🧩 156 React Components                 ✅ Redis Caching (Upstash)          ║
 ║  📦 6 Context Providers                  ✅ Email Notifications (Resend)     ║
-║  🔧 51 Lib Utilities                     ✅ Google OAuth                     ║
-║  🪝 8 Custom Hooks                       ✅ Inline Editing (12 pages)        ║
-║  🧪 68 E2E Test Files                    ✅ WCAG AA Color System (4.5:1)     ║
+║  🔧 49 Lib Utilities                     ✅ Google OAuth                     ║
+║  🪝 7 Custom Hooks                       ✅ Inline Editing (12 pages)        ║
+║  🧪 69 E2E Test Files                    ✅ WCAG AA Color System (4.5:1)     ║
 ║                                                                              ║
 ║  RECENT ADDITIONS (Jan 2026)             LIGHTHOUSE SCORES                   ║
 ║  ────────────────────────────            ──────────────────                   ║
 ║  ✨ Quotes System (full workflow)        📊 SEO: 100%                        ║
 ║  ✨ Version History (20 revisions)       📊 Accessibility: 100%              ║
 ║  ✨ Daily Changelog Automation           📊 Performance: 78%                 ║
-║  ✨ Dark Mode w/ WCAG AA                 📊 Best Practices: 79%              ║
+║  ✨ Blog System w/ Admin CMS             📊 Best Practices: 79%              ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -87,14 +87,14 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                           NEXT.JS APP (app/)                                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  23 PUBLIC   │  │  21 ADMIN    │  │  72 API      │  │  165 REACT   │      │
+│  │  23 PUBLIC   │  │  18 ADMIN    │  │  72 API      │  │  156 REACT   │      │
 │  │  PAGES       │  │  PAGES       │  │  ROUTES      │  │  COMPONENTS  │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘      │
 │                                                                              │
-│  ┌──────────────────────────────────────────────────────────────────────┐    │
-│  │                        5 CONTEXT PROVIDERS                            │    │
-│  │  AuthContext │ CartContext │ ToastContext │ StripeContext │ ServiceModal │
-│  └──────────────────────────────────────────────────────────────────────┘    │
+│  ┌────────────────────────────────────────────────────────────────────────┐  │
+│  │                          6 CONTEXT PROVIDERS                            │  │
+│  │  Auth │ Cart │ Toast │ Stripe │ ServiceModal │ InlineEdit               │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
 └──────────────────────────────────────┬───────────────────────────────────────┘
                                        │
          ┌─────────────────────────────┼─────────────────────────────┐
@@ -144,13 +144,11 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 
 **Operations**
 - [Deployment](#deployment)
-- [Testing](#testing) ← *68 E2E test files*
+- [Testing](#testing) ← *69 E2E test files*
 - [Troubleshooting](#troubleshooting)
 
 **Reference**
-- [Puck Visual Builder](#puck-visual-builder) ← *28 components, color utilities*
 - [Inline Editing](#inline-editing) ← *click-to-edit on 12 pages + version history*
-- [Template System](#template-system) ← *5-step wizard, starter templates*
 - [API Patterns](#api-patterns) ← *auth, error handling*
 - [Design System](#design-system)
 - [Key Files Reference](#key-files-reference)
@@ -422,32 +420,7 @@ The following diagram shows how all system components interact for major user jo
 
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 4. ADMIN & CMS FLOW (Puck Page Builder)                                      │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-  Admin User         Puck Editor          Save/Publish         Live Site
-       │                  │                    │                   │
-       ▼                  ▼                    ▼                   ▼
-  ┌─────────┐    ┌────────────────┐    ┌─────────────┐    ┌─────────────┐
-  │ Login   │───►│ Visual Editor  │───►│ POST        │───►│ Cached page │
-  │ /admin  │    │ - 22 Components│    │ /api/pages  │    │ served via  │
-  └─────────┘    │ - Drag & Drop  │    │             │    │ /p/[slug]   │
-                 │ - Live Preview │    │ Supabase    │    └─────────────┘
-                 └────────────────┘    │ storage     │
-                                       └─────────────┘
-
-  Component Categories:
-  ┌──────────────────────────────────────────────────────────────────┐
-  │ Layout   │ Hero, Columns, Cards, Container, Grid, Section        │
-  │ Media    │ Image, Gallery, Video, MediaLibrary                   │
-  │ Content  │ Text, Heading, List, Divider, Spacer, RichText       │
-  │ Inter.   │ Button, Accordion, Tabs, ContactForm                  │
-  │ Commerce │ ProductCard, ProductGrid, PriceDisplay, AddToCart    │
-  └──────────────────────────────────────────────────────────────────┘
-
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 5. EMAIL NOTIFICATION FLOW                                                   │
+│ 4. EMAIL NOTIFICATION FLOW                                                   │
 └─────────────────────────────────────────────────────────────────────────────┘
 
   Trigger Event           Email Service          Resend API
@@ -488,9 +461,9 @@ Real Medusa implementation with database-persisted products, carts, and orders. 
 | Orders | ✅ Working | 4 E2E tests | Full order objects, linked in Supabase |
 | Email | ✅ Working | 9 unit tests | 4 email types via Resend |
 
-**All E2E tests passing** - 68 test files across 7 categories. See [Testing](#testing) for complete coverage map.
+**All E2E tests passing** - 69 test files across 7 categories. See [Testing](#testing) for complete coverage map.
 
-**Consultation Products** (seeded via `medusa/seed-products.js` using Admin API):
+**Consultation Products** (seeded via Admin API on Railway):
 | Product | Price | Duration | Handle |
 |---------|-------|----------|--------|
 | 15-Minute Quick Consultation | $20 | 15 min | `consultation-15-min` |
@@ -628,23 +601,22 @@ supabase db reset
 │
 ├── app/                   ← NEXT.JS APPLICATION
 │   ├── app/               ← Pages & API routes (Next.js App Router)
-│   ├── components/        ← 165 React components
+│   ├── components/        ← 156 React components
 │   ├── context/           ← 6 state providers
-│   ├── lib/               ← 51 utility files
-│   ├── hooks/             ← 8 custom React hooks
+│   ├── lib/               ← 49 utility files
+│   ├── hooks/             ← 7 custom React hooks
 │   ├── emails/            ← Email templates (React Email)
-│   ├── e2e/               ← 68 Playwright test files
+│   ├── e2e/               ← 69 Playwright test files
 │   └── __tests__/         ← Unit & accessibility tests
 │
-├── supabase/              ← DATABASE
-│   └── migrations/        ← Schema migrations
-│
-└── medusa/                ← E-COMMERCE BACKEND (Railway)
-    ├── src/               ← Medusa customizations
-    └── seed-products.js   ← Product seeding script
+└── supabase/              ← DATABASE
+    └── migrations/        ← Schema migrations
+
+# Note: Medusa backend is deployed on Railway (not in this repo)
+# See https://need-this-done-production.up.railway.app
 ```
 
-### Complete Page Inventory (44 pages total)
+### Complete Page Inventory (41 pages total)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -653,34 +625,30 @@ supabase db reset
 │                                                                             │
 │  MARKETING                    E-COMMERCE                   AUTH             │
 │  /                 (home)     /shop             (catalog)  /login           │
-│  /services                    /shop/[productId] (detail)   /auth/callback   │
-│  /pricing                     /cart                                         │
-│  /how-it-works               /checkout                     LEGAL            │
-│  /faq                         /dashboard        (orders)   /privacy         │
-│  /contact                                                  /terms           │
-│  /get-started                 DYNAMIC                      CONTENT          │
-│                               /p/[slug]         (CMS)      /blog            │
-│                                                            /blog/[slug]     │
-│                                                            /changelog       │
-│                                                            /guide           │
+│  /services                    /shop/[productId] (detail)                    │
+│  /pricing                     /cart                        LEGAL            │
+│  /pricing/success             /checkout                    /privacy         │
+│  /how-it-works               /dashboard        (orders)    /terms           │
+│  /faq                                                                       │
+│  /contact                     BUILD-A-PROJECT              CONTENT          │
+│  /get-started                 /build                       /blog            │
+│  /about                       /build/success               /blog/[slug]     │
+│  /resume                                                   /guide           │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                          ADMIN PAGES (21 pages)                              │
+│                          ADMIN PAGES (18 pages)                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  SHOP MANAGEMENT              CONTENT                      OTHER            │
-│  /admin/shop                  /admin/pages       (list)    /admin/users     │
-│  /admin/shop/products         /admin/pages/new   (create)  /admin/appointments│
-│  /admin/shop/products/new     /admin/pages/[slug]/edit     /admin/quotes    │
-│  /admin/shop/orders           /admin/pages/[slug]/blocks   /admin/dev       │
-│  /admin/shop/inventory                                     /admin/analytics │
-│  /admin/orders       (legacy) /admin/content     (alt CMS) /admin/colors    │
-│  /admin/products     (legacy) /admin/content/[slug]/edit   BLOG             │
-│                                                            /admin/blog      │
-│                                                            /admin/blog/new  │
-│                                                            /admin/blog/[slug]/edit│
+│  /admin/shop                  /admin/content               /admin/users     │
+│  /admin/shop/products/new     /admin/content/[slug]/edit   /admin/appointments│
+│  /admin/shop/orders                                        /admin/quotes    │
+│  /admin/shop/inventory        BLOG                         /admin/dev       │
+│  /admin/orders                /admin/blog                  /admin/analytics │
+│  /admin/products              /admin/blog/new              /admin/colors    │
+│  /admin/products/manage       /admin/blog/[slug]/edit                       │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -861,19 +829,6 @@ INLINE EDITING SYSTEM
 ├── fetch-page-content.ts    Page content fetching with fallback
 ├── default-page-content.ts  Default content templates
 └── page-content-types.ts    TypeScript type definitions
-
-PUCK PAGE BUILDER
-├── puck-config.tsx      22 page builder components (2,100+ lines)
-├── puck-utils.tsx       Shared utilities (getPuckAccentColors, etc.)
-├── puck-editable.tsx    Puck editor integration
-└── sections/index.ts    Pre-built section templates
-
-TEMPLATES SYSTEM
-├── templates/index.ts           Template registry
-├── templates/config.ts          Template configuration
-├── templates/types.ts           Template type definitions
-├── templates/utils.ts           Template utilities
-└── templates/starter-templates.ts  Pre-built starter templates
 
 UTILITIES
 ├── format.ts            Price/date formatting (formatPrice)
@@ -1065,8 +1020,8 @@ Consultation products include built-in booking constraints for quality service:
 
 | Constraint | Value | Enforced By |
 |------------|-------|-------------|
-| Advance booking | 24 hours minimum | `api/appointments/availability` |
-| Daily limit | 5 appointments max | `api/appointments/availability` |
+| Advance booking | 24 hours minimum | `api/appointments/request/route.ts` |
+| Daily limit | 5 appointments max | `api/appointments/request/route.ts` |
 | Buffer time | 30 minutes between appointments | Google Calendar validation |
 | Business hours | 9 AM - 5 PM, Monday-Friday | Appointment form time picker |
 
@@ -1079,7 +1034,6 @@ Consultation products include built-in booking constraints for quality service:
 **Implementation:**
 - Form validation in `components/AppointmentRequestForm.tsx`
 - Backend validation in `api/appointments/request/route.ts`
-- Real-time availability check via `api/appointments/availability`
 
 ### Testing the Cart
 
@@ -1405,7 +1359,7 @@ export async function GET(request: Request) {
 | E2E Accessibility | 10 | ✅ Passing | `npm run test:e2e -- e2e/accessibility.a11y.test.ts` |
 | E2E Visual Regression | 10 | ✅ Passing | `npm run test:e2e -- e2e/checkout-screenshots.spec.ts` |
 | E2E Admin Project Flow | 6 | ✅ Passing | `npm run test:e2e -- e2e/admin-project-flow.spec.ts` |
-| **Total** | **68 files** | ✅ **All Passing** | `npm run test:e2e` |
+| **Total** | **69 files** | ✅ **All Passing** | `npm run test:e2e` |
 
 ### Feature → Test Coverage Map
 
@@ -1671,7 +1625,7 @@ npm run test:all
 npm run test:e2e
 
 # Run only unit/integration tests (fast, no browser)
-npm run test:run
+npm run test:unit
 
 # Run only accessibility tests
 npm run test:a11y
@@ -1721,24 +1675,7 @@ Tests run automatically in CI/CD. Before deploying:
 
 **No broken windows policy**: If a test fails, fix it before shipping. We don't skip tests or ignore failures.
 
-### Dark Mode Testing
-
-All pages are tested in both light and dark modes using axe-playwright:
-
-```typescript
-// e2e/accessibility.a11y.test.ts
-test(`${page.name} - Dark Mode Accessibility`, async ({ page: browserPage }) => {
-  // Apply dark mode BEFORE navigation
-  await browserPage.emulateMedia({ colorScheme: 'dark' });
-  await browserPage.goto(page.path);
-
-  // Run axe accessibility audit
-  const results = await new AxeBuilder({ page: browserPage }).analyze();
-  expect(results.violations).toEqual([]);
-});
-```
-
-Common dark mode issues & fixes are documented in [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md).
+> **Note**: Dark mode is currently disabled. Light mode only.
 
 ---
 
@@ -1823,33 +1760,6 @@ curl http://localhost:3000/api/shop/products | jq '.products[0].variants'
 - Ensure `SKIP_CACHE=false` in production
 - Check Railway/Upstash dashboards for service health
 
-### Issue: Dark mode contrast problems
-
-**Symptom**: Text hard to read in dark mode
-
-**Solutions**:
-```bash
-# Run accessibility tests
-cd app && npm run test:a11y
-
-# Test locally in browser
-# Toggle dark mode → Check all text readable
-```
-
-**Fix**: Always use centralized colors from `app/lib/colors.ts`:
-```typescript
-// ❌ Wrong: hardcoded Tailwind classes
-<p className="text-gray-800">Text</p>
-
-// ✅ Right: use color system
-import { headingColors, formInputColors } from '@/lib/colors';
-
-<h2 className={headingColors.primary}>Heading</h2>
-<p className={formInputColors.helper}>Helper text</p>
-```
-
-Available color utilities: `headingColors`, `formInputColors`, `formValidationColors`, `titleColors`, `accentColors`, `navigationColors`, `dangerColors`, `linkColors`, `mutedTextColors`, `alertColors`, `dividerColors`, `placeholderColors`, `checkmarkColors`, `cardHoverColors`, `topBorderColors`, `groupHoverColors`, `cardBgColors`, `cardBorderColors`. See [app/lib/colors.ts](app/lib/colors.ts) for the full list.
-
 ### Issue: Supabase connection errors
 
 **Symptom**: "Failed to connect to Supabase"
@@ -1869,82 +1779,6 @@ supabase start
 # Reset if needed (WARNING: clears data)
 supabase db reset
 ```
-
----
-
-## Puck Visual Builder
-
-![Get Started page showcasing the visual page building experience](app/public/screenshots/december-2025-release/get-started-desktop-light.png)
-
-Puck enables drag-and-drop page building with a live preview. Admins can create and edit pages visually without touching code.
-
-**Recent Enhancements (December 2025):**
-- Pre-built section library for rapid page assembly
-- Template marketplace for sharing/selling page designs
-- TipTap WYSIWYG rich text editor integration
-- Inline click-to-edit on 12 marketing pages
-
-### 30+ Available Components
-
-| Category | Components |
-|----------|------------|
-| **Layout** | Spacer, Container, Columns, Divider, TextBlock |
-| **Media** | Image, Hero, ImageText, ImageGallery, RichText, VideoEmbed |
-| **Interactive** | Accordion, Tabs, FeatureGrid, Button, Card, CircleBadge |
-| **E-Commerce** | ProductCard, ProductGrid, FeaturedProduct, PricingTable |
-| **Social Proof** | Testimonials, StatsCounter |
-| **CTA** | CTASection, PageHeader |
-
-### Puck Color Utilities
-
-All Puck components use centralized colors from `lib/puck-utils.tsx`:
-
-```typescript
-import { getPuckAccentColors, getPuckFullColors } from '@/lib/puck-utils';
-
-// Basic colors (bg, text, border, hover states)
-const colors = getPuckAccentColors('purple');
-
-// Full colors (includes buttonBg, iconBg, subtleBg, etc.)
-const fullColors = getPuckFullColors('blue');
-```
-
-**Layout maps:** `puckColumnsMap`, `puckGapMap`, `puckAspectMap`, `puckContainerWidthMap`
-**Icons:** `puckIcons` - 15+ SVG icons (star, check, heart, shield, etc.)
-
-### Adding New Puck Components
-
-Edit `lib/puck-config.tsx` and add to the `components` object:
-
-```typescript
-MyComponent: {
-  fields: {
-    title: { type: 'text', label: 'Title' },
-    variant: {
-      type: 'select',
-      label: 'Variant',
-      options: [
-        { label: 'Primary', value: 'primary' },
-        { label: 'Secondary', value: 'secondary' },
-      ]
-    },
-  },
-  defaultProps: {
-    title: 'Default Title',
-    variant: 'primary',
-  },
-  render: ({ title, variant }) => (
-    <div className={variant === 'primary' ? 'bg-purple-100' : 'bg-gray-100'}>
-      <h2>{title}</h2>
-    </div>
-  ),
-},
-```
-
-Each component needs:
-- `fields` - Editor inputs (text, select, radio, etc.)
-- `defaultProps` - Default values
-- `render` - React component that renders the output
 
 ---
 
@@ -2030,57 +1864,6 @@ const {
 
 ---
 
-## Template System
-
-Templates are pre-built page layouts users customize through a 5-step wizard.
-
-### Architecture
-
-```
-lib/templates/
-├── types.ts          # PageTemplate, TemplateSection, WizardState
-├── config.ts         # CATEGORY_INFO, COLOR_OPTIONS
-├── utils.ts          # filterByCategory, searchTemplates, etc.
-├── starter-templates.ts  # Ready-to-use templates
-└── index.ts          # Re-exports everything
-```
-
-### Template Categories
-
-| Category | Purpose | Icon |
-|----------|---------|------|
-| landing | Sales pages, launches, promotions | 🚀 |
-| course | Online courses, training programs | 📚 |
-| shop | Products, collections, e-commerce | 🛒 |
-| content | Blog, portfolio, about pages | 📝 |
-| utility | Contact, thank you, simple pages | ⚙️ |
-
-### Creating a New Template
-
-Add to `lib/templates/starter-templates.ts`:
-
-```typescript
-export const myTemplate: PageTemplate = {
-  id: 'my-template',
-  name: 'My Template',
-  description: 'What this template is for',
-  category: 'landing',
-  audience: 'business',
-  tags: ['keyword1', 'keyword2'],
-  defaultColor: 'purple',
-  sections: [
-    { type: 'Hero', props: { title: '...', subtitle: '...' } },
-    { type: 'FeatureGrid', props: { features: [...] } },
-    // ... more sections
-  ],
-  placeholders: [
-    { id: 'headline', label: 'Headline', type: 'text', sectionIndex: 0, propPath: 'title' },
-  ],
-};
-```
-
----
-
 ## API Patterns
 
 ### Authentication
@@ -2140,10 +1923,10 @@ See [.claude/rules/design-system.md](.claude/rules/design-system.md) for:
 
 - **Color System** - Centralized colors in `app/lib/colors.ts`
 - **Accessibility Standards** - WCAG AA compliance, 5:1 contrast minimum
-- **Dark Mode Requirements** - Every component must work in light & dark
 - **Component Testing** - Automated a11y tests, testing utilities
-- **Dark Mode Testing Guide** - Common issues and fixes
 - **Component Patterns** - Existing components, building new components
+
+> **Note**: Dark mode is currently disabled. Light mode only.
 
 ---
 
@@ -2178,6 +1961,7 @@ See [.claude/rules/design-system.md](.claude/rules/design-system.md) for:
 | `app/context/StripeContext.tsx` | Stripe Elements provider |
 | `app/context/ToastContext.tsx` | Global toast notification state |
 | `app/context/ServiceModalContext.tsx` | Service detail modal state |
+| `app/context/InlineEditContext.tsx` | Inline editing state for admin |
 
 ### UI Components
 | File | Purpose |
@@ -2215,9 +1999,9 @@ All UI components are WCAG AA compliant with keyboard navigation and ARIA attrib
 ### Backend Services
 | File | Purpose |
 |------|---------|
-| `medusa/src/index.ts` | Medusa Express server (deployed on Railway) |
-| `medusa/medusa-config.js` | Medusa configuration |
-| `supabase/migrations/` | Database schema |
+| `supabase/migrations/` | Database schema migrations |
+
+> **Note**: Medusa backend is deployed on Railway (https://need-this-done-production.up.railway.app)
 
 ### Testing
 | File | Purpose |
@@ -2287,40 +2071,15 @@ These improvements are **done and working**:
 - StatusBadge and PricingCard component refinements
 - Better accessibility with proper color contrast
 
-**Changelog & Documentation** (`/changelog`):
-- Public changelog page showing all platform updates
-- Visual documentation with screenshots for each feature
+**Visual Documentation**:
 - Automated screenshot capture workflow (`npm run screenshot:affected`)
 - Screenshots stored in `public/screenshots/` for public access
-
-**Puck Component Library**: Now 28 components across 6 categories:
-- **Layout** (4): Spacer, Container, Columns, Divider
-- **Media** (5): Image, ImageGallery, Hero, ImageText, VideoEmbed
-- **Content** (4): TextBlock, RichText, PageHeader, CTASection
-- **Interactive** (6): Accordion, Tabs, FeatureGrid, Button, Card, CircleBadge
-- **Social Proof** (2): Testimonials, StatsCounter
-- **E-Commerce** (4): ProductCard, ProductGrid, FeaturedProduct, PricingTable
-
-Plus supporting utilities: MediaPickerField, shared puck-utils.ts
 
 ---
 
 ### 🔜 Next Up (High Value)
 
-#### 1. Enable Puck Page Builder in Production
-
-**Current State**: Puck is fully built (28 components) but disabled pending testing.
-
-**What's Needed**:
-- E2E tests for Puck admin workflows (create, edit, publish, delete)
-- Test public page rendering and cache behavior
-- Permission enforcement testing
-
-**Value**: Unlocks visual page building for non-technical users.
-
----
-
-#### 2. Google Calendar Integration Testing
+#### 1. Google Calendar Integration Testing
 
 **Current State**: OAuth flow built, event creation API ready (90% complete).
 
