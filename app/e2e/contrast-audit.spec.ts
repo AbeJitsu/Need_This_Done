@@ -290,7 +290,7 @@ test.describe('Accent Color Verification', () => {
   // These use text-accent-* classes which resolve via CSS variables
   const ACCENT_VAR_COLORS: Record<string, { rgb: string; hex: string; name: string }> = {
     gold: { rgb: 'rgb(139, 107, 84)', hex: '#8b6b54', name: 'gold-500 (accent var)' },
-    emerald: { rgb: 'rgb(16, 185, 129)', hex: '#10b981', name: 'emerald-500 (accent var)' },
+    emerald: { rgb: 'rgb(16, 185, 129)', hex: '#10b981', name: 'green-500 (accent var)' },
     blue: { rgb: 'rgb(59, 130, 246)', hex: '#3b82f6', name: 'blue-500 (accent var)' },
     purple: { rgb: 'rgb(168, 85, 247)', hex: '#a855f7', name: 'purple-500 (accent var)' },
   };
@@ -298,7 +298,7 @@ test.describe('Accent Color Verification', () => {
   // Expected direct Tailwind colors (text-gold-600, etc.)
   const DIRECT_COLORS: Record<string, { rgb: string; hex: string; name: string }> = {
     'gold-600': { rgb: 'rgb(111, 80, 61)', hex: '#6f503d', name: 'gold-600' },
-    'emerald-700': { rgb: 'rgb(4, 120, 87)', hex: '#047857', name: 'emerald-700' },
+    'green-700': { rgb: 'rgb(4, 120, 87)', hex: '#047857', name: 'green-700' },
   };
 
   // Pages using text-accent-* classes (CSS variable based)

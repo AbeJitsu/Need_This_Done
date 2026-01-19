@@ -64,11 +64,11 @@ const themeColors: Record<AccentVariant, {
     dotColor: 'bg-green-400',
   },
   teal: {
-    accentBg: 'bg-emerald-500',
-    accentBorder: 'border-emerald-200',
+    accentBg: 'bg-green-500',
+    accentBorder: 'border-green-200',
     textColor: accentText.teal,
-    cornerAccent: 'bg-emerald-100',
-    dotColor: 'bg-emerald-400',
+    cornerAccent: 'bg-green-100',
+    dotColor: 'bg-green-400',
   },
   gray: {
     accentBg: 'bg-slate-500',
