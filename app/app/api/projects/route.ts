@@ -159,7 +159,7 @@ export async function POST(request: Request) {
     // Emails failing should not break the submission (already in database)
 
     try {
-      const { adminSent, clientSent } = await sendProjectSubmissionEmails(
+      await sendProjectSubmissionEmails(
         // Admin notification data
         {
           projectId: project.id,
@@ -181,18 +181,6 @@ export async function POST(request: Request) {
           service: project.service || undefined,
         }
       );
-
-      // Log email results (optional: store in database for tracking)
-      if (adminSent) {
-        console.log(
-          `[Projects API] Admin notification sent for project ${project.id}`
-        );
-      }
-      if (clientSent) {
-        console.log(
-          `[Projects API] Client confirmation sent to ${project.email}`
-        );
-      }
     } catch (emailError) {
       // Don't fail the submission if emails break
       console.error('[Projects API] Email notification error:', emailError);

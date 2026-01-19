@@ -99,19 +99,10 @@ export async function POST(request: NextRequest) {
 
     // Only process email.received events
     if (event.type !== 'email.received') {
-      console.log(`[Email Forward] Ignoring event type: ${event.type}`);
       return NextResponse.json({ status: 'ignored', type: event.type });
     }
 
-    const { email_id, from, to, subject, attachments } = event.data;
-
-    console.log('[Email Forward] Processing inbound email:', {
-      email_id,
-      from,
-      to,
-      subject,
-      attachmentCount: attachments?.length || 0,
-    });
+    const { email_id, from, to, subject } = event.data;
 
     // Fetch the full email content (body not included in webhook payload)
     const emailContent = await fetchReceivedEmailContent(email_id);
@@ -167,12 +158,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
-    console.log('[Email Forward] Successfully forwarded email:', {
-      originalEmailId: email_id,
-      forwardedEmailId: sendResult?.id,
-      forwardedTo: emailConfig.adminEmail,
-    });
 
     return NextResponse.json({
       status: 'forwarded',
