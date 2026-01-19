@@ -12,7 +12,6 @@ import {
   alertColors,
   headingColors,
   dividerColors,
-  titleColors,
   leftBorderColors,
   dangerColors,
   lightBgColors,
@@ -305,7 +304,7 @@ export default function CartPage() {
                         {title}
                       </h3>
                       {/* Duration badge */}
-                      <p className={`text-sm mt-1 ${titleColors[color]}`}>
+                      <p className={`text-sm mt-1 ${accentColors[color].titleText}`}>
                         {duration}
                       </p>
                       {/* Reassuring note */}
@@ -357,7 +356,7 @@ export default function CartPage() {
 
             {/* Continue shopping link */}
             <div className="pt-2">
-              <Link href="/pricing" className={`${titleColors.blue} hover:underline rounded ${focusRingClasses.blue}`}>
+              <Link href="/pricing" className={`${accentColors.blue.titleText} hover:underline rounded ${focusRingClasses.blue}`}>
                 &larr; Browse More Consultations
               </Link>
             </div>

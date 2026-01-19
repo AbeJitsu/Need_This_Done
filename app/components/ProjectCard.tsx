@@ -4,7 +4,6 @@ import StatusBadge from './StatusBadge';
 import {
   accentColors,
   AccentVariant,
-  cardHoverColors,
   cardHoverBgTints,
   statusBorderColors,
   tagHoverColors,
@@ -97,7 +96,7 @@ export default function ProjectCard({
         ${cardBorderColors.light} border-2
         ${statusBorderColors[serviceAccent]}
         transition-all duration-300
-        ${cardHoverColors[serviceAccent]}
+        ${accentColors[serviceAccent].cardHover}
         ${cardHoverBgTints[serviceAccent]}
         hover:-translate-y-1 hover:shadow-lg
         active:scale-[0.98]

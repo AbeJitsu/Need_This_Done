@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Button from '@/components/Button';
-import { titleColors, alertColors, accentColors } from '@/lib/colors';
+import { alertColors, accentColors } from '@/lib/colors';
 
 // ============================================================================
 // PRODUCT MANAGEMENT INTERFACE
@@ -328,7 +328,7 @@ export default function ProductManagePage() {
 
           <div className="flex items-end justify-between mb-6 animate-fadeInUp">
             <div>
-              <p className={`text-sm font-semibold ${titleColors.purple} mb-2 tracking-wider uppercase`}>
+              <p className={`text-sm font-semibold ${accentColors.purple.titleText} mb-2 tracking-wider uppercase`}>
                 Admin Dashboard
               </p>
               <h1 className="text-5xl font-serif font-bold text-gray-900 mb-3">
@@ -368,7 +368,7 @@ export default function ProductManagePage() {
           </div>
         ) : error && products.length === 0 ? (
           <div className="text-center py-20">
-            <p className={`${titleColors.red} text-lg`}>{error}</p>
+            <p className={`${accentColors.red.titleText} text-lg`}>{error}</p>
             <Button variant="purple" onClick={fetchProducts} className="mt-4">
               Retry
             </Button>

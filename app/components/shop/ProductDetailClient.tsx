@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import type { Product } from '@/lib/medusa-client';
-import { headingColors, formInputColors, alertColors, formValidationColors, productImageStyles, titleColors, cardBgColors, focusRingClasses } from '@/lib/colors';
+import { headingColors, formInputColors, alertColors, formValidationColors, productImageStyles, accentColors, cardBgColors, focusRingClasses } from '@/lib/colors';
 
 // ============================================================================
 // Product Detail Client Component
@@ -70,7 +70,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Back link */}
-      <Link href="/pricing" className={`${titleColors.blue} hover:underline mb-6 inline-block rounded ${focusRingClasses.blue}`}>
+      <Link href="/pricing" className={`${accentColors.blue.titleText} hover:underline mb-6 inline-block rounded ${focusRingClasses.blue}`}>
         ← Back to Pricing
       </Link>
 

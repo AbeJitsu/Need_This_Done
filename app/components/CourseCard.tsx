@@ -2,9 +2,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {
   AccentColor,
-  titleColors,
-  topBorderColors,
-  cardHoverColors,
   formInputColors,
   mutedTextColors,
   accentColors,
@@ -78,9 +75,9 @@ export default function CourseCard({
       className={`
         block ${cardBgColors.base} rounded-xl
         ${cardBorderColors.light} border-t-4
-        ${topBorderColors[color]}
+        ${accentColors[color].topBorder}
         transition-all duration-300
-        ${cardHoverColors[color]}
+        ${accentColors[color].cardHover}
         ${shadowClasses.cardHover}
         overflow-hidden
       `}
@@ -122,7 +119,7 @@ export default function CourseCard({
       {/* Card content */}
       <div className="p-4">
         {/* Title */}
-        <h3 className={`font-bold text-lg mb-1 ${titleColors[color]} line-clamp-2`}>
+        <h3 className={`font-bold text-lg mb-1 ${accentColors[color].titleText} line-clamp-2`}>
           {title}
         </h3>
 
@@ -157,7 +154,7 @@ export default function CourseCard({
           <div>
             <div className="flex justify-between text-xs mb-1">
               <span className={mutedTextColors.light}>Progress</span>
-              <span className={titleColors[color]}>{progress}%</span>
+              <span className={accentColors[color].titleText}>{progress}%</span>
             </div>
             <div
               className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"
@@ -175,10 +172,10 @@ export default function CourseCard({
         ) : (
           <div className="flex items-baseline gap-2">
             {isFree ? (
-              <span className={`font-bold text-lg ${titleColors[color]}`}>Free</span>
+              <span className={`font-bold text-lg ${accentColors[color].titleText}`}>Free</span>
             ) : price !== undefined ? (
               <>
-                <span className={`font-bold text-lg ${titleColors[color]}`}>
+                <span className={`font-bold text-lg ${accentColors[color].titleText}`}>
                   {formatPriceWhole(price)}
                 </span>
                 {hasDiscount && originalPrice && (

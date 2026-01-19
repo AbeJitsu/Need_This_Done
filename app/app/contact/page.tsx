@@ -21,7 +21,6 @@ import {
   Users,
 } from 'lucide-react';
 import {
-  titleColors,
   accentColors,
   iconCircleColors,
   coloredLinkText,
@@ -454,7 +453,7 @@ export default function ContactPage() {
                       <p className={`text-xs mb-1 ${isSelected ? 'text-slate-500' : 'text-slate-400'}`}>
                         {type.description}
                       </p>
-                      <p className={`text-sm font-medium ${isSelected ? titleColors.blue : 'text-blue-400'}`}>
+                      <p className={`text-sm font-medium ${isSelected ? accentColors.blue.titleText : 'text-blue-400'}`}>
                         {type.duration}
                       </p>
 

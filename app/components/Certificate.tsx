@@ -1,4 +1,4 @@
-import { AccentColor, titleColors, accentColors, mutedTextColors, cardBgColors } from '@/lib/colors';
+import { AccentColor, accentColors, mutedTextColors, cardBgColors } from '@/lib/colors';
 
 // ============================================================================
 // Certificate Component
@@ -70,7 +70,7 @@ export default function Certificate({
         <p className={`${mutedTextColors.light} mb-4`}>
           This is to certify that
         </p>
-        <h2 className={`text-3xl md:text-4xl font-serif font-bold ${titleColors[color]} mb-4`}>
+        <h2 className={`text-3xl md:text-4xl font-serif font-bold ${accentColors[color].titleText} mb-4`}>
           {studentName}
         </h2>
         <p className={mutedTextColors.light}>
