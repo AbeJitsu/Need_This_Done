@@ -57,16 +57,15 @@ function getDurationLabel(title: string): string {
 // ============================================================================
 function EmptyCartState() {
   return (
-    <section className="min-h-[70vh] flex items-center py-16 md:py-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 w-full">
-        <div className="relative overflow-hidden py-12 md:py-16">
+    <section className="min-h-[70vh] flex items-center py-8 md:py-12">
+      <div className="relative overflow-hidden md:max-w-6xl md:mx-auto md:rounded-2xl py-12 md:py-16 w-full">
           {/* Gradient orbs - purple/violet for pricing/cart theme (matching site pattern) */}
           <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-purple-100 blur-3xl" />
           <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-blue-100 blur-2xl" />
           <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-green-100 blur-xl" />
 
           {/* Content with z-10 to stay above gradients */}
-          <div className="relative z-10">
+          <div className="relative z-10 px-4 sm:px-6 md:px-8">
             {/* Asymmetric two-column layout */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
 
@@ -189,7 +188,6 @@ function EmptyCartState() {
             </div>
           </div>
         </div>
-      </div>
     </section>
   );
 }
