@@ -154,14 +154,16 @@ export default function ServicesPageClient({ content: initialContent }: Services
                         ))}
                       </ul>
                       {/* Button */}
-                      <Button
-                        variant={path.button.variant}
-                        href={path.button.href}
-                        size={path.button.size || 'lg'}
-                        className="w-full"
-                      >
-                        {path.button.text}
-                      </Button>
+                      <div className="text-center">
+                        <Button
+                          variant={path.button.variant}
+                          href={path.button.href}
+                          size={path.button.size || 'lg'}
+                          className="min-w-[200px]"
+                        >
+                          {path.button.text}
+                        </Button>
+                      </div>
                     </div>
                   </Card>
                 </EditableItem>
