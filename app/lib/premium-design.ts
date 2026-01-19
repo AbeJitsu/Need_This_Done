@@ -133,7 +133,7 @@ export const borders = {
     purple: 'hover:border-purple-300 dark:hover:border-purple-600',
     green: 'hover:border-green-300 dark:hover:border-green-600',
     gold: 'hover:border-gold-300 dark:hover:border-gold-600',
-    teal: 'hover:border-emerald-300 dark:hover:border-emerald-600',
+    teal: 'hover:border-green-300 dark:hover:border-green-600',
   },
 };
 
@@ -344,7 +344,7 @@ export const darkSection = {
 
   // Trust indicators
   trustIndicator: 'flex items-center gap-2 text-sm text-slate-400',
-  trustDot: 'w-1.5 h-1.5 rounded-full bg-emerald-400',
+  trustDot: 'w-1.5 h-1.5 rounded-full bg-green-400',
 };
 
 // ============================================================================
@@ -371,9 +371,9 @@ export const iconContainer = {
     blue: 'bg-blue-100 dark:bg-blue-900/30',
     purple: 'bg-purple-100 dark:bg-purple-900/30',
     green: 'bg-green-100 dark:bg-green-900/30',
-    emerald: 'bg-emerald-100 dark:bg-emerald-900/30',
+    emerald: 'bg-green-100 dark:bg-green-900/30',
     gold: 'bg-gold-100 dark:bg-gold-900/30',
-    teal: 'bg-emerald-100 dark:bg-emerald-900/30',
+    teal: 'bg-green-100 dark:bg-green-900/30',
     gray: 'bg-gray-100 dark:bg-gray-700',
   },
 
@@ -382,9 +382,9 @@ export const iconContainer = {
     blue: 'text-blue-600 dark:text-blue-400',
     purple: 'text-purple-600 dark:text-purple-400',
     green: 'text-green-600 dark:text-green-400',
-    emerald: 'text-emerald-600 dark:text-emerald-400',
+    emerald: 'text-green-600 dark:text-green-400',
     gold: 'text-gold-600 dark:text-gold-400',
-    teal: 'text-emerald-600 dark:text-emerald-400',
+    teal: 'text-green-600 dark:text-green-400',
     gray: 'text-gray-600 dark:text-gray-400',
   },
 
@@ -562,10 +562,10 @@ export const glass = {
   // Gradient glass backgrounds (color-themed)
   gradient: {
     blue: 'bg-gradient-to-br from-blue-50/80 via-white/80 to-blue-50/80 backdrop-blur-xl',
-    green: 'bg-gradient-to-br from-emerald-50/80 via-white/80 to-emerald-50/80 backdrop-blur-xl',
+    green: 'bg-gradient-to-br from-green-50/80 via-white/80 to-green-50/80 backdrop-blur-xl',
     purple: 'bg-gradient-to-br from-purple-50/80 via-white/80 to-purple-50/80 backdrop-blur-xl',
     gold: 'bg-gradient-to-br from-gold-50/80 via-white/80 to-gold-50/80 backdrop-blur-xl',
-    teal: 'bg-gradient-to-br from-emerald-50/80 via-white/80 to-blue-50/80 backdrop-blur-xl',
+    teal: 'bg-gradient-to-br from-green-50/80 via-white/80 to-blue-50/80 backdrop-blur-xl',
   },
 };
 
@@ -590,21 +590,21 @@ export const glass = {
 export const heroGradient = {
   // Homepage & Get Started - Growth, success (brand primary)
   green: {
-    bg: 'absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-emerald-50/50',
-    spot1: 'absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 blur-3xl',
-    spot2: 'absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-emerald-100 to-blue-100 blur-2xl',
-    spot3: 'absolute top-20 left-1/4 w-32 h-32 rounded-full bg-emerald-100 blur-xl',
-    darkGlow1: 'bg-emerald-500/10',
-    darkGlow2: 'bg-emerald-500/10',
+    bg: 'absolute inset-0 bg-gradient-to-br from-green-50 via-white to-green-50/50',
+    spot1: 'absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-green-100 to-green-100 blur-3xl',
+    spot2: 'absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-blue-100 blur-2xl',
+    spot3: 'absolute top-20 left-1/4 w-32 h-32 rounded-full bg-green-100 blur-xl',
+    darkGlow1: 'bg-green-500/10',
+    darkGlow2: 'bg-green-500/10',
   },
 
   // Services - Technical, professional
   teal: {
-    bg: 'absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-blue-50/50',
-    spot1: 'absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-emerald-100 to-blue-100 blur-3xl',
+    bg: 'absolute inset-0 bg-gradient-to-br from-green-50 via-white to-blue-50/50',
+    spot1: 'absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-green-100 to-blue-100 blur-3xl',
     spot2: 'absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-blue-100 blur-2xl',
-    spot3: 'absolute top-20 left-1/4 w-32 h-32 rounded-full bg-emerald-100 blur-xl',
-    darkGlow1: 'bg-emerald-500/10',
+    spot3: 'absolute top-20 left-1/4 w-32 h-32 rounded-full bg-green-100 blur-xl',
+    darkGlow1: 'bg-green-500/10',
     darkGlow2: 'bg-blue-500/10',
   },
 
@@ -662,18 +662,18 @@ export const heroGradient = {
 // Dark section glow presets (match hero gradients)
 export const darkSectionGlow = {
   green: {
-    glow1: 'absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2',
-    glow2: 'absolute bottom-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3',
-    dot: 'bg-emerald-400',
-    icon: 'text-emerald-400',
-    iconBg: 'bg-emerald-500/20',
+    glow1: 'absolute top-0 left-0 w-96 h-96 bg-green-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2',
+    glow2: 'absolute bottom-0 right-0 w-80 h-80 bg-green-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3',
+    dot: 'bg-green-400',
+    icon: 'text-green-400',
+    iconBg: 'bg-green-500/20',
   },
   teal: {
-    glow1: 'absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2',
+    glow1: 'absolute top-0 left-0 w-96 h-96 bg-green-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2',
     glow2: 'absolute bottom-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3',
-    dot: 'bg-emerald-400',
-    icon: 'text-emerald-400',
-    iconBg: 'bg-emerald-500/20',
+    dot: 'bg-green-400',
+    icon: 'text-green-400',
+    iconBg: 'bg-green-500/20',
   },
   blue: {
     glow1: 'absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2',

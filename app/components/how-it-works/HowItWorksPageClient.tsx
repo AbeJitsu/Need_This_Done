@@ -45,7 +45,7 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
         <div className="relative overflow-hidden md:max-w-5xl md:mx-auto md:rounded-2xl flex items-center justify-center min-h-[220px]">
           {/* Gradient orbs */}
           <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-gold-100 to-gold-100 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-emerald-100 blur-2xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-green-100 to-green-100 blur-2xl" />
 
           {/* Text container - always padded */}
           <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
@@ -165,13 +165,13 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
           ================================================================ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-green-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-green-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
           <EditableSection sectionKey="timeline" label="Timeline">
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/20 mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-green-500/20 mb-6">
                 <Calendar className={`w-8 h-8 ${accent.emerald.textOnDark}`} />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -184,15 +184,15 @@ export default function HowItWorksPageClient({ content: initialContent }: HowItW
               {/* Trust indicators like homepage */}
               <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-sm text-slate-400">
                 <span className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
                   Most projects: 1-4 weeks
                 </span>
                 <span className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
                   Regular updates
                 </span>
                 <span className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
                   No surprises
                 </span>
               </div>

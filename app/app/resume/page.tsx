@@ -27,7 +27,7 @@ const skills = [
     category: 'Frontend & UI',
     items: ['React', 'Next.js', 'Vue.js', 'TypeScript', 'Tailwind CSS', 'TipTap'],
     color: 'emerald' as const,
-    hoverGlow: 'from-emerald-500/10 to-emerald-600/10',
+    hoverGlow: 'from-green-500/10 to-green-600/10',
   },
   {
     category: 'Backend & Data',
@@ -142,9 +142,9 @@ const education = [
 
 const timelineColors: Record<string, { dot: string; line: string; badge: string }> = {
   emerald: {
-    dot: 'bg-emerald-500',
-    line: 'from-emerald-500',
-    badge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+    dot: 'bg-green-500',
+    line: 'from-green-500',
+    badge: 'bg-green-50 text-green-800 border-green-200',
   },
   blue: {
     dot: 'bg-blue-500',
@@ -193,7 +193,7 @@ export default function ResumePage() {
           <div className="text-center mb-8">
             <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold text-stone-900 mb-3">
               Abiezer{' '}
-              <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
                 &ldquo;Abe&rdquo;
               </span>{' '}
               Reyes
@@ -206,7 +206,7 @@ export default function ResumePage() {
           {/* Contact info - horizontal pills */}
           <div className="flex flex-wrap justify-center gap-3 mb-8">
             <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-stone-500 text-base text-stone-700 shadow-sm">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
               Orlando, FL
             </span>
             <a
@@ -319,7 +319,7 @@ export default function ResumePage() {
           {/* Timeline */}
           <div className="relative">
             {/* Vertical spine */}
-            <div className="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-gradient-to-b from-emerald-300 via-blue-300 via-purple-300 to-stone-300" />
+            <div className="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-gradient-to-b from-green-300 via-blue-300 via-purple-300 to-stone-300" />
 
             {/* Experience items */}
             <StaggerContainer className="space-y-8 md:space-y-10" triggerOnScroll={false}>
@@ -389,7 +389,7 @@ export default function ResumePage() {
           {/* Project card */}
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 p-8 md:p-12">
             {/* Decorative gradient orbs */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl" />
 
             <div className="relative">
@@ -413,7 +413,7 @@ export default function ResumePage() {
                   'Vitest unit tests',
                 ].map((feature) => (
                   <div key={feature} className="flex items-center gap-3 text-base text-stone-200">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <span className="w-2 h-2 rounded-full bg-green-400" />
                     {feature}
                   </div>
                 ))}
@@ -551,7 +551,7 @@ export default function ResumePage() {
 
             {/* CTA buttons - BJJ belt progression */}
             <div className="flex flex-wrap justify-center gap-4">
-              <Button variant="green" href="/about" size="lg" className="shadow-lg shadow-emerald-500/25">
+              <Button variant="green" href="/about" size="lg" className="shadow-lg shadow-green-500/25">
                 About Me
               </Button>
               <Button variant="blue" href="/services" size="lg" className="shadow-lg shadow-blue-500/25">

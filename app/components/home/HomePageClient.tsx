@@ -215,15 +215,15 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 {/* Trust indicators - refined */}
                 <div className="mt-10 flex flex-wrap justify-center gap-8 text-sm text-slate-400">
                   <span className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
                     15-30 minute call
                   </span>
                   <span className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
                     Get a clear next step
                   </span>
                   <span className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
                     No pressure, ever
                   </span>
                 </div>
@@ -245,8 +245,8 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
               <div className="grid md:grid-cols-3 gap-4 mb-8">
                 {/* Websites */}
                 <div className="p-5 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-center">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                     </svg>
                   </div>

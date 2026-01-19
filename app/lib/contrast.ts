@@ -192,7 +192,7 @@ function computeAccentColors(color: ColorName): AccentColorSet {
   const hoverShadeOnLight = String(Math.min(Number(shadeOnLight) + 100, 900)) as Shade;
 
   // Map to Tailwind classes
-  // Special case: 'emerald' uses the emerald- prefix, others use their name
+  // Special case: 'emerald' uses the green- prefix, others use their name
   const prefix = color;
 
   return {
