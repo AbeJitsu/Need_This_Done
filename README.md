@@ -528,47 +528,154 @@ Storybook will be available at: `http://localhost:6006`
 
 ### Environment Configuration
 
-The app automatically connects to:
+Create `.env.local` in the `app/` directory. Copy from `.env.example` and fill in your values.
+
+**Service connections:**
 - **Frontend**: Next.js dev server on localhost:3000
-- **Backend**: Medusa API on Railway (via `MEDUSA_BACKEND_URL` from `.env.local`)
-- **Database**: Supabase (local instance started with `supabase start`)
-- **Cache**: Upstash Redis (configured in Railway)
+- **Backend**: Medusa API on Railway (via `MEDUSA_BACKEND_URL`)
+- **Database**: Supabase (local via `supabase start` or cloud)
+- **Cache**: Upstash Redis (via `REDIS_URL`)
 
-**Required `.env.local` variables** (create this file in the `app/` directory):
+### Complete Environment Variables Reference
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     ENVIRONMENT VARIABLES BY SERVICE                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+#### Supabase (Database & Auth) — 3 vars, REQUIRED
+
+| Variable | Purpose | Where to get it |
+|----------|---------|-----------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase API endpoint (browser) | `supabase status` or Supabase dashboard |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public API key for client-side auth | `supabase status` or Supabase dashboard |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-side admin key (bypasses RLS) | `supabase status` or Supabase dashboard |
+
+**Used by:** `lib/supabase.ts`, `lib/supabase-server.ts`, all API routes needing database access
+
+#### Site URLs — 3 vars, REQUIRED
+
+| Variable | Purpose | Example |
+|----------|---------|---------|
+| `NEXT_PUBLIC_SITE_URL` | Canonical production URL | `https://needthisdone.com` |
+| `NEXT_PUBLIC_APP_URL` | Current app URL (dev or prod) | `http://localhost:3000` |
+| `NEXT_PUBLIC_BASE_URL` | Base URL for API calls | `http://localhost:3000` |
+
+**Used by:** Email links, OAuth callbacks, SEO metadata, absolute URL generation
+
+#### Stripe (Payments) — 3 vars, REQUIRED
+
+| Variable | Purpose | Where to get it |
+|----------|---------|-----------------|
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Client-side Stripe.js key | [Stripe Dashboard → API Keys](https://dashboard.stripe.com/apikeys) |
+| `STRIPE_SECRET_KEY` | Server-side API key | [Stripe Dashboard → API Keys](https://dashboard.stripe.com/apikeys) |
+| `STRIPE_WEBHOOK_SECRET` | Validates webhook signatures | [Stripe Dashboard → Webhooks](https://dashboard.stripe.com/webhooks) |
+
+**Used by:** `lib/stripe.ts`, `context/StripeContext.tsx`, `api/stripe/*` routes
+
+#### Medusa (E-commerce Backend) — 5 vars, REQUIRED
+
+| Variable | Purpose | Notes |
+|----------|---------|-------|
+| `NEXT_PUBLIC_MEDUSA_URL` | Public Medusa storefront API | Railway deployment URL |
+| `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` | Client-side API key | From Medusa Admin |
+| `MEDUSA_BACKEND_URL` | Server-side Medusa API | Same as above, used in API routes |
+| `MEDUSA_ADMIN_EMAIL` | Admin panel login email | Set during Medusa setup |
+| `MEDUSA_ADMIN_PASSWORD` | Admin panel login password | Required for product scripts |
+
+**Used by:** `lib/medusa-client.ts`, shop pages, cart operations, product management scripts
+
+#### Google (OAuth + Calendar) — 3 vars, REQUIRED for social login
+
+| Variable | Purpose | Where to get it |
+|----------|---------|-----------------|
+| `GOOGLE_CLIENT_ID` | OAuth 2.0 client ID | [Google Cloud Console](https://console.cloud.google.com) |
+| `GOOGLE_CLIENT_SECRET` | OAuth 2.0 client secret | [Google Cloud Console](https://console.cloud.google.com) |
+| `GOOGLE_REDIRECT_URI` | OAuth callback URL | `https://yoursite.com/api/auth/callback/google` |
+
+**Used by:** `lib/auth-options.ts`, `lib/google-calendar.ts`, Google sign-in flow
+
+#### Resend (Email) — 4 vars, REQUIRED
+
+| Variable | Purpose | Where to get it |
+|----------|---------|-----------------|
+| `RESEND_API_KEY` | Email sending API key | [Resend Dashboard](https://resend.com/api-keys) |
+| `RESEND_FROM_EMAIL` | Sender email address | Must match verified domain |
+| `RESEND_ADMIN_EMAIL` | Where admin notifications go | Your admin inbox |
+| `RESEND_WEBHOOK_SECRET` | Validates email webhooks | Resend webhook settings |
+
+**Used by:** `lib/email.ts`, `lib/email-service.ts`, all email templates in `emails/`
+
+#### Upstash Redis (Cache) — 1 var, REQUIRED
+
+| Variable | Purpose | Where to get it |
+|----------|---------|-----------------|
+| `REDIS_URL` | Redis connection string | [Upstash Console](https://console.upstash.com) |
+
+**Used by:** `lib/redis.ts`, `lib/cache.ts`, product/cart/order caching
+
+#### Vector Search & Chat (Optional) — 2 vars
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `VECTOR_SEARCH_SIMILARITY_THRESHOLD` | Minimum similarity score for search results | `0.7` |
+| `VECTOR_SEARCH_MAX_RESULTS` | Maximum results returned | `5` |
+
+**Used by:** AI chatbot, semantic search features
+
+#### Cron Jobs (Optional) — 4 vars
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `CRON_SECRET` | Authenticates cron job requests | Required if using cron |
+| `ABANDONED_CART_HOURS` | Hours before cart is considered abandoned | `2` |
+| `MAX_CART_REMINDERS` | Maximum reminder emails per cart | `3` |
+| `REMINDER_INTERVAL_HOURS` | Hours between reminder emails | `24` |
+
+**Used by:** `api/cron/*` routes, abandoned cart emails
+
+#### E2E Testing (Development Only) — 7 vars
+
+| Variable | Purpose |
+|----------|---------|
+| `E2E_ADMIN_EMAIL` | Test admin account email |
+| `E2E_ADMIN_PASSWORD` | Test admin account password |
+| `E2E_USER_EMAIL` | Test user account email |
+| `E2E_USER_PASSWORD` | Test user account password |
+| `NEXT_PUBLIC_E2E_ADMIN_BYPASS` | Skip auth in E2E tests (`true`) |
+| `SKIP_WEBSERVER` | Use existing dev server (`true`) |
+| `BASE_URL` | Test server URL |
+
+**Used by:** Playwright tests in `e2e/`
+
+#### Development Flags (Optional) — 2 vars
+
+| Variable | Purpose | When to use |
+|----------|---------|-------------|
+| `SKIP_CACHE` | Bypass Redis cache | Debugging cache issues |
+| `SKIP_EMAILS` | Don't send real emails | Local development |
+
+### Quick Setup by Environment
+
+**Local Development:**
 ```bash
-# Supabase (local development)
+# Get Supabase keys
+supabase start
+supabase status  # Copy URL and keys
+
+# Minimum viable .env.local
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...  # Get from: supabase status
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...  # Get from: supabase status
-
-# Medusa (Railway)
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<from supabase status>
+SUPABASE_SERVICE_ROLE_KEY=<from supabase status>
 MEDUSA_BACKEND_URL=https://need-this-done-production.up.railway.app
-MEDUSA_ADMIN_EMAIL=your_admin_email  # Required for Medusa admin authentication
-MEDUSA_ADMIN_PASSWORD=your_admin_password  # Required for product management scripts
-
-# Stripe (payments)
-STRIPE_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-
-# Email (Resend)
-RESEND_API_KEY=re_...
-RESEND_FROM_EMAIL=your_verified_email@domain.com
-RESEND_ADMIN_EMAIL=your_admin_notification_email
-
-# AI Chatbot (optional)
-OPENAI_API_KEY=sk-...
-NEXT_PUBLIC_CHATBOT_MODEL=gpt-4o-mini
-
-# Site Configuration
-NEXT_PUBLIC_SITE_URL=http://localhost:3000  # Development
-NODE_ENV=development
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+SKIP_EMAILS=true
+SKIP_CACHE=true
 ```
 
-**To get Supabase keys:**
-```bash
-supabase status
-```
+**Production (Vercel):**
+All variables should be set in Vercel Environment Variables dashboard. Never commit real credentials to git.
 
 ### Stopping Services
 
