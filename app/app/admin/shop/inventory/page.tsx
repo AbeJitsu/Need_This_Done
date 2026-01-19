@@ -81,7 +81,6 @@ export default function AdminInventoryPage() {
     setError(null);
 
     try {
-      console.log('[Inventory] Fetching from /api/admin/inventory...');
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), API_REQUEST_TIMEOUT);
 
@@ -89,7 +88,6 @@ export default function AdminInventoryPage() {
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
-      console.log('[Inventory] Response status:', res.status);
 
       if (!res.ok) {
         if (res.status === 401) {
@@ -104,7 +102,6 @@ export default function AdminInventoryPage() {
       }
 
       const data = await res.json();
-      console.log('[Inventory] Got data:', data.inventory?.length, 'items');
       setInventory(data.inventory || []);
       setStats(data.stats || null);
     } catch (err) {

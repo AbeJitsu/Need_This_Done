@@ -69,8 +69,6 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    console.log(`[Changelog Cron] Found ${incompleteEntries.length} entries to process`);
-
     const results = { processed: 0, completed: 0, errors: 0 };
 
     for (const entry of incompleteEntries) {
@@ -102,7 +100,6 @@ export async function POST(request: NextRequest) {
           console.error(`Failed to update entry ${entry.slug}:`, updateError);
           results.errors++;
         } else {
-          console.log(`  ✅ Completed: ${entry.slug}`);
           results.completed++;
         }
 

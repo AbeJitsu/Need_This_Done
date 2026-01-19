@@ -100,8 +100,8 @@ export async function POST(request: NextRequest) {
         break;
 
       default:
-        // Log unhandled events for monitoring
-        console.log(`Unhandled Stripe event type: ${event.type}`);
+        // Unhandled event types are silently ignored
+        break;
     }
 
     // Acknowledge receipt to Stripe
@@ -128,8 +128,6 @@ async function handlePaymentSuccess(
 ) {
   const orderId = paymentIntent.metadata.order_id;
   const email = paymentIntent.metadata.email;
-
-  console.log(`Payment succeeded: ${paymentIntent.id}, order: ${orderId}`);
 
   // Update order status if we have an order ID
   if (orderId) {
@@ -177,8 +175,6 @@ async function handlePaymentFailed(
 ) {
   const orderId = paymentIntent.metadata.order_id;
 
-  console.log(`Payment failed: ${paymentIntent.id}, order: ${orderId}`);
-
   if (orderId) {
     const { error } = await supabase
       .from('orders')
@@ -198,8 +194,6 @@ async function handleSubscriptionUpdate(
   subscription: Stripe.Subscription,
   supabase: ReturnType<typeof getSupabaseAdmin>
 ) {
-  console.log(`Subscription updated: ${subscription.id}, status: ${subscription.status}`);
-
   // Find user by Stripe customer ID
   const { data: customer } = await supabase
     .from('stripe_customers')
@@ -252,8 +246,6 @@ async function handleSubscriptionDeleted(
   subscription: Stripe.Subscription,
   supabase: ReturnType<typeof getSupabaseAdmin>
 ) {
-  console.log(`Subscription deleted: ${subscription.id}`);
-
   const { error } = await supabase
     .from('subscriptions')
     .update({ status: 'canceled' })
@@ -268,17 +260,11 @@ async function handleSubscriptionDeleted(
  * Handle successful invoice payment (for subscription renewals)
  */
 async function handleInvoicePaid(
-  invoice: Stripe.Invoice,
+  _invoice: Stripe.Invoice,
   _supabase: ReturnType<typeof getSupabaseAdmin>
 ) {
-  console.log(`Invoice paid: ${invoice.id}`);
-
   // For subscription invoices, the subscription status is updated via
-  // customer.subscription.updated event, so we just log here
-  const invoiceData = invoice as any;
-  if (invoiceData.subscription) {
-    console.log(`Subscription ${invoiceData.subscription} invoice paid`);
-  }
+  // customer.subscription.updated event, so no action needed here
 }
 
 /**
@@ -288,10 +274,8 @@ async function handleInvoicePaymentFailed(
   invoice: Stripe.Invoice,
   _supabase: ReturnType<typeof getSupabaseAdmin>
 ) {
-  console.log(`Invoice payment failed: ${invoice.id}`);
-
   // The subscription status change will be handled by customer.subscription.updated
-  // This is just for logging/alerting purposes
+  // Log as warning for alerting purposes
   const invoiceData = invoice as any;
   if (invoiceData.subscription) {
     console.warn(
