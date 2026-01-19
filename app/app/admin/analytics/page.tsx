@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
-import { alertColors, accentColors, softBgColors, titleTextColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors, formInputColors, titleColors } from '@/lib/colors';
+import { alertColors, accentColors, softBgColors, titleTextColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors, formInputColors } from '@/lib/colors';
 
 // ============================================================================
 // Admin Analytics Dashboard - /admin/analytics
@@ -297,7 +297,7 @@ export default function AnalyticsDashboard() {
                       className="flex-1 flex flex-col items-center group relative"
                     >
                       <div
-                        className={`w-full ${titleColors.purple} rounded-t transition-all`}
+                        className={`w-full ${accentColors.purple.titleText} rounded-t transition-all`}
                         style={{ height: `${Math.max(height, 2)}%` }}
                       />
                       <span className={`text-xs ${mutedTextColors.normal} mt-1 hidden md:block`}>

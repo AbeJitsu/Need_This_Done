@@ -17,7 +17,6 @@ import {
   alertColors,
   headingColors,
   dividerColors,
-  titleColors,
   lightBgColors,
   accentColors,
   cardBgColors,
@@ -773,7 +772,7 @@ export default function CheckoutPage() {
                       <button
                         type="button"
                         onClick={() => setShowAddress2(true)}
-                        className={`text-sm ${titleColors.blue} hover:underline`}
+                        className={`text-sm ${accentColors.blue.titleText} hover:underline`}
                       >
                         + Add apartment, suite, etc.
                       </button>

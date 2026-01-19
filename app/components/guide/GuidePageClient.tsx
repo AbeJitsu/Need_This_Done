@@ -11,7 +11,7 @@ import {
   headingColors,
   formInputColors,
   faqColors,
-  titleColors,
+  accentColors,
   cardBgColors,
   cardBorderColors,
   shadowClasses,
@@ -130,7 +130,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
                     {heroItem.section.icon || '🔍'}
                   </div>
                   <div className="flex-1 text-center md:text-left">
-                    <h2 className={`text-2xl font-bold ${titleColors.green} mb-3`}>
+                    <h2 className={`text-2xl font-bold ${accentColors.green.titleText} mb-3`}>
                       {heroItem.section.title}
                     </h2>
                     <div className={`${formInputColors.helper} mb-4 whitespace-pre-line`}>
@@ -157,7 +157,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
 
             return (
               <section key={groupId} id={groupId} className="mb-0">
-                <h2 className={`text-lg font-semibold ${titleColors[config.color]} mb-4 flex items-center gap-2`}>
+                <h2 className={`text-lg font-semibold ${accentColors[config.color].titleText} mb-4 flex items-center gap-2`}>
                   <span className={`w-2 h-2 rounded-full ${config.dotBg}`} aria-hidden="true" />
                   {config.title}
                 </h2>

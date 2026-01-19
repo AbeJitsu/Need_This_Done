@@ -15,7 +15,7 @@ import {
   headingColors,
   cardBgColors,
   cardBorderColors,
-  cardHoverColors,
+  accentColors,
   getSolidButtonColors,
   uiChromeBg,
   hoverBgColors,
@@ -448,7 +448,7 @@ export default function AdminSidebar() {
                     relative rounded-lg
                     ${uiChromeBg.panel}
                     ${dividerColors.border.replace('border-', 'border ')}
-                    ${cardHoverColors.blue}
+                    ${accentColors.blue.cardHover}
                     transition-all duration-150 group
                   `}
                 >

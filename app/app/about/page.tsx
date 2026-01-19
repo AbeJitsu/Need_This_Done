@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import Button from '@/components/Button';
 import {
-  titleColors,
   accentColors,
 } from '@/lib/colors';
 
@@ -220,7 +219,7 @@ export default function AboutPage() {
               <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-green-100 to-green-50 border border-green-200 flex items-center justify-center">
                 <span className="text-2xl">💬</span>
               </div>
-              <h3 className={`font-bold text-lg ${titleColors.green} mb-2`}>
+              <h3 className={`font-bold text-lg ${accentColors.green.titleText} mb-2`}>
                 Clear Communication
               </h3>
               <p className="text-stone-600 text-sm leading-relaxed">
@@ -234,7 +233,7 @@ export default function AboutPage() {
               <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 border border-blue-200 flex items-center justify-center">
                 <span className="text-2xl">✅</span>
               </div>
-              <h3 className={`font-bold text-lg ${titleColors.blue} mb-2`}>
+              <h3 className={`font-bold text-lg ${accentColors.blue.titleText} mb-2`}>
                 Reliable Follow-through
               </h3>
               <p className="text-stone-600 text-sm leading-relaxed">
@@ -248,7 +247,7 @@ export default function AboutPage() {
               <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-50 border border-purple-200 flex items-center justify-center">
                 <span className="text-2xl">🧘</span>
               </div>
-              <h3 className={`font-bold text-lg ${titleColors.purple} mb-2`}>
+              <h3 className={`font-bold text-lg ${accentColors.purple.titleText} mb-2`}>
                 Calm Under Pressure
               </h3>
               <p className="text-stone-600 text-sm leading-relaxed">
@@ -271,7 +270,7 @@ export default function AboutPage() {
                 <span className="text-xl">⚡</span>
               </div>
               <div>
-                <h3 className={`font-playfair text-xl font-bold ${titleColors.gold} mb-3`}>
+                <h3 className={`font-playfair text-xl font-bold ${accentColors.gold.titleText} mb-3`}>
                   On AI
                 </h3>
                 <p className="text-stone-700 leading-relaxed mb-3">
