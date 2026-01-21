@@ -132,6 +132,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+
+  // Google Search Console verification
+  verification: {
+    google: 'CnXTZsLJ4prlLIidSFHpHT3GaU7Fx1a5BiaEjm7kdMk',
+  },
 };
 
 // ============================================================================
