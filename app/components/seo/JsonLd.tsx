@@ -293,3 +293,7 @@ export function AllServicesJsonLd() {
     />
   );
 }
+
+export function FAQPageJsonLd() {
+  return <JsonLd type="FAQPage" />;
+}
