@@ -1,29 +1,37 @@
-# Medusa v2 Railway Deployment
+# Medusa v2 Railway Deployment - Verified Working Configuration
 
-Documentation for deploying Medusa v2 on Railway. Updated after extensive testing.
+**Last updated:** Jan 22, 2026 (Commit: a67f1f0)
+**Status:** ✅ Tested and working on production
+**Deployment:** https://need-this-done-production.up.railway.app
 
-## Working Configuration
+---
 
-**This is the ONLY pattern that works reliably on Railway:**
+## The Working Configuration
+
+This is the ONLY configuration we've verified works on Railway with NODE_ENV=production set globally.
 
 ### `medusa-v2/nixpacks.toml`
+
 ```toml
 # Railway deployment config for Medusa v2
-# Working pattern: build at runtime, admin disabled
+# Working pattern: build at runtime with NODE_ENV override
+# Note: NODE_ENV=production during build breaks config resolution in Medusa v2.12+
+# Solution: build with NODE_ENV=development, then switch to production for runtime
 [phases.setup]
 nixPkgs = ["nodejs_20", "npm-9_x"]
 
 [phases.install]
-cmds = ["npm install --legacy-peer-deps"]
+cmds = ["npm install --legacy-peer-deps --production=false"]
 
 [phases.build]
-cmds = ["echo 'Build at runtime'"]
+cmds = ["echo 'Build at runtime to avoid npm install timeout'"]
 
 [start]
-cmd = "npm run build && medusa db:migrate && medusa start"
+cmd = "NODE_ENV=development npm run build && NODE_ENV=production medusa db:migrate && medusa start"
 ```
 
 ### `medusa-v2/railway.json`
+
 ```json
 {
   "$schema": "https://railway.app/railway.schema.json",
@@ -31,7 +39,7 @@ cmd = "npm run build && medusa db:migrate && medusa start"
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "npm run build && medusa db:migrate && medusa start",
+    "startCommand": "NODE_ENV=development npm run build && NODE_ENV=production medusa db:migrate && medusa start",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE"
@@ -39,63 +47,104 @@ cmd = "npm run build && medusa db:migrate && medusa start"
 }
 ```
 
-### Required Environment Variables
-
-Set these in Railway:
+### Required Environment Variables (Railway Dashboard)
 
 | Variable | Value | Notes |
 |----------|-------|-------|
+| `NODE_ENV` | `production` | CRITICAL - must be set globally in Railway |
 | `HOST` | `0.0.0.0` | **Required** - allows external connections |
 | `DISABLE_MEDUSA_ADMIN` | `true` | **Required** - admin won't work on Railway |
-| `DATABASE_URL` | your postgres URL | Supabase or Railway Postgres |
-| `JWT_SECRET` | secure random string | |
-| `COOKIE_SECRET` | secure random string | |
-| `ADMIN_CORS` | your admin URL | |
-| `STORE_CORS` | your storefront URL | |
+| `DATABASE_URL` | postgres connection | From Supabase or Railway Postgres |
+| `JWT_SECRET` | random secure string | Generate with `openssl rand -base64 32` |
+| `COOKIE_SECRET` | random secure string | Generate with `openssl rand -base64 32` |
+| `ADMIN_CORS` | admin URL | e.g., `https://admin.yoursite.com` |
+| `STORE_CORS` | storefront URL | e.g., `https://yoursite.com` |
 
-Set via Railway CLI:
+---
+
+## Why This Configuration Works (The Deep Dive)
+
+### The Problems We Encountered
+
+**Problem 1: Build fails with "Cannot find module '/app/medusa-config'"**
+- **Root cause:** When `NODE_ENV=production` is set globally in Railway, `medusa build` cannot resolve TypeScript config files (Medusa v2.12+ regression)
+- **Solution:** Override `NODE_ENV=development` just for the build step
+- **Reference:** [Medusa Issue #14229](https://github.com/medusajs/medusa/issues/14229)
+
+**Problem 2: ts-node missing error during build**
+- **Root cause:** When `npm install` runs with `NODE_ENV=production`, npm skips installing devDependencies by default. `ts-node` is a devDependency needed for the build.
+- **Solution:** Add `--production=false` flag to force npm to install ALL dependencies
+- **Command:** `npm install --legacy-peer-deps --production=false`
+
+**Problem 3: Healthcheck timeout failures**
+- **Root cause:** The startup command was taking too long. If the server doesn't respond to /health within 300 seconds, Railway kills the container.
+- **Why 300 seconds?** The build (`npm run build`) + migrations (`medusa db:migrate`) can take 30-45 seconds total.
+- **Solution:** Skip build during Docker build phase and run it at startup instead
+
+### The Timing Flow
+
+```
+1. Nixpacks install phase (~26s)
+   npm install --legacy-peer-deps --production=false
+   (all dependencies installed, including ts-node and build tools)
+
+2. Nixpacks build phase (instant)
+   echo 'Build at runtime to avoid npm install timeout'
+   (skipped to avoid COPY overwrite issue)
+
+3. Container starts, runs start command:
+   NODE_ENV=development npm run build     (~25s - compiles TypeScript config)
+   NODE_ENV=production medusa db:migrate  (~10s - runs database migrations)
+   NODE_ENV=production medusa start       (immediate - starts server)
+
+4. Healthcheck queries /health within ~50s total
+   ✅ Server responds with 200 OK
+   ✅ Deployment succeeds
+
+Total startup: ~50 seconds ✓ (well within 300s timeout)
+```
+
+### Why NOT These Approaches
+
+**❌ Build during Docker build phase:**
+```toml
+[phases.build]
+cmds = ["npm run build"]  # DON'T DO THIS
+```
+**Problem:** Nixpacks does `COPY . /app` AFTER the build phase, overwriting the `.medusa/` directory with source files. Build output is lost.
+
+**❌ Run from `.medusa/server` directory:**
 ```bash
-railway variables --set "HOST=0.0.0.0"
-railway variables --set "DISABLE_MEDUSA_ADMIN=true"
+cmd = "cd .medusa/server && npm install && npm run start"  # DON'T DO THIS
 ```
+**Problem:** The `npm install` in `.medusa/server` takes 2+ minutes, exceeding the healthcheck timeout.
 
-## Seeding Products (IMPORTANT!)
-
-### The Simple Explanation
-
-Think of it like setting up a new store:
-
-1. **Deploy** = Opening the store doors (happens every time you push code)
-2. **Seed** = Putting products on the shelves (only do this ONCE)
-
-Once products are on the shelves (in the database), they stay there. You don't need to put them back every time you open the doors.
-
-### Why We DON'T Seed on Every Deploy
-
+**❌ Include npm install in start command:**
+```bash
+cmd = "npm install && npm run build && medusa db:migrate && medusa start"  # DON'T DO THIS
 ```
-❌ BAD: npm run build && medusa db:migrate && npm run seed && medusa start
-✅ GOOD: npm run build && medusa db:migrate && medusa start
+**Problem:** npm install is already done in the install phase. Running it again adds 30+ seconds and risks timeout.
+
+**❌ Seed products on every deploy:**
+```bash
+cmd = "npm run build && medusa db:migrate && npm run seed && medusa start"  # DON'T DO THIS
 ```
+**Problem:** `npm run seed` starts the entire Medusa application, adding 30+ seconds to startup. Products only need seeding ONCE.
 
-**Why?**
+---
 
-1. `npm run seed` uses `medusa exec` which starts up the ENTIRE Medusa application
-2. This adds 30+ seconds to startup time
-3. Railway's healthcheck says "are you alive?" and if you don't answer fast enough, it kills you
-4. Products only need to be created ONCE - they live in the database forever
+## Seeding Products (One-Time Setup)
 
-### How to Seed Products (First Time Setup)
+### Initial Seed (Do This Once)
 
-After your deployment succeeds:
+After deployment succeeds and server is running:
 
 ```bash
 cd medusa-v2
 railway run npm run seed
 ```
 
-This runs the seed script against your production database. The products get created and stay there permanently.
-
-**What the seed creates:**
+This creates:
 - Default sales channel
 - Default region (United States)
 - Default shipping profile
@@ -103,227 +152,109 @@ This runs the seed script against your production database. The products get cre
 - Publishable API key
 - Your products (consultations)
 
-### How to Add Products in the Future
+### Adding Products Later
 
-The seed script is only for initial setup. After that:
+Use the Admin API or UI (if exposed), not the seed script.
 
-| Method | When to Use |
-|--------|-------------|
-| Admin UI | Day-to-day product management |
-| Admin API | Programmatic updates |
-| One-time script | Bulk imports or special migrations |
+---
 
-**Using Admin UI:**
-1. Go to your app's `/admin/products` page
-2. Create, edit, delete products through the interface
+## Verification
 
-**Using Admin API:**
+After deployment completes, verify:
+
 ```bash
-curl -X POST https://your-medusa.railway.app/admin/products \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"title": "New Product", ...}'
+# 1. Health endpoint responds
+curl https://need-this-done-production.up.railway.app/health
+# Expected: HTTP 200 OK with body "OK"
+
+# 2. API requires publishable key
+curl https://need-this-done-production.up.railway.app/store/products
+# Expected: JSON error about missing x-publishable-api-key
 ```
 
-### Seed Script Location
+If both pass, deployment is successful.
 
-The seed script lives at: `medusa-v2/src/scripts/seed.ts`
-
-If you need to modify what gets seeded:
-1. Edit the seed script
-2. Run it manually: `railway run npm run seed`
-
-### Quick Reference
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ FIRST TIME SETUP                                                │
-│                                                                 │
-│ 1. Deploy (push code)                                           │
-│ 2. Wait for "Deployment successful"                             │
-│ 3. Run seed ONCE: cd medusa-v2 && railway run npm run seed      │
-│ 4. Done! Products are in database forever                       │
-├─────────────────────────────────────────────────────────────────┤
-│ FUTURE DEPLOYS                                                  │
-│                                                                 │
-│ 1. Push code                                                    │
-│ 2. That's it! Products already exist                            │
-├─────────────────────────────────────────────────────────────────┤
-│ ADDING NEW PRODUCTS                                             │
-│                                                                 │
-│ Use Admin UI or API - NOT the seed script                       │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-## What Works
-
-| Feature | Status |
-|---------|--------|
-| `/health` endpoint | ✅ Working |
-| `/store/*` API | ✅ Working |
-| `/admin/*` API | ✅ Working |
-| `/app` Admin Dashboard | ❌ Disabled |
-
-## What Does NOT Work (And Why)
-
-### ❌ Building during Docker phase + running from `.medusa/server`
-
-**The "official" Medusa pattern:**
-```bash
-# Build phase
-npm run build
-
-# Start command
-cd .medusa/server && npm install && npm run predeploy && npm run start
-```
-
-**Why it fails:** The `npm install` in `.medusa/server` takes 2+ minutes, exceeding Railway's healthcheck timeout.
-
-### ❌ Building during Docker phase (Nixpacks)
-
-**What we tried:**
-```toml
-[phases.build]
-cmds = ["npm run build"]
-```
-
-**Why it fails:** Nixpacks does `COPY . /app` AFTER the build step, which overwrites the `.medusa/` directory with source files. The build output is lost.
-
-### ❌ Admin enabled (`DISABLE_MEDUSA_ADMIN=false`)
-
-**Why it fails:** When admin is enabled, `medusa start` looks for admin files at `.medusa/admin/index.html`. But:
-- If we build at runtime, files go to `.medusa/server/public/admin/`
-- `medusa start` from project root looks in wrong location
-- Error: "Could not find index.html in the admin build directory"
-
-## The Working Pattern Explained
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ 1. Nixpacks install phase: npm install --legacy-peer-deps       │
-│    (installs all dependencies to node_modules/)                 │
-├─────────────────────────────────────────────────────────────────┤
-│ 2. Nixpacks build phase: echo 'Build at runtime'                │
-│    (skip - we build at startup instead)                         │
-├─────────────────────────────────────────────────────────────────┤
-│ 3. Container starts, runs start command:                        │
-│    npm run build     → Creates .medusa/server/ (~25s)           │
-│    medusa db:migrate → Runs migrations (~10s)                   │
-│    medusa start      → Starts server (immediate)                │
-├─────────────────────────────────────────────────────────────────┤
-│ 4. Healthcheck hits /health within 300s timeout                 │
-│    Total startup: ~45 seconds ✓                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-**Key insight:** Building at runtime works because the `.medusa/` folder persists within the same container session. The Nixpacks COPY problem only affects the Docker build phase.
-
-## Admin Dashboard Options
-
-Since admin doesn't work on Railway, you have these options:
-
-### Option 1: Local Admin (Recommended for Development)
-```bash
-cd medusa-v2
-npx medusa develop
-# Admin at http://localhost:9000/app
-```
-
-### Option 2: Separate Admin Deployment (Vercel)
-```bash
-# Build admin only
-npx medusa build --admin-only
-
-# Deploy .medusa/admin/ to Vercel
-# Set MEDUSA_BACKEND_URL to your Railway URL
-```
-
-### Option 3: Medusa Cloud
-Use Medusa's managed hosting which handles admin properly.
+---
 
 ## Troubleshooting
 
-### Error: "Could not find index.html in admin build directory"
+### Symptom: Healthcheck fails repeatedly
 
-**Cause:** Admin is enabled but files don't exist in expected location.
+**Diagnosis:** Check deploy logs (not build logs) for:
+- `ERROR: Cannot find module '/app/medusa-config'` → ts-node not installed or NODE_ENV issue
+- `ERROR: Cannot find module 'ts-node'` → npm install skipped devDependencies
+- `ERROR: Database connection failed` → DATABASE_URL issue
+- `ERROR: Could not find index.html` → DISABLE_MEDUSA_ADMIN not set to true
 
-**Fix:** Set `DISABLE_MEDUSA_ADMIN=true` in Railway variables.
+**Fix based on error:**
+- Config module not found → Ensure `NODE_ENV=development` override in start command
+- ts-node missing → Ensure `--production=false` in install command
+- Database error → Verify DATABASE_URL in Railway variables
+- Admin error → Set `DISABLE_MEDUSA_ADMIN=true`
 
-### Error: "Cannot find module '/app/medusa-config'"
+### Symptom: Server starts but /health returns 503
 
-**Cause:** TypeScript not compiled - build didn't run.
+**Diagnosis:** Server is running but not ready
+- Likely still running migrations
+- Check logs for `medusa db:migrate` progress
 
-**Fix:** Ensure start command begins with `npm run build`.
+**Fix:** Wait 60 more seconds, the healthcheck will keep retrying
 
-### Healthcheck fails after 2 minutes
+### Symptom: Deployment was working, now fails
 
-**Cause:** Startup taking too long.
+**Diagnosis checklist:**
+1. Did you merge code from main to production? → Check if medusa-v2 config changed
+2. Did Railway update? → Check Railway status page
+3. Did Medusa package version change? → Check package.json in medusa-v2/
 
-**Possible causes:**
-1. `npm install` running at startup (don't do this)
-2. Build failing silently
-3. Database connection issues
+**Recovery:**
+If unsure, rollback to the last known working deployment in Railway:
+1. Go to Deployments tab
+2. Find the last successful deployment (green checkmark)
+3. Click menu (three dots) → Redeploy
 
-**Fix:** Check deploy logs for errors.
+---
 
-### Server starts but external requests fail
+## Key Learnings for Future Changes
 
-**Cause:** `HOST` not set.
+**If you change anything in medusa-v2:**
 
-**Fix:**
-```bash
-railway variables --set "HOST=0.0.0.0"
-```
+1. Test locally first: `cd medusa-v2 && npm run build`
+2. Commit to main branch
+3. Merge main into production: `git checkout production && git merge main && git push`
+4. Monitor Railway deployment
+5. If it fails, check the deploy logs for the actual error (not build logs)
 
-Medusa defaults to `localhost` which doesn't accept external connections.
+**If Medusa version changes:**
 
-## Comparison: v1 vs v2
+Review the [Medusa release notes](https://github.com/medusajs/medusa/releases) for breaking changes in:
+- Build command output
+- Configuration file expectations
+- Module resolution changes
 
-| Aspect | Medusa v1 | Medusa v2 |
-|--------|-----------|-----------|
-| Config | `medusa-config.js` | `medusa-config.ts` |
-| Build | Not required | Required |
-| Migrations | `medusa migrations run` | `medusa db:migrate` |
-| Admin | Separate or disabled | Built-in (but problematic on Railway) |
-| Start cmd | `medusa migrations run && medusa start` | `npm run build && medusa db:migrate && medusa start` |
+**If NODE_ENV handling changes in Railway:**
 
-## Files Changed From Default
+The start command must explicitly set `NODE_ENV=development` for the build step. Do NOT rely on global NODE_ENV.
 
-When you run `create-medusa-app`, modify these files:
-
-### `medusa-config.ts`
-- Load env from root `.env.local` (if using monorepo)
-- Add `admin.disable` config
-- Handle DATABASE_URL construction from Supabase vars
-
-### `nixpacks.toml` (create new)
-- Skip Docker build phase
-- Set start command
-
-### `railway.json` (create new)
-- Configure healthcheck
-- Set start command
-
-## Quick Setup Checklist
-
-1. [ ] Create medusa-v2 with `npx create-medusa-app@latest`
-2. [ ] Configure `medusa-config.ts` to load env vars
-3. [ ] Create `nixpacks.toml` with working pattern
-4. [ ] Create `railway.json` with healthcheck config
-5. [ ] Set Railway env vars:
-   - [ ] `HOST=0.0.0.0`
-   - [ ] `DISABLE_MEDUSA_ADMIN=true`
-   - [ ] `DATABASE_URL`
-   - [ ] `JWT_SECRET`
-   - [ ] `COOKIE_SECRET`
-   - [ ] `ADMIN_CORS`
-   - [ ] `STORE_CORS`
-6. [ ] Push to trigger deployment
-7. [ ] Verify `/health` returns OK
+---
 
 ## References
 
-- [Medusa v2 Docs](https://docs.medusajs.com/v2)
+- [Medusa v2 Documentation](https://docs.medusajs.com)
 - [Medusa Build Command](https://docs.medusajs.com/learn/build)
 - [Railway Nixpacks](https://nixpacks.com/)
-- [MedusaJS Railway Boilerplate](https://github.com/rpuls/medusajs-2.0-for-railway-boilerplate)
+- [Medusa Issue #14229 - Config Resolution Bug](https://github.com/medusajs/medusa/issues/14229)
+- [Medusa Issue #13943 - Docker Build Failures](https://github.com/medusajs/medusa/issues/13943)
+
+---
+
+## Deployment History
+
+| Commit | Status | Issue | Notes |
+|--------|--------|-------|-------|
+| `a67f1f0` | ✅ Working | — | Correct: npm install --production=false, NODE_ENV overrides |
+| `81034e3` | ❌ Failed | ts-node missing | Missing --production=false flag |
+| `5faac32` | ❌ Failed | CONFIG not found | NODE_ENV override not yet applied |
+| `ba4bc02` | ❌ Failed | cd medusa-v2 failed | Directory doesn't exist in build context |
+| `448deab` | ❌ Failed | COPY overwrite | Build in build phase doesn't work with Nixpacks |
+| `451441a2` (old) | ✅ Working | — | Reference working deployment before recent changes |
