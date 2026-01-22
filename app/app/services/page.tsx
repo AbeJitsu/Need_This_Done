@@ -1,6 +1,7 @@
 import { getDefaultContent } from '@/lib/default-page-content';
 import type { ServicesPageContent } from '@/lib/page-content-types';
 import ServicesPageClient from '@/components/services/ServicesPageClient';
+import { AllServicesJsonLd } from '@/components/seo/JsonLd';
 
 // ============================================================================
 // Services Page - Decision Accelerator
@@ -26,5 +27,10 @@ export const metadata = {
 export default function ServicesPage() {
   const content = getDefaultContent('services') as ServicesPageContent;
 
-  return <ServicesPageClient content={content} />;
+  return (
+    <>
+      <AllServicesJsonLd />
+      <ServicesPageClient content={content} />
+    </>
+  );
 }
