@@ -1,6 +1,7 @@
 # Railway deployment config for Medusa v2
-# Working pattern: build at runtime (in start phase), admin disabled
-# Note: npm install during build phase causes timeout; build at runtime instead
+# Working pattern: build at runtime with NODE_ENV override
+# Note: NODE_ENV=production during build breaks config resolution in Medusa v2.12+
+# Solution: build with NODE_ENV=development, then switch to production for runtime
 [phases.setup]
 nixPkgs = ["nodejs_20", "npm-9_x"]
 
@@ -11,4 +12,4 @@ cmds = ["npm install --legacy-peer-deps"]
 cmds = ["echo 'Build at runtime to avoid npm install timeout'"]
 
 [start]
-cmd = "npm run build && medusa db:migrate && medusa start"
+cmd = "NODE_ENV=development npm run build && NODE_ENV=production medusa db:migrate && medusa start"
