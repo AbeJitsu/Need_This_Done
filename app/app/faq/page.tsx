@@ -1,6 +1,7 @@
 import { fetchPageContent } from '@/lib/fetch-page-content';
 import type { FAQPageContent } from '@/lib/page-content-types';
 import FAQPageClient from '@/components/faq/FAQPageClient';
+import { FAQPageJsonLd } from '@/components/seo/JsonLd';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,5 +27,10 @@ export const metadata = {
 export default async function FAQPage() {
   const content = await fetchPageContent<FAQPageContent>('faq');
 
-  return <FAQPageClient content={content} />;
+  return (
+    <>
+      <FAQPageJsonLd />
+      <FAQPageClient content={content} />
+    </>
+  );
 }
