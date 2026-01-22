@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "cd medusa-v2 && medusa db:migrate && medusa start",
+    "startCommand": "npm run build && medusa db:migrate && medusa start",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE"

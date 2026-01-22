@@ -1,13 +1,14 @@
 # Railway deployment config for Medusa v2
-# Working pattern: build in build phase, admin disabled
+# Working pattern: build at runtime (in start phase), admin disabled
+# Note: npm install during build phase causes timeout; build at runtime instead
 [phases.setup]
 nixPkgs = ["nodejs_20", "npm-9_x"]
 
 [phases.install]
-cmds = ["cd medusa-v2 && npm install --legacy-peer-deps"]
+cmds = ["npm install --legacy-peer-deps"]
 
 [phases.build]
-cmds = ["cd medusa-v2 && npm run build"]
+cmds = ["echo 'Build at runtime to avoid npm install timeout'"]
 
 [start]
-cmd = "cd medusa-v2 && medusa db:migrate && medusa start"
+cmd = "npm run build && medusa db:migrate && medusa start"
