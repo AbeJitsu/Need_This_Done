@@ -53,6 +53,14 @@ const schemas = {
     name: businessInfo.name,
     url: businessInfo.url,
     description: businessInfo.description,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${businessInfo.url}/search?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
   },
 
   Service: {
