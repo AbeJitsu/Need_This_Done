@@ -197,6 +197,14 @@ export async function waitForPageReady(
   // Wait for DOM to be ready
   await page.waitForLoadState('domcontentloaded');
 
+  // Wait for stylesheets and all resources to load (critical for screenshot tests)
+  // This ensures CSS is fully applied before we capture screenshots
+  try {
+    await page.waitForLoadState('load', { timeout: 10000 });
+  } catch {
+    // Ignore timeout - page might still be usable
+  }
+
   // Wait for network to settle (API calls, images, etc.)
   if (waitForNetwork) {
     try {
@@ -225,7 +233,7 @@ export async function waitForPageReady(
   }
 
   // Final wait for React hydration and animations to settle
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(500);
 }
 
 // ============================================================================
