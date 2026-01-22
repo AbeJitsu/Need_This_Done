@@ -13,7 +13,7 @@ import { InlineEditProvider } from '@/context/InlineEditContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
 import { AdminSidebarToggle, EditModeBar, EditModeTutorial, InlineTextEditor } from '@/components/InlineEditor';
-import { LocalBusinessJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
+import { ProfessionalServiceJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
 import { seoConfig } from '@/lib/seo-config';
 
 // ============================================================================
@@ -157,7 +157,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${poppins.variable} ${playfair.variable}`}>
       <head>
         {/* JSON-LD Structured Data for rich search results */}
-        <LocalBusinessJsonLd />
+        <ProfessionalServiceJsonLd />
         <WebSiteJsonLd />
 
         {/* FOUC Prevention: Apply dark mode immediately before any rendering */}
