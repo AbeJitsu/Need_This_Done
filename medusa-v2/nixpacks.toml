@@ -6,7 +6,7 @@
 nixPkgs = ["nodejs_20", "npm-9_x"]
 
 [phases.install]
-cmds = ["npm install --legacy-peer-deps"]
+cmds = ["npm install --legacy-peer-deps --production=false"]
 
 [phases.build]
 cmds = ["echo 'Build at runtime to avoid npm install timeout'"]
