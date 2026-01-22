@@ -215,3 +215,81 @@ export function ServiceJsonLd() {
 export function ProfessionalServiceJsonLd() {
   return <JsonLd type="ProfessionalService" />;
 }
+
+// Dynamic service schema for individual services
+interface ServiceSchemaProps {
+  serviceName: string;
+  serviceDescription: string;
+  serviceType: string;
+  price?: string;
+}
+
+export function DynamicServiceJsonLd({ serviceName, serviceDescription, serviceType, price }: ServiceSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: serviceName,
+    description: serviceDescription,
+    serviceType: serviceType,
+    provider: {
+      '@type': 'ProfessionalService',
+      name: seoConfig.siteName,
+      url: seoConfig.baseUrl,
+    },
+    areaServed: {
+      '@type': 'Country',
+      name: 'United States',
+    },
+    ...(price && {
+      offers: {
+        '@type': 'Offer',
+        price: price.replace(/[^0-9]/g, ''),
+        priceCurrency: 'USD',
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          price: price.replace(/[^0-9]/g, ''),
+          priceCurrency: 'USD',
+          description: price,
+        },
+      },
+    }),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// All services schema for services page
+export function AllServicesJsonLd() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Professional Services',
+    description: 'Web development, automation, and AI services for businesses',
+    itemListElement: seoConfig.services.map((service, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Service',
+        name: service.name,
+        description: service.description,
+        serviceType: service.serviceType,
+        provider: {
+          '@type': 'ProfessionalService',
+          name: seoConfig.siteName,
+        },
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
