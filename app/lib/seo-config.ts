@@ -42,6 +42,28 @@ export const seoConfig = {
     'Orlando',
     'freelance developer',
   ],
+
+  // Services for structured data
+  services: [
+    {
+      name: 'Website Builds',
+      description: 'Professional website design and development. Custom sites built to convert visitors into customers, mobile-optimized and SEO-ready.',
+      serviceType: 'Web Development',
+      price: 'From $500',
+    },
+    {
+      name: 'Automation Setup',
+      description: 'Workflow automation and tool integration. Connect your apps and eliminate repetitive manual tasks.',
+      serviceType: 'Business Process Automation',
+      price: 'From $150',
+    },
+    {
+      name: 'Managed AI Services',
+      description: 'AI agent development and ongoing management. Custom AI solutions that run 24/7 while you focus on growth.',
+      serviceType: 'AI Consulting',
+      price: 'From $500/month',
+    },
+  ],
 };
 
 // Type export for consumers that need the shape
