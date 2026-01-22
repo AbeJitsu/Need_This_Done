@@ -7,7 +7,7 @@
 import { seoConfig } from '@/lib/seo-config';
 
 interface JsonLdProps {
-  type: 'LocalBusiness' | 'WebSite' | 'Service' | 'FAQPage';
+  type: 'LocalBusiness' | 'WebSite' | 'Service' | 'FAQPage' | 'ProfessionalService';
 }
 
 // Base business information used across all schema types - sourced from seoConfig
@@ -44,6 +44,42 @@ const schemas = {
       dayOfWeek: seoConfig.business.openingHours.days,
       opens: seoConfig.business.openingHours.opens,
       closes: seoConfig.business.openingHours.closes,
+    },
+  },
+
+  ProfessionalService: {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': businessInfo.url,
+    name: businessInfo.name,
+    url: businessInfo.url,
+    description: businessInfo.description,
+    address: businessInfo.address,
+    email: businessInfo.email,
+    priceRange: businessInfo.priceRange,
+    image: `${businessInfo.url}/og-image.png`,
+    sameAs: seoConfig.business.socialLinks,
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: seoConfig.business.openingHours.days,
+      opens: seoConfig.business.openingHours.opens,
+      closes: seoConfig.business.openingHours.closes,
+    },
+    areaServed: {
+      '@type': 'Country',
+      name: 'United States',
+    },
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Professional Services',
+      itemListElement: seoConfig.services.map((service) => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: service.name,
+          description: service.description,
+        },
+      })),
     },
   },
 
@@ -174,4 +210,8 @@ export function WebSiteJsonLd() {
 
 export function ServiceJsonLd() {
   return <JsonLd type="Service" />;
+}
+
+export function ProfessionalServiceJsonLd() {
+  return <JsonLd type="ProfessionalService" />;
 }
