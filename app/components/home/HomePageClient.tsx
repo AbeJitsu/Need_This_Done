@@ -321,8 +321,8 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           <div className="bg-white rounded-3xl border border-gray-200 p-8 md:p-12 mb-8">
             {/* Desktop: Horizontal timeline */}
             <div className="hidden md:flex items-start justify-between gap-4 relative">
-              {/* Timeline line */}
-              <div className="absolute top-8 left-0 right-0 h-0.5 bg-gray-200" style={{ top: '2rem' }} />
+              {/* Timeline line - centered through the 48px circles (24px = center) */}
+              <div className="absolute left-0 right-0 h-0.5 bg-gray-200" style={{ top: '1.5rem' }} />
 
               {content.processPreview.steps.map((step, index) => {
                 const colorMap: Record<string, { bg: string; text: string }> = {
