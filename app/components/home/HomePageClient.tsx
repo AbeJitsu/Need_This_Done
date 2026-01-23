@@ -1,7 +1,6 @@
 'use client';
 
 import Button from '@/components/Button';
-import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import { EditableSection, EditableItem, Editable, EditableLink } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import ServiceIcon, { getServiceIconType } from '@/components/home/ServiceIcons';
@@ -89,10 +88,10 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             WHAT WE BUILD
           </h2>
 
-          {/* Service cards - asymmetric grid */}
+          {/* Service cards - asymmetric grid with glassmorphism */}
           <div className="grid lg:grid-cols-[1.5fr_1fr] gap-6 lg:gap-8 mb-8">
-            {/* Hero Card - Website Builds (First card, 60% width on desktop) */}
-            {content.services.cards[0] && (
+            {/* Hero Card - Website Builds (Full modal content displayed) */}
+            {content.services.cards[0] && content.services.cards[0].modal && (
               <EditableItem
                 sectionKey="services"
                 arrayField="cards"
@@ -100,30 +99,69 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 label={content.services.cards[0].title}
                 content={content.services.cards[0] as unknown as Record<string, unknown>}
               >
-                <ServiceCardWithModal
-                  title={content.services.cards[0].title}
-                  tagline={content.services.cards[0].tagline}
-                  description={content.services.cards[0].description}
-                  details={content.services.cards[0].details}
-                  color="green"
-                  variant="full"
-                  linkText={content.services.cards[0].linkText}
-                  editBasePath={`services.cards.0`}
-                  cardIndex={0}
-                  modal={content.services.cards[0].modal}
-                  icon={<ServiceIcon
-                    type={getServiceIconType(content.services.cards[0].title)}
-                    color="green"
-                    size="md"
-                  />}
-                />
+                <div className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border border-emerald-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm">
+                  {/* Icon */}
+                  <div className="w-16 h-16 rounded-xl bg-emerald-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <ServiceIcon
+                      type={getServiceIconType(content.services.cards[0].title)}
+                      color="green"
+                      size="md"
+                    />
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-3xl font-manrope font-bold text-emerald-600 mb-3">
+                    {content.services.cards[0].title}
+                  </h3>
+
+                  {/* Modal headline */}
+                  <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                    {content.services.cards[0].modal.headline}
+                  </h4>
+
+                  {/* Modal hook */}
+                  <p className="text-gray-600 mb-6">
+                    {content.services.cards[0].modal.hook}
+                  </p>
+
+                  {/* Bullet points */}
+                  {content.services.cards[0].modal.bulletHeader && (
+                    <div className="mb-6">
+                      <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                        {content.services.cards[0].modal.bulletHeader}
+                      </p>
+                      <ul className="space-y-2">
+                        {content.services.cards[0].modal.bulletPoints.map((point, idx) => (
+                          <li key={idx} className="flex items-start gap-3">
+                            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5">
+                              <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                            <span className="text-gray-700">{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* CTAs */}
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button variant="green" href={content.services.cards[0].modal.ctas.primary.href} className="shadow-lg">
+                      {content.services.cards[0].modal.ctas.primary.text}
+                    </Button>
+                    <Button variant="gray" href={content.services.cards[0].modal.ctas.secondary.href}>
+                      {content.services.cards[0].modal.ctas.secondary.text}
+                    </Button>
+                  </div>
+                </div>
               </EditableItem>
             )}
 
-            {/* Right column - stacked cards (40% width on desktop) */}
+            {/* Right column - stacked cards with glassmorphism */}
             <div className="flex flex-col gap-6">
               {/* Automation Setup Card */}
-              {content.services.cards[1] && (
+              {content.services.cards[1] && content.services.cards[1].modal && (
                 <EditableItem
                   sectionKey="services"
                   arrayField="cards"
@@ -131,28 +169,41 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[1].title}
                   content={content.services.cards[1] as unknown as Record<string, unknown>}
                 >
-                  <ServiceCardWithModal
-                    title={content.services.cards[1].title}
-                    tagline={content.services.cards[1].tagline}
-                    description={content.services.cards[1].description}
-                    details={content.services.cards[1].details}
-                    color="blue"
-                    variant="compact"
-                    linkText={content.services.cards[1].linkText}
-                    editBasePath={`services.cards.1`}
-                    cardIndex={1}
-                    modal={content.services.cards[1].modal}
-                    icon={<ServiceIcon
-                      type={getServiceIconType(content.services.cards[1].title)}
-                      color="blue"
-                      size="sm"
-                    />}
-                  />
+                  <div className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border border-blue-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm">
+                    {/* Icon */}
+                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <ServiceIcon
+                        type={getServiceIconType(content.services.cards[1].title)}
+                        color="blue"
+                        size="sm"
+                      />
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-2xl font-manrope font-bold text-blue-600 mb-2">
+                      {content.services.cards[1].title}
+                    </h3>
+
+                    {/* Modal headline */}
+                    <p className="text-base font-semibold text-gray-900 mb-2">
+                      {content.services.cards[1].modal.headline}
+                    </p>
+
+                    {/* Modal hook */}
+                    <p className="text-sm text-gray-600 mb-4">
+                      {content.services.cards[1].modal.hook}
+                    </p>
+
+                    {/* CTA */}
+                    <Button variant="blue" href={content.services.cards[1].modal.ctas.primary.href} className="w-full">
+                      {content.services.cards[1].modal.ctas.primary.text}
+                    </Button>
+                  </div>
                 </EditableItem>
               )}
 
               {/* Managed AI Card */}
-              {content.services.cards[2] && (
+              {content.services.cards[2] && content.services.cards[2].modal && (
                 <EditableItem
                   sectionKey="services"
                   arrayField="cards"
@@ -160,23 +211,36 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[2].title}
                   content={content.services.cards[2] as unknown as Record<string, unknown>}
                 >
-                  <ServiceCardWithModal
-                    title={content.services.cards[2].title}
-                    tagline={content.services.cards[2].tagline}
-                    description={content.services.cards[2].description}
-                    details={content.services.cards[2].details}
-                    color="purple"
-                    variant="compact"
-                    linkText={content.services.cards[2].linkText}
-                    editBasePath={`services.cards.2`}
-                    cardIndex={2}
-                    modal={content.services.cards[2].modal}
-                    icon={<ServiceIcon
-                      type={getServiceIconType(content.services.cards[2].title)}
-                      color="purple"
-                      size="sm"
-                    />}
-                  />
+                  <div className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border border-purple-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm">
+                    {/* Icon */}
+                    <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <ServiceIcon
+                        type={getServiceIconType(content.services.cards[2].title)}
+                        color="purple"
+                        size="sm"
+                      />
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-2xl font-manrope font-bold text-purple-600 mb-2">
+                      {content.services.cards[2].title}
+                    </h3>
+
+                    {/* Modal headline */}
+                    <p className="text-base font-semibold text-gray-900 mb-2">
+                      {content.services.cards[2].modal.headline}
+                    </p>
+
+                    {/* Modal hook */}
+                    <p className="text-sm text-gray-600 mb-4">
+                      {content.services.cards[2].modal.hook}
+                    </p>
+
+                    {/* CTA */}
+                    <Button variant="purple" href={content.services.cards[2].modal.ctas.primary.href} className="w-full">
+                      {content.services.cards[2].modal.ctas.primary.text}
+                    </Button>
+                  </div>
                 </EditableItem>
               )}
             </div>
