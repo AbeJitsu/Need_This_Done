@@ -59,39 +59,10 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
               </h1>
             </Editable>
             <Editable path="hero.description">
-              <p className={`text-xl md:text-2xl ${formInputColors.helper} leading-relaxed mb-8 max-w-3xl mx-auto animate-slide-up animate-delay-150`}>
+              <p className={`text-xl md:text-2xl ${formInputColors.helper} leading-relaxed max-w-3xl mx-auto animate-slide-up animate-delay-150`}>
                 {content.hero.description}
               </p>
             </Editable>
-            <SortableItemsWrapper
-              sectionKey="hero"
-              arrayField="buttons"
-              itemIds={content.hero.buttons.map((_, i) => `hero-btn-${i}`)}
-              className="flex flex-wrap gap-4 justify-center animate-slide-up animate-delay-300"
-            >
-              {content.hero.buttons.map((button, index) => (
-                <EditableItem
-                  key={`hero-btn-${index}`}
-                  sectionKey="hero"
-                  arrayField="buttons"
-                  index={index}
-                  label={button.text}
-                  content={button as unknown as Record<string, unknown>}
-                  sortable
-                  sortId={`hero-btn-${index}`}
-                >
-                  <Editable
-                    path={`hero.buttons.${index}.text`}
-                    hrefPath={`hero.buttons.${index}.href`}
-                    href={button.href}
-                  >
-                    <Button variant={button.variant} href={button.href}>
-                      {button.text}
-                    </Button>
-                  </Editable>
-                </EditableItem>
-              ))}
-            </SortableItemsWrapper>
           </div>
         </div>
       </EditableSection>
