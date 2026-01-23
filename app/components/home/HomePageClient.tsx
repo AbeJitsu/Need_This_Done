@@ -59,10 +59,8 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             </Editable>
             {/* Scroll indicator - functional smooth scroll */}
             <button
-              onClick={() => {
-                // Block action in edit mode - let EditableItem handle the click
-                if (isEditMode) return;
-
+              onClick={(e) => {
+                e.preventDefault();
                 const servicesSection = document.getElementById('services-section');
                 if (servicesSection) {
                   servicesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
