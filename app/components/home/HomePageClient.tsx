@@ -394,7 +394,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           <div className="text-center">
             <a
               href="/how-it-works"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-purple-600 text-white font-semibold text-lg rounded-xl hover:bg-purple-700 transition-colors shadow-lg shadow-purple-500/25"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-semibold text-lg rounded-xl hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-500/25"
             >
               SEE THE FULL PROCESS
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -427,7 +427,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
               <a
                 href="/get-started"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 text-white font-semibold text-lg rounded-xl hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30"
               >
                 START A PROJECT
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -436,7 +436,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
               </a>
               <a
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-purple-600 text-white font-semibold text-lg rounded-xl hover:bg-purple-700 transition-colors shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30"
               >
                 BOOK FREE CALL
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
