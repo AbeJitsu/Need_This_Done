@@ -137,21 +137,21 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[1].title}
                   content={content.services.cards[1] as unknown as Record<string, unknown>}
                 >
-                  <div className="group relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 border-l-4 border-purple-500 shadow-xl shadow-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-2 transition-all duration-300 animate-slide-up animate-delay-200">
-                    <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <div className="group relative bg-gradient-to-br from-blue-50 to-white rounded-2xl p-6 border-l-4 border-blue-500 shadow-xl shadow-blue-500/10 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2 transition-all duration-300 animate-slide-up animate-delay-200">
+                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <ServiceIcon
                         type={getServiceIconType(content.services.cards[1].title)}
-                        color="purple"
+                        color="blue"
                         size="sm"
                       />
                     </div>
-                    <h3 className="text-2xl font-manrope font-bold text-purple-600 mb-3">
+                    <h3 className="text-2xl font-manrope font-bold text-blue-600 mb-3">
                       {content.services.cards[1].title}
                     </h3>
                     <p className="text-base text-gray-600 mb-4">
                       {content.services.cards[1].tagline}
                     </p>
-                    <button className="text-purple-600 hover:text-purple-700 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                    <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
                       {content.services.cards[1].linkText}
                       <span>→</span>
                     </button>
@@ -168,21 +168,21 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[2].title}
                   content={content.services.cards[2] as unknown as Record<string, unknown>}
                 >
-                  <div className="group relative bg-gradient-to-br from-blue-50 to-white rounded-2xl p-6 border-l-4 border-blue-500 shadow-xl shadow-blue-500/10 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2 transition-all duration-300 animate-slide-up animate-delay-300">
-                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <div className="group relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 border-l-4 border-purple-500 shadow-xl shadow-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-2 transition-all duration-300 animate-slide-up animate-delay-300">
+                    <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <ServiceIcon
                         type={getServiceIconType(content.services.cards[2].title)}
-                        color="blue"
+                        color="purple"
                         size="sm"
                       />
                     </div>
-                    <h3 className="text-2xl font-manrope font-bold text-blue-600 mb-3">
+                    <h3 className="text-2xl font-manrope font-bold text-purple-600 mb-3">
                       {content.services.cards[2].title}
                     </h3>
                     <p className="text-base text-gray-600 mb-4">
                       {content.services.cards[2].tagline}
                     </p>
-                    <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                    <button className="text-purple-600 hover:text-purple-700 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
                       {content.services.cards[2].linkText}
                       <span>→</span>
                     </button>
@@ -265,9 +265,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   </div>
 
                   {/* Automation */}
-                  <div className="flex items-center gap-4 p-4 rounded-xl border-l-4 border-purple-500 bg-gray-50">
-                    <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="flex items-center gap-4 p-4 rounded-xl border-l-4 border-blue-500 bg-gray-50">
+                    <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     </div>
@@ -278,9 +278,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   </div>
 
                   {/* Managed AI */}
-                  <div className="flex items-center gap-4 p-4 rounded-xl border-l-4 border-blue-500 bg-gray-50">
-                    <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="flex items-center gap-4 p-4 rounded-xl border-l-4 border-purple-500 bg-gray-50">
+                    <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                     </div>
@@ -325,20 +325,18 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
               <div className="absolute top-8 left-0 right-0 h-0.5 bg-gray-200" style={{ top: '2rem' }} />
 
               {content.processPreview.steps.map((step, index) => {
-                const colorMap: Record<string, { bg: string; text: string; dot: string }> = {
-                  emerald: { bg: 'bg-emerald-500', text: 'text-emerald-600', dot: 'bg-emerald-500' },
-                  blue: { bg: 'bg-blue-500', text: 'text-blue-600', dot: 'bg-blue-500' },
-                  purple: { bg: 'bg-purple-500', text: 'text-purple-600', dot: 'bg-purple-500' },
-                  gold: { bg: 'bg-gold-500', text: 'text-gold-600', dot: 'bg-gold-500' },
+                const colorMap: Record<string, { bg: string; text: string }> = {
+                  emerald: { bg: 'bg-emerald-500', text: 'text-emerald-600' },
+                  blue: { bg: 'bg-blue-500', text: 'text-blue-600' },
+                  purple: { bg: 'bg-purple-500', text: 'text-purple-600' },
+                  gold: { bg: 'bg-gold-500', text: 'text-gold-600' },
                 };
-                const colors = colorMap[step.color] || { bg: 'bg-gray-500', text: 'text-gray-600', dot: 'bg-gray-500' };
+                const colors = colorMap[step.color] || { bg: 'bg-gray-500', text: 'text-gray-600' };
 
                 return (
                   <div key={index} className="flex-1 text-center relative">
-                    {/* Dot on timeline */}
-                    <div className={`w-4 h-4 ${colors.dot} rounded-full mx-auto mb-6 relative z-10 ring-4 ring-white`} />
-                    {/* Step number badge */}
-                    <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full ${colors.bg} text-white font-bold text-xl mb-4`}>
+                    {/* Step number badge on timeline */}
+                    <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full ${colors.bg} text-white font-bold text-xl mb-4 relative z-10 ring-4 ring-white`}>
                       {step.number}
                     </div>
                     {/* Step content */}

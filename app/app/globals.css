@@ -16,6 +16,23 @@ Think of them as:
 @tailwind utilities;
 
 /* ========================================================================
+Smooth Scrolling
+========================================================================
+Enable smooth scrolling site-wide for better UX
+*/
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Disable smooth scroll for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ========================================================================
 Custom CSS Variables
 ========================================================================
 Define colors and sizes once, reuse everywhere
