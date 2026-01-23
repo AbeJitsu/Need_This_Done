@@ -45,216 +45,265 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
   return (
     <div className="py-8">
-      {/* Hero Section - edge-to-edge on mobile, contained on desktop */}
+      {/* Hero Section - Bold Statement */}
       <EditableSection sectionKey="hero" label="Hero Section">
-        <div className="relative text-center mb-20 py-8 overflow-hidden md:max-w-6xl md:mx-auto md:rounded-2xl">
-          {/* Geometric background accents */}
-          <GeometricAccents variant="hero" />
+        <div className="relative mb-20 py-12 md:py-16 overflow-hidden">
+          {/* Background gradients - diagonal emerald slash + purple glow */}
+          <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-emerald-100 to-emerald-50 blur-3xl opacity-60 rotate-45" />
+          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-gradient-to-tl from-purple-100 to-purple-50 blur-3xl opacity-50" />
 
-          {/* Hero content - always padded */}
-          <div className="relative z-10 px-4 sm:px-6 md:px-8">
+          {/* Hero content - left-aligned, max-w container */}
+          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
             <Editable path="hero.title">
-              <h1 className={`text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight ${accentColors.blue.titleText} mb-6 animate-scale-in`}>
-                {content.hero.title}
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-manrope font-extrabold tracking-tight mb-6 animate-scale-in leading-[1.1]">
+                <span className="block bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
+                  WEBSITES.
+                </span>
+                <span className="block bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+                  AUTOMATION.
+                </span>
+                <span className="block bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
+                  AI.
+                </span>
               </h1>
             </Editable>
             <Editable path="hero.description">
-              <p className={`text-xl md:text-2xl ${formInputColors.helper} leading-relaxed max-w-3xl mx-auto animate-slide-up animate-delay-150`}>
-                {content.hero.description}
+              <p className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-2xl animate-slide-up animate-delay-150">
+                From your first website to fully automated operations.
               </p>
             </Editable>
+            {/* Subtle scroll indicator */}
+            <div className="mt-12 flex items-center gap-2 text-sm text-gray-500 animate-slide-up animate-delay-300">
+              <span>Scroll to explore</span>
+              <svg className="w-4 h-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
           </div>
         </div>
       </EditableSection>
 
       {/* Rest of content in max-w container */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-        {/* Services Section - Enhanced with icons and animations */}
+        {/* Services Section - Asymmetric Hero Card Layout */}
         <EditableSection sectionKey="services" label="Services">
-        <div className="mb-16">
-          {/* Section title */}
-          <EditableLink
-            href={content.services.linkHref}
-            textPath="services.title"
-            hrefPath="services.linkHref"
-            className={`text-3xl font-bold ${headingColors.primary} mb-8 text-center ${groupHoverColors.green} transition-colors cursor-pointer block animate-slide-up`}
-            linkClassName="group"
-          >
-            <h2 className="inline">
-              {content.services.title}{' '}
-              <span className="text-lg opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-            </h2>
-          </EditableLink>
+        <div className="mb-24">
+          {/* Section title - bold, left-aligned */}
+          <h2 className="text-4xl md:text-5xl font-manrope font-extrabold text-gray-900 mb-12 animate-slide-up">
+            WHAT WE BUILD
+          </h2>
 
-          {/* Service cards grid */}
-          <SortableItemsWrapper
-            sectionKey="services"
-            arrayField="cards"
-            itemIds={content.services.cards.map((_, i) => `service-${i}`)}
-            className="grid lg:grid-cols-3 gap-6"
-          >
-            {content.services.cards.map((service, index) => {
-              const delayClass = index === 0 ? 'animate-delay-100' : index === 1 ? 'animate-delay-200' : 'animate-delay-300';
-              return (
-                <EditableItem
-                  key={`service-${index}`}
-                  sectionKey="services"
-                  arrayField="cards"
-                  index={index}
-                  label={service.title}
-                  content={service as unknown as Record<string, unknown>}
-                  sortable
-                  sortId={`service-${index}`}
-                >
-                  <div className={`h-full animate-slide-up ${delayClass}`}>
-                    <ServiceCardWithModal
-                      title={service.title}
-                      tagline={service.tagline}
-                      description={service.description}
-                      details={service.details}
-                      color={service.color as 'blue' | 'purple' | 'green'}
-                      variant="compact"
-                      linkText={service.linkText}
-                      editBasePath={`services.cards.${index}`}
-                      cardIndex={index}
-                      modal={service.modal}
-                      icon={<ServiceIcon
-                        type={getServiceIconType(service.title)}
-                        color={service.color as 'blue' | 'purple' | 'green'}
-                        size="sm"
-                      />}
+          {/* Service cards - asymmetric grid */}
+          <div className="grid lg:grid-cols-[1.5fr_1fr] gap-6 lg:gap-8 mb-8">
+            {/* Hero Card - Website Builds (First card, 60% width on desktop) */}
+            {content.services.cards[0] && (
+              <EditableItem
+                sectionKey="services"
+                arrayField="cards"
+                index={0}
+                label={content.services.cards[0].title}
+                content={content.services.cards[0] as unknown as Record<string, unknown>}
+              >
+                <div className="group relative bg-gradient-to-br from-emerald-50 to-white rounded-2xl p-8 lg:p-10 border-l-4 border-emerald-500 shadow-xl shadow-emerald-500/10 hover:shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-3 transition-all duration-300 animate-slide-up animate-delay-100">
+                  {/* Large icon */}
+                  <div className="w-16 h-16 rounded-xl bg-emerald-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <ServiceIcon
+                      type={getServiceIconType(content.services.cards[0].title)}
+                      color="green"
+                      size="md"
                     />
                   </div>
-                </EditableItem>
-              );
-            })}
-          </SortableItemsWrapper>
+                  {/* Title */}
+                  <h3 className="text-3xl font-manrope font-bold text-emerald-600 mb-4">
+                    {content.services.cards[0].title}
+                  </h3>
+                  {/* Description */}
+                  <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+                    {content.services.cards[0].description}
+                  </p>
+                  {/* Pricing hint */}
+                  <p className="text-sm font-semibold text-gray-600 mb-6">
+                    From $500 • 2-3 weeks
+                  </p>
+                  {/* CTA Button */}
+                  <Button variant="green" className="shadow-lg">
+                    {content.services.cards[0].linkText}
+                  </Button>
+                </div>
+              </EditableItem>
+            )}
 
-          {/* Compare all services link - clearly outside and below cards */}
-          <div className="mt-6 text-center animate-slide-up animate-delay-400">
+            {/* Right column - stacked cards (40% width on desktop) */}
+            <div className="flex flex-col gap-6">
+              {/* Automation Setup Card */}
+              {content.services.cards[1] && (
+                <EditableItem
+                  sectionKey="services"
+                  arrayField="cards"
+                  index={1}
+                  label={content.services.cards[1].title}
+                  content={content.services.cards[1] as unknown as Record<string, unknown>}
+                >
+                  <div className="group relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 border-l-4 border-purple-500 shadow-xl shadow-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-2 transition-all duration-300 animate-slide-up animate-delay-200">
+                    <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <ServiceIcon
+                        type={getServiceIconType(content.services.cards[1].title)}
+                        color="purple"
+                        size="sm"
+                      />
+                    </div>
+                    <h3 className="text-2xl font-manrope font-bold text-purple-600 mb-3">
+                      {content.services.cards[1].title}
+                    </h3>
+                    <p className="text-base text-gray-600 mb-4">
+                      {content.services.cards[1].tagline}
+                    </p>
+                    <button className="text-purple-600 hover:text-purple-700 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                      {content.services.cards[1].linkText}
+                      <span>→</span>
+                    </button>
+                  </div>
+                </EditableItem>
+              )}
+
+              {/* Managed AI Card */}
+              {content.services.cards[2] && (
+                <EditableItem
+                  sectionKey="services"
+                  arrayField="cards"
+                  index={2}
+                  label={content.services.cards[2].title}
+                  content={content.services.cards[2] as unknown as Record<string, unknown>}
+                >
+                  <div className="group relative bg-gradient-to-br from-blue-50 to-white rounded-2xl p-6 border-l-4 border-blue-500 shadow-xl shadow-blue-500/10 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2 transition-all duration-300 animate-slide-up animate-delay-300">
+                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <ServiceIcon
+                        type={getServiceIconType(content.services.cards[2].title)}
+                        color="blue"
+                        size="sm"
+                      />
+                    </div>
+                    <h3 className="text-2xl font-manrope font-bold text-blue-600 mb-3">
+                      {content.services.cards[2].title}
+                    </h3>
+                    <p className="text-base text-gray-600 mb-4">
+                      {content.services.cards[2].tagline}
+                    </p>
+                    <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                      {content.services.cards[2].linkText}
+                      <span>→</span>
+                    </button>
+                  </div>
+                </EditableItem>
+              )}
+            </div>
+          </div>
+
+          {/* Compare all services link - bold treatment */}
+          <div className="text-center animate-slide-up animate-delay-400">
             <EditableLink
               href={content.services.linkHref}
               textPath="services.linkText"
               hrefPath="services.linkHref"
-              className={`${linkColors.blue} ${linkHoverColors.blue} hover:underline ${linkFontWeight} ${focusRingClasses.blue} rounded`}
+              className="inline-flex items-center gap-2 text-xl font-manrope font-bold text-emerald-600 hover:text-emerald-700 hover:underline transition-colors"
             >
-              {content.services.linkText}
+              <span>{content.services.linkText}</span>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </EditableLink>
           </div>
         </div>
       </EditableSection>
 
-      {/* Consultation & Pricing Section - Premium Design */}
+      {/* Consultation & Pricing Section - Split Decision */}
       {content.consultations && (
         <EditableSection sectionKey="consultations" label="Consultations">
-          <div className="mb-16 animate-slide-up">
-            {/* Main Consultation Card - Hero treatment */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 mb-8">
-              {/* Decorative elements */}
-              <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-              <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+          <div className="mb-24 animate-slide-up">
+            {/* 50/50 Split Layout */}
+            <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
+              {/* Left: Consultation Card - Warmer invitation */}
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-900 p-8 lg:p-10">
+                {/* Decorative glow */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl" />
 
-              <div className="relative px-8 py-16 md:py-20 text-center">
-                {/* Eyebrow */}
-                <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-blue-300 text-sm font-medium mb-6 backdrop-blur-sm">
-                  Free • No Commitment
-                </span>
-
-                <Editable path="consultations.title">
-                  <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-                    {content.consultations.title}
+                <div className="relative">
+                  <h2 className="text-3xl lg:text-4xl font-manrope font-extrabold text-white mb-6">
+                    NOT SURE WHERE<br />TO START?
                   </h2>
-                </Editable>
-                <Editable path="consultations.description">
-                  <p className="text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-                    {content.consultations.description}
-                  </p>
-                </Editable>
 
-                {/* Primary CTA - Prominent white button */}
-                <a
-                  href={content.consultations.linkHref}
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-white text-slate-900 font-semibold text-lg rounded-2xl hover:bg-slate-100 transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-100"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  Book a Free Consultation
-                </a>
-
-                {/* Trust indicators - refined */}
-                <div className="mt-10 flex flex-wrap justify-center gap-8 text-sm text-slate-400">
-                  <span className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                    15, 30, or 45 minute call
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                    Get a clear next step
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                    No pressure, ever
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Pricing Preview - Clean, understated */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-400 dark:border-gray-700 p-8">
-              <div className="text-center mb-8">
-                <h3 className={`text-sm font-semibold uppercase tracking-wider text-gray-500 mb-2`}>
-                  If you already know what you need
-                </h3>
-                <p className={`text-2xl font-bold ${headingColors.primary}`}>
-                  Transparent Pricing
-                </p>
-              </div>
-
-              {/* Quick pricing cards */}
-              <div className="grid md:grid-cols-3 gap-4 mb-8">
-                {/* Websites */}
-                <div className="p-5 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-center">
-                  <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                    </svg>
+                  <div className="space-y-2 mb-8 text-emerald-100 text-lg">
+                    <p>15-minute call.</p>
+                    <p>Zero pressure.</p>
+                    <p>Clear path forward.</p>
                   </div>
-                  <p className="font-semibold text-gray-900 dark:text-white mb-1">Websites</p>
-                  <p className="text-gray-500 text-sm">From $500</p>
-                </div>
 
-                {/* Automation */}
-                <div className="p-5 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-center">
-                  <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  <a
+                    href={content.consultations.linkHref}
+                    className="inline-flex items-center gap-3 px-6 py-3 bg-white text-emerald-900 font-semibold text-lg rounded-xl hover:bg-emerald-50 transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-100"
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                  </div>
-                  <p className="font-semibold text-gray-900 dark:text-white mb-1">Automation</p>
-                  <p className="text-gray-500 text-sm">$150/workflow</p>
-                </div>
-
-                {/* Managed AI */}
-                <div className="p-5 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-center">
-                  <div className="w-10 h-10 rounded-lg bg-gold-100 dark:bg-gold-900/30 flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-5 h-5 text-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <p className="font-semibold text-gray-900 dark:text-white mb-1">Managed AI</p>
-                  <p className="text-gray-500 text-sm">$500/month</p>
+                    Book Free Call
+                  </a>
                 </div>
               </div>
 
-              {/* View pricing link */}
-              <div className="text-center">
+              {/* Right: Pricing Quick Reference */}
+              <div className="bg-white rounded-3xl border border-gray-200 p-8 lg:p-10">
+                <h2 className="text-2xl font-manrope font-bold text-gray-900 mb-8">
+                  KNOW WHAT YOU NEED?
+                </h2>
+
+                {/* Pricing list with colored borders */}
+                <div className="space-y-4 mb-8">
+                  {/* Websites */}
+                  <div className="flex items-center gap-4 p-4 rounded-xl border-l-4 border-emerald-500 bg-gray-50">
+                    <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">WEBSITES</p>
+                      <p className="text-sm text-gray-600">From $500</p>
+                    </div>
+                  </div>
+
+                  {/* Automation */}
+                  <div className="flex items-center gap-4 p-4 rounded-xl border-l-4 border-purple-500 bg-gray-50">
+                    <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">AUTOMATION</p>
+                      <p className="text-sm text-gray-600">$150/workflow</p>
+                    </div>
+                  </div>
+
+                  {/* Managed AI */}
+                  <div className="flex items-center gap-4 p-4 rounded-xl border-l-4 border-blue-500 bg-gray-50">
+                    <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">MANAGED AI</p>
+                      <p className="text-sm text-gray-600">$500/month</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* View full pricing CTA */}
                 <a
                   href="/pricing"
-                  className={`inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white font-medium transition-colors`}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-colors w-full justify-center"
                 >
-                  View full pricing
+                  View Full Pricing
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
@@ -265,135 +314,148 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
         </EditableSection>
       )}
 
-      {/* How It Works Preview - Enhanced with connectors */}
+      {/* How It Works - Timeline Flow */}
       <EditableSection sectionKey="processPreview" label="Process Preview">
-        <EditableCard
-          href="/how-it-works"
-          className={`block mb-16 ${cardBgColors.base} rounded-2xl p-8 ${cardBorderColors.subtle} transition-all duration-300 ${accentColors.purple.cardHover} ${shadowClasses.cardHover} active:scale-98 group ${focusRingClasses.purple} animate-slide-up`}
-        >
-          <Editable path="processPreview.title">
-            <h2 className={`text-3xl font-bold ${headingColors.primary} mb-8 text-center transition-colors`}>
-              {content.processPreview.title}
-            </h2>
-          </Editable>
-          {/* Process steps with connectors - uses flex for better connector alignment */}
-          <div className="flex flex-col md:flex-row items-center md:items-start justify-center gap-4 md:gap-2">
-            {content.processPreview.steps.map((step, index) => {
-              const isLast = index === content.processPreview.steps.length - 1;
-              const delayClass = `animate-delay-${(index + 1) * 100}`;
-              return (
-                <div key={`step-group-${index}`} className="flex flex-col md:flex-row items-center">
-                  <SortableItemsWrapper
-                    sectionKey="processPreview"
-                    arrayField="steps"
-                    itemIds={[`step-${index}`]}
-                    className="flex-shrink-0"
-                  >
-                    <EditableItem
-                      sectionKey="processPreview"
-                      arrayField="steps"
-                      index={index}
-                      label={step.title}
-                      content={step as unknown as Record<string, unknown>}
-                      sortable
-                      sortId={`step-${index}`}
-                    >
-                      <div className={`text-center w-36 animate-slide-up ${delayClass}`}>
-                        <div className="flex justify-center mb-3">
-                          <CircleBadge number={step.number} color={step.color} size="md" />
-                        </div>
-                        <Editable path={`processPreview.steps.${index}.title`}>
-                          <h3 className={`font-semibold ${headingColors.primary} mb-2`}>{step.title}</h3>
-                        </Editable>
-                        <Editable path={`processPreview.steps.${index}.description`}>
-                          <p className={`${formInputColors.helper} text-sm`}>{step.description}</p>
-                        </Editable>
+        <div className="mb-24 animate-slide-up">
+          <h2 className="text-4xl md:text-5xl font-manrope font-extrabold text-gray-900 mb-4">
+            HOW IT WORKS
+          </h2>
+          <p className="text-xl text-gray-600 mb-12">
+            Simple. Transparent. Fast.
+          </p>
+
+          {/* Timeline - horizontal on desktop, vertical on mobile */}
+          <div className="bg-white rounded-3xl border border-gray-200 p-8 md:p-12 mb-8">
+            {/* Desktop: Horizontal timeline */}
+            <div className="hidden md:flex items-start justify-between gap-4 relative">
+              {/* Timeline line */}
+              <div className="absolute top-8 left-0 right-0 h-0.5 bg-gray-200" style={{ top: '2rem' }} />
+
+              {content.processPreview.steps.map((step, index) => {
+                const colors = {
+                  emerald: { bg: 'bg-emerald-500', text: 'text-emerald-600', dot: 'bg-emerald-500' },
+                  blue: { bg: 'bg-blue-500', text: 'text-blue-600', dot: 'bg-blue-500' },
+                  purple: { bg: 'bg-purple-500', text: 'text-purple-600', dot: 'bg-purple-500' },
+                  gold: { bg: 'bg-gold-500', text: 'text-gold-600', dot: 'bg-gold-500' },
+                }[step.color] || { bg: 'bg-gray-500', text: 'text-gray-600', dot: 'bg-gray-500' };
+
+                return (
+                  <div key={index} className="flex-1 text-center relative">
+                    {/* Dot on timeline */}
+                    <div className={`w-4 h-4 ${colors.dot} rounded-full mx-auto mb-6 relative z-10 ring-4 ring-white`} />
+                    {/* Step number badge */}
+                    <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full ${colors.bg} text-white font-bold text-xl mb-4`}>
+                      {step.number}
+                    </div>
+                    {/* Step content */}
+                    <h3 className={`font-manrope font-bold ${colors.text} mb-2 text-lg`}>
+                      {step.title}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {step.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Mobile: Vertical timeline */}
+            <div className="md:hidden space-y-8">
+              {content.processPreview.steps.map((step, index) => {
+                const colors = {
+                  emerald: { bg: 'bg-emerald-500', text: 'text-emerald-600', line: 'bg-emerald-200' },
+                  blue: { bg: 'bg-blue-500', text: 'text-blue-600', line: 'bg-blue-200' },
+                  purple: { bg: 'bg-purple-500', text: 'text-purple-600', line: 'bg-purple-200' },
+                  gold: { bg: 'bg-gold-500', text: 'text-gold-600', line: 'bg-gold-200' },
+                }[step.color] || { bg: 'bg-gray-500', text: 'text-gray-600', line: 'bg-gray-200' };
+
+                const isLast = index === content.processPreview.steps.length - 1;
+
+                return (
+                  <div key={index} className="flex gap-4">
+                    {/* Left: Badge and line */}
+                    <div className="flex flex-col items-center">
+                      <div className={`flex items-center justify-center w-12 h-12 rounded-full ${colors.bg} text-white font-bold text-xl flex-shrink-0`}>
+                        {step.number}
                       </div>
-                    </EditableItem>
-                  </SortableItemsWrapper>
-                  {/* Step connector arrow */}
-                  {!isLast && <StepConnector color={step.color as 'blue' | 'purple' | 'green' | 'gold'} />}
-                </div>
-              );
-            })}
+                      {!isLast && (
+                        <div className={`w-0.5 h-full ${colors.line} mt-2`} />
+                      )}
+                    </div>
+                    {/* Right: Content */}
+                    <div className="flex-1 pt-2">
+                      <h3 className={`font-manrope font-bold ${colors.text} mb-2 text-xl`}>
+                        {step.title}
+                      </h3>
+                      <p className="text-base text-gray-600">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <Editable path="processPreview.linkText">
-            <p className={`text-center mt-8 ${formInputColors.helper} font-medium group-hover:underline`}>
-              {content.processPreview.linkText}
-            </p>
-          </Editable>
-        </EditableCard>
+
+          {/* CTA Button */}
+          <div className="text-center">
+            <a
+              href="/how-it-works"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-purple-600 text-white font-semibold text-lg rounded-xl hover:bg-purple-700 transition-colors shadow-lg shadow-purple-500/25"
+            >
+              SEE THE FULL PROCESS
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
       </EditableSection>
 
-      {/* CTA Section - Enhanced with gradient background */}
+      {/* CTA Section - Confident Close */}
       <EditableSection sectionKey="cta" label="Call to Action">
-        <div className={`relative text-center py-14 px-8 rounded-3xl overflow-hidden animate-slide-up`}>
-          {/* Gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-blue-50 to-purple-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800" />
+        <div className="relative py-16 px-8 rounded-3xl overflow-hidden animate-slide-up">
+          {/* Gradient background - emerald invitation */}
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-white" />
+          {/* Decorative glow orb */}
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-200/40 rounded-full blur-3xl" />
 
-          {/* Content */}
-          <div className="relative z-10">
-            <Editable path="cta.title">
-              <h2 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-4`}>
-                {content.cta.title}
-              </h2>
-            </Editable>
-            <Editable path="cta.description">
-              <p className={`text-lg ${formInputColors.helper} mb-8 max-w-2xl mx-auto`}>
-                {content.cta.description}
-              </p>
-            </Editable>
-            <SortableItemsWrapper
-              sectionKey="cta"
-              arrayField="buttons"
-              itemIds={content.cta.buttons.map((_, i) => `cta-btn-${i}`)}
-              className="flex flex-wrap gap-4 justify-center mb-6"
-            >
-              {content.cta.buttons.map((button, index) => (
-                <EditableItem
-                  key={`cta-btn-${index}`}
-                  sectionKey="cta"
-                  arrayField="buttons"
-                  index={index}
-                  label={button.text}
-                  content={button as unknown as Record<string, unknown>}
-                  sortable
-                  sortId={`cta-btn-${index}`}
-                >
-                  <Editable
-                    path={`cta.buttons.${index}.text`}
-                    hrefPath={`cta.buttons.${index}.href`}
-                    href={button.href}
-                  >
-                    <Button variant={button.variant} href={button.href}>
-                      {button.text}
-                    </Button>
-                  </Editable>
-                </EditableItem>
-              ))}
-            </SortableItemsWrapper>
-            {content.cta.footer && (
-              <p className={`${formInputColors.helper}`}>
-                <Editable path="cta.footer">
-                  <span>{content.cta.footer}</span>
-                </Editable>{' '}
-                <EditableLink
-                  href={content.cta.footerLinkHref}
-                  textPath="cta.footerLinkText"
-                  hrefPath="cta.footerLinkHref"
-                  className={`${accentColors.purple.text} hover:opacity-80 hover:underline ${linkFontWeight}`}
-                >
-                  {content.cta.footerLinkText}
-                </EditableLink>
-              </p>
-            )}
-            {content.cta.chatbotNote && (
-              <Editable path="cta.chatbotNote">
-                <p className={`text-sm ${formInputColors.helper} mt-2`}>
-                  {content.cta.chatbotNote}
-                </p>
-              </Editable>
-            )}
+          {/* Content - left-aligned */}
+          <div className="relative z-10 max-w-4xl">
+            <h2 className="text-5xl md:text-6xl font-manrope font-extrabold text-emerald-900 mb-6">
+              LET'S BUILD.
+            </h2>
+            <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-2xl">
+              Your project deserves expert execution.<br />
+              Start with a quick form or free consultation.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              <a
+                href="/get-started"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 text-white font-semibold text-lg rounded-xl hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30"
+              >
+                START A PROJECT
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+              <a
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30"
+              >
+                BOOK FREE CALL
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </a>
+            </div>
+
+            {/* Chatbot note */}
+            <p className="text-sm text-gray-500">
+              Questions? Our chatbot is standing by. ↘
+            </p>
           </div>
         </div>
       </EditableSection>

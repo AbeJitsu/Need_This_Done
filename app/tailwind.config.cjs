@@ -217,6 +217,33 @@ const config = {
     'hover:scale-102',
     'hover:-translate-y-0.5',
 
+    // Colored shadows for hero card design
+    'shadow-emerald-500/10', 'shadow-emerald-500/20', 'shadow-emerald-500/25', 'shadow-emerald-500/30',
+    'shadow-purple-500/10', 'shadow-purple-500/20', 'shadow-purple-500/25', 'shadow-purple-500/30',
+    'shadow-blue-500/10', 'shadow-blue-500/20', 'shadow-blue-500/25', 'shadow-blue-500/30',
+    'hover:shadow-emerald-500/20', 'hover:shadow-emerald-500/30',
+    'hover:shadow-purple-500/20', 'hover:shadow-purple-500/30',
+    'hover:shadow-blue-500/20', 'hover:shadow-blue-500/30',
+
+    // Transform classes for hero card hover
+    'hover:-translate-y-3', 'hover:-translate-y-2',
+    'hover:scale-110',
+
+    // Gradient text classes
+    'bg-gradient-to-r', 'bg-clip-text', 'text-transparent',
+    'from-emerald-600', 'to-emerald-700',
+    'from-blue-600', 'to-blue-700',
+    'from-purple-600', 'to-purple-700',
+
+    // Gradient background classes
+    'from-emerald-50', 'to-white', 'from-purple-50', 'from-blue-50',
+    'from-emerald-900', 'via-emerald-800', 'to-emerald-900',
+    'from-emerald-100', 'to-emerald-50',
+    'from-purple-100', 'to-purple-50',
+
+    // Left border thick variants
+    'border-l-4',
+
   ],
 
   // ========================================================================
@@ -440,10 +467,12 @@ const config = {
 
       // Custom fonts - Typography hierarchy
       // - Inter: Modern, trustworthy (body text)
+      // - Manrope: Geometric, bold, distinctive (headings)
       // - Playfair Display: Elegant serif (editorial headlines)
       // - Poppins: Geometric, authoritative (logo/brand)
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        manrope: ['var(--font-manrope)', 'system-ui', 'sans-serif'],
         playfair: ['var(--font-playfair)', 'Georgia', 'serif'],
         poppins: ['var(--font-poppins)', 'system-ui', 'sans-serif'],
       },

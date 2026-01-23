@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Poppins, Playfair_Display } from 'next/font/google';
+import { Inter, Poppins, Playfair_Display, Manrope } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -29,6 +29,14 @@ export const dynamic = 'force-dynamic';
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+});
+
+// Manrope font - geometric, bold, distinctive (headings)
+const manrope = Manrope({
+  subsets: ['latin'],
+  weight: ['700', '800'],
+  variable: '--font-manrope',
   display: 'swap',
 });
 
@@ -154,7 +162,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${poppins.variable} ${playfair.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${manrope.variable} ${poppins.variable} ${playfair.variable}`}>
       <head>
         {/* JSON-LD Structured Data for rich search results */}
         <ProfessionalServiceJsonLd />
