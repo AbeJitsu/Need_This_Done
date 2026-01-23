@@ -56,13 +56,22 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 From your first website to fully automated operations.
               </p>
             </Editable>
-            {/* Subtle scroll indicator */}
-            <div className="mt-12 flex items-center gap-2 text-sm text-gray-500 animate-slide-up animate-delay-300">
+            {/* Scroll indicator - functional smooth scroll */}
+            <button
+              onClick={() => {
+                const servicesSection = document.getElementById('services-section');
+                if (servicesSection) {
+                  servicesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+              className="mt-12 flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors cursor-pointer animate-slide-up animate-delay-300"
+              aria-label="Scroll to services section"
+            >
               <span>Scroll to explore</span>
               <svg className="w-4 h-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
-            </div>
+            </button>
           </div>
         </div>
       </EditableSection>
@@ -71,7 +80,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
         {/* Services Section - Asymmetric Hero Card Layout */}
         <EditableSection sectionKey="services" label="Services">
-        <div className="mb-24">
+        <div id="services-section" className="mb-24 scroll-mt-24">
           {/* Section title - bold, left-aligned */}
           <h2 className="text-4xl md:text-5xl font-manrope font-extrabold text-gray-900 mb-12 animate-slide-up">
             WHAT WE BUILD
