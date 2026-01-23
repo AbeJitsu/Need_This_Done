@@ -33,8 +33,8 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       <EditableSection sectionKey="hero" label="Hero Section">
         <div className="relative mb-20 py-12 md:py-16 overflow-hidden">
           {/* Background gradients - diagonal emerald slash + purple glow */}
-          <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-emerald-100 to-emerald-50 blur-3xl opacity-60 rotate-45" />
-          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-gradient-to-tl from-purple-100 to-purple-50 blur-3xl opacity-50" />
+          <div className="absolute -top-20 -left-20 w-[600px] h-[600px] bg-gradient-to-br from-emerald-200 to-emerald-100 blur-3xl opacity-70" />
+          <div className="absolute -bottom-16 -right-16 w-[500px] h-[500px] bg-gradient-to-tl from-purple-200 to-purple-100 blur-3xl opacity-60" />
 
           {/* Hero content - left-aligned, max-w container */}
           <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
