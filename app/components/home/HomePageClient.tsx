@@ -22,7 +22,7 @@ interface HomePageClientProps {
 
 export default function HomePageClient({ content: initialContent }: HomePageClientProps) {
   // Use content from universal provider (auto-loaded by route)
-  const { pageContent } = useInlineEdit();
+  const { pageContent, isEditMode } = useInlineEdit();
   // Check that pageContent has expected structure before using it
   const hasValidContent = pageContent && 'hero' in pageContent && 'services' in pageContent;
   const content = hasValidContent ? (pageContent as unknown as HomePageContent) : initialContent;
@@ -32,9 +32,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       {/* Hero Section - Bold Statement */}
       <EditableSection sectionKey="hero" label="Hero Section">
         <div className="relative mb-20 py-12 md:py-16 overflow-hidden">
-          {/* Background gradients - diagonal emerald slash + purple glow */}
-          <div className="absolute -top-20 -left-20 w-[600px] h-[600px] bg-gradient-to-br from-emerald-200 to-emerald-100 blur-3xl opacity-70" />
-          <div className="absolute -bottom-16 -right-16 w-[500px] h-[500px] bg-gradient-to-tl from-purple-200 to-purple-100 blur-3xl opacity-60" />
+          {/* Background gradients - responsive sizing for mobile visibility */}
+          <div className="absolute -top-10 -left-10 w-[300px] h-[300px] md:w-[600px] md:h-[600px] md:-top-20 md:-left-20 bg-gradient-to-br from-emerald-200 to-emerald-100 blur-3xl opacity-70" />
+          <div className="absolute -bottom-8 -right-8 w-[250px] h-[250px] md:w-[500px] md:h-[500px] md:-bottom-16 md:-right-16 bg-gradient-to-tl from-purple-200 to-purple-100 blur-3xl opacity-60" />
 
           {/* Hero content - left-aligned, max-w container */}
           <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
@@ -59,6 +59,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             {/* Scroll indicator - functional smooth scroll */}
             <button
               onClick={() => {
+                // Block action in edit mode - let EditableItem handle the click
+                if (isEditMode) return;
+
                 const servicesSection = document.getElementById('services-section');
                 if (servicesSection) {
                   servicesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
