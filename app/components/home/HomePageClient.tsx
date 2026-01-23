@@ -1,25 +1,9 @@
 'use client';
 
 import Button from '@/components/Button';
-import ServiceCardWithModal from '@/components/ServiceCardWithModal';
-import CircleBadge from '@/components/CircleBadge';
-import { EditableSection, EditableItem, SortableItemsWrapper, Editable, EditableLink, EditableCard } from '@/components/InlineEditor';
+import { EditableSection, EditableItem, Editable, EditableLink } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
-import GeometricAccents, { StepConnector } from '@/components/home/GeometricAccents';
 import ServiceIcon, { getServiceIconType } from '@/components/home/ServiceIcons';
-import {
-  formInputColors,
-  headingColors,
-  groupHoverColors,
-  accentColors,
-  shadowClasses,
-  linkColors,
-  linkHoverColors,
-  linkFontWeight,
-  focusRingClasses,
-  cardBgColors,
-  cardBorderColors,
-} from '@/lib/colors';
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -332,12 +316,13 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
               <div className="absolute top-8 left-0 right-0 h-0.5 bg-gray-200" style={{ top: '2rem' }} />
 
               {content.processPreview.steps.map((step, index) => {
-                const colors = {
+                const colorMap: Record<string, { bg: string; text: string; dot: string }> = {
                   emerald: { bg: 'bg-emerald-500', text: 'text-emerald-600', dot: 'bg-emerald-500' },
                   blue: { bg: 'bg-blue-500', text: 'text-blue-600', dot: 'bg-blue-500' },
                   purple: { bg: 'bg-purple-500', text: 'text-purple-600', dot: 'bg-purple-500' },
                   gold: { bg: 'bg-gold-500', text: 'text-gold-600', dot: 'bg-gold-500' },
-                }[step.color] || { bg: 'bg-gray-500', text: 'text-gray-600', dot: 'bg-gray-500' };
+                };
+                const colors = colorMap[step.color] || { bg: 'bg-gray-500', text: 'text-gray-600', dot: 'bg-gray-500' };
 
                 return (
                   <div key={index} className="flex-1 text-center relative">
@@ -362,12 +347,13 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             {/* Mobile: Vertical timeline */}
             <div className="md:hidden space-y-8">
               {content.processPreview.steps.map((step, index) => {
-                const colors = {
+                const colorMap: Record<string, { bg: string; text: string; line: string }> = {
                   emerald: { bg: 'bg-emerald-500', text: 'text-emerald-600', line: 'bg-emerald-200' },
                   blue: { bg: 'bg-blue-500', text: 'text-blue-600', line: 'bg-blue-200' },
                   purple: { bg: 'bg-purple-500', text: 'text-purple-600', line: 'bg-purple-200' },
                   gold: { bg: 'bg-gold-500', text: 'text-gold-600', line: 'bg-gold-200' },
-                }[step.color] || { bg: 'bg-gray-500', text: 'text-gray-600', line: 'bg-gray-200' };
+                };
+                const colors = colorMap[step.color] || { bg: 'bg-gray-500', text: 'text-gray-600', line: 'bg-gray-200' };
 
                 const isLast = index === content.processPreview.steps.length - 1;
 
