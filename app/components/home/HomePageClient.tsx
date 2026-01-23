@@ -29,15 +29,16 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
   return (
     <div className="py-8">
-      {/* Hero Section - Bold Statement */}
+      {/* Hero Section - Contained with rounded corners on desktop, edge-to-edge on mobile */}
       <EditableSection sectionKey="hero" label="Hero Section">
-        <div className="relative mb-20 py-12 md:py-16 overflow-hidden">
+        {/* Gradient container - full width on mobile, contained+rounded on desktop */}
+        <div className="relative overflow-hidden md:max-w-6xl md:mx-auto md:rounded-2xl py-12 md:py-16 mb-20">
           {/* Background gradients - responsive sizing for mobile visibility */}
           <div className="absolute -top-10 -left-10 w-[300px] h-[300px] md:w-[600px] md:h-[600px] md:-top-20 md:-left-20 bg-gradient-to-br from-emerald-200 to-emerald-100 blur-3xl opacity-70" />
           <div className="absolute -bottom-8 -right-8 w-[250px] h-[250px] md:w-[500px] md:h-[500px] md:-bottom-16 md:-right-16 bg-gradient-to-tl from-purple-200 to-purple-100 blur-3xl opacity-60" />
 
-          {/* Hero content - left-aligned, max-w container */}
-          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+          {/* Hero content - left-aligned, always padded */}
+          <div className="relative z-10 px-4 sm:px-6 md:px-8">
             <Editable path="hero.title">
               <h1 className="text-5xl sm:text-6xl md:text-7xl font-manrope font-extrabold tracking-tight mb-6 animate-scale-in leading-[1.1]">
                 <span className="block bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
