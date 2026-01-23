@@ -1,6 +1,7 @@
 'use client';
 
 import Button from '@/components/Button';
+import ServiceCardWithModal from '@/components/ServiceCardWithModal';
 import { EditableSection, EditableItem, Editable, EditableLink } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import ServiceIcon, { getServiceIconType } from '@/components/home/ServiceIcons';
@@ -99,32 +100,23 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 label={content.services.cards[0].title}
                 content={content.services.cards[0] as unknown as Record<string, unknown>}
               >
-                <div className="group relative bg-gradient-to-br from-emerald-50 to-white rounded-2xl p-8 lg:p-10 border-l-4 border-emerald-500 shadow-xl shadow-emerald-500/10 hover:shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-3 transition-all duration-300 animate-slide-up animate-delay-100">
-                  {/* Large icon */}
-                  <div className="w-16 h-16 rounded-xl bg-emerald-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <ServiceIcon
-                      type={getServiceIconType(content.services.cards[0].title)}
-                      color="green"
-                      size="md"
-                    />
-                  </div>
-                  {/* Title */}
-                  <h3 className="text-3xl font-manrope font-bold text-emerald-600 mb-4">
-                    {content.services.cards[0].title}
-                  </h3>
-                  {/* Description */}
-                  <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                    {content.services.cards[0].description}
-                  </p>
-                  {/* Pricing hint */}
-                  <p className="text-sm font-semibold text-gray-600 mb-6">
-                    From $500 • 2-3 weeks
-                  </p>
-                  {/* CTA Button */}
-                  <Button variant="green" className="shadow-lg">
-                    {content.services.cards[0].linkText}
-                  </Button>
-                </div>
+                <ServiceCardWithModal
+                  title={content.services.cards[0].title}
+                  tagline={content.services.cards[0].tagline}
+                  description={content.services.cards[0].description}
+                  details={content.services.cards[0].details}
+                  color="green"
+                  variant="full"
+                  linkText={content.services.cards[0].linkText}
+                  editBasePath={`services.cards.0`}
+                  cardIndex={0}
+                  modal={content.services.cards[0].modal}
+                  icon={<ServiceIcon
+                    type={getServiceIconType(content.services.cards[0].title)}
+                    color="green"
+                    size="md"
+                  />}
+                />
               </EditableItem>
             )}
 
@@ -139,25 +131,23 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[1].title}
                   content={content.services.cards[1] as unknown as Record<string, unknown>}
                 >
-                  <div className="group relative bg-gradient-to-br from-blue-50 to-white rounded-2xl p-6 border-l-4 border-blue-500 shadow-xl shadow-blue-500/10 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2 transition-all duration-300 animate-slide-up animate-delay-200">
-                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <ServiceIcon
-                        type={getServiceIconType(content.services.cards[1].title)}
-                        color="blue"
-                        size="sm"
-                      />
-                    </div>
-                    <h3 className="text-2xl font-manrope font-bold text-blue-600 mb-3">
-                      {content.services.cards[1].title}
-                    </h3>
-                    <p className="text-base text-gray-600 mb-4">
-                      {content.services.cards[1].tagline}
-                    </p>
-                    <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
-                      {content.services.cards[1].linkText}
-                      <span>→</span>
-                    </button>
-                  </div>
+                  <ServiceCardWithModal
+                    title={content.services.cards[1].title}
+                    tagline={content.services.cards[1].tagline}
+                    description={content.services.cards[1].description}
+                    details={content.services.cards[1].details}
+                    color="blue"
+                    variant="compact"
+                    linkText={content.services.cards[1].linkText}
+                    editBasePath={`services.cards.1`}
+                    cardIndex={1}
+                    modal={content.services.cards[1].modal}
+                    icon={<ServiceIcon
+                      type={getServiceIconType(content.services.cards[1].title)}
+                      color="blue"
+                      size="sm"
+                    />}
+                  />
                 </EditableItem>
               )}
 
@@ -170,25 +160,23 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[2].title}
                   content={content.services.cards[2] as unknown as Record<string, unknown>}
                 >
-                  <div className="group relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 border-l-4 border-purple-500 shadow-xl shadow-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-2 transition-all duration-300 animate-slide-up animate-delay-300">
-                    <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <ServiceIcon
-                        type={getServiceIconType(content.services.cards[2].title)}
-                        color="purple"
-                        size="sm"
-                      />
-                    </div>
-                    <h3 className="text-2xl font-manrope font-bold text-purple-600 mb-3">
-                      {content.services.cards[2].title}
-                    </h3>
-                    <p className="text-base text-gray-600 mb-4">
-                      {content.services.cards[2].tagline}
-                    </p>
-                    <button className="text-purple-600 hover:text-purple-700 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
-                      {content.services.cards[2].linkText}
-                      <span>→</span>
-                    </button>
-                  </div>
+                  <ServiceCardWithModal
+                    title={content.services.cards[2].title}
+                    tagline={content.services.cards[2].tagline}
+                    description={content.services.cards[2].description}
+                    details={content.services.cards[2].details}
+                    color="purple"
+                    variant="compact"
+                    linkText={content.services.cards[2].linkText}
+                    editBasePath={`services.cards.2`}
+                    cardIndex={2}
+                    modal={content.services.cards[2].modal}
+                    icon={<ServiceIcon
+                      type={getServiceIconType(content.services.cards[2].title)}
+                      color="purple"
+                      size="sm"
+                    />}
+                  />
                 </EditableItem>
               )}
             </div>
