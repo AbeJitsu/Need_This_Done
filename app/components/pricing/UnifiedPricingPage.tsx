@@ -19,12 +19,19 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import Button from '@/components/Button';
+import Card from '@/components/Card';
+import PaymentForm from '@/components/PaymentForm';
+import { StripeElementsWrapper } from '@/context/StripeContext';
 import {
   headingColors,
   formInputColors,
   accentColors,
   cardBgColors,
   cardBorderColors,
+  featureCardColors,
+  stepBadgeColors,
+  mutedTextColors,
+  alertColors,
 } from '@/lib/colors';
 
 // ============================================================================
@@ -39,6 +46,16 @@ import {
 // ============================================================================
 // Data Definitions
 // ============================================================================
+
+interface AuthorizedQuote {
+  id: string;
+  referenceNumber: string;
+  customerName: string;
+  totalAmount: number;
+  depositAmount: number;
+  lineItems: Array<{ description: string; amount: number }>;
+  expiresAt: string;
+}
 
 interface Package {
   id: string;
@@ -114,10 +131,20 @@ export default function UnifiedPricingPage() {
   const [checkingOutPackage, setCheckingOutPackage] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState('');
 
+  // Quote authorization state
+  const [quoteRef, setQuoteRef] = useState('');
+  const [email, setEmail] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [authorizedQuote, setAuthorizedQuote] = useState<AuthorizedQuote | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+
   // Section refs for smooth scrolling
   const websitesRef = useRef<HTMLElement>(null);
   const automationRef = useRef<HTMLElement>(null);
   const customRef = useRef<HTMLElement>(null);
+  const quoteAuthRef = useRef<HTMLElement>(null);
 
   const scrollToSection = (ref: React.RefObject<HTMLElement | null>) => {
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -176,6 +203,82 @@ export default function UnifiedPricingPage() {
     }
   };
 
+  // ============================================================================
+  // Handle Quote Authorization Form Submission
+  // ============================================================================
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (!quoteRef.trim()) {
+      setError('We need your quote reference number to get started');
+      return;
+    }
+
+    if (!email.trim()) {
+      setError("What's the email address on your quote?");
+      return;
+    }
+
+    try {
+      setIsProcessing(true);
+
+      // Call the authorize API
+      const response = await fetch('/api/quotes/authorize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quoteRef: quoteRef.trim(), email: email.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Something went wrong. Please try again.');
+        return;
+      }
+
+      // Store the quote data and client secret for payment
+      setAuthorizedQuote(data.quote);
+      setClientSecret(data.clientSecret);
+    } catch {
+      setError("Hmm, something went wrong. Please try again or reach out to us - we're here to help.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // ============================================================================
+  // Handle Payment Success
+  // ============================================================================
+  const handlePaymentSuccess = async (paymentIntentId: string) => {
+    // Update quote status to deposit_paid
+    try {
+      await fetch('/api/quotes/deposit-confirmed', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          quoteId: authorizedQuote?.id,
+          paymentIntentId,
+        }),
+      });
+    } catch (err) {
+      console.error('Failed to update quote status:', err);
+      // Don't fail the user - payment was successful
+    }
+
+    setSuccess(true);
+  };
+
+  // ============================================================================
+  // Format currency for display
+  // ============================================================================
+  const formatCurrency = (cents: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(cents / 100);
+  };
+
   return (
     <div className="min-h-screen">
       {/* ================================================================== */}
@@ -200,41 +303,50 @@ export default function UnifiedPricingPage() {
               </p>
 
               {/* Quick navigation cards - BJJ belt progression: green → blue → purple → gold */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto animate-slide-up animate-delay-200">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-5xl mx-auto animate-slide-up animate-delay-200">
                 <button
                   onClick={() => scrollToSection(websitesRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-400 hover:border-green-300 hover:shadow-lg transition-all"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:border-green-400 transition-all duration-300 hover:-translate-y-1"
                 >
-                  <Globe size={24} className={`${accentColors.green.text} group-hover:scale-110 transition-transform`} />
-                  <span className={`font-medium ${headingColors.primary}`}>Websites</span>
-                  <span className={`text-sm ${accentColors.green.text}`}>from $500</span>
+                  <Globe size={24} className={`${accentColors.green.text} group-hover:scale-120 transition-transform duration-300`} />
+                  <span className={`font-semibold text-sm ${headingColors.primary}`}>Websites</span>
+                  <span className={`text-xs font-medium ${accentColors.green.text}`}>from $500</span>
                 </button>
 
                 <button
                   onClick={() => scrollToSection(automationRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-400 hover:border-blue-300 hover:shadow-lg transition-all"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:border-blue-400 transition-all duration-300 hover:-translate-y-1"
                 >
-                  <Zap size={24} className={`${accentColors.blue.text} group-hover:scale-110 transition-transform`} />
-                  <span className={`font-medium ${headingColors.primary}`}>Automation</span>
-                  <span className={`text-sm ${accentColors.blue.text}`}>$150/workflow</span>
+                  <Zap size={24} className={`${accentColors.blue.text} group-hover:scale-120 transition-transform duration-300`} />
+                  <span className={`font-semibold text-sm ${headingColors.primary}`}>Automation</span>
+                  <span className={`text-xs font-medium ${accentColors.blue.text}`}>$150/workflow</span>
                 </button>
 
                 <button
                   onClick={() => scrollToSection(automationRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-400 hover:border-purple-300 hover:shadow-lg transition-all"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:border-purple-400 transition-all duration-300 hover:-translate-y-1"
                 >
-                  <Bot size={24} className={`${accentColors.purple.text} group-hover:scale-110 transition-transform`} />
-                  <span className={`font-medium ${headingColors.primary}`}>AI Agents</span>
-                  <span className={`text-sm ${accentColors.purple.text}`}>$500/month</span>
+                  <Bot size={24} className={`${accentColors.purple.text} group-hover:scale-120 transition-transform duration-300`} />
+                  <span className={`font-semibold text-sm ${headingColors.primary}`}>AI Agents</span>
+                  <span className={`text-xs font-medium ${accentColors.purple.text}`}>$500/month</span>
                 </button>
 
                 <button
                   onClick={() => scrollToSection(customRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-400 hover:border-gold-300 hover:shadow-lg transition-all"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:border-gold-400 transition-all duration-300 hover:-translate-y-1"
                 >
-                  <Puzzle size={24} className={`${accentColors.gold.text} group-hover:scale-110 transition-transform`} />
-                  <span className={`font-medium ${headingColors.primary}`}>Custom</span>
-                  <span className={`text-sm ${accentColors.gold.text}`}>you decide</span>
+                  <Puzzle size={24} className={`${accentColors.gold.text} group-hover:scale-120 transition-transform duration-300`} />
+                  <span className={`font-semibold text-sm ${headingColors.primary}`}>Custom</span>
+                  <span className={`text-xs font-medium ${accentColors.gold.text}`}>you decide</span>
+                </button>
+
+                <button
+                  onClick={() => scrollToSection(quoteAuthRef)}
+                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-gray-100 to-white backdrop-blur-sm border border-gray-300 shadow-md hover:shadow-lg hover:border-gray-400 transition-all duration-300 hover:-translate-y-1"
+                >
+                  <FileText size={24} className="text-gray-600 group-hover:scale-120 transition-transform duration-300" />
+                  <span className={`font-semibold text-sm ${headingColors.primary}`}>Have a Quote?</span>
+                  <span className="text-xs font-medium text-gray-600">authorize</span>
                 </button>
               </div>
 
@@ -263,9 +375,9 @@ export default function UnifiedPricingPage() {
                 <div
                   key={pkg.id}
                   className={`
-                    relative ${cardBgColors.base} rounded-2xl border transition-all
-                    p-8 hover:shadow-lg
-                    ${pkg.popular ? 'ring-2 ring-blue-200' : cardBorderColors.subtle}
+                    relative ${cardBgColors.base} rounded-3xl border transition-all duration-300
+                    p-8 hover:shadow-xl hover:-translate-y-2
+                    ${pkg.popular ? 'ring-2 ring-blue-300 shadow-lg' : `${cardBorderColors.subtle} hover:ring-2 hover:ring-gray-300`}
                     animate-slide-up animate-delay-${(index + 1) * 100}
                   `}
                 >
@@ -403,8 +515,8 @@ export default function UnifiedPricingPage() {
                   key={addon.id}
                   onClick={() => toggleAddon(addon.id)}
                   className={`
-                    w-full flex items-center justify-between p-5 text-left transition-colors
-                    ${isSelected ? 'bg-blue-50' : 'hover:bg-gray-50'}
+                    w-full flex items-center justify-between p-6 text-left transition-all duration-200
+                    ${isSelected ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500' : 'hover:bg-gray-50'}
                     ${index === 0 ? 'rounded-t-2xl' : ''}
                     ${index === ADDONS.length - 1 ? 'rounded-b-2xl' : ''}
                   `}
@@ -486,7 +598,7 @@ export default function UnifiedPricingPage() {
       </section>
 
       {/* ================================================================== */}
-      {/* CONSULTATION CTA - At bottom, warm dark section */}
+      {/* CONSULTATION CTA - At bottom, warm light section */}
       {/* ================================================================== */}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
@@ -520,6 +632,236 @@ export default function UnifiedPricingPage() {
           </div>
         </div>
       </section>
+
+      {/* ================================================================== */}
+      {/* QUOTE AUTHORIZATION SECTION - Dark background */}
+      {/* ================================================================== */}
+      {success ? (
+        <section ref={quoteAuthRef} id="quote-authorization" className="py-16 scroll-mt-8">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+            <div className="text-center mb-8">
+              <div className={`inline-block p-4 ${accentColors.green.bg} rounded-full mb-4`}>
+                <svg className={`w-10 h-10 ${featureCardColors.success.icon}`} fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                You&apos;re All Set!
+              </h2>
+              <p className={`text-lg ${formInputColors.helper}`}>
+                We&apos;ve received your deposit and we&apos;re excited to get started.
+              </p>
+            </div>
+
+            <Card hoverEffect="none" className="mb-8">
+              <div className="p-8">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                  What Happens Next
+                </h3>
+
+                <div className="space-y-4">
+                  <div className="flex gap-4">
+                    <div className={`flex-shrink-0 w-8 h-8 ${accentColors.green.bg} rounded-full flex items-center justify-center`}>
+                      <span className={`${stepBadgeColors.green} font-semibold`}>1</span>
+                    </div>
+                    <div>
+                      <h4 className={`font-semibold ${headingColors.primary}`}>Confirmation Email</h4>
+                      <p className={formInputColors.helper}>
+                        Check your inbox for a receipt and project details.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className={`flex-shrink-0 w-8 h-8 ${accentColors.blue.bg} rounded-full flex items-center justify-center`}>
+                      <span className={`${stepBadgeColors.blue} font-semibold`}>2</span>
+                    </div>
+                    <div>
+                      <h4 className={`font-semibold ${headingColors.primary}`}>We Get to Work</h4>
+                      <p className={formInputColors.helper}>
+                        Your project moves to the front of our queue and work begins.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className={`flex-shrink-0 w-8 h-8 ${accentColors.purple.bg} rounded-full flex items-center justify-center`}>
+                      <span className={`${stepBadgeColors.purple} font-semibold`}>3</span>
+                    </div>
+                    <div>
+                      <h4 className={`font-semibold ${headingColors.primary}`}>Stay in Touch</h4>
+                      <p className={formInputColors.helper}>
+                        We&apos;ll keep you updated on progress and reach out with any questions.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className={`flex-shrink-0 w-8 h-8 ${accentColors.gold.bg} rounded-full flex items-center justify-center`}>
+                      <span className={`${stepBadgeColors.gold} font-semibold`}>4</span>
+                    </div>
+                    <div>
+                      <h4 className={`font-semibold ${headingColors.primary}`}>Review & Delivery</h4>
+                      <p className={formInputColors.helper}>
+                        Once complete, you&apos;ll review the work. Final 50% is due upon approval.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <div className="text-center">
+              <Button variant="blue" href="/">
+                Back to Home
+              </Button>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section ref={quoteAuthRef} id="quote-authorization" className="scroll-mt-8 relative overflow-hidden rounded-3xl">
+          {/* Dark gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+          <div className="absolute top-0 left-0 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 right-0 w-80 h-80 bg-green-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
+            {/* Already Have a Quote Section */}
+            <div className="text-center mb-10">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                Already Received a Quote?
+              </h2>
+              <p className="text-slate-300 text-lg max-w-xl mx-auto">
+                Authorize your project and pay your deposit below
+              </p>
+            </div>
+
+            {/* Authorization Form or Payment Form */}
+            <Card hoverEffect="none" id="authorize" className="mb-8">
+              {clientSecret && authorizedQuote ? (
+                // Show payment form after authorization
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                    Pay Your Deposit
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6">
+                    Hi {authorizedQuote.customerName.split(' ')[0]}! Your quote is ready. Pay your 50% deposit to get started.
+                  </p>
+
+                  {/* Quote Summary */}
+                  <div className={`mb-6 p-4 ${accentColors.blue.bg} rounded-lg`}>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className={headingColors.secondary}>Quote Reference</span>
+                      <span className={`font-mono font-semibold ${headingColors.primary}`}>{authorizedQuote.referenceNumber}</span>
+                    </div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className={headingColors.secondary}>Total Project</span>
+                      <span className={headingColors.primary}>{formatCurrency(authorizedQuote.totalAmount)}</span>
+                    </div>
+                    <div className={`flex justify-between items-center pt-2 border-t ${accentColors.blue.border}`}>
+                      <span className={`font-semibold ${headingColors.primary}`}>Deposit Due Today</span>
+                      <span className={`text-xl font-bold ${accentColors.green.text}`}>{formatCurrency(authorizedQuote.depositAmount)}</span>
+                    </div>
+                  </div>
+
+                  {/* Stripe Payment Form */}
+                  <StripeElementsWrapper clientSecret={clientSecret}>
+                    <PaymentForm
+                      onSuccess={handlePaymentSuccess}
+                      onError={(err) => setError(err)}
+                      returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/pricing#quote-authorization`}
+                      submitText={`Pay ${formatCurrency(authorizedQuote.depositAmount)} Deposit`}
+                      processingText="Processing payment..."
+                    />
+                  </StripeElementsWrapper>
+
+                  {/* Back button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setClientSecret(null);
+                      setAuthorizedQuote(null);
+                    }}
+                    className={`mt-4 w-full text-center text-sm ${mutedTextColors.light} hover:underline`}
+                  >
+                    ← Use a different quote
+                  </button>
+                </div>
+              ) : (
+                // Show authorization form
+                <form onSubmit={handleSubmit} className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                    Authorize Your Quote
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6">
+                    Enter your quote reference and email to access your quote and pay your deposit.
+                  </p>
+
+                  {error && (
+                    <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+                      <p className={`text-sm ${alertColors.error.text}`}>{error}</p>
+                    </div>
+                  )}
+
+                  <div className="space-y-5 mb-8 max-w-sm mx-auto">
+                    <div>
+                      <label htmlFor="quoteRef" className={`block text-sm font-semibold mb-2.5 ${formInputColors.label}`}>
+                        Quote Reference
+                      </label>
+                      <input
+                        type="text"
+                        id="quoteRef"
+                        autoComplete="off"
+                        value={quoteRef}
+                        onChange={(e) => setQuoteRef(e.target.value)}
+                        placeholder="e.g., NTD-010126-1430"
+                        className={`w-full px-4 py-3.5 border-2 border-gray-300 rounded-xl bg-white/50 backdrop-blur-sm transition-all focus:outline-none focus:border-purple-400 focus:bg-white focus:ring-4 focus:ring-purple-100 ${formInputColors.placeholder}`}
+                      />
+                      <p className={`mt-2 text-xs ${formInputColors.helper}`}>
+                        You'll find this in your quote email
+                      </p>
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className={`block text-sm font-semibold mb-2.5 ${formInputColors.label}`}>
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        autoComplete="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="your@email.com"
+                        className={`w-full px-4 py-3.5 border-2 border-gray-300 rounded-xl bg-white/50 backdrop-blur-sm transition-all focus:outline-none focus:border-purple-400 focus:bg-white focus:ring-4 focus:ring-purple-100 ${formInputColors.placeholder}`}
+                      />
+                      <p className={`mt-2 text-xs ${formInputColors.helper}`}>
+                        The email address on your quote
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-center">
+                    <Button
+                      variant="purple"
+                      type="submit"
+                      disabled={isProcessing}
+                      size="lg"
+                      className="min-w-56"
+                    >
+                      {isProcessing ? 'Authorizing...' : 'Authorize Quote'}
+                    </Button>
+                  </div>
+
+                  <p className={`mt-4 text-center text-sm ${mutedTextColors.light}`}>
+                    Your information is secure. We use industry-standard encryption.
+                  </p>
+                </form>
+              )}
+            </Card>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

@@ -341,37 +341,6 @@ export interface ContactPageContent {
   cta: CTASection;
 }
 
-// --- Get Started Page ---
-export interface GetStartedPath {
-  badge: string;
-  title: string;
-  description: string;
-  features: string[];
-  button: CTAButton & { size?: 'sm' | 'md' | 'lg' };
-  hoverColor: AccentVariant;
-  /** Visual editor styles for this path card */
-  styles?: ItemStyles;
-}
-
-export interface GetStartedPageContent {
-  header: PageHeader;
-  paths: GetStartedPath[];
-  quoteSection: { title: string; description: string };
-  authForm: {
-    title: string;
-    description: string;
-    quoteRefLabel: string;
-    quoteRefPlaceholder: string;
-    quoteRefHelper: string;
-    emailLabel: string;
-    emailPlaceholder: string;
-    emailHelper: string;
-    submitButton: string;
-    processingText: string;
-    securityNote: string;
-  };
-}
-
 // --- Blog Page ---
 export interface BlogPageContent {
   header: PageHeader;
@@ -475,7 +444,7 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
       { href: '/contact', label: 'Contact' },
       { href: '/faq', label: 'FAQ' },
       { href: '/blog', label: 'Blog' },
-      { href: '/get-started', label: 'Get Started' },
+      { href: '/pricing#quote-authorization', label: 'Authorize Quote' },
     ],
     legalLinks: [
       { href: '/privacy', label: 'Privacy' },
@@ -968,49 +937,7 @@ export const PAGE_CONFIGS = {
     } as ContactPageContent,
   },
 
-  'get-started': {
-    route: '/get-started',
-    slug: 'get-started',
-    displayName: 'Get Started',
-    contentType: 'get_started_page',
-    defaults: {
-      header: { title: 'Let\'s Build Something', description: 'Two ways to get started. Pick what works for you.' },
-      paths: [
-        {
-          badge: 'Free',
-          title: 'Get a Quote',
-          description: 'Tell us what you need built. No obligation.',
-          features: ['Response in 2 business days', 'Clear pricing upfront', 'No commitment required'],
-          button: { text: 'Request a Quote', variant: 'gold', href: '/contact', size: 'lg' },
-          hoverColor: 'gold',
-        },
-        {
-          badge: 'Free',
-          title: 'Strategy Call',
-          description: 'Talk through your needs with an expert.',
-          features: ['30-minute focused session', 'Personalized recommendations', 'No obligation'],
-          button: { text: 'Book a Call', variant: 'purple', href: '/contact', size: 'lg' },
-          hoverColor: 'purple',
-        },
-      ],
-      quoteSection: { title: 'Already Have a Quote?', description: 'Enter your quote details below to authorize your project.' },
-      authForm: {
-        title: "Let's Begin Your Project",
-        description: "Enter your details and we'll process your deposit",
-        quoteRefLabel: 'Quote Reference Number',
-        quoteRefPlaceholder: 'e.g., NTD-010126-1430',
-        quoteRefHelper: "You'll find this in your quote email",
-        emailLabel: 'Email Address',
-        emailPlaceholder: 'your@email.com',
-        emailHelper: 'Use the same email from your quote request',
-        submitButton: 'Authorize & Pay Deposit',
-        processingText: 'Getting everything ready...',
-        securityNote: 'Secure payment processing. Your information is protected.',
-      },
-    } as GetStartedPageContent,
-  },
-
-  blog: {
+blog: {
     route: '/blog',
     slug: 'blog',
     displayName: 'Blog',
@@ -1033,7 +960,7 @@ export const PAGE_CONFIGS = {
       sections: [
         { title: 'Browse Our Services', icon: '🔍', group: 'getting-started', content: 'Explore what we offer and find the right fit for your needs:\n\n• Visit the Services page to see our full range of professional services\n• Each service includes detailed descriptions, pricing, and what\'s included\n• Check our Pricing page to compare packages and find the best value\n• Use our FAQ for quick answers to common questions' },
         { title: 'Book a Consultation', icon: '📅', group: 'getting-started', content: 'Ready for expert guidance? Here\'s how to book:\n\n1. Visit the Shop to see available consultation packages (15, 30, or 55 minutes)\n2. Click any consultation to see full details and add to cart\n3. Review your cart and proceed to checkout\n4. Complete secure payment via Stripe (we accept all major cards)\n5. Select your preferred date and time for the session\n6. You\'ll receive an email confirmation with calendar invite' },
-        { title: 'Start a Project', icon: '🚀', group: 'getting-started', content: 'Already have a quote? Here\'s how to get started:\n\n1. Go to the Get Started page\n2. Enter your quote reference number from our email\n3. Review the project scope and pricing\n4. Complete payment to authorize the project\n5. We\'ll be in touch within 24 hours to kick things off' },
+        { title: 'Start a Project', icon: '🚀', group: 'getting-started', content: 'Already have a quote? Here\'s how to get started:\n\n1. Go to the Pricing page and scroll down to "Already Received a Quote?"\n2. Enter your quote reference number from our email\n3. Review the project scope and pricing\n4. Complete payment to authorize the project\n5. We\'ll be in touch within 24 hours to kick things off' },
         { title: 'Create Your Account', icon: '👤', group: 'account', content: 'An account gives you access to your dashboard and order history:\n\n• Sign in with Google for one-click access\n• Or create an account with email and password\n• Your account links all your orders and consultations\n• Access your dashboard anytime to check status and history' },
         { title: 'Your Dashboard', icon: '📊', group: 'account', content: 'Once logged in, your dashboard is your home base:\n\n• View all your orders and their current status\n• Track consultation bookings and upcoming appointments\n• Access order details and receipts\n• Update your account settings and preferences' },
         { title: 'Explore Our Content', icon: '📚', group: 'explore', content: 'Stay informed with our regularly updated content:\n\n• Blog: Tips, insights, and industry updates\n• How It Works: Step-by-step breakdown of our process\n• FAQ: Quick answers to common questions' },
@@ -1119,7 +1046,6 @@ export type PageContent =
   | FAQPageContent
   | HowItWorksPageContent
   | ContactPageContent
-  | GetStartedPageContent
   | BlogPageContent
   | GuidePageContent
   | PrivacyPageContent

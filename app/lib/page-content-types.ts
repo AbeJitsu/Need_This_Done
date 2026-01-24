@@ -35,8 +35,6 @@ export type {
   HomeServiceCard,
   HomePageContent,
   ContactPageContent,
-  GetStartedPath,
-  GetStartedPageContent,
   BlogPageContent,
   GuideGroup,
   GuideSection,

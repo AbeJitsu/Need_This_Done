@@ -9,7 +9,7 @@ import { getDefaultContent } from '@/lib/default-page-content';
 // Usage:
 //   const content = await fetchPageContent<PrivacyPageContent>('privacy');
 
-type PageSlug = 'privacy' | 'terms' | 'guide' | 'faq' | 'home' | 'services' | 'pricing' | 'how-it-works' | 'contact' | 'get-started' | 'blog';
+type PageSlug = 'privacy' | 'terms' | 'guide' | 'faq' | 'home' | 'services' | 'pricing' | 'how-it-works' | 'contact' | 'blog' | 'login';
 
 /**
  * Fetches page content from the API with automatic fallback to defaults.
