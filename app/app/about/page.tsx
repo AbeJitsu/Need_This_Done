@@ -319,7 +319,7 @@ export default function AboutPage() {
             <Button variant="green" href="/resume" size="lg" className="shadow-lg shadow-green-500/25">
               View Resume
             </Button>
-            <Button variant="blue" href="/services" size="lg" className="shadow-lg shadow-blue-500/25">
+            <Button variant="blue" href="/#services-section" size="lg" className="shadow-lg shadow-blue-500/25">
               See Services
             </Button>
             <Button variant="purple" href="/contact" size="lg" className="shadow-lg shadow-purple-500/25">

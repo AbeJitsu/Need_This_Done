@@ -554,7 +554,7 @@ export default function ResumePage() {
               <Button variant="green" href="/about" size="lg" className="shadow-lg shadow-green-500/25">
                 About Me
               </Button>
-              <Button variant="blue" href="/services" size="lg" className="shadow-lg shadow-blue-500/25">
+              <Button variant="blue" href="/#services-section" size="lg" className="shadow-lg shadow-blue-500/25">
                 Services
               </Button>
               <Button variant="purple" href="/contact" size="lg" className="shadow-lg shadow-purple-500/25">

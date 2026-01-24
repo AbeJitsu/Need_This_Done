@@ -733,7 +733,7 @@ export default function ContactPage() {
               <ArrowRight className="w-4 h-4" />
             </a>
             <a
-              href="/services"
+              href="/#services-section"
               className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-400 rounded-xl font-medium text-gray-700 hover:border-gray-400 hover:shadow-sm transition-all"
             >
               Browse Services
