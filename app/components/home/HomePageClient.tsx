@@ -259,18 +259,20 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </div>
 
           {/* Trust Badges - BJJ Color Progression */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-12">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span className="text-sm font-medium text-gray-700">Human + AI</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-blue-500" />
-              <span className="text-sm font-medium text-gray-700">Clear Updates</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-purple-500" />
-              <span className="text-sm font-medium text-gray-700">No Surprises</span>
+          <div className="flex justify-center mb-12">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="text-sm font-medium text-gray-700">Human + AI</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                <span className="text-sm font-medium text-gray-700">Clear Updates</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-purple-500" />
+                <span className="text-sm font-medium text-gray-700">No Surprises</span>
+              </div>
             </div>
           </div>
 
