@@ -53,3 +53,24 @@ Use ASCII charts for complex flows. Keep them simple.
 - **Supabase** migrations in `/supabase/migrations`
 - **Medusa backend** in `/medusa` (deployed on Railway)
 - **Environment variables** in `.env.local` (see README.md for required vars)
+
+## Deployment Guidelines
+
+**Vercel Configuration:**
+- **CRITICAL:** Always add a root `vercel.json` with proper build commands when deployment fails
+- **Build Command:** `cd app && npm run build`
+- **Install Command:** `cd app && npm install` 
+- **Dev Command:** `cd app && npm run dev`
+- **Output Directory:** `app/.next`
+- **Framework:** `nextjs`
+
+**Environment Variables Required for Deployment:**
+- Copy `app/.env.example` to verify all required environment variables are set in Vercel dashboard
+- Missing environment variables are the #1 cause of Vercel deployment failures
+- Always check Vercel logs for "ReferenceError: [VARIABLE] is not defined"
+
+**Common Deployment Fixes:**
+1. Ensure `vercel.json` exists in project root (not in `/app`)
+2. Verify all environment variables from `.env.example` are set in Vercel
+3. Check build logs for missing dependencies or configuration errors
+4. Confirm Next.js config has proper `output: 'standalone'` setting

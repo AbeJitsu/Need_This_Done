@@ -1,0 +1,26 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "cd app && npm run build",
+  "devCommand": "cd app && npm run dev",
+  "installCommand": "cd app && npm install",
+  "framework": "nextjs",
+  "crons": [
+    {
+      "path": "/api/cron/abandoned-carts",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/changelog",
+      "schedule": "0 0 * * *"
+    }
+  ],
+  "functions": {
+    "app/**/*.tsx": {
+      "maxDuration": 30
+    },
+    "app/api/**": {
+      "maxDuration": 60
+    }
+  },
+  "outputDirectory": "app/.next"
+}
