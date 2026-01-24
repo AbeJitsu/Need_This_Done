@@ -453,41 +453,41 @@ export default function UnifiedPricingPage() {
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Automation */}
-            <div className={`${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-lg transition-all`}>
+            <div className={`flex flex-col ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-lg transition-all`}>
               <div className={`w-12 h-12 rounded-xl ${accentColors.purple.bg} flex items-center justify-center mb-4`}>
                 <Zap size={24} className={accentColors.purple.text} />
               </div>
               <h3 className={`text-2xl font-bold ${accentColors.purple.titleText} mb-1`}>
                 Automation Setup
               </h3>
-              <p className={`${formInputColors.helper} mb-4`}>
+              <p className={`${formInputColors.helper} mb-4 min-h-[48px]`}>
                 Connect your tools. Stop doing repetitive work.
               </p>
-              <div className="mb-6">
+              <div className="mb-6 min-h-[40px]">
                 <span className={`text-3xl font-bold ${headingColors.primary}`}>$150</span>
                 <span className={`text-sm ${formInputColors.helper} ml-2`}>per workflow</span>
               </div>
-              <Button variant="purple" href="/contact#consultation" className="w-full">
+              <Button variant="purple" href="/contact#consultation" className="w-full mt-auto">
                 Book a Call
               </Button>
             </div>
 
             {/* Managed AI */}
-            <div className={`${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-lg transition-all`}>
+            <div className={`flex flex-col ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-lg transition-all`}>
               <div className={`w-12 h-12 rounded-xl ${accentColors.gold.bg} flex items-center justify-center mb-4`}>
                 <Bot size={24} className={accentColors.gold.text} />
               </div>
               <h3 className={`text-2xl font-bold ${accentColors.gold.titleText} mb-1`}>
                 Managed AI
               </h3>
-              <p className={`${formInputColors.helper} mb-4`}>
+              <p className={`${formInputColors.helper} mb-4 min-h-[48px]`}>
                 AI agents that work while you sleep.
               </p>
-              <div className="mb-6">
+              <div className="mb-6 min-h-[40px]">
                 <span className={`text-3xl font-bold ${headingColors.primary}`}>$500</span>
                 <span className={`text-sm ${formInputColors.helper} ml-2`}>per month</span>
               </div>
-              <Button variant="gold" href="/contact#consultation" className="w-full">
+              <Button variant="gold" href="/contact#consultation" className="w-full mt-auto">
                 Book a Call
               </Button>
             </div>
