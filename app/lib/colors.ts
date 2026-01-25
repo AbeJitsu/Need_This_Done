@@ -39,40 +39,8 @@
 //
 // ============================================================================
 
-// Import computed shades from the WCAG contrast system
-import { computedShades } from './contrast';
-
 export type AccentColor = 'purple' | 'blue' | 'green';
 export type AccentVariant = 'purple' | 'blue' | 'green' | 'gold' | 'teal' | 'gray' | 'red';
-
-// ============================================================================
-// COLOR MAPPINGS - Translate between semantic names and Tailwind prefixes
-// ============================================================================
-// 'green' in our system → 'emerald' in Tailwind (for a refined look)
-// This mapping enables the ETC pattern: one change cascades everywhere.
-
-const colorToTailwind: Record<AccentVariant, string> = {
-  purple: 'purple',
-  blue: 'blue',
-  green: 'emerald',
-  gold: 'gold',
-  teal: 'teal',
-  gray: 'gray',
-  red: 'red',
-};
-
-// Map to contrast.ts color names (same as Tailwind except green → emerald)
-type ContrastColor = 'emerald' | 'blue' | 'purple' | 'gold' | 'teal' | 'gray' | 'red';
-const colorToContrast: Record<AccentVariant, ContrastColor> = {
-  purple: 'purple',
-  blue: 'blue',
-  green: 'emerald',
-  gold: 'gold',
-  teal: 'teal',
-  gray: 'gray',
-  red: 'red',
-};
-
 
 /**
  * Generate colors for solid-filled buttons.
