@@ -375,7 +375,7 @@ export default function UnifiedPricingPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {PACKAGES.map((pkg, index) => {
+            {PACKAGES.map((pkg) => {
               const isLoading = checkingOutPackage === pkg.id;
               const colorClass = pkg.color === 'blue' ? 'blue' : 'green';
 
@@ -468,16 +468,16 @@ export default function UnifiedPricingPage() {
             <p className={`text-lg ${formInputColors.helper} mb-4`}>
               Work smarter with intelligent automation
             </p>
-            <div className="w-24 h-1 mx-auto rounded-full bg-gradient-to-r from-blue-500 to-purple-500" />
+            <div className="w-24 h-1 mx-auto rounded-full bg-gradient-to-r from-purple-500 to-gold-500" />
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Automation */}
-            <div className={`flex flex-col ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-xl hover:-translate-y-1 hover:border-blue-400 hover:shadow-blue-500/10 transition-all duration-300`}>
-              <div className={`w-14 h-14 rounded-xl ${accentColors.blue.bg} flex items-center justify-center mb-5`}>
-                <Zap size={28} className={accentColors.blue.text} />
+            <div className={`flex flex-col ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-xl hover:-translate-y-1 hover:border-purple-400 hover:shadow-purple-500/10 transition-all duration-300`}>
+              <div className={`w-14 h-14 rounded-xl ${accentColors.purple.bg} flex items-center justify-center mb-5`}>
+                <Zap size={28} className={accentColors.purple.text} />
               </div>
-              <h3 className={`text-2xl font-bold ${accentColors.blue.titleText} mb-2`}>
+              <h3 className={`text-2xl font-bold ${accentColors.purple.titleText} mb-2`}>
                 Automation Setup
               </h3>
               <p className={`${formInputColors.helper} mb-6 min-h-[48px]`}>
@@ -487,17 +487,17 @@ export default function UnifiedPricingPage() {
                 <span className={`text-5xl font-bold ${headingColors.primary}`}>$150</span>
                 <span className={`text-base ${formInputColors.helper} ml-2`}>per workflow</span>
               </div>
-              <Button variant="blue" href="/contact#consultation" className="w-full mt-auto shadow-lg shadow-blue-500/25">
+              <Button variant="purple" href="/contact#consultation" className="w-full mt-auto shadow-lg shadow-purple-500/25">
                 Book a Call
               </Button>
             </div>
 
             {/* Managed AI */}
-            <div className={`flex flex-col ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-xl hover:-translate-y-1 hover:border-purple-400 hover:shadow-purple-500/10 transition-all duration-300`}>
-              <div className={`w-14 h-14 rounded-xl ${accentColors.purple.bg} flex items-center justify-center mb-5`}>
-                <Bot size={28} className={accentColors.purple.text} />
+            <div className={`flex flex-col ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-xl hover:-translate-y-1 hover:border-gold-400 hover:shadow-gold-500/10 transition-all duration-300`}>
+              <div className={`w-14 h-14 rounded-xl ${accentColors.gold.bg} flex items-center justify-center mb-5`}>
+                <Bot size={28} className={accentColors.gold.text} />
               </div>
-              <h3 className={`text-2xl font-bold ${accentColors.purple.titleText} mb-2`}>
+              <h3 className={`text-2xl font-bold ${accentColors.gold.titleText} mb-2`}>
                 Managed AI
               </h3>
               <p className={`${formInputColors.helper} mb-6 min-h-[48px]`}>
@@ -507,7 +507,7 @@ export default function UnifiedPricingPage() {
                 <span className={`text-5xl font-bold ${headingColors.primary}`}>$500</span>
                 <span className={`text-base ${formInputColors.helper} ml-2`}>per month</span>
               </div>
-              <Button variant="purple" href="/contact#consultation" className="w-full mt-auto shadow-lg shadow-purple-500/25">
+              <Button variant="gold" href="/contact#consultation" className="w-full mt-auto shadow-lg shadow-gold-500/25">
                 Book a Call
               </Button>
             </div>
@@ -533,7 +533,7 @@ export default function UnifiedPricingPage() {
 
           {/* Add-ons list - clean table style like shop page */}
           <div className={`${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} divide-y divide-gray-400 overflow-hidden shadow-lg`}>
-            {ADDONS.map((addon, index) => {
+            {ADDONS.map((addon) => {
               const isSelected = selectedAddons.has(addon.id);
               const Icon = addon.icon;
 
@@ -545,7 +545,7 @@ export default function UnifiedPricingPage() {
                     w-full flex items-center justify-between p-6 text-left transition-all duration-200
                     ${isSelected
                       ? 'bg-gradient-to-r from-gold-50 to-purple-50 border-l-4 border-gold-500'
-                      : 'hover:bg-gray-50 border-l-4 border-transparent'
+                      : 'hover:bg-gray-50'
                     }
                   `}
                 >
