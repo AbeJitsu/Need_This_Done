@@ -306,45 +306,45 @@ export default function UnifiedPricingPage() {
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-5xl mx-auto animate-slide-up animate-delay-200">
                 <button
                   onClick={() => scrollToSection(websitesRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:border-green-400 transition-all duration-300 hover:-translate-y-1"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-400 shadow-lg hover:shadow-xl hover:border-emerald-500 hover:shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-1"
                 >
-                  <Globe size={24} className={`${accentColors.green.text} group-hover:scale-120 transition-transform duration-300`} />
+                  <Globe size={24} className={`${accentColors.green.text} group-hover:scale-110 transition-transform duration-300`} />
                   <span className={`font-semibold text-sm ${headingColors.primary}`}>Websites</span>
                   <span className={`text-xs font-medium ${accentColors.green.text}`}>from $500</span>
                 </button>
 
                 <button
                   onClick={() => scrollToSection(automationRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:border-blue-400 transition-all duration-300 hover:-translate-y-1"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-400 shadow-lg hover:shadow-xl hover:border-blue-500 hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1"
                 >
-                  <Zap size={24} className={`${accentColors.blue.text} group-hover:scale-120 transition-transform duration-300`} />
+                  <Zap size={24} className={`${accentColors.blue.text} group-hover:scale-110 transition-transform duration-300`} />
                   <span className={`font-semibold text-sm ${headingColors.primary}`}>Automation</span>
                   <span className={`text-xs font-medium ${accentColors.blue.text}`}>$150/workflow</span>
                 </button>
 
                 <button
                   onClick={() => scrollToSection(automationRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:border-purple-400 transition-all duration-300 hover:-translate-y-1"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-400 shadow-lg hover:shadow-xl hover:border-purple-500 hover:shadow-purple-500/20 transition-all duration-300 hover:-translate-y-1"
                 >
-                  <Bot size={24} className={`${accentColors.purple.text} group-hover:scale-120 transition-transform duration-300`} />
+                  <Bot size={24} className={`${accentColors.purple.text} group-hover:scale-110 transition-transform duration-300`} />
                   <span className={`font-semibold text-sm ${headingColors.primary}`}>AI Agents</span>
                   <span className={`text-xs font-medium ${accentColors.purple.text}`}>$500/month</span>
                 </button>
 
                 <button
                   onClick={() => scrollToSection(customRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm border border-gray-200 shadow-md hover:shadow-lg hover:border-gold-400 transition-all duration-300 hover:-translate-y-1"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-400 shadow-lg hover:shadow-xl hover:border-gold-500 hover:shadow-gold-500/20 transition-all duration-300 hover:-translate-y-1"
                 >
-                  <Puzzle size={24} className={`${accentColors.gold.text} group-hover:scale-120 transition-transform duration-300`} />
+                  <Puzzle size={24} className={`${accentColors.gold.text} group-hover:scale-110 transition-transform duration-300`} />
                   <span className={`font-semibold text-sm ${headingColors.primary}`}>Custom</span>
                   <span className={`text-xs font-medium ${accentColors.gold.text}`}>you decide</span>
                 </button>
 
                 <button
                   onClick={() => scrollToSection(quoteAuthRef)}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-gray-100 to-white backdrop-blur-sm border border-gray-300 shadow-md hover:shadow-lg hover:border-gray-400 transition-all duration-300 hover:-translate-y-1"
+                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-400 shadow-lg hover:shadow-xl hover:border-gray-500 transition-all duration-300 hover:-translate-y-1"
                 >
-                  <FileText size={24} className="text-gray-600 group-hover:scale-120 transition-transform duration-300" />
+                  <FileText size={24} className="text-gray-600 group-hover:scale-110 transition-transform duration-300" />
                   <span className={`font-semibold text-sm ${headingColors.primary}`}>Have a Quote?</span>
                   <span className="text-xs font-medium text-gray-600">authorize</span>
                 </button>
@@ -361,41 +361,54 @@ export default function UnifiedPricingPage() {
       {/* ================================================================== */}
       {/* WEBSITES SECTION */}
       {/* ================================================================== */}
-      <section ref={websitesRef} id="websites" className="py-16 scroll-mt-8">
+      <section ref={websitesRef} id="websites" className="py-20 scroll-mt-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          <h2 className={`text-sm font-semibold uppercase tracking-wider ${formInputColors.helper} mb-6`}>
-            Packages
-          </h2>
+          {/* Premium section header */}
+          <div className="text-center mb-12">
+            <h2 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-3`}>
+              Website Packages
+            </h2>
+            <p className={`text-lg ${formInputColors.helper} mb-4`}>
+              Professional websites that get you online fast
+            </p>
+            <div className="w-24 h-1 mx-auto rounded-full bg-gradient-to-r from-emerald-500 to-blue-500" />
+          </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-8">
             {PACKAGES.map((pkg, index) => {
               const isLoading = checkingOutPackage === pkg.id;
+              const colorClass = pkg.color === 'blue' ? 'blue' : 'green';
 
               return (
                 <div
                   key={pkg.id}
                   className={`
-                    relative ${cardBgColors.base} rounded-3xl border transition-all duration-300
+                    relative ${cardBgColors.base} rounded-2xl border transition-all duration-300
                     p-8 hover:shadow-xl hover:-translate-y-2
-                    ${pkg.popular ? 'ring-2 ring-blue-300 shadow-lg' : `${cardBorderColors.subtle} hover:ring-2 hover:ring-gray-300`}
-                    animate-slide-up animate-delay-${(index + 1) * 100}
+                    ${pkg.popular
+                      ? 'ring-2 ring-blue-400 shadow-xl shadow-blue-500/10 scale-[1.02]'
+                      : `${cardBorderColors.subtle} hover:border-${colorClass}-400 hover:shadow-${colorClass}-500/10`
+                    }
                   `}
                 >
                   {pkg.popular && (
-                    <div className="absolute -top-3 left-6">
-                      <span className={`${accentColors.blue.bg} ${accentColors.blue.text} text-xs font-medium px-3 py-1 rounded-full`}>
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                      <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg shadow-blue-500/25">
                         Most Popular
                       </span>
                     </div>
                   )}
 
-                  <div className="mb-6">
-                    <h3 className={`text-2xl font-bold ${accentColors[pkg.color].titleText} mb-1`}>
+                  <div className="mb-6 pt-2">
+                    <h3 className={`text-2xl font-bold ${accentColors[pkg.color].titleText} mb-2`}>
                       {pkg.name}
                     </h3>
-                    <div className={`text-3xl font-bold ${headingColors.primary}`}>
-                      ${pkg.price.toLocaleString()}
-                      <span className={`text-base font-normal ${formInputColors.helper} ml-2`}>
+                    <p className={`text-sm ${formInputColors.helper} mb-4`}>{pkg.description}</p>
+                    <div className="flex items-baseline gap-1">
+                      <span className={`text-5xl font-bold ${headingColors.primary}`}>
+                        ${pkg.price.toLocaleString()}
+                      </span>
+                      <span className={`text-base font-normal ${formInputColors.helper}`}>
                         one-time
                       </span>
                     </div>
@@ -404,31 +417,31 @@ export default function UnifiedPricingPage() {
                   <ul className="space-y-3 mb-8">
                     {pkg.features.map((feature, i) => (
                       <li key={i} className="flex items-center gap-3">
-                        <Check size={18} className={accentColors[pkg.color].text} strokeWidth={2.5} />
+                        <div className={`flex-shrink-0 w-5 h-5 rounded-full ${accentColors[pkg.color].bg} flex items-center justify-center`}>
+                          <Check size={12} className={accentColors[pkg.color].text} strokeWidth={3} />
+                        </div>
                         <span className={formInputColors.helper}>{feature}</span>
                       </li>
                     ))}
                   </ul>
 
-                  <button
+                  <Button
+                    variant={pkg.color}
                     onClick={() => handlePackageCheckout(pkg.id, pkg.price)}
                     disabled={checkingOutPackage !== null}
-                    className={`
-                      w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2
-                      ${pkg.color === 'blue'
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/25'
-                        : 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/25'
-                      }
-                      disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl
-                    `}
+                    className={`w-full shadow-lg ${pkg.color === 'blue' ? 'shadow-blue-500/25' : 'shadow-emerald-500/25'}`}
                   >
                     {isLoading ? (
-                      <><Loader2 size={18} className="animate-spin" /> Processing...</>
+                      <span className="flex items-center justify-center gap-2">
+                        <Loader2 size={18} className="animate-spin" /> Processing...
+                      </span>
                     ) : (
-                      <>Start for ${pkg.deposit} <ArrowRight size={18} /></>
+                      <span className="flex items-center justify-center gap-2">
+                        Start for ${pkg.deposit} <ArrowRight size={18} />
+                      </span>
                     )}
-                  </button>
-                  <p className={`text-center text-sm ${formInputColors.helper} mt-2`}>
+                  </Button>
+                  <p className={`text-center text-sm ${formInputColors.helper} mt-3`}>
                     50% deposit, remainder on delivery
                   </p>
                 </div>
@@ -445,49 +458,56 @@ export default function UnifiedPricingPage() {
       {/* ================================================================== */}
       {/* AUTOMATION & AI SECTION */}
       {/* ================================================================== */}
-      <section ref={automationRef} id="automation" className="py-16 scroll-mt-8">
+      <section ref={automationRef} id="automation" className="py-20 scroll-mt-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          <h2 className={`text-sm font-semibold uppercase tracking-wider ${formInputColors.helper} mb-6`}>
-            Automation & AI
-          </h2>
+          {/* Premium section header */}
+          <div className="text-center mb-12">
+            <h2 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-3`}>
+              Automation & AI
+            </h2>
+            <p className={`text-lg ${formInputColors.helper} mb-4`}>
+              Work smarter with intelligent automation
+            </p>
+            <div className="w-24 h-1 mx-auto rounded-full bg-gradient-to-r from-blue-500 to-purple-500" />
+          </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-8">
             {/* Automation */}
-            <div className={`flex flex-col ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-lg transition-all`}>
-              <div className={`w-12 h-12 rounded-xl ${accentColors.purple.bg} flex items-center justify-center mb-4`}>
-                <Zap size={24} className={accentColors.purple.text} />
+            <div className={`flex flex-col ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-xl hover:-translate-y-1 hover:border-blue-400 hover:shadow-blue-500/10 transition-all duration-300`}>
+              <div className={`w-14 h-14 rounded-xl ${accentColors.blue.bg} flex items-center justify-center mb-5`}>
+                <Zap size={28} className={accentColors.blue.text} />
               </div>
-              <h3 className={`text-2xl font-bold ${accentColors.purple.titleText} mb-1`}>
+              <h3 className={`text-2xl font-bold ${accentColors.blue.titleText} mb-2`}>
                 Automation Setup
               </h3>
-              <p className={`${formInputColors.helper} mb-4 min-h-[48px]`}>
+              <p className={`${formInputColors.helper} mb-6 min-h-[48px]`}>
                 Connect your tools. Stop doing repetitive work.
               </p>
-              <div className="mb-6 min-h-[40px]">
-                <span className={`text-3xl font-bold ${headingColors.primary}`}>$150</span>
-                <span className={`text-sm ${formInputColors.helper} ml-2`}>per workflow</span>
+              <div className="mb-6">
+                <span className={`text-5xl font-bold ${headingColors.primary}`}>$150</span>
+                <span className={`text-base ${formInputColors.helper} ml-2`}>per workflow</span>
               </div>
-              <Button variant="purple" href="/contact#consultation" className="w-full mt-auto">
+              <Button variant="blue" href="/contact#consultation" className="w-full mt-auto shadow-lg shadow-blue-500/25">
                 Book a Call
               </Button>
             </div>
 
             {/* Managed AI */}
-            <div className={`flex flex-col ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-lg transition-all`}>
-              <div className={`w-12 h-12 rounded-xl ${accentColors.gold.bg} flex items-center justify-center mb-4`}>
-                <Bot size={24} className={accentColors.gold.text} />
+            <div className={`flex flex-col ${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} p-8 hover:shadow-xl hover:-translate-y-1 hover:border-purple-400 hover:shadow-purple-500/10 transition-all duration-300`}>
+              <div className={`w-14 h-14 rounded-xl ${accentColors.purple.bg} flex items-center justify-center mb-5`}>
+                <Bot size={28} className={accentColors.purple.text} />
               </div>
-              <h3 className={`text-2xl font-bold ${accentColors.gold.titleText} mb-1`}>
+              <h3 className={`text-2xl font-bold ${accentColors.purple.titleText} mb-2`}>
                 Managed AI
               </h3>
-              <p className={`${formInputColors.helper} mb-4 min-h-[48px]`}>
+              <p className={`${formInputColors.helper} mb-6 min-h-[48px]`}>
                 AI agents that work while you sleep.
               </p>
-              <div className="mb-6 min-h-[40px]">
-                <span className={`text-3xl font-bold ${headingColors.primary}`}>$500</span>
-                <span className={`text-sm ${formInputColors.helper} ml-2`}>per month</span>
+              <div className="mb-6">
+                <span className={`text-5xl font-bold ${headingColors.primary}`}>$500</span>
+                <span className={`text-base ${formInputColors.helper} ml-2`}>per month</span>
               </div>
-              <Button variant="gold" href="/contact#consultation" className="w-full mt-auto">
+              <Button variant="purple" href="/contact#consultation" className="w-full mt-auto shadow-lg shadow-purple-500/25">
                 Book a Call
               </Button>
             </div>
@@ -498,14 +518,21 @@ export default function UnifiedPricingPage() {
       {/* ================================================================== */}
       {/* CUSTOM BUILD SECTION - Like shop page "Add-ons" */}
       {/* ================================================================== */}
-      <section ref={customRef} id="custom" className="py-16 scroll-mt-8">
+      <section ref={customRef} id="custom" className="py-20 scroll-mt-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          <h2 className={`text-sm font-semibold uppercase tracking-wider ${formInputColors.helper} mb-6`}>
-            Build Your Own
-          </h2>
+          {/* Premium section header */}
+          <div className="text-center mb-12">
+            <h2 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-3`}>
+              Build Your Own
+            </h2>
+            <p className={`text-lg ${formInputColors.helper} mb-4`}>
+              Pick exactly what you need, nothing more
+            </p>
+            <div className="w-24 h-1 mx-auto rounded-full bg-gradient-to-r from-purple-500 to-gold-500" />
+          </div>
 
           {/* Add-ons list - clean table style like shop page */}
-          <div className={`${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} divide-y ${cardBorderColors.subtle} overflow-hidden`}>
+          <div className={`${cardBgColors.base} rounded-2xl border ${cardBorderColors.subtle} divide-y divide-gray-400 overflow-hidden shadow-lg`}>
             {ADDONS.map((addon, index) => {
               const isSelected = selectedAddons.has(addon.id);
               const Icon = addon.icon;
@@ -516,28 +543,32 @@ export default function UnifiedPricingPage() {
                   onClick={() => toggleAddon(addon.id)}
                   className={`
                     w-full flex items-center justify-between p-6 text-left transition-all duration-200
-                    ${isSelected ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500' : 'hover:bg-gray-50'}
-                    ${index === 0 ? 'rounded-t-2xl' : ''}
-                    ${index === ADDONS.length - 1 ? 'rounded-b-2xl' : ''}
+                    ${isSelected
+                      ? 'bg-gradient-to-r from-gold-50 to-purple-50 border-l-4 border-gold-500'
+                      : 'hover:bg-gray-50 border-l-4 border-transparent'
+                    }
                   `}
                 >
                   <div className="flex items-center gap-4">
                     {/* Checkbox */}
                     <div className={`
-                      w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors
-                      ${isSelected ? 'bg-blue-500 border-blue-500 text-white' : 'border-gray-400'}
+                      w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all duration-200
+                      ${isSelected
+                        ? 'bg-gradient-to-br from-gold-500 to-purple-500 border-transparent text-white shadow-md'
+                        : 'border-gray-400 hover:border-gold-400'
+                      }
                     `}>
-                      {isSelected && <Check size={12} strokeWidth={3} />}
+                      {isSelected && <Check size={14} strokeWidth={3} />}
                     </div>
 
                     {/* Icon */}
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isSelected ? 'bg-blue-100' : 'bg-gray-100'}`}>
-                      <Icon size={20} className={isSelected ? accentText.blue : 'text-gray-500'} />
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors duration-200 ${isSelected ? 'bg-gold-100' : 'bg-gray-100'}`}>
+                      <Icon size={24} className={isSelected ? accentText.gold : 'text-gray-500'} />
                     </div>
 
                     {/* Text */}
                     <div>
-                      <h3 className={`font-semibold ${headingColors.primary}`}>
+                      <h3 className={`font-semibold text-lg ${headingColors.primary}`}>
                         {addon.name}
                       </h3>
                       <p className={`text-sm ${formInputColors.helper}`}>
@@ -547,8 +578,8 @@ export default function UnifiedPricingPage() {
                   </div>
 
                   {/* Price */}
-                  <div className={`text-xl font-bold ${isSelected ? accentColors.blue.text : accentColors.purple.text} whitespace-nowrap ml-4`}>
-                    ${addon.price}
+                  <div className={`text-2xl font-bold ${isSelected ? accentColors.gold.text : headingColors.primary} whitespace-nowrap ml-4`}>
+                    +${addon.price}
                   </div>
                 </button>
               );
@@ -557,39 +588,40 @@ export default function UnifiedPricingPage() {
 
           {/* Total & Checkout - appears when items selected */}
           {selectedAddons.size > 0 && (
-            <div className="mt-6 p-6 rounded-2xl bg-gradient-to-br from-purple-50 via-white to-blue-50 border border-gray-400 animate-slide-up">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="mt-8 p-8 rounded-2xl bg-gradient-to-br from-gold-50 via-white to-purple-50 border border-gray-400 shadow-xl animate-slide-up">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                 <div>
-                  <p className={`text-sm ${formInputColors.helper} mb-1`}>
+                  <p className={`text-sm font-medium ${formInputColors.helper} mb-2`}>
                     {selectedAddons.size} item{selectedAddons.size > 1 ? 's' : ''} selected
                   </p>
                   <div className="flex items-baseline gap-2">
-                    <span className={`text-3xl font-bold ${headingColors.primary}`}>
+                    <span className={`text-5xl font-bold ${headingColors.primary}`}>
                       ${customTotal.toLocaleString()}
                     </span>
-                    <span className={`${formInputColors.helper}`}>
+                    <span className={`text-lg ${formInputColors.helper}`}>
                       total
                     </span>
                   </div>
                 </div>
-                <button
+                <Button
+                  variant="gold"
                   onClick={handleCustomCheckout}
                   disabled={isCheckingOut}
-                  className="
-                    px-8 py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2
-                    bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600
-                    text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-100
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                  "
+                  size="lg"
+                  className="shadow-lg shadow-gold-500/25 px-8"
                 >
                   {isCheckingOut ? (
-                    <><Loader2 size={18} className="animate-spin" /> Processing...</>
+                    <span className="flex items-center gap-2">
+                      <Loader2 size={18} className="animate-spin" /> Processing...
+                    </span>
                   ) : (
-                    <>Start for ${customDeposit} <ArrowRight size={18} /></>
+                    <span className="flex items-center gap-2">
+                      Start for ${customDeposit} <ArrowRight size={18} />
+                    </span>
                   )}
-                </button>
+                </Button>
               </div>
-              <p className={`text-sm ${formInputColors.helper} mt-3`}>
+              <p className={`text-sm ${formInputColors.helper} mt-4`}>
                 50% deposit to start, remainder on delivery
               </p>
             </div>
@@ -600,32 +632,34 @@ export default function UnifiedPricingPage() {
       {/* ================================================================== */}
       {/* CONSULTATION CTA - At bottom, warm light section */}
       {/* ================================================================== */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-50 via-white to-blue-50 border border-gray-400 p-8 md:p-12 text-center">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-100/50 to-transparent rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-50 via-white to-blue-50 border border-gray-400 p-10 md:p-16 text-center shadow-xl">
+            {/* Decorative orbs */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-emerald-100 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-blue-100 to-transparent rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl" />
 
             <div className="relative">
-              <h2 className={`text-2xl md:text-3xl font-bold ${headingColors.primary} mb-3`}>
+              <h2 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-4`}>
                 Not sure what you need?
               </h2>
               <p className={`text-lg ${formInputColors.helper} mb-8 max-w-xl mx-auto`}>
                 Book a free consultation. We&apos;ll help you figure out the right solution — no pressure.
               </p>
 
-              <a
+              <Button
+                variant="green"
                 href="/contact#consultation"
-                className={`
-                  inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold
-                  ${accentColors.purple.bg} ${accentColors.purple.text} border ${accentColors.purple.border}
-                  hover:scale-105 transition-transform shadow-lg shadow-purple-500/20
-                `}
+                size="lg"
+                className="shadow-lg shadow-emerald-500/25"
               >
-                <Calendar size={20} />
-                Book a Free Consultation
-              </a>
+                <span className="flex items-center gap-2">
+                  <Calendar size={20} />
+                  Book a Free Consultation
+                </span>
+              </Button>
 
-              <p className={`text-sm ${formInputColors.helper} mt-6`}>
+              <p className={`text-sm ${formInputColors.helper} mt-8`}>
                 15, 30, or 45 minute sessions • No commitment required
               </p>
             </div>
