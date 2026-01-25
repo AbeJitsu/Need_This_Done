@@ -2,6 +2,21 @@
 /* These styles apply to the entire app - every page and component */
 
 /* ========================================================================
+Font Stack - System Fonts with Google Fonts Enhancement
+========================================================================
+Using system fonts as the base ensures fast loading and reliability.
+Google Fonts are loaded optionally - the app works without them.
+*/
+
+/* System font stack definitions */
+:root {
+  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-manrope: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-poppins: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-playfair: 'Playfair Display', Georgia, 'Times New Roman', serif;
+}
+
+/* ========================================================================
 Tailwind CSS Directives
 ========================================================================
 These imports bring in Tailwind's base, component, and utility styles

@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Poppins, Playfair_Display, Manrope } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -25,36 +24,18 @@ import { seoConfig } from '@/lib/seo-config';
 // all pages are rendered at request time with proper context.
 export const dynamic = 'force-dynamic';
 
-// Inter font - modern, trustworthy, highly readable (body text)
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-// Manrope font - geometric, bold, distinctive (headings)
-const manrope = Manrope({
-  subsets: ['latin'],
-  weight: ['700', '800'],
-  variable: '--font-manrope',
-  display: 'swap',
-});
-
-// Poppins font - geometric, authoritative (logo/brand)
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['600', '700'],
-  variable: '--font-poppins',
-  display: 'swap',
-});
-
-// Playfair Display - elegant serif for logo
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  weight: ['700'],
-  variable: '--font-playfair',
-  display: 'swap',
-});
+// ============================================================================
+// Font Configuration - System Font Stack
+// ============================================================================
+// Using CSS system font stacks for reliability across all environments.
+// Google Fonts are loaded via CSS @import in globals.css for production,
+// with system fonts as fallback when network is unavailable.
+//
+// Font purposes:
+// - Inter/system-ui: Body text (modern, trustworthy, highly readable)
+// - Manrope/system-ui: Headings (geometric, bold, distinctive)
+// - Poppins/system-ui: Logo/brand (geometric, authoritative)
+// - Playfair Display/Georgia: Elegant serif accents
 
 // ============================================================================
 // Root Layout Component
@@ -162,7 +143,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${manrope.variable} ${poppins.variable} ${playfair.variable}`}>
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* JSON-LD Structured Data for rich search results */}
         <ProfessionalServiceJsonLd />

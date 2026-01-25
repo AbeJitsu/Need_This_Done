@@ -1,7 +1,6 @@
 'use client';
 
-import Button from '@/components/Button';
-import { EditableSection, EditableItem, Editable, EditableLink } from '@/components/InlineEditor';
+import { EditableSection, EditableItem, Editable } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import ServiceIcon, { getServiceIconType } from '@/components/home/ServiceIcons';
 import type { HomePageContent } from '@/lib/page-content-types';
@@ -22,7 +21,7 @@ interface HomePageClientProps {
 
 export default function HomePageClient({ content: initialContent }: HomePageClientProps) {
   // Use content from universal provider (auto-loaded by route)
-  const { pageContent, isEditMode } = useInlineEdit();
+  const { pageContent } = useInlineEdit();
   // Check that pageContent has expected structure before using it
   const hasValidContent = pageContent && 'hero' in pageContent && 'services' in pageContent;
   const content = hasValidContent ? (pageContent as unknown as HomePageContent) : initialContent;
