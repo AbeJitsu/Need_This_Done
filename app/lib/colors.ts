@@ -39,98 +39,8 @@
 //
 // ============================================================================
 
-// Import computed shades from the WCAG contrast system
-import { computedShades } from './contrast';
-
 export type AccentColor = 'purple' | 'blue' | 'green';
 export type AccentVariant = 'purple' | 'blue' | 'green' | 'gold' | 'teal' | 'gray' | 'red';
-
-// ============================================================================
-// COLOR MAPPINGS - Translate between semantic names and Tailwind prefixes
-// ============================================================================
-// 'green' in our system → 'emerald' in Tailwind (for a refined look)
-// This mapping enables the ETC pattern: one change cascades everywhere.
-
-const colorToTailwind: Record<AccentVariant, string> = {
-  purple: 'purple',
-  blue: 'blue',
-  green: 'emerald',
-  gold: 'gold',
-  teal: 'teal',
-  gray: 'gray',
-  red: 'red',
-};
-
-// Map to contrast.ts color names (same as Tailwind except green → emerald)
-type ContrastColor = 'emerald' | 'blue' | 'purple' | 'gold' | 'teal' | 'gray' | 'red';
-const colorToContrast: Record<AccentVariant, ContrastColor> = {
-  purple: 'purple',
-  blue: 'blue',
-  green: 'emerald',
-  gold: 'gold',
-  teal: 'teal',
-  gray: 'gray',
-  red: 'red',
-};
-
-// ============================================================================
-// COMPUTED SHADE HELPER - Get the lightest WCAG AA compliant shade
-// ============================================================================
-// Use this for new code to get automatically computed shades.
-// Example: getComputedShade('green', 'onWhite') → '500' (or whatever passes 4.5:1)
-
-export function getComputedShade(color: AccentVariant, background: 'onWhite' | 'onGray100' | 'onDark' = 'onWhite'): string {
-  return computedShades[background][colorToContrast[color]];
-}
-
-// ============================================================================
-// COLOR UTILITY FUNCTIONS - Generate WCAG AA colors dynamically
-// ============================================================================
-// These functions generate color class strings following the WCAG AA pattern.
-// Use these instead of hardcoded color objects for new code.
-//
-// The Pattern (ETC Architecture):
-//   Light mode: -100 bg, computed text shade (lightest that meets 4.5:1)
-//   Dark mode:  -500 bg, white text (4.5:1 contrast)
-//
-// Benefits:
-//   - Adding a new color = add to AccentVariant type only
-//   - All 7 colors work automatically
-//   - WCAG AA compliance built into the formula
-//   - Shades auto-calculated from hex values (ETC)
-// ============================================================================
-
-/**
- * Generate accent colors for ghost/outline style elements.
- * Light mode: pastel bg (-100), colored text (computed WCAG AA shade)
- * Dark mode: vibrant bg (-500), white text
- *
- * Use for: badges, chips, tags, outline buttons, feature cards
- *
- * @example
- * const colors = getAccentColors('purple');
- * <div className={`${colors.bg} ${colors.text}`}>Badge</div>
- */
-export function getAccentColors(color: AccentVariant) {
-  const tw = colorToTailwind[color];
-  const shade = computedShades.onWhite[colorToContrast[color]];
-  const hoverShade = String(Math.min(Number(shade) + 100, 900));
-
-  return {
-    // Background: -100 light, -500 dark (WCAG AA anchor)
-    bg: `bg-${tw}-100 dark:bg-${tw}-500`,
-    // Text: computed shade light (4.5:1 on white), white dark (4.5:1 on -500)
-    text: `text-${tw}-${shade} dark:text-white`,
-    // Border: -500 light (visible), -100 dark (pops on dark bg)
-    border: `border-${tw}-500 dark:border-${tw}-100`,
-    // Hover text
-    hoverText: `hover:text-${tw}-${hoverShade} dark:hover:text-gray-100`,
-    // Hover border
-    hoverBorder: `hover:border-${tw}-${hoverShade} dark:hover:border-${tw}-200`,
-    // Icon on pastel bg: computed shade light, -100 dark
-    icon: `text-${tw}-${shade} dark:text-${tw}-100`,
-  };
-}
 
 /**
  * Generate colors for solid-filled buttons.
@@ -162,23 +72,6 @@ export function getSolidButtonColors(color: AccentVariant) {
 }
 
 /**
- * Generate colors for outline buttons.
- * Colored border + text, subtle hover bg.
- *
- * Use for: secondary CTAs, cancel buttons, less prominent actions
- *
- * @example
- * const btn = getOutlineButtonColors('purple');
- * <button className={`border-2 ${btn.base} ${btn.hover}`}>Cancel</button>
- */
-export function getOutlineButtonColors(color: AccentVariant) {
-  return {
-    base: `border-${color}-500 text-${color}-600 dark:text-${color}-300`,
-    hover: `hover:bg-${color}-100 dark:hover:bg-${color}-800`,
-  };
-}
-
-/**
  * Generate colors for checkmark circles (icon + background).
  * Used in feature lists, bullet points, success states.
  *
@@ -194,39 +87,6 @@ export function getCheckmarkColors(color: AccentVariant) {
     border: `border border-${color}-300 dark:border-${color}-400`,
     icon: `text-${color}-600 dark:text-${color}-100`,
   };
-}
-
-/**
- * Generate soft background colors for subtle accents.
- * -100 in light mode, -800 in dark mode (more subtle than -500).
- *
- * Use for: info banners, selected states, icon circles
- *
- * @example
- * const soft = getSoftBgColors('blue');
- * <div className={`${soft.bg} ${soft.text}`}>Info box</div>
- */
-export function getSoftBgColors(color: AccentVariant) {
-  const darkShade = color === 'gray' ? '700' : '800';
-  return {
-    bg: `bg-${color}-100 dark:bg-${color}-${darkShade}`,
-    text: `text-${color}-600 dark:text-${color}-300`,
-    heading: `text-${color}-800 dark:text-white`,
-    border: `border border-${color}-200 dark:border-${color}-600`,
-  };
-}
-
-/**
- * Generate title text colors (colored headings).
- * Computed shade light mode (lightest WCAG AA), -300 dark mode.
- *
- * @example
- * <h2 className={getTitleColor('purple')}>Section Title</h2>
- */
-export function getTitleColor(color: AccentVariant): string {
-  const tw = colorToTailwind[color];
-  const shade = computedShades.onWhite[colorToContrast[color]];
-  return `text-${tw}-${shade} dark:text-${tw}-300`;
 }
 
 /**
@@ -391,23 +251,6 @@ export const accentFontWeight = 'font-semibold';
 export const linkFontWeight = 'font-medium';
 
 // ============================================================================
-// Title Colors - Used for headings and labels (generic)
-// ============================================================================
-// @deprecated Use accentColors[color].titleText instead for better consolidation
-// Unified pattern for all accent colors:
-// Light mode: -600 shades ensure 4.5:1+ contrast on white (minimum)
-// Dark mode: -300 shades ensure 4.5:1+ contrast on gray-800 (lighter, readable as text)
-export const titleColors: Record<AccentVariant, string> = {
-  purple: 'text-purple-600 dark:text-purple-300',
-  blue: 'text-blue-600 dark:text-blue-300',
-  green: 'text-green-600 dark:text-green-300',
-  gold: 'text-gold-600 dark:text-gold-300',
-  teal: 'text-green-600 dark:text-green-300',
-  gray: 'text-gray-600 dark:text-gray-300',
-  red: 'text-red-600 dark:text-red-300',
-};
-
-// ============================================================================
 // Title Text Colors - For StepCard titles on dark backgrounds
 // ============================================================================
 // Light mode: -600 text for minimum WCAG AA contrast
@@ -421,16 +264,6 @@ export const titleTextColors: Record<AccentVariant, string> = {
   teal: 'text-green-600 dark:text-green-100',
   gray: 'text-gray-600 dark:text-gray-100',
   red: 'text-red-600 dark:text-red-100',
-};
-
-// ============================================================================
-// Border Colors - Top border accent for cards
-// ============================================================================
-// @deprecated Use accentColors[color].topBorder instead for better consolidation
-export const topBorderColors: Record<AccentColor, string> = {
-  purple: 'border-t-purple-500',
-  blue: 'border-t-blue-500',
-  green: 'border-t-green-500',
 };
 
 // ============================================================================
@@ -479,21 +312,6 @@ export const checkmarkColors: Record<AccentColor, {
   purple: { bg: 'bg-purple-100 dark:bg-purple-500', icon: 'text-purple-600 dark:text-purple-100' },
   blue: { bg: 'bg-blue-100 dark:bg-blue-500', icon: 'text-blue-600 dark:text-blue-100' },
   green: { bg: 'bg-green-100 dark:bg-green-500', icon: 'text-green-600 dark:text-green-100' },
-};
-
-// ============================================================================
-// Card Hover Colors - For Card component hover states
-// ============================================================================
-// @deprecated Use accentColors[color].cardHover instead for better consolidation
-// Centralized hover border colors for cards with color accents
-export const cardHoverColors: Record<AccentVariant, string> = {
-  green: 'hover:border-green-500 dark:hover:border-green-300',
-  blue: 'hover:border-blue-500 dark:hover:border-blue-300',
-  purple: 'hover:border-purple-500 dark:hover:border-purple-300',
-  gold: 'hover:border-gold-500 dark:hover:border-gold-300',
-  teal: 'hover:border-green-500 dark:hover:border-green-300',
-  gray: 'hover:border-gray-500 dark:hover:border-gray-400',
-  red: 'hover:border-red-500 dark:hover:border-red-300',
 };
 
 // ============================================================================
@@ -729,14 +547,6 @@ export const stepBadgeColors: Record<AccentVariant, string> = {
 };
 
 // ============================================================================
-// Success Checkmark Colors - For checkmarks in feature lists and success states
-// ============================================================================
-export const successCheckmarkColors = {
-  icon: 'text-green-600 dark:text-green-300',
-  iconAlt: 'text-green-700 dark:text-green-100', // For vibrant bg circles - matches accent system
-};
-
-// ============================================================================
 // Danger/Destructive Action Colors - For delete, remove, cancel actions
 // ============================================================================
 export const dangerColors = {
@@ -776,17 +586,6 @@ export const linkColors = {
 export const linkHoverColors = {
   blue: 'hover:text-blue-700 dark:hover:text-blue-300',
   purple: 'hover:text-purple-700 dark:hover:text-purple-300',
-};
-
-// ============================================================================
-// Group Hover Colors - For elements that change on parent hover
-// ============================================================================
-// Used for text that changes color when a parent with group class is hovered
-export const groupHoverColors = {
-  green: 'group-hover:text-green-500 dark:group-hover:text-green-300',
-  blue: 'group-hover:text-blue-500 dark:group-hover:text-blue-300',
-  purple: 'group-hover:text-purple-500 dark:group-hover:text-purple-300',
-  gold: 'group-hover:text-gold-500 dark:group-hover:text-gold-300',
 };
 
 // ============================================================================
@@ -863,32 +662,6 @@ export const neutralAccentBg: Record<AccentVariant, string> = {
 export const footerColors = {
   bg: 'bg-white dark:bg-gray-900',
   border: 'border-t border-gray-400 dark:border-gray-800',
-};
-
-// ============================================================================
-// Placeholder Colors - For image placeholders and empty states
-// ============================================================================
-export const placeholderColors = {
-  bg: 'bg-gray-200 dark:bg-gray-700',
-};
-
-// ============================================================================
-// Checkmark Background Colors - DEPRECATED: Use getCheckmarkColors() instead
-// ============================================================================
-// Kept for backwards compatibility. New code should use:
-//   import { getCheckmarkColors } from '@/lib/colors';
-//   const { bg, border, icon } = getCheckmarkColors('green');
-// ============================================================================
-
-// ============================================================================
-// Chip Colors - Pill-shaped navigation links (NEUTRAL pattern)
-// ============================================================================
-// Used for tag-style links that stay neutral gray in both modes.
-// Different from accentColors which use INVERSION pattern.
-export const chipColors = {
-  bg: 'bg-gray-100 dark:bg-gray-700',
-  text: 'text-gray-900 dark:text-gray-100',
-  hover: 'hover:bg-gray-200 dark:hover:bg-gray-600',
 };
 
 // ============================================================================
@@ -1055,39 +828,6 @@ export const statusBadgeColors = {
 };
 
 // ============================================================================
-// Category Badge Colors - For content categorization
-// ============================================================================
-// Consistent styling for category badges across pages
-// Category badges: -600 text in light mode for WCAG AA minimum
-export const categoryBadgeColors: Record<string, string> = {
-  Admin: 'bg-purple-100 text-purple-600 dark:bg-purple-500 dark:text-white',
-  Shop: 'bg-green-100 text-green-600 dark:bg-green-500 dark:text-white',
-  Dashboard: 'bg-blue-100 text-blue-600 dark:bg-blue-500 dark:text-white',
-  Public: 'bg-gray-100 text-gray-600 dark:bg-gray-500 dark:text-white',
-};
-
-// ============================================================================
-// File Upload Colors - For file upload dropzones
-// ============================================================================
-export const fileUploadColors = {
-  border: 'border-2 border-dashed border-gray-400 dark:border-gray-600',
-  hoverBorder: 'hover:border-blue-400 dark:hover:border-blue-500',
-  bg: 'bg-gray-100 dark:bg-gray-800',
-  hoverBg: 'hover:bg-gray-200 dark:hover:bg-gray-700',
-};
-
-// ============================================================================
-// Navigation Background Colors - For navigation bar
-// ============================================================================
-export const navigationBgColors = {
-  base: 'bg-white dark:bg-gray-900',
-  border: 'border-b border-gray-400 dark:border-gray-800',
-  dropdown: 'bg-white dark:bg-gray-800',
-  dropdownBorder: 'border border-gray-400 dark:border-gray-700',
-  dropdownHover: 'hover:bg-gray-100 dark:hover:bg-gray-700',
-};
-
-// ============================================================================
 // Layout Background Colors - For page sections and containers
 // ============================================================================
 export const layoutBgColors = {
@@ -1107,71 +847,6 @@ export const gradientColors = {
   popularBadge: 'bg-gradient-to-r from-blue-500 to-blue-600',
   // Avatar placeholder gradient
   avatarPlaceholder: 'bg-gradient-to-br from-purple-400 to-blue-500',
-};
-
-// ============================================================================
-// Solid Button Colors - FILLED style (dark bg, white text)
-// ============================================================================
-// For primary action buttons, CTAs, and buttons that need to stand out.
-// Light mode: -600 shade for backgrounds, -700 on hover
-// Dark mode: -600 shade for backgrounds (same as light for 4.5:1+ contrast with white)
-//
-// WHEN TO USE:
-//   - Primary action buttons ("Get Started", "Submit", "Send")
-//   - CTAs that need to stand out
-//   - Modal confirm buttons
-//
-// For GHOST/OUTLINE style (light bg, colored text), use accentColors instead.
-export const solidButtonColors: Record<AccentVariant, {
-  bg: string;
-  hover: string;
-  text: string;
-  focus: string;
-}> = {
-  purple: {
-    bg: 'bg-purple-600 dark:bg-purple-600',
-    hover: 'hover:bg-purple-700 dark:hover:bg-purple-700',
-    text: 'text-white',
-    focus: 'focus:ring-2 focus:ring-purple-500',
-  },
-  blue: {
-    bg: 'bg-blue-600 dark:bg-blue-600',
-    hover: 'hover:bg-blue-700 dark:hover:bg-blue-700',
-    text: 'text-white',
-    focus: 'focus:ring-2 focus:ring-blue-500',
-  },
-  green: {
-    bg: 'bg-green-600 dark:bg-green-600',
-    hover: 'hover:bg-green-700 dark:hover:bg-green-700',
-    text: 'text-white',
-    focus: 'focus:ring-2 focus:ring-green-500',
-  },
-  gold: {
-    // Gold CTA buttons use light bg + dark text in BOTH modes (no inversion)
-    // Stands out against dark backgrounds while maintaining consistent branding
-    bg: 'bg-gold-100',
-    hover: 'hover:bg-gold-200',
-    text: 'text-gold-900',
-    focus: 'focus:ring-2 focus:ring-gold-500',
-  },
-  teal: {
-    bg: 'bg-green-600 dark:bg-green-600',
-    hover: 'hover:bg-green-700 dark:hover:bg-green-700',
-    text: 'text-white',
-    focus: 'focus:ring-2 focus:ring-green-500',
-  },
-  gray: {
-    bg: 'bg-gray-600 dark:bg-gray-600',
-    hover: 'hover:bg-gray-700 dark:hover:bg-gray-700',
-    text: 'text-white',
-    focus: 'focus:ring-2 focus:ring-gray-500',
-  },
-  red: {
-    bg: 'bg-red-600 dark:bg-red-600',
-    hover: 'hover:bg-red-700 dark:hover:bg-red-700',
-    text: 'text-white',
-    focus: 'focus:ring-2 focus:ring-red-500',
-  },
 };
 
 // ============================================================================
@@ -1237,54 +912,6 @@ export const adminSidebarColors = {
     appointments: 'text-green-600 dark:text-green-400',
     users: 'text-purple-600 dark:text-purple-400',
     dev: 'text-gold-600 dark:text-gold-400',
-  },
-};
-
-// ============================================================================
-// Service Comparison Card Colors - For service comparison sections
-// ============================================================================
-// Three-column card layout with distinct colors for each service type.
-// Only stores accent-specific colors. Common text colors use centralized system:
-// - Card background: use cardBgColors.base
-// - Label text: use headingColors.secondary
-// - Value text: use headingColors.primary
-export type ServiceType = 'virtualAssistant' | 'dataDocuments' | 'website';
-
-export const serviceComparisonColors: Record<ServiceType, {
-  border: string;
-  headerBg: string;
-  headerText: string;
-  pricingBg: string;
-  pricingBorder: string;
-  pricingLabelText: string;
-  pricingValueText: string;
-}> = {
-  virtualAssistant: {
-    border: 'border border-green-200/60 dark:border-green-700/60',
-    headerBg: 'bg-gradient-to-r from-green-50 to-green-50 dark:from-green-900/50 dark:to-green-900/50',
-    headerText: 'text-green-700 dark:text-green-300',
-    pricingBg: 'bg-green-50/50 dark:bg-green-900/30',
-    pricingBorder: 'border-t border-green-200/60 dark:border-green-700/60',
-    pricingLabelText: 'text-green-600 dark:text-green-400',
-    pricingValueText: 'text-green-700 dark:text-green-300',
-  },
-  dataDocuments: {
-    border: 'border border-blue-200/60 dark:border-blue-700/60',
-    headerBg: 'bg-gradient-to-r from-blue-50 to-blue-50 dark:from-blue-900/50 dark:to-blue-900/50',
-    headerText: 'text-blue-700 dark:text-blue-300',
-    pricingBg: 'bg-blue-50/50 dark:bg-blue-900/30',
-    pricingBorder: 'border-t border-blue-200/60 dark:border-blue-700/60',
-    pricingLabelText: 'text-blue-600 dark:text-blue-400',
-    pricingValueText: 'text-blue-700 dark:text-blue-300',
-  },
-  website: {
-    border: 'border border-purple-200/60 dark:border-purple-700/60',
-    headerBg: 'bg-gradient-to-r from-purple-50 to-purple-50 dark:from-purple-900/50 dark:to-purple-900/50',
-    headerText: 'text-purple-700 dark:text-purple-300',
-    pricingBg: 'bg-purple-50/50 dark:bg-purple-900/30',
-    pricingBorder: 'border-t border-purple-200/60 dark:border-purple-700/60',
-    pricingLabelText: 'text-purple-600 dark:text-purple-400',
-    pricingValueText: 'text-purple-700 dark:text-purple-300',
   },
 };
 

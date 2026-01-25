@@ -1,19 +1,23 @@
-# Color System Rule
-
-**NEVER hardcode colors.** All colors come from `lib/colors.ts`.
+# Color System Guidelines
 
 ## BJJ Belt Color Progression
 
-The founder is a Brazilian Jiu-Jitsu purple belt. Use the BJJ belt progression as the primary color hierarchy:
+The founder is a Brazilian Jiu-Jitsu purple belt. Use this color hierarchy:
 
-| Order | Color | Tailwind Palette | Usage |
-|-------|-------|------------------|-------|
+| Order | Belt | Tailwind Palette | Usage |
+|-------|------|------------------|-------|
 | 1st | **Green** | `emerald-*` | Primary actions, success states, main CTAs |
 | 2nd | **Blue** | `blue-*` | Secondary elements, links, professional tone |
 | 3rd | **Purple** | `purple-*` | Tertiary accents, creativity, special emphasis |
-| 4th | **Gold** | `gold-*` | Warm highlights, links on dark backgrounds |
+| 4th | **Brown** | `gold-*` | Warm highlights, links on dark backgrounds |
+| 5th | **Black** | `gray-800/900` | Final element, mastery, neutral anchor |
 
-**Important**: Avoid orange/amber for text. Use gold instead for warm accents.
+**How many elements?**
+- **3 elements**: Green → Blue → Purple
+- **4 elements**: Green → Blue → Purple → Brown (gold)
+- **5 elements**: Green → Blue → Purple → Brown → Black (dark gray)
+
+**Avoid**: Orange/amber for text. Use gold instead.
 
 ## Contrast Compliance (WCAG AA)
 
@@ -26,47 +30,28 @@ Minimum compliant shades on white backgrounds:
 | Purple | purple-600 | purple-500 |
 | Gold | gold-700 | gold-500 |
 | Gray | gray-600 | gray-400 |
-| Stone | stone-600 | stone-500 |
-| Slate | slate-600 | slate-400 |
 | Red | red-600 | red-500 |
-
-**Warning:** `stone-400` (2.52:1) does NOT meet 3:1 contrast. Use `stone-500` minimum.
 
 **Reference:** See `app/color-contrast-viewer.html` for full palette with ratios.
 
-When multiple colored elements appear together (buttons, headings, sections), follow this progression top-to-bottom or left-to-right.
+## Centralized Colors (Optional)
 
-## Usage
-
-```typescript
-import { formInputColors, accentColors, titleColors } from '@/lib/colors';
-
-// For text colors
-<h2 className={titleColors.green}>Primary Heading</h2>
-<h3 className={titleColors.blue}>Secondary Heading</h3>
-<h4 className={titleColors.purple}>Tertiary Heading</h4>
-
-// For helper text
-<p className={formInputColors.helper}>Helper text</p>
-```
-
-## Puck Components
-
-For Puck visual builder components, use utilities from `lib/puck-utils.tsx`:
+`lib/colors.ts` has pre-built color objects if you need them:
 
 ```typescript
-import { getPuckAccentColors, getPuckFullColors } from '@/lib/puck-utils';
+import { accentColors, titleColors, formInputColors } from '@/lib/colors';
 
-const colors = getPuckAccentColors(accentColor);
-const fullColors = getPuckFullColors(accentColor);
+// Complex components with multiple color properties
+<Card className={`${accentColors.blue.bg} ${accentColors.blue.text}`} />
 ```
 
-## Why This Matters
+For simple one-off colors, Tailwind classes are fine:
 
-- Dynamic Tailwind classes break in production (purged at build time)
-- Centralized colors enable theme changes
-- Consistent brand across all components
-- WCAG AA compliance built into the color scale
+```typescript
+// Simple usage - just use Tailwind directly
+<h2 className="text-blue-600">Heading</h2>
+<p className="text-gray-600">Body text</p>
+```
 
 ## Note
 
