@@ -247,7 +247,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
       {/* How It Works - Enhanced Full Section */}
       <EditableSection sectionKey="processPreview" label="Process Preview">
-        <div id="how-it-works-section" className="mb-24 animate-slide-up scroll-mt-20">
+        <div id="how-it-works-section" className="mb-24 animate-slide-up scroll-mt-28">
           {/* Section Header */}
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-manrope font-extrabold text-gray-900 mb-4">
