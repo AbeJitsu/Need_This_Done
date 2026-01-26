@@ -287,10 +287,8 @@ export default function UnifiedPricingPage() {
       <section className="py-8 md:py-12">
         {/* Gradient container - full width on mobile, contained on desktop */}
         <div className="relative overflow-hidden py-12 md:py-16 md:max-w-6xl md:mx-auto md:rounded-3xl">
-            {/* Gradient orbs - purple/blue/cyan for warmth */}
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-100 to-purple-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-blue-100 blur-2xl" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-gradient-to-br from-gold-50 to-gold-50 blur-2xl opacity-60" />
+            {/* Linear gradient: green → light blue → purple (bottom-left to top-right) */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-emerald-200 via-sky-50 to-purple-200" />
 
             {/* Text container - always padded */}
             <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
