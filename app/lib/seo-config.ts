@@ -36,11 +36,27 @@ export const seoConfig = {
 
   // SEO keywords
   keywords: [
-    'project services',
+    // Primary services
     'web development',
+    'website design',
+    'automation services',
+    'AI solutions',
+    'workflow automation',
+    // Business terms
     'professional services',
-    'Orlando',
+    'project services',
     'freelance developer',
+    'small business help',
+    'technical consulting',
+    // Location
+    'Orlando',
+    'Florida',
+    'remote services',
+    // Problem-solving
+    'get things done',
+    'task completion',
+    'business automation',
+    'custom website',
   ],
 
   // Services for structured data
