@@ -63,6 +63,34 @@ const nextConfig = {
   // Redirect old pages to unified pricing page
   async redirects() {
     return [
+      // Consolidated pages - merged into homepage
+      {
+        source: '/services',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/how-it-works',
+        destination: '/',
+        permanent: true,
+      },
+      // Removed pages - redirect to closest equivalent
+      {
+        source: '/get-started',
+        destination: '/pricing',
+        permanent: true,
+      },
+      {
+        source: '/changelog',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/guide',
+        destination: '/',
+        permanent: true,
+      },
+      // Legacy shop routes
       {
         source: '/shop',
         destination: '/pricing',
