@@ -33,6 +33,7 @@ import {
   mutedTextColors,
   alertColors,
 } from '@/lib/colors';
+import { scrollToRef } from '@/lib/scroll-utils';
 
 // ============================================================================
 // Unified Pricing Page - Warm, inviting design with smooth scroll navigation
@@ -146,8 +147,9 @@ export default function UnifiedPricingPage() {
   const customRef = useRef<HTMLElement>(null);
   const quoteAuthRef = useRef<HTMLElement>(null);
 
+  // Scroll helper that respects prefers-reduced-motion preference
   const scrollToSection = (ref: React.RefObject<HTMLElement | null>) => {
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollToRef(ref, { block: 'start' });
   };
 
   const toggleAddon = (id: string) => {

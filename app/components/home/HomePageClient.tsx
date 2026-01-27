@@ -4,6 +4,7 @@ import { EditableSection, EditableItem, Editable } from '@/components/InlineEdit
 import { useInlineEdit } from '@/context/InlineEditContext';
 import ServiceIcon, { getServiceIconType } from '@/components/home/ServiceIcons';
 import type { HomePageContent } from '@/lib/page-content-types';
+import { scrollToId } from '@/lib/scroll-utils';
 
 // ============================================================================
 // Home Page Client - Enhanced Visual Design
@@ -60,14 +61,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 From your first website to fully automated operations. We build the technology that lets you focus on what matters.
               </p>
             </Editable>
-            {/* Scroll indicator - functional smooth scroll */}
+            {/* Scroll indicator - respects prefers-reduced-motion */}
             <button
               onClick={(e) => {
                 e.preventDefault();
-                const servicesSection = document.getElementById('services-section');
-                if (servicesSection) {
-                  servicesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+                scrollToId('services-section', { block: 'start' });
               }}
               className="mt-10 inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors cursor-pointer animate-slide-up animate-delay-300"
               aria-label="Scroll to services section"
