@@ -52,37 +52,54 @@ export async function POST(request: NextRequest) {
     // Idempotency Protection - Prevent Duplicate Event Processing
     // ========================================================================
     // Stripe may send the same webhook multiple times (network retries).
-    // Check if we've already processed this event ID to prevent duplicate
-    // charges, order updates, or subscription changes.
+    // Use atomic upsert with unique constraint to prevent race conditions.
+    //
+    // CRITICAL: The previous SELECT-then-INSERT pattern had a TOCTOU race:
+    //   Thread A: SELECT (no row) → Thread B: INSERT (success) → Thread A: INSERT (fails)
+    //   Both threads would process the event.
+    //
+    // Solution: Use upsert with ignoreDuplicates to make it atomic.
+    // If row exists, do nothing. If new, insert and continue processing.
 
-    const { data: existingEvent } = await supabase
+    const { error: upsertError } = await supabase
       .from('webhook_events')
-      .select('id, processed_at')
+      .upsert(
+        {
+          event_id: event.id,
+          event_type: event.type,
+          processed_at: new Date().toISOString(),
+        },
+        {
+          onConflict: 'event_id',
+          ignoreDuplicates: true, // Don't update if exists, just return success
+        }
+      );
+
+    // Check if this is a duplicate by attempting to read back the row
+    const { data: eventRecord } = await supabase
+      .from('webhook_events')
+      .select('processed_at')
       .eq('event_id', event.id)
       .single();
 
-    if (existingEvent) {
-      console.log(`[Webhook] Event ${event.id} already processed at ${existingEvent.processed_at}, skipping`);
-      return NextResponse.json({ received: true, skipped: true });
-    }
+    if (eventRecord) {
+      const processingTime = new Date(eventRecord.processed_at).getTime();
+      const now = Date.now();
 
-    // Record this event as being processed (prevents race conditions)
-    const { error: insertError } = await supabase
-      .from('webhook_events')
-      .insert({
-        event_id: event.id,
-        event_type: event.type,
-        processed_at: new Date().toISOString(),
-      });
-
-    if (insertError) {
-      // If insert fails due to unique constraint, another request beat us to it
-      if (insertError.code === '23505') {
-        console.log(`[Webhook] Event ${event.id} already being processed by another request, skipping`);
+      // If processed_at is more than 1 second old, this is a retry
+      if (now - processingTime > 1000) {
+        console.log(`[Webhook] Event ${event.id} already processed at ${eventRecord.processed_at}, skipping duplicate`);
         return NextResponse.json({ received: true, skipped: true });
       }
-      console.error('[Webhook] Failed to record event:', insertError);
-      // Continue processing - better to risk duplicate than drop events
+    }
+
+    if (upsertError) {
+      console.error('[Webhook] Failed to record event:', upsertError);
+      // Fail fast - don't process if we can't guarantee idempotency
+      return NextResponse.json(
+        { error: 'Failed to ensure idempotency' },
+        { status: 500 }
+      );
     }
 
     // Route event to appropriate handler

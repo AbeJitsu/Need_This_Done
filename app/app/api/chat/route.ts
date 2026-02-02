@@ -2,6 +2,7 @@ import { openai } from '@ai-sdk/openai';
 import { streamText, embed, type CoreMessage } from 'ai';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { redis } from '@/lib/redis';
+import { withSupabaseRetry } from '@/lib/supabase-retry';
 
 export const dynamic = 'force-dynamic';
 
@@ -192,18 +193,39 @@ export async function POST(req: Request) {
     // Convert embedding array to string format for pgvector RPC
     const embeddingStr = `[${embedding.join(',')}]`;
 
-    const { data: matches, error: searchError } = await supabase.rpc(
-      'match_page_embeddings',
-      {
-        query_embedding: embeddingStr,
-        match_threshold: similarityThreshold,
-        match_count: maxResults,
-      }
-    );
+    // RELIABILITY FIX: Add retry logic for vector search
+    // Vector search can fail due to transient database issues (connection timeouts,
+    // connection pool exhaustion). Retrying ensures chat quality doesn't degrade.
+    let matches: { page_title: string; page_url: string; content_chunk: string }[] | null = null;
+    let searchError: unknown = null;
+
+    try {
+      const searchResult = await withSupabaseRetry(
+        async () => {
+          const result = await supabase.rpc('match_page_embeddings', {
+            query_embedding: embeddingStr,
+            match_threshold: similarityThreshold,
+            match_count: maxResults,
+          });
+          return result;
+        },
+        {
+          operation: 'Vector search for chat context',
+          maxRetries: 2, // Only 2 retries - vector search is optional, don't wait too long
+        }
+      );
+
+      matches = searchResult.data as { page_title: string; page_url: string; content_chunk: string }[] | null;
+      searchError = searchResult.error;
+    } catch (error) {
+      searchError = error;
+      console.error('[Chat] Vector search failed after retries:', error);
+      // Continue without context rather than failing completely
+    }
 
     if (searchError) {
-      console.error('Vector search error:', searchError);
-      // Continue without context rather than failing completely
+      console.warn('[Chat] Vector search error, continuing without context:', searchError);
+      // Context-less response is better than no response
     }
 
     // ========================================================================

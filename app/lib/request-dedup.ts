@@ -8,6 +8,7 @@
 
 import { redis } from './redis';
 import { createHash } from 'crypto';
+import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from './api-timeout';
 
 // ============================================================================
 // Configuration
@@ -66,10 +67,17 @@ export async function checkAndMarkRequest(
     // CRITICAL: Use SET with NX (only set if not exists) + EX (expiration) atomically
     // This ensures exactly-once semantics even under high concurrency
     // Returns "OK" if set successfully, null if key already exists
-    const result = await redis.raw.set(key, new Date().toISOString(), {
-      NX: true, // Only set if key doesn't exist (atomic test-and-set)
-      EX: DEDUP_TTL_SECONDS,
-    });
+    //
+    // TIMEOUT PROTECTION: Wrap Redis call with timeout to prevent indefinite hangs
+    // If Redis is slow, fail fast and allow request through (graceful degradation)
+    const result = await withTimeout(
+      redis.raw.set(key, new Date().toISOString(), {
+        NX: true, // Only set if key doesn't exist (atomic test-and-set)
+        EX: DEDUP_TTL_SECONDS,
+      }),
+      TIMEOUT_LIMITS.CACHE, // 2 seconds - dedup should be fast
+      `Deduplication check for ${operation}`
+    );
 
     if (result === null) {
       // Key already exists - this is a duplicate request
@@ -80,8 +88,14 @@ export async function checkAndMarkRequest(
     // Key was set successfully - this is a new request
     return true;
   } catch (error) {
-    console.error(`[Dedup] Redis error for ${operation}:`, error);
-    // On Redis failure, allow the request through to avoid blocking legitimate traffic
+    // Handle timeout errors specifically
+    if (error instanceof TimeoutError) {
+      console.error(`[Dedup] Timeout on ${operation} - allowing request to prevent blocking:`, error.message);
+    } else {
+      console.error(`[Dedup] Redis error for ${operation}:`, error);
+    }
+
+    // On Redis failure or timeout, allow the request through to avoid blocking legitimate traffic
     // Better to risk a duplicate than to block all requests
     return true;
   }
@@ -95,9 +109,18 @@ export async function checkAndMarkRequest(
 export async function clearRequestFingerprint(fingerprint: string): Promise<void> {
   const key = `${DEDUP_KEY_PREFIX}${fingerprint}`;
   try {
-    await redis.del(key);
+    // Add timeout protection for delete operations as well
+    await withTimeout(
+      redis.del(key),
+      TIMEOUT_LIMITS.CACHE,
+      'Clear deduplication fingerprint'
+    );
   } catch (error) {
-    console.error('[Dedup] Failed to clear fingerprint:', error);
+    if (error instanceof TimeoutError) {
+      console.error('[Dedup] Timeout clearing fingerprint:', error.message);
+    } else {
+      console.error('[Dedup] Failed to clear fingerprint:', error);
+    }
   }
 }
 
