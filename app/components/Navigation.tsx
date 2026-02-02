@@ -112,6 +112,7 @@ export default function Navigation() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    aria-current={isActive ? 'page' : undefined}
                     className={`
                       px-3 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors transition-transform
                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
@@ -329,6 +330,7 @@ export default function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  aria-current={isActive ? 'page' : undefined}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`
                     block px-3 py-2 text-base font-medium rounded-md transition-colors

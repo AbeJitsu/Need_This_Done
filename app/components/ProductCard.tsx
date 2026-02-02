@@ -73,7 +73,7 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
         h-full ${cardBgColors.base} rounded-xl border-2 ${cardBorderColors.light}
         transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-emerald-400
         active:scale-[0.98] flex flex-col focus-within:outline-none focus-within:ring-2 focus-within:ring-emerald-500 focus-within:ring-offset-2 focus-within:ring-offset-white
-        group-hover:${accentColors.green.cardHover}
+        group-hover:border-emerald-500 dark:group-hover:border-emerald-300
       `}>
         {/* Product Image */}
         <div className="relative w-full h-48 bg-gray-100 rounded-t-lg overflow-hidden flex-shrink-0">

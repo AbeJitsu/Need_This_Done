@@ -185,29 +185,6 @@ export default function RootLayout({
         {/* JSON-LD Structured Data for rich search results */}
         <ProfessionalServiceJsonLd />
         <WebSiteJsonLd />
-
-        {/* FOUC Prevention: Apply dark mode immediately before any rendering */}
-        {/* This blocking script runs before CSS/content loads to prevent flash */}
-        {/* Matches DarkModeToggle logic: check localStorage first, then system preference */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  // TEMPORARY: Force light mode only until dark mode colors are fixed
-                  // This prevents broken dark mode from appearing in production
-                  document.documentElement.classList.remove('dark');
-                  document.documentElement.classList.add('light');
-                  
-                  // Clear any stored dark mode preference to prevent confusion
-                  localStorage.removeItem('darkMode');
-                } catch (e) {
-                  // Silent fail - light mode will be the default
-                }
-              })();
-            `,
-          }}
-        />
       </head>
       <body className="transition-colors duration-0">
         <SessionProvider>
