@@ -204,7 +204,7 @@ export default function AppointmentRequestForm({
         </div>
 
         {error && (
-          <div className={`mb-4 p-3 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+          <div role="alert" aria-live="polite" className={`mb-4 p-3 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
             <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
           </div>
         )}
@@ -217,10 +217,11 @@ export default function AppointmentRequestForm({
             </h4>
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="preferred-date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Date *
                 </label>
                 <input
+                  id="preferred-date"
                   type="date"
                   name="preferredDate"
                   value={formData.preferredDate}
@@ -228,19 +229,24 @@ export default function AppointmentRequestForm({
                   min={minDate}
                   max={maxDateStr}
                   required
-                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors`}
+                  aria-required="true"
+                  aria-invalid={error ? 'true' : 'false'}
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="preferred-time" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Time *
                 </label>
                 <select
+                  id="preferred-time"
                   name="preferredTimeStart"
                   value={formData.preferredTimeStart}
                   onChange={handleChange}
                   required
-                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors`}
+                  aria-required="true"
+                  aria-invalid={error ? 'true' : 'false'}
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
                 >
                   <option value="">Select a time</option>
                   {availableTimeOptions.map((option) => (
@@ -261,28 +267,30 @@ export default function AppointmentRequestForm({
             </h4>
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="alternate-date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Date
                 </label>
                 <input
+                  id="alternate-date"
                   type="date"
                   name="alternateDate"
                   value={formData.alternateDate}
                   onChange={handleChange}
                   min={minDate}
                   max={maxDateStr}
-                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors`}
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="alternate-time" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Time
                 </label>
                 <select
+                  id="alternate-time"
                   name="alternateTimeStart"
                   value={formData.alternateTimeStart}
                   onChange={handleChange}
-                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors`}
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
                 >
                   <option value="">Select a time</option>
                   {availableTimeOptions.map((option) => (
@@ -297,17 +305,18 @@ export default function AppointmentRequestForm({
 
           {/* Notes */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="appointment-notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Questions or Notes{' '}
               <span className={formInputColors.helper}>(optional)</span>
             </label>
             <textarea
+              id="appointment-notes"
               name="notes"
               value={formData.notes}
               onChange={handleChange}
               rows={3}
               placeholder="Any specific topics you'd like to discuss or questions you have..."
-              className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} resize-none disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors`}
+              className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} resize-none disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
             />
           </div>
 
