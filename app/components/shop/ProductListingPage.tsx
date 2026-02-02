@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Search, ChevronDown, Loader2 } from 'lucide-react';
 import Button from '@/components/Button';
 import ProductCard from '@/components/ProductCard';
+import CategoryFilter from '@/components/shop/CategoryFilter';
 
 interface Product {
   id: string;
@@ -28,6 +29,7 @@ export default function ProductListingPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [minPrice, setMinPrice] = useState<string>('');
   const [maxPrice, setMaxPrice] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [showFilters, setShowFilters] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +43,7 @@ export default function ProductListingPage() {
       if (searchQuery) params.append('q', searchQuery);
       if (minPrice) params.append('minPrice', minPrice);
       if (maxPrice) params.append('maxPrice', maxPrice);
+      if (selectedCategory) params.append('category', selectedCategory);
 
       const response = await fetch(`/api/products/search?${params.toString()}`);
 
@@ -58,7 +61,7 @@ export default function ProductListingPage() {
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, minPrice, maxPrice]);
+  }, [searchQuery, minPrice, maxPrice, selectedCategory]);
 
   // Fetch products on mount and when filters change
   useEffect(() => {
@@ -128,22 +131,32 @@ export default function ProductListingPage() {
             </div>
           </form>
 
-          {/* Filter Toggle */}
-          <button
-            id="filter-toggle"
-            onClick={() => setShowFilters(!showFilters)}
-            aria-expanded={showFilters}
-            aria-controls="price-filters"
-            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 mb-4 px-3 py-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
-          >
-            <span className="font-medium">Price Range</span>
-            <ChevronDown
-              className={`w-5 h-5 transition-transform ${
-                showFilters ? 'rotate-180' : ''
-              }`}
-              aria-hidden="true"
+          {/* Category and Price Filters Row */}
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <CategoryFilter
+              selectedCategory={selectedCategory}
+              onCategoryChange={(category) => {
+                setSelectedCategory(category);
+                setHasSearched(true);
+              }}
             />
-          </button>
+
+              <button
+              id="filter-toggle"
+              onClick={() => setShowFilters(!showFilters)}
+              aria-expanded={showFilters}
+              aria-controls="price-filters"
+              className="flex items-center justify-between gap-2 px-4 py-2 border border-gray-300 rounded-lg bg-white hover:border-emerald-500 transition-colors md:w-auto w-full"
+            >
+              <span className="text-sm font-medium text-gray-700">Price Range</span>
+              <ChevronDown
+                className={`w-5 h-5 text-gray-600 transition-transform ${
+                  showFilters ? 'rotate-180' : ''
+                }`}
+                aria-hidden="true"
+              />
+            </button>
+          </div>
 
           {/* Price Filters */}
           {showFilters && (
@@ -186,16 +199,17 @@ export default function ProductListingPage() {
                   </div>
                 </div>
               </div>
-              {(minPrice || maxPrice) && (
+              {(minPrice || maxPrice || selectedCategory) && (
                 <button
                   onClick={() => {
                     setMinPrice('');
                     setMaxPrice('');
+                    setSelectedCategory('');
                     handleFilterChange();
                   }}
                   className="mt-3 text-sm text-gray-500 hover:text-gray-700 underline"
                 >
-                  Clear price filters
+                  Clear all filters
                 </button>
               )}
             </div>

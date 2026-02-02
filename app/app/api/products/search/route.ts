@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get('q')?.toLowerCase() || '';
     const minPrice = searchParams.get('minPrice') ? parseInt(searchParams.get('minPrice')!) : 0;
     const maxPrice = searchParams.get('maxPrice') ? parseInt(searchParams.get('maxPrice')!) : Infinity;
+    const category = searchParams.get('category')?.toLowerCase() || '';
     const limit = Math.min(parseInt(searchParams.get('limit') || '100'), 100);
     const offset = parseInt(searchParams.get('offset') || '0');
 
@@ -24,12 +25,22 @@ export async function GET(request: NextRequest) {
     const products = Array.isArray(response) ? response : response.products;
     const totalCount = Array.isArray(response) ? products.length : response.count;
 
-    // Filter products by search query and price
+    // Filter products by search query, category, and price
     const filtered = products.filter(product => {
       // Text search in title and description
       const matchesQuery = !query ||
         product.title.toLowerCase().includes(query) ||
         (product.description?.toLowerCase().includes(query) ?? false);
+
+      // Category filter - match against product metadata
+      let matchesCategory = true;
+      if (category) {
+        const productCategory = (product.metadata?.category || product.metadata?.product_type || '')
+          .toString()
+          .toLowerCase()
+          .replace(/\s+/g, '-');
+        matchesCategory = productCategory === category;
+      }
 
       // Get the product price (from first variant or metadata)
       const price = product.variants?.[0]?.calculated_price?.calculated_amount ??
@@ -37,7 +48,7 @@ export async function GET(request: NextRequest) {
                    0;
       const matchesPrice = price >= minPrice && price <= maxPrice;
 
-      return matchesQuery && matchesPrice;
+      return matchesQuery && matchesCategory && matchesPrice;
     });
 
     return NextResponse.json({
