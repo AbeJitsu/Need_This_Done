@@ -5,6 +5,9 @@ import {
   isValidEmail,
   validateFiles,
   trimField,
+  sanitizeEmail,
+  sanitizeFilename,
+  validateStringLength,
 } from '@/lib/validation';
 import {
   badRequest,
@@ -52,12 +55,26 @@ export async function POST(request: Request) {
       return badRequest('Email is required');
     }
 
-    if (!isValidEmail(email)) {
-      return badRequest('Invalid email format');
+    // Sanitize and validate email
+    let sanitizedEmail: string;
+    try {
+      sanitizedEmail = sanitizeEmail(email);
+    } catch (err) {
+      return badRequest(err instanceof Error ? err.message : 'Invalid email format');
     }
 
     if (!trimField(message)) {
       return badRequest('Project details are required');
+    }
+
+    // Validate string lengths to prevent database overflow and DoS
+    try {
+      validateStringLength(name.trim(), 200, 'Name');
+      validateStringLength(message.trim(), 5000, 'Project details');
+      if (company) validateStringLength(company.trim(), 200, 'Company');
+      if (service) validateStringLength(service.trim(), 100, 'Service');
+    } catch (err) {
+      return badRequest(err instanceof Error ? err.message : 'Input validation failed');
     }
 
     // ====================================================================
@@ -106,11 +123,20 @@ export async function POST(request: Request) {
 
     if (files.length > 0) {
       const timestamp = Date.now();
-      const sanitizedEmail = email.trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
+      const sanitizedEmailForPath = sanitizedEmail.replace(/[^a-z0-9]/g, '_');
 
       for (const file of files) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${sanitizedEmail}/${timestamp}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        // Sanitize filename to prevent path traversal and injection
+        let safeFilename: string;
+        try {
+          safeFilename = sanitizeFilename(file.name);
+        } catch (err) {
+          console.error(`File upload error: invalid filename "${file.name}"`, err);
+          return badRequest(`Invalid filename: ${file.name}`);
+        }
+
+        const fileExt = safeFilename.split('.').pop() || 'bin';
+        const fileName = `${sanitizedEmailForPath}/${timestamp}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
         const { error: uploadError } = await supabaseAdmin.storage
           .from('project-attachments')
@@ -133,7 +159,7 @@ export async function POST(request: Request) {
       .from('projects')
       .insert({
         name: name.trim(),
-        email: email.trim().toLowerCase(),
+        email: sanitizedEmail,
         company: company?.trim() || null,
         service: service?.trim() || null,
         message: message.trim(),

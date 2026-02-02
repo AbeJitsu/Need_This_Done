@@ -48,6 +48,43 @@ export async function POST(request: NextRequest) {
     // Get admin client for database operations
     const supabase = getSupabaseAdmin();
 
+    // ========================================================================
+    // Idempotency Protection - Prevent Duplicate Event Processing
+    // ========================================================================
+    // Stripe may send the same webhook multiple times (network retries).
+    // Check if we've already processed this event ID to prevent duplicate
+    // charges, order updates, or subscription changes.
+
+    const { data: existingEvent } = await supabase
+      .from('webhook_events')
+      .select('id, processed_at')
+      .eq('event_id', event.id)
+      .single();
+
+    if (existingEvent) {
+      console.log(`[Webhook] Event ${event.id} already processed at ${existingEvent.processed_at}, skipping`);
+      return NextResponse.json({ received: true, skipped: true });
+    }
+
+    // Record this event as being processed (prevents race conditions)
+    const { error: insertError } = await supabase
+      .from('webhook_events')
+      .insert({
+        event_id: event.id,
+        event_type: event.type,
+        processed_at: new Date().toISOString(),
+      });
+
+    if (insertError) {
+      // If insert fails due to unique constraint, another request beat us to it
+      if (insertError.code === '23505') {
+        console.log(`[Webhook] Event ${event.id} already being processed by another request, skipping`);
+        return NextResponse.json({ received: true, skipped: true });
+      }
+      console.error('[Webhook] Failed to record event:', insertError);
+      // Continue processing - better to risk duplicate than drop events
+    }
+
     // Route event to appropriate handler
     switch (event.type) {
       // ======================================================================
