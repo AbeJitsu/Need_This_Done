@@ -9,6 +9,7 @@ import { useWishlist } from '@/context/WishlistContext';
 import Button from '@/components/Button';
 import ReviewForm from './ReviewForm';
 import ReviewSection from './ReviewSection';
+import ProductAvailability from '@/components/ProductAvailability';
 import type { Product } from '@/lib/medusa-client';
 import { headingColors, formInputColors, alertColors, formValidationColors, productImageStyles, accentColors, cardBgColors, focusRingClasses } from '@/lib/colors';
 
@@ -230,6 +231,15 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               You have {itemCount} item{itemCount !== 1 ? 's' : ''} in your cart
             </p>
           )}
+
+          {/* Product availability */}
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <ProductAvailability
+              productId={product.id}
+              variantId={selectedVariant || undefined}
+              inventoryQuantity={product.variants?.[0]?.inventory_quantity}
+            />
+          </div>
 
           {/* Action buttons */}
           <div className="flex flex-col gap-3 mt-auto">
