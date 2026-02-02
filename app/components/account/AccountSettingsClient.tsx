@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { User, LogOut, Mail, Save, Loader2, Check, AlertCircle } from 'lucide-react';
 import Button from '@/components/Button';
+import MyReviewsSection from './MyReviewsSection';
 import { accentColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors } from '@/lib/colors';
 
 // ============================================================================
@@ -231,8 +232,11 @@ export default function AccountSettingsClient() {
           </div>
         </div>
 
+        {/* My Reviews Section */}
+        <MyReviewsSection />
+
         {/* Danger Zone */}
-        <div className="rounded-xl border-2 border-red-200 bg-red-50 p-8">
+        <div className="rounded-xl border-2 border-red-200 bg-red-50 p-8 mt-8">
           <h3 className="text-lg font-semibold text-red-900 mb-3">Danger Zone</h3>
           <p className={`${mutedTextColors.normal} mb-6`}>
             Sign out of your account. You'll be able to sign back in anytime.
