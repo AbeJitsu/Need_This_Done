@@ -8,6 +8,7 @@ import ChatMessage from './ChatMessage';
 import { useIndexingOptional } from './IndexingContext';
 import { cardBgColors, dividerColors, headingColors, formInputColors, mutedTextColors, alertColors, formValidationColors, getSolidButtonColors, iconButtonColors, lightBgColors, loadingColors, linkColors } from '@/lib/colors';
 import { CloseIcon } from '@/components/ui/icons';
+import { scrollIntoViewWithMotionPreference } from '@/lib/scroll-utils';
 
 // ============================================================================
 // Chat Persistence - Keep chat history across page navigations
@@ -125,11 +126,11 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
   }, [messages]);
 
   // ========================================================================
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-scroll to bottom when new messages arrive (respects prefers-reduced-motion)
   // ========================================================================
   useEffect(() => {
     if (isOpen && !isCollapsed) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      scrollIntoViewWithMotionPreference(messagesEndRef.current);
     }
   }, [messages, isOpen, isCollapsed]);
 
