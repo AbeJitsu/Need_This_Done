@@ -30,10 +30,12 @@ export default function ProductListingPage() {
   const [maxPrice, setMaxPrice] = useState<string>('');
   const [showFilters, setShowFilters] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch products based on search and filters
   const fetchProducts = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const params = new URLSearchParams();
       if (searchQuery) params.append('q', searchQuery);
@@ -41,12 +43,18 @@ export default function ProductListingPage() {
       if (maxPrice) params.append('maxPrice', maxPrice);
 
       const response = await fetch(`/api/products/search?${params.toString()}`);
-      const data: SearchResponse = await response.json();
 
+      if (!response.ok) {
+        throw new Error('Failed to load products. Please check your connection and try again.');
+      }
+
+      const data: SearchResponse = await response.json();
       setProducts(data.products);
       setHasSearched(true);
-    } catch (error) {
-      console.error('Failed to fetch products:', error);
+    } catch (err) {
+      console.error('Failed to fetch products:', err);
+      setError(err instanceof Error ? err.message : 'Unable to load products. Please try again later.');
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -199,19 +207,53 @@ export default function ProductListingPage() {
       <section className="py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
           {loading ? (
-            <div className="flex items-center justify-center py-20" role="status" aria-live="polite">
+            <div className="flex items-center justify-center py-20" role="status" aria-live="polite" aria-label="Loading products">
               <div className="flex items-center gap-3">
                 <Loader2 className="w-6 h-6 text-emerald-600 animate-spin" aria-hidden="true" />
                 <span className="text-gray-600">Loading products...</span>
               </div>
             </div>
+          ) : error ? (
+            <div className="text-center py-20" role="alert">
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-700 font-medium">Unable to Load Products</p>
+                <p className="text-red-600 text-sm mt-1">{error}</p>
+              </div>
+              <Button
+                variant="blue"
+                onClick={() => fetchProducts()}
+              >
+                Try Again
+              </Button>
+            </div>
           ) : products.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-500 text-lg">
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                {hasSearched ? 'No Products Found' : 'No Products Available'}
+              </h2>
+              <p className="text-gray-600 mb-6 max-w-md mx-auto">
                 {hasSearched
-                  ? 'No products found. Try adjusting your search or filters.'
-                  : 'No products available.'}
+                  ? 'We couldn\'t find any products matching your criteria. Try adjusting your search terms or filters.'
+                  : 'No products are currently available. Please check back soon!'}
               </p>
+              <div className="flex gap-3 justify-center flex-wrap">
+                {hasSearched && (
+                  <Button
+                    variant="gray"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setMinPrice('');
+                      setMaxPrice('');
+                      setShowFilters(false);
+                    }}
+                  >
+                    Clear Filters
+                  </Button>
+                )}
+                <Button variant="blue" href="/shop">
+                  View All Products
+                </Button>
+              </div>
             </div>
           ) : (
             <>

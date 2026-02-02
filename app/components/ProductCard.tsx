@@ -30,6 +30,7 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const inWishlist = isInWishlist(product.id);
   const [isCartClicked, setIsCartClicked] = useState(false);
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
 
   const imageUrl = product.images?.[0]?.url;
   const shortDescription = product.description
@@ -41,6 +42,22 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
     e.preventDefault();
     e.stopPropagation();
     setIsCartClicked(true);
+  };
+
+  // Handle wishlist toggle with loading state
+  const handleWishlistToggle = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsWishlistLoading(true);
+    try {
+      if (inWishlist) {
+        removeFromWishlist(product.id);
+      } else {
+        addToWishlist(product.id, product.title, 0);
+      }
+    } finally {
+      setIsWishlistLoading(false);
+    }
   };
 
   return (
@@ -68,29 +85,25 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
 
           {/* Wishlist Button - Floating */}
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              if (inWishlist) {
-                removeFromWishlist(product.id);
-              } else {
-                addToWishlist(product.id, product.title, 0);
-              }
-            }}
+            onClick={handleWishlistToggle}
+            disabled={isWishlistLoading}
             className={`
               absolute top-3 right-3 p-2 rounded-lg backdrop-blur-sm
               transition-all duration-200 z-10 motion-safe:hover:scale-110 motion-safe:active:scale-95
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white
+              disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
               ${inWishlist
                 ? `${accentColors.green.bg} ${accentColors.green.text} focus-visible:ring-green-500`
                 : 'bg-white/80 hover:bg-white text-gray-600 hover:text-gray-900 focus-visible:ring-gray-400'
               }
             `}
-            aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+            aria-label={isWishlistLoading ? 'Loading...' : (inWishlist ? 'Remove from wishlist' : 'Add to wishlist')}
             aria-pressed={inWishlist}
-            title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+            aria-busy={isWishlistLoading}
+            title={isWishlistLoading ? 'Loading...' : (inWishlist ? 'Remove from wishlist' : 'Add to wishlist')}
           >
             <Heart
-              className="w-5 h-5"
+              className={`w-5 h-5 ${isWishlistLoading ? 'animate-pulse' : ''}`}
               fill={inWishlist ? 'currentColor' : 'none'}
             />
           </button>
