@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
         try {
           return await withTimeout(
             medusaClient.products.list(paginationParams),
-            TIMEOUT_LIMITS.EXTERNAL,
+            TIMEOUT_LIMITS.EXTERNAL_API,
             'Fetch products from Medusa'
           );
         } catch (timeoutErr) {

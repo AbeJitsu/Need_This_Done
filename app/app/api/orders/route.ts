@@ -64,7 +64,7 @@ async function handleGetOrder(orderId: string) {
         try {
           return await withTimeout(
             medusaClient.orders.get(orderId),
-            TIMEOUT_LIMITS.EXTERNAL,
+            TIMEOUT_LIMITS.EXTERNAL_API,
             'Fetch order from Medusa'
           );
         } catch (timeoutErr) {

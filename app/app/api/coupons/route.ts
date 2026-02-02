@@ -55,9 +55,9 @@ export async function GET(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
 
     // Validate coupon with timeout protection
-    let result;
+    let response;
     try {
-      result = await withTimeout(
+      response = await withTimeout(
         supabase.rpc('validate_coupon', {
           p_code: code,
           p_cart_total: cartTotal,
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
           p_user_id: user?.id || null,
           p_email: user?.email || null,
           p_is_first_order: isFirstOrder,
-        }),
+        }) as any,
         TIMEOUT_LIMITS.DATABASE,
         'Validate coupon in database'
       );
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
       throw timeoutErr;
     }
 
-    const { data, error } = result;
+    const { data, error } = response as { data: unknown; error: unknown };
 
     if (error) {
       console.error('Coupon validation error:', error);
@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const result = data?.[0] as CouponValidationResult | undefined;
+    const result = (data as CouponValidationResult[] | null)?.[0];
 
     if (!result) {
       return NextResponse.json(
@@ -143,9 +143,9 @@ export async function POST(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
 
     // Apply the coupon with timeout protection
-    let result;
+    let response;
     try {
-      result = await withTimeout(
+      response = await withTimeout(
         supabase.rpc('apply_coupon', {
           p_coupon_id: body.coupon_id,
           p_user_id: user?.id || null,
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
           p_discount_applied: body.discount_applied || 0,
           p_order_total: body.order_total || 0,
           p_email: body.email || user?.email || null,
-        }),
+        }) as any,
         TIMEOUT_LIMITS.DATABASE,
         'Apply coupon in database'
       );
@@ -168,7 +168,7 @@ export async function POST(request: NextRequest) {
       throw timeoutErr;
     }
 
-    const { data, error } = result;
+    const { data, error } = response as { data: unknown; error: unknown };
 
     if (error) {
       console.error('Coupon application error:', error);
