@@ -6,6 +6,7 @@
 'use client';
 
 import { useEffect, useState, use } from 'react';
+import Image from 'next/image';
 import Button from '@/components/Button';
 import StatusBadge from '@/components/StatusBadge';
 import { accentColors } from '@/lib/colors';
@@ -175,10 +176,12 @@ export default function OrderDetailPage({
                 {/* Product Image */}
                 {item.thumbnail && (
                   <div className="flex-shrink-0">
-                    <img
+                    <Image
                       src={item.thumbnail}
                       alt={item.title || 'Product'}
-                      className="w-20 h-20 object-cover rounded"
+                      width={80}
+                      height={80}
+                      className="object-cover rounded"
                     />
                   </div>
                 )}

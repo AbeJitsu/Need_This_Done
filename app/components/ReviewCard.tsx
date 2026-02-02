@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import Image from 'next/image';
 import StarRating from './StarRating';
 import { accentColors, alertColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 
@@ -138,11 +139,13 @@ export default function ReviewCard({
       {review.images && review.images.length > 0 && (
         <div className="mt-3 flex gap-2 flex-wrap">
           {review.images.map((image, index) => (
-            <img
+            <Image
               key={index}
               src={image}
               alt={`Review image ${index + 1}`}
-              className="w-20 h-20 object-cover rounded-lg border border-gray-400 dark:border-gray-700"
+              width={80}
+              height={80}
+              className="object-cover rounded-lg border border-gray-400 dark:border-gray-700"
             />
           ))}
         </div>

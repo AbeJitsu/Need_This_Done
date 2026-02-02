@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Button from '@/components/Button';
 import { alertColors, accentColors } from '@/lib/colors';
 
@@ -414,10 +415,12 @@ export default function ProductManagePage() {
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-4">
                           {product.thumbnail ? (
-                            <img
+                            <Image
                               src={product.thumbnail}
                               alt={product.title}
-                              className="w-16 h-16 object-cover rounded-lg shadow-md group-hover:shadow-lg transition-shadow duration-200"
+                              width={64}
+                              height={64}
+                              className="object-cover rounded-lg shadow-md group-hover:shadow-lg transition-shadow duration-200"
                             />
                           ) : (
                             <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
@@ -578,10 +581,12 @@ export default function ProductManagePage() {
                 {formData.thumbnail && (
                   <div className="mt-3">
                     <p className="text-xs text-gray-500 mb-2">Preview:</p>
-                    <img
+                    <Image
                       src={formData.thumbnail}
                       alt="Preview"
-                      className="w-32 h-32 object-cover rounded-lg border-2 border-gray-400"
+                      width={128}
+                      height={128}
+                      className="object-cover rounded-lg border-2 border-gray-400"
                     />
                   </div>
                 )}
