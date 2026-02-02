@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdmin } from '@/lib/api-auth';
 import { withTimeout, TIMEOUT_LIMITS } from '@/lib/api-timeout';
