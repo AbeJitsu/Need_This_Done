@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
+import { useWishlist } from '@/context/WishlistContext';
 import Button from '@/components/Button';
 import type { Product } from '@/lib/medusa-client';
 import { headingColors, formInputColors, alertColors, formValidationColors, productImageStyles, accentColors, cardBgColors, focusRingClasses } from '@/lib/colors';
@@ -21,18 +22,51 @@ interface ProductDetailClientProps {
 
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
   const { addItem, itemCount } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isManagingWishlist, setIsManagingWishlist] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(
     product?.variants?.[0]?.id || null
   );
   const [error, setError] = useState('');
   const [toastMessage, setToastMessage] = useState('');
 
+  const inWishlist = isInWishlist(product.id);
+
   // Get price from first variant's prices array (Medusa structure)
   const price = product.variants?.[0]?.prices?.[0]?.amount ?? 0;
   const image = product.images?.[0]?.url;
   const variants = product.variants || [];
+
+  // ========================================================================
+  // Handle wishlist toggle
+  // ========================================================================
+  const handleWishlistToggle = async () => {
+    try {
+      setIsManagingWishlist(true);
+      setError('');
+
+      if (inWishlist) {
+        await removeFromWishlist(product.id);
+        setToastMessage('Removed from wishlist');
+      } else {
+        await addToWishlist(
+          product.id,
+          product.title,
+          price,
+          image
+        );
+        setToastMessage('Added to wishlist!');
+      }
+
+      setTimeout(() => setToastMessage(''), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update wishlist');
+    } finally {
+      setIsManagingWishlist(false);
+    }
+  };
 
   // ========================================================================
   // Handle add to cart
@@ -180,24 +214,39 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           )}
 
           {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 mt-auto">
-            <Button
-              variant="purple"
-              size="lg"
-              onClick={handleAddToCart}
-              disabled={isAddingToCart}
-              className="flex-1"
+          <div className="flex flex-col gap-3 mt-auto">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                variant="purple"
+                size="lg"
+                onClick={handleAddToCart}
+                disabled={isAddingToCart}
+                className="flex-1"
+              >
+                {isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
+              </Button>
+              <Button
+                variant="gray"
+                size="lg"
+                href="/cart"
+                className="flex-1"
+              >
+                View Cart
+              </Button>
+            </div>
+
+            {/* Wishlist button */}
+            <button
+              onClick={handleWishlistToggle}
+              disabled={isManagingWishlist}
+              className={`w-full px-4 py-2 rounded-lg font-medium transition ${
+                inWishlist
+                  ? 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100'
+                  : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200'
+              } disabled:opacity-50 disabled:cursor-not-allowed ${focusRingClasses.blue}`}
             >
-              {isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
-            </Button>
-            <Button
-              variant="gray"
-              size="lg"
-              href="/cart"
-              className="flex-1"
-            >
-              View Cart
-            </Button>
+              {isManagingWishlist ? 'Updating...' : inWishlist ? '❤️ Remove from Wishlist' : '🤍 Add to Wishlist'}
+            </button>
           </div>
         </div>
       </div>

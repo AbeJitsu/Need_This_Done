@@ -10,6 +10,7 @@ import { StripeProvider } from '@/context/StripeContext';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { InlineEditProvider } from '@/context/InlineEditContext';
+import { WishlistProvider } from '@/context/WishlistContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
 import { AdminSidebarToggle, EditModeBar, EditModeTutorial, InlineTextEditor } from '@/components/InlineEditor';
@@ -195,10 +196,11 @@ export default function RootLayout({
         <SessionProvider>
         <AuthProvider>
           <CartProvider>
-            <StripeProvider>
-              <ServiceModalProvider>
-                <ToastProvider>
-                  <InlineEditProvider>
+            <WishlistProvider>
+              <StripeProvider>
+                <ServiceModalProvider>
+                  <ToastProvider>
+                    <InlineEditProvider>
                     {/* Skip to main content link for keyboard users */}
                     <a
                       href="#main-content"
@@ -234,10 +236,11 @@ export default function RootLayout({
 
                     {/* Edit mode tutorial - shows on first edit mode activation */}
                     <EditModeTutorial />
-                  </InlineEditProvider>
-                </ToastProvider>
-              </ServiceModalProvider>
-            </StripeProvider>
+                    </InlineEditProvider>
+                  </ToastProvider>
+                </ServiceModalProvider>
+              </StripeProvider>
+            </WishlistProvider>
           </CartProvider>
         </AuthProvider>
         </SessionProvider>
