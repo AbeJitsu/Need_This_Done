@@ -123,14 +123,43 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    // Note: In a real implementation, you would call Medusa admin API to update inventory
-    // For now, we acknowledge the request
-    // TODO: Implement Medusa admin API integration for inventory updates
+    // Validate update format
+    for (const update of updates) {
+      if (!update.variantId || typeof update.inventoryQuantity !== 'number') {
+        return NextResponse.json(
+          { error: 'Each update must have variantId (string) and inventoryQuantity (number)' },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Get Medusa admin token
+    const { getMedusaAdminToken } = await import('@/lib/medusa-helpers');
+    const adminToken = await getMedusaAdminToken();
+
+    // Update each variant in Medusa
+    const { admin } = await import('@/lib/medusa-client');
+    const results = await Promise.allSettled(
+      updates.map(({ variantId, inventoryQuantity }) =>
+        admin.updateVariantInventory(adminToken, variantId, inventoryQuantity)
+      )
+    );
+
+    // Count successes and failures
+    const successful = results.filter(r => r.status === 'fulfilled').length;
+    const failed = results.filter(r => r.status === 'rejected').length;
+
+    // Extract error details for failed updates
+    const errors = results
+      .map((r, i) => r.status === 'rejected' ? { variantId: updates[i].variantId, error: r.reason?.message || 'Unknown error' } : null)
+      .filter(Boolean);
 
     return NextResponse.json({
-      success: true,
-      message: `Received ${updates.length} inventory updates. Sync to Medusa when ready.`,
-      updates,
+      success: failed === 0,
+      message: `Updated ${successful} of ${updates.length} variants`,
+      successful,
+      failed,
+      errors: failed > 0 ? errors : undefined,
     });
   } catch (error) {
     return handleApiError(error, 'Admin Inventory PATCH');
