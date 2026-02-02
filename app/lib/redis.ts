@@ -30,18 +30,39 @@ const redis: RedisClientType = createClient({
   socket: {
     // Reconnect if connection drops (useful for network hiccups)
     reconnectStrategy: (retries: number) => {
+      // CRITICAL: Limit reconnection attempts to prevent infinite loops
       if (retries > 10) {
-        // Give up after 10 failed reconnection attempts
+        console.error('[Redis] Max reconnection attempts (10) reached, giving up');
+        // Return Error to stop reconnecting
         return new Error('Max reconnection attempts reached');
       }
-      // Wait progressively longer between retries (max 3 seconds)
-      return Math.min(1000 * Math.pow(2, retries), 3000);
+
+      // Exponential backoff with jitter to prevent thundering herd
+      const baseDelay = Math.min(1000 * Math.pow(2, retries), 3000);
+      const jitter = Math.random() * 500; // 0-500ms jitter
+      const delay = baseDelay + jitter;
+
+      console.warn(`[Redis] Reconnection attempt ${retries + 1}/10 in ${delay}ms`);
+      return delay;
     },
 
     // During build, don't wait forever for connection
     connectTimeout: isBuildTime ? 100 : 5000,
+
+    // Add command timeout to prevent hanging on slow commands
+    commandTimeout: 3000, // 3 seconds max for any Redis command
   },
 });
+
+// ============================================================================
+// Connection State Tracking
+// ============================================================================
+// Track connection failures to prevent cascading errors
+
+let connectionAttempts = 0;
+let lastConnectionError: Date | null = null;
+const MAX_CONNECTION_FAILURES = 3;
+const CONNECTION_FAILURE_WINDOW_MS = 60000; // 1 minute
 
 // ============================================================================
 // Error Handling
@@ -50,15 +71,36 @@ const redis: RedisClientType = createClient({
 // If Redis goes down, the app should still work (just without caching)
 
 redis.on('error', (error) => {
-  console.error('Redis error:', error);
+  console.error('[Redis] Error:', error);
+
+  // Track connection failures
+  if (error.message?.includes('connect') || error.message?.includes('ECONNREFUSED')) {
+    connectionAttempts++;
+    lastConnectionError = new Date();
+
+    if (connectionAttempts >= MAX_CONNECTION_FAILURES) {
+      console.error(`[Redis] ${MAX_CONNECTION_FAILURES} connection failures detected - circuit breaker engaged`);
+    }
+  }
 });
 
 redis.on('connect', () => {
-  console.log('Connected to Redis');
+  console.log('[Redis] Connected successfully');
+  // Reset failure counter on successful connection
+  connectionAttempts = 0;
+  lastConnectionError = null;
 });
 
 redis.on('ready', () => {
-  console.log('Redis is ready');
+  console.log('[Redis] Ready to accept commands');
+});
+
+redis.on('reconnecting', () => {
+  console.warn('[Redis] Reconnecting...');
+});
+
+redis.on('end', () => {
+  console.warn('[Redis] Connection closed');
 });
 
 // ============================================================================
@@ -68,18 +110,46 @@ redis.on('ready', () => {
 // Handles the async nature of Redis connections properly
 // During build time, skip connection to avoid timeouts
 
+/**
+ * Ensures Redis connection is established before operations
+ * Implements circuit breaker pattern to prevent cascading failures
+ *
+ * @throws Error if circuit breaker is open (too many recent failures)
+ */
 async function ensureConnected(): Promise<void> {
   // Skip Redis connection during build - pages will be static
   if (isBuildTime) {
     return;
   }
 
+  // Circuit breaker: if too many failures recently, fail fast
+  if (lastConnectionError) {
+    const timeSinceLastError = Date.now() - lastConnectionError.getTime();
+    if (
+      connectionAttempts >= MAX_CONNECTION_FAILURES &&
+      timeSinceLastError < CONNECTION_FAILURE_WINDOW_MS
+    ) {
+      throw new Error(
+        `Redis circuit breaker open: ${connectionAttempts} failures in last ${CONNECTION_FAILURE_WINDOW_MS / 1000}s`
+      );
+    }
+
+    // Reset if outside failure window
+    if (timeSinceLastError >= CONNECTION_FAILURE_WINDOW_MS) {
+      connectionAttempts = 0;
+      lastConnectionError = null;
+    }
+  }
+
   if (!redis.isOpen) {
     try {
       await redis.connect();
     } catch (error) {
-      console.error('Failed to connect to Redis:', error);
+      console.error('[Redis] Failed to connect:', error);
+      connectionAttempts++;
+      lastConnectionError = new Date();
       // Don't throw - let the app continue without cache
+      throw error;
     }
   }
 }
@@ -95,23 +165,43 @@ async function ping(): Promise<string> {
 }
 
 async function get(key: string): Promise<string | null> {
-  await ensureConnected();
-  return redis.get(key);
+  try {
+    await ensureConnected();
+    return await redis.get(key);
+  } catch (error) {
+    console.error(`[Redis] GET ${key} failed:`, error);
+    return null; // Graceful degradation
+  }
 }
 
 async function set(key: string, value: string, options?: { EX?: number }): Promise<string | null> {
-  await ensureConnected();
-  return redis.set(key, value, options);
+  try {
+    await ensureConnected();
+    return await redis.set(key, value, options);
+  } catch (error) {
+    console.error(`[Redis] SET ${key} failed:`, error);
+    return null; // Graceful degradation
+  }
 }
 
 async function setEx(key: string, seconds: number, value: string): Promise<string> {
-  await ensureConnected();
-  return redis.setEx(key, seconds, value);
+  try {
+    await ensureConnected();
+    return await redis.setEx(key, seconds, value);
+  } catch (error) {
+    console.error(`[Redis] SETEX ${key} failed:`, error);
+    throw error; // Caller handles failure
+  }
 }
 
 async function del(...keys: string[]): Promise<number> {
-  await ensureConnected();
-  return redis.del(keys);
+  try {
+    await ensureConnected();
+    return await redis.del(keys);
+  } catch (error) {
+    console.error(`[Redis] DEL ${keys.join(', ')} failed:`, error);
+    return 0; // Graceful degradation
+  }
 }
 
 async function quit(): Promise<string> {
@@ -123,28 +213,53 @@ async function quit(): Promise<string> {
 
 // Additional methods used by integration tests
 async function keys(pattern: string): Promise<string[]> {
-  await ensureConnected();
-  return redis.keys(pattern);
+  try {
+    await ensureConnected();
+    return await redis.keys(pattern);
+  } catch (error) {
+    console.error(`[Redis] KEYS ${pattern} failed:`, error);
+    return []; // Graceful degradation
+  }
 }
 
 async function setex(key: string, seconds: number, value: string): Promise<string> {
-  await ensureConnected();
-  return redis.setEx(key, seconds, value);
+  try {
+    await ensureConnected();
+    return await redis.setEx(key, seconds, value);
+  } catch (error) {
+    console.error(`[Redis] SETEX ${key} failed:`, error);
+    throw error; // Caller handles failure
+  }
 }
 
 async function incr(key: string): Promise<number> {
-  await ensureConnected();
-  return redis.incr(key);
+  try {
+    await ensureConnected();
+    return await redis.incr(key);
+  } catch (error) {
+    console.error(`[Redis] INCR ${key} failed:`, error);
+    throw error; // Counters should fail loudly
+  }
 }
 
 async function rpush(key: string, ...values: string[]): Promise<number> {
-  await ensureConnected();
-  return redis.rPush(key, values);
+  try {
+    await ensureConnected();
+    return await redis.rPush(key, values);
+  } catch (error) {
+    console.error(`[Redis] RPUSH ${key} failed:`, error);
+    throw error; // List operations should fail loudly
+  }
 }
 
 async function lrange(key: string, start: number, stop: number): Promise<string[]> {
-  await ensureConnected();
-  return redis.lRange(key, start, stop);
+  try {
+    await ensureConnected();
+    return await redis.lRange(key, start, stop);
+  } catch (error) {
+    console.error(`[Redis] LRANGE ${key} failed:`, error);
+    return []; // Graceful degradation
+  }
 }
 
 // Export a wrapper object with connection-safe methods

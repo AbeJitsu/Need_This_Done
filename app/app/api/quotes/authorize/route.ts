@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { createPaymentIntent } from '@/lib/stripe';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { badRequest, notFound, handleApiError } from '@/lib/api-errors';
+import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
 
 // Schema validates and transforms input in one step
 const AuthorizeSchema = z.object({
@@ -94,7 +95,11 @@ export async function POST(request: NextRequest) {
     if (quote.status === 'authorized' && quote.stripe_payment_intent_id) {
       // Retrieve the existing payment intent to get the client secret
       const { getPaymentIntent } = await import('@/lib/stripe');
-      const existingIntent = await getPaymentIntent(quote.stripe_payment_intent_id);
+      const existingIntent = await withTimeout(
+        getPaymentIntent(quote.stripe_payment_intent_id),
+        TIMEOUT_LIMITS.EXTERNAL_API,
+        'Stripe payment intent retrieval'
+      );
 
       return NextResponse.json({
         clientSecret: existingIntent.client_secret,
@@ -111,16 +116,20 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Create a new PaymentIntent for the deposit
-    const paymentIntent = await createPaymentIntent(
-      quote.deposit_amount,
-      'usd',
-      {
-        quote_id: quote.id,
-        quote_ref: quote.reference_number,
-        customer_email: quote.customer_email,
-        payment_type: 'deposit',
-      }
+    // Create a new PaymentIntent for the deposit with timeout protection
+    const paymentIntent = await withTimeout(
+      createPaymentIntent(
+        quote.deposit_amount,
+        'usd',
+        {
+          quote_id: quote.id,
+          quote_ref: quote.reference_number,
+          customer_email: quote.customer_email,
+          payment_type: 'deposit',
+        }
+      ),
+      TIMEOUT_LIMITS.EXTERNAL_API,
+      'Stripe payment intent creation'
     );
 
     // Update quote status to authorized and store payment intent ID
@@ -151,6 +160,10 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
+    if (error instanceof TimeoutError) {
+      console.error('[Authorize Quote] External API timeout:', error);
+      return badRequest('Payment service is currently slow, please try again in a moment');
+    }
     return handleApiError(error, 'Authorize Quote');
   }
 }
