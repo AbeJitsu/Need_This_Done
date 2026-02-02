@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { sendAppointmentRequestNotification } from '@/lib/email-service';
+import { logAppointmentNotification } from '@/lib/appointment-notifications';
 import { validateRequest, commonSchemas } from '@/lib/api-validation';
 import { badRequest, serverError } from '@/lib/api-errors';
 import { withSupabaseRetry, isForeignKeyViolation } from '@/lib/supabase-retry';
@@ -133,20 +134,19 @@ export async function POST(request: NextRequest) {
     const preferred_time_end = `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
 
     // ====================================================================
-    // Check Availability with TOCTOU Prevention
+    // Check Availability with Database-Level TOCTOU Prevention
     // ====================================================================
-    // CRITICAL: Fetch all appointments for the day. Then attempt to insert.
-    // Supabase will handle concurrent inserts safely, but we check daily
-    // limit and time conflicts first to provide immediate feedback.
+    // CRITICAL: Database has two triggers that prevent overlapping appointments:
+    // 1. check_appointment_conflict_trigger - Prevents time slot conflicts
+    // 2. check_daily_limit_trigger - Enforces max 5 appointments/day
     //
-    // If two requests slip through this check due to timing, the second
-    // INSERT will still succeed (no database constraint prevents this).
-    // A production system would need:
-    // 1. Database-level check constraints, OR
-    // 2. Serializable isolation level, OR
-    // 3. Pessimistic locking (SELECT ... FOR UPDATE)
+    // These database constraints provide TOCTOU protection:
+    // - Even if two concurrent requests slip through this check
+    // - The database will reject the second insert
+    // - Error message is caught below and returned to user
     //
-    // For now, we provide the best effort validation with clear error feedback.
+    // This approach is more efficient than pessimistic locking while
+    // still preventing race conditions at the database level.
 
     const BUFFER_MINUTES = 30;
     const MAX_DAILY_BOOKINGS = 5;
@@ -252,14 +252,28 @@ export async function POST(request: NextRequest) {
         return badRequest('Order not found');
       }
 
+      // Check for database conflict detection (time slot unavailable or daily limit)
+      if (insertError.message?.includes('APPOINTMENT_CONFLICT')) {
+        console.warn('[Appointment Request] Time slot conflict detected:', insertError.message);
+        return badRequest('This time slot conflicts with an existing appointment. Please select a different time.');
+      }
+
+      if (insertError.message?.includes('DAILY_LIMIT_EXCEEDED')) {
+        console.warn('[Appointment Request] Daily booking limit reached:', insertError.message);
+        return badRequest('This day is fully booked. Please select another date.');
+      }
+
       console.error('[Appointment Request] Insert error:', insertError);
       return serverError('Failed to create appointment request. Please try again.');
     }
 
     // ====================================================================
-    // Send Admin Notification (Fire-and-Forget)
+    // Send Admin Notification with Delivery Tracking
     // ====================================================================
-    // Don't block response on email sending, but log errors for monitoring.
+    // Send notification asynchronously but track delivery status in database
+    // This allows us to detect lost notifications and send reminders
+
+    const adminNotificationEmail = process.env.ADMIN_EMAIL || 'admin@needthisdone.com';
 
     sendAppointmentRequestNotification({
       requestId: appointmentRequest.id,
@@ -279,9 +293,33 @@ export async function POST(request: NextRequest) {
         dateStyle: 'full',
         timeStyle: 'short',
       }),
-    }).catch((err) => {
-      console.error('[Appointment Request] Failed to send admin notification:', err);
-    });
+    })
+      .then((emailId) => {
+        // Log successful notification
+        logAppointmentNotification({
+          appointment_id: appointmentRequest.id,
+          admin_email: adminNotificationEmail,
+          subject: `New Appointment Request: ${service_name || 'Consultation'} on ${preferred_date}`,
+          status: 'sent',
+          email_service_id: emailId || undefined,
+        }).catch((err) => {
+          console.error('[Appointment Request] Failed to log sent notification:', err);
+        });
+      })
+      .catch((err) => {
+        console.error('[Appointment Request] Failed to send admin notification:', err);
+
+        // Log failed notification
+        logAppointmentNotification({
+          appointment_id: appointmentRequest.id,
+          admin_email: adminNotificationEmail,
+          subject: `New Appointment Request: ${service_name || 'Consultation'} on ${preferred_date}`,
+          status: 'failed',
+          error_message: err instanceof Error ? err.message : 'Unknown error',
+        }).catch((logErr) => {
+          console.error('[Appointment Request] Failed to log failed notification:', logErr);
+        });
+      });
 
     return NextResponse.json({
       success: true,

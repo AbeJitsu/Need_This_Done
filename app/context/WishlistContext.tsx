@@ -50,7 +50,17 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       const session = await getSession();
 
       if (session?.access_token) {
-        // Fetch from server for authenticated users
+        // ======================================================================
+        // Authenticated User: Migrate anonymous wishlist to server
+        // ======================================================================
+        // When user logs in, check if they have items in localStorage
+        // (saved while browsing anonymously). If so, migrate them to the server
+        // before loading the authenticated wishlist.
+
+        const localStorageWishlist = localStorage.getItem('wishlist');
+        const anonymousItems = localStorageWishlist ? JSON.parse(localStorageWishlist) : [];
+
+        // Fetch authenticated wishlist
         const response = await fetch('/api/wishlist', {
           headers: {
             Authorization: `Bearer ${session.access_token}`,
@@ -62,9 +72,44 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
         }
 
         const data = await response.json();
-        setItems(data.items || []);
+        const authenticatedItems = data.items || [];
+
+        // ======================================================================
+        // Merge anonymous items into authenticated wishlist
+        // ======================================================================
+        // Add any anonymous items that aren't already in the authenticated wishlist
+        const mergedItems = [...authenticatedItems];
+        for (const item of anonymousItems) {
+          if (!mergedItems.some(existing => existing.product_id === item.product_id)) {
+            try {
+              // Add to server
+              const addResponse = await fetch('/api/wishlist', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify(item),
+              });
+
+              if (addResponse.ok) {
+                mergedItems.push(item);
+              }
+            } catch (err) {
+              console.warn(`Failed to migrate wishlist item ${item.product_id}:`, err);
+              // Continue migrating other items even if one fails
+            }
+          }
+        }
+
+        setItems(mergedItems);
+
+        // Clear localStorage since we've migrated everything
+        localStorage.removeItem('wishlist');
       } else {
-        // Use localStorage for anonymous users
+        // ======================================================================
+        // Anonymous User: Use localStorage
+        // ======================================================================
         const saved = localStorage.getItem('wishlist');
         setItems(saved ? JSON.parse(saved) : []);
       }
