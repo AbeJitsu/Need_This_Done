@@ -23,11 +23,12 @@ export default function AdminShopDashboard() {
   const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
   const { showToast } = useToast();
 
-  const [activeTab, setActiveTab] = useState<'products' | 'orders'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'orders' | 'inventory'>('products');
   const [products, setProducts] = useState<Product[]>([]);
-  const [orders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [deletingProductId, setDeletingProductId] = useState<string | null>(null);
 
   // Import/Export state
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -58,17 +59,22 @@ export default function AdminShopDashboard() {
         setLoading(true);
         setError('');
 
-        // Fetch products
-        const productsResponse = await fetch('/api/shop/products');
+        // Fetch products and orders in parallel
+        const [productsResponse, ordersResponse] = await Promise.all([
+          fetch('/api/shop/products'),
+          fetch('/api/admin/orders'),
+        ]);
+
         if (!productsResponse.ok) {
           throw new Error('Failed to load products');
         }
         const productsData = await productsResponse.json();
         setProducts(productsData.products || []);
 
-        // Fetch orders (from Medusa admin API)
-        // Note: This would need admin auth token in real implementation
-        // For now, we show the products list
+        if (ordersResponse.ok) {
+          const ordersData = await ordersResponse.json();
+          setOrders(ordersData.orders || []);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load shop data');
       } finally {
@@ -114,6 +120,36 @@ export default function AdminShopDashboard() {
       setShowExportOptions(false);
     } catch (err) {
       showToast(err instanceof Error ? err.message : 'Export failed', 'error');
+    }
+  };
+
+  // ========================================================================
+  // Delete product handler
+  // ========================================================================
+  const handleDeleteProduct = async (productId: string, productTitle: string) => {
+    if (!confirm(`Are you sure you want to delete "${productTitle}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      setDeletingProductId(productId);
+      const response = await fetch(`/api/admin/products/${productId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete product');
+      }
+
+      showToast('Product deleted successfully', 'success');
+
+      // Remove product from local state
+      setProducts(prev => prev.filter(p => p.id !== productId));
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to delete product', 'error');
+    } finally {
+      setDeletingProductId(null);
     }
   };
 
@@ -250,6 +286,20 @@ export default function AdminShopDashboard() {
             }`}
           >
             Orders ({orders.length})
+          </button>
+          <button
+            onClick={() => router.push('/admin/shop/inventory')}
+            role="tab"
+            aria-selected={activeTab === 'inventory'}
+            aria-controls="inventory-panel"
+            id="inventory-tab"
+            className={`px-4 py-3 font-medium border-b-2 transition-colors ${
+              activeTab === 'inventory'
+                ? `${coloredLinkText.blue} border-blue-600`
+                : `${navigationColors.link} border-transparent ${navigationColors.linkHover}`
+            }`}
+          >
+            Inventory
           </button>
         </div>
       </div>
@@ -403,9 +453,10 @@ export default function AdminShopDashboard() {
                         <Button
                           size="sm"
                           variant="gray"
-                          onClick={() => showToast('Delete product functionality coming soon', 'info')}
+                          onClick={() => handleDeleteProduct(product.id, product.title)}
+                          disabled={deletingProductId === product.id}
                         >
-                          Delete
+                          {deletingProductId === product.id ? 'Deleting...' : 'Delete'}
                         </Button>
                       </div>
                     </div>

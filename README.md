@@ -30,12 +30,12 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║  🪝 7 Custom Hooks                       ✅ Inline Editing (12 pages)        ║
 ║  🧪 69 E2E Test Files                    ✅ WCAG AA Color System (4.5:1)     ║
 ║                                                                              ║
-║  RECENT ADDITIONS (Jan 2026)             LIGHTHOUSE SCORES                   ║
+║  RECENT ADDITIONS (Feb 2026)             LIGHTHOUSE SCORES                   ║
 ║  ────────────────────────────            ──────────────────                   ║
-║  ✨ Quotes System (full workflow)        📊 SEO: 100%                        ║
-║  ✨ Version History (20 revisions)       📊 Accessibility: 100%              ║
-║  ✨ Daily Changelog Automation           📊 Performance: 78%                 ║
-║  ✨ Blog System w/ Admin CMS             📊 Best Practices: 79%              ║
+║  ✨ Order Confirmation Emails            📊 SEO: 100%                        ║
+║  ✨ Customer Quote Auth + Deposit        📊 Accessibility: 100%              ║
+║  ✨ Backend Reliability Hardening        📊 Performance: 78%                 ║
+║  ✨ Auth & Validation on API Routes      📊 Best Practices: 79%              ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```

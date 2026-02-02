@@ -28,7 +28,7 @@ export default function AboutPage() {
           {/* Decorative line */}
           <div className="flex items-center gap-4 mb-8 md:mb-12">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-stone-300 to-transparent" />
-            <span className="text-xs tracking-[0.3em] uppercase text-stone-400 font-medium">
+            <span className="text-xs tracking-[0.3em] uppercase text-stone-500 font-medium">
               The Founder
             </span>
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-stone-300 to-transparent" />
@@ -70,7 +70,7 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
           {/* Section header */}
           <div className="mb-10 md:mb-16">
-            <span className="text-xs tracking-[0.2em] uppercase text-stone-400 font-medium block mb-3">
+            <span className="text-xs tracking-[0.2em] uppercase text-stone-500 font-medium block mb-3">
               The Path
             </span>
             <h2 className="font-playfair text-3xl md:text-4xl font-bold text-stone-900">
@@ -204,7 +204,7 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
           {/* Section header */}
           <div className="mb-10 md:mb-16 text-center">
-            <span className="text-xs tracking-[0.2em] uppercase text-stone-400 font-medium block mb-3">
+            <span className="text-xs tracking-[0.2em] uppercase text-stone-500 font-medium block mb-3">
               Working Together
             </span>
             <h2 className="font-playfair text-3xl md:text-4xl font-bold text-stone-900">

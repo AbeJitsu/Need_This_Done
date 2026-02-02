@@ -187,3 +187,88 @@ export function formatProductUpdateForMedusa(updateData: ProductUpdateData) {
       : undefined,
   };
 }
+
+// ============================================================================
+// Admin Cart Queries
+// ============================================================================
+// What: Query carts from Medusa admin API
+// Why: Find abandoned carts for recovery emails
+// How: GET requests with filters for created date and completion status
+
+export interface MedusaCart {
+  id: string;
+  email?: string;
+  customer_id?: string;
+  created_at: string;
+  updated_at: string;
+  completed_at?: string | null;
+  items: Array<{
+    id: string;
+    title: string;
+    description?: string;
+    thumbnail?: string;
+    quantity: number;
+    unit_price: number;
+    variant?: {
+      product?: {
+        title?: string;
+        thumbnail?: string;
+      };
+    };
+  }>;
+  subtotal: number;
+  total: number;
+  shipping_total?: number;
+  tax_total?: number;
+}
+
+export async function listAbandonedCarts(
+  token: string,
+  hoursAgo: number,
+  limit = 50
+): Promise<MedusaCart[]> {
+  if (!MEDUSA_BACKEND_URL) {
+    throw new Error('MEDUSA_BACKEND_URL is not configured');
+  }
+
+  // Calculate cutoff timestamp (carts older than X hours)
+  const cutoffDate = new Date();
+  cutoffDate.setHours(cutoffDate.getHours() - hoursAgo);
+  const cutoffTimestamp = cutoffDate.toISOString();
+
+  // Query Medusa for incomplete carts
+  // Note: Medusa admin carts endpoint supports filtering
+  const params = new URLSearchParams({
+    limit: limit.toString(),
+    offset: '0',
+    expand: 'items,items.variant,items.variant.product',
+    // Filter for carts that:
+    // 1. Were created before cutoff
+    // 2. Don't have a completed_at timestamp (incomplete)
+    // 3. Have an email address (can contact them)
+    created_at: JSON.stringify({ lt: cutoffTimestamp }),
+  });
+
+  const response = await fetch(
+    `${MEDUSA_BACKEND_URL}/admin/carts?${params.toString()}`,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: 'Failed to fetch carts' }));
+    throw new Error(`Failed to fetch abandoned carts: ${error.message}`);
+  }
+
+  const data = await response.json();
+
+  // Filter for incomplete carts with email addresses
+  const carts = (data.carts || []) as MedusaCart[];
+  return carts.filter(
+    cart => !cart.completed_at && cart.email && cart.items?.length > 0
+  );
+}

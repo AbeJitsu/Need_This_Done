@@ -480,6 +480,27 @@ export const admin = {
     });
     await handleResponse<{ success: boolean }>(response);
   },
+
+  /**
+   * Update variant inventory (admin only)
+   * POST /admin/variants/:variantId
+   * Updates inventory_quantity for a specific product variant
+   */
+  updateVariantInventory: async (
+    token: string,
+    variantId: string,
+    inventoryQuantity: number
+  ): Promise<ProductVariant> => {
+    const response = await fetchWithRetry(`${MEDUSA_URL}/admin/variants/${variantId}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ inventory_quantity: inventoryQuantity }),
+    });
+    const data = await handleResponse<{ variant: ProductVariant }>(response);
+    return data.variant;
+  },
 };
 
 // ============================================================================

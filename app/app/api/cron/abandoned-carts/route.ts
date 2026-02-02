@@ -37,14 +37,18 @@ interface AbandonedCart {
 export async function POST(request: NextRequest) {
   try {
     // Verify cron secret for security
+    // Always require the secret when configured, regardless of environment
     const authHeader = request.headers.get('authorization');
     const cronSecret = process.env.CRON_SECRET;
 
-    // In production, require the secret
-    if (process.env.NODE_ENV === 'production' && cronSecret) {
+    if (cronSecret) {
       if (authHeader !== `Bearer ${cronSecret}`) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
+    } else if (process.env.NODE_ENV === 'production') {
+      // In production, CRON_SECRET must be configured
+      console.error('[Cron] CRON_SECRET not configured in production');
+      return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
     }
 
     const supabase = await createSupabaseServerClient();
@@ -98,13 +102,24 @@ export async function POST(request: NextRequest) {
         );
 
         if (emailId) {
+          // Get existing reminder count for this cart
+          const { data: existingReminder } = await supabase
+            .from('cart_reminders')
+            .select('reminder_count')
+            .eq('cart_id', cart.cart_id)
+            .order('sent_at', { ascending: false })
+            .limit(1)
+            .single();
+
+          const newReminderCount = (existingReminder?.reminder_count || 0) + 1;
+
           // Record the reminder in database
           await supabase.from('cart_reminders').insert({
             cart_id: cart.cart_id,
             email: cart.email,
             cart_total: cart.subtotal,
             item_count: cart.items.length,
-            reminder_count: 1, // Will increment on subsequent reminders
+            reminder_count: newReminderCount,
           });
 
           results.sent++;
@@ -139,8 +154,28 @@ export async function POST(request: NextRequest) {
 // ============================================================================
 // Returns stats about abandoned cart recovery
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
+    // Require cron secret or admin auth to view stats
+    const authHeader = request.headers.get('authorization');
+    const cronSecret = process.env.CRON_SECRET;
+
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+      // Fall back to admin auth check
+      const { verifyAdmin } = await import('@/lib/api-auth');
+      const auth = await verifyAdmin();
+      if (auth.error) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+    } else if (!cronSecret) {
+      // No cron secret configured - require admin auth
+      const { verifyAdmin } = await import('@/lib/api-auth');
+      const auth = await verifyAdmin();
+      if (auth.error) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+    }
+
     const supabase = await createSupabaseServerClient();
 
     // Get reminder stats
@@ -188,26 +223,88 @@ export async function GET(_request: NextRequest) {
 // 3. Haven't received a reminder recently
 
 async function findAbandonedCarts(
-  _supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
-  _thresholdHours: number,
-  _maxReminders: number,
-  _reminderIntervalHours: number
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
+  thresholdHours: number,
+  maxReminders: number,
+  reminderIntervalHours: number
 ): Promise<AbandonedCart[]> {
-  // For now, return empty array - this would integrate with Medusa
-  // In a real implementation, you would:
-  // 1. Query Medusa for carts older than thresholdHours
-  // 2. Filter out carts that have been completed
-  // 3. Cross-reference with cart_reminders to avoid duplicates
-  // 4. Return carts that need reminders
+  try {
+    // Import Medusa helpers dynamically to avoid circular dependencies
+    const { getMedusaAdminToken, listAbandonedCarts } = await import('@/lib/medusa-helpers');
 
-  // TODO: Implement Medusa cart integration
-  // This is a placeholder that shows the expected structure
+    // Get admin token for Medusa API
+    const token = await getMedusaAdminToken();
 
-  // Check for carts that have been tracked in local storage but not completed
-  // This would require a separate cart_tracking table or Medusa integration
+    // Fetch abandoned carts from Medusa (carts older than threshold hours)
+    const medusaCarts = await listAbandonedCarts(token, thresholdHours);
 
-  // Removed console.log - consider implementing proper logging service for cron jobs
-  // Would log: Checking for carts older than X hours, max Y reminders, Z hours between reminders
+    if (medusaCarts.length === 0) {
+      return [];
+    }
 
-  return [];
+    // Get cart IDs that have already received reminders
+    const cartIds = medusaCarts.map(cart => cart.id);
+    const { data: existingReminders } = await supabase
+      .from('cart_reminders')
+      .select('cart_id, reminder_count, sent_at')
+      .in('cart_id', cartIds);
+
+    // Create a map of cart_id -> reminder info
+    const reminderMap = new Map<string, { count: number; lastSent: string }>();
+    (existingReminders || []).forEach(reminder => {
+      const existing = reminderMap.get(reminder.cart_id);
+      if (!existing || new Date(reminder.sent_at) > new Date(existing.lastSent)) {
+        reminderMap.set(reminder.cart_id, {
+          count: reminder.reminder_count,
+          lastSent: reminder.sent_at,
+        });
+      }
+    });
+
+    // Filter carts based on reminder rules
+    const now = new Date();
+    const eligibleCarts: AbandonedCart[] = [];
+
+    for (const cart of medusaCarts) {
+      const reminderInfo = reminderMap.get(cart.id);
+
+      // Skip if already sent max reminders
+      if (reminderInfo && reminderInfo.count >= maxReminders) {
+        continue;
+      }
+
+      // Skip if reminder sent too recently
+      if (reminderInfo) {
+        const lastSentDate = new Date(reminderInfo.lastSent);
+        const hoursSinceLastReminder =
+          (now.getTime() - lastSentDate.getTime()) / (1000 * 60 * 60);
+
+        if (hoursSinceLastReminder < reminderIntervalHours) {
+          continue;
+        }
+      }
+
+      // Transform Medusa cart to AbandonedCart format
+      const items: CartItem[] = cart.items.map(item => ({
+        name: item.title || item.variant?.product?.title || 'Product',
+        quantity: item.quantity,
+        price: item.unit_price,
+      }));
+
+      eligibleCarts.push({
+        cart_id: cart.id,
+        email: cart.email!,
+        customer_name: undefined, // Medusa v2 doesn't include customer name in cart
+        items,
+        subtotal: cart.subtotal,
+        created_at: cart.created_at,
+      });
+    }
+
+    return eligibleCarts;
+  } catch (error) {
+    console.error('Error finding abandoned carts:', error);
+    // Return empty array on error to allow cron to continue
+    return [];
+  }
 }

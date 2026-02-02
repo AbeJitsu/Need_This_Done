@@ -22,7 +22,7 @@ const defaultFooterLinks: FooterLink[] = [
   { href: '/pricing', label: 'Pricing' },
   { href: '/faq', label: 'FAQ' },
   { href: '/blog', label: 'Blog' },
-  { href: '/get-started', label: 'Get Started' },
+  { href: '/contact', label: 'Get Started' },
 ];
 
 export default function Footer() {
@@ -54,26 +54,29 @@ export default function Footer() {
             </Editable>
           </Link>
 
-          {/* Navigation links - inline with dot separators */}
-          <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-x-1 gap-y-1">
+          {/* Navigation links - responsive layout with better spacing */}
+          <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-x-1 gap-y-1.5">
             {footerLinks.map((link, index) => (
               <span key={link.href} className="flex items-center">
                 <Link
                   href={link.href}
-                  className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}
+                  className={`text-sm text-gray-700 dark:text-gray-300 ${linkHoverColors.blue} transition-colors py-1.5 px-2.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
                 >
                   <Editable path={`_layout.footer.links.${index}.label`}>
                     <span>{link.label}</span>
                   </Editable>
                 </Link>
-                <span className={`mx-2 text-sm ${formInputColors.helper}`}>·</span>
+                {index < footerLinks.length - 1 && (
+                  <span className={`mx-1.5 text-sm ${formInputColors.helper} hidden sm:inline`} aria-hidden="true">·</span>
+                )}
               </span>
             ))}
+            <span className="hidden sm:inline mx-1.5 text-sm text-gray-600 dark:text-gray-300" aria-hidden="true">·</span>
             <button
               type="button"
               onClick={openChatbot}
-              className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors cursor-pointer flex items-center gap-1`}
-              aria-label="Chat with AI assistant"
+              className={`text-sm text-gray-700 dark:text-gray-300 ${linkHoverColors.blue} transition-colors cursor-pointer flex items-center gap-1.5 py-1.5 px-2.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+              aria-label="Open AI chatbot to ask questions"
             >
               <svg
                 className="w-3.5 h-3.5"
@@ -105,7 +108,7 @@ export default function Footer() {
           <p className="flex items-center gap-2">
             {legalLinks.map((link, index) => (
               <span key={link.href} className="flex items-center gap-2">
-                <Link href={link.href} className={`${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}>
+                <Link href={link.href} className={`text-gray-700 dark:text-gray-300 ${linkHoverColors.blue} transition-colors py-1 px-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}>
                   <Editable path={`_layout.footer.legalLinks.${index}.label`}>
                     <span>{link.label}</span>
                   </Editable>
