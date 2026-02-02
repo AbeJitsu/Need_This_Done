@@ -208,13 +208,22 @@ export default function ReviewsModerationDashboard() {
     <div className={`min-h-screen ${containerBg} py-8`}>
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className={`text-4xl font-bold ${headingColors.blue.text} mb-2`}>
-            Review Moderation
-          </h1>
-          <p className={mutedTextColors.base}>
-            Review and approve customer feedback before it appears on product pages
-          </p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className={`text-4xl font-bold ${headingColors.blue.text} mb-2`}>
+              Review Moderation
+            </h1>
+            <p className={mutedTextColors.base}>
+              Review and approve customer feedback before it appears on product pages
+            </p>
+          </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => router.push('/admin/reviews/analytics')}
+          >
+            View Analytics
+          </Button>
         </div>
 
         {/* Stats */}
