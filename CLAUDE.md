@@ -35,9 +35,10 @@ Speak like a friend over coffee. Easy to understand.
 
 ## What's Built
 
-**Latest additions (Feb 2, 2026):**
+**Latest additions (Feb 2, 2026 — Final):**
+- ✅ **Recently viewed products**: Browse history tracking + widget on shop page (commit af0557c)
 - ✅ **Customer referral program**: Earn \$10 store credits for each successful referral with unique code, real-time tracking, and credit balance management
-- ✅ **Admin communication hub**: Create email templates, build targeted campaigns to customer segments, track open/click rates and delivery status
+- ✅ **Admin communication hub**: Create email templates, build targeted campaigns to customer segments, track open/click rates and delivery status (fixed form submission)
 - ✅ **Email segmentation for waitlist members**: Create targeted campaigns with performance analytics and one-click sending
 - ✅ **Waitlist analytics dashboard**: Real-time demand metrics, conversion tracking, top products, signup trends
 - ✅ **Product category management**: Admin CRUD for categories with color-coding and custom ordering

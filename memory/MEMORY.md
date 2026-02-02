@@ -8,11 +8,12 @@ Key learnings and patterns discovered during development.
 
 ---
 
-## Project Status — Feb 2, 2026
+## Project Status — Feb 2, 2026 (Final)
 
 **Current State:** Mature, production-ready with comprehensive reliability hardening and complete feature set
-- **Customer referral program**: \$10 store credits for each successful referral (new Feb 2 06:16)
-- **Admin communication hub**: Email templates, targeted campaigns, open/click tracking (new Feb 2 06:16)
+- **Recently viewed products**: Browse history tracking + dashboard widget (new Feb 2 06:37)
+- **Customer referral program**: \$10 store credits for each successful referral (Feb 2 06:16)
+- **Admin communication hub**: Email templates, targeted campaigns, open/click tracking with fixed form submission (Feb 2 06:31)
 - **Email segmentation for waitlist members**: Targeted campaigns with performance tracking (Feb 2 05:59)
 - **Waitlist analytics dashboard**: Real-time demand metrics, conversion tracking (Feb 2)
 - **Product category management**: Admin CRUD with color-coding and reordering (Feb 2)
@@ -33,6 +34,12 @@ Key learnings and patterns discovered during development.
 - Test suite: 69 E2E tests + accessibility tests
 
 **Completed Recent Work (Feb 2):**
+- ✅ Recently viewed products - Browse history tracking across sessions, widget on shop page, full history page (commit af0557c)
+- ✅ Code quality cleanup - Removed unused variables and imports (commit 64ebafa)
+- ✅ Admin form submissions fixed - Communication hub campaign/template creation and sending (commit 437ebbc)
+- ✅ Referral analytics retry - Added error state and retry button (commit 437ebbc)
+- ✅ Idempotency protection - Email campaign sends now deduplicated (commit 481c37d)
+- ✅ Frontend polish - Skeleton loaders and focus management improvements (commit f0975b2)
 - ✅ Customer referral program - Unique referral codes, credit balance tracking, referral history, admin analytics (commit ccfd93b)
 - ✅ Admin communication hub - Email template manager, campaign creation, performance tracking, recipient segmentation (commit ccfd93b)
 - ✅ Email segmentation for waitlist members - Campaign creation/management UI, targeted offers, performance analytics (commit aa7fff6)
@@ -56,14 +63,27 @@ Key learnings and patterns discovered during development.
 - ✅ Customer dashboard: Active appointments section with status/details (commit b6bbb73)
 - ✅ Dashboard stats overview: Key account metrics visualization (commit 64362f4)
 
-**Next Priority Areas:**
-1. Performance optimization for search/filtering (if needed based on usage metrics)
-2. Load testing for Redis circuit breaker under high concurrency
-3. Admin analytics expansion - Inventory turnover rates, customer lifetime value
-4. Enhanced product recommendations based on comparison history
-5. Mobile responsiveness audit across new campaign UI
+**Next Priority Areas (Post-Launch):**
+1. Performance optimization for search/filtering (monitor based on real usage metrics)
+2. Load testing for Redis circuit breaker under production concurrency
+3. Admin analytics expansion - Inventory turnover rates, customer lifetime value, ROI tracking
+4. Enhanced product recommendations based on browsing and comparison history
+5. A/B testing framework for campaign performance optimization
+6. Mobile responsiveness audit across new campaign and admin dashboards
+7. Monitoring and alerting for reliability metrics (error rates, latency, uptime)
 
 ## Customer-Facing Features — Feb 2, 2026
+
+**Recently Viewed Products** (commit af0557c — Feb 2 06:37)
+- Browse history tracking: Customers see up to 10 most recently viewed products
+- BrowsingHistoryContext: React context manages history state with localStorage persistence
+- Works for both authenticated and anonymous users
+- Two viewing options:
+  - RecentlyViewedWidget: Compact display showing 3 most recent items on shop page
+  - RecentlyViewedPage: Full-page view at `/recently-viewed` with complete browsing history
+- Automatic tracking: Product detail page tracks visits with timestamps via useEffect
+- Improves discovery: Helps customers easily return to products they're considering
+- Foundation for product recommendations and personalization
 
 **Customer Referral Program** (commit ccfd93b — Feb 2 06:16)
 - Unique referral code generated per customer, accessible in account dashboard
