@@ -2,6 +2,19 @@
 
 Key learnings and patterns discovered during development.
 
+## Project Status — Feb 2, 2026
+
+**Current State:** Mature, production-ready with comprehensive reliability hardening
+- Backend reliability audit completed (9 of 10 critical issues resolved)
+- Customer-facing features: Order confirmation emails, quote authorization, appointment reminders
+- Admin dashboard: Full appointment management with Google Calendar, product analytics, enrollments
+- Test suite: 69 E2E tests + accessibility tests, cleaned up non-enforcing artifacts
+
+**Next Priority Areas:**
+1. Cache invalidation race condition handling (low priority, no blocking issues)
+2. Load testing for Redis circuit breaker
+3. Expansion of rate limiting to other cost-sensitive endpoints
+
 ## Customer-Facing Features — Feb 1, 2026
 
 **Order Confirmation Email** (`api/stripe/webhook/route.ts`)
@@ -75,7 +88,7 @@ Key learnings and patterns discovered during development.
 - ~85 lines of reusable e-commerce logic
 - Reduces duplication across pages and API routes
 
-## Admin Dashboard Features — Feb 1, 2026
+## Admin Dashboard Features — Feb 2, 2026
 
 **Google Calendar Integration** (`/admin/settings`)
 - OAuth connection UI: Connect/disconnect buttons with status display
@@ -89,6 +102,11 @@ Key learnings and patterns discovered during development.
 - Calendar event creation status visible to admin
 - Graceful degradation: Appointments approve even if email/calendar fails
 - Admin receives actionable warnings for failures
+- **Automatic Reminder Emails** (Feb 2): Sends 24h and 1h pre-appointment reminders
+  - Cron job: `/api/cron/appointment-reminders` (runs hourly)
+  - Tracking table prevents duplicate emails
+  - Beautiful template with appointment details and meeting links
+  - Reduces no-shows through proactive customer communication
 
 **Product Analytics** (`/admin/product-analytics`)
 - Product engagement: views, cart adds, purchases, conversion funnel

@@ -57,9 +57,13 @@ None currently blocking. All critical backend reliability risks addressed.
 - Icon color increased: gray-300 (1.7:1) → gray-400 (2.8:1)
 - Better visibility while remaining subtle
 
-## Testing Coverage
+## Testing Coverage & Cleanup — Feb 2, 2026
 
-- E2E tests: 69 files (per README metrics)
+- E2E tests: Cleaned up non-enforcing and debug artifacts
+  - Removed: `debug-classes.spec.ts` (development-time console.log test)
+  - Removed: `hardcoded-content-audit.spec.ts` (non-enforcing audit warnings)
 - Accessibility: Automated via axe-core
 - Backend reliability: Manual audit completed Feb 1, 2026
 - Load testing: Not performed yet (recommended for Redis circuit breaker)
+
+**Principle:** Tests must enforce compliance or be removed. Audit-only tests that print warnings but don't fail belong in documentation, not the test suite.
