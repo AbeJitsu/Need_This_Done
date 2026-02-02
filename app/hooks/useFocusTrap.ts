@@ -14,7 +14,7 @@ interface UseFocusTrapOptions {
   onClose?: () => void;
 }
 
-export function useFocusTrap({ isOpen, onClose }: UseFocusTrapOptions) {
+export function useFocusTrap({ isOpen }: UseFocusTrapOptions) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // ========================================================================

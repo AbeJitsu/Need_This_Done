@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { alertColors, statusBadgeColors, containerBg, headingColors, mutedTextColors, coloredLinkText, dividerColors } from '@/lib/colors';
+import { alertColors, statusBadgeColors, headingColors, mutedTextColors, coloredLinkText } from '@/lib/colors';
 
 // ============================================================================
 // My Reviews Section - Shows user's submitted product reviews
@@ -114,17 +114,17 @@ export default function MyReviewsSection() {
   if (loading) {
     return (
       <div className="mt-8 pt-8 border-t border-gray-200">
-        <h2 className={`text-2xl font-bold ${headingColors.blue.text} mb-4`}>
+        <h2 className={`text-2xl font-bold ${headingColors.primary} mb-4`}>
           My Reviews
         </h2>
-        <p className={mutedTextColors.base}>Loading your reviews...</p>
+        <p className={mutedTextColors.normal}>Loading your reviews...</p>
       </div>
     );
   }
 
   return (
     <div className="mt-8 pt-8 border-t border-gray-200">
-      <h2 className={`text-2xl font-bold ${headingColors.blue.text} mb-4`}>
+      <h2 className={`text-2xl font-bold ${headingColors.primary} mb-4`}>
         My Reviews
       </h2>
 
@@ -136,7 +136,7 @@ export default function MyReviewsSection() {
 
       {reviews.length === 0 ? (
         <Card className="p-6 text-center">
-          <p className={mutedTextColors.base}>
+          <p className={mutedTextColors.normal}>
             You haven't submitted any reviews yet. Start reviewing products you've purchased!
           </p>
         </Card>
@@ -148,7 +148,7 @@ export default function MyReviewsSection() {
                 {/* Review content */}
                 <div className="flex-1">
                   {/* Product title */}
-                  <div className={`text-sm font-medium ${coloredLinkText.blue.text} mb-2`}>
+                  <div className={`text-sm font-medium ${coloredLinkText.blue} mb-2`}>
                     {review.product?.title || 'Unknown Product'}
                   </div>
 
@@ -173,12 +173,12 @@ export default function MyReviewsSection() {
 
                   {/* Title and content */}
                   {review.title && (
-                    <h3 className={`font-semibold ${headingColors.blue.text} mb-1`}>
+                    <h3 className={`font-semibold ${headingColors.primary} mb-1`}>
                       {review.title}
                     </h3>
                   )}
                   {review.content && (
-                    <p className={`${mutedTextColors.base} mb-3 line-clamp-2`}>
+                    <p className={`${mutedTextColors.normal} mb-3 line-clamp-2`}>
                       {review.content}
                     </p>
                   )}
@@ -188,10 +188,10 @@ export default function MyReviewsSection() {
                     <span
                       className={`text-xs font-semibold px-3 py-1 rounded-full ${
                         review.status === 'pending'
-                          ? statusBadgeColors.warning.bg
+                          ? statusBadgeColors.pending.bg
                           : review.status === 'approved'
-                            ? statusBadgeColors.success.bg
-                            : statusBadgeColors.error.bg
+                            ? statusBadgeColors.published.bg
+                            : statusBadgeColors.rejected.bg
                       }`}
                     >
                       {review.status === 'pending' && '⏳ Pending Approval'}
@@ -207,7 +207,7 @@ export default function MyReviewsSection() {
                   </div>
 
                   {/* Date */}
-                  <div className={`text-xs ${mutedTextColors.base}`}>
+                  <div className={`text-xs ${mutedTextColors.normal}`}>
                     Submitted {new Date(review.created_at).toLocaleDateString()}
                   </div>
                 </div>
@@ -215,7 +215,7 @@ export default function MyReviewsSection() {
                 {/* Actions - only for pending reviews */}
                 {review.status === 'pending' && (
                   <Button
-                    variant="secondary"
+                    variant="gray"
                     size="sm"
                     onClick={() => handleDeleteReview(review.id)}
                     disabled={deleteLoading === review.id}
@@ -231,7 +231,7 @@ export default function MyReviewsSection() {
 
       {/* Info box */}
       <Card className="mt-4 p-4 bg-blue-50 border border-blue-100">
-        <p className={`text-sm ${mutedTextColors.base}`}>
+        <p className={`text-sm ${mutedTextColors.normal}`}>
           <strong>ℹ️ How reviews work:</strong> When you submit a review, it goes through
           moderation before being published. You'll see your review status here, and we'll
           notify you by email when it's approved.

@@ -210,20 +210,6 @@ const reviewCard: React.CSSProperties = {
   border: '2px solid #dcfce7',
 };
 
-const productImage: React.CSSProperties = {
-  maxWidth: '200px',
-  height: 'auto',
-  borderRadius: '8px',
-  margin: '0 auto 20px auto',
-  display: 'block',
-};
-
-const productTitle: React.CSSProperties = {
-  color: '#1f2937',
-  fontSize: '20px',
-  fontWeight: 'bold',
-  margin: '16px 0',
-};
 
 const ratingSection: React.CSSProperties = {
   margin: '16px 0',

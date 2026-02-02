@@ -16,7 +16,6 @@
 // - Track failures to detect cascading problems
 // - NEVER return 200 until we're confident data was persisted
 
-import { withSupabaseRetry } from './supabase-retry';
 import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from './api-timeout';
 
 // ============================================================================
@@ -169,7 +168,6 @@ export async function withWebhookRetry(
   } = options;
 
   let lastError: unknown;
-  let retriesAttempted = 0;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
@@ -184,7 +182,6 @@ export async function withWebhookRetry(
       return { success: true };
     } catch (error) {
       lastError = error;
-      retriesAttempted = attempt;
 
       const errorType = classifyError(error);
 

@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { discoverPublicPages, DiscoveredPage } from './utils/page-discovery';
 import { waitForPageReady } from './helpers';
 
@@ -39,70 +39,6 @@ const BORDER_SELECTORS = [
   '[role="button"]',
   '.border',                       // Explicit border classes
 ];
-
-// ============================================================================
-// Color Utilities
-// ============================================================================
-
-interface RGB {
-  r: number;
-  g: number;
-  b: number;
-}
-
-/**
- * Parse a CSS color string to RGB values
- */
-function parseColor(color: string): RGB | null {
-  // Handle rgb/rgba format
-  const rgbMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-  if (rgbMatch) {
-    return {
-      r: parseInt(rgbMatch[1]),
-      g: parseInt(rgbMatch[2]),
-      b: parseInt(rgbMatch[3]),
-    };
-  }
-
-  // Handle hex format
-  const hexMatch = color.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
-  if (hexMatch) {
-    return {
-      r: parseInt(hexMatch[1], 16),
-      g: parseInt(hexMatch[2], 16),
-      b: parseInt(hexMatch[3], 16),
-    };
-  }
-
-  // Handle transparent
-  if (color === 'transparent' || color === 'rgba(0, 0, 0, 0)') {
-    return null;
-  }
-
-  return null;
-}
-
-/**
- * Calculate relative luminance per WCAG 2.1
- */
-function getLuminance(rgb: RGB): number {
-  const [r, g, b] = [rgb.r, rgb.g, rgb.b].map((c) => {
-    const sRGB = c / 255;
-    return sRGB <= 0.03928 ? sRGB / 12.92 : Math.pow((sRGB + 0.055) / 1.055, 2.4);
-  });
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
-/**
- * Calculate contrast ratio between two colors
- */
-function getContrastRatio(color1: RGB, color2: RGB): number {
-  const l1 = getLuminance(color1);
-  const l2 = getLuminance(color2);
-  const lighter = Math.max(l1, l2);
-  const darker = Math.min(l1, l2);
-  return (lighter + 0.05) / (darker + 0.05);
-}
 
 // ============================================================================
 // Violation Types

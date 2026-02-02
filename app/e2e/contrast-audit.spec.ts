@@ -295,12 +295,6 @@ test.describe('Accent Color Verification', () => {
     purple: { rgb: 'rgb(168, 85, 247)', hex: '#a855f7', name: 'purple-500 (accent var)' },
   };
 
-  // Expected direct Tailwind colors (text-gold-600, etc.)
-  const DIRECT_COLORS: Record<string, { rgb: string; hex: string; name: string }> = {
-    'gold-600': { rgb: 'rgb(111, 80, 61)', hex: '#6f503d', name: 'gold-600' },
-    'green-700': { rgb: 'rgb(4, 120, 87)', hex: '#047857', name: 'green-700' },
-  };
-
   // Pages using text-accent-* classes (CSS variable based)
   // This specifically catches CSS variable override bugs
   const ACCENT_VAR_PAGES = [

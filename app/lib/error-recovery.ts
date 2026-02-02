@@ -410,11 +410,14 @@ export function logError(
         ? 'warn'
         : 'debug';
 
-  console[logLevel as keyof typeof console](
-    `[${classified.code}] ${context}:`,
-    classified.message,
-    classified.debugInfo
-  );
+  const logMethod = console[logLevel as 'error' | 'warn' | 'debug'];
+  if (logMethod) {
+    logMethod(
+      `[${classified.code}] ${context}:`,
+      classified.message,
+      classified.debugInfo
+    );
+  }
 
   // TODO: Send critical errors to error tracking service (Sentry, etc.)
   if (classified.shouldAlert && classified.severity === 'critical') {

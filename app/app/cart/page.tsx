@@ -13,7 +13,6 @@ import {
   headingColors,
   dividerColors,
   leftBorderColors,
-  dangerColors,
   lightBgColors,
   accentColors,
   cardBgColors,

@@ -115,9 +115,9 @@ export default function ConfirmDialog({
         {/* Modal panel - stops click propagation so outside clicks close modal */}
         <div
           ref={(el) => {
-            if (el) {
-              modalRef.current = el;
-              focusTrapRef.current = el;
+            if (el && modalRef && focusTrapRef) {
+              (modalRef as any).current = el;
+              (focusTrapRef as any).current = el;
             }
           }}
           onClick={(e) => e.stopPropagation()}
