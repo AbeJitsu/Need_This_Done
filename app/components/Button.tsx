@@ -84,8 +84,8 @@ export default function Button({
     ghost: `${ghostClasses[variant]} ${colors.text} ${colors.hoverText}`,
   };
 
-  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-xl transition-all duration-300 motion-safe:hover:scale-105 motion-safe:active:scale-95 ${colors.focusVisible} ${sizeClasses[size]} ${styleClasses[buttonStyle]}`;
-  const disabledClasses = isDisabled ? 'opacity-60 cursor-not-allowed motion-safe:hover:scale-100 motion-safe:active:scale-100' : '';
+  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-xl transition-all duration-300 motion-safe:hover:scale-105 motion-safe:active:scale-95 ${colors.focusVisible} ${sizeClasses[size]} ${styleClasses[buttonStyle]} relative`;
+  const disabledClasses = isDisabled ? 'after:absolute after:inset-0 after:bg-black/40 after:rounded-xl cursor-not-allowed motion-safe:hover:scale-100 motion-safe:active:scale-100' : '';
   const fullClasses = `${baseClasses} ${disabledClasses} ${className}`.trim();
 
   // Render as Link if href is provided and not disabled
@@ -106,8 +106,10 @@ export default function Button({
       className={fullClasses}
       aria-busy={isLoading}
     >
-      {isLoading && <LoadingSpinner size="sm" color="current" />}
-      {isLoading && loadingText ? loadingText : children}
+      <span className="relative z-10 flex items-center justify-center gap-2">
+        {isLoading && <LoadingSpinner size="sm" color="current" />}
+        {isLoading && loadingText ? loadingText : children}
+      </span>
     </button>
   );
 }

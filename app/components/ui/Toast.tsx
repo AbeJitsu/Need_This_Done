@@ -91,7 +91,7 @@ export default function Toast({ message, type, onDismiss }: ToastProps) {
       {/* Dismiss button */}
       <button
         onClick={onDismiss}
-        className={`${styles.text} opacity-70 hover:opacity-100 transition-opacity flex-shrink-0`}
+        className={`${styles.text} opacity-70 hover:opacity-100 transition-opacity flex-shrink-0 rounded p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2`}
         aria-label="Dismiss notification"
       >
         <CloseIcon size="sm" />

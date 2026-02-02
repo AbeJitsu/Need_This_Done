@@ -158,10 +158,10 @@ export default function ConfirmDialog({
               <button
                 onClick={onConfirm}
                 className={`
-                  flex-1 py-2.5 px-4 rounded-lg font-medium
+                  flex-1 py-2.5 px-4 rounded-lg font-medium border-2
                   ${styles.confirmBg} ${styles.confirmHover} ${styles.confirmText}
                   transition-colors
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 focus-visible:ring-blue-500
                 `}
               >
                 {confirmLabel}
