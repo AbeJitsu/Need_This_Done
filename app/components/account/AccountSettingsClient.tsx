@@ -5,6 +5,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { User, LogOut, Mail, Save, Loader2, Check, AlertCircle } from 'lucide-react';
 import Button from '@/components/Button';
 import MyReviewsSection from './MyReviewsSection';
+import NotificationPreferencesSection from './NotificationPreferencesSection';
 import { accentColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors } from '@/lib/colors';
 
 // ============================================================================
@@ -231,6 +232,9 @@ export default function AccountSettingsClient() {
             </div>
           </div>
         </div>
+
+        {/* Notification Preferences Section */}
+        <NotificationPreferencesSection />
 
         {/* My Reviews Section */}
         <MyReviewsSection />
