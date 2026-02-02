@@ -611,8 +611,11 @@ export default function ContactPage() {
               </label>
 
               <div
+                role="button"
+                tabIndex={0}
                 onClick={() => fileInputRef.current?.click()}
-                className="border border-gray-400 rounded-xl p-6 text-center cursor-pointer bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/50 transition-all group"
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInputRef.current?.click(); } }}
+                className="border border-gray-400 rounded-xl p-6 text-center cursor-pointer bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 transition-all group"
               >
                 <input
                   ref={fileInputRef}

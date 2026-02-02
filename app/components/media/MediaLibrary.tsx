@@ -280,8 +280,12 @@ export default function MediaLibrary({
                   return (
                     <div
                       key={item.id}
-                      className="group relative aspect-square rounded-lg overflow-hidden cursor-pointer"
+                      role="button"
+                      tabIndex={0}
+                      className="group relative aspect-square rounded-lg overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2"
                       onClick={() => handleSelect(item)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSelect(item); } }}
+                      aria-label={`Select image ${item.alt_text || item.filename}`}
                     >
                       {/* Image */}
                       {item.url && (
