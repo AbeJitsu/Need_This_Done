@@ -3,6 +3,7 @@ import { streamText, embed, type CoreMessage } from 'ai';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { redis } from '@/lib/redis';
 import { withSupabaseRetry } from '@/lib/supabase-retry';
+import { withTimeout } from '@/lib/api-timeout';
 import { validateRequestSize, SIZE_LIMITS } from '@/lib/request-size-limit';
 import { NextRequest } from 'next/server';
 
@@ -294,18 +295,46 @@ CITATION FORMAT:
 - Example: [Get a Quote](/contact) or [Services](/services)`;
 
     // ========================================================================
-    // Step 5: Stream response using Vercel AI SDK
+    // Step 5: Stream response using Vercel AI SDK with Timeout Protection
     // ========================================================================
-    const result = streamText({
-      model: openai('gpt-4o-mini'),
-      system: systemPrompt,
-      messages: normalizedMessages,
-      maxOutputTokens: 1000,
-      temperature: 0.7,
-    });
+    // Timeout recommendation: 30 seconds for LLM inference
+    // LLM calls can be slower than typical API calls, so we use a longer timeout
+    const LLM_TIMEOUT_MS = 30000;
 
-    // Return streaming response
-    return result.toTextStreamResponse();
+    // Create the stream with timeout protection
+    const streamPromise = (async () => {
+      try {
+        const result = await withTimeout(
+          Promise.resolve(
+            streamText({
+              model: openai('gpt-4o-mini'),
+              system: systemPrompt,
+              messages: normalizedMessages,
+              maxOutputTokens: 1000,
+              temperature: 0.7,
+            })
+          ),
+          LLM_TIMEOUT_MS,
+          'LLM inference'
+        );
+
+        // Return streaming response
+        return result.toTextStreamResponse();
+      } catch (timeoutError) {
+        if (timeoutError instanceof Error && timeoutError.message.includes('timed out')) {
+          console.error('LLM request timed out after', LLM_TIMEOUT_MS + 'ms');
+          return new Response(
+            JSON.stringify({
+              error: 'The AI model is currently slow. Please try again in a moment.',
+            }),
+            { status: 503, headers: { 'Content-Type': 'application/json' } }
+          );
+        }
+        throw timeoutError;
+      }
+    })();
+
+    return await streamPromise;
   } catch (error) {
     console.error('Chat API error:', error);
 

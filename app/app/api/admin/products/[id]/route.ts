@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { verifyAdmin } from '@/lib/api-auth';
 import { badRequest, handleApiError, notFound } from '@/lib/api-errors';
 import { cache, CACHE_KEYS } from '@/lib/cache';
+import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
 import {
   getMedusaAdminToken,
   formatProductUpdateForMedusa,
@@ -66,15 +67,19 @@ export async function PUT(
       category_ids,
     });
 
-    // Update product in Medusa
-    const response = await fetch(`${MEDUSA_BACKEND_URL}/admin/products/${id}`, {
-      method: 'POST', // Medusa v2 uses POST for updates
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(productUpdate),
-    });
+    // Update product in Medusa with timeout protection
+    const response = await withTimeout(
+      fetch(`${MEDUSA_BACKEND_URL}/admin/products/${id}`, {
+        method: 'POST', // Medusa v2 uses POST for updates
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productUpdate),
+      }),
+      TIMEOUT_LIMITS.EXTERNAL_API,
+      'Medusa product fetch'
+    );
 
     if (!response.ok) {
       if (response.status === 404) {
@@ -94,24 +99,33 @@ export async function PUT(
       const usdPrice = variantPrices.find((p: { currency_code: string }) => p.currency_code === 'usd');
 
       if (usdPrice) {
-        // Update existing price
-        await fetch(
-          `${MEDUSA_BACKEND_URL}/admin/products/${id}/variants/${variantId}`,
-          {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              prices: variantPrices.map((p: { id: string; currency_code: string; amount: number }) =>
-                p.currency_code === 'usd'
-                  ? { ...p, amount: priceUpdate }
-                  : p
-              ),
-            }),
-          }
-        );
+        // Update existing price with timeout protection
+        try {
+          await withTimeout(
+            fetch(
+              `${MEDUSA_BACKEND_URL}/admin/products/${id}/variants/${variantId}`,
+              {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  prices: variantPrices.map((p: { id: string; currency_code: string; amount: number }) =>
+                    p.currency_code === 'usd'
+                      ? { ...p, amount: priceUpdate }
+                      : p
+                  ),
+                }),
+              }
+            ),
+            TIMEOUT_LIMITS.EXTERNAL_API,
+            'Medusa variant price update'
+          );
+        } catch (error) {
+          // Log the error but don't fail the entire operation if variant update times out
+          console.error('Warning: Variant price update timed out or failed:', error);
+        }
       }
     }
 
@@ -127,6 +141,13 @@ export async function PUT(
       message: 'Product updated successfully',
     });
   } catch (error) {
+    // Handle timeout errors with appropriate status code
+    if (error instanceof TimeoutError) {
+      return NextResponse.json(
+        { error: 'Product update timed out. Medusa backend is currently slow. Please try again.' },
+        { status: 503 }
+      );
+    }
     return handleApiError(error, 'Admin Product PUT');
   }
 }
@@ -152,14 +173,18 @@ export async function DELETE(
     // Get Medusa admin token
     const token = await getMedusaAdminToken();
 
-    // Delete product from Medusa
-    const response = await fetch(`${MEDUSA_BACKEND_URL}/admin/products/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    // Delete product from Medusa with timeout protection
+    const response = await withTimeout(
+      fetch(`${MEDUSA_BACKEND_URL}/admin/products/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }),
+      TIMEOUT_LIMITS.EXTERNAL_API,
+      'Medusa product delete'
+    );
 
     if (!response.ok) {
       if (response.status === 404) {
@@ -180,6 +205,13 @@ export async function DELETE(
       message: 'Product deleted successfully',
     });
   } catch (error) {
+    // Handle timeout errors with appropriate status code
+    if (error instanceof TimeoutError) {
+      return NextResponse.json(
+        { error: 'Product delete timed out. Medusa backend is currently slow. Please try again.' },
+        { status: 503 }
+      );
+    }
     return handleApiError(error, 'Admin Product DELETE');
   }
 }

@@ -13,6 +13,10 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@components', '@icons', '@ui'],
   },
+  // Disable Pages Router file detection entirely since we use App Router
+  // This prevents Next.js from trying to prerender built-in Pages Router error pages
+  // which would attempt to import react-email HTML components at build time
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
 
   // ========================================================================
   // Server External Packages
@@ -25,6 +29,17 @@ const nextConfig = {
     '@react-email/render',
     'react-email',
   ],
+
+  // ========================================================================
+  // Webpack Configuration
+  // ========================================================================
+  // Ignore react-email during builds to prevent eval of Html component
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.externals = [...(config.externals || []), 'react-email'];
+    }
+    return config;
+  },
 
   // ========================================================================
   // Output Mode: Default (optimized for Vercel)
