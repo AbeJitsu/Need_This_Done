@@ -54,7 +54,7 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden py-20 md:py-0 bg-white"
+      className="relative h-[80vh] flex flex-col items-center justify-center overflow-hidden py-20 md:py-0 bg-white"
     >
       {/* ============================================================
           BACKGROUND LAYER: Smooth Directional Gradient
@@ -78,31 +78,27 @@ export function Hero() {
               rgba(167, 243, 208, 0.4) 10%,
               rgba(167, 243, 208, 0.25) 11%,
               rgba(167, 243, 208, 0.1) 12%,
-              white 14%,
-              white 32%,
-              rgba(191, 219, 254, 0.1) 34%,
-              rgba(191, 219, 254, 0.25) 35%,
-              rgba(191, 219, 254, 0.4) 36%,
-              rgba(191, 219, 254, 0.55) 37%,
-              rgba(191, 219, 254, 0.7) 38%,
-              rgba(191, 219, 254, 0.85) 39%,
-              #bfdbfe 40%,
+              rgba(191, 219, 254, 0.1) 18%,
+              rgba(191, 219, 254, 0.25) 24%,
+              rgba(191, 219, 254, 0.4) 30%,
+              rgba(191, 219, 254, 0.55) 36%,
+              rgba(191, 219, 254, 0.7) 42%,
+              rgba(191, 219, 254, 0.85) 45%,
+              #bfdbfe 48%,
               #bfdbfe 52%,
-              rgba(191, 219, 254, 0.85) 53%,
-              rgba(191, 219, 254, 0.7) 54%,
-              rgba(191, 219, 254, 0.55) 55%,
-              rgba(191, 219, 254, 0.4) 56%,
-              rgba(191, 219, 254, 0.25) 57%,
-              rgba(191, 219, 254, 0.1) 58%,
-              white 60%,
-              white 78%,
-              rgba(216, 180, 254, 0.1) 80%,
-              rgba(216, 180, 254, 0.25) 81%,
-              rgba(216, 180, 254, 0.4) 82%,
-              rgba(216, 180, 254, 0.55) 83%,
-              rgba(216, 180, 254, 0.7) 84%,
-              rgba(216, 180, 254, 0.85) 85%,
-              #d8b4fe 86%,
+              rgba(191, 219, 254, 0.85) 55%,
+              rgba(191, 219, 254, 0.7) 58%,
+              rgba(191, 219, 254, 0.55) 64%,
+              rgba(191, 219, 254, 0.4) 70%,
+              rgba(191, 219, 254, 0.25) 76%,
+              rgba(191, 219, 254, 0.1) 82%,
+              rgba(216, 180, 254, 0.1) 84%,
+              rgba(216, 180, 254, 0.25) 86%,
+              rgba(216, 180, 254, 0.4) 88%,
+              rgba(216, 180, 254, 0.55) 90%,
+              rgba(216, 180, 254, 0.7) 92%,
+              rgba(216, 180, 254, 0.85) 94%,
+              #d8b4fe 96%,
               #d8b4fe 100%)`,
           }}
           animate={{
