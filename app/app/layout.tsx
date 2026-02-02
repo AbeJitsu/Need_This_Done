@@ -210,7 +210,7 @@ export default function RootLayout({
                     <EditModeBar />
 
                     {/* Page content - gradient background applied here once for all pages */}
-                    <main id="main-content" className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-950">
+                    <main id="main-content" className="min-h-screen bg-white">
                       {children}
                     </main>
 
