@@ -29,7 +29,7 @@ export default function StepCard({
 }: StepCardProps) {
   // Fallback to blue if color is undefined or invalid
   const safeColor = color && accentColors[color] ? color : 'blue';
-  const cardClasses = `${cardBgColors.base} rounded-xl p-12 ${cardBorderColors.subtle} transition-all ${accentColors[safeColor].cardHover} ${shadowClasses.cardHover}`;
+  const cardClasses = `${cardBgColors.base} rounded-xl p-6 md:p-12 ${cardBorderColors.subtle} transition-all ${accentColors[safeColor].cardHover} ${shadowClasses.cardHover}`;
 
   const cardContent = (
       <div>

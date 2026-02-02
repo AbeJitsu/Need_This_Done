@@ -730,14 +730,14 @@ export default function ContactPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <a
               href="/pricing"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-400 rounded-xl font-medium text-gray-700 hover:border-gray-400 hover:shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:border-blue-300 hover:text-blue-700 hover:shadow-md transition-all"
             >
               View Pricing
               <ArrowRight className="w-4 h-4" />
             </a>
             <a
               href="/#services-section"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-400 rounded-xl font-medium text-gray-700 hover:border-gray-400 hover:shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:shadow-md transition-all"
             >
               Browse Services
               <ArrowRight className="w-4 h-4" />
