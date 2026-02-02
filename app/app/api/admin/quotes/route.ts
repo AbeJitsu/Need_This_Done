@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { verifyAdmin } from '@/lib/api-auth';
-import { handleApiError, badRequest } from '@/lib/api-errors';
+import { handleApiError } from '@/lib/api-errors';
+import { validateRequest, commonSchemas } from '@/lib/api-validation';
 import { cache, CACHE_TTL } from '@/lib/cache';
 
 export const dynamic = 'force-dynamic';
@@ -60,34 +62,30 @@ export async function GET() {
 // POST - Create New Quote (Admin Only)
 // ============================================================================
 
-interface CreateQuoteRequest {
-  customerName: string;
-  customerEmail: string;
-  projectId?: string;
-  totalAmount: number;
-  notes?: string;
-}
+// Zod schema for quote creation validation
+const CreateQuoteSchema = z.object({
+  customerName: commonSchemas.nonEmptyString,
+  customerEmail: commonSchemas.email,
+  projectId: commonSchemas.uuid.optional(),
+  totalAmount: commonSchemas.positiveInt,
+  notes: commonSchemas.optionalString,
+});
 
 export async function POST(request: NextRequest) {
   try {
     const authResult = await verifyAdmin();
     if (authResult.error) return authResult.error;
 
-    const body: CreateQuoteRequest = await request.json();
-    const { customerName, customerEmail, projectId, totalAmount, notes } = body;
+    // ====================================================================
+    // Validate Request Body with Zod Schema
+    // ====================================================================
+    // Use centralized validation for consistency and clear error messages.
+    // All fields are sanitized and transformed during validation.
 
-    // Validate required fields
-    if (!customerName || typeof customerName !== 'string') {
-      return badRequest('Customer name is required');
-    }
+    const result = await validateRequest(request, CreateQuoteSchema);
+    if (!result.success) return result.error;
 
-    if (!customerEmail || typeof customerEmail !== 'string') {
-      return badRequest('Customer email is required');
-    }
-
-    if (!totalAmount || typeof totalAmount !== 'number' || totalAmount <= 0) {
-      return badRequest('Total amount must be a positive number (in cents)');
-    }
+    const { customerName, customerEmail, projectId, totalAmount, notes } = result.data;
 
     const { createSupabaseServerClient } = await import('@/lib/supabase-server');
     const supabase = await createSupabaseServerClient();
