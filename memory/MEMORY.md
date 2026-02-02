@@ -11,6 +11,9 @@ Key learnings and patterns discovered during development.
 ## Project Status — Feb 2, 2026
 
 **Current State:** Mature, production-ready with comprehensive reliability hardening and complete feature set
+- Product category filtering: Browse products by category with auto-populated dropdown from metadata
+- Product waitlist system: Sign up for out-of-stock items, email capture for future notifications
+- Product availability display: Shows stock status (in stock, low stock, out of stock) with waitlist UI
 - Product reviews system: Full lifecycle with admin moderation dashboard, analytics, and user tracking
 - Account settings page: Customer profile management + My Reviews section showing submission status
 - Product discovery: Full-text search and advanced filtering across catalog
@@ -23,6 +26,9 @@ Key learnings and patterns discovered during development.
 - Test suite: 69 E2E tests + accessibility tests
 
 **Completed Recent Work (Feb 2):**
+- ✅ Product category filtering - browse products by category with auto-populated dropdown (commit 56f7502)
+- ✅ Product waitlist system - sign up for out-of-stock items with email capture (commit 908f2c7)
+- ✅ Product availability display - shows stock status and waitlist form (ProductAvailability component)
 - ✅ Quick reorder button on order history - one-click reordering of completed orders (commit 88ac8f2)
 - ✅ CSV export of order history - download orders with ID, date, status, total, email
 - ✅ Invoice downloads (OrderInvoice component) - customers can download PDFs from order page
@@ -34,10 +40,12 @@ Key learnings and patterns discovered during development.
 - ✅ Dashboard stats overview: Key account metrics visualization (commit 64362f4)
 
 **Next Priority Areas:**
-1. Performance optimization for search/filtering (if needed based on usage metrics)
-2. Cache invalidation race condition handling (low priority, no blocking issues)
-3. Load testing for Redis circuit breaker under high concurrency
-4. Expansion of rate limiting to other cost-sensitive endpoints
+1. Waitlist notifications - Automated emails when out-of-stock products return to inventory
+2. Waitlist analytics - Track demand patterns for out-of-stock products
+3. Category management UI - Admin dashboard to configure/customize categories
+4. Performance optimization for search/filtering (if needed based on usage metrics)
+5. Load testing for Redis circuit breaker under high concurrency
+6. Email segmentation - Send targeted offers to waitlist members
 
 ## Customer-Facing Features — Feb 2, 2026
 
@@ -63,6 +71,24 @@ Key learnings and patterns discovered during development.
 - ProductCard component: Consistent display across shop and wishlist pages
 - Real-time search results with improved UX and performance
 - Supports dynamic category and tag-based filtering
+
+**Product Category Filtering** (commit 56f7502)
+- CategoryFilter component: Dropdown selector for browsing by product category
+- API: `/api/products/categories` extracts unique categories from product metadata
+- Auto-populated categories (no manual configuration needed)
+- Shows product counts per category
+- Integrates with search bar and price filters
+- "Clear all filters" button to reset criteria
+
+**Product Waitlist & Availability System** (commit 908f2c7)
+- ProductAvailability component: Displays stock status (in stock, low stock, out of stock)
+- Waitlist signup form for out-of-stock products with email validation
+- Database: `product_waitlist` table (migration 045) tracks customer interest
+- API endpoints:
+  - `POST /api/products/waitlist` - Sign up for waitlist with duplicate detection
+  - `GET /api/products/waitlist?email=X` - Retrieve user's waitlist entries
+- Unique constraint on email+product_id prevents duplicate signups
+- Foundation for future automated back-in-stock notifications
 
 **User Wishlist System** (commit 69b8121)
 - Wishlist page at `/wishlist` displays saved products with add-to-cart buttons

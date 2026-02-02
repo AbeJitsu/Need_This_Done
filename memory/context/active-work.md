@@ -19,6 +19,22 @@ Platform is stable and ready for production use.
 
 ## Recently Completed — Feb 2, 2026
 
+**Product Category Filtering** (commit 56f7502)
+- CategoryFilter component: Dropdown selector for browsing by product category
+- API: `GET /api/products/categories` extracts and returns unique product categories
+- Auto-populated from existing product metadata (no manual configuration)
+- Shows product count per category
+- Integrated with ProductListingPage alongside search bar and price filters
+- "Clear all filters" button for resetting all criteria
+
+**Product Waitlist System** (commit 908f2c7)
+- ProductAvailability component: Stock status display (in stock, low stock, out of stock)
+- Waitlist signup form for out-of-stock items with email validation
+- API: `POST /api/products/waitlist` - Email capture with duplicate detection (409 conflict)
+- API: `GET /api/products/waitlist?email=X` - Retrieve user's waitlist entries
+- Database: `product_waitlist` table with unique email+product_id constraint
+- Foundation for automated back-in-stock notifications
+
 **Product Reviews System** (commit d4bbbef)
 - ReviewForm component: Customer review submission with 5-star ratings, title, content
 - ReviewSection component: Display reviews, rating stats, and distribution breakdown

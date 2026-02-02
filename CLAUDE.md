@@ -36,9 +36,12 @@ Speak like a friend over coffee. Easy to understand.
 ## What's Built
 
 **Latest additions (Feb 2, 2026):**
-- ✅ **Customer dashboard**: Active appointments section + statistics overview (new)
-- ✅ **Quick reorder button**: One-click reorder of completed orders, adds all items to cart automatically
-- ✅ **CSV export**: Download full order history as spreadsheet (ID, date, status, total, email)
+- ✅ **Product category filtering**: Browse products by category with auto-populated dropdown from metadata
+- ✅ **Product waitlist system**: Sign up for out-of-stock items, captures email for future back-in-stock notifications
+- ✅ **Product availability display**: Shows stock status (in stock, low stock, out of stock) with waitlist UI
+- ✅ **Customer dashboard**: Active appointments section + statistics overview
+- ✅ **Quick reorder button**: One-click reorder of completed orders
+- ✅ **CSV export**: Download full order history as spreadsheet
 - ✅ **Review notification emails**: Automated emails when reviews are approved/rejected
 - ✅ **Invoice downloads**: Customers can download order invoices as PDFs
 - ✅ **Notification preferences**: Email opt-in/opt-out controls in account settings
