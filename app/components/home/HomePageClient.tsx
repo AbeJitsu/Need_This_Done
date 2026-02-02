@@ -190,13 +190,6 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                       </div>
                     )}
 
-                    {/* Arrow indicator */}
-                    <div className="mt-8 flex items-center gap-2 text-white/60 group-hover:text-white transition-colors">
-                      <span className="text-sm font-semibold">View pricing</span>
-                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </div>
                   </div>
                 </motion.article>
               </EditableItem>
@@ -255,13 +248,6 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                         {content.services.cards[1].modal.hook}
                       </p>
 
-                      {/* Arrow */}
-                      <div className="mt-6 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
-                        <span className="text-sm font-semibold">View pricing</span>
-                        <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </div>
                     </div>
                   </motion.article>
                 </EditableItem>
@@ -318,13 +304,6 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                         {content.services.cards[2].modal.hook}
                       </p>
 
-                      {/* Arrow */}
-                      <div className="mt-6 flex items-center gap-2 text-purple-200/80 group-hover:text-white transition-colors">
-                        <span className="text-sm font-semibold">View pricing</span>
-                        <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </div>
                     </div>
                   </motion.article>
                 </EditableItem>
@@ -495,40 +474,56 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
       {/* CTA Section - Confident Close */}
       <EditableSection sectionKey="cta" label="Call to Action">
-        <FadeIn direction="up"><div className="relative py-16 px-8 rounded-3xl overflow-hidden">
-          {/* Gradient background - purple invitation */}
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-white" />
-          {/* Decorative glow orb */}
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-purple-200/40 rounded-full blur-3xl" />
+        <FadeIn direction="up">
+          <div className="relative rounded-3xl overflow-hidden">
+            {/* Dark gradient background — slate with purple accent */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950" />
+            {/* Subtle glow accents */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/8 rounded-full blur-3xl" />
+            {/* Large decorative watermark */}
+            <div className="absolute -bottom-8 -right-4 text-[12rem] font-black text-white/5 leading-none select-none pointer-events-none">→</div>
 
-          {/* Content - centered */}
-          <div className="relative z-10 max-w-4xl mx-auto text-center">
-            <h2 className="text-5xl md:text-6xl font-manrope font-extrabold text-purple-900 mb-6">
-              LET'S TALK.
-            </h2>
-            <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
-              Not sure where to start? Let's figure it out together.<br />
-              Book a free 30-minute strategy call.
-            </p>
+            {/* Content */}
+            <div className="relative z-10 py-20 px-8 md:px-16">
+              <div className="max-w-4xl mx-auto">
+                {/* Two-column: text left, CTA right */}
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-10">
+                  {/* Left: headline + subtext */}
+                  <div className="md:max-w-xl">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-purple-400" />
+                      <span className="text-sm font-semibold tracking-widest uppercase text-purple-300">Ready?</span>
+                    </div>
+                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-[0.95] tracking-tight mb-5">
+                      Let&apos;s build<br />
+                      <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">something great.</span>
+                    </h2>
+                    <p className="text-lg text-slate-400 max-w-md leading-relaxed">
+                      Not sure where to start? Book a free 30-minute strategy call. No pressure, just clarity.
+                    </p>
+                  </div>
 
-            {/* Single CTA Button - Purple (3rd in BJJ order) */}
-            <div className="mb-6">
-              <Button variant="purple" href="/contact" size="lg">
-                BOOK A FREE CALL
-              </Button>
+                  {/* Right: CTA stack */}
+                  <div className="flex flex-col items-center md:items-start gap-4">
+                    <Button variant="green" href="/contact" size="lg" className="shadow-2xl shadow-emerald-500/30">
+                      Book a Free Call
+                    </Button>
+                    <button
+                      onClick={() => window.dispatchEvent(new CustomEvent('open-chatbot'))}
+                      className="text-sm text-slate-500 hover:text-white transition-colors cursor-pointer rounded px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                    >
+                      Or ask our chatbot anything →
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            {/* Chatbot link */}
-            <button
-              onClick={() => window.dispatchEvent(new CustomEvent('open-chatbot'))}
-              className="text-sm text-purple-600 hover:text-purple-700 hover:underline transition-colors cursor-pointer rounded px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2"
-            >
-              Or ask our chatbot anything →
-            </button>
           </div>
-        </div></FadeIn>
+        </FadeIn>
       </EditableSection>
       </div>{/* End max-w container */}
+      <div className="h-16" />
     </div>
   );
 }
