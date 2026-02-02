@@ -82,14 +82,11 @@ export async function POST(request: NextRequest) {
       return badRequest('Email does not match the quote. Please use the email the quote was sent to.');
     }
 
-    // Check quote status
-    const validStatuses = ['sent', 'authorized'];
+    // Check quote status - allow viewing paid quotes for confirmation
+    const validStatuses = ['sent', 'authorized', 'deposit_paid'];
     if (!validStatuses.includes(quote.status)) {
       if (quote.status === 'draft') {
         return badRequest('This quote has not been sent yet. Please contact us for assistance.');
-      }
-      if (quote.status === 'deposit_paid') {
-        return badRequest('Deposit has already been paid for this quote.');
       }
       if (quote.status === 'expired' || quote.status === 'cancelled') {
         return badRequest('This quote is no longer valid. Please contact us for a new quote.');
@@ -109,8 +106,9 @@ export async function POST(request: NextRequest) {
       return badRequest('This quote has expired. Please contact us for a new quote.');
     }
 
-    // If already authorized with a payment intent, return the existing one
-    if (quote.status === 'authorized' && quote.stripe_payment_intent_id) {
+    // If already authorized or paid with a payment intent, return the existing one
+    // This allows customers to view their quote confirmation after payment
+    if ((quote.status === 'authorized' || quote.status === 'deposit_paid') && quote.stripe_payment_intent_id) {
       // Retrieve the existing payment intent to get the client secret
       const { getPaymentIntent } = await import('@/lib/stripe');
       const existingIntent = await withTimeout(
@@ -132,6 +130,12 @@ export async function POST(request: NextRequest) {
           expiresAt: quote.expires_at,
         },
       });
+    }
+
+    // If quote is marked as paid but we couldn't retrieve the payment intent,
+    // that's a data integrity issue - don't create a new one
+    if (quote.status === 'deposit_paid' && !quote.stripe_payment_intent_id) {
+      return badRequest('Quote payment record incomplete. Please contact support for assistance.');
     }
 
     // Create a new PaymentIntent for the deposit with timeout protection
