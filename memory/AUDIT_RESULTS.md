@@ -22,7 +22,11 @@ Full report: [memory/backend-reliability-evaluation-2026-02-01.md](./backend-rel
 **Remaining Issues:**
 10. Redis memory leak potential (unbounded growth) - low priority
 
-**Next Steps:** Consider rate limiting for enhanced DoS protection (optional)
+**Additional Improvements (commits a62f5f9):**
+- ✅ Chat API rate limiting (20 req/min per IP)
+- ✅ DoS protection (max 50 messages, 50KB total size)
+- ✅ Redis atomic operations (SET NX prevents race conditions)
+- ✅ Graceful shutdown handlers for containerized deployments
 
 ## Known Issues
 
@@ -30,19 +34,28 @@ None currently blocking. All critical backend reliability risks addressed.
 
 ## Accessibility Improvements — Feb 1, 2026
 
-**Navigation Contrast** (commit ddaf381)
-- Fixed border contrast: gray-500 (2.8:1) → gray-600 (4.5:1)
-- Affects: sticky navigation bar, mobile menu, user dropdown dividers
-- Now meets WCAG AA 3:1 requirement for UI components
+**Navigation Contrast** (commit 9aeee89)
+- Fixed border contrast: gray-600 (2.5:1) → gray-400 (3.1:1)
+- Meets WCAG AA 3:1 requirement for UI components
+- Added smooth slide animation to mobile menu dropdown
 
-**Keyboard Focus Visibility** (commit ddaf381)
-- Added focus-visible rings to homepage service cards
-- Color-matched rings (emerald, blue, purple) with lift effect
-- Cards had tabIndex={0} but no visual focus indicator
+**Keyboard Interactions** (commit 9aeee89)
+- Service cards respond to Enter/Space keys (navigate to /pricing)
+- Changed role from "article" to "button" with proper ARIA attributes
+- Added cursor-pointer for visual feedback
 
-**Footer Link Contrast** (commit ddaf381)
-- Upgraded footer links: gray-600 (4.5:1) → gray-700 (5.8:1)
-- Better readability for key navigation elements
+**Motion Accessibility** (commit 9aeee89)
+- All scale animations wrapped in motion-safe: prefix
+- Respects prefers-reduced-motion user preference
+- Applied to: Button component, homepage CTAs, service cards, timeline badges
+
+**Footer Touch Targets** (commit 9aeee89)
+- Added proper padding (py-1 px-2) for 44x44px minimum
+- Added focus-visible ring states for keyboard navigation
+
+**EmptyState Icon** (commit 9aeee89)
+- Icon color increased: gray-300 (1.7:1) → gray-400 (2.8:1)
+- Better visibility while remaining subtle
 
 ## Testing Coverage
 

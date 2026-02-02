@@ -62,21 +62,27 @@ Key learnings and patterns discovered during development.
 
 ## Admin Dashboard Features — Feb 1, 2026
 
+**Google Calendar Integration** (`/admin/settings`)
+- OAuth connection UI: Connect/disconnect buttons with status display
+- Shows connected Google email and available features
+- Token management: Expiration errors surface to admin
+- Auto-refresh implemented in `lib/google-calendar.ts`
+- API: `/api/google/status`, `/api/google/disconnect`
+
+**Appointment Management** (`/admin/appointments`)
+- Email delivery tracking: Shows success/failure status on approval
+- Calendar event creation status visible to admin
+- Graceful degradation: Appointments approve even if email/calendar fails
+- Admin receives actionable warnings for failures
+
 **Product Analytics** (`/admin/product-analytics`)
-- Shows product engagement: views, cart adds, purchases, conversion funnel
+- Product engagement: views, cart adds, purchases, conversion funnel
 - Time range filters: 7/14/30/90 days
 - Popular products list + trending products (24h growth)
-- Uses existing `product_interactions` table and DB views
 - API: `/api/admin/product-analytics`
 
 **Enrollments Management** (`/admin/enrollments`)
 - Course enrollment oversight with CRUD operations
 - Summary: total/free/paid enrollments, completion rate, revenue
 - Filterable table with user details, progress tracking
-- Completes EnrollButton component integration
 - API: `/api/admin/enrollments`
-
-**Order Analytics** (`/admin/analytics`)
-- SVG-based charts (no external dependencies)
-- Donut chart for order status, line chart for revenue trends
-- Summary stats: daily average, peak day, totals

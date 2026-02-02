@@ -175,4 +175,69 @@ Key decisions made and why.
 - Redis-backed with 60-second TTL per request signature
 - Returns 429 status for duplicates within window
 - Graceful degradation if Redis unavailable
+- Uses atomic SET NX to prevent race conditions
 - Applied to: project submission endpoint
+
+## Rate Limiting for API Protection — Feb 1, 2026
+
+**Decision:** Add Redis-backed rate limiting to Chat API and other high-risk endpoints
+
+**Why:**
+- Chat API integrates with OpenAI (cost per request)
+- No protection against API abuse or DoS attacks
+- Could lead to bill shock from malicious/excessive usage
+- Large message arrays could cause memory exhaustion
+
+**How:**
+- Redis-backed rate limiting: 20 requests/minute per IP
+- Request validation: Max 50 messages, 50KB total size
+- Message format validation prevents malformed data
+- Applied to: `/api/chat` endpoint
+- Pattern can extend to other cost-sensitive APIs
+
+## Timeout Protection for External Dependencies — Feb 1, 2026
+
+**Decision:** Wrap all external API calls with configurable timeouts
+
+**Why:**
+- External services (Medusa, Stripe) can hang indefinitely
+- Users experienced infinite spinners waiting for responses
+- Network issues should fail fast, not freeze the app
+- Critical for checkout flow where multiple APIs are called sequentially
+
+**How:**
+- Created `lib/api-timeout.ts` with timeout wrappers
+- Checkout flow timeouts: 8s cart operations, 15s order creation
+- Applied to: cart fetch/update, payment session init/select, order creation
+- Follows existing pattern from `lib/api-timeout.ts`
+
+## Graceful Shutdown for Long-Running Processes — Feb 1, 2026
+
+**Decision:** Implement proper cleanup handlers on process termination
+
+**Why:**
+- Redis connections leaked in Docker/Kubernetes environments
+- No cleanup on SIGTERM/SIGINT left zombie connections
+- Critical for containerized deployments
+
+**How:**
+- Added global shutdown handlers in `lib/redis.ts`
+- Listens for: SIGTERM, SIGINT, beforeExit, uncaughtException, unhandledRejection
+- Ensures Redis connections close properly on shutdown
+- Prevents connection leaks and resource exhaustion
+
+## Fail-Safe Appointment Approval — Feb 1, 2026
+
+**Decision:** Approve appointments even if email or calendar fails
+
+**Why:**
+- Previously, appointment approval would fail completely if email/calendar errored
+- Admin had no visibility into why approval failed
+- Business logic shouldn't depend on notification delivery
+
+**How:**
+- Appointments approve to database first (critical path)
+- Email and calendar operations attempt after approval
+- Admin receives detailed status: success, warning, or partial failure
+- Actionable error messages guide admin to fix configuration
+- Applied to: `/api/admin/appointments/[id]/approve`
