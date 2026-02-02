@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingCart, Heart } from 'lucide-react';
@@ -28,11 +29,19 @@ interface ProductCardProps {
 export default function ProductCard({ product, price, href }: ProductCardProps) {
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const inWishlist = isInWishlist(product.id);
+  const [isCartClicked, setIsCartClicked] = useState(false);
 
   const imageUrl = product.images?.[0]?.url;
   const shortDescription = product.description
     ? product.description.slice(0, 80) + (product.description.length > 80 ? '...' : '')
     : '';
+
+  // Navigate to detail page - button click is handled via link wrapper
+  const handleCartClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsCartClicked(true);
+  };
 
   return (
     <Link href={href}>
@@ -110,7 +119,8 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
         {/* Add to Cart Button */}
         <div className="px-4 pb-4">
           <button
-            aria-label={`Add ${product.title} to cart`}
+            onClick={handleCartClick}
+            aria-label={`View ${product.title} and add to cart`}
             className={`
             w-full py-2 px-4 rounded-lg font-medium transition-all duration-200
             flex items-center justify-center gap-2
@@ -119,7 +129,7 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white
           `}>
             <ShoppingCart className="w-5 h-5" />
-            Add to Cart
+            {isCartClicked ? 'Opening...' : 'View & Add'}
           </button>
         </div>
       </div>

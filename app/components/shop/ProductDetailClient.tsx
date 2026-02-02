@@ -173,13 +173,14 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           {/* Variant selection */}
           {variants.length > 0 && (
             <div className="mb-6">
-              <label className={`block text-sm font-medium ${headingColors.primary} mb-2`}>
+              <label htmlFor="variant-select" className={`block text-sm font-medium ${headingColors.primary} mb-2`}>
                 Select Variant
               </label>
               <select
+                id="variant-select"
                 value={selectedVariant || ''}
                 onChange={(e) => setSelectedVariant(e.target.value)}
-                className={`w-full px-4 py-2 border ${formInputColors.base} rounded-lg`}
+                className={`w-full px-4 py-2 border ${formInputColors.base} rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-blue-500`}
               >
                 {variants.map((variant: any) => (
                   <option key={variant.id} value={variant.id}>
@@ -195,13 +196,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             <label htmlFor="quantity-input" className={`block text-sm font-medium ${headingColors.primary} mb-2`}>
               Quantity
             </label>
-            <div className="flex items-center gap-3" role="group" aria-labelledby="quantity-input">
+            <div className="flex items-center gap-3" role="group" aria-labelledby="quantity-label">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 ${focusRingClasses.blue}`}
-                aria-label={`Decrease quantity from ${quantity}`}
+                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 ${focusRingClasses.blue} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-blue-500`}
+                aria-label={`Decrease quantity from ${quantity} to ${Math.max(1, quantity - 1)}`}
               >
-                −
+                <span aria-hidden="true">−</span>
               </button>
               <input
                 id="quantity-input"
@@ -209,17 +210,18 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 min="1"
                 value={quantity}
                 onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                aria-label="Quantity of items to add"
-                className={`w-16 px-3 py-2 border ${formInputColors.base} rounded-lg text-center ${focusRingClasses.blue}`}
+                aria-label="Enter quantity of items to add"
+                className={`w-16 px-3 py-2 border ${formInputColors.base} rounded-lg text-center ${focusRingClasses.blue} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-blue-500`}
               />
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 ${focusRingClasses.blue}`}
-                aria-label={`Increase quantity from ${quantity}`}
+                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 ${focusRingClasses.blue} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-blue-500`}
+                aria-label={`Increase quantity from ${quantity} to ${quantity + 1}`}
               >
-                +
+                <span aria-hidden="true">+</span>
               </button>
             </div>
+            <span id="quantity-label" className="sr-only">Adjust quantity before adding to cart</span>
           </div>
 
           {/* Cart info */}

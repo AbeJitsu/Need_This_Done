@@ -97,10 +97,12 @@ export default function ProductListingPage() {
 
           {/* Search Form */}
           <form onSubmit={handleSearch} className="mb-6">
+            <label htmlFor="product-search" className="sr-only">Search products</label>
             <div className="flex gap-2">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" aria-hidden="true" />
                 <input
+                  id="product-search"
                   type="text"
                   placeholder="Search products by name or description..."
                   value={searchQuery}
@@ -120,20 +122,24 @@ export default function ProductListingPage() {
 
           {/* Filter Toggle */}
           <button
+            id="filter-toggle"
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 mb-4"
+            aria-expanded={showFilters}
+            aria-controls="price-filters"
+            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 mb-4 px-3 py-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
           >
             <span className="font-medium">Price Range</span>
             <ChevronDown
               className={`w-5 h-5 transition-transform ${
                 showFilters ? 'rotate-180' : ''
               }`}
+              aria-hidden="true"
             />
           </button>
 
           {/* Price Filters */}
           {showFilters && (
-            <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+            <div id="price-filters" className="bg-white border border-gray-200 rounded-lg p-4 mb-6" role="region" aria-labelledby="filter-toggle">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -193,8 +199,11 @@ export default function ProductListingPage() {
       <section className="py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
           {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-6 h-6 text-emerald-600 animate-spin" />
+            <div className="flex items-center justify-center py-20" role="status" aria-live="polite">
+              <div className="flex items-center gap-3">
+                <Loader2 className="w-6 h-6 text-emerald-600 animate-spin" aria-hidden="true" />
+                <span className="text-gray-600">Loading products...</span>
+              </div>
             </div>
           ) : products.length === 0 ? (
             <div className="text-center py-20">
@@ -206,8 +215,8 @@ export default function ProductListingPage() {
             </div>
           ) : (
             <>
-              <div className="mb-6 text-gray-600">
-                Showing <span className="font-semibold">{products.length}</span> product
+              <div className="mb-6 text-gray-600" role="status" aria-live="polite">
+                Showing <span className="font-semibold" aria-label={`${products.length} product${products.length !== 1 ? 's' : ''}`}>{products.length}</span> product
                 {products.length !== 1 ? 's' : ''}
               </div>
 
