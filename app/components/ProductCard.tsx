@@ -69,12 +69,15 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
             }}
             className={`
               absolute top-3 right-3 p-2 rounded-lg backdrop-blur-sm
-              transition-all duration-200 z-10
+              transition-all duration-200 z-10 motion-safe:hover:scale-110 motion-safe:active:scale-95
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white
               ${inWishlist
-                ? `${accentColors.green.bg} ${accentColors.green.text}`
-                : 'bg-white/80 hover:bg-white text-gray-600 hover:text-gray-900'
+                ? `${accentColors.green.bg} ${accentColors.green.text} focus-visible:ring-green-500`
+                : 'bg-white/80 hover:bg-white text-gray-600 hover:text-gray-900 focus-visible:ring-gray-400'
               }
             `}
+            aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+            aria-pressed={inWishlist}
             title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
           >
             <Heart
@@ -106,11 +109,14 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
 
         {/* Add to Cart Button */}
         <div className="px-4 pb-4">
-          <button className={`
+          <button
+            aria-label={`Add ${product.title} to cart`}
+            className={`
             w-full py-2 px-4 rounded-lg font-medium transition-all duration-200
             flex items-center justify-center gap-2
             ${accentColors.green.bg} ${accentColors.green.text}
-            hover:opacity-90 active:scale-95
+            motion-safe:hover:scale-105 motion-safe:active:scale-95
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white
           `}>
             <ShoppingCart className="w-5 h-5" />
             Add to Cart

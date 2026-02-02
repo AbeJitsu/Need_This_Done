@@ -152,8 +152,8 @@ export default function CouponInput({
               ${formInputColors.base}
               ${formInputColors.placeholder}
               ${formInputColors.focus}
-              disabled:opacity-50 disabled:cursor-not-allowed
-              uppercase tracking-wider
+              disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300
+              uppercase tracking-wider transition-colors
             `}
             aria-label="Coupon code"
             aria-describedby={result?.error ? 'coupon-error' : undefined}
@@ -189,10 +189,11 @@ export default function CouponInput({
           className={`
             px-6 py-2.5 rounded-lg font-medium
             ${colors.bg} ${colors.text}
-            hover:opacity-90
-            focus:outline-none focus:ring-2 focus:ring-offset-1
-            disabled:opacity-50 disabled:cursor-not-allowed
-            transition-opacity
+            motion-safe:hover:scale-105 motion-safe:active:scale-95 transition-all
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1
+            disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100
+            disabled:after:absolute disabled:after:inset-0 disabled:after:bg-black/20 disabled:after:rounded-lg
+            relative
           `}
           aria-label="Apply coupon"
         >

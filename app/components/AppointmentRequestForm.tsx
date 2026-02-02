@@ -228,7 +228,7 @@ export default function AppointmentRequestForm({
                   min={minDate}
                   max={maxDateStr}
                   required
-                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base}`}
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors`}
                 />
               </div>
               <div>
@@ -240,7 +240,7 @@ export default function AppointmentRequestForm({
                   value={formData.preferredTimeStart}
                   onChange={handleChange}
                   required
-                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base}`}
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors`}
                 >
                   <option value="">Select a time</option>
                   {availableTimeOptions.map((option) => (
@@ -271,7 +271,7 @@ export default function AppointmentRequestForm({
                   onChange={handleChange}
                   min={minDate}
                   max={maxDateStr}
-                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base}`}
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors`}
                 />
               </div>
               <div>
@@ -282,7 +282,7 @@ export default function AppointmentRequestForm({
                   name="alternateTimeStart"
                   value={formData.alternateTimeStart}
                   onChange={handleChange}
-                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base}`}
+                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors`}
                 >
                   <option value="">Select a time</option>
                   {availableTimeOptions.map((option) => (
@@ -307,7 +307,7 @@ export default function AppointmentRequestForm({
               onChange={handleChange}
               rows={3}
               placeholder="Any specific topics you'd like to discuss or questions you have..."
-              className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} resize-none`}
+              className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} resize-none disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors`}
             />
           </div>
 
