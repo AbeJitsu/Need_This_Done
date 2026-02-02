@@ -8,6 +8,7 @@ import MyReviewsSection from './MyReviewsSection';
 import NotificationPreferencesSection from './NotificationPreferencesSection';
 import SavedAddressesSection from './SavedAddressesSection';
 import SpendingAnalyticsSection from './SpendingAnalyticsSection';
+import LoyaltyPointsSection from './LoyaltyPointsSection';
 import { ReferralDashboard } from '@/components/ReferralDashboard';
 import { accentColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors } from '@/lib/colors';
 
@@ -234,6 +235,11 @@ export default function AccountSettingsClient() {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Loyalty Points Section */}
+        <div className="mb-8">
+          <LoyaltyPointsSection />
         </div>
 
         {/* Referral Dashboard Section */}
