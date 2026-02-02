@@ -124,13 +124,14 @@ export default function Navigation() {
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className={`lg:hidden p-2 ${navigationColors.link} ${navigationColors.linkHover} transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
-              aria-label="Toggle menu"
+              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={mobileMenuOpen ? "true" : "false"}
+              aria-controls="mobile-menu"
             >
               {mobileMenuOpen ? (
-                <CloseIcon size="lg" />
+                <CloseIcon size="lg" aria-hidden="true" />
               ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
@@ -290,8 +291,8 @@ export default function Navigation() {
 
       {/* Mobile Menu Dropdown - slides down when hamburger is clicked */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-gray-400 dark:border-gray-700 bg-white dark:bg-gray-900">
-          <div className="px-4 py-3 space-y-1">
+        <div id="mobile-menu" className="lg:hidden border-t border-gray-400 dark:border-gray-700 bg-white dark:bg-gray-900">
+          <nav aria-label="Mobile navigation" className="px-4 py-3 space-y-1">
             {navigationLinks.map((link, index) => {
               const isActive =
                 pathname === link.href ||
@@ -380,7 +381,7 @@ export default function Navigation() {
                 </button>
               </div>
             )}
-          </div>
+          </nav>
         </div>
       )}
     </nav>

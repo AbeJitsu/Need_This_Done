@@ -73,7 +73,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
               aria-label="Scroll to services section"
             >
               <span>Scroll to explore</span>
-              <svg className="w-4 h-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 motion-safe:animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
@@ -102,9 +102,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 label={content.services.cards[0].title}
                 content={content.services.cards[0] as unknown as Record<string, unknown>}
               >
-                <div className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border border-emerald-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 active:scale-[0.99] active:translate-y-0 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm focus-within:ring-4 focus-within:ring-emerald-300 focus-within:ring-offset-2">
+                <article className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border border-emerald-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm" tabIndex={0} role="article" aria-labelledby="service-card-0-title">
                   {/* Icon */}
-                  <div className="w-16 h-16 rounded-xl bg-emerald-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <div className="w-16 h-16 rounded-xl bg-emerald-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform" aria-hidden="true">
                     <ServiceIcon
                       type={getServiceIconType(content.services.cards[0].title)}
                       color="green"
@@ -113,7 +113,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-3xl font-manrope font-bold text-emerald-600 mb-3">
+                  <h3 id="service-card-0-title" className="text-3xl font-manrope font-bold text-emerald-600 mb-3">
                     {content.services.cards[0].title}
                   </h3>
 
@@ -133,10 +133,10 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                       <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
                         {content.services.cards[0].modal.bulletHeader}
                       </p>
-                      <ul className="space-y-2">
+                      <ul className="space-y-2" role="list">
                         {content.services.cards[0].modal.bulletPoints.map((point, idx) => (
                           <li key={idx} className="flex items-start gap-3">
-                            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5">
+                            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5" aria-hidden="true">
                               <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                               </svg>
@@ -147,7 +147,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                       </ul>
                     </div>
                   )}
-                </div>
+                </article>
               </EditableItem>
             )}
 
@@ -162,9 +162,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[1].title}
                   content={content.services.cards[1] as unknown as Record<string, unknown>}
                 >
-                  <div className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border border-blue-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 active:scale-[0.99] active:translate-y-0 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm focus-within:ring-4 focus-within:ring-blue-300 focus-within:ring-offset-2">
+                  <article className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border border-blue-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm" tabIndex={0} role="article" aria-labelledby="service-card-1-title">
                     {/* Icon */}
-                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" aria-hidden="true">
                       <ServiceIcon
                         type={getServiceIconType(content.services.cards[1].title)}
                         color="blue"
@@ -173,7 +173,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-2xl font-manrope font-bold text-blue-600 mb-2">
+                    <h3 id="service-card-1-title" className="text-2xl font-manrope font-bold text-blue-600 mb-2">
                       {content.services.cards[1].title}
                     </h3>
 
@@ -186,7 +186,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     <p className="text-sm text-gray-600">
                       {content.services.cards[1].modal.hook}
                     </p>
-                  </div>
+                  </article>
                 </EditableItem>
               )}
 
@@ -199,9 +199,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[2].title}
                   content={content.services.cards[2] as unknown as Record<string, unknown>}
                 >
-                  <div className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border border-purple-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 active:scale-[0.99] active:translate-y-0 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm focus-within:ring-4 focus-within:ring-purple-300 focus-within:ring-offset-2">
+                  <article className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border border-purple-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm" tabIndex={0} role="article" aria-labelledby="service-card-2-title">
                     {/* Icon */}
-                    <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" aria-hidden="true">
                       <ServiceIcon
                         type={getServiceIconType(content.services.cards[2].title)}
                         color="purple"
@@ -210,7 +210,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-2xl font-manrope font-bold text-purple-600 mb-2">
+                    <h3 id="service-card-2-title" className="text-2xl font-manrope font-bold text-purple-600 mb-2">
                       {content.services.cards[2].title}
                     </h3>
 
@@ -223,7 +223,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     <p className="text-sm text-gray-600">
                       {content.services.cards[2].modal.hook}
                     </p>
-                  </div>
+                  </article>
                 </EditableItem>
               )}
             </div>

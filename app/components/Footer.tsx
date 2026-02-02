@@ -75,7 +75,7 @@ export default function Footer() {
               type="button"
               onClick={openChatbot}
               className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors cursor-pointer flex items-center gap-1 py-1 px-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
-              aria-label="Chat with AI assistant"
+              aria-label="Open AI chatbot to ask questions"
             >
               <svg
                 className="w-3.5 h-3.5"
