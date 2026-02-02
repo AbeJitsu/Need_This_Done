@@ -103,7 +103,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 content={content.services.cards[0] as unknown as Record<string, unknown>}
               >
                 <article
-                  className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border border-emerald-100 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 cursor-pointer"
+                  className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border-2 border-emerald-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-emerald-400 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-emerald-500 cursor-pointer"
                   tabIndex={0}
                   role="button"
                   aria-labelledby="service-card-0-title"
@@ -175,7 +175,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   content={content.services.cards[1] as unknown as Record<string, unknown>}
                 >
                   <article
-                    className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border border-blue-100 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 cursor-pointer"
+                    className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border-2 border-blue-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-blue-400 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-blue-500 cursor-pointer"
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-1-title"
@@ -224,7 +224,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   content={content.services.cards[2] as unknown as Record<string, unknown>}
                 >
                   <article
-                    className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border border-purple-100 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 cursor-pointer"
+                    className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border-2 border-purple-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-purple-400 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-purple-500 cursor-pointer"
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-2-title"

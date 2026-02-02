@@ -54,27 +54,28 @@ export default function Footer() {
             </Editable>
           </Link>
 
-          {/* Navigation links - inline with dot separators */}
-          <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-x-2 gap-y-2">
+          {/* Navigation links - responsive layout with better spacing */}
+          <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-x-1 gap-y-1.5">
             {footerLinks.map((link, index) => (
               <span key={link.href} className="flex items-center">
                 <Link
                   href={link.href}
-                  className={`text-sm text-gray-700 dark:text-gray-300 ${linkHoverColors.blue} transition-colors py-1 px-2 -mx-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+                  className={`text-sm text-gray-700 dark:text-gray-300 ${linkHoverColors.blue} transition-colors py-1.5 px-2.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
                 >
                   <Editable path={`_layout.footer.links.${index}.label`}>
                     <span>{link.label}</span>
                   </Editable>
                 </Link>
                 {index < footerLinks.length - 1 && (
-                  <span className={`mx-3 text-sm ${formInputColors.helper}`}>·</span>
+                  <span className={`mx-1.5 text-sm ${formInputColors.helper} hidden sm:inline`} aria-hidden="true">·</span>
                 )}
               </span>
             ))}
+            <span className="hidden sm:inline mx-1.5 text-sm text-gray-600 dark:text-gray-300" aria-hidden="true">·</span>
             <button
               type="button"
               onClick={openChatbot}
-              className={`text-sm text-gray-700 dark:text-gray-300 ${linkHoverColors.blue} transition-colors cursor-pointer flex items-center gap-1 py-1 px-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+              className={`text-sm text-gray-700 dark:text-gray-300 ${linkHoverColors.blue} transition-colors cursor-pointer flex items-center gap-1.5 py-1.5 px-2.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
               aria-label="Open AI chatbot to ask questions"
             >
               <svg
