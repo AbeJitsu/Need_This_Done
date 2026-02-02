@@ -2,25 +2,31 @@
 
 What's currently being built or fixed.
 
-## Current Focus — Feb 2026
+## Current Focus — Feb 1, 2026
 
-**Status:** Memory system setup
-- Creating memory/ directory structure for the first time
-- Documenting recent e-commerce improvements (abandoned carts, order history)
-- Capturing SEO fixes and design pattern updates
+**Status:** Backend reliability phase complete
+- Implemented validation, timeout protection, and Redis hardening
+- Enhanced analytics dashboard with visual charts
+- Fixed inventory management API endpoint
+- Memory system fully operational
 
-## Recently Completed — Feb 2026
+## Recently Completed — Feb 1, 2026
 
-**Abandoned Cart & Order History** (commit 17ac470)
-- Enhanced abandoned cart recovery cron job
-- Added order listing and detail pages
-- Improved error handling site-wide
+**Backend Reliability Improvements** (commit 1d30310)
+- Request validation middleware with Zod schemas
+- API timeout protection for external calls (Medusa, Stripe)
+- Redis circuit breaker pattern + connection hardening
+- Files: `lib/api-validation.ts`, `lib/api-timeout.ts`, `lib/redis.ts`
 
-**SEO & Google Indexing** (commits bd6b311, ca9a455, ed48694)
-- Fixed sitemap to remove dead page URLs
-- Added 301 redirects for migrated pages
-- Expanded SEO keywords
+**Analytics Dashboard Enhancement** (commit f553e0d)
+- Added donut chart for order status distribution
+- SVG line chart for revenue trends with gradient fill
+- Bar chart for order volume visualization
+- Summary stats (daily average, peak day, totals)
+- File: `app/admin/analytics/page.tsx`
 
-**Pricing Page Design** (commit 97a411e)
-- Replaced floating orbs with diagonal gradient overlay
-- Cleaner, more performant hero section
+**Inventory Management API Fix** (commit f553e0d)
+- Connected PATCH endpoint to Medusa backend
+- Added `updateVariantInventory` method to admin client
+- Supports bulk updates with detailed error handling
+- File: `app/api/admin/inventory/route.ts`

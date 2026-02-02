@@ -2,45 +2,46 @@
 
 Key learnings and patterns discovered during development.
 
-## E-commerce Flow Improvements — Feb 2026
+## Backend Reliability Patterns — Feb 1, 2026
 
-**Abandoned Cart Recovery**
-- Cron job enhanced with better error handling and logging
-- Sends reminder emails for carts inactive 24+ hours
-- File: `app/api/cron/abandoned-carts/route.ts`
+**Request Validation** (`lib/api-validation.ts`)
+- Zod-based schema validation for all API routes
+- Auto-normalizes inputs (trim, lowercase emails)
+- Type-safe results prevent runtime errors
+- Common schemas: ProjectSubmissionSchema, QuoteAuthorizationSchema
 
-**Order History**
-- New pages for viewing order list and order details
-- Files: `app/orders/page.tsx`, `app/orders/[orderId]/page.tsx`
-- Uses Medusa helpers for fetching order data
+**Timeout Protection** (`lib/api-timeout.ts`)
+- Configurable timeouts: 8s external APIs, 10s database, 2s cache
+- `withTimeout()`, `withRetry()`, `withTimeoutAll()` wrappers
+- Applied to: cart operations, quote authorization, payment intents
 
-**Error Handling**
-- Added Next.js error boundaries: `error.tsx`, `global-error.tsx`
-- Provides user-friendly error messages with recovery options
-
-## SEO & Indexing Fixes — Feb 2026
-
-**Google Indexing Issues Resolved**
-- Removed dead pages from sitemap (migrated pages from root to /about)
-- Added 301 redirects in `next.config.cjs` for old URLs
-- Expanded SEO keywords, removed unused SearchAction schema
-
-**Files Changed:**
-- `app/sitemap.ts` - Cleaned up URL list
-- `app/next.config.cjs` - Added redirects object
-- `app/lib/seo-config.ts` - Expanded keywords
-- `app/components/seo/JsonLd.tsx` - Removed broken schema
-
-## Design Patterns
-
-**Hero Gradient Pattern**
-- Use diagonal gradient overlays instead of floating orbs on pricing page
-- Simpler, more performant than multiple blur effects
-- File: `app/components/pricing/UnifiedPricingPage.tsx`
+**Redis Hardening** (`lib/redis.ts`)
+- Circuit breaker pattern with 10 max retries
+- Exponential backoff with jitter (prevents thundering herd)
+- 3s command timeout, graceful degradation on failure
 
 ## Helper Library Growth
 
-**Medusa Helpers** (`app/lib/medusa-helpers.ts`)
-- Centralized functions for fetching orders, carts, products
+**Medusa Admin Client** (`lib/medusa-client.ts`)
+- Added `updateVariantInventory()` for bulk inventory updates
+- Centralized admin authentication with `getMedusaAdminToken()`
+- Existing helpers: `getOrder()`, `getCart()`, `listOrders()`
+
+**Medusa Helpers** (`lib/medusa-helpers.ts`)
 - ~85 lines of reusable e-commerce logic
 - Reduces duplication across pages and API routes
+
+## Admin Dashboard Features — Feb 1, 2026
+
+**Analytics Visualizations** (`app/admin/analytics/page.tsx`)
+- SVG-based charts with no external dependencies (Chart.js avoided)
+- Donut chart for order status distribution (visual pie chart)
+- Line chart with gradient fill for revenue trends
+- Bar chart for order volume with hover tooltips
+- Summary stats: daily average, peak day, total orders/revenue
+
+**Inventory Management** (`app/api/admin/inventory/route.ts`)
+- Bulk inventory updates via PATCH endpoint
+- Connected to Medusa backend via `updateVariantInventory()`
+- Returns detailed success/failure results per variant
+- Proper error handling and validation
