@@ -65,7 +65,7 @@ export default function LoyaltyPointsSection() {
     };
 
     fetchBalance();
-  }, [session?.user?.email]);
+  }, [session?.user?.email, session?.user?.id]);
 
   if (isLoading) {
     return (

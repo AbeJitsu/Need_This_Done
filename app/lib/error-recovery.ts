@@ -13,6 +13,7 @@
 // - Unclear logs make debugging production issues difficult
 
 import { PostgrestError } from '@supabase/supabase-js';
+import { recordCriticalError } from './error-alerts';
 
 // ============================================================================
 // Error Classification
@@ -419,9 +420,9 @@ export function logError(
     );
   }
 
-  // TODO: Send critical errors to error tracking service (Sentry, etc.)
+  // Record critical errors to browser storage for admin review
   if (classified.shouldAlert && classified.severity === 'critical') {
-    // sendErrorAlert(classified);
+    recordCriticalError(classified, context);
   }
 
   return classified;
