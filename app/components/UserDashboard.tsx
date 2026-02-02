@@ -7,6 +7,7 @@ import Card from './Card';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
 import ProgressBar from './ProgressBar';
+import ActiveAppointmentsSection from './dashboard/ActiveAppointmentsSection';
 import { useDashboard, LoadingSkeleton, ErrorDisplay } from '@/hooks/useDashboard';
 import { headingColors, formInputColors, cardBgColors, dividerColors, statusBadgeColors, accentColors } from '@/lib/colors';
 
@@ -178,6 +179,23 @@ export default function UserDashboard() {
           </Button>
         </div>
       )}
+
+      {/* ====================================================================
+          Active Appointments Section
+          ==================================================================== */}
+
+      <div className={`mt-12 border-t ${dividerColors.border} pt-8`}>
+        <div className="mb-6">
+          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
+            Active Appointments
+          </h2>
+          <p className={formInputColors.helper}>
+            Your scheduled consultations
+          </p>
+        </div>
+
+        <ActiveAppointmentsSection />
+      </div>
 
       {/* ====================================================================
           My Orders Section
