@@ -2,6 +2,8 @@
 
 Quality findings from recent evaluations and automated checks.
 
+**Latest:** Email segmentation for waitlist campaigns added Feb 2, 2026 (commit aa7fff6). System is feature-complete with all critical reliability fixes implemented. See MEMORY.md for comprehensive feature inventory.
+
 ## Backend Reliability Audit — Feb 1, 2026
 
 **Status:** Completed - 9 of 10 critical issues resolved

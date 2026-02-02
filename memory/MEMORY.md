@@ -11,11 +11,12 @@ Key learnings and patterns discovered during development.
 ## Project Status — Feb 2, 2026
 
 **Current State:** Mature, production-ready with comprehensive reliability hardening and complete feature set
-- **Waitlist analytics dashboard**: Real-time demand metrics, conversion tracking (new Feb 2)
-- **Product category management**: Admin CRUD with color-coding and reordering (new Feb 2)
-- **Product comparison tool**: Side-by-side comparison modal for up to 4 products (new Feb 2)
-- **Order notes/special requests**: Customers can add custom notes at checkout (new Feb 2)
-- Product category filtering: Browse products by category with auto-populated dropdown from metadata
+- **Email segmentation for waitlist members**: Targeted campaigns with performance tracking (new Feb 2 05:59)
+- **Waitlist analytics dashboard**: Real-time demand metrics, conversion tracking (Feb 2)
+- **Product category management**: Admin CRUD with color-coding and reordering (Feb 2)
+- **Product comparison tool**: Side-by-side comparison modal for up to 4 products (Feb 2)
+- **Order notes/special requests**: Customers can add custom notes at checkout (Feb 2)
+- Product category filtering: Browse products by category with admin-controlled dropdown from metadata
 - Product waitlist system: Sign up for out-of-stock items, email capture for future notifications
 - Product availability display: Shows stock status (in stock, low stock, out of stock) with waitlist UI
 - Product reviews system: Full lifecycle with admin moderation dashboard, analytics, and user tracking
@@ -30,6 +31,7 @@ Key learnings and patterns discovered during development.
 - Test suite: 69 E2E tests + accessibility tests
 
 **Completed Recent Work (Feb 2):**
+- ✅ Email segmentation for waitlist members - Campaign creation/management UI, targeted offers, performance analytics (commit aa7fff6)
 - ✅ Waitlist analytics dashboard - Real-time demand metrics, conversion rates, trending products (commit c1fc243)
 - ✅ Product category management - Admin CRUD interface with color-coding and reordering (commit c1fc243)
 - ✅ Product comparison tool - Side-by-side product comparison modal with max 4 items (commit bf2382b)
@@ -38,6 +40,7 @@ Key learnings and patterns discovered during development.
 - ✅ Spending analytics - Customer spending visualization and metrics (commit 7384dbd)
 - ✅ Waitlist notifications - Automated emails when products return to stock (commit 19dbc93)
 - ✅ Backend reliability audit - 8 critical issues identified and fixed (commit e724d3b)
+- ✅ Email retry mechanism - Cron job to retry failed email deliveries with exponential backoff
 - ✅ Product category filtering - browse products by category with admin-controlled dropdown (commit 56f7502)
 - ✅ Product waitlist system - sign up for out-of-stock items with email capture (commit 908f2c7)
 - ✅ Product availability display - shows stock status and waitlist form (ProductAvailability component)
@@ -50,11 +53,11 @@ Key learnings and patterns discovered during development.
 - ✅ Dashboard stats overview: Key account metrics visualization (commit 64362f4)
 
 **Next Priority Areas:**
-1. Email segmentation - Send targeted offers to waitlist members based on product interest
-2. Performance optimization for search/filtering (if needed based on usage metrics)
-3. Load testing for Redis circuit breaker under high concurrency
-4. Admin analytics expansion - Inventory turnover rates, customer lifetime value
-5. Enhanced product recommendations based on comparison history
+1. Performance optimization for search/filtering (if needed based on usage metrics)
+2. Load testing for Redis circuit breaker under high concurrency
+3. Admin analytics expansion - Inventory turnover rates, customer lifetime value
+4. Enhanced product recommendations based on comparison history
+5. Mobile responsiveness audit across new campaign UI
 
 ## Customer-Facing Features — Feb 2, 2026
 
@@ -229,6 +232,17 @@ Key learnings and patterns discovered during development.
 - Summary: total/free/paid enrollments, completion rate, revenue
 - Filterable table with user details, progress tracking
 - API: `/api/admin/enrollments`
+
+**Waitlist Campaign Management** (`/admin/waitlist-campaigns` — Feb 2 05:59)
+- Create, edit, view, and send targeted email campaigns to waitlist members
+- Campaign creation form: Product targeting, offer type (targeted_offer, restock_alert, exclusive_discount)
+- Campaign detail page with performance analytics: Open rates, click rates, conversion rates
+- Campaign list with status filtering (draft, scheduled, sent, paused)
+- One-click campaign sending with recipient tracking and delivery status
+- Email template: Professional branded emails with discount code support and CTAs
+- Database: `waitlist_campaigns` and `waitlist_campaign_recipients` tables for segmentation
+- API endpoints: GET/POST campaigns, GET/PATCH/DELETE by ID, POST /send for campaign dispatch
+- Enables data-driven marketing to increase waitlist conversion to actual sales
 
 **Waitlist Analytics Dashboard** (`/admin/waitlist-analytics` — Feb 2)
 - Real-time demand metrics for out-of-stock products

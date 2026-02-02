@@ -36,6 +36,7 @@ Speak like a friend over coffee. Easy to understand.
 ## What's Built
 
 **Latest additions (Feb 2, 2026):**
+- ✅ **Email segmentation for waitlist members**: Create targeted campaigns with performance analytics and one-click sending
 - ✅ **Waitlist analytics dashboard**: Real-time demand metrics, conversion tracking, top products, signup trends
 - ✅ **Product category management**: Admin CRUD for categories with color-coding and custom ordering
 - ✅ **Product comparison tool**: Side-by-side comparison modal for up to 4 products
