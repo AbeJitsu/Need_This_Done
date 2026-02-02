@@ -8,6 +8,7 @@ import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
 import ProgressBar from './ProgressBar';
 import ActiveAppointmentsSection from './dashboard/ActiveAppointmentsSection';
+import DashboardStatsOverview from './dashboard/DashboardStatsOverview';
 import { useDashboard, LoadingSkeleton, ErrorDisplay } from '@/hooks/useDashboard';
 import { headingColors, formInputColors, cardBgColors, dividerColors, statusBadgeColors, accentColors } from '@/lib/colors';
 
@@ -100,6 +101,12 @@ export default function UserDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* ====================================================================
+          Quick Stats Overview
+          ==================================================================== */}
+
+      <DashboardStatsOverview />
+
       {/* ====================================================================
           Header
           ==================================================================== */}
