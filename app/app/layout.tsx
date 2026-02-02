@@ -16,6 +16,20 @@ import { ServiceDetailModal } from '@/components/service-modal';
 import { AdminSidebarToggle, EditModeBar, EditModeTutorial, InlineTextEditor } from '@/components/InlineEditor';
 import { ProfessionalServiceJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
 import { seoConfig } from '@/lib/seo-config';
+import { validateEnvironmentVariables } from '@/lib/env-validation';
+
+// Validate all required environment variables on startup
+// This ensures the app fails immediately if config is wrong instead of
+// failing deep in a request handler after hours of running
+try {
+  validateEnvironmentVariables();
+} catch (error) {
+  if (error instanceof Error) {
+    console.error('Fatal: Environment validation failed:', error.message);
+  }
+  // Re-throw to prevent app from starting
+  throw error;
+}
 
 // ============================================================================
 // Force Dynamic Rendering for All Routes

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import { sendAppointmentRequestNotification } from '@/lib/email-service';
 import { logAppointmentNotification } from '@/lib/appointment-notifications';
 import { validateRequest, commonSchemas } from '@/lib/api-validation';
@@ -105,11 +105,16 @@ export async function POST(request: NextRequest) {
     // ====================================================================
     // Database Access
     // ====================================================================
+    // Use singleton admin client - reuses connection pool instead of creating new connection per request
+    // This prevents connection pool exhaustion under load
 
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    let supabase;
+    try {
+      supabase = getSupabaseAdmin();
+    } catch (err) {
+      console.error('[Appointment Request] Failed to initialize Supabase admin client:', err);
+      return serverError('Server configuration error. Please contact support.');
+    }
 
     // Verify the order exists
     const { data: order, error: orderError } = await supabase

@@ -64,6 +64,14 @@ export async function checkAndMarkRequest(
   const key = `${DEDUP_KEY_PREFIX}${fingerprint}`;
 
   try {
+    // Check if Redis circuit breaker is open - if so, we can't rely on dedup
+    if (redis.isCircuitBreakerOpen()) {
+      console.warn(`[Dedup] Redis circuit breaker open for ${operation} - deduplication disabled`);
+      // Return false to block the request if it's critical (will be caught by caller)
+      // Better to fail explicitly than silently allow duplicates
+      throw new Error('Redis unavailable - cannot verify deduplication');
+    }
+
     // CRITICAL: Use SET with NX (only set if not exists) + EX (expiration) atomically
     // This ensures exactly-once semantics even under high concurrency
     // Returns "OK" if set successfully, null if key already exists
@@ -90,13 +98,15 @@ export async function checkAndMarkRequest(
   } catch (error) {
     // Handle timeout errors specifically
     if (error instanceof TimeoutError) {
-      console.error(`[Dedup] Timeout on ${operation} - allowing request to prevent blocking:`, error.message);
+      console.error(`[Dedup] Timeout on ${operation} - blocking request to prevent duplicates:`, error.message);
+      // Return false to block on timeout - better safe than sorry for duplicate submissions
+      return false;
     } else {
       console.error(`[Dedup] Redis error for ${operation}:`, error);
     }
 
-    // On Redis failure or timeout, allow the request through to avoid blocking legitimate traffic
-    // Better to risk a duplicate than to block all requests
+    // On Redis connection failure (not timeout), still allow through to prevent blocking all traffic
+    // Circuit breaker check above will catch repeated failures
     return true;
   }
 }

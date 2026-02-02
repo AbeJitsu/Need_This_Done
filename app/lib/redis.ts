@@ -310,6 +310,44 @@ if (typeof process !== 'undefined') {
   });
 }
 
+/**
+ * Check if Redis circuit breaker is currently open (service unavailable)
+ * Use this to disable features that depend on Redis when it's down
+ *
+ * @returns true if circuit breaker is open (Redis unavailable), false otherwise
+ */
+function isCircuitBreakerOpen(): boolean {
+  if (!lastConnectionError) {
+    return false; // No recent errors, breaker is closed
+  }
+
+  const timeSinceLastError = Date.now() - lastConnectionError.getTime();
+
+  if (
+    connectionAttempts >= MAX_CONNECTION_FAILURES &&
+    timeSinceLastError < CONNECTION_FAILURE_WINDOW_MS
+  ) {
+    return true; // Too many failures recently, breaker is open
+  }
+
+  // Too long since last error, breaker has reset
+  return false;
+}
+
+/**
+ * Get current circuit breaker state (for monitoring/debugging)
+ * @returns Object with connection attempts and circuit breaker status
+ */
+function getCircuitBreakerState() {
+  return {
+    isOpen: isCircuitBreakerOpen(),
+    connectionAttempts,
+    lastConnectionError: lastConnectionError?.toISOString() || null,
+    maxAttempts: MAX_CONNECTION_FAILURES,
+    windowMs: CONNECTION_FAILURE_WINDOW_MS,
+  };
+}
+
 // Export a wrapper object with connection-safe methods
 const safeRedis = {
   ping,
@@ -323,6 +361,9 @@ const safeRedis = {
   incr,
   rpush,
   lrange,
+  // Circuit breaker state accessors
+  isCircuitBreakerOpen,
+  getCircuitBreakerState,
   // Expose raw client for advanced use cases
   raw: redis,
 };
