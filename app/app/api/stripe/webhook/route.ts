@@ -97,8 +97,11 @@ export async function POST(request: NextRequest) {
       const processingTime = new Date(eventRecord.processed_at).getTime();
       const now = Date.now();
 
-      // If processed_at is more than 1 second old, this is a retry
-      if (now - processingTime > 1000) {
+      // If processed_at is more than 24 hours old, this is a retry
+      // Stripe retries with exponential backoff: 5s, 5s, 10s, 10s, 17s, 33s, 133s (max)
+      // All retries will be within a few hours, so 24 hours is safe for durability
+      const DUPLICATE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
+      if (now - processingTime > DUPLICATE_WINDOW_MS) {
         console.log(`[Webhook] Event ${event.id} already processed at ${eventRecord.processed_at}, skipping duplicate`);
         return NextResponse.json({ received: true, skipped: true });
       }

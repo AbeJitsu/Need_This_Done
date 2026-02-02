@@ -41,8 +41,17 @@ interface QuoteRecord {
 
 export async function POST(request: NextRequest) {
   try {
+    // Parse JSON body with explicit error handling
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch (e) {
+      // JSON parsing failed - return clear 400 error
+      return badRequest('Invalid JSON format');
+    }
+
     // Validate and transform input with Zod
-    const parsed = AuthorizeSchema.safeParse(await request.json());
+    const parsed = AuthorizeSchema.safeParse(body);
     if (!parsed.success) {
       return badRequest(parsed.error.issues[0].message);
     }

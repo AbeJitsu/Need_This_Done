@@ -36,8 +36,17 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
+    // Parse JSON body with explicit error handling
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch (e) {
+      // JSON parsing failed - return clear 400 error
+      return badRequest('Invalid JSON format');
+    }
+
     // Validate input with Zod schema
-    const parsed = SignupSchema.safeParse(await request.json());
+    const parsed = SignupSchema.safeParse(body);
     if (!parsed.success) {
       return badRequest(parsed.error.issues[0].message);
     }

@@ -60,13 +60,23 @@ export async function POST(request: NextRequest) {
 
     // Validate 24-hour minimum notice
     const requestedDateTime = new Date(`${preferred_date}T${preferred_time_start}`);
+
+    // Check for invalid date (must come BEFORE comparisons)
+    if (isNaN(requestedDateTime.getTime())) {
+      return badRequest('Invalid appointment date or time format');
+    }
+
     const minDateTime = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
     if (requestedDateTime < minDateTime) {
       return badRequest('Appointments must be booked at least 24 hours in advance');
     }
 
     // Validate date is a weekday
-    const preferredDay = new Date(preferred_date + 'T12:00:00').getDay();
+    const weekdayDate = new Date(preferred_date + 'T12:00:00');
+    if (isNaN(weekdayDate.getTime())) {
+      return badRequest('Invalid appointment date');
+    }
+    const preferredDay = weekdayDate.getDay();
     if (preferredDay === 0 || preferredDay === 6) {
       return badRequest('Preferred date must be a weekday (Monday-Friday)');
     }
