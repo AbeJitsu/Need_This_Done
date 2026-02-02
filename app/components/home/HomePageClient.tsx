@@ -7,6 +7,7 @@ import { useInlineEdit } from '@/context/InlineEditContext';
 import ServiceIcon, { getServiceIconType } from '@/components/home/ServiceIcons';
 import Button from '@/components/Button';
 import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
+import { Hero } from '@/components/home/sections/Hero';
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -32,9 +33,12 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
   const content = hasValidContent ? (pageContent as unknown as HomePageContent) : initialContent;
 
   return (
-    <div className="py-8">
-      {/* Hero Section - Contained with rounded corners on desktop, edge-to-edge on mobile */}
-      <EditableSection sectionKey="hero" label="Hero Section">
+    <div>
+      {/* New Hero Section */}
+      <Hero />
+
+      {/* Legacy Hero Section - Temporarily disabled to use new Hero */}
+      {false && (<EditableSection sectionKey="hero" label="Hero Section">
         {/* Gradient container - full width on mobile, contained+rounded on desktop */}
         <div className="relative overflow-hidden md:max-w-6xl md:mx-auto md:rounded-2xl py-16 md:py-24 mb-20">
           {/* Background gradients - BJJ color orbs (green, blue, purple) */}
@@ -91,6 +95,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </div>
         </div>
       </EditableSection>
+      )}
 
       {/* Rest of content in max-w container */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
