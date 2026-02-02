@@ -10,6 +10,8 @@ import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import PaymentForm from '@/components/PaymentForm';
 import AppointmentStepForm, { AppointmentData } from '@/components/AppointmentStepForm';
+import AddressSelector from '@/components/AddressSelector';
+import { SavedAddress } from '@/lib/hooks/useSavedAddresses';
 import {
   formInputColors,
   formValidationColors,
@@ -88,6 +90,19 @@ export default function CheckoutPage() {
       setEmail(user.email);
     }
   }, [user, email]);
+
+  // ========================================================================
+  // Handle saved address selection
+  // ========================================================================
+  const handleAddressSelect = (address: SavedAddress) => {
+    setFirstName(address.first_name);
+    setLastName(address.last_name);
+    setAddress(address.street_address);
+    setAddress2(address.apartment || '');
+    setCityStateZip(`${address.city}, ${address.state_province} ${address.postal_code}`);
+    // Clear any field errors when user selects an address
+    setFieldErrors({});
+  };
 
   // ========================================================================
   // Step 1: Handle info submission - check for appointment requirement
@@ -759,6 +774,11 @@ export default function CheckoutPage() {
                   </div>
                 )}
               </div>
+
+              {/* Saved Addresses Selector - Only show for authenticated users */}
+              {isAuthenticated && (
+                <AddressSelector onSelectAddress={handleAddressSelect} isAuthenticated={isAuthenticated} />
+              )}
 
               {/* Shipping Information - Inner rectangle 2 */}
               <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
