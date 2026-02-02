@@ -65,12 +65,25 @@ export function Hero() {
 
       {/* Smooth directional gradient with subtle animation */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* Main directional gradient: bottom-left to top-right with BJJ belt colors */}
+        {/* Main directional gradient: muted color bands flowing bottom-left to top-right */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-tr from-emerald-500/15 via-blue-500/12 via-purple-500/10 via-amber-600/8 to-slate-400/5"
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `linear-gradient(135deg,
+              #c6f6d5 0%,
+              white 15%,
+              #bfdbfe 22%,
+              white 35%,
+              #e9d5ff 42%,
+              white 55%,
+              #fef3c7 62%,
+              white 75%,
+              #e2e8f0 82%,
+              white 100%)`,
+          }}
           animate={{
-            scale: [1, 1.03, 1],
-            opacity: [0.8, 1, 0.8],
+            scale: [1, 1.02, 1],
+            opacity: [0.5, 0.65, 0.5],
           }}
           transition={{
             duration: 15,
@@ -79,9 +92,9 @@ export function Hero() {
           }}
         />
 
-        {/* Cursor-reactive glow — follows mouse with muted opacity */}
+        {/* Cursor-reactive glow — follows mouse */}
         <motion.div
-          className="absolute w-80 h-80 rounded-full bg-gradient-to-br from-blue-400/15 to-purple-400/8 blur-2xl pointer-events-none"
+          className="absolute w-80 h-80 rounded-full bg-gradient-to-br from-blue-400/40 to-purple-400/30 blur-2xl pointer-events-none"
           animate={{
             x: mousePosition.x - 160,
             y: mousePosition.y - 160,
