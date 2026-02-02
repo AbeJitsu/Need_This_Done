@@ -3,8 +3,9 @@ import { supabase } from '@/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { isValidEmail, isValidPassword, PASSWORD_REQUIREMENTS } from '@/lib/validation';
-import { badRequest, handleApiError } from '@/lib/api-errors';
+import { badRequest, handleApiError, serverError } from '@/lib/api-errors';
 import { sendWelcomeEmail } from '@/lib/email-service';
+import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
 
 // Schema uses existing validation helpers for consistency with forms
 const SignupSchema = z.object({
@@ -63,15 +64,33 @@ export async function POST(request: NextRequest) {
     //
     // We pass emailRedirectTo so users return to our app after confirming
     // their email, completing the signup flow.
+    //
+    // TIMEOUT PROTECTION: Supabase auth can hang if the service is slow.
+    // Fail fast with a 10-second timeout to prevent blocking users.
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password, // This is hashed by Supabase - we never store plain passwords
-      options: {
-        data: metadata || {}, // Store additional user info (name, etc.)
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-      },
-    });
+    let result;
+    try {
+      result = await withTimeout(
+        supabase.auth.signUp({
+          email,
+          password, // This is hashed by Supabase - we never store plain passwords
+          options: {
+            data: metadata || {}, // Store additional user info (name, etc.)
+            emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+          },
+        }),
+        TIMEOUT_LIMITS.DATABASE, // 10 seconds - auth should be fast
+        'Supabase signup'
+      );
+    } catch (timeoutErr) {
+      if (timeoutErr instanceof TimeoutError) {
+        console.error('[Signup] Timeout during signup:', timeoutErr.message);
+        return serverError('Sign up service is currently slow. Please try again in a moment.');
+      }
+      throw timeoutErr;
+    }
+
+    const { data, error } = result;
 
     if (error) {
       // If signup fails (e.g., email already exists), return the error

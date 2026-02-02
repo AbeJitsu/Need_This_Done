@@ -2,8 +2,9 @@ import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { isValidEmail, isValidPassword, PASSWORD_REQUIREMENTS } from '@/lib/validation';
-import { badRequest, unauthorized, handleApiError } from '@/lib/api-errors';
+import { badRequest, unauthorized, handleApiError, serverError } from '@/lib/api-errors';
 import { sendLoginNotification } from '@/lib/email-service';
+import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
 
 // Schema uses existing validation helpers for consistency with forms
 const LoginSchema = z.object({
@@ -64,13 +65,31 @@ export async function POST(request: NextRequest) {
     // If credentials are valid, Supabase returns:
     // - user: User object (ID, email, metadata, etc.)
     // - session: Contains access_token and refresh_token (JWTs)
+    //
+    // TIMEOUT PROTECTION: Supabase auth can hang if the service is slow.
+    // Fail fast with a 10-second timeout to prevent blocking users.
 
     const supabase = await createSupabaseServerClient();
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    let result;
+    try {
+      result = await withTimeout(
+        supabase.auth.signInWithPassword({
+          email,
+          password,
+        }),
+        TIMEOUT_LIMITS.DATABASE, // 10 seconds - auth should be fast
+        'Supabase login'
+      );
+    } catch (timeoutErr) {
+      if (timeoutErr instanceof TimeoutError) {
+        console.error('[Login] Timeout during login:', timeoutErr.message);
+        return serverError('Sign in service is currently slow. Please try again in a moment.');
+      }
+      throw timeoutErr;
+    }
+
+    const { data, error } = result;
 
     if (error) {
       // SECURITY: Don't reveal whether email exists or password is wrong.
