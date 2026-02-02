@@ -73,7 +73,7 @@ export default function Toast({ message, type, onDismiss }: ToastProps) {
         ${styles.bg} ${styles.border}
         rounded-lg p-4 shadow-lg
         flex items-start gap-3
-        animate-toast-enter
+        motion-safe:animate-toast-enter
         max-w-sm
       `}
       role="alert"

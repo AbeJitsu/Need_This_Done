@@ -54,7 +54,7 @@ export default function AlignmentToolbar({
         fixed z-[55] flex items-center gap-1 p-1.5 rounded-lg shadow-lg
         border border-gray-400 dark:border-gray-700
         ${uiChromeBg.toolbar}
-        animate-in fade-in slide-in-from-bottom-2 duration-150
+        motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-150
       `}
       style={{
         top: position.y,

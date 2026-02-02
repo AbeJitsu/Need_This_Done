@@ -88,6 +88,7 @@ export function BooleanToggleEditor({ path, value, label, onChange }: FieldEdito
         className={`
           relative inline-flex h-6 w-11 items-center rounded-full transition-colors
           ${boolValue ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'}
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
         `}
         role="switch"
         aria-checked={boolValue}

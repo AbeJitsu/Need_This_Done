@@ -102,7 +102,7 @@ export default function ConfirmDialog({
             relative w-full max-w-md
             ${cardBgColors.base} rounded-2xl shadow-2xl
             transition-all duration-300 ease-out
-            animate-modal-enter
+            motion-safe:animate-modal-enter
           `}
         >
           {/* Close button */}
@@ -112,6 +112,7 @@ export default function ConfirmDialog({
               absolute top-4 right-4 z-10
               ${iconButtonColors.text} ${iconButtonColors.hover}
               p-2 rounded-lg ${iconButtonColors.bg} transition-colors
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
             `}
             aria-label="Close dialog"
           >
@@ -147,6 +148,7 @@ export default function ConfirmDialog({
                   ${headingColors.primary}
                   hover:bg-gray-100 dark:hover:bg-gray-700
                   transition-colors
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
                 `}
               >
                 {cancelLabel}
@@ -159,6 +161,7 @@ export default function ConfirmDialog({
                   flex-1 py-2.5 px-4 rounded-lg font-medium
                   ${styles.confirmBg} ${styles.confirmHover} ${styles.confirmText}
                   transition-colors
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500
                 `}
               >
                 {confirmLabel}

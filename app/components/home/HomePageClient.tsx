@@ -46,7 +46,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           {/* Hero content - CENTERED */}
           <div className="relative z-10 px-4 sm:px-6 md:px-8 text-center">
             <Editable path="hero.title">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-manrope font-extrabold tracking-tight mb-6 animate-scale-in leading-[1.1]">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-manrope font-extrabold tracking-tight mb-6 motion-safe:animate-scale-in leading-[1.1]">
                 <span className="bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
                   Websites.
                 </span>{' '}
@@ -59,7 +59,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
               </h1>
             </Editable>
             <Editable path="hero.description">
-              <p className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto animate-slide-up animate-delay-150">
+              <p className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto motion-safe:animate-slide-up motion-safe:animate-delay-150">
                 From your first website to fully automated operations. We build the technology that lets you focus on what matters.
               </p>
             </Editable>
@@ -72,7 +72,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   servicesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
               }}
-              className="mt-10 inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors cursor-pointer animate-slide-up animate-delay-300 rounded-lg px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+              className="mt-10 inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors cursor-pointer motion-safe:animate-slide-up motion-safe:animate-delay-300 rounded-lg px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
               aria-label="Scroll to services section"
             >
               <span>Scroll to explore</span>
@@ -90,7 +90,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
         <EditableSection sectionKey="services" label="Services">
         <div id="services-section" className="mb-24 scroll-mt-24">
           {/* Section title - bold, left-aligned */}
-          <h2 className="text-4xl md:text-5xl font-manrope font-extrabold text-gray-900 mb-12 animate-slide-up">
+          <h2 className="text-4xl md:text-5xl font-manrope font-extrabold text-gray-900 mb-12 motion-safe:animate-slide-up">
             WHAT WE BUILD
           </h2>
 
@@ -106,7 +106,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 content={content.services.cards[0] as unknown as Record<string, unknown>}
               >
                 <article
-                  className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border-2 border-emerald-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-emerald-400 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-emerald-500 cursor-pointer"
+                  className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border-2 border-emerald-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-emerald-400 transition-all duration-300 motion-safe:animate-slide-up motion-safe:animate-delay-100 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-emerald-500 cursor-pointer"
                   tabIndex={0}
                   role="button"
                   aria-labelledby="service-card-0-title"
@@ -178,7 +178,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   content={content.services.cards[1] as unknown as Record<string, unknown>}
                 >
                   <article
-                    className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border-2 border-blue-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-blue-400 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-blue-500 cursor-pointer"
+                    className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border-2 border-blue-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-blue-400 transition-all duration-300 motion-safe:animate-slide-up motion-safe:animate-delay-200 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-blue-500 cursor-pointer"
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-1-title"
@@ -227,7 +227,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   content={content.services.cards[2] as unknown as Record<string, unknown>}
                 >
                   <article
-                    className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border-2 border-purple-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-purple-400 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-purple-500 cursor-pointer"
+                    className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border-2 border-purple-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-purple-400 transition-all duration-300 motion-safe:animate-slide-up motion-safe:animate-delay-300 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-purple-500 cursor-pointer"
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-2-title"
@@ -280,7 +280,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
       {/* How It Works - Enhanced Full Section */}
       <EditableSection sectionKey="processPreview" label="Process Preview">
-        <div id="how-it-works-section" className="mb-24 animate-slide-up scroll-mt-28">
+        <div id="how-it-works-section" className="mb-24 motion-safe:animate-slide-up scroll-mt-28">
           {/* Section Header */}
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-manrope font-extrabold text-gray-900 mb-4">
@@ -436,7 +436,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
       {/* CTA Section - Confident Close */}
       <EditableSection sectionKey="cta" label="Call to Action">
-        <div className="relative py-16 px-8 rounded-3xl overflow-hidden animate-slide-up">
+        <div className="relative py-16 px-8 rounded-3xl overflow-hidden motion-safe:animate-slide-up">
           {/* Gradient background - purple invitation */}
           <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-white" />
           {/* Decorative glow orb */}
