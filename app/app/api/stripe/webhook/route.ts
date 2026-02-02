@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { constructWebhookEvent } from '@/lib/stripe';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { cache } from '@/lib/cache';
+import { sendOrderConfirmation } from '@/lib/email-service';
 import Stripe from 'stripe';
 
 export const dynamic = 'force-dynamic';
@@ -218,6 +219,41 @@ async function handlePaymentSuccess(
 
   if (paymentError) {
     console.error('Failed to record payment:', paymentError);
+  }
+
+  // Send order confirmation email (fire and forget - don't block webhook response)
+  if (email && orderId) {
+    // Fetch order details for the email
+    const { data: orderDetails } = await supabase
+      .from('orders')
+      .select('id, medusa_order_id, total, requires_appointment, customer_name, items')
+      .eq('medusa_order_id', orderId)
+      .single();
+
+    if (orderDetails) {
+      const orderItems = Array.isArray(orderDetails.items) ? orderDetails.items : [];
+      sendOrderConfirmation({
+        orderId: orderDetails.medusa_order_id?.slice(0, 8) || orderId.slice(0, 8),
+        orderDate: new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+        customerEmail: email,
+        customerName: orderDetails.customer_name || undefined,
+        items: orderItems.map((item: Record<string, unknown>) => ({
+          name: (item.name as string) || 'Item',
+          quantity: (item.quantity as number) || 1,
+          price: (item.price as number) || 0,
+          requiresAppointment: (item.requires_appointment as boolean) || false,
+        })),
+        subtotal: paymentIntent.amount,
+        total: paymentIntent.amount,
+        requiresAppointment: orderDetails.requires_appointment || false,
+      }).catch((err) => {
+        console.error('[Webhook] Failed to send order confirmation email:', err);
+      });
+    }
   }
 }
 

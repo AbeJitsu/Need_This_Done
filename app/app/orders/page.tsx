@@ -258,7 +258,7 @@ export default function OrderHistoryPage() {
 
         {/* Back Button */}
         <div className="mt-8 text-center">
-          <Button variant="gray" href="/admin/dashboard">
+          <Button variant="gray" href="/dashboard">
             Back to Dashboard
           </Button>
         </div>
