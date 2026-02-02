@@ -148,6 +148,18 @@ export type AppointmentCancellationEmailProps = {
   reason?: string;
 };
 
+export type AppointmentReminderEmailProps = {
+  customerName?: string;
+  customerEmail: string;
+  appointmentDate: string;
+  appointmentTime: string;
+  durationMinutes: number;
+  serviceName: string;
+  meetingLink?: string;
+  orderId: string;
+  hoursUntilAppointment: number;
+};
+
 export type DepositConfirmationEmailProps = {
   customerEmail: string;
   customerName: string;
