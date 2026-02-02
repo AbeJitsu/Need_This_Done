@@ -4,7 +4,8 @@ Key learnings and patterns discovered during development.
 
 ## Project Status — Feb 2, 2026
 
-**Current State:** Mature, production-ready with comprehensive reliability hardening and customer-facing shop enhancements
+**Current State:** Mature, production-ready with comprehensive reliability hardening and rich customer-facing features
+- Product reviews system: Full 5-star ratings with moderation and customer voting
 - Account settings page: Customer profile management with persistent storage
 - Product discovery: Full-text search and advanced filtering across catalog
 - User wishlist feature: Save/manage favorite products with persistence
@@ -21,6 +22,15 @@ Key learnings and patterns discovered during development.
 5. Wishlist enhancement (export, email, sharing - optional)
 
 ## Customer-Facing Features — Feb 2, 2026
+
+**Product Reviews System** (commit d4bbbef)
+- Complete review lifecycle: submission → pending moderation → approval
+- ReviewForm component: 5-star ratings, title, content, anonymous/authenticated support
+- ReviewSection component: Rating statistics, distribution breakdown, review display
+- Customers can vote "helpful" on reviews and report inappropriate content
+- Existing API endpoints utilized (`/api/reviews` with CRUD operations)
+- Database: Uses existing `reviews`, `review_votes`, `review_reports` tables from migration 028
+- Admin moderation queue ready (future: admin dashboard integration)
 
 **Account Settings Page** (commit 1592bfd)
 - Profile management at `/account` for logged-in customers

@@ -19,6 +19,21 @@ Platform is stable and ready for production use.
 
 ## Recently Completed — Feb 2, 2026
 
+**Product Reviews System** (commit d4bbbef)
+- ReviewForm component: Customer review submission with 5-star ratings, title, content
+- ReviewSection component: Display reviews, rating stats, and distribution breakdown
+- Integration with ProductDetailClient to show reviews on product pages
+- Supports both authenticated and anonymous reviews
+- Admin moderation queue integration (reviews pending approval workflow)
+- Uses existing API endpoints and database schema
+
+**Frontend Fixes: Critical Flows** (commit cd2e396)
+- Appointment double-booking prevention: Database constraint triggers on time/date conflicts
+- Wishlist data persistence: Auto-migrate localStorage items when user logs in
+- Notification tracking: Full audit trail for appointment admin notifications
+- Failed notification detection: Admin endpoint to identify delivery failures
+- Migration 043 (appointment constraints) + Migration 044 (notification logging)
+
 **Customer Account Settings Page** (commit 1592bfd)
 - New page at `/account` for customer profile management
 - Account settings client component with form for editing profile info
