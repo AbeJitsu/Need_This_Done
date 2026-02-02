@@ -65,20 +65,19 @@ export function Hero() {
 
       {/* Smooth directional gradient with subtle animation */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* Main directional gradient: three core colors with white separation, bottom-left to top-right */}
+        {/* Main directional gradient: evenly distributed colors with white breathing room */}
         <motion.div
           className="absolute inset-0"
           style={{
             backgroundImage: `linear-gradient(45deg,
               #a7f3d0 0%,
-              #a7f3d0 15%,
-              white 22%,
-              #bfdbfe 30%,
-              #bfdbfe 45%,
-              white 52%,
-              #d8b4fe 60%,
-              #d8b4fe 75%,
-              white 100%)`,
+              #a7f3d0 28%,
+              white 32%,
+              #bfdbfe 36%,
+              #bfdbfe 64%,
+              white 68%,
+              #d8b4fe 72%,
+              #d8b4fe 100%)`,
           }}
           animate={{
             scale: [1, 1.02, 1],
