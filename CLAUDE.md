@@ -36,6 +36,8 @@ Speak like a friend over coffee. Easy to understand.
 ## What's Built
 
 **Latest additions (Feb 2, 2026):**
+- ✅ **Product comparison tool**: Side-by-side comparison modal for up to 4 products
+- ✅ **Order notes**: Customers add special requests/delivery instructions at checkout
 - ✅ **Saved addresses**: CRUD management in account settings with default address support
 - ✅ **Spending analytics**: Customer spending visualization with time-based aggregation
 - ✅ **Waitlist notifications**: Automated emails when out-of-stock products return to inventory

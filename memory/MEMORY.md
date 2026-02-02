@@ -11,6 +11,8 @@ Key learnings and patterns discovered during development.
 ## Project Status — Feb 2, 2026
 
 **Current State:** Mature, production-ready with comprehensive reliability hardening and complete feature set
+- **Product comparison tool**: Side-by-side comparison modal for up to 4 products (new Feb 2)
+- **Order notes/special requests**: Customers can add custom notes at checkout (new Feb 2)
 - Product category filtering: Browse products by category with auto-populated dropdown from metadata
 - Product waitlist system: Sign up for out-of-stock items, email capture for future notifications
 - Product availability display: Shows stock status (in stock, low stock, out of stock) with waitlist UI
@@ -22,11 +24,13 @@ Key learnings and patterns discovered during development.
 - Critical appointment flow fixes: 3 silent failures resolved with explicit error handling
 - Backend reliability: Comprehensive error classification, circuit breaker, retry logic, deduplication, rate limiting
 - Admin dashboard: Review moderation, analytics, appointment management, Google Calendar, product analytics, enrollments
-- **Customer dashboard**: Active appointments section + statistics overview (new Feb 2)
+- Customer dashboard: Active appointments section + statistics overview
 - Test suite: 69 E2E tests + accessibility tests
 
 **Completed Recent Work (Feb 2):**
-- ✅ Saved addresses system - CRUD management in account settings (commit 7384dbd)
+- ✅ Product comparison tool - Side-by-side product comparison modal with max 4 items (commit bf2382b)
+- ✅ Order notes system - Customers add special requests/instructions at checkout (commit bf2382b)
+- ✅ Saved addresses system - CRUD management in account settings with default address support (commit 7384dbd)
 - ✅ Spending analytics - Customer spending visualization and metrics (commit 7384dbd)
 - ✅ Waitlist notifications - Automated emails when products return to stock (commit 19dbc93)
 - ✅ Backend reliability audit - 8 critical issues identified and fixed (commit e724d3b)
@@ -42,12 +46,11 @@ Key learnings and patterns discovered during development.
 - ✅ Dashboard stats overview: Key account metrics visualization (commit 64362f4)
 
 **Next Priority Areas:**
-1. Waitlist notifications - Automated emails when out-of-stock products return to inventory
-2. Waitlist analytics - Track demand patterns for out-of-stock products
-3. Category management UI - Admin dashboard to configure/customize categories
-4. Performance optimization for search/filtering (if needed based on usage metrics)
-5. Load testing for Redis circuit breaker under high concurrency
-6. Email segmentation - Send targeted offers to waitlist members
+1. Waitlist analytics - Track demand patterns for out-of-stock products
+2. Category management UI - Admin dashboard to configure/customize categories
+3. Performance optimization for search/filtering (if needed based on usage metrics)
+4. Load testing for Redis circuit breaker under high concurrency
+5. Email segmentation - Send targeted offers to waitlist members
 
 ## Customer-Facing Features — Feb 2, 2026
 
@@ -289,3 +292,26 @@ Key learnings and patterns discovered during development.
   - Quick visual indicators of customer engagement and account activity
   - Compact card layout with icon + stat display
   - Location: Top of `/dashboard` customer page
+
+**Product Comparison Tool** (commit bf2382b — Feb 2)
+- Side-by-side comparison modal for up to 4 products
+- ComparisonContext manages comparison state across app
+- CompareButton on ProductCard adds/removes products from comparison
+- ProductComparisonModal displays interactive comparison table with:
+  - Product images, names, prices
+  - Ratings and availability status
+  - Full descriptions for each product
+  - Add-to-cart buttons for comparison items
+- Max 4 products limit prevents overwhelming UI
+- Context persists comparison across page navigation
+- Location: Compare button visible on ProductCard everywhere products are displayed
+
+**Order Notes / Special Requests** (commit bf2382b — Feb 2)
+- Optional textarea field on checkout form for customer notes
+- 500-character limit with live character counter
+- Supports delivery instructions (e.g., "leave at front door")
+- Supports special handling (e.g., "fragile items")
+- Supports customization requests (e.g., "color preference")
+- Notes saved with order for team reference during fulfillment
+- Field submission integrated into checkout form validation
+- Location: `/checkout` page in order summary section
