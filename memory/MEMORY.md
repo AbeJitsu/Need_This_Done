@@ -31,6 +31,24 @@ Key learnings and patterns discovered during development.
 - Prevents orphaned records on partial failures
 - Ensures data consistency
 
+**Race Condition Prevention** (`api/appointments/request/route.ts`)
+- Atomic time slot validation: fetch all appointments before checking availability
+- Prevents TOCTOU bugs in concurrent booking requests
+- Single query approach eliminates race window
+
+**Transient Failure Recovery** (`lib/supabase-retry.ts`)
+- Auto-retry wrapper for database operations (3 attempts max)
+- Smart error classification: retry connection issues, fail fast on constraints
+- Exponential backoff with jitter prevents thundering herd
+- Applied to: projects, enrollments, quote auth
+
+**Request Deduplication** (`lib/request-dedup.ts`)
+- SHA-256 fingerprinting prevents duplicate submissions
+- Redis-backed with 60s TTL window
+- Graceful degradation if Redis unavailable
+- Returns 429 for duplicates within window
+- Applied to: project submissions
+
 ## Helper Library Growth
 
 **Medusa Admin Client** (`lib/medusa-client.ts`)

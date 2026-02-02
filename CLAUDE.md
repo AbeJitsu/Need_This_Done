@@ -54,6 +54,23 @@ Use ASCII charts for complex flows. Keep them simple.
 - **Medusa backend** in `/medusa` (deployed on Railway)
 - **Environment variables** in `.env.local` (see README.md for required vars)
 
+## Backend Reliability Helpers
+
+**Location:** `/app/lib/`
+
+Key utilities for production-grade reliability:
+
+| File | Purpose |
+|------|---------|
+| `supabase-retry.ts` | Auto-retry wrapper for transient DB failures (3 attempts, exponential backoff) |
+| `request-dedup.ts` | Prevents duplicate form submissions (SHA-256 fingerprinting, 60s TTL) |
+| `api-timeout.ts` | Timeout protection for external APIs (8s external, 10s DB, 2s cache) |
+| `api-validation.ts` | Zod schema validation middleware for type-safe API routes |
+| `validation.ts` | Input sanitization (email, file paths, length limits) |
+| `redis.ts` | Circuit breaker pattern with graceful degradation |
+
+See `memory/context/decisions.md` for implementation rationale.
+
 ## Deployment Guidelines
 
 **Vercel Configuration:**

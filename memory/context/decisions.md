@@ -129,3 +129,50 @@ Key decisions made and why.
 - `sanitizeFilePath()` - prevents directory traversal
 - `validateLength()` - enforces max string lengths
 - Applied to: project submissions, file uploads, quote requests
+
+## Race Condition Prevention via Atomic Validation — Feb 1, 2026
+
+**Decision:** Fetch all relevant data before validation in concurrent scenarios
+
+**Why:**
+- Appointment booking had TOCTOU race: check time → book → conflict possible
+- Multiple users could book same time slot simultaneously
+- Time range calculation between fetch and validate created race window
+
+**How:**
+- Move all calculations before database query
+- Single query fetches all existing appointments
+- Validate against complete dataset atomically
+- No time window between check and insert
+- Applied to: appointment request flow
+
+## Retry Logic for Transient Database Failures — Feb 1, 2026
+
+**Decision:** Automatically retry database operations that fail due to network/connection issues
+
+**Why:**
+- Users saw 500 errors for temporary network hiccups
+- Database connection timeouts treated same as constraint violations
+- No distinction between retryable and permanent failures
+
+**How:**
+- Created `lib/supabase-retry.ts` with smart retry wrapper
+- Classifies errors: retry connection issues, fail fast on constraints
+- 3 retry attempts with exponential backoff + jitter
+- Applied to: project submissions, enrollments, quote auth
+
+## Request Deduplication for User Actions — Feb 1, 2026
+
+**Decision:** Prevent duplicate form submissions within short time window
+
+**Why:**
+- Double-clicks on submit buttons created duplicate records
+- Browser retry logic could resubmit POST requests
+- No server-side protection against duplicate submissions
+
+**How:**
+- Created `lib/request-dedup.ts` with SHA-256 fingerprinting
+- Redis-backed with 60-second TTL per request signature
+- Returns 429 status for duplicates within window
+- Graceful degradation if Redis unavailable
+- Applied to: project submission endpoint

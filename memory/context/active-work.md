@@ -4,30 +4,27 @@ What's currently being built or fixed.
 
 ## Current Focus — Feb 1, 2026
 
-**Status:** Admin feature expansion complete
-- Product Analytics dashboard shows engagement metrics (views, cart adds, purchases)
-- Enrollments management system provides course oversight
-- Backend hardening: webhook idempotency, transactions, input sanitization
-- All major backend reliability gaps now addressed
+**Status:** Admin platform and backend reliability complete
+- All major admin features shipped (analytics, enrollments, shop management)
+- Backend hardening complete: race conditions, retries, deduplication, idempotency
+- Accessibility improvements across navigation and interactive elements
+- Platform ready for production use
 
 ## Recently Completed — Feb 1, 2026
 
-**Product Analytics Dashboard** (commit b22b9dd)
-- Page: `/admin/product-analytics` - Product popularity and trends
-- API: `/api/admin/product-analytics` - Queries product_interactions table
-- Metrics: views, cart adds, purchases, conversion funnel
-- Time filters: 7/14/30/90 day ranges
-- Uses existing DB views: popular_products, trending_products
+**Shop Management Completion** (commit 68c5558)
+- Product deletion: Wired existing DELETE endpoint to UI with confirmation
+- Orders display: Fetches and shows real order data in admin dashboard
+- Inventory navigation: Added tab linking to existing inventory page
+- All shop endpoints now properly connected to frontend
 
-**Enrollments Management** (commit b22b9dd)
-- Page: `/admin/enrollments` - Course enrollment oversight
-- API: `/api/admin/enrollments` - CRUD for enrollment records
-- Summary stats: total/free/paid enrollments, completion rate, revenue
-- Completes EnrollButton component integration
+**Backend Reliability Improvements** (commit 9c42578)
+- Race condition fixes: Atomic appointment validation prevents double-booking
+- Retry wrapper (`lib/supabase-retry.ts`): Auto-retry transient DB failures
+- Request deduplication (`lib/request-dedup.ts`): Prevents double-click submissions
+- Applied to: project submissions, enrollments, quote auth, appointments
 
-**Backend Security Hardening** (commit 4d7c949)
-- Webhook idempotency: prevents duplicate Stripe webhook processing
-- Database transactions: quote creation + project updates atomic
-- Input sanitization: blocks directory traversal, email injection, path attacks
-- Length validation: prevents database overflow and DoS
-- Files: `lib/validation.ts`, migrations 040/041, webhook route
+**Accessibility Improvements** (commit ddaf381)
+- Navigation borders: Upgraded gray-500 → gray-600 for 4.5:1 contrast
+- Keyboard focus: Added visible focus rings to homepage service cards
+- Footer links: Upgraded gray-600 → gray-700 for 5.8:1 contrast ratio
