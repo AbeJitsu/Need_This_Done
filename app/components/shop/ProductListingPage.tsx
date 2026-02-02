@@ -7,6 +7,7 @@ import ProductCard from '@/components/ProductCard';
 import CategoryFilter from '@/components/shop/CategoryFilter';
 import EmptyState from '@/components/ui/EmptyState';
 import { SkeletonCard } from '@/components/ui/Skeleton';
+import RecentlyViewedWidget from '@/components/RecentlyViewedWidget';
 
 interface Product {
   id: string;
@@ -220,6 +221,13 @@ export default function ProductListingPage() {
               )}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Recently Viewed Widget */}
+      <section className="py-8 md:py-12 bg-gradient-to-b from-white to-gray-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+          <RecentlyViewedWidget />
         </div>
       </section>
 

@@ -12,6 +12,7 @@ import { ToastProvider } from '@/context/ToastContext';
 import { InlineEditProvider } from '@/context/InlineEditContext';
 import { WishlistProvider } from '@/context/WishlistContext';
 import { ComparisonProvider } from '@/context/ComparisonContext';
+import { BrowsingHistoryProvider } from '@/context/BrowsingHistoryContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
 import ProductComparisonModal from '@/components/ProductComparisonModal';
@@ -214,6 +215,7 @@ export default function RootLayout({
           <CartProvider>
             <WishlistProvider>
               <ComparisonProvider>
+                <BrowsingHistoryProvider>
                 <StripeProvider>
                   <ServiceModalProvider>
                     <ToastProvider>
@@ -260,6 +262,7 @@ export default function RootLayout({
                   </ToastProvider>
                 </ServiceModalProvider>
               </StripeProvider>
+                </BrowsingHistoryProvider>
             </ComparisonProvider>
             </WishlistProvider>
           </CartProvider>

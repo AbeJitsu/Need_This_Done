@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { useBrowsingHistory } from '@/context/BrowsingHistoryContext';
 import Button from '@/components/Button';
 import ReviewForm from './ReviewForm';
 import ReviewSection from './ReviewSection';
@@ -28,6 +29,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   const { user } = useAuth();
   const { addItem, itemCount } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { addViewedProduct } = useBrowsingHistory();
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isManagingWishlist, setIsManagingWishlist] = useState(false);
@@ -44,6 +46,18 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   const price = product.variants?.[0]?.prices?.[0]?.amount ?? 0;
   const image = product.images?.[0]?.url;
   const variants = product.variants || [];
+
+  // ========================================================================
+  // Track product view in browsing history
+  // ========================================================================
+  useEffect(() => {
+    addViewedProduct({
+      product_id: product.id,
+      title: product.title,
+      image: image,
+      viewed_at: new Date().toISOString(),
+    });
+  }, [product.id, product.title, image, addViewedProduct]);
 
   // ========================================================================
   // Handle wishlist toggle
