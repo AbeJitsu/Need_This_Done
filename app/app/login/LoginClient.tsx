@@ -166,7 +166,7 @@ export default function LoginClient() {
           Animated Gradient Background
           ================================================================ */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900" />
 
         <div
           className="absolute w-[600px] h-[600px] rounded-full blur-[120px] opacity-30"
@@ -237,9 +237,10 @@ export default function LoginClient() {
           {/* Glass Card */}
           <FadeIn triggerOnScroll={false} delay={0.2}>
             <div
-              className="relative backdrop-blur-xl bg-white/[0.07] rounded-2xl p-8 md:p-10 border border-white/[0.15] ring-1 ring-white/[0.05]"
+              className="relative backdrop-blur-2xl bg-white/[0.08] rounded-2xl p-8 md:p-10 border border-white/[0.12] ring-1 ring-white/[0.06]"
               style={{
-                boxShadow: '0 0 40px rgba(255,255,255,0.18), 0 0 70px rgba(255,255,255,0.1), inset 0 1px 0 rgba(255,255,255,0.1)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 60px rgba(16,185,129,0.08), 0 0 60px rgba(59,130,246,0.06), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(255,255,255,0.05)',
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.08) 100%)',
               }}
             >
               <AnimatePresence mode="wait">
