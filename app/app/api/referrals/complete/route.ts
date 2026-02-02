@@ -12,7 +12,7 @@ interface CompleteReferralRequest {
 
 export async function POST(request: Request) {
   try {
-    const { referralTransactionId, orderId } = (await request.json()) as CompleteReferralRequest;
+    const { referralTransactionId, orderId: _orderId } = (await request.json()) as CompleteReferralRequest;
 
     if (!referralTransactionId) {
       return Response.json(
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     }
 
     // Add credit to referrer's account
-    const { error: creditError } = await supabase
+    await supabase
       .from('customer_referrals')
       .update({
         credit_balance: supabase.rpc('increment_credit_balance', {

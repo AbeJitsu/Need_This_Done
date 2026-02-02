@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Search, ChevronDown, Loader2 } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
 import Button from '@/components/Button';
 import ProductCard from '@/components/ProductCard';
 import CategoryFilter from '@/components/shop/CategoryFilter';

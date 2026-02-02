@@ -98,7 +98,7 @@ export async function POST(request: Request) {
 
 async function sendCampaignEmails(
   campaignId: string,
-  userId: string
+  _userId: string
 ): Promise<{
   success: boolean;
   sent: number;
