@@ -1,14 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 import { Resend } from 'resend';
+import { validateSupabaseAdminConfig } from '@/lib/supabase-client-safe';
 import { withDeduplication, isDuplicateRequestError } from '@/lib/request-dedup';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface SendCampaignRequest {
   campaignId: string;
@@ -16,6 +10,13 @@ interface SendCampaignRequest {
 
 export async function POST(request: Request) {
   try {
+    const config = validateSupabaseAdminConfig();
+    if (!config.isValid) return config.error;
+
+    const supabase = createClient(config.url, config.key, {
+      auth: { persistSession: false }
+    });
+
     const headersList = headers();
     const authHeader = headersList.get('authorization');
 
@@ -105,6 +106,15 @@ async function sendCampaignEmails(
   failed: number;
   total: number;
 }> {
+  const config = validateSupabaseAdminConfig();
+  if (!config.isValid) throw new Error('Supabase not configured');
+
+  const supabase = createClient(config.url, config.key, {
+    auth: { persistSession: false }
+  });
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
   // Fetch campaign and template
   const { data: campaign, error: campaignError } = await supabase
     .from('email_campaigns')

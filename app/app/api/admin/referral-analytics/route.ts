@@ -1,13 +1,16 @@
-import { createClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { createClient } from '@supabase/supabase-js';
+import { validateSupabaseAdminConfig } from '@/lib/supabase-client-safe';
 
 export async function GET() {
   try {
+    const config = validateSupabaseAdminConfig();
+    if (!config.isValid) return config.error;
+
+    const supabase = createClient(config.url, config.key, {
+      auth: { persistSession: false }
+    });
+
     const headersList = headers();
     const authHeader = headersList.get('authorization');
 

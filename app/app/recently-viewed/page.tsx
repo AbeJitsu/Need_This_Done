@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useBrowsingHistory } from '@/context/BrowsingHistoryContext';
 import Button from '@/components/Button';
 import PageHeader from '@/components/PageHeader';
@@ -159,9 +160,11 @@ export default function RecentlyViewedPage() {
               {/* Product image */}
               {product?.thumbnail && (
                 <div className="flex-shrink-0 w-32 h-32 rounded-lg overflow-hidden bg-gray-200">
-                  <img
+                  <Image
                     src={product.thumbnail}
                     alt={product.title || 'Product'}
+                    width={128}
+                    height={128}
                     className="w-full h-full object-cover"
                   />
                 </div>

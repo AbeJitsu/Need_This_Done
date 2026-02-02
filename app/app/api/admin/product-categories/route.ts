@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { isAdmin } from '@/lib/auth';
-
 // ============================================================================
 // GET /api/admin/product-categories - List all categories
 // POST /api/admin/product-categories - Create new category

@@ -1,7 +1,6 @@
 // ============================================================================
 // GET /api/user/appointments - Fetch current user's appointments
 // ============================================================================
-// What: Returns active appointments for the authenticated user
 // Why: Customers need to see their scheduled consultations
 // How: Queries appointment_requests by customer email, filters by status
 

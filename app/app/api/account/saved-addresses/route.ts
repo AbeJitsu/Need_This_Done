@@ -1,13 +1,14 @@
 // ============================================================================
 // Saved Addresses API - GET, POST, PUT, DELETE
-// ============================================================================
 // What: Manage customer saved addresses for faster checkout
 // Why: Improve checkout UX with address auto-fill
 // How: CRUD operations on saved_addresses table
+// ============================================================================
 
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth-options';
 import { createClient } from '@supabase/supabase-js';
+import { validateSupabaseAdminConfig } from '@/lib/supabase-client-safe';
 import { z } from 'zod';
 
 // ============================================================================
@@ -35,15 +36,17 @@ const SavedAddressSchema = z.object({
 
 export async function GET() {
   try {
+    const config = validateSupabaseAdminConfig();
+    if (!config.isValid) return config.error;
+
+    const supabase = createClient(config.url, config.key, {
+      auth: { persistSession: false }
+    });
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
 
     const { data: addresses, error } = await supabase
       .from('saved_addresses')
@@ -70,6 +73,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const config = validateSupabaseAdminConfig();
+    if (!config.isValid) return config.error;
+
+    const supabase = createClient(config.url, config.key, {
+      auth: { persistSession: false }
+    });
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
@@ -77,11 +87,6 @@ export async function POST(request: Request) {
 
     const body = await request.json();
     const validated = SavedAddressSchema.parse(body);
-
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
 
     // If setting as default, unset other defaults
     if (validated.is_default) {
@@ -124,6 +129,13 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
+    const config = validateSupabaseAdminConfig();
+    if (!config.isValid) return config.error;
+
+    const supabase = createClient(config.url, config.key, {
+      auth: { persistSession: false }
+    });
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
@@ -137,11 +149,6 @@ export async function PUT(request: Request) {
 
     const body = await request.json();
     const validated = SavedAddressSchema.partial().parse(body);
-
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
 
     // Verify ownership
     const { data: existing } = await supabase
@@ -194,6 +201,13 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    const config = validateSupabaseAdminConfig();
+    if (!config.isValid) return config.error;
+
+    const supabase = createClient(config.url, config.key, {
+      auth: { persistSession: false }
+    });
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
@@ -204,11 +218,6 @@ export async function DELETE(request: Request) {
     if (!addressId) {
       return Response.json({ error: 'Address ID required' }, { status: 400 });
     }
-
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
 
     // Verify ownership
     const { data: existing } = await supabase

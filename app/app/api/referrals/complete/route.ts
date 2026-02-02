@@ -1,9 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { validateSupabaseAdminConfig } from '@/lib/supabase-client-safe';
 
 interface CompleteReferralRequest {
   referralTransactionId: string;
@@ -12,6 +8,13 @@ interface CompleteReferralRequest {
 
 export async function POST(request: Request) {
   try {
+    const config = validateSupabaseAdminConfig();
+    if (!config.isValid) return config.error;
+
+    const supabase = createClient(config.url, config.key, {
+      auth: { persistSession: false }
+    });
+
     const { referralTransactionId, orderId: _orderId } = (await request.json()) as CompleteReferralRequest;
 
     if (!referralTransactionId) {

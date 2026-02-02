@@ -7,8 +7,6 @@ import CampaignEmail from '@/emails/CampaignEmail';
 
 export const dynamic = 'force-dynamic';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(
   _request: NextRequest,
   { params }: { params: { id: string } }
@@ -71,6 +69,7 @@ export async function POST(
 // body is only executed once (protected by atomic Redis SET NX).
 
 async function sendCampaignEmails(campaignId: string) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const supabase = await createSupabaseServerClient();
 
   // Fetch campaign

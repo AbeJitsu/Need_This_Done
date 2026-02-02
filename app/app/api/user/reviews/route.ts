@@ -1,7 +1,6 @@
 // ============================================================================
 // GET /api/user/reviews - Fetch current user's reviews
 // ============================================================================
-// What: Returns reviews submitted by the authenticated user
 // Why: Customers need to see their review history and status
 // How: Queries reviews table by customer email, returns all statuses
 

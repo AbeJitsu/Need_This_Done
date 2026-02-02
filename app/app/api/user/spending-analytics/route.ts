@@ -8,6 +8,7 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth-options';
 import { createClient } from '@supabase/supabase-js';
+import { validateSupabaseAdminConfig } from '@/lib/supabase-client-safe';
 
 // ============================================================================
 // Types
@@ -46,15 +47,17 @@ interface SpendingAnalytics {
 
 export async function GET() {
   try {
+    const config = validateSupabaseAdminConfig();
+    if (!config.isValid) return config.error;
+
+    const supabase = createClient(config.url, config.key, {
+      auth: { persistSession: false }
+    });
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
 
     // Get all orders for current user
     const { data: orders, error: ordersError } = await supabase

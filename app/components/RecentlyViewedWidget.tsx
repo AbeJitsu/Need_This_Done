@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useBrowsingHistory } from '@/context/BrowsingHistoryContext';
 import Button from '@/components/Button';
 import { headingColors, formInputColors } from '@/lib/colors';
@@ -38,9 +39,11 @@ export default function RecentlyViewedWidget() {
           >
             {item.image && (
               <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden bg-gray-200">
-                <img
+                <Image
                   src={item.image}
                   alt={item.title || 'Product'}
+                  width={64}
+                  height={64}
                   className="w-full h-full object-cover"
                 />
               </div>

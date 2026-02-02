@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { isAdmin } from '@/lib/auth';
-
 // ============================================================================
 // PATCH /api/admin/product-categories/[id] - Update category
 // DELETE /api/admin/product-categories/[id] - Delete category
