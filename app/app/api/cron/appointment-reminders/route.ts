@@ -290,13 +290,21 @@ async function findAppointmentsNeedingReminders(
     if (appointmentsFor24h) {
       for (const apt of appointmentsFor24h) {
         // Check if reminder already sent
-        const { data: existing } = await supabase
+        const { data: existing, error: existingError } = await supabase
           .from('appointment_reminders')
           .select('id')
           .eq('appointment_id', apt.id)
           .eq('reminder_type', '24h')
           .single();
 
+        // If query failed with error other than "not found", propagate it
+        if (existingError && existingError.code !== 'PGRST116') {
+          throw new Error(
+            `Failed to check existing 24h reminder for appointment ${apt.id}: ${existingError.message}`
+          );
+        }
+
+        // Only add reminder if not already sent
         if (!existing) {
           const aptDateTime = new Date(`${apt.preferred_date}T${apt.preferred_time_start}`);
           // Only send if appointment is in 24±1 hour window
@@ -323,13 +331,21 @@ async function findAppointmentsNeedingReminders(
     if (appointmentsFor1h) {
       for (const apt of appointmentsFor1h) {
         // Check if reminder already sent
-        const { data: existing } = await supabase
+        const { data: existing, error: existingError } = await supabase
           .from('appointment_reminders')
           .select('id')
           .eq('appointment_id', apt.id)
           .eq('reminder_type', '1h')
           .single();
 
+        // If query failed with error other than "not found", propagate it
+        if (existingError && existingError.code !== 'PGRST116') {
+          throw new Error(
+            `Failed to check existing 1h reminder for appointment ${apt.id}: ${existingError.message}`
+          );
+        }
+
+        // Only add reminder if not already sent
         if (!existing) {
           const aptDateTime = new Date(`${apt.preferred_date}T${apt.preferred_time_start}`);
           // Only send if appointment is in 1±0.5 hour window

@@ -336,14 +336,15 @@ async function handlePaymentSuccess(
     // Wrap with timeout to prevent hanging webhook if database is slow
     let orderDetails: Record<string, unknown> | null = null;
     try {
+      // Execute the Supabase query with timeout protection
       const result = await withTimeout(
-        Promise.resolve(
-          supabase
+        (async () => {
+          return await supabase
             .from('orders')
             .select('id, medusa_order_id, total, requires_appointment, customer_name, items')
             .eq('medusa_order_id', orderId)
-            .single()
-        ),
+            .single();
+        })(),
         TIMEOUT_LIMITS.DATABASE,
         'Fetch order details for confirmation email'
       );

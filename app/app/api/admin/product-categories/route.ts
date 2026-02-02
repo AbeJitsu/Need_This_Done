@@ -7,7 +7,7 @@ import { isAdmin } from '@/lib/auth';
 // POST /api/admin/product-categories - Create new category
 // ============================================================================
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const adminCheck = await isAdmin();
     if (!adminCheck) {

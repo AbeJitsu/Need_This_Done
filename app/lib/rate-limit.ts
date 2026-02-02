@@ -58,16 +58,27 @@ export async function checkRateLimit(
       };
     }
 
-    // Get current count from Redis
-    const count = await withTimeout(
-      redis.raw.get(key),
+    // ATOMIC: Increment counter first to prevent race conditions
+    // If concurrent requests both check THEN increment, they can both pass
+    // By incrementing first, we ensure count is accurate before checking
+    const newCount = await withTimeout(
+      redis.raw.incr(key),
       TIMEOUT_LIMITS.CACHE,
-      `Rate limit check for ${context}`
+      `Rate limit increment for ${context}`
     );
 
-    const currentCount = count ? parseInt(count) : 0;
-    const allowed = currentCount < limitConfig.maxAttempts;
-    const remaining = Math.max(0, limitConfig.maxAttempts - currentCount - 1);
+    // Set TTL only on first increment (when newCount becomes 1)
+    if (newCount === 1) {
+      await withTimeout(
+        redis.raw.expire(key, limitConfig.windowSeconds),
+        TIMEOUT_LIMITS.CACHE,
+        `Rate limit TTL set for ${context}`
+      );
+    }
+
+    // Now check if we're allowed (compare against max attempts)
+    const allowed = newCount <= limitConfig.maxAttempts;
+    const remaining = Math.max(0, limitConfig.maxAttempts - newCount);
 
     // Calculate reset time
     const ttl = await withTimeout(
@@ -77,25 +88,9 @@ export async function checkRateLimit(
     );
     const resetAt = new Date(Date.now() + Math.max(ttl, limitConfig.windowSeconds) * 1000);
 
-    // Increment counter
-    if (allowed) {
-      await withTimeout(
-        redis.raw.incr(key),
-        TIMEOUT_LIMITS.CACHE,
-        `Rate limit increment for ${context}`
-      );
-
-      // Set TTL only on first increment (when count was 0)
-      if (currentCount === 0) {
-        await withTimeout(
-          redis.raw.expire(key, limitConfig.windowSeconds),
-          TIMEOUT_LIMITS.CACHE,
-          `Rate limit TTL set for ${context}`
-        );
-      }
-    } else {
+    if (!allowed) {
       console.warn(
-        `[RateLimit] Rate limit exceeded for ${context} (identifier: ${identifier.substring(0, 8)}..., count: ${currentCount})`
+        `[RateLimit] Rate limit exceeded for ${context} (identifier: ${identifier.substring(0, 8)}..., count: ${newCount}/${limitConfig.maxAttempts})`
       );
     }
 
