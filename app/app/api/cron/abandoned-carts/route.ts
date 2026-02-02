@@ -37,14 +37,18 @@ interface AbandonedCart {
 export async function POST(request: NextRequest) {
   try {
     // Verify cron secret for security
+    // Always require the secret when configured, regardless of environment
     const authHeader = request.headers.get('authorization');
     const cronSecret = process.env.CRON_SECRET;
 
-    // In production, require the secret
-    if (process.env.NODE_ENV === 'production' && cronSecret) {
+    if (cronSecret) {
       if (authHeader !== `Bearer ${cronSecret}`) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
+    } else if (process.env.NODE_ENV === 'production') {
+      // In production, CRON_SECRET must be configured
+      console.error('[Cron] CRON_SECRET not configured in production');
+      return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
     }
 
     const supabase = await createSupabaseServerClient();
@@ -150,8 +154,28 @@ export async function POST(request: NextRequest) {
 // ============================================================================
 // Returns stats about abandoned cart recovery
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
+    // Require cron secret or admin auth to view stats
+    const authHeader = request.headers.get('authorization');
+    const cronSecret = process.env.CRON_SECRET;
+
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+      // Fall back to admin auth check
+      const { verifyAdmin } = await import('@/lib/api-auth');
+      const auth = await verifyAdmin();
+      if (auth.error) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+    } else if (!cronSecret) {
+      // No cron secret configured - require admin auth
+      const { verifyAdmin } = await import('@/lib/api-auth');
+      const auth = await verifyAdmin();
+      if (auth.error) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+    }
+
     const supabase = await createSupabaseServerClient();
 
     // Get reminder stats
