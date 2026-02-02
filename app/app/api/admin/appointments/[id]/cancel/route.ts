@@ -106,6 +106,8 @@ export async function POST(
     }
 
     // Send cancellation email to customer
+    let emailSent = false;
+    let emailError: string | null = null;
     try {
       const preferredDate = new Date(appointment.preferred_date);
       const formattedDate = preferredDate.toLocaleDateString('en-US', {
@@ -124,14 +126,32 @@ export async function POST(
         serviceName: appointment.service_name || 'Consultation',
         orderId: appointment.order_id,
       });
-    } catch (emailError) {
-      console.error('[Cancel Appointment] Email send failed:', emailError);
-      // Continue - cancellation succeeded, email is secondary
+      emailSent = true;
+    } catch (err) {
+      emailError = err instanceof Error ? err.message : 'Unknown error';
+      console.error('[Cancel Appointment] Email send failed:', err);
+      // Log failure for admin visibility - cancellation still succeeds but customer may not be notified
+      try {
+        const { getSupabaseAdmin } = await import('@/lib/supabase');
+        const supabase = getSupabaseAdmin();
+        await supabase.from('email_failures').insert({
+          type: 'appointment_cancellation',
+          recipient_email: appointment.customer_email,
+          subject: `Appointment Cancellation Confirmation: ${appointment.service_name || 'Consultation'}`,
+          order_id: appointment.order_id,
+          error_message: emailError,
+          created_at: new Date().toISOString(),
+        });
+      } catch {
+        // Silent fail if logging fails
+      }
     }
 
     return NextResponse.json({
       success: true,
       message: 'Appointment canceled successfully',
+      email_sent: emailSent,
+      email_error: emailError,
     });
 
   } catch (error) {

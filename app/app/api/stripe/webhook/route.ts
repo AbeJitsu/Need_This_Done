@@ -350,8 +350,20 @@ async function handlePaymentSuccess(
         subtotal: paymentIntent.amount,
         total: paymentIntent.amount,
         requiresAppointment: orderDetails.requires_appointment || false,
-      }).catch((err) => {
+      }).catch((err: unknown) => {
         console.error('[Webhook] Failed to send order confirmation email:', err);
+        // Log failed email attempt to database for manual follow-up (don't block webhook)
+        // Fire-and-forget - don't await
+        supabase
+          .from('email_failures')
+          .insert({
+            type: 'order_confirmation',
+            recipient_email: email,
+            subject: `Order Confirmation: ${orderDetails.medusa_order_id?.slice(0, 8) || orderId.slice(0, 8)}`,
+            order_id: orderDetails.id,
+            error_message: err instanceof Error ? err.message : 'Unknown error',
+            created_at: new Date().toISOString(),
+          });
       });
     }
   }
