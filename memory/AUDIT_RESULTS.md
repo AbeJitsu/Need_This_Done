@@ -30,6 +30,13 @@ Full report: [memory/backend-reliability-evaluation-2026-02-01.md](./backend-rel
 
 ## Recent Feature Additions — Feb 2, 2026
 
+**Waitlist Analytics & Category Management** (commit c1fc243)
+- ✅ **Waitlist Analytics Dashboard:** Real-time demand metrics, top products, signup trends, 7/14/30/90 day filters
+- ✅ **Product Category Management:** Admin CRUD with color-coding, drag-to-reorder, cascade deletes
+- New migrations: `product_categories` table for admin-defined category management
+- New APIs: `/api/admin/waitlist-analytics`, `/api/admin/product-categories`
+- Enables data-driven inventory decisions and custom product discovery organization
+
 **Order History Features** (commit 88ac8f2)
 - ✅ **Quick Reorder:** One-click button adds all items from completed order to cart
 - ✅ **CSV Export:** Download entire order history as spreadsheet file

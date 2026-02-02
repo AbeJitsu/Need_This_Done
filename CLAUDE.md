@@ -36,19 +36,21 @@ Speak like a friend over coffee. Easy to understand.
 ## What's Built
 
 **Latest additions (Feb 2, 2026):**
+- ✅ **Waitlist analytics dashboard**: Real-time demand metrics, conversion tracking, top products, signup trends
+- ✅ **Product category management**: Admin CRUD for categories with color-coding and custom ordering
 - ✅ **Product comparison tool**: Side-by-side comparison modal for up to 4 products
 - ✅ **Order notes**: Customers add special requests/delivery instructions at checkout
 - ✅ **Saved addresses**: CRUD management in account settings with default address support
 - ✅ **Spending analytics**: Customer spending visualization with time-based aggregation
 - ✅ **Waitlist notifications**: Automated emails when out-of-stock products return to inventory
-- ✅ **Product category filtering**: Browse products by category with auto-populated dropdown
+- ✅ **Product category filtering**: Browse products by category with admin-controlled dropdown
 - ✅ **Product waitlist system**: Sign up for out-of-stock items with email capture
 - ✅ **Product availability display**: Shows stock status with waitlist form
 - ✅ **Customer dashboard**: Active appointments + statistics overview
 - ✅ **Order management**: History, quick reorder, CSV export, invoices, timeline
 - ✅ **Review system**: Admin moderation, analytics, notification emails
 - ✅ **Account settings**: Profile, addresses, notification preferences, review tracking
-- ✅ **Admin dashboards**: Reviews, analytics, appointments, product insights
+- ✅ **Admin dashboards**: Reviews, analytics, appointments, product insights, waitlist, categories
 - ✅ **Backend reliability**: Connection pooling, retries, validation, circuit breaker, rate limiting
 
 **Backend Reliability (Feb 2 Audit - 8 Critical Fixes):**

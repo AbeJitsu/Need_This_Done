@@ -11,6 +11,8 @@ Key learnings and patterns discovered during development.
 ## Project Status — Feb 2, 2026
 
 **Current State:** Mature, production-ready with comprehensive reliability hardening and complete feature set
+- **Waitlist analytics dashboard**: Real-time demand metrics, conversion tracking (new Feb 2)
+- **Product category management**: Admin CRUD with color-coding and reordering (new Feb 2)
 - **Product comparison tool**: Side-by-side comparison modal for up to 4 products (new Feb 2)
 - **Order notes/special requests**: Customers can add custom notes at checkout (new Feb 2)
 - Product category filtering: Browse products by category with auto-populated dropdown from metadata
@@ -28,13 +30,15 @@ Key learnings and patterns discovered during development.
 - Test suite: 69 E2E tests + accessibility tests
 
 **Completed Recent Work (Feb 2):**
+- ✅ Waitlist analytics dashboard - Real-time demand metrics, conversion rates, trending products (commit c1fc243)
+- ✅ Product category management - Admin CRUD interface with color-coding and reordering (commit c1fc243)
 - ✅ Product comparison tool - Side-by-side product comparison modal with max 4 items (commit bf2382b)
 - ✅ Order notes system - Customers add special requests/instructions at checkout (commit bf2382b)
 - ✅ Saved addresses system - CRUD management in account settings with default address support (commit 7384dbd)
 - ✅ Spending analytics - Customer spending visualization and metrics (commit 7384dbd)
 - ✅ Waitlist notifications - Automated emails when products return to stock (commit 19dbc93)
 - ✅ Backend reliability audit - 8 critical issues identified and fixed (commit e724d3b)
-- ✅ Product category filtering - browse products by category with auto-populated dropdown (commit 56f7502)
+- ✅ Product category filtering - browse products by category with admin-controlled dropdown (commit 56f7502)
 - ✅ Product waitlist system - sign up for out-of-stock items with email capture (commit 908f2c7)
 - ✅ Product availability display - shows stock status and waitlist form (ProductAvailability component)
 - ✅ Quick reorder button on order history - one-click reordering of completed orders (commit 88ac8f2)
@@ -46,11 +50,11 @@ Key learnings and patterns discovered during development.
 - ✅ Dashboard stats overview: Key account metrics visualization (commit 64362f4)
 
 **Next Priority Areas:**
-1. Waitlist analytics - Track demand patterns for out-of-stock products
-2. Category management UI - Admin dashboard to configure/customize categories
-3. Performance optimization for search/filtering (if needed based on usage metrics)
-4. Load testing for Redis circuit breaker under high concurrency
-5. Email segmentation - Send targeted offers to waitlist members
+1. Email segmentation - Send targeted offers to waitlist members based on product interest
+2. Performance optimization for search/filtering (if needed based on usage metrics)
+3. Load testing for Redis circuit breaker under high concurrency
+4. Admin analytics expansion - Inventory turnover rates, customer lifetime value
+5. Enhanced product recommendations based on comparison history
 
 ## Customer-Facing Features — Feb 2, 2026
 
@@ -225,6 +229,26 @@ Key learnings and patterns discovered during development.
 - Summary: total/free/paid enrollments, completion rate, revenue
 - Filterable table with user details, progress tracking
 - API: `/api/admin/enrollments`
+
+**Waitlist Analytics Dashboard** (`/admin/waitlist-analytics` — Feb 2)
+- Real-time demand metrics for out-of-stock products
+- Key metrics: Total waitlist entries, unique products, conversion rates, avg time to notify
+- Time range filters: 7/14/30/90 days for trend analysis
+- Top waitlisted products ranked by customer interest with notification status
+- Daily signup trends visualization to identify demand patterns and peak interest periods
+- Helps admins prioritize restocking based on actual customer demand data
+- API: `/api/admin/waitlist-analytics` provides aggregated metrics and product rankings
+
+**Product Category Management** (`/admin/products/categories` — Feb 2)
+- Full CRUD interface to create, edit, delete, and reorder product categories
+- Color-coded categories for visual organization and brand consistency
+- Admin-controlled naming and sorting (not auto-discovered from products)
+- Drag-to-reorder for custom category sequencing
+- Cascade deletes with proper foreign key constraints in database
+- Intuitive form with real-time validation and feedback
+- Database: `product_categories` table (migration 047) stores admin-defined categories
+- API: `/api/admin/product-categories` (GET/POST/PATCH/DELETE operations)
+- Enables admins to customize product discovery flow precisely
 
 **Order Features** (commits 6c5bd3f, 3e43138 — Feb 2)
 - **Invoice downloads**: OrderInvoice component generates downloadable PDFs with order details, line items, totals
