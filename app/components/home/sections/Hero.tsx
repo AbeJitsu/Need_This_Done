@@ -54,7 +54,7 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[80vh] flex flex-col items-center justify-center overflow-hidden py-20 md:py-0 bg-white"
+      className="relative h-[80vh] flex flex-col items-center justify-center py-20 md:py-0 bg-white"
     >
       {/* ============================================================
           BACKGROUND LAYER: Smooth Directional Gradient
@@ -64,7 +64,7 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-slate-100 z-0" />
 
       {/* Smooth directional gradient with subtle animation */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 z-0 overflow-hidden rounded-none">
         {/* Main directional gradient: green and purple as edges, blue in middle */}
         <motion.div
           className="absolute inset-0"
@@ -131,7 +131,7 @@ export function Hero() {
           CONTENT LAYER: Typography & Interactions
           ============================================================ */}
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 md:px-12 text-center pt-20 sm:pt-24 md:pt-32">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 md:px-12 text-center mt-16 md:mt-20 pt-12 sm:pt-16 md:pt-20">
         {/* Main Headline — MASSIVE, Bold, Gradient Text */}
         <motion.div
           className="mb-8"
