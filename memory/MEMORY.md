@@ -2,6 +2,21 @@
 
 Key learnings and patterns discovered during development.
 
+## Customer-Facing Features — Feb 1, 2026
+
+**Order Confirmation Email** (`api/stripe/webhook/route.ts`)
+- Triggered on `checkout.session.completed` webhook event
+- Sends confirmation via Resend to customer email
+
+**Quote Authorization & Deposit** (`app/quotes/[ref]/page.tsx`)
+- Customer-facing page for reviewing and authorizing quotes
+- Stripe-powered deposit collection integrated into the flow
+- Uses quote reference token for secure access (no auth required)
+
+**Auth Hardening** (commit ca89e05)
+- Added `requireAdmin()` checks to: media upload/delete, file access, embeddings index, product image upload
+- Added Zod validation to routes that previously accepted raw input
+
 ## Backend Reliability Patterns — Feb 1, 2026
 
 **Request Validation** (`lib/api-validation.ts`, `lib/validation.ts`)

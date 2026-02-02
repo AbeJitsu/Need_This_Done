@@ -16,6 +16,22 @@ Platform is stable and ready for production use.
 
 ## Recently Completed — Feb 1, 2026
 
+**Order Confirmation Email** (commit a962914)
+- Sends confirmation email to customer on successful Stripe payment
+- Triggered from Stripe webhook handler
+
+**Link & URL Fixes** (commit d5c7871)
+- Fixed broken `/get-started` links across Footer, Homepage CTAs
+- Fixed quote email URL to use correct path
+
+**Auth & Validation Hardening** (commit ca89e05)
+- Added missing auth checks on admin API routes (media, files, embeddings, product upload)
+- Added input validation on routes that lacked it
+
+**Customer Quote Authorization Page** (commit 7adb87d)
+- Full quote review and deposit payment page at `/quotes/[ref]`
+- Stripe-powered deposit collection
+
 **Google Calendar Integration** (commit b8d376a)
 - Admin settings page: OAuth connection UI with status display
 - Token management: Proper error surfacing for token expiration
