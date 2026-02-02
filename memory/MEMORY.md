@@ -11,7 +11,9 @@ Key learnings and patterns discovered during development.
 ## Project Status — Feb 2, 2026
 
 **Current State:** Mature, production-ready with comprehensive reliability hardening and complete feature set
-- **Email segmentation for waitlist members**: Targeted campaigns with performance tracking (new Feb 2 05:59)
+- **Customer referral program**: \$10 store credits for each successful referral (new Feb 2 06:16)
+- **Admin communication hub**: Email templates, targeted campaigns, open/click tracking (new Feb 2 06:16)
+- **Email segmentation for waitlist members**: Targeted campaigns with performance tracking (Feb 2 05:59)
 - **Waitlist analytics dashboard**: Real-time demand metrics, conversion tracking (Feb 2)
 - **Product category management**: Admin CRUD with color-coding and reordering (Feb 2)
 - **Product comparison tool**: Side-by-side comparison modal for up to 4 products (Feb 2)
@@ -31,6 +33,8 @@ Key learnings and patterns discovered during development.
 - Test suite: 69 E2E tests + accessibility tests
 
 **Completed Recent Work (Feb 2):**
+- ✅ Customer referral program - Unique referral codes, credit balance tracking, referral history, admin analytics (commit ccfd93b)
+- ✅ Admin communication hub - Email template manager, campaign creation, performance tracking, recipient segmentation (commit ccfd93b)
 - ✅ Email segmentation for waitlist members - Campaign creation/management UI, targeted offers, performance analytics (commit aa7fff6)
 - ✅ Waitlist analytics dashboard - Real-time demand metrics, conversion rates, trending products (commit c1fc243)
 - ✅ Product category management - Admin CRUD interface with color-coding and reordering (commit c1fc243)
@@ -60,6 +64,35 @@ Key learnings and patterns discovered during development.
 5. Mobile responsiveness audit across new campaign UI
 
 ## Customer-Facing Features — Feb 2, 2026
+
+**Customer Referral Program** (commit ccfd93b — Feb 2 06:16)
+- Unique referral code generated per customer, accessible in account dashboard
+- \$10 store credit awarded for each successful referral (friend signs up + makes first purchase)
+- ReferralDashboard component: Shows referral code, earned credits, balance, referral history
+- Database: `referral_system` table tracks referrers, `referral_transactions` for credit tracking, `referral_credit_usage` for balance
+- API endpoints:
+  - `GET /api/referrals/my-referral` - Retrieve customer's referral code and balance
+  - `POST /api/referrals/track` - Track new signup using referral code
+  - `POST /api/referrals/complete` - Mark referral as complete when friend makes purchase
+  - `GET /api/admin/referral-analytics` - Admin dashboard with conversion rates and top referrers
+- Auto-generates unique codes with validation, prevents duplicates
+- Integrated into account settings for easy customer access
+- Admin analytics shows conversion rates, total earned credits, referral status breakdown
+
+**Admin Communication Hub** (commit ccfd93b — Feb 2 06:16)
+- Email template manager: Create, edit, delete reusable HTML email templates
+- Campaign builder: Create campaigns targeting customer segments with product-specific offers
+- Campaign types: `targeted_offer`, `restock_alert`, `exclusive_discount`
+- Campaign tracking: Open rates, click rates, conversion rates per recipient
+- One-click campaign sending with delivery status monitoring
+- Database: `email_templates`, `waitlist_campaigns`, `waitlist_campaign_recipients`, `campaign_open_tracking`, `campaign_click_tracking`
+- API endpoints:
+  - `GET/POST /api/admin/email-templates` - Manage email templates
+  - `GET/POST /api/admin/email-campaigns` - Create and list campaigns
+  - `POST /api/admin/email-campaigns/send` - Send campaign to recipients
+  - Campaign detail pages show performance metrics
+- Email template design with HTML editor, customer merge tags support
+- Professional branded emails integrated with Resend for reliable delivery
 
 **Product Reviews System** (complete as of Feb 2, 2026)
 - Submission: ReviewForm component with 5-star ratings, title, content, anonymous/authenticated support
@@ -195,6 +228,14 @@ Key learnings and patterns discovered during development.
 - Reduces duplication across pages and API routes
 
 ## Critical Fixes — Feb 2, 2026
+
+**Chat API Timeout & Missing Cron Jobs** (commit c66dc74 — Feb 2 06:12)
+- Chat timeout defeated: `/api/chat` wrapped streamText() with Promise.resolve(), preventing timeout from interrupting long LLM calls. Fixed: Async IIFE pattern allows timeout to interrupt actual inference
+- Missing cron job registrations: Three critical scheduled tasks not registered in vercel.json (never executed in production):
+  - Appointment reminders: 24h and 1h pre-appointment emails
+  - Email retry: Recovery from transient email service failures
+  - Waitlist notifications: Back-in-stock alerts for waiting customers
+- Added cron job configuration with appropriate schedules to vercel.json
 
 **Appointment Flow Silent Failures** (commit 12a9226)
 - Silent failure after payment: Users saw success but appointment wasn't created. Fixed: Show error alert with admin email link

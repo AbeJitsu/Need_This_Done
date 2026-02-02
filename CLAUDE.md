@@ -36,6 +36,8 @@ Speak like a friend over coffee. Easy to understand.
 ## What's Built
 
 **Latest additions (Feb 2, 2026):**
+- ✅ **Customer referral program**: Earn \$10 store credits for each successful referral with unique code, real-time tracking, and credit balance management
+- ✅ **Admin communication hub**: Create email templates, build targeted campaigns to customer segments, track open/click rates and delivery status
 - ✅ **Email segmentation for waitlist members**: Create targeted campaigns with performance analytics and one-click sending
 - ✅ **Waitlist analytics dashboard**: Real-time demand metrics, conversion tracking, top products, signup trends
 - ✅ **Product category management**: Admin CRUD for categories with color-coding and custom ordering
@@ -51,7 +53,7 @@ Speak like a friend over coffee. Easy to understand.
 - ✅ **Order management**: History, quick reorder, CSV export, invoices, timeline
 - ✅ **Review system**: Admin moderation, analytics, notification emails
 - ✅ **Account settings**: Profile, addresses, notification preferences, review tracking
-- ✅ **Admin dashboards**: Reviews, analytics, appointments, product insights, waitlist, categories
+- ✅ **Admin dashboards**: Reviews, analytics, appointments, product insights, waitlist, categories, referrals, email campaigns
 - ✅ **Backend reliability**: Connection pooling, retries, validation, circuit breaker, rate limiting
 
 **Backend Reliability (Feb 2 Audit - 8 Critical Fixes):**
