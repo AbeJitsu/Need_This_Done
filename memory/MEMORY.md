@@ -10,21 +10,24 @@ Key learnings and patterns discovered during development.
 
 ## Project Status — Feb 2, 2026
 
-**Current State:** Mature, production-ready with comprehensive reliability hardening and complete review system
+**Current State:** Mature, production-ready with comprehensive reliability hardening and complete feature set
 - Product reviews system: Full lifecycle with admin moderation dashboard, analytics, and user tracking
 - Account settings page: Customer profile management + My Reviews section showing submission status
 - Product discovery: Full-text search and advanced filtering across catalog
 - User wishlist feature: Save/manage favorite products with persistence
+- Order history: Quick reorder, CSV export, invoice downloads, timeline tracking
 - Critical appointment flow fixes: 3 silent failures resolved with explicit error handling
-- Backend reliability: Comprehensive error classification, circuit breaker, retry logic, deduplication
+- Backend reliability: Comprehensive error classification, circuit breaker, retry logic, deduplication, rate limiting
 - Admin dashboard: Review moderation, analytics, appointment management, Google Calendar, product analytics, enrollments
 - Test suite: 69 E2E tests + accessibility tests
 
 **Completed Recent Work (Feb 2):**
+- ✅ Quick reorder button on order history - one-click reordering of completed orders (commit 88ac8f2)
+- ✅ CSV export of order history - download orders with ID, date, status, total, email
 - ✅ Invoice downloads (OrderInvoice component) - customers can download PDFs from order page
 - ✅ Notification preferences UI - email opt-in/opt-out controls in account settings
 - ✅ Order tracking timeline - visual progression of order status
-- ✅ Fixed TypeScript/build errors across admin and API routes (commit 458a575)
+- ✅ Fixed TypeScript/build errors across admin and API routes
 - ✅ Improved accessibility and feedback on shopping interface (cart, payment, product detail)
 
 **Next Priority Areas:**
@@ -197,3 +200,17 @@ Key learnings and patterns discovered during development.
   - Supportive tone maintains user relationship despite rejection
 - Integration: Automatic email trigger in `/api/admin/reviews` route during moderation
 - Closes communication loop and sets clear expectations for review community standards
+
+**Order History Features** (commit 88ac8f2 — Feb 2)
+- **Quick Reorder:** One-click button adds all items from completed order to cart automatically
+  - Reduces friction for repeat purchases
+  - Shows success/error messages with feedback
+  - Handles out-of-stock items gracefully (partial fulfillment)
+  - Location: `/orders` page on completed orders
+- **CSV Export:** Download entire order history as spreadsheet file
+  - Format: Order ID, Date, Status, Total, Email
+  - Filename: `order-history-YYYY-MM-DD.csv`
+  - Client-side generation (no server overhead)
+  - Supports accounting/business record-keeping
+  - Location: Header button on `/orders` page
+- **Enhanced API:** `/api/user/orders` now fetches order items from Medusa for complete data

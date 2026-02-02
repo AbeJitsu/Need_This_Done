@@ -36,6 +36,8 @@ Speak like a friend over coffee. Easy to understand.
 ## What's Built
 
 **Latest additions (Feb 2, 2026):**
+- ✅ **Quick reorder button**: One-click reorder of completed orders, adds all items to cart automatically
+- ✅ **CSV export**: Download full order history as spreadsheet (ID, date, status, total, email)
 - ✅ **Review notification emails**: Automated emails when reviews are approved/rejected
 - ✅ **Invoice downloads**: Customers can download order invoices as PDFs
 - ✅ **Notification preferences**: Email opt-in/opt-out controls in account settings
@@ -43,12 +45,13 @@ Speak like a friend over coffee. Easy to understand.
 - ✅ **Product reviews system**: Full lifecycle with admin moderation and customer feedback
 - ✅ **Account settings**: Profile management and review tracking
 - ✅ **Admin dashboards**: Review moderation, analytics, appointments, product insights
-- ✅ **Backend reliability**: Retry logic, request deduplication, timeouts, circuit breakers
+- ✅ **Backend reliability**: Retry logic, request deduplication, timeouts, circuit breakers, rate limiting
 
 **Critical Fixes (Functionality Evaluation - Feb 2):**
 - ✅ **Redis deduplication**: Blocks submissions when Redis unavailable (prevents spam)
 - ✅ **Connection pooling**: All routes use singleton Supabase client (supports 100+ concurrent requests)
 - ✅ **Upload timeout**: Form parsing fails gracefully after 30s (prevents hangs)
+- ✅ **Rate limiting**: Auth endpoints protected from brute-force attacks (5 login/3 signup per 15 min)
 
 See **memory/MEMORY.md** for full feature inventory and **FUNCTIONALITY_EVALUATION_FIXES.md** for reliability fixes.
 

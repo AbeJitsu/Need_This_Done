@@ -28,6 +28,13 @@ Full report: [memory/backend-reliability-evaluation-2026-02-01.md](./backend-rel
 - ✅ Redis atomic operations (SET NX prevents race conditions)
 - ✅ Graceful shutdown handlers for containerized deployments
 
+## Recent Feature Additions — Feb 2, 2026
+
+**Order History Features** (commit 88ac8f2)
+- ✅ **Quick Reorder:** One-click button adds all items from completed order to cart
+- ✅ **CSV Export:** Download entire order history as spreadsheet file
+- API Enhancement: `/api/user/orders` fetches order items from Medusa for complete data
+
 ## Known Issues
 
 None currently blocking. All critical backend reliability risks addressed.
