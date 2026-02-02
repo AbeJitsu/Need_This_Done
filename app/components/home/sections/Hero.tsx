@@ -37,10 +37,9 @@ export function Hero() {
     };
 
     const section = sectionRef.current;
-    if (section) {
-      section.addEventListener('mousemove', handleMouseMove);
-      return () => section.removeEventListener('mousemove', handleMouseMove);
-    }
+    if (!section) return;
+    section.addEventListener('mousemove', handleMouseMove);
+    return () => section.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   // Scroll to services section

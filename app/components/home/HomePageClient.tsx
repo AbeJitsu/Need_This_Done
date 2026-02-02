@@ -4,9 +4,8 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { EditableSection, EditableItem, Editable } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
-import ServiceIcon, { getServiceIconType } from '@/components/home/ServiceIcons';
 import Button from '@/components/Button';
-import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
+import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
 import { Hero } from '@/components/home/sections/Hero';
 import type { HomePageContent } from '@/lib/page-content-types';
 
