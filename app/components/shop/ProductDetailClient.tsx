@@ -3,9 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import Button from '@/components/Button';
+import ReviewForm from './ReviewForm';
+import ReviewSection from './ReviewSection';
 import type { Product } from '@/lib/medusa-client';
 import { headingColors, formInputColors, alertColors, formValidationColors, productImageStyles, accentColors, cardBgColors, focusRingClasses } from '@/lib/colors';
 
@@ -21,6 +24,7 @@ interface ProductDetailClientProps {
 }
 
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
+  const { user } = useAuth();
   const { addItem, itemCount } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(1);
@@ -31,6 +35,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   );
   const [error, setError] = useState('');
   const [toastMessage, setToastMessage] = useState('');
+  const [reviewsRefreshKey, setReviewsRefreshKey] = useState(0);
 
   const inWishlist = isInWishlist(product.id);
 
@@ -101,15 +106,22 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     }
   };
 
+  // ========================================================================
+  // Handle review submitted - refresh reviews section
+  // ========================================================================
+  const handleReviewSubmitted = () => {
+    setReviewsRefreshKey((prev) => prev + 1);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Back link */}
       <Link href="/pricing" className={`${accentColors.blue.titleText} hover:underline mb-6 inline-block rounded ${focusRingClasses.blue}`}>
         ← Back to Pricing
       </Link>
 
       {/* Main content */}
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-8 mb-12">
         {/* Product image */}
         {image ? (
           <div className={`relative ${cardBgColors.elevated} rounded-lg overflow-hidden h-96`}>
@@ -249,6 +261,19 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Reviews Section */}
+      <div className="border-t border-gray-200 pt-12">
+        <ReviewForm
+          productId={product.id}
+          onSubmitSuccess={handleReviewSubmitted}
+          isAuthenticated={!!user}
+        />
+        <ReviewSection
+          key={reviewsRefreshKey}
+          productId={product.id}
+        />
       </div>
     </div>
   );
