@@ -1,0 +1,122 @@
+'use client';
+
+import Link from 'next/link';
+import Image from 'next/image';
+import { ShoppingCart, Heart } from 'lucide-react';
+import { accentColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors } from '@/lib/colors';
+import { useWishlist } from '@/context/WishlistContext';
+
+// ============================================================================
+// Product Card Component - Display Product Summary
+// ============================================================================
+// Shows product with image, title, price, and quick actions.
+// What: Displays product summary in grid format.
+// Why: Provides visual preview of products in listing.
+// How: Used in product listing page; link opens detail page.
+
+interface ProductCardProps {
+  product: {
+    id: string;
+    title: string;
+    description?: string;
+    images?: Array<{ url: string }>;
+  };
+  price: string;
+  href: string;
+}
+
+export default function ProductCard({ product, price, href }: ProductCardProps) {
+  const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
+  const inWishlist = isInWishlist(product.id);
+
+  const imageUrl = product.images?.[0]?.url;
+  const shortDescription = product.description
+    ? product.description.slice(0, 80) + (product.description.length > 80 ? '...' : '')
+    : '';
+
+  return (
+    <Link href={href}>
+      <div className={`
+        h-full ${cardBgColors.base} rounded-xl border-2 ${cardBorderColors.light}
+        transition-all duration-300 hover:shadow-lg hover:-translate-y-1
+        active:scale-[0.98] flex flex-col
+        hover:${accentColors.green.cardHover}
+      `}>
+        {/* Product Image */}
+        <div className="relative w-full h-48 bg-gray-100 rounded-t-lg overflow-hidden flex-shrink-0">
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={product.title}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+              <span className="text-gray-400">No image</span>
+            </div>
+          )}
+
+          {/* Wishlist Button - Floating */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              if (inWishlist) {
+                removeFromWishlist(product.id);
+              } else {
+                addToWishlist(product.id, product.title, 0);
+              }
+            }}
+            className={`
+              absolute top-3 right-3 p-2 rounded-lg backdrop-blur-sm
+              transition-all duration-200 z-10
+              ${inWishlist
+                ? `${accentColors.green.bg} ${accentColors.green.text}`
+                : 'bg-white/80 hover:bg-white text-gray-600 hover:text-gray-900'
+              }
+            `}
+            title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+          >
+            <Heart
+              className="w-5 h-5"
+              fill={inWishlist ? 'currentColor' : 'none'}
+            />
+          </button>
+        </div>
+
+        {/* Product Info */}
+        <div className="flex-1 flex flex-col p-4">
+          <h3 className={`text-lg font-semibold ${headingColors.primary} mb-2 line-clamp-2`}>
+            {product.title}
+          </h3>
+
+          {shortDescription && (
+            <p className={`text-sm ${mutedTextColors.normal} mb-4 line-clamp-2`}>
+              {shortDescription}
+            </p>
+          )}
+
+          {/* Price and Button */}
+          <div className="mt-auto flex items-center justify-between gap-3">
+            <span className="text-2xl font-bold text-emerald-600">
+              {price}
+            </span>
+          </div>
+        </div>
+
+        {/* Add to Cart Button */}
+        <div className="px-4 pb-4">
+          <button className={`
+            w-full py-2 px-4 rounded-lg font-medium transition-all duration-200
+            flex items-center justify-center gap-2
+            ${accentColors.green.bg} ${accentColors.green.text}
+            hover:opacity-90 active:scale-95
+          `}>
+            <ShoppingCart className="w-5 h-5" />
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </Link>
+  );
+}
