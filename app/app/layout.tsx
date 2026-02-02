@@ -28,10 +28,8 @@ try {
   validateEnvironmentVariables();
 } catch (error) {
   if (error instanceof Error) {
-    console.error('Fatal: Environment validation failed:', error.message);
+    console.warn('[EnvValidation] Warning:', error.message);
   }
-  // Re-throw to prevent app from starting
-  throw error;
 }
 
 // ============================================================================

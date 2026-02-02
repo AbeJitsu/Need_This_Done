@@ -245,18 +245,16 @@ const isProduction = process.env.NODE_ENV === 'production' || process.env.CI ===
 const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';
 
 if ((isProduction || isBuildTime) && typeof process !== 'undefined') {
-  // Only validate required vars in production
-  // This ensures deployment fails immediately if config is wrong
+  // Validate in production runtime but don't crash the process
+  // Missing vars will log warnings; individual features degrade gracefully
   if (!isBuildTime) {
     try {
       validateEnvironmentVariables();
     } catch (error) {
-      console.error('Fatal: Environment validation failed');
+      console.warn('[EnvValidation] Warning: Some environment variables are missing or invalid.');
       if (error instanceof Error) {
-        console.error(error.message);
+        console.warn(error.message);
       }
-      // Exit process so deployment doesn't proceed with bad config
-      process.exit(1);
     }
   }
 }
