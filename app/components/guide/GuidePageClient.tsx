@@ -4,6 +4,7 @@ import PageHeader from '@/components/PageHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import CTASection from '@/components/CTASection';
+import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
 import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { GuidePageContent, GuideGroup, GuideSection } from '@/lib/page-content-types';
@@ -75,14 +76,17 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header Section - Editable */}
       <EditableSection sectionKey="header" label="Page Header">
+        <FadeIn direction="up" triggerOnScroll={false}>
         <PageHeader
           title={content.header.title}
           description={content.header.description}
           color="green"
         />
+        </FadeIn>
       </EditableSection>
 
       {/* Quick Navigation - Jump Links */}
+      <FadeIn direction="up" delay={0.15} triggerOnScroll={false}>
       <nav className={`${cardBgColors.base} rounded-xl shadow-sm ${cardBorderColors.light} p-4 mb-8`}>
         <div className="flex flex-wrap items-center gap-3">
           <span className={`text-sm font-medium ${formInputColors.helper}`}>Jump to:</span>
@@ -103,6 +107,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
           </a>
         </div>
       </nav>
+      </FadeIn>
 
       {/* All Sections - Single EditableSection with SortableItemsWrapper */}
       <EditableSection sectionKey="sections" label="Guide Sections">
@@ -161,13 +166,15 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
                   <span className={`w-2 h-2 rounded-full ${config.dotBg}`} aria-hidden="true" />
                   {config.title}
                 </h2>
-                <div className="space-y-4">
-                  {sectionsInGroup.map(({ section, index }) => {
+                <StaggerContainer className="space-y-4">
+                  {sectionsInGroup.map(({ section, index: sectionIndex }, groupIdx) => {
                     const styles = faqColors[config.color];
+                    const index = sectionIndex;
+                    const direction = groupIdx % 2 === 0 ? 'left' as const : 'right' as const;
 
                     return (
+                      <StaggerItem key={`section-${index}`} direction={direction}>
                       <EditableItem
-                        key={`section-${index}`}
                         sectionKey="sections"
                         arrayField="sections"
                         index={index}
@@ -194,15 +201,17 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
                           </div>
                         </article>
                       </EditableItem>
+                      </StaggerItem>
                     );
                   })}
-                </div>
+                </StaggerContainer>
               </section>
             );
           })}
 
           {/* Support Section - CTA */}
-          <section id="support" className="mb-0">
+          <RevealSection as="section" className="mb-0">
+          <div id="support">
             {supportSections.map(({ section, index }) => (
               <EditableItem
                 key={`section-${index}`}
@@ -225,7 +234,8 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
                 />
               </EditableItem>
             ))}
-          </section>
+          </div>
+          </RevealSection>
         </SortableItemsWrapper>
       </EditableSection>
     </div>

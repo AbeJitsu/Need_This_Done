@@ -2,6 +2,7 @@
 import { accentText } from '@/lib/contrast';
 
 import { useState, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   Check,
   Globe,
@@ -20,6 +21,7 @@ import {
 } from 'lucide-react';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
+import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
 import PaymentForm from '@/components/PaymentForm';
 import { StripeElementsWrapper } from '@/context/StripeContext';
 import {
@@ -293,15 +295,18 @@ export default function UnifiedPricingPage() {
             {/* Text container - always padded */}
             <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
               {/* Headline - bold, unified hero style */}
-              <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold ${headingColors.primary} mb-4 animate-slide-up`}>
+              <FadeIn direction="up" triggerOnScroll={false}>
+              <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold ${headingColors.primary} mb-4`}>
                 Simple Pricing
               </h1>
-              <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto mb-10 animate-slide-up animate-delay-100`}>
+              <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto mb-10`}>
                 Pick a package or build exactly what you need. No hidden fees.
               </p>
+              </FadeIn>
 
               {/* Quick navigation cards - BJJ belt progression: green → blue → purple → gold */}
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-5xl mx-auto animate-slide-up animate-delay-200">
+              <StaggerContainer staggerDelay={0.06} className="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-5xl mx-auto">
+                <StaggerItem>
                 <button
                   onClick={() => scrollToSection(websitesRef)}
                   className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-400 shadow-lg hover:shadow-xl hover:border-emerald-500 hover:shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-1"
@@ -310,7 +315,9 @@ export default function UnifiedPricingPage() {
                   <span className={`font-semibold text-sm ${headingColors.primary}`}>Websites</span>
                   <span className={`text-xs font-medium ${accentColors.green.text}`}>from $500</span>
                 </button>
+                </StaggerItem>
 
+                <StaggerItem>
                 <button
                   onClick={() => scrollToSection(automationRef)}
                   className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-400 shadow-lg hover:shadow-xl hover:border-blue-500 hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1"
@@ -319,7 +326,9 @@ export default function UnifiedPricingPage() {
                   <span className={`font-semibold text-sm ${headingColors.primary}`}>Automation</span>
                   <span className={`text-xs font-medium ${accentColors.blue.text}`}>$150/workflow</span>
                 </button>
+                </StaggerItem>
 
+                <StaggerItem>
                 <button
                   onClick={() => scrollToSection(automationRef)}
                   className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-400 shadow-lg hover:shadow-xl hover:border-purple-500 hover:shadow-purple-500/20 transition-all duration-300 hover:-translate-y-1"
@@ -328,7 +337,9 @@ export default function UnifiedPricingPage() {
                   <span className={`font-semibold text-sm ${headingColors.primary}`}>AI Agents</span>
                   <span className={`text-xs font-medium ${accentColors.purple.text}`}>$500/month</span>
                 </button>
+                </StaggerItem>
 
+                <StaggerItem>
                 <button
                   onClick={() => scrollToSection(customRef)}
                   className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-400 shadow-lg hover:shadow-xl hover:border-gold-500 hover:shadow-gold-500/20 transition-all duration-300 hover:-translate-y-1"
@@ -337,7 +348,9 @@ export default function UnifiedPricingPage() {
                   <span className={`font-semibold text-sm ${headingColors.primary}`}>Custom</span>
                   <span className={`text-xs font-medium ${accentColors.gold.text}`}>you decide</span>
                 </button>
+                </StaggerItem>
 
+                <StaggerItem>
                 <button
                   onClick={() => scrollToSection(quoteAuthRef)}
                   className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-400 shadow-lg hover:shadow-xl hover:border-gray-500 transition-all duration-300 hover:-translate-y-1"
@@ -346,11 +359,12 @@ export default function UnifiedPricingPage() {
                   <span className={`font-semibold text-sm ${headingColors.primary}`}>Have a Quote?</span>
                   <span className="text-xs font-medium text-gray-600">authorize</span>
                 </button>
-              </div>
+                </StaggerItem>
+              </StaggerContainer>
 
               {/* Scroll hint */}
-              <div className="mt-8 animate-bounce">
-                <ChevronDown size={24} className="mx-auto text-gray-400" />
+              <div className="mt-8">
+                <ChevronDown size={24} className="mx-auto text-gray-400 animate-bounce" />
               </div>
             </div>
           </div>
@@ -362,6 +376,7 @@ export default function UnifiedPricingPage() {
       <section ref={websitesRef} id="websites" className="py-20 scroll-mt-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           {/* Premium section header */}
+          <FadeIn direction="up">
           <div className="text-center mb-12">
             <h2 className={`text-3xl md:text-4xl font-bold ${headingColors.primary} mb-3`}>
               Website Packages
@@ -371,15 +386,16 @@ export default function UnifiedPricingPage() {
             </p>
             <div className="w-24 h-1 mx-auto rounded-full bg-gradient-to-r from-emerald-500 to-blue-500" />
           </div>
+          </FadeIn>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <StaggerContainer className="grid md:grid-cols-2 gap-8">
             {PACKAGES.map((pkg) => {
               const isLoading = checkingOutPackage === pkg.id;
               const colorClass = pkg.color === 'blue' ? 'blue' : 'green';
 
               return (
+                <StaggerItem key={pkg.id}>
                 <div
-                  key={pkg.id}
                   className={`
                     relative ${cardBgColors.base} rounded-2xl border transition-all duration-300
                     p-8 hover:shadow-xl hover:-translate-y-2
@@ -443,9 +459,10 @@ export default function UnifiedPricingPage() {
                     50% deposit, remainder on delivery
                   </p>
                 </div>
+                </StaggerItem>
               );
             })}
-          </div>
+          </StaggerContainer>
 
           {checkoutError && (
             <p className="mt-4 text-center text-red-600">{checkoutError}</p>
@@ -585,8 +602,14 @@ export default function UnifiedPricingPage() {
           </div>
 
           {/* Total & Checkout - appears when items selected */}
+          <AnimatePresence>
           {selectedAddons.size > 0 && (
-            <div className="mt-8 p-8 rounded-2xl bg-gradient-to-br from-gold-50 via-white to-purple-50 border border-gray-400 shadow-xl animate-slide-up">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="mt-8 p-8 rounded-2xl bg-gradient-to-br from-gold-50 via-white to-purple-50 border border-gray-400 shadow-xl">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                 <div>
                   <p className={`text-sm font-medium ${formInputColors.helper} mb-2`}>
@@ -622,8 +645,9 @@ export default function UnifiedPricingPage() {
               <p className={`text-sm ${formInputColors.helper} mt-4`}>
                 50% deposit to start, remainder on delivery
               </p>
-            </div>
+            </motion.div>
           )}
+          </AnimatePresence>
         </div>
       </section>
 
@@ -632,6 +656,7 @@ export default function UnifiedPricingPage() {
       {/* ================================================================== */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+          <RevealSection>
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-50 via-white to-blue-50 border border-gray-400 p-10 md:p-16 text-center shadow-xl">
             {/* Decorative orbs */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-emerald-100 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
@@ -662,6 +687,7 @@ export default function UnifiedPricingPage() {
               </p>
             </div>
           </div>
+          </RevealSection>
         </div>
       </section>
 

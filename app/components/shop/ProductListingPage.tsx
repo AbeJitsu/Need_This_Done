@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
 import Button from '@/components/Button';
+import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
 import ProductCard from '@/components/ProductCard';
 import CategoryFilter from '@/components/shop/CategoryFilter';
 import EmptyState from '@/components/ui/EmptyState';
@@ -100,20 +101,29 @@ export default function ProductListingPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section with Search */}
-      <section className="py-8 md:py-12 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-8 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="relative overflow-hidden py-8">
+            {/* Gradient orbs - emerald/blue theme */}
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-emerald-100 to-blue-100 blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-emerald-100 blur-2xl" />
+            <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-emerald-100 blur-xl" />
+
+            <div className="relative z-10">
+          <FadeIn direction="up" triggerOnScroll={false}>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
             Discover Our Products
           </h1>
           <p className="text-lg text-gray-600 mb-8">
             Find exactly what you need with our advanced search and filtering
           </p>
+          </FadeIn>
 
           {/* Search Form */}
           <form onSubmit={handleSearch} className="mb-6">
             <label htmlFor="product-search" className="sr-only">Search products</label>
             <div className="flex gap-2">
-              <div className="flex-1 relative">
+              <div className="flex-1 relative bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100">
                 <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" aria-hidden="true" />
                 <input
                   id="product-search"
@@ -121,7 +131,7 @@ export default function ProductListingPage() {
                   placeholder="Search products by name or description..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors duration-200"
+                  className="w-full pl-10 pr-4 py-2 bg-transparent rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors duration-200"
                 />
               </div>
               <Button
@@ -221,6 +231,8 @@ export default function ProductListingPage() {
               )}
             </div>
           )}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -281,20 +293,20 @@ export default function ProductListingPage() {
                 {products.length !== 1 ? 's' : ''}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product) => {
                   const price = getProductPrice(product);
                   return (
-                    <div key={product.id} className="h-full">
+                    <StaggerItem key={product.id} className="h-full">
                       <ProductCard
                         product={product}
                         price={formatPrice(price)}
                         href={`/shop/${product.handle || product.id}`}
                       />
-                    </div>
+                    </StaggerItem>
                   );
                 })}
-              </div>
+              </StaggerContainer>
             </>
           )}
         </div>

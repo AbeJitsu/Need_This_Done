@@ -7,6 +7,7 @@ import { useInlineEdit } from '@/context/InlineEditContext';
 import type { BlogPageContent } from '@/lib/page-content-types';
 import { BlogPostSummary, BLOG_CATEGORIES } from '@/lib/blog-types';
 import { headingColors, formInputColors, accentColors, focusRingClasses } from '@/lib/colors';
+import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
 
 // ============================================================================
 // Blog Page Client - Universal Editing Version
@@ -44,12 +45,14 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
           {/* Text container - always padded */}
           <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
             <EditableSection sectionKey="header" label="Page Header">
+              <FadeIn direction="up" triggerOnScroll={false}>
               <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${accentColors.purple.titleText} mb-4`}>
                 {content.header.title}
               </h1>
               <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
                 {content.header.description}
               </p>
+              </FadeIn>
             </EditableSection>
           </div>
         </div>
@@ -75,16 +78,18 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
             <>
               {/* Featured Post */}
               {featuredPost && (
+                <FadeIn direction="up" delay={0.1}>
                 <div className="mb-12">
                   <BlogPostCard post={featuredPost} featured />
                 </div>
+                </FadeIn>
               )}
 
               {/* Category Filter (if we have posts) */}
               {otherPosts.length > 0 && (
                 <div className="mb-8">
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    <Link
+                  <StaggerContainer staggerDelay={0.04} className="flex flex-wrap gap-2 justify-center">
+                    <StaggerItem><Link
                       href="/blog"
                       className={`
                         px-4 py-2 rounded-full text-sm font-medium transition-colors
@@ -93,10 +98,10 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
                       `}
                     >
                       {content.categoryFilterLabel}
-                    </Link>
+                    </Link></StaggerItem>
                     {Object.entries(BLOG_CATEGORIES).slice(0, 5).map(([key, label]) => (
+                      <StaggerItem key={key}>
                       <Link
-                        key={key}
                         href={`/blog?category=${key}`}
                         className={`
                           px-4 py-2 rounded-full text-sm font-medium transition-colors
@@ -106,8 +111,9 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
                       >
                         {label}
                       </Link>
+                      </StaggerItem>
                     ))}
-                  </div>
+                  </StaggerContainer>
                 </div>
               )}
 
@@ -117,11 +123,13 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
                   <h2 className={`text-2xl font-bold ${headingColors.primary} mb-6`}>
                     {content.morePostsTitle}
                   </h2>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {otherPosts.map((post) => (
-                      <BlogPostCard key={post.id} post={post} />
+                      <StaggerItem key={post.id}>
+                        <BlogPostCard post={post} />
+                      </StaggerItem>
                     ))}
-                  </div>
+                  </StaggerContainer>
                 </div>
               )}
             </>
