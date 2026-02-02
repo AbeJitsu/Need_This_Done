@@ -133,11 +133,12 @@ export default function ServiceCard({
   );
 
   const cardClasses = `p-6 ${cardBgColors.base} rounded-xl ${cardBorderColors.light} ${accentColors[color].topBorder} transition-all duration-300 ${accentColors[color].cardHover} ${shadowClasses.cardHover} h-full`;
+  const interactiveClasses = onClick || href ? 'hover:-translate-y-1 active:scale-[0.98] active:translate-y-0' : '';
 
   // Wrap in Link if href is provided
   if (href) {
     return (
-      <Link href={href} className={`block ${cardClasses}`}>
+      <Link href={href} className={`block ${cardClasses} ${interactiveClasses}`}>
         {cardContent}
       </Link>
     );
@@ -149,7 +150,7 @@ export default function ServiceCard({
       <button
         type="button"
         onClick={onClick}
-        className={`block text-left w-full ${cardClasses} cursor-pointer`}
+        className={`block text-left w-full ${cardClasses} ${interactiveClasses} cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-${color === 'green' ? 'green' : color === 'blue' ? 'blue' : 'purple'}-300 focus-visible:ring-offset-2`}
       >
         {cardContent}
       </button>

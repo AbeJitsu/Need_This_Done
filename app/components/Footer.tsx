@@ -55,24 +55,26 @@ export default function Footer() {
           </Link>
 
           {/* Navigation links - inline with dot separators */}
-          <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-x-1 gap-y-1">
+          <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-x-2 gap-y-2">
             {footerLinks.map((link, index) => (
               <span key={link.href} className="flex items-center">
                 <Link
                   href={link.href}
-                  className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors`}
+                  className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors py-1 px-2 -mx-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
                 >
                   <Editable path={`_layout.footer.links.${index}.label`}>
                     <span>{link.label}</span>
                   </Editable>
                 </Link>
-                <span className={`mx-2 text-sm ${formInputColors.helper}`}>·</span>
+                {index < footerLinks.length - 1 && (
+                  <span className={`mx-3 text-sm ${formInputColors.helper}`}>·</span>
+                )}
               </span>
             ))}
             <button
               type="button"
               onClick={openChatbot}
-              className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors cursor-pointer flex items-center gap-1`}
+              className={`text-sm ${formInputColors.helper} ${linkHoverColors.blue} transition-colors cursor-pointer flex items-center gap-1 py-1 px-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
               aria-label="Chat with AI assistant"
             >
               <svg

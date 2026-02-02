@@ -9,12 +9,14 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 // All buttons have: border + bg + text with proper dark mode inversion.
 // Matches Navigation CTA buttons exactly for consistency.
 
-type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonSize = 'sm' | 'md' | 'lg' | 'xl';
+type ButtonStyle = 'solid' | 'outline' | 'ghost';
 
 interface ButtonProps {
   children: React.ReactNode;
   variant?: AccentVariant;
   size?: ButtonSize;
+  buttonStyle?: ButtonStyle;
   href?: string;
   onClick?: () => void;
   disabled?: boolean;
@@ -30,8 +32,9 @@ interface ButtonProps {
 
 const sizeClasses: Record<ButtonSize, string> = {
   sm: 'px-4 py-2 text-sm',
-  md: 'px-6 py-3',
-  lg: 'px-8 py-3',
+  md: 'px-6 py-3 text-base',
+  lg: 'px-8 py-4 text-lg',
+  xl: 'px-10 py-5 text-xl',
 };
 
 // ============================================================================
@@ -42,6 +45,7 @@ export default function Button({
   children,
   variant = 'blue',
   size = 'lg',
+  buttonStyle = 'solid',
   href,
   onClick,
   disabled = false,
@@ -52,8 +56,15 @@ export default function Button({
 }: ButtonProps) {
   const colors = accentColors[variant];
   const isDisabled = disabled || isLoading;
-  // All buttons use accentColors: border + bg + text with dark mode inversion
-  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-full transition-all duration-300 hover:scale-105 active:scale-95 ${colors.focusVisible} ${sizeClasses[size]} ${accentBorderWidth} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`;
+
+  // Style variants for visual hierarchy
+  const styleClasses = {
+    solid: `${accentBorderWidth} bg-${variant}-600 text-white border-${variant}-600 hover:bg-${variant}-700 hover:border-${variant}-700 active:bg-${variant}-800 shadow-lg shadow-${variant}-500/25`,
+    outline: `${accentBorderWidth} ${colors.bg} ${colors.text} ${colors.border} ${colors.hoverText} ${colors.hoverBorder}`,
+    ghost: `border-transparent ${colors.text} ${colors.hoverText} hover:bg-${variant}-50`,
+  };
+
+  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 ${colors.focusVisible} ${sizeClasses[size]} ${styleClasses[buttonStyle]}`;
   const disabledClasses = isDisabled ? 'opacity-60 cursor-not-allowed hover:scale-100 active:scale-100' : '';
   const fullClasses = `${baseClasses} ${disabledClasses} ${className}`.trim();
 

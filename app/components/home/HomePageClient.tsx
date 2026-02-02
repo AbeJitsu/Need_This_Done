@@ -69,7 +69,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   servicesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
               }}
-              className="mt-10 inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors cursor-pointer animate-slide-up animate-delay-300"
+              className="mt-10 inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors cursor-pointer animate-slide-up animate-delay-300 rounded-lg px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
               aria-label="Scroll to services section"
             >
               <span>Scroll to explore</span>
@@ -102,7 +102,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 label={content.services.cards[0].title}
                 content={content.services.cards[0] as unknown as Record<string, unknown>}
               >
-                <div className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border border-emerald-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm">
+                <div className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border border-emerald-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 active:scale-[0.99] active:translate-y-0 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm focus-within:ring-4 focus-within:ring-emerald-300 focus-within:ring-offset-2">
                   {/* Icon */}
                   <div className="w-16 h-16 rounded-xl bg-emerald-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <ServiceIcon
@@ -162,7 +162,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[1].title}
                   content={content.services.cards[1] as unknown as Record<string, unknown>}
                 >
-                  <div className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border border-blue-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm">
+                  <div className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border border-blue-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 active:scale-[0.99] active:translate-y-0 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm focus-within:ring-4 focus-within:ring-blue-300 focus-within:ring-offset-2">
                     {/* Icon */}
                     <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <ServiceIcon
@@ -199,7 +199,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[2].title}
                   content={content.services.cards[2] as unknown as Record<string, unknown>}
                 >
-                  <div className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border border-purple-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm">
+                  <div className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border border-purple-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 active:scale-[0.99] active:translate-y-0 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm focus-within:ring-4 focus-within:ring-purple-300 focus-within:ring-offset-2">
                     {/* Icon */}
                     <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <ServiceIcon
@@ -233,7 +233,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           <div className="text-center mt-8">
             <a
               href="/pricing"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-semibold text-lg rounded-xl hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-500/25"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-semibold text-lg rounded-xl hover:bg-emerald-700 hover:scale-105 active:scale-95 active:bg-emerald-800 transition-all duration-300 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-300 focus-visible:ring-offset-2"
             >
               View Pricing
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -396,7 +396,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           <div className="text-center mt-10">
             <a
               href="/get-started"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-xl hover:bg-blue-700 hover:scale-105 active:scale-95 active:bg-blue-800 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-300 focus-visible:ring-offset-2"
             >
               Start Your Project
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -429,7 +429,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             <div className="mb-6">
               <a
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-purple-600 text-white font-semibold text-xl rounded-xl hover:bg-purple-700 transition-all shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-purple-600 text-white font-semibold text-xl rounded-xl hover:bg-purple-700 hover:scale-105 active:scale-95 active:bg-purple-800 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-300 focus-visible:ring-offset-2"
               >
                 BOOK A FREE CALL
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -441,7 +441,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             {/* Chatbot link */}
             <button
               onClick={() => window.dispatchEvent(new CustomEvent('open-chatbot'))}
-              className="text-sm text-purple-600 hover:text-purple-700 hover:underline transition-colors cursor-pointer"
+              className="text-sm text-purple-600 hover:text-purple-700 hover:underline transition-colors cursor-pointer rounded px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2"
             >
               Or ask our chatbot anything →
             </button>

@@ -74,7 +74,7 @@ export default function Navigation() {
   };
 
   return (
-    <nav aria-label="Main navigation" className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-400 dark:border-gray-800 shadow-sm">
+    <nav aria-label="Main navigation" className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-500 dark:border-gray-700 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo / Home Link - Editable in edit mode */}
@@ -123,7 +123,7 @@ export default function Navigation() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`lg:hidden p-2 ${navigationColors.link} ${navigationColors.linkHover} transition-colors`}
+              className={`lg:hidden p-2 ${navigationColors.link} ${navigationColors.linkHover} transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen ? "true" : "false"}
             >
@@ -200,7 +200,9 @@ export default function Navigation() {
                   <button
                     type="button"
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className={`flex items-center gap-2 px-2 py-1.5 text-sm font-medium ${navigationColors.userButton} ${navigationColors.userButtonHover} rounded-md transition-colors`}
+                    className={`flex items-center gap-2 px-2 py-1.5 text-sm font-medium ${navigationColors.userButton} ${navigationColors.userButtonHover} rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+                    aria-haspopup="true"
+                    aria-expanded={showDropdown ? "true" : "false"}
                   >
                     <div className="w-7 h-7 rounded-full bg-gray-400 dark:bg-gray-600 text-white flex items-center justify-center text-xs font-semibold">
                       {user?.email?.charAt(0).toUpperCase() || 'U'}
