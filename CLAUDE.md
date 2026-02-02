@@ -33,9 +33,22 @@ Speak like a friend over coffee. Easy to understand.
 | Draft a commit          | Run `/dac`                    |
 | Check work status       | Run `/check-work`             |
 
+## What's Built
+
+**Latest additions (Feb 2, 2026):**
+- ✅ **Invoice downloads**: Customers can download order invoices as PDFs
+- ✅ **Notification preferences**: Email opt-in/opt-out controls in account settings
+- ✅ **Order tracking timeline**: Visual timeline of order status progression
+- ✅ **Product reviews system**: Full lifecycle with admin moderation and customer feedback
+- ✅ **Account settings**: Profile management and review tracking
+- ✅ **Admin dashboards**: Review moderation, analytics, appointments, product insights
+- ✅ **Backend reliability**: Retry logic, request deduplication, timeouts, circuit breakers
+
+See **memory/MEMORY.md** for full feature inventory.
+
 ## How to Work
 
-1. Check **README.md** for how things work
+1. Check **memory/MEMORY.md** for project status and features
 2. Run `cd app && npm run dev` to start
 3. Run `/dac` to draft commits (never commit directly)
 
@@ -69,7 +82,7 @@ Key utilities for production-grade reliability:
 | `validation.ts` | Input sanitization (email, file paths, length limits) |
 | `redis.ts` | Circuit breaker pattern with graceful degradation |
 
-See `memory/context/decisions.md` for implementation rationale.
+See **memory/MEMORY.md** "Backend Reliability Patterns" section for details.
 
 ## Deployment Guidelines
 

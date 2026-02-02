@@ -2,6 +2,12 @@
 
 Key learnings and patterns discovered during development.
 
+## Documentation Note
+
+**Evaluation Reports** (Feb 2, 2026): Root directory contains auto-evaluation summaries (BACKEND_EVAL_SUMMARY.md, FRONTEND_EVAL_SUMMARY.md, etc.). These capture work completed and are archived. **Primary source of truth**: This MEMORY.md file.
+
+---
+
 ## Project Status — Feb 2, 2026
 
 **Current State:** Mature, production-ready with comprehensive reliability hardening and complete review system
@@ -15,12 +21,11 @@ Key learnings and patterns discovered during development.
 - Test suite: 69 E2E tests + accessibility tests
 
 **Completed Recent Work (Feb 2):**
-- ✅ Admin review moderation dashboard (`/admin/reviews`) - approve/reject pending reviews
-- ✅ Review analytics dashboard (`/admin/reviews/analytics`) - insights into customer feedback patterns
-- ✅ User review tracking (`/account` My Reviews section) - customers see their review status
-- ✅ Fixed appointment creation silent failure after payment succeeds
-- ✅ Fixed missing null check on appointment IDs in logging
-- ✅ Fixed silent fallback in cart fetch failure during checkout
+- ✅ Invoice downloads (OrderInvoice component) - customers can download PDFs from order page
+- ✅ Notification preferences UI - email opt-in/opt-out controls in account settings
+- ✅ Order tracking timeline - visual progression of order status
+- ✅ Fixed TypeScript/build errors across admin and API routes (commit 458a575)
+- ✅ Improved accessibility and feedback on shopping interface (cart, payment, product detail)
 
 **Next Priority Areas:**
 1. Performance optimization for search/filtering (if needed based on usage metrics)
@@ -171,3 +176,14 @@ Key learnings and patterns discovered during development.
 - Summary: total/free/paid enrollments, completion rate, revenue
 - Filterable table with user details, progress tracking
 - API: `/api/admin/enrollments`
+
+**Order Features** (commits 6c5bd3f, 3e43138 — Feb 2)
+- **Invoice downloads**: OrderInvoice component generates downloadable PDFs with order details, line items, totals
+- **Order tracking timeline**: Visual timeline showing order progression through states (pending → processing → shipped → delivered)
+- **Integrated in** `/app/orders/[orderId]/page.tsx` for customer transparency
+
+**Notification Preferences** (commit 1b1129e — Feb 2)
+- Email opt-in/opt-out controls at `/account`
+- NotificationPreferencesSection component manages user communication preferences
+- API: `/api/account/notification-preferences` persists preferences
+- Supports controlling: order updates, promotional emails, review notifications, etc.
