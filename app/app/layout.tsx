@@ -11,8 +11,10 @@ import { ServiceModalProvider } from '@/context/ServiceModalContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { InlineEditProvider } from '@/context/InlineEditContext';
 import { WishlistProvider } from '@/context/WishlistContext';
+import { ComparisonProvider } from '@/context/ComparisonContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
+import ProductComparisonModal from '@/components/ProductComparisonModal';
 import { AdminSidebarToggle, EditModeBar, EditModeTutorial, InlineTextEditor } from '@/components/InlineEditor';
 import { ProfessionalServiceJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
 import { seoConfig } from '@/lib/seo-config';
@@ -211,10 +213,11 @@ export default function RootLayout({
         <AuthProvider>
           <CartProvider>
             <WishlistProvider>
-              <StripeProvider>
-                <ServiceModalProvider>
-                  <ToastProvider>
-                    <InlineEditProvider>
+              <ComparisonProvider>
+                <StripeProvider>
+                  <ServiceModalProvider>
+                    <ToastProvider>
+                      <InlineEditProvider>
                     {/* Skip to main content link for keyboard users */}
                     <a
                       href="#main-content"
@@ -244,6 +247,9 @@ export default function RootLayout({
                     {/* Service detail modal - available on all pages */}
                     <ServiceDetailModal />
 
+                    {/* Product comparison modal - available on all pages */}
+                    <ProductComparisonModal />
+
                     {/* Inline editing - click any text to edit it directly */}
                     <AdminSidebarToggle />
                     <InlineTextEditor />
@@ -254,6 +260,7 @@ export default function RootLayout({
                   </ToastProvider>
                 </ServiceModalProvider>
               </StripeProvider>
+            </ComparisonProvider>
             </WishlistProvider>
           </CartProvider>
         </AuthProvider>

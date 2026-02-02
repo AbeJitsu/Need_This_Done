@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { ShoppingCart, Heart } from 'lucide-react';
 import { accentColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors } from '@/lib/colors';
 import { useWishlist } from '@/context/WishlistContext';
+import CompareButton from './CompareButton';
 
 // ============================================================================
 // Product Card Component - Display Product Summary
@@ -22,6 +23,9 @@ interface ProductCardProps {
     title: string;
     description?: string;
     images?: Array<{ url: string }>;
+    variants?: Array<{
+      calculated_price?: { calculated_amount: number };
+    }>;
   };
   price: string;
   href: string;
@@ -132,8 +136,8 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
           </div>
         </div>
 
-        {/* Add to Cart Button */}
-        <div className="px-4 pb-4">
+        {/* Add to Cart Button and Compare */}
+        <div className="px-4 pb-4 space-y-2">
           <button
             onClick={handleCartClick}
             disabled={isNavigating}
@@ -149,6 +153,7 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
             <ShoppingCart className="w-5 h-5" />
             {isNavigating ? 'Opening...' : 'View & Add'}
           </button>
+          <CompareButton product={product} />
         </div>
       </div>
     </Link>

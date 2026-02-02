@@ -50,6 +50,7 @@ export default function CheckoutPage() {
   const [address2, setAddress2] = useState('');
   const [showAddress2, setShowAddress2] = useState(false);
   const [cityStateZip, setCityStateZip] = useState('');
+  const [orderNotes, setOrderNotes] = useState('');
 
   // Payment state
   const [clientSecret, setClientSecret] = useState('');
@@ -214,6 +215,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           cart_id: cartId,
           email,
+          order_notes: orderNotes.trim() || null,
         }),
       });
 
@@ -904,6 +906,31 @@ export default function CheckoutPage() {
                       </p>
                     )}
                   </div>
+                </div>
+              </div>
+
+              {/* Order Notes - Optional */}
+              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
+                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
+                  Special Requests (Optional)
+                </h2>
+
+                <div>
+                  <label htmlFor="orderNotes" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                    Add any special requests or delivery instructions
+                  </label>
+                  <textarea
+                    id="orderNotes"
+                    value={orderNotes}
+                    onChange={(e) => setOrderNotes(e.target.value)}
+                    placeholder="e.g., Leave at front door, fragile items, custom color request..."
+                    maxLength={500}
+                    rows={4}
+                    className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 border-gray-300 transition-colors ${formInputColors.focus} resize-none`}
+                  />
+                  <p className={`text-sm ${formInputColors.helper} mt-2`}>
+                    {orderNotes.length}/500 characters
+                  </p>
                 </div>
               </div>
 
