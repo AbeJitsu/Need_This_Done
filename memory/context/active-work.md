@@ -7,6 +7,8 @@ What's currently being built or fixed.
 **Status:** Production-ready platform - all core systems operational
 
 Major systems complete:
+- User account settings page with profile management
+- Product discovery with search and filtering capabilities
 - User wishlist system for saving favorite products
 - Admin dashboard with Google Calendar integration
 - Backend reliability hardening (race conditions, retries, validation, rate limiting)
@@ -16,6 +18,32 @@ Major systems complete:
 Platform is stable and ready for production use.
 
 ## Recently Completed — Feb 2, 2026
+
+**Customer Account Settings Page** (commit 1592bfd)
+- New page at `/account` for customer profile management
+- Account settings client component with form for editing profile info
+- API endpoint `/api/account/profile/route.ts` for profile updates
+- Integrated with checkout flow for pre-filling customer details
+
+**Product Discovery: Search & Filtering** (commit 60ed4bc)
+- New `/api/products/search` endpoint for full-text product search
+- ProductListingPage component with search bar and filtering UI
+- ProductCard component for displaying product information
+- Advanced filtering by category, price range, and availability
+- Real-time search results with improved UX
+
+**Quote Authorization Improvements** (commit 7ca7b64)
+- Customers can now view paid quotes for confirmation
+- Enhanced quote detail view with payment status
+- Better visual feedback on quote authorization flow
+
+**Appointment Checkout Validation** (commit f710cc8)
+- Added response validation for appointment checks during checkout
+- Prevents invalid appointment states from proceeding to payment
+
+**Wishlist Error Handling** (commit a770bd4)
+- Fixed error handling on wishlist page remove action
+- Better user feedback when removing items fails
 
 **User Wishlist System** (commit 69b8121)
 - Wishlist page at `/wishlist` showing saved products

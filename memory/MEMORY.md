@@ -4,7 +4,9 @@ Key learnings and patterns discovered during development.
 
 ## Project Status — Feb 2, 2026
 
-**Current State:** Mature, production-ready with comprehensive reliability hardening
+**Current State:** Mature, production-ready with comprehensive reliability hardening and customer-facing shop enhancements
+- Account settings page: Customer profile management with persistent storage
+- Product discovery: Full-text search and advanced filtering across catalog
 - User wishlist feature: Save/manage favorite products with persistence
 - Backend reliability audit completed (9 of 10 critical issues resolved)
 - Customer-facing features: Order confirmation emails, quote authorization, appointment reminders
@@ -12,12 +14,27 @@ Key learnings and patterns discovered during development.
 - Test suite: 69 E2E tests + accessibility tests, cleaned up non-enforcing artifacts
 
 **Next Priority Areas:**
-1. Cache invalidation race condition handling (low priority, no blocking issues)
-2. Load testing for Redis circuit breaker
-3. Expansion of rate limiting to other cost-sensitive endpoints
-4. Wishlist enhancement (export, email, sharing - optional)
+1. Performance optimization for search and filtering (if needed based on usage)
+2. Cache invalidation race condition handling (low priority, no blocking issues)
+3. Load testing for Redis circuit breaker
+4. Expansion of rate limiting to other cost-sensitive endpoints
+5. Wishlist enhancement (export, email, sharing - optional)
 
 ## Customer-Facing Features — Feb 2, 2026
+
+**Account Settings Page** (commit 1592bfd)
+- Profile management at `/account` for logged-in customers
+- View and edit personal information (name, email, phone, etc.)
+- AccountSettingsClient component handles form state and validation
+- `/api/account/profile` endpoint persists profile updates to database
+- Integrated with checkout for pre-filling customer details
+
+**Product Discovery: Search & Filtering** (commit 60ed4bc)
+- Full-text search at `/api/products/search` for fast product lookup
+- ProductListingPage: Advanced filtering by category, price range, availability
+- ProductCard component: Consistent display across shop and wishlist pages
+- Real-time search results with improved UX and performance
+- Supports dynamic category and tag-based filtering
 
 **User Wishlist System** (commit 69b8121)
 - Wishlist page at `/wishlist` displays saved products with add-to-cart buttons
