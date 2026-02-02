@@ -36,6 +36,7 @@ Speak like a friend over coffee. Easy to understand.
 ## What's Built
 
 **Latest additions (Feb 2, 2026):**
+- ✅ **Review notification emails**: Automated emails when reviews are approved/rejected
 - ✅ **Invoice downloads**: Customers can download order invoices as PDFs
 - ✅ **Notification preferences**: Email opt-in/opt-out controls in account settings
 - ✅ **Order tracking timeline**: Visual timeline of order status progression

@@ -32,7 +32,6 @@ Key learnings and patterns discovered during development.
 2. Cache invalidation race condition handling (low priority, no blocking issues)
 3. Load testing for Redis circuit breaker under high concurrency
 4. Expansion of rate limiting to other cost-sensitive endpoints
-5. Review notification emails (when review approved/rejected)
 
 ## Customer-Facing Features — Feb 2, 2026
 
@@ -187,3 +186,14 @@ Key learnings and patterns discovered during development.
 - NotificationPreferencesSection component manages user communication preferences
 - API: `/api/account/notification-preferences` persists preferences
 - Supports controlling: order updates, promotional emails, review notifications, etc.
+
+**Review Notification Emails** (commit 38818c0 — Feb 2)
+- ReviewApprovedEmail: Sent when admin approves a review in moderation dashboard
+  - Celebrates published review with product details, rating displayed
+  - Includes link to view product and browse other reviews
+- ReviewRejectedEmail: Sent when admin rejects a review with reason
+  - Explains rejection reason, invites resubmission
+  - Provides link to community guidelines
+  - Supportive tone maintains user relationship despite rejection
+- Integration: Automatic email trigger in `/api/admin/reviews` route during moderation
+- Closes communication loop and sets clear expectations for review community standards
