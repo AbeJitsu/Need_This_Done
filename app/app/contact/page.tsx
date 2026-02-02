@@ -1,5 +1,4 @@
 'use client';
-import { accentText } from '@/lib/contrast';
 
 import { useState, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -23,17 +22,17 @@ import {
   Users,
 } from 'lucide-react';
 import {
-  accentColors,
   iconCircleColors,
   coloredLinkText,
 } from '@/lib/colors';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
 
 // ============================================================================
-// Contact Page - Premium Consultation Booking
+// Contact Page - Bold Editorial Treatment
 // ============================================================================
-// Redesigned with luxury aesthetic that continues the dark premium card
-// from the home page. Two-zone layout: dark hero → bright form.
+// Two-zone layout: dark editorial hero → bright form.
+// Matches pricing page aesthetic with accent lines, font-black headings,
+// uppercase labels, and dark glass cards.
 
 const MAX_FILES = 3;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -101,14 +100,12 @@ export default function ContactPage() {
   // Scroll to consultation picker after it renders (respects prefers-reduced-motion)
   useEffect(() => {
     if (contactPath === 'consultation' && shouldScrollToPicker) {
-      // Wait for the picker to render, then scroll
       const scrollToPicker = () => {
         if (consultationPickerRef.current) {
           scrollIntoViewWithMotionPreference(consultationPickerRef.current, { block: 'center' });
-          setShouldScrollToPicker(false); // Reset after scrolling
+          setShouldScrollToPicker(false);
         }
       };
-      // Use requestAnimationFrame to ensure DOM has updated
       requestAnimationFrame(() => {
         requestAnimationFrame(scrollToPicker);
       });
@@ -119,12 +116,10 @@ export default function ContactPage() {
   const handlePathSelect = (path: 'quote' | 'consultation') => {
     setContactPath(path);
     if (path === 'quote') {
-      // Scroll to form after selection
       setTimeout(() => {
         scrollIntoViewWithMotionPreference(formSectionRef.current, { block: 'start' });
       }, 150);
     } else if (path === 'consultation') {
-      // Trigger scroll to consultation picker
       setShouldScrollToPicker(true);
     }
   };
@@ -137,6 +132,7 @@ export default function ContactPage() {
       scrollIntoViewWithMotionPreference(formSectionRef.current, { block: 'start' });
     }, 150);
   };
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -235,57 +231,68 @@ export default function ContactPage() {
     }
   };
 
-  // Success state
+  // ========================================================================
+  // Success State - Dark card treatment
+  // ========================================================================
   if (submitStatus === 'success') {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center px-4">
+      <div className="min-h-[80vh] flex items-center justify-center px-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        {/* Decorative blurs */}
+        <div className="absolute top-0 left-1/3 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-3xl" />
+
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
-          className="max-w-lg w-full text-center"
+          className="relative max-w-lg w-full"
         >
-          {/* Success icon */}
-          <div className="relative mx-auto w-24 h-24 mb-8">
-            <div className="absolute inset-0 bg-green-500/20 rounded-full animate-ping" />
-            <div className="relative w-full h-full bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg shadow-green-500/30">
-              <Check className="w-12 h-12 text-white" strokeWidth={3} />
+          <div className="relative rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm p-10">
+            {/* Success icon with glow */}
+            <div className="relative mx-auto w-24 h-24 mb-8">
+              <div className="absolute inset-0 bg-green-500/20 rounded-full animate-ping" />
+              <div className="absolute inset-[-8px] bg-green-500/10 rounded-full blur-xl" />
+              <div className="relative w-full h-full bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg shadow-green-500/30">
+                <Check className="w-12 h-12 text-white" strokeWidth={3} />
+              </div>
+            </div>
+
+            <h1 className="text-4xl font-black text-white mb-4 tracking-tight text-center">
+              {content.success.title}
+            </h1>
+            <p className="text-xl text-slate-400 mb-8 text-center">
+              {content.success.description}
+            </p>
+
+            {/* What happens next - dark card */}
+            <div className="rounded-2xl bg-white/5 border border-white/10 p-6 text-left mb-8">
+              <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-blue-400" />
+                {content.success.nextStepsTitle}
+              </h3>
+              <ol className="space-y-3">
+                {content.success.nextSteps.map((step, index) => (
+                  <li key={index} className="flex items-start gap-3 text-slate-300">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-semibold flex items-center justify-center">
+                      {index + 1}
+                    </span>
+                    {step}
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => setSubmitStatus('idle')}
+                className="text-blue-400 font-medium hover:text-blue-300 transition-colors inline-flex items-center gap-2"
+              >
+                {content.success.sendAnotherLink}
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
-
-          <h1 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-            {content.success.title}
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            {content.success.description}
-          </p>
-
-          {/* What happens next */}
-          <div className="bg-slate-50 rounded-2xl p-6 text-left mb-8">
-            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Clock className={`w-5 h-5 ${iconCircleColors.blue.icon}`} />
-              {content.success.nextStepsTitle}
-            </h3>
-            <ol className="space-y-3">
-              {content.success.nextSteps.map((step, index) => (
-                <li key={index} className="flex items-start gap-3 text-gray-600">
-                  <span className={`flex-shrink-0 w-6 h-6 rounded-full ${accentColors.blue.bg} ${accentColors.blue.text} text-sm font-semibold flex items-center justify-center`}>
-                    {index + 1}
-                  </span>
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setSubmitStatus('idle')}
-            className={`${coloredLinkText.blue} font-medium hover:text-blue-700 transition-colors inline-flex items-center gap-2`}
-          >
-            {content.success.sendAnotherLink}
-            <ArrowRight className="w-4 h-4" />
-          </button>
         </motion.div>
       </div>
     );
@@ -294,7 +301,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen">
       {/* ================================================================== */}
-      {/* Hero Section - Premium Dark (continues home page aesthetic) */}
+      {/* Hero Section - Bold Editorial Dark */}
       {/* ================================================================== */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         {/* Decorative blurs */}
@@ -302,131 +309,134 @@ export default function ContactPage() {
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-transparent via-white/[0.02] to-transparent" />
 
-        {/* Grid pattern overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                             linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px',
-          }}
-        />
-
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-16 md:pt-24 pb-24 md:pb-32">
-          {/* Eyebrow badge */}
-          <FadeIn direction="up" triggerOnScroll={false}>
-            <div className="flex justify-center mb-8">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-blue-300 text-sm font-medium backdrop-blur-sm border border-white/10">
-                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                Free Quote • No Commitment
-              </span>
-            </div>
-          </FadeIn>
-
-          {/* Main heading */}
-          <FadeIn direction="up" delay={0.1} triggerOnScroll={false}>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white text-center mb-6 tracking-tight">
-            Let&apos;s Build Something
-            <span className="block mt-2 pb-2 bg-gradient-to-r from-blue-400 via-purple-400 to-purple-400 bg-clip-text text-transparent">
-              Together
-            </span>
-          </h1>
-          </FadeIn>
-
-          <FadeIn direction="up" delay={0.2} triggerOnScroll={false}>
-          <p className="text-xl text-slate-300 text-center max-w-2xl mx-auto mb-12 leading-relaxed">
-            Choose how you&apos;d like to get started. Both options are completely free.
-          </p>
-          </FadeIn>
-
-          {/* Two Path Cards */}
-          <StaggerContainer delayStart={0.3} className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {/* Get a Free Quote */}
-            <StaggerItem>
-            <button
-              type="button"
-              onClick={() => handlePathSelect('quote')}
-              className={`
-                relative p-8 rounded-2xl text-left transition-all duration-300
-                ${contactPath === 'quote'
-                  ? 'bg-white text-slate-900 shadow-2xl shadow-white/20 scale-[1.02]'
-                  : 'bg-white/5 text-white hover:bg-white/10 hover:scale-[1.02] border border-white/10 hover:border-green-400/40'}
-              `}
-            >
-              <div className={`
-                w-14 h-14 rounded-2xl flex items-center justify-center mb-5
-                ${contactPath === 'quote' ? `${iconCircleColors.green.bg} ${iconCircleColors.green.icon}` : 'bg-white/10 text-green-400'}
-              `}>
-                <FileText className="w-7 h-7" />
-              </div>
-
-              <h3 className="font-bold text-2xl mb-2">Get a Free Quote</h3>
-              <p className={`text-base mb-4 ${contactPath === 'quote' ? 'text-slate-600' : 'text-slate-400'}`}>
-                Tell us what you need and we&apos;ll send you a detailed quote within 2 business days.
-              </p>
-              <ul className={`space-y-2 text-sm ${contactPath === 'quote' ? 'text-slate-500' : 'text-slate-400'}`}>
-                <li className="flex items-center gap-2">
-                  <Check className={`w-4 h-4 ${accentText.emerald}`} />
-                  No commitment required
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className={`w-4 h-4 ${accentText.emerald}`} />
-                  Clear pricing upfront
-                </li>
-              </ul>
-
-              {contactPath === 'quote' && (
-                <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-                  <Check className="w-4 h-4 text-white" strokeWidth={3} />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-16 md:pt-24 pb-20 md:pb-28">
+          {/* Two-column layout: editorial header left, path cards right */}
+          <div className="grid md:grid-cols-[1.2fr_1fr] gap-12 md:gap-16 items-start">
+            {/* Left column — editorial header */}
+            <FadeIn direction="up" triggerOnScroll={false}>
+              <div>
+                {/* Accent line + uppercase label (matches pricing pattern) */}
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
+                  <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Get Started</span>
                 </div>
-              )}
-            </button>
-            </StaggerItem>
 
-            {/* Book a Consultation */}
-            <StaggerItem>
-            <button
-              type="button"
-              onClick={() => handlePathSelect('consultation')}
-              className={`
-                relative p-8 rounded-2xl text-left transition-all duration-300
-                ${contactPath === 'consultation'
-                  ? 'bg-white text-slate-900 shadow-2xl shadow-white/20 scale-[1.02]'
-                  : 'bg-white/5 text-white hover:bg-white/10 hover:scale-[1.02] border border-white/10 hover:border-blue-400/40'}
-              `}
-            >
-              <div className={`
-                w-14 h-14 rounded-2xl flex items-center justify-center mb-5
-                ${contactPath === 'consultation' ? `${iconCircleColors.blue.bg} ${iconCircleColors.blue.icon}` : 'bg-white/10 text-blue-400'}
-              `}>
-                <Users className="w-7 h-7" />
-              </div>
+                <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[0.95] mb-5">
+                  Tell us what<br />
+                  <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">you need done.</span>
+                </h1>
 
-              <h3 className="font-bold text-2xl mb-2">Book a Consultation</h3>
-              <p className={`text-base mb-4 ${contactPath === 'consultation' ? 'text-slate-600' : 'text-slate-400'}`}>
-                Talk through your project with an expert. We&apos;ll help you figure out the best approach.
-              </p>
-              <ul className={`space-y-2 text-sm ${contactPath === 'consultation' ? 'text-slate-500' : 'text-slate-400'}`}>
-                <li className="flex items-center gap-2">
-                  <Check className={`w-4 h-4 ${accentText.blue}`} />
-                  15, 30, or 45 minute sessions
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className={`w-4 h-4 ${accentText.blue}`} />
-                  Personalized recommendations
-                </li>
-              </ul>
+                <p className="text-xl text-slate-400 max-w-md leading-relaxed mb-8">
+                  Free quote or live consultation — pick what works for you. No pressure, no commitment.
+                </p>
 
-              {contactPath === 'consultation' && (
-                <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
-                  <Check className="w-4 h-4 text-white" strokeWidth={3} />
+                {/* Trust indicators */}
+                <div className="flex flex-col gap-3 text-sm text-slate-400">
+                  <span className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                    Response within 24 hours
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                    Get a clear next step
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                    No pressure, ever
+                  </span>
                 </div>
-              )}
-            </button>
-            </StaggerItem>
-          </StaggerContainer>
+              </div>
+            </FadeIn>
 
-          {/* Consultation Type Cards - Only show when consultation path selected */}
+            {/* Right column — path selection cards */}
+            <StaggerContainer delayStart={0.2} className="flex flex-col gap-4">
+              {/* Get a Free Quote */}
+              <StaggerItem>
+                <button
+                  type="button"
+                  onClick={() => handlePathSelect('quote')}
+                  className={`
+                    relative w-full p-6 rounded-2xl text-left transition-all duration-300
+                    ${contactPath === 'quote'
+                      ? 'bg-white/10 ring-2 ring-emerald-400/50 shadow-lg shadow-emerald-500/10'
+                      : 'bg-white/5 hover:bg-white/10 border border-white/10 hover:border-emerald-400/30'}
+                  `}
+                >
+                  <div className={`
+                    w-11 h-11 rounded-xl flex items-center justify-center mb-4
+                    ${contactPath === 'quote' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/10 text-emerald-400'}
+                  `}>
+                    <FileText className="w-5 h-5" />
+                  </div>
+
+                  <h3 className="font-black text-xl text-white mb-1.5 tracking-tight">Get a Free Quote</h3>
+                  <p className="text-sm text-slate-400 mb-3">
+                    Tell us what you need — detailed quote within 2 business days.
+                  </p>
+                  <ul className="space-y-1.5 text-xs text-slate-400">
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      No commitment required
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      Clear pricing upfront
+                    </li>
+                  </ul>
+
+                  {contactPath === 'quote' && (
+                    <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                    </div>
+                  )}
+                </button>
+              </StaggerItem>
+
+              {/* Book a Consultation */}
+              <StaggerItem>
+                <button
+                  type="button"
+                  onClick={() => handlePathSelect('consultation')}
+                  className={`
+                    relative w-full p-6 rounded-2xl text-left transition-all duration-300
+                    ${contactPath === 'consultation'
+                      ? 'bg-white/10 ring-2 ring-blue-400/50 shadow-lg shadow-blue-500/10'
+                      : 'bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-400/30'}
+                  `}
+                >
+                  <div className={`
+                    w-11 h-11 rounded-xl flex items-center justify-center mb-4
+                    ${contactPath === 'consultation' ? 'bg-blue-500/20 text-blue-400' : 'bg-white/10 text-blue-400'}
+                  `}>
+                    <Users className="w-5 h-5" />
+                  </div>
+
+                  <h3 className="font-black text-xl text-white mb-1.5 tracking-tight">Book a Consultation</h3>
+                  <p className="text-sm text-slate-400 mb-3">
+                    Talk through your project with an expert. We&apos;ll help you plan the best approach.
+                  </p>
+                  <ul className="space-y-1.5 text-xs text-slate-400">
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-blue-400" />
+                      15, 30, or 45 minute sessions
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-blue-400" />
+                      Personalized recommendations
+                    </li>
+                  </ul>
+
+                  {contactPath === 'consultation' && (
+                    <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                    </div>
+                  )}
+                </button>
+              </StaggerItem>
+            </StaggerContainer>
+          </div>
+
+          {/* Consultation Type Cards - Dark glass style */}
           <AnimatePresence>
           {contactPath === 'consultation' && (
             <motion.div
@@ -435,13 +445,25 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="mt-10"
+              className="mt-12"
             >
-              <p className="text-center text-slate-300 mb-6">Pick a consultation length:</p>
-              <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+              <p className="text-slate-400 mb-6 text-sm font-semibold tracking-widest uppercase">Pick a session length</p>
+              <div className="grid md:grid-cols-3 gap-4 max-w-3xl">
                 {CONSULTATION_TYPES.map((type) => {
                   const Icon = type.icon;
                   const isSelected = selectedConsultation === type.id;
+
+                  const ringColor = type.color === 'emerald'
+                    ? 'ring-emerald-400/50 shadow-emerald-500/10'
+                    : type.color === 'blue'
+                      ? 'ring-blue-400/50 shadow-blue-500/10'
+                      : 'ring-purple-400/50 shadow-purple-500/10';
+
+                  const iconColor = type.color === 'emerald'
+                    ? 'text-emerald-400'
+                    : type.color === 'blue'
+                      ? 'text-blue-400'
+                      : 'text-purple-400';
 
                   return (
                     <button
@@ -451,8 +473,8 @@ export default function ContactPage() {
                       className={`
                         relative p-5 rounded-2xl text-left transition-all duration-300
                         ${isSelected
-                          ? 'bg-white text-slate-900 shadow-xl shadow-white/20 scale-[1.02]'
-                          : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}
+                          ? `bg-white/10 ring-2 ${ringColor} shadow-lg`
+                          : 'bg-white/5 hover:bg-white/10 border border-white/10'}
                       `}
                     >
                       {type.popular && (
@@ -467,19 +489,17 @@ export default function ContactPage() {
                       <div className={`
                         w-9 h-9 rounded-lg flex items-center justify-center mb-3
                         ${isSelected
-                          ? type.color === 'emerald' ? `${iconCircleColors.green.bg} ${iconCircleColors.green.icon}`
-                            : type.color === 'blue' ? `${iconCircleColors.blue.bg} ${iconCircleColors.blue.icon}`
-                            : `${iconCircleColors.purple.bg} ${iconCircleColors.purple.icon}`
-                          : 'bg-white/10 text-white'}
+                          ? `bg-white/10 ${iconColor}`
+                          : 'bg-white/10 text-white/60'}
                       `}>
                         <Icon className="w-4 h-4" />
                       </div>
 
-                      <h3 className="font-semibold mb-1">{type.name}</h3>
-                      <p className={`text-xs mb-1 ${isSelected ? 'text-slate-500' : 'text-slate-400'}`}>
+                      <h3 className="font-semibold text-white mb-1">{type.name}</h3>
+                      <p className="text-xs text-slate-400 mb-1">
                         {type.description}
                       </p>
-                      <p className={`text-sm font-medium ${isSelected ? accentColors.blue.titleText : 'text-blue-400'}`}>
+                      <p className={`text-sm font-medium ${isSelected ? iconColor : 'text-slate-400'}`}>
                         {type.duration}
                       </p>
 
@@ -495,46 +515,29 @@ export default function ContactPage() {
             </motion.div>
           )}
           </AnimatePresence>
-
-          {/* Trust indicators */}
-          <FadeIn direction="up" delay={0.4} triggerOnScroll={false}>
-          <div className="flex flex-wrap justify-center gap-6 mt-12 text-sm text-slate-400">
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              Response within 24 hours
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              Get a clear next step
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              No pressure, ever
-            </span>
-          </div>
-          </FadeIn>
         </div>
-
-        {/* Curved transition to form */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-white" style={{
-          clipPath: 'ellipse(70% 100% at 50% 100%)'
-        }} />
       </section>
 
       {/* ================================================================== */}
-      {/* Form Section - Clean, Bright */}
+      {/* Form Section - Clean, Bright with Editorial Header */}
       {/* ================================================================== */}
       <section ref={formSectionRef} className="bg-white py-16 md:py-20 scroll-mt-4">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          {/* Form header */}
-          <FadeIn direction="up"><div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-              Tell us about your project
-            </h2>
-            <p className="text-gray-600">
-              Share some details and we&apos;ll get back to you with ideas.
-            </p>
-          </div></FadeIn>
+        <div className="max-w-xl mx-auto px-4 sm:px-6">
+          {/* Editorial left-aligned header */}
+          <FadeIn direction="up">
+            <div className="mb-10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500" />
+                <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Your Project</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight mb-3">
+                Tell us the details.
+              </h2>
+              <p className="text-gray-500">
+                Share some details and we&apos;ll get back to you with ideas.
+              </p>
+            </div>
+          </FadeIn>
 
           {/* The Form */}
           <FadeIn direction="up" delay={0.1}><form onSubmit={handleSubmit} className="space-y-6">
@@ -707,7 +710,7 @@ export default function ContactPage() {
               </div>
             )}
 
-            {/* Submit button */}
+            {/* Submit button - emerald primary CTA */}
             <motion.button
               type="submit"
               disabled={isSubmitting}
@@ -719,7 +722,7 @@ export default function ContactPage() {
                 flex items-center justify-center gap-3
                 ${isSubmitting
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-slate-800 to-slate-900 text-white hover:from-slate-700 hover:to-slate-800 shadow-lg shadow-slate-900/20 hover:shadow-xl hover:shadow-slate-900/30'}
+                  : 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white hover:from-emerald-500 hover:to-emerald-400 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30'}
               `}
             >
               {isSubmitting ? (
@@ -744,36 +747,6 @@ export default function ContactPage() {
               .
             </p>
           </form></FadeIn>
-        </div>
-      </section>
-
-      {/* ================================================================== */}
-      {/* Alternative Contact Section */}
-      {/* ================================================================== */}
-      <section className="bg-gray-50 py-16 md:py-20">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
-          <h3 className="text-xl font-semibold text-gray-900 mb-3">
-            Prefer a different way to connect?
-          </h3>
-          <p className="text-gray-600 mb-6">
-            Check out our pricing or browse services to learn more.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href="/pricing"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:border-blue-300 hover:text-blue-700 hover:shadow-md transition-all"
-            >
-              View Pricing
-              <ArrowRight className="w-4 h-4" />
-            </a>
-            <a
-              href="/#services-section"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:shadow-md transition-all"
-            >
-              Browse Services
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
         </div>
       </section>
     </div>
