@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdmin } from '@/lib/api-auth';
+import { withTimeout, TIMEOUT_LIMITS } from '@/lib/api-timeout';
 
 // ============================================================================
 // Update Product Image in Medusa (Admin Only)
@@ -13,21 +14,31 @@ const MEDUSA_ADMIN_EMAIL = process.env.MEDUSA_ADMIN_EMAIL;
 const MEDUSA_ADMIN_PASSWORD = process.env.MEDUSA_ADMIN_PASSWORD;
 
 async function authenticateWithMedusa() {
-  const response = await fetch(`${MEDUSA_BACKEND_URL}/admin/auth`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: MEDUSA_ADMIN_EMAIL,
-      password: MEDUSA_ADMIN_PASSWORD,
-    }),
-  });
+  try {
+    const response = await withTimeout(
+      fetch(`${MEDUSA_BACKEND_URL}/admin/auth`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: MEDUSA_ADMIN_EMAIL,
+          password: MEDUSA_ADMIN_PASSWORD,
+        }),
+      }),
+      TIMEOUT_LIMITS.EXTERNAL_API,
+      'Medusa authentication'
+    );
 
-  if (!response.ok) {
-    throw new Error('Failed to authenticate with Medusa');
+    if (!response.ok) {
+      throw new Error('Failed to authenticate with Medusa');
+    }
+
+    const cookies = response.headers.get('set-cookie');
+    return cookies;
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('[Update Image] Medusa authentication failed:', errorMessage);
+    throw error;
   }
-
-  const cookies = response.headers.get('set-cookie');
-  return cookies;
 }
 
 export async function POST(request: NextRequest) {
@@ -57,18 +68,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Update product image
-    const updateResponse = await fetch(`${MEDUSA_BACKEND_URL}/admin/products/${productId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: authCookies,
-      },
-      body: JSON.stringify({
-        thumbnail: imageUrl,
-        images: [{ url: imageUrl }],
+    // Update product image with timeout protection
+    const updateResponse = await withTimeout(
+      fetch(`${MEDUSA_BACKEND_URL}/admin/products/${productId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: authCookies,
+        },
+        body: JSON.stringify({
+          thumbnail: imageUrl,
+          images: [{ url: imageUrl }],
+        }),
       }),
-    });
+      TIMEOUT_LIMITS.EXTERNAL_API,
+      `Update product image for ${productId}`
+    );
 
     if (!updateResponse.ok) {
       const errorData = await updateResponse.json().catch(() => ({}));

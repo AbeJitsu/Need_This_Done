@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdmin } from '@/lib/api-auth';
 import { handleApiError } from '@/lib/api-errors';
+import { withTimeout, TIMEOUT_LIMITS } from '@/lib/api-timeout';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,9 +26,13 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const format = searchParams.get('format') || 'json';
 
-    // Fetch products from our API
-    const productsResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/shop/products`
+    // Fetch products from our API with timeout protection
+    const productsResponse = await withTimeout(
+      fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/shop/products`
+      ),
+      TIMEOUT_LIMITS.EXTERNAL_API,
+      'Fetch products for export'
     );
 
     if (!productsResponse.ok) {
