@@ -20,7 +20,7 @@ export const getCurrentUser = async () => {
 
     if (error) {
       // AuthSessionMissingError is expected when no user is logged in
-      if (error.__isAuthError) return null;
+      if ('__isAuthError' in error) return null;
       console.error('Error getting current user:', error);
       return null;
     }
@@ -44,7 +44,7 @@ export const getSession = async () => {
     } = await supabase.auth.getSession();
 
     if (error) {
-      if (error.__isAuthError) return null;
+      if ('__isAuthError' in error) return null;
       console.error('Error getting session:', error);
       return null;
     }
