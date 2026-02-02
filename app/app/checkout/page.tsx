@@ -139,9 +139,19 @@ export default function CheckoutPage() {
         body: JSON.stringify({ cart_id: cartId }),
       });
 
+      // Handle non-OK responses
+      if (!checkResponse.ok) {
+        throw new Error('Failed to check appointment requirement');
+      }
+
       const checkData = await checkResponse.json();
 
-      if (checkResponse.ok && checkData.requires_appointment) {
+      // Validate response structure before using it
+      if (!checkData || typeof checkData.requires_appointment !== 'boolean') {
+        throw new Error('Invalid appointment check response');
+      }
+
+      if (checkData.requires_appointment) {
         // Store appointment info and go to appointment step
         setRequiresAppointment(true);
         setAppointmentInfo({
