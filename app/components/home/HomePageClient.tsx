@@ -99,19 +99,25 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
       {/* Rest of content in max-w container */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-        {/* Services Section - Asymmetric Hero Card Layout */}
+        {/* Services Section - Bold Asymmetric Cards */}
         <EditableSection sectionKey="services" label="Services">
         <div id="services-section" className="mb-24 scroll-mt-24">
-          {/* Section title - bold, left-aligned */}
+          {/* Section header — editorial style with accent line */}
           <FadeIn direction="up">
-            <h2 className="text-4xl md:text-5xl font-manrope font-extrabold text-gray-900 mb-12">
-              WHAT WE BUILD
-            </h2>
+            <div className="mb-14">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="h-1 w-12 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 rounded-full" />
+                <span className="text-sm font-semibold uppercase tracking-widest text-gray-500">Our Services</span>
+              </div>
+              <h2 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tight leading-[0.95]">
+                What we build
+              </h2>
+            </div>
           </FadeIn>
 
-          {/* Service cards - asymmetric grid with glassmorphism */}
-          <StaggerContainer className="grid lg:grid-cols-[1.5fr_1fr] gap-6 lg:gap-8 mb-8">
-            {/* Hero Card - Website Builds (Full modal content displayed) */}
+          {/* Service cards — asymmetric grid */}
+          <StaggerContainer className="grid lg:grid-cols-[1.4fr_1fr] gap-5 lg:gap-6 mb-10">
+            {/* Hero Card — Website Builds */}
             {content.services.cards[0] && content.services.cards[0].modal && (
               <StaggerItem>
               <EditableItem
@@ -121,8 +127,8 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 label={content.services.cards[0].title}
                 content={content.services.cards[0] as unknown as Record<string, unknown>}
               >
-                <article
-                  className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border-2 border-emerald-200 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:border-emerald-400 transition-all duration-300 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl focus-visible:-translate-y-1 focus-visible:border-emerald-500 cursor-pointer"
+                <motion.article
+                  className="group relative h-full rounded-3xl p-8 lg:p-10 cursor-pointer overflow-hidden bg-emerald-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
                   tabIndex={0}
                   role="button"
                   aria-labelledby="service-card-0-title"
@@ -133,58 +139,72 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                       router.push('/pricing');
                     }
                   }}
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
                 >
-                  {/* Icon */}
-                  <div className="w-16 h-16 rounded-xl bg-emerald-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform" aria-hidden="true">
-                    <ServiceIcon
-                      type={getServiceIconType(content.services.cards[0].title)}
-                      color="green"
-                      size="md"
-                    />
-                  </div>
+                  {/* Subtle gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-700 via-emerald-800 to-emerald-900 opacity-100" />
+                  {/* Decorative glow */}
+                  <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-emerald-400/20 blur-3xl" />
+                  <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-emerald-300/15 blur-2xl" />
 
-                  {/* Title */}
-                  <h3 id="service-card-0-title" className="text-3xl font-manrope font-bold text-emerald-600 mb-3">
-                    {content.services.cards[0].title}
-                  </h3>
-
-                  {/* Modal headline */}
-                  <h4 className="text-xl font-semibold text-gray-900 mb-2">
-                    {content.services.cards[0].modal.headline}
-                  </h4>
-
-                  {/* Modal hook */}
-                  <p className="text-gray-600 mb-6">
-                    {content.services.cards[0].modal.hook}
-                  </p>
-
-                  {/* Bullet points */}
-                  {content.services.cards[0].modal.bulletHeader && (
-                    <div>
-                      <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                        {content.services.cards[0].modal.bulletHeader}
-                      </p>
-                      <ul className="space-y-2" role="list">
-                        {content.services.cards[0].modal.bulletPoints.map((point, idx) => (
-                          <li key={idx} className="flex items-start gap-3">
-                            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5" aria-hidden="true">
-                              <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
-                            </div>
-                            <span className="text-gray-700">{point}</span>
-                          </li>
-                        ))}
-                      </ul>
+                  <div className="relative z-10">
+                    {/* Number badge */}
+                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/15 text-white/80 text-sm font-bold mb-6 backdrop-blur-sm border border-white/10">
+                      01
                     </div>
-                  )}
-                </article>
+
+                    {/* Title */}
+                    <h3 id="service-card-0-title" className="text-3xl lg:text-4xl font-black text-white mb-3 tracking-tight">
+                      {content.services.cards[0].title}
+                    </h3>
+
+                    {/* Headline */}
+                    <p className="text-lg font-semibold text-white/90 mb-2">
+                      {content.services.cards[0].modal.headline}
+                    </p>
+
+                    {/* Hook */}
+                    <p className="text-emerald-200 mb-8 leading-relaxed max-w-md">
+                      {content.services.cards[0].modal.hook}
+                    </p>
+
+                    {/* Bullet points */}
+                    {content.services.cards[0].modal.bulletHeader && (
+                      <div>
+                        <p className="text-xs font-bold text-emerald-300 uppercase tracking-widest mb-3">
+                          {content.services.cards[0].modal.bulletHeader}
+                        </p>
+                        <ul className="space-y-2.5" role="list">
+                          {content.services.cards[0].modal.bulletPoints.map((point, idx) => (
+                            <li key={idx} className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center mt-0.5" aria-hidden="true">
+                                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </div>
+                              <span className="text-white/90 text-sm">{point}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Arrow indicator */}
+                    <div className="mt-8 flex items-center gap-2 text-white/60 group-hover:text-white transition-colors">
+                      <span className="text-sm font-semibold">View pricing</span>
+                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </div>
+                  </div>
+                </motion.article>
               </EditableItem>
               </StaggerItem>
             )}
 
-            {/* Right column - stacked cards with glassmorphism */}
-            <div className="flex flex-col gap-6">
+            {/* Right column — stacked cards */}
+            <div className="flex flex-col gap-5 lg:gap-6">
               {/* Automation Setup Card */}
               {content.services.cards[1] && content.services.cards[1].modal && (
                 <StaggerItem>
@@ -195,8 +215,8 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[1].title}
                   content={content.services.cards[1] as unknown as Record<string, unknown>}
                 >
-                  <article
-                    className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border-2 border-blue-200 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:border-blue-400 transition-all duration-300 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl focus-visible:-translate-y-1 focus-visible:border-blue-500 cursor-pointer"
+                  <motion.article
+                    className="group relative h-full rounded-3xl p-7 cursor-pointer overflow-hidden bg-slate-900 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-1-title"
@@ -207,31 +227,43 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                         router.push('/pricing');
                       }
                     }}
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
                   >
-                    {/* Icon */}
-                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" aria-hidden="true">
-                      <ServiceIcon
-                        type={getServiceIconType(content.services.cards[1].title)}
-                        color="blue"
-                        size="sm"
-                      />
+                    {/* Blue accent glow */}
+                    <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-blue-500/20 blur-3xl" />
+                    <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-blue-400/10 blur-2xl" />
+
+                    <div className="relative z-10">
+                      {/* Number badge */}
+                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold mb-5 border border-blue-500/20">
+                        02
+                      </div>
+
+                      {/* Title */}
+                      <h3 id="service-card-1-title" className="text-2xl font-black text-white mb-2 tracking-tight">
+                        {content.services.cards[1].title}
+                      </h3>
+
+                      {/* Headline */}
+                      <p className="text-base font-semibold text-blue-200 mb-2">
+                        {content.services.cards[1].modal.headline}
+                      </p>
+
+                      {/* Hook */}
+                      <p className="text-sm text-slate-400 leading-relaxed">
+                        {content.services.cards[1].modal.hook}
+                      </p>
+
+                      {/* Arrow */}
+                      <div className="mt-6 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
+                        <span className="text-sm font-semibold">View pricing</span>
+                        <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </div>
                     </div>
-
-                    {/* Title */}
-                    <h3 id="service-card-1-title" className="text-2xl font-manrope font-bold text-blue-600 mb-2">
-                      {content.services.cards[1].title}
-                    </h3>
-
-                    {/* Modal headline */}
-                    <p className="text-base font-semibold text-gray-900 mb-2">
-                      {content.services.cards[1].modal.headline}
-                    </p>
-
-                    {/* Modal hook */}
-                    <p className="text-sm text-gray-600">
-                      {content.services.cards[1].modal.hook}
-                    </p>
-                  </article>
+                  </motion.article>
                 </EditableItem>
                 </StaggerItem>
               )}
@@ -246,8 +278,8 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[2].title}
                   content={content.services.cards[2] as unknown as Record<string, unknown>}
                 >
-                  <article
-                    className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border-2 border-purple-200 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:border-purple-400 transition-all duration-300 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl focus-visible:-translate-y-1 focus-visible:border-purple-500 cursor-pointer"
+                  <motion.article
+                    className="group relative h-full rounded-3xl p-7 cursor-pointer overflow-hidden bg-gradient-to-br from-purple-700 to-purple-900 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-400 focus-visible:ring-offset-2"
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-2-title"
@@ -258,43 +290,57 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                         router.push('/pricing');
                       }
                     }}
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
                   >
-                    {/* Icon */}
-                    <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" aria-hidden="true">
-                      <ServiceIcon
-                        type={getServiceIconType(content.services.cards[2].title)}
-                        color="purple"
-                        size="sm"
-                      />
+                    {/* Purple accent glow */}
+                    <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-purple-400/20 blur-3xl" />
+                    <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-purple-300/15 blur-2xl" />
+
+                    <div className="relative z-10">
+                      {/* Number badge */}
+                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/15 text-purple-200 text-sm font-bold mb-5 border border-white/10">
+                        03
+                      </div>
+
+                      {/* Title */}
+                      <h3 id="service-card-2-title" className="text-2xl font-black text-white mb-2 tracking-tight">
+                        {content.services.cards[2].title}
+                      </h3>
+
+                      {/* Headline */}
+                      <p className="text-base font-semibold text-purple-200 mb-2">
+                        {content.services.cards[2].modal.headline}
+                      </p>
+
+                      {/* Hook */}
+                      <p className="text-sm text-purple-200 leading-relaxed">
+                        {content.services.cards[2].modal.hook}
+                      </p>
+
+                      {/* Arrow */}
+                      <div className="mt-6 flex items-center gap-2 text-purple-200/80 group-hover:text-white transition-colors">
+                        <span className="text-sm font-semibold">View pricing</span>
+                        <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </div>
                     </div>
-
-                    {/* Title */}
-                    <h3 id="service-card-2-title" className="text-2xl font-manrope font-bold text-purple-600 mb-2">
-                      {content.services.cards[2].title}
-                    </h3>
-
-                    {/* Modal headline */}
-                    <p className="text-base font-semibold text-gray-900 mb-2">
-                      {content.services.cards[2].modal.headline}
-                    </p>
-
-                    {/* Modal hook */}
-                    <p className="text-sm text-gray-600">
-                      {content.services.cards[2].modal.hook}
-                    </p>
-                  </article>
+                  </motion.article>
                 </EditableItem>
                 </StaggerItem>
               )}
             </div>
           </StaggerContainer>
 
-          {/* Section CTA - View Pricing */}
-          <div className="text-center mt-8">
-            <Button variant="green" href="/pricing" size="lg">
-              View Pricing
-            </Button>
-          </div>
+          {/* Section CTA */}
+          <FadeIn direction="up">
+            <div className="text-center mt-10">
+              <Button variant="green" href="/pricing" size="lg" className="shadow-lg shadow-emerald-500/25">
+                View Pricing
+              </Button>
+            </div>
+          </FadeIn>
 
         </div>
       </EditableSection>
