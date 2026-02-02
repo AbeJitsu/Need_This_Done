@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { EditableSection, EditableItem, Editable } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import ServiceIcon, { getServiceIconType } from '@/components/home/ServiceIcons';
@@ -21,6 +22,7 @@ interface HomePageClientProps {
 }
 
 export default function HomePageClient({ content: initialContent }: HomePageClientProps) {
+  const router = useRouter();
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
   // Check that pageContent has expected structure before using it
@@ -108,11 +110,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   tabIndex={0}
                   role="button"
                   aria-labelledby="service-card-0-title"
-                  onClick={() => window.location.href = '/pricing'}
+                  onClick={() => router.push('/pricing')}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      window.location.href = '/pricing';
+                      router.push('/pricing');
                     }
                   }}
                 >
@@ -180,11 +182,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-1-title"
-                    onClick={() => window.location.href = '/pricing'}
+                    onClick={() => router.push('/pricing')}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        window.location.href = '/pricing';
+                        router.push('/pricing');
                       }
                     }}
                   >
@@ -229,11 +231,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-2-title"
-                    onClick={() => window.location.href = '/pricing'}
+                    onClick={() => router.push('/pricing')}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        window.location.href = '/pricing';
+                        router.push('/pricing');
                       }
                     }}
                   >
@@ -268,15 +270,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
           {/* Section CTA - View Pricing */}
           <div className="text-center mt-8">
-            <a
-              href="/pricing"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-semibold text-lg rounded-xl hover:bg-emerald-700 motion-safe:hover:scale-105 motion-safe:active:scale-95 active:bg-emerald-800 transition-all duration-300 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-300 focus-visible:ring-offset-2"
-            >
+            <Button variant="green" href="/pricing" size="lg">
               View Pricing
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
+            </Button>
           </div>
 
         </div>
@@ -458,15 +454,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
             {/* Single CTA Button - Purple (3rd in BJJ order) */}
             <div className="mb-6">
-              <a
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-purple-600 text-white font-semibold text-xl rounded-xl hover:bg-purple-700 motion-safe:hover:scale-105 motion-safe:active:scale-95 active:bg-purple-800 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-300 focus-visible:ring-offset-2"
-              >
+              <Button variant="purple" href="/contact" size="lg">
                 BOOK A FREE CALL
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </a>
+              </Button>
             </div>
 
             {/* Chatbot link */}

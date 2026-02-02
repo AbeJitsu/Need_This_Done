@@ -54,14 +54,23 @@ export default function Navigation() {
       }
     };
 
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (showDropdown) setShowDropdown(false);
+        if (mobileMenuOpen) setMobileMenuOpen(false);
+      }
+    };
+
     // Handle both mouse and touch events for mobile support
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
     };
-  }, []);
+  }, [showDropdown, mobileMenuOpen]);
 
   // ============================================================================
   // Handle Logout

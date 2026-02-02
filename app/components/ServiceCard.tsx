@@ -150,7 +150,7 @@ export default function ServiceCard({
       <button
         type="button"
         onClick={onClick}
-        className={`block text-left w-full ${cardClasses} ${interactiveClasses} cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-${color === 'green' ? 'green' : color === 'blue' ? 'blue' : 'purple'}-300 focus-visible:ring-offset-2`}
+        className={`block text-left w-full ${cardClasses} ${interactiveClasses} cursor-pointer ${accentColors[color].focusVisible}`}
       >
         {cardContent}
       </button>
