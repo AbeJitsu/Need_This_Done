@@ -325,18 +325,25 @@ async function handlePaymentSuccess(
   if (email && orderId) {
     // Fetch order details for the email (best-effort, don't fail if this fails)
     // Wrap with timeout to prevent hanging webhook if database is slow
-    let orderDetails;
+    let orderDetails: Record<string, unknown> | null = null;
     try {
       const result = await withTimeout(
-        supabase
-          .from('orders')
-          .select('id, medusa_order_id, total, requires_appointment, customer_name, items')
-          .eq('medusa_order_id', orderId)
-          .single(),
+        Promise.resolve(
+          supabase
+            .from('orders')
+            .select('id, medusa_order_id, total, requires_appointment, customer_name, items')
+            .eq('medusa_order_id', orderId)
+            .single()
+        ),
         TIMEOUT_LIMITS.DATABASE,
         'Fetch order details for confirmation email'
       );
-      orderDetails = result.data;
+      if (result && typeof result === 'object' && 'data' in result) {
+        const data = (result as unknown as Record<string, unknown>).data;
+        if (data && typeof data === 'object') {
+          orderDetails = data as Record<string, unknown>;
+        }
+      }
     } catch (err) {
       console.warn('[Webhook] Failed to fetch order details for email (timeout or error):', err);
       // Continue - send email with minimal data
@@ -344,15 +351,16 @@ async function handlePaymentSuccess(
 
     if (orderDetails) {
       const orderItems = Array.isArray(orderDetails.items) ? orderDetails.items : [];
+      const shortOrderId = String(orderDetails.medusa_order_id || orderId).slice(0, 8);
       sendOrderConfirmation({
-        orderId: orderDetails.medusa_order_id?.slice(0, 8) || orderId.slice(0, 8),
+        orderId: shortOrderId,
         orderDate: new Date().toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
         }),
         customerEmail: email,
-        customerName: orderDetails.customer_name || undefined,
+        customerName: (orderDetails.customer_name as string) || undefined,
         items: orderItems.map((item: Record<string, unknown>) => ({
           name: (item.name as string) || 'Item',
           quantity: (item.quantity as number) || 1,
@@ -361,18 +369,19 @@ async function handlePaymentSuccess(
         })),
         subtotal: paymentIntent.amount,
         total: paymentIntent.amount,
-        requiresAppointment: orderDetails.requires_appointment || false,
+        requiresAppointment: (orderDetails.requires_appointment as boolean) || false,
       }).catch((err: unknown) => {
         console.error('[Webhook] Failed to send order confirmation email:', err);
         // Log failed email attempt to database for manual follow-up (don't block webhook)
         // Fire-and-forget - don't await
+        const failureOrderId = String(orderDetails?.medusa_order_id || orderId).slice(0, 8);
         supabase
           .from('email_failures')
           .insert({
             type: 'order_confirmation',
             recipient_email: email,
-            subject: `Order Confirmation: ${orderDetails.medusa_order_id?.slice(0, 8) || orderId.slice(0, 8)}`,
-            order_id: orderDetails.id,
+            subject: `Order Confirmation: ${failureOrderId}`,
+            order_id: (orderDetails?.id as string) || orderId,
             error_message: err instanceof Error ? err.message : 'Unknown error',
             created_at: new Date().toISOString(),
           });

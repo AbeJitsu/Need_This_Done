@@ -133,8 +133,11 @@ export async function POST(request: NextRequest) {
       // Send asynchronously without blocking response, but track in DB for visibility
       (async () => {
         try {
+          const userEmail = data.user?.email;
+          if (!userEmail) return; // Email is required to send notification
+
           const emailId = await sendWelcomeEmail({
-            email: data.user!.email,
+            email: userEmail,
             name: (metadata?.name || metadata?.full_name) as string | undefined,
           });
 

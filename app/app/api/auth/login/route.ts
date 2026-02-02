@@ -154,8 +154,11 @@ export async function POST(request: NextRequest) {
       // Send asynchronously without blocking response, but track in DB for visibility
       (async () => {
         try {
+          const userEmail = data.user?.email;
+          if (!userEmail) return; // Email is required to send notification
+
           const emailId = await sendLoginNotification({
-            email: data.user!.email,
+            email: userEmail,
             loginTime: new Date().toLocaleString('en-US', {
               weekday: 'long',
               year: 'numeric',
