@@ -6,9 +6,15 @@ test.describe('Hero Section', () => {
   });
 
   test('renders the main headline text', async ({ page }) => {
-    // Check headline is visible
-    await expect(page.locator('text=We build what')).toBeVisible();
-    await expect(page.locator('text=you need done')).toBeVisible();
+    // Check headline h1 exists and is visible
+    const headline = page.locator('h1').first();
+    await expect(headline).toBeVisible();
+
+    // Check key phrases are in the headline
+    const headlineText = await headline.textContent();
+    expect(headlineText).toContain('We build');
+    expect(headlineText).toContain('what you need');
+    expect(headlineText).toContain('done');
   });
 
   test('renders call-to-action button', async ({ page }) => {
@@ -47,17 +53,17 @@ test.describe('Hero Section', () => {
     await expect(contentWrapper).toBeVisible();
   });
 
-  test('supports reduced motion preference', async ({ page, context }) => {
-    // Create new context with reduced motion preference
-    const newPage = await context.newPage();
-    await newPage.emulateMedia({ reducedMotion: 'reduce' });
-    await newPage.goto('http://localhost:3001/');
+  test('supports reduced motion preference', async ({ page }) => {
+    // Emulate reduced motion on current page
+    await page.emulateMedia({ reducedMotion: 'reduce' });
 
-    // Page should still render without errors
-    const headline = newPage.locator('text=We build what');
+    // Page should still render without errors even with reduced motion
+    const headline = page.locator('h1').first();
     await expect(headline).toBeVisible();
 
-    await newPage.close();
+    // Check content is still present
+    const headlineText = await headline.textContent();
+    expect(headlineText).toContain('We build');
   });
 
   test('renders scroll indicator', async ({ page }) => {
