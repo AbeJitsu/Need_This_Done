@@ -134,8 +134,9 @@ export default function ConfirmDialog({
             className={`
               absolute top-4 right-4 z-10
               ${iconButtonColors.text} ${iconButtonColors.hover}
-              p-2 rounded-lg ${iconButtonColors.bg} transition-colors
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
+              p-2 rounded-lg ${iconButtonColors.bg} transition-all duration-200
+              motion-safe:hover:scale-110 motion-safe:active:scale-95
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
             `}
             aria-label="Close dialog"
           >
@@ -169,9 +170,10 @@ export default function ConfirmDialog({
                   flex-1 py-2.5 px-4 rounded-lg font-medium
                   border-2 border-gray-400 dark:border-gray-600
                   ${headingColors.primary}
-                  hover:bg-gray-100 dark:hover:bg-gray-700
-                  transition-colors
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
+                  hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-gray-500 dark:hover:border-gray-500
+                  motion-safe:hover:scale-105 motion-safe:active:scale-95
+                  transition-all duration-200
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                 `}
               >
                 {cancelLabel}
@@ -183,8 +185,10 @@ export default function ConfirmDialog({
                 className={`
                   flex-1 py-2.5 px-4 rounded-lg font-medium border-2
                   ${styles.confirmBg} ${styles.confirmHover} ${styles.confirmText}
-                  transition-colors
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 focus-visible:ring-blue-500
+                  motion-safe:hover:scale-105 motion-safe:active:scale-95
+                  transition-all duration-200
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
+                  ${variant === 'danger' ? 'focus-visible:ring-red-500' : variant === 'warning' ? 'focus-visible:ring-gold-500' : 'focus-visible:ring-blue-500'}
                 `}
               >
                 {confirmLabel}

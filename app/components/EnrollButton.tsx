@@ -51,11 +51,12 @@ export default function EnrollButton({
   // Get color classes from our color system
   const colors = accentColors[color];
 
-  // Ring colors for focus state (not in accentColors)
-  const ringColors = {
-    blue: 'focus:ring-blue-500',
-    green: 'focus:ring-green-500',
-    purple: 'focus:ring-purple-500',
+  // Ring colors for focus state - use focus-visible instead of focus for keyboard-only focus
+  // This ensures focus ring only shows for keyboard navigation, not mouse clicks
+  const ringClasses = {
+    blue: 'focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+    green: 'focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-green-500 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
+    purple: 'focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-purple-500 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   };
 
   const handleEnroll = async () => {
@@ -142,9 +143,9 @@ export default function EnrollButton({
         rounded-lg font-medium
         transition-all duration-200
         ${colors.bg} ${colors.text}
-        hover:opacity-90
-        focus:outline-none focus:ring-2 focus:ring-offset-2 ${ringColors[color]}
-        disabled:opacity-50 disabled:cursor-not-allowed
+        hover:opacity-90 motion-safe:hover:scale-105 motion-safe:active:scale-95
+        ${ringClasses[color]}
+        disabled:opacity-50 disabled:cursor-not-allowed motion-safe:disabled:hover:scale-100 motion-safe:disabled:active:scale-100
       `}
       data-testid="enroll-button"
       aria-label={

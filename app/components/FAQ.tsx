@@ -121,8 +121,10 @@ export default function FAQ() {
                 hover:bg-gray-200 dark:hover:bg-gray-600
                 text-left
                 font-medium ${headingColors.primary}
-                transition-colors
+                transition-all duration-200
                 flex items-center justify-between
+                rounded-lg
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
               `}
             >
               <span>{faq.question}</span>
