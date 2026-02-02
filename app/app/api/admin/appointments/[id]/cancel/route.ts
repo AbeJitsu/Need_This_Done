@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import { deleteCalendarEvent, isCalendarConnected, getValidAccessToken } from '@/lib/google-calendar';
 import { sendAppointmentCancellation } from '@/lib/email-service';
 
@@ -19,11 +19,8 @@ export async function POST(
   try {
     const { id } = await params;
 
-    // Create Supabase client with service role
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    // Use singleton admin client
+    const supabase = getSupabaseAdmin();
 
     // Get authorization header
     const authHeader = request.headers.get('authorization');

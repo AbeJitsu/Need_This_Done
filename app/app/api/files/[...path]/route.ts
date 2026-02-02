@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import { verifyAuth } from '@/lib/api-auth';
 
 export const dynamic = 'force-dynamic';
@@ -38,17 +38,13 @@ export async function GET(
     return NextResponse.json({ error: 'File path required' }, { status: 400 });
   }
 
-  // Validate environment variables
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    console.error('Missing Supabase environment variables for file download');
+  // Use singleton admin client for storage access
+  try {
+    var supabase = getSupabaseAdmin();
+  } catch (error) {
+    console.error('Supabase configuration error for file download:', error);
     return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
   }
-
-  // Create Supabase client with service role for storage access
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-  );
 
   // Generate a signed URL (valid for 24 hours)
   const { data, error } = await supabase.storage

@@ -77,7 +77,7 @@ export async function checkAndMarkRequest(
     // Returns "OK" if set successfully, null if key already exists
     //
     // TIMEOUT PROTECTION: Wrap Redis call with timeout to prevent indefinite hangs
-    // If Redis is slow, fail fast and allow request through (graceful degradation)
+    // If Redis is slow, fail fast and block request (better safe than sorry)
     const result = await withTimeout(
       redis.raw.set(key, new Date().toISOString(), {
         NX: true, // Only set if key doesn't exist (atomic test-and-set)
@@ -103,11 +103,10 @@ export async function checkAndMarkRequest(
       return false;
     } else {
       console.error(`[Dedup] Redis error for ${operation}:`, error);
+      // On any Redis error, block the request - better to false-positive on dedup
+      // than to allow unlimited duplicate submissions when Redis is down
+      return false;
     }
-
-    // On Redis connection failure (not timeout), still allow through to prevent blocking all traffic
-    // Circuit breaker check above will catch repeated failures
-    return true;
   }
 }
 

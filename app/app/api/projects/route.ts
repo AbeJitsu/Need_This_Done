@@ -20,6 +20,7 @@ import {
   createRequestFingerprint,
   checkAndMarkRequest,
 } from '@/lib/request-dedup';
+import { withTimeout } from '@/lib/api-timeout';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +35,13 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
-    const formData = await request.formData();
+    // Parse form data with timeout protection to prevent large upload hangs
+    // If parsing takes > 30 seconds (e.g., 100MB file upload), fail fast
+    const formData = await withTimeout(
+      request.formData(),
+      30000, // 30 seconds - reasonable for large file uploads
+      'Parse form data with file attachments'
+    );
 
     // ====================================================================
     // Extract Form Fields
