@@ -1,6 +1,8 @@
 import { openai } from '@ai-sdk/openai';
 import { streamText, embed, type CoreMessage } from 'ai';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { redis } from '@/lib/redis';
+import { withSupabaseRetry } from '@/lib/supabase-retry';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,12 +25,114 @@ export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
 
-    // Validate input
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    // ========================================================================
+    // Input Validation - Prevent DoS and Resource Exhaustion
+    // ========================================================================
+
+    // Validate messages array exists and is array
+    if (!messages || !Array.isArray(messages)) {
       return new Response(
         JSON.stringify({ error: 'Messages array is required' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
+    }
+
+    // Prevent DoS via large message arrays (max 50 messages in history)
+    if (messages.length === 0) {
+      return new Response(
+        JSON.stringify({ error: 'Messages array cannot be empty' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (messages.length > 50) {
+      return new Response(
+        JSON.stringify({ error: 'Too many messages. Maximum 50 messages allowed.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate each message has required fields
+    for (const msg of messages) {
+      if (!msg.role || typeof msg.role !== 'string') {
+        return new Response(
+          JSON.stringify({ error: 'Invalid message format: missing role' }),
+          { status: 400, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Role must be one of: user, assistant, system
+      if (!['user', 'assistant', 'system'].includes(msg.role)) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid message role. Must be: user, assistant, or system' }),
+          { status: 400, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // Validate total conversation size (prevent memory exhaustion)
+    const totalContentLength = messages.reduce((sum, msg) => {
+      const content = msg.content || msg.parts?.[0]?.text || '';
+      return sum + content.length;
+    }, 0);
+
+    // Maximum 50KB of total conversation content
+    if (totalContentLength > 50000) {
+      return new Response(
+        JSON.stringify({ error: 'Conversation too long. Please start a new chat.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // ========================================================================
+    // Rate Limiting - Prevent Abuse and Control API Costs
+    // ========================================================================
+    // Limit to 20 requests per minute per IP address
+    // Uses Redis for distributed rate limiting across multiple instances
+
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+                     req.headers.get('x-real-ip') ||
+                     'unknown';
+
+    const rateLimitKey = `rate:chat:${clientIp}`;
+    const rateLimitWindow = 60; // 60 seconds
+    const rateLimitMax = 20; // 20 requests per minute
+
+    try {
+      // Increment request counter for this IP
+      const requestCount = await redis.incr(rateLimitKey);
+
+      // Set expiration on first request in window
+      if (requestCount === 1) {
+        await redis.raw.expire(rateLimitKey, rateLimitWindow);
+      }
+
+      // Block if over limit
+      if (requestCount > rateLimitMax) {
+        console.warn(`[Chat] Rate limit exceeded for IP: ${clientIp} (${requestCount} requests)`);
+        return new Response(
+          JSON.stringify({
+            error: 'Too many requests. Please wait a moment before trying again.',
+            retryAfter: rateLimitWindow,
+          }),
+          {
+            status: 429,
+            headers: {
+              'Content-Type': 'application/json',
+              'Retry-After': rateLimitWindow.toString(),
+              'X-RateLimit-Limit': rateLimitMax.toString(),
+              'X-RateLimit-Remaining': Math.max(0, rateLimitMax - requestCount).toString(),
+            }
+          }
+        );
+      }
+
+      // Add rate limit headers to successful responses (informational)
+      req.headers.set('X-RateLimit-Remaining', (rateLimitMax - requestCount).toString());
+    } catch (rateLimitError) {
+      // If rate limiting fails (Redis down), allow request through
+      // Better to serve users than to block them on infrastructure failure
+      console.error('[Chat] Rate limiting failed:', rateLimitError);
     }
 
     // ========================================================================
@@ -89,18 +193,39 @@ export async function POST(req: Request) {
     // Convert embedding array to string format for pgvector RPC
     const embeddingStr = `[${embedding.join(',')}]`;
 
-    const { data: matches, error: searchError } = await supabase.rpc(
-      'match_page_embeddings',
-      {
-        query_embedding: embeddingStr,
-        match_threshold: similarityThreshold,
-        match_count: maxResults,
-      }
-    );
+    // RELIABILITY FIX: Add retry logic for vector search
+    // Vector search can fail due to transient database issues (connection timeouts,
+    // connection pool exhaustion). Retrying ensures chat quality doesn't degrade.
+    let matches: { page_title: string; page_url: string; content_chunk: string }[] | null = null;
+    let searchError: unknown = null;
+
+    try {
+      const searchResult = await withSupabaseRetry(
+        async () => {
+          const result = await supabase.rpc('match_page_embeddings', {
+            query_embedding: embeddingStr,
+            match_threshold: similarityThreshold,
+            match_count: maxResults,
+          });
+          return result;
+        },
+        {
+          operation: 'Vector search for chat context',
+          maxRetries: 2, // Only 2 retries - vector search is optional, don't wait too long
+        }
+      );
+
+      matches = searchResult.data as { page_title: string; page_url: string; content_chunk: string }[] | null;
+      searchError = searchResult.error;
+    } catch (error) {
+      searchError = error;
+      console.error('[Chat] Vector search failed after retries:', error);
+      // Continue without context rather than failing completely
+    }
 
     if (searchError) {
-      console.error('Vector search error:', searchError);
-      // Continue without context rather than failing completely
+      console.warn('[Chat] Vector search error, continuing without context:', searchError);
+      // Context-less response is better than no response
     }
 
     // ========================================================================

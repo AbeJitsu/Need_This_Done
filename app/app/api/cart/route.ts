@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { medusaClient } from '@/lib/medusa-client';
 import { badRequest, serverError, handleApiError } from '@/lib/api-errors';
 import { cache, CACHE_KEYS } from '@/lib/cache';
+import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,8 +23,12 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(_request: NextRequest) {
   try {
-    // Create new cart in Medusa
-    const cart = await medusaClient.carts.create();
+    // Create new cart in Medusa with timeout protection
+    const cart = await withTimeout(
+      medusaClient.carts.create(),
+      TIMEOUT_LIMITS.EXTERNAL_API,
+      'Medusa cart creation'
+    );
 
     if (!cart || !cart.id) {
       return serverError('Failed to create cart');
@@ -37,6 +42,10 @@ export async function POST(_request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
+    if (error instanceof TimeoutError) {
+      console.error('[Cart API] Medusa cart creation timed out:', error);
+      return serverError('Cart service is currently slow, please try again in a moment');
+    }
     return handleApiError(error, 'Cart POST');
   }
 }
@@ -58,7 +67,12 @@ export async function GET(request: NextRequest) {
     const result = await cache.wrap(
       CACHE_KEYS.cart(cartId),
       async () => {
-        return await medusaClient.carts.get(cartId);
+        // Wrap Medusa API call with timeout
+        return await withTimeout(
+          medusaClient.carts.get(cartId),
+          TIMEOUT_LIMITS.EXTERNAL_API,
+          'Medusa cart fetch'
+        );
       },
       30 // 30 seconds - carts change frequently
     );
@@ -69,6 +83,10 @@ export async function GET(request: NextRequest) {
       source: result.source,
     });
   } catch (error) {
+    if (error instanceof TimeoutError) {
+      console.error('[Cart API] Medusa cart fetch timed out:', error);
+      return serverError('Cart service is currently slow, please try again in a moment');
+    }
     return handleApiError(error, 'Cart GET');
   }
 }

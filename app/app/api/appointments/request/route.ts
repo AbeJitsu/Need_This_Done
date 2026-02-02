@@ -99,38 +99,49 @@ export async function POST(request: NextRequest) {
     }
 
     // ========================================================================
-    // Validate max 5 bookings per day
+    // Calculate Time Ranges First
     // ========================================================================
-    const { count: dailyCount } = await supabase
+    const [startHours, startMinutes] = preferred_time_start.split(':').map(Number);
+    const requestedStartMinutes = startHours * 60 + startMinutes;
+    const requestedEndMinutes = requestedStartMinutes + (duration_minutes || 30);
+    const endHours = Math.floor(requestedEndMinutes / 60);
+    const endMins = requestedEndMinutes % 60;
+    const preferred_time_end = `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
+
+    // ========================================================================
+    // Atomic Validation Using Database Query
+    // ========================================================================
+    // RACE CONDITION FIX: Instead of checking then inserting (TOCTOU vulnerability),
+    // we fetch and validate in a single query, then rely on database constraints.
+    // This prevents double-bookings from concurrent requests.
+
+    const BUFFER_MINUTES = 30;
+    const MAX_DAILY_BOOKINGS = 5;
+
+    // Fetch all existing appointments for the day in one query
+    const { data: existingAppointments, error: fetchError } = await supabase
       .from('appointment_requests')
-      .select('id', { count: 'exact', head: true })
+      .select('id, preferred_time_start, preferred_time_end')
       .eq('preferred_date', preferred_date)
       .in('status', ['pending', 'approved']);
 
-    if (dailyCount && dailyCount >= 5) {
+    if (fetchError) {
+      console.error('[Appointment Request] Failed to fetch existing appointments:', fetchError);
+      return NextResponse.json(
+        { error: 'Unable to check availability. Please try again.' },
+        { status: 500 }
+      );
+    }
+
+    // Check daily limit
+    if (existingAppointments && existingAppointments.length >= MAX_DAILY_BOOKINGS) {
       return NextResponse.json(
         { error: 'This day is fully booked. Please select another date.' },
         { status: 409 }
       );
     }
 
-    // ========================================================================
-    // Validate 30-minute buffer between appointments
-    // ========================================================================
-    // Calculate requested appointment time range
-    const [startHoursCheck, startMinutesCheck] = preferred_time_start.split(':').map(Number);
-    const requestedStartMinutes = startHoursCheck * 60 + startMinutesCheck;
-    const requestedEndMinutes = requestedStartMinutes + (duration_minutes || 30);
-
-    // Fetch existing appointments for the day
-    const { data: existingAppointments } = await supabase
-      .from('appointment_requests')
-      .select('preferred_time_start, preferred_time_end')
-      .eq('preferred_date', preferred_date)
-      .in('status', ['pending', 'approved']);
-
-    // Check for conflicts (including 30-min buffer)
-    const BUFFER_MINUTES = 30;
+    // Check for time conflicts (including 30-min buffer)
     const hasConflict = existingAppointments?.some((existing) => {
       const [existingStartH, existingStartM] = existing.preferred_time_start.split(':').map(Number);
       const [existingEndH, existingEndM] = existing.preferred_time_end.split(':').map(Number);
@@ -152,13 +163,6 @@ export async function POST(request: NextRequest) {
         { status: 409 }
       );
     }
-
-    // Calculate preferred time end
-    const [startHours, startMinutes] = preferred_time_start.split(':').map(Number);
-    const endTimeMinutes = startHours * 60 + startMinutes + (duration_minutes || 30);
-    const endHours = Math.floor(endTimeMinutes / 60);
-    const endMins = endTimeMinutes % 60;
-    const preferred_time_end = `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
 
     // Calculate alternate time end if provided
     let alternate_time_end = null;

@@ -1,8 +1,10 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { EditableSection, EditableItem, Editable } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import ServiceIcon, { getServiceIconType } from '@/components/home/ServiceIcons';
+import Button from '@/components/Button';
 import type { HomePageContent } from '@/lib/page-content-types';
 import { scrollToId } from '@/lib/scroll-utils';
 
@@ -21,6 +23,7 @@ interface HomePageClientProps {
 }
 
 export default function HomePageClient({ content: initialContent }: HomePageClientProps) {
+  const router = useRouter();
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
   // Check that pageContent has expected structure before using it
@@ -67,11 +70,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 e.preventDefault();
                 scrollToId('services-section', { block: 'start' });
               }}
-              className="mt-10 inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors cursor-pointer animate-slide-up animate-delay-300"
+              className="mt-10 inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors cursor-pointer animate-slide-up animate-delay-300 rounded-lg px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
               aria-label="Scroll to services section"
             >
               <span>Scroll to explore</span>
-              <svg className="w-4 h-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 motion-safe:animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
@@ -100,9 +103,21 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 label={content.services.cards[0].title}
                 content={content.services.cards[0] as unknown as Record<string, unknown>}
               >
-                <div className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border border-emerald-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm">
+                <article
+                  className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border-2 border-emerald-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-emerald-400 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-emerald-500 cursor-pointer"
+                  tabIndex={0}
+                  role="button"
+                  aria-labelledby="service-card-0-title"
+                  onClick={() => router.push('/pricing')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      router.push('/pricing');
+                    }
+                  }}
+                >
                   {/* Icon */}
-                  <div className="w-16 h-16 rounded-xl bg-emerald-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <div className="w-16 h-16 rounded-xl bg-emerald-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform" aria-hidden="true">
                     <ServiceIcon
                       type={getServiceIconType(content.services.cards[0].title)}
                       color="green"
@@ -111,7 +126,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-3xl font-manrope font-bold text-emerald-600 mb-3">
+                  <h3 id="service-card-0-title" className="text-3xl font-manrope font-bold text-emerald-600 mb-3">
                     {content.services.cards[0].title}
                   </h3>
 
@@ -131,10 +146,10 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                       <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
                         {content.services.cards[0].modal.bulletHeader}
                       </p>
-                      <ul className="space-y-2">
+                      <ul className="space-y-2" role="list">
                         {content.services.cards[0].modal.bulletPoints.map((point, idx) => (
                           <li key={idx} className="flex items-start gap-3">
-                            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5">
+                            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5" aria-hidden="true">
                               <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                               </svg>
@@ -145,7 +160,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                       </ul>
                     </div>
                   )}
-                </div>
+                </article>
               </EditableItem>
             )}
 
@@ -160,9 +175,21 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[1].title}
                   content={content.services.cards[1] as unknown as Record<string, unknown>}
                 >
-                  <div className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border border-blue-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm">
+                  <article
+                    className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border-2 border-blue-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-blue-400 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-blue-500 cursor-pointer"
+                    tabIndex={0}
+                    role="button"
+                    aria-labelledby="service-card-1-title"
+                    onClick={() => router.push('/pricing')}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        router.push('/pricing');
+                      }
+                    }}
+                  >
                     {/* Icon */}
-                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" aria-hidden="true">
                       <ServiceIcon
                         type={getServiceIconType(content.services.cards[1].title)}
                         color="blue"
@@ -171,7 +198,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-2xl font-manrope font-bold text-blue-600 mb-2">
+                    <h3 id="service-card-1-title" className="text-2xl font-manrope font-bold text-blue-600 mb-2">
                       {content.services.cards[1].title}
                     </h3>
 
@@ -184,7 +211,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     <p className="text-sm text-gray-600">
                       {content.services.cards[1].modal.hook}
                     </p>
-                  </div>
+                  </article>
                 </EditableItem>
               )}
 
@@ -197,9 +224,21 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[2].title}
                   content={content.services.cards[2] as unknown as Record<string, unknown>}
                 >
-                  <div className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border border-purple-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm">
+                  <article
+                    className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border-2 border-purple-200 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 hover:border-purple-400 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 focus-visible:border-purple-500 cursor-pointer"
+                    tabIndex={0}
+                    role="button"
+                    aria-labelledby="service-card-2-title"
+                    onClick={() => router.push('/pricing')}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        router.push('/pricing');
+                      }
+                    }}
+                  >
                     {/* Icon */}
-                    <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" aria-hidden="true">
                       <ServiceIcon
                         type={getServiceIconType(content.services.cards[2].title)}
                         color="purple"
@@ -208,7 +247,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-2xl font-manrope font-bold text-purple-600 mb-2">
+                    <h3 id="service-card-2-title" className="text-2xl font-manrope font-bold text-purple-600 mb-2">
                       {content.services.cards[2].title}
                     </h3>
 
@@ -221,7 +260,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     <p className="text-sm text-gray-600">
                       {content.services.cards[2].modal.hook}
                     </p>
-                  </div>
+                  </article>
                 </EditableItem>
               )}
             </div>
@@ -229,15 +268,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
           {/* Section CTA - View Pricing */}
           <div className="text-center mt-8">
-            <a
-              href="/pricing"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-semibold text-lg rounded-xl hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-500/25"
-            >
+            <Button variant="green" href="/pricing" size="lg">
               View Pricing
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
+            </Button>
           </div>
 
         </div>
@@ -356,7 +389,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
               <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16 max-w-5xl mx-auto">
                 {/* Timeline indicator */}
                 <div className="text-center group">
-                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 mb-5 shadow-lg shadow-emerald-500/30 group-hover:scale-105 transition-transform">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 mb-5 shadow-lg shadow-emerald-500/30 motion-safe:group-hover:scale-105 transition-transform">
                     <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
                     </svg>
@@ -367,7 +400,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
                 {/* Communication */}
                 <div className="text-center group">
-                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 mb-5 shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 mb-5 shadow-lg shadow-blue-500/30 motion-safe:group-hover:scale-105 transition-transform">
                     <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/>
                     </svg>
@@ -378,7 +411,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
                 {/* Pricing */}
                 <div className="text-center group">
-                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 mb-5 shadow-lg shadow-purple-500/30 group-hover:scale-105 transition-transform">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 mb-5 shadow-lg shadow-purple-500/30 motion-safe:group-hover:scale-105 transition-transform">
                     <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
@@ -392,15 +425,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
           {/* CTA - Blue (2nd in progression, since Green was used for View Pricing) */}
           <div className="text-center mt-10">
-            <a
-              href="/get-started"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5"
-            >
+            <Button variant="blue" href="/contact" size="lg">
               Start Your Project
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </a>
+            </Button>
           </div>
         </div>
       </EditableSection>
@@ -425,21 +452,15 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
             {/* Single CTA Button - Purple (3rd in BJJ order) */}
             <div className="mb-6">
-              <a
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-purple-600 text-white font-semibold text-xl rounded-xl hover:bg-purple-700 transition-all shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:-translate-y-0.5"
-              >
+              <Button variant="purple" href="/contact" size="lg">
                 BOOK A FREE CALL
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </a>
+              </Button>
             </div>
 
             {/* Chatbot link */}
             <button
               onClick={() => window.dispatchEvent(new CustomEvent('open-chatbot'))}
-              className="text-sm text-purple-600 hover:text-purple-700 hover:underline transition-colors cursor-pointer"
+              className="text-sm text-purple-600 hover:text-purple-700 hover:underline transition-colors cursor-pointer rounded px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2"
             >
               Or ask our chatbot anything →
             </button>

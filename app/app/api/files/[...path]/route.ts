@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { verifyAuth } from '@/lib/api-auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,15 +10,28 @@ export const dynamic = 'force-dynamic';
 // Serves files from Supabase Storage via time-limited signed URLs.
 // Used by ProjectDetailModal to let admins view/download attachments.
 //
-// Security: Uses signed URLs that expire after 24 hours. Files in the
-// project-attachments bucket are not publicly accessible.
+// Security: Requires authentication. Uses signed URLs that expire after 24
+// hours. Files in the project-attachments bucket are not publicly accessible.
+// Path traversal attempts (.. segments) are rejected.
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> }
 ) {
+  // Require authentication - only logged-in users can access project files
+  const auth = await verifyAuth();
+  if (auth.error) {
+    return auth.error;
+  }
+
   // Reconstruct the file path from URL segments
   const { path } = await params;
+
+  // Reject path traversal attempts
+  if (path.some(segment => segment === '..' || segment === '.' || segment.includes('\0'))) {
+    return NextResponse.json({ error: 'Invalid path' }, { status: 400 });
+  }
+
   const filePath = path.join('/');
 
   if (!filePath) {

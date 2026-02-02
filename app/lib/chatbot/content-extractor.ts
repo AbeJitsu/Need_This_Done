@@ -288,7 +288,7 @@ export function getPageType(pathname: string): 'static' | 'cms' | 'product' {
   }
 
   // Static pages have known paths
-  const staticPaths = ['/', '/services', '/pricing', '/faq', '/how-it-works', '/contact', '/get-started'];
+  const staticPaths = ['/', '/services', '/pricing', '/faq', '/how-it-works', '/contact'];
   if (staticPaths.includes(pathname)) {
     return 'static';
   }

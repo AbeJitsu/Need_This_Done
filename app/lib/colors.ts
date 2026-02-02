@@ -911,6 +911,7 @@ export const adminSidebarColors = {
     shop: 'text-green-600 dark:text-green-400',
     appointments: 'text-green-600 dark:text-green-400',
     users: 'text-purple-600 dark:text-purple-400',
+    analytics: 'text-purple-600 dark:text-purple-400',
     dev: 'text-gold-600 dark:text-gold-400',
   },
 };

@@ -78,11 +78,12 @@ export async function POST(
 
     // Try to create Google Calendar event if connected
     let googleEventId: string | null = null;
+    let calendarError: string | null = null;
     const calendarConnected = await isCalendarConnected(user.id);
 
     if (calendarConnected) {
       try {
-        // Get access token for the admin user
+        // Get access token for the admin user (handles token refresh automatically)
         const accessToken = await getValidAccessToken(user.id);
 
         // Combine date and time for start
@@ -97,8 +98,19 @@ export async function POST(
         });
 
         googleEventId = calendarEvent.id || null;
-      } catch (calendarError) {
-        console.error('[Approve Appointment] Calendar event creation failed:', calendarError);
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        console.error('[Approve Appointment] Calendar event creation failed:', errorMessage);
+
+        // Capture error message to return to admin
+        if (errorMessage.includes('No Google Calendar connection found')) {
+          calendarError = 'Calendar disconnected. Please reconnect in Settings.';
+        } else if (errorMessage.includes('Token refresh failed')) {
+          calendarError = 'Calendar authorization expired. Please reconnect in Settings.';
+        } else {
+          calendarError = 'Failed to create calendar event. Check Settings.';
+        }
+
         // Continue without calendar event - we'll still approve the appointment
       }
     }
@@ -153,25 +165,37 @@ export async function POST(
       appointment.customer_email
     );
 
-    // Send confirmation email (fire and forget)
-    sendAppointmentConfirmation({
-      customerEmail: appointment.customer_email,
-      customerName: appointment.customer_name || undefined,
-      serviceName: 'Consultation',
-      appointmentDate,
-      appointmentTime,
-      durationMinutes: appointment.duration_minutes,
-      orderId: appointment.order_id,
-      meetingLink: undefined,
-      notes: appointment.notes || undefined,
-    }, icsContent).catch((err) => {
-      console.error('[Approve Appointment] Failed to send confirmation email:', err);
-    });
+    // Send confirmation email with proper error tracking
+    let emailSent = false;
+    let emailError: string | null = null;
+
+    try {
+      await sendAppointmentConfirmation({
+        customerEmail: appointment.customer_email,
+        customerName: appointment.customer_name || undefined,
+        serviceName: 'Consultation',
+        appointmentDate,
+        appointmentTime,
+        durationMinutes: appointment.duration_minutes,
+        orderId: appointment.order_id,
+        meetingLink: undefined,
+        notes: appointment.notes || undefined,
+      }, icsContent);
+
+      emailSent = true;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      console.error('[Approve Appointment] Failed to send confirmation email:', errorMessage);
+      emailError = 'Failed to send confirmation email';
+    }
 
     return NextResponse.json({
       success: true,
       message: 'Appointment approved successfully',
       google_event_created: !!googleEventId,
+      calendar_error: calendarError,
+      email_sent: emailSent,
+      email_error: emailError,
     });
 
   } catch (error) {

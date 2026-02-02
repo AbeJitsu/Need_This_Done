@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { withSupabaseRetry, isUniqueViolation } from '@/lib/supabase-retry';
 
 export const dynamic = 'force-dynamic';
 
@@ -150,21 +151,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create free enrollment
-    const { data: enrollment, error } = await supabase
-      .from('enrollments')
-      .insert({
-        user_id: user.id,
-        course_id: body.course_id,
-        enrollment_type: 'free',
-        amount_paid: 0,
-        progress: 0,
-      })
-      .select()
-      .single();
+    // Create free enrollment with retry logic
+    const enrollmentResult = await withSupabaseRetry(
+      () => supabase
+        .from('enrollments')
+        .insert({
+          user_id: user.id,
+          course_id: body.course_id,
+          enrollment_type: 'free',
+          amount_paid: 0,
+          progress: 0,
+        })
+        .select()
+        .single(),
+      { operation: 'Create enrollment', maxRetries: 3 }
+    );
+
+    const { data: enrollment, error } = enrollmentResult;
 
     if (error) {
-      console.error('Failed to create enrollment:', error);
+      // Handle unique constraint violation specifically
+      if (isUniqueViolation(error)) {
+        return NextResponse.json(
+          { error: 'Already enrolled in this course' },
+          { status: 409 }
+        );
+      }
+
+      console.error('Failed to create enrollment after retries:', error);
       return NextResponse.json(
         { error: 'Failed to create enrollment' },
         { status: 500 }

@@ -44,9 +44,9 @@ export async function POST(
       return badRequest(`Cannot send quote with status '${quote.status}'`);
     }
 
-    // Build the payment URL - directs to /get-started with quote ref pre-filled
+    // Build the payment URL - directs customer to their quote authorization page
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com';
-    const paymentUrl = `${siteUrl}/get-started#authorize`;
+    const paymentUrl = `${siteUrl}/quotes/${quote.reference_number}`;
 
     // Send the quote email
     const emailResult = await sendQuoteEmail({

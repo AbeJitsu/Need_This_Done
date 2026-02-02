@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { createPaymentIntent } from '@/lib/stripe';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { badRequest, notFound, handleApiError } from '@/lib/api-errors';
+import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
+import { withSupabaseRetry } from '@/lib/supabase-retry';
 
 // Schema validates and transforms input in one step
 const AuthorizeSchema = z.object({
@@ -46,13 +48,18 @@ export async function POST(request: NextRequest) {
     }
     const { quoteRef, email } = parsed.data; // Already normalized by schema transforms
 
-    // Look up the quote
+    // Look up the quote with retry logic (critical for payment flow)
     const supabase = getSupabaseAdmin();
-    const { data: quote, error: fetchError } = await supabase
-      .from('quotes')
-      .select('*')
-      .eq('reference_number', quoteRef)
-      .single<QuoteRecord>();
+    const quoteResult = await withSupabaseRetry(
+      () => supabase
+        .from('quotes')
+        .select('*')
+        .eq('reference_number', quoteRef)
+        .single<QuoteRecord>(),
+      { operation: 'Fetch quote', maxRetries: 3 }
+    );
+
+    const { data: quote, error: fetchError } = quoteResult;
 
     if (fetchError || !quote) {
       return notFound('Quote not found. Please check your reference number.');
@@ -94,7 +101,11 @@ export async function POST(request: NextRequest) {
     if (quote.status === 'authorized' && quote.stripe_payment_intent_id) {
       // Retrieve the existing payment intent to get the client secret
       const { getPaymentIntent } = await import('@/lib/stripe');
-      const existingIntent = await getPaymentIntent(quote.stripe_payment_intent_id);
+      const existingIntent = await withTimeout(
+        getPaymentIntent(quote.stripe_payment_intent_id),
+        TIMEOUT_LIMITS.EXTERNAL_API,
+        'Stripe payment intent retrieval'
+      );
 
       return NextResponse.json({
         clientSecret: existingIntent.client_secret,
@@ -111,30 +122,38 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Create a new PaymentIntent for the deposit
-    const paymentIntent = await createPaymentIntent(
-      quote.deposit_amount,
-      'usd',
-      {
-        quote_id: quote.id,
-        quote_ref: quote.reference_number,
-        customer_email: quote.customer_email,
-        payment_type: 'deposit',
-      }
+    // Create a new PaymentIntent for the deposit with timeout protection
+    const paymentIntent = await withTimeout(
+      createPaymentIntent(
+        quote.deposit_amount,
+        'usd',
+        {
+          quote_id: quote.id,
+          quote_ref: quote.reference_number,
+          customer_email: quote.customer_email,
+          payment_type: 'deposit',
+        }
+      ),
+      TIMEOUT_LIMITS.EXTERNAL_API,
+      'Stripe payment intent creation'
     );
 
-    // Update quote status to authorized and store payment intent ID
-    const { error: updateError } = await supabase
-      .from('quotes')
-      .update({
-        status: 'authorized',
-        stripe_payment_intent_id: paymentIntent.id,
-      })
-      .eq('id', quote.id);
+    // Update quote status to authorized and store payment intent ID with retry
+    const updateResult = await withSupabaseRetry(
+      () => supabase
+        .from('quotes')
+        .update({
+          status: 'authorized',
+          stripe_payment_intent_id: paymentIntent.id,
+        })
+        .eq('id', quote.id),
+      { operation: 'Update quote status', maxRetries: 3 }
+    );
 
-    if (updateError) {
-      console.error('Failed to update quote status:', updateError);
+    if (updateResult.error) {
+      console.error('Failed to update quote status after retries:', updateResult.error);
       // Don't fail the request - payment intent was created successfully
+      // The quote can be manually updated if needed
     }
 
     return NextResponse.json({
@@ -151,6 +170,10 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
+    if (error instanceof TimeoutError) {
+      console.error('[Authorize Quote] External API timeout:', error);
+      return badRequest('Payment service is currently slow, please try again in a moment');
+    }
     return handleApiError(error, 'Authorize Quote');
   }
 }

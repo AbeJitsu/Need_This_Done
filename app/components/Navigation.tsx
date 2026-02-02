@@ -54,14 +54,23 @@ export default function Navigation() {
       }
     };
 
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (showDropdown) setShowDropdown(false);
+        if (mobileMenuOpen) setMobileMenuOpen(false);
+      }
+    };
+
     // Handle both mouse and touch events for mobile support
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
     };
-  }, []);
+  }, [showDropdown, mobileMenuOpen]);
 
   // ============================================================================
   // Handle Logout
@@ -74,7 +83,7 @@ export default function Navigation() {
   };
 
   return (
-    <nav aria-label="Main navigation" className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-400 dark:border-gray-800 shadow-sm">
+    <nav aria-label="Main navigation" className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-400 dark:border-gray-700 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo / Home Link - Editable in edit mode */}
@@ -123,14 +132,15 @@ export default function Navigation() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`lg:hidden p-2 ${navigationColors.link} ${navigationColors.linkHover} transition-colors`}
-              aria-label="Toggle menu"
+              className={`lg:hidden p-2 ${navigationColors.link} ${navigationColors.linkHover} transition-colors rounded-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
+              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={mobileMenuOpen ? "true" : "false"}
+              aria-controls="mobile-menu"
             >
               {mobileMenuOpen ? (
-                <CloseIcon size="lg" />
+                <CloseIcon size="lg" aria-hidden="true" />
               ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
@@ -200,7 +210,9 @@ export default function Navigation() {
                   <button
                     type="button"
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className={`flex items-center gap-2 px-2 py-1.5 text-sm font-medium ${navigationColors.userButton} ${navigationColors.userButtonHover} rounded-md transition-colors`}
+                    className={`flex items-center gap-2 px-2 py-1.5 text-sm font-medium ${navigationColors.userButton} ${navigationColors.userButtonHover} rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}
+                    aria-haspopup="true"
+                    aria-expanded={showDropdown ? "true" : "false"}
                   >
                     <div className="w-7 h-7 rounded-full bg-gray-400 dark:bg-gray-600 text-white flex items-center justify-center text-xs font-semibold">
                       {user?.email?.charAt(0).toUpperCase() || 'U'}
@@ -288,8 +300,8 @@ export default function Navigation() {
 
       {/* Mobile Menu Dropdown - slides down when hamburger is clicked */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-gray-400 dark:border-gray-700 bg-white dark:bg-gray-900">
-          <div className="px-4 py-3 space-y-1">
+        <div id="mobile-menu" className="lg:hidden border-t border-gray-400 dark:border-gray-700 bg-white dark:bg-gray-900 animate-slide-up">
+          <nav aria-label="Mobile navigation" className="px-4 py-3 space-y-1">
             {navigationLinks.map((link, index) => {
               const isActive =
                 pathname === link.href ||
@@ -378,7 +390,7 @@ export default function Navigation() {
                 </button>
               </div>
             )}
-          </div>
+          </nav>
         </div>
       )}
     </nav>

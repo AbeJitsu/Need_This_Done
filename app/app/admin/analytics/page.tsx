@@ -259,20 +259,37 @@ export default function AnalyticsDashboard() {
         />
       </div>
 
-      {/* Orders by Status */}
+      {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        {/* Orders by Status - Pie Chart */}
         <Card hoverEffect="none">
           <div className="p-6">
             <h2 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
               Orders by Status
             </h2>
-            {data ? (
-              <div className="space-y-3">
-                <StatusBar label="Pending" count={data.summary.ordersByStatus.pending} total={data.summary.totalOrders} color="yellow" />
-                <StatusBar label="Processing" count={data.summary.ordersByStatus.processing} total={data.summary.totalOrders} color="blue" />
-                <StatusBar label="Shipped" count={data.summary.ordersByStatus.shipped} total={data.summary.totalOrders} color="purple" />
-                <StatusBar label="Delivered" count={data.summary.ordersByStatus.delivered} total={data.summary.totalOrders} color="green" />
-                <StatusBar label="Canceled" count={data.summary.ordersByStatus.canceled} total={data.summary.totalOrders} color="red" />
+            {data && data.summary.totalOrders > 0 ? (
+              <div className="space-y-6">
+                {/* Visual pie chart using CSS */}
+                <div className="flex justify-center">
+                  <PieChart
+                    data={[
+                      { label: 'Pending', value: data.summary.ordersByStatus.pending, color: '#f59e0b' },
+                      { label: 'Processing', value: data.summary.ordersByStatus.processing, color: '#3b82f6' },
+                      { label: 'Shipped', value: data.summary.ordersByStatus.shipped, color: '#8b5cf6' },
+                      { label: 'Delivered', value: data.summary.ordersByStatus.delivered, color: '#10b981' },
+                      { label: 'Canceled', value: data.summary.ordersByStatus.canceled, color: '#ef4444' },
+                    ]}
+                    total={data.summary.totalOrders}
+                  />
+                </div>
+                {/* Legend */}
+                <div className="space-y-2">
+                  <StatusBar label="Pending" count={data.summary.ordersByStatus.pending} total={data.summary.totalOrders} color="yellow" />
+                  <StatusBar label="Processing" count={data.summary.ordersByStatus.processing} total={data.summary.totalOrders} color="blue" />
+                  <StatusBar label="Shipped" count={data.summary.ordersByStatus.shipped} total={data.summary.totalOrders} color="purple" />
+                  <StatusBar label="Delivered" count={data.summary.ordersByStatus.delivered} total={data.summary.totalOrders} color="green" />
+                  <StatusBar label="Canceled" count={data.summary.ordersByStatus.canceled} total={data.summary.totalOrders} color="red" />
+                </div>
               </div>
             ) : (
               <p className={mutedTextColors.normal}>No data available</p>
@@ -280,38 +297,37 @@ export default function AnalyticsDashboard() {
           </div>
         </Card>
 
-        {/* Revenue Trend Chart */}
+        {/* Revenue Trend Chart - Enhanced */}
         <Card hoverEffect="none">
           <div className="p-6">
             <h2 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
-              Revenue Trend
+              Revenue Trend (Last 14 Days)
             </h2>
             {data?.trends && data.trends.length > 0 ? (
-              <div className="h-48 flex items-end gap-1">
-                {data.trends.slice(-14).map((point) => {
-                  const maxRevenue = getMaxRevenue();
-                  const height = maxRevenue > 0 ? (point.revenue / maxRevenue) * 100 : 0;
-                  return (
-                    <div
-                      key={point.date}
-                      className="flex-1 flex flex-col items-center group relative"
-                    >
-                      <div
-                        className={`w-full ${accentColors.purple.titleText} rounded-t transition-all`}
-                        style={{ height: `${Math.max(height, 2)}%` }}
-                      />
-                      <span className={`text-xs ${mutedTextColors.normal} mt-1 hidden md:block`}>
-                        {new Date(point.date).getDate()}
-                      </span>
-                      {/* Tooltip */}
-                      <div className={`absolute bottom-full mb-2 hidden group-hover:block ${cardBgColors.base} ${headingColors.primary} text-xs px-2 py-1 rounded whitespace-nowrap z-10 border ${cardBorderColors.light}`}>
-                        {formatCurrency(point.revenue)}
-                        <br />
-                        {point.orders} orders
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="space-y-4">
+                {/* Line chart visualization */}
+                <div className="h-48 relative">
+                  <LineChart
+                    data={data.trends.slice(-14)}
+                    maxValue={getMaxRevenue()}
+                    formatValue={formatCurrency}
+                  />
+                </div>
+                {/* Summary stats */}
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+                  <div>
+                    <p className={`text-xs ${mutedTextColors.normal}`}>Average Daily Revenue</p>
+                    <p className={`text-lg font-semibold ${headingColors.primary}`}>
+                      {formatCurrency(Math.round(data.trends.slice(-14).reduce((sum, d) => sum + d.revenue, 0) / data.trends.slice(-14).length))}
+                    </p>
+                  </div>
+                  <div>
+                    <p className={`text-xs ${mutedTextColors.normal}`}>Peak Day</p>
+                    <p className={`text-lg font-semibold ${headingColors.primary}`}>
+                      {formatCurrency(getMaxRevenue())}
+                    </p>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="h-48 flex items-center justify-center">
@@ -321,6 +337,44 @@ export default function AnalyticsDashboard() {
           </div>
         </Card>
       </div>
+
+      {/* Orders Over Time Chart */}
+      {data?.trends && data.trends.length > 0 && (
+        <Card hoverEffect="none">
+          <div className="p-6">
+            <h2 className={`text-lg font-semibold ${headingColors.primary} mb-4`}>
+              Order Volume (Last 14 Days)
+            </h2>
+            <div className="h-64">
+              <BarChart
+                data={data.trends.slice(-14)}
+                maxValue={Math.max(...data.trends.slice(-14).map(d => d.orders))}
+                color="#3b82f6"
+              />
+            </div>
+            <div className="grid grid-cols-3 gap-4 mt-6 pt-4 border-t border-gray-200">
+              <div>
+                <p className={`text-xs ${mutedTextColors.normal}`}>Total Orders</p>
+                <p className={`text-lg font-semibold ${headingColors.primary}`}>
+                  {data.trends.slice(-14).reduce((sum, d) => sum + d.orders, 0)}
+                </p>
+              </div>
+              <div>
+                <p className={`text-xs ${mutedTextColors.normal}`}>Daily Average</p>
+                <p className={`text-lg font-semibold ${headingColors.primary}`}>
+                  {Math.round(data.trends.slice(-14).reduce((sum, d) => sum + d.orders, 0) / data.trends.slice(-14).length)}
+                </p>
+              </div>
+              <div>
+                <p className={`text-xs ${mutedTextColors.normal}`}>Peak Day</p>
+                <p className={`text-lg font-semibold ${headingColors.primary}`}>
+                  {Math.max(...data.trends.slice(-14).map(d => d.orders))}
+                </p>
+              </div>
+            </div>
+          </div>
+        </Card>
+      )}
     </div>
   );
 }
@@ -415,4 +469,213 @@ function getDefaultStartDate(): string {
 
 function getDefaultEndDate(): string {
   return new Date().toISOString().split('T')[0];
+}
+
+// ============================================================================
+// Chart Components
+// ============================================================================
+
+interface PieChartProps {
+  data: Array<{ label: string; value: number; color: string }>;
+  total: number;
+}
+
+function PieChart({ data, total }: PieChartProps) {
+  if (total === 0) {
+    return (
+      <div className="w-48 h-48 rounded-full bg-gray-200 flex items-center justify-center">
+        <span className="text-gray-400 text-sm">No data</span>
+      </div>
+    );
+  }
+
+  // Calculate percentages and create conic gradient
+  let currentAngle = 0;
+  const segments = data
+    .filter(d => d.value > 0)
+    .map(({ value, color }) => {
+      const percentage = (value / total) * 100;
+      const startAngle = currentAngle;
+      currentAngle += percentage;
+      return `${color} ${startAngle}% ${currentAngle}%`;
+    });
+
+  const gradientStyle = `conic-gradient(${segments.join(', ')})`;
+
+  return (
+    <div className="relative w-48 h-48">
+      <div
+        className="w-full h-full rounded-full"
+        style={{ background: gradientStyle }}
+      />
+      {/* Center hole for donut effect */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-2xl font-bold text-gray-900">{total}</p>
+            <p className="text-xs text-gray-500">orders</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface LineChartProps {
+  data: TrendDataPoint[];
+  maxValue: number;
+  formatValue: (value: number) => string;
+}
+
+function LineChart({ data, maxValue, formatValue }: LineChartProps) {
+  if (data.length === 0 || maxValue === 0) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <p className="text-gray-400">No data</p>
+      </div>
+    );
+  }
+
+  // Calculate points for the line path
+  const width = 100;
+  const height = 100;
+  const padding = 5;
+  const pointSpacing = (width - padding * 2) / (data.length - 1);
+
+  const points = data.map((point, i) => {
+    const x = padding + i * pointSpacing;
+    const y = height - padding - ((point.revenue / maxValue) * (height - padding * 2));
+    return { x, y, ...point };
+  });
+
+  // Create SVG path
+  const pathD = points
+    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`)
+    .join(' ');
+
+  // Create area fill path (extends to bottom)
+  const areaD = `${pathD} L ${points[points.length - 1].x} ${height - padding} L ${points[0].x} ${height - padding} Z`;
+
+  return (
+    <div className="h-full relative">
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full">
+        {/* Grid lines */}
+        {[0, 0.25, 0.5, 0.75, 1].map((fraction) => {
+          const y = height - padding - (fraction * (height - padding * 2));
+          return (
+            <line
+              key={fraction}
+              x1={padding}
+              y1={y}
+              x2={width - padding}
+              y2={y}
+              stroke="#e5e7eb"
+              strokeWidth="0.5"
+            />
+          );
+        })}
+
+        {/* Area fill */}
+        <path
+          d={areaD}
+          fill="url(#gradient)"
+          opacity="0.2"
+        />
+
+        {/* Line */}
+        <path
+          d={pathD}
+          fill="none"
+          stroke="#8b5cf6"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+
+        {/* Data points */}
+        {points.map((point, i) => (
+          <g key={i}>
+            <circle
+              cx={point.x}
+              cy={point.y}
+              r="3"
+              fill="#8b5cf6"
+              className="hover:r-4 transition-all cursor-pointer"
+            />
+            <title>{`${new Date(point.date).toLocaleDateString()}: ${formatValue(point.revenue)} (${point.orders} orders)`}</title>
+          </g>
+        ))}
+
+        {/* Gradient definition */}
+        <defs>
+          <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#8b5cf6" />
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      {/* X-axis labels */}
+      <div className="flex justify-between mt-2 px-2">
+        <span className="text-xs text-gray-500">
+          {new Date(data[0].date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+        </span>
+        <span className="text-xs text-gray-500">
+          {new Date(data[data.length - 1].date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+interface BarChartProps {
+  data: TrendDataPoint[];
+  maxValue: number;
+  color: string;
+}
+
+function BarChart({ data, maxValue, color }: BarChartProps) {
+  if (data.length === 0 || maxValue === 0) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <p className="text-gray-400">No data</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-full flex items-end justify-between gap-1 px-2">
+      {data.map((point, i) => {
+        const height = (point.orders / maxValue) * 100;
+        return (
+          <div
+            key={i}
+            className="flex-1 flex flex-col items-center group relative"
+          >
+            {/* Bar */}
+            <div className="w-full flex flex-col items-center">
+              <div
+                className="w-full rounded-t transition-all hover:opacity-80"
+                style={{
+                  height: `${Math.max(height, 2)}%`,
+                  backgroundColor: color,
+                  minHeight: point.orders > 0 ? '4px' : '0',
+                }}
+              />
+              {/* X-axis label */}
+              <span className="text-xs text-gray-500 mt-1 hidden md:block">
+                {new Date(point.date).getDate()}
+              </span>
+            </div>
+
+            {/* Tooltip */}
+            <div className="absolute bottom-full mb-2 hidden group-hover:block bg-white text-gray-900 text-xs px-3 py-2 rounded shadow-lg whitespace-nowrap z-10 border border-gray-200">
+              <div className="font-semibold">{new Date(point.date).toLocaleDateString()}</div>
+              <div className="text-gray-600">{point.orders} orders</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 }

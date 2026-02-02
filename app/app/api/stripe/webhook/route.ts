@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { constructWebhookEvent } from '@/lib/stripe';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { cache } from '@/lib/cache';
+import { sendOrderConfirmation } from '@/lib/email-service';
 import Stripe from 'stripe';
 
 export const dynamic = 'force-dynamic';
@@ -47,6 +48,61 @@ export async function POST(request: NextRequest) {
 
     // Get admin client for database operations
     const supabase = getSupabaseAdmin();
+
+    // ========================================================================
+    // Idempotency Protection - Prevent Duplicate Event Processing
+    // ========================================================================
+    // Stripe may send the same webhook multiple times (network retries).
+    // Use atomic upsert with unique constraint to prevent race conditions.
+    //
+    // CRITICAL: The previous SELECT-then-INSERT pattern had a TOCTOU race:
+    //   Thread A: SELECT (no row) → Thread B: INSERT (success) → Thread A: INSERT (fails)
+    //   Both threads would process the event.
+    //
+    // Solution: Use upsert with ignoreDuplicates to make it atomic.
+    // If row exists, do nothing. If new, insert and continue processing.
+
+    const { error: upsertError } = await supabase
+      .from('webhook_events')
+      .upsert(
+        {
+          event_id: event.id,
+          event_type: event.type,
+          processed_at: new Date().toISOString(),
+        },
+        {
+          onConflict: 'event_id',
+          ignoreDuplicates: true, // Don't update if exists, just return success
+        }
+      );
+
+    // Check upsert error FIRST before any duplicate detection
+    if (upsertError) {
+      console.error('[Webhook] Failed to record event:', upsertError);
+      // Fail fast - don't process if we can't guarantee idempotency
+      return NextResponse.json(
+        { error: 'Failed to ensure idempotency' },
+        { status: 500 }
+      );
+    }
+
+    // Check if this is a duplicate by attempting to read back the row
+    const { data: eventRecord } = await supabase
+      .from('webhook_events')
+      .select('processed_at')
+      .eq('event_id', event.id)
+      .single();
+
+    if (eventRecord) {
+      const processingTime = new Date(eventRecord.processed_at).getTime();
+      const now = Date.now();
+
+      // If processed_at is more than 1 second old, this is a retry
+      if (now - processingTime > 1000) {
+        console.log(`[Webhook] Event ${event.id} already processed at ${eventRecord.processed_at}, skipping duplicate`);
+        return NextResponse.json({ received: true, skipped: true });
+      }
+    }
 
     // Route event to appropriate handler
     switch (event.type) {
@@ -163,6 +219,41 @@ async function handlePaymentSuccess(
 
   if (paymentError) {
     console.error('Failed to record payment:', paymentError);
+  }
+
+  // Send order confirmation email (fire and forget - don't block webhook response)
+  if (email && orderId) {
+    // Fetch order details for the email
+    const { data: orderDetails } = await supabase
+      .from('orders')
+      .select('id, medusa_order_id, total, requires_appointment, customer_name, items')
+      .eq('medusa_order_id', orderId)
+      .single();
+
+    if (orderDetails) {
+      const orderItems = Array.isArray(orderDetails.items) ? orderDetails.items : [];
+      sendOrderConfirmation({
+        orderId: orderDetails.medusa_order_id?.slice(0, 8) || orderId.slice(0, 8),
+        orderDate: new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+        customerEmail: email,
+        customerName: orderDetails.customer_name || undefined,
+        items: orderItems.map((item: Record<string, unknown>) => ({
+          name: (item.name as string) || 'Item',
+          quantity: (item.quantity as number) || 1,
+          price: (item.price as number) || 0,
+          requiresAppointment: (item.requires_appointment as boolean) || false,
+        })),
+        subtotal: paymentIntent.amount,
+        total: paymentIntent.amount,
+        requiresAppointment: orderDetails.requires_appointment || false,
+      }).catch((err) => {
+        console.error('[Webhook] Failed to send order confirmation email:', err);
+      });
+    }
   }
 }
 
