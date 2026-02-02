@@ -171,10 +171,10 @@ export default function AdminSettingsPage() {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
           <div className="animate-pulse">
-            <div className={`h-8 ${cardBgColors.gray} rounded w-1/3 mb-8`}></div>
-            <div className={`${cardBgColors.white} rounded-xl p-6 ${cardBorderColors.gray} border`}>
-              <div className={`h-6 ${cardBgColors.gray} rounded w-1/4 mb-4`}></div>
-              <div className={`h-4 ${cardBgColors.gray} rounded w-3/4`}></div>
+            <div className={`h-8 ${cardBgColors.elevated} rounded w-1/3 mb-8`}></div>
+            <div className={`${cardBgColors.base} rounded-xl p-6 ${cardBorderColors.light} border`}>
+              <div className={`h-6 ${cardBgColors.elevated} rounded w-1/4 mb-4`}></div>
+              <div className={`h-4 ${cardBgColors.elevated} rounded w-3/4`}></div>
             </div>
           </div>
         </div>
@@ -188,7 +188,7 @@ export default function AdminSettingsPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className={`text-3xl font-bold ${headingColors.primary}`}>Settings</h1>
-          <p className={`mt-2 ${mutedTextColors.primary}`}>
+          <p className={`mt-2 ${mutedTextColors.normal}`}>
             Manage your admin settings and integrations
           </p>
         </div>
@@ -208,7 +208,7 @@ export default function AdminSettingsPage() {
                 <h2 className={`text-xl font-semibold ${headingColors.primary} mb-2`}>
                   Google Calendar Integration
                 </h2>
-                <p className={mutedTextColors.primary}>
+                <p className={mutedTextColors.normal}>
                   Connect your Google Calendar to automatically create events when you approve appointments
                 </p>
               </div>
@@ -223,17 +223,17 @@ export default function AdminSettingsPage() {
             {calendarStatus?.connected ? (
               <div className="space-y-4">
                 {/* Connected Account Info */}
-                <div className={`${cardBgColors.gray} rounded-lg p-4`}>
+                <div className={`${cardBgColors.base} rounded-lg p-4`}>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className={`text-sm font-medium ${mutedTextColors.primary}`}>
+                      <p className={`text-sm font-medium ${mutedTextColors.normal}`}>
                         Connected Account
                       </p>
                       <p className={`text-base font-semibold ${headingColors.primary} mt-1`}>
                         {calendarStatus.googleEmail}
                       </p>
                       {calendarStatus.connectedAt && (
-                        <p className={`text-xs ${mutedTextColors.primary} mt-1`}>
+                        <p className={`text-xs ${mutedTextColors.normal} mt-1`}>
                           Connected {new Date(calendarStatus.connectedAt).toLocaleDateString()}
                         </p>
                       )}
@@ -245,26 +245,26 @@ export default function AdminSettingsPage() {
                 </div>
 
                 {/* Features List */}
-                <div className={`${cardBgColors.gray} rounded-lg p-4`}>
+                <div className={`${cardBgColors.base} rounded-lg p-4`}>
                   <p className={`text-sm font-medium ${headingColors.primary} mb-3`}>Active Features:</p>
                   <ul className="space-y-2">
                     <li className="flex items-start">
                       <svg className={`w-5 h-5 ${alertColors.success.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className={mutedTextColors.primary}>Automatic event creation when appointments are approved</span>
+                      <span className={mutedTextColors.normal}>Automatic event creation when appointments are approved</span>
                     </li>
                     <li className="flex items-start">
                       <svg className={`w-5 h-5 ${alertColors.success.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className={mutedTextColors.primary}>Calendar invites sent to customers automatically</span>
+                      <span className={mutedTextColors.normal}>Calendar invites sent to customers automatically</span>
                     </li>
                     <li className="flex items-start">
                       <svg className={`w-5 h-5 ${alertColors.success.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className={mutedTextColors.primary}>Automatic reminders (1 day and 30 minutes before)</span>
+                      <span className={mutedTextColors.normal}>Automatic reminders (1 day and 30 minutes before)</span>
                     </li>
                   </ul>
                 </div>
@@ -283,8 +283,8 @@ export default function AdminSettingsPage() {
             ) : (
               <div className="space-y-4">
                 {/* Not Connected State */}
-                <div className={`${cardBgColors.gray} rounded-lg p-4`}>
-                  <p className={mutedTextColors.primary}>
+                <div className={`${cardBgColors.base} rounded-lg p-4`}>
+                  <p className={mutedTextColors.normal}>
                     When you connect Google Calendar, approved appointments will automatically:
                   </p>
                   <ul className="mt-3 space-y-2">
@@ -292,19 +292,19 @@ export default function AdminSettingsPage() {
                       <svg className={`w-5 h-5 ${accentColors.blue.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
-                      <span className={mutedTextColors.primary}>Create events on your Google Calendar</span>
+                      <span className={mutedTextColors.normal}>Create events on your Google Calendar</span>
                     </li>
                     <li className="flex items-start">
                       <svg className={`w-5 h-5 ${accentColors.blue.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
-                      <span className={mutedTextColors.primary}>Send calendar invites to customers</span>
+                      <span className={mutedTextColors.normal}>Send calendar invites to customers</span>
                     </li>
                     <li className="flex items-start">
                       <svg className={`w-5 h-5 ${accentColors.blue.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
-                      <span className={mutedTextColors.primary}>Include automatic email and popup reminders</span>
+                      <span className={mutedTextColors.normal}>Include automatic email and popup reminders</span>
                     </li>
                   </ul>
                 </div>
@@ -330,7 +330,7 @@ export default function AdminSettingsPage() {
             <h2 className={`text-xl font-semibold ${headingColors.primary} mb-2`}>
               Additional Settings
             </h2>
-            <p className={mutedTextColors.primary}>
+            <p className={mutedTextColors.normal}>
               More settings and integrations coming soon
             </p>
           </div>

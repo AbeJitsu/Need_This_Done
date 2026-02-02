@@ -51,11 +51,14 @@ export async function POST(request: NextRequest) {
     // Look up the quote with retry logic (critical for payment flow)
     const supabase = getSupabaseAdmin();
     const quoteResult = await withSupabaseRetry(
-      () => supabase
-        .from('quotes')
-        .select('*')
-        .eq('reference_number', quoteRef)
-        .single<QuoteRecord>(),
+      async () => {
+        const res = await supabase
+          .from('quotes')
+          .select('*')
+          .eq('reference_number', quoteRef)
+          .single<QuoteRecord>();
+        return res;
+      },
       { operation: 'Fetch quote', maxRetries: 3 }
     );
 
@@ -140,13 +143,16 @@ export async function POST(request: NextRequest) {
 
     // Update quote status to authorized and store payment intent ID with retry
     const updateResult = await withSupabaseRetry(
-      () => supabase
-        .from('quotes')
-        .update({
-          status: 'authorized',
-          stripe_payment_intent_id: paymentIntent.id,
-        })
-        .eq('id', quote.id),
+      async () => {
+        const res = await supabase
+          .from('quotes')
+          .update({
+            status: 'authorized',
+            stripe_payment_intent_id: paymentIntent.id,
+          })
+          .eq('id', quote.id);
+        return res;
+      },
       { operation: 'Update quote status', maxRetries: 3 }
     );
 

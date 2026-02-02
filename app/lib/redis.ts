@@ -49,8 +49,7 @@ const redis: RedisClientType = createClient({
     // During build, don't wait forever for connection
     connectTimeout: isBuildTime ? 100 : 5000,
 
-    // Add command timeout to prevent hanging on slow commands
-    commandTimeout: 3000, // 3 seconds max for any Redis command
+    // Command timeout intentionally omitted; use guarded wrappers for operations to apply timeouts when needed
   },
 });
 
