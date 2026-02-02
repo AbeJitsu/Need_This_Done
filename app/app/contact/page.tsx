@@ -523,7 +523,7 @@ export default function ContactPage() {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Jane Smith"
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                 />
               </div>
               <div>
@@ -538,7 +538,7 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="jane@example.com"
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                 />
               </div>
             </div>
@@ -556,7 +556,7 @@ export default function ContactPage() {
                   value={formData.company}
                   onChange={handleChange}
                   placeholder="Acme Inc"
-                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                 />
               </div>
               <div>
@@ -600,7 +600,7 @@ export default function ContactPage() {
                 value={formData.message}
                 onChange={handleChange}
                 placeholder="Tell us about your project, goals, timeline, or any questions you have..."
-                className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all resize-none"
+                className="w-full px-4 py-3.5 rounded-xl border border-gray-400 bg-gray-50/50 text-gray-900 placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all resize-none"
               />
             </div>
 

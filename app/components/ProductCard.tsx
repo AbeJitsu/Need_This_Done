@@ -98,7 +98,7 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
               absolute top-3 right-3 p-2 rounded-lg backdrop-blur-sm
               transition-all duration-200 z-10 motion-safe:hover:scale-110 motion-safe:active:scale-95
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white
-              disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+              disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:animate-pulse
               ${inWishlist
                 ? `${accentColors.green.bg} ${accentColors.green.text} focus-visible:ring-green-500`
                 : 'bg-white/80 hover:bg-white text-gray-600 hover:text-gray-900 focus-visible:ring-gray-400'

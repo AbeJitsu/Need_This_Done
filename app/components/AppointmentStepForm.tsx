@@ -210,7 +210,7 @@ export default function AppointmentStepForm({
         </div>
 
         {error && (
-          <div className={`mb-4 p-3 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+          <div id="appointment-error" className={`mb-4 p-3 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`} role="alert">
             <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
           </div>
         )}
@@ -234,6 +234,9 @@ export default function AppointmentStepForm({
                   min={minDate}
                   max={maxDateStr}
                   required
+                  aria-required="true"
+                  aria-invalid={!!error}
+                  aria-describedby={error ? 'appointment-error' : undefined}
                   className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                 />
               </div>
@@ -256,6 +259,9 @@ export default function AppointmentStepForm({
                       name="preferredTimeStart"
                       value={formData.preferredTimeStart}
                       onChange={handleChange}
+                      aria-required="true"
+                      aria-invalid={!!error}
+                      aria-describedby={error ? 'appointment-error' : undefined}
                       className="hidden md:block w-full px-4 py-3 border border-gray-400 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                     >
                       <option value="">Select a time</option>
@@ -267,13 +273,13 @@ export default function AppointmentStepForm({
                     </select>
 
                     {/* Mobile: Button grid for better tap targets */}
-                    <div className="md:hidden grid grid-cols-3 gap-2">
+                    <div className="md:hidden grid grid-cols-3 gap-3">
                       {availableTimeOptions.map((option) => (
                         <button
                           key={option.value}
                           type="button"
                           onClick={() => setFormData((prev) => ({ ...prev, preferredTimeStart: option.value }))}
-                          className={`py-3 px-2 text-sm font-medium rounded-lg border-2 transition-all ${
+                          className={`min-h-12 py-4 px-2 text-sm font-medium rounded-lg border-2 transition-all ${
                             formData.preferredTimeStart === option.value
                               ? 'bg-purple-600 border-purple-600 text-white'
                               : `${cardBgColors.base} border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 ${hoverBgColors.purple}`
@@ -340,13 +346,13 @@ export default function AppointmentStepForm({
                     </select>
 
                     {/* Mobile: Button grid for better tap targets */}
-                    <div className="md:hidden grid grid-cols-3 gap-2">
+                    <div className="md:hidden grid grid-cols-3 gap-3">
                       {availableAlternateTimeOptions.map((option) => (
                         <button
                           key={option.value}
                           type="button"
                           onClick={() => setFormData((prev) => ({ ...prev, alternateTimeStart: option.value }))}
-                          className={`py-3 px-2 text-sm font-medium rounded-lg border-2 transition-all ${
+                          className={`min-h-12 py-4 px-2 text-sm font-medium rounded-lg border-2 transition-all ${
                             formData.alternateTimeStart === option.value
                               ? 'bg-purple-600 border-purple-600 text-white'
                               : `${cardBgColors.base} border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-purple-400 ${hoverBgColors.purple}`

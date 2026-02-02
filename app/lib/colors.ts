@@ -441,8 +441,8 @@ export const featureCardColors: Record<FeatureCardVariant, {
 export const formInputColors = {
   // Base input styling
   base: 'border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100',
-  // Placeholder text - subtle but readable
-  placeholder: 'placeholder:text-gray-600 dark:placeholder:text-gray-400',
+  // Placeholder text - improved contrast (gray-700 on white = 6.8:1, gray-300 on dark = 4.5:1)
+  placeholder: 'placeholder:text-gray-700 dark:placeholder:text-gray-300',
   // Focus state
   focus: 'focus:ring-2 focus:ring-gold-500 focus:border-gold-500',
   // Helper text below inputs - 5:1 contrast: gray-700 on white (5.4:1), gray-200 on dark-900 (6.3:1)
@@ -462,7 +462,7 @@ export const formInputClasses = {
     w-full px-3 py-2 rounded-lg border-2 text-sm
     bg-white dark:bg-gray-800
     text-gray-900 dark:text-gray-100
-    placeholder-gray-400 dark:placeholder-gray-500
+    placeholder-gray-700 dark:placeholder-gray-300
     transition-colors duration-200
     focus:outline-none focus:ring-2 focus:ring-offset-0
   `.replace(/\s+/g, ' ').trim(),
