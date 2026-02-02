@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { withSupabaseRetry, isUniqueViolation } from '@/lib/supabase-retry';
+import { validateRequestSize, SIZE_LIMITS } from '@/lib/request-size-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -99,6 +100,14 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate request size to prevent memory exhaustion
+    const sizeError = validateRequestSize(
+      request,
+      SIZE_LIMITS.JSON_PAYLOAD,
+      'Enrollment request'
+    );
+    if (sizeError) return sizeError;
+
     const supabase = await createSupabaseServerClient();
 
     // Get current user

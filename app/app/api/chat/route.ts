@@ -3,6 +3,8 @@ import { streamText, embed, type CoreMessage } from 'ai';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { redis } from '@/lib/redis';
 import { withSupabaseRetry } from '@/lib/supabase-retry';
+import { validateRequestSize, SIZE_LIMITS } from '@/lib/request-size-limit';
+import { NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,9 +23,18 @@ export const dynamic = 'force-dynamic';
  * 2. GPT-4o mini for generating responses
  * 3. Streaming for real-time response delivery
  */
-export async function POST(req: Request) {
+export async function POST(req: NextRequest | Request) {
   try {
-    const { messages } = await req.json();
+    // Validate request size BEFORE parsing JSON to prevent memory exhaustion
+    const nextReq = req as NextRequest;
+    const sizeError = validateRequestSize(
+      nextReq,
+      SIZE_LIMITS.CHAT_MESSAGE,
+      'Chat API request'
+    );
+    if (sizeError) return sizeError;
+
+    const { messages } = await nextReq.json();
 
     // ========================================================================
     // Input Validation - Prevent DoS and Resource Exhaustion

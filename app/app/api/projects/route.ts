@@ -111,11 +111,13 @@ export async function POST(request: Request) {
     // Get Admin Client
     // ====================================================================
     // Contact form submissions need the admin client to bypass RLS
+    // Validate configuration before creating client
 
     let supabaseAdmin;
     try {
       supabaseAdmin = getSupabaseAdmin();
     } catch (err) {
+      console.error('[Projects] Failed to initialize Supabase admin client:', err);
       return serverError('Server configuration error. Please contact support.');
     }
 

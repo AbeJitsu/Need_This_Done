@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { sendAppointmentRequestNotification } from '@/lib/email-service';
 import { validateRequest, commonSchemas } from '@/lib/api-validation';
-import { badRequest } from '@/lib/api-errors';
+import { badRequest, serverError } from '@/lib/api-errors';
+import { withSupabaseRetry, isForeignKeyViolation } from '@/lib/supabase-retry';
+import { validateRequestSize, SIZE_LIMITS } from '@/lib/request-size-limit';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -31,6 +33,18 @@ const AppointmentRequestSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // ====================================================================
+    // Validate Request Size and Content
+    // ====================================================================
+    // Prevent DoS via oversized payloads
+
+    const sizeError = validateRequestSize(
+      request,
+      SIZE_LIMITS.JSON_PAYLOAD,
+      'Appointment request'
+    );
+    if (sizeError) return sizeError;
+
     // ====================================================================
     // Validate Request with Zod Schema
     // ====================================================================
@@ -185,27 +199,46 @@ export async function POST(request: NextRequest) {
     }
 
     // ====================================================================
-    // Create Appointment Request
+    // Create Appointment Request with Retry & Conflict Handling
     // ====================================================================
+    // Use retry logic to handle transient database errors
+    // Check for constraint violations to provide meaningful error messages
 
-    const { data: appointmentRequest, error: insertError } = await supabase
-      .from('appointment_requests')
-      .insert({
-        order_id,
-        customer_email,
-        customer_name: customer_name || null,
-        preferred_date,
-        preferred_time_start,
-        preferred_time_end,
-        alternate_date: alternate_date || null,
-        alternate_time_start: alternate_time_start || null,
-        alternate_time_end,
-        duration_minutes: duration_minutes || 30,
-        notes: notes || null,
-        status: 'pending',
-      })
-      .select()
-      .single();
+    let appointmentRequest;
+    let insertError;
+
+    try {
+      const result = await withSupabaseRetry(
+        async () => {
+          const res = await supabase
+            .from('appointment_requests')
+            .insert({
+              order_id,
+              customer_email,
+              customer_name: customer_name || null,
+              preferred_date,
+              preferred_time_start,
+              preferred_time_end,
+              alternate_date: alternate_date || null,
+              alternate_time_start: alternate_time_start || null,
+              alternate_time_end,
+              duration_minutes: duration_minutes || 30,
+              notes: notes || null,
+              status: 'pending',
+            })
+            .select()
+            .single();
+          return res;
+        },
+        { operation: 'Create appointment request', maxRetries: 2 }
+      );
+
+      appointmentRequest = result.data;
+      insertError = result.error;
+    } catch (retryError) {
+      console.error('[Appointment Request] Insert failed after retries:', retryError);
+      return serverError('Failed to create appointment request. Please try again.');
+    }
 
     if (insertError) {
       // Check if this is a duplicate attempt for the same order
@@ -214,8 +247,13 @@ export async function POST(request: NextRequest) {
         return badRequest('Appointment request already exists for this order');
       }
 
+      // Check for foreign key violation (order doesn't exist)
+      if (isForeignKeyViolation(insertError)) {
+        return badRequest('Order not found');
+      }
+
       console.error('[Appointment Request] Insert error:', insertError);
-      return badRequest(insertError.message || 'Failed to create appointment request');
+      return serverError('Failed to create appointment request. Please try again.');
     }
 
     // ====================================================================
