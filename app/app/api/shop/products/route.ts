@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { medusaClient, Product, PaginatedProducts } from '@/lib/medusa-client';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 import { handleApiError } from '@/lib/api-errors';
+import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
 
 export const dynamic = 'force-dynamic';
 
@@ -61,8 +62,20 @@ export async function GET(request: NextRequest) {
     const result = await cache.wrap(
       cacheKey,
       async () => {
-        const products = await medusaClient.products.list(paginationParams);
-        return products;
+        // Add timeout protection for Medusa API call
+        try {
+          return await withTimeout(
+            medusaClient.products.list(paginationParams),
+            TIMEOUT_LIMITS.EXTERNAL,
+            'Fetch products from Medusa'
+          );
+        } catch (timeoutErr) {
+          if (timeoutErr instanceof TimeoutError) {
+            console.error('[Products] Medusa timeout:', timeoutErr.message);
+            throw new Error('Product service is responding slowly. Please try again.');
+          }
+          throw timeoutErr;
+        }
       },
       CACHE_TTL.STATIC // 1 hour - products rarely change
     );

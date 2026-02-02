@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
 
 // ============================================================================
 // Coupons API - /api/coupons
@@ -53,15 +54,33 @@ export async function GET(request: NextRequest) {
     // Get current user if authenticated
     const { data: { user } } = await supabase.auth.getUser();
 
-    // Validate coupon
-    const { data, error } = await supabase.rpc('validate_coupon', {
-      p_code: code,
-      p_cart_total: cartTotal,
-      p_item_count: itemCount,
-      p_user_id: user?.id || null,
-      p_email: user?.email || null,
-      p_is_first_order: isFirstOrder,
-    });
+    // Validate coupon with timeout protection
+    let result;
+    try {
+      result = await withTimeout(
+        supabase.rpc('validate_coupon', {
+          p_code: code,
+          p_cart_total: cartTotal,
+          p_item_count: itemCount,
+          p_user_id: user?.id || null,
+          p_email: user?.email || null,
+          p_is_first_order: isFirstOrder,
+        }),
+        TIMEOUT_LIMITS.DATABASE,
+        'Validate coupon in database'
+      );
+    } catch (timeoutErr) {
+      if (timeoutErr instanceof TimeoutError) {
+        console.error('[Coupons] Database timeout:', timeoutErr.message);
+        return NextResponse.json(
+          { error: 'Coupon validation is temporarily slow. Please try again.' },
+          { status: 503 }
+        );
+      }
+      throw timeoutErr;
+    }
+
+    const { data, error } = result;
 
     if (error) {
       console.error('Coupon validation error:', error);
@@ -123,15 +142,33 @@ export async function POST(request: NextRequest) {
     // Get current user if authenticated
     const { data: { user } } = await supabase.auth.getUser();
 
-    // Apply the coupon
-    const { data, error } = await supabase.rpc('apply_coupon', {
-      p_coupon_id: body.coupon_id,
-      p_user_id: user?.id || null,
-      p_order_id: body.order_id || null,
-      p_discount_applied: body.discount_applied || 0,
-      p_order_total: body.order_total || 0,
-      p_email: body.email || user?.email || null,
-    });
+    // Apply the coupon with timeout protection
+    let result;
+    try {
+      result = await withTimeout(
+        supabase.rpc('apply_coupon', {
+          p_coupon_id: body.coupon_id,
+          p_user_id: user?.id || null,
+          p_order_id: body.order_id || null,
+          p_discount_applied: body.discount_applied || 0,
+          p_order_total: body.order_total || 0,
+          p_email: body.email || user?.email || null,
+        }),
+        TIMEOUT_LIMITS.DATABASE,
+        'Apply coupon in database'
+      );
+    } catch (timeoutErr) {
+      if (timeoutErr instanceof TimeoutError) {
+        console.error('[Coupons] Database timeout:', timeoutErr.message);
+        return NextResponse.json(
+          { error: 'Coupon application is temporarily slow. Please try again.' },
+          { status: 503 }
+        );
+      }
+      throw timeoutErr;
+    }
+
+    const { data, error } = result;
 
     if (error) {
       console.error('Coupon application error:', error);

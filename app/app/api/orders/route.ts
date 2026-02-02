@@ -4,6 +4,7 @@ import { medusaClient } from '@/lib/medusa-client';
 import { badRequest, handleApiError } from '@/lib/api-errors';
 import { verifyAuth } from '@/lib/api-auth';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
+import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
 
 export const dynamic = 'force-dynamic';
 
@@ -59,7 +60,20 @@ async function handleGetOrder(orderId: string) {
     const result = await cache.wrap(
       CACHE_KEYS.order(orderId),
       async () => {
-        return await medusaClient.orders.get(orderId);
+        // Add timeout protection for Medusa API call
+        try {
+          return await withTimeout(
+            medusaClient.orders.get(orderId),
+            TIMEOUT_LIMITS.EXTERNAL,
+            'Fetch order from Medusa'
+          );
+        } catch (timeoutErr) {
+          if (timeoutErr instanceof TimeoutError) {
+            console.error('[Orders] Medusa timeout:', timeoutErr.message);
+            throw new Error('Order service is responding slowly. Please try again.');
+          }
+          throw timeoutErr;
+        }
       },
       CACHE_TTL.LONG // 5 minutes
     );
