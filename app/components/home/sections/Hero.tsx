@@ -125,7 +125,7 @@ export function Hero() {
           CONTENT LAYER: Typography & Interactions
           ============================================================ */}
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 md:px-12 text-center">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 md:px-12 text-center pt-12 sm:pt-20 md:pt-32">
         {/* Main Headline — MASSIVE, Bold, Gradient Text */}
         <motion.div
           className="mb-8"
