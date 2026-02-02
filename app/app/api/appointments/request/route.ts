@@ -273,6 +273,17 @@ export async function POST(request: NextRequest) {
     }
 
     // ====================================================================
+    // Validate Appointment Request Was Created
+    // ====================================================================
+    // Ensure the database insert actually returned the appointment record
+    // (should always be true if insertError was null, but be explicit)
+
+    if (!appointmentRequest || !appointmentRequest.id) {
+      console.error('[Appointment Request] Insert succeeded but returned no data');
+      return serverError('Failed to create appointment request. Please try again.');
+    }
+
+    // ====================================================================
     // Send Admin Notification with Delivery Tracking
     // ====================================================================
     // Send notification asynchronously but track delivery status in database

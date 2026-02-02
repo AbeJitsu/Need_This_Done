@@ -67,13 +67,26 @@ export async function POST(request: NextRequest) {
         }
       }
     } catch (error) {
-      console.error('Failed to fetch cart for appointment check:', error);
-      // Return false if cart fetch fails - let checkout proceed normally
-      return NextResponse.json({
-        requires_appointment: false,
-        service_name: null,
-        duration_minutes: null,
+      // Log cart fetch failure as a warning since this is critical for checkout flow
+      // Silent degradation would let checkout proceed without required appointment steps
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.warn('[Check Appointment] Failed to fetch cart for appointment check:', {
+        cart_id,
+        error: errorMessage,
+        severity: 'warning',
+        impact: 'Checkout will proceed without appointment requirement check',
       });
+
+      // Return error instead of silently degrading
+      // The client can decide whether to proceed without appointment verification
+      return NextResponse.json(
+        {
+          error: 'Unable to verify appointment requirements. Please try again.',
+          code: 'CART_FETCH_FAILED',
+          retryable: true,
+        },
+        { status: 503 }
+      );
     }
 
     return NextResponse.json({

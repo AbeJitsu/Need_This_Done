@@ -66,6 +66,7 @@ export default function CheckoutPage() {
     durationMinutes: number;
   } | null>(null);
   const [appointmentData, setAppointmentData] = useState<AppointmentData | null>(null);
+  const [appointmentCreationError, setAppointmentCreationError] = useState('');
 
   // Redirect if no cart items (but not during appointment/payment/confirmation)
   useEffect(() => {
@@ -141,7 +142,16 @@ export default function CheckoutPage() {
 
       // Handle non-OK responses
       if (!checkResponse.ok) {
-        throw new Error('Failed to check appointment requirement');
+        const checkData = await checkResponse.json();
+        const errorMsg = checkData.error || 'Failed to check appointment requirement';
+
+        // If retryable (e.g., service temporarily down), show user a recoverable error
+        if (checkData.retryable) {
+          throw new Error(errorMsg + ' (Please try again in a moment)');
+        }
+
+        // Otherwise, it's a client error
+        throw new Error(errorMsg);
       }
 
       const checkData = await checkResponse.json();
@@ -278,10 +288,15 @@ export default function CheckoutPage() {
         });
 
         if (!response.ok) {
-          console.error('Failed to create appointment request');
+          const errorData = await response.json();
+          const errorMessage = errorData.error || 'Failed to create appointment request';
+          console.error('Failed to create appointment request:', errorMessage);
+          setAppointmentCreationError(errorMessage);
         }
-      } catch {
-        console.error('Error creating appointment request');
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Error creating appointment request';
+        console.error('Error creating appointment request:', errorMessage);
+        setAppointmentCreationError(errorMessage);
       }
     }
 
@@ -381,27 +396,45 @@ export default function CheckoutPage() {
               </p>
             </div>
 
-            {/* Appointment confirmation message */}
+            {/* Appointment confirmation message or error */}
             {requiresAppointment && appointmentData && (
-              <div className={`mb-6 p-4 ${alertColors.info.bg} ${alertColors.info.border} rounded-lg`}>
-                <p className={`text-sm ${alertColors.info.text}`}>
-                  <strong>Appointment Requested:</strong>{' '}
-                  {new Date(appointmentData.preferredDate + 'T12:00:00').toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    month: 'long',
-                    day: 'numeric',
-                  })}{' '}
-                  at {appointmentData.preferredTimeStart.replace(/^(\d{2}):(\d{2})$/, (_, h, m) => {
-                    const hour = parseInt(h);
-                    const ampm = hour >= 12 ? 'PM' : 'AM';
-                    const hour12 = convertTo12HourFormat(hour);
-                    return `${hour12}:${m} ${ampm}`;
-                  })}
-                </p>
-                <p className={`text-sm ${alertColors.info.text} mt-1 opacity-80`}>
-                  We&apos;ll review your request and confirm within 24 hours.
-                </p>
-              </div>
+              <>
+                {appointmentCreationError && (
+                  <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+                    <p className={`text-sm font-semibold ${formValidationColors.error}`}>
+                      ⚠️ Appointment Request Failed
+                    </p>
+                    <p className={`text-sm ${formValidationColors.error} mt-2`}>
+                      {appointmentCreationError}
+                    </p>
+                    <p className={`text-sm ${formValidationColors.error} mt-2 opacity-80`}>
+                      Your payment was processed successfully, but we couldn't register your appointment request.
+                      Please contact us at <a href="mailto:admin@needthisdone.com" className="underline font-medium">admin@needthisdone.com</a> with your order number to schedule your consultation.
+                    </p>
+                  </div>
+                )}
+                {!appointmentCreationError && (
+                  <div className={`mb-6 p-4 ${alertColors.info.bg} ${alertColors.info.border} rounded-lg`}>
+                    <p className={`text-sm ${alertColors.info.text}`}>
+                      <strong>Appointment Requested:</strong>{' '}
+                      {new Date(appointmentData.preferredDate + 'T12:00:00').toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        month: 'long',
+                        day: 'numeric',
+                      })}{' '}
+                      at {appointmentData.preferredTimeStart.replace(/^(\d{2}):(\d{2})$/, (_, h, m) => {
+                        const hour = parseInt(h);
+                        const ampm = hour >= 12 ? 'PM' : 'AM';
+                        const hour12 = convertTo12HourFormat(hour);
+                        return `${hour12}:${m} ${ampm}`;
+                      })}
+                    </p>
+                    <p className={`text-sm ${alertColors.info.text} mt-1 opacity-80`}>
+                      We&apos;ll review your request and confirm within 24 hours.
+                    </p>
+                  </div>
+                )}
+              </>
             )}
 
             <div className={`${alertColors.success.bg} ${alertColors.success.border} rounded-lg p-4`}>
