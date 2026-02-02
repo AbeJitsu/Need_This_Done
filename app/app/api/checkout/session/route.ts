@@ -4,6 +4,7 @@ import { medusaClient } from '@/lib/medusa-client';
 import { badRequest, serverError, handleApiError } from '@/lib/api-errors';
 import { verifyAuth } from '@/lib/api-auth';
 import { cache, CACHE_KEYS } from '@/lib/cache';
+import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,10 +53,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch cart to check for appointment-required products
+    // Wrap with timeout to prevent hanging on slow Medusa responses
     let cart;
     let requiresAppointment = false;
     try {
-      cart = await medusaClient.carts.get(cart_id);
+      cart = await withTimeout(
+        medusaClient.carts.get(cart_id),
+        TIMEOUT_LIMITS.EXTERNAL_API,
+        'Medusa cart fetch'
+      );
       // Check if any items require appointments
       // Note: Medusa v1 with expand=items.variant.product puts product at item.variant.product
       requiresAppointment =
@@ -69,6 +75,10 @@ export async function POST(request: NextRequest) {
           return flag === true || flag === 'true';
         }) || false;
     } catch (error) {
+      if (error instanceof TimeoutError) {
+        console.error('[Checkout] Cart fetch timed out:', error.message);
+        return serverError('Checkout service is currently slow. Please try again in a moment.');
+      }
       console.error('Failed to fetch cart for appointment check:', error);
       // Continue checkout even if cart fetch fails
     }
@@ -77,8 +87,16 @@ export async function POST(request: NextRequest) {
     // Medusa requires a customer email before completing the cart
     if (email) {
       try {
-        await medusaClient.carts.update(cart_id, { email });
+        await withTimeout(
+          medusaClient.carts.update(cart_id, { email }),
+          TIMEOUT_LIMITS.EXTERNAL_API,
+          'Medusa cart update'
+        );
       } catch (error) {
+        if (error instanceof TimeoutError) {
+          console.error('[Checkout] Cart update timed out:', error.message);
+          return serverError('Checkout service is currently slow. Please try again.');
+        }
         console.error('Failed to set customer email on cart:', error);
         return serverError('Failed to update cart with customer information');
       }
@@ -88,21 +106,42 @@ export async function POST(request: NextRequest) {
     // Medusa requires this even for manual payment processing
     try {
       // Step 1: Initialize payment sessions (discovers available providers)
-      await medusaClient.carts.initializePaymentSessions(cart_id);
+      await withTimeout(
+        medusaClient.carts.initializePaymentSessions(cart_id),
+        TIMEOUT_LIMITS.EXTERNAL_API,
+        'Medusa payment session init'
+      );
 
       // Step 2: Select the manual payment provider
       // We use 'manual' because actual payment happens through Stripe separately
-      await medusaClient.carts.selectPaymentSession(cart_id, 'manual');
+      await withTimeout(
+        medusaClient.carts.selectPaymentSession(cart_id, 'manual'),
+        TIMEOUT_LIMITS.EXTERNAL_API,
+        'Medusa payment session select'
+      );
     } catch (error) {
+      if (error instanceof TimeoutError) {
+        console.error('[Checkout] Payment session setup timed out:', error.message);
+        return serverError('Checkout service is currently slow. Please try again.');
+      }
       console.error('Failed to initialize payment session:', error);
       return serverError('Failed to prepare checkout. Please try again.');
     }
 
     // Create order from cart in Medusa
+    // This is the critical operation - use longer timeout (15s instead of 8s)
     let order;
     try {
-      order = await medusaClient.orders.create(cart_id);
+      order = await withTimeout(
+        medusaClient.orders.create(cart_id),
+        TIMEOUT_LIMITS.WEBHOOK, // 15 seconds for order creation
+        'Medusa order creation'
+      );
     } catch (error) {
+      if (error instanceof TimeoutError) {
+        console.error('[Checkout] Order creation timed out:', error.message);
+        return serverError('Order processing is taking longer than expected. Please check your email for confirmation or contact support.');
+      }
       console.error('Failed to create order from cart:', error);
       // Log the full error for debugging
       if (error && typeof error === 'object' && 'message' in error) {

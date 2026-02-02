@@ -63,9 +63,11 @@ export async function checkAndMarkRequest(
   const key = `${DEDUP_KEY_PREFIX}${fingerprint}`;
 
   try {
-    // Try to set the key only if it doesn't exist (NX flag)
+    // CRITICAL: Use SET with NX (only set if not exists) + EX (expiration) atomically
+    // This ensures exactly-once semantics even under high concurrency
     // Returns "OK" if set successfully, null if key already exists
-    const result = await redis.set(key, new Date().toISOString(), {
+    const result = await redis.raw.set(key, new Date().toISOString(), {
+      NX: true, // Only set if key doesn't exist (atomic test-and-set)
       EX: DEDUP_TTL_SECONDS,
     });
 

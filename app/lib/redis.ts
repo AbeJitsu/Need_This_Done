@@ -262,6 +262,55 @@ async function lrange(key: string, start: number, stop: number): Promise<string[
   }
 }
 
+// ============================================================================
+// Graceful Shutdown Handling
+// ============================================================================
+// Ensure Redis connection is properly closed when process exits
+// Prevents connection leaks and ensures clean shutdown
+
+let isShuttingDown = false;
+
+async function gracefulShutdown(signal: string): Promise<void> {
+  if (isShuttingDown) {
+    return; // Already shutting down
+  }
+
+  isShuttingDown = true;
+  console.log(`[Redis] Received ${signal}, closing connection...`);
+
+  try {
+    if (redis.isOpen) {
+      await redis.quit();
+      console.log('[Redis] Connection closed successfully');
+    }
+  } catch (error) {
+    console.error('[Redis] Error during shutdown:', error);
+  }
+}
+
+// Register shutdown handlers for all common exit scenarios
+// SIGTERM: Docker/Kubernetes graceful shutdown
+// SIGINT: Ctrl+C in terminal
+// beforeExit: Node.js event loop is about to exit
+if (typeof process !== 'undefined') {
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+  process.on('beforeExit', () => gracefulShutdown('beforeExit'));
+
+  // Handle uncaught errors that would crash the process
+  process.on('uncaughtException', async (error) => {
+    console.error('[Redis] Uncaught exception, closing connection:', error);
+    await gracefulShutdown('uncaughtException');
+    process.exit(1);
+  });
+
+  process.on('unhandledRejection', async (reason) => {
+    console.error('[Redis] Unhandled rejection, closing connection:', reason);
+    await gracefulShutdown('unhandledRejection');
+    process.exit(1);
+  });
+}
+
 // Export a wrapper object with connection-safe methods
 const safeRedis = {
   ping,
