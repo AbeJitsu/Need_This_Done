@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { initializeRequestContext, logger, createResponseHeaders } from '@/lib/request-context';
+import { withSupabaseRetry } from '@/lib/supabase-retry';
 import {
   sendReviewApprovedEmail,
   sendReviewRejectedEmail,
@@ -214,7 +215,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Update review status
+    // Update review status with retry logic for transient database failures
     const newStatus = action === 'approve' ? 'approved' : 'rejected';
     const updateData: Record<string, unknown> = {
       status: newStatus,
@@ -226,12 +227,35 @@ export async function POST(request: NextRequest) {
       updateData.rejection_reason = rejection_reason;
     }
 
-    const { data: updatedReview, error: updateError } = await supabase
-      .from('reviews')
-      .update(updateData)
-      .eq('id', id)
-      .select()
-      .single();
+    let updatedReview;
+    let updateError;
+
+    try {
+      const result = await withSupabaseRetry(
+        async () => {
+          const res = await supabase
+            .from('reviews')
+            .update(updateData)
+            .eq('id', id)
+            .select()
+            .single();
+          return res;
+        },
+        { operation: 'Update review moderation status', maxRetries: 2 }
+      );
+
+      updatedReview = result.data;
+      updateError = result.error;
+    } catch (retryError) {
+      logger.error('Failed to update review after retries', retryError as Error, {
+        userId: user.id,
+        reviewId: id,
+      });
+      return NextResponse.json(
+        { error: 'Failed to update review' },
+        { status: 500, headers: createResponseHeaders() }
+      );
+    }
 
     if (updateError) {
       logger.error('Failed to update review', updateError as Error, { userId: user.id, reviewId: id });

@@ -387,9 +387,9 @@ async function handlePaymentSuccess(
       }).catch((err: unknown) => {
         console.error('[Webhook] Failed to send order confirmation email:', err);
         // Log failed email attempt to database for manual follow-up (don't block webhook)
-        // Fire-and-forget - don't await
+        // Fire-and-forget - don't await, but ALWAYS attach rejection handler
         const failureOrderId = String(orderDetails?.medusa_order_id || orderId).slice(0, 8);
-        (async () => {
+        const logFailurePromise = (async () => {
           try {
             await supabase
               .from('email_failures')
@@ -405,6 +405,12 @@ async function handlePaymentSuccess(
             console.error('[Webhook] Failed to log order confirmation email failure:', logErr);
           }
         })();
+
+        // CRITICAL: Attach rejection handler to prevent unhandled promise rejections
+        // even though this is fire-and-forget
+        logFailurePromise.catch((err) => {
+          console.error('[Webhook] Unhandled error in email failure logging task:', err);
+        });
       });
     }
   }

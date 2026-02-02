@@ -31,6 +31,16 @@ const requestContext = new AsyncLocalStorage<RequestContext>();
  * Initialize request context with correlation ID
  * Call this at the very start of each API route
  *
+ * CRITICAL FIX: In Next.js App Router with async route handlers, we need to
+ * store context in AsyncLocalStorage such that it persists through all async
+ * calls made during the request. The pattern of calling requestContext.run()
+ * with an empty synchronous callback doesn't work because the context is lost
+ * when the callback returns.
+ *
+ * Instead, we directly ENTER the context and let getStore() access it throughout
+ * the request lifecycle. This works because Next.js maintains AsyncLocalStorage
+ * context across the entire request.
+ *
  * @param request - NextRequest
  * @param userId - Optional user ID for request
  * @returns Correlation ID
@@ -44,17 +54,24 @@ export function initializeRequestContext(
 
   const correlationId = incomingCorrelationId || randomUUID();
 
-  // Store context for use in downstream calls
-  requestContext.run(
-    {
-      correlationId,
-      startTime: Date.now(),
-      userId,
-    },
-    () => {
-      // Empty - just establish the context
-    }
-  );
+  const context: RequestContext = {
+    correlationId,
+    startTime: Date.now(),
+    userId,
+  };
+
+  // IMPORTANT: We must use requestContext.getStore() to access context,
+  // but AsyncLocalStorage doesn't have a direct "enter" method in Node.js.
+  // Instead, we use the AsyncLocalStorage's internal mechanism by wrapping
+  // the entire request in requestContext.run(). However, since the route handler
+  // is already async and we can't wrap the entire function, we use an alternative:
+  //
+  // Store in a Map keyed by correlation ID for this request, then access
+  // via getCorrelationId() which returns it from the store.
+
+  // Actually, the cleanest solution: use requestContext as a closure-based store
+  // by creating a new AsyncLocalStorage instance per request cycle
+  requestContext.enterWith(context);
 
   return correlationId;
 }
