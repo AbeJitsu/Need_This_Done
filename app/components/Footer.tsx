@@ -22,7 +22,7 @@ const defaultFooterLinks: FooterLink[] = [
   { href: '/pricing', label: 'Pricing' },
   { href: '/faq', label: 'FAQ' },
   { href: '/blog', label: 'Blog' },
-  { href: '/get-started', label: 'Get Started' },
+  { href: '/contact', label: 'Get Started' },
 ];
 
 export default function Footer() {

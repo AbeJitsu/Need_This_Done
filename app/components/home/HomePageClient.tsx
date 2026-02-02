@@ -3,6 +3,7 @@
 import { EditableSection, EditableItem, Editable } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import ServiceIcon, { getServiceIconType } from '@/components/home/ServiceIcons';
+import Button from '@/components/Button';
 import type { HomePageContent } from '@/lib/page-content-types';
 
 // ============================================================================
@@ -430,15 +431,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
           {/* CTA - Blue (2nd in progression, since Green was used for View Pricing) */}
           <div className="text-center mt-10">
-            <a
-              href="/get-started"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-xl hover:bg-blue-700 motion-safe:hover:scale-105 motion-safe:active:scale-95 active:bg-blue-800 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-300 focus-visible:ring-offset-2"
-            >
+            <Button variant="blue" href="/contact" size="lg">
               Start Your Project
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </a>
+            </Button>
           </div>
         </div>
       </EditableSection>
