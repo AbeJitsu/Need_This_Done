@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
+import { getSession } from '@/lib/auth';
 import { TrendingUp, Users, Gift } from 'lucide-react';
 import Link from 'next/link';
 
@@ -27,16 +30,33 @@ interface ReferralStats {
 }
 
 export default function ReferralAnalyticsPage() {
-  const { user, getToken } = useAuth();
+  const router = useRouter();
+  const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
+  const { showToast } = useToast();
   const [stats, setStats] = useState<ReferralStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Auth protection
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/login');
+    } else if (!authLoading && isAuthenticated && !isAdmin) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, isAdmin, authLoading, router]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!isAuthenticated || !isAdmin || authLoading) return;
 
     const fetchStats = async () => {
       try {
-        const token = await getToken();
+        setError(null);
+        const session = await getSession();
+        if (!session?.access_token) {
+          throw new Error('Not authenticated');
+        }
+        const token = session.access_token;
         const response = await fetch('/api/admin/referral-analytics', {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -44,8 +64,14 @@ export default function ReferralAnalyticsPage() {
         if (response.ok) {
           const data = await response.json();
           setStats(data);
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.error || `HTTP ${response.status}: Failed to fetch referral analytics`);
         }
       } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to load referral data';
+        setError(errorMessage);
+        showToast(errorMessage, 'error');
         console.error('Error fetching stats:', error);
       } finally {
         setLoading(false);
@@ -53,14 +79,29 @@ export default function ReferralAnalyticsPage() {
     };
 
     fetchStats();
-  }, [user, getToken]);
+  }, [isAuthenticated, isAdmin, authLoading, showToast]);
 
   if (loading) {
     return <div className="py-12 text-center">Loading referral analytics...</div>;
   }
 
+  if (error) {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-red-600 font-medium">Error Loading Referral Analytics</p>
+        <p className="text-gray-600 mt-2">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
   if (!stats) {
-    return <div className="py-12 text-center text-gray-600">Unable to load referral data</div>;
+    return <div className="py-12 text-center text-gray-600">No referral data available yet</div>;
   }
 
   return (

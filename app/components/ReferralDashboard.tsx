@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { getSession } from '@/lib/auth';
 import { Copy, Share2, TrendingUp } from 'lucide-react';
 
 interface ReferralData {
@@ -21,17 +22,21 @@ interface ReferralData {
 }
 
 export function ReferralDashboard() {
-  const { user, getToken } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [referralData, setReferralData] = useState<ReferralData | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!user) return;
+    if (!isAuthenticated) return;
 
     const fetchReferralData = async () => {
       try {
-        const token = await getToken();
+        const session = await getSession();
+        if (!session?.access_token) {
+          throw new Error('Not authenticated');
+        }
+        const token = session.access_token;
         const response = await fetch('/api/referrals/my-referral', {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -48,7 +53,7 @@ export function ReferralDashboard() {
     };
 
     fetchReferralData();
-  }, [user, getToken]);
+  }, [isAuthenticated]);
 
   if (loading) {
     return <div className="text-center py-8">Loading referral info...</div>;

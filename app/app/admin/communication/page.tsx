@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
+import { getSession } from '@/lib/auth';
 import { Mail, Send, Plus, Eye } from 'lucide-react';
 import Link from 'next/link';
 
@@ -27,7 +30,9 @@ interface EmailCampaign {
 }
 
 export default function CommunicationHubPage() {
-  const { user, getToken } = useAuth();
+  const router = useRouter();
+  const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
+  const { showToast } = useToast();
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
   const [campaigns, setCampaigns] = useState<EmailCampaign[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,12 +40,39 @@ export default function CommunicationHubPage() {
   const [showNewTemplate, setShowNewTemplate] = useState(false);
   const [showNewCampaign, setShowNewCampaign] = useState(false);
 
+  // Campaign form state
+  const [campaignName, setCampaignName] = useState('');
+  const [campaignTemplate, setCampaignTemplate] = useState('');
+  const [campaignSegment, setCampaignSegment] = useState('All Customers');
+  const [submittingCampaign, setSubmittingCampaign] = useState(false);
+
+  // Template form state
+  const [templateName, setTemplateName] = useState('');
+  const [templateSubject, setTemplateSubject] = useState('');
+  const [templatePreview, setTemplatePreview] = useState('');
+  const [templateHtml, setTemplateHtml] = useState('');
+  const [submittingTemplate, setSubmittingTemplate] = useState(false);
+
+  // Auth protection
   useEffect(() => {
-    if (!user) return;
+    if (!authLoading && !isAuthenticated) {
+      router.push('/login');
+    } else if (!authLoading && isAuthenticated && !isAdmin) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, isAdmin, authLoading, router]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !isAdmin || authLoading) return;
 
     const fetchData = async () => {
       try {
-        const token = await getToken();
+        const session = await getSession();
+        if (!session?.access_token) {
+          throw new Error('Not authenticated');
+        }
+
+        const token = session.access_token;
 
         // Fetch templates
         const templatesRes = await fetch('/api/admin/email-templates', {
@@ -67,7 +99,176 @@ export default function CommunicationHubPage() {
     };
 
     fetchData();
-  }, [user, getToken]);
+  }, [isAuthenticated, isAdmin, authLoading]);
+
+  const handleCreateCampaign = async () => {
+    if (!campaignName.trim()) {
+      showToast('Campaign name is required', 'error');
+      return;
+    }
+
+    if (!campaignTemplate) {
+      showToast('Please select a template', 'error');
+      return;
+    }
+
+    try {
+      setSubmittingCampaign(true);
+      const session = await getSession();
+      if (!session?.access_token) {
+        throw new Error('Not authenticated');
+      }
+      const token = session.access_token;
+
+      const response = await fetch('/api/admin/email-campaigns', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          campaign_name: campaignName,
+          template_id: campaignTemplate,
+          target_segment: campaignSegment,
+          status: 'draft',
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create campaign');
+      }
+
+      showToast('Campaign created successfully', 'success');
+      setCampaignName('');
+      setCampaignTemplate('');
+      setCampaignSegment('All Customers');
+      setShowNewCampaign(false);
+
+      // Refresh campaigns
+      const campaignsRes = await fetch('/api/admin/email-campaigns', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (campaignsRes.ok) {
+        const data = await campaignsRes.json();
+        setCampaigns(data.campaigns);
+      }
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to create campaign', 'error');
+    } finally {
+      setSubmittingCampaign(false);
+    }
+  };
+
+  const handleCreateTemplate = async () => {
+    if (!templateName.trim()) {
+      showToast('Template name is required', 'error');
+      return;
+    }
+
+    if (!templateSubject.trim()) {
+      showToast('Email subject is required', 'error');
+      return;
+    }
+
+    if (!templateHtml.trim()) {
+      showToast('HTML content is required', 'error');
+      return;
+    }
+
+    try {
+      setSubmittingTemplate(true);
+      const session = await getSession();
+      if (!session?.access_token) {
+        throw new Error('Not authenticated');
+      }
+      const token = session.access_token;
+
+      const response = await fetch('/api/admin/email-templates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: templateName,
+          subject: templateSubject,
+          preview_text: templatePreview,
+          html_content: templateHtml,
+          template_type: 'custom',
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create template');
+      }
+
+      showToast('Template created successfully', 'success');
+      setTemplateName('');
+      setTemplateSubject('');
+      setTemplatePreview('');
+      setTemplateHtml('');
+      setShowNewTemplate(false);
+
+      // Refresh templates
+      const templatesRes = await fetch('/api/admin/email-templates', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (templatesRes.ok) {
+        const data = await templatesRes.json();
+        setTemplates(data.templates);
+      }
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to create template', 'error');
+    } finally {
+      setSubmittingTemplate(false);
+    }
+  };
+
+  const handleSendCampaign = async (campaignId: string) => {
+    if (!confirm('Are you sure you want to send this campaign? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const session = await getSession();
+      if (!session?.access_token) {
+        throw new Error('Not authenticated');
+      }
+      const token = session.access_token;
+
+      const response = await fetch(`/api/admin/email-campaigns/${campaignId}/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to send campaign');
+      }
+
+      const result = await response.json();
+      showToast(
+        `Campaign sent to ${result.sent || 0} recipients${result.failed > 0 ? ` (${result.failed} failed)` : ''}`,
+        'success'
+      );
+
+      // Refresh campaigns
+      const campaignsRes = await fetch('/api/admin/email-campaigns', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (campaignsRes.ok) {
+        const data = await campaignsRes.json();
+        setCampaigns(data.campaigns);
+      }
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to send campaign', 'error');
+    }
+  };
 
   if (loading) {
     return <div className="py-12 text-center">Loading communication hub...</div>;
@@ -131,6 +332,8 @@ export default function CommunicationHubPage() {
                   </label>
                   <input
                     type="text"
+                    value={campaignName}
+                    onChange={(e) => setCampaignName(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600"
                     placeholder="e.g., Spring Sale Promotion"
                   />
@@ -140,8 +343,12 @@ export default function CommunicationHubPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Select Template
                   </label>
-                  <select className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600">
-                    <option>Choose a template...</option>
+                  <select
+                    value={campaignTemplate}
+                    onChange={(e) => setCampaignTemplate(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  >
+                    <option value="">Choose a template...</option>
                     {templates.map(t => (
                       <option key={t.id} value={t.id}>
                         {t.name}
@@ -154,7 +361,11 @@ export default function CommunicationHubPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Target Segment
                   </label>
-                  <select className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600">
+                  <select
+                    value={campaignSegment}
+                    onChange={(e) => setCampaignSegment(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  >
                     <option>All Customers</option>
                     <option>High-Value Customers</option>
                     <option>New Signups (Last 30 Days)</option>
@@ -163,8 +374,12 @@ export default function CommunicationHubPage() {
                   </select>
                 </div>
 
-                <button className="w-full px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition font-medium">
-                  Create Campaign
+                <button
+                  onClick={handleCreateCampaign}
+                  disabled={submittingCampaign}
+                  className="w-full px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {submittingCampaign ? 'Creating...' : 'Create Campaign'}
                 </button>
               </div>
             </div>
@@ -213,7 +428,10 @@ export default function CommunicationHubPage() {
                   </div>
 
                   {campaign.status === 'draft' && (
-                    <button className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition text-sm">
+                    <button
+                      onClick={() => handleSendCampaign(campaign.id)}
+                      className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition text-sm"
+                    >
                       <Send className="w-4 h-4" />
                       Send Now
                     </button>
@@ -250,6 +468,8 @@ export default function CommunicationHubPage() {
                   </label>
                   <input
                     type="text"
+                    value={templateName}
+                    onChange={(e) => setTemplateName(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600"
                     placeholder="e.g., Promotional Banner"
                   />
@@ -261,6 +481,8 @@ export default function CommunicationHubPage() {
                   </label>
                   <input
                     type="text"
+                    value={templateSubject}
+                    onChange={(e) => setTemplateSubject(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600"
                     placeholder="e.g., Save 20% on your next order!"
                   />
@@ -272,6 +494,8 @@ export default function CommunicationHubPage() {
                   </label>
                   <input
                     type="text"
+                    value={templatePreview}
+                    onChange={(e) => setTemplatePreview(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600"
                     placeholder="Brief preview shown in inbox"
                   />
@@ -283,13 +507,19 @@ export default function CommunicationHubPage() {
                   </label>
                   <textarea
                     rows={8}
+                    value={templateHtml}
+                    onChange={(e) => setTemplateHtml(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-600 font-mono text-sm"
                     placeholder="Paste your HTML email template here..."
                   />
                 </div>
 
-                <button className="w-full px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition font-medium">
-                  Create Template
+                <button
+                  onClick={handleCreateTemplate}
+                  disabled={submittingTemplate}
+                  className="w-full px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {submittingTemplate ? 'Creating...' : 'Create Template'}
                 </button>
               </div>
             </div>

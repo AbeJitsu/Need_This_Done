@@ -42,10 +42,6 @@ export default function CampaignDetailPage() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchCampaign();
-  }, [campaignId]);
-
   const fetchCampaign = async () => {
     try {
       setLoading(true);
@@ -60,6 +56,13 @@ export default function CampaignDetailPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (campaignId) {
+      fetchCampaign();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [campaignId]);
 
   const handleSendCampaign = async () => {
     if (!campaign) return;

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
@@ -326,10 +327,12 @@ export default function WaitlistAnalyticsDashboard() {
                         {index + 1}
                       </div>
                       {product.thumbnail && (
-                        <img
+                        <Image
                           src={product.thumbnail}
                           alt={product.productName}
-                          className="w-12 h-12 rounded object-cover"
+                          width={48}
+                          height={48}
+                          className="rounded object-cover"
                         />
                       )}
                       <div className="flex-1">
