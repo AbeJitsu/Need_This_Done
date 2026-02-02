@@ -102,7 +102,19 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 label={content.services.cards[0].title}
                 content={content.services.cards[0] as unknown as Record<string, unknown>}
               >
-                <article className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border border-emerald-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl focus-visible:-translate-y-1" tabIndex={0} role="article" aria-labelledby="service-card-0-title">
+                <article
+                  className="group relative bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 rounded-2xl p-8 lg:p-10 border border-emerald-100 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-100 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 cursor-pointer"
+                  tabIndex={0}
+                  role="button"
+                  aria-labelledby="service-card-0-title"
+                  onClick={() => window.location.href = '/pricing'}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      window.location.href = '/pricing';
+                    }
+                  }}
+                >
                   {/* Icon */}
                   <div className="w-16 h-16 rounded-xl bg-emerald-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform" aria-hidden="true">
                     <ServiceIcon
@@ -162,7 +174,19 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[1].title}
                   content={content.services.cards[1] as unknown as Record<string, unknown>}
                 >
-                  <article className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border border-blue-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl focus-visible:-translate-y-1" tabIndex={0} role="article" aria-labelledby="service-card-1-title">
+                  <article
+                    className="group relative bg-gradient-to-br from-blue-50 via-white to-blue-50/30 rounded-2xl p-6 border border-blue-100 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-200 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 cursor-pointer"
+                    tabIndex={0}
+                    role="button"
+                    aria-labelledby="service-card-1-title"
+                    onClick={() => window.location.href = '/pricing'}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        window.location.href = '/pricing';
+                      }
+                    }}
+                  >
                     {/* Icon */}
                     <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" aria-hidden="true">
                       <ServiceIcon
@@ -199,7 +223,19 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   label={content.services.cards[2].title}
                   content={content.services.cards[2] as unknown as Record<string, unknown>}
                 >
-                  <article className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border border-purple-100 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl focus-visible:-translate-y-1" tabIndex={0} role="article" aria-labelledby="service-card-2-title">
+                  <article
+                    className="group relative bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-2xl p-6 border border-purple-100 shadow-xl motion-safe:hover:shadow-2xl motion-safe:hover:-translate-y-1 transition-all duration-300 animate-slide-up animate-delay-300 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:shadow-2xl motion-safe:focus-visible:-translate-y-1 cursor-pointer"
+                    tabIndex={0}
+                    role="button"
+                    aria-labelledby="service-card-2-title"
+                    onClick={() => window.location.href = '/pricing'}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        window.location.href = '/pricing';
+                      }
+                    }}
+                  >
                     {/* Icon */}
                     <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" aria-hidden="true">
                       <ServiceIcon
@@ -233,7 +269,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           <div className="text-center mt-8">
             <a
               href="/pricing"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-semibold text-lg rounded-xl hover:bg-emerald-700 hover:scale-105 active:scale-95 active:bg-emerald-800 transition-all duration-300 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-300 focus-visible:ring-offset-2"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-semibold text-lg rounded-xl hover:bg-emerald-700 motion-safe:hover:scale-105 motion-safe:active:scale-95 active:bg-emerald-800 transition-all duration-300 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-300 focus-visible:ring-offset-2"
             >
               View Pricing
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -358,7 +394,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
               <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16 max-w-5xl mx-auto">
                 {/* Timeline indicator */}
                 <div className="text-center group">
-                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 mb-5 shadow-lg shadow-emerald-500/30 group-hover:scale-105 transition-transform">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 mb-5 shadow-lg shadow-emerald-500/30 motion-safe:group-hover:scale-105 transition-transform">
                     <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
                     </svg>
@@ -369,7 +405,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
                 {/* Communication */}
                 <div className="text-center group">
-                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 mb-5 shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 mb-5 shadow-lg shadow-blue-500/30 motion-safe:group-hover:scale-105 transition-transform">
                     <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/>
                     </svg>
@@ -380,7 +416,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
                 {/* Pricing */}
                 <div className="text-center group">
-                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 mb-5 shadow-lg shadow-purple-500/30 group-hover:scale-105 transition-transform">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 mb-5 shadow-lg shadow-purple-500/30 motion-safe:group-hover:scale-105 transition-transform">
                     <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
@@ -396,7 +432,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           <div className="text-center mt-10">
             <a
               href="/get-started"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-xl hover:bg-blue-700 hover:scale-105 active:scale-95 active:bg-blue-800 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-300 focus-visible:ring-offset-2"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold text-lg rounded-xl hover:bg-blue-700 motion-safe:hover:scale-105 motion-safe:active:scale-95 active:bg-blue-800 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-300 focus-visible:ring-offset-2"
             >
               Start Your Project
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -429,7 +465,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             <div className="mb-6">
               <a
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-purple-600 text-white font-semibold text-xl rounded-xl hover:bg-purple-700 hover:scale-105 active:scale-95 active:bg-purple-800 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-300 focus-visible:ring-offset-2"
+                className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-purple-600 text-white font-semibold text-xl rounded-xl hover:bg-purple-700 motion-safe:hover:scale-105 motion-safe:active:scale-95 active:bg-purple-800 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-300 focus-visible:ring-offset-2"
               >
                 BOOK A FREE CALL
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

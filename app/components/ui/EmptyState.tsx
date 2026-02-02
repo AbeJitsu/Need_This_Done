@@ -65,7 +65,7 @@ export default function EmptyState({
   return (
     <div className={`flex flex-col items-center justify-center py-12 px-6 text-center ${className}`}>
       {/* Icon */}
-      <div className="text-gray-300 dark:text-gray-600 mb-6">
+      <div className="text-gray-400 dark:text-gray-600 mb-6">
         {IconComponent}
       </div>
 

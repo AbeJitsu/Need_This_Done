@@ -107,7 +107,7 @@ export default function Footer() {
           <p className="flex items-center gap-2">
             {legalLinks.map((link, index) => (
               <span key={link.href} className="flex items-center gap-2">
-                <Link href={link.href} className={`text-gray-700 dark:text-gray-300 ${linkHoverColors.blue} transition-colors`}>
+                <Link href={link.href} className={`text-gray-700 dark:text-gray-300 ${linkHoverColors.blue} transition-colors py-1 px-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2`}>
                   <Editable path={`_layout.footer.legalLinks.${index}.label`}>
                     <span>{link.label}</span>
                   </Editable>
