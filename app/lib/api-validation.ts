@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { z, ZodError, ZodSchema } from 'zod';
+import { z, ZodSchema } from 'zod';
 import { badRequest } from './api-errors';
 
 // ============================================================================
@@ -271,7 +271,7 @@ export const PageSlugParamSchema = z.object({
 });
 
 export const UpdatePageContentSchema = z.object({
-  content: z.record(z.unknown()), // JSON object, structure validated by page-specific types
+  content: z.record(z.string(), z.unknown()), // JSON object, structure validated by page-specific types
 });
 
 // ============================================================================

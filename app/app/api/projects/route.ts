@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import {
-  isValidEmail,
   validateFiles,
   trimField,
   sanitizeEmail,
@@ -180,20 +179,23 @@ export async function POST(request: Request) {
     // ====================================================================
 
     const insertResult = await withSupabaseRetry(
-      () => supabaseAdmin
-        .from('projects')
-        .insert({
-          name: name.trim(),
-          email: sanitizedEmail,
-          company: company?.trim() || null,
-          service: service?.trim() || null,
-          message: message.trim(),
-          status: 'submitted',
-          attachments: attachmentPaths.length > 0 ? attachmentPaths : null,
-          user_id: userId,
-        })
-        .select()
-        .single(),
+      async () => {
+        const res = await supabaseAdmin
+          .from('projects')
+          .insert({
+            name: name.trim(),
+            email: sanitizedEmail,
+            company: company?.trim() || null,
+            service: service?.trim() || null,
+            message: message.trim(),
+            status: 'submitted',
+            attachments: attachmentPaths.length > 0 ? attachmentPaths : null,
+            user_id: userId,
+          })
+          .select()
+          .single();
+        return res;
+      },
       { operation: 'Insert project', maxRetries: 3 }
     );
 

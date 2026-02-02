@@ -88,17 +88,17 @@ function PaymentForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Order Summary */}
-      <div className={`p-4 rounded-lg ${formInputColors.bg} border ${formInputColors.border}`}>
-        <h3 className={`text-lg font-semibold mb-3 ${headingColors.base}`}>
+      <div className={`p-4 rounded-lg ${formInputColors.base}`}>
+        <h3 className={`text-lg font-semibold mb-3 ${headingColors.primary}`}>
           Deposit Amount
         </h3>
         <div className="flex justify-between items-center">
           <span className={mutedTextColors.normal}>50% Deposit to Start</span>
-          <span className={`text-2xl font-bold ${headingColors.base}`}>
+          <span className={`text-2xl font-bold ${headingColors.primary}`}>
             {formatCurrency(quote.depositAmount)}
           </span>
         </div>
-        <div className={`mt-3 pt-3 border-t ${dividerColors.base}`}>
+        <div className={`mt-3 pt-3 border-t ${dividerColors.border}`}>
           <div className="flex justify-between text-sm">
             <span className={mutedTextColors.normal}>Total Project Cost</span>
             <span className={mutedTextColors.normal}>{formatCurrency(quote.totalAmount)}</span>
@@ -114,7 +114,7 @@ function PaymentForm({
 
       {/* Payment Element */}
       <div>
-        <label className={`block text-sm font-medium mb-2 ${headingColors.base}`}>
+        <label className={`block text-sm font-medium mb-2 ${headingColors.primary}`}>
           Payment Information
         </label>
         <PaymentElement />
@@ -140,7 +140,7 @@ function PaymentForm({
         {isProcessing ? 'Processing...' : `Pay ${formatCurrency(quote.depositAmount)} Deposit`}
       </Button>
 
-      <p className={`text-xs text-center ${mutedTextColors.dim}`}>
+      <p className={`text-xs text-center ${mutedTextColors.light}`}>
         Your payment is secure and encrypted. You'll receive a confirmation email after payment.
       </p>
     </form>
@@ -251,7 +251,7 @@ export default function QuoteAuthorizationPage() {
         <div className="max-w-xl mx-auto px-4">
           <Card>
             <div className="text-center mb-8">
-              <h1 className={`text-3xl font-bold mb-2 ${headingColors.base}`}>
+              <h1 className={`text-3xl font-bold mb-2 ${headingColors.primary}`}>
                 Authorize Quote
               </h1>
               <p className={mutedTextColors.normal}>
@@ -263,7 +263,7 @@ export default function QuoteAuthorizationPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className={`block text-sm font-medium mb-2 ${headingColors.base}`}
+                  className={`block text-sm font-medium mb-2 ${headingColors.primary}`}
                 >
                   Email Address
                 </label>
@@ -274,9 +274,9 @@ export default function QuoteAuthorizationPage() {
                   value={state.email}
                   onChange={(e) => setState(prev => ({ ...prev, email: e.target.value }))}
                   placeholder="Enter the email the quote was sent to"
-                  className={`w-full px-4 py-3 rounded-lg border ${formInputColors.border} ${formInputColors.bg} ${formInputColors.text} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors`}
+                  className={`w-full px-4 py-3 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} ${formInputColors.focus} outline-none transition-colors`}
                 />
-                <p className={`mt-2 text-sm ${mutedTextColors.dim}`}>
+                <p className={`mt-2 text-sm ${mutedTextColors.normal}`}>
                   This must match the email address on your quote.
                 </p>
               </div>
@@ -300,8 +300,8 @@ export default function QuoteAuthorizationPage() {
               </Button>
             </form>
 
-            <div className={`mt-6 pt-6 border-t ${dividerColors.base}`}>
-              <p className={`text-sm ${mutedTextColors.dim}`}>
+            <div className={`mt-6 pt-6 border-t ${dividerColors.border}`}>
+              <p className={`text-sm ${mutedTextColors.light}`}>
                 <strong>Need help?</strong> Contact us at{' '}
                 <a href="mailto:hello@needthisdone.com" className="text-blue-600 hover:underline">
                   hello@needthisdone.com
@@ -327,7 +327,7 @@ export default function QuoteAuthorizationPage() {
           <Card>
             {/* Header */}
             <div className="mb-8">
-              <h1 className={`text-3xl font-bold mb-2 ${headingColors.base}`}>
+              <h1 className={`text-3xl font-bold mb-2 ${headingColors.primary}`}>
                 Pay Deposit to Start Project
               </h1>
               <p className={mutedTextColors.normal}>
@@ -347,14 +347,14 @@ export default function QuoteAuthorizationPage() {
             {/* Line Items */}
             {state.quote.lineItems && state.quote.lineItems.length > 0 && (
               <div className="mb-8">
-                <h2 className={`text-xl font-semibold mb-4 ${headingColors.base}`}>
+                <h2 className={`text-xl font-semibold mb-4 ${headingColors.primary}`}>
                   Project Scope
                 </h2>
-                <div className={`rounded-lg border ${dividerColors.base} divide-y ${dividerColors.base}`}>
+                <div className={`rounded-lg border ${dividerColors.border} divide-y ${dividerColors.border}`}>
                   {state.quote.lineItems.map((item, index) => (
                     <div key={index} className="p-4 flex justify-between items-start">
                       <span className={mutedTextColors.normal}>{item.description}</span>
-                      <span className={`font-semibold ${headingColors.base}`}>
+                      <span className={`font-semibold ${headingColors.primary}`}>
                         {formatCurrency(item.amount)}
                       </span>
                     </div>
@@ -388,7 +388,7 @@ export default function QuoteAuthorizationPage() {
                 </svg>
               </div>
 
-              <h1 className={`text-3xl font-bold mb-4 ${headingColors.base}`}>
+              <h1 className={`text-3xl font-bold mb-4 ${headingColors.primary}`}>
                 Payment Successful!
               </h1>
 
@@ -396,17 +396,17 @@ export default function QuoteAuthorizationPage() {
                 Thank you for your deposit payment. We'll begin work on your project right away.
               </p>
 
-              <div className={`p-6 rounded-lg ${formInputColors.bg} border ${formInputColors.border} mb-8`}>
+              <div className={`p-6 rounded-lg ${formInputColors.base} mb-8`}>
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className={mutedTextColors.normal}>Quote Reference:</span>
-                    <span className={`font-mono font-semibold ${headingColors.base}`}>
+                    <span className={`font-mono font-semibold ${headingColors.primary}`}>
                       {state.quote.referenceNumber}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className={mutedTextColors.normal}>Deposit Paid:</span>
-                    <span className={`font-semibold ${headingColors.base}`}>
+                    <span className={`font-semibold ${headingColors.primary}`}>
                       {formatCurrency(state.quote.depositAmount)}
                     </span>
                   </div>
@@ -416,9 +416,9 @@ export default function QuoteAuthorizationPage() {
                       {formatCurrency(state.quote.totalAmount)}
                     </span>
                   </div>
-                  <div className={`pt-3 border-t ${dividerColors.base} flex justify-between`}>
+                  <div className={`pt-3 border-t ${dividerColors.border} flex justify-between`}>
                     <span className={mutedTextColors.normal}>Balance Due on Completion:</span>
-                    <span className={`font-semibold ${headingColors.base}`}>
+                    <span className={`font-semibold ${headingColors.primary}`}>
                       {formatCurrency(state.quote.totalAmount - state.quote.depositAmount)}
                     </span>
                   </div>
@@ -426,7 +426,7 @@ export default function QuoteAuthorizationPage() {
               </div>
 
               <div className="space-y-4">
-                <h2 className={`text-xl font-semibold ${headingColors.base}`}>What's Next?</h2>
+                <h2 className={`text-xl font-semibold ${headingColors.primary}`}>What's Next?</h2>
                 <ul className={`space-y-2 text-left ${mutedTextColors.normal}`}>
                   <li className="flex items-start">
                     <span className="mr-2">✓</span>

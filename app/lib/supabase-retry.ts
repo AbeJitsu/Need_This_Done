@@ -150,7 +150,7 @@ export async function withSupabaseRetry<T>(
  * }, { operation: 'Create order with payment' });
  */
 export async function withSupabaseTransaction<T>(
-  transactionFn: (client: any) => Promise<T>,
+  transactionFn: () => Promise<T>,
   options: SupabaseRetryOptions = {}
 ): Promise<T> {
   // Note: Supabase JS client doesn't support explicit transactions

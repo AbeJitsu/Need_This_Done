@@ -153,17 +153,20 @@ export async function POST(request: NextRequest) {
 
     // Create free enrollment with retry logic
     const enrollmentResult = await withSupabaseRetry(
-      () => supabase
-        .from('enrollments')
-        .insert({
-          user_id: user.id,
-          course_id: body.course_id,
-          enrollment_type: 'free',
-          amount_paid: 0,
-          progress: 0,
-        })
-        .select()
-        .single(),
+      async () => {
+        const res = await supabase
+          .from('enrollments')
+          .insert({
+            user_id: user.id,
+            course_id: body.course_id,
+            enrollment_type: 'free',
+            amount_paid: 0,
+            progress: 0,
+          })
+          .select()
+          .single();
+        return res;
+      },
       { operation: 'Create enrollment', maxRetries: 3 }
     );
 
