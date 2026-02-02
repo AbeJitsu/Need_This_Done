@@ -3,6 +3,7 @@ import { openai } from '@ai-sdk/openai';
 import { embedMany } from 'ai';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { chunkText } from '@/lib/chatbot';
+import { verifyAdmin } from '@/lib/api-auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,6 +37,12 @@ interface IndexRequest {
  */
 export async function POST(request: Request) {
   try {
+    // Admin-only - embedding indexing can overwrite chatbot knowledge
+    const auth = await verifyAdmin();
+    if (auth.error) {
+      return auth.error;
+    }
+
     const body: IndexRequest = await request.json();
 
     const {

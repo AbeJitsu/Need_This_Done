@@ -17,6 +17,12 @@ import {
 
 export async function GET(request: NextRequest) {
   try {
+    // Require authentication to list media
+    const auth = await verifyAuth();
+    if (auth.error) {
+      return auth.error;
+    }
+
     const supabase = getSupabaseAdmin();
     const { searchParams } = new URL(request.url);
 
@@ -40,7 +46,11 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      query = query.or(`filename.ilike.%${search}%,alt_text.ilike.%${search}%,caption.ilike.%${search}%`);
+      // Escape PostgREST special characters to prevent filter injection
+      const sanitizedSearch = search.replace(/[%_.,()"\\]/g, '');
+      if (sanitizedSearch) {
+        query = query.or(`filename.ilike.%${sanitizedSearch}%,alt_text.ilike.%${sanitizedSearch}%,caption.ilike.%${sanitizedSearch}%`);
+      }
     }
 
     if (tags && tags.length > 0) {

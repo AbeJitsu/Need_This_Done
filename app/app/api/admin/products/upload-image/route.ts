@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { verifyAdmin } from '@/lib/api-auth';
 
 // ============================================================================
-// Upload Image to Supabase Storage
+// Upload Image to Supabase Storage (Admin Only)
 // ============================================================================
 // What: Uploads product images to Supabase Storage
 // Why: Provides centralized image hosting with public URLs
 // How: Uses service role key to bypass RLS, uploads to product-images bucket
+
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 
 // Create Supabase client lazily to avoid build-time errors
 // Environment variables aren't available during Next.js page data collection
@@ -23,6 +27,12 @@ function getSupabaseClient() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Admin-only endpoint
+    const auth = await verifyAdmin();
+    if (auth.error) {
+      return auth.error;
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const productId = formData.get('productId') as string;
@@ -33,6 +43,27 @@ export async function POST(request: NextRequest) {
 
     if (!productId) {
       return NextResponse.json({ error: 'No product ID provided' }, { status: 400 });
+    }
+
+    // Validate file type
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      return NextResponse.json(
+        { error: `Invalid file type. Allowed: ${ALLOWED_IMAGE_TYPES.join(', ')}` },
+        { status: 400 }
+      );
+    }
+
+    // Validate file size
+    if (file.size > MAX_IMAGE_SIZE) {
+      return NextResponse.json(
+        { error: `File too large. Maximum size: ${MAX_IMAGE_SIZE / 1024 / 1024}MB` },
+        { status: 400 }
+      );
+    }
+
+    // Validate productId format (alphanumeric, hyphens, underscores only)
+    if (!/^[a-zA-Z0-9_-]+$/.test(productId)) {
+      return NextResponse.json({ error: 'Invalid product ID format' }, { status: 400 });
     }
 
     // Generate filename based on product ID

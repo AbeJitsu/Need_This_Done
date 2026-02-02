@@ -75,6 +75,16 @@ export async function POST(request: NextRequest) {
         }
       );
 
+    // Check upsert error FIRST before any duplicate detection
+    if (upsertError) {
+      console.error('[Webhook] Failed to record event:', upsertError);
+      // Fail fast - don't process if we can't guarantee idempotency
+      return NextResponse.json(
+        { error: 'Failed to ensure idempotency' },
+        { status: 500 }
+      );
+    }
+
     // Check if this is a duplicate by attempting to read back the row
     const { data: eventRecord } = await supabase
       .from('webhook_events')
@@ -91,15 +101,6 @@ export async function POST(request: NextRequest) {
         console.log(`[Webhook] Event ${event.id} already processed at ${eventRecord.processed_at}, skipping duplicate`);
         return NextResponse.json({ received: true, skipped: true });
       }
-    }
-
-    if (upsertError) {
-      console.error('[Webhook] Failed to record event:', upsertError);
-      // Fail fast - don't process if we can't guarantee idempotency
-      return NextResponse.json(
-        { error: 'Failed to ensure idempotency' },
-        { status: 500 }
-      );
     }
 
     // Route event to appropriate handler

@@ -13,6 +13,12 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Require authentication to access media items
+    const auth = await verifyAuth();
+    if (auth.error) {
+      return auth.error;
+    }
+
     const supabase = getSupabaseAdmin();
     const { id } = params;
 
