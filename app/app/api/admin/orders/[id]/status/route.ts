@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdmin } from '@/lib/api-auth';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { sendOrderStatusUpdate } from '@/lib/email-service';
 
@@ -22,38 +23,18 @@ export async function PATCH(
   try {
     const { id } = await params;
 
+    // ========================================================================
+    // AUTHORIZATION: Use centralized verifyAdmin() helper
+    // ========================================================================
+    // This ensures consistent auth logic across all admin endpoints.
+    // If auth fails, returns appropriate 401/403 error response.
+    const auth = await verifyAdmin();
+    if (auth.error) {
+      return auth.error;
+    }
+
     // Use singleton admin client
     const supabase = getSupabaseAdmin();
-
-    // Get authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Unauthorized - Please log in' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.substring(7);
-
-    // Verify the user
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized - Invalid token' },
-        { status: 401 }
-      );
-    }
-
-    // Check if user is admin
-    const isAdmin = user.user_metadata?.is_admin === true;
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: 'Forbidden - Admin access required' },
-        { status: 403 }
-      );
-    }
 
     // Get and validate the new status from request body
     const body = await request.json();

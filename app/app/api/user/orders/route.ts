@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { verifyAuth } from '@/lib/api-auth';
 import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 import { handleApiError } from '@/lib/api-errors';
+import { withTimeout, TIMEOUT_LIMITS } from '@/lib/api-timeout';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,17 +43,28 @@ export async function GET() {
           throw new Error('Failed to load orders');
         }
 
-        // Fetch order items for each order from Medusa API
+        // ====================================================================
+        // PERFORMANCE: Fetch order items with timeout protection
+        // ====================================================================
+        // Each order makes an API call to Medusa. Without timeout, slow API
+        // responses cause the entire endpoint to hang. We protect each call
+        // with an 8-second timeout. If Medusa is slow, we gracefully fall
+        // back to returning orders without items.
         const ordersWithItems = await Promise.all(
           (orders || []).map(async (order) => {
             try {
-              const medusaResponse = await fetch(
-                `${process.env.NEXT_PUBLIC_MEDUSA_URL}/admin/orders/${order.medusa_order_id}`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${process.env.MEDUSA_ADMIN_TOKEN}`,
-                  },
-                }
+              // Add timeout protection: 8 seconds for external API
+              const medusaResponse = await withTimeout(
+                fetch(
+                  `${process.env.NEXT_PUBLIC_MEDUSA_URL}/admin/orders/${order.medusa_order_id}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${process.env.MEDUSA_ADMIN_TOKEN}`,
+                    },
+                  }
+                ),
+                TIMEOUT_LIMITS.EXTERNAL_API,
+                `Fetch Medusa order details for ${order.medusa_order_id}`
               );
 
               if (medusaResponse.ok) {
@@ -70,6 +82,7 @@ export async function GET() {
               return { ...order, items: [] };
             } catch (err) {
               console.error('Failed to fetch items for order:', order.medusa_order_id, err);
+              // Gracefully degrade: return order without items on timeout/error
               return { ...order, items: [] };
             }
           })
