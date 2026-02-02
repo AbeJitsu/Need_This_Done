@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
@@ -20,7 +20,8 @@ import { headingColors, formInputColors, focusRingClasses } from '@/lib/colors';
 export default function WishlistPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { items, isLoading, removeFromWishlist } = useWishlist();
+  const { items, isLoading, removeFromWishlist, error: contextError } = useWishlist();
+  const [removingId, setRemovingId] = useState<string | null>(null);
 
   // ========================================================================
   // Auth protection - redirect non-authenticated users
@@ -30,6 +31,20 @@ export default function WishlistPage() {
       router.push('/login');
     }
   }, [isAuthenticated, authLoading, router]);
+
+  // ========================================================================
+  // Handle remove from wishlist with error handling
+  // ========================================================================
+  const handleRemoveFromWishlist = async (productId: string) => {
+    try {
+      setRemovingId(productId);
+      await removeFromWishlist(productId);
+    } catch (err) {
+      // Error is displayed below via contextError
+    } finally {
+      setRemovingId(null);
+    }
+  };
 
   if (authLoading || isLoading) {
     return (
@@ -78,6 +93,13 @@ export default function WishlistPage() {
   // ========================================================================
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12">
+      {/* Error display */}
+      {contextError && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-700 text-sm font-medium">{contextError}</p>
+        </div>
+      )}
+
       <PageHeader
         title="My Wishlist"
         description={`${items.length} item${items.length !== 1 ? 's' : ''} saved`}
@@ -109,12 +131,15 @@ export default function WishlistPage() {
                 </Button>
               </Link>
               <button
-                onClick={() => removeFromWishlist(item.product_id)}
+                onClick={() => handleRemoveFromWishlist(item.product_id)}
+                disabled={removingId === item.product_id}
                 className={`px-4 py-2 rounded-lg font-medium text-sm transition ${
-                  'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100'
+                  removingId === item.product_id
+                    ? 'bg-red-100 text-red-400 border border-red-200 cursor-not-allowed'
+                    : 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100'
                 } ${focusRingClasses.blue}`}
               >
-                Remove
+                {removingId === item.product_id ? 'Removing...' : 'Remove'}
               </button>
             </div>
           </Card>
