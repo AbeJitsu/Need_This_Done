@@ -131,7 +131,8 @@ export async function POST(request: NextRequest) {
 
     if (data.user?.email) {
       // Send asynchronously without blocking response, but track in DB for visibility
-      (async () => {
+      // CRITICAL: Attach error handler to prevent unhandled rejections
+      const sendWelcomeEmailAsync = (async () => {
         try {
           const userEmail = data.user?.email;
           if (!userEmail) return; // Email is required to send notification
@@ -171,6 +172,11 @@ export async function POST(request: NextRequest) {
           }
         }
       })();
+
+      // Attach catch handler to prevent unhandled promise rejections
+      sendWelcomeEmailAsync.catch((err) => {
+        console.error('[Signup] Unhandled error in async welcome email task:', err);
+      });
     }
 
     // ========================================================================

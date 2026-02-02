@@ -74,6 +74,15 @@ export async function POST(request: NextRequest) {
     // CRITICAL: Use atomic transaction to ensure exactly-once semantics.
     // Separate insert attempt (to detect if duplicate) from processing logic.
 
+    // Validate event ID exists - this is our idempotency key
+    if (!event.id || typeof event.id !== 'string') {
+      console.error('[Webhook] Invalid event ID from Stripe:', event.id);
+      return NextResponse.json(
+        { error: 'Invalid event ID' },
+        { status: 400 }
+      );
+    }
+
     const DUPLICATE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
     let isDuplicate = false;
     let isDuplicateRecentlyProcessed = false;
@@ -352,6 +361,8 @@ async function handlePaymentSuccess(
     if (orderDetails) {
       const orderItems = Array.isArray(orderDetails.items) ? orderDetails.items : [];
       const shortOrderId = String(orderDetails.medusa_order_id || orderId).slice(0, 8);
+
+      // CRITICAL: Attach error handler to prevent unhandled rejections
       sendOrderConfirmation({
         orderId: shortOrderId,
         orderDate: new Date().toLocaleDateString('en-US', {
@@ -370,21 +381,29 @@ async function handlePaymentSuccess(
         subtotal: paymentIntent.amount,
         total: paymentIntent.amount,
         requiresAppointment: (orderDetails.requires_appointment as boolean) || false,
+      }).then(() => {
+        console.log('[Webhook] Order confirmation email task completed');
       }).catch((err: unknown) => {
         console.error('[Webhook] Failed to send order confirmation email:', err);
         // Log failed email attempt to database for manual follow-up (don't block webhook)
         // Fire-and-forget - don't await
         const failureOrderId = String(orderDetails?.medusa_order_id || orderId).slice(0, 8);
-        supabase
-          .from('email_failures')
-          .insert({
-            type: 'order_confirmation',
-            recipient_email: email,
-            subject: `Order Confirmation: ${failureOrderId}`,
-            order_id: (orderDetails?.id as string) || orderId,
-            error_message: err instanceof Error ? err.message : 'Unknown error',
-            created_at: new Date().toISOString(),
-          });
+        (async () => {
+          try {
+            await supabase
+              .from('email_failures')
+              .insert({
+                type: 'order_confirmation',
+                recipient_email: email,
+                subject: `Order Confirmation: ${failureOrderId}`,
+                order_id: (orderDetails?.id as string) || orderId,
+                error_message: err instanceof Error ? err.message : 'Unknown error',
+                created_at: new Date().toISOString(),
+              });
+          } catch (logErr) {
+            console.error('[Webhook] Failed to log order confirmation email failure:', logErr);
+          }
+        })();
       });
     }
   }

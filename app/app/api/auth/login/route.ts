@@ -152,58 +152,64 @@ export async function POST(request: NextRequest) {
       const userAgent = request.headers.get('user-agent') || 'Unknown';
 
       // Send asynchronously without blocking response, but track in DB for visibility
-      (async () => {
-        try {
-          const userEmail = data.user?.email;
-          if (!userEmail) return; // Email is required to send notification
+    // CRITICAL: Attach error handler to prevent unhandled rejections
+    const sendLoginEmailAsync = (async () => {
+      try {
+        const userEmail = data.user?.email;
+        if (!userEmail) return; // Email is required to send notification
 
-          const emailId = await sendLoginNotification({
-            email: userEmail,
-            loginTime: new Date().toLocaleString('en-US', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: '2-digit',
-              timeZoneName: 'short',
-            }),
-            ipAddress,
-            userAgent,
-          });
+        const emailId = await sendLoginNotification({
+          email: userEmail,
+          loginTime: new Date().toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            timeZoneName: 'short',
+          }),
+          ipAddress,
+          userAgent,
+        });
 
-          // Log successful delivery
-          if (emailId) {
-            logger.info('Login notification email sent', {
-              userId: data.user?.id,
-              emailId,
-            });
-          }
-        } catch (err) {
-          logger.error('Login notification email failed', err as Error, {
+        // Log successful delivery
+        if (emailId) {
+          logger.info('Login notification email sent', {
             userId: data.user?.id,
-            email: data.user?.email,
-            ipAddress,
+            emailId,
           });
-
-          // Track failed email for manual follow-up (best-effort, don't block response)
-          try {
-            const supabaseClient = await createSupabaseServerClient();
-            await supabaseClient
-              .from('email_failures')
-              .insert({
-                type: 'login_notification',
-                recipient_email: data.user?.email,
-                subject: `Sign-In Notification for ${data.user?.email}`,
-                user_id: data.user?.id,
-                error_message: err instanceof Error ? err.message : 'Unknown error',
-                created_at: new Date().toISOString(),
-              });
-          } catch (logErr) {
-            logger.error('Failed to log login notification failure', logErr as Error);
-          }
         }
-      })();
+      } catch (err) {
+        logger.error('Login notification email failed', err as Error, {
+          userId: data.user?.id,
+          email: data.user?.email,
+          ipAddress,
+        });
+
+        // Track failed email for manual follow-up (best-effort, don't block response)
+        try {
+          const supabaseClient = await createSupabaseServerClient();
+          await supabaseClient
+            .from('email_failures')
+            .insert({
+              type: 'login_notification',
+              recipient_email: data.user?.email,
+              subject: `Sign-In Notification for ${data.user?.email}`,
+              user_id: data.user?.id,
+              error_message: err instanceof Error ? err.message : 'Unknown error',
+              created_at: new Date().toISOString(),
+            });
+        } catch (logErr) {
+          logger.error('Failed to log login notification failure', logErr as Error);
+        }
+      }
+    })();
+
+    // Attach catch handler to prevent unhandled promise rejections
+    sendLoginEmailAsync.catch((err) => {
+      logger.error('Unhandled error in async login email task', err as Error);
+    });
     }
 
     // ========================================================================

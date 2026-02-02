@@ -71,6 +71,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Validate sorting parameter to prevent injection attacks
+    // Only allow whitelisted sort values
+    const ALLOWED_SORT_OPTIONS = ['helpful', 'rating_high', 'rating_low', 'recent'];
+    const validatedSort = ALLOWED_SORT_OPTIONS.includes(sortBy) ? sortBy : 'recent';
+
+    // Validate pagination parameters to prevent resource exhaustion
+    const validatedLimit = Math.min(Math.max(parseInt(String(limit)) || 10, 1), 100); // Max 100 per page
+    const validatedOffset = Math.max(parseInt(String(offset)) || 0, 0); // Min 0
+
     // Build query
     let query = supabase
       .from('reviews')
@@ -78,8 +87,8 @@ export async function GET(request: NextRequest) {
       .eq('product_id', productId)
       .eq('status', 'approved');
 
-    // Apply sorting
-    switch (sortBy) {
+    // Apply sorting (with validated parameter only)
+    switch (validatedSort) {
       case 'helpful':
         query = query.order('helpful_count', { ascending: false });
         break;
@@ -94,8 +103,8 @@ export async function GET(request: NextRequest) {
         query = query.order('created_at', { ascending: false });
     }
 
-    // Apply pagination
-    query = query.range(offset, offset + limit - 1);
+    // Apply pagination with validated values
+    query = query.range(validatedOffset, validatedOffset + validatedLimit - 1);
 
     const { data: reviews, error, count } = await query;
 
@@ -116,9 +125,9 @@ export async function GET(request: NextRequest) {
       rating: ratingSummary,
       pagination: {
         total: count || 0,
-        limit,
-        offset,
-        hasMore: (count || 0) > offset + limit,
+        limit: validatedLimit,
+        offset: validatedOffset,
+        hasMore: (count || 0) > validatedOffset + validatedLimit,
       },
     });
   } catch (error) {

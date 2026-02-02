@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Process each abandoned cart
+    // Process each abandoned cart with robust error handling
     const results = {
       processed: 0,
       sent: 0,
@@ -87,6 +87,14 @@ export async function POST(request: NextRequest) {
 
     for (const cart of abandonedCarts) {
       try {
+        // Validate cart data before processing
+        if (!cart.cart_id || !cart.email) {
+          console.error('[Abandoned Carts Cron] Invalid cart data, skipping:', { cart });
+          results.errors++;
+          results.processed++;
+          continue;
+        }
+
         // Send recovery email
         const emailId = await sendEmailWithRetry(
           cart.email,
@@ -111,9 +119,10 @@ export async function POST(request: NextRequest) {
             .limit(1)
             .single();
 
+          // Handle case where no previous reminder exists (not an error)
           const newReminderCount = (existingReminder?.reminder_count || 0) + 1;
 
-          // Record the reminder in database
+          // Record the reminder in database with explicit error handling
           const { error: insertError } = await supabase.from('cart_reminders').insert({
             cart_id: cart.cart_id,
             email: cart.email,
@@ -127,18 +136,25 @@ export async function POST(request: NextRequest) {
               cart_id: cart.cart_id,
               email: cart.email,
               error: insertError,
+              errorCode: (insertError as any).code,
             });
+            // Email was sent but logging failed - still count as sent but track error separately
+            results.sent++;
             results.errors++;
           } else {
             results.sent++;
           }
         } else {
+          console.warn('[Abandoned Carts Cron] Email send failed, no emailId returned:', {
+            cart_id: cart.cart_id,
+            email: cart.email,
+          });
           results.errors++;
         }
 
         results.processed++;
       } catch (error) {
-        console.error(`Failed to process cart ${cart.cart_id}:`, error);
+        console.error(`[Abandoned Carts Cron] Failed to process cart ${(cart as any)?.cart_id}:`, error);
         results.errors++;
         results.processed++;
       }
