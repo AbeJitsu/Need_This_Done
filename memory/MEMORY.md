@@ -26,6 +26,10 @@ Key learnings and patterns discovered during development.
 - Test suite: 69 E2E tests + accessibility tests
 
 **Completed Recent Work (Feb 2):**
+- ✅ Saved addresses system - CRUD management in account settings (commit 7384dbd)
+- ✅ Spending analytics - Customer spending visualization and metrics (commit 7384dbd)
+- ✅ Waitlist notifications - Automated emails when products return to stock (commit 19dbc93)
+- ✅ Backend reliability audit - 8 critical issues identified and fixed (commit e724d3b)
 - ✅ Product category filtering - browse products by category with auto-populated dropdown (commit 56f7502)
 - ✅ Product waitlist system - sign up for out-of-stock items with email capture (commit 908f2c7)
 - ✅ Product availability display - shows stock status and waitlist form (ProductAvailability component)
@@ -34,8 +38,6 @@ Key learnings and patterns discovered during development.
 - ✅ Invoice downloads (OrderInvoice component) - customers can download PDFs from order page
 - ✅ Notification preferences UI - email opt-in/opt-out controls in account settings
 - ✅ Order tracking timeline - visual progression of order status
-- ✅ Fixed TypeScript/build errors across admin and API routes
-- ✅ Improved accessibility and feedback on shopping interface (cart, payment, product detail)
 - ✅ Customer dashboard: Active appointments section with status/details (commit b6bbb73)
 - ✅ Dashboard stats overview: Key account metrics visualization (commit 64362f4)
 
@@ -88,7 +90,20 @@ Key learnings and patterns discovered during development.
   - `POST /api/products/waitlist` - Sign up for waitlist with duplicate detection
   - `GET /api/products/waitlist?email=X` - Retrieve user's waitlist entries
 - Unique constraint on email+product_id prevents duplicate signups
-- Foundation for future automated back-in-stock notifications
+- Foundation for automated back-in-stock notifications
+
+**Waitlist Notifications System** (commit 19dbc93 — Feb 2)
+- Automated emails when waitlisted products return to stock
+- Cron job: `/api/cron/waitlist-notifications` runs hourly
+  - Scans products with waitlist entries
+  - Checks current inventory status vs. last notification state
+  - Sends WaitlistNotificationEmail only on status transition (out → in stock)
+- Database: `waitlist_notification_sent` tracking table prevents duplicate sends
+- Email template includes:
+  - Product name, image, and current price
+  - "Shop now" button with direct product link
+  - Reduces manual customer research, drives conversions
+- Graceful degradation: Logs failures, retries on next cron execution
 
 **User Wishlist System** (commit 69b8121)
 - Wishlist page at `/wishlist` displays saved products with add-to-cart buttons
@@ -218,6 +233,24 @@ Key learnings and patterns discovered during development.
 - NotificationPreferencesSection component manages user communication preferences
 - API: `/api/account/notification-preferences` persists preferences
 - Supports controlling: order updates, promotional emails, review notifications, etc.
+
+**Saved Addresses System** (commit 7384dbd — Feb 2)
+- SavedAddressesSection component in account settings for address CRUD
+- Store multiple delivery addresses with default address support
+- Database: `saved_addresses` table (migration 046) tracks customer addresses
+- API: `POST /api/account/saved-addresses` - Add new address
+- API: `DELETE /api/account/saved-addresses/:id` - Remove address
+- API: `PATCH /api/account/saved-addresses/:id/default` - Set default address
+- Improves checkout friction: Pre-filled addresses for repeat customers
+- Enables multi-location delivery for business customers
+
+**Spending Analytics** (commit 7384dbd — Feb 2)
+- SpendingAnalyticsSection visualizes customer spending patterns
+- Time-based aggregation: Daily/weekly/monthly spend tracking
+- Key metrics: Total spend, average order, purchase frequency
+- API: `GET /api/user/spending-analytics` calculates aggregated order data
+- Uses order history from Medusa with date filtering
+- Displayed in customer account dashboard (`/account` page)
 
 **Review Notification Emails** (commit 38818c0 — Feb 2)
 - ReviewApprovedEmail: Sent when admin approves a review in moderation dashboard

@@ -36,26 +36,28 @@ Speak like a friend over coffee. Easy to understand.
 ## What's Built
 
 **Latest additions (Feb 2, 2026):**
-- ✅ **Product category filtering**: Browse products by category with auto-populated dropdown from metadata
-- ✅ **Product waitlist system**: Sign up for out-of-stock items, captures email for future back-in-stock notifications
-- ✅ **Product availability display**: Shows stock status (in stock, low stock, out of stock) with waitlist UI
-- ✅ **Customer dashboard**: Active appointments section + statistics overview
-- ✅ **Quick reorder button**: One-click reorder of completed orders
-- ✅ **CSV export**: Download full order history as spreadsheet
-- ✅ **Review notification emails**: Automated emails when reviews are approved/rejected
-- ✅ **Invoice downloads**: Customers can download order invoices as PDFs
-- ✅ **Notification preferences**: Email opt-in/opt-out controls in account settings
-- ✅ **Order tracking timeline**: Visual timeline of order status progression
-- ✅ **Product reviews system**: Full lifecycle with admin moderation and customer feedback
-- ✅ **Account settings**: Profile management and review tracking
-- ✅ **Admin dashboards**: Review moderation, analytics, appointments, product insights
-- ✅ **Backend reliability**: Retry logic, request deduplication, timeouts, circuit breakers, rate limiting
+- ✅ **Saved addresses**: CRUD management in account settings with default address support
+- ✅ **Spending analytics**: Customer spending visualization with time-based aggregation
+- ✅ **Waitlist notifications**: Automated emails when out-of-stock products return to inventory
+- ✅ **Product category filtering**: Browse products by category with auto-populated dropdown
+- ✅ **Product waitlist system**: Sign up for out-of-stock items with email capture
+- ✅ **Product availability display**: Shows stock status with waitlist form
+- ✅ **Customer dashboard**: Active appointments + statistics overview
+- ✅ **Order management**: History, quick reorder, CSV export, invoices, timeline
+- ✅ **Review system**: Admin moderation, analytics, notification emails
+- ✅ **Account settings**: Profile, addresses, notification preferences, review tracking
+- ✅ **Admin dashboards**: Reviews, analytics, appointments, product insights
+- ✅ **Backend reliability**: Connection pooling, retries, validation, circuit breaker, rate limiting
 
-**Critical Fixes (Functionality Evaluation - Feb 2):**
-- ✅ **Redis deduplication**: Blocks submissions when Redis unavailable (prevents spam)
-- ✅ **Connection pooling**: All routes use singleton Supabase client (supports 100+ concurrent requests)
-- ✅ **Upload timeout**: Form parsing fails gracefully after 30s (prevents hangs)
-- ✅ **Rate limiting**: Auth endpoints protected from brute-force attacks (5 login/3 signup per 15 min)
+**Backend Reliability (Feb 2 Audit - 8 Critical Fixes):**
+- ✅ **Connection pooling**: Singleton Supabase client handles 100+ concurrent requests
+- ✅ **Async/await safety**: Fixed fire-and-forget bugs in appointment flow
+- ✅ **Email failure logging**: Tracks delivery issues for recovery workflows
+- ✅ **Form upload timeout**: 30s graceful failure to prevent hangs
+- ✅ **Rate limiting**: Auth endpoints protected (5 login/3 signup per 15 min)
+- ✅ **Request deduplication**: SHA-256 fingerprinting with Redis circuit breaker
+- ✅ **Authorization hardening**: Added checks on all admin routes
+- ✅ **Environment validation**: Required vars checked at startup
 
 See **memory/MEMORY.md** for full feature inventory and **FUNCTIONALITY_EVALUATION_FIXES.md** for reliability fixes.
 
