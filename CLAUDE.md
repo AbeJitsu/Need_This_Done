@@ -44,7 +44,12 @@ Speak like a friend over coffee. Easy to understand.
 - ✅ **Admin dashboards**: Review moderation, analytics, appointments, product insights
 - ✅ **Backend reliability**: Retry logic, request deduplication, timeouts, circuit breakers
 
-See **memory/MEMORY.md** for full feature inventory.
+**Critical Fixes (Functionality Evaluation - Feb 2):**
+- ✅ **Redis deduplication**: Blocks submissions when Redis unavailable (prevents spam)
+- ✅ **Connection pooling**: All routes use singleton Supabase client (supports 100+ concurrent requests)
+- ✅ **Upload timeout**: Form parsing fails gracefully after 30s (prevents hangs)
+
+See **memory/MEMORY.md** for full feature inventory and **FUNCTIONALITY_EVALUATION_FIXES.md** for reliability fixes.
 
 ## How to Work
 
