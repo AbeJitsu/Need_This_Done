@@ -57,58 +57,31 @@ export function Hero() {
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden py-20 md:py-0 bg-white"
     >
       {/* ============================================================
-          BACKGROUND LAYER: Dramatic Gradient Mesh
+          BACKGROUND LAYER: Smooth Directional Gradient
           ============================================================ */}
 
-      {/* Base gradient backdrop — rich, saturated colors */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/20 to-slate-100 z-0" />
+      {/* Base gradient backdrop — clean and light */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-slate-100 z-0" />
 
-      {/* Animated gradient orbs — BOLD and SATURATED */}
+      {/* Smooth directional gradient with subtle animation */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* Left orb — Emerald GREEN (saturated, bold) */}
+        {/* Main directional gradient: bottom-left to top-right with BJJ belt colors */}
         <motion.div
-          className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-emerald-400 via-emerald-300 to-cyan-200 blur-3xl opacity-40"
+          className="absolute inset-0 bg-gradient-to-tr from-emerald-500/15 via-blue-500/12 via-purple-500/10 via-amber-600/8 to-slate-400/5"
           animate={{
-            x: [0, 40, 0],
-            y: [0, -40, 0],
+            scale: [1, 1.03, 1],
+            opacity: [0.8, 1, 0.8],
           }}
           transition={{
-            duration: 8,
+            duration: 15,
             repeat: Infinity,
             ease: 'easeInOut',
           }}
         />
 
-        {/* Right orb — VIBRANT BLUE to PURPLE (intense gradient) */}
+        {/* Cursor-reactive glow — follows mouse with muted opacity */}
         <motion.div
-          className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-400 blur-3xl opacity-35"
-          animate={{
-            x: [0, -50, 0],
-            y: [0, 50, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-
-        {/* Center accent — Gold/amber glow */}
-        <motion.div
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-gradient-to-br from-amber-300/40 to-orange-400/20 blur-2xl"
-          animate={{
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-
-        {/* Cursor-reactive glow — follows mouse */}
-        <motion.div
-          className="absolute w-80 h-80 rounded-full bg-gradient-to-br from-blue-400/20 to-purple-400/10 blur-2xl pointer-events-none"
+          className="absolute w-80 h-80 rounded-full bg-gradient-to-br from-blue-400/15 to-purple-400/8 blur-2xl pointer-events-none"
           animate={{
             x: mousePosition.x - 160,
             y: mousePosition.y - 160,
