@@ -319,51 +319,54 @@ export async function POST(request: NextRequest) {
 
     const adminNotificationEmail = process.env.ADMIN_EMAIL || 'admin@needthisdone.com';
 
-    sendAppointmentRequestNotification({
-      requestId: appointmentRequest.id,
-      orderId: order_id,
-      customerName: customer_name || null,
-      customerEmail: customer_email,
-      serviceName: service_name || 'Consultation',
-      durationMinutes: duration_minutes || 30,
-      preferredDate: preferred_date,
-      preferredTimeStart: preferred_time_start,
-      preferredTimeEnd: preferred_time_end,
-      alternateDate: alternate_date || null,
-      alternateTimeStart: alternate_time_start || null,
-      alternateTimeEnd: alternate_time_end,
-      notes: notes || null,
-      submittedAt: new Date().toLocaleString('en-US', {
-        dateStyle: 'full',
-        timeStyle: 'short',
-      }),
-    })
-      .then((emailId) => {
-        // Log successful notification
-        logAppointmentNotification({
-          appointment_id: appointmentRequest.id,
-          admin_email: adminNotificationEmail,
-          subject: `New Appointment Request: ${service_name || 'Consultation'} on ${preferred_date}`,
-          status: 'sent',
-          email_service_id: emailId || undefined,
-        }).catch((err) => {
-          console.error('[Appointment Request] Failed to log sent notification:', err);
-        });
-      })
-      .catch((err) => {
-        console.error('[Appointment Request] Failed to send admin notification:', err);
+    // Send notification email and log the result (await ensures it completes before response)
+    try {
+      const emailId = await sendAppointmentRequestNotification({
+        requestId: appointmentRequest.id,
+        orderId: order_id,
+        customerName: customer_name || null,
+        customerEmail: customer_email,
+        serviceName: service_name || 'Consultation',
+        durationMinutes: duration_minutes || 30,
+        preferredDate: preferred_date,
+        preferredTimeStart: preferred_time_start,
+        preferredTimeEnd: preferred_time_end,
+        alternateDate: alternate_date || null,
+        alternateTimeStart: alternate_time_start || null,
+        alternateTimeEnd: alternate_time_end,
+        notes: notes || null,
+        submittedAt: new Date().toLocaleString('en-US', {
+          dateStyle: 'full',
+          timeStyle: 'short',
+        }),
+      });
 
-        // Log failed notification
-        logAppointmentNotification({
+      // Log successful notification
+      await logAppointmentNotification({
+        appointment_id: appointmentRequest.id,
+        admin_email: adminNotificationEmail,
+        subject: `New Appointment Request: ${service_name || 'Consultation'} on ${preferred_date}`,
+        status: 'sent',
+        email_service_id: emailId || undefined,
+      }).catch((err) => {
+        console.error('[Appointment Request] Failed to log sent notification:', err);
+      });
+    } catch (err) {
+      console.error('[Appointment Request] Failed to send admin notification:', err);
+
+      // Log failed notification (best-effort, don't block response)
+      try {
+        await logAppointmentNotification({
           appointment_id: appointmentRequest.id,
           admin_email: adminNotificationEmail,
           subject: `New Appointment Request: ${service_name || 'Consultation'} on ${preferred_date}`,
           status: 'failed',
           error_message: err instanceof Error ? err.message : 'Unknown error',
-        }).catch((logErr) => {
-          console.error('[Appointment Request] Failed to log failed notification:', logErr);
         });
-      });
+      } catch (logErr) {
+        console.error('[Appointment Request] Failed to log failed notification:', logErr);
+      }
+    }
 
     return NextResponse.json({
       success: true,

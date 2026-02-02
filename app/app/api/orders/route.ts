@@ -75,7 +75,7 @@ async function handleGetOrder(orderId: string) {
           throw timeoutErr;
         }
       },
-      CACHE_TTL.LONG // 5 minutes
+      CACHE_TTL.MEDIUM // 1 minute - Orders change frequently, need fresh data
     );
 
     return NextResponse.json({

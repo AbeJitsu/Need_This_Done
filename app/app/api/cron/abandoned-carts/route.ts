@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
           const newReminderCount = (existingReminder?.reminder_count || 0) + 1;
 
           // Record the reminder in database
-          await supabase.from('cart_reminders').insert({
+          const { error: insertError } = await supabase.from('cart_reminders').insert({
             cart_id: cart.cart_id,
             email: cart.email,
             cart_total: cart.subtotal,
@@ -122,7 +122,16 @@ export async function POST(request: NextRequest) {
             reminder_count: newReminderCount,
           });
 
-          results.sent++;
+          if (insertError) {
+            console.error('[Abandoned Carts Cron] Failed to log cart reminder:', {
+              cart_id: cart.cart_id,
+              email: cart.email,
+              error: insertError,
+            });
+            results.errors++;
+          } else {
+            results.sent++;
+          }
         } else {
           results.errors++;
         }
