@@ -457,10 +457,11 @@ async function handleSubscriptionUpdate(
         .single();
 
       if (customerError || !customer) {
-        console.warn(
-          `[Webhook] No user found for Stripe customer: ${subscription.customer}`
+        // This is a critical error - we can't update subscription without knowing the user
+        // Throw so withWebhookRetry can handle it appropriately
+        throw new Error(
+          `Failed to find user for Stripe customer ${subscription.customer}: ${customerError?.message || 'Not found'}`
         );
-        return; // Continue - don't block on missing customer
       }
 
       // Upsert subscription record

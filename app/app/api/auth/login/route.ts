@@ -138,11 +138,13 @@ export async function POST(request: NextRequest) {
     }
 
     // ========================================================================
-    // Step 3: Send Login Notification Email
+    // Step 3: Send Login Notification Email (Fire-and-Forget)
     // ========================================================================
     // Security feature: notify user of new sign-ins so they can spot
-    // unauthorized access. Fire-and-forget but track delivery in database
-    // for monitoring and recovery workflows.
+    // unauthorized access. Fire-and-forget background task with error tracking.
+    //
+    // SAFETY: We use a separate function and explicitly handle rejection to prevent
+    // any possibility of unhandled promise rejections, even in edge cases.
 
     if (data.user?.email) {
       const ipAddress =
@@ -151,65 +153,14 @@ export async function POST(request: NextRequest) {
         'Unknown';
       const userAgent = request.headers.get('user-agent') || 'Unknown';
 
-      // Send asynchronously without blocking response, but track in DB for visibility
-    // CRITICAL: Attach error handler to prevent unhandled rejections
-    const sendLoginEmailAsync = (async () => {
-      try {
-        const userEmail = data.user?.email;
-        if (!userEmail) return; // Email is required to send notification
-
-        const emailId = await sendLoginNotification({
-          email: userEmail,
-          loginTime: new Date().toLocaleString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            timeZoneName: 'short',
-          }),
-          ipAddress,
-          userAgent,
-        });
-
-        // Log successful delivery
-        if (emailId) {
-          logger.info('Login notification email sent', {
-            userId: data.user?.id,
-            emailId,
-          });
-        }
-      } catch (err) {
-        logger.error('Login notification email failed', err as Error, {
-          userId: data.user?.id,
-          email: data.user?.email,
-          ipAddress,
-        });
-
-        // Track failed email for manual follow-up (best-effort, don't block response)
-        try {
-          const supabaseClient = await createSupabaseServerClient();
-          await supabaseClient
-            .from('email_failures')
-            .insert({
-              type: 'login_notification',
-              recipient_email: data.user?.email,
-              subject: `Sign-In Notification for ${data.user?.email}`,
-              user_id: data.user?.id,
-              error_message: err instanceof Error ? err.message : 'Unknown error',
-              created_at: new Date().toISOString(),
-            });
-        } catch (logErr) {
-          logger.error('Failed to log login notification failure', logErr as Error);
-        }
-      }
-    })();
-
-    // Attach catch handler to prevent unhandled promise rejections
-    sendLoginEmailAsync.catch((err) => {
-      logger.error('Unhandled error in async login email task', err as Error);
-    });
+      // Fire-and-forget: send email in background without awaiting
+      // Use void to explicitly mark as intentional fire-and-forget
+      void sendLoginEmailInBackground(
+        data.user.email,
+        data.user.id,
+        ipAddress,
+        userAgent
+      );
     }
 
     // ========================================================================
@@ -249,5 +200,66 @@ export async function POST(request: NextRequest) {
     // Unexpected error (JSON parsing, network issue, etc.)
     logger.error('Login failed with exception', error as Error);
     return handleApiError(error, 'Login');
+  }
+}
+
+// ============================================================================
+// Background Email Task - Fire-and-Forget with Full Error Handling
+// ============================================================================
+// Separated into its own function so we can use fire-and-forget semantics
+// while ensuring NO unhandled rejections are possible.
+// This function catches all errors internally and logs them appropriately.
+
+async function sendLoginEmailInBackground(
+  email: string,
+  userId: string,
+  ipAddress: string,
+  userAgent: string
+): Promise<void> {
+  try {
+    const emailId = await sendLoginNotification({
+      email,
+      loginTime: new Date().toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZoneName: 'short',
+      }),
+      ipAddress,
+      userAgent,
+    });
+
+    // Log successful delivery
+    if (emailId) {
+      logger.info('Login notification email sent', { userId, emailId });
+    }
+  } catch (err) {
+    logger.error('Login notification email failed', err as Error, {
+      userId,
+      email,
+      ipAddress,
+    });
+
+    // Track failed email for retry cron job
+    // This is best-effort - if tracking fails, we just log it
+    try {
+      const supabaseClient = await createSupabaseServerClient();
+      await supabaseClient.from('email_failures').insert({
+        type: 'login_notification',
+        recipient_email: email,
+        subject: `Sign-In Notification for ${email}`,
+        user_id: userId,
+        attempt_count: 1,
+        last_error: err instanceof Error ? err.message : 'Unknown error',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+    } catch (logErr) {
+      // If we can't even log the failure, just log locally
+      logger.error('Failed to log login notification failure', logErr as Error);
+    }
   }
 }
