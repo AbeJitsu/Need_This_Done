@@ -9,6 +9,7 @@ import { useEffect, useState, use } from 'react';
 import Image from 'next/image';
 import Button from '@/components/Button';
 import StatusBadge from '@/components/StatusBadge';
+import OrderInvoice from '@/components/OrderInvoice';
 import { accentColors } from '@/lib/colors';
 import { medusaClient } from '@/lib/medusa-client';
 import type { Order, LineItem } from '@/lib/medusa-client';
@@ -26,6 +27,7 @@ export default function OrderDetailPage({
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showInvoice, setShowInvoice] = useState(false);
 
   // ============================================================================
   // Load Order Details
@@ -191,10 +193,17 @@ export default function OrderDetailPage({
   return (
     <div className="min-h-screen bg-white py-16 px-4 sm:px-6 md:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Back Button */}
-        <div className="mb-6">
+        {/* Action Buttons */}
+        <div className="mb-6 flex gap-3">
           <Button variant="gray" size="sm" href="/orders">
             ← Back to Orders
+          </Button>
+          <Button
+            variant="blue"
+            size="sm"
+            onClick={() => setShowInvoice(true)}
+          >
+            📄 Invoice
           </Button>
         </div>
 
@@ -370,6 +379,11 @@ export default function OrderDetailPage({
           </div>
         </div>
       </div>
+
+      {/* Invoice Modal */}
+      {showInvoice && order && (
+        <OrderInvoice order={order} onClose={() => setShowInvoice(false)} isModal={true} />
+      )}
     </div>
   );
 }
