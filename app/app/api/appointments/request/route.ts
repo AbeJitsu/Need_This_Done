@@ -317,7 +317,7 @@ export async function POST(request: NextRequest) {
     // Send notification asynchronously but track delivery status in database
     // This allows us to detect lost notifications and send reminders
 
-    const adminNotificationEmail = process.env.ADMIN_EMAIL || 'admin@needthisdone.com';
+    const adminNotificationEmail = process.env.RESEND_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'admin@needthisdone.com';
 
     // Send notification email and log the result (await ensures it completes before response)
     try {

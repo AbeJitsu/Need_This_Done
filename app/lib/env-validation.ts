@@ -134,8 +134,8 @@ export function validateEnvironmentVariables(): void {
       validate: (v) => v.startsWith('re_'),
       errorMessage: 'Must start with re_',
     },
-    ADMIN_EMAIL: {
-      name: 'ADMIN_EMAIL',
+    RESEND_ADMIN_EMAIL: {
+      name: 'RESEND_ADMIN_EMAIL',
       required: true,
       validate: (v) => v.includes('@'),
       errorMessage: 'Must be valid email',

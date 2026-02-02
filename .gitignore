@@ -76,3 +76,5 @@ env.md.do
 app/affected-routes.json
 app/component-route-map.json
 content/changelog/auto-log.json
+.vercel
+.env*.local
