@@ -136,6 +136,25 @@ export default function AppointmentsDashboard() {
         throw new Error(data.error || `Failed to ${action} appointment`);
       }
 
+      const result = await response.json();
+
+      // Show warnings if calendar or email failed (only for approve action)
+      if (action === 'approve') {
+        const warnings: string[] = [];
+
+        if (result.calendar_error) {
+          warnings.push(`⚠️ Calendar: ${result.calendar_error}`);
+        }
+
+        if (result.email_error) {
+          warnings.push(`⚠️ Email: ${result.email_error}`);
+        }
+
+        if (warnings.length > 0) {
+          setError(`Appointment approved with warnings:\n${warnings.join('\n')}`);
+        }
+      }
+
       // Refresh appointments list
       await fetchAppointments();
     } catch (err) {
