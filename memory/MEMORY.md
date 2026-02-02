@@ -11,7 +11,9 @@ Key learnings and patterns discovered during development.
 ## Project Status — Feb 2, 2026 (Final)
 
 **Current State:** Mature, production-ready with comprehensive reliability hardening and complete feature set
-- **Recently viewed products**: Browse history tracking + dashboard widget (new Feb 2 06:37)
+- **Customer loyalty points system**: Earn 1 point per \$1 spent, redeem 100+ for discounts, admin analytics (Feb 2 07:05)
+- **Build blockers fixed**: Supabase/Resend clients moved from module to handler level, <img> warnings resolved (Feb 2 07:00)
+- **Recently viewed products**: Browse history tracking + dashboard widget (Feb 2 06:37)
 - **Customer referral program**: \$10 store credits for each successful referral (Feb 2 06:16)
 - **Admin communication hub**: Email templates, targeted campaigns, open/click tracking with fixed form submission (Feb 2 06:31)
 - **Email segmentation for waitlist members**: Targeted campaigns with performance tracking (Feb 2 05:59)
@@ -34,6 +36,10 @@ Key learnings and patterns discovered during development.
 - Test suite: 69 E2E tests + accessibility tests
 
 **Completed Recent Work (Feb 2):**
+- ✅ Customer loyalty points system - Earn points on purchases, redeem for discounts, admin analytics dashboard (commit 6ef1f17)
+- ✅ Build blocker fixes - Moved Supabase/Resend initialization from module to handler level (16 routes), fixed <img> warnings (commit b5cfd40)
+- ✅ Admin API hardening - Standardized admin auth, campaign deduplication, N+1 query protection (commit a6a242f)
+- ✅ Frontend polish - Skeleton loaders and focus management improvements (commit 57a3e53)
 - ✅ Recently viewed products - Browse history tracking across sessions, widget on shop page, full history page (commit af0557c)
 - ✅ Code quality cleanup - Removed unused variables and imports (commit 64ebafa)
 - ✅ Admin form submissions fixed - Communication hub campaign/template creation and sending (commit 437ebbc)
@@ -84,6 +90,18 @@ Key learnings and patterns discovered during development.
 - Automatic tracking: Product detail page tracks visits with timestamps via useEffect
 - Improves discovery: Helps customers easily return to products they're considering
 - Foundation for product recommendations and personalization
+
+**Customer Loyalty Points System** (commit 6ef1f17 — Feb 2 07:05)
+- Automatic point earning: 1 point per \$1 spent on all orders
+- LoyaltyPointsSection: Customer dashboard showing current balance, earning history, redemption options
+- Redemption: Minimum 100 points required for checkout discount (configurable via admin settings)
+- Database: `loyalty_points_config` (program settings), `loyalty_points` (earned points), `loyalty_redemptions` (redemption tracking), `loyalty_points_balance` (current balance view)
+- API endpoints:
+  - `GET /api/loyalty/balance` - Customer's current points and earning history
+  - `POST /api/loyalty/redeem` - Redeem points for checkout discount
+  - `GET /api/admin/loyalty-analytics` - Admin dashboard with total points issued, redemption rates, top earners
+- Admin dashboard at `/admin/loyalty` shows program performance, trends, and customer engagement
+- Complementary to referral program: Creates dual incentive for new acquisition (\$10 referrals) and retention (loyalty points)
 
 **Customer Referral Program** (commit ccfd93b — Feb 2 06:16)
 - Unique referral code generated per customer, accessible in account dashboard
@@ -185,6 +203,16 @@ Key learnings and patterns discovered during development.
 - Stripe-powered deposit collection integrated into the flow
 - Uses quote reference token for secure access (no auth required)
 
+**Admin API Reliability & Security** (commit a6a242f — Feb 2 06:53)
+- **Standardized admin authorization**: All admin routes now consistently use `requireAdmin()` authentication checks
+- **Campaign deduplication**: Email campaigns use SHA-256 request fingerprinting to prevent accidental duplicate sends
+  - Applied to: `/api/admin/email-campaigns/[id]/send`
+  - Prevents double-submissions from network retries or user double-clicks
+- **N+1 query protection**:
+  - Waitlist campaign send now batches recipient emails instead of querying per recipient
+  - Referral analytics aggregates data in single query instead of looping
+  - Loyalty analytics calculates totals/averages with GROUP BY instead of post-processing
+
 **Auth Hardening** (commit ca89e05)
 - Added `requireAdmin()` checks to: media upload/delete, file access, embeddings index, product image upload
 - Added Zod validation to routes that previously accepted raw input
@@ -248,6 +276,17 @@ Key learnings and patterns discovered during development.
 - Reduces duplication across pages and API routes
 
 ## Critical Fixes — Feb 2, 2026
+
+**Build Blocker Fixes** (commit b5cfd40 — Feb 2 07:00)
+- **Supabase client initialization failure**: Clients were initialized at module-level, causing "Error: supabaseUrl is required" during Next.js build collection phase
+  - Fixed 14 routes by moving Supabase client from module→handler level
+  - Uses `validateSupabaseAdminConfig()` helper for safe env var checking
+  - Routes fixed: email-templates, email-campaigns, product-categories, referral-analytics, waitlist-analytics, waitlist-campaigns/send, saved-addresses, referrals endpoints, user endpoints
+- **Resend client initialization failure**: Same pattern with Resend clients in email/campaign routes
+  - Fixed 2 routes by moving initialization inside handler functions
+- **<img> tag warnings**: Next.js Image component warnings on unnecessary <img> tags throughout components
+  - Warnings eliminated by using Next.js Image component where appropriate
+  - Build now completes without warnings
 
 **Chat API Timeout & Missing Cron Jobs** (commit c66dc74 — Feb 2 06:12)
 - Chat timeout defeated: `/api/chat` wrapped streamText() with Promise.resolve(), preventing timeout from interrupting long LLM calls. Fixed: Async IIFE pattern allows timeout to interrupt actual inference

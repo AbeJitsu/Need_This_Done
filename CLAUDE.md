@@ -35,10 +35,13 @@ Speak like a friend over coffee. Easy to understand.
 
 ## What's Built
 
-**Latest additions (Feb 2, 2026 — Final):**
+**Latest additions (Feb 2, 2026):**
+- ✅ **Customer loyalty points system**: Earn 1 point per \$1 spent, redeem 100+ points for discounts at checkout with admin analytics (commit 6ef1f17)
+- ✅ **Build blockers fixed**: Supabase/Resend client initialization moved from module to handler level (16 routes), <img> tag warnings resolved (commit b5cfd40)
+- ✅ **Admin API hardening**: Standardized admin auth checks, campaign deduplication, N+1 query protection (commit a6a242f)
 - ✅ **Recently viewed products**: Browse history tracking + widget on shop page (commit af0557c)
 - ✅ **Customer referral program**: Earn \$10 store credits for each successful referral with unique code, real-time tracking, and credit balance management
-- ✅ **Admin communication hub**: Create email templates, build targeted campaigns to customer segments, track open/click rates and delivery status (fixed form submission)
+- ✅ **Admin communication hub**: Create email templates, build targeted campaigns to customer segments, track open/click rates and delivery status
 - ✅ **Email segmentation for waitlist members**: Create targeted campaigns with performance analytics and one-click sending
 - ✅ **Waitlist analytics dashboard**: Real-time demand metrics, conversion tracking, top products, signup trends
 - ✅ **Product category management**: Admin CRUD for categories with color-coding and custom ordering
@@ -54,7 +57,7 @@ Speak like a friend over coffee. Easy to understand.
 - ✅ **Order management**: History, quick reorder, CSV export, invoices, timeline
 - ✅ **Review system**: Admin moderation, analytics, notification emails
 - ✅ **Account settings**: Profile, addresses, notification preferences, review tracking
-- ✅ **Admin dashboards**: Reviews, analytics, appointments, product insights, waitlist, categories, referrals, email campaigns
+- ✅ **Admin dashboards**: Reviews, analytics, appointments, product insights, waitlist, categories, referrals, email campaigns, loyalty
 - ✅ **Backend reliability**: Connection pooling, retries, validation, circuit breaker, rate limiting
 
 **Backend Reliability (Feb 2 Audit - 8 Critical Fixes):**
