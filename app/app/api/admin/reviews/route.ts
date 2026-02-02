@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import {
+  sendReviewApprovedEmail,
+  sendReviewRejectedEmail,
+} from '@/lib/review-notifications';
 
 // ============================================================================
 // Admin Reviews API - /api/admin/reviews
@@ -203,10 +207,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ========================================================================
+    // Send notification email to reviewer
+    // ========================================================================
+    // Fetch product title for email
+    const { data: product } = await supabase
+      .from('products')
+      .select('title, featured_image')
+      .eq('id', review.product_id)
+      .single();
+
+    // Fetch product URL for email (using Medusa product ID)
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com';
+    const productUrl = product
+      ? `${siteUrl}/shop/${review.product_id}`
+      : undefined;
+
+    // Send email based on action
+    if (action === 'approve' && review.reviewer_email) {
+      await sendReviewApprovedEmail(
+        review.reviewer_email,
+        review.reviewer_name,
+        product?.title || 'Product',
+        product?.featured_image,
+        review.rating,
+        review.title,
+        productUrl
+      );
+    } else if (action === 'reject' && review.reviewer_email) {
+      await sendReviewRejectedEmail(
+        review.reviewer_email,
+        review.reviewer_name,
+        product?.title || 'Product',
+        review.rating,
+        rejection_reason,
+        productUrl
+      );
+    }
+
     return NextResponse.json({
       success: true,
       review: updatedReview,
-      message: `Review ${action}ed successfully`,
+      message: `Review ${action}ed successfully and reviewer has been notified`,
     });
   } catch (error) {
     console.error('Admin reviews POST error:', error);
