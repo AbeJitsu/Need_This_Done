@@ -181,7 +181,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 id="variant-select"
                 value={selectedVariant || ''}
                 onChange={(e) => setSelectedVariant(e.target.value)}
-                className={`w-full px-4 py-2 border ${formInputColors.base} rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-blue-500`}
+                className={`w-full px-4 py-3 border-2 ${formInputColors.base} rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-blue-500 transition hover:border-gray-400`}
               >
                 {variants.map((variant: any) => (
                   <option key={variant.id} value={variant.id}>
@@ -200,7 +200,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             <div className="flex items-center gap-3" role="group" aria-labelledby="quantity-label">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 ${focusRingClasses.blue} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-blue-500`}
+                className={`px-4 py-2 border-2 ${formInputColors.base} rounded-lg transition hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 ${focusRingClasses.blue} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2`}
                 aria-label={`Decrease quantity from ${quantity} to ${Math.max(1, quantity - 1)}`}
               >
                 <span aria-hidden="true">−</span>
@@ -212,11 +212,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 value={quantity}
                 onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                 aria-label="Enter quantity of items to add"
-                className={`w-16 px-3 py-2 border ${formInputColors.base} rounded-lg text-center ${focusRingClasses.blue} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-blue-500`}
+                className={`w-16 px-3 py-2 border-2 ${formInputColors.base} rounded-lg text-center font-medium ${focusRingClasses.blue} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition`}
               />
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 ${focusRingClasses.blue} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-blue-500`}
+                className={`px-4 py-2 border-2 ${formInputColors.base} rounded-lg transition hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 ${focusRingClasses.blue} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2`}
                 aria-label={`Increase quantity from ${quantity} to ${quantity + 1}`}
               >
                 <span aria-hidden="true">+</span>
@@ -249,9 +249,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 size="lg"
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
+                isLoading={isAddingToCart}
+                loadingText="Adding..."
                 className="flex-1"
               >
-                {isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
+                Add to Cart
               </Button>
               <Button
                 variant="gray"
@@ -269,11 +271,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               disabled={isManagingWishlist}
               aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
               aria-pressed={inWishlist}
-              className={`w-full px-4 py-2 rounded-lg font-medium transition-all duration-200 motion-safe:hover:scale-105 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 flex items-center justify-center gap-2 ${
+              className={`w-full px-4 py-2 rounded-lg font-medium transition-all duration-200 motion-safe:hover:scale-105 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 flex items-center justify-center gap-2 border-2 ${
                 inWishlist
-                  ? 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 active:bg-red-200'
-                  : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200 active:bg-gray-300'
-              } disabled:opacity-50 disabled:cursor-not-allowed ${focusRingClasses.blue}`}
+                  ? `${accentColors.red.bg} ${accentColors.red.text} ${accentColors.red.border} hover:opacity-90`
+                  : `${accentColors.gray.bg} ${accentColors.gray.text} ${accentColors.gray.border} hover:opacity-90`
+              } disabled:opacity-50 disabled:cursor-not-allowed ${focusRingClasses.blue} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2`}
             >
               {isManagingWishlist ? (
                 <>

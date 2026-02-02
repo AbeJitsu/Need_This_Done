@@ -57,7 +57,7 @@ export default function ProductComparisonModal() {
                         {/* Remove Button */}
                         <button
                           onClick={() => removeProduct(product.id)}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition"
+                          className={`absolute -top-2 -right-2 rounded-full p-1 transition ${accentColors.red.bg} text-white hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2`}
                           aria-label={`Remove ${product.title} from comparison`}
                         >
                           <X size={16} />
@@ -92,7 +92,7 @@ export default function ProductComparisonModal() {
                   <td className="font-semibold p-3 bg-gray-50">Price</td>
                   {selectedProducts.map((product) => (
                     <td key={`price-${product.id}`} className="text-center p-3">
-                      <p className={`text-xl font-bold ${accentColors.green.text}`}>
+                      <p className={`text-xl font-bold ${accentColors.blue.titleText}`}>
                         {formatPrice(product.price)}
                       </p>
                     </td>
@@ -124,11 +124,11 @@ export default function ProductComparisonModal() {
                         <div className="flex items-center justify-center gap-2">
                           {product.inStock ? (
                             <>
-                              <Check size={20} className="text-green-600" />
-                              <span className="text-green-600 font-medium">In Stock</span>
+                              <Check size={20} className={accentColors.green.text} />
+                              <span className={`font-medium ${accentColors.green.text}`}>In Stock</span>
                             </>
                           ) : (
-                            <span className="text-red-600 font-medium">Out of Stock</span>
+                            <span className={`font-medium ${accentColors.red.text}`}>Out of Stock</span>
                           )}
                         </div>
                       ) : (
