@@ -35,6 +35,11 @@ Full report: [memory/backend-reliability-evaluation-2026-02-01.md](./backend-rel
 - ✅ **CSV Export:** Download entire order history as spreadsheet file
 - API Enhancement: `/api/user/orders` fetches order items from Medusa for complete data
 
+**Customer Dashboard** (commits b6bbb73, 64362f4)
+- ✅ **Active Appointments Section:** Shows upcoming appointments with status and details
+- ✅ **Dashboard Stats Overview:** Key metrics (orders, reviews, appointments) at a glance
+- New APIs: `/api/user/appointments`, `/api/user/reviews` for customer dashboard data
+
 ## Known Issues
 
 None currently blocking. All critical backend reliability risks addressed.

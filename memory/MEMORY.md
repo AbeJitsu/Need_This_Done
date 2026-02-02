@@ -19,6 +19,7 @@ Key learnings and patterns discovered during development.
 - Critical appointment flow fixes: 3 silent failures resolved with explicit error handling
 - Backend reliability: Comprehensive error classification, circuit breaker, retry logic, deduplication, rate limiting
 - Admin dashboard: Review moderation, analytics, appointment management, Google Calendar, product analytics, enrollments
+- **Customer dashboard**: Active appointments section + statistics overview (new Feb 2)
 - Test suite: 69 E2E tests + accessibility tests
 
 **Completed Recent Work (Feb 2):**
@@ -29,6 +30,8 @@ Key learnings and patterns discovered during development.
 - ✅ Order tracking timeline - visual progression of order status
 - ✅ Fixed TypeScript/build errors across admin and API routes
 - ✅ Improved accessibility and feedback on shopping interface (cart, payment, product detail)
+- ✅ Customer dashboard: Active appointments section with status/details (commit b6bbb73)
+- ✅ Dashboard stats overview: Key account metrics visualization (commit 64362f4)
 
 **Next Priority Areas:**
 1. Performance optimization for search/filtering (if needed based on usage metrics)
@@ -214,3 +217,16 @@ Key learnings and patterns discovered during development.
   - Supports accounting/business record-keeping
   - Location: Header button on `/orders` page
 - **Enhanced API:** `/api/user/orders` now fetches order items from Medusa for complete data
+
+**Customer Dashboard** (commits b6bbb73, 64362f4 — Feb 2)
+- **Active Appointments Section** (`ActiveAppointmentsSection.tsx`)
+  - Displays upcoming appointments with status, date/time, and details
+  - Shows appointment confirmation status and meeting links
+  - Empty state with CTA when no appointments scheduled
+  - API: `/api/user/appointments` fetches customer's appointments
+  - Location: `/dashboard` customer-facing page
+- **Dashboard Stats Overview** (`DashboardStatsOverview.tsx`)
+  - Key metrics at a glance: total orders, reviews submitted, appointments booked
+  - Quick visual indicators of customer engagement and account activity
+  - Compact card layout with icon + stat display
+  - Location: Top of `/dashboard` customer page

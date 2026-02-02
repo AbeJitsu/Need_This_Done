@@ -36,6 +36,7 @@ Speak like a friend over coffee. Easy to understand.
 ## What's Built
 
 **Latest additions (Feb 2, 2026):**
+- ✅ **Customer dashboard**: Active appointments section + statistics overview (new)
 - ✅ **Quick reorder button**: One-click reorder of completed orders, adds all items to cart automatically
 - ✅ **CSV export**: Download full order history as spreadsheet (ID, date, status, total, email)
 - ✅ **Review notification emails**: Automated emails when reviews are approved/rejected
