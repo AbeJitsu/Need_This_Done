@@ -305,15 +305,15 @@ CITATION FORMAT:
     const streamPromise = (async () => {
       try {
         const result = await withTimeout(
-          Promise.resolve(
-            streamText({
+          (async () => {
+            return await streamText({
               model: openai('gpt-4o-mini'),
               system: systemPrompt,
               messages: normalizedMessages,
               maxOutputTokens: 1000,
               temperature: 0.7,
-            })
-          ),
+            });
+          })(),
           LLM_TIMEOUT_MS,
           'LLM inference'
         );
