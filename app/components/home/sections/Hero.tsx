@@ -54,7 +54,7 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[80vh] flex flex-col items-center justify-center py-20 md:py-0 bg-white"
+      className="relative min-h-screen flex flex-col items-center justify-center py-20 md:py-0 bg-white"
     >
       {/* ============================================================
           BACKGROUND LAYER: Smooth Directional Gradient
@@ -131,7 +131,7 @@ export function Hero() {
           CONTENT LAYER: Typography & Interactions
           ============================================================ */}
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 md:px-12 text-center mt-16 md:mt-20 pt-12 sm:pt-16 md:pt-20">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 md:px-12 text-center pt-4 sm:pt-8 md:pt-12">
         {/* Main Headline — MASSIVE, Bold, Gradient Text */}
         <motion.div
           className="mb-8"
@@ -148,7 +148,7 @@ export function Hero() {
             },
           }}
         >
-          <h1 className="text-7xl sm:text-8xl md:text-9xl font-black leading-[0.9] tracking-tighter">
+          <h1 className="text-6xl sm:text-7xl md:text-8xl font-black leading-[0.9] tracking-tighter">
             <motion.span
               className="inline-block bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent"
               variants={{
@@ -309,8 +309,7 @@ export function Hero() {
           DECORATIVE ELEMENTS: Visual Polish
           ============================================================ */}
 
-      {/* Top gradient fade — premium polish */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white via-white/50 to-transparent pointer-events-none z-20" />
+      {/* Top gradient fade removed — was creating white gap at top */}
 
       {/* Subtle grid pattern (optional, commented out for now) */}
       {/* <div className="absolute inset-0 opacity-5 bg-[linear-gradient(90deg,#000_1px,transparent_1px),linear-gradient(#000_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0" /> */}
