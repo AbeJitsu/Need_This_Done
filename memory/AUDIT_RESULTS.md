@@ -2,7 +2,7 @@
 
 Quality findings from recent evaluations and automated checks.
 
-**Latest:** Email segmentation for waitlist campaigns added Feb 2, 2026 (commit aa7fff6). System is feature-complete with all critical reliability fixes implemented. See MEMORY.md for comprehensive feature inventory.
+**Latest:** Customer loyalty points system (commit 6ef1f17) + build blocker fixes (commit b5cfd40) + admin API hardening (commit a6a242f) — Feb 2, 2026. System is feature-complete with all critical reliability fixes implemented. See MEMORY.md for comprehensive feature inventory.
 
 ## Backend Reliability Audit — Feb 1, 2026
 
