@@ -278,7 +278,7 @@ export default function UnifiedPricingPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-16 md:pb-24">
       {/* ================================================================== */}
       {/* HERO SECTION - Edge-to-edge on mobile, contained on desktop */}
       {/* ================================================================== */}
