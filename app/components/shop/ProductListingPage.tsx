@@ -105,7 +105,7 @@ export default function ProductListingPage() {
                   placeholder="Search products by name or description..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:border-gray-400 transition-colors"
                 />
               </div>
               <Button
@@ -149,7 +149,7 @@ export default function ProductListingPage() {
                         setMinPrice(e.target.value);
                         handleFilterChange();
                       }}
-                      className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:border-gray-400 transition-colors"
                     />
                   </div>
                 </div>
@@ -167,7 +167,7 @@ export default function ProductListingPage() {
                         setMaxPrice(e.target.value);
                         handleFilterChange();
                       }}
-                      className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:border-gray-400 transition-colors"
                     />
                   </div>
                 </div>

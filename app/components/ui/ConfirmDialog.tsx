@@ -1,6 +1,8 @@
 'use client';
 
+import { useRef, useEffect } from 'react';
 import { useBackdropClose } from '@/hooks/useBackdropClose';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import {
   cardBgColors,
   iconButtonColors,
@@ -71,7 +73,24 @@ export default function ConfirmDialog({
     onClose: onCancel,
     includeEscape: true,
   });
+  const { containerRef: focusTrapRef } = useFocusTrap({
+    isOpen,
+    onClose: onCancel,
+  });
+  const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
   const styles = variantStyles[variant];
+
+  // ========================================================================
+  // Store previously focused element and restore focus on close
+  // ========================================================================
+  useEffect(() => {
+    if (isOpen) {
+      previouslyFocusedElementRef.current = document.activeElement as HTMLElement;
+    } else if (previouslyFocusedElementRef.current) {
+      previouslyFocusedElementRef.current.focus();
+      previouslyFocusedElementRef.current = null;
+    }
+  }, [isOpen]);
 
   // Don't render if closed
   if (!isOpen) return null;
@@ -95,9 +114,13 @@ export default function ConfirmDialog({
       >
         {/* Modal panel - stops click propagation so outside clicks close modal */}
         <div
-          ref={modalRef}
+          ref={(el) => {
+            if (el) {
+              modalRef.current = el;
+              focusTrapRef.current = el;
+            }
+          }}
           onClick={(e) => e.stopPropagation()}
-          tabIndex={-1}
           className={`
             relative w-full max-w-md
             ${cardBgColors.base} rounded-2xl shadow-2xl

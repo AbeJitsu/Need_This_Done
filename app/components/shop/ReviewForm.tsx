@@ -200,11 +200,11 @@ export default function ReviewForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g., Great product, highly recommend!"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-transparent hover:border-gray-400 transition-colors"
             maxLength={255}
             disabled={isSubmitting}
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-700 dark:text-gray-200 mt-1">
             {title.length}/255 characters
           </p>
         </div>
@@ -223,11 +223,11 @@ export default function ReviewForm({
             onChange={(e) => setContent(e.target.value)}
             placeholder="Tell us what you think about this product..."
             rows={5}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-transparent hover:border-gray-400 transition-colors"
             maxLength={2000}
             disabled={isSubmitting}
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-700 dark:text-gray-200 mt-1">
             {content.length}/2000 characters
           </p>
         </div>
@@ -238,7 +238,7 @@ export default function ReviewForm({
             <div>
               <label
                 htmlFor="review-name"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2"
               >
                 Your Name
               </label>
@@ -248,7 +248,7 @@ export default function ReviewForm({
                 value={reviewerName}
                 onChange={(e) => setReviewerName(e.target.value)}
                 placeholder="Leave blank to submit as Anonymous"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-transparent hover:border-gray-400 transition-colors"
                 maxLength={255}
                 disabled={isSubmitting}
               />
@@ -257,7 +257,7 @@ export default function ReviewForm({
             <div>
               <label
                 htmlFor="review-email"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2"
               >
                 Email * (kept private)
               </label>
@@ -267,10 +267,10 @@ export default function ReviewForm({
                 value={reviewerEmail}
                 onChange={(e) => setReviewerEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-transparent hover:border-gray-400 transition-colors"
                 disabled={isSubmitting}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-700 dark:text-gray-200 mt-1">
                 Your email won't be published and is used to verify your
                 identity.
               </p>

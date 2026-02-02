@@ -445,8 +445,8 @@ export const formInputColors = {
   placeholder: 'placeholder:text-gray-600 dark:placeholder:text-gray-400',
   // Focus state
   focus: 'focus:ring-2 focus:ring-gold-500 focus:border-gold-500',
-  // Helper text below inputs - 5:1 contrast in both modes
-  helper: 'text-gray-600 dark:text-gray-300',
+  // Helper text below inputs - 5:1 contrast: gray-700 on white (5.4:1), gray-200 on dark-900 (6.3:1)
+  helper: 'text-gray-700 dark:text-gray-200',
   // Label text - 5:1 contrast in both modes
   label: 'text-gray-700 dark:text-gray-100',
 };

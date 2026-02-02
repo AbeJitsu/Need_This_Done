@@ -84,8 +84,8 @@ export default function Button({
     ghost: `${ghostClasses[variant]} ${colors.text} ${colors.hoverText}`,
   };
 
-  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-xl transition-all duration-300 motion-safe:hover:scale-105 motion-safe:active:scale-95 ${colors.focusVisible} ${sizeClasses[size]} ${styleClasses[buttonStyle]} relative`;
-  const disabledClasses = isDisabled ? 'after:absolute after:inset-0 after:bg-black/40 after:rounded-xl cursor-not-allowed motion-safe:hover:scale-100 motion-safe:active:scale-100' : '';
+  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-xl transition-all duration-300 motion-safe:hover:scale-105 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 focus-visible:ring-${variant}-500 ${sizeClasses[size]} ${styleClasses[buttonStyle]} relative`;
+  const disabledClasses = isDisabled ? 'after:absolute after:inset-0 after:bg-black/30 after:rounded-xl cursor-not-allowed motion-safe:hover:scale-100 motion-safe:active:scale-100' : '';
   const fullClasses = `${baseClasses} ${disabledClasses} ${className}`.trim();
 
   // Render as Link if href is provided and not disabled
