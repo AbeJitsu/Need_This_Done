@@ -741,7 +741,7 @@ export default function CheckoutPage() {
                       aria-required="true"
                       aria-invalid={!!fieldErrors.email}
                       aria-describedby={fieldErrors.email ? 'checkout-email-error' : 'checkout-email-help'}
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${fieldErrors.email ? 'border-red-500' : ''} ${formInputColors.focus}`}
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'} ${formInputColors.focus}`}
                       placeholder="your@email.com"
                     />
                     {fieldErrors.email ? (
@@ -783,7 +783,7 @@ export default function CheckoutPage() {
                       required
                       aria-required="true"
                       aria-invalid={!!fieldErrors.firstName}
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${fieldErrors.firstName ? 'border-red-500' : ''} ${formInputColors.focus}`}
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.firstName ? 'border-red-500 bg-red-50' : 'border-gray-300'} ${formInputColors.focus}`}
                       placeholder="John"
                     />
                     {fieldErrors.firstName && (
@@ -811,7 +811,7 @@ export default function CheckoutPage() {
                       required
                       aria-required="true"
                       aria-invalid={!!fieldErrors.lastName}
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${fieldErrors.lastName ? 'border-red-500' : ''} ${formInputColors.focus}`}
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.lastName ? 'border-red-500 bg-red-50' : 'border-gray-300'} ${formInputColors.focus}`}
                       placeholder="Doe"
                     />
                     {fieldErrors.lastName && (
@@ -839,7 +839,7 @@ export default function CheckoutPage() {
                       required
                       aria-required="true"
                       aria-invalid={!!fieldErrors.address}
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${fieldErrors.address ? 'border-red-500' : ''} ${formInputColors.focus}`}
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.address ? 'border-red-500 bg-red-50' : 'border-gray-300'} ${formInputColors.focus}`}
                       placeholder="123 Main St"
                     />
                     {fieldErrors.address && (
@@ -861,7 +861,7 @@ export default function CheckoutPage() {
                           autoComplete="address-line2"
                           value={address2}
                           onChange={(e) => setAddress2(e.target.value)}
-                          className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${formInputColors.focus}`}
+                          className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 border-gray-300 transition-colors ${formInputColors.focus}`}
                           placeholder="Apt 4B, Suite 100, etc."
                           autoFocus
                         />
@@ -895,7 +895,7 @@ export default function CheckoutPage() {
                       required
                       aria-required="true"
                       aria-invalid={!!fieldErrors.cityStateZip}
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${fieldErrors.cityStateZip ? 'border-red-500' : ''} ${formInputColors.focus}`}
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.cityStateZip ? 'border-red-500 bg-red-50' : 'border-gray-300'} ${formInputColors.focus}`}
                       placeholder="New York, NY 10001"
                     />
                     {fieldErrors.cityStateZip && (

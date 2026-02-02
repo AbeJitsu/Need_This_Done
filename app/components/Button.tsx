@@ -38,6 +38,19 @@ const sizeClasses: Record<ButtonSize, string> = {
 };
 
 // ============================================================================
+// Focus Ring Classes - Static classes for keyboard accessibility
+// ============================================================================
+const focusRingClasses: Record<AccentVariant, string> = {
+  blue: 'focus-visible:ring-blue-500',
+  green: 'focus-visible:ring-green-500',
+  purple: 'focus-visible:ring-purple-500',
+  gold: 'focus-visible:ring-gold-500',
+  teal: 'focus-visible:ring-teal-500',
+  gray: 'focus-visible:ring-gray-500',
+  red: 'focus-visible:ring-red-500',
+};
+
+// ============================================================================
 // Button Component
 // ============================================================================
 
@@ -84,7 +97,7 @@ export default function Button({
     ghost: `${ghostClasses[variant]} ${colors.text} ${colors.hoverText}`,
   };
 
-  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-xl transition-all duration-300 motion-safe:hover:scale-105 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-${variant}-500 ${sizeClasses[size]} ${styleClasses[buttonStyle]} relative`;
+  const baseClasses = `inline-flex items-center justify-center gap-2 ${accentFontWeight} rounded-xl transition-all duration-300 motion-safe:hover:scale-105 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${focusRingClasses[variant]} ${sizeClasses[size]} ${styleClasses[buttonStyle]} relative`;
   const disabledClasses = isDisabled ? 'after:absolute after:inset-0 after:bg-black/30 after:rounded-xl cursor-not-allowed motion-safe:hover:scale-100 motion-safe:active:scale-100' : '';
   const fullClasses = `${baseClasses} ${disabledClasses} ${className}`.trim();
 

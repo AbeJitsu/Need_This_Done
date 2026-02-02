@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ShoppingCart, Heart } from 'lucide-react';
 import { accentColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors } from '@/lib/colors';
@@ -27,9 +28,10 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, price, href }: ProductCardProps) {
+  const router = useRouter();
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const inWishlist = isInWishlist(product.id);
-  const [isCartClicked, setIsCartClicked] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const [isWishlistLoading, setIsWishlistLoading] = useState(false);
 
   const imageUrl = product.images?.[0]?.url;
@@ -37,11 +39,12 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
     ? product.description.slice(0, 80) + (product.description.length > 80 ? '...' : '')
     : '';
 
-  // Navigate to detail page - button click is handled via link wrapper
+  // Navigate to detail page when button clicked
   const handleCartClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsCartClicked(true);
+    setIsNavigating(true);
+    router.push(href);
   };
 
   // Handle wishlist toggle with loading state
@@ -133,6 +136,7 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
         <div className="px-4 pb-4">
           <button
             onClick={handleCartClick}
+            disabled={isNavigating}
             aria-label={`View ${product.title} and add to cart`}
             className={`
             w-full py-2 px-4 rounded-lg font-medium transition-all duration-200
@@ -140,9 +144,10 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
             ${accentColors.green.bg} ${accentColors.green.text}
             motion-safe:hover:scale-105 motion-safe:active:scale-95
             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white
+            disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100
           `}>
             <ShoppingCart className="w-5 h-5" />
-            {isCartClicked ? 'Opening...' : 'View & Add'}
+            {isNavigating ? 'Opening...' : 'View & Add'}
           </button>
         </div>
       </div>

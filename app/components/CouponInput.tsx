@@ -147,6 +147,7 @@ export default function CouponInput({
             onKeyDown={handleKeyDown}
             placeholder="Enter coupon code"
             disabled={disabled || isLoading}
+            autoComplete="off"
             className={`
               w-full px-4 py-2.5 rounded-lg
               ${formInputColors.base}
