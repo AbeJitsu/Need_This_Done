@@ -2,11 +2,12 @@
 
 What's currently being built or fixed.
 
-## Current Focus — Feb 1, 2026
+## Current Focus — Feb 2, 2026
 
 **Status:** Production-ready platform - all core systems operational
 
 Major systems complete:
+- User wishlist system for saving favorite products
 - Admin dashboard with Google Calendar integration
 - Backend reliability hardening (race conditions, retries, validation, rate limiting)
 - Accessibility compliance (WCAG AA across navigation and interactive elements)
@@ -14,7 +15,17 @@ Major systems complete:
 
 Platform is stable and ready for production use.
 
-## Recently Completed — Feb 1, 2026
+## Recently Completed — Feb 2, 2026
+
+**User Wishlist System** (commit 69b8121)
+- Wishlist page at `/wishlist` showing saved products
+- Add/remove from wishlist buttons in shop pages and product detail
+- WishlistContext manages state with localStorage persistence
+- API routes: `/api/wishlist` (list), `/api/wishlist/[productId]` (add/remove)
+- Product detail client displays wishlist status and action buttons
+- Navigation updated with wishlist link
+
+## Previously Completed — Feb 1, 2026
 
 **Order Confirmation Email** (commit a962914)
 - Sends confirmation email to customer on successful Stripe payment

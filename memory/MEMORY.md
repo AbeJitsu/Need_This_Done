@@ -5,6 +5,7 @@ Key learnings and patterns discovered during development.
 ## Project Status — Feb 2, 2026
 
 **Current State:** Mature, production-ready with comprehensive reliability hardening
+- User wishlist feature: Save/manage favorite products with persistence
 - Backend reliability audit completed (9 of 10 critical issues resolved)
 - Customer-facing features: Order confirmation emails, quote authorization, appointment reminders
 - Admin dashboard: Full appointment management with Google Calendar, product analytics, enrollments
@@ -14,8 +15,17 @@ Key learnings and patterns discovered during development.
 1. Cache invalidation race condition handling (low priority, no blocking issues)
 2. Load testing for Redis circuit breaker
 3. Expansion of rate limiting to other cost-sensitive endpoints
+4. Wishlist enhancement (export, email, sharing - optional)
 
-## Customer-Facing Features — Feb 1, 2026
+## Customer-Facing Features — Feb 2, 2026
+
+**User Wishlist System** (commit 69b8121)
+- Wishlist page at `/wishlist` displays saved products with add-to-cart buttons
+- WishlistContext: Manages wishlist state with localStorage persistence (survives page refreshes)
+- Add/remove buttons: Quick actions in shop listings and product detail pages
+- API integration: `/api/wishlist` (list items), `/api/wishlist/[productId]` (add/remove)
+- UI feedback: Wishlist icon shows saved status in product cards
+- Zero authentication required: Built with context-based state management
 
 **Order Confirmation Email** (`api/stripe/webhook/route.ts`)
 - Triggered on `checkout.session.completed` webhook event
