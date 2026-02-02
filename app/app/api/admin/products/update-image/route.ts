@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdmin } from '@/lib/api-auth';
 
 // ============================================================================
-// Update Product Image in Medusa
+// Update Product Image in Medusa (Admin Only)
 // ============================================================================
 // What: Updates a product's image URL via Medusa Admin API
-// Why: Allows changing product images without direct Medusa admin access
-// How: Authenticates with Medusa admin, updates product via API
+// Why: Allows authorized admins to change product images without direct Medusa access
+// How: Verifies admin authorization first, then authenticates with Medusa and updates
 
 const MEDUSA_BACKEND_URL = process.env.MEDUSA_BACKEND_URL || process.env.NEXT_PUBLIC_MEDUSA_URL;
 const MEDUSA_ADMIN_EMAIL = process.env.MEDUSA_ADMIN_EMAIL;
@@ -31,6 +32,12 @@ async function authenticateWithMedusa() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Admin-only endpoint - verify authorization BEFORE parsing request
+    const auth = await verifyAdmin();
+    if (auth.error) {
+      return auth.error;
+    }
+
     const { productId, imageUrl } = await request.json();
 
     if (!productId || !imageUrl) {

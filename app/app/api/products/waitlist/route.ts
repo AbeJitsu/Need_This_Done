@@ -6,13 +6,23 @@
 // How: Store email + product ID, allow users to be notified when stock returns
 
 import { NextResponse, NextRequest } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
-// Defer Supabase initialization to avoid build-time initialization
-function getSupabaseClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+// Use singleton admin client to leverage connection pooling
+// This ensures all requests share the same connection pool,
+// supporting 100+ concurrent requests without exhaustion
+
+// Validate required environment variables are present
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+  throw new Error(
+    'Missing NEXT_PUBLIC_SUPABASE_URL environment variable. ' +
+    'Waitlist API cannot initialize without Supabase configuration.'
+  );
+}
+if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  throw new Error(
+    'Missing SUPABASE_SERVICE_ROLE_KEY environment variable. ' +
+    'Waitlist API requires service role credentials for database access.'
   );
 }
 
@@ -50,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if already on waitlist
-    const supabase = getSupabaseClient();
+    const supabase = getSupabaseAdmin();
     const { data: existing, error: checkError } = await supabase
       .from('product_waitlist')
       .select('id')
@@ -118,7 +128,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const supabase = getSupabaseClient();
+    const supabase = getSupabaseAdmin();
     const { data: waitlistItems, error } = await supabase
       .from('product_waitlist')
       .select('product_id, variant_id, status, created_at')

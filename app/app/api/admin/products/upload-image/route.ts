@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get public URL
+    // Get public URL (getPublicUrl is synchronous, no await needed)
     const { data: urlData } = supabase.storage
       .from('product-images')
       .getPublicUrl(filePath);
