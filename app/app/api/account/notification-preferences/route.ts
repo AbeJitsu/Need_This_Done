@@ -5,6 +5,8 @@
 // Why: Let users control which emails they receive
 // How: Store preferences in user metadata or preferences table
 
+export const dynamic = 'force-dynamic';
+
 import { NextResponse, NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth-options';

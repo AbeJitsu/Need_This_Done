@@ -5,6 +5,8 @@
 // How: CRUD operations on saved_addresses table
 // ============================================================================
 
+export const dynamic = 'force-dynamic';
+
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth-options';
 import { createClient } from '@supabase/supabase-js';

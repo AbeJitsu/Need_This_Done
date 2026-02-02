@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { createClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 import { validateSupabaseAdminConfig } from '@/lib/supabase-client-safe';

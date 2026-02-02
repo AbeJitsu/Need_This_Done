@@ -5,6 +5,8 @@
 // Why: Allow customers to manage their account details
 // How: Fetch/update user data from Supabase or NextAuth session
 
+export const dynamic = 'force-dynamic';
+
 import { NextResponse, NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth-options';
