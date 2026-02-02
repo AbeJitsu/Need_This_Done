@@ -4,6 +4,7 @@ import { createPaymentIntent } from '@/lib/stripe';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { badRequest, notFound, handleApiError } from '@/lib/api-errors';
 import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
+import { withSupabaseRetry } from '@/lib/supabase-retry';
 
 // Schema validates and transforms input in one step
 const AuthorizeSchema = z.object({
@@ -47,13 +48,18 @@ export async function POST(request: NextRequest) {
     }
     const { quoteRef, email } = parsed.data; // Already normalized by schema transforms
 
-    // Look up the quote
+    // Look up the quote with retry logic (critical for payment flow)
     const supabase = getSupabaseAdmin();
-    const { data: quote, error: fetchError } = await supabase
-      .from('quotes')
-      .select('*')
-      .eq('reference_number', quoteRef)
-      .single<QuoteRecord>();
+    const quoteResult = await withSupabaseRetry(
+      () => supabase
+        .from('quotes')
+        .select('*')
+        .eq('reference_number', quoteRef)
+        .single<QuoteRecord>(),
+      { operation: 'Fetch quote', maxRetries: 3 }
+    );
+
+    const { data: quote, error: fetchError } = quoteResult;
 
     if (fetchError || !quote) {
       return notFound('Quote not found. Please check your reference number.');
@@ -132,18 +138,22 @@ export async function POST(request: NextRequest) {
       'Stripe payment intent creation'
     );
 
-    // Update quote status to authorized and store payment intent ID
-    const { error: updateError } = await supabase
-      .from('quotes')
-      .update({
-        status: 'authorized',
-        stripe_payment_intent_id: paymentIntent.id,
-      })
-      .eq('id', quote.id);
+    // Update quote status to authorized and store payment intent ID with retry
+    const updateResult = await withSupabaseRetry(
+      () => supabase
+        .from('quotes')
+        .update({
+          status: 'authorized',
+          stripe_payment_intent_id: paymentIntent.id,
+        })
+        .eq('id', quote.id),
+      { operation: 'Update quote status', maxRetries: 3 }
+    );
 
-    if (updateError) {
-      console.error('Failed to update quote status:', updateError);
+    if (updateResult.error) {
+      console.error('Failed to update quote status after retries:', updateResult.error);
       // Don't fail the request - payment intent was created successfully
+      // The quote can be manually updated if needed
     }
 
     return NextResponse.json({

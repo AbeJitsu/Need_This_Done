@@ -16,6 +16,11 @@ import {
 } from '@/lib/api-errors';
 import { cache, CACHE_KEYS } from '@/lib/cache';
 import { sendProjectSubmissionEmails } from '@/lib/email-service';
+import { withSupabaseRetry, isUniqueViolation } from '@/lib/supabase-retry';
+import {
+  createRequestFingerprint,
+  checkAndMarkRequest,
+} from '@/lib/request-dedup';
 
 export const dynamic = 'force-dynamic';
 
@@ -152,29 +157,63 @@ export async function POST(request: Request) {
     }
 
     // ====================================================================
-    // Insert into Database
+    // Request Deduplication - Prevent Double Submissions
+    // ====================================================================
+    // Create fingerprint from core form data (excludes files for performance)
+    const requestFingerprint = createRequestFingerprint({
+      email: sanitizedEmail,
+      name: name.trim(),
+      message: message.trim(),
+      service: service?.trim() || '',
+    }, userId || undefined);
+
+    const isNewRequest = await checkAndMarkRequest(requestFingerprint, 'project submission');
+    if (!isNewRequest) {
+      return NextResponse.json(
+        { error: 'Duplicate submission detected. Please wait a moment before submitting again.' },
+        { status: 429 }
+      );
+    }
+
+    // ====================================================================
+    // Insert into Database with Retry Logic
     // ====================================================================
 
-    const { data: project, error } = await supabaseAdmin
-      .from('projects')
-      .insert({
-        name: name.trim(),
-        email: sanitizedEmail,
-        company: company?.trim() || null,
-        service: service?.trim() || null,
-        message: message.trim(),
-        status: 'submitted',
-        attachments: attachmentPaths.length > 0 ? attachmentPaths : null,
-        user_id: userId,
-      })
-      .select()
-      .single();
+    const insertResult = await withSupabaseRetry(
+      () => supabaseAdmin
+        .from('projects')
+        .insert({
+          name: name.trim(),
+          email: sanitizedEmail,
+          company: company?.trim() || null,
+          service: service?.trim() || null,
+          message: message.trim(),
+          status: 'submitted',
+          attachments: attachmentPaths.length > 0 ? attachmentPaths : null,
+          user_id: userId,
+        })
+        .select()
+        .single(),
+      { operation: 'Insert project', maxRetries: 3 }
+    );
+
+    const { data: project, error } = insertResult;
 
     if (error) {
+      // Check for unique constraint violation (shouldn't happen with dedup, but defensive)
+      if (isUniqueViolation(error)) {
+        console.warn('[Projects] Unique violation despite deduplication:', error);
+        return NextResponse.json(
+          { error: 'Duplicate submission detected.' },
+          { status: 409 }
+        );
+      }
+
       if (error.message.includes('does not exist')) {
         return serverError('Database not configured. Please run migrations.');
       }
 
+      console.error('[Projects] Insert failed after retries:', error);
       return serverError('Failed to submit project. Please try again.');
     }
 
