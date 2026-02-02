@@ -56,6 +56,7 @@ export default function CheckoutPage() {
   const [orderId, setOrderId] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState(false);
 
   // Appointment state (for consultation products)
@@ -92,32 +93,36 @@ export default function CheckoutPage() {
   const handleInfoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    const newFieldErrors: Record<string, string> = {};
 
     // Validate required fields
     if (!email) {
-      setError('Email is required');
-      return;
+      newFieldErrors.email = 'Email is required';
     }
 
     if (!firstName.trim()) {
-      setError('First name is required');
-      return;
+      newFieldErrors.firstName = 'First name is required';
     }
 
     if (!lastName.trim()) {
-      setError('Last name is required');
-      return;
+      newFieldErrors.lastName = 'Last name is required';
     }
 
     if (!address.trim()) {
-      setError('Address is required');
-      return;
+      newFieldErrors.address = 'Address is required';
     }
 
     if (!cityStateZip.trim()) {
-      setError('City, State, ZIP is required');
+      newFieldErrors.cityStateZip = 'City, State, ZIP is required';
+    }
+
+    if (Object.keys(newFieldErrors).length > 0) {
+      setFieldErrors(newFieldErrors);
+      setError('Please fill in all required fields');
       return;
     }
+
+    setFieldErrors({});
 
     if (!cartId || itemCount === 0) {
       setError('Your cart is empty');
@@ -683,15 +688,29 @@ export default function CheckoutPage() {
                       id="checkout-email"
                       autoComplete="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (fieldErrors.email) {
+                          setFieldErrors(prev => ({ ...prev, email: '' }));
+                        }
+                      }}
                       required
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
+                      aria-required="true"
+                      aria-invalid={!!fieldErrors.email}
+                      aria-describedby={fieldErrors.email ? 'checkout-email-error' : 'checkout-email-help'}
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${fieldErrors.email ? 'border-red-500' : ''} ${formInputColors.focus}`}
                       placeholder="your@email.com"
                     />
-                    <p className={`text-sm ${formInputColors.helper} mt-2`}>
-                      We&apos;ll use this email to send your order confirmation
-                      and receipt.
-                    </p>
+                    {fieldErrors.email ? (
+                      <p id="checkout-email-error" className={`text-sm ${formValidationColors.error} mt-2`}>
+                        {fieldErrors.email}
+                      </p>
+                    ) : (
+                      <p id="checkout-email-help" className={`text-sm ${formInputColors.helper} mt-2`}>
+                        We&apos;ll use this email to send your order confirmation
+                        and receipt.
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
@@ -712,11 +731,23 @@ export default function CheckoutPage() {
                       id="firstName"
                       autoComplete="given-name"
                       value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
+                      onChange={(e) => {
+                        setFirstName(e.target.value);
+                        if (fieldErrors.firstName) {
+                          setFieldErrors(prev => ({ ...prev, firstName: '' }));
+                        }
+                      }}
                       required
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
+                      aria-required="true"
+                      aria-invalid={!!fieldErrors.firstName}
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${fieldErrors.firstName ? 'border-red-500' : ''} ${formInputColors.focus}`}
                       placeholder="John"
                     />
+                    {fieldErrors.firstName && (
+                      <p className={`text-sm ${formValidationColors.error} mt-1`}>
+                        {fieldErrors.firstName}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -728,11 +759,23 @@ export default function CheckoutPage() {
                       id="lastName"
                       autoComplete="family-name"
                       value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
+                      onChange={(e) => {
+                        setLastName(e.target.value);
+                        if (fieldErrors.lastName) {
+                          setFieldErrors(prev => ({ ...prev, lastName: '' }));
+                        }
+                      }}
                       required
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
+                      aria-required="true"
+                      aria-invalid={!!fieldErrors.lastName}
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${fieldErrors.lastName ? 'border-red-500' : ''} ${formInputColors.focus}`}
                       placeholder="Doe"
                     />
+                    {fieldErrors.lastName && (
+                      <p className={`text-sm ${formValidationColors.error} mt-1`}>
+                        {fieldErrors.lastName}
+                      </p>
+                    )}
                   </div>
 
                   <div className="sm:col-span-2">
@@ -744,11 +787,23 @@ export default function CheckoutPage() {
                       id="address"
                       autoComplete="street-address"
                       value={address}
-                      onChange={(e) => setAddress(e.target.value)}
+                      onChange={(e) => {
+                        setAddress(e.target.value);
+                        if (fieldErrors.address) {
+                          setFieldErrors(prev => ({ ...prev, address: '' }));
+                        }
+                      }}
                       required
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
+                      aria-required="true"
+                      aria-invalid={!!fieldErrors.address}
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${fieldErrors.address ? 'border-red-500' : ''} ${formInputColors.focus}`}
                       placeholder="123 Main St"
                     />
+                    {fieldErrors.address && (
+                      <p className={`text-sm ${formValidationColors.error} mt-1`}>
+                        {fieldErrors.address}
+                      </p>
+                    )}
                   </div>
 
                   <div className="sm:col-span-2">
@@ -763,7 +818,7 @@ export default function CheckoutPage() {
                           autoComplete="address-line2"
                           value={address2}
                           onChange={(e) => setAddress2(e.target.value)}
-                          className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
+                          className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${formInputColors.focus}`}
                           placeholder="Apt 4B, Suite 100, etc."
                           autoFocus
                         />
@@ -788,11 +843,23 @@ export default function CheckoutPage() {
                       id="cityStateZip"
                       autoComplete="address-level2"
                       value={cityStateZip}
-                      onChange={(e) => setCityStateZip(e.target.value)}
+                      onChange={(e) => {
+                        setCityStateZip(e.target.value);
+                        if (fieldErrors.cityStateZip) {
+                          setFieldErrors(prev => ({ ...prev, cityStateZip: '' }));
+                        }
+                      }}
                       required
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} border`}
+                      aria-required="true"
+                      aria-invalid={!!fieldErrors.cityStateZip}
+                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border ${fieldErrors.cityStateZip ? 'border-red-500' : ''} ${formInputColors.focus}`}
                       placeholder="New York, NY 10001"
                     />
+                    {fieldErrors.cityStateZip && (
+                      <p className={`text-sm ${formValidationColors.error} mt-1`}>
+                        {fieldErrors.cityStateZip}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
