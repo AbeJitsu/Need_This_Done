@@ -141,7 +141,8 @@ export async function POST(request: NextRequest) {
     // Step 3: Send Login Notification Email
     // ========================================================================
     // Security feature: notify user of new sign-ins so they can spot
-    // unauthorized access. Runs async - doesn't block the login response.
+    // unauthorized access. Fire-and-forget but track delivery in database
+    // for monitoring and recovery workflows.
 
     if (data.user?.email) {
       const ipAddress =
@@ -150,22 +151,56 @@ export async function POST(request: NextRequest) {
         'Unknown';
       const userAgent = request.headers.get('user-agent') || 'Unknown';
 
-      sendLoginNotification({
-        email: data.user.email,
-        loginTime: new Date().toLocaleString('en-US', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: '2-digit',
-          timeZoneName: 'short',
-        }),
-        ipAddress,
-        userAgent,
-      }).catch((err) => {
-        console.error('[Login] Login notification email failed:', err);
-      });
+      // Send asynchronously without blocking response, but track in DB for visibility
+      (async () => {
+        try {
+          const emailId = await sendLoginNotification({
+            email: data.user!.email,
+            loginTime: new Date().toLocaleString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              timeZoneName: 'short',
+            }),
+            ipAddress,
+            userAgent,
+          });
+
+          // Log successful delivery
+          if (emailId) {
+            logger.info('Login notification email sent', {
+              userId: data.user?.id,
+              emailId,
+            });
+          }
+        } catch (err) {
+          logger.error('Login notification email failed', err as Error, {
+            userId: data.user?.id,
+            email: data.user?.email,
+            ipAddress,
+          });
+
+          // Track failed email for manual follow-up (best-effort, don't block response)
+          try {
+            const supabaseClient = await createSupabaseServerClient();
+            await supabaseClient
+              .from('email_failures')
+              .insert({
+                type: 'login_notification',
+                recipient_email: data.user?.email,
+                subject: `Sign-In Notification for ${data.user?.email}`,
+                user_id: data.user?.id,
+                error_message: err instanceof Error ? err.message : 'Unknown error',
+                created_at: new Date().toISOString(),
+              });
+          } catch (logErr) {
+            logger.error('Failed to log login notification failure', logErr as Error);
+          }
+        }
+      })();
     }
 
     // ========================================================================

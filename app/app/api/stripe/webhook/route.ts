@@ -324,11 +324,23 @@ async function handlePaymentSuccess(
   // Send order confirmation email (fire and forget - don't block webhook response)
   if (email && orderId) {
     // Fetch order details for the email (best-effort, don't fail if this fails)
-    const { data: orderDetails } = await supabase
-      .from('orders')
-      .select('id, medusa_order_id, total, requires_appointment, customer_name, items')
-      .eq('medusa_order_id', orderId)
-      .single();
+    // Wrap with timeout to prevent hanging webhook if database is slow
+    let orderDetails;
+    try {
+      const result = await withTimeout(
+        supabase
+          .from('orders')
+          .select('id, medusa_order_id, total, requires_appointment, customer_name, items')
+          .eq('medusa_order_id', orderId)
+          .single(),
+        TIMEOUT_LIMITS.DATABASE,
+        'Fetch order details for confirmation email'
+      );
+      orderDetails = result.data;
+    } catch (err) {
+      console.warn('[Webhook] Failed to fetch order details for email (timeout or error):', err);
+      // Continue - send email with minimal data
+    }
 
     if (orderDetails) {
       const orderItems = Array.isArray(orderDetails.items) ? orderDetails.items : [];

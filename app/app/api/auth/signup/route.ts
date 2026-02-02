@@ -127,16 +127,47 @@ export async function POST(request: NextRequest) {
     // Step 3: Send Welcome Email
     // ========================================================================
     // Send our custom welcome email in addition to Supabase's confirmation.
-    // This runs async - we don't wait for it to complete before responding.
-    // Email failures shouldn't break the signup flow.
+    // Fire-and-forget but track delivery in database for monitoring.
 
     if (data.user?.email) {
-      sendWelcomeEmail({
-        email: data.user.email,
-        name: (metadata?.name || metadata?.full_name) as string | undefined,
-      }).catch((err) => {
-        console.error('[Signup] Welcome email failed:', err);
-      });
+      // Send asynchronously without blocking response, but track in DB for visibility
+      (async () => {
+        try {
+          const emailId = await sendWelcomeEmail({
+            email: data.user!.email,
+            name: (metadata?.name || metadata?.full_name) as string | undefined,
+          });
+
+          if (emailId) {
+            console.log('[Signup] Welcome email sent', {
+              userId: data.user?.id,
+              emailId,
+            });
+          }
+        } catch (err) {
+          console.error('[Signup] Welcome email failed:', err, {
+            userId: data.user?.id,
+            email: data.user?.email,
+          });
+
+          // Track failed email for manual follow-up (best-effort, don't block response)
+          try {
+            const supabaseClient = await import('@/lib/supabase').then(m => m.supabase);
+            await supabaseClient
+              .from('email_failures')
+              .insert({
+                type: 'welcome_email',
+                recipient_email: data.user?.email,
+                subject: 'Welcome to NeedThisDone!',
+                user_id: data.user?.id,
+                error_message: err instanceof Error ? err.message : 'Unknown error',
+                created_at: new Date().toISOString(),
+              });
+          } catch (logErr) {
+            console.error('[Signup] Failed to log welcome email failure:', logErr);
+          }
+        }
+      })();
     }
 
     // ========================================================================

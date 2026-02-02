@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { initializeRequestContext, logger, createResponseHeaders } from '@/lib/request-context';
 import {
   sendReviewApprovedEmail,
   sendReviewRejectedEmail,
@@ -24,14 +25,20 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
+    // Initialize request context for audit trail
+    initializeRequestContext(request);
+
     const supabase = await createSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     // Check if admin
     if (!user) {
+      logger.warn('Admin reviews access denied - no authentication', {
+        ip: request.headers.get('x-forwarded-for')?.split(',')[0],
+      });
       return NextResponse.json(
         { error: 'Not authenticated' },
-        { status: 401 }
+        { status: 401, headers: createResponseHeaders() }
       );
     }
 
@@ -42,11 +49,18 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (!profile?.is_admin) {
+      logger.warn('Admin reviews access denied - insufficient permissions', {
+        userId: user.id,
+        ip: request.headers.get('x-forwarded-for')?.split(',')[0],
+      });
       return NextResponse.json(
         { error: 'Admin access required' },
-        { status: 403 }
+        { status: 403, headers: createResponseHeaders() }
       );
     }
+
+    // Log successful admin access
+    logger.info('Admin reviews access', { userId: user.id });
 
     const { searchParams } = new URL(request.url);
     const statusFilter = searchParams.get('status') || 'pending';
@@ -91,27 +105,32 @@ export async function GET(request: NextRequest) {
     const { data: reviews, error, count } = await query;
 
     if (error) {
-      console.error('Failed to fetch reviews for moderation:', error);
+      logger.error('Failed to fetch reviews for moderation', error as Error, { userId: user.id });
       return NextResponse.json(
         { error: 'Failed to fetch reviews' },
-        { status: 500 }
+        { status: 500, headers: createResponseHeaders() }
       );
     }
 
-    return NextResponse.json({
-      reviews: reviews || [],
-      pagination: {
-        total: count || 0,
-        limit,
-        offset,
-        hasMore: (count || 0) > offset + limit,
+    logger.debug('Admin reviews fetched', { userId: user.id, count });
+
+    return NextResponse.json(
+      {
+        reviews: reviews || [],
+        pagination: {
+          total: count || 0,
+          limit,
+          offset,
+          hasMore: (count || 0) > offset + limit,
+        },
       },
-    });
+      { headers: createResponseHeaders() }
+    );
   } catch (error) {
-    console.error('Admin reviews GET error:', error);
+    logger.error('Admin reviews GET error', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: createResponseHeaders() }
     );
   }
 }
@@ -125,14 +144,20 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Initialize request context for audit trail
+    initializeRequestContext(request);
+
     const supabase = await createSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     // Check if admin
     if (!user) {
+      logger.warn('Admin reviews POST denied - no authentication', {
+        ip: request.headers.get('x-forwarded-for')?.split(',')[0],
+      });
       return NextResponse.json(
         { error: 'Not authenticated' },
-        { status: 401 }
+        { status: 401, headers: createResponseHeaders() }
       );
     }
 
@@ -143,9 +168,13 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!profile?.is_admin) {
+      logger.warn('Admin reviews POST denied - insufficient permissions', {
+        userId: user.id,
+        ip: request.headers.get('x-forwarded-for')?.split(',')[0],
+      });
       return NextResponse.json(
         { error: 'Admin access required' },
-        { status: 403 }
+        { status: 403, headers: createResponseHeaders() }
       );
     }
 
@@ -153,18 +182,23 @@ export async function POST(request: NextRequest) {
     const { action, id, rejection_reason } = body;
 
     if (!id) {
+      logger.warn('Admin reviews POST - missing review ID', { userId: user.id });
       return NextResponse.json(
         { error: 'Missing required field: id' },
-        { status: 400 }
+        { status: 400, headers: createResponseHeaders() }
       );
     }
 
     if (!action || !['approve', 'reject'].includes(action)) {
+      logger.warn('Admin reviews POST - invalid action', { userId: user.id, action });
       return NextResponse.json(
         { error: 'Missing or invalid action. Must be approve or reject' },
-        { status: 400 }
+        { status: 400, headers: createResponseHeaders() }
       );
     }
+
+    // Log the admin action
+    logger.info('Admin review moderation', { userId: user.id, action, reviewId: id });
 
     // Get the review to verify it exists and is pending
     const { data: review, error: fetchError } = await supabase
@@ -200,10 +234,10 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (updateError) {
-      console.error('Failed to update review:', updateError);
+      logger.error('Failed to update review', updateError as Error, { userId: user.id, reviewId: id });
       return NextResponse.json(
         { error: 'Failed to update review' },
-        { status: 500 }
+        { status: 500, headers: createResponseHeaders() }
       );
     }
 
@@ -263,20 +297,30 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({
-      success: true,
-      review: updatedReview,
-      message: emailSent
-        ? `Review ${action}ed successfully and reviewer has been notified`
-        : `Review ${action}ed successfully but reviewer notification failed: ${emailError}`,
+    logger.info('Admin review moderation completed', {
+      userId: user.id,
+      action,
+      reviewId: id,
       emailNotificationStatus: emailSent ? 'sent' : 'failed',
-      emailNotificationError: emailError || undefined,
     });
+
+    return NextResponse.json(
+      {
+        success: true,
+        review: updatedReview,
+        message: emailSent
+          ? `Review ${action}ed successfully and reviewer has been notified`
+          : `Review ${action}ed successfully but reviewer notification failed: ${emailError}`,
+        emailNotificationStatus: emailSent ? 'sent' : 'failed',
+        emailNotificationError: emailError || undefined,
+      },
+      { headers: createResponseHeaders() }
+    );
   } catch (error) {
-    console.error('Admin reviews POST error:', error);
+    logger.error('Admin reviews POST error', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: createResponseHeaders() }
     );
   }
 }
