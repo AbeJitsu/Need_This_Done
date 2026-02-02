@@ -1,7 +1,7 @@
 // ============================================================================
 // Order History Page - /orders
 // ============================================================================
-// Customer-facing page to view past orders
+// Customer-facing page to view past orders with quick reorder and CSV export
 // Uses existing /api/user/orders endpoint
 
 'use client';
@@ -11,10 +11,20 @@ import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import StatusBadge from '@/components/StatusBadge';
 import { accentColors } from '@/lib/colors';
+import { useCart } from '@/context/CartContext';
 
 // ============================================================================
 // Types
 // ============================================================================
+
+interface OrderItem {
+  id: string;
+  title: string;
+  quantity: number;
+  unit_price: number;
+  variant_id: string;
+  thumbnail?: string;
+}
 
 interface Order {
   id: string;
@@ -24,6 +34,7 @@ interface Order {
   email: string;
   created_at: string;
   updated_at: string;
+  items?: OrderItem[];
 }
 
 // ============================================================================
@@ -32,9 +43,13 @@ interface Order {
 
 export default function OrderHistoryPage() {
   const router = useRouter();
+  const { addItem } = useCart();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reorderingOrderId, setReorderingOrderId] = useState<string | null>(null);
+  const [reorderSuccess, setReorderSuccess] = useState<string | null>(null);
+  const [reorderError, setReorderError] = useState<string | null>(null);
 
   // ============================================================================
   // Load Orders on Mount
@@ -115,6 +130,95 @@ export default function OrderHistoryPage() {
   };
 
   // ============================================================================
+  // Quick Reorder - Add all items from an order to cart
+  // ============================================================================
+
+  const handleQuickReorder = async (order: Order) => {
+    try {
+      setReorderingOrderId(order.id);
+      setReorderError(null);
+      setReorderSuccess(null);
+
+      if (!order.items || order.items.length === 0) {
+        setReorderError('This order has no items to reorder');
+        return;
+      }
+
+      // Add each item from the order to cart
+      let addedCount = 0;
+      for (const item of order.items) {
+        try {
+          await addItem(item.variant_id, item.quantity, {
+            title: item.title,
+            unit_price: item.unit_price,
+            thumbnail: item.thumbnail,
+          });
+          addedCount++;
+        } catch (itemError) {
+          console.error('Failed to add item to cart:', itemError);
+          // Continue adding other items even if one fails
+        }
+      }
+
+      if (addedCount === 0) {
+        setReorderError('Failed to add items to cart. Please try again.');
+      } else {
+        setReorderSuccess(`Added ${addedCount} item${addedCount > 1 ? 's' : ''} to cart!`);
+        setTimeout(() => {
+          router.push('/cart');
+        }, 2000);
+      }
+    } catch (err) {
+      setReorderError('Failed to reorder. Please try again.');
+      console.error('Reorder error:', err);
+    } finally {
+      setReorderingOrderId(null);
+    }
+  };
+
+  // ============================================================================
+  // Export to CSV - Download order history as CSV file
+  // ============================================================================
+
+  const handleExportCSV = () => {
+    try {
+      // Create CSV headers
+      const headers = ['Order ID', 'Date', 'Status', 'Total', 'Email'];
+
+      // Create CSV rows
+      const rows = orders.map((order) => [
+        order.medusa_order_id,
+        new Date(order.created_at).toLocaleDateString('en-US'),
+        getStatusLabel(order.status),
+        `$${(order.total / 100).toFixed(2)}`,
+        order.email,
+      ]);
+
+      // Combine headers and rows
+      const csvContent = [
+        headers.join(','),
+        ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
+      ].join('\n');
+
+      // Create blob and download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+
+      link.setAttribute('href', url);
+      link.setAttribute('download', `order-history-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error('CSV export error:', err);
+      setError('Failed to export orders. Please try again.');
+    }
+  };
+
+  // ============================================================================
   // Loading State
   // ============================================================================
 
@@ -189,12 +293,35 @@ export default function OrderHistoryPage() {
       <div className="max-w-4xl mx-auto">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className={`text-3xl font-bold ${accentColors.blue.text} mb-2`}>
-            Order History
-          </h1>
-          <p className="text-gray-600">
-            View and track your past orders
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <div>
+              <h1 className={`text-3xl font-bold ${accentColors.blue.text} mb-2`}>
+                Order History
+              </h1>
+              <p className="text-gray-600">
+                View and track your past orders
+              </p>
+            </div>
+            {orders.length > 0 && (
+              <Button
+                variant="gray"
+                size="sm"
+                onClick={handleExportCSV}
+              >
+                📥 Export as CSV
+              </Button>
+            )}
+          </div>
+          {reorderSuccess && (
+            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-700">
+              ✓ {reorderSuccess}
+            </div>
+          )}
+          {reorderError && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              ✕ {reorderError}
+            </div>
+          )}
         </div>
 
         {/* Orders List */}
@@ -234,7 +361,7 @@ export default function OrderHistoryPage() {
               </div>
 
               {/* Order Actions */}
-              <div className="mt-4 pt-4 border-t border-gray-200 flex gap-3">
+              <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-2">
                 <Button
                   variant="blue"
                   size="sm"
@@ -243,13 +370,23 @@ export default function OrderHistoryPage() {
                   View Details
                 </Button>
                 {order.status === 'completed' && (
-                  <Button
-                    variant="gray"
-                    size="sm"
-                    href="/contact"
-                  >
-                    Need Help?
-                  </Button>
+                  <>
+                    <Button
+                      variant="green"
+                      size="sm"
+                      onClick={() => handleQuickReorder(order)}
+                      disabled={reorderingOrderId === order.id}
+                    >
+                      {reorderingOrderId === order.id ? '⏳ Adding...' : '🔄 Quick Reorder'}
+                    </Button>
+                    <Button
+                      variant="gray"
+                      size="sm"
+                      href="/contact"
+                    >
+                      Need Help?
+                    </Button>
+                  </>
                 )}
               </div>
             </div>

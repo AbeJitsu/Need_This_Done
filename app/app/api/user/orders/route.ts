@@ -42,7 +42,40 @@ export async function GET() {
           throw new Error('Failed to load orders');
         }
 
-        return orders || [];
+        // Fetch order items for each order from Medusa API
+        const ordersWithItems = await Promise.all(
+          (orders || []).map(async (order) => {
+            try {
+              const medusaResponse = await fetch(
+                `${process.env.NEXT_PUBLIC_MEDUSA_URL}/admin/orders/${order.medusa_order_id}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${process.env.MEDUSA_ADMIN_TOKEN}`,
+                  },
+                }
+              );
+
+              if (medusaResponse.ok) {
+                const medusaOrder = await medusaResponse.json();
+                const items = (medusaOrder.order?.items || []).map((item: any) => ({
+                  id: item.id,
+                  title: item.title,
+                  quantity: item.quantity,
+                  unit_price: item.unit_price,
+                  variant_id: item.variant_id,
+                  thumbnail: item.thumbnail,
+                }));
+                return { ...order, items };
+              }
+              return { ...order, items: [] };
+            } catch (err) {
+              console.error('Failed to fetch items for order:', order.medusa_order_id, err);
+              return { ...order, items: [] };
+            }
+          })
+        );
+
+        return ordersWithItems;
       },
       CACHE_TTL.MEDIUM // 1 minute - orders change frequently
     );
