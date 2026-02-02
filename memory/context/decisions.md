@@ -83,3 +83,49 @@ Key decisions made and why.
 - Circuit breaker: fail fast after 3 failures in 60s window
 - 3s command timeout per operation
 - Graceful fallback on all cache operations
+
+## Webhook Idempotency Over Duplicate Processing — Feb 1, 2026
+
+**Decision:** Track Stripe event IDs in database before processing
+
+**Why:**
+- Stripe retries failed webhooks automatically
+- Without tracking, same payment could be processed multiple times
+- Could lead to duplicate orders, charges, or inventory changes
+
+**How:**
+- Created `webhook_events` table (migration 040)
+- Check event ID exists before processing
+- Insert event ID first, then process (prevents race conditions)
+- Applied to: payment success, refunds, disputes
+
+## Database Transactions for Multi-Step Operations — Feb 1, 2026
+
+**Decision:** Use Postgres transactions for quote creation + project updates
+
+**Why:**
+- Quote creation involved 2 steps: insert quote, update project
+- If step 2 failed, orphaned quote record remained
+- Data inconsistency broke admin views and user flows
+
+**How:**
+- Created `create_quote_transaction()` function (migration 041)
+- Single atomic operation: both succeed or both rollback
+- Applied to: quote authorization flow
+- Pattern can extend to other multi-step operations
+
+## Input Sanitization at System Boundaries — Feb 1, 2026
+
+**Decision:** Sanitize all user input at API entry points
+
+**Why:**
+- File upload paths used simple string replace (vulnerable)
+- Email fields not validated for injection attacks
+- No length limits allowed database overflow attempts
+
+**How:**
+- Created `lib/validation.ts` with sanitization functions
+- `sanitizeEmail()` - strips dangerous characters
+- `sanitizeFilePath()` - prevents directory traversal
+- `validateLength()` - enforces max string lengths
+- Applied to: project submissions, file uploads, quote requests

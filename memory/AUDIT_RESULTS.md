@@ -4,7 +4,7 @@ Quality findings from recent evaluations and automated checks.
 
 ## Backend Reliability Audit — Feb 1, 2026
 
-**Status:** Completed - 3 of 10 critical issues resolved
+**Status:** Completed - 6 of 10 critical issues resolved
 
 Full report: [memory/backend-reliability-evaluation-2026-02-01.md](./backend-reliability-evaluation-2026-02-01.md)
 
@@ -12,17 +12,17 @@ Full report: [memory/backend-reliability-evaluation-2026-02-01.md](./backend-rel
 1. ✅ Request validation middleware (Zod schemas)
 2. ✅ API timeout protection (8s external, 10s DB, 2s cache)
 3. ✅ Redis circuit breaker + connection hardening
+5. ✅ Database transaction isolation (quote auth flow atomic)
+7. ✅ Webhook replay protection (idempotency tracking)
+8. ✅ File upload path traversal blocked (input sanitization)
 
-**Remaining Critical Issues:**
+**Remaining Issues:**
 4. Cache invalidation race conditions (concurrent writes)
-5. Missing database transaction isolation (quote auth flow)
 6. No rate limiting on public endpoints
-7. Webhook replay protection missing
-8. File upload path traversal vulnerability
-9. Error message information leakage
+9. Error message information leakage (DB schema exposed)
 10. Redis memory leak potential (unbounded growth)
 
-**Next Steps:** Focus on #4 (cache locking) and #5 (transactions)
+**Next Steps:** Rate limiting for public endpoints (#6), then cache locking (#4)
 
 ## Known Issues
 

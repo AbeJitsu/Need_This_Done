@@ -4,11 +4,12 @@ Key learnings and patterns discovered during development.
 
 ## Backend Reliability Patterns — Feb 1, 2026
 
-**Request Validation** (`lib/api-validation.ts`)
+**Request Validation** (`lib/api-validation.ts`, `lib/validation.ts`)
 - Zod-based schema validation for all API routes
 - Auto-normalizes inputs (trim, lowercase emails)
 - Type-safe results prevent runtime errors
-- Common schemas: ProjectSubmissionSchema, QuoteAuthorizationSchema
+- Input sanitization: blocks directory traversal, email injection
+- Length validation: prevents database overflow attacks
 
 **Timeout Protection** (`lib/api-timeout.ts`)
 - Configurable timeouts: 8s external APIs, 10s database, 2s cache
@@ -19,6 +20,16 @@ Key learnings and patterns discovered during development.
 - Circuit breaker pattern with 10 max retries
 - Exponential backoff with jitter (prevents thundering herd)
 - 3s command timeout, graceful degradation on failure
+
+**Webhook Idempotency** (`api/stripe/webhook/route.ts`)
+- Stores Stripe event IDs in `webhook_events` table
+- Prevents duplicate processing when webhooks are retried
+- Critical for payment operations
+
+**Database Transactions** (migrations 041)
+- Quote creation + project updates atomic via `create_quote_transaction()`
+- Prevents orphaned records on partial failures
+- Ensures data consistency
 
 ## Helper Library Growth
 
@@ -33,15 +44,21 @@ Key learnings and patterns discovered during development.
 
 ## Admin Dashboard Features — Feb 1, 2026
 
-**Analytics Visualizations** (`app/admin/analytics/page.tsx`)
-- SVG-based charts with no external dependencies (Chart.js avoided)
-- Donut chart for order status distribution (visual pie chart)
-- Line chart with gradient fill for revenue trends
-- Bar chart for order volume with hover tooltips
-- Summary stats: daily average, peak day, total orders/revenue
+**Product Analytics** (`/admin/product-analytics`)
+- Shows product engagement: views, cart adds, purchases, conversion funnel
+- Time range filters: 7/14/30/90 days
+- Popular products list + trending products (24h growth)
+- Uses existing `product_interactions` table and DB views
+- API: `/api/admin/product-analytics`
 
-**Inventory Management** (`app/api/admin/inventory/route.ts`)
-- Bulk inventory updates via PATCH endpoint
-- Connected to Medusa backend via `updateVariantInventory()`
-- Returns detailed success/failure results per variant
-- Proper error handling and validation
+**Enrollments Management** (`/admin/enrollments`)
+- Course enrollment oversight with CRUD operations
+- Summary: total/free/paid enrollments, completion rate, revenue
+- Filterable table with user details, progress tracking
+- Completes EnrollButton component integration
+- API: `/api/admin/enrollments`
+
+**Order Analytics** (`/admin/analytics`)
+- SVG-based charts (no external dependencies)
+- Donut chart for order status, line chart for revenue trends
+- Summary stats: daily average, peak day, totals
