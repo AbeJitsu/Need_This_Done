@@ -127,11 +127,12 @@ export function ReferralDashboard() {
                 type="text"
                 value={referralData.referral.referral_code}
                 readOnly
-                className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded text-gray-900 font-mono font-semibold"
+                className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded text-gray-900 font-mono font-semibold opacity-60 cursor-not-allowed"
               />
               <button
                 onClick={copyToClipboard}
-                className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 flex items-center gap-2 transition"
+                className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 flex items-center gap-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+                aria-label="Copy referral code"
               >
                 <Copy className="w-4 h-4" />
                 {copied ? 'Copied!' : 'Copy'}
@@ -146,7 +147,7 @@ export function ReferralDashboard() {
                 type="text"
                 value={referralData.referralUrl}
                 readOnly
-                className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded text-gray-900 text-sm truncate"
+                className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded text-gray-900 text-sm truncate opacity-60 cursor-not-allowed"
               />
               <button
                 onClick={() => {
@@ -154,7 +155,8 @@ export function ReferralDashboard() {
                   setCopied(true);
                   setTimeout(() => setCopied(false), 2000);
                 }}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2 transition"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                aria-label="Copy referral link"
               >
                 <Copy className="w-4 h-4" />
               </button>

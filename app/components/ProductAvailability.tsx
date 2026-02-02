@@ -45,7 +45,7 @@ export default function ProductAvailability({
       if (response.ok) {
         setSubmitStatus('success');
         setEmail('');
-        setTimeout(() => setSubmitStatus('idle'), 3000);
+        setTimeout(() => setSubmitStatus('idle'), 5000);
       } else {
         const data = await response.json();
         setSubmitStatus('error');

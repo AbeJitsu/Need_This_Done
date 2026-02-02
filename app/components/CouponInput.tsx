@@ -191,7 +191,7 @@ export default function CouponInput({
             px-6 py-2.5 rounded-lg font-medium
             ${colors.bg} ${colors.text}
             motion-safe:hover:scale-105 motion-safe:active:scale-95 transition-all
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-${color}-500
             disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100
             disabled:after:absolute disabled:after:inset-0 disabled:after:bg-black/20 disabled:after:rounded-lg
             relative

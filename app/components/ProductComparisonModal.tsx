@@ -38,7 +38,7 @@ export default function ProductComparisonModal() {
             </div>
             <button
               onClick={clearComparison}
-              className={`p-2 hover:bg-gray-100 rounded-lg transition ${accentColors.green.text}`}
+              className={`p-2 hover:bg-gray-100 rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 ${accentColors.green.text}`}
               aria-label="Close comparison"
             >
               <X size={24} />

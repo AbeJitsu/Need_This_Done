@@ -231,7 +231,11 @@ export default function AppointmentRequestForm({
                   required
                   aria-required="true"
                   aria-invalid={error ? 'true' : 'false'}
-                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
+                  className={`w-full px-4 py-2 border rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 ${
+                    error
+                      ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/20'
+                      : formInputColors.base
+                  }`}
                 />
               </div>
               <div>
@@ -246,7 +250,11 @@ export default function AppointmentRequestForm({
                   required
                   aria-required="true"
                   aria-invalid={error ? 'true' : 'false'}
-                  className={`w-full px-4 py-2 border rounded-lg ${formInputColors.base} disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
+                  className={`w-full px-4 py-2 border rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:border-gray-300 ${
+                    error
+                      ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/20'
+                      : formInputColors.base
+                  }`}
                 >
                   <option value="">Select a time</option>
                   {availableTimeOptions.map((option) => (

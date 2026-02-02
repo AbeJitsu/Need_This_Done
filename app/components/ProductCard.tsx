@@ -150,8 +150,36 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white
             disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100
           `}>
-            <ShoppingCart className="w-5 h-5" />
-            {isNavigating ? 'Opening...' : 'View & Add'}
+            {isNavigating ? (
+              <>
+                <svg
+                  className="animate-spin w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
+                </svg>
+                Opening...
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="w-5 h-5" />
+                View & Add
+              </>
+            )}
           </button>
           <CompareButton product={product} />
         </div>
