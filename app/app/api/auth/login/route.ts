@@ -5,6 +5,8 @@ import { isValidEmail, isValidPassword, PASSWORD_REQUIREMENTS } from '@/lib/vali
 import { badRequest, unauthorized, handleApiError, serverError } from '@/lib/api-errors';
 import { sendLoginNotification } from '@/lib/email-service';
 import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
+import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from '@/lib/rate-limit';
+import { initializeRequestContext, logger, createResponseHeaders } from '@/lib/request-context';
 
 // Schema uses existing validation helpers for consistency with forms
 const LoginSchema = z.object({
@@ -36,6 +38,43 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
+    // ========================================================================
+    // Initialize Request Context
+    // ========================================================================
+    // Create correlation ID for distributed tracing - allows us to track this
+    // request through all logs and debug issues end-to-end
+
+    initializeRequestContext(request);
+    logger.info('Login request received', {
+      ip: request.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown',
+    });
+
+    // ========================================================================
+    // Rate Limit Protection
+    // ========================================================================
+    // Protect login endpoint from brute-force attacks by limiting attempts
+    // per IP address. 5 attempts per 15 minutes is enough for legitimate users
+    // but prevents password guessing attacks.
+
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0] ||
+      request.headers.get('x-real-ip') ||
+      'unknown';
+
+    const { allowed: rateLimitAllowed, resetAt } = await checkRateLimit(
+      ip,
+      RATE_LIMITS.AUTH_LOGIN,
+      'login'
+    );
+
+    if (!rateLimitAllowed) {
+      logger.warn('Rate limit exceeded for login', { ip });
+      return rateLimitResponse(
+        resetAt,
+        'Too many login attempts. Please try again in a few minutes.'
+      );
+    }
+
     // Parse JSON body with explicit error handling
     let body: unknown;
     try {
@@ -145,6 +184,8 @@ export async function POST(request: NextRequest) {
     // The client stores these tokens (usually in secure cookies) and
     // includes the access_token in future requests as: Authorization: Bearer {token}
 
+    logger.info('Login successful', { userId: data.user?.id, email: data.user?.email });
+
     return NextResponse.json(
       {
         message: 'Signed in successfully',
@@ -155,10 +196,14 @@ export async function POST(request: NextRequest) {
           expires_at: data.session?.expires_at,
         },
       },
-      { status: 200 } // 200 = OK (success)
+      {
+        status: 200, // 200 = OK (success)
+        headers: createResponseHeaders(),
+      }
     );
   } catch (error) {
     // Unexpected error (JSON parsing, network issue, etc.)
+    logger.error('Login failed with exception', error as Error);
     return handleApiError(error, 'Login');
   }
 }

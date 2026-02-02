@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { createRequestFingerprint, checkAndMarkRequest } from '@/lib/request-dedup';
 
 // ============================================================================
 // Reviews API - /api/reviews
@@ -178,6 +179,33 @@ export async function POST(request: NextRequest) {
           );
         }
 
+        // ====================================================================
+        // Deduplication Check
+        // ====================================================================
+        // Prevent duplicate review submissions from double-clicks or retries.
+        // Fingerprint by user/email + product + rating to catch exact duplicates.
+
+        try {
+          const fingerprint = createRequestFingerprint({
+            action: 'create_review',
+            product_id,
+            rating,
+            content,
+            email: reviewer_email || user?.email,
+          }, user?.id);
+
+          const isNew = await checkAndMarkRequest(fingerprint, 'review submission');
+          if (!isNew) {
+            return NextResponse.json(
+              { error: 'This review was already submitted. Please wait a moment before trying again.' },
+              { status: 429 }
+            );
+          }
+        } catch (dedupError) {
+          console.error('Deduplication check failed:', dedupError);
+          // Don't block the request if dedup fails - log and proceed
+        }
+
         // Check for verified purchase (simplified check)
         let isVerifiedPurchase = false;
         if (order_id && user) {
@@ -254,6 +282,32 @@ export async function POST(request: NextRequest) {
           );
         }
 
+        // ====================================================================
+        // Deduplication Check
+        // ====================================================================
+        // Prevent duplicate votes from double-clicks. Users clicking the same
+        // button twice should be idempotent - only vote once.
+
+        try {
+          const fingerprint = createRequestFingerprint({
+            action: 'vote_on_review',
+            review_id,
+            vote_type,
+            user_or_session: user?.id || session_id,
+          }, user?.id);
+
+          const isNew = await checkAndMarkRequest(fingerprint, 'review vote');
+          if (!isNew) {
+            return NextResponse.json(
+              { error: 'You already voted on this review. Your vote has been counted.' },
+              { status: 409 }
+            );
+          }
+        } catch (dedupError) {
+          console.error('Deduplication check failed for vote:', dedupError);
+          // Don't block the vote if dedup fails - log and proceed
+        }
+
         const { data, error } = await supabase
           .rpc('vote_on_review', {
             p_review_id: review_id,
@@ -298,6 +352,31 @@ export async function POST(request: NextRequest) {
             { error: 'Must be logged in to report reviews' },
             { status: 401 }
           );
+        }
+
+        // ====================================================================
+        // Deduplication Check
+        // ====================================================================
+        // Prevent duplicate reports from the same user on the same review.
+        // One report per user per review is enough.
+
+        try {
+          const fingerprint = createRequestFingerprint({
+            action: 'report_review',
+            review_id,
+            user_id: user.id,
+          }, user.id);
+
+          const isNew = await checkAndMarkRequest(fingerprint, 'review report');
+          if (!isNew) {
+            return NextResponse.json(
+              { error: 'You already reported this review. Thank you for helping us maintain quality.' },
+              { status: 409 }
+            );
+          }
+        } catch (dedupError) {
+          console.error('Deduplication check failed for report:', dedupError);
+          // Don't block the report if dedup fails - log and proceed
         }
 
         const { error } = await supabase

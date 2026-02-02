@@ -6,6 +6,7 @@ import { isValidEmail, isValidPassword, PASSWORD_REQUIREMENTS } from '@/lib/vali
 import { badRequest, handleApiError, serverError } from '@/lib/api-errors';
 import { sendWelcomeEmail } from '@/lib/email-service';
 import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
+import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from '@/lib/rate-limit';
 
 // Schema uses existing validation helpers for consistency with forms
 const SignupSchema = z.object({
@@ -37,6 +38,31 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
+    // ========================================================================
+    // Rate Limit Protection
+    // ========================================================================
+    // Protect signup endpoint from account enumeration and spam by limiting
+    // signup attempts per IP. 3 attempts per 15 minutes is strict but prevents
+    // bulk account creation attacks.
+
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0] ||
+      request.headers.get('x-real-ip') ||
+      'unknown';
+
+    const { allowed: rateLimitAllowed, resetAt } = await checkRateLimit(
+      ip,
+      RATE_LIMITS.AUTH_SIGNUP,
+      'signup'
+    );
+
+    if (!rateLimitAllowed) {
+      return rateLimitResponse(
+        resetAt,
+        'Too many signup attempts. Please try again in a few minutes.'
+      );
+    }
+
     // Parse JSON body with explicit error handling
     let body: unknown;
     try {

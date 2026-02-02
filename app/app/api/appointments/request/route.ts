@@ -6,6 +6,7 @@ import { validateRequest, commonSchemas } from '@/lib/api-validation';
 import { badRequest, serverError } from '@/lib/api-errors';
 import { withSupabaseRetry, isForeignKeyViolation } from '@/lib/supabase-retry';
 import { validateRequestSize, SIZE_LIMITS } from '@/lib/request-size-limit';
+import { createRequestFingerprint, checkAndMarkRequest } from '@/lib/request-dedup';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -67,6 +68,33 @@ export async function POST(request: NextRequest) {
       notes,
       service_name,
     } = result.data;
+
+    // ====================================================================
+    // Deduplication Check
+    // ====================================================================
+    // Prevent duplicate appointment requests from double-clicks or retries.
+    // Fingerprint by order ID + preferred date/time to catch exact duplicates.
+
+    try {
+      const fingerprint = createRequestFingerprint({
+        action: 'appointment_request',
+        order_id,
+        customer_email,
+        preferred_date,
+        preferred_time_start,
+      });
+
+      const isNew = await checkAndMarkRequest(fingerprint, 'appointment request');
+      if (!isNew) {
+        return NextResponse.json(
+          { error: 'This appointment request was already submitted. Please wait a moment before trying again.' },
+          { status: 429 }
+        );
+      }
+    } catch (dedupError) {
+      console.error('Deduplication check failed:', dedupError);
+      // Don't block the request if dedup fails - log and proceed
+    }
 
     // ====================================================================
     // Business Logic Validation
