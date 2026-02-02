@@ -6,6 +6,7 @@ import Button from '@/components/Button';
 import ProductCard from '@/components/ProductCard';
 import CategoryFilter from '@/components/shop/CategoryFilter';
 import EmptyState from '@/components/ui/EmptyState';
+import { SkeletonCard } from '@/components/ui/Skeleton';
 
 interface Product {
   id: string;
@@ -164,37 +165,41 @@ export default function ProductListingPage() {
             <div id="price-filters" className="bg-white border border-gray-200 rounded-lg p-4 mb-6" role="region" aria-labelledby="filter-toggle">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="min-price" className="block text-sm font-medium text-gray-700 mb-2">
                     Min Price
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-2 text-gray-500">$</span>
+                    <span className="absolute left-3 top-2 text-gray-500" aria-hidden="true">$</span>
                     <input
                       type="number"
+                      id="min-price"
                       placeholder="0"
                       value={minPrice}
                       onChange={(e) => {
                         setMinPrice(e.target.value);
                         handleFilterChange();
                       }}
+                      aria-label="Minimum product price"
                       className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors duration-200"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="max-price" className="block text-sm font-medium text-gray-700 mb-2">
                     Max Price
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-2 text-gray-500">$</span>
+                    <span className="absolute left-3 top-2 text-gray-500" aria-hidden="true">$</span>
                     <input
                       type="number"
+                      id="max-price"
                       placeholder="No limit"
                       value={maxPrice}
                       onChange={(e) => {
                         setMaxPrice(e.target.value);
                         handleFilterChange();
                       }}
+                      aria-label="Maximum product price"
                       className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors duration-200"
                     />
                   </div>
@@ -222,11 +227,10 @@ export default function ProductListingPage() {
       <section className="py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
           {loading ? (
-            <div className="flex items-center justify-center py-20" role="status" aria-live="polite" aria-label="Loading products">
-              <div className="flex items-center gap-3">
-                <Loader2 className="w-6 h-6 text-emerald-600 animate-spin" aria-hidden="true" />
-                <span className="text-gray-600">Loading products...</span>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="status" aria-live="polite" aria-label="Loading products, please wait">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
             </div>
           ) : error ? (
             <div role="alert">

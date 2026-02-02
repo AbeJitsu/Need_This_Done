@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
@@ -40,6 +40,13 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { cart, cartId, itemCount, clearCart, isSyncing, isCartReady } = useCart();
   const { user, isAuthenticated } = useAuth();
+
+  // Form field references for focus management
+  const emailRef = useRef<HTMLInputElement>(null);
+  const firstNameRef = useRef<HTMLInputElement>(null);
+  const lastNameRef = useRef<HTMLInputElement>(null);
+  const addressRef = useRef<HTMLInputElement>(null);
+  const cityStateZipRef = useRef<HTMLInputElement>(null);
 
   // Step state
   const [currentStep, setCurrentStep] = useState<CheckoutStep>('info');
@@ -136,6 +143,20 @@ export default function CheckoutPage() {
     if (Object.keys(newFieldErrors).length > 0) {
       setFieldErrors(newFieldErrors);
       setError('Please fill in all required fields');
+
+      // Focus on the first field with an error for better UX
+      // This helps keyboard and screen reader users understand what needs to be fixed
+      if (newFieldErrors.email && emailRef.current) {
+        emailRef.current.focus();
+      } else if (newFieldErrors.firstName && firstNameRef.current) {
+        firstNameRef.current.focus();
+      } else if (newFieldErrors.lastName && lastNameRef.current) {
+        lastNameRef.current.focus();
+      } else if (newFieldErrors.address && addressRef.current) {
+        addressRef.current.focus();
+      } else if (newFieldErrors.cityStateZip && cityStateZipRef.current) {
+        cityStateZipRef.current.focus();
+      }
       return;
     }
 
@@ -746,6 +767,7 @@ export default function CheckoutPage() {
                     <input
                       type="email"
                       id="checkout-email"
+                      ref={emailRef}
                       autoComplete="email"
                       value={email}
                       onChange={(e) => {
@@ -794,6 +816,7 @@ export default function CheckoutPage() {
                     <input
                       type="text"
                       id="firstName"
+                      ref={firstNameRef}
                       autoComplete="given-name"
                       value={firstName}
                       onChange={(e) => {
@@ -822,6 +845,7 @@ export default function CheckoutPage() {
                     <input
                       type="text"
                       id="lastName"
+                      ref={lastNameRef}
                       autoComplete="family-name"
                       value={lastName}
                       onChange={(e) => {
@@ -850,6 +874,7 @@ export default function CheckoutPage() {
                     <input
                       type="text"
                       id="address"
+                      ref={addressRef}
                       autoComplete="street-address"
                       value={address}
                       onChange={(e) => {
@@ -906,6 +931,7 @@ export default function CheckoutPage() {
                     <input
                       type="text"
                       id="cityStateZip"
+                      ref={cityStateZipRef}
                       autoComplete="address-level2"
                       value={cityStateZip}
                       onChange={(e) => {
