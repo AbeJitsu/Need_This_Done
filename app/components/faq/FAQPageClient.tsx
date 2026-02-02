@@ -2,8 +2,10 @@
 import { accentText } from '@/lib/contrast';
 
 import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { faqColors, accentColors, formInputColors, cardBgColors, cardBorderColors } from '@/lib/colors';
+import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
 import CircleBadge from '@/components/CircleBadge';
 import CTASection from '@/components/CTASection';
 import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
@@ -92,12 +94,14 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
           {/* Text container - always padded */}
           <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
             <EditableSection sectionKey="header" label="Page Header">
+              <FadeIn direction="up" triggerOnScroll={false}>
               <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${accentColors.gold.titleText} mb-4`}>
                 {content.header.title}
               </h1>
               <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
                 {content.header.description}
               </p>
+              </FadeIn>
             </EditableSection>
           </div>
         </div>
@@ -120,6 +124,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
 
           {/* FAQ List */}
           <EditableSection sectionKey="items" label="FAQ Items">
+            <StaggerContainer as="div">
             <SortableItemsWrapper
               sectionKey="items"
               arrayField="items"
@@ -134,8 +139,8 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
                 const isExpanded = expandedIndex === index;
 
                 return (
+                  <StaggerItem key={`faq-item-${index}`}>
                   <EditableItem
-                    key={`faq-item-${index}`}
                     sectionKey="items"
                     arrayField="items"
                     index={index}
@@ -174,35 +179,41 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
                         <h2 className={`flex-1 text-lg md:text-xl font-semibold ${styles.text}`}>
                           {faq.question}
                         </h2>
-                        <ChevronDown
-                          className={`
-                            w-5 h-5 text-gray-400
-                            transition-transform duration-300 ease-out
-                            ${isExpanded ? 'rotate-180' : ''}
-                            group-hover:text-gray-600
-                          `}
-                        />
+                        <motion.div
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <ChevronDown
+                            className="w-5 h-5 text-gray-400 group-hover:text-gray-600"
+                          />
+                        </motion.div>
                       </button>
 
                       {/* Answer - expandable content */}
-                      <div
-                        className={`
-                          overflow-hidden
-                          transition-all duration-300 ease-out
-                          ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
-                        `}
-                      >
-                        <div className="px-5 md:px-6 pb-5 md:pb-6 pt-2 ml-12 md:ml-14 border-t border-gray-100 dark:border-gray-800">
-                          <p className={`${formInputColors.helper} leading-relaxed`}>
-                            {renderAnswer(faq.answer, faq.links)}
-                          </p>
-                        </div>
-                      </div>
+                      <AnimatePresence initial={false}>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: 'easeOut' }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-5 md:px-6 pb-5 md:pb-6 pt-2 ml-12 md:ml-14 border-t border-gray-100 dark:border-gray-800">
+                            <p className={`${formInputColors.helper} leading-relaxed`}>
+                              {renderAnswer(faq.answer, faq.links)}
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
+                      </AnimatePresence>
                     </div>
                   </EditableItem>
+                  </StaggerItem>
                 );
               })}
             </SortableItemsWrapper>
+            </StaggerContainer>
           </EditableSection>
         </div>
       </section>
@@ -217,12 +228,14 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
           <EditableSection sectionKey="cta" label="Call to Action">
+            <RevealSection>
             <CTASection
               title={content.cta.title}
               description={content.cta.description}
               buttons={content.cta.buttons}
               hoverColor={content.cta.hoverColor || 'gold'}
             />
+            </RevealSection>
           </EditableSection>
         </div>
       </section>

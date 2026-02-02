@@ -4,16 +4,16 @@
  * @param isSignUpMode - Whether the user is in sign up mode
  * @returns The appropriate title text
  */
-export function getAuthTitle(isForgotPassword: boolean, isSignUpMode: boolean): string {
+export function getAuthTitle(isForgotPassword: boolean, isSignUpMode: boolean): { plain: string; gradient: string } {
   if (isForgotPassword) {
-    return 'Reset Your Password';
+    return { plain: 'Reset', gradient: 'Password' };
   }
-  
+
   if (isSignUpMode) {
-    return 'Join Us';
+    return { plain: 'Create', gradient: 'Account' };
   }
-  
-  return 'Welcome Back';
+
+  return { plain: 'Welcome', gradient: 'Back' };
 }
 
 /**
