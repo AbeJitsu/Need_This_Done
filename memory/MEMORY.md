@@ -4,33 +4,41 @@ Key learnings and patterns discovered during development.
 
 ## Project Status — Feb 2, 2026
 
-**Current State:** Mature, production-ready with comprehensive reliability hardening and rich customer-facing features
-- Product reviews system: Full 5-star ratings with moderation and customer voting
-- Account settings page: Customer profile management with persistent storage
+**Current State:** Mature, production-ready with comprehensive reliability hardening and complete review system
+- Product reviews system: Full lifecycle with admin moderation dashboard, analytics, and user tracking
+- Account settings page: Customer profile management + My Reviews section showing submission status
 - Product discovery: Full-text search and advanced filtering across catalog
 - User wishlist feature: Save/manage favorite products with persistence
-- Backend reliability audit completed (9 of 10 critical issues resolved)
-- Customer-facing features: Order confirmation emails, quote authorization, appointment reminders
-- Admin dashboard: Full appointment management with Google Calendar, product analytics, enrollments
-- Test suite: 69 E2E tests + accessibility tests, cleaned up non-enforcing artifacts
+- Critical appointment flow fixes: 3 silent failures resolved with explicit error handling
+- Backend reliability: Comprehensive error classification, circuit breaker, retry logic, deduplication
+- Admin dashboard: Review moderation, analytics, appointment management, Google Calendar, product analytics, enrollments
+- Test suite: 69 E2E tests + accessibility tests
+
+**Completed Recent Work (Feb 2):**
+- ✅ Admin review moderation dashboard (`/admin/reviews`) - approve/reject pending reviews
+- ✅ Review analytics dashboard (`/admin/reviews/analytics`) - insights into customer feedback patterns
+- ✅ User review tracking (`/account` My Reviews section) - customers see their review status
+- ✅ Fixed appointment creation silent failure after payment succeeds
+- ✅ Fixed missing null check on appointment IDs in logging
+- ✅ Fixed silent fallback in cart fetch failure during checkout
 
 **Next Priority Areas:**
-1. Performance optimization for search and filtering (if needed based on usage)
+1. Performance optimization for search/filtering (if needed based on usage metrics)
 2. Cache invalidation race condition handling (low priority, no blocking issues)
-3. Load testing for Redis circuit breaker
+3. Load testing for Redis circuit breaker under high concurrency
 4. Expansion of rate limiting to other cost-sensitive endpoints
-5. Wishlist enhancement (export, email, sharing - optional)
+5. Review notification emails (when review approved/rejected)
 
 ## Customer-Facing Features — Feb 2, 2026
 
-**Product Reviews System** (commit d4bbbef)
-- Complete review lifecycle: submission → pending moderation → approval
-- ReviewForm component: 5-star ratings, title, content, anonymous/authenticated support
-- ReviewSection component: Rating statistics, distribution breakdown, review display
-- Customers can vote "helpful" on reviews and report inappropriate content
-- Existing API endpoints utilized (`/api/reviews` with CRUD operations)
-- Database: Uses existing `reviews`, `review_votes`, `review_reports` tables from migration 028
-- Admin moderation queue ready (future: admin dashboard integration)
+**Product Reviews System** (complete as of Feb 2, 2026)
+- Submission: ReviewForm component with 5-star ratings, title, content, anonymous/authenticated support
+- Display: ReviewSection with rating statistics, distribution breakdown, customer voting
+- Moderation: Admin dashboard at `/admin/reviews` - approve/reject pending reviews with optional reason
+- Analytics: `/admin/reviews/analytics` - product-level metrics, rating distribution, moderation status
+- User tracking: `/account` "My Reviews" section shows customers their review status (pending/published/rejected)
+- Database: Uses `reviews`, `review_votes`, `review_reports` tables from migration 028
+- Full lifecycle: submission → pending → admin review → published/rejected → customer visibility
 
 **Account Settings Page** (commit 1592bfd)
 - Profile management at `/account` for logged-in customers
@@ -124,6 +132,13 @@ Key learnings and patterns discovered during development.
 **Medusa Helpers** (`lib/medusa-helpers.ts`)
 - ~85 lines of reusable e-commerce logic
 - Reduces duplication across pages and API routes
+
+## Critical Fixes — Feb 2, 2026
+
+**Appointment Flow Silent Failures** (commit 12a9226)
+- Silent failure after payment: Users saw success but appointment wasn't created. Fixed: Show error alert with admin email link
+- Missing null check: Appointment IDs undefined in logging. Fixed: Validate ID exists before logging
+- Cart fetch silent fallback: Medusa API down = user bypasses appointment step. Fixed: Return explicit 503 error for retries
 
 ## Admin Dashboard Features — Feb 2, 2026
 
