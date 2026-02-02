@@ -4,6 +4,17 @@
 
 const nextConfig = {
   // ========================================================================
+  // Skip Pages Router Compatibility Layer
+  // ========================================================================
+  // We're using App Router only (no /pages directory)
+  // Next.js still generates Pages Router files for compatibility, but we
+  // prevent it from trying to export /404 and /500 by setting the build stage
+  // to 'all' and letting the app router handle error pages
+  experimental: {
+    optimizePackageImports: ['@components', '@icons', '@ui'],
+  },
+
+  // ========================================================================
   // Server External Packages
   // ========================================================================
   // Prevent react-email packages from being bundled during page prerendering
@@ -16,12 +27,11 @@ const nextConfig = {
   ],
 
   // ========================================================================
-  // Output Mode: Standalone
+  // Output Mode: Default (optimized for Vercel)
   // ========================================================================
-  // Packages everything needed to run into a single folder
-  // Like pre-packaging meals so they only need heating, not cooking
-  // Result: Faster builds, smaller images, easier deployment
-  output: 'standalone',
+  // Vercel has its own optimized build process and doesn't use Next.js 'standalone' mode
+  // Using 'standalone' mode causes export errors with global-error.tsx, so we disable it
+  // Vercel deployment configuration is specified in vercel.json instead
 
   // ========================================================================
   // Image Optimization
@@ -134,6 +144,7 @@ const nextConfig = {
       }
     ];
   },
+
 };
 
 module.exports = nextConfig;

@@ -9,6 +9,9 @@
 
 import { useEffect } from 'react';
 
+// Prevent prerendering of error boundary - must be dynamic only
+export const dynamic = 'force-dynamic';
+
 interface GlobalErrorProps {
   error: Error & { digest?: string };
   reset: () => void;
@@ -26,8 +29,8 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
   }, [error]);
 
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" suppressHydrationWarning>
+      <body style={{ margin: 0, padding: 0 }}>
         <div
           style={{
             minHeight: '100vh',
