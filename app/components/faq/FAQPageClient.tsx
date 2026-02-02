@@ -1,27 +1,40 @@
 'use client';
-import { accentText } from '@/lib/contrast';
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
-import { faqColors, accentColors, formInputColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
 import CircleBadge from '@/components/CircleBadge';
 import CTASection from '@/components/CTASection';
 import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { FAQPageContent } from '@/lib/page-content-types';
-import { ChevronDown, MessageCircleQuestion } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 // ============================================================================
-// FAQ Page Client - Universal Editing Version
+// FAQ Page Client - Dark Glass Redesign
 // ============================================================================
-// Uses universal content loading from InlineEditProvider.
-// EditableSection/EditableItem wrappers provide click-to-select functionality.
+// Dark hero → Dark glass accordion section → Dark CTA
+// Preserves inline editing and Framer Motion accordion.
 
 interface FAQPageClientProps {
   content: FAQPageContent;
 }
+
+// Color maps for dark-on-dark card styling (BJJ belt progression)
+const cardHoverRing: Record<string, string> = {
+  green: 'hover:border-emerald-500/40 hover:ring-1 hover:ring-emerald-500/20',
+  blue: 'hover:border-blue-500/40 hover:ring-1 hover:ring-blue-500/20',
+  purple: 'hover:border-purple-500/40 hover:ring-1 hover:ring-purple-500/20',
+  gold: 'hover:border-amber-500/40 hover:ring-1 hover:ring-amber-500/20',
+};
+
+const questionText: Record<string, string> = {
+  green: 'text-emerald-400',
+  blue: 'text-blue-400',
+  purple: 'text-purple-400',
+  gold: 'text-amber-400',
+};
 
 // Helper: Render Answer with Links
 function renderAnswer(answer: string, links?: Array<{ text: string; href: string }>) {
@@ -29,24 +42,21 @@ function renderAnswer(answer: string, links?: Array<{ text: string; href: string
     return answer;
   }
 
-  // Replace link text with actual links
-  let result = answer;
+  const result = answer;
   const parts: (string | JSX.Element)[] = [];
   let lastIndex = 0;
 
   links.forEach((link, idx) => {
     const linkIndex = result.indexOf(link.text, lastIndex);
     if (linkIndex !== -1) {
-      // Add text before the link
       if (linkIndex > lastIndex) {
         parts.push(result.slice(lastIndex, linkIndex));
       }
-      // Add the link
       parts.push(
         <Link
           key={idx}
           href={link.href}
-          className={`${accentColors.blue.titleText} font-medium hover:underline`}
+          className="text-blue-400 font-medium hover:underline"
         >
           {link.text}
         </Link>
@@ -55,7 +65,6 @@ function renderAnswer(answer: string, links?: Array<{ text: string; href: string
     }
   });
 
-  // Add remaining text
   if (lastIndex < result.length) {
     parts.push(result.slice(lastIndex));
   }
@@ -64,17 +73,13 @@ function renderAnswer(answer: string, links?: Array<{ text: string; href: string
 }
 
 export default function FAQPageClient({ content: initialContent }: FAQPageClientProps) {
-  // Use content from universal provider (auto-loaded by route)
   const { pageContent, isEditMode } = useInlineEdit();
-  // Check that pageContent has expected structure before using it
   const hasValidContent = pageContent && 'items' in pageContent && 'header' in pageContent;
   const content = hasValidContent ? (pageContent as unknown as FAQPageContent) : initialContent;
 
-  // Track which FAQ item is expanded
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   const toggleExpanded = (index: number) => {
-    // Don't toggle in edit mode - let the click-to-edit work
     if (isEditMode) return;
     setExpandedIndex(expandedIndex === index ? null : index);
   };
@@ -82,44 +87,49 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
   return (
     <div className="min-h-screen">
       {/* ================================================================
-          Hero Section - Edge-to-edge on mobile, contained on desktop
+          Hero Section - Dark Editorial
           ================================================================ */}
-      <section className="py-8 md:py-12">
-        {/* Gradient container - full width on mobile, contained on desktop */}
-        <div className="relative overflow-hidden md:max-w-4xl md:mx-auto md:rounded-2xl flex items-center justify-center min-h-[220px]">
-          {/* Gradient orbs */}
-          <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-gold-100 to-gold-100 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-purple-100 to-purple-100 blur-2xl" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        {/* Decorative blurs */}
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-amber-500/8 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
 
-          {/* Text container - always padded */}
-          <div className="relative z-10 text-center px-4 sm:px-6 md:px-8">
-            <EditableSection sectionKey="header" label="Page Header">
-              <FadeIn direction="up" triggerOnScroll={false}>
-              <h1 className={`text-4xl md:text-5xl font-bold tracking-tight ${accentColors.gold.titleText} mb-4`}>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 pt-16 md:pt-24 pb-14 md:pb-20">
+          <EditableSection sectionKey="header" label="Page Header">
+            <FadeIn direction="up" triggerOnScroll={false}>
+              {/* Accent line + label */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-1 rounded-full bg-gradient-to-r from-amber-400 to-purple-400" />
+                <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
+                  FAQ
+                </span>
+              </div>
+
+              <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4">
                 {content.header.title}
               </h1>
-              <p className={`text-xl ${formInputColors.helper} max-w-2xl mx-auto`}>
+              <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
                 {content.header.description}
               </p>
-              </FadeIn>
-            </EditableSection>
-          </div>
+            </FadeIn>
+          </EditableSection>
         </div>
       </section>
 
       {/* ================================================================
-          FAQ List - White background section with premium cards
+          FAQ List - Dark glass cards
           ================================================================ */}
-      <section className="pt-0 pb-12 md:pt-0 md:pb-16">
+      <section className="py-12 md:py-20 bg-gradient-to-b from-slate-900 to-slate-900">
+        {/* Subtle divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12 md:mb-20" />
+
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           {/* Section intro */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-gold-100 to-purple-100 mb-4">
-              <MessageCircleQuestion className={`w-6 h-6 ${accentText.gold}`} />
-            </div>
-            <p className={`${formInputColors.helper} max-w-lg mx-auto`}>
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
+            <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
               Click any question to reveal the answer
-            </p>
+            </span>
           </div>
 
           {/* FAQ List */}
@@ -132,10 +142,8 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
               className="space-y-4 mb-10"
             >
               {content.items.map((faq, index) => {
-                // Cycle through colors: green, blue, purple, gold
                 const colors = ['green', 'blue', 'purple', 'gold'] as const;
                 const color = colors[index % 4];
-                const styles = faqColors[color];
                 const isExpanded = expandedIndex === index;
 
                 return (
@@ -152,12 +160,11 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
                     <div
                       className={`
                         group
-                        ${cardBgColors.base} rounded-2xl
-                        border ${isExpanded ? 'border-gray-400 dark:border-gray-600' : cardBorderColors.subtle}
-                        border-l-4 ${styles.border}
-                        shadow-sm hover:shadow-md
+                        bg-white/5 rounded-2xl backdrop-blur-sm
+                        border ${isExpanded ? 'border-white/20' : 'border-white/10'}
+                        ${cardHoverRing[color]}
                         transition-all duration-300 ease-out
-                        ${isExpanded ? 'shadow-lg' : ''}
+                        ${isExpanded ? 'shadow-lg shadow-black/20' : 'shadow-sm shadow-black/10'}
                       `}
                     >
                       {/* Question - clickable header */}
@@ -169,14 +176,14 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
                           text-left
                           cursor-pointer
                           transition-colors duration-200
-                          ${isExpanded ? 'bg-gray-50/50 dark:bg-gray-800/50' : 'hover:bg-gray-50/50 dark:hover:bg-gray-800/30'}
+                          ${isExpanded ? 'bg-white/5' : 'hover:bg-white/5'}
                           rounded-t-2xl
                           ${!isExpanded && 'rounded-b-2xl'}
                         `}
                         aria-expanded={isExpanded}
                       >
                         <CircleBadge number={index + 1} color={color} size="sm" />
-                        <h2 className={`flex-1 text-lg md:text-xl font-semibold ${styles.text}`}>
+                        <h2 className={`flex-1 text-lg md:text-xl font-bold tracking-tight ${questionText[color]}`}>
                           {faq.question}
                         </h2>
                         <motion.div
@@ -184,7 +191,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
                           transition={{ duration: 0.3 }}
                         >
                           <ChevronDown
-                            className="w-5 h-5 text-gray-400 group-hover:text-gray-600"
+                            className="w-5 h-5 text-slate-500 group-hover:text-slate-300"
                           />
                         </motion.div>
                       </button>
@@ -199,8 +206,8 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
                           transition={{ duration: 0.3, ease: 'easeOut' }}
                           className="overflow-hidden"
                         >
-                          <div className="px-5 md:px-6 pb-5 md:pb-6 pt-2 ml-12 md:ml-14 border-t border-gray-100 dark:border-gray-800">
-                            <p className={`${formInputColors.helper} leading-relaxed`}>
+                          <div className="px-5 md:px-6 pb-5 md:pb-6 pt-2 ml-12 md:ml-14 border-t border-white/10">
+                            <p className="text-slate-400 leading-relaxed">
                               {renderAnswer(faq.answer, faq.links)}
                             </p>
                           </div>
@@ -219,14 +226,14 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
       </section>
 
       {/* ================================================================
-          CTA Section - Dark background for contrast
+          CTA Section - Dark Editorial
           ================================================================ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-24">
           <EditableSection sectionKey="cta" label="Call to Action">
             <RevealSection>
             <CTASection

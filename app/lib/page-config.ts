@@ -433,7 +433,7 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
       { href: '/pricing', label: 'Pricing' },
       { href: '/#how-it-works-section', label: 'How It Works' },
     ],
-    ctaButton: { text: 'Get a Quote', href: '/contact' },
+    ctaButton: { text: 'Contact', href: '/contact' },
     signInText: 'Sign in',
   },
   footer: {
@@ -441,10 +441,8 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
     tagline: 'Technology that works as hard as you do.',
     links: [
       { href: '/about', label: 'About' },
-      { href: '/contact', label: 'Contact' },
       { href: '/faq', label: 'FAQ' },
       { href: '/blog', label: 'Blog' },
-      { href: '/pricing#quote-authorization', label: 'Authorize Quote' },
     ],
     legalLinks: [
       { href: '/privacy', label: 'Privacy' },
