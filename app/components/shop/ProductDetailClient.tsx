@@ -192,26 +192,30 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
 
           {/* Quantity selector */}
           <div className="mb-6">
-            <label className={`block text-sm font-medium ${headingColors.primary} mb-2`}>
+            <label htmlFor="quantity-input" className={`block text-sm font-medium ${headingColors.primary} mb-2`}>
               Quantity
             </label>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3" role="group" aria-labelledby="quantity-input">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition ${focusRingClasses.blue}`}
+                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 ${focusRingClasses.blue}`}
+                aria-label={`Decrease quantity from ${quantity}`}
               >
                 −
               </button>
               <input
+                id="quantity-input"
                 type="number"
                 min="1"
                 value={quantity}
                 onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                className={`w-16 px-3 py-2 border ${formInputColors.base} rounded-lg text-center`}
+                aria-label="Quantity of items to add"
+                className={`w-16 px-3 py-2 border ${formInputColors.base} rounded-lg text-center ${focusRingClasses.blue}`}
               />
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition ${focusRingClasses.blue}`}
+                className={`px-4 py-2 border ${formInputColors.base} rounded-lg ${cardBgColors.interactive} transition hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 ${focusRingClasses.blue}`}
+                aria-label={`Increase quantity from ${quantity}`}
               >
                 +
               </button>
@@ -251,13 +255,25 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             <button
               onClick={handleWishlistToggle}
               disabled={isManagingWishlist}
-              className={`w-full px-4 py-2 rounded-lg font-medium transition ${
+              aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+              aria-pressed={inWishlist}
+              className={`w-full px-4 py-2 rounded-lg font-medium transition-all duration-200 motion-safe:hover:scale-105 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 flex items-center justify-center gap-2 ${
                 inWishlist
-                  ? 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100'
-                  : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200'
+                  ? 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 active:bg-red-200'
+                  : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200 active:bg-gray-300'
               } disabled:opacity-50 disabled:cursor-not-allowed ${focusRingClasses.blue}`}
             >
-              {isManagingWishlist ? 'Updating...' : inWishlist ? '❤️ Remove from Wishlist' : '🤍 Add to Wishlist'}
+              {isManagingWishlist ? (
+                <>
+                  <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                  <span>Updating...</span>
+                </>
+              ) : (
+                <>
+                  <span aria-hidden="true">{inWishlist ? '❤️' : '🤍'}</span>
+                  <span>{inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}</span>
+                </>
+              )}
             </button>
           </div>
         </div>

@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   PaymentElement,
   useStripe,
   useElements,
 } from '@stripe/react-stripe-js';
 import Button from '@/components/Button';
+import Skeleton from '@/components/ui/Skeleton';
 import { alertColors, cardBgColors, cardBorderColors } from '@/lib/colors';
 
 // ============================================================================
@@ -38,6 +39,9 @@ export default function PaymentForm({
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [message, setMessage] = useState('');
+
+  // Track when Stripe elements are ready to display
+  const isStripeReady = !!stripe && !!elements;
 
   // ========================================================================
   // Handle form submission
@@ -108,11 +112,23 @@ export default function PaymentForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Stripe Payment Element - handles all payment method types */}
       <div className={`${cardBgColors.base} p-4 rounded-lg ${cardBorderColors.light}`}>
-        <PaymentElement
-          options={{
-            layout: 'tabs',
-          }}
-        />
+        {isStripeReady ? (
+          <PaymentElement
+            options={{
+              layout: 'tabs',
+            }}
+          />
+        ) : (
+          <div className="space-y-3">
+            <Skeleton height="40px" />
+            <Skeleton height="40px" width="60%" />
+            <div className="flex gap-2">
+              <Skeleton height="32px" width="32px" variant="circular" />
+              <Skeleton height="32px" width="32px" variant="circular" />
+              <Skeleton height="32px" width="32px" variant="circular" />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Error/Status message */}

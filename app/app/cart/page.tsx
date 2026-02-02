@@ -314,8 +314,9 @@ export default function CartPage() {
                     <button
                       onClick={() => handleRemoveItem(item.id || '')}
                       disabled={isUpdating === item.id}
-                      className={`text-gray-500 ${dangerColors.hover} transition text-xl leading-none rounded ${focusRingClasses.gold}`}
-                      aria-label="Remove item"
+                      className={`text-gray-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-all duration-200 text-xl leading-none ${focusRingClasses.gold} motion-safe:hover:scale-110 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed`}
+                      aria-label={`Remove ${title || 'item'} from cart`}
+                      aria-busy={isUpdating === item.id}
                     >
                       &times;
                     </button>
@@ -323,23 +324,39 @@ export default function CartPage() {
 
                   <div className="flex justify-between items-center">
                     {/* Quantity controls */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3" role="group" aria-label="Quantity selector">
                       <button
                         onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
                         disabled={isUpdating === item.id}
-                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue}`}
+                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100`}
+                        aria-label={`Decrease quantity for ${title || 'item'}`}
+                        aria-busy={isUpdating === item.id}
                       >
-                        −
+                        {isUpdating === item.id ? (
+                          <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                        ) : (
+                          '−'
+                        )}
                       </button>
-                      <span className={`w-10 text-center font-semibold text-lg ${headingColors.primary}`}>
+                      <span
+                        className={`w-10 text-center font-semibold text-lg ${headingColors.primary}`}
+                        aria-live="polite"
+                        aria-atomic="true"
+                      >
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
                         disabled={isUpdating === item.id}
-                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue}`}
+                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100`}
+                        aria-label={`Increase quantity for ${title || 'item'}`}
+                        aria-busy={isUpdating === item.id}
                       >
-                        +
+                        {isUpdating === item.id ? (
+                          <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                        ) : (
+                          '+'
+                        )}
                       </button>
                     </div>
 
