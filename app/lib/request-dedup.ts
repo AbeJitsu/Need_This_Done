@@ -98,14 +98,17 @@ export async function checkAndMarkRequest(
   } catch (error) {
     // Handle timeout errors specifically
     if (error instanceof TimeoutError) {
-      console.error(`[Dedup] Timeout on ${operation} - blocking request to prevent duplicates:`, error.message);
-      // Return false to block on timeout - better safe than sorry for duplicate submissions
-      return false;
+      console.error(`[Dedup] Timeout on ${operation} - allowing request (dedup unavailable):`, error.message);
+      // On timeout: Redis is slow, not necessarily down. Allow the request (fail open).
+      // Blocking valid requests is worse UX than occasionally allowing duplicates.
+      // If Redis recovers, the fingerprint will still be set for future requests.
+      return true;
     } else {
       console.error(`[Dedup] Redis error for ${operation}:`, error);
-      // On any Redis error, block the request - better to false-positive on dedup
-      // than to allow unlimited duplicate submissions when Redis is down
-      return false;
+      // On connection errors: Redis is down, not available.
+      // Return true to allow the request rather than cascade failures.
+      // The cost of an occasional duplicate is less than blocking all requests.
+      return true;
     }
   }
 }

@@ -71,29 +71,52 @@ export async function POST(request: NextRequest) {
     // Idempotency Protection - Prevent Duplicate Event Processing
     // ========================================================================
     // Stripe may send the same webhook multiple times (network retries).
-    // Use atomic upsert with unique constraint to prevent race conditions.
-    //
-    // Uses retry logic to handle transient database failures.
+    // CRITICAL: Use atomic transaction to ensure exactly-once semantics.
+    // Separate insert attempt (to detect if duplicate) from processing logic.
 
-    // Record the webhook event for idempotency checking
+    const DUPLICATE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
+    let isDuplicate = false;
+    let isDuplicateRecentlyProcessed = false;
+
+    // Atomically insert the event record - this will fail if event_id already exists
+    // This is our idempotency key: first insert wins
     const recordEventResult = await withWebhookRetry(
       async () => {
-        const { error: upsertError } = await supabase
+        const now = new Date().toISOString();
+        const { error: insertError } = await supabase
           .from('webhook_events')
-          .upsert(
-            {
-              event_id: event.id,
-              event_type: event.type,
-              processed_at: new Date().toISOString(),
-            },
-            {
-              onConflict: 'event_id',
-              ignoreDuplicates: true,
-            }
-          );
+          .insert({
+            event_id: event.id,
+            event_type: event.type,
+            processed_at: now,
+            first_seen_at: now,
+          })
+          .select('processed_at, first_seen_at')
+          .single();
 
-        if (upsertError) {
-          throw new Error(`Failed to record event: ${upsertError.message}`);
+        // If insert fails with constraint error, this is a duplicate
+        if (insertError) {
+          if (insertError.message?.includes('duplicate') || insertError.code === '23505') {
+            // This is a duplicate event - fetch its first processing time
+            const { data: existingEvent } = await supabase
+              .from('webhook_events')
+              .select('first_seen_at')
+              .eq('event_id', event.id)
+              .single();
+
+            if (existingEvent) {
+              const firstSeenTime = new Date(
+                (existingEvent as Record<string, unknown>).first_seen_at as string
+              ).getTime();
+              isDuplicateRecentlyProcessed = Date.now() - firstSeenTime < DUPLICATE_WINDOW_MS;
+              isDuplicate = true;
+              console.log(
+                `[Webhook] Event ${event.id} is a duplicate (first seen: ${new Date(firstSeenTime).toISOString()}, recent: ${isDuplicateRecentlyProcessed})`
+              );
+              return; // Exit early for duplicates
+            }
+          }
+          throw new Error(`Failed to record event: ${insertError.message}`);
         }
       },
       { operation: 'Record webhook event for idempotency' }
@@ -111,24 +134,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if this is a duplicate by checking processed_at timestamp
-    const { data: eventRecord, error: selectError } = await supabase
-      .from('webhook_events')
-      .select('processed_at')
-      .eq('event_id', event.id)
-      .single();
-
-    if (selectError) {
-      console.warn(`[Webhook] Failed to check if event was duplicate:`, selectError);
-    } else if (eventRecord && typeof (eventRecord as Record<string, unknown>).processed_at === 'string') {
-      const processingTime = new Date((eventRecord as Record<string, unknown>).processed_at as string).getTime();
-      const now = Date.now();
-      const DUPLICATE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
-
-      if (now - processingTime < DUPLICATE_WINDOW_MS) {
-        console.log(`[Webhook] Event ${event.id} already processed recently, skipping duplicate`);
-        return NextResponse.json({ received: true, skipped: true });
-      }
+    // If this is a recently-processed duplicate, skip processing but return success
+    if (isDuplicate && isDuplicateRecentlyProcessed) {
+      console.log(`[Webhook] Event ${event.id} already processed recently, skipping duplicate`);
+      return NextResponse.json({ received: true, skipped: true });
     }
 
     // ====================================================================

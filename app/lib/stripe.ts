@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { getSupabaseAdmin } from './supabase';
+import { withSupabaseRetry } from './supabase-retry';
 
 // ============================================================================
 // Stripe Server-Side Client
@@ -48,6 +49,11 @@ export function getStripe(): Stripe {
  * Get or create a Stripe customer for a Supabase user.
  * Checks the database first, creates a new customer if none exists.
  *
+ * RELIABILITY: Includes retry logic for database failures
+ * - Retries database insert if transient failure
+ * - Returns customer ID on success
+ * - Throws if database becomes permanently unavailable
+ *
  * @param userId - Supabase user ID
  * @param email - User's email address
  * @returns Stripe customer ID
@@ -78,11 +84,55 @@ export async function getOrCreateStripeCustomer(
     },
   });
 
-  // Store the mapping in our database
-  await supabase.from('stripe_customers').insert({
-    user_id: userId,
-    stripe_customer_id: customer.id,
-  });
+  // Store the mapping in our database with retry logic
+  // CRITICAL: If this fails, Stripe customer is created but not stored in DB.
+  // Retry on transient failures (connection timeouts, pool exhaustion).
+  // If permanent failure, throw so caller knows to retry the whole operation.
+  let storeError: unknown;
+  try {
+    await withSupabaseRetry(
+      async () => {
+        const { error } = await supabase.from('stripe_customers').insert({
+          user_id: userId,
+          stripe_customer_id: customer.id,
+        });
+        if (error) throw error;
+      },
+      { operation: 'Store Stripe customer mapping' }
+    );
+  } catch (error) {
+    storeError = error;
+    console.error(
+      `[Stripe] Failed to store Stripe customer mapping after creating customer`,
+      {
+        userId,
+        stripeCustomerId: customer.id,
+        error: String(error),
+      }
+    );
+
+    // If it's a unique constraint violation, check if another instance created it
+    if (
+      String(error).includes('duplicate') ||
+      String(error).includes('unique') ||
+      String(error).includes('23505')
+    ) {
+      const { data: retryCheck } = await supabase
+        .from('stripe_customers')
+        .select('stripe_customer_id')
+        .eq('user_id', userId)
+        .single();
+
+      if (retryCheck?.stripe_customer_id) {
+        // Another instance successfully created the mapping, use theirs
+        console.log(`[Stripe] Another instance created mapping for user ${userId}`);
+        return retryCheck.stripe_customer_id;
+      }
+    }
+
+    // Re-throw permanent errors so caller can decide what to do
+    throw new Error(`Failed to store Stripe customer: ${storeError}`);
+  }
 
   return customer.id;
 }

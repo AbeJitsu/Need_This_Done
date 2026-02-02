@@ -241,6 +241,16 @@ async function incr(key: string): Promise<number> {
   }
 }
 
+async function expire(key: string, seconds: number): Promise<boolean> {
+  try {
+    await ensureConnected();
+    return await redis.expire(key, seconds);
+  } catch (error) {
+    console.error(`[Redis] EXPIRE ${key} failed:`, error);
+    throw error; // TTL operations should fail loudly - prevents orphaned keys
+  }
+}
+
 async function rpush(key: string, ...values: string[]): Promise<number> {
   try {
     await ensureConnected();
@@ -361,6 +371,7 @@ const safeRedis = {
   incr,
   rpush,
   lrange,
+  expire,
   // Circuit breaker state accessors
   isCircuitBreakerOpen,
   getCircuitBreakerState,

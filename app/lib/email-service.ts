@@ -542,20 +542,45 @@ export async function sendDepositConfirmation(
 export async function sendQuoteEmail(
   data: QuoteEmailProps,
 ): Promise<string | null> {
-  // Dynamic import to prevent bundling during page prerendering
-  const { default: QuoteEmail } = await import("../emails/QuoteEmail");
+  try {
+    // Validate required fields to prevent crashes
+    if (!data.customerName || typeof data.customerName !== 'string') {
+      console.error(`[Email] sendQuoteEmail failed: customerName is missing or invalid`, {
+        quoteReference: data.quoteReference,
+        customerEmail: data.customerEmail,
+      });
+      return null; // Fail silently but log for debugging
+    }
 
-  const firstName = data.customerName.split(' ')[0];
-  const depositFormatted = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(data.depositAmount / 100);
+    if (!data.customerEmail || typeof data.customerEmail !== 'string') {
+      console.error(`[Email] sendQuoteEmail failed: customerEmail is missing or invalid`, {
+        quoteReference: data.quoteReference,
+      });
+      return null;
+    }
 
-  const subject = `📝 ${firstName}, your quote is ready - ${depositFormatted} to get started`;
+    // Dynamic import to prevent bundling during page prerendering
+    const { default: QuoteEmail } = await import("../emails/QuoteEmail");
 
-  return sendEmailWithRetry(
-    data.customerEmail,
-    subject,
-    QuoteEmail(data),
-  );
+    // Extract first name, handling edge cases (empty string, only whitespace, etc.)
+    const firstName = (data.customerName.trim().split(' ')[0] || 'there').trim();
+    const depositFormatted = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(data.depositAmount / 100);
+
+    const subject = `📝 ${firstName}, your quote is ready - ${depositFormatted} to get started`;
+
+    return sendEmailWithRetry(
+      data.customerEmail,
+      subject,
+      QuoteEmail(data),
+    );
+  } catch (error) {
+    console.error(`[Email] sendQuoteEmail failed:`, error, {
+      quoteReference: data.quoteReference,
+      customerEmail: data.customerEmail,
+    });
+    return null;
+  }
 }

@@ -44,7 +44,9 @@ export async function POST(request: NextRequest) {
       const rateLimitKey = `rate:payment-intent:${clientIp}`;
       const requestCount = await redis.incr(rateLimitKey);
       if (requestCount === 1) {
-        await redis.raw.expire(rateLimitKey, 300); // 5-minute window
+        // Set TTL on first increment - prevents orphaned keys if client doesn't complete payment
+        // Must use safe wrapper to ensure expiration is actually set
+        await redis.expire(rateLimitKey, 300); // 5-minute window
       }
       // Max 10 payment intents per 5 minutes per IP
       if (requestCount > 10) {
@@ -54,8 +56,9 @@ export async function POST(request: NextRequest) {
           { status: 429, headers: { 'Retry-After': '300' } }
         );
       }
-    } catch {
-      // If rate limiting fails (Redis down), allow through
+    } catch (error) {
+      // If rate limiting fails, log it but allow through (fail open)
+      console.error(`[Payment Intent] Rate limiting failed:`, error);
     }
 
     // Validate input with Zod schema
