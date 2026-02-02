@@ -6,6 +6,8 @@ import { User, LogOut, Mail, Save, Loader2, Check, AlertCircle } from 'lucide-re
 import Button from '@/components/Button';
 import MyReviewsSection from './MyReviewsSection';
 import NotificationPreferencesSection from './NotificationPreferencesSection';
+import SavedAddressesSection from './SavedAddressesSection';
+import SpendingAnalyticsSection from './SpendingAnalyticsSection';
 import { accentColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors } from '@/lib/colors';
 
 // ============================================================================
@@ -231,6 +233,16 @@ export default function AccountSettingsClient() {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Spending Analytics Section */}
+        <div className="mb-8 bg-white rounded-lg border border-gray-200 p-6">
+          <SpendingAnalyticsSection />
+        </div>
+
+        {/* Saved Addresses Section */}
+        <div className="mb-8">
+          <SavedAddressesSection />
         </div>
 
         {/* Notification Preferences Section */}
