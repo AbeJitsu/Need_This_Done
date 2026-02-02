@@ -197,8 +197,11 @@ export async function POST(request: NextRequest) {
           const isNew = await checkAndMarkRequest(fingerprint, 'review submission');
           if (!isNew) {
             return NextResponse.json(
-              { error: 'This review was already submitted. Please wait a moment before trying again.' },
-              { status: 429 }
+              {
+                error: 'This review was just submitted. Please wait at least 60 seconds before submitting another review for this product.',
+                retryAfter: 60,
+              },
+              { status: 429, headers: { 'Retry-After': '60' } }
             );
           }
         } catch (dedupError) {

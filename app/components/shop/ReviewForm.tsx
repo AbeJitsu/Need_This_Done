@@ -31,6 +31,7 @@ export default function ReviewForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [retryAfter, setRetryAfter] = useState<number | null>(null);
 
   // ========================================================================
   // Handle form submit
@@ -81,6 +82,10 @@ export default function ReviewForm({
 
       if (!response.ok) {
         const data = await response.json();
+        // Handle rate-limited responses (429) with retry-after info
+        if (response.status === 429 && data.retryAfter) {
+          setRetryAfter(data.retryAfter);
+        }
         throw new Error(data.error || 'Failed to submit review');
       }
 
@@ -169,6 +174,11 @@ export default function ReviewForm({
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <p className="text-red-700 text-sm">{error}</p>
+            {retryAfter && (
+              <p className="text-red-600 text-xs mt-2 font-medium">
+                You can submit another review in {retryAfter} seconds.
+              </p>
+            )}
           </div>
         )}
 

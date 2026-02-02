@@ -224,31 +224,53 @@ export async function POST(request: NextRequest) {
       : undefined;
 
     // Send email based on action
-    if (action === 'approve' && review.reviewer_email) {
-      await sendReviewApprovedEmail(
-        review.reviewer_email,
-        review.reviewer_name,
-        product?.title || 'Product',
-        product?.featured_image,
-        review.rating,
-        review.title,
-        productUrl
-      );
-    } else if (action === 'reject' && review.reviewer_email) {
-      await sendReviewRejectedEmail(
-        review.reviewer_email,
-        review.reviewer_name,
-        product?.title || 'Product',
-        review.rating,
-        rejection_reason,
-        productUrl
-      );
+    let emailSent = false;
+    let emailError = '';
+
+    if (!review.reviewer_email) {
+      emailError = 'No email address on file for this reviewer';
+      console.warn(`[Review ${id}] Cannot send ${action} email: ${emailError}`);
+    } else if (action === 'approve') {
+      try {
+        await sendReviewApprovedEmail(
+          review.reviewer_email,
+          review.reviewer_name,
+          product?.title || 'Product',
+          product?.featured_image,
+          review.rating,
+          review.title,
+          productUrl
+        );
+        emailSent = true;
+      } catch (emailErr) {
+        emailError = `Failed to send approval email: ${emailErr instanceof Error ? emailErr.message : String(emailErr)}`;
+        console.error(`[Review ${id}] ${emailError}`);
+      }
+    } else if (action === 'reject') {
+      try {
+        await sendReviewRejectedEmail(
+          review.reviewer_email,
+          review.reviewer_name,
+          product?.title || 'Product',
+          review.rating,
+          rejection_reason,
+          productUrl
+        );
+        emailSent = true;
+      } catch (emailErr) {
+        emailError = `Failed to send rejection email: ${emailErr instanceof Error ? emailErr.message : String(emailErr)}`;
+        console.error(`[Review ${id}] ${emailError}`);
+      }
     }
 
     return NextResponse.json({
       success: true,
       review: updatedReview,
-      message: `Review ${action}ed successfully and reviewer has been notified`,
+      message: emailSent
+        ? `Review ${action}ed successfully and reviewer has been notified`
+        : `Review ${action}ed successfully but reviewer notification failed: ${emailError}`,
+      emailNotificationStatus: emailSent ? 'sent' : 'failed',
+      emailNotificationError: emailError || undefined,
     });
   } catch (error) {
     console.error('Admin reviews POST error:', error);

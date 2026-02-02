@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     //
     // Uses retry logic to handle transient database failures.
 
-    let eventRecord: { processed_at: string } | null = null;
+    // Record the webhook event for idempotency checking
     const recordEventResult = await withWebhookRetry(
       async () => {
         const { error: upsertError } = await supabase
@@ -95,19 +95,6 @@ export async function POST(request: NextRequest) {
         if (upsertError) {
           throw new Error(`Failed to record event: ${upsertError.message}`);
         }
-
-        // Read back to check if this was a duplicate
-        const { data, error: selectError } = await supabase
-          .from('webhook_events')
-          .select('processed_at')
-          .eq('event_id', event.id)
-          .single();
-
-        if (selectError) {
-          throw new Error(`Failed to check event idempotency: ${selectError.message}`);
-        }
-
-        eventRecord = data;
       },
       { operation: 'Record webhook event for idempotency' }
     );
@@ -125,13 +112,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if this is a duplicate by checking processed_at timestamp
-    if (eventRecord) {
-      const processingTime = new Date(eventRecord.processed_at).getTime();
+    const { data: eventRecord, error: selectError } = await supabase
+      .from('webhook_events')
+      .select('processed_at')
+      .eq('event_id', event.id)
+      .single();
+
+    if (selectError) {
+      console.warn(`[Webhook] Failed to check if event was duplicate:`, selectError);
+    } else if (eventRecord && typeof (eventRecord as Record<string, unknown>).processed_at === 'string') {
+      const processingTime = new Date((eventRecord as Record<string, unknown>).processed_at as string).getTime();
       const now = Date.now();
       const DUPLICATE_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-      if (now - processingTime > DUPLICATE_WINDOW_MS) {
-        console.log(`[Webhook] Event ${event.id} already processed, skipping duplicate`);
+      if (now - processingTime < DUPLICATE_WINDOW_MS) {
+        console.log(`[Webhook] Event ${event.id} already processed recently, skipping duplicate`);
         return NextResponse.json({ received: true, skipped: true });
       }
     }
