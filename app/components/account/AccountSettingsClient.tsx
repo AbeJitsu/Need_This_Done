@@ -189,15 +189,15 @@ export default function AccountSettingsClient() {
 
             {/* Status Messages */}
             {saveStatus === 'error' && errorMessage && (
-              <div className="mb-6 p-4 rounded-lg bg-red-50 border-2 border-red-200 flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div role="alert" aria-live="polite" aria-atomic="true" className="mb-6 p-4 rounded-lg bg-red-50 border-2 border-red-200 flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <p className="text-sm text-red-700">{errorMessage}</p>
               </div>
             )}
 
             {saveStatus === 'success' && (
-              <div className="mb-6 p-4 rounded-lg bg-emerald-50 border-2 border-emerald-200 flex items-start gap-3">
-                <Check className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <div role="status" aria-live="polite" aria-atomic="true" className="mb-6 p-4 rounded-lg bg-emerald-50 border-2 border-emerald-200 flex items-start gap-3">
+                <Check className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <p className="text-sm text-emerald-700">Profile updated successfully!</p>
               </div>
             )}

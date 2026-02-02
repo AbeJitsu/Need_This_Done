@@ -73,7 +73,7 @@ export default function CategoryFilter({
               onCategoryChange('');
               setIsOpen(false);
             }}
-            className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+            className={`w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
               !selectedCategory ? 'bg-emerald-50 text-emerald-700 font-medium' : 'text-gray-700'
             }`}
           >
@@ -94,7 +94,7 @@ export default function CategoryFilter({
                 onCategoryChange(category.handle);
                 setIsOpen(false);
               }}
-              className={`w-full text-left px-4 py-2 border-t border-gray-100 hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+              className={`w-full text-left px-4 py-2 border-t border-gray-100 hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                 selectedCategory === category.handle
                   ? 'bg-emerald-50 text-emerald-700 font-medium'
                   : 'text-gray-700'

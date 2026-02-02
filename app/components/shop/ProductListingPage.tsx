@@ -5,6 +5,7 @@ import { Search, ChevronDown, Loader2 } from 'lucide-react';
 import Button from '@/components/Button';
 import ProductCard from '@/components/ProductCard';
 import CategoryFilter from '@/components/shop/CategoryFilter';
+import EmptyState from '@/components/ui/EmptyState';
 
 interface Product {
   id: string;
@@ -228,47 +229,39 @@ export default function ProductListingPage() {
               </div>
             </div>
           ) : error ? (
-            <div className="text-center py-20" role="alert">
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-700 font-medium">Unable to Load Products</p>
-                <p className="text-red-600 text-sm mt-1">{error}</p>
-              </div>
-              <Button
-                variant="blue"
-                onClick={() => fetchProducts()}
-              >
-                Try Again
-              </Button>
+            <div role="alert">
+              <EmptyState
+                icon="search"
+                title="Unable to Load Products"
+                description={error}
+                actionLabel="Try Again"
+                actionVariant="blue"
+                onAction={() => fetchProducts()}
+              />
             </div>
           ) : products.length === 0 ? (
-            <div className="text-center py-20">
-              <h2 className="text-2xl font-bold text-gray-900 mb-3">
-                {hasSearched ? 'No Products Found' : 'No Products Available'}
-              </h2>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                {hasSearched
+            <EmptyState
+              icon={hasSearched ? 'search' : 'folder'}
+              title={hasSearched ? 'No Products Found' : 'No Products Available'}
+              description={
+                hasSearched
                   ? 'We couldn\'t find any products matching your criteria. Try adjusting your search terms or filters.'
-                  : 'No products are currently available. Please check back soon!'}
-              </p>
-              <div className="flex gap-3 justify-center flex-wrap">
-                {hasSearched && (
-                  <Button
-                    variant="gray"
-                    onClick={() => {
+                  : 'No products are currently available. Please check back soon!'
+              }
+              actionLabel={hasSearched ? 'Clear Filters' : 'Back to Shop'}
+              actionVariant="blue"
+              onAction={
+                hasSearched
+                  ? () => {
                       setSearchQuery('');
                       setMinPrice('');
                       setMaxPrice('');
                       setShowFilters(false);
-                    }}
-                  >
-                    Clear Filters
-                  </Button>
-                )}
-                <Button variant="blue" href="/shop">
-                  View All Products
-                </Button>
-              </div>
-            </div>
+                    }
+                  : undefined
+              }
+              actionHref={!hasSearched ? '/shop' : undefined}
+            />
           ) : (
             <>
               <div className="mb-6 text-gray-600" role="status" aria-live="polite">
