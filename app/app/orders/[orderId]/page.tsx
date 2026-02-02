@@ -96,6 +96,56 @@ export default function OrderDetailPage({
   };
 
   // ============================================================================
+  // Order Timeline Stages
+  // ============================================================================
+  // Define the progression of an order through fulfillment stages
+
+  interface TimelineStage {
+    id: string;
+    label: string;
+    description: string;
+    icon: string;
+  }
+
+  const timelineStages: TimelineStage[] = [
+    {
+      id: 'placed',
+      label: 'Order Placed',
+      description: 'Your order has been received',
+      icon: '✓',
+    },
+    {
+      id: 'processing',
+      label: 'Processing',
+      description: 'We are preparing your order',
+      icon: '⚙',
+    },
+    {
+      id: 'shipped',
+      label: 'Shipped',
+      description: 'Your order is on its way',
+      icon: '📦',
+    },
+    {
+      id: 'delivered',
+      label: 'Delivered',
+      description: 'Order has been delivered',
+      icon: '🎉',
+    },
+  ];
+
+  const getCurrentStageIndex = (): number => {
+    // Map order status to timeline position
+    // 'pending' shows placed + processing (index 1)
+    // 'completed' shows all stages (index 3)
+    // 'canceled' shows placed only (index 0)
+    if (order?.status === 'completed') return 3;
+    if (order?.status === 'pending') return 1;
+    if (order?.status === 'canceled') return 0;
+    return 0;
+  };
+
+  // ============================================================================
   // Loading State
   // ============================================================================
 
@@ -162,6 +212,68 @@ export default function OrderDetailPage({
           <p className="text-sm text-gray-500">
             Order ID: {order.id}
           </p>
+        </div>
+
+        {/* Order Tracking Timeline */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">Order Progress</h2>
+          <div className="space-y-4">
+            {timelineStages.map((stage, index) => {
+              const isComplete = index <= getCurrentStageIndex();
+              const isCanceled = order?.status === 'canceled';
+
+              return (
+                <div key={stage.id} className="flex gap-4">
+                  {/* Timeline Dot and Line */}
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold transition-all ${
+                        isComplete && !isCanceled
+                          ? 'bg-emerald-100 text-emerald-700 border-2 border-emerald-500'
+                          : 'bg-gray-100 text-gray-400 border-2 border-gray-300'
+                      }`}
+                    >
+                      {stage.icon}
+                    </div>
+                    {index < timelineStages.length - 1 && (
+                      <div
+                        className={`w-1 h-12 mt-2 ${
+                          isComplete && !isCanceled
+                            ? 'bg-emerald-300'
+                            : 'bg-gray-200'
+                        }`}
+                      />
+                    )}
+                  </div>
+
+                  {/* Timeline Content */}
+                  <div className="pb-4 pt-2">
+                    <h3
+                      className={`font-semibold ${
+                        isComplete && !isCanceled
+                          ? 'text-emerald-700'
+                          : 'text-gray-500'
+                      }`}
+                    >
+                      {stage.label}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {stage.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Canceled Order Message */}
+          {order?.status === 'canceled' && (
+            <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-800">
+                This order has been canceled. If you have questions, please contact support.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Order Items */}
