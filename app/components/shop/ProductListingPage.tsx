@@ -52,12 +52,10 @@ export default function ProductListingPage() {
     }
   }, [searchQuery, minPrice, maxPrice]);
 
-  // Fetch products on mount (only on initial load, not on every render)
+  // Fetch products on mount and when filters change
   useEffect(() => {
-    // Only fetch on first mount, ignore fetchProducts dependency to avoid infinite loops
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   // Handle search submit
   const handleSearch = (e: React.FormEvent) => {

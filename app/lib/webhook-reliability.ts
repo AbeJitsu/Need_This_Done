@@ -29,7 +29,7 @@ interface WebhookReliabilityOptions {
   timeoutMs?: number;
 }
 
-interface WebhookHandlerResult {
+export interface WebhookHandlerResult {
   success: boolean;
   error?: {
     message: string;

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
-import { filterButtonColors, alertColors, statusBadgeColors, softBgColors, containerBg, uiChromeBg, headingColors, mutedTextColors, coloredLinkText, dividerColors } from '@/lib/colors';
+import { alertColors, statusBadgeColors, containerBg, mutedTextColors, coloredLinkText, accentColors } from '@/lib/colors';
 
 // ============================================================================
 // Review Analytics Dashboard - /admin/reviews/analytics
@@ -216,10 +216,10 @@ export default function ReviewAnalyticsDashboard() {
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className={`text-4xl font-bold ${headingColors.blue.text} mb-2`}>
+          <h1 className={`text-4xl font-bold ${accentColors.blue.text} mb-2`}>
             Review Analytics
           </h1>
-          <p className={mutedTextColors.base}>
+          <p className={mutedTextColors.light}>
             Customer feedback metrics and rating trends
           </p>
         </div>
@@ -227,28 +227,28 @@ export default function ReviewAnalyticsDashboard() {
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <Card className="p-6">
-            <div className={`text-3xl font-bold ${headingColors.emerald.text}`}>
+            <div className={`text-3xl font-bold ${accentColors.green.text}`}>
               {analytics?.total_reviews || 0}
             </div>
-            <div className={mutedTextColors.base}>Total Reviews</div>
+            <div className={mutedTextColors.light}>Total Reviews</div>
           </Card>
           <Card className="p-6">
-            <div className={`text-3xl font-bold ${headingColors.blue.text}`}>
+            <div className={`text-3xl font-bold ${accentColors.blue.text}`}>
               {analytics?.approved_reviews || 0}
             </div>
-            <div className={mutedTextColors.base}>Published</div>
+            <div className={mutedTextColors.light}>Published</div>
           </Card>
           <Card className="p-6">
-            <div className={`text-3xl font-bold ${headingColors.yellow.text}`}>
+            <div className={`text-3xl font-bold text-yellow-600`}>
               {analytics?.pending_reviews || 0}
             </div>
-            <div className={mutedTextColors.base}>Pending Moderation</div>
+            <div className={mutedTextColors.light}>Pending Moderation</div>
           </Card>
           <Card className="p-6">
-            <div className={`text-3xl font-bold ${headingColors.purple.text}`}>
+            <div className={`text-3xl font-bold ${accentColors.purple.text}`}>
               {analytics?.average_rating.toFixed(1) || '0.0'}
             </div>
-            <div className={mutedTextColors.base}>Avg Rating</div>
+            <div className={mutedTextColors.light}>Avg Rating</div>
           </Card>
         </div>
 
@@ -296,7 +296,7 @@ export default function ReviewAnalyticsDashboard() {
         {/* Loading state */}
         {loading && (
           <div className="text-center py-12">
-            <p className={mutedTextColors.base}>Loading analytics...</p>
+            <p className={mutedTextColors.light}>Loading analytics...</p>
           </div>
         )}
 
@@ -306,19 +306,19 @@ export default function ReviewAnalyticsDashboard() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200">
-                  <th className={`text-left p-4 font-semibold ${headingColors.blue.text}`}>
+                  <th className={`text-left p-4 font-semibold ${accentColors.blue.text}`}>
                     Product
                   </th>
-                  <th className={`text-center p-4 font-semibold ${headingColors.blue.text}`}>
+                  <th className={`text-center p-4 font-semibold ${accentColors.blue.text}`}>
                     Reviews
                   </th>
-                  <th className={`text-center p-4 font-semibold ${headingColors.blue.text}`}>
+                  <th className={`text-center p-4 font-semibold ${accentColors.blue.text}`}>
                     Avg Rating
                   </th>
-                  <th className={`text-center p-4 font-semibold ${headingColors.blue.text}`}>
+                  <th className={`text-center p-4 font-semibold ${accentColors.blue.text}`}>
                     Distribution
                   </th>
-                  <th className={`text-center p-4 font-semibold ${headingColors.blue.text}`}>
+                  <th className={`text-center p-4 font-semibold ${accentColors.blue.text}`}>
                     Status
                   </th>
                 </tr>
@@ -326,11 +326,11 @@ export default function ReviewAnalyticsDashboard() {
               <tbody>
                 {analytics.products.map((product) => (
                   <tr key={product.product_id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className={`p-4 font-medium ${coloredLinkText.blue.text}`}>
+                    <td className={`p-4 font-medium ${coloredLinkText.blue}`}>
                       {product.product_title}
                     </td>
                     <td className="text-center p-4">
-                      <span className={`font-bold ${headingColors.emerald.text}`}>
+                      <span className={`font-bold ${accentColors.green.text}`}>
                         {product.total_reviews}
                       </span>
                     </td>
@@ -369,17 +369,17 @@ export default function ReviewAnalyticsDashboard() {
                     <td className="text-center p-4">
                       <div className="flex justify-center gap-2 text-xs font-semibold">
                         {product.approved_count > 0 && (
-                          <span className={statusBadgeColors.success.bg}>
+                          <span className={statusBadgeColors.approved.bg}>
                             ✓ {product.approved_count}
                           </span>
                         )}
                         {product.pending_count > 0 && (
-                          <span className={statusBadgeColors.warning.bg}>
+                          <span className={statusBadgeColors.pending.bg}>
                             ⏳ {product.pending_count}
                           </span>
                         )}
                         {product.rejected_count > 0 && (
-                          <span className={statusBadgeColors.error.bg}>
+                          <span className={statusBadgeColors.rejected.bg}>
                             ✗ {product.rejected_count}
                           </span>
                         )}
@@ -395,7 +395,7 @@ export default function ReviewAnalyticsDashboard() {
         {/* Empty state */}
         {!loading && analytics && analytics.products.length === 0 && (
           <Card className="p-12 text-center">
-            <p className={mutedTextColors.base}>No reviews yet</p>
+            <p className={mutedTextColors.light}>No reviews yet</p>
           </Card>
         )}
       </div>

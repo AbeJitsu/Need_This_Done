@@ -8,7 +8,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth-options';
-import { supabase } from '@/lib/supabase';
 
 export async function GET() {
   try {
@@ -59,18 +58,9 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Update user metadata in Supabase if they're a Supabase user
-    const { error: updateError } = await supabase.auth.updateUser({
-      data: { name: name.trim() }
-    });
-
-    if (updateError) {
-      console.error('Update error:', updateError);
-      return NextResponse.json(
-        { error: 'Failed to update profile' },
-        { status: 500 }
-      );
-    }
+    // Note: Name is read-only from NextAuth/Google OAuth
+    // User cannot change their name through this API as it comes from their Google account
+    // In the future, if we implement profile customization, we'd store it separately in a user profiles table
 
     return NextResponse.json({
       user: {

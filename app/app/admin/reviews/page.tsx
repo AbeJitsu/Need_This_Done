@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import { filterButtonColors, alertColors, statusBadgeColors, softBgColors, containerBg, uiChromeBg, headingColors, mutedTextColors, coloredLinkText, dividerColors } from '@/lib/colors';
+import { alertColors, statusBadgeColors, containerBg, mutedTextColors, coloredLinkText, accentColors } from '@/lib/colors';
 
 // ============================================================================
 // Reviews Moderation Dashboard - /admin/reviews
@@ -202,23 +202,21 @@ export default function ReviewsModerationDashboard() {
     return null;
   }
 
-  const pendingCount = reviews.filter(r => r.status === 'pending').length;
-
   return (
     <div className={`min-h-screen ${containerBg} py-8`}>
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8 flex items-start justify-between">
           <div>
-            <h1 className={`text-4xl font-bold ${headingColors.blue.text} mb-2`}>
+            <h1 className={`text-4xl font-bold ${accentColors.blue.text} mb-2`}>
               Review Moderation
             </h1>
-            <p className={mutedTextColors.base}>
+            <p className={mutedTextColors.light}>
               Review and approve customer feedback before it appears on product pages
             </p>
           </div>
           <Button
-            variant="secondary"
+            variant="gray"
             size="sm"
             onClick={() => router.push('/admin/reviews/analytics')}
           >
@@ -229,22 +227,22 @@ export default function ReviewsModerationDashboard() {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Card className="p-6">
-            <div className={`text-3xl font-bold ${headingColors.emerald.text}`}>
+            <div className={`text-3xl font-bold ${accentColors.green.text}`}>
               {reviews.filter(r => r.status === 'pending').length}
             </div>
-            <div className={mutedTextColors.base}>Pending Review</div>
+            <div className={mutedTextColors.light}>Pending Review</div>
           </Card>
           <Card className="p-6">
-            <div className={`text-3xl font-bold ${headingColors.blue.text}`}>
+            <div className={`text-3xl font-bold ${accentColors.blue.text}`}>
               {reviews.filter(r => r.status === 'approved').length}
             </div>
-            <div className={mutedTextColors.base}>Approved</div>
+            <div className={mutedTextColors.light}>Approved</div>
           </Card>
           <Card className="p-6">
-            <div className={`text-3xl font-bold ${headingColors.purple.text}`}>
+            <div className={`text-3xl font-bold ${accentColors.purple.text}`}>
               {reviews.filter(r => r.status === 'rejected').length}
             </div>
-            <div className={mutedTextColors.base}>Rejected</div>
+            <div className={mutedTextColors.light}>Rejected</div>
           </Card>
         </div>
 
@@ -254,7 +252,7 @@ export default function ReviewsModerationDashboard() {
             (status) => (
               <Button
                 key={status}
-                variant={statusFilter === status ? 'primary' : 'secondary'}
+                variant={statusFilter === status ? 'blue' : 'gray'}
                 size="sm"
                 onClick={() => setStatusFilter(status)}
               >
@@ -274,14 +272,14 @@ export default function ReviewsModerationDashboard() {
         {/* Loading state */}
         {loading && (
           <div className="text-center py-12">
-            <p className={mutedTextColors.base}>Loading reviews...</p>
+            <p className={mutedTextColors.light}>Loading reviews...</p>
           </div>
         )}
 
         {/* Empty state */}
         {!loading && filteredReviews.length === 0 && (
           <Card className="p-12 text-center">
-            <p className={mutedTextColors.base}>
+            <p className={mutedTextColors.light}>
               {statusFilter === 'pending'
                 ? 'No pending reviews to moderate'
                 : `No ${statusFilter} reviews`}
@@ -298,7 +296,7 @@ export default function ReviewsModerationDashboard() {
                   {/* Review content */}
                   <div className="flex-1">
                     {/* Product title */}
-                    <div className={`text-sm font-medium ${coloredLinkText.blue.text} mb-2`}>
+                    <div className={`text-sm font-medium ${coloredLinkText.blue} mb-2`}>
                       {review.product?.title || 'Unknown Product'}
                     </div>
 
@@ -319,7 +317,7 @@ export default function ReviewsModerationDashboard() {
                         ))}
                       </div>
                       {review.is_verified_purchase && (
-                        <span className={`text-xs font-semibold ${statusBadgeColors.success.bg}`}>
+                        <span className={`text-xs font-semibold ${statusBadgeColors.approved.bg}`}>
                           ✓ Verified Purchase
                         </span>
                       )}
@@ -327,18 +325,18 @@ export default function ReviewsModerationDashboard() {
 
                     {/* Title and content */}
                     {review.title && (
-                      <h3 className={`font-semibold ${headingColors.blue.text} mb-1`}>
+                      <h3 className={`font-semibold ${accentColors.blue.text} mb-1`}>
                         {review.title}
                       </h3>
                     )}
                     {review.content && (
-                      <p className={`${mutedTextColors.base} mb-3 line-clamp-3`}>
+                      <p className={`${mutedTextColors.light} mb-3 line-clamp-3`}>
                         {review.content}
                       </p>
                     )}
 
                     {/* Reviewer info */}
-                    <div className={`text-xs ${mutedTextColors.base} space-y-1`}>
+                    <div className={`text-xs ${mutedTextColors.light} space-y-1`}>
                       <div>by {review.reviewer_name}</div>
                       {review.reviewer_email && (
                         <div>{review.reviewer_email}</div>
@@ -353,10 +351,10 @@ export default function ReviewsModerationDashboard() {
                       <span
                         className={`text-xs font-semibold px-2 py-1 rounded ${
                           review.status === 'pending'
-                            ? statusBadgeColors.warning.bg
+                            ? statusBadgeColors.pending.bg
                             : review.status === 'approved'
-                              ? statusBadgeColors.success.bg
-                              : statusBadgeColors.error.bg
+                              ? statusBadgeColors.approved.bg
+                              : statusBadgeColors.rejected.bg
                         }`}
                       >
                         {review.status.charAt(0).toUpperCase() +
@@ -374,7 +372,7 @@ export default function ReviewsModerationDashboard() {
                   {review.status === 'pending' && (
                     <div className="flex flex-col gap-2 min-w-max">
                       <Button
-                        variant="primary"
+                        variant="green"
                         size="sm"
                         onClick={() => handleApprove(review.id)}
                         disabled={actionLoading === review.id}
@@ -382,7 +380,7 @@ export default function ReviewsModerationDashboard() {
                         {actionLoading === review.id ? 'Processing...' : 'Approve'}
                       </Button>
                       <Button
-                        variant="secondary"
+                        variant="gray"
                         size="sm"
                         onClick={() =>
                           setSelectedReviewId(
@@ -402,7 +400,7 @@ export default function ReviewsModerationDashboard() {
                 {/* Rejection reason input - shown when rejecting */}
                 {selectedReviewId === review.id && review.status === 'pending' && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
-                    <label className={`block text-sm font-medium ${headingColors.blue.text} mb-2`}>
+                    <label className={`block text-sm font-medium ${accentColors.blue.text} mb-2`}>
                       Rejection Reason (optional)
                     </label>
                     <textarea
@@ -414,7 +412,7 @@ export default function ReviewsModerationDashboard() {
                     />
                     <div className="flex gap-2">
                       <Button
-                        variant="secondary"
+                        variant="gray"
                         size="sm"
                         onClick={() => handleReject(review.id)}
                         disabled={actionLoading === review.id}
@@ -424,7 +422,7 @@ export default function ReviewsModerationDashboard() {
                           : 'Confirm Rejection'}
                       </Button>
                       <Button
-                        variant="secondary"
+                        variant="gray"
                         size="sm"
                         onClick={() => {
                           setSelectedReviewId(null);
