@@ -12,6 +12,7 @@ import PaymentForm from '@/components/PaymentForm';
 import AppointmentStepForm, { AppointmentData } from '@/components/AppointmentStepForm';
 import AddressSelector from '@/components/AddressSelector';
 import { SavedAddress } from '@/lib/hooks/useSavedAddresses';
+import { calculateDeposit, calculateBalanceRemaining } from '@/lib/deposit-utils';
 import {
   formInputColors,
   formValidationColors,
@@ -68,6 +69,10 @@ export default function CheckoutPage() {
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState(false);
+
+  // Deposit payment state
+  const [payInFull, setPayInFull] = useState(false);
+  const [consentChecked, setConsentChecked] = useState(false);
 
   // Appointment state (for consultation products)
   const [requiresAppointment, setRequiresAppointment] = useState(false);
@@ -389,14 +394,19 @@ export default function CheckoutPage() {
         });
       }
 
-      // Create PaymentIntent for the combined total (Medusa + services, in cents)
+      // Create PaymentIntent - calculate deposit or full amount from combined total
+      const chargeAmount = payInFull ? combinedTotal : calculateDeposit(combinedTotal);
+      const isDeposit = !payInFull;
+
       const paymentResponse = await fetch('/api/stripe/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: combinedTotal,
+          amount: chargeAmount,
           order_id: orderData.order_id,
           email,
+          is_deposit: isDeposit,
+          save_payment_method: isDeposit, // Save card for final payment if doing deposits
         }),
       });
 
@@ -678,18 +688,84 @@ export default function CheckoutPage() {
                 </div>
               )}
 
+              {/* Deposit Payment Notice */}
+              {!payInFull && (
+                <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+                  <div className="flex gap-3">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zm-11-1h2v2H7V4zm2 4H7v2h2V8zm2-4h2v2h-2V4zm2 4h-2v2h2V8z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-blue-900">Deposit Payment</h3>
+                      <p className="text-sm text-blue-700 mt-1">
+                        Pay <strong>${(calculateDeposit(cart?.total || 0) / 100).toFixed(2)}</strong> today to secure your order.
+                        The remaining <strong>${(calculateBalanceRemaining(cart?.total || 0) / 100).toFixed(2)}</strong> will be charged
+                        when your order is ready for delivery.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Full Payment Option */}
+              <label className="flex items-center gap-2 text-sm p-3 border rounded hover:bg-gray-50 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={payInFull}
+                  onChange={(e) => {
+                    setPayInFull(e.target.checked);
+                    setConsentChecked(false); // Reset consent when toggling
+                  }}
+                  className="w-4 h-4"
+                />
+                <span className="text-gray-700">
+                  Pay in full now (${((cart?.total || 0) / 100).toFixed(2)}) instead of deposit
+                </span>
+              </label>
+
+              {/* Consent Checkbox */}
+              <label className="flex items-start gap-2 text-sm p-3 border rounded hover:bg-gray-50 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consentChecked}
+                  onChange={(e) => setConsentChecked(e.target.checked)}
+                  className="w-4 h-4 mt-1"
+                  required
+                />
+                <span className="text-gray-700">
+                  {payInFull ? (
+                    <>I understand I'm paying the full amount now.</>
+                  ) : (
+                    <>I authorize charging the remaining balance when my order is ready. I can update my payment method or pay with an alternative method if needed.</>
+                  )}
+                </span>
+              </label>
+
               {/* Payment form */}
               <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
                 <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
                   Payment Details
                 </h2>
 
+                {!consentChecked && (
+                  <div className={`p-3 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
+                    <p className={`text-sm ${formValidationColors.error}`}>
+                      Please check the consent box above to continue
+                    </p>
+                  </div>
+                )}
+
                 <StripeElementsWrapper clientSecret={clientSecret}>
                   <PaymentForm
                     onSuccess={handlePaymentSuccess}
                     onError={handlePaymentError}
                     returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/checkout`}
-                    submitText={`Pay $${(combinedTotal / 100).toFixed(2)}`}
+                    submitText={payInFull
+                      ? `Pay in Full $${(combinedTotal / 100).toFixed(2)}`
+                      : `Pay Deposit $${(calculateDeposit(combinedTotal) / 100).toFixed(2)}`
+                    }
                   />
                 </StripeElementsWrapper>
               </div>

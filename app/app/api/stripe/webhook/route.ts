@@ -270,22 +270,56 @@ async function handlePaymentSuccess(
 
   const orderId = paymentIntent.metadata?.order_id;
   const email = paymentIntent.metadata?.email;
+  const paymentType = paymentIntent.metadata?.payment_type;
 
   // Update order status if we have an order ID
   if (orderId) {
     const updateResult = await withWebhookRetry(
       async () => {
-        const { error: orderError } = await supabase
-          .from('orders')
-          .update({
-            payment_status: 'paid',
-            stripe_payment_intent_id: paymentIntent.id,
-            status: 'completed',
-          })
-          .eq('medusa_order_id', orderId);
+        // Handle deposit vs full payment differently
+        if (paymentType === 'deposit') {
+          // DEPOSIT PAYMENT: Save payment method for final charge, mark as processing
+          const depositAmount = paymentIntent.amount;
+          const totalAmount = depositAmount * 2; // Deposit is 50%
+          const balanceRemaining = totalAmount - depositAmount;
 
-        if (orderError) {
-          throw new Error(`Failed to update order: ${orderError.message}`);
+          const { error: orderError } = await supabase
+            .from('orders')
+            .update({
+              payment_status: 'deposit_paid',
+              deposit_amount: depositAmount,
+              balance_remaining: balanceRemaining,
+              deposit_payment_intent_id: paymentIntent.id,
+              stripe_payment_method_id: paymentIntent.payment_method as string,
+              final_payment_status: 'pending',
+              status: 'processing', // Not completed until final payment
+            })
+            .eq('medusa_order_id', orderId);
+
+          if (orderError) {
+            throw new Error(`Failed to update order for deposit: ${orderError.message}`);
+          }
+
+          console.log(
+            `[Webhook] Deposit payment processed: order=${orderId}, ` +
+            `deposit=$${depositAmount / 100}, balance=$${balanceRemaining / 100}`
+          );
+        } else {
+          // FULL PAYMENT: Mark as completed immediately
+          const { error: orderError } = await supabase
+            .from('orders')
+            .update({
+              payment_status: 'paid',
+              stripe_payment_intent_id: paymentIntent.id,
+              status: 'completed',
+            })
+            .eq('medusa_order_id', orderId);
+
+          if (orderError) {
+            throw new Error(`Failed to update order: ${orderError.message}`);
+          }
+
+          console.log(`[Webhook] Full payment processed: order=${orderId}`);
         }
       },
       { operation: 'Update order payment status' }

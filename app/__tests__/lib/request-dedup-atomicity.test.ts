@@ -8,7 +8,7 @@
 // CRITICAL: This test validates that Redis SET NX + EX atomicity prevents the race condition
 // where concurrent requests both check-for-existence-then-set, allowing duplicates through.
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {
   createRequestFingerprint,
   checkAndMarkRequest,

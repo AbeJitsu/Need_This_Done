@@ -584,3 +584,146 @@ export async function sendQuoteEmail(
     return null;
   }
 }
+
+/**
+ * Send email when order is ready for delivery and final payment processed
+ * Notifies customer that order is ready to pick up
+ *
+ * @param customerEmail - Customer email address
+ * @param orderId - Order ID (short format for display)
+ * @param finalPaymentMethod - How final payment was processed (card/cash/check/other)
+ * @param customerName - Customer name for personalization
+ * @param amountCharged - Amount charged (if via card), in cents
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendOrderReadyEmail(
+  customerEmail: string,
+  orderId: string,
+  finalPaymentMethod: 'card' | 'cash' | 'check' | 'other',
+  customerName?: string,
+  amountCharged?: number,
+): Promise<string | null> {
+  try {
+    const { default: OrderReadyEmail } = await import('../emails/OrderReadyEmail');
+
+    const subject = `Your order is ready! Order #${orderId}`;
+
+    return await sendEmailWithRetry(
+      customerEmail,
+      subject,
+      OrderReadyEmail({
+        orderId,
+        customerName,
+        finalPaymentMethod,
+        amountCharged,
+      }),
+    );
+  } catch (error) {
+    console.error(`[Email] sendOrderReadyEmail failed:`, error, {
+      customerEmail,
+      orderId,
+    });
+    return null;
+  }
+}
+
+/**
+ * Send email when final payment charge fails
+ * Notifies customer that card was declined and payment is needed
+ *
+ * @param customerEmail - Customer email address
+ * @param orderId - Order ID (short format for display)
+ * @param balanceRemaining - Amount still owed, in cents
+ * @param customerName - Customer name for personalization
+ * @param contactEmail - Support email address
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendFinalPaymentFailedEmail(
+  customerEmail: string,
+  orderId: string,
+  balanceRemaining: number,
+  customerName?: string,
+  contactEmail?: string,
+): Promise<string | null> {
+  try {
+    const { default: FinalPaymentFailedEmail } = await import('../emails/FinalPaymentFailedEmail');
+
+    const subject = `Action needed: Final payment for order #${orderId}`;
+
+    return await sendEmailWithRetry(
+      customerEmail,
+      subject,
+      FinalPaymentFailedEmail({
+        orderId,
+        customerName,
+        balanceRemaining,
+        contactEmail,
+      }),
+    );
+  } catch (error) {
+    console.error(`[Email] sendFinalPaymentFailedEmail failed:`, error, {
+      customerEmail,
+      orderId,
+    });
+    return null;
+  }
+}
+
+// ============================================================================
+// Order Cancellation Emails
+// ============================================================================
+
+/**
+ * Send email when order is canceled by admin
+ * Notifies customer and includes refund information if applicable
+ *
+ * @param customerEmail - Customer email address
+ * @param customerName - Customer name for personalization
+ * @param orderId - Order ID (short format for display)
+ * @param reason - Reason for cancellation
+ * @param refunded - Whether deposit was refunded
+ * @param refundAmount - Amount refunded, in cents
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendOrderCanceledEmail(
+  {
+    customerEmail,
+    customerName,
+    orderId,
+    reason,
+    refunded = false,
+    refundAmount = 0,
+  }: {
+    customerEmail: string;
+    customerName: string;
+    orderId: string;
+    reason: string;
+    refunded?: boolean;
+    refundAmount?: number;
+  }
+): Promise<string | null> {
+  try {
+    const { default: OrderCanceledEmail } = await import('../emails/OrderCanceledEmail');
+
+    const subject = `Order #${orderId} Has Been Canceled`;
+
+    return await sendEmailWithRetry(
+      customerEmail,
+      subject,
+      OrderCanceledEmail({
+        customerEmail,
+        customerName,
+        orderId,
+        reason,
+        refunded,
+        refundAmount,
+      }),
+    );
+  } catch (error) {
+    console.error(`[Email] sendOrderCanceledEmail failed:`, error, {
+      customerEmail,
+      orderId,
+    });
+    return null;
+  }
+}

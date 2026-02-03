@@ -17,6 +17,11 @@ const PaymentIntentSchema = z.object({
     .max(1000000, 'Amount cannot exceed $10,000'),
   order_id: z.string().min(1).optional(),
   email: z.string().email().optional(),
+  // Deposit payment support: is_deposit indicates this is a 50% deposit charge
+  // The amount passed is already calculated (50% of total)
+  is_deposit: z.boolean().optional().default(false),
+  // save_payment_method indicates we should set up_future_usage for saving the card
+  save_payment_method: z.boolean().optional().default(false),
 });
 
 export const dynamic = 'force-dynamic';
@@ -66,7 +71,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return badRequest(parsed.error.issues[0].message);
     }
-    const { amount, order_id, email } = parsed.data;
+    const { amount, order_id, email, is_deposit, save_payment_method } = parsed.data;
 
     // Check if user is authenticated (optional - supports guest checkout)
     let customerId: string | undefined;
@@ -94,12 +99,30 @@ export async function POST(request: NextRequest) {
     if (order_id) metadata.order_id = order_id;
     if (email) metadata.email = email;
 
-    // Create the PaymentIntent
+    // Add payment type metadata
+    metadata.payment_type = is_deposit ? 'deposit' : 'full_payment';
+
+    // Create PaymentIntent parameters
+    const piParams: any = {
+      amount,
+      currency: 'usd',
+      metadata,
+    };
+
+    // For deposit payments or when explicitly saving payment method:
+    // Enable setup_future_usage to save the card for later charges
+    if (is_deposit || save_payment_method) {
+      piParams.setup_future_usage = 'off_session';
+    }
+
+    // Create the PaymentIntent with deposit support
     const paymentIntent = await createPaymentIntent(
       amount,
       'usd',
       metadata,
-      customerId
+      customerId,
+      // Pass setup_future_usage in the options if needed
+      is_deposit || save_payment_method ? { setup_future_usage: 'off_session' } : undefined
     );
 
     return NextResponse.json({
