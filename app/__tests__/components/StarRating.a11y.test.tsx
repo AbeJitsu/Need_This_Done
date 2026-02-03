@@ -106,6 +106,18 @@ describe('StarRating accessibility', () => {
         expect(button).toHaveAttribute('tabIndex', '0');
       });
     });
+
+    it('star buttons have focus-visible styles for keyboard users', () => {
+      const { getAllByRole } = render(
+        <StarRating value={3} onChange={mockOnChange} />
+      );
+      const buttons = getAllByRole('radio');
+
+      // At least one button should have focus-visible styling
+      // We check that focus-visible: classes are present (not just focus:)
+      const firstButton = buttons[0];
+      expect(firstButton.className).toMatch(/focus-visible:/);
+    });
   });
 
   describe('with showValue', () => {
