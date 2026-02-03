@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { withTimeout, TIMEOUT_LIMITS } from '@/lib/api-timeout';
 
 // ============================================================================
 // Pricing Products API
@@ -15,6 +16,13 @@ export const revalidate = 60; // Cache for 60 seconds
 
 const MEDUSA_URL = process.env.NEXT_PUBLIC_MEDUSA_URL || process.env.MEDUSA_BACKEND_URL;
 const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY;
+
+// Collection handles - centralized for maintainability
+const COLLECTION_HANDLES = {
+  packages: 'website-packages',
+  addons: 'website-addons',
+  services: 'automation-services',
+} as const;
 
 // ============================================================================
 // Types
@@ -75,40 +83,49 @@ interface MedusaCollection {
 // Medusa API Helpers
 // ============================================================================
 
-async function fetchMedusa<T>(path: string): Promise<T> {
+async function fetchMedusa<T>(path: string, description: string): Promise<T> {
   const url = `${MEDUSA_URL}${path}`;
 
-  const response = await fetch(url, {
+  const fetchPromise = fetch(url, {
     headers: {
       'Content-Type': 'application/json',
       ...(PUBLISHABLE_KEY && { 'x-publishable-api-key': PUBLISHABLE_KEY }),
     },
     next: { revalidate: 60 },
+  }).then(async (response) => {
+    if (!response.ok) {
+      const error = await response.text().catch(() => 'Unknown error');
+      throw new Error(`Medusa API error: ${response.status} - ${error}`);
+    }
+    return response.json() as Promise<T>;
   });
 
-  if (!response.ok) {
-    const error = await response.text().catch(() => 'Unknown error');
-    throw new Error(`Medusa API error: ${response.status} - ${error}`);
-  }
-
-  return response.json();
+  // Wrap in timeout to prevent hanging requests
+  return withTimeout(fetchPromise, TIMEOUT_LIMITS.EXTERNAL_API, description);
 }
 
 async function getRegionId(): Promise<string | null> {
   try {
-    const data = await fetchMedusa<{ regions: Array<{ id: string }> }>('/store/regions');
+    const data = await fetchMedusa<{ regions: Array<{ id: string }> }>(
+      '/store/regions',
+      'Fetch Medusa regions'
+    );
     return data.regions?.[0]?.id || null;
-  } catch {
+  } catch (error) {
+    console.error('[Pricing API] Failed to fetch regions:', error);
     return null;
   }
 }
 
 async function getCollections(): Promise<MedusaCollection[]> {
   try {
-    // Store API for collections
-    const data = await fetchMedusa<{ collections: MedusaCollection[] }>('/store/collections');
+    const data = await fetchMedusa<{ collections: MedusaCollection[] }>(
+      '/store/collections',
+      'Fetch Medusa collections'
+    );
     return data.collections || [];
-  } catch {
+  } catch (error) {
+    console.error('[Pricing API] Failed to fetch collections:', error);
     return [];
   }
 }
@@ -116,10 +133,12 @@ async function getCollections(): Promise<MedusaCollection[]> {
 async function getProductsByCollection(collectionId: string, regionId: string): Promise<MedusaProduct[]> {
   try {
     const data = await fetchMedusa<{ products: MedusaProduct[] }>(
-      `/store/products?collection_id[]=${collectionId}&region_id=${regionId}`
+      `/store/products?collection_id[]=${collectionId}&region_id=${regionId}`,
+      `Fetch products for collection ${collectionId}`
     );
     return data.products || [];
-  } catch {
+  } catch (error) {
+    console.error(`[Pricing API] Failed to fetch products for collection ${collectionId}:`, error);
     return [];
   }
 }
@@ -184,10 +203,10 @@ export async function GET() {
       collectionHandleToId.set(collection.handle, collection.id);
     }
 
-    // Fetch products by collection
-    const packagesCollectionId = collectionHandleToId.get('website-packages');
-    const addonsCollectionId = collectionHandleToId.get('website-addons');
-    const servicesCollectionId = collectionHandleToId.get('automation-services');
+    // Fetch products by collection (using centralized constants)
+    const packagesCollectionId = collectionHandleToId.get(COLLECTION_HANDLES.packages);
+    const addonsCollectionId = collectionHandleToId.get(COLLECTION_HANDLES.addons);
+    const servicesCollectionId = collectionHandleToId.get(COLLECTION_HANDLES.services);
 
     const [packagesRaw, addonsRaw, servicesRaw] = await Promise.all([
       packagesCollectionId ? getProductsByCollection(packagesCollectionId, regionId) : [],

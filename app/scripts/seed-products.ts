@@ -27,6 +27,37 @@ if (!MEDUSA_URL) {
 }
 
 // ============================================================================
+// Early Validation - Check Required Config Before Seeding
+// ============================================================================
+
+function validateSubscriptionConfig(): void {
+  const subscriptionProducts = [
+    { handle: 'managed-ai', envVar: 'STRIPE_MANAGED_AI_PRICE_ID' },
+    // Add more subscription products here as needed
+  ];
+
+  const missingConfig: string[] = [];
+
+  for (const product of subscriptionProducts) {
+    const priceId = process.env[product.envVar];
+    if (!priceId) {
+      missingConfig.push(`  - ${product.envVar} (required for "${product.handle}")`);
+    }
+  }
+
+  if (missingConfig.length > 0) {
+    console.error('\n❌ Missing Stripe price IDs for subscription products:\n');
+    console.error(missingConfig.join('\n'));
+    console.error('\n   To fix:');
+    console.error('   1. Create the recurring price in Stripe Dashboard');
+    console.error('   2. Add the price ID to .env.local');
+    console.error('   3. Run this script again\n');
+    console.error('   Or remove subscription products from PRODUCTS array if not needed.\n');
+    process.exit(1);
+  }
+}
+
+// ============================================================================
 // Product Definitions
 // ============================================================================
 
@@ -403,6 +434,10 @@ async function main() {
   console.log('\n🚀 Seeding products to Medusa...\n');
   console.log(`   Backend: ${MEDUSA_URL}\n`);
 
+  // Validate subscription config BEFORE doing anything
+  // This prevents creating products with empty stripe_price_id
+  validateSubscriptionConfig();
+
   try {
     // Authenticate
     console.log('🔐 Authenticating...');
@@ -447,13 +482,6 @@ async function main() {
 
     console.log('\n✨ Done! Products seeded successfully.\n');
     console.log('   View at: /pricing\n');
-
-    // Warn if subscription product missing Stripe price ID
-    const managedAi = PRODUCTS.find((p) => p.handle === 'managed-ai');
-    if (managedAi && !managedAi.metadata.stripe_price_id) {
-      console.log('⚠️  Note: STRIPE_MANAGED_AI_PRICE_ID not set.');
-      console.log('   Set this in .env.local to enable Managed AI subscriptions.\n');
-    }
   } catch (error) {
     console.error('\n❌ Error:', error instanceof Error ? error.message : error);
     process.exit(1);

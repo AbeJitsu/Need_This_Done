@@ -21,17 +21,27 @@ interface Subscription {
   currentPeriodEnd: string;
   cancelAtPeriodEnd: boolean;
   createdAt: string;
+  productName?: string; // Optional - returned from API if available
 }
 
-// Map Stripe price IDs to friendly product names
-// This should match products in Medusa
-const PRICE_NAMES: Record<string, string> = {
-  // Add your Stripe price IDs here
-  // e.g., 'price_xxx': 'Managed AI'
+// Known subscription products - maps Stripe price IDs to friendly names
+// These are populated from environment variables in the API
+const KNOWN_PRODUCTS: Record<string, string> = {
+  // Managed AI subscription - price ID comes from env
+  // The actual mapping happens in the subscriptions API
 };
 
-function getProductName(priceId: string): string {
-  return PRICE_NAMES[priceId] || 'Subscription';
+function getProductName(subscription: Subscription): string {
+  // Prefer API-provided product name
+  if (subscription.productName) {
+    return subscription.productName;
+  }
+  // Fallback to known products mapping
+  if (KNOWN_PRODUCTS[subscription.stripePriceId]) {
+    return KNOWN_PRODUCTS[subscription.stripePriceId];
+  }
+  // Last resort - generic name
+  return 'Monthly Subscription';
 }
 
 function getStatusBadge(status: string, cancelAtPeriodEnd: boolean) {
@@ -178,7 +188,7 @@ export default function SubscriptionSection() {
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <h4 className={`font-medium ${headingColors.primary}`}>
-                    {getProductName(sub.stripePriceId)}
+                    {getProductName(sub)}
                   </h4>
                   <p className={`text-sm ${mutedTextColors.normal}`}>
                     {sub.cancelAtPeriodEnd

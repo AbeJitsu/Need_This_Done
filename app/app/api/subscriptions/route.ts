@@ -13,6 +13,19 @@ export const dynamic = 'force-dynamic';
 // Why: Display subscription status in account settings
 // How: Query Supabase subscriptions table, joined with product info
 
+// Map known Stripe price IDs to product names
+// This is populated from environment variables
+const PRICE_TO_PRODUCT_NAME: Record<string, string> = {};
+
+// Populate from env vars at runtime
+if (process.env.STRIPE_MANAGED_AI_PRICE_ID) {
+  PRICE_TO_PRODUCT_NAME[process.env.STRIPE_MANAGED_AI_PRICE_ID] = 'Managed AI';
+}
+
+function getProductNameForPriceId(priceId: string): string | null {
+  return PRICE_TO_PRODUCT_NAME[priceId] || null;
+}
+
 export async function GET() {
   try {
     const supabase = await createSupabaseServerClient();
@@ -55,6 +68,8 @@ export async function GET() {
       currentPeriodEnd: sub.current_period_end,
       cancelAtPeriodEnd: sub.cancel_at_period_end,
       createdAt: sub.created_at,
+      // Include product name if we can determine it from the price ID
+      productName: getProductNameForPriceId(sub.stripe_price_id),
     }));
 
     return NextResponse.json({
