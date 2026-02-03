@@ -38,7 +38,7 @@ type CheckoutStep = 'info' | 'appointment' | 'payment' | 'confirmation';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, cartId, itemCount, clearCart, isSyncing, isCartReady } = useCart();
+  const { cart, cartId, itemCount, clearCart, isSyncing, isCartReady, serviceItems, serviceTotal } = useCart();
   const { user, isAuthenticated } = useAuth();
 
   // Form field references for focus management
@@ -77,6 +77,103 @@ export default function CheckoutPage() {
   } | null>(null);
   const [appointmentData, setAppointmentData] = useState<AppointmentData | null>(null);
   const [appointmentCreationError, setAppointmentCreationError] = useState('');
+
+  // Combined total: Medusa items (cents) + service items (dollars → cents)
+  const medusaTotal = cart?.total || 0;
+  const serviceTotalCents = serviceTotal * 100;
+  const combinedTotal = medusaTotal + serviceTotalCents;
+  const hasMedusaItems = (cart?.items?.length || 0) > 0;
+  const hasServiceItems = serviceItems.length > 0;
+
+  // Reusable order summary for all checkout steps
+  const renderOrderSummary = () => (
+    <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.base}`}>
+      <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
+        Order Summary
+      </h2>
+
+      {/* Service items from pricing page */}
+      {hasServiceItems && (
+        <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
+          {serviceItems.map((si) => (
+            <div key={si.id} className="flex justify-between items-start">
+              <div className="flex-1">
+                <p className={`font-medium ${headingColors.primary} text-sm`}>
+                  {si.title}
+                </p>
+                <p className={`text-xs ${formInputColors.helper}`}>
+                  {si.type === 'package' ? 'Website Package' : 'Add-on'} &middot; Qty: {si.quantity}
+                </p>
+              </div>
+              <p className={`font-semibold ${headingColors.primary} text-sm`}>
+                ${(si.unit_price * si.quantity).toLocaleString()}.00
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Medusa cart items (consultations, shop products) */}
+      {hasMedusaItems && (
+        <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
+          {cart?.items?.map((item) => (
+            <div key={item.id} className="flex justify-between items-start">
+              <div className="flex-1">
+                <p className={`font-medium ${headingColors.primary} text-sm`}>
+                  {item.title || item.variant?.title || 'Consultation'}
+                </p>
+                <p className={`text-xs ${formInputColors.helper}`}>
+                  Qty: {item.quantity}
+                </p>
+              </div>
+              <p className={`font-semibold ${headingColors.primary} text-sm`}>
+                ${(((item.unit_price || 0) * item.quantity) / 100).toFixed(2)}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Totals */}
+      <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
+        {hasServiceItems && (
+          <div className="flex justify-between">
+            <span className={formInputColors.helper}>Services</span>
+            <span className={`font-semibold ${headingColors.primary}`}>
+              ${serviceTotal.toLocaleString()}.00
+            </span>
+          </div>
+        )}
+        {hasMedusaItems && (
+          <div className="flex justify-between">
+            <span className={formInputColors.helper}>Products</span>
+            <span className={`font-semibold ${headingColors.primary}`}>
+              ${((cart?.subtotal || 0) / 100).toFixed(2)}
+            </span>
+          </div>
+        )}
+        {(cart?.tax_total || 0) > 0 && (
+          <div className="flex justify-between">
+            <span className={formInputColors.helper}>Tax</span>
+            <span className={`font-semibold ${headingColors.primary}`}>
+              ${((cart?.tax_total || 0) / 100).toFixed(2)}
+            </span>
+          </div>
+        )}
+      </div>
+
+      <div className="flex justify-between mb-6">
+        <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
+        <span className={`text-2xl font-bold ${headingColors.primary}`}>
+          ${(combinedTotal / 100).toFixed(2)}
+        </span>
+      </div>
+
+      <Button variant="blue" href="/cart" className="w-full" size="lg">
+        Edit Cart
+      </Button>
+    </div>
+  );
 
   // Redirect if no cart items (but not during appointment/payment/confirmation)
   useEffect(() => {
@@ -162,13 +259,19 @@ export default function CheckoutPage() {
 
     setFieldErrors({});
 
-    if (!cartId || itemCount === 0) {
+    if (itemCount === 0) {
       setError('Your cart is empty');
       return;
     }
 
     try {
       setIsProcessing(true);
+
+      // Service-only carts don't need appointment check — skip straight to payment
+      if (!cartId || !hasMedusaItems) {
+        await proceedToPayment();
+        return;
+      }
 
       // Check if cart requires appointment (by checking product metadata)
       const checkResponse = await fetch('/api/checkout/check-appointment', {
@@ -229,8 +332,8 @@ export default function CheckoutPage() {
   // Create order and payment intent - proceed to payment step
   // ========================================================================
   const proceedToPayment = async () => {
-    // Guard: Ensure cart is fully synced before proceeding
-    if (isSyncing) {
+    // Guard: Ensure cart is fully synced before proceeding (only matters for Medusa items)
+    if (hasMedusaItems && isSyncing) {
       setError('Just a moment - finishing up your cart changes...');
       return;
     }
@@ -244,14 +347,27 @@ export default function CheckoutPage() {
       setIsProcessing(true);
       setError('');
 
+      // Build service items payload for the checkout API
+      const serviceItemsPayload = serviceItems.map((si) => ({
+        service_id: si.serviceId,
+        type: si.type,
+        title: si.title,
+        description: si.description || null,
+        unit_price: si.unit_price,
+        quantity: si.quantity,
+        features: si.features || [],
+      }));
+
       // Create order (saves order in Medusa + Supabase)
       const orderResponse = await fetch('/api/checkout/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          cart_id: cartId,
+          cart_id: cartId || null,
           email,
           order_notes: orderNotes.trim() || null,
+          service_items: serviceItemsPayload.length > 0 ? serviceItemsPayload : undefined,
+          service_total: serviceTotal > 0 ? serviceTotal : undefined,
         }),
       });
 
@@ -273,12 +389,12 @@ export default function CheckoutPage() {
         });
       }
 
-      // Create PaymentIntent for the order total
+      // Create PaymentIntent for the combined total (Medusa + services, in cents)
       const paymentResponse = await fetch('/api/stripe/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: cart?.total || 0,
+          amount: combinedTotal,
           order_id: orderData.order_id,
           email,
         }),
@@ -528,59 +644,7 @@ export default function CheckoutPage() {
 
             {/* Right column - Order Summary */}
             <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.base}`}>
-                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
-                  Order Summary
-                </h2>
-
-                {/* Cart items preview */}
-                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-                  {cart?.items?.map((item) => (
-                    <div key={item.id} className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <p className={`font-medium ${headingColors.primary} text-sm`}>
-                          {item.title || item.variant?.title || 'Consultation'}
-                        </p>
-                        <p className={`text-xs ${formInputColors.helper}`}>
-                          Qty: {item.quantity}
-                        </p>
-                      </div>
-                      <p className={`font-semibold ${headingColors.primary} text-sm`}>
-                        ${(((item.unit_price || 0) * item.quantity) / 100).toFixed(2)}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-                  <div className="flex justify-between">
-                    <span className={formInputColors.helper}>Subtotal</span>
-                    <span className={`font-semibold ${headingColors.primary}`}>
-                      ${((cart?.subtotal || 0) / 100).toFixed(2)}
-                    </span>
-                  </div>
-
-                  {(cart?.tax_total || 0) > 0 && (
-                    <div className="flex justify-between">
-                      <span className={formInputColors.helper}>Tax</span>
-                      <span className={`font-semibold ${headingColors.primary}`}>
-                        ${((cart?.tax_total || 0) / 100).toFixed(2)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex justify-between mb-6">
-                  <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
-                  <span className={`text-2xl font-bold ${headingColors.primary}`}>
-                    ${((cart?.total || 0) / 100).toFixed(2)}
-                  </span>
-                </div>
-
-                <Button variant="blue" href="/cart" className="w-full" size="lg">
-                  Edit Cart
-                </Button>
-              </div>
+              {renderOrderSummary()}
 
               {/* What happens next */}
               <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 ${lightBgColors.blue}`}>
@@ -625,7 +689,7 @@ export default function CheckoutPage() {
                     onSuccess={handlePaymentSuccess}
                     onError={handlePaymentError}
                     returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/checkout`}
-                    submitText={`Pay $${((cart?.total || 0) / 100).toFixed(2)}`}
+                    submitText={`Pay $${(combinedTotal / 100).toFixed(2)}`}
                   />
                 </StripeElementsWrapper>
               </div>
@@ -643,59 +707,7 @@ export default function CheckoutPage() {
 
             {/* Right column - Order Summary */}
             <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.base}`}>
-                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
-                  Order Summary
-                </h2>
-
-                {/* Cart items preview */}
-                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-                  {cart?.items?.map((item) => (
-                    <div key={item.id} className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <p className={`font-medium ${headingColors.primary} text-sm`}>
-                          {item.title || item.variant?.title || 'Consultation'}
-                        </p>
-                        <p className={`text-xs ${formInputColors.helper}`}>
-                          Qty: {item.quantity}
-                        </p>
-                      </div>
-                      <p className={`font-semibold ${headingColors.primary} text-sm`}>
-                        ${(((item.unit_price || 0) * item.quantity) / 100).toFixed(2)}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-                  <div className="flex justify-between">
-                    <span className={formInputColors.helper}>Subtotal</span>
-                    <span className={`font-semibold ${headingColors.primary}`}>
-                      ${((cart?.subtotal || 0) / 100).toFixed(2)}
-                    </span>
-                  </div>
-
-                  {(cart?.tax_total || 0) > 0 && (
-                    <div className="flex justify-between">
-                      <span className={formInputColors.helper}>Tax</span>
-                      <span className={`font-semibold ${headingColors.primary}`}>
-                        ${((cart?.tax_total || 0) / 100).toFixed(2)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex justify-between mb-6">
-                  <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
-                  <span className={`text-2xl font-bold ${headingColors.primary}`}>
-                    ${((cart?.total || 0) / 100).toFixed(2)}
-                  </span>
-                </div>
-
-                <Button variant="blue" href="/cart" className="w-full" size="lg">
-                  Edit Cart
-                </Button>
-              </div>
+              {renderOrderSummary()}
 
               {/* What happens next */}
               <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 ${lightBgColors.blue}`}>
@@ -1005,64 +1017,12 @@ export default function CheckoutPage() {
 
             {/* Right column - Order Summary */}
             <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.base}`}>
-                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
-                  Order Summary
-                </h2>
-
-                {/* Cart items preview */}
-                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-                  {cart?.items?.map((item) => (
-                    <div key={item.id} className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <p className={`font-medium ${headingColors.primary} text-sm`}>
-                          {item.title || item.variant?.title || 'Consultation'}
-                        </p>
-                        <p className={`text-xs ${formInputColors.helper}`}>
-                          Qty: {item.quantity}
-                        </p>
-                      </div>
-                      <p className={`font-semibold ${headingColors.primary} text-sm`}>
-                        ${(((item.unit_price || 0) * item.quantity) / 100).toFixed(2)}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-                  <div className="flex justify-between">
-                    <span className={formInputColors.helper}>Subtotal</span>
-                    <span className={`font-semibold ${headingColors.primary}`}>
-                      ${((cart?.subtotal || 0) / 100).toFixed(2)}
-                    </span>
-                  </div>
-
-                  {(cart?.tax_total || 0) > 0 && (
-                    <div className="flex justify-between">
-                      <span className={formInputColors.helper}>Tax</span>
-                      <span className={`font-semibold ${headingColors.primary}`}>
-                        ${((cart?.tax_total || 0) / 100).toFixed(2)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex justify-between mb-6">
-                  <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
-                  <span className={`text-2xl font-bold ${headingColors.primary}`}>
-                    ${((cart?.total || 0) / 100).toFixed(2)}
-                  </span>
-                </div>
-
-                <Button variant="blue" href="/cart" className="w-full" size="lg">
-                  Edit Cart
-                </Button>
-              </div>
+              {renderOrderSummary()}
 
               {/* What happens next */}
               <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 ${lightBgColors.blue}`}>
                 <p className={`text-sm ${formInputColors.helper}`}>
-                  <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
+                  <strong>What happens next?</strong> After payment, we&apos;ll confirm your order and send you next steps by email.
                 </p>
               </div>
             </div>
