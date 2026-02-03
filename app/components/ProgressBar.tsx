@@ -46,6 +46,11 @@ export default function ProgressBar({
   const clampedValue = Math.max(0, Math.min(100, value));
   const isComplete = clampedValue >= 100;
 
+  // Human-readable text for screen readers
+  const valueText = isComplete
+    ? 'Complete'
+    : `${Math.round(clampedValue)}% complete`;
+
   // Size classes for the bar height
   const sizeClasses = {
     sm: 'h-1.5',
@@ -85,6 +90,7 @@ export default function ProgressBar({
         aria-valuenow={clampedValue}
         aria-valuemin={0}
         aria-valuemax={100}
+        aria-valuetext={valueText}
         aria-label={label || 'Progress'}
         className={`
           w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden

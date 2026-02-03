@@ -91,7 +91,7 @@ export default function StarRating({
               ${sizeClasses[size]}
               ${isInteractive ? 'cursor-pointer hover:scale-110' : 'cursor-default'}
               transition-transform
-              focus:outline-none focus:ring-2 focus:ring-offset-1 rounded
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded
               disabled:cursor-default
             `}
             role={isInteractive ? 'radio' : undefined}
