@@ -107,7 +107,7 @@ Fix non-text contrast violations and consolidate to approved color palette.
 - [x] Update .claude/rules/design-system.md with minimum shades table
 - [x] Add dark backgrounds section to color-contrast-viewer.html
 - [x] Verify production build works
-- [x] Merge main → production branch
+- [x] Merge testing → production branch
 - [x] Update plan.md with completion status
 
 ---

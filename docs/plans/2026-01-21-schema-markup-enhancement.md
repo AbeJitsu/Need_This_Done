@@ -459,7 +459,8 @@ Paste the JSON-LD and verify no errors
 ```bash
 git add -A
 git commit -m "feat(seo): complete schema markup implementation"
-git checkout production && git merge main --no-edit && git push && git checkout main
+git checkout testing && git merge dev --no-edit && git push
+git checkout production && git merge testing --no-edit && git push
 ```
 
 ---

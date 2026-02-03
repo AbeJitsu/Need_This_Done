@@ -1,0 +1,95 @@
+[
+  {
+    "handle": "15-min-consultation",
+    "title": "15-Minute Consultation",
+    "existing_thumbnail": "https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-15min.jpg",
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Marketing hero image for product detail page and social",
+        "prompt": "Photorealistic hero shot: a clean modern workspace with a laptop open to a calendar app, a notebook with handwriting, and a steaming coffee mug — soft natural window light, shallow depth of field, warm neutral color grading, brand-accent highlight #06b6d4 on the calendar UI, no identifiable faces, minimal props, centered composition, 3:2 aspect, deliver high-res JPG (2400x1600) and optimized WebP 1200x800. Alt text: 'Consultation — expert meeting, 15 minutes.'",
+        "output": ["jpg:2400x1600","webp:1200x800"],
+        "alt_text": "Consultation — expert meeting, 15 minutes",
+        "filename": "consultation-15min-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Square thumbnail for listing and product card",
+        "prompt": "Studio-style product thumbnail: flat-lay top-down of a notebook and pen on a light-gray surface with a small calendar card that reads '15 min' — crisp lighting, soft shadows, minimal styling, brand accent #06b6d4 on calendar card, clean background, export as PNG 800x800 and WebP 400x400. Alt text: '15-minute consultation thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "15-minute consultation thumbnail",
+        "filename": "consultation-15min-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Small listing image / avatar (used in checkout and carts)",
+        "prompt": "Minimal iconographic mark: circular badge with '15' numeral and subtle calendar glyph, flat geometric style, 2-color palette (dark slate #0f172a + teal #06b6d4), optimized SVG and PNG 128x128, provide light/dark variants and suggested aria-label '15-minute consultation'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "15-minute consultation",
+        "filename": "consultation-15min-badge"
+      }
+    ]
+  },
+  {
+    "handle": "30-min-consultation",
+    "title": "30-Minute Consultation",
+    "existing_thumbnail": "https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-30min.jpg",
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Product detail hero for in-depth session",
+        "prompt": "Photorealistic hero: two people in a modern meeting room (faces out of frame or blurred) pointing at a laptop screen with a project plan visible, cool neutral tones with warm highlights, natural window lighting, brand accent #06b6d4 on UI elements, 3:2 aspect, deliver JPG 2400x1600 and WebP 1200x800. Alt text: '30-minute consultation — collaborative planning.'",
+        "output": ["jpg:2400x1600","webp:1200x800"],
+        "alt_text": "30-minute consultation — collaborative planning",
+        "filename": "consultation-30min-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Listing card thumbnail",
+        "prompt": "Clean studio thumbnail: calendar card or ticket reading '30' on a textured off-white background, subtle shadow, brand accent #06b6d4, PNG 800x800 and WebP 400x400, minimal composition. Alt text: '30-minute consultation thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "30-minute consultation thumbnail",
+        "filename": "consultation-30min-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Small listing icon",
+        "prompt": "Badge icon: circular badge with '30' and calendar glyph, geometric flat style, 2-color palette (dark slate + teal), SVG + PNG 128x128, include aria-label '30-minute consultation'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "30-minute consultation",
+        "filename": "consultation-30min-badge"
+      }
+    ]
+  },
+  {
+    "handle": "55-min-consultation",
+    "title": "55-Minute Consultation",
+    "existing_thumbnail": "https://oxhjtmozsdstbokwtnwa.supabase.co/storage/v1/object/public/product-images/consultation-55min.jpg",
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Feature hero for comprehensive session",
+        "prompt": "Photorealistic hero: overhead of a detailed project roadmap on a desk with laptop, open planner, and coffee — cinematic natural light, shallow depth of field, rich but neutral color grading, brand accent #06b6d4 on roadmap markers, 3:2 aspect, deliver JPG 2800x1867 and optimized WebP 1400x933. Alt text: '55-minute consultation — comprehensive session.'",
+        "output": ["jpg:2800x1867","webp:1400x933"],
+        "alt_text": "55-minute consultation — comprehensive session",
+        "filename": "consultation-55min-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Square product thumbnail",
+        "prompt": "Studio-style thumbnail: ticket or calendar card with '55' and small checklist icon on a light neutral background, controlled soft lighting, brand accent #06b6d4, PNG 800x800 and WebP 400x400. Alt text: '55-minute consultation thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "55-minute consultation thumbnail",
+        "filename": "consultation-55min-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Small listing badge",
+        "prompt": "Circular badge with '55' numeral and simple calendar/checklist glyph, flat geometric style, dark slate + teal, SVG and PNG 128x128, provide light/dark variants and aria-label '55-minute consultation'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "55-minute consultation",
+        "filename": "consultation-55min-badge"
+      }
+    ]
+  }
+]
