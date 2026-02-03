@@ -93,6 +93,24 @@ Use ASCII charts for complex flows. Keep them simple.
 - **Medusa backend** in `/medusa` (deployed on Railway)
 - **Environment variables** in `.env.local` (see README.md for required vars)
 
+## Product & Pricing Management
+
+**CRITICAL: All products are managed through Medusa. Never hardcode product data.**
+
+| Task | How |
+|------|-----|
+| Add/edit products | Edit `scripts/seed-products.ts`, run `npx tsx scripts/seed-products.ts` |
+| Fetch products | Use `/api/pricing/products` endpoint |
+| Add to cart | Use `CartContext.addItem(variantId, quantity)` |
+| Product types | `package`, `addon`, `service`, `subscription` (in metadata) |
+
+```
+Source of truth: Medusa → API → Frontend
+Never: Hardcoded arrays in React components
+```
+
+See `.claude/rules/medusa-products.md` for full details.
+
 ## Backend Reliability Helpers
 
 **Location:** `/app/lib/`

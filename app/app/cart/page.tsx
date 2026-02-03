@@ -25,31 +25,7 @@ import {
 // ============================================================================
 // What: Displays items in cart with quantity management
 // Why: Lets customer review before checkout
-// How: Uses CartContext to manage items, displays friendly consultation details
-
-// ============================================================================
-// Helper: Determine consultation color by price tier
-// ============================================================================
-// 15-min ($20) → green, 30-min ($35) → blue, 55-min ($50) → purple
-function getConsultationColor(unitPrice: number): AccentColor {
-  // Prices in cents: 2000 = $20, 3500 = $35, 5000 = $50
-  if (unitPrice <= 2500) return 'green';
-  if (unitPrice <= 4000) return 'blue';
-  return 'purple';
-}
-
-// ============================================================================
-// Helper: Get friendly duration label from title
-// ============================================================================
-function getDurationLabel(title: string): string {
-  // Extract duration from title like "15-Minute Quick Consultation"
-  const match = title.match(/(\d+)-?(?:minute|min)/i);
-  if (match) {
-    const minutes = parseInt(match[1], 10);
-    return `${minutes} minutes`;
-  }
-  return 'Consultation';
-}
+// How: Uses CartContext to manage Medusa cart items with product metadata
 
 // ============================================================================
 // Empty Cart State Component - Editorial, warm invitation design
@@ -191,18 +167,49 @@ function EmptyCartState() {
   );
 }
 
+// ============================================================================
+// Helper: Determine color by product type or price
+// ============================================================================
+// Packages → green, Addons → purple, Services → blue, Subscriptions → purple
+function getItemColor(item: {
+  unit_price?: number;
+  product?: { metadata?: Record<string, unknown> };
+}): AccentColor {
+  const productType = item.product?.metadata?.type as string | undefined;
+  if (productType === 'package') return 'green';
+  if (productType === 'addon') return 'purple';
+  if (productType === 'service') return 'blue';
+  if (productType === 'subscription') return 'purple'; // Use purple for subscriptions
+
+  // Fallback for shop products: color by price tier
+  const unitPrice = item.unit_price || 0;
+  if (unitPrice <= 2500) return 'green';
+  if (unitPrice <= 4000) return 'blue';
+  return 'purple';
+}
+
+// ============================================================================
+// Helper: Get display label for product type
+// ============================================================================
+function getItemTypeLabel(item: {
+  product?: { metadata?: Record<string, unknown> };
+}): string {
+  const productType = item.product?.metadata?.type as string | undefined;
+  if (productType === 'package') return 'Website Package';
+  if (productType === 'addon') return 'Add-on Service';
+  if (productType === 'service') return 'Automation Service';
+  if (productType === 'subscription') return 'Monthly Subscription';
+  return 'Product';
+}
+
 export default function CartPage() {
   const {
     cart, itemCount, updateItem, removeItem, error: cartError,
-    serviceItems, serviceTotal,
-    removeServiceItem, updateServiceItemQuantity,
   } = useCart();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [localError, setLocalError] = useState('');
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
-  // Track whether the item to remove is a service item or Medusa item
-  const [removeIsService, setRemoveIsService] = useState(false);
 
   // ========================================================================
   // Handle quantity change
@@ -227,9 +234,8 @@ export default function CartPage() {
   // ========================================================================
   // Handle remove item - Show confirmation dialog
   // ========================================================================
-  const handleRemoveItem = (lineItemId: string, isService = false) => {
+  const handleRemoveItem = (lineItemId: string) => {
     setItemToRemove(lineItemId);
-    setRemoveIsService(isService);
     setShowRemoveDialog(true);
   };
 
@@ -243,18 +249,12 @@ export default function CartPage() {
       setIsUpdating(itemToRemove);
       setLocalError('');
       setShowRemoveDialog(false);
-
-      if (removeIsService) {
-        removeServiceItem(itemToRemove);
-      } else {
-        await removeItem(itemToRemove);
-      }
+      await removeItem(itemToRemove);
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : 'We couldn\'t remove that item. Please try again or reach out if this keeps happening.');
     } finally {
       setIsUpdating(null);
       setItemToRemove(null);
-      setRemoveIsService(false);
     }
   };
 
@@ -264,26 +264,21 @@ export default function CartPage() {
   const cancelRemoveItem = () => {
     setShowRemoveDialog(false);
     setItemToRemove(null);
-    setRemoveIsService(false);
   };
 
   // ========================================================================
-  // Empty cart state - Show when no Medusa items AND no service items
+  // Empty cart state
   // ========================================================================
-  const hasMedusaItems = cart && cart.items && cart.items.length > 0;
-  const hasServiceItems = serviceItems.length > 0;
+  const hasItems = cart && cart.items && cart.items.length > 0;
 
-  if (!hasMedusaItems && !hasServiceItems) {
+  if (!hasItems) {
     return <EmptyCartState />;
   }
 
-  // Calculate totals (Medusa items in cents, service items in dollars)
-  const medusaSubtotal = cart?.subtotal || 0;
+  // Calculate totals (all in cents from Medusa)
+  const subtotal = cart?.subtotal || 0;
   const tax = cart?.tax_total || 0;
-  const medusaTotal = cart?.total || medusaSubtotal + tax;
-  // Convert service total (dollars) to cents for consistent display
-  const serviceTotalCents = serviceTotal * 100;
-  const combinedTotal = medusaTotal + serviceTotalCents;
+  const total = cart?.total || subtotal + tax;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
@@ -304,30 +299,36 @@ export default function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
           {/* Left column - Cart items */}
           <div className="lg:col-span-3 space-y-6">
-            {/* Service items from pricing page */}
-            {serviceItems.map((si) => {
-              const lineTotal = si.unit_price * si.quantity;
-              // Color based on type: packages get green, addons get purple
-              const color = si.type === 'package' ? 'green' : 'purple';
+            {/* All cart items from Medusa (packages, addons, services, products) */}
+            {cart?.items?.map((item) => {
+              const title = item.title || item.variant?.title || item.product?.title || 'Item';
+              const description = item.description || item.product?.description;
+              const unitPrice = item.unit_price || 0;
+              const lineTotal = unitPrice * item.quantity;
+              const color = getItemColor(item);
+              const typeLabel = getItemTypeLabel(item);
+              const features = item.product?.metadata?.features as string[] | undefined;
+              const isSubscription = item.product?.metadata?.type === 'subscription';
 
               return (
-                <div key={si.id} className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 border-l-4 ${leftBorderColors[color]} ${cardBgColors.elevated}`}>
+                <div key={item.id} className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 border-l-4 ${leftBorderColors[color]} ${cardBgColors.elevated}`}>
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex-grow">
                       <h3 className={`text-lg font-semibold ${headingColors.primary}`}>
-                        {si.title}
+                        {title}
                       </h3>
                       <p className={`text-sm mt-1 ${accentColors[color].titleText}`}>
-                        {si.type === 'package' ? 'Website Package' : 'Add-on Service'}
+                        {typeLabel}
+                        {isSubscription && ' • Billed monthly'}
                       </p>
-                      {si.description && (
+                      {description && (
                         <p className={`text-xs mt-2 ${formInputColors.helper}`}>
-                          {si.description}
+                          {description}
                         </p>
                       )}
-                      {si.features && si.features.length > 0 && (
+                      {features && features.length > 0 && (
                         <ul className={`text-xs mt-3 space-y-1 ${formInputColors.helper}`}>
-                          {si.features.map((f, i) => (
+                          {features.map((f, i) => (
                             <li key={i} className="flex items-center gap-1.5">
                               <span className="text-emerald-500">&#10003;</span> {f}
                             </li>
@@ -336,75 +337,10 @@ export default function CartPage() {
                       )}
                     </div>
                     <button
-                      onClick={() => handleRemoveItem(si.id, true)}
-                      disabled={isUpdating === si.id}
-                      className={`text-gray-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-all duration-200 text-xl leading-none ${focusRingClasses.gold} motion-safe:hover:scale-110 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed`}
-                      aria-label={`Remove ${si.title} from cart`}
-                    >
-                      &times;
-                    </button>
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-3" role="group" aria-label="Quantity selector">
-                      <button
-                        onClick={() => updateServiceItemQuantity(si.id, si.quantity - 1)}
-                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100`}
-                        aria-label={`Decrease quantity for ${si.title}`}
-                      >
-                        −
-                      </button>
-                      <span className={`w-10 text-center font-semibold text-lg ${headingColors.primary}`} aria-live="polite" aria-atomic="true">
-                        {si.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateServiceItemQuantity(si.id, si.quantity + 1)}
-                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100`}
-                        aria-label={`Increase quantity for ${si.title}`}
-                      >
-                        +
-                      </button>
-                    </div>
-                    <p className={`text-lg font-semibold ${headingColors.primary}`}>
-                      ${lineTotal.toLocaleString()}.00
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* Medusa cart items (consultations, shop products) */}
-            {cart?.items?.map((item) => {
-              // Get consultation details
-              const title = item.title || item.variant?.title || 'Consultation';
-              const unitPrice = item.unit_price || 0;
-              const lineTotal = unitPrice * item.quantity;
-              const color = getConsultationColor(unitPrice);
-              const duration = getDurationLabel(title);
-
-              return (
-                <div key={item.id} className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 border-l-4 ${leftBorderColors[color]} ${cardBgColors.elevated}`}>
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="flex-grow">
-                      {/* Consultation title */}
-                      <h3 className={`text-lg font-semibold ${headingColors.primary}`}>
-                        {title}
-                      </h3>
-                      {/* Duration badge */}
-                      <p className={`text-sm mt-1 ${accentColors[color].titleText}`}>
-                        {duration}
-                      </p>
-                      {/* Reassuring note */}
-                      <p className={`text-xs mt-3 ${formInputColors.helper}`}>
-                        You&apos;ll pick your preferred time at checkout
-                      </p>
-                    </div>
-                    {/* Remove button */}
-                    <button
                       onClick={() => handleRemoveItem(item.id || '')}
                       disabled={isUpdating === item.id}
                       className={`text-gray-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-all duration-200 text-xl leading-none ${focusRingClasses.gold} motion-safe:hover:scale-110 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed`}
-                      aria-label={`Remove ${title || 'item'} from cart`}
+                      aria-label={`Remove ${title} from cart`}
                       aria-busy={isUpdating === item.id}
                     >
                       &times;
@@ -418,7 +354,7 @@ export default function CartPage() {
                         onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
                         disabled={isUpdating === item.id}
                         className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100`}
-                        aria-label={`Decrease quantity for ${title || 'item'}`}
+                        aria-label={`Decrease quantity for ${title}`}
                         aria-busy={isUpdating === item.id}
                       >
                         {isUpdating === item.id ? (
@@ -438,7 +374,7 @@ export default function CartPage() {
                         onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
                         disabled={isUpdating === item.id}
                         className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100`}
-                        aria-label={`Increase quantity for ${title || 'item'}`}
+                        aria-label={`Increase quantity for ${title}`}
                         aria-busy={isUpdating === item.id}
                       >
                         {isUpdating === item.id ? (
@@ -452,6 +388,7 @@ export default function CartPage() {
                     {/* Price */}
                     <p className={`text-lg font-semibold ${headingColors.primary}`}>
                       ${(lineTotal / 100).toFixed(2)}
+                      {isSubscription && <span className="text-sm font-normal">/mo</span>}
                     </p>
                   </div>
                 </div>
@@ -475,23 +412,12 @@ export default function CartPage() {
               </h2>
 
               <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-                {hasServiceItems && (
-                  <div className="flex justify-between">
-                    <span className={formInputColors.helper}>Services</span>
-                    <span className={`font-semibold ${headingColors.primary}`}>
-                      ${serviceTotal.toLocaleString()}.00
-                    </span>
-                  </div>
-                )}
-
-                {hasMedusaItems && (
-                  <div className="flex justify-between">
-                    <span className={formInputColors.helper}>Products</span>
-                    <span className={`font-semibold ${headingColors.primary}`}>
-                      ${(medusaSubtotal / 100).toFixed(2)}
-                    </span>
-                  </div>
-                )}
+                <div className="flex justify-between">
+                  <span className={formInputColors.helper}>Subtotal</span>
+                  <span className={`font-semibold ${headingColors.primary}`}>
+                    ${(subtotal / 100).toFixed(2)}
+                  </span>
+                </div>
 
                 {tax > 0 && (
                   <div className="flex justify-between">
@@ -506,7 +432,7 @@ export default function CartPage() {
               <div className="flex justify-between mb-6">
                 <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
                 <span className={`text-2xl font-bold ${headingColors.primary}`}>
-                  ${(combinedTotal / 100).toFixed(2)}
+                  ${(total / 100).toFixed(2)}
                 </span>
               </div>
 

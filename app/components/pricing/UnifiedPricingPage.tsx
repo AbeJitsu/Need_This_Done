@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
@@ -36,16 +36,16 @@ import {
 import { scrollToRef } from '@/lib/scroll-utils';
 
 // ============================================================================
-// Unified Pricing Page - Warm, inviting design with smooth scroll navigation
+// Unified Pricing Page - Fetches products from Medusa
 // ============================================================================
 // Design: Inspired by the shop page's welcoming aesthetic
 // - Hero with gradient orbs + bold headline
 // - Clear service categories with smooth scroll
-// - No email required upfront (collected at Stripe)
+// - Products fetched from Medusa via /api/pricing/products
 // - Consultation CTA at bottom
 
 // ============================================================================
-// Data Definitions
+// Data Types
 // ============================================================================
 
 interface AuthorizedQuote {
@@ -58,69 +58,32 @@ interface AuthorizedQuote {
   expiresAt: string;
 }
 
-interface Package {
+type ProductType = 'package' | 'addon' | 'service' | 'subscription';
+
+interface PricingProduct {
   id: string;
-  name: string;
-  price: number;
-  deposit: number;
+  title: string;
   description: string;
+  handle: string;
+  price: number; // in cents
+  variantId: string;
+  type: ProductType;
+  depositPercent: number;
   features: string[];
-  color: 'green' | 'blue';
-  popular?: boolean;
+  billingPeriod: 'monthly' | null;
+  popular: boolean;
+  stripePriceId?: string;
 }
 
-interface Addon {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  icon: React.ElementType;
-}
-
-const PACKAGES: Package[] = [
-  {
-    id: 'launch-site',
-    name: 'Launch Site',
-    price: 500,
-    deposit: 250,
-    description: 'Get online fast with a professional site.',
-    color: 'green',
-    features: [
-      '3-5 pages',
-      'Custom design',
-      'Mobile responsive',
-      'Contact form',
-      'Basic SEO',
-      '30 days support',
-    ],
-  },
-  {
-    id: 'growth-site',
-    name: 'Growth Site',
-    price: 1200,
-    deposit: 600,
-    description: 'Scale your online presence.',
-    color: 'blue',
-    popular: true,
-    features: [
-      '5-8 pages',
-      'Everything in Launch',
-      'Blog with CMS',
-      'Content editing',
-      'Enhanced SEO',
-      '60 days support',
-    ],
-  },
-];
-
-const ADDONS: Addon[] = [
-  { id: 'additional-page', name: 'Extra Page', price: 100, description: 'Add another page to your site', icon: FileText },
-  { id: 'blog-setup', name: 'Blog', price: 300, description: 'Full blog with SEO optimization', icon: PenTool },
-  { id: 'contact-form-files', name: 'File Uploads', price: 150, description: 'Accept file attachments', icon: Upload },
-  { id: 'calendar-booking', name: 'Booking', price: 200, description: 'Calendar scheduling integration', icon: Calendar },
-  { id: 'payment-integration', name: 'Payments', price: 400, description: 'Stripe payment integration', icon: CreditCard },
-  { id: 'cms-integration', name: 'CMS', price: 500, description: 'Edit your content yourself', icon: Edit3 },
-];
+// Icon mapping for add-ons
+const ADDON_ICONS: Record<string, React.ElementType> = {
+  'additional-page': FileText,
+  'blog-setup': PenTool,
+  'contact-form-files': Upload,
+  'calendar-booking': Calendar,
+  'payment-integration': CreditCard,
+  'cms-integration': Edit3,
+};
 
 // ============================================================================
 // Component
@@ -128,7 +91,15 @@ const ADDONS: Addon[] = [
 
 export default function UnifiedPricingPage() {
   const router = useRouter();
-  const { addServiceItem } = useCart();
+  const { addItem } = useCart();
+
+  // Product state (fetched from Medusa)
+  const [packages, setPackages] = useState<PricingProduct[]>([]);
+  const [addons, setAddons] = useState<PricingProduct[]>([]);
+  const [services, setServices] = useState<PricingProduct[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [productError, setProductError] = useState('');
+
   const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkingOutPackage, setCheckingOutPackage] = useState<string | null>(null);
@@ -150,6 +121,35 @@ export default function UnifiedPricingPage() {
   const customRef = useRef<HTMLElement>(null);
   const quoteAuthRef = useRef<HTMLElement>(null);
 
+  // ========================================================================
+  // Fetch products from Medusa on mount
+  // ========================================================================
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        setIsLoadingProducts(true);
+        setProductError('');
+
+        const response = await fetch('/api/pricing/products');
+        if (!response.ok) {
+          throw new Error('Failed to load products');
+        }
+
+        const data = await response.json();
+        setPackages(data.packages || []);
+        setAddons(data.addons || []);
+        setServices(data.services || []);
+      } catch (err) {
+        console.error('Failed to fetch pricing products:', err);
+        setProductError('Unable to load products. Please refresh the page.');
+      } finally {
+        setIsLoadingProducts(false);
+      }
+    }
+
+    fetchProducts();
+  }, []);
+
   // Scroll helper that respects prefers-reduced-motion preference
   const scrollToSection = (ref: React.RefObject<HTMLElement | null>) => {
     scrollToRef(ref, { block: 'start' });
@@ -164,59 +164,65 @@ export default function UnifiedPricingPage() {
     });
   };
 
-  const customTotal = ADDONS.filter((a) => selectedAddons.has(a.id)).reduce((sum, a) => sum + a.price, 0);
+  // Calculate custom build totals
+  const selectedAddonProducts = addons.filter((a) => selectedAddons.has(a.id));
+  const customTotal = selectedAddonProducts.reduce((sum, a) => sum + a.price, 0);
   const customDeposit = Math.round(customTotal / 2);
 
-  // Package checkout - add to cart and navigate
-  const handlePackageCheckout = (packageId: string) => {
-    const pkg = PACKAGES.find((p) => p.id === packageId);
-    if (!pkg) return;
-
-    setCheckingOutPackage(packageId);
+  // ========================================================================
+  // Package checkout - add to Medusa cart and navigate
+  // ========================================================================
+  const handlePackageCheckout = async (pkg: PricingProduct) => {
+    setCheckingOutPackage(pkg.id);
     setCheckoutError('');
 
-    addServiceItem({
-      serviceId: pkg.id,
-      type: 'package',
-      title: pkg.name,
-      description: pkg.description,
-      unit_price: pkg.price,
-      features: pkg.features,
-    });
+    try {
+      // Add to Medusa cart
+      await addItem(pkg.variantId, 1, {
+        title: pkg.title,
+        unit_price: pkg.price,
+      });
 
-    setToastMessage(`${pkg.name} added to cart!`);
-    setTimeout(() => {
-      setToastMessage('');
+      setToastMessage(`${pkg.title} added to cart!`);
+      setTimeout(() => {
+        setToastMessage('');
+        setCheckingOutPackage(null);
+        router.push('/cart');
+      }, 1000);
+    } catch (err) {
+      setCheckoutError(err instanceof Error ? err.message : 'Failed to add to cart');
       setCheckingOutPackage(null);
-      router.push('/cart');
-    }, 1000);
+    }
   };
 
+  // ========================================================================
   // Custom build checkout - add selected add-ons to cart
-  const handleCustomCheckout = () => {
+  // ========================================================================
+  const handleCustomCheckout = async () => {
     if (selectedAddons.size === 0) return;
     setIsCheckingOut(true);
     setCheckoutError('');
 
-    // Add each selected addon as a service item
-    const selectedAddonList = ADDONS.filter((a) => selectedAddons.has(a.id));
-    for (const addon of selectedAddonList) {
-      addServiceItem({
-        serviceId: addon.id,
-        type: 'addon',
-        title: addon.name,
-        description: addon.description,
-        unit_price: addon.price,
-      });
-    }
+    try {
+      // Add each selected addon to cart
+      for (const addon of selectedAddonProducts) {
+        await addItem(addon.variantId, 1, {
+          title: addon.title,
+          unit_price: addon.price,
+        });
+      }
 
-    setToastMessage(`${selectedAddonList.length} item${selectedAddonList.length > 1 ? 's' : ''} added to cart!`);
-    setTimeout(() => {
-      setToastMessage('');
+      setToastMessage(`${selectedAddonProducts.length} item${selectedAddonProducts.length > 1 ? 's' : ''} added to cart!`);
+      setTimeout(() => {
+        setToastMessage('');
+        setIsCheckingOut(false);
+        setSelectedAddons(new Set());
+        router.push('/cart');
+      }, 1000);
+    } catch (err) {
+      setCheckoutError(err instanceof Error ? err.message : 'Failed to add items to cart');
       setIsCheckingOut(false);
-      setSelectedAddons(new Set());
-      router.push('/cart');
-    }, 1000);
+    }
   };
 
   // ============================================================================
@@ -295,6 +301,15 @@ export default function UnifiedPricingPage() {
     }).format(cents / 100);
   };
 
+  // Get the cheapest package price for hero
+  const minPackagePrice = packages.length > 0
+    ? Math.min(...packages.map((p) => p.price))
+    : 50000;
+
+  // Get automation service for hero
+  const automationService = services.find((s) => s.type === 'service');
+  const subscriptionService = services.find((s) => s.type === 'subscription');
+
   return (
     <div className="min-h-screen pb-16 md:pb-24">
       {/* Toast notification for cart additions */}
@@ -338,9 +353,9 @@ export default function UnifiedPricingPage() {
             {/* Quick navigation — horizontal pills */}
             <StaggerContainer staggerDelay={0.06} className="flex flex-wrap gap-3">
               {[
-                { label: 'Websites', price: 'from $500', icon: Globe, ref: websitesRef, color: 'emerald' },
-                { label: 'Automation', price: '$150/workflow', icon: Zap, ref: automationRef, color: 'blue' },
-                { label: 'AI Agents', price: '$500/month', icon: Bot, ref: automationRef, color: 'purple' },
+                { label: 'Websites', price: `from $${minPackagePrice / 100}`, icon: Globe, ref: websitesRef, color: 'emerald' },
+                { label: 'Automation', price: automationService ? `$${automationService.price / 100}/workflow` : '$150/workflow', icon: Zap, ref: automationRef, color: 'blue' },
+                { label: 'AI Agents', price: subscriptionService ? `$${subscriptionService.price / 100}/month` : '$500/month', icon: Bot, ref: automationRef, color: 'purple' },
                 { label: 'Custom', price: 'you decide', icon: Puzzle, ref: customRef, color: 'amber' },
                 { label: 'Have a Quote?', price: 'authorize', icon: FileText, ref: quoteAuthRef, color: 'slate' },
               ].map((item) => {
@@ -369,385 +384,414 @@ export default function UnifiedPricingPage() {
         </div>
       </section>
 
-      {/* ================================================================== */}
-      {/* WEBSITES SECTION */}
-      {/* ================================================================== */}
-      <section ref={websitesRef} id="websites" className="py-24 scroll-mt-8">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-          {/* Editorial section header */}
-          <FadeIn direction="up">
-          <div className="mb-14">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500" />
-              <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Websites</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-3">
-              Your site, built right.
-            </h2>
-            <p className="text-lg text-gray-500 max-w-lg">
-              Professional websites that get you online fast — designed to grow with you.
-            </p>
+      {/* Loading state */}
+      {isLoadingProducts && (
+        <div className="flex justify-center items-center py-24">
+          <Loader2 size={32} className="animate-spin text-gray-400" />
+        </div>
+      )}
+
+      {/* Error state */}
+      {productError && (
+        <div className="max-w-5xl mx-auto px-4 py-12">
+          <div className={`p-6 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg text-center`}>
+            <p className={alertColors.error.text}>{productError}</p>
+            <Button variant="gray" onClick={() => window.location.reload()} className="mt-4">
+              Refresh Page
+            </Button>
           </div>
-          </FadeIn>
+        </div>
+      )}
 
-          <StaggerContainer className="grid md:grid-cols-2 gap-6">
-            {PACKAGES.map((pkg) => {
-              const isLoading = checkingOutPackage === pkg.id;
-              const isPopular = pkg.popular;
+      {/* Only show sections if products loaded */}
+      {!isLoadingProducts && !productError && (
+        <>
+          {/* ================================================================== */}
+          {/* WEBSITES SECTION */}
+          {/* ================================================================== */}
+          <section ref={websitesRef} id="websites" className="py-24 scroll-mt-8">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+              {/* Editorial section header */}
+              <FadeIn direction="up">
+              <div className="mb-14">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500" />
+                  <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Websites</span>
+                </div>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-3">
+                  Your site, built right.
+                </h2>
+                <p className="text-lg text-gray-500 max-w-lg">
+                  Professional websites that get you online fast — designed to grow with you.
+                </p>
+              </div>
+              </FadeIn>
 
-              // Color maps for dark card variants
-              const cardStyles = pkg.color === 'blue'
-                ? {
-                    bg: 'bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950',
-                    glow1: 'bg-blue-500/15',
-                    glow2: 'bg-blue-400/10',
-                    check: 'bg-blue-500/20 text-blue-400',
-                    accent: 'text-blue-400',
-                    badge: 'from-blue-500 to-blue-600',
-                    shadow: 'shadow-blue-500/25',
-                  }
-                : {
-                    bg: 'bg-gradient-to-br from-emerald-800 via-emerald-800 to-emerald-900',
-                    glow1: 'bg-emerald-400/15',
-                    glow2: 'bg-emerald-300/10',
-                    check: 'bg-emerald-500/20 text-emerald-400',
-                    accent: 'text-emerald-400',
-                    badge: 'from-emerald-500 to-emerald-600',
-                    shadow: 'shadow-emerald-500/25',
-                  };
+              <StaggerContainer className="grid md:grid-cols-2 gap-6">
+                {packages.map((pkg) => {
+                  const isLoading = checkingOutPackage === pkg.id;
+                  const isPopular = pkg.popular;
+                  const deposit = Math.round(pkg.price * (pkg.depositPercent / 100));
 
-              return (
-                <StaggerItem key={pkg.id}>
-                <div
-                  className={`
-                    relative rounded-3xl overflow-hidden transition-all duration-300
-                    p-8 lg:p-10 hover:-translate-y-2
-                    ${cardStyles.bg}
-                    ${isPopular ? 'ring-2 ring-blue-400/50 shadow-2xl shadow-blue-500/20 md:scale-[1.03]' : 'shadow-xl'}
-                  `}
-                >
-                  {/* Accent glows */}
-                  <div className={`absolute -top-20 -right-20 w-64 h-64 rounded-full ${cardStyles.glow1} blur-3xl`} />
-                  <div className={`absolute -bottom-10 -left-10 w-40 h-40 rounded-full ${cardStyles.glow2} blur-2xl`} />
+                  // Color maps for dark card variants
+                  const cardStyles = isPopular
+                    ? {
+                        bg: 'bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950',
+                        glow1: 'bg-blue-500/15',
+                        glow2: 'bg-blue-400/10',
+                        check: 'bg-blue-500/20 text-blue-400',
+                        accent: 'text-blue-400',
+                        badge: 'from-blue-500 to-blue-600',
+                        shadow: 'shadow-blue-500/25',
+                      }
+                    : {
+                        bg: 'bg-gradient-to-br from-emerald-800 via-emerald-800 to-emerald-900',
+                        glow1: 'bg-emerald-400/15',
+                        glow2: 'bg-emerald-300/10',
+                        check: 'bg-emerald-500/20 text-emerald-400',
+                        accent: 'text-emerald-400',
+                        badge: 'from-emerald-500 to-emerald-600',
+                        shadow: 'shadow-emerald-500/25',
+                      };
 
-                  <div className="relative z-10">
-                    {isPopular && (
-                      <div className="mb-5">
-                        <span className={`inline-block bg-gradient-to-r ${cardStyles.badge} text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg ${cardStyles.shadow}`}>
-                          Most Popular
+                  return (
+                    <StaggerItem key={pkg.id}>
+                    <div
+                      className={`
+                        relative rounded-3xl overflow-hidden transition-all duration-300
+                        p-8 lg:p-10 hover:-translate-y-2
+                        ${cardStyles.bg}
+                        ${isPopular ? 'ring-2 ring-blue-400/50 shadow-2xl shadow-blue-500/20 md:scale-[1.03]' : 'shadow-xl'}
+                      `}
+                    >
+                      {/* Accent glows */}
+                      <div className={`absolute -top-20 -right-20 w-64 h-64 rounded-full ${cardStyles.glow1} blur-3xl`} />
+                      <div className={`absolute -bottom-10 -left-10 w-40 h-40 rounded-full ${cardStyles.glow2} blur-2xl`} />
+
+                      <div className="relative z-10">
+                        {isPopular && (
+                          <div className="mb-5">
+                            <span className={`inline-block bg-gradient-to-r ${cardStyles.badge} text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg ${cardStyles.shadow}`}>
+                              Most Popular
+                            </span>
+                          </div>
+                        )}
+
+                        <h3 className="text-2xl font-black text-white tracking-tight mb-2">
+                          {pkg.title}
+                        </h3>
+                        <p className="text-sm text-white/60 mb-6">{pkg.description}</p>
+
+                        <div className="flex items-baseline gap-2 mb-8">
+                          <span className="text-5xl font-black text-white">
+                            ${(pkg.price / 100).toLocaleString()}
+                          </span>
+                          <span className="text-base font-medium text-white/50">
+                            one-time
+                          </span>
+                        </div>
+
+                        <ul className="space-y-3 mb-8">
+                          {pkg.features.map((feature, i) => (
+                            <li key={i} className="flex items-center gap-3">
+                              <div className={`flex-shrink-0 w-5 h-5 rounded-full ${cardStyles.check} flex items-center justify-center`}>
+                                <Check size={12} strokeWidth={3} />
+                              </div>
+                              <span className="text-sm text-white/80">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+
+                        <button
+                          onClick={() => handlePackageCheckout(pkg)}
+                          disabled={checkingOutPackage !== null}
+                          className={`w-full py-3.5 px-6 rounded-xl font-semibold text-base transition-all duration-300 bg-white text-gray-900 hover:bg-white/90 shadow-lg ${cardStyles.shadow} disabled:opacity-50 disabled:cursor-not-allowed`}
+                        >
+                          {isLoading ? (
+                            <span className="flex items-center justify-center gap-2">
+                              <Loader2 size={18} className="animate-spin" /> Processing...
+                            </span>
+                          ) : (
+                            <span className="flex items-center justify-center gap-2">
+                              Start for ${deposit / 100} <ArrowRight size={18} />
+                            </span>
+                          )}
+                        </button>
+                        <p className="text-center text-sm text-white/40 mt-3">
+                          {pkg.depositPercent}% deposit, remainder on delivery
+                        </p>
+                      </div>
+                    </div>
+                    </StaggerItem>
+                  );
+                })}
+              </StaggerContainer>
+
+              {checkoutError && (
+                <p className="mt-4 text-center text-red-600">{checkoutError}</p>
+              )}
+            </div>
+          </section>
+
+          {/* ================================================================== */}
+          {/* AUTOMATION & AI SECTION */}
+          {/* ================================================================== */}
+          <section ref={automationRef} id="automation" className="py-24 scroll-mt-8">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+              {/* Editorial section header */}
+              <FadeIn direction="up">
+              <div className="mb-14">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-500 to-gold-500" />
+                  <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Automation & AI</span>
+                </div>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-3">
+                  Let the machines handle it.
+                </h2>
+                <p className="text-lg text-gray-500 max-w-lg">
+                  Work smarter with intelligent automation that runs while you sleep.
+                </p>
+              </div>
+              </FadeIn>
+
+              <StaggerContainer className="grid md:grid-cols-2 gap-6">
+                {/* Automation Setup */}
+                {automationService && (
+                  <StaggerItem>
+                  <div className="relative flex flex-col rounded-3xl overflow-hidden p-8 lg:p-10 bg-gradient-to-br from-purple-700 via-purple-800 to-purple-900 shadow-xl hover:-translate-y-2 transition-all duration-300 h-full">
+                    {/* Accent glows */}
+                    <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-purple-400/20 blur-3xl" />
+                    <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-purple-300/15 blur-2xl" />
+
+                    <div className="relative z-10 flex flex-col h-full">
+                      <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center mb-6 border border-white/10">
+                        <Zap size={24} className="text-purple-200" />
+                      </div>
+                      <h3 className="text-2xl font-black text-white tracking-tight mb-2">
+                        {automationService.title}
+                      </h3>
+                      <p className="text-purple-200 mb-6 leading-relaxed">
+                        {automationService.description}
+                      </p>
+                      <div className="flex items-baseline gap-2 mb-8">
+                        <span className="text-5xl font-black text-white">${automationService.price / 100}</span>
+                        <span className="text-base font-medium text-white/50">per workflow</span>
+                      </div>
+                      <Button variant="purple" href="/contact#consultation" className="w-full mt-auto bg-white/15 border border-white/20 text-white hover:bg-white/25 shadow-lg shadow-purple-500/25">
+                        Book a Call
+                      </Button>
+                    </div>
+                  </div>
+                  </StaggerItem>
+                )}
+
+                {/* Managed AI */}
+                {subscriptionService && (
+                  <StaggerItem>
+                  <div className="relative flex flex-col rounded-3xl overflow-hidden p-8 lg:p-10 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 shadow-xl hover:-translate-y-2 transition-all duration-300 h-full">
+                    {/* Accent glows */}
+                    <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-gold-500/15 blur-3xl" />
+                    <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-gold-400/10 blur-2xl" />
+
+                    <div className="relative z-10 flex flex-col h-full">
+                      <div className="w-12 h-12 rounded-full bg-gold-500/20 flex items-center justify-center mb-6 border border-gold-500/20">
+                        <Bot size={24} className="text-gold-400" />
+                      </div>
+                      <h3 className="text-2xl font-black text-white tracking-tight mb-2">
+                        {subscriptionService.title}
+                      </h3>
+                      <p className="text-slate-400 mb-6 leading-relaxed">
+                        {subscriptionService.description}
+                      </p>
+                      <div className="flex items-baseline gap-2 mb-8">
+                        <span className="text-5xl font-black text-white">${subscriptionService.price / 100}</span>
+                        <span className="text-base font-medium text-white/50">per month</span>
+                      </div>
+                      <Button variant="gold" href="/contact#consultation" className="w-full mt-auto bg-white/10 border border-white/15 text-white hover:bg-white/20 shadow-lg shadow-gold-500/25">
+                        Book a Call
+                      </Button>
+                    </div>
+                  </div>
+                  </StaggerItem>
+                )}
+              </StaggerContainer>
+            </div>
+          </section>
+
+          {/* ================================================================== */}
+          {/* CUSTOM BUILD SECTION */}
+          {/* ================================================================== */}
+          <section ref={customRef} id="custom" className="py-24 scroll-mt-8">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+              {/* Editorial section header */}
+              <FadeIn direction="up">
+              <div className="mb-14">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-1 rounded-full bg-gradient-to-r from-gold-500 to-purple-500" />
+                  <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">À La Carte</span>
+                </div>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-3">
+                  Build your own.
+                </h2>
+                <p className="text-lg text-gray-500 max-w-lg">
+                  Pick exactly what you need — nothing more, nothing less.
+                </p>
+              </div>
+              </FadeIn>
+
+              {/* Add-ons grid - selectable tiles */}
+              <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {addons.map((addon) => {
+                  const isSelected = selectedAddons.has(addon.id);
+                  const Icon = ADDON_ICONS[addon.handle] || FileText;
+
+                  return (
+                    <StaggerItem key={addon.id}>
+                    <button
+                      onClick={() => toggleAddon(addon.id)}
+                      className={`
+                        relative w-full text-left rounded-2xl p-6 transition-all duration-300 group
+                        ${isSelected
+                          ? 'bg-gradient-to-br from-slate-900 to-slate-800 shadow-xl shadow-gold-500/10 ring-2 ring-gold-500/50 -translate-y-1'
+                          : 'bg-white border border-gray-200 hover:border-gray-300 hover:shadow-lg hover:-translate-y-1'
+                        }
+                      `}
+                    >
+                      {/* Checkbox indicator */}
+                      <div className={`
+                        absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200
+                        ${isSelected
+                          ? 'bg-gradient-to-br from-gold-500 to-purple-500 text-white shadow-md'
+                          : 'border-2 border-gray-300 group-hover:border-gray-400'
+                        }
+                      `}>
+                        {isSelected && <Check size={14} strokeWidth={3} />}
+                      </div>
+
+                      {/* Icon */}
+                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-colors duration-200 ${isSelected ? 'bg-gold-500/20' : 'bg-gray-100 group-hover:bg-gray-200'}`}>
+                        <Icon size={22} className={isSelected ? 'text-gold-400' : 'text-gray-500'} />
+                      </div>
+
+                      {/* Text */}
+                      <h3 className={`font-bold text-base mb-1 ${isSelected ? 'text-white' : 'text-gray-900'}`}>
+                        {addon.title}
+                      </h3>
+                      <p className={`text-sm mb-4 ${isSelected ? 'text-white/60' : 'text-gray-500'}`}>
+                        {addon.description}
+                      </p>
+
+                      {/* Price */}
+                      <div className={`text-2xl font-black ${isSelected ? 'text-gold-400' : 'text-gray-900'}`}>
+                        +${addon.price / 100}
+                      </div>
+                    </button>
+                    </StaggerItem>
+                  );
+                })}
+              </StaggerContainer>
+
+              {/* Total & Checkout - bold dark card */}
+              <AnimatePresence>
+              {selectedAddons.size > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.3 }}
+                  className="mt-8 relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 p-8 shadow-2xl">
+                  {/* Accent glow */}
+                  <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-gold-500/15 blur-3xl" />
+
+                  <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+                    <div>
+                      <p className="text-sm font-medium text-white/50 mb-2">
+                        {selectedAddons.size} item{selectedAddons.size > 1 ? 's' : ''} selected
+                      </p>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-5xl font-black text-white">
+                          ${(customTotal / 100).toLocaleString()}
+                        </span>
+                        <span className="text-lg text-white/50">
+                          total
                         </span>
                       </div>
-                    )}
-
-                    <h3 className="text-2xl font-black text-white tracking-tight mb-2">
-                      {pkg.name}
-                    </h3>
-                    <p className="text-sm text-white/60 mb-6">{pkg.description}</p>
-
-                    <div className="flex items-baseline gap-2 mb-8">
-                      <span className="text-5xl font-black text-white">
-                        ${pkg.price.toLocaleString()}
-                      </span>
-                      <span className="text-base font-medium text-white/50">
-                        one-time
-                      </span>
                     </div>
-
-                    <ul className="space-y-3 mb-8">
-                      {pkg.features.map((feature, i) => (
-                        <li key={i} className="flex items-center gap-3">
-                          <div className={`flex-shrink-0 w-5 h-5 rounded-full ${cardStyles.check} flex items-center justify-center`}>
-                            <Check size={12} strokeWidth={3} />
-                          </div>
-                          <span className="text-sm text-white/80">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-
                     <button
-                      onClick={() => handlePackageCheckout(pkg.id)}
-                      disabled={checkingOutPackage !== null}
-                      className={`w-full py-3.5 px-6 rounded-xl font-semibold text-base transition-all duration-300 bg-white text-gray-900 hover:bg-white/90 shadow-lg ${cardStyles.shadow} disabled:opacity-50 disabled:cursor-not-allowed`}
+                      onClick={handleCustomCheckout}
+                      disabled={isCheckingOut}
+                      className="py-3.5 px-8 rounded-xl font-semibold text-base transition-all duration-300 bg-white text-gray-900 hover:bg-white/90 shadow-lg shadow-gold-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isLoading ? (
-                        <span className="flex items-center justify-center gap-2">
+                      {isCheckingOut ? (
+                        <span className="flex items-center gap-2">
                           <Loader2 size={18} className="animate-spin" /> Processing...
                         </span>
                       ) : (
-                        <span className="flex items-center justify-center gap-2">
-                          Start for ${pkg.deposit} <ArrowRight size={18} />
+                        <span className="flex items-center gap-2">
+                          Start for ${customDeposit / 100} <ArrowRight size={18} />
                         </span>
                       )}
                     </button>
-                    <p className="text-center text-sm text-white/40 mt-3">
-                      50% deposit, remainder on delivery
+                  </div>
+                  <p className="text-sm text-white/40 mt-4">
+                    50% deposit to start, remainder on delivery
+                  </p>
+                </motion.div>
+              )}
+              </AnimatePresence>
+            </div>
+          </section>
+
+          {/* ================================================================== */}
+          {/* CONSULTATION CTA - Bold dark treatment */}
+          {/* ================================================================== */}
+          <section className="py-24">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+              <RevealSection>
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950 p-10 md:p-16 shadow-2xl">
+                {/* Accent glows */}
+                <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
+                {/* Watermark */}
+                <div className="absolute -bottom-4 -right-2 text-[8rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">?</div>
+
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-10">
+                  <div className="max-w-lg">
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-purple-400" />
+                      <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Free Consultation</span>
+                    </div>
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
+                      Not sure<br />what you need?
+                    </h2>
+                    <p className="text-lg text-slate-400 leading-relaxed">
+                      Book a free call. We&apos;ll help you figure out the right solution — no pressure, no commitment.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col items-center md:items-start gap-4">
+                    <Button
+                      variant="green"
+                      href="/contact#consultation"
+                      size="lg"
+                      className="shadow-lg shadow-emerald-500/25 whitespace-nowrap"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Calendar size={20} />
+                        Book a Free Call
+                      </span>
+                    </Button>
+                    <p className="text-sm text-slate-500">
+                      15, 30, or 45 minute sessions
                     </p>
                   </div>
                 </div>
-                </StaggerItem>
-              );
-            })}
-          </StaggerContainer>
-
-          {checkoutError && (
-            <p className="mt-4 text-center text-red-600">{checkoutError}</p>
-          )}
-        </div>
-      </section>
-
-      {/* ================================================================== */}
-      {/* AUTOMATION & AI SECTION */}
-      {/* ================================================================== */}
-      <section ref={automationRef} id="automation" className="py-24 scroll-mt-8">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-          {/* Editorial section header */}
-          <FadeIn direction="up">
-          <div className="mb-14">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-500 to-gold-500" />
-              <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Automation & AI</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-3">
-              Let the machines handle it.
-            </h2>
-            <p className="text-lg text-gray-500 max-w-lg">
-              Work smarter with intelligent automation that runs while you sleep.
-            </p>
-          </div>
-          </FadeIn>
-
-          <StaggerContainer className="grid md:grid-cols-2 gap-6">
-            {/* Automation Setup */}
-            <StaggerItem>
-            <div className="relative flex flex-col rounded-3xl overflow-hidden p-8 lg:p-10 bg-gradient-to-br from-purple-700 via-purple-800 to-purple-900 shadow-xl hover:-translate-y-2 transition-all duration-300 h-full">
-              {/* Accent glows */}
-              <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-purple-400/20 blur-3xl" />
-              <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-purple-300/15 blur-2xl" />
-
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center mb-6 border border-white/10">
-                  <Zap size={24} className="text-purple-200" />
-                </div>
-                <h3 className="text-2xl font-black text-white tracking-tight mb-2">
-                  Automation Setup
-                </h3>
-                <p className="text-purple-200 mb-6 leading-relaxed">
-                  Connect your tools and eliminate repetitive work. We build workflows that save you hours every week.
-                </p>
-                <div className="flex items-baseline gap-2 mb-8">
-                  <span className="text-5xl font-black text-white">$150</span>
-                  <span className="text-base font-medium text-white/50">per workflow</span>
-                </div>
-                <Button variant="purple" href="/contact#consultation" className="w-full mt-auto bg-white/15 border border-white/20 text-white hover:bg-white/25 shadow-lg shadow-purple-500/25">
-                  Book a Call
-                </Button>
               </div>
+              </RevealSection>
             </div>
-            </StaggerItem>
-
-            {/* Managed AI */}
-            <StaggerItem>
-            <div className="relative flex flex-col rounded-3xl overflow-hidden p-8 lg:p-10 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 shadow-xl hover:-translate-y-2 transition-all duration-300 h-full">
-              {/* Accent glows */}
-              <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-gold-500/15 blur-3xl" />
-              <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-gold-400/10 blur-2xl" />
-
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="w-12 h-12 rounded-full bg-gold-500/20 flex items-center justify-center mb-6 border border-gold-500/20">
-                  <Bot size={24} className="text-gold-400" />
-                </div>
-                <h3 className="text-2xl font-black text-white tracking-tight mb-2">
-                  Managed AI
-                </h3>
-                <p className="text-slate-400 mb-6 leading-relaxed">
-                  AI agents that handle customer support, data entry, and internal ops — around the clock.
-                </p>
-                <div className="flex items-baseline gap-2 mb-8">
-                  <span className="text-5xl font-black text-white">$500</span>
-                  <span className="text-base font-medium text-white/50">per month</span>
-                </div>
-                <Button variant="gold" href="/contact#consultation" className="w-full mt-auto bg-white/10 border border-white/15 text-white hover:bg-white/20 shadow-lg shadow-gold-500/25">
-                  Book a Call
-                </Button>
-              </div>
-            </div>
-            </StaggerItem>
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* ================================================================== */}
-      {/* CUSTOM BUILD SECTION */}
-      {/* ================================================================== */}
-      <section ref={customRef} id="custom" className="py-24 scroll-mt-8">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-          {/* Editorial section header */}
-          <FadeIn direction="up">
-          <div className="mb-14">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-gold-500 to-purple-500" />
-              <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">À La Carte</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-3">
-              Build your own.
-            </h2>
-            <p className="text-lg text-gray-500 max-w-lg">
-              Pick exactly what you need — nothing more, nothing less.
-            </p>
-          </div>
-          </FadeIn>
-
-          {/* Add-ons grid - selectable tiles */}
-          <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {ADDONS.map((addon) => {
-              const isSelected = selectedAddons.has(addon.id);
-              const Icon = addon.icon;
-
-              return (
-                <StaggerItem key={addon.id}>
-                <button
-                  onClick={() => toggleAddon(addon.id)}
-                  className={`
-                    relative w-full text-left rounded-2xl p-6 transition-all duration-300 group
-                    ${isSelected
-                      ? 'bg-gradient-to-br from-slate-900 to-slate-800 shadow-xl shadow-gold-500/10 ring-2 ring-gold-500/50 -translate-y-1'
-                      : 'bg-white border border-gray-200 hover:border-gray-300 hover:shadow-lg hover:-translate-y-1'
-                    }
-                  `}
-                >
-                  {/* Checkbox indicator */}
-                  <div className={`
-                    absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200
-                    ${isSelected
-                      ? 'bg-gradient-to-br from-gold-500 to-purple-500 text-white shadow-md'
-                      : 'border-2 border-gray-300 group-hover:border-gray-400'
-                    }
-                  `}>
-                    {isSelected && <Check size={14} strokeWidth={3} />}
-                  </div>
-
-                  {/* Icon */}
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-colors duration-200 ${isSelected ? 'bg-gold-500/20' : 'bg-gray-100 group-hover:bg-gray-200'}`}>
-                    <Icon size={22} className={isSelected ? 'text-gold-400' : 'text-gray-500'} />
-                  </div>
-
-                  {/* Text */}
-                  <h3 className={`font-bold text-base mb-1 ${isSelected ? 'text-white' : 'text-gray-900'}`}>
-                    {addon.name}
-                  </h3>
-                  <p className={`text-sm mb-4 ${isSelected ? 'text-white/60' : 'text-gray-500'}`}>
-                    {addon.description}
-                  </p>
-
-                  {/* Price */}
-                  <div className={`text-2xl font-black ${isSelected ? 'text-gold-400' : 'text-gray-900'}`}>
-                    +${addon.price}
-                  </div>
-                </button>
-                </StaggerItem>
-              );
-            })}
-          </StaggerContainer>
-
-          {/* Total & Checkout - bold dark card */}
-          <AnimatePresence>
-          {selectedAddons.size > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.3 }}
-              className="mt-8 relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 p-8 shadow-2xl">
-              {/* Accent glow */}
-              <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-gold-500/15 blur-3xl" />
-
-              <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-                <div>
-                  <p className="text-sm font-medium text-white/50 mb-2">
-                    {selectedAddons.size} item{selectedAddons.size > 1 ? 's' : ''} selected
-                  </p>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-5xl font-black text-white">
-                      ${customTotal.toLocaleString()}
-                    </span>
-                    <span className="text-lg text-white/50">
-                      total
-                    </span>
-                  </div>
-                </div>
-                <button
-                  onClick={handleCustomCheckout}
-                  disabled={isCheckingOut}
-                  className="py-3.5 px-8 rounded-xl font-semibold text-base transition-all duration-300 bg-white text-gray-900 hover:bg-white/90 shadow-lg shadow-gold-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isCheckingOut ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 size={18} className="animate-spin" /> Processing...
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      Start for ${customDeposit} <ArrowRight size={18} />
-                    </span>
-                  )}
-                </button>
-              </div>
-              <p className="text-sm text-white/40 mt-4">
-                50% deposit to start, remainder on delivery
-              </p>
-            </motion.div>
-          )}
-          </AnimatePresence>
-        </div>
-      </section>
-
-      {/* ================================================================== */}
-      {/* CONSULTATION CTA - Bold dark treatment */}
-      {/* ================================================================== */}
-      <section className="py-24">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-          <RevealSection>
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950 p-10 md:p-16 shadow-2xl">
-            {/* Accent glows */}
-            <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
-            {/* Watermark */}
-            <div className="absolute -bottom-4 -right-2 text-[8rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">?</div>
-
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-10">
-              <div className="max-w-lg">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-purple-400" />
-                  <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Free Consultation</span>
-                </div>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
-                  Not sure<br />what you need?
-                </h2>
-                <p className="text-lg text-slate-400 leading-relaxed">
-                  Book a free call. We&apos;ll help you figure out the right solution — no pressure, no commitment.
-                </p>
-              </div>
-
-              <div className="flex flex-col items-center md:items-start gap-4">
-                <Button
-                  variant="green"
-                  href="/contact#consultation"
-                  size="lg"
-                  className="shadow-lg shadow-emerald-500/25 whitespace-nowrap"
-                >
-                  <span className="flex items-center gap-2">
-                    <Calendar size={20} />
-                    Book a Free Call
-                  </span>
-                </Button>
-                <p className="text-sm text-slate-500">
-                  15, 30, or 45 minute sessions
-                </p>
-              </div>
-            </div>
-          </div>
-          </RevealSection>
-        </div>
-      </section>
+          </section>
+        </>
+      )}
 
       {/* ================================================================== */}
       {/* QUOTE AUTHORIZATION SECTION - Dark background */}
