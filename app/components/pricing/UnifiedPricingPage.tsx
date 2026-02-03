@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useCart } from '@/context/CartContext';
 import {
   Check,
   Globe,
@@ -31,6 +33,7 @@ import {
   mutedTextColors,
   alertColors,
 } from '@/lib/colors';
+import { scrollToRef } from '@/lib/scroll-utils';
 
 // ============================================================================
 // Unified Pricing Page - Warm, inviting design with smooth scroll navigation
@@ -124,10 +127,13 @@ const ADDONS: Addon[] = [
 // ============================================================================
 
 export default function UnifiedPricingPage() {
+  const router = useRouter();
+  const { addServiceItem } = useCart();
   const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkingOutPackage, setCheckingOutPackage] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
 
   // Quote authorization state
   const [quoteRef, setQuoteRef] = useState('');
@@ -144,8 +150,9 @@ export default function UnifiedPricingPage() {
   const customRef = useRef<HTMLElement>(null);
   const quoteAuthRef = useRef<HTMLElement>(null);
 
+  // Scroll helper that respects prefers-reduced-motion preference
   const scrollToSection = (ref: React.RefObject<HTMLElement | null>) => {
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollToRef(ref, { block: 'start' });
   };
 
   const toggleAddon = (id: string) => {
@@ -160,45 +167,56 @@ export default function UnifiedPricingPage() {
   const customTotal = ADDONS.filter((a) => selectedAddons.has(a.id)).reduce((sum, a) => sum + a.price, 0);
   const customDeposit = Math.round(customTotal / 2);
 
-  // Package checkout - redirects to Stripe (email collected there)
-  const handlePackageCheckout = async (packageId: string, price: number) => {
+  // Package checkout - add to cart and navigate
+  const handlePackageCheckout = (packageId: string) => {
+    const pkg = PACKAGES.find((p) => p.id === packageId);
+    if (!pkg) return;
+
     setCheckingOutPackage(packageId);
     setCheckoutError('');
 
-    try {
-      const response = await fetch('/api/stripe/create-build-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'package', packageId, total: price }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Failed to create checkout');
-      window.location.href = data.url;
-    } catch (error) {
-      setCheckoutError(error instanceof Error ? error.message : 'Something went wrong');
+    addServiceItem({
+      serviceId: pkg.id,
+      type: 'package',
+      title: pkg.name,
+      description: pkg.description,
+      unit_price: pkg.price,
+      features: pkg.features,
+    });
+
+    setToastMessage(`${pkg.name} added to cart!`);
+    setTimeout(() => {
+      setToastMessage('');
       setCheckingOutPackage(null);
-    }
+      router.push('/cart');
+    }, 1000);
   };
 
-  // Custom build checkout
-  const handleCustomCheckout = async () => {
+  // Custom build checkout - add selected add-ons to cart
+  const handleCustomCheckout = () => {
     if (selectedAddons.size === 0) return;
     setIsCheckingOut(true);
     setCheckoutError('');
 
-    try {
-      const response = await fetch('/api/stripe/create-build-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'custom', features: Array.from(selectedAddons), total: customTotal }),
+    // Add each selected addon as a service item
+    const selectedAddonList = ADDONS.filter((a) => selectedAddons.has(a.id));
+    for (const addon of selectedAddonList) {
+      addServiceItem({
+        serviceId: addon.id,
+        type: 'addon',
+        title: addon.name,
+        description: addon.description,
+        unit_price: addon.price,
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Failed to create checkout');
-      window.location.href = data.url;
-    } catch (error) {
-      setCheckoutError(error instanceof Error ? error.message : 'Something went wrong');
-      setIsCheckingOut(false);
     }
+
+    setToastMessage(`${selectedAddonList.length} item${selectedAddonList.length > 1 ? 's' : ''} added to cart!`);
+    setTimeout(() => {
+      setToastMessage('');
+      setIsCheckingOut(false);
+      setSelectedAddons(new Set());
+      router.push('/cart');
+    }, 1000);
   };
 
   // ============================================================================
@@ -279,6 +297,13 @@ export default function UnifiedPricingPage() {
 
   return (
     <div className="min-h-screen">
+      {/* Toast notification for cart additions */}
+      {toastMessage && (
+        <div className="fixed top-4 right-4 z-50 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg shadow-emerald-500/25 animate-fade-in font-semibold">
+          {toastMessage}
+        </div>
+      )}
+
       {/* ================================================================== */}
       {/* HERO SECTION - Edge-to-edge on mobile, contained on desktop */}
       {/* ================================================================== */}
@@ -440,7 +465,7 @@ export default function UnifiedPricingPage() {
                     </ul>
 
                     <button
-                      onClick={() => handlePackageCheckout(pkg.id, pkg.price)}
+                      onClick={() => handlePackageCheckout(pkg.id)}
                       disabled={checkingOutPackage !== null}
                       className={`w-full py-3.5 px-6 rounded-xl font-semibold text-base transition-all duration-300 bg-white text-gray-900 hover:bg-white/90 shadow-lg ${cardStyles.shadow} disabled:opacity-50 disabled:cursor-not-allowed`}
                     >

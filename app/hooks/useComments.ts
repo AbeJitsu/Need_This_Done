@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { scrollIntoViewWithMotionPreference } from '@/lib/scroll-utils';
 
 // ============================================================================
 // useComments Hook
@@ -53,11 +54,11 @@ export function useComments(projectId: string | null, isOpen: boolean, isAdmin: 
   }, [isOpen, projectId]);
 
   // ============================================================================
-  // Auto-scroll to Latest Comment
+  // Auto-scroll to Latest Comment (respects prefers-reduced-motion)
   // ============================================================================
 
   useEffect(() => {
-    commentsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    scrollIntoViewWithMotionPreference(commentsEndRef.current);
   }, [comments]);
 
   // ============================================================================

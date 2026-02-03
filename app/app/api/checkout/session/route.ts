@@ -26,11 +26,11 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { cart_id, email } = body;
+    const { cart_id, email, service_items, service_total } = body;
 
-    // Validate required fields
-    if (!cart_id) {
-      return badRequest('cart_id is required');
+    // Validate: need either a Medusa cart or service items
+    if (!cart_id && (!service_items || service_items.length === 0)) {
+      return badRequest('cart_id or service_items is required');
     }
 
     // Check if user is authenticated (optional - guest checkout supported)
@@ -52,145 +52,144 @@ export async function POST(request: NextRequest) {
       return badRequest('Email is required for guest checkout');
     }
 
-    // Fetch cart to check for appointment-required products
-    // Wrap with timeout to prevent hanging on slow Medusa responses
-    let cart;
+    // ====================================================================
+    // Process Medusa cart (if present)
+    // ====================================================================
+    let order: { id: string; total: number; status: string; email: string } | null = null;
     let requiresAppointment = false;
-    try {
-      cart = await withTimeout(
-        medusaClient.carts.get(cart_id),
-        TIMEOUT_LIMITS.EXTERNAL_API,
-        'Medusa cart fetch'
-      );
-      // Check if any items require appointments
-      // Note: Medusa v1 with expand=items.variant.product puts product at item.variant.product
-      requiresAppointment =
-        cart.items?.some((item) => {
-          // Check both possible locations - Medusa v1 nests product under variant
-          const metadata =
-            (item.variant as { product?: { metadata?: Record<string, unknown> } })?.product
-              ?.metadata || item.product?.metadata;
-          const flag = metadata?.requires_appointment;
-          // Handle both boolean true and string "true"
-          return flag === true || flag === 'true';
-        }) || false;
-    } catch (error) {
-      if (error instanceof TimeoutError) {
-        console.error('[Checkout] Cart fetch timed out:', error.message);
-        return serverError('Checkout service is currently slow. Please try again in a moment.');
-      }
-      console.error('Failed to fetch cart for appointment check:', error);
-      // Continue checkout even if cart fetch fails
-    }
 
-    // Set customer email on cart (required for guest checkout)
-    // Medusa requires a customer email before completing the cart
-    if (email) {
+    if (cart_id) {
+      // Fetch cart to check for appointment-required products
+      let cart;
+      try {
+        cart = await withTimeout(
+          medusaClient.carts.get(cart_id),
+          TIMEOUT_LIMITS.EXTERNAL_API,
+          'Medusa cart fetch'
+        );
+        requiresAppointment =
+          cart.items?.some((item) => {
+            const metadata =
+              (item.variant as { product?: { metadata?: Record<string, unknown> } })?.product
+                ?.metadata || item.product?.metadata;
+            const flag = metadata?.requires_appointment;
+            return flag === true || flag === 'true';
+          }) || false;
+      } catch (error) {
+        if (error instanceof TimeoutError) {
+          console.error('[Checkout] Cart fetch timed out:', error.message);
+          return serverError('Checkout service is currently slow. Please try again in a moment.');
+        }
+        console.error('Failed to fetch cart for appointment check:', error);
+      }
+
+      // Set customer email on cart
+      if (email) {
+        try {
+          await withTimeout(
+            medusaClient.carts.update(cart_id, { email }),
+            TIMEOUT_LIMITS.EXTERNAL_API,
+            'Medusa cart update'
+          );
+        } catch (error) {
+          if (error instanceof TimeoutError) {
+            console.error('[Checkout] Cart update timed out:', error.message);
+            return serverError('Checkout service is currently slow. Please try again.');
+          }
+          console.error('Failed to set customer email on cart:', error);
+          return serverError('Failed to update cart with customer information');
+        }
+      }
+
+      // Initialize payment session and create Medusa order
       try {
         await withTimeout(
-          medusaClient.carts.update(cart_id, { email }),
+          medusaClient.carts.initializePaymentSessions(cart_id),
           TIMEOUT_LIMITS.EXTERNAL_API,
-          'Medusa cart update'
+          'Medusa payment session init'
+        );
+        await withTimeout(
+          medusaClient.carts.selectPaymentSession(cart_id, 'manual'),
+          TIMEOUT_LIMITS.EXTERNAL_API,
+          'Medusa payment session select'
         );
       } catch (error) {
         if (error instanceof TimeoutError) {
-          console.error('[Checkout] Cart update timed out:', error.message);
+          console.error('[Checkout] Payment session setup timed out:', error.message);
           return serverError('Checkout service is currently slow. Please try again.');
         }
-        console.error('Failed to set customer email on cart:', error);
-        return serverError('Failed to update cart with customer information');
+        console.error('Failed to initialize payment session:', error);
+        return serverError('Failed to prepare checkout. Please try again.');
       }
+
+      try {
+        order = await withTimeout(
+          medusaClient.orders.create(cart_id),
+          TIMEOUT_LIMITS.WEBHOOK,
+          'Medusa order creation'
+        );
+      } catch (error) {
+        if (error instanceof TimeoutError) {
+          console.error('[Checkout] Order creation timed out:', error.message);
+          return serverError('Order processing is taking longer than expected. Please check your email for confirmation or contact support.');
+        }
+        console.error('Failed to create order from cart:', error);
+        return serverError('Failed to create order from cart');
+      }
+
+      if (!order || !order.id) {
+        return serverError('Order creation failed');
+      }
+
+      // Invalidate cart cache
+      await cache.invalidate(CACHE_KEYS.cart(cart_id));
     }
 
-    // Initialize payment session on cart before completing
-    // Medusa requires this even for manual payment processing
-    try {
-      // Step 1: Initialize payment sessions (discovers available providers)
-      await withTimeout(
-        medusaClient.carts.initializePaymentSessions(cart_id),
-        TIMEOUT_LIMITS.EXTERNAL_API,
-        'Medusa payment session init'
-      );
+    // ====================================================================
+    // Generate order ID for service-only orders (no Medusa cart)
+    // ====================================================================
+    const orderId = order?.id || `svc_${crypto.randomUUID()}`;
 
-      // Step 2: Select the manual payment provider
-      // We use 'manual' because actual payment happens through Stripe separately
-      await withTimeout(
-        medusaClient.carts.selectPaymentSession(cart_id, 'manual'),
-        TIMEOUT_LIMITS.EXTERNAL_API,
-        'Medusa payment session select'
-      );
-    } catch (error) {
-      if (error instanceof TimeoutError) {
-        console.error('[Checkout] Payment session setup timed out:', error.message);
-        return serverError('Checkout service is currently slow. Please try again.');
-      }
-      console.error('Failed to initialize payment session:', error);
-      return serverError('Failed to prepare checkout. Please try again.');
-    }
-
-    // Create order from cart in Medusa
-    // This is the critical operation - use longer timeout (15s instead of 8s)
-    let order;
-    try {
-      order = await withTimeout(
-        medusaClient.orders.create(cart_id),
-        TIMEOUT_LIMITS.WEBHOOK, // 15 seconds for order creation
-        'Medusa order creation'
-      );
-    } catch (error) {
-      if (error instanceof TimeoutError) {
-        console.error('[Checkout] Order creation timed out:', error.message);
-        return serverError('Order processing is taking longer than expected. Please check your email for confirmation or contact support.');
-      }
-      console.error('Failed to create order from cart:', error);
-      // Log the full error for debugging
-      if (error && typeof error === 'object' && 'message' in error) {
-        console.error('Medusa error details:', error);
-      }
-      return serverError('Failed to create order from cart');
-    }
-
-    if (!order || !order.id) {
-      return serverError('Order creation failed');
-    }
-
-    // If authenticated, link order to Supabase user
+    // ====================================================================
+    // Save order to Supabase (both Medusa and service items)
+    // ====================================================================
     if (isAuthenticated && userId) {
       try {
         const supabase = await createSupabaseServerClient();
+
+        // Calculate total: Medusa order total (cents) + service total (dollars → cents)
+        const medusaTotal = order?.total || 0;
+        const serviceTotalCents = (service_total || 0) * 100;
+        const combinedTotal = medusaTotal + serviceTotalCents;
+
         const { error: dbError } = await supabase
           .from('orders')
           .insert({
             user_id: userId,
-            medusa_order_id: order.id,
-            total: order.total,
-            status: order.status,
-            email: order.email,
+            medusa_order_id: orderId,
+            total: combinedTotal,
+            status: order?.status || 'pending',
+            email: order?.email || email,
             requires_appointment: requiresAppointment,
+            ...(service_items && service_items.length > 0 ? { service_items } : {}),
           });
 
         if (dbError) {
           console.error('Failed to link order to user:', dbError);
-          // Don't fail checkout - order exists in Medusa
         }
 
-        // Invalidate user's order cache
         await cache.invalidate(CACHE_KEYS.userOrders(userId));
       } catch (error) {
         console.error('Failed to save order to Supabase:', error);
-        // Don't fail checkout - order exists in Medusa
       }
     }
-
-    // Invalidate cart cache since it's now converted to order
-    await cache.invalidate(CACHE_KEYS.cart(cart_id));
 
     return NextResponse.json(
       {
         success: true,
-        order,
-        order_id: order.id,
-        tracking_email: order.email,
+        order: order || null,
+        order_id: orderId,
+        tracking_email: order?.email || email,
         requires_appointment: requiresAppointment,
       },
       { status: 201 }

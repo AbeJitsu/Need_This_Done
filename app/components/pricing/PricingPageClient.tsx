@@ -12,6 +12,7 @@ import { EditableSection, EditableItem, SortableItemsWrapper } from '@/component
 import { useInlineEdit } from '@/context/InlineEditContext';
 import type { PricingPageContent, AccentVariant } from '@/lib/page-content-types';
 import { formInputColors, headingColors, dividerColors, accentColors, accentBorderWidth, checkmarkColors, featureCardColors, stepBadgeColors, mutedTextColors, alertColors } from '@/lib/colors';
+import { scrollToId } from '@/lib/scroll-utils';
 
 // ============================================================================
 // Pricing Page Client - Universal Editing Version
@@ -59,12 +60,8 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
   // ============================================================================
   // Scroll Helper for Quick Navigation
   // ============================================================================
-  const scrollTo = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+  // Uses scrollToId utility which respects prefers-reduced-motion preference
+  const scrollTo = (id: string) => scrollToId(id, { block: 'start' });
 
   // ============================================================================
   // Handle Quote Authorization Form Submission

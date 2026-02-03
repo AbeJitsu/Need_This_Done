@@ -6,6 +6,7 @@ import { getServices } from '@/config/site.config';
 import { useEditableContent } from '@/hooks/useEditableContent';
 import type { ContactPageContent } from '@/lib/page-content-types';
 import { defaultContactContent } from '@/lib/default-page-content';
+import { scrollIntoViewWithMotionPreference } from '@/lib/scroll-utils';
 import {
   Clock,
   MessageSquare,
@@ -96,12 +97,12 @@ export default function ContactPage() {
     }
   }, []);
 
-  // Scroll to consultation picker after it renders
+  // Scroll to consultation picker after it renders (respects prefers-reduced-motion)
   useEffect(() => {
     if (contactPath === 'consultation' && shouldScrollToPicker) {
       const scrollToPicker = () => {
         if (consultationPickerRef.current) {
-          consultationPickerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          scrollIntoViewWithMotionPreference(consultationPickerRef.current, { block: 'center' });
           setShouldScrollToPicker(false);
         }
       };
@@ -111,23 +112,24 @@ export default function ContactPage() {
     }
   }, [contactPath, shouldScrollToPicker]);
 
-  // Handle path selection (Quote vs Consultation)
+  // Handle path selection (Quote vs Consultation) - respects prefers-reduced-motion
   const handlePathSelect = (path: 'quote' | 'consultation') => {
     setContactPath(path);
     if (path === 'quote') {
       setTimeout(() => {
-        formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollIntoViewWithMotionPreference(formSectionRef.current, { block: 'start' });
       }, 150);
     } else if (path === 'consultation') {
       setShouldScrollToPicker(true);
     }
   };
 
-  // Handle consultation type selection with smooth scroll to form
+  // Handle consultation type selection with scroll to form (respects prefers-reduced-motion)
   const handleConsultationSelect = (typeId: string) => {
     setSelectedConsultation(typeId);
+    // Scroll to form after a brief delay for visual feedback
     setTimeout(() => {
-      formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollIntoViewWithMotionPreference(formSectionRef.current, { block: 'start' });
     }, 150);
   };
 
