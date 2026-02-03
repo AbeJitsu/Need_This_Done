@@ -103,6 +103,7 @@ export default function UnifiedPricingPage() {
   const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkingOutPackage, setCheckingOutPackage] = useState<string | null>(null);
+  const [addingService, setAddingService] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState('');
   const [toastMessage, setToastMessage] = useState('');
 
@@ -222,6 +223,31 @@ export default function UnifiedPricingPage() {
     } catch (err) {
       setCheckoutError(err instanceof Error ? err.message : 'Failed to add items to cart');
       setIsCheckingOut(false);
+    }
+  };
+
+  // ========================================================================
+  // Service checkout - add service/subscription to Medusa cart
+  // ========================================================================
+  const handleServiceAddToCart = async (service: PricingProduct) => {
+    setAddingService(service.id);
+    setCheckoutError('');
+
+    try {
+      await addItem(service.variantId, 1, {
+        title: service.title,
+        unit_price: service.price,
+      });
+
+      setToastMessage(`${service.title} added to cart!`);
+      setTimeout(() => {
+        setToastMessage('');
+        setAddingService(null);
+        router.push('/cart');
+      }, 1000);
+    } catch (err) {
+      setCheckoutError(err instanceof Error ? err.message : 'Failed to add to cart');
+      setAddingService(null);
     }
   };
 
@@ -599,8 +625,13 @@ export default function UnifiedPricingPage() {
                         <span className="text-5xl font-black text-white">${automationService.price / 100}</span>
                         <span className="text-base font-medium text-white/50">per workflow</span>
                       </div>
-                      <Button variant="purple" href="/contact#consultation" className="w-full mt-auto bg-white/15 border border-white/20 text-white hover:bg-white/25 shadow-lg shadow-purple-500/25">
-                        Book a Call
+                      <Button
+                        variant="purple"
+                        onClick={() => handleServiceAddToCart(automationService)}
+                        disabled={addingService === automationService.id}
+                        className="w-full mt-auto bg-white/15 border border-white/20 text-white hover:bg-white/25 shadow-lg shadow-purple-500/25"
+                      >
+                        {addingService === automationService.id ? 'Adding...' : 'Add to Cart'}
                       </Button>
                     </div>
                   </div>
@@ -629,8 +660,13 @@ export default function UnifiedPricingPage() {
                         <span className="text-5xl font-black text-white">${subscriptionService.price / 100}</span>
                         <span className="text-base font-medium text-white/50">per month</span>
                       </div>
-                      <Button variant="gold" href="/contact#consultation" className="w-full mt-auto bg-white/10 border border-white/15 text-white hover:bg-white/20 shadow-lg shadow-gold-500/25">
-                        Book a Call
+                      <Button
+                        variant="gold"
+                        onClick={() => handleServiceAddToCart(subscriptionService)}
+                        disabled={addingService === subscriptionService.id}
+                        className="w-full mt-auto bg-white/10 border border-white/15 text-white hover:bg-white/20 shadow-lg shadow-gold-500/25"
+                      >
+                        {addingService === subscriptionService.id ? 'Adding...' : 'Subscribe'}
                       </Button>
                     </div>
                   </div>

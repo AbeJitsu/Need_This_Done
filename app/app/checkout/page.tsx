@@ -6,8 +6,6 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { StripeElementsWrapper } from '@/context/StripeContext';
 import Button from '@/components/Button';
-import PageHeader from '@/components/PageHeader';
-import Card from '@/components/Card';
 import PaymentForm from '@/components/PaymentForm';
 import AppointmentStepForm, { AppointmentData } from '@/components/AppointmentStepForm';
 import AddressSelector from '@/components/AddressSelector';
@@ -16,17 +14,14 @@ import { calculateDeposit, calculateBalanceRemaining } from '@/lib/deposit-utils
 import {
   formInputColors,
   formValidationColors,
-  featureCardColors,
   alertColors,
   headingColors,
-  dividerColors,
-  lightBgColors,
   accentColors,
-  cardBgColors,
 } from '@/lib/colors';
 import { COPY_FEEDBACK_DELAY } from '@/lib/timing';
 import { CheckIcon } from '@/components/ui/icons';
 import { convertTo12HourFormat } from '@/lib/time-utils';
+import { FadeIn } from '@/components/motion';
 
 // ============================================================================
 // Checkout Page - /checkout
@@ -97,66 +92,74 @@ export default function CheckoutPage() {
     return 'Product';
   };
 
-  // Reusable order summary for all checkout steps
+  // Reusable order summary for all checkout steps - Dark Glass Treatment
   const renderOrderSummary = () => (
-    <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.base}`}>
-      <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
-        Order Summary
-      </h2>
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8">
+      {/* Accent glows */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-24 h-24 bg-emerald-500/15 rounded-full blur-2xl" />
 
-      {/* All cart items from Medusa */}
-      {hasItems && (
-        <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-          {cart?.items?.map((item) => {
-            const isSubscription = item.product?.metadata?.type === 'subscription';
-            return (
-              <div key={item.id} className="flex justify-between items-start">
-                <div className="flex-1">
-                  <p className={`font-medium ${headingColors.primary} text-sm`}>
-                    {item.title || item.variant?.title || item.product?.title || 'Item'}
-                  </p>
-                  <p className={`text-xs ${formInputColors.helper}`}>
-                    {getItemTypeLabel(item)} &middot; Qty: {item.quantity}
+      <div className="relative z-10">
+        {/* Section header */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-6 h-1 rounded-full bg-gradient-to-r from-purple-400 to-emerald-400" />
+          <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Order Summary</span>
+        </div>
+
+        {/* All cart items from Medusa */}
+        {hasItems && (
+          <div className="space-y-4 mb-6 pb-6 border-b border-white/10">
+            {cart?.items?.map((item) => {
+              const isSubscription = item.product?.metadata?.type === 'subscription';
+              return (
+                <div key={item.id} className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <p className="font-medium text-white text-sm">
+                      {item.title || item.variant?.title || item.product?.title || 'Item'}
+                    </p>
+                    <p className="text-xs text-slate-400">
+                      {getItemTypeLabel(item)} &middot; Qty: {item.quantity}
+                    </p>
+                  </div>
+                  <p className="font-semibold text-white text-sm">
+                    ${(((item.unit_price || 0) * item.quantity) / 100).toFixed(2)}
+                    {isSubscription && <span className="text-xs font-normal text-slate-400">/mo</span>}
                   </p>
                 </div>
-                <p className={`font-semibold ${headingColors.primary} text-sm`}>
-                  ${(((item.unit_price || 0) * item.quantity) / 100).toFixed(2)}
-                  {isSubscription && <span className="text-xs font-normal">/mo</span>}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Totals */}
-      <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-        <div className="flex justify-between">
-          <span className={formInputColors.helper}>Subtotal</span>
-          <span className={`font-semibold ${headingColors.primary}`}>
-            ${((cart?.subtotal || 0) / 100).toFixed(2)}
-          </span>
-        </div>
-        {(cart?.tax_total || 0) > 0 && (
-          <div className="flex justify-between">
-            <span className={formInputColors.helper}>Tax</span>
-            <span className={`font-semibold ${headingColors.primary}`}>
-              ${((cart?.tax_total || 0) / 100).toFixed(2)}
-            </span>
+              );
+            })}
           </div>
         )}
-      </div>
 
-      <div className="flex justify-between mb-6">
-        <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
-        <span className={`text-2xl font-bold ${headingColors.primary}`}>
-          ${(total / 100).toFixed(2)}
-        </span>
-      </div>
+        {/* Totals */}
+        <div className="space-y-4 mb-6 pb-6 border-b border-white/10">
+          <div className="flex justify-between">
+            <span className="text-slate-400">Subtotal</span>
+            <span className="font-semibold text-white">
+              ${((cart?.subtotal || 0) / 100).toFixed(2)}
+            </span>
+          </div>
+          {(cart?.tax_total || 0) > 0 && (
+            <div className="flex justify-between">
+              <span className="text-slate-400">Tax</span>
+              <span className="font-semibold text-white">
+                ${((cart?.tax_total || 0) / 100).toFixed(2)}
+              </span>
+            </div>
+          )}
+        </div>
 
-      <Button variant="blue" href="/cart" className="w-full" size="lg">
-        Edit Cart
-      </Button>
+        <div className="flex justify-between items-baseline mb-8">
+          <span className="text-lg font-bold text-white">Total</span>
+          <span className="text-3xl font-black text-white">
+            ${(total / 100).toFixed(2)}
+          </span>
+        </div>
+
+        <Button variant="gray" href="/cart" className="w-full bg-white/10 hover:bg-white/15 border-white/10 text-white" size="lg">
+          Edit Cart
+        </Button>
+      </div>
     </div>
   );
 
@@ -446,147 +449,171 @@ export default function CheckoutPage() {
   };
 
   // ========================================================================
-  // Order confirmation screen (Step 3)
+  // Order confirmation screen (Step 3) - Editorial Treatment
   // ========================================================================
   if (currentStep === 'confirmation') {
     return (
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
-        <div className="text-center mb-8">
-          <div className={`inline-block p-3 ${accentColors.green.bg} rounded-full mb-4`}>
-            <svg
-              className={`w-8 h-8 ${featureCardColors.success.icon}`}
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
-            You're All Set!
-          </h1>
-          <p className={formInputColors.helper}>
-            Thanks so much for your order - we're excited to get started!
-            {requiresAppointment && ' We\'ll confirm your appointment shortly.'}
-          </p>
-        </div>
+      <div className="min-h-screen">
+        {/* Hero Header */}
+        <section className="pt-8 md:pt-12 pb-4">
+          <div className="relative overflow-hidden py-12 md:py-16 md:max-w-6xl md:mx-auto md:rounded-3xl">
+            {/* Dark gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950" />
+            {/* Accent glows */}
+            <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
+            {/* Success check watermark */}
+            <div className="absolute -bottom-8 -right-4 text-[10rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">✓</div>
 
-        <Card hoverEffect="none" className="mb-6">
-          <div className="p-4 sm:p-6 lg:p-8">
-            <div className={`mb-6 pb-6 ${dividerColors.border} border-b`}>
-              <p className={`text-sm ${formInputColors.helper} mb-2`}>
-                Order Number
-              </p>
-              <div className="flex items-center gap-3">
-                <p className={`text-xl sm:text-2xl font-bold ${headingColors.primary} font-mono`}>
-                  {orderId.length > 16
-                    ? `${orderId.slice(0, 10)}...${orderId.slice(-6)}`
-                    : orderId}
+            <div className="relative z-10 px-6 sm:px-8 md:px-12 text-center">
+              <FadeIn direction="up" triggerOnScroll={false}>
+                {/* Success icon */}
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/30 mb-6">
+                  <svg className="w-8 h-8 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[0.95] mb-4">
+                  You&apos;re all set!
+                </h1>
+                <p className="text-xl text-slate-400 max-w-xl mx-auto leading-relaxed">
+                  Thanks so much for your order - we&apos;re excited to get started!
+                  {requiresAppointment && ' We\'ll confirm your appointment shortly.'}
                 </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    navigator.clipboard.writeText(orderId);
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), COPY_FEEDBACK_DELAY);
-                  }}
-                  className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
-                    copied
-                      ? `${accentColors.green.bg} ${accentColors.green.text}`
-                      : `${accentColors.gray.bg} ${headingColors.secondary} ${cardBgColors.interactive}`
-                  }`}
-                  title="Copy full order number"
-                >
-                  {copied ? (
+              </FadeIn>
+            </div>
+          </div>
+        </section>
+
+        {/* Order Details */}
+        <section className="py-8 md:py-12">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 md:px-8">
+            <FadeIn direction="up" delay={0.1}>
+              {/* Order card - Dark Glass Treatment */}
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8 mb-6">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/15 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl" />
+
+                <div className="relative z-10">
+                  {/* Order Number */}
+                  <div className="mb-6 pb-6 border-b border-white/10">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-6 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-purple-400" />
+                      <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Order Number</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <p className="text-xl sm:text-2xl font-bold text-white font-mono">
+                        {orderId.length > 16
+                          ? `${orderId.slice(0, 10)}...${orderId.slice(-6)}`
+                          : orderId}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(orderId);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), COPY_FEEDBACK_DELAY);
+                        }}
+                        className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                          copied
+                            ? 'bg-emerald-500/20 text-emerald-400'
+                            : 'bg-white/10 text-white hover:bg-white/15'
+                        }`}
+                        title="Copy full order number"
+                      >
+                        {copied ? (
+                          <>
+                            <CheckIcon size="sm" />
+                            Copied
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            Copy
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Confirmation Email */}
+                  <div className="mb-6">
+                    <p className="text-sm text-slate-400 mb-2">Confirmation Email</p>
+                    <p className="text-lg text-white font-medium">{email}</p>
+                    <p className="text-sm text-slate-400 mt-2">
+                      Check your inbox for a confirmation email with your order details.
+                    </p>
+                  </div>
+
+                  {/* Appointment confirmation message or error */}
+                  {requiresAppointment && appointmentData && (
                     <>
-                      <CheckIcon size="sm" />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                      </svg>
-                      Copy
+                      {appointmentCreationError && (
+                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+                          <p className="text-sm font-semibold text-red-400">
+                            ⚠️ Appointment Request Failed
+                          </p>
+                          <p className="text-sm text-red-300 mt-2">
+                            {appointmentCreationError}
+                          </p>
+                          <p className="text-sm text-red-300/80 mt-2">
+                            Your payment was processed successfully, but we couldn&apos;t register your appointment request.
+                            Please contact us at <a href="mailto:admin@needthisdone.com" className="underline font-medium text-red-400">admin@needthisdone.com</a> with your order number to schedule your consultation.
+                          </p>
+                        </div>
+                      )}
+                      {!appointmentCreationError && (
+                        <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+                          <p className="text-sm text-blue-300">
+                            <strong className="text-blue-400">Appointment Requested:</strong>{' '}
+                            {new Date(appointmentData.preferredDate + 'T12:00:00').toLocaleDateString('en-US', {
+                              weekday: 'long',
+                              month: 'long',
+                              day: 'numeric',
+                            })}{' '}
+                            at {appointmentData.preferredTimeStart.replace(/^(\d{2}):(\d{2})$/, (_, h, m) => {
+                              const hour = parseInt(h);
+                              const ampm = hour >= 12 ? 'PM' : 'AM';
+                              const hour12 = convertTo12HourFormat(hour);
+                              return `${hour12}:${m} ${ampm}`;
+                            })}
+                          </p>
+                          <p className="text-sm text-blue-300/80 mt-1">
+                            We&apos;ll review your request and confirm within 24 hours.
+                          </p>
+                        </div>
+                      )}
                     </>
                   )}
-                </button>
+
+                  {/* Success message */}
+                  <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+                    <p className="text-sm text-emerald-300">
+                      Your payment has been processed securely. You&apos;ll receive a
+                      receipt via email shortly.
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
+            </FadeIn>
 
-            <div className="mb-6">
-              <p className={`text-sm ${formInputColors.helper} mb-2`}>
-                Confirmation Email
-              </p>
-              <p className={`text-lg ${headingColors.primary} font-medium`}>{email}</p>
-              <p className={`text-sm ${formInputColors.helper} mt-2`}>
-                Check your inbox for a confirmation email with your order details.
-              </p>
-            </div>
-
-            {/* Appointment confirmation message or error */}
-            {requiresAppointment && appointmentData && (
-              <>
-                {appointmentCreationError && (
-                  <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-                    <p className={`text-sm font-semibold ${formValidationColors.error}`}>
-                      ⚠️ Appointment Request Failed
-                    </p>
-                    <p className={`text-sm ${formValidationColors.error} mt-2`}>
-                      {appointmentCreationError}
-                    </p>
-                    <p className={`text-sm ${formValidationColors.error} mt-2 opacity-80`}>
-                      Your payment was processed successfully, but we couldn't register your appointment request.
-                      Please contact us at <a href="mailto:admin@needthisdone.com" className="underline font-medium">admin@needthisdone.com</a> with your order number to schedule your consultation.
-                    </p>
-                  </div>
+            <FadeIn direction="up" delay={0.2}>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button variant="purple" href="/pricing" className="flex-1 shadow-lg shadow-purple-500/25" size="lg">
+                  Continue Shopping
+                </Button>
+                {isAuthenticated && (
+                  <Button variant="blue" href="/dashboard" className="flex-1 shadow-lg shadow-blue-500/25" size="lg">
+                    View My Orders
+                  </Button>
                 )}
-                {!appointmentCreationError && (
-                  <div className={`mb-6 p-4 ${alertColors.info.bg} ${alertColors.info.border} rounded-lg`}>
-                    <p className={`text-sm ${alertColors.info.text}`}>
-                      <strong>Appointment Requested:</strong>{' '}
-                      {new Date(appointmentData.preferredDate + 'T12:00:00').toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        month: 'long',
-                        day: 'numeric',
-                      })}{' '}
-                      at {appointmentData.preferredTimeStart.replace(/^(\d{2}):(\d{2})$/, (_, h, m) => {
-                        const hour = parseInt(h);
-                        const ampm = hour >= 12 ? 'PM' : 'AM';
-                        const hour12 = convertTo12HourFormat(hour);
-                        return `${hour12}:${m} ${ampm}`;
-                      })}
-                    </p>
-                    <p className={`text-sm ${alertColors.info.text} mt-1 opacity-80`}>
-                      We&apos;ll review your request and confirm within 24 hours.
-                    </p>
-                  </div>
-                )}
-              </>
-            )}
-
-            <div className={`${alertColors.success.bg} ${alertColors.success.border} rounded-lg p-4`}>
-              <p className={`text-sm ${formValidationColors.success}`}>
-                Your payment has been processed securely. You&apos;ll receive a
-                receipt via email shortly.
-              </p>
-            </div>
+              </div>
+            </FadeIn>
           </div>
-        </Card>
-
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button variant="purple" href="/pricing" className="flex-1">
-            Continue Shopping
-          </Button>
-          {isAuthenticated && (
-            <Button variant="blue" href="/dashboard" className="flex-1">
-              View My Orders
-            </Button>
-          )}
-        </div>
+        </section>
       </div>
     );
   }
@@ -596,482 +623,641 @@ export default function CheckoutPage() {
   // ========================================================================
   if (currentStep === 'appointment' && appointmentInfo) {
     return (
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
-        <PageHeader title="Schedule Your Consultation" description="Pick a time that works for you" />
+      <div className="min-h-screen">
+        {/* Hero Header */}
+        <section className="pt-8 md:pt-12 pb-4">
+          <div className="relative overflow-hidden py-12 md:py-16 md:max-w-6xl md:mx-auto md:rounded-3xl">
+            {/* Dark gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950" />
+            {/* Accent glows */}
+            <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
+            {/* Calendar watermark */}
+            <div className="absolute -bottom-8 -right-4 text-[10rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">📅</div>
 
-        <Card hoverEffect="none">
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
-            {/* Left column - Appointment form */}
-            <div className="w-full">
-              {/* Error message */}
-              {error && (
-                <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-                  <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
+            <div className="relative z-10 px-6 sm:px-8 md:px-12">
+              <FadeIn direction="up" triggerOnScroll={false}>
+                {/* Editorial header */}
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-8 h-1 rounded-full bg-gradient-to-r from-blue-400 to-purple-400" />
+                  <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Step 2 of 3</span>
                 </div>
-              )}
-
-              <AppointmentStepForm
-                durationMinutes={appointmentInfo.durationMinutes}
-                serviceName={appointmentInfo.serviceName}
-                onComplete={handleAppointmentComplete}
-                onBack={() => setCurrentStep('info')}
-                isProcessing={isProcessing}
-              />
-            </div>
-
-            {/* Right column - Order Summary */}
-            <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              {renderOrderSummary()}
-
-              {/* What happens next */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 ${lightBgColors.blue}`}>
-                <p className={`text-sm ${formInputColors.helper}`}>
-                  <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[0.95] mb-4">
+                  Pick your time.
+                </h1>
+                <p className="text-xl text-slate-400 max-w-xl leading-relaxed">
+                  Choose a time that works best for your {appointmentInfo.serviceName}.
                 </p>
+              </FadeIn>
+            </div>
+          </div>
+        </section>
+
+        {/* Main Content */}
+        <section className="py-8 md:py-12">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 lg:gap-10">
+              {/* Left column - Appointment form */}
+              <div className="w-full">
+                {/* Error message */}
+                {error && (
+                  <FadeIn direction="up">
+                    <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-xl`}>
+                      <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
+                    </div>
+                  </FadeIn>
+                )}
+
+                <FadeIn direction="up" delay={0.1}>
+                  <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg shadow-slate-200/50">
+                    <AppointmentStepForm
+                      durationMinutes={appointmentInfo.durationMinutes}
+                      serviceName={appointmentInfo.serviceName}
+                      onComplete={handleAppointmentComplete}
+                      onBack={() => setCurrentStep('info')}
+                      isProcessing={isProcessing}
+                    />
+                  </div>
+                </FadeIn>
+              </div>
+
+              {/* Right column - Order Summary */}
+              <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
+                <FadeIn direction="up" delay={0.2}>
+                  {renderOrderSummary()}
+                </FadeIn>
+
+                <FadeIn direction="up" delay={0.3}>
+                  {/* What happens next - Dark Glass Card */}
+                  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-5 sm:p-6">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/10 rounded-full blur-2xl" />
+
+                    <div className="relative z-10">
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                          <span className="text-blue-400 text-sm">💡</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-white mb-1">What happens next?</p>
+                          <p className="text-sm text-slate-400 leading-relaxed">
+                            After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </FadeIn>
               </div>
             </div>
           </div>
-        </Card>
+        </section>
       </div>
     );
   }
 
   // ========================================================================
-  // Payment step (Step 3)
+  // Payment step (Step 3) - Editorial Treatment
   // ========================================================================
   if (currentStep === 'payment' && clientSecret) {
     return (
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
-        <PageHeader title="Payment" description="Complete your purchase" />
+      <div className="min-h-screen">
+        {/* Hero Header */}
+        <section className="pt-8 md:pt-12 pb-4">
+          <div className="relative overflow-hidden py-12 md:py-16 md:max-w-6xl md:mx-auto md:rounded-3xl">
+            {/* Dark gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950" />
+            {/* Accent glows */}
+            <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl" />
+            {/* Payment watermark */}
+            <div className="absolute -bottom-8 -right-4 text-[10rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">💳</div>
 
-        <Card hoverEffect="none">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
-            {/* Left column - Payment form */}
-            <div className="w-full space-y-6">
-              {/* Error message */}
-              {error && (
-                <div className={`p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-                  <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
+            <div className="relative z-10 px-6 sm:px-8 md:px-12">
+              <FadeIn direction="up" triggerOnScroll={false}>
+                {/* Editorial header */}
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-400 to-emerald-400" />
+                  <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Step 3 of 3</span>
                 </div>
-              )}
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[0.95] mb-4">
+                  Secure payment.
+                </h1>
+                <p className="text-xl text-slate-400 max-w-xl leading-relaxed">
+                  Complete your purchase with our secure payment system.
+                </p>
+              </FadeIn>
+            </div>
+          </div>
+        </section>
 
-              {/* Deposit Payment Notice */}
-              {!payInFull && (
-                <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-                  <div className="flex gap-3">
-                    <div className="flex-shrink-0">
-                      <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zm-11-1h2v2H7V4zm2 4H7v2h2V8zm2-4h2v2h-2V4zm2 4h-2v2h2V8z" clipRule="evenodd" />
-                      </svg>
+        {/* Main Content */}
+        <section className="py-8 md:py-12">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
+              {/* Left column - Payment form */}
+              <div className="w-full space-y-6">
+                {/* Error message */}
+                {error && (
+                  <FadeIn direction="up">
+                    <div className={`p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-xl`}>
+                      <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-blue-900">Deposit Payment</h3>
-                      <p className="text-sm text-blue-700 mt-1">
-                        Pay <strong>${(calculateDeposit(cart?.total || 0) / 100).toFixed(2)}</strong> today to secure your order.
-                        The remaining <strong>${(calculateBalanceRemaining(cart?.total || 0) / 100).toFixed(2)}</strong> will be charged
-                        when your order is ready for delivery.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Full Payment Option */}
-              <label className="flex items-center gap-2 text-sm p-3 border rounded hover:bg-gray-50 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={payInFull}
-                  onChange={(e) => {
-                    setPayInFull(e.target.checked);
-                    setConsentChecked(false); // Reset consent when toggling
-                  }}
-                  className="w-4 h-4"
-                />
-                <span className="text-gray-700">
-                  Pay in full now (${((cart?.total || 0) / 100).toFixed(2)}) instead of deposit
-                </span>
-              </label>
-
-              {/* Consent Checkbox */}
-              <label className="flex items-start gap-2 text-sm p-3 border rounded hover:bg-gray-50 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={consentChecked}
-                  onChange={(e) => setConsentChecked(e.target.checked)}
-                  className="w-4 h-4 mt-1"
-                  required
-                />
-                <span className="text-gray-700">
-                  {payInFull ? (
-                    <>I understand I'm paying the full amount now.</>
-                  ) : (
-                    <>I authorize charging the remaining balance when my order is ready. I can update my payment method or pay with an alternative method if needed.</>
-                  )}
-                </span>
-              </label>
-
-              {/* Payment form */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
-                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
-                  Payment Details
-                </h2>
-
-                {!consentChecked && (
-                  <div className={`p-3 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-                    <p className={`text-sm ${formValidationColors.error}`}>
-                      Please check the consent box above to continue
-                    </p>
-                  </div>
+                  </FadeIn>
                 )}
 
-                <StripeElementsWrapper clientSecret={clientSecret}>
-                  <PaymentForm
-                    onSuccess={handlePaymentSuccess}
-                    onError={handlePaymentError}
-                    returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/checkout`}
-                    submitText={payInFull
-                      ? `Pay in Full $${(total / 100).toFixed(2)}`
-                      : `Pay Deposit $${(calculateDeposit(total) / 100).toFixed(2)}`
-                    }
-                  />
-                </StripeElementsWrapper>
+                {/* Deposit Payment Notice */}
+                <FadeIn direction="up" delay={0.1}>
+                  {!payInFull && (
+                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-900/50 to-blue-950/50 border border-blue-500/20 p-5">
+                      <div className="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-full blur-2xl" />
+                      <div className="relative z-10 flex gap-4">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                          <span className="text-blue-400">💰</span>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-bold text-white mb-1">Deposit Payment</h3>
+                          <p className="text-sm text-blue-200">
+                            Pay <strong className="text-white">${(calculateDeposit(cart?.total || 0) / 100).toFixed(2)}</strong> today to secure your order.
+                            The remaining <strong className="text-white">${(calculateBalanceRemaining(cart?.total || 0) / 100).toFixed(2)}</strong> will be charged
+                            when your order is ready for delivery.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </FadeIn>
+
+                {/* Payment options card */}
+                <FadeIn direction="up" delay={0.15}>
+                  <div className="bg-white rounded-2xl p-6 shadow-lg shadow-slate-200/50 space-y-4">
+                    {/* Full Payment Option */}
+                    <label className="flex items-center gap-3 text-sm p-4 border-2 border-gray-100 rounded-xl hover:border-purple-200 hover:bg-purple-50/50 cursor-pointer transition-all">
+                      <input
+                        type="checkbox"
+                        checked={payInFull}
+                        onChange={(e) => {
+                          setPayInFull(e.target.checked);
+                          setConsentChecked(false);
+                        }}
+                        className="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                      />
+                      <span className="text-gray-700 font-medium">
+                        Pay in full now (${((cart?.total || 0) / 100).toFixed(2)}) instead of deposit
+                      </span>
+                    </label>
+
+                    {/* Consent Checkbox */}
+                    <label className="flex items-start gap-3 text-sm p-4 border-2 border-gray-100 rounded-xl hover:border-emerald-200 hover:bg-emerald-50/50 cursor-pointer transition-all">
+                      <input
+                        type="checkbox"
+                        checked={consentChecked}
+                        onChange={(e) => setConsentChecked(e.target.checked)}
+                        className="w-5 h-5 mt-0.5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                        required
+                      />
+                      <span className="text-gray-700">
+                        {payInFull ? (
+                          <>I understand I&apos;m paying the full amount now.</>
+                        ) : (
+                          <>I authorize charging the remaining balance when my order is ready. I can update my payment method or pay with an alternative method if needed.</>
+                        )}
+                      </span>
+                    </label>
+                  </div>
+                </FadeIn>
+
+                {/* Payment form */}
+                <FadeIn direction="up" delay={0.2}>
+                  <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg shadow-slate-200/50">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-6 h-1 rounded-full bg-gradient-to-r from-purple-500 to-emerald-500" />
+                      <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Payment Details</span>
+                    </div>
+
+                    {!consentChecked && (
+                      <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <p className="text-sm text-amber-800 font-medium">
+                          ⚠️ Please check the consent box above to continue
+                        </p>
+                      </div>
+                    )}
+
+                    <StripeElementsWrapper clientSecret={clientSecret}>
+                      <PaymentForm
+                        onSuccess={handlePaymentSuccess}
+                        onError={handlePaymentError}
+                        returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/checkout`}
+                        submitText={payInFull
+                          ? `Pay in Full $${(total / 100).toFixed(2)}`
+                          : `Pay Deposit $${(calculateDeposit(total) / 100).toFixed(2)}`
+                        }
+                      />
+                    </StripeElementsWrapper>
+                  </div>
+                </FadeIn>
+
+                {/* Back button */}
+                <FadeIn direction="up" delay={0.25}>
+                  <Button
+                    variant="gray"
+                    onClick={() => setCurrentStep(requiresAppointment ? 'appointment' : 'info')}
+                    className="w-full"
+                    size="lg"
+                  >
+                    {requiresAppointment ? 'Back to Scheduling' : 'Back to Information'}
+                  </Button>
+                </FadeIn>
               </div>
 
-              {/* Back button */}
-              <Button
-                variant="gray"
-                onClick={() => setCurrentStep(requiresAppointment ? 'appointment' : 'info')}
-                className="w-full"
-                size="lg"
-              >
-                {requiresAppointment ? 'Back to Scheduling' : 'Back to Information'}
-              </Button>
-            </div>
+              {/* Right column - Order Summary */}
+              <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
+                <FadeIn direction="up" delay={0.2}>
+                  {renderOrderSummary()}
+                </FadeIn>
 
-            {/* Right column - Order Summary */}
-            <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              {renderOrderSummary()}
+                <FadeIn direction="up" delay={0.3}>
+                  {/* What happens next - Dark Glass Card */}
+                  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-5 sm:p-6">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-emerald-500/10 rounded-full blur-2xl" />
 
-              {/* What happens next */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 ${lightBgColors.blue}`}>
-                <p className={`text-sm ${formInputColors.helper}`}>
-                  <strong>What happens next?</strong> After payment, we&apos;ll confirm your appointment within 24 hours and send you calendar details.
-                </p>
+                    <div className="relative z-10">
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                          <span className="text-emerald-400 text-sm">🔒</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-white mb-1">Secure & Protected</p>
+                          <p className="text-sm text-slate-400 leading-relaxed">
+                            Your payment is encrypted and processed securely through Stripe.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </FadeIn>
               </div>
             </div>
           </div>
-        </Card>
+        </section>
       </div>
     );
   }
 
   // ========================================================================
-  // Information step (Step 1)
+  // Information step (Step 1) - Editorial Treatment
   // ========================================================================
   return (
-    <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8">
-      <PageHeader title="Checkout" description="Complete your purchase" />
+    <div className="min-h-screen">
+      {/* Hero Header */}
+      <section className="pt-8 md:pt-12 pb-4">
+        <div className="relative overflow-hidden py-12 md:py-16 md:max-w-6xl md:mx-auto md:rounded-3xl">
+          {/* Dark gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950" />
+          {/* Accent glows */}
+          <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl" />
+          {/* Checkout watermark */}
+          <div className="absolute -bottom-8 -right-4 text-[10rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">✨</div>
 
-      {itemCount === 0 ? (
-        <Card hoverEffect="none">
-          <div className="p-4 sm:p-6 lg:p-8 text-center">
-            <p className={`${formInputColors.helper} mb-4`}>
-              Your cart is empty.
-            </p>
-            <Button variant="purple" href="/pricing">
-              Browse Services
-            </Button>
-          </div>
-        </Card>
-      ) : (
-        <Card hoverEffect="none">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
-            {/* Left column - Checkout form */}
-            <form onSubmit={handleInfoSubmit} className="w-full space-y-8">
-              {/* Error message */}
-              {error && (
-                <div className={`p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-                  <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
-                </div>
-              )}
-
-              {/* Contact Information - Inner rectangle 1 */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
-                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
-                  Contact Information
-                </h2>
-
-                {isAuthenticated ? (
-                  <div>
-                    <p className={`text-sm ${formInputColors.helper} mb-2`}>
-                      Email
-                    </p>
-                    <p className={`text-lg ${headingColors.primary} font-medium`}>
-                      {email}
-                    </p>
-                    <p className={`text-sm ${formInputColors.helper} mt-2`}>
-                      Logged in as{' '}
-                      <span className="font-semibold">{user?.email}</span>
-                    </p>
-                  </div>
-                ) : (
-                  <div>
-                    <label htmlFor="checkout-email" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="checkout-email"
-                      ref={emailRef}
-                      autoComplete="email"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        if (fieldErrors.email) {
-                          setFieldErrors(prev => ({ ...prev, email: '' }));
-                        }
-                      }}
-                      required
-                      aria-required="true"
-                      aria-invalid={!!fieldErrors.email}
-                      aria-describedby={fieldErrors.email ? 'checkout-email-error' : 'checkout-email-help'}
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'} ${formInputColors.focus}`}
-                      placeholder="your@email.com"
-                    />
-                    {fieldErrors.email ? (
-                      <p id="checkout-email-error" className={`text-sm ${formValidationColors.error} mt-2`}>
-                        {fieldErrors.email}
-                      </p>
-                    ) : (
-                      <p id="checkout-email-help" className={`text-sm ${formInputColors.helper} mt-2`}>
-                        We&apos;ll use this email to send your order confirmation
-                        and receipt.
-                      </p>
-                    )}
-                  </div>
-                )}
+          <div className="relative z-10 px-6 sm:px-8 md:px-12">
+            <FadeIn direction="up" triggerOnScroll={false}>
+              {/* Editorial header */}
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-400" />
+                <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Checkout</span>
               </div>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[0.95] mb-4">
+                Let&apos;s finalize.
+              </h1>
+              <p className="text-xl text-slate-400 max-w-xl leading-relaxed">
+                Just a few details and you&apos;re all set.
+              </p>
+            </FadeIn>
+          </div>
+        </div>
+      </section>
 
-              {/* Saved Addresses Selector - Only show for authenticated users */}
-              {isAuthenticated && (
-                <AddressSelector onSelectAddress={handleAddressSelect} isAuthenticated={isAuthenticated} />
-              )}
+      {/* Main Content */}
+      <section className="py-8 md:py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+          {itemCount === 0 ? (
+            <FadeIn direction="up">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 sm:p-12 text-center">
+                <div className="absolute top-0 left-1/4 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl" />
+                <div className="relative z-10">
+                  <p className="text-slate-400 mb-6 text-lg">Your cart is empty.</p>
+                  <Button variant="purple" href="/pricing" className="shadow-lg shadow-purple-500/25">
+                    Browse Services
+                  </Button>
+                </div>
+              </div>
+            </FadeIn>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
+              {/* Left column - Checkout form */}
+              <form onSubmit={handleInfoSubmit} className="w-full space-y-6">
+                {/* Error message */}
+                {error && (
+                  <FadeIn direction="up">
+                    <div className={`p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-xl`}>
+                      <p className={`text-sm ${formValidationColors.error}`}>{error}</p>
+                    </div>
+                  </FadeIn>
+                )}
 
-              {/* Shipping Information - Inner rectangle 2 */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
-                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
-                  Shipping Information
-                </h2>
+                {/* Contact Information */}
+                <FadeIn direction="up" delay={0.1}>
+                  <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg shadow-slate-200/50">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-6 h-1 rounded-full bg-gradient-to-r from-purple-500 to-blue-500" />
+                      <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Contact Information</span>
+                    </div>
 
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="firstName" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                      First Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      ref={firstNameRef}
-                      autoComplete="given-name"
-                      value={firstName}
-                      onChange={(e) => {
-                        setFirstName(e.target.value);
-                        if (fieldErrors.firstName) {
-                          setFieldErrors(prev => ({ ...prev, firstName: '' }));
-                        }
-                      }}
-                      required
-                      aria-required="true"
-                      aria-invalid={!!fieldErrors.firstName}
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.firstName ? 'border-red-500 bg-red-50' : 'border-gray-300'} ${formInputColors.focus}`}
-                      placeholder="John"
-                    />
-                    {fieldErrors.firstName && (
-                      <p className={`text-sm ${formValidationColors.error} mt-1`}>
-                        {fieldErrors.firstName}
-                      </p>
+                    {isAuthenticated ? (
+                      <div>
+                        <p className={`text-sm ${formInputColors.helper} mb-2`}>Email</p>
+                        <p className={`text-lg ${headingColors.primary} font-medium`}>{email}</p>
+                        <p className={`text-sm ${formInputColors.helper} mt-2`}>
+                          Logged in as <span className="font-semibold">{user?.email}</span>
+                        </p>
+                      </div>
+                    ) : (
+                      <div>
+                        <label htmlFor="checkout-email" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                          Email Address *
+                        </label>
+                        <input
+                          type="email"
+                          id="checkout-email"
+                          ref={emailRef}
+                          autoComplete="email"
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            if (fieldErrors.email) {
+                              setFieldErrors(prev => ({ ...prev, email: '' }));
+                            }
+                          }}
+                          required
+                          aria-required="true"
+                          aria-invalid={!!fieldErrors.email}
+                          aria-describedby={fieldErrors.email ? 'checkout-email-error' : 'checkout-email-help'}
+                          className={`w-full px-4 py-3 rounded-xl ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.email ? 'border-red-500 bg-red-50' : 'border-gray-200'} ${formInputColors.focus}`}
+                          placeholder="your@email.com"
+                        />
+                        {fieldErrors.email ? (
+                          <p id="checkout-email-error" className={`text-sm ${formValidationColors.error} mt-2`}>
+                            {fieldErrors.email}
+                          </p>
+                        ) : (
+                          <p id="checkout-email-help" className={`text-sm ${formInputColors.helper} mt-2`}>
+                            We&apos;ll use this email to send your order confirmation and receipt.
+                          </p>
+                        )}
+                      </div>
                     )}
                   </div>
+                </FadeIn>
 
-                  <div>
-                    <label htmlFor="lastName" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                      Last Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      ref={lastNameRef}
-                      autoComplete="family-name"
-                      value={lastName}
-                      onChange={(e) => {
-                        setLastName(e.target.value);
-                        if (fieldErrors.lastName) {
-                          setFieldErrors(prev => ({ ...prev, lastName: '' }));
-                        }
-                      }}
-                      required
-                      aria-required="true"
-                      aria-invalid={!!fieldErrors.lastName}
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.lastName ? 'border-red-500 bg-red-50' : 'border-gray-300'} ${formInputColors.focus}`}
-                      placeholder="Doe"
-                    />
-                    {fieldErrors.lastName && (
-                      <p className={`text-sm ${formValidationColors.error} mt-1`}>
-                        {fieldErrors.lastName}
-                      </p>
-                    )}
-                  </div>
+                {/* Saved Addresses Selector */}
+                {isAuthenticated && (
+                  <FadeIn direction="up" delay={0.15}>
+                    <AddressSelector onSelectAddress={handleAddressSelect} isAuthenticated={isAuthenticated} />
+                  </FadeIn>
+                )}
 
-                  <div className="sm:col-span-2">
-                    <label htmlFor="address" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                      Address *
-                    </label>
-                    <input
-                      type="text"
-                      id="address"
-                      ref={addressRef}
-                      autoComplete="street-address"
-                      value={address}
-                      onChange={(e) => {
-                        setAddress(e.target.value);
-                        if (fieldErrors.address) {
-                          setFieldErrors(prev => ({ ...prev, address: '' }));
-                        }
-                      }}
-                      required
-                      aria-required="true"
-                      aria-invalid={!!fieldErrors.address}
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.address ? 'border-red-500 bg-red-50' : 'border-gray-300'} ${formInputColors.focus}`}
-                      placeholder="123 Main St"
-                    />
-                    {fieldErrors.address && (
-                      <p className={`text-sm ${formValidationColors.error} mt-1`}>
-                        {fieldErrors.address}
-                      </p>
-                    )}
-                  </div>
+                {/* Shipping Information */}
+                <FadeIn direction="up" delay={0.2}>
+                  <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg shadow-slate-200/50">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-6 h-1 rounded-full bg-gradient-to-r from-blue-500 to-emerald-500" />
+                      <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Shipping Information</span>
+                    </div>
 
-                  <div className="sm:col-span-2">
-                    {showAddress2 ? (
-                      <>
-                        <label htmlFor="address2" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                          Apt, Suite, etc. (optional)
+                    <div className="grid sm:grid-cols-2 gap-5">
+                      <div>
+                        <label htmlFor="firstName" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                          First Name *
                         </label>
                         <input
                           type="text"
-                          id="address2"
-                          autoComplete="address-line2"
-                          value={address2}
-                          onChange={(e) => setAddress2(e.target.value)}
-                          className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 border-gray-300 transition-colors ${formInputColors.focus}`}
-                          placeholder="Apt 4B, Suite 100, etc."
-                          autoFocus
+                          id="firstName"
+                          ref={firstNameRef}
+                          autoComplete="given-name"
+                          value={firstName}
+                          onChange={(e) => {
+                            setFirstName(e.target.value);
+                            if (fieldErrors.firstName) {
+                              setFieldErrors(prev => ({ ...prev, firstName: '' }));
+                            }
+                          }}
+                          required
+                          aria-required="true"
+                          aria-invalid={!!fieldErrors.firstName}
+                          className={`w-full px-4 py-3 rounded-xl ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.firstName ? 'border-red-500 bg-red-50' : 'border-gray-200'} ${formInputColors.focus}`}
+                          placeholder="John"
                         />
-                      </>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setShowAddress2(true)}
-                        className={`text-sm ${accentColors.blue.titleText} hover:underline`}
-                      >
-                        + Add apartment, suite, etc.
-                      </button>
-                    )}
-                  </div>
+                        {fieldErrors.firstName && (
+                          <p className={`text-sm ${formValidationColors.error} mt-1`}>{fieldErrors.firstName}</p>
+                        )}
+                      </div>
 
-                  <div className="sm:col-span-2">
-                    <label htmlFor="cityStateZip" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                      City, State, ZIP *
-                    </label>
-                    <input
-                      type="text"
-                      id="cityStateZip"
-                      ref={cityStateZipRef}
-                      autoComplete="address-level2"
-                      value={cityStateZip}
-                      onChange={(e) => {
-                        setCityStateZip(e.target.value);
-                        if (fieldErrors.cityStateZip) {
-                          setFieldErrors(prev => ({ ...prev, cityStateZip: '' }));
-                        }
-                      }}
-                      required
-                      aria-required="true"
-                      aria-invalid={!!fieldErrors.cityStateZip}
-                      className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.cityStateZip ? 'border-red-500 bg-red-50' : 'border-gray-300'} ${formInputColors.focus}`}
-                      placeholder="New York, NY 10001"
-                    />
-                    {fieldErrors.cityStateZip && (
-                      <p className={`text-sm ${formValidationColors.error} mt-1`}>
-                        {fieldErrors.cityStateZip}
+                      <div>
+                        <label htmlFor="lastName" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                          Last Name *
+                        </label>
+                        <input
+                          type="text"
+                          id="lastName"
+                          ref={lastNameRef}
+                          autoComplete="family-name"
+                          value={lastName}
+                          onChange={(e) => {
+                            setLastName(e.target.value);
+                            if (fieldErrors.lastName) {
+                              setFieldErrors(prev => ({ ...prev, lastName: '' }));
+                            }
+                          }}
+                          required
+                          aria-required="true"
+                          aria-invalid={!!fieldErrors.lastName}
+                          className={`w-full px-4 py-3 rounded-xl ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.lastName ? 'border-red-500 bg-red-50' : 'border-gray-200'} ${formInputColors.focus}`}
+                          placeholder="Doe"
+                        />
+                        {fieldErrors.lastName && (
+                          <p className={`text-sm ${formValidationColors.error} mt-1`}>{fieldErrors.lastName}</p>
+                        )}
+                      </div>
+
+                      <div className="sm:col-span-2">
+                        <label htmlFor="address" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                          Address *
+                        </label>
+                        <input
+                          type="text"
+                          id="address"
+                          ref={addressRef}
+                          autoComplete="street-address"
+                          value={address}
+                          onChange={(e) => {
+                            setAddress(e.target.value);
+                            if (fieldErrors.address) {
+                              setFieldErrors(prev => ({ ...prev, address: '' }));
+                            }
+                          }}
+                          required
+                          aria-required="true"
+                          aria-invalid={!!fieldErrors.address}
+                          className={`w-full px-4 py-3 rounded-xl ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.address ? 'border-red-500 bg-red-50' : 'border-gray-200'} ${formInputColors.focus}`}
+                          placeholder="123 Main St"
+                        />
+                        {fieldErrors.address && (
+                          <p className={`text-sm ${formValidationColors.error} mt-1`}>{fieldErrors.address}</p>
+                        )}
+                      </div>
+
+                      <div className="sm:col-span-2">
+                        {showAddress2 ? (
+                          <>
+                            <label htmlFor="address2" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                              Apt, Suite, etc. (optional)
+                            </label>
+                            <input
+                              type="text"
+                              id="address2"
+                              autoComplete="address-line2"
+                              value={address2}
+                              onChange={(e) => setAddress2(e.target.value)}
+                              className={`w-full px-4 py-3 rounded-xl ${formInputColors.base} ${formInputColors.placeholder} border-2 border-gray-200 transition-colors ${formInputColors.focus}`}
+                              placeholder="Apt 4B, Suite 100, etc."
+                              autoFocus
+                            />
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setShowAddress2(true)}
+                            className={`text-sm ${accentColors.blue.titleText} font-medium hover:underline`}
+                          >
+                            + Add apartment, suite, etc.
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="sm:col-span-2">
+                        <label htmlFor="cityStateZip" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                          City, State, ZIP *
+                        </label>
+                        <input
+                          type="text"
+                          id="cityStateZip"
+                          ref={cityStateZipRef}
+                          autoComplete="address-level2"
+                          value={cityStateZip}
+                          onChange={(e) => {
+                            setCityStateZip(e.target.value);
+                            if (fieldErrors.cityStateZip) {
+                              setFieldErrors(prev => ({ ...prev, cityStateZip: '' }));
+                            }
+                          }}
+                          required
+                          aria-required="true"
+                          aria-invalid={!!fieldErrors.cityStateZip}
+                          className={`w-full px-4 py-3 rounded-xl ${formInputColors.base} ${formInputColors.placeholder} border-2 transition-colors ${fieldErrors.cityStateZip ? 'border-red-500 bg-red-50' : 'border-gray-200'} ${formInputColors.focus}`}
+                          placeholder="New York, NY 10001"
+                        />
+                        {fieldErrors.cityStateZip && (
+                          <p className={`text-sm ${formValidationColors.error} mt-1`}>{fieldErrors.cityStateZip}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </FadeIn>
+
+                {/* Order Notes */}
+                <FadeIn direction="up" delay={0.25}>
+                  <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg shadow-slate-200/50">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-6 h-1 rounded-full bg-gradient-to-r from-emerald-500 to-purple-500" />
+                      <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Special Requests (Optional)</span>
+                    </div>
+
+                    <div>
+                      <label htmlFor="orderNotes" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
+                        Add any special requests or delivery instructions
+                      </label>
+                      <textarea
+                        id="orderNotes"
+                        value={orderNotes}
+                        onChange={(e) => setOrderNotes(e.target.value)}
+                        placeholder="e.g., Leave at front door, fragile items, custom color request..."
+                        maxLength={500}
+                        rows={4}
+                        className={`w-full px-4 py-3 rounded-xl ${formInputColors.base} ${formInputColors.placeholder} border-2 border-gray-200 transition-colors ${formInputColors.focus} resize-none`}
+                      />
+                      <p className={`text-sm ${formInputColors.helper} mt-2`}>
+                        {orderNotes.length}/500 characters
                       </p>
-                    )}
+                    </div>
                   </div>
-                </div>
-              </div>
+                </FadeIn>
 
-              {/* Order Notes - Optional */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
-                <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
-                  Special Requests (Optional)
-                </h2>
+                {/* Action buttons */}
+                <FadeIn direction="up" delay={0.3}>
+                  <div className="space-y-3">
+                    <Button
+                      variant="green"
+                      type="submit"
+                      disabled={isProcessing}
+                      className="w-full shadow-lg shadow-emerald-500/25"
+                      size="lg"
+                    >
+                      {isProcessing ? 'Processing...' : 'Continue to Payment'}
+                    </Button>
 
-                <div>
-                  <label htmlFor="orderNotes" className={`block text-sm font-medium ${formInputColors.label} mb-2`}>
-                    Add any special requests or delivery instructions
-                  </label>
-                  <textarea
-                    id="orderNotes"
-                    value={orderNotes}
-                    onChange={(e) => setOrderNotes(e.target.value)}
-                    placeholder="e.g., Leave at front door, fragile items, custom color request..."
-                    maxLength={500}
-                    rows={4}
-                    className={`w-full px-4 py-2 rounded-lg ${formInputColors.base} ${formInputColors.placeholder} border-2 border-gray-300 transition-colors ${formInputColors.focus} resize-none`}
-                  />
-                  <p className={`text-sm ${formInputColors.helper} mt-2`}>
-                    {orderNotes.length}/500 characters
-                  </p>
-                </div>
-              </div>
+                    <Button
+                      variant="gray"
+                      href="/cart"
+                      className="w-full"
+                      size="lg"
+                    >
+                      Back to Cart
+                    </Button>
+                  </div>
+                </FadeIn>
+              </form>
 
-              {/* Action buttons */}
-              <div className="space-y-3">
-                <Button
-                  variant="purple"
-                  type="submit"
-                  disabled={isProcessing}
-                  className="w-full"
-                  size="lg"
-                >
-                  {isProcessing ? 'Processing...' : 'Continue'}
-                </Button>
+              {/* Right column - Order Summary */}
+              <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
+                <FadeIn direction="up" delay={0.2}>
+                  {renderOrderSummary()}
+                </FadeIn>
 
-                <Button
-                  variant="gray"
-                  href="/cart"
-                  className="w-full"
-                  size="lg"
-                >
-                  Back to Cart
-                </Button>
-              </div>
-            </form>
+                <FadeIn direction="up" delay={0.3}>
+                  {/* What happens next - Dark Glass Card */}
+                  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-5 sm:p-6">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/10 rounded-full blur-2xl" />
 
-            {/* Right column - Order Summary */}
-            <div className="w-full lg:self-start lg:sticky lg:top-20 space-y-6">
-              {renderOrderSummary()}
-
-              {/* What happens next */}
-              <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 ${lightBgColors.blue}`}>
-                <p className={`text-sm ${formInputColors.helper}`}>
-                  <strong>What happens next?</strong> After payment, we&apos;ll confirm your order and send you next steps by email.
-                </p>
+                    <div className="relative z-10">
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                          <span className="text-blue-400 text-sm">💡</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-white mb-1">What happens next?</p>
+                          <p className="text-sm text-slate-400 leading-relaxed">
+                            After payment, we&apos;ll confirm your order and send you next steps by email.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </FadeIn>
               </div>
             </div>
-          </div>
-        </Card>
-      )}
+          )}
+        </div>
+      </section>
     </div>
   );
 }
