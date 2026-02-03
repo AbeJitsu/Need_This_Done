@@ -5,12 +5,12 @@
  * Run with: npx tsx scripts/seed-products.ts
  *
  * Requires admin credentials in .env.local:
- * - MEDUSA_BACKEND_URL
+ * - MEDUSA_BACKEND_URL (or NEXT_PUBLIC_MEDUSA_URL)
  * - MEDUSA_ADMIN_EMAIL
  * - MEDUSA_ADMIN_PASSWORD
  *
- * Optional for subscription products:
- * - STRIPE_MANAGED_AI_PRICE_ID (Stripe price ID for monthly subscription)
+ * Note: Subscription products are handled natively by Medusa's
+ * subscription module - no separate Stripe price IDs required.
  */
 
 import { config } from 'dotenv';
@@ -24,37 +24,6 @@ const MEDUSA_URL = process.env.MEDUSA_BACKEND_URL || process.env.NEXT_PUBLIC_MED
 if (!MEDUSA_URL) {
   console.error('❌ MEDUSA_BACKEND_URL not set in .env.local');
   process.exit(1);
-}
-
-// ============================================================================
-// Early Validation - Check Required Config Before Seeding
-// ============================================================================
-
-function validateSubscriptionConfig(): void {
-  const subscriptionProducts = [
-    { handle: 'managed-ai', envVar: 'STRIPE_MANAGED_AI_PRICE_ID' },
-    // Add more subscription products here as needed
-  ];
-
-  const missingConfig: string[] = [];
-
-  for (const product of subscriptionProducts) {
-    const priceId = process.env[product.envVar];
-    if (!priceId) {
-      missingConfig.push(`  - ${product.envVar} (required for "${product.handle}")`);
-    }
-  }
-
-  if (missingConfig.length > 0) {
-    console.error('\n❌ Missing Stripe price IDs for subscription products:\n');
-    console.error(missingConfig.join('\n'));
-    console.error('\n   To fix:');
-    console.error('   1. Create the recurring price in Stripe Dashboard');
-    console.error('   2. Add the price ID to .env.local');
-    console.error('   3. Run this script again\n');
-    console.error('   Or remove subscription products from PRODUCTS array if not needed.\n');
-    process.exit(1);
-  }
 }
 
 // ============================================================================
@@ -240,7 +209,7 @@ const PRODUCTS: ProductDefinition[] = [
       type: 'subscription',
       deposit_percent: 0, // No deposit for subscriptions
       billing_period: 'monthly',
-      stripe_price_id: process.env.STRIPE_MANAGED_AI_PRICE_ID || '', // Set in .env.local
+      // Medusa handles subscription billing natively - no stripe_price_id needed
       features: [
         'AI agents',
         'Customer support',
@@ -314,8 +283,8 @@ async function getRegionAndSalesChannel(token: string) {
 async function ensureCollections(token: string): Promise<Map<string, string>> {
   const collectionMap = new Map<string, string>();
 
-  // Get existing collections
-  const listRes = await fetch(`${MEDUSA_URL}/admin/product-collections`, {
+  // Get existing collections (Medusa v2 uses /admin/collections)
+  const listRes = await fetch(`${MEDUSA_URL}/admin/collections`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   const listData = await listRes.json();
@@ -333,8 +302,8 @@ async function ensureCollections(token: string): Promise<Map<string, string>> {
       continue;
     }
 
-    // Create collection
-    const createRes = await fetch(`${MEDUSA_URL}/admin/product-collections`, {
+    // Create collection (Medusa v2 uses /admin/collections)
+    const createRes = await fetch(`${MEDUSA_URL}/admin/collections`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -359,7 +328,18 @@ async function ensureCollections(token: string): Promise<Map<string, string>> {
   return collectionMap;
 }
 
-async function createProduct(
+async function findProductByHandle(token: string, handle: string): Promise<string | null> {
+  const response = await fetch(`${MEDUSA_URL}/admin/products?handle=${handle}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) return null;
+
+  const data = await response.json();
+  return data.products?.[0]?.id || null;
+}
+
+async function createOrUpdateProduct(
   token: string,
   product: ProductDefinition,
   regionId: string,
@@ -369,6 +349,35 @@ async function createProduct(
   const sku = product.handle.replace(/-/g, '_').toUpperCase();
   const collectionId = collectionMap.get(product.collection);
 
+  // Check if product already exists
+  const existingProductId = await findProductByHandle(token, product.handle);
+
+  if (existingProductId) {
+    // UPDATE existing product with collection and metadata
+    const updateData = {
+      collection_id: collectionId,
+      metadata: product.metadata,
+    };
+
+    const updateResponse = await fetch(`${MEDUSA_URL}/admin/products/${existingProductId}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateData),
+    });
+
+    if (!updateResponse.ok) {
+      const error = await updateResponse.json().catch(() => ({}));
+      throw new Error(`Failed to update ${product.title}: ${JSON.stringify(error)}`);
+    }
+
+    console.log(`  🔄 Updated: ${product.title} (linked to collection)`);
+    return;
+  }
+
+  // CREATE new product
   const productData = {
     title: product.title,
     description: product.description,
@@ -411,11 +420,6 @@ async function createProduct(
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
-    // Check if product already exists
-    if (error.message?.includes('already exists') || error.message?.includes('duplicate')) {
-      console.log(`  ⏭️  ${product.title} already exists, skipping`);
-      return;
-    }
     throw new Error(`Failed to create ${product.title}: ${JSON.stringify(error)}`);
   }
 
@@ -433,10 +437,6 @@ async function createProduct(
 async function main() {
   console.log('\n🚀 Seeding products to Medusa...\n');
   console.log(`   Backend: ${MEDUSA_URL}\n`);
-
-  // Validate subscription config BEFORE doing anything
-  // This prevents creating products with empty stripe_price_id
-  validateSubscriptionConfig();
 
   try {
     // Authenticate
@@ -458,8 +458,8 @@ async function main() {
     console.log('📂 Creating collections...\n');
     const collectionMap = await ensureCollections(token);
 
-    // Create products grouped by type
-    console.log('\n📦 Creating products...\n');
+    // Create or update products grouped by type
+    console.log('\n📦 Syncing products...\n');
 
     const packages = PRODUCTS.filter((p) => p.type === 'package');
     const addons = PRODUCTS.filter((p) => p.type === 'addon');
@@ -467,17 +467,17 @@ async function main() {
 
     console.log('   Website Packages:');
     for (const product of packages) {
-      await createProduct(token, product, region.id, salesChannel.id, collectionMap);
+      await createOrUpdateProduct(token, product, region.id, salesChannel.id, collectionMap);
     }
 
     console.log('\n   Website Add-ons:');
     for (const product of addons) {
-      await createProduct(token, product, region.id, salesChannel.id, collectionMap);
+      await createOrUpdateProduct(token, product, region.id, salesChannel.id, collectionMap);
     }
 
     console.log('\n   Automation Services:');
     for (const product of services) {
-      await createProduct(token, product, region.id, salesChannel.id, collectionMap);
+      await createOrUpdateProduct(token, product, region.id, salesChannel.id, collectionMap);
     }
 
     console.log('\n✨ Done! Products seeded successfully.\n');
