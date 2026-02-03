@@ -173,94 +173,83 @@ export default function UnifiedPricingPage() {
   // ========================================================================
   // Package checkout - add to Medusa cart and navigate
   // ========================================================================
-  const handlePackageCheckout = async (pkg: PricingProduct) => {
+  // Now synchronous - addItem updates UI instantly, syncs in background
+  const handlePackageCheckout = (pkg: PricingProduct) => {
     setCheckingOutPackage(pkg.id);
     setCheckoutError('');
 
-    try {
-      // Add to Medusa cart with extended product info for display
-      await addItem(pkg.variantId, 1, {
-        title: pkg.title,
-        unit_price: pkg.price,
-        type: pkg.type as 'package' | 'addon' | 'service' | 'subscription',
-        description: pkg.description,
-        features: pkg.features,
-        billingPeriod: pkg.billingPeriod,
-      });
+    // Add to Medusa cart with extended product info for display (instant UI update)
+    addItem(pkg.variantId, 1, {
+      title: pkg.title,
+      unit_price: pkg.price,
+      type: pkg.type as 'package' | 'addon' | 'service' | 'subscription',
+      description: pkg.description,
+      features: pkg.features,
+      billingPeriod: pkg.billingPeriod,
+    });
 
-      setToastMessage(`${pkg.title} added to cart!`);
-      setTimeout(() => {
-        setToastMessage('');
-        setCheckingOutPackage(null);
-        router.push('/cart');
-      }, 1000);
-    } catch (err) {
-      setCheckoutError(err instanceof Error ? err.message : 'Failed to add to cart');
+    setToastMessage(`${pkg.title} added to cart!`);
+    setTimeout(() => {
+      setToastMessage('');
       setCheckingOutPackage(null);
-    }
+      router.push('/cart');
+    }, 1000);
   };
 
   // ========================================================================
   // Custom build checkout - add selected add-ons to cart
   // ========================================================================
-  const handleCustomCheckout = async () => {
+  // Now synchronous - all items added instantly in parallel, sync in background
+  const handleCustomCheckout = () => {
     if (selectedAddons.size === 0) return;
     setIsCheckingOut(true);
     setCheckoutError('');
 
-    try {
-      // Add each selected addon to cart with extended product info
-      for (const addon of selectedAddonProducts) {
-        await addItem(addon.variantId, 1, {
-          title: addon.title,
-          unit_price: addon.price,
-          type: addon.type as 'package' | 'addon' | 'service' | 'subscription',
-          description: addon.description,
-          features: addon.features,
-          billingPeriod: addon.billingPeriod,
-        });
-      }
+    // Add all selected addons in parallel (fire-and-forget, instant UI)
+    selectedAddonProducts.forEach((addon) => {
+      addItem(addon.variantId, 1, {
+        title: addon.title,
+        unit_price: addon.price,
+        type: addon.type as 'package' | 'addon' | 'service' | 'subscription',
+        description: addon.description,
+        features: addon.features,
+        billingPeriod: addon.billingPeriod,
+      });
+    });
 
-      setToastMessage(`${selectedAddonProducts.length} item${selectedAddonProducts.length > 1 ? 's' : ''} added to cart!`);
-      setTimeout(() => {
-        setToastMessage('');
-        setIsCheckingOut(false);
-        setSelectedAddons(new Set());
-        router.push('/cart');
-      }, 1000);
-    } catch (err) {
-      setCheckoutError(err instanceof Error ? err.message : 'Failed to add items to cart');
+    setToastMessage(`${selectedAddonProducts.length} item${selectedAddonProducts.length > 1 ? 's' : ''} added to cart!`);
+    setTimeout(() => {
+      setToastMessage('');
       setIsCheckingOut(false);
-    }
+      setSelectedAddons(new Set());
+      router.push('/cart');
+    }, 1000);
   };
 
   // ========================================================================
   // Service checkout - add service/subscription to Medusa cart
   // ========================================================================
-  const handleServiceAddToCart = async (service: PricingProduct) => {
+  // Now synchronous - addItem updates UI instantly, syncs in background
+  const handleServiceAddToCart = (service: PricingProduct) => {
     setAddingService(service.id);
     setCheckoutError('');
 
-    try {
-      await addItem(service.variantId, 1, {
-        title: service.title,
-        unit_price: service.price,
-        type: service.type as 'package' | 'addon' | 'service' | 'subscription',
-        description: service.description,
-        features: service.features,
-        billingPeriod: service.billingPeriod,
-      });
+    // Add to Medusa cart with extended product info (instant UI update)
+    addItem(service.variantId, 1, {
+      title: service.title,
+      unit_price: service.price,
+      type: service.type as 'package' | 'addon' | 'service' | 'subscription',
+      description: service.description,
+      features: service.features,
+      billingPeriod: service.billingPeriod,
+    });
 
-      setToastMessage(`${service.title} added to cart!`);
-      setTimeout(() => {
-        setToastMessage('');
-        setAddingService(null);
-        router.push('/cart');
-      }, 1000);
-    } catch (err) {
-      setCheckoutError(err instanceof Error ? err.message : 'Failed to add to cart');
+    setToastMessage(`${service.title} added to cart!`);
+    setTimeout(() => {
+      setToastMessage('');
       setAddingService(null);
-    }
+      router.push('/cart');
+    }, 1000);
   };
 
   // ============================================================================
