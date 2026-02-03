@@ -668,3 +668,62 @@ export async function sendFinalPaymentFailedEmail(
     return null;
   }
 }
+
+// ============================================================================
+// Order Cancellation Emails
+// ============================================================================
+
+/**
+ * Send email when order is canceled by admin
+ * Notifies customer and includes refund information if applicable
+ *
+ * @param customerEmail - Customer email address
+ * @param customerName - Customer name for personalization
+ * @param orderId - Order ID (short format for display)
+ * @param reason - Reason for cancellation
+ * @param refunded - Whether deposit was refunded
+ * @param refundAmount - Amount refunded, in cents
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendOrderCanceledEmail(
+  {
+    customerEmail,
+    customerName,
+    orderId,
+    reason,
+    refunded = false,
+    refundAmount = 0,
+  }: {
+    customerEmail: string;
+    customerName: string;
+    orderId: string;
+    reason: string;
+    refunded?: boolean;
+    refundAmount?: number;
+  }
+): Promise<string | null> {
+  try {
+    const { default: OrderCanceledEmail } = await import('../emails/OrderCanceledEmail');
+
+    const subject = `Order #${orderId} Has Been Canceled`;
+
+    return await sendEmailWithRetry(
+      customerEmail,
+      subject,
+      OrderCanceledEmail({
+        customerEmail,
+        customerName,
+        orderId,
+        reason,
+        refunded,
+        refundAmount,
+      }),
+    );
+  } catch (error) {
+    console.error(`[Email] sendOrderCanceledEmail failed:`, error, {
+      customerEmail,
+      orderId,
+    });
+    return null;
+  }
+}

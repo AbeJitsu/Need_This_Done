@@ -45,6 +45,15 @@ CREATE INDEX IF NOT EXISTS orders_stripe_payment_method_id_idx ON orders(stripe_
 CREATE INDEX IF NOT EXISTS orders_ready_for_delivery_at_idx ON orders(ready_for_delivery_at DESC NULLS LAST);
 
 -- ============================================================================
+-- Add Cancellation Fields
+-- ============================================================================
+
+ALTER TABLE orders
+  ADD COLUMN IF NOT EXISTS canceled_at TIMESTAMP WITH TIME ZONE,
+  ADD COLUMN IF NOT EXISTS cancel_reason TEXT,
+  ADD COLUMN IF NOT EXISTS admin_notes TEXT;
+
+-- ============================================================================
 -- Add Constraints for Data Integrity
 -- ============================================================================
 
@@ -113,6 +122,10 @@ COMMENT ON COLUMN orders.stripe_payment_method_id IS 'Saved Stripe PaymentMethod
 COMMENT ON COLUMN orders.ready_for_delivery_at IS 'Timestamp when admin marked order ready for delivery';
 COMMENT ON COLUMN orders.final_payment_completed_at IS 'Timestamp when final payment was completed';
 COMMENT ON COLUMN orders.payment_status IS 'Payment phase: pending, deposit_paid, paid, canceled, failed';
+COMMENT ON COLUMN orders.canceled_at IS 'Timestamp when order was canceled by admin';
+COMMENT ON COLUMN orders.cancel_reason IS 'Reason for cancellation provided by admin';
+COMMENT ON COLUMN orders.admin_notes IS 'Additional notes from admin about cancellation';
+
 
 COMMENT ON FUNCTION calculate_deposit_amount IS 'Calculates 50% deposit amount from total, rounded up';
 COMMENT ON FUNCTION has_pending_final_payment IS 'Returns true if order has pending final payment to collect';
