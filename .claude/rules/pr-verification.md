@@ -1,91 +1,112 @@
 # PR Verification Rule
 
-Never merge a PR without local verification. Fetch it, test it, review it.
+Verification depth depends on what changed. Use the decision tree to pick the right level.
 
-## The Workflow
+## Decision Tree
 
-```
-Browser Claude creates PR → Fetch locally → Test → Review → Merge or Fix
-```
+Start here to pick your verification level:
 
-## Fetching a PR
+| What Changed? | Risk Level | Verification |
+|---------------|-----------|--------------|
+| 1-2 files, visual/config only | Low | **Quick** |
+| Dependency patch (20.0 → 20.3) | Low | **Quick** |
+| New feature, multi-file, new logic | Medium | **Standard** |
+| API endpoints, state management | Medium | **Standard** |
+| Auth, checkout, payments touched | High | **Full** |
+| Major refactor (10+ files) | High | **Full** |
+| Unsure which tier | ? | **Full** (better safe) |
 
-```bash
-# Fetch and checkout the PR (easiest method)
-gh pr checkout <PR-number>
+---
 
-# Example
-gh pr checkout 42
-```
+## Quick Verification (Low-Risk Changes)
 
-This automatically:
-- Fetches the branch from origin
-- Creates a local branch
-- Checks it out for you
-
-## Verification Checklist
-
-Run these before merging:
-
-| Step | Command | What to Check |
-|------|---------|---------------|
-| 1. Dev server | `cd app && npm run dev` | App loads without errors |
-| 2. E2E tests | `cd app && npm run test:e2e` | All tests pass |
-| 3. A11y tests | `cd app && npm run test:a11y` | No accessibility regressions |
-| 4. Review diff | `git diff main...HEAD` | Changes match intent |
-| 5. Build check | `cd app && npm run build` | No build errors |
-
-## Quick Verification (minimum)
-
-For small, low-risk changes:
+For visual fixes, config updates, dependency patches, self-contained changes.
 
 ```bash
-gh pr checkout <PR#>
-cd app && npm run dev          # Check it runs
-cd app && npm run test:e2e     # Tests pass
+# Checkout
+git checkout origin/<branch-name>
+
+# 1. Read the diff (understand what changed)
+git diff origin/main...HEAD
+
+# 2. Start dev server
+cd app && npm run dev
+
+# 3. Quick visual check (does it look right? Any errors?)
+# → Look at the console, spot-check the UI
+
+# 4. Done — ready to merge
 ```
 
-## Full Verification (recommended)
+**Examples:** Hero gradient responsive fix, color tweaks, Stripe patch version bump, config changes
 
-For larger changes or anything touching critical paths:
+---
+
+## Standard Verification (Medium-Risk Changes)
+
+For new features, multi-file changes, state/API modifications.
 
 ```bash
-gh pr checkout <PR#>
-cd app && npm run dev          # Check it runs
-cd app && npm run test:e2e     # E2E tests
-cd app && npm run test:a11y    # Accessibility
-cd app && npm run build        # Production build
-git diff main...HEAD           # Review all changes
+# Checkout
+git checkout origin/<branch-name>
+
+# 1. Dev server check
+cd app && npm run dev
+
+# 2. E2E tests
+cd app && npm run test:e2e
+
+# 3. Review the diff
+git diff origin/main...HEAD
+
+# 4. Merge if green
 ```
 
-## What to Look For in Review
+---
 
-- **Does the change match what you asked for?**
-- **Any files changed that shouldn't be?**
-- **Are there console errors or warnings?**
-- **Does the UI look right?**
+## Full Verification (High-Risk Changes)
 
-## After Verification
+For auth, payments, major refactors, or anything you're unsure about.
 
-**If everything passes:**
 ```bash
-# Merge on GitHub (keeps PR history clean)
-gh pr merge <PR#> --merge
+# Checkout
+git checkout origin/<branch-name>
 
-# Or merge locally
+# 1. Dev server
+cd app && npm run dev
+
+# 2. All tests
+cd app && npm run test:e2e
+cd app && npm run test:a11y
+
+# 3. Build check
+cd app && npm run build
+
+# 4. Review diff thoroughly
+git diff origin/main...HEAD
+
+# 5. Merge if all green
+```
+
+---
+
+## Merging
+
+```bash
+# Option 1: Local merge (simpler)
 git checkout main
-git merge <branch-name>
+git merge origin/<branch-name>
 git push
+
+# Option 2: GitHub merge (keeps PR history)
+gh pr merge <PR#> --merge
 ```
 
-**If issues found:**
-1. Note the specific problems
-2. Either fix locally and push, or
-3. Comment on PR and have browser Claude fix it
+---
 
-## Anti-patterns
+## Anti-patterns to Avoid
 
-- Merging PRs directly on GitHub without local testing
-- Assuming tests passed in CI (CI might not exist or be comprehensive)
-- Skipping verification because "it's a small change"
-- Reviewing only the files you expected to change (check ALL changed files)
+- ❌ Running full test suite for simple visual fixes (wastes time)
+- ❌ Merging without reading the diff at all (miss mistakes)
+- ❌ Skipping verification entirely (accumulates bugs)
+- ❌ Using "Full Verification" for every tiny change (slows you down)
