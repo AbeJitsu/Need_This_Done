@@ -173,7 +173,10 @@ export async function createPaymentIntent(
   amount: number,
   currency: string = 'usd',
   metadata?: Record<string, string>,
-  customerId?: string
+  customerId?: string,
+  options?: {
+    setup_future_usage?: 'off_session' | 'on_session';
+  }
 ): Promise<Stripe.PaymentIntent> {
   const stripe = getStripe();
 
@@ -192,6 +195,11 @@ export async function createPaymentIntent(
   // Attach to customer if provided (enables saved payment methods)
   if (customerId) {
     params.customer = customerId;
+  }
+
+  // Enable card saving for future off_session charges (e.g., final payment on delivery)
+  if (options?.setup_future_usage) {
+    params.setup_future_usage = options.setup_future_usage;
   }
 
   return stripe.paymentIntents.create(params);

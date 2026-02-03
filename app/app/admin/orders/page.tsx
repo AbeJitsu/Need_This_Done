@@ -8,6 +8,8 @@ import { useAuth } from '@/context/AuthContext';
 import { getSession } from '@/lib/auth';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import DepositPaymentCard from '@/components/DepositPaymentCard';
+import ReadyForDeliveryModal from '@/components/ReadyForDeliveryModal';
 import { filterButtonColors, alertColors, statusBadgeColors, containerBg, uiChromeBg, mutedTextColors, headingColors, coloredLinkText, dividerColors } from '@/lib/colors';
 
 // ============================================================================
@@ -26,6 +28,12 @@ interface Order {
   email: string | null;
   created_at: string;
   updated_at: string;
+  // Deposit payment fields (for 50/50 payment system)
+  deposit_amount?: number;
+  balance_remaining?: number;
+  final_payment_status?: string;
+  final_payment_method?: string;
+  stripe_payment_method_id?: string;
 }
 
 type StatusFilter = 'all' | 'pending' | 'processing' | 'shipped' | 'delivered' | 'canceled';
@@ -43,6 +51,8 @@ export default function OrdersDashboard() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
+  const [showReadyForDeliveryModal, setShowReadyForDeliveryModal] = useState(false);
+  const [selectedOrderForDelivery, setSelectedOrderForDelivery] = useState<Order | null>(null);
 
   // ========================================================================
   // Auth protection
@@ -140,6 +150,36 @@ export default function OrdersDashboard() {
     } finally {
       setActionLoading(null);
     }
+  };
+
+  // ========================================================================
+  // Handle ready for delivery modal
+  // ========================================================================
+  const handleOpenReadyForDeliveryModal = (order: Order) => {
+    setSelectedOrderForDelivery(order);
+    setShowReadyForDeliveryModal(true);
+  };
+
+  const handleReadyForDeliverySuccess = async (paymentMethod: string, charged: boolean) => {
+    // Refresh orders to show updated payment status
+    await fetchOrders();
+    setShowReadyForDeliveryModal(false);
+    setSelectedOrderForDelivery(null);
+
+    // Show success message based on payment method and result
+    let message = '';
+    if (charged) {
+      message = 'Card charged successfully! Order marked as ready for delivery.';
+    } else {
+      const methodLabels: Record<string, string> = {
+        cash: 'Cash',
+        check: 'Check',
+        other: 'Alternative payment',
+      };
+      const methodLabel = methodLabels[paymentMethod] || paymentMethod;
+      message = `${methodLabel} payment recorded. Order marked as ready for delivery.`;
+    }
+    alert(message);
   };
 
   // ========================================================================
@@ -300,6 +340,17 @@ export default function OrdersDashboard() {
                   </div>
                 </div>
 
+                {/* Deposit Payment Status (if order has deposit fields) */}
+                {order.deposit_amount && (
+                  <DepositPaymentCard
+                    depositAmount={order.deposit_amount}
+                    balanceRemaining={order.balance_remaining || 0}
+                    finalPaymentStatus={(order.final_payment_status || 'pending') as 'pending' | 'paid' | 'failed' | 'waived'}
+                    finalPaymentMethod={order.final_payment_method}
+                    onReadyForDelivery={() => handleOpenReadyForDeliveryModal(order)}
+                  />
+                )}
+
                 {/* Expandable section for status updates */}
                 <div className={`border-t ${dividerColors.border} pt-4`}>
                   <button
@@ -339,6 +390,18 @@ export default function OrdersDashboard() {
                   )}
                 </div>
               </div>
+
+              {/* Ready for Delivery Modal */}
+              {selectedOrderForDelivery?.id === order.id && (
+                <ReadyForDeliveryModal
+                  isOpen={showReadyForDeliveryModal}
+                  orderId={order.id}
+                  orderNumber={order.medusa_order_id}
+                  balanceRemaining={order.balance_remaining || 0}
+                  onClose={() => setShowReadyForDeliveryModal(false)}
+                  onSuccess={handleReadyForDeliverySuccess}
+                />
+              )}
             </Card>
           ))}
         </div>
