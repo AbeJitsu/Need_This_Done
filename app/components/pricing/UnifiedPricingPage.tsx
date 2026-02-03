@@ -178,10 +178,14 @@ export default function UnifiedPricingPage() {
     setCheckoutError('');
 
     try {
-      // Add to Medusa cart
+      // Add to Medusa cart with extended product info for display
       await addItem(pkg.variantId, 1, {
         title: pkg.title,
         unit_price: pkg.price,
+        type: pkg.type as 'package' | 'addon' | 'service' | 'subscription',
+        description: pkg.description,
+        features: pkg.features,
+        billingPeriod: pkg.billingPeriod,
       });
 
       setToastMessage(`${pkg.title} added to cart!`);
@@ -205,11 +209,15 @@ export default function UnifiedPricingPage() {
     setCheckoutError('');
 
     try {
-      // Add each selected addon to cart
+      // Add each selected addon to cart with extended product info
       for (const addon of selectedAddonProducts) {
         await addItem(addon.variantId, 1, {
           title: addon.title,
           unit_price: addon.price,
+          type: addon.type as 'package' | 'addon' | 'service' | 'subscription',
+          description: addon.description,
+          features: addon.features,
+          billingPeriod: addon.billingPeriod,
         });
       }
 
@@ -237,6 +245,10 @@ export default function UnifiedPricingPage() {
       await addItem(service.variantId, 1, {
         title: service.title,
         unit_price: service.price,
+        type: service.type as 'package' | 'addon' | 'service' | 'subscription',
+        description: service.description,
+        features: service.features,
+        billingPeriod: service.billingPeriod,
       });
 
       setToastMessage(`${service.title} added to cart!`);

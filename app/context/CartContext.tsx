@@ -25,6 +25,11 @@ interface OptimisticProductInfo {
   title?: string;
   unit_price?: number;
   thumbnail?: string;
+  // Extended info for display
+  type?: 'package' | 'addon' | 'service' | 'subscription';
+  description?: string;
+  features?: string[];
+  billingPeriod?: 'monthly' | null;
 }
 
 interface CartContextType {
@@ -43,6 +48,9 @@ interface CartContextType {
   updateItem: (lineItemId: string, quantity: number) => Promise<void>;
   removeItem: (lineItemId: string) => Promise<void>;
   clearCart: () => void;
+
+  // Product info lookup (for display purposes)
+  getProductInfo: (variantId: string) => OptimisticProductInfo | undefined;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -57,6 +65,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Store product info by variant_id for display (persists after server sync)
+  const productInfoMapRef = useRef<Map<string, OptimisticProductInfo>>(new Map());
 
   // Track pending operations for rollback
   const pendingOpsRef = useRef(0);
@@ -158,12 +169,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // ========================================================================
+  // Get product info by variant ID (for display purposes)
+  // ========================================================================
+  const getProductInfo = useCallback((variantId: string): OptimisticProductInfo | undefined => {
+    return productInfoMapRef.current.get(variantId);
+  }, []);
+
+  // ========================================================================
   // Add item to cart (OPTIMISTIC)
   // ========================================================================
   // Updates UI immediately, syncs with server in background
   const addItem = useCallback(
     async (variantId: string, quantity: number, productInfo?: OptimisticProductInfo) => {
       setError(null);
+
+      // Store product info for later display (persists after server sync)
+      if (productInfo) {
+        productInfoMapRef.current.set(variantId, productInfo);
+      }
 
       // Save current state for potential rollback
       const previousCart = cart;
@@ -202,7 +225,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             };
           }
 
-          // Add new item
+          // Add new item with extended product info
           const newItem = {
             id: tempId,
             variant_id: variantId,
@@ -210,6 +233,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             title: productInfo?.title || 'Adding...',
             unit_price: productInfo?.unit_price || 0,
             thumbnail: productInfo?.thumbnail,
+            // Extended info for display (stored in metadata-like structure)
+            metadata: {
+              type: productInfo?.type,
+              description: productInfo?.description,
+              features: productInfo?.features,
+              billingPeriod: productInfo?.billingPeriod,
+            },
           };
 
           return {
@@ -418,6 +448,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         updateItem,
         removeItem,
         clearCart,
+        getProductInfo,
       }}
     >
       {children}

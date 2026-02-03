@@ -6,10 +6,8 @@ import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import {
-  formInputColors,
   alertColors,
   headingColors,
-  leftBorderColors,
   accentColors,
   focusRingClasses,
   type AccentColor,
@@ -164,43 +162,42 @@ function EmptyCartState() {
 }
 
 // ============================================================================
-// Helper: Determine color by product type or price
+// Helper: Determine color by product type string
 // ============================================================================
 // Packages → green, Addons → purple, Services → blue, Subscriptions → purple
-function getItemColor(item: {
-  unit_price?: number;
-  product?: { metadata?: Record<string, unknown> };
-}): AccentColor {
-  const productType = item.product?.metadata?.type as string | undefined;
+function getItemColorByType(productType: string | undefined): AccentColor {
   if (productType === 'package') return 'green';
   if (productType === 'addon') return 'purple';
   if (productType === 'service') return 'blue';
-  if (productType === 'subscription') return 'purple'; // Use purple for subscriptions
-
-  // Fallback for shop products: color by price tier
-  const unitPrice = item.unit_price || 0;
-  if (unitPrice <= 2500) return 'green';
-  if (unitPrice <= 4000) return 'blue';
-  return 'purple';
+  if (productType === 'subscription') return 'purple';
+  return 'blue'; // Default
 }
 
 // ============================================================================
-// Helper: Get display label for product type
+// Helper: Get display label for product type string
 // ============================================================================
-function getItemTypeLabel(item: {
-  product?: { metadata?: Record<string, unknown> };
-}): string {
-  const productType = item.product?.metadata?.type as string | undefined;
+function getTypeLabelByType(productType: string | undefined): string {
   if (productType === 'package') return 'Website Package';
-  if (productType === 'addon') return 'Add-on Service';
-  if (productType === 'service') return 'Automation Service';
-  if (productType === 'subscription') return 'Monthly Subscription';
+  if (productType === 'addon') return 'Add-on';
+  if (productType === 'service') return 'Automation';
+  if (productType === 'subscription') return 'Subscription';
   return 'Product';
+}
+
+// ============================================================================
+// Helper: Get icon for product type
+// ============================================================================
+function getTypeIcon(productType: string | undefined): string {
+  if (productType === 'package') return '🌐';
+  if (productType === 'addon') return '✨';
+  if (productType === 'service') return '⚙️';
+  if (productType === 'subscription') return '🔄';
+  return '📦';
 }
 
 export default function CartPage() {
   const {
-    cart, itemCount, updateItem, removeItem, error: cartError,
+    cart, itemCount, updateItem, removeItem, error: cartError, getProductInfo,
   } = useCart();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [localError, setLocalError] = useState('');
@@ -337,104 +334,155 @@ export default function CartPage() {
               <StaggerContainer staggerDelay={0.08} className="space-y-4">
                 {/* All cart items from Medusa (packages, addons, services, products) */}
                 {cart?.items?.map((item) => {
+                  // Get extended product info from our stored map (more reliable than Medusa cart)
+                  const storedInfo = getProductInfo(item.variant_id || '');
+
                   const title = item.title || item.variant?.title || item.product?.title || 'Item';
-                  const description = item.description || item.product?.description;
+                  const description = storedInfo?.description || item.description || item.product?.description;
                   const unitPrice = item.unit_price || 0;
                   const lineTotal = unitPrice * item.quantity;
-                  const color = getItemColor(item);
-                  const typeLabel = getItemTypeLabel(item);
-                  const features = item.product?.metadata?.features as string[] | undefined;
-                  const isSubscription = item.product?.metadata?.type === 'subscription';
+
+                  // Use stored type info if available, fallback to product metadata
+                  const itemWithMetadata = item as { product?: { metadata?: Record<string, unknown> } };
+                  const productType = storedInfo?.type || itemWithMetadata.product?.metadata?.type as string;
+                  const color = getItemColorByType(productType);
+                  const typeLabel = getTypeLabelByType(productType);
+                  const features = storedInfo?.features || itemWithMetadata.product?.metadata?.features as string[] | undefined;
+                  const isSubscription = productType === 'subscription' || storedInfo?.billingPeriod === 'monthly';
+
+                  // Get background color classes based on type
+                  const bgColorClasses = {
+                    green: 'from-emerald-50/80 to-white',
+                    blue: 'from-blue-50/80 to-white',
+                    purple: 'from-purple-50/80 to-white',
+                    gold: 'from-amber-50/80 to-white',
+                    gray: 'from-gray-50/80 to-white',
+                  };
+                  const badgeColorClasses = {
+                    green: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                    blue: 'bg-blue-100 text-blue-700 border-blue-200',
+                    purple: 'bg-purple-100 text-purple-700 border-purple-200',
+                    gold: 'bg-amber-100 text-amber-700 border-amber-200',
+                    gray: 'bg-gray-100 text-gray-700 border-gray-200',
+                  };
+                  const iconBgClasses = {
+                    green: 'bg-emerald-500',
+                    blue: 'bg-blue-500',
+                    purple: 'bg-purple-500',
+                    gold: 'bg-amber-500',
+                    gray: 'bg-gray-500',
+                  };
+                  const icon = getTypeIcon(productType);
 
                   return (
                     <StaggerItem key={item.id}>
-                      <div className={`bg-white rounded-2xl p-5 sm:p-6 shadow-lg shadow-slate-200/50 border-l-4 ${leftBorderColors[color]} transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5`}>
-                        <div className="flex justify-between items-start mb-5">
-                          <div className="flex-grow">
-                            <h3 className={`text-lg font-bold ${headingColors.primary}`}>
+                      <div className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${bgColorClasses[color]} shadow-lg shadow-slate-200/50 border border-white/60 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5`}>
+                        {/* Left accent stripe */}
+                        <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${iconBgClasses[color]}`} />
+
+                        <div className="p-5 sm:p-6 pl-6 sm:pl-8">
+                          {/* Top row: Type badge + Remove button */}
+                          <div className="flex justify-between items-start mb-4">
+                            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold ${badgeColorClasses[color]}`}>
+                              <span>{icon}</span>
+                              <span>{typeLabel}</span>
+                              {isSubscription && <span className="opacity-70">• Monthly</span>}
+                            </div>
+                            <button
+                              onClick={() => handleRemoveItem(item.id || '')}
+                              disabled={isUpdating === item.id}
+                              className={`text-gray-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-xl transition-all duration-200 text-xl leading-none ${focusRingClasses.gold} motion-safe:hover:scale-110 motion-safe:active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed`}
+                              aria-label={`Remove ${title} from cart`}
+                              aria-busy={isUpdating === item.id}
+                            >
+                              &times;
+                            </button>
+                          </div>
+
+                          {/* Product title and description */}
+                          <div className="mb-4">
+                            <h3 className={`text-xl font-bold ${headingColors.primary} leading-tight`}>
                               {title}
                             </h3>
-                            <p className={`text-sm mt-1 font-medium ${accentColors[color].titleText}`}>
-                              {typeLabel}
-                              {isSubscription && ' • Billed monthly'}
-                            </p>
                             {description && (
-                              <p className={`text-sm mt-2 ${formInputColors.helper}`}>
+                              <p className="text-sm text-gray-600 mt-2 leading-relaxed line-clamp-2">
                                 {description}
                               </p>
                             )}
-                            {features && features.length > 0 && (
-                              <ul className={`text-sm mt-3 space-y-1.5 ${formInputColors.helper}`}>
-                                {features.slice(0, 3).map((f, i) => (
-                                  <li key={i} className="flex items-center gap-2">
-                                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center">
-                                      <span className="text-emerald-600 text-xs">✓</span>
-                                    </span>
-                                    {f}
-                                  </li>
-                                ))}
-                                {features.length > 3 && (
-                                  <li className="text-xs text-gray-400 pl-7">
-                                    +{features.length - 3} more features
-                                  </li>
+                          </div>
+
+                          {/* Features list - compact horizontal pills */}
+                          {features && features.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mb-5">
+                              {features.slice(0, 4).map((f, i) => (
+                                <span
+                                  key={i}
+                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/80 border border-gray-100 text-xs text-gray-600"
+                                >
+                                  <span className="text-emerald-500">✓</span>
+                                  {f}
+                                </span>
+                              ))}
+                              {features.length > 4 && (
+                                <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-gray-100 text-xs text-gray-500">
+                                  +{features.length - 4} more
+                                </span>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Bottom row: Quantity + Price */}
+                          <div className="flex justify-between items-center pt-4 border-t border-gray-200/60">
+                            {/* Quantity controls */}
+                            <div className="flex items-center gap-1" role="group" aria-label="Quantity selector">
+                              <button
+                                onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
+                                disabled={isUpdating === item.id}
+                                className={`w-9 h-9 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 ${headingColors.secondary} font-bold text-sm transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 flex items-center justify-center shadow-sm`}
+                                aria-label={`Decrease quantity for ${title}`}
+                                aria-busy={isUpdating === item.id}
+                              >
+                                {isUpdating === item.id ? (
+                                  <span className="inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                                ) : (
+                                  '−'
                                 )}
-                              </ul>
-                            )}
-                          </div>
-                          <button
-                            onClick={() => handleRemoveItem(item.id || '')}
-                            disabled={isUpdating === item.id}
-                            className={`text-gray-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-xl transition-all duration-200 text-xl leading-none ${focusRingClasses.gold} motion-safe:hover:scale-110 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed`}
-                            aria-label={`Remove ${title} from cart`}
-                            aria-busy={isUpdating === item.id}
-                          >
-                            &times;
-                          </button>
-                        </div>
+                              </button>
+                              <span
+                                className={`w-10 text-center font-bold text-base ${headingColors.primary}`}
+                                aria-live="polite"
+                                aria-atomic="true"
+                              >
+                                {item.quantity}
+                              </span>
+                              <button
+                                onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
+                                disabled={isUpdating === item.id}
+                                className={`w-9 h-9 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 ${headingColors.secondary} font-bold text-sm transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 flex items-center justify-center shadow-sm`}
+                                aria-label={`Increase quantity for ${title}`}
+                                aria-busy={isUpdating === item.id}
+                              >
+                                {isUpdating === item.id ? (
+                                  <span className="inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                                ) : (
+                                  '+'
+                                )}
+                              </button>
+                            </div>
 
-                        <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                          {/* Quantity controls */}
-                          <div className="flex items-center gap-2" role="group" aria-label="Quantity selector">
-                            <button
-                              onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
-                              disabled={isUpdating === item.id}
-                              className={`w-10 h-10 rounded-xl border-2 border-gray-200 bg-gray-50 hover:bg-gray-100 ${headingColors.secondary} font-bold transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 flex items-center justify-center`}
-                              aria-label={`Decrease quantity for ${title}`}
-                              aria-busy={isUpdating === item.id}
-                            >
-                              {isUpdating === item.id ? (
-                                <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-                              ) : (
-                                '−'
+                            {/* Price - prominent display */}
+                            <div className="text-right">
+                              <p className={`text-2xl font-black ${headingColors.primary}`}>
+                                ${(lineTotal / 100).toFixed(2)}
+                              </p>
+                              {isSubscription && (
+                                <p className="text-xs text-gray-500 font-medium">per month</p>
                               )}
-                            </button>
-                            <span
-                              className={`w-12 text-center font-bold text-lg ${headingColors.primary}`}
-                              aria-live="polite"
-                              aria-atomic="true"
-                            >
-                              {item.quantity}
-                            </span>
-                            <button
-                              onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
-                              disabled={isUpdating === item.id}
-                              className={`w-10 h-10 rounded-xl border-2 border-gray-200 bg-gray-50 hover:bg-gray-100 ${headingColors.secondary} font-bold transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 flex items-center justify-center`}
-                              aria-label={`Increase quantity for ${title}`}
-                              aria-busy={isUpdating === item.id}
-                            >
-                              {isUpdating === item.id ? (
-                                <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-                              ) : (
-                                '+'
+                              {!isSubscription && item.quantity > 1 && (
+                                <p className="text-xs text-gray-500">${(unitPrice / 100).toFixed(2)} each</p>
                               )}
-                            </button>
+                            </div>
                           </div>
-
-                          {/* Price */}
-                          <p className={`text-xl font-bold ${headingColors.primary}`}>
-                            ${(lineTotal / 100).toFixed(2)}
-                            {isSubscription && <span className="text-sm font-normal text-gray-500">/mo</span>}
-                          </p>
                         </div>
                       </div>
                     </StaggerItem>
