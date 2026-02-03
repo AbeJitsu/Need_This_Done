@@ -4,21 +4,15 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
-import Card from '@/components/Card';
-import PageHeader from '@/components/PageHeader';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import {
-  formInputColors,
   alertColors,
   headingColors,
-  dividerColors,
-  leftBorderColors,
-  lightBgColors,
   accentColors,
-  cardBgColors,
   focusRingClasses,
   type AccentColor,
 } from '@/lib/colors';
+import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
 
 // ============================================================================
 // Shopping Cart Page - /cart
@@ -168,43 +162,42 @@ function EmptyCartState() {
 }
 
 // ============================================================================
-// Helper: Determine color by product type or price
+// Helper: Determine color by product type string
 // ============================================================================
 // Packages → green, Addons → purple, Services → blue, Subscriptions → purple
-function getItemColor(item: {
-  unit_price?: number;
-  product?: { metadata?: Record<string, unknown> };
-}): AccentColor {
-  const productType = item.product?.metadata?.type as string | undefined;
+function getItemColorByType(productType: string | undefined): AccentColor {
   if (productType === 'package') return 'green';
   if (productType === 'addon') return 'purple';
   if (productType === 'service') return 'blue';
-  if (productType === 'subscription') return 'purple'; // Use purple for subscriptions
-
-  // Fallback for shop products: color by price tier
-  const unitPrice = item.unit_price || 0;
-  if (unitPrice <= 2500) return 'green';
-  if (unitPrice <= 4000) return 'blue';
-  return 'purple';
+  if (productType === 'subscription') return 'purple';
+  return 'blue'; // Default
 }
 
 // ============================================================================
-// Helper: Get display label for product type
+// Helper: Get display label for product type string
 // ============================================================================
-function getItemTypeLabel(item: {
-  product?: { metadata?: Record<string, unknown> };
-}): string {
-  const productType = item.product?.metadata?.type as string | undefined;
+function getTypeLabelByType(productType: string | undefined): string {
   if (productType === 'package') return 'Website Package';
-  if (productType === 'addon') return 'Add-on Service';
-  if (productType === 'service') return 'Automation Service';
-  if (productType === 'subscription') return 'Monthly Subscription';
+  if (productType === 'addon') return 'Add-on';
+  if (productType === 'service') return 'Automation';
+  if (productType === 'subscription') return 'Subscription';
   return 'Product';
+}
+
+// ============================================================================
+// Helper: Get icon for product type
+// ============================================================================
+function getTypeIcon(productType: string | undefined): string {
+  if (productType === 'package') return '🌐';
+  if (productType === 'addon') return '✨';
+  if (productType === 'service') return '⚙️';
+  if (productType === 'subscription') return '🔄';
+  return '📦';
 }
 
 export default function CartPage() {
   const {
-    cart, itemCount, updateItem, removeItem, error: cartError,
+    cart, itemCount, updateItem, removeItem, error: cartError, getProductInfo,
   } = useCart();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [localError, setLocalError] = useState('');
@@ -281,187 +274,319 @@ export default function CartPage() {
   const total = cart?.total || subtotal + tax;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-      <PageHeader
-        title="Almost there!"
-        description={`You've got ${itemCount} ${itemCount === 1 ? 'item' : 'items'} in your cart.`}
-      />
+    <div className="min-h-screen">
+      {/* ================================================================
+          Hero Header - Editorial Style
+          ================================================================ */}
+      <section className="pt-8 md:pt-12 pb-4">
+        <div className="relative overflow-hidden py-12 md:py-16 md:max-w-6xl md:mx-auto md:rounded-3xl">
+          {/* Dark gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950" />
+          {/* Accent glows */}
+          <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
+          {/* Watermark */}
+          <div className="absolute -bottom-8 -right-4 text-[10rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">🛒</div>
 
-      {/* Error messages */}
-      {(localError || cartError) && (
-        <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg`}>
-          <p className={`text-sm ${alertColors.error.text}`}>{localError || cartError}</p>
-        </div>
-      )}
-
-      {/* Unified container with three inner rectangles */}
-      <Card hoverEffect="none">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
-          {/* Left column - Cart items */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* All cart items from Medusa (packages, addons, services, products) */}
-            {cart?.items?.map((item) => {
-              const title = item.title || item.variant?.title || item.product?.title || 'Item';
-              const description = item.description || item.product?.description;
-              const unitPrice = item.unit_price || 0;
-              const lineTotal = unitPrice * item.quantity;
-              const color = getItemColor(item);
-              const typeLabel = getItemTypeLabel(item);
-              const features = item.product?.metadata?.features as string[] | undefined;
-              const isSubscription = item.product?.metadata?.type === 'subscription';
-
-              return (
-                <div key={item.id} className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 border-l-4 ${leftBorderColors[color]} ${cardBgColors.elevated}`}>
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="flex-grow">
-                      <h3 className={`text-lg font-semibold ${headingColors.primary}`}>
-                        {title}
-                      </h3>
-                      <p className={`text-sm mt-1 ${accentColors[color].titleText}`}>
-                        {typeLabel}
-                        {isSubscription && ' • Billed monthly'}
-                      </p>
-                      {description && (
-                        <p className={`text-xs mt-2 ${formInputColors.helper}`}>
-                          {description}
-                        </p>
-                      )}
-                      {features && features.length > 0 && (
-                        <ul className={`text-xs mt-3 space-y-1 ${formInputColors.helper}`}>
-                          {features.map((f, i) => (
-                            <li key={i} className="flex items-center gap-1.5">
-                              <span className="text-emerald-500">&#10003;</span> {f}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => handleRemoveItem(item.id || '')}
-                      disabled={isUpdating === item.id}
-                      className={`text-gray-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-all duration-200 text-xl leading-none ${focusRingClasses.gold} motion-safe:hover:scale-110 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed`}
-                      aria-label={`Remove ${title} from cart`}
-                      aria-busy={isUpdating === item.id}
-                    >
-                      &times;
-                    </button>
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    {/* Quantity controls */}
-                    <div className="flex items-center gap-3" role="group" aria-label="Quantity selector">
-                      <button
-                        onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
-                        disabled={isUpdating === item.id}
-                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100`}
-                        aria-label={`Decrease quantity for ${title}`}
-                        aria-busy={isUpdating === item.id}
-                      >
-                        {isUpdating === item.id ? (
-                          <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-                        ) : (
-                          '−'
-                        )}
-                      </button>
-                      <span
-                        className={`w-10 text-center font-semibold text-lg ${headingColors.primary}`}
-                        aria-live="polite"
-                        aria-atomic="true"
-                      >
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
-                        disabled={isUpdating === item.id}
-                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100`}
-                        aria-label={`Increase quantity for ${title}`}
-                        aria-busy={isUpdating === item.id}
-                      >
-                        {isUpdating === item.id ? (
-                          <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-                        ) : (
-                          '+'
-                        )}
-                      </button>
-                    </div>
-
-                    {/* Price */}
-                    <p className={`text-lg font-semibold ${headingColors.primary}`}>
-                      ${(lineTotal / 100).toFixed(2)}
-                      {isSubscription && <span className="text-sm font-normal">/mo</span>}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* Continue shopping link */}
-            <div className="pt-2">
-              <Link href="/pricing" className={`${accentColors.blue.titleText} hover:underline rounded ${focusRingClasses.blue}`}>
-                &larr; Browse More Consultations
-              </Link>
-            </div>
-          </div>
-
-          {/* Right column - Order summary + Info */}
-          <div className="lg:col-span-2 space-y-6 lg:self-start lg:sticky lg:top-20">
-            {/* Order Summary - Inner rectangle */}
-            <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 ${cardBgColors.elevated}`}>
-              <h2 className={`text-xl font-bold ${headingColors.primary} mb-6`}>
-                Order Summary
-              </h2>
-
-              <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-                <div className="flex justify-between">
-                  <span className={formInputColors.helper}>Subtotal</span>
-                  <span className={`font-semibold ${headingColors.primary}`}>
-                    ${(subtotal / 100).toFixed(2)}
-                  </span>
-                </div>
-
-                {tax > 0 && (
-                  <div className="flex justify-between">
-                    <span className={formInputColors.helper}>Tax</span>
-                    <span className={`font-semibold ${headingColors.primary}`}>
-                      ${(tax / 100).toFixed(2)}
-                    </span>
-                  </div>
-                )}
+          <div className="relative z-10 px-6 sm:px-8 md:px-12">
+            <FadeIn direction="up" triggerOnScroll={false}>
+              {/* Editorial header */}
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-purple-400" />
+                <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Shopping Cart</span>
               </div>
-
-              <div className="flex justify-between mb-6">
-                <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
-                <span className={`text-2xl font-bold ${headingColors.primary}`}>
-                  ${(total / 100).toFixed(2)}
-                </span>
-              </div>
-
-              <Button
-                variant="gold"
-                href="/checkout"
-                className="w-full mb-3"
-              >
-                Checkout
-              </Button>
-
-              <Button
-                variant="gray"
-                href="/pricing"
-                className="w-full"
-              >
-                Browse More
-              </Button>
-            </div>
-
-            {/* What happens next - Inner rectangle */}
-            <div className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 ${lightBgColors.blue}`}>
-              <p className={`text-sm ${formInputColors.helper}`}>
-                <strong>What happens next?</strong> At checkout, you&apos;ll select your preferred appointment time. We&apos;ll confirm within 24 hours and send you calendar details.
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[0.95] mb-4">
+                Almost there.
+              </h1>
+              <p className="text-xl text-slate-400 max-w-xl leading-relaxed">
+                You&apos;ve got {itemCount} {itemCount === 1 ? 'item' : 'items'} ready to go.
               </p>
+            </FadeIn>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================
+          Main Content - Cart Items & Order Summary
+          ================================================================ */}
+      <section className="py-8 md:py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
+          {/* Error messages */}
+          {(localError || cartError) && (
+            <FadeIn direction="up">
+              <div className={`mb-6 p-4 ${alertColors.error.bg} ${alertColors.error.border} rounded-xl`}>
+                <p className={`text-sm ${alertColors.error.text}`}>{localError || cartError}</p>
+              </div>
+            </FadeIn>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-10">
+            {/* Left column - Cart items */}
+            <div className="lg:col-span-3">
+              {/* Section header */}
+              <FadeIn direction="up" delay={0.1}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-6 h-1 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500" />
+                  <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Your Items</span>
+                </div>
+              </FadeIn>
+
+              <StaggerContainer staggerDelay={0.08} className="space-y-4">
+                {/* All cart items from Medusa (packages, addons, services, products) */}
+                {cart?.items?.map((item) => {
+                  // Get extended product info from our stored map (more reliable than Medusa cart)
+                  const storedInfo = getProductInfo(item.variant_id || '');
+
+                  const title = item.title || item.variant?.title || item.product?.title || 'Item';
+                  const description = storedInfo?.description || item.description || item.product?.description;
+                  const unitPrice = item.unit_price || 0;
+                  const lineTotal = unitPrice * item.quantity;
+
+                  // Use stored type info if available, fallback to product metadata
+                  const itemWithMetadata = item as { product?: { metadata?: Record<string, unknown> } };
+                  const productType = storedInfo?.type || itemWithMetadata.product?.metadata?.type as string;
+                  const color = getItemColorByType(productType);
+                  const typeLabel = getTypeLabelByType(productType);
+                  const features = storedInfo?.features || itemWithMetadata.product?.metadata?.features as string[] | undefined;
+                  const isSubscription = productType === 'subscription' || storedInfo?.billingPeriod === 'monthly';
+
+                  // Get background color classes based on type
+                  const bgColorClasses = {
+                    green: 'from-emerald-50/80 to-white',
+                    blue: 'from-blue-50/80 to-white',
+                    purple: 'from-purple-50/80 to-white',
+                    gold: 'from-amber-50/80 to-white',
+                    gray: 'from-gray-50/80 to-white',
+                  };
+                  const badgeColorClasses = {
+                    green: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                    blue: 'bg-blue-100 text-blue-700 border-blue-200',
+                    purple: 'bg-purple-100 text-purple-700 border-purple-200',
+                    gold: 'bg-amber-100 text-amber-700 border-amber-200',
+                    gray: 'bg-gray-100 text-gray-700 border-gray-200',
+                  };
+                  const iconBgClasses = {
+                    green: 'bg-emerald-500',
+                    blue: 'bg-blue-500',
+                    purple: 'bg-purple-500',
+                    gold: 'bg-amber-500',
+                    gray: 'bg-gray-500',
+                  };
+                  const icon = getTypeIcon(productType);
+
+                  return (
+                    <StaggerItem key={item.id}>
+                      <div className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${bgColorClasses[color]} shadow-lg shadow-slate-200/50 border border-white/60 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5`}>
+                        {/* Left accent stripe */}
+                        <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${iconBgClasses[color]}`} />
+
+                        <div className="p-5 sm:p-6 pl-6 sm:pl-8">
+                          {/* Top row: Type badge + Remove button */}
+                          <div className="flex justify-between items-start mb-4">
+                            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold ${badgeColorClasses[color]}`}>
+                              <span>{icon}</span>
+                              <span>{typeLabel}</span>
+                              {isSubscription && <span className="opacity-70">• Monthly</span>}
+                            </div>
+                            <button
+                              onClick={() => handleRemoveItem(item.id || '')}
+                              disabled={isUpdating === item.id}
+                              className={`text-gray-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-xl transition-all duration-200 text-xl leading-none ${focusRingClasses.gold} motion-safe:hover:scale-110 motion-safe:active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed`}
+                              aria-label={`Remove ${title} from cart`}
+                              aria-busy={isUpdating === item.id}
+                            >
+                              &times;
+                            </button>
+                          </div>
+
+                          {/* Product title and description */}
+                          <div className="mb-4">
+                            <h3 className={`text-xl font-bold ${headingColors.primary} leading-tight`}>
+                              {title}
+                            </h3>
+                            {description && (
+                              <p className="text-sm text-gray-600 mt-2 leading-relaxed line-clamp-2">
+                                {description}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Features list - compact horizontal pills */}
+                          {features && features.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mb-5">
+                              {features.slice(0, 4).map((f, i) => (
+                                <span
+                                  key={i}
+                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/80 border border-gray-100 text-xs text-gray-600"
+                                >
+                                  <span className="text-emerald-500">✓</span>
+                                  {f}
+                                </span>
+                              ))}
+                              {features.length > 4 && (
+                                <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-gray-100 text-xs text-gray-500">
+                                  +{features.length - 4} more
+                                </span>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Bottom row: Quantity + Price */}
+                          <div className="flex justify-between items-center pt-4 border-t border-gray-200/60">
+                            {/* Quantity controls */}
+                            <div className="flex items-center gap-1" role="group" aria-label="Quantity selector">
+                              <button
+                                onClick={() => handleUpdateQuantity(item.id || '', item.quantity - 1)}
+                                disabled={isUpdating === item.id}
+                                className={`w-9 h-9 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 ${headingColors.secondary} font-bold text-sm transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 flex items-center justify-center shadow-sm`}
+                                aria-label={`Decrease quantity for ${title}`}
+                                aria-busy={isUpdating === item.id}
+                              >
+                                {isUpdating === item.id ? (
+                                  <span className="inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                                ) : (
+                                  '−'
+                                )}
+                              </button>
+                              <span
+                                className={`w-10 text-center font-bold text-base ${headingColors.primary}`}
+                                aria-live="polite"
+                                aria-atomic="true"
+                              >
+                                {item.quantity}
+                              </span>
+                              <button
+                                onClick={() => handleUpdateQuantity(item.id || '', item.quantity + 1)}
+                                disabled={isUpdating === item.id}
+                                className={`w-9 h-9 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 ${headingColors.secondary} font-bold text-sm transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 flex items-center justify-center shadow-sm`}
+                                aria-label={`Increase quantity for ${title}`}
+                                aria-busy={isUpdating === item.id}
+                              >
+                                {isUpdating === item.id ? (
+                                  <span className="inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                                ) : (
+                                  '+'
+                                )}
+                              </button>
+                            </div>
+
+                            {/* Price - prominent display */}
+                            <div className="text-right">
+                              <p className={`text-2xl font-black ${headingColors.primary}`}>
+                                ${(lineTotal / 100).toFixed(2)}
+                              </p>
+                              {isSubscription && (
+                                <p className="text-xs text-gray-500 font-medium">per month</p>
+                              )}
+                              {!isSubscription && item.quantity > 1 && (
+                                <p className="text-xs text-gray-500">${(unitPrice / 100).toFixed(2)} each</p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </StaggerItem>
+                  );
+                })}
+              </StaggerContainer>
+
+              {/* Continue shopping link */}
+              <FadeIn direction="up" delay={0.3}>
+                <div className="pt-6">
+                  <Link href="/pricing" className={`inline-flex items-center gap-2 ${accentColors.blue.titleText} font-medium hover:underline rounded ${focusRingClasses.blue} transition-colors`}>
+                    <span>←</span>
+                    <span>Browse More Consultations</span>
+                  </Link>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* Right column - Order summary + Info (Dark Glass Treatment) */}
+            <div className="lg:col-span-2 space-y-6 lg:self-start lg:sticky lg:top-20">
+              <FadeIn direction="up" delay={0.2}>
+                {/* Order Summary - Dark Glass Card */}
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8">
+                  {/* Accent glow */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl" />
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/15 rounded-full blur-2xl" />
+
+                  <div className="relative z-10">
+                    {/* Section header */}
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-6 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-purple-400" />
+                      <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Order Summary</span>
+                    </div>
+
+                    <div className="space-y-4 mb-6 pb-6 border-b border-white/10">
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">Subtotal</span>
+                        <span className="font-semibold text-white">
+                          ${(subtotal / 100).toFixed(2)}
+                        </span>
+                      </div>
+
+                      {tax > 0 && (
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Tax</span>
+                          <span className="font-semibold text-white">
+                            ${(tax / 100).toFixed(2)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex justify-between items-baseline mb-8">
+                      <span className="text-lg font-bold text-white">Total</span>
+                      <span className="text-3xl font-black text-white">
+                        ${(total / 100).toFixed(2)}
+                      </span>
+                    </div>
+
+                    <Button
+                      variant="green"
+                      href="/checkout"
+                      className="w-full mb-3 shadow-lg shadow-emerald-500/25"
+                      size="lg"
+                    >
+                      Proceed to Checkout
+                    </Button>
+
+                    <Button
+                      variant="gray"
+                      href="/pricing"
+                      className="w-full bg-white/10 hover:bg-white/15 border-white/10 text-white"
+                      size="lg"
+                    >
+                      Browse More
+                    </Button>
+                  </div>
+                </div>
+              </FadeIn>
+
+              <FadeIn direction="up" delay={0.3}>
+                {/* What happens next - Dark Glass Card */}
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-5 sm:p-6">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/10 rounded-full blur-2xl" />
+
+                  <div className="relative z-10">
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span className="text-blue-400 text-sm">💡</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-white mb-1">What happens next?</p>
+                        <p className="text-sm text-slate-400 leading-relaxed">
+                          At checkout, you&apos;ll select your preferred appointment time. We&apos;ll confirm within 24 hours and send you calendar details.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
             </div>
           </div>
         </div>
-      </Card>
+      </section>
 
       {/* Remove item confirmation dialog */}
       <ConfirmDialog

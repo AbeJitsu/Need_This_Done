@@ -132,8 +132,9 @@ async function getCollections(): Promise<MedusaCollection[]> {
 
 async function getProductsByCollection(collectionId: string, regionId: string): Promise<MedusaProduct[]> {
   try {
+    // Medusa v2 Store API - use +metadata to include metadata in response
     const data = await fetchMedusa<{ products: MedusaProduct[] }>(
-      `/store/products?collection_id[]=${collectionId}&region_id=${regionId}`,
+      `/store/products?collection_id[]=${collectionId}&region_id=${regionId}&fields=+metadata`,
       `Fetch products for collection ${collectionId}`
     );
     return data.products || [];

@@ -103,6 +103,7 @@ export default function UnifiedPricingPage() {
   const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkingOutPackage, setCheckingOutPackage] = useState<string | null>(null);
+  const [addingService, setAddingService] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState('');
   const [toastMessage, setToastMessage] = useState('');
 
@@ -177,10 +178,14 @@ export default function UnifiedPricingPage() {
     setCheckoutError('');
 
     try {
-      // Add to Medusa cart
+      // Add to Medusa cart with extended product info for display
       await addItem(pkg.variantId, 1, {
         title: pkg.title,
         unit_price: pkg.price,
+        type: pkg.type as 'package' | 'addon' | 'service' | 'subscription',
+        description: pkg.description,
+        features: pkg.features,
+        billingPeriod: pkg.billingPeriod,
       });
 
       setToastMessage(`${pkg.title} added to cart!`);
@@ -204,11 +209,15 @@ export default function UnifiedPricingPage() {
     setCheckoutError('');
 
     try {
-      // Add each selected addon to cart
+      // Add each selected addon to cart with extended product info
       for (const addon of selectedAddonProducts) {
         await addItem(addon.variantId, 1, {
           title: addon.title,
           unit_price: addon.price,
+          type: addon.type as 'package' | 'addon' | 'service' | 'subscription',
+          description: addon.description,
+          features: addon.features,
+          billingPeriod: addon.billingPeriod,
         });
       }
 
@@ -222,6 +231,35 @@ export default function UnifiedPricingPage() {
     } catch (err) {
       setCheckoutError(err instanceof Error ? err.message : 'Failed to add items to cart');
       setIsCheckingOut(false);
+    }
+  };
+
+  // ========================================================================
+  // Service checkout - add service/subscription to Medusa cart
+  // ========================================================================
+  const handleServiceAddToCart = async (service: PricingProduct) => {
+    setAddingService(service.id);
+    setCheckoutError('');
+
+    try {
+      await addItem(service.variantId, 1, {
+        title: service.title,
+        unit_price: service.price,
+        type: service.type as 'package' | 'addon' | 'service' | 'subscription',
+        description: service.description,
+        features: service.features,
+        billingPeriod: service.billingPeriod,
+      });
+
+      setToastMessage(`${service.title} added to cart!`);
+      setTimeout(() => {
+        setToastMessage('');
+        setAddingService(null);
+        router.push('/cart');
+      }, 1000);
+    } catch (err) {
+      setCheckoutError(err instanceof Error ? err.message : 'Failed to add to cart');
+      setAddingService(null);
     }
   };
 
@@ -350,18 +388,40 @@ export default function UnifiedPricingPage() {
               </div>
             </FadeIn>
 
-            {/* Quick navigation — horizontal pills */}
-            <StaggerContainer staggerDelay={0.06} className="flex flex-wrap gap-3">
+            {/* Quick navigation — pills in two rows */}
+            {/* Row 1: 2 items centered */}
+            <StaggerContainer staggerDelay={0.06} className="flex flex-wrap justify-center gap-3 mb-3">
               {[
                 { label: 'Websites', price: `from $${minPackagePrice / 100}`, icon: Globe, ref: websitesRef, color: 'emerald' },
                 { label: 'Automation', price: automationService ? `$${automationService.price / 100}/workflow` : '$150/workflow', icon: Zap, ref: automationRef, color: 'blue' },
+              ].map((item) => {
+                const colorMap: Record<string, string> = {
+                  emerald: 'hover:border-emerald-500/50 hover:bg-emerald-500/10 text-emerald-400',
+                  blue: 'hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400',
+                };
+                return (
+                  <StaggerItem key={item.label}>
+                    <button
+                      onClick={() => scrollToSection(item.ref)}
+                      className={`group flex items-center gap-3 px-6 py-3.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 ${colorMap[item.color]}`}
+                    >
+                      <item.icon size={20} className="group-hover:scale-110 transition-transform duration-300" />
+                      <span className="font-semibold text-base text-white">{item.label}</span>
+                      <span className="text-sm font-medium opacity-70">{item.price}</span>
+                    </button>
+                  </StaggerItem>
+                );
+              })}
+            </StaggerContainer>
+
+            {/* Row 2: 3 items centered */}
+            <StaggerContainer staggerDelay={0.06} className="flex flex-wrap justify-center gap-3">
+              {[
                 { label: 'AI Agents', price: subscriptionService ? `$${subscriptionService.price / 100}/month` : '$500/month', icon: Bot, ref: automationRef, color: 'purple' },
                 { label: 'Custom', price: 'you decide', icon: Puzzle, ref: customRef, color: 'amber' },
                 { label: 'Have a Quote?', price: 'authorize', icon: FileText, ref: quoteAuthRef, color: 'slate' },
               ].map((item) => {
                 const colorMap: Record<string, string> = {
-                  emerald: 'hover:border-emerald-500/50 hover:bg-emerald-500/10 text-emerald-400',
-                  blue: 'hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400',
                   purple: 'hover:border-purple-500/50 hover:bg-purple-500/10 text-purple-400',
                   amber: 'hover:border-amber-500/50 hover:bg-amber-500/10 text-amber-400',
                   slate: 'hover:border-slate-500/50 hover:bg-slate-500/10 text-slate-400',
@@ -577,8 +637,13 @@ export default function UnifiedPricingPage() {
                         <span className="text-5xl font-black text-white">${automationService.price / 100}</span>
                         <span className="text-base font-medium text-white/50">per workflow</span>
                       </div>
-                      <Button variant="purple" href="/contact#consultation" className="w-full mt-auto bg-white/15 border border-white/20 text-white hover:bg-white/25 shadow-lg shadow-purple-500/25">
-                        Book a Call
+                      <Button
+                        variant="purple"
+                        onClick={() => handleServiceAddToCart(automationService)}
+                        disabled={addingService === automationService.id}
+                        className="w-full mt-auto bg-white/15 border border-white/20 text-white hover:bg-white/25 shadow-lg shadow-purple-500/25"
+                      >
+                        {addingService === automationService.id ? 'Adding...' : 'Add to Cart'}
                       </Button>
                     </div>
                   </div>
@@ -607,8 +672,13 @@ export default function UnifiedPricingPage() {
                         <span className="text-5xl font-black text-white">${subscriptionService.price / 100}</span>
                         <span className="text-base font-medium text-white/50">per month</span>
                       </div>
-                      <Button variant="gold" href="/contact#consultation" className="w-full mt-auto bg-white/10 border border-white/15 text-white hover:bg-white/20 shadow-lg shadow-gold-500/25">
-                        Book a Call
+                      <Button
+                        variant="gold"
+                        onClick={() => handleServiceAddToCart(subscriptionService)}
+                        disabled={addingService === subscriptionService.id}
+                        className="w-full mt-auto bg-white/10 border border-white/15 text-white hover:bg-white/20 shadow-lg shadow-gold-500/25"
+                      >
+                        {addingService === subscriptionService.id ? 'Adding...' : 'Subscribe'}
                       </Button>
                     </div>
                   </div>
@@ -879,7 +949,7 @@ export default function UnifiedPricingPage() {
           </div>
         </section>
       ) : (
-        <section ref={quoteAuthRef} id="quote-authorization" className="scroll-mt-8 relative overflow-hidden rounded-3xl">
+        <section ref={quoteAuthRef} id="quote-authorization" className="scroll-mt-8 relative overflow-hidden rounded-t-3xl">
           {/* Dark gradient background */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
           <div className="absolute top-0 left-0 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />

@@ -521,7 +521,7 @@ export default function ContactPage() {
       {/* ================================================================== */}
       {/* Form Section - Clean, Bright with Editorial Header */}
       {/* ================================================================== */}
-      <section ref={formSectionRef} className="bg-white py-16 md:py-20 scroll-mt-4">
+      <section ref={formSectionRef} className="bg-white py-16 md:py-20 scroll-mt-24">
         <div className="max-w-xl mx-auto px-4 sm:px-6">
           {/* Editorial left-aligned header */}
           <FadeIn direction="up">
