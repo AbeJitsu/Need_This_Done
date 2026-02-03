@@ -52,6 +52,7 @@ export default function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
 
   return (
     <span
+      role="status"
       className={`${sizeClass} ${config.bg} ${config.text} font-medium rounded-full whitespace-nowrap`}
     >
       {config.label}
