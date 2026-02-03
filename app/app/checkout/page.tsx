@@ -39,7 +39,7 @@ type CheckoutStep = 'info' | 'appointment' | 'payment' | 'confirmation';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, cartId, itemCount, clearCart, isSyncing, isCartReady, serviceItems, serviceTotal } = useCart();
+  const { cart, cartId, itemCount, clearCart, isSyncing, isCartReady } = useCart();
   const { user, isAuthenticated } = useAuth();
 
   // Form field references for focus management
@@ -83,12 +83,19 @@ export default function CheckoutPage() {
   const [appointmentData, setAppointmentData] = useState<AppointmentData | null>(null);
   const [appointmentCreationError, setAppointmentCreationError] = useState('');
 
-  // Combined total: Medusa items (cents) + service items (dollars → cents)
-  const medusaTotal = cart?.total || 0;
-  const serviceTotalCents = serviceTotal * 100;
-  const combinedTotal = medusaTotal + serviceTotalCents;
-  const hasMedusaItems = (cart?.items?.length || 0) > 0;
-  const hasServiceItems = serviceItems.length > 0;
+  // Total from Medusa cart (all in cents)
+  const total = cart?.total || 0;
+  const hasItems = (cart?.items?.length || 0) > 0;
+
+  // Helper: Get display label for product type
+  const getItemTypeLabel = (item: { product?: { metadata?: Record<string, unknown> } }): string => {
+    const productType = item.product?.metadata?.type as string | undefined;
+    if (productType === 'package') return 'Website Package';
+    if (productType === 'addon') return 'Add-on';
+    if (productType === 'service') return 'Service';
+    if (productType === 'subscription') return 'Subscription';
+    return 'Product';
+  };
 
   // Reusable order summary for all checkout steps
   const renderOrderSummary = () => (
@@ -97,66 +104,39 @@ export default function CheckoutPage() {
         Order Summary
       </h2>
 
-      {/* Service items from pricing page */}
-      {hasServiceItems && (
+      {/* All cart items from Medusa */}
+      {hasItems && (
         <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-          {serviceItems.map((si) => (
-            <div key={si.id} className="flex justify-between items-start">
-              <div className="flex-1">
-                <p className={`font-medium ${headingColors.primary} text-sm`}>
-                  {si.title}
-                </p>
-                <p className={`text-xs ${formInputColors.helper}`}>
-                  {si.type === 'package' ? 'Website Package' : 'Add-on'} &middot; Qty: {si.quantity}
+          {cart?.items?.map((item) => {
+            const isSubscription = item.product?.metadata?.type === 'subscription';
+            return (
+              <div key={item.id} className="flex justify-between items-start">
+                <div className="flex-1">
+                  <p className={`font-medium ${headingColors.primary} text-sm`}>
+                    {item.title || item.variant?.title || item.product?.title || 'Item'}
+                  </p>
+                  <p className={`text-xs ${formInputColors.helper}`}>
+                    {getItemTypeLabel(item)} &middot; Qty: {item.quantity}
+                  </p>
+                </div>
+                <p className={`font-semibold ${headingColors.primary} text-sm`}>
+                  ${(((item.unit_price || 0) * item.quantity) / 100).toFixed(2)}
+                  {isSubscription && <span className="text-xs font-normal">/mo</span>}
                 </p>
               </div>
-              <p className={`font-semibold ${headingColors.primary} text-sm`}>
-                ${(si.unit_price * si.quantity).toLocaleString()}.00
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Medusa cart items (consultations, shop products) */}
-      {hasMedusaItems && (
-        <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-          {cart?.items?.map((item) => (
-            <div key={item.id} className="flex justify-between items-start">
-              <div className="flex-1">
-                <p className={`font-medium ${headingColors.primary} text-sm`}>
-                  {item.title || item.variant?.title || 'Consultation'}
-                </p>
-                <p className={`text-xs ${formInputColors.helper}`}>
-                  Qty: {item.quantity}
-                </p>
-              </div>
-              <p className={`font-semibold ${headingColors.primary} text-sm`}>
-                ${(((item.unit_price || 0) * item.quantity) / 100).toFixed(2)}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
       {/* Totals */}
       <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-        {hasServiceItems && (
-          <div className="flex justify-between">
-            <span className={formInputColors.helper}>Services</span>
-            <span className={`font-semibold ${headingColors.primary}`}>
-              ${serviceTotal.toLocaleString()}.00
-            </span>
-          </div>
-        )}
-        {hasMedusaItems && (
-          <div className="flex justify-between">
-            <span className={formInputColors.helper}>Products</span>
-            <span className={`font-semibold ${headingColors.primary}`}>
-              ${((cart?.subtotal || 0) / 100).toFixed(2)}
-            </span>
-          </div>
-        )}
+        <div className="flex justify-between">
+          <span className={formInputColors.helper}>Subtotal</span>
+          <span className={`font-semibold ${headingColors.primary}`}>
+            ${((cart?.subtotal || 0) / 100).toFixed(2)}
+          </span>
+        </div>
         {(cart?.tax_total || 0) > 0 && (
           <div className="flex justify-between">
             <span className={formInputColors.helper}>Tax</span>
@@ -170,7 +150,7 @@ export default function CheckoutPage() {
       <div className="flex justify-between mb-6">
         <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
         <span className={`text-2xl font-bold ${headingColors.primary}`}>
-          ${(combinedTotal / 100).toFixed(2)}
+          ${(total / 100).toFixed(2)}
         </span>
       </div>
 
@@ -272,8 +252,8 @@ export default function CheckoutPage() {
     try {
       setIsProcessing(true);
 
-      // Service-only carts don't need appointment check — skip straight to payment
-      if (!cartId || !hasMedusaItems) {
+      // Skip appointment check if no cart
+      if (!cartId) {
         await proceedToPayment();
         return;
       }
@@ -337,8 +317,8 @@ export default function CheckoutPage() {
   // Create order and payment intent - proceed to payment step
   // ========================================================================
   const proceedToPayment = async () => {
-    // Guard: Ensure cart is fully synced before proceeding (only matters for Medusa items)
-    if (hasMedusaItems && isSyncing) {
+    // Guard: Ensure cart is fully synced before proceeding
+    if (isSyncing) {
       setError('Just a moment - finishing up your cart changes...');
       return;
     }
@@ -352,27 +332,14 @@ export default function CheckoutPage() {
       setIsProcessing(true);
       setError('');
 
-      // Build service items payload for the checkout API
-      const serviceItemsPayload = serviceItems.map((si) => ({
-        service_id: si.serviceId,
-        type: si.type,
-        title: si.title,
-        description: si.description || null,
-        unit_price: si.unit_price,
-        quantity: si.quantity,
-        features: si.features || [],
-      }));
-
       // Create order (saves order in Medusa + Supabase)
       const orderResponse = await fetch('/api/checkout/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          cart_id: cartId || null,
+          cart_id: cartId,
           email,
           order_notes: orderNotes.trim() || null,
-          service_items: serviceItemsPayload.length > 0 ? serviceItemsPayload : undefined,
-          service_total: serviceTotal > 0 ? serviceTotal : undefined,
         }),
       });
 
@@ -394,8 +361,8 @@ export default function CheckoutPage() {
         });
       }
 
-      // Create PaymentIntent - calculate deposit or full amount from combined total
-      const chargeAmount = payInFull ? combinedTotal : calculateDeposit(combinedTotal);
+      // Create PaymentIntent - calculate deposit or full amount
+      const chargeAmount = payInFull ? total : calculateDeposit(total);
       const isDeposit = !payInFull;
 
       const paymentResponse = await fetch('/api/stripe/create-payment-intent', {
@@ -763,8 +730,8 @@ export default function CheckoutPage() {
                     onError={handlePaymentError}
                     returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/checkout`}
                     submitText={payInFull
-                      ? `Pay in Full $${(combinedTotal / 100).toFixed(2)}`
-                      : `Pay Deposit $${(calculateDeposit(combinedTotal) / 100).toFixed(2)}`
+                      ? `Pay in Full $${(total / 100).toFixed(2)}`
+                      : `Pay Deposit $${(calculateDeposit(total) / 100).toFixed(2)}`
                     }
                   />
                 </StripeElementsWrapper>

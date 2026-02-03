@@ -1,13 +1,16 @@
 /**
  * Seed Products Script
  *
- * Creates the website build products and add-ons in Medusa.
+ * Creates the website build products, add-ons, and services in Medusa.
  * Run with: npx tsx scripts/seed-products.ts
  *
  * Requires admin credentials in .env.local:
  * - MEDUSA_BACKEND_URL
  * - MEDUSA_ADMIN_EMAIL
  * - MEDUSA_ADMIN_PASSWORD
+ *
+ * Optional for subscription products:
+ * - STRIPE_MANAGED_AI_PRICE_ID (Stripe price ID for monthly subscription)
  */
 
 import { config } from 'dotenv';
@@ -27,87 +30,209 @@ if (!MEDUSA_URL) {
 // Product Definitions
 // ============================================================================
 
+type ProductType = 'package' | 'addon' | 'service' | 'subscription';
+
 interface ProductDefinition {
   title: string;
   description: string;
   handle: string;
   price: number; // in cents
-  category: 'package' | 'addon';
-  metadata?: Record<string, unknown>;
+  type: ProductType;
+  collection: string; // collection handle
+  metadata: {
+    type: ProductType;
+    deposit_percent: number;
+    features: string[];
+    billing_period?: 'monthly' | null;
+    popular?: boolean;
+    stripe_price_id?: string; // For subscription products
+  };
 }
 
 const PRODUCTS: ProductDefinition[] = [
-  // Main Packages
+  // ========================================
+  // Website Packages
+  // ========================================
   {
     title: 'Launch Site',
-    description: 'Perfect for getting online fast. 3-5 page Next.js website deployed on Vercel. Includes custom design, mobile responsive, contact form, and basic SEO setup.',
+    description: 'Perfect for getting online fast. 3-5 page Next.js website deployed on Vercel.',
     handle: 'launch-site',
     price: 50000, // $500
-    category: 'package',
+    type: 'package',
+    collection: 'website-packages',
     metadata: {
-      pages_included: '3-5',
-      timeline: '1-2 weeks',
-      support_days: 30,
+      type: 'package',
+      deposit_percent: 50,
+      features: [
+        '3-5 pages',
+        'Custom design',
+        'Mobile responsive',
+        'Contact form',
+        'Basic SEO',
+        '30 days support',
+      ],
     },
   },
   {
     title: 'Growth Site',
-    description: 'For businesses ready to scale. 5-8 page website with blog, CMS for easy updates, integrations, and enhanced SEO. Everything in Launch plus room to grow.',
+    description: 'For businesses ready to scale. 5-8 page website with blog, CMS, and enhanced SEO.',
     handle: 'growth-site',
     price: 120000, // $1,200
-    category: 'package',
+    type: 'package',
+    collection: 'website-packages',
     metadata: {
-      pages_included: '5-8',
-      timeline: '2-4 weeks',
-      support_days: 60,
-      includes_blog: true,
-      includes_cms: true,
+      type: 'package',
+      deposit_percent: 50,
+      popular: true,
+      features: [
+        '5-8 pages',
+        'Everything in Launch',
+        'Blog with CMS',
+        'Content editing',
+        'Enhanced SEO',
+        '60 days support',
+      ],
     },
   },
 
-  // Add-ons
+  // ========================================
+  // Website Add-ons
+  // ========================================
   {
-    title: 'Additional Page',
+    title: 'Extra Page',
     description: 'Add another page to your site. Design, development, and deployment included.',
     handle: 'additional-page',
     price: 10000, // $100
-    category: 'addon',
+    type: 'addon',
+    collection: 'website-addons',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: ['Custom page design', 'Mobile responsive', 'SEO optimized'],
+    },
   },
   {
-    title: 'Blog Setup',
-    description: 'Add a blog to your site with MDX support. Write posts in markdown, automatic formatting and SEO.',
+    title: 'Blog',
+    description: 'Add a blog to your site with MDX support. Full SEO optimization included.',
     handle: 'blog-setup',
     price: 30000, // $300
-    category: 'addon',
+    type: 'addon',
+    collection: 'website-addons',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: ['MDX blog support', 'Auto formatting', 'SEO optimization', 'RSS feed'],
+    },
   },
   {
-    title: 'Contact Form with File Upload',
+    title: 'File Uploads',
     description: 'Enhanced contact form with file attachment support. Up to 3 files, 5MB each.',
     handle: 'contact-form-files',
     price: 15000, // $150
-    category: 'addon',
+    type: 'addon',
+    collection: 'website-addons',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: ['File attachments', 'Up to 3 files', '5MB per file', 'Email notifications'],
+    },
   },
   {
-    title: 'Calendar Booking',
-    description: 'Integrate Calendly, Cal.com, or similar booking widget. Let visitors schedule calls directly.',
+    title: 'Booking',
+    description: 'Integrate Calendly, Cal.com, or similar booking widget.',
     handle: 'calendar-booking',
     price: 20000, // $200
-    category: 'addon',
+    type: 'addon',
+    collection: 'website-addons',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: ['Calendar integration', 'Booking widget', 'Email confirmations'],
+    },
   },
   {
-    title: 'Payment Integration',
+    title: 'Payments',
     description: 'Accept payments via Stripe. One-time payments, subscriptions, or donations.',
     handle: 'payment-integration',
     price: 40000, // $400
-    category: 'addon',
+    type: 'addon',
+    collection: 'website-addons',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: ['Stripe integration', 'One-time payments', 'Subscriptions', 'Donations'],
+    },
   },
   {
-    title: 'CMS Integration',
-    description: 'Add a content management system so you can update your site without code. Edit text, images, and pages yourself.',
+    title: 'CMS',
+    description: 'Add a content management system so you can update your site without code.',
     handle: 'cms-integration',
     price: 50000, // $500
-    category: 'addon',
+    type: 'addon',
+    collection: 'website-addons',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: ['Visual editor', 'Edit text & images', 'No code required', 'Version history'],
+    },
   },
+
+  // ========================================
+  // Automation Services
+  // ========================================
+  {
+    title: 'Automation Setup',
+    description: 'Connect your tools and eliminate repetitive work. We build workflows that save you hours every week.',
+    handle: 'automation-setup',
+    price: 15000, // $150 per workflow
+    type: 'service',
+    collection: 'automation-services',
+    metadata: {
+      type: 'service',
+      deposit_percent: 100, // Pay upfront for services
+      features: [
+        'Tool integration',
+        'Workflow automation',
+        'Time savings',
+        'Custom triggers',
+      ],
+    },
+  },
+  {
+    title: 'Managed AI',
+    description: 'AI agents that handle customer support, data entry, and internal ops — around the clock.',
+    handle: 'managed-ai',
+    price: 50000, // $500/month
+    type: 'subscription',
+    collection: 'automation-services',
+    metadata: {
+      type: 'subscription',
+      deposit_percent: 0, // No deposit for subscriptions
+      billing_period: 'monthly',
+      stripe_price_id: process.env.STRIPE_MANAGED_AI_PRICE_ID || '', // Set in .env.local
+      features: [
+        'AI agents',
+        'Customer support',
+        'Data entry automation',
+        '24/7 operations',
+      ],
+    },
+  },
+];
+
+// ============================================================================
+// Collection Definitions
+// ============================================================================
+
+interface CollectionDefinition {
+  title: string;
+  handle: string;
+}
+
+const COLLECTIONS: CollectionDefinition[] = [
+  { title: 'Website Packages', handle: 'website-packages' },
+  { title: 'Website Add-ons', handle: 'website-addons' },
+  { title: 'Automation Services', handle: 'automation-services' },
 ];
 
 // ============================================================================
@@ -155,19 +280,70 @@ async function getRegionAndSalesChannel(token: string) {
   return { region, salesChannel };
 }
 
+async function ensureCollections(token: string): Promise<Map<string, string>> {
+  const collectionMap = new Map<string, string>();
+
+  // Get existing collections
+  const listRes = await fetch(`${MEDUSA_URL}/admin/product-collections`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const listData = await listRes.json();
+  const existingCollections = listData.collections || [];
+
+  for (const collection of COLLECTIONS) {
+    // Check if collection exists
+    const existing = existingCollections.find(
+      (c: { handle: string }) => c.handle === collection.handle
+    );
+
+    if (existing) {
+      console.log(`  ⏭️  Collection "${collection.title}" already exists`);
+      collectionMap.set(collection.handle, existing.id);
+      continue;
+    }
+
+    // Create collection
+    const createRes = await fetch(`${MEDUSA_URL}/admin/product-collections`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: collection.title,
+        handle: collection.handle,
+      }),
+    });
+
+    if (!createRes.ok) {
+      const error = await createRes.json().catch(() => ({}));
+      throw new Error(`Failed to create collection ${collection.title}: ${JSON.stringify(error)}`);
+    }
+
+    const createData = await createRes.json();
+    console.log(`  ✅ Created collection: ${collection.title}`);
+    collectionMap.set(collection.handle, createData.collection.id);
+  }
+
+  return collectionMap;
+}
+
 async function createProduct(
   token: string,
   product: ProductDefinition,
   regionId: string,
-  salesChannelId: string
+  salesChannelId: string,
+  collectionMap: Map<string, string>
 ): Promise<void> {
   const sku = product.handle.replace(/-/g, '_').toUpperCase();
+  const collectionId = collectionMap.get(product.collection);
 
   const productData = {
     title: product.title,
     description: product.description,
     handle: product.handle,
     status: 'published',
+    collection_id: collectionId,
     options: [
       {
         title: 'Default',
@@ -190,10 +366,7 @@ async function createProduct(
       },
     ],
     sales_channels: [{ id: salesChannelId }],
-    metadata: {
-      ...product.metadata,
-      category: product.category,
-    },
+    metadata: product.metadata,
   };
 
   const response = await fetch(`${MEDUSA_URL}/admin/products`, {
@@ -215,7 +388,11 @@ async function createProduct(
     throw new Error(`Failed to create ${product.title}: ${JSON.stringify(error)}`);
   }
 
-  console.log(`  ✅ Created: ${product.title} ($${product.price / 100})`);
+  const priceLabel = product.type === 'subscription'
+    ? `$${product.price / 100}/month`
+    : `$${product.price / 100}`;
+
+  console.log(`  ✅ Created: ${product.title} (${priceLabel})`);
 }
 
 // ============================================================================
@@ -242,24 +419,41 @@ async function main() {
     console.log(`   Region: ${region.name}`);
     console.log(`   Sales Channel: ${salesChannel.name}\n`);
 
-    // Create products
-    console.log('📦 Creating products...\n');
+    // Ensure collections exist
+    console.log('📂 Creating collections...\n');
+    const collectionMap = await ensureCollections(token);
 
-    const packages = PRODUCTS.filter((p) => p.category === 'package');
-    const addons = PRODUCTS.filter((p) => p.category === 'addon');
+    // Create products grouped by type
+    console.log('\n📦 Creating products...\n');
 
-    console.log('   Packages:');
+    const packages = PRODUCTS.filter((p) => p.type === 'package');
+    const addons = PRODUCTS.filter((p) => p.type === 'addon');
+    const services = PRODUCTS.filter((p) => p.type === 'service' || p.type === 'subscription');
+
+    console.log('   Website Packages:');
     for (const product of packages) {
-      await createProduct(token, product, region.id, salesChannel.id);
+      await createProduct(token, product, region.id, salesChannel.id, collectionMap);
     }
 
-    console.log('\n   Add-ons:');
+    console.log('\n   Website Add-ons:');
     for (const product of addons) {
-      await createProduct(token, product, region.id, salesChannel.id);
+      await createProduct(token, product, region.id, salesChannel.id, collectionMap);
+    }
+
+    console.log('\n   Automation Services:');
+    for (const product of services) {
+      await createProduct(token, product, region.id, salesChannel.id, collectionMap);
     }
 
     console.log('\n✨ Done! Products seeded successfully.\n');
-    console.log('   View at: /shop\n');
+    console.log('   View at: /pricing\n');
+
+    // Warn if subscription product missing Stripe price ID
+    const managedAi = PRODUCTS.find((p) => p.handle === 'managed-ai');
+    if (managedAi && !managedAi.metadata.stripe_price_id) {
+      console.log('⚠️  Note: STRIPE_MANAGED_AI_PRICE_ID not set.');
+      console.log('   Set this in .env.local to enable Managed AI subscriptions.\n');
+    }
   } catch (error) {
     console.error('\n❌ Error:', error instanceof Error ? error.message : error);
     process.exit(1);
