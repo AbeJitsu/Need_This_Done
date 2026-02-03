@@ -92,8 +92,10 @@
   "exclude": [
     "node_modules",
     "__tests__",
+    "e2e",
     "**/*.test.ts",
     "**/*.test.tsx",
+    "**/*.spec.ts",
     "vitest.config.ts",
     "vitest.setup.ts"
   ]
