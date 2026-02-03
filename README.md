@@ -195,25 +195,36 @@ Open http://localhost:3000 and you're in! The app hot-reloads, so your changes a
 
 ### Branch Workflow
 
-- `main` - Production code, deploys automatically to Vercel
-- `dev` - Active development, test changes here first
-- `experiment` - Isolated experiments
+Three-branch strategy with clear separation of concerns:
+
+| Branch | Purpose | Deploys To |
+|--------|---------|-----------|
+| `production` | Live production site | Vercel production (needthisdone.com) |
+| `testing` | QA and pre-production testing | Vercel staging preview |
+| `dev` | Active development | Vercel preview deployments |
 
 **Workflow:**
 1. Develop and test on `dev` branch locally
 2. Push to GitHub - Vercel creates preview deployment
-3. Test preview URL, then merge `dev` → `main`
-4. Vercel auto-deploys to production
+3. Test preview URL, then merge `dev` → `testing` for QA
+4. Test on staging, then merge `testing` → `production`
+5. Production deployment is automatic
 
 ### Deploying Changes
 
 **Frontend (Vercel - Automatic):**
 ```bash
-# Push to main triggers automatic deployment
-git checkout main
+# Standard workflow: dev → testing → production
+git checkout testing
 git merge dev
-git push origin main
-# Vercel deploys automatically
+git push origin testing
+# Vercel creates staging preview, test it
+
+# Then promote to production
+git checkout production
+git merge testing
+git push origin production
+# Vercel deploys automatically to production
 ```
 
 **Medusa Backend (Railway):**

@@ -220,10 +220,12 @@ If unsure, rollback to the last known working deployment in Railway:
 **If you change anything in medusa-v2:**
 
 1. Test locally first: `cd medusa-v2 && npm run build`
-2. Commit to main branch
-3. Merge main into production: `git checkout production && git merge main && git push`
-4. Monitor Railway deployment
-5. If it fails, check the deploy logs for the actual error (not build logs)
+2. Commit to dev branch
+3. Merge dev → testing: `git checkout testing && git merge dev && git push`
+4. Test on staging environment
+5. Merge testing → production: `git checkout production && git merge testing && git push`
+6. Monitor Railway deployment
+7. If it fails, check the deploy logs for the actual error (not build logs)
 
 **If Medusa version changes:**
 
