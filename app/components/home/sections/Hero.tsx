@@ -63,7 +63,7 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-slate-100 z-0" />
 
       {/* Smooth directional gradient with subtle animation */}
-      <div className="absolute inset-x-0 top-0 bottom-[35%] z-0 overflow-hidden">
+      <div className="absolute inset-x-0 top-0 bottom-[10%] md:bottom-[35%] z-0 overflow-hidden">
         {/* Main directional gradient: green and purple as edges, blue in middle */}
         <motion.div
           className="absolute inset-0"
