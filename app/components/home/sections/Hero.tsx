@@ -133,7 +133,7 @@ export function Hero() {
       <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 md:px-12 text-center pt-4 sm:pt-8 md:pt-12">
         {/* Main Headline — MASSIVE, Bold, Gradient Text */}
         <motion.div
-          className="mb-8"
+          className="mb-10 md:mb-12"
           initial="hidden"
           animate="visible"
           variants={{
@@ -147,7 +147,7 @@ export function Hero() {
             },
           }}
         >
-          <h1 className="text-6xl sm:text-7xl md:text-8xl font-black leading-[0.9] tracking-tighter">
+          <h1 className="text-6xl sm:text-7xl md:text-8xl font-black leading-[1.05] tracking-tighter">
             <motion.span
               className="inline-block bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent"
               variants={{
@@ -196,7 +196,7 @@ export function Hero() {
 
         {/* Rotating Keyword — BOLD Color, Larger */}
         <motion.div
-          className="mb-12 h-16 flex items-center justify-center"
+          className="mb-10 md:mb-12 h-16 md:h-20 flex items-center justify-center"
           key={currentKeywordIndex}
           initial={{ opacity: 0, y: 30, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
