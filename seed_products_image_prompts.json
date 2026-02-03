@@ -1,0 +1,322 @@
+[
+  {
+    "handle": "launch-site",
+    "title": "Launch Site",
+    "type": "package",
+    "existing_thumbnail": null,
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Marketing hero for product detail and social",
+        "prompt": "Photorealistic hero: a modern laptop on a clean desk showing a 3-5 page website homepage in a browser, soft window light, shallow depth of field, warm neutral tones, brand-accent teal #06b6d4 on key UI elements, no faces, 3:2 aspect, output JPG 2400x1600 and WebP 1200x800. Alt text: 'Launch site — quick website build.'",
+        "output": ["jpg:2400x1600","webp:1200x800"],
+        "alt_text": "Launch site — quick website build",
+        "filename": "launch-site-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Listing card thumbnail",
+        "prompt": "Clean studio thumbnail: a small browser window mockup card on a light gray background with label 'Launch Site' and price tag, crisp lighting, subtle shadow, brand accent #06b6d4, PNG 800x800 and WebP 400x400. Alt text: 'Launch Site — website package.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "Launch Site — website package",
+        "filename": "launch-site-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Small listing icon/badge",
+        "prompt": "Flat icon: monitor/browser window with a small sparkle to indicate quick launch, 24x24 grid, 2-color palette (dark slate #0f172a + teal #06b6d4), optimized SVG + PNG 128x128, provide light/dark variants and aria-label 'Launch Site'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "Launch Site",
+        "filename": "launch-site-badge"
+      }
+    ]
+  },
+  {
+    "handle": "growth-site",
+    "title": "Growth Site",
+    "type": "package",
+    "existing_thumbnail": null,
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Marketing hero emphasizing scale and analytics",
+        "prompt": "Photorealistic hero: modern meeting table with laptop showing analytics dashboard and blog, tasteful composition, cool neutrals with teal accent #06b6d4 on graphs, shallow depth of field, 3:2 aspect, JPG 2400x1600 + WebP 1200x800. Alt text: 'Growth Site — scalable website with blog and CMS.'",
+        "output": ["jpg:2400x1600","webp:1200x800"],
+        "alt_text": "Growth Site — scalable website with blog and CMS",
+        "filename": "growth-site-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Listing thumbnail",
+        "prompt": "Studio thumbnail: small mockup with multiple page thumbnails layered, label 'Growth Site', clean background, brand accent #06b6d4, PNG 800x800 and WebP 400x400. Alt text: 'Growth Site thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "Growth Site thumbnail",
+        "filename": "growth-site-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Badge/icon",
+        "prompt": "Flat icon: upward arrow combined with a browser window, 24x24 grid, dark slate + teal, SVG + PNG 128x128, include aria-label 'Growth Site'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "Growth Site",
+        "filename": "growth-site-badge"
+      }
+    ]
+  },
+  {
+    "handle": "additional-page",
+    "title": "Extra Page",
+    "type": "addon",
+    "existing_thumbnail": null,
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Feature hero showing a single page design",
+        "prompt": "Photorealistic hero: close-up of a single-page mockup on a tablet with a pen beside it, soft studio lighting, neutral background, accent #06b6d4 on CTA, 3:2 aspect, JPG 2000x1333 + WebP 1000x667. Alt text: 'Extra page — additional page design.'",
+        "output": ["jpg:2000x1333","webp:1000x667"],
+        "alt_text": "Extra page — additional page design",
+        "filename": "additional-page-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Listing thumbnail",
+        "prompt": "Minimal thumbnail: single sheet mockup with '+1' badge, clean background, PNG 800x800 and WebP 400x400, brand accent #06b6d4. Alt text: 'Extra Page thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "Extra Page thumbnail",
+        "filename": "additional-page-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Badge/icon",
+        "prompt": "Flat icon: page sheet with a plus sign, geometric, 24x24 grid, dark slate + teal, SVG + PNG 128x128, aria-label 'Extra Page'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "Extra Page",
+        "filename": "additional-page-badge"
+      }
+    ]
+  },
+  {
+    "handle": "blog-setup",
+    "title": "Blog",
+    "type": "addon",
+    "existing_thumbnail": null,
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Hero for content/blog setup",
+        "prompt": "Photorealistic hero: cozy desk with open laptop showing a blog CMS editor, a notebook, and a cup of coffee, warm tones, brand accent #06b6d4 on editor UI, 3:2 aspect, JPG 2400x1600 + WebP 1200x800. Alt text: 'Blog setup — MDX blog and CMS.'",
+        "output": ["jpg:2400x1600","webp:1200x800"],
+        "alt_text": "Blog setup — MDX blog and CMS",
+        "filename": "blog-setup-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Listing thumbnail",
+        "prompt": "Clean thumbnail: small article card with image placeholder and title line, neutral background, accent #06b6d4, PNG 800x800 and WebP 400x400. Alt text: 'Blog setup thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "Blog setup thumbnail",
+        "filename": "blog-setup-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Icon",
+        "prompt": "Flat icon: document with pen/markdown mark, 24x24 grid, dark slate + teal, SVG + PNG 128x128, aria-label 'Blog'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "Blog",
+        "filename": "blog-setup-badge"
+      }
+    ]
+  },
+  {
+    "handle": "contact-form-files",
+    "title": "File Uploads",
+    "type": "addon",
+    "existing_thumbnail": null,
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Hero showing file upload interaction",
+        "prompt": "Photorealistic hero: hand interacting with a web form file upload UI on a tablet, subtle motion blur, clean UI, brand accent #06b6d4 on upload button, 3:2 aspect, JPG 2000x1333 + WebP 1000x667. Alt text: 'File uploads — enhanced contact form.'",
+        "output": ["jpg:2000x1333","webp:1000x667"],
+        "alt_text": "File uploads — enhanced contact form",
+        "filename": "contact-form-files-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Listing thumbnail",
+        "prompt": "Thumbnail: stylized file icon with small upload arrow on soft background, PNG 800x800 and WebP 400x400, accent #06b6d4. Alt text: 'File uploads thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "File uploads thumbnail",
+        "filename": "contact-form-files-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Badge/icon",
+        "prompt": "Flat icon: file with upload arrow, 24x24 grid, dark slate + teal, SVG + PNG 128x128, aria-label 'File Uploads'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "File Uploads",
+        "filename": "contact-form-files-badge"
+      }
+    ]
+  },
+  {
+    "handle": "calendar-booking",
+    "title": "Booking",
+    "type": "addon",
+    "existing_thumbnail": null,
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Hero showing booking UI and calendar",
+        "prompt": "Photorealistic hero: close-up of hands scheduling on a calendar UI on a laptop, natural window light, calendar cells with teal accent #06b6d4, 3:2 aspect, JPG 2400x1600 + WebP 1200x800. Alt text: 'Booking integration — schedule appointments.'",
+        "output": ["jpg:2400x1600","webp:1200x800"],
+        "alt_text": "Booking integration — schedule appointments",
+        "filename": "calendar-booking-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Thumbnail",
+        "prompt": "Thumbnail: small calendar card with a highlighted date, soft shadow, PNG 800x800 and WebP 400x400, brand accent #06b6d4. Alt text: 'Booking thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "Booking thumbnail",
+        "filename": "calendar-booking-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Badge/icon",
+        "prompt": "Flat icon: calendar with checkmark, 24x24 grid, dark slate + teal, SVG + PNG 128x128, aria-label 'Booking'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "Booking",
+        "filename": "calendar-booking-badge"
+      }
+    ]
+  },
+  {
+    "handle": "payment-integration",
+    "title": "Payments",
+    "type": "addon",
+    "existing_thumbnail": null,
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Hero showing secure payment flow",
+        "prompt": "Photorealistic hero: close-up of a checkout card form on a laptop and a lock icon overlay, soft studio lighting, blue/teal accent #06b6d4 on the pay button, 3:2 aspect, JPG 2400x1600 + WebP 1200x800. Alt text: 'Payments integration — Stripe setup.'",
+        "output": ["jpg:2400x1600","webp:1200x800"],
+        "alt_text": "Payments integration — Stripe setup",
+        "filename": "payment-integration-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Thumbnail",
+        "prompt": "Thumbnail: credit card or chip icon on soft neutral background, PNG 800x800 and WebP 400x400, brand accent #06b6d4, minimal styling. Alt text: 'Payments thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "Payments thumbnail",
+        "filename": "payment-integration-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Badge/icon",
+        "prompt": "Flat icon: credit card with a lock or check, 24x24 grid, dark slate + teal, SVG + PNG 128x128, aria-label 'Payments'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "Payments",
+        "filename": "payment-integration-badge"
+      }
+    ]
+  },
+  {
+    "handle": "cms-integration",
+    "title": "CMS",
+    "type": "addon",
+    "existing_thumbnail": null,
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Hero showing content editing",
+        "prompt": "Photorealistic hero: editor UI on screen with live preview and editable blocks, clean desk, soft natural light, accent #06b6d4 on UI elements, 3:2 aspect, JPG 2400x1600 + WebP 1200x800. Alt text: 'CMS integration — visual editor.'",
+        "output": ["jpg:2400x1600","webp:1200x800"],
+        "alt_text": "CMS integration — visual editor",
+        "filename": "cms-integration-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Thumbnail",
+        "prompt": "Thumbnail: small editor card with a pencil icon, neutral background, PNG 800x800 and WebP 400x400, brand accent #06b6d4. Alt text: 'CMS thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "CMS thumbnail",
+        "filename": "cms-integration-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Badge/icon",
+        "prompt": "Flat icon: pencil over a webpage, 24x24 grid, dark slate + teal, SVG + PNG 128x128, aria-label 'CMS'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "CMS",
+        "filename": "cms-integration-badge"
+      }
+    ]
+  },
+  {
+    "handle": "automation-setup",
+    "title": "Automation Setup",
+    "type": "service",
+    "existing_thumbnail": null,
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Hero showing workflow automation",
+        "prompt": "Photorealistic hero: multi-monitor desk showing a workflow diagram and integrations (API boxes and arrows), cool tones with teal accent #06b6d4, cinematic lighting, 3:2 aspect, JPG 2400x1600 + WebP 1200x800. Alt text: 'Automation setup — workflow integrations.'",
+        "output": ["jpg:2400x1600","webp:1200x800"],
+        "alt_text": "Automation setup — workflow integrations",
+        "filename": "automation-setup-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Thumbnail",
+        "prompt": "Thumbnail: simple flowchart card with arrows and nodes, PNG 800x800 and WebP 400x400, brand accent #06b6d4, minimal composition. Alt text: 'Automation thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "Automation thumbnail",
+        "filename": "automation-setup-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Badge/icon",
+        "prompt": "Flat icon: gear with connecting nodes, 24x24 grid, dark slate + teal, SVG + PNG 128x128, aria-label 'Automation'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "Automation",
+        "filename": "automation-setup-badge"
+      }
+    ]
+  },
+  {
+    "handle": "managed-ai",
+    "title": "Managed AI",
+    "type": "subscription",
+    "existing_thumbnail": null,
+    "images": [
+      {
+        "type": "hero",
+        "purpose": "Hero for subscription service (AI agents)",
+        "prompt": "Photorealistic hero: modern operations dashboard on a large monitor with chatbots and analytics widgets, soft studio lighting, teal accent #06b6d4 on key UI elements, 3:2 aspect, JPG 2400x1600 + WebP 1200x800. Alt text: 'Managed AI — AI agents and operations.'",
+        "output": ["jpg:2400x1600","webp:1200x800"],
+        "alt_text": "Managed AI — AI agents and operations",
+        "filename": "managed-ai-hero"
+      },
+      {
+        "type": "thumbnail",
+        "purpose": "Thumbnail",
+        "prompt": "Thumbnail: robot/agent icon with service label, neutral background, PNG 800x800 and WebP 400x400, brand accent #06b6d4. Alt text: 'Managed AI thumbnail.'",
+        "output": ["png:800x800","webp:400x400"],
+        "alt_text": "Managed AI thumbnail",
+        "filename": "managed-ai-thumb"
+      },
+      {
+        "type": "listing",
+        "purpose": "Badge/icon",
+        "prompt": "Flat icon: simplified robot head or chat bubble with gear, 24x24 grid, dark slate + teal, SVG + PNG 128x128, aria-label 'Managed AI'.",
+        "output": ["svg","png:128x128"],
+        "alt_text": "Managed AI",
+        "filename": "managed-ai-badge"
+      }
+    ]
+  }
+]
