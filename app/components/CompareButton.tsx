@@ -47,14 +47,16 @@ export default function CompareButton({ product }: CompareButtonProps) {
     <button
       onClick={handleToggleComparison}
       disabled={maxReached}
+      aria-pressed={isSelected}
       className={`
         p-2 rounded-lg transition-all duration-200
         flex items-center gap-2 text-sm font-medium
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white
         ${isSelected
           ? `${accentColors.blue.bg} ${accentColors.blue.text}`
           : maxReached
           ? 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-60'
-          : `bg-gray-100 ${accentColors.blue.text} hover:${accentColors.blue.bg}`
+          : `bg-gray-100 ${accentColors.blue.text} hover:bg-blue-100`
         }
       `}
       title={maxReached && !isSelected ? 'Maximum 4 products to compare' : undefined}
