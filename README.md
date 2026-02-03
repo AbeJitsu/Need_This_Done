@@ -58,8 +58,8 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 │                                                                             │
 │  TESTING                      DEV TOOLS                 AI/SEARCH           │
 │  ───────                      ─────────                 ─────────           │
-│  Playwright (E2E)             Storybook 10.1            OpenAI GPT          │
-│  Vitest (unit)                ESLint                    Vercel AI SDK       │
+│  Playwright (E2E)             ESLint                    OpenAI GPT          │
+│  Vitest (unit)                TypeScript                Vercel AI SDK       │
 │  Axe Core (a11y)              TypeScript                Vector embeddings   │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -167,8 +167,6 @@ npm run dev              # Start the dev server
 
 Open http://localhost:3000 and you're in! The app hot-reloads, so your changes appear instantly.
 
-**Want to explore the component library?** Run `npm run storybook` to see all UI components in isolation.
-
 ### Helpful Commands
 
 | Command | What it does |
@@ -178,7 +176,6 @@ Open http://localhost:3000 and you're in! The app hot-reloads, so your changes a
 | `npm run test` | Run E2E tests |
 | `npm run test:a11y` | Run accessibility tests |
 | `npm run lint` | Run ESLint |
-| `npm run storybook` | Start Storybook |
 
 ---
 
@@ -254,7 +251,7 @@ A modern platform for professional services that combines:
 - **User accounts**: Authentication, profiles, order history
 - **Admin dashboard**: Manage products, view orders, user management
 - **Visual page builder**: Non-technical users can create pages (Puck visual editor)
-- **Component library**: Reusable, accessible React components (Storybook)
+- **Component library**: Reusable, accessible React components
 
 > **Tech Stack**: See [Current State at a Glance](#current-state-at-a-glance) for the complete technology stack.
 
@@ -528,14 +525,6 @@ Supabase will start with:
 - Supabase API (port 54321)
 - Realtime server
 - Database migrations applied automatically
-
-**For Storybook (optional third terminal):**
-```bash
-cd app
-npm run storybook
-```
-
-Storybook will be available at: `http://localhost:6006`
 
 ### Environment Configuration
 

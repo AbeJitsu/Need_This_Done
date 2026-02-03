@@ -28,7 +28,6 @@ Speak like a friend over coffee. Easy to understand.
 | Start dev server        | `cd app && npm run dev`       |
 | Run all tests           | `cd app && npm run test:e2e`  |
 | Run accessibility tests | `cd app && npm run test:a11y` |
-| Start Storybook         | `cd app && npm run storybook` |
 | Understand codebase     | Read `README.md`              |
 | Draft a commit          | Run `/dac`                    |
 | Check work status       | Run `/check-work`             |
