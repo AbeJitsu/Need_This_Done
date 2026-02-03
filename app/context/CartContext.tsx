@@ -44,7 +44,8 @@ interface CartContextType {
   // Actions
   createCart: () => Promise<string>;
   getCart: (cartId: string) => Promise<void>;
-  addItem: (variantId: string, quantity: number, productInfo?: OptimisticProductInfo) => Promise<void>;
+  // addItem is synchronous - updates UI immediately, syncs with server in background
+  addItem: (variantId: string, quantity: number, productInfo?: OptimisticProductInfo) => void;
   updateItem: (lineItemId: string, quantity: number) => Promise<void>;
   removeItem: (lineItemId: string) => Promise<void>;
   clearCart: () => void;
@@ -54,6 +55,27 @@ interface CartContextType {
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+
+// ============================================================================
+// Helper: Create optimistic cart structure for immediate UI updates
+// ============================================================================
+// When no cart exists yet, we create a temporary in-memory cart so the UI
+// can update instantly. The real cart is created in the background.
+
+function createOptimisticCart(): MedusaCart {
+  return {
+    id: `optimistic_${Date.now()}`,
+    items: [],
+    subtotal: 0,
+    total: 0,
+    tax_total: 0,
+    // Medusa cart fields with sensible defaults
+    region_id: '',
+    shipping_total: 0,
+    discount_total: 0,
+    gift_card_total: 0,
+  } as MedusaCart;
+}
 
 // ============================================================================
 // Cart Provider Component
@@ -176,103 +198,47 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // ========================================================================
-  // Add item to cart (OPTIMISTIC)
+  // Background sync: Send item to server after optimistic update
   // ========================================================================
-  // Updates UI immediately, syncs with server in background
-  const addItem = useCallback(
-    async (variantId: string, quantity: number, productInfo?: OptimisticProductInfo) => {
-      setError(null);
+  // This runs in the background after the UI has already updated.
+  // If it fails, we keep the optimistic state and mark an error for checkout.
 
-      // Store product info for later display (persists after server sync)
-      if (productInfo) {
-        productInfoMapRef.current.set(variantId, productInfo);
-      }
-
-      // Save current state for potential rollback
-      const previousCart = cart;
+  const syncItemToServer = useCallback(
+    async (variantId: string, quantity: number) => {
+      pendingOpsRef.current++;
+      setIsSyncing(true);
 
       try {
-        let currentCartId = cartId;
-
-        // Create cart if it doesn't exist (this part must be synchronous)
-        if (!currentCartId) {
-          currentCartId = await createCart();
+        // Ensure we have a real cart (create if needed)
+        let realCartId: string = cartId || '';
+        if (!realCartId || realCartId.startsWith('optimistic_')) {
+          const response = await fetch('/api/cart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+          });
+          if (!response.ok) throw new Error('Failed to create cart');
+          const data = await response.json();
+          realCartId = data.cart.id as string;
+          setCartId(realCartId);
+          localStorage.setItem('medusa_cart_id', realCartId);
         }
 
-        // Generate temporary ID for optimistic item
-        const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-        // OPTIMISTIC UPDATE: Add item to cart immediately
-        setCart((prev) => {
-          if (!prev) return prev;
-
-          // Check if item with same variant already exists
-          const existingItemIndex = prev.items.findIndex((item) => item.variant_id === variantId);
-
-          if (existingItemIndex >= 0) {
-            // Update existing item quantity
-            const updatedItems = [...prev.items];
-            updatedItems[existingItemIndex] = {
-              ...updatedItems[existingItemIndex],
-              quantity: updatedItems[existingItemIndex].quantity + quantity,
-            };
-            return {
-              ...prev,
-              items: updatedItems,
-              // Estimate new totals
-              subtotal: prev.subtotal + (productInfo?.unit_price || 0) * quantity,
-              total: prev.total + (productInfo?.unit_price || 0) * quantity,
-            };
-          }
-
-          // Add new item with extended product info
-          const newItem = {
-            id: tempId,
-            variant_id: variantId,
-            quantity,
-            title: productInfo?.title || 'Adding...',
-            unit_price: productInfo?.unit_price || 0,
-            thumbnail: productInfo?.thumbnail,
-            // Extended info for display (stored in metadata-like structure)
-            metadata: {
-              type: productInfo?.type,
-              description: productInfo?.description,
-              features: productInfo?.features,
-              billingPeriod: productInfo?.billingPeriod,
-            },
-          };
-
-          return {
-            ...prev,
-            items: [...prev.items, newItem],
-            subtotal: prev.subtotal + (productInfo?.unit_price || 0) * quantity,
-            total: prev.total + (productInfo?.unit_price || 0) * quantity,
-          };
-        });
-
-        // BACKGROUND SYNC: Send request to server
-        pendingOpsRef.current++;
-        setIsSyncing(true);
-
-        const response = await fetch(`/api/cart/${currentCartId}/items`, {
+        // Add item to real cart
+        const response = await fetch(`/api/cart/${realCartId}/items`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ variant_id: variantId, quantity }),
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to add item to cart');
-        }
+        if (!response.ok) throw new Error('Failed to sync item');
 
         // Replace optimistic cart with server response
         const data = await response.json();
         setCart(data.cart);
       } catch (err) {
-        // ROLLBACK: Restore previous cart state
-        setCart(previousCart);
-        const message = err instanceof Error ? err.message : 'Failed to add item';
-        setError(message);
-        throw err;
+        // Don't rollback - keep optimistic state visible, mark error for checkout
+        console.error('Background sync failed:', err);
+        setError(err instanceof Error ? err.message : 'Sync failed');
       } finally {
         pendingOpsRef.current--;
         if (pendingOpsRef.current === 0) {
@@ -280,7 +246,81 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
       }
     },
-    [cartId, cart, createCart]
+    [cartId]
+  );
+
+  // ========================================================================
+  // Add item to cart (TRUE OPTIMISTIC - Zero Blocking)
+  // ========================================================================
+  // Updates UI INSTANTLY, syncs with server in background.
+  // This function is synchronous - it never blocks the caller.
+
+  const addItem = useCallback(
+    (variantId: string, quantity: number, productInfo?: OptimisticProductInfo) => {
+      setError(null);
+
+      // Store product info for later display (persists after server sync)
+      if (productInfo) {
+        productInfoMapRef.current.set(variantId, productInfo);
+      }
+
+      // Generate temporary ID for optimistic item
+      const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+      // INSTANT: Update cart in memory (create optimistic cart if needed)
+      setCart((prev) => {
+        const currentCart = prev || createOptimisticCart();
+
+        // Check if item with same variant already exists
+        const existingItemIndex = currentCart.items.findIndex(
+          (item) => item.variant_id === variantId
+        );
+
+        if (existingItemIndex >= 0) {
+          // Update existing item quantity
+          const updatedItems = [...currentCart.items];
+          updatedItems[existingItemIndex] = {
+            ...updatedItems[existingItemIndex],
+            quantity: updatedItems[existingItemIndex].quantity + quantity,
+          };
+          return {
+            ...currentCart,
+            items: updatedItems,
+            // Estimate new totals
+            subtotal: currentCart.subtotal + (productInfo?.unit_price || 0) * quantity,
+            total: currentCart.total + (productInfo?.unit_price || 0) * quantity,
+          };
+        }
+
+        // Add new item with extended product info
+        const newItem = {
+          id: tempId,
+          variant_id: variantId,
+          quantity,
+          title: productInfo?.title || 'Adding...',
+          unit_price: productInfo?.unit_price || 0,
+          thumbnail: productInfo?.thumbnail,
+          // Extended info for display (stored in metadata-like structure)
+          metadata: {
+            type: productInfo?.type,
+            description: productInfo?.description,
+            features: productInfo?.features,
+            billingPeriod: productInfo?.billingPeriod,
+          },
+        };
+
+        return {
+          ...currentCart,
+          items: [...currentCart.items, newItem],
+          subtotal: currentCart.subtotal + (productInfo?.unit_price || 0) * quantity,
+          total: currentCart.total + (productInfo?.unit_price || 0) * quantity,
+        };
+      });
+
+      // BACKGROUND: Sync with server (fire and forget)
+      syncItemToServer(variantId, quantity);
+    },
+    [syncItemToServer]
   );
 
   // ========================================================================
@@ -428,9 +468,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // ========================================================================
   // Check if cart is ready for checkout
   // ========================================================================
-  // Cart is ready when there are items and all items are synced (no temp IDs)
+  // Cart is ready when:
+  // 1. There are items in the cart
+  // 2. No background sync is in progress
+  // 3. No items have temporary IDs (not yet synced)
+  // 4. Cart ID is real (not optimistic)
   const hasTemporaryItems = cart?.items?.some((item) => item.id?.startsWith('temp_')) ?? false;
-  const isCartReady = itemCount > 0 && !isSyncing && !hasTemporaryItems;
+  const hasOptimisticCart = cart?.id?.startsWith('optimistic_') ?? false;
+  const isCartReady = itemCount > 0 && !isSyncing && !hasTemporaryItems && !hasOptimisticCart;
 
   return (
     <CartContext.Provider
