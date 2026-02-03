@@ -22,6 +22,22 @@ interface OptimisticProductInfo {
   thumbnail?: string;
 }
 
+// ============================================================================
+// Service Items - Local cart items for pricing page packages/add-ons
+// ============================================================================
+// These items live client-side only (no Medusa variant required).
+// They get sent to Stripe checkout directly.
+export interface ServiceItem {
+  id: string;           // Unique ID (e.g., "service_launch-site")
+  serviceId: string;    // Original package/addon ID (e.g., "launch-site")
+  type: 'package' | 'addon';
+  title: string;
+  description?: string;
+  unit_price: number;   // Price in dollars (not cents — pricing page uses dollars)
+  quantity: number;
+  features?: string[];  // Package features list for display
+}
+
 interface CartContextType {
   cart: MedusaCart | null;
   cartId: string | null;
@@ -31,12 +47,21 @@ interface CartContextType {
   error: string | null;
   itemCount: number;
 
+  // Service items from pricing page (stored locally)
+  serviceItems: ServiceItem[];
+  serviceItemCount: number;
+  serviceTotal: number;
+
   // Actions
   createCart: () => Promise<string>;
   getCart: (cartId: string) => Promise<void>;
   addItem: (variantId: string, quantity: number, productInfo?: OptimisticProductInfo) => Promise<void>;
   updateItem: (lineItemId: string, quantity: number) => Promise<void>;
   removeItem: (lineItemId: string) => Promise<void>;
+  addServiceItem: (item: Omit<ServiceItem, 'id' | 'quantity'>) => void;
+  removeServiceItem: (id: string) => void;
+  updateServiceItemQuantity: (id: string, quantity: number) => void;
+  clearServiceItems: () => void;
   clearCart: () => void;
 }
 
@@ -55,6 +80,28 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Track pending operations for rollback
   const pendingOpsRef = useRef(0);
+
+  // ========================================================================
+  // Service items state (pricing page packages/add-ons, stored in localStorage)
+  // ========================================================================
+  const [serviceItems, setServiceItems] = useState<ServiceItem[]>([]);
+
+  // Load service items from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('ntd_service_items');
+      if (saved) {
+        setServiceItems(JSON.parse(saved));
+      }
+    } catch {
+      // Ignore parse errors
+    }
+  }, []);
+
+  // Persist service items to localStorage on change
+  useEffect(() => {
+    localStorage.setItem('ntd_service_items', JSON.stringify(serviceItems));
+  }, [serviceItems]);
 
   // ========================================================================
   // Initialize cart from localStorage on mount and validate it exists
@@ -375,28 +422,82 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   );
 
   // ========================================================================
+  // Service Item Actions (local only, no Medusa)
+  // ========================================================================
+
+  // Add a service item (package or addon) to the cart
+  const addServiceItem = useCallback((item: Omit<ServiceItem, 'id' | 'quantity'>) => {
+    setServiceItems((prev) => {
+      // Check if this service is already in the cart
+      const existingIndex = prev.findIndex((si) => si.serviceId === item.serviceId);
+      if (existingIndex >= 0) {
+        // Increment quantity
+        const updated = [...prev];
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + 1,
+        };
+        return updated;
+      }
+      // Add new service item
+      return [...prev, {
+        ...item,
+        id: `service_${item.serviceId}`,
+        quantity: 1,
+      }];
+    });
+  }, []);
+
+  // Remove a service item by ID
+  const removeServiceItem = useCallback((id: string) => {
+    setServiceItems((prev) => prev.filter((si) => si.id !== id));
+  }, []);
+
+  // Update service item quantity
+  const updateServiceItemQuantity = useCallback((id: string, quantity: number) => {
+    if (quantity < 1) {
+      setServiceItems((prev) => prev.filter((si) => si.id !== id));
+      return;
+    }
+    setServiceItems((prev) =>
+      prev.map((si) => (si.id === id ? { ...si, quantity } : si))
+    );
+  }, []);
+
+  // Clear all service items
+  const clearServiceItems = useCallback(() => {
+    setServiceItems([]);
+    localStorage.removeItem('ntd_service_items');
+  }, []);
+
+  // ========================================================================
   // Clear cart (local only)
   // ========================================================================
   const clearCart = useCallback(() => {
     setCart(null);
     setCartId(null);
     localStorage.removeItem('medusa_cart_id');
-  }, []);
+    clearServiceItems();
+  }, [clearServiceItems]);
 
   // ========================================================================
-  // Compute item count
+  // Compute item counts and service totals
   // ========================================================================
-  const itemCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+  const medusaItemCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+  const serviceItemCount = serviceItems.reduce((sum, si) => sum + si.quantity, 0);
+  const itemCount = medusaItemCount + serviceItemCount;
+
+  // Service items total in dollars
+  const serviceTotal = serviceItems.reduce((sum, si) => sum + si.unit_price * si.quantity, 0);
 
   // ========================================================================
   // Check if cart is ready for checkout
   // ========================================================================
-  // Cart is ready when:
-  // 1. Not currently syncing with server
-  // 2. No items have temporary IDs (all items confirmed by server)
-  // 3. Cart exists and has items
+  // Cart is ready when there are items (Medusa or service) and Medusa items are synced
   const hasTemporaryItems = cart?.items?.some((item) => item.id?.startsWith('temp_')) ?? false;
-  const isCartReady = !isSyncing && !hasTemporaryItems && !!cart && itemCount > 0;
+  const hasMedusaItems = medusaItemCount > 0;
+  const medusaReady = !hasMedusaItems || (!isSyncing && !hasTemporaryItems);
+  const isCartReady = medusaReady && itemCount > 0;
 
   return (
     <CartContext.Provider
@@ -408,11 +509,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         isCartReady,
         error,
         itemCount,
+        serviceItems,
+        serviceItemCount,
+        serviceTotal,
         createCart,
         getCart,
         addItem,
         updateItem,
         removeItem,
+        addServiceItem,
+        removeServiceItem,
+        updateServiceItemQuantity,
+        clearServiceItems,
         clearCart,
       }}
     >

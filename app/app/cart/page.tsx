@@ -192,11 +192,17 @@ function EmptyCartState() {
 }
 
 export default function CartPage() {
-  const { cart, cartId, itemCount, updateItem, removeItem, error: cartError } = useCart();
+  const {
+    cart, itemCount, updateItem, removeItem, error: cartError,
+    serviceItems, serviceTotal,
+    removeServiceItem, updateServiceItemQuantity,
+  } = useCart();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [localError, setLocalError] = useState('');
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
+  // Track whether the item to remove is a service item or Medusa item
+  const [removeIsService, setRemoveIsService] = useState(false);
 
   // ========================================================================
   // Handle quantity change
@@ -221,8 +227,9 @@ export default function CartPage() {
   // ========================================================================
   // Handle remove item - Show confirmation dialog
   // ========================================================================
-  const handleRemoveItem = (lineItemId: string) => {
+  const handleRemoveItem = (lineItemId: string, isService = false) => {
     setItemToRemove(lineItemId);
+    setRemoveIsService(isService);
     setShowRemoveDialog(true);
   };
 
@@ -236,12 +243,18 @@ export default function CartPage() {
       setIsUpdating(itemToRemove);
       setLocalError('');
       setShowRemoveDialog(false);
-      await removeItem(itemToRemove);
+
+      if (removeIsService) {
+        removeServiceItem(itemToRemove);
+      } else {
+        await removeItem(itemToRemove);
+      }
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : 'We couldn\'t remove that item. Please try again or reach out if this keeps happening.');
     } finally {
       setIsUpdating(null);
       setItemToRemove(null);
+      setRemoveIsService(false);
     }
   };
 
@@ -251,25 +264,32 @@ export default function CartPage() {
   const cancelRemoveItem = () => {
     setShowRemoveDialog(false);
     setItemToRemove(null);
+    setRemoveIsService(false);
   };
 
   // ========================================================================
-  // Empty cart state - Editorial, warm invitation design
+  // Empty cart state - Show when no Medusa items AND no service items
   // ========================================================================
-  if (!cartId || !cart || cart.items.length === 0) {
+  const hasMedusaItems = cart && cart.items && cart.items.length > 0;
+  const hasServiceItems = serviceItems.length > 0;
+
+  if (!hasMedusaItems && !hasServiceItems) {
     return <EmptyCartState />;
   }
 
-  // Calculate totals
-  const subtotal = cart.subtotal || 0;
-  const tax = cart.tax_total || 0;
-  const total = cart.total || subtotal + tax;
+  // Calculate totals (Medusa items in cents, service items in dollars)
+  const medusaSubtotal = cart?.subtotal || 0;
+  const tax = cart?.tax_total || 0;
+  const medusaTotal = cart?.total || medusaSubtotal + tax;
+  // Convert service total (dollars) to cents for consistent display
+  const serviceTotalCents = serviceTotal * 100;
+  const combinedTotal = medusaTotal + serviceTotalCents;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       <PageHeader
         title="Almost there!"
-        description={`You've got ${itemCount} ${itemCount === 1 ? 'consultation' : 'consultations'} ready to book.`}
+        description={`You've got ${itemCount} ${itemCount === 1 ? 'item' : 'items'} in your cart.`}
       />
 
       {/* Error messages */}
@@ -284,7 +304,77 @@ export default function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
           {/* Left column - Cart items */}
           <div className="lg:col-span-3 space-y-6">
-            {cart.items.map((item) => {
+            {/* Service items from pricing page */}
+            {serviceItems.map((si) => {
+              const lineTotal = si.unit_price * si.quantity;
+              // Color based on type: packages get green, addons get purple
+              const color = si.type === 'package' ? 'green' : 'purple';
+
+              return (
+                <div key={si.id} className={`${dividerColors.border} border rounded-lg p-4 sm:p-6 md:p-8 border-l-4 ${leftBorderColors[color]} ${cardBgColors.elevated}`}>
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="flex-grow">
+                      <h3 className={`text-lg font-semibold ${headingColors.primary}`}>
+                        {si.title}
+                      </h3>
+                      <p className={`text-sm mt-1 ${accentColors[color].titleText}`}>
+                        {si.type === 'package' ? 'Website Package' : 'Add-on Service'}
+                      </p>
+                      {si.description && (
+                        <p className={`text-xs mt-2 ${formInputColors.helper}`}>
+                          {si.description}
+                        </p>
+                      )}
+                      {si.features && si.features.length > 0 && (
+                        <ul className={`text-xs mt-3 space-y-1 ${formInputColors.helper}`}>
+                          {si.features.map((f, i) => (
+                            <li key={i} className="flex items-center gap-1.5">
+                              <span className="text-emerald-500">&#10003;</span> {f}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => handleRemoveItem(si.id, true)}
+                      disabled={isUpdating === si.id}
+                      className={`text-gray-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-all duration-200 text-xl leading-none ${focusRingClasses.gold} motion-safe:hover:scale-110 motion-safe:active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed`}
+                      aria-label={`Remove ${si.title} from cart`}
+                    >
+                      &times;
+                    </button>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3" role="group" aria-label="Quantity selector">
+                      <button
+                        onClick={() => updateServiceItemQuantity(si.id, si.quantity - 1)}
+                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100`}
+                        aria-label={`Decrease quantity for ${si.title}`}
+                      >
+                        −
+                      </button>
+                      <span className={`w-10 text-center font-semibold text-lg ${headingColors.primary}`} aria-live="polite" aria-atomic="true">
+                        {si.quantity}
+                      </span>
+                      <button
+                        onClick={() => updateServiceItemQuantity(si.id, si.quantity + 1)}
+                        className={`px-4 py-2 rounded-lg border-2 ${accentColors.gray.border} ${accentColors.gray.bg} ${cardBgColors.interactive} ${headingColors.secondary} font-medium transition disabled:opacity-50 ${focusRingClasses.blue} hover:scale-105 active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100`}
+                        aria-label={`Increase quantity for ${si.title}`}
+                      >
+                        +
+                      </button>
+                    </div>
+                    <p className={`text-lg font-semibold ${headingColors.primary}`}>
+                      ${lineTotal.toLocaleString()}.00
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Medusa cart items (consultations, shop products) */}
+            {cart?.items?.map((item) => {
               // Get consultation details
               const title = item.title || item.variant?.title || 'Consultation';
               const unitPrice = item.unit_price || 0;
@@ -385,12 +475,23 @@ export default function CartPage() {
               </h2>
 
               <div className={`space-y-4 mb-6 pb-6 border-b ${dividerColors.border}`}>
-                <div className="flex justify-between">
-                  <span className={formInputColors.helper}>Subtotal</span>
-                  <span className={`font-semibold ${headingColors.primary}`}>
-                    ${(subtotal / 100).toFixed(2)}
-                  </span>
-                </div>
+                {hasServiceItems && (
+                  <div className="flex justify-between">
+                    <span className={formInputColors.helper}>Services</span>
+                    <span className={`font-semibold ${headingColors.primary}`}>
+                      ${serviceTotal.toLocaleString()}.00
+                    </span>
+                  </div>
+                )}
+
+                {hasMedusaItems && (
+                  <div className="flex justify-between">
+                    <span className={formInputColors.helper}>Products</span>
+                    <span className={`font-semibold ${headingColors.primary}`}>
+                      ${(medusaSubtotal / 100).toFixed(2)}
+                    </span>
+                  </div>
+                )}
 
                 {tax > 0 && (
                   <div className="flex justify-between">
@@ -405,7 +506,7 @@ export default function CartPage() {
               <div className="flex justify-between mb-6">
                 <span className={`text-lg font-bold ${headingColors.primary}`}>Total</span>
                 <span className={`text-2xl font-bold ${headingColors.primary}`}>
-                  ${(total / 100).toFixed(2)}
+                  ${(combinedTotal / 100).toFixed(2)}
                 </span>
               </div>
 
