@@ -18,6 +18,9 @@ import {
   Edit3,
   Loader2,
   ArrowRight,
+  Shield,
+  Clock,
+  Sparkles,
 } from 'lucide-react';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -433,10 +436,96 @@ export default function UnifiedPricingPage() {
         </div>
       </section>
 
-      {/* Loading state */}
+      {/* ================================================================== */}
+      {/* VALUE PROPS - Always visible, loads instantly */}
+      {/* ================================================================== */}
+      <section className="py-16 border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+          <StaggerContainer className="grid md:grid-cols-3 gap-8" staggerDelay={0.1}>
+            {[
+              {
+                icon: Shield,
+                title: 'Transparent Pricing',
+                description: 'No hidden fees. What you see is what you pay.',
+              },
+              {
+                icon: Clock,
+                title: '50% Deposit Model',
+                description: 'Pay half upfront, half on delivery. Fair for everyone.',
+              },
+              {
+                icon: Sparkles,
+                title: 'Quality Guaranteed',
+                description: "Not happy? We'll make it right or refund your deposit.",
+              },
+            ].map((prop, i) => (
+              <StaggerItem key={i}>
+                <div className="text-center">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 mb-4">
+                    <prop.icon size={24} />
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-2">{prop.title}</h3>
+                  <p className="text-gray-600 text-sm">{prop.description}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* HOW IT WORKS - Always visible, loads instantly */}
+      {/* ================================================================== */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+          <FadeIn direction="up">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+                How It Works
+              </h2>
+              <p className="text-gray-600 max-w-lg mx-auto">
+                From idea to launch in four simple steps
+              </p>
+            </div>
+          </FadeIn>
+
+          <StaggerContainer className="grid md:grid-cols-4 gap-6" staggerDelay={0.08}>
+            {[
+              { step: '1', title: 'Choose', desc: 'Pick a package or build your own' },
+              { step: '2', title: 'Pay Deposit', desc: '50% upfront to start work' },
+              { step: '3', title: 'Collaborate', desc: 'We build, you review' },
+              { step: '4', title: 'Launch', desc: 'Pay balance, go live!' },
+            ].map((item, i) => (
+              <StaggerItem key={i}>
+                <div className="relative text-center">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-blue-500 text-white font-bold flex items-center justify-center mx-auto mb-3">
+                    {item.step}
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
+                  <p className="text-gray-600 text-sm">{item.desc}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </section>
+
+      {/* Loading state - contextual, not jarring */}
       {isLoadingProducts && (
-        <div className="flex justify-center items-center py-24">
-          <Loader2 size={32} className="animate-spin text-gray-400" />
+        <div className="py-16">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+            <div className="text-center mb-8">
+              <p className="text-gray-500 text-sm font-medium">
+                Loading your options...
+              </p>
+            </div>
+            {/* Skeleton cards for visual continuity */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {[1, 2].map((i) => (
+                <div key={i} className="animate-pulse rounded-3xl bg-gray-100 h-80" />
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
@@ -705,11 +794,11 @@ export default function UnifiedPricingPage() {
                   const Icon = ADDON_ICONS[addon.handle] || FileText;
 
                   return (
-                    <StaggerItem key={addon.id}>
+                    <StaggerItem key={addon.id} className="h-full">
                     <button
                       onClick={() => toggleAddon(addon.id)}
                       className={`
-                        relative w-full text-left rounded-2xl p-6 transition-all duration-300 group
+                        relative w-full h-full text-left rounded-2xl p-6 transition-all duration-300 group flex flex-col
                         ${isSelected
                           ? 'bg-gradient-to-br from-slate-900 to-slate-800 shadow-xl shadow-gold-500/10 ring-2 ring-gold-500/50 -translate-y-1'
                           : 'bg-white border border-gray-200 hover:border-gray-300 hover:shadow-lg hover:-translate-y-1'
@@ -736,12 +825,12 @@ export default function UnifiedPricingPage() {
                       <h3 className={`font-bold text-base mb-1 ${isSelected ? 'text-white' : 'text-gray-900'}`}>
                         {addon.title}
                       </h3>
-                      <p className={`text-sm mb-4 ${isSelected ? 'text-white/60' : 'text-gray-500'}`}>
+                      <p className={`text-sm mb-4 flex-grow ${isSelected ? 'text-white/60' : 'text-gray-500'}`}>
                         {addon.description}
                       </p>
 
-                      {/* Price */}
-                      <div className={`text-2xl font-black ${isSelected ? 'text-gold-400' : 'text-gray-900'}`}>
+                      {/* Price - pushed to bottom */}
+                      <div className={`text-2xl font-black mt-auto ${isSelected ? 'text-gold-400' : 'text-gray-900'}`}>
                         +${addon.price / 100}
                       </div>
                     </button>
