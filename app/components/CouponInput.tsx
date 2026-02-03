@@ -12,6 +12,13 @@ import { formInputColors, accentColors, alertColors } from '@/lib/colors';
 
 type AccentColor = 'blue' | 'green' | 'purple';
 
+// Focus ring classes must be static for Tailwind to include them in the build
+const focusRingClasses: Record<AccentColor, string> = {
+  blue: 'focus-visible:ring-blue-500',
+  green: 'focus-visible:ring-green-500',
+  purple: 'focus-visible:ring-purple-500',
+};
+
 interface CouponResult {
   valid: boolean;
   coupon_id?: string;
@@ -191,7 +198,7 @@ export default function CouponInput({
             px-6 py-2.5 rounded-lg font-medium
             ${colors.bg} ${colors.text}
             motion-safe:hover:scale-105 motion-safe:active:scale-95 transition-all
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-${color}-500
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${focusRingClasses[color]}
             disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100
             disabled:after:absolute disabled:after:inset-0 disabled:after:bg-black/20 disabled:after:rounded-lg
             relative
