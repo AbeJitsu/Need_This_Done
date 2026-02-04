@@ -75,7 +75,7 @@ export async function GET() {
     // ====================================================================
     // Check 3: Get list of indexed pages
     // ====================================================================
-    const { data: pageData, error: pageError } = await supabase
+    const { data: pageData } = await supabase
       .from('page_embeddings')
       .select('page_url, page_title');
 
@@ -86,7 +86,7 @@ export async function GET() {
     // ====================================================================
     // Check 4: Get timestamp of latest indexed content
     // ====================================================================
-    const { data: latestData, error: latestError } = await supabase
+    const { data: latestData } = await supabase
       .from('page_embeddings')
       .select('created_at')
       .order('created_at', { ascending: false })
