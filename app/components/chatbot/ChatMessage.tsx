@@ -62,14 +62,14 @@ export default function ChatMessage({ message }: ChatMessageProps) {
       <div
         className={`max-w-[85%] rounded-2xl px-4 py-3 ${
           isUser
-            ? 'bg-blue-600 text-white rounded-br-md'
+            ? 'bg-blue-600 text-white rounded-br-md font-medium'
             : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-md'
         }`}
       >
         {/* Message content with markdown link support */}
         <div
           onClick={handleClick}
-          className={`prose prose-sm max-w-none ${
+          className={`prose prose-base max-w-none ${
             isUser
               ? 'prose-invert'
               : 'dark:prose-invert'
