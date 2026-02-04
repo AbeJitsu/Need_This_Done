@@ -271,11 +271,11 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
         <div className="flex-1 text-center">
           <h2
             id="chatbot-title"
-            className={`text-lg font-semibold ${headingColors.primary}`}
+            className={`text-xl font-semibold ${headingColors.primary}`}
           >
             AI Assistant
           </h2>
-          <p className={`text-sm ${formInputColors.helper}`}>
+          <p className={`text-base ${formInputColors.helper}`}>
             Get instant answers about our services
           </p>
         </div>
@@ -343,10 +343,10 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
-            <h3 className={`text-lg font-medium ${headingColors.primary} mb-2`}>
+            <h3 className={`text-xl font-medium ${headingColors.primary} mb-2`}>
               Hi there! How can I help?
             </h3>
-            <p className={`${formInputColors.helper} text-sm max-w-sm mx-auto`}>
+            <p className={`${formInputColors.helper} text-base max-w-sm mx-auto`}>
               I'm an AI assistant. Ask me about our services, pricing, or how we can help with your projects.
             </p>
           </div>
@@ -398,7 +398,7 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your message..."
             disabled={isLoading}
-            className={`flex-1 px-4 py-3 rounded-xl
+            className={`flex-1 px-4 py-3 rounded-xl text-base
                        ${formInputColors.base} ${formInputColors.placeholder}
                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
                        disabled:opacity-50 disabled:cursor-not-allowed
@@ -410,7 +410,7 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
             disabled={!input.trim() || isLoading}
             aria-label="Send message"
             title="Send message"
-            className={`px-5 py-3 rounded-xl
+            className={`px-5 py-3 rounded-xl text-base
                        ${getSolidButtonColors('blue').bg} ${getSolidButtonColors('blue').hover}
                        ${getSolidButtonColors('blue').text} font-medium
                        transition-colors
@@ -423,7 +423,7 @@ export default function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
           </button>
         </div>
 
-        <p className={`text-xs ${mutedTextColors.normal} mt-2 text-center`}>
+        <p className={`text-sm ${mutedTextColors.normal} mt-2 text-center`}>
           Press Enter to send
         </p>
       </form>

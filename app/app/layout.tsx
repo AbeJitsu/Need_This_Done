@@ -204,7 +204,9 @@ export default function RootLayout({
                     </a>
 
                     {/* Site-wide navigation (includes dark mode toggle) */}
-                    <Navigation />
+                    <div data-noindex>
+                      <Navigation />
+                    </div>
 
                     {/* Edit mode indicator bar - shows when admin is in edit mode */}
                     <EditModeBar />
@@ -215,7 +217,9 @@ export default function RootLayout({
                     </main>
 
                     {/* Site-wide footer */}
-                    <Footer />
+                    <div data-noindex>
+                      <Footer />
+                    </div>
 
                     {/* AI Chatbot - floating widget available on all pages */}
                     <PageIndexer />
