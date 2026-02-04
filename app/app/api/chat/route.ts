@@ -202,9 +202,6 @@ export async function POST(req: NextRequest | Request) {
       );
     }
 
-    // Convert embedding array to string format for pgvector RPC
-    const embeddingStr = `[${embedding.join(',')}]`;
-
     // RELIABILITY FIX: Add retry logic for vector search
     // Vector search can fail due to transient database issues (connection timeouts,
     // connection pool exhaustion). Retrying ensures chat quality doesn't degrade.
@@ -215,7 +212,7 @@ export async function POST(req: NextRequest | Request) {
       const searchResult = await withSupabaseRetry(
         async () => {
           const result = await supabase.rpc('match_page_embeddings', {
-            query_embedding: embeddingStr,
+            query_embedding: embedding,
             match_threshold: similarityThreshold,
             match_count: maxResults,
           });
