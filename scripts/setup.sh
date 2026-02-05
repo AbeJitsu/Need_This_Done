@@ -265,7 +265,10 @@ EMBEDDING_BATCH_SIZE=100
 # ============================================================================
 # Vector Search Configuration (REQUIRED)
 # ============================================================================
-VECTOR_SEARCH_SIMILARITY_THRESHOLD=0.5
+# Threshold: 0.3 is recommended for semantic search (0.3-0.45 is typical for relevant content)
+# Higher values (0.5+) are too strict and filter out most semantic matches
+# Lower values (<0.2) risk including low-quality matches
+VECTOR_SEARCH_SIMILARITY_THRESHOLD=0.3
 VECTOR_SEARCH_MAX_RESULTS=5
 EOF
 

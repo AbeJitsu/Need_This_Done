@@ -224,8 +224,16 @@ export async function POST(req: NextRequest | Request) {
         }
       );
 
-      matches = searchResult.data as { page_title: string; page_url: string; content_chunk: string }[] | null;
+      matches = searchResult.data as { page_title: string; page_url: string; content_chunk: string; similarity?: number }[] | null;
       searchError = searchResult.error;
+
+      // Log similarity scores for debugging threshold configuration
+      if (matches && matches.length > 0) {
+        const scores = matches
+          .map(m => `${(m.similarity ?? 0).toFixed(3)}`)
+          .join(', ');
+        console.log(`[Chat] Vector search found ${matches.length} matches with similarities: ${scores}`);
+      }
     } catch (error) {
       searchError = error;
       console.error('[Chat] Vector search failed after retries:', error);
