@@ -114,10 +114,21 @@ export default function PageIndexer() {
         const { indexed } = await checkResponse.json();
 
         // Skip if already indexed with same content
-        if (indexed) {
+        // Exception: Force re-index pages listed in FORCE_REINDEX_PATHS env var
+        const forceReindexEnv = typeof window !== 'undefined'
+          ? undefined
+          : process.env.NEXT_PUBLIC_FORCE_REINDEX_PATHS;
+        const forcedReindexPaths = forceReindexEnv ? forceReindexEnv.split(',') : ['/pricing', '/services'];
+        const shouldForceReindex = forcedReindexPaths.includes(pathname);
+
+        if (indexed && !shouldForceReindex) {
           console.debug(`[PageIndexer] ${pathname} already indexed (hash matches)`);
           indexing?.setStatus('indexed');
           return;
+        }
+
+        if (indexed && shouldForceReindex) {
+          console.debug(`[PageIndexer] Force re-indexing ${pathname} (dynamic content page)`);
         }
 
         // ====================================================================
@@ -168,13 +179,14 @@ export default function PageIndexer() {
     let cleanup: (() => void) | undefined;
 
     if (document.readyState === 'complete') {
-      // Wait for async content to load (Medusa API, etc.)
-      const timeoutId = setTimeout(indexPage, 3000);
+      // Wait for async content to load (Medusa API, React state updates, etc.)
+      // 5000ms ensures FAQ content and products are fully rendered
+      const timeoutId = setTimeout(indexPage, 5000);
       cleanup = () => clearTimeout(timeoutId);
     } else {
       // Wait for load event
       const handleLoad = () => {
-        setTimeout(indexPage, 3000);
+        setTimeout(indexPage, 5000);
       };
       window.addEventListener('load', handleLoad);
       cleanup = () => window.removeEventListener('load', handleLoad);
