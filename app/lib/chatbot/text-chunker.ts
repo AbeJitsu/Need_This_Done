@@ -36,8 +36,8 @@ export function chunkText(
   options: ChunkOptions = {}
 ): TextChunk[] {
   const {
-    maxChunkSize = 6000,  // ~1500 tokens, conservative limit
-    overlapSize = 200     // Overlap keeps context at chunk boundaries
+    maxChunkSize = 1500,  // ~300-400 tokens, semantically focused chunks
+    overlapSize = 100     // Smaller overlap for focused chunks
   } = options;
 
   // Normalize whitespace (collapse multiple spaces/newlines)

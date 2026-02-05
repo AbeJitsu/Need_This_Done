@@ -103,8 +103,8 @@ export async function POST(request: Request) {
     // Step 2: Chunk the content
     // ========================================================================
     const chunks = chunkText(content, {
-      maxChunkSize: 6000,  // ~1500 tokens
-      overlapSize: 200,    // Context overlap
+      maxChunkSize: 1500,  // ~300-400 tokens, semantically focused chunks
+      overlapSize: 100,    // Smaller overlap for focused chunks
     });
 
     if (chunks.length === 0) {
