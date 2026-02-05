@@ -89,11 +89,13 @@ export default function PageIndexer() {
         }
 
         console.debug(`[PageIndexer] Extracted ${text.length} characters from ${pathname}`);
+        console.debug(`[PageIndexer] First 500 chars:`, text.substring(0, 500));
 
         // ====================================================================
         // Step 2: Generate content hash
         // ====================================================================
         const contentHash = await generateContentHash(text);
+        console.debug(`[PageIndexer] Generated hash for ${pathname}:`, contentHash);
 
         // ====================================================================
         // Step 3: Check if already indexed with this hash
@@ -111,13 +113,26 @@ export default function PageIndexer() {
           return;
         }
 
-        const { indexed } = await checkResponse.json();
+        const checkResult = await checkResponse.json();
+        const { indexed } = checkResult;
+        console.debug(`[PageIndexer] Check result for ${pathname}:`, checkResult);
 
         // Skip if already indexed with same content
-        if (indexed) {
+        // Exception: Force re-index pages listed in FORCE_REINDEX_PATHS env var
+        const forceReindexEnv = typeof window !== 'undefined'
+          ? undefined
+          : process.env.NEXT_PUBLIC_FORCE_REINDEX_PATHS;
+        const forcedReindexPaths = forceReindexEnv ? forceReindexEnv.split(',') : ['/pricing', '/services'];
+        const shouldForceReindex = forcedReindexPaths.includes(pathname);
+
+        if (indexed && !shouldForceReindex) {
           console.debug(`[PageIndexer] ${pathname} already indexed (hash matches)`);
           indexing?.setStatus('indexed');
           return;
+        }
+
+        if (indexed && shouldForceReindex) {
+          console.debug(`[PageIndexer] Force re-indexing ${pathname} (dynamic content page)`);
         }
 
         // ====================================================================
@@ -168,15 +183,14 @@ export default function PageIndexer() {
     let cleanup: (() => void) | undefined;
 
     if (document.readyState === 'complete') {
-      // Wait for dynamic content to load (e.g., Medusa API calls, async data fetching)
-      // Pages like /pricing fetch products via useEffect, so we need sufficient time
-      // for the API call to complete AND React to re-render the content
-      const timeoutId = setTimeout(indexPage, 3000);
+      // Wait for async content to load (Medusa API, React state updates, etc.)
+      // 5000ms ensures FAQ content and products are fully rendered
+      const timeoutId = setTimeout(indexPage, 5000);
       cleanup = () => clearTimeout(timeoutId);
     } else {
       // Wait for load event
       const handleLoad = () => {
-        setTimeout(indexPage, 3000);
+        setTimeout(indexPage, 5000);
       };
       window.addEventListener('load', handleLoad);
       cleanup = () => window.removeEventListener('load', handleLoad);

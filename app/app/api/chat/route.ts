@@ -233,6 +233,8 @@ export async function POST(req: NextRequest | Request) {
           .map(m => `${(m.similarity ?? 0).toFixed(3)}`)
           .join(', ');
         console.log(`[Chat] Vector search found ${matches.length} matches with similarities: ${scores}`);
+      } else {
+        console.log(`[Chat] Vector search found 0 matches (all below ${similarityThreshold} threshold)`);
       }
     } catch (error) {
       searchError = error;

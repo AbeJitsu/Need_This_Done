@@ -36,8 +36,8 @@ export function chunkText(
   options: ChunkOptions = {}
 ): TextChunk[] {
   const {
-    maxChunkSize = 6000,  // ~1500 tokens, conservative limit
-    overlapSize = 200     // Overlap keeps context at chunk boundaries
+    maxChunkSize = 2500,  // ~500-600 tokens, balanced semantic coherence
+    overlapSize = 150     // Balance between context and deduplication
   } = options;
 
   // Normalize whitespace (collapse multiple spaces/newlines)
@@ -60,13 +60,14 @@ export function chunkText(
       endPos = normalized.length;
     } else {
       // Try to break at sentence boundary (period followed by space)
+      // But enforce minimum chunk size to prevent excessive fragmentation
       const sentenceEnd = findSentenceBreak(normalized, startPos, endPos);
-      if (sentenceEnd > startPos + maxChunkSize / 2) {
+      if (sentenceEnd > startPos + Math.max(1000, maxChunkSize * 0.4)) {
         endPos = sentenceEnd;
       } else {
         // Fallback: break at word boundary
         const wordBreak = normalized.lastIndexOf(' ', endPos);
-        if (wordBreak > startPos) {
+        if (wordBreak > startPos + Math.max(500, maxChunkSize * 0.2)) {
           endPos = wordBreak;
         }
       }
