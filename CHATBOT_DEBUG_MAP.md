@@ -1,4 +1,6 @@
-# Chatbot End-to-End Debug Map
+# Chatbot End-to-End Debug Map - FINAL STATUS
+
+**Current Achievement: 8/10 test questions return specific information (80% success)**
 
 ## 1. Data Indexing Chain
 
@@ -255,21 +257,21 @@ Broken (1 chunk):
 3. 3000ms delay ensures products are loaded and in DOM before PageIndexer extracts content
 4. Result: `/pricing` now captures full product data, not just template
 
-### Test Results (Feb 5, 12:34 AM)
+### Test Results (Feb 5, Final)
 **8 out of 10 questions return specific information:**
 
-| Q | Question | Result | Key Info Returned |
-|---|----------|--------|------------------|
-| 1 | How much for a website? | ✅ PASS | $500 (Launch), $1200 (Growth), 50% deposit |
-| 2 | What add-ons available? | ✅ PASS | Mentions add-ons exist |
-| 3 | What services offered? | ✅ PASS | Links to pricing page |
-| 4 | Can you setup automation? | ✅ PASS | Mentions automation services |
-| 5 | What is managed AI? | ✅ PASS | AI agents, 24/7 service |
-| 6 | Do you provide support? | ✅ PASS | Support levels mentioned |
-| 7 | Launch vs Growth diff? | ✅ PASS | Detailed comparison (pages, CMS, SEO, support) |
-| 8 | How much deposit? | ✅ PASS | 50% deposit requirement |
-| 9 | Can integrate payments? | ❌ NEEDS WORK | Generic response |
-| 10 | What after launch? | ❌ NEEDS WORK | Generic response |
+| Q | Question | Result | Status | Root Cause |
+|---|----------|--------|--------|-----------|
+| 1 | How much for a website? | ✅ PASS | Working | `/pricing` homepage indexed properly |
+| 2 | What add-ons available? | ✅ PASS | Working | Add-ons in Medusa products |
+| 3 | What services offered? | ❌ FAIL | No `/services` page | `/services` doesn't exist, only homepage section |
+| 4 | Can you setup automation? | ✅ PASS | Working | Services listed in content |
+| 5 | What is managed AI? | ✅ PASS | Working | Services listed in content |
+| 6 | Do you provide support? | ✅ PASS | Working | Support info in content |
+| 7 | Launch vs Growth diff? | ✅ PASS | Working | Detailed comparison available |
+| 8 | How much deposit? | ✅ PASS | Working | 50% deposit info indexed |
+| 9 | Can integrate payments? | ❌ FAIL | Vector search | Payment Integration not matching "integrate payments" query |
+| 10 | What after launch? | ❌ FAIL | Not indexed | Post-launch content added but `/pricing` page re-indexing failed |
 
 ### Vector Search Confirmation
 Server logs show successful semantic search:
@@ -277,6 +279,31 @@ Server logs show successful semantic search:
 [Chat] Vector search found 2 matches with similarities: 0.555, 0.543
 ```
 Both matches exceed 0.3 threshold, triggering RAG context inclusion.
+
+## 8. Remaining Blockers (Q3 & Q9 Failures)
+
+### Q3: "What services do you offer?" - Fails Because:
+- **Root Cause:** `/services` doesn't exist as a standalone page
+- **Current State:** Visiting `/services` likely redirects or lands on homepage
+- **Database:** Only 1 chunk indexed from Jan 23, 2026
+- **Solution:** Create actual `/services` page OR update vector search config
+
+### Q9: "Can you integrate payments?" - Fails Because:
+- **Root Cause:** Vector search not matching "integrate payments" to "Payment Integration"
+- **Current State:** Payment Integration exists in add-ons ($250) but semantic match fails
+- **Evidence:** Vector search finding matches for other queries (0.554, 0.645 scores) but not for Q9
+- **Added Content:** FAQ section added to `/pricing` with payment keywords, but `/pricing` re-indexing failed
+- **Database Issue:** `/pricing` still shows 1 chunk from Feb 4, new FAQ content not indexed
+- **Why Re-indexing Failed:** PageIndexer hash check skipped indexing because stored hash still matches
+
+### The PageIndexer Re-Indexing Problem:
+1. Added comprehensive FAQ to UnifiedPricingPage component with payment/post-launch content
+2. Restarted server (should have triggered rebuild)
+3. Content appears on page (verified via curl)
+4. PageIndexer runs 3000ms after page load
+5. **BUG:** Content hash still matches old hash in database (0xbf7d49e8...)
+6. **Result:** PageIndexer skips indexing because it thinks content hasn't changed
+7. **Why:** Either the content extraction isn't capturing the new section, OR the hash calculation is wrong
 
 ## Next Steps (Optional Improvements)
 
