@@ -9,6 +9,9 @@ import { NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+// Type for vector search results with similarity scores
+type SearchResult = { page_title: string; page_url: string; content_chunk: string; similarity?: number };
+
 // ============================================================================
 // Chat API Route - POST /api/chat
 // ============================================================================
@@ -205,7 +208,7 @@ export async function POST(req: NextRequest | Request) {
     // RELIABILITY FIX: Add retry logic for vector search
     // Vector search can fail due to transient database issues (connection timeouts,
     // connection pool exhaustion). Retrying ensures chat quality doesn't degrade.
-    let matches: { page_title: string; page_url: string; content_chunk: string }[] | null = null;
+    let matches: SearchResult[] | null = null;
     let searchError: unknown = null;
 
     try {
@@ -224,7 +227,7 @@ export async function POST(req: NextRequest | Request) {
         }
       );
 
-      matches = searchResult.data as { page_title: string; page_url: string; content_chunk: string; similarity?: number }[] | null;
+      matches = searchResult.data as SearchResult[] | null;
       searchError = searchResult.error;
 
       // Log similarity scores for debugging threshold configuration
