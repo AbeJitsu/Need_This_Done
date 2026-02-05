@@ -17,11 +17,11 @@ export function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Rotate keywords every 3 seconds
+  // Rotate keywords every 2.0 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentKeywordIndex((prev) => (prev + 1) % keywords.length);
-    }, 3000);
+    }, 2000);
     return () => clearInterval(interval);
   }, []);
 
@@ -201,7 +201,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 30, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -30, scale: 0.9 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 1.0 }}
         >
           <span
             className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight"
