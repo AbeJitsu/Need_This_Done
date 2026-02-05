@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import Button from '@/components/Button';
 import { ChevronDown } from 'lucide-react';
 
-const keywords = ['websites', 'automations', 'AI tools'];
+const keywords = ['Websites', 'Automations', 'AI Tools'];
 const keywordColors = ['#059669', '#2563eb', '#9333ea']; // emerald, blue, purple
 
 // Animation timing standard: 0.5s for most interactions (per design plan)
