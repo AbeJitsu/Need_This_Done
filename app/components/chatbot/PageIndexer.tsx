@@ -168,13 +168,13 @@ export default function PageIndexer() {
     let cleanup: (() => void) | undefined;
 
     if (document.readyState === 'complete') {
-      // Small delay to ensure React has finished rendering
-      const timeoutId = setTimeout(indexPage, 500);
+      // Wait for async content to load (Medusa API, etc.)
+      const timeoutId = setTimeout(indexPage, 3000);
       cleanup = () => clearTimeout(timeoutId);
     } else {
       // Wait for load event
       const handleLoad = () => {
-        setTimeout(indexPage, 500);
+        setTimeout(indexPage, 3000);
       };
       window.addEventListener('load', handleLoad);
       cleanup = () => window.removeEventListener('load', handleLoad);
