@@ -12,8 +12,9 @@ import HomePageClient from '@/components/home/HomePageClient';
 // Click the floating pencil button to open the edit sidebar,
 // then click on any section to edit its content directly.
 
-// Force dynamic rendering - content comes from API
-export const dynamic = 'force-dynamic';
+// Use Incremental Static Regeneration (ISR) to pre-render and cache
+// Regenerate the page every hour (3600 seconds)
+export const revalidate = 3600;
 
 export const metadata = {
   title: 'NeedThisDone - Get Your Projects Done Right',

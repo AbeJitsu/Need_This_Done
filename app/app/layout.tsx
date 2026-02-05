@@ -33,13 +33,12 @@ try {
 }
 
 // ============================================================================
-// Force Dynamic Rendering for All Routes
+// Static Generation with ISR
 // ============================================================================
-// The Navigation component uses useAuth and useCart hooks, which require
-// context providers. During static prerendering at build time, these contexts
-// aren't available, causing build failures. Making the layout dynamic ensures
-// all pages are rendered at request time with proper context.
-export const dynamic = 'force-dynamic';
+// Previously forced dynamic rendering due to context providers in Navigation.
+// Now using ISR to pre-render pages and regenerate periodically.
+// Contexts are created at request time, allowing static page generation.
+export const revalidate = 3600; // Regenerate every hour
 
 // Inter font - modern, trustworthy, highly readable (body text)
 const inter = Inter({
@@ -204,7 +203,9 @@ export default function RootLayout({
                     </a>
 
                     {/* Site-wide navigation (includes dark mode toggle) */}
-                    <Navigation />
+                    <div data-noindex>
+                      <Navigation />
+                    </div>
 
                     {/* Edit mode indicator bar - shows when admin is in edit mode */}
                     <EditModeBar />
@@ -215,7 +216,9 @@ export default function RootLayout({
                     </main>
 
                     {/* Site-wide footer */}
-                    <Footer />
+                    <div data-noindex>
+                      <Footer />
+                    </div>
 
                     {/* AI Chatbot - floating widget available on all pages */}
                     <PageIndexer />
