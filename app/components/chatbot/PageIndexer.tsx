@@ -168,13 +168,15 @@ export default function PageIndexer() {
     let cleanup: (() => void) | undefined;
 
     if (document.readyState === 'complete') {
-      // Small delay to ensure React has finished rendering
-      const timeoutId = setTimeout(indexPage, 500);
+      // Wait for dynamic content to load (e.g., Medusa API calls, async data fetching)
+      // Pages like /pricing fetch products via useEffect, so we need sufficient time
+      // for the API call to complete AND React to re-render the content
+      const timeoutId = setTimeout(indexPage, 3000);
       cleanup = () => clearTimeout(timeoutId);
     } else {
       // Wait for load event
       const handleLoad = () => {
-        setTimeout(indexPage, 500);
+        setTimeout(indexPage, 3000);
       };
       window.addEventListener('load', handleLoad);
       cleanup = () => window.removeEventListener('load', handleLoad);
