@@ -38,12 +38,16 @@ export async function GET(request: Request) {
 
     // Check if any embedding exists for this URL with this exact hash
     // We only need to check one record since all chunks share the same hash
+    console.log(`[Check] Searching for page_url="${pageUrl}" with hash="${contentHash}"`);
+
     const { data, error } = await supabase
       .from('page_embeddings')
       .select('id, content_hash')
       .eq('page_url', pageUrl)
       .eq('content_hash', contentHash)
       .limit(1);
+
+    console.log(`[Check] Query result: data=${data?.length || 0} rows, error=`, error);
 
     // Handle gracefully: PGRST205 = table doesn't exist
     // If embeddings feature isn't set up, just return not indexed
@@ -66,6 +70,7 @@ export async function GET(request: Request) {
 
     // Page is indexed if we found a matching record
     const isIndexed = data && data.length > 0;
+    console.log(`[Check] Result: indexed=${isIndexed}`);
 
     return NextResponse.json({
       indexed: isIndexed,

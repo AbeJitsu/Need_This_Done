@@ -89,11 +89,13 @@ export default function PageIndexer() {
         }
 
         console.debug(`[PageIndexer] Extracted ${text.length} characters from ${pathname}`);
+        console.debug(`[PageIndexer] First 500 chars:`, text.substring(0, 500));
 
         // ====================================================================
         // Step 2: Generate content hash
         // ====================================================================
         const contentHash = await generateContentHash(text);
+        console.debug(`[PageIndexer] Generated hash for ${pathname}:`, contentHash);
 
         // ====================================================================
         // Step 3: Check if already indexed with this hash
@@ -111,7 +113,9 @@ export default function PageIndexer() {
           return;
         }
 
-        const { indexed } = await checkResponse.json();
+        const checkResult = await checkResponse.json();
+        const { indexed } = checkResult;
+        console.debug(`[PageIndexer] Check result for ${pathname}:`, checkResult);
 
         // Skip if already indexed with same content
         // Exception: Force re-index pages listed in FORCE_REINDEX_PATHS env var
