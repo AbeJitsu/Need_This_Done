@@ -429,9 +429,10 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
   header: {
     brand: 'Need This Done',
     navLinks: [
-      { href: '/#services-section', label: 'Services' },
+      { href: '/work', label: 'Work' },
+      { href: '/services', label: 'Services' },
       { href: '/pricing', label: 'Pricing' },
-      { href: '/#how-it-works-section', label: 'How It Works' },
+      { href: '/blog', label: 'Blog' },
     ],
     ctaButton: { text: 'Contact', href: '/contact' },
     signInText: 'Sign in',
@@ -441,8 +442,9 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
     tagline: 'Technology that works as hard as you do.',
     links: [
       { href: '/about', label: 'About' },
-      { href: '/faq', label: 'FAQ' },
+      { href: '/work', label: 'Work' },
       { href: '/blog', label: 'Blog' },
+      { href: '/faq', label: 'FAQ' },
     ],
     legalLinks: [
       { href: '/privacy', label: 'Privacy' },
@@ -924,13 +926,13 @@ export const PAGE_CONFIGS = {
       },
       cta: {
         title: 'Want to learn more first?',
-        description: '',
+        description: 'See what I\'ve built, or learn about my process.',
         buttons: [
+          { text: 'View My Work', variant: 'green', href: '/work' },
           { text: 'View Services', variant: 'blue', href: '/#services-section' },
-          { text: 'How It Works', variant: 'purple', href: '/#how-it-works-section' },
-          { text: 'Read the FAQ', variant: 'green', href: '/faq' },
+          { text: 'Read the FAQ', variant: 'purple', href: '/faq' },
         ],
-        hoverColor: 'blue',
+        hoverColor: 'green',
       },
     } as ContactPageContent,
   },

@@ -10,6 +10,7 @@ import {
   calculateReadingTime,
   BLOG_CATEGORIES,
 } from '@/lib/blog-types';
+import { BlogPostingJsonLd } from '@/components/seo/JsonLd';
 import {
   headingColors,
   formInputColors,
@@ -58,6 +59,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: 'article',
       publishedTime: post.published_at || undefined,
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.meta_title || post.title,
+      description: post.meta_description || post.excerpt || undefined,
+      images: post.featured_image ? [post.featured_image] : undefined,
+    },
   };
 }
 
@@ -101,6 +108,8 @@ export default async function BlogPostPage({ params }: PageProps) {
     : null;
 
   return (
+    <>
+    <BlogPostingJsonLd post={post} />
     <article className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Back Link */}
       <Link
@@ -264,5 +273,6 @@ export default async function BlogPostPage({ params }: PageProps) {
         </div>
       </div>
     </article>
+    </>
   );
 }

@@ -313,9 +313,12 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
           {/* Section CTA */}
           <FadeIn direction="up">
-            <div className="text-center mt-10">
+            <div className="flex flex-wrap justify-center gap-4 mt-10">
               <Button variant="green" href="/pricing" size="lg" className="shadow-lg shadow-emerald-500/25">
                 View Pricing
+              </Button>
+              <Button variant="blue" href="/services" size="lg" className="shadow-lg shadow-blue-500/25">
+                View All Services
               </Button>
             </div>
           </FadeIn>
@@ -347,10 +350,10 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             <StaggerContainer className="grid grid-cols-4 gap-0">
               {content.processPreview.steps.map((step, index) => {
                 const stepStyles = [
-                  { bg: 'bg-emerald-800', gradient: 'from-emerald-700 via-emerald-800 to-emerald-900', badge: 'bg-white/15 text-white', title: 'text-white', desc: 'text-emerald-200', num: 'text-emerald-300/40' },
-                  { bg: 'bg-slate-900', gradient: 'from-slate-800 via-slate-900 to-slate-950', badge: 'bg-blue-500/20 text-blue-400', title: 'text-white', desc: 'text-slate-400', num: 'text-blue-500/20' },
-                  { bg: 'bg-purple-800', gradient: 'from-purple-700 via-purple-800 to-purple-900', badge: 'bg-white/15 text-purple-200', title: 'text-white', desc: 'text-purple-200', num: 'text-purple-400/20' },
-                  { bg: 'bg-yellow-900', gradient: 'from-yellow-800 via-yellow-900 to-yellow-950', badge: 'bg-white/15 text-yellow-200', title: 'text-white', desc: 'text-yellow-200', num: 'text-yellow-500/30' },
+                  { bg: 'bg-emerald-800', gradient: 'from-emerald-700 via-emerald-800 to-emerald-900', badge: 'bg-white/15 text-white', title: 'text-white', desc: 'text-emerald-200', num: 'text-emerald-300/10' },
+                  { bg: 'bg-slate-900', gradient: 'from-slate-800 via-slate-900 to-slate-950', badge: 'bg-white/15 text-white', title: 'text-white', desc: 'text-slate-400', num: 'text-blue-500/10' },
+                  { bg: 'bg-purple-800', gradient: 'from-purple-700 via-purple-800 to-purple-900', badge: 'bg-white/15 text-purple-200', title: 'text-white', desc: 'text-purple-200', num: 'text-purple-400/10' },
+                  { bg: 'bg-yellow-900', gradient: 'from-yellow-800 via-yellow-900 to-yellow-950', badge: 'bg-white/15 text-yellow-200', title: 'text-white', desc: 'text-yellow-200', num: 'text-yellow-500/10' },
                 ];
                 const style = stepStyles[index] || stepStyles[0];
                 const isFirst = index === 0;
@@ -365,15 +368,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     >
                       {/* Gradient overlay */}
                       <div className={`absolute inset-0 bg-gradient-to-br ${style.gradient}`} />
-                      {/* Large background number */}
-                      <div className={`absolute -bottom-4 -right-2 text-[8rem] font-black ${style.num} leading-none select-none pointer-events-none`}>
-                        {step.number}
-                      </div>
 
                       <div className="relative z-10">
                         {/* Step badge */}
                         <div className={`inline-flex items-center justify-center w-10 h-10 rounded-full ${style.badge} text-sm font-bold mb-6 border border-white/10`}>
-                          {String(step.number).padStart(2, '0')}
+                          {step.number}
                         </div>
 
                         <h3 className={`text-xl font-black ${style.title} mb-2 tracking-tight`}>
