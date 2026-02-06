@@ -142,8 +142,7 @@ export default function ServicesPage() {
           {services.map((service) => (
             <StaggerItem key={service.number}>
               <div
-                className={`relative overflow-hidden rounded-3xl p-8 md:p-10 lg:p-12 ${service.bg} transition-transform duration-300 hover:y-[-4px]`}
-                whileHover={{ y: -4 }}
+                className={`relative overflow-hidden rounded-3xl p-8 md:p-10 lg:p-12 ${service.bg}`}
               >
               {/* Background gradient */}
               <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient}`} />
