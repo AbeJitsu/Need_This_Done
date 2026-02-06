@@ -41,7 +41,7 @@ export const virtualAssistantModal: ServiceModalContent = {
   ctas: {
     primary: {
       text: 'See All Services',
-      href: '/#services-section',
+      href: '/services',
     },
     secondary: {
       text: 'Get a Quote',
@@ -68,7 +68,7 @@ export const dataDocumentsModal: ServiceModalContent = {
   ctas: {
     primary: {
       text: 'See All Services',
-      href: '/#services-section',
+      href: '/services',
     },
     secondary: {
       text: 'Get a Quote',
@@ -95,7 +95,7 @@ export const websiteServicesModal: ServiceModalContent = {
   ctas: {
     primary: {
       text: 'See All Services',
-      href: '/#services-section',
+      href: '/services',
     },
     secondary: {
       text: 'Get a Quote',

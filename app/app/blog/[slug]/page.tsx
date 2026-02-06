@@ -267,7 +267,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           <Button variant="gold" href="/contact" size="lg">
             Get Started
           </Button>
-          <Button variant="gray" href="/#services-section" size="lg">
+          <Button variant="gray" href="/services" size="lg">
             View Services
           </Button>
         </div>

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { AllServicesJsonLd, ProfessionalServiceJsonLd } from '@/components/seo/JsonLd';
 import { seoConfig } from '@/lib/seo-config';
+import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
 
 // ============================================================================
 // Services Page - /services
@@ -104,29 +105,6 @@ const services = [
   },
 ];
 
-const processSteps = [
-  {
-    number: '1',
-    title: 'Discovery',
-    description: 'We learn about your goals, your audience, and what success looks like for you.',
-  },
-  {
-    number: '2',
-    title: 'Proposal',
-    description: 'You get a clear scope, timeline, and price. No surprises, no hidden fees.',
-  },
-  {
-    number: '3',
-    title: 'Build',
-    description: 'We build with regular check-ins so you see progress and can give feedback.',
-  },
-  {
-    number: '4',
-    title: 'Launch',
-    description: 'We deploy, test, and hand off. You get documentation and ongoing support options.',
-  },
-];
-
 export default function ServicesPage() {
   return (
     <>
@@ -144,24 +122,28 @@ export default function ServicesPage() {
               Our Services
             </span>
           </div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
-            What We Build
-          </h1>
-          <p className="text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed">
-            From your first website to fully automated operations. We build the technology
-            that lets you focus on what matters.
-          </p>
+          <FadeIn direction="up" triggerOnScroll={false}>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
+              What We Build
+            </h1>
+          </FadeIn>
+          <FadeIn direction="up" delay={0.1} triggerOnScroll={false}>
+            <p className="text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed">
+              From your first website to fully automated operations. We build the technology
+              that lets you focus on what matters.
+            </p>
+          </FadeIn>
         </div>
       </section>
 
       {/* Service Cards */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-24">
-        <div className="space-y-8">
+        <StaggerContainer className="space-y-8">
           {services.map((service) => (
-            <div
-              key={service.number}
-              className={`relative overflow-hidden rounded-3xl p-8 md:p-10 lg:p-12 ${service.bg}`}
-            >
+            <StaggerItem key={service.number}>
+              <div
+                className={`relative overflow-hidden rounded-3xl p-8 md:p-10 lg:p-12 ${service.bg}`}
+              >
               {/* Background gradient */}
               <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient}`} />
               {/* Decorative glows */}
@@ -210,62 +192,40 @@ export default function ServicesPage() {
                 </div>
               </div>
             </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </section>
 
-      {/* Process Section */}
+      {/* Process Teaser — full details on /how-it-works */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pb-16 md:pb-24">
-        <div className="mb-12">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="h-1 w-12 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 rounded-full" />
-            <span className="text-sm font-semibold uppercase tracking-widest text-gray-500">
-              Our Process
-            </span>
+        <RevealSection>
+          <div className="rounded-3xl bg-gradient-to-br from-slate-50 to-blue-50 border border-blue-100 p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight mb-2">
+              Wondering how it all works?
+            </h2>
+            <p className="text-gray-500 max-w-lg">
+              Four simple steps from idea to launch. No jargon, no surprises — just clear communication and reliable delivery.
+            </p>
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-[0.95]">
-            How It Works
-          </h2>
+          <Link
+            href="/how-it-works"
+            className="inline-flex items-center px-8 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-500 transition-colors shadow-lg shadow-blue-500/25 whitespace-nowrap"
+          >
+            See Our Process
+            <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
         </div>
-
-        <div className="grid md:grid-cols-4 gap-0">
-          {processSteps.map((step, index) => {
-            const stepStyles = [
-              { bg: 'bg-emerald-800', gradient: 'from-emerald-700 via-emerald-800 to-emerald-900', badge: 'bg-white/15 text-white', desc: 'text-emerald-200', num: 'text-emerald-300/10' },
-              { bg: 'bg-slate-900', gradient: 'from-slate-800 via-slate-900 to-slate-950', badge: 'bg-white/15 text-white', desc: 'text-slate-400', num: 'text-blue-500/10' },
-              { bg: 'bg-purple-800', gradient: 'from-purple-700 via-purple-800 to-purple-900', badge: 'bg-white/15 text-purple-200', desc: 'text-purple-200', num: 'text-purple-400/10' },
-              { bg: 'bg-yellow-900', gradient: 'from-yellow-800 via-yellow-900 to-yellow-950', badge: 'bg-white/15 text-yellow-200', desc: 'text-yellow-200', num: 'text-yellow-500/10' },
-            ];
-            const style = stepStyles[index];
-            const isFirst = index === 0;
-            const isLast = index === processSteps.length - 1;
-
-            return (
-              <div
-                key={index}
-                className={`relative overflow-hidden p-8 ${style.bg} ${isFirst ? 'rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none' : ''} ${isLast ? 'rounded-b-3xl md:rounded-r-3xl md:rounded-bl-none' : ''}`}
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${style.gradient}`} />
-                <div className="relative z-10">
-                  <div className={`inline-flex items-center justify-center w-10 h-10 rounded-full ${style.badge} text-sm font-bold mb-6 border border-white/10`}>
-                    {step.number}
-                  </div>
-                  <h3 className="text-xl font-black text-white mb-2 tracking-tight">
-                    {step.title}
-                  </h3>
-                  <p className={`text-sm ${style.desc} leading-relaxed`}>
-                    {step.description}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        </RevealSection>
       </section>
 
       {/* CTA Section */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pb-16 md:pb-24">
-        <div className="relative rounded-3xl overflow-hidden">
+        <RevealSection>
+          <div className="relative rounded-3xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950" />
           <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/8 rounded-full blur-3xl" />
@@ -293,6 +253,7 @@ export default function ServicesPage() {
             </div>
           </div>
         </div>
+        </RevealSection>
       </section>
     </>
   );

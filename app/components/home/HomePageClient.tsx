@@ -164,30 +164,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     </p>
 
                     {/* Hook */}
-                    <p className="text-emerald-200 mb-8 leading-relaxed max-w-md">
+                    <p className="text-emerald-200 leading-relaxed max-w-md">
                       {content.services.cards[0].modal.hook}
                     </p>
-
-                    {/* Bullet points */}
-                    {content.services.cards[0].modal.bulletHeader && (
-                      <div>
-                        <p className="text-xs font-bold text-emerald-300 uppercase tracking-widest mb-3">
-                          {content.services.cards[0].modal.bulletHeader}
-                        </p>
-                        <ul className="space-y-2.5" role="list">
-                          {content.services.cards[0].modal.bulletPoints.map((point, idx) => (
-                            <li key={idx} className="flex items-start gap-3">
-                              <div className="flex-shrink-0 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center mt-0.5" aria-hidden="true">
-                                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                </svg>
-                              </div>
-                              <span className="text-white/90 text-sm">{point}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
 
                   </div>
                 </motion.article>
@@ -420,50 +399,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
             </div>
           </div>
 
-          {/* Metrics bar — inline, no stagger animation to avoid invisible content */}
-          <FadeIn direction="up">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-              <div className="flex items-center gap-4 p-5 rounded-2xl bg-gray-50 border border-gray-100">
-                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-emerald-600" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xl font-black text-gray-900">1-4 Weeks</p>
-                  <p className="text-sm text-gray-500">Most projects completed</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-5 rounded-2xl bg-gray-50 border border-gray-100">
-                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/>
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xl font-black text-gray-900">Regular Updates</p>
-                  <p className="text-sm text-gray-500">You&apos;re never in the dark</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-5 rounded-2xl bg-gray-50 border border-gray-100">
-                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xl font-black text-gray-900">No Surprises</p>
-                  <p className="text-sm text-gray-500">Transparent pricing upfront</p>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-
-          {/* CTA */}
+          {/* CTA — drives to dedicated page */}
           <FadeIn direction="up">
             <div className="text-center">
-              <Button variant="blue" href="/contact" size="lg" className="shadow-lg shadow-blue-500/25">
-                Start Your Project
+              <Button variant="blue" href="/how-it-works" size="lg" className="shadow-lg shadow-blue-500/25">
+                See How We Work
               </Button>
             </div>
           </FadeIn>

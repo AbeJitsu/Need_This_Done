@@ -431,6 +431,7 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
     navLinks: [
       { href: '/work', label: 'Work' },
       { href: '/services', label: 'Services' },
+      { href: '/how-it-works', label: 'How It Works' },
       { href: '/pricing', label: 'Pricing' },
       { href: '/blog', label: 'Blog' },
     ],
@@ -487,7 +488,7 @@ export const PAGE_CONFIGS = {
         title: 'Websites. Automation. AI.',
         description: 'From your first website to fully automated operations. We build the technology that lets you focus on what matters.',
         buttons: [
-          { text: 'See Services', variant: 'blue', href: '/#services-section' },
+          { text: 'See Services', variant: 'blue', href: '/services' },
           { text: 'Get a Quote', variant: 'gold', href: '/contact' },
         ],
       },
@@ -812,9 +813,9 @@ export const PAGE_CONFIGS = {
         description: 'Your questions, answered.',
       },
       items: [
-        { question: 'What do you build?', answer: 'Three main things: professional websites, automation workflows, and managed AI services. Most clients start with a website and add automation as they grow. Some go straight to managed AI. We\'ll help you figure out what makes sense for your situation.', links: [{ text: 'See all services', href: '/#services-section' }] },
+        { question: 'What do you build?', answer: 'Three main things: professional websites, automation workflows, and managed AI services. Most clients start with a website and add automation as they grow. Some go straight to managed AI. We\'ll help you figure out what makes sense for your situation.', links: [{ text: 'See all services', href: '/services' }] },
         { question: 'How much does it cost?', answer: 'Website builds start at $500. Automation setup starts at $150 per workflow. Managed AI services start at $500/month. Every project gets a clear quote upfront—no hourly billing surprises.', links: [{ text: 'View pricing', href: '/pricing' }] },
-        { question: 'How long does it take?', answer: 'Websites typically take 1-4 weeks depending on complexity. Automation workflows take 1-2 weeks each. Managed AI is ongoing. We\'ll give you a realistic timeline before we start.', links: [{ text: 'How it works', href: '/#how-it-works-section' }] },
+        { question: 'How long does it take?', answer: 'Websites typically take 1-4 weeks depending on complexity. Automation workflows take 1-2 weeks each. Managed AI is ongoing. We\'ll give you a realistic timeline before we start.', links: [{ text: 'How it works', href: '/how-it-works' }] },
         { question: 'Do I need to be technical?', answer: 'Not at all. Just describe what you want to accomplish in plain English. We handle the technical side and explain things without jargon.' },
         { question: 'What if I need changes after delivery?', answer: 'Website builds include 30 days of support and reasonable revisions. Automation setups include a training session and email support. Managed AI includes continuous optimization as part of the monthly fee.' },
         { question: 'How does payment work?', answer: 'For project work: 50% deposit to start, 50% on approval. For managed AI: monthly billing. We accept all major credit cards. No surprises.', links: [{ text: 'Ready to start?', href: '/contact' }] },
@@ -868,7 +869,7 @@ export const PAGE_CONFIGS = {
         description: 'Tell us what you need built. We\'ll take it from there.',
         buttons: [
           { text: 'Get a Quote', variant: 'gold', href: '/contact' },
-          { text: 'View Services', variant: 'blue', href: '/#services-section' },
+          { text: 'View Services', variant: 'blue', href: '/services' },
           { text: 'See Pricing', variant: 'purple', href: '/pricing' },
         ],
         hoverColor: 'gold',
@@ -929,7 +930,7 @@ export const PAGE_CONFIGS = {
         description: 'See what I\'ve built, or learn about my process.',
         buttons: [
           { text: 'View My Work', variant: 'green', href: '/work' },
-          { text: 'View Services', variant: 'blue', href: '/#services-section' },
+          { text: 'View Services', variant: 'blue', href: '/services' },
           { text: 'Read the FAQ', variant: 'purple', href: '/faq' },
         ],
         hoverColor: 'green',

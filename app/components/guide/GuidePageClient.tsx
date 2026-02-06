@@ -141,7 +141,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
                     <div className={`${formInputColors.helper} mb-4 whitespace-pre-line`}>
                       {heroItem.section.content}
                     </div>
-                    <Button variant="green" href="/#services-section" size="lg">
+                    <Button variant="green" href="/services" size="lg">
                       Explore Services
                     </Button>
                   </div>
