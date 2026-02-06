@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion as useFramerReducedMotion } from 'framer-motion';
 import { ReactNode, useMemo } from 'react';
-import { createFadeVariants, DISTANCE, TIMING } from './variants';
+import { createFadeVariants, DISTANCE, TIMING, defaultViewport } from './variants';
 
 // ============================================================================
 // StaggerItem Component
@@ -31,6 +31,14 @@ interface StaggerItemProps {
   className?: string;
   // HTML element to render as
   as?: keyof JSX.IntrinsicElements;
+  // For scroll-triggered stagger: index of this item in the sequence
+  staggerIndex?: number;
+  // For scroll-triggered stagger: delay between items (seconds)
+  staggerDelay?: number;
+  // Whether to trigger animation on scroll
+  triggerOnScroll?: boolean;
+  // Only animate once when scrolling into view
+  once?: boolean;
 }
 
 export function StaggerItem({
@@ -40,6 +48,10 @@ export function StaggerItem({
   duration = TIMING.duration.normal,
   className = '',
   as = 'div',
+  staggerIndex = 0,
+  staggerDelay = TIMING.stagger.normal,
+  triggerOnScroll = false,
+  once = true,
 }: StaggerItemProps) {
   const prefersReducedMotion = useFramerReducedMotion();
 
@@ -62,16 +74,39 @@ export function StaggerItem({
     ? TIMING.duration.fast
     : duration;
 
+  // Calculate delay based on stagger index
+  const itemDelay = staggerIndex * staggerDelay;
+
   // Create the motion component dynamically based on 'as' prop
   const MotionComponent = motion[as as keyof typeof motion] as typeof motion.div;
 
+  const transitionProps = {
+    duration: effectiveDuration,
+    ease: TIMING.ease.default,
+    delay: triggerOnScroll ? itemDelay : 0, // Only apply delay when scroll-triggered
+  };
+
+  // Individual scroll trigger - each card animates when it comes into view
+  if (triggerOnScroll) {
+    return (
+      <MotionComponent
+        variants={variants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ ...defaultViewport, once }}
+        transition={transitionProps}
+        className={className}
+      >
+        {children}
+      </MotionComponent>
+    );
+  }
+
+  // Container-controlled animation (from parent StaggerContainer)
   return (
     <MotionComponent
       variants={variants}
-      transition={{
-        duration: effectiveDuration,
-        ease: TIMING.ease.default,
-      }}
+      transition={transitionProps}
       className={className}
     >
       {children}

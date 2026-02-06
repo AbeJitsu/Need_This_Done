@@ -1,10 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useMemo, Children, cloneElement, isValidElement } from 'react';
 import {
   createStaggerContainerVariants,
-  defaultViewport,
   TIMING,
 } from './variants';
 
@@ -54,26 +53,43 @@ export function StaggerContainer({
   // Create the motion component dynamically based on 'as' prop
   const MotionComponent = motion[as as keyof typeof motion] as typeof motion.div;
 
+  // When using individual scroll triggers, pass stagger info to each child
+  const enhancedChildren = useMemo(() => {
+    if (!triggerOnScroll) return children;
+
+    return Children.map(children, (child, index) => {
+      if (isValidElement(child)) {
+        return cloneElement(child, {
+          staggerIndex: index,
+          staggerDelay,
+          triggerOnScroll: true,
+          once,
+        } as any);
+      }
+      return child;
+    });
+  }, [children, triggerOnScroll, staggerDelay, once]);
+
   const motionProps = {
     initial: 'hidden',
     variants,
     className,
   };
 
-  // Scroll-triggered animation
+  // Individual scroll-triggered animation (each child animates when it enters view)
   if (triggerOnScroll) {
     return (
       <MotionComponent
         {...motionProps}
-        whileInView="visible"
-        viewport={{ ...defaultViewport, once }}
+        animate="visible"
+        className={className}
       >
-        {children}
+        {enhancedChildren}
       </MotionComponent>
     );
   }
 
-  // Immediate animation (on mount)
+  // Immediate animation with container-controlled stagger (on mount)
   return (
     <MotionComponent {...motionProps} animate="visible">
       {children}

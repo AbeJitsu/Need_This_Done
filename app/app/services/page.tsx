@@ -138,7 +138,7 @@ export default function ServicesPage() {
 
       {/* Service Cards */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-24">
-        <StaggerContainer>
+        <StaggerContainer className="space-y-8">
           {services.map((service) => (
             <StaggerItem key={service.number}>
               <div
