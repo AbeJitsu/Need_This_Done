@@ -2,95 +2,71 @@
 description: Draft a commit message
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git add:*), Bash(git commit:*), Bash(git push:*)
 ---
-
 # Draft a Commit
 
 Look at the changes that are ready to save and write a commit message that's inviting, focused, considerate, supportive, and influential.
 
-## Autonomous Mode Improvements
+## Change Categorization
 
-### 1. Auto-Stage Changes
-If nothing is staged but there are unstaged changes, automatically stage everything:
-```bash
-git add -A
-```
-This removes friction from the commit flow.
-
-### 2. Auto-Commit for Small Changes
-For autonomous work, auto-commit when ALL these conditions are met:
-- Total diff is under 100 lines
-- Changes are single-purpose (one logical unit)
-- No sensitive files (.env, secrets, credentials)
-- Changes pass basic validation (no syntax errors visible in diff)
-
-When auto-committing, skip the "Would you like adjustments?" step and proceed directly to commit + push.
-
-### 3. Smart Change Categorization
 Detect change type from file patterns to choose the right prefix:
 
-| Pattern | Prefix | Example |
-|---------|--------|---------|
-| `*.test.*`, `*.spec.*`, `e2e/*` | `Test:` | Test: Add checkout flow tests |
-| `*.md`, `docs/*` | `Docs:` | Docs: Update API documentation |
-| `.claude/*`, `*.config.*` | `Config:` | Config: Add commit-often rule |
-| Bug keywords in diff (fix, resolve, patch) | `Fix:` | Fix: Resolve cart total calculation |
-| New files with feature code | `Add:` | Add: User profile settings page |
-| Deletions > additions | `Remove:` | Remove: Deprecated analytics code |
-| Refactoring (same logic, different structure) | `Refactor:` | Refactor: Extract color utilities |
+| Pattern                                       | Prefix        | Example                             |
+| --------------------------------------------- | ------------- | ----------------------------------- |
+| `*.test.*`, `*.spec.*`, `e2e/*`         | `Test:`     | Test: Add checkout flow tests       |
+| `*.md`, `docs/*`                          | `Docs:`     | Docs: Update API documentation      |
+| `.claude/*`, `*.config.*`                 | `Config:`   | Config: Add commit-often rule       |
+| Bug keywords in diff (fix, resolve, patch)    | `Fix:`      | Fix: Resolve cart total calculation |
+| New files with feature code                   | `Add:`      | Add: User profile settings page     |
+| Deletions > additions                         | `Remove:`   | Remove: Deprecated analytics code   |
+| Refactoring (same logic, different structure) | `Refactor:` | Refactor: Extract color utilities   |
 
 ## Your Task
 
 1. **Check what changed**
+
    ```bash
    git status
    git diff --staged  # or git diff if nothing staged
    git log --oneline -5
    ```
 
-2. **Auto-stage if needed**
-   If unstaged changes exist but nothing is staged:
-   ```bash
-   git add -A
-   ```
+2. **Analyze the diff**
 
-3. **Analyze the diff**
    - Count total lines changed
    - Identify change category from file patterns
    - Check for sensitive files
    - Determine if single-purpose
 
-4. **Draft the message following this structure:**
+3. **Draft the message following this structure:**
 
 ### Summary Line (under 50 characters)
+
 - Use detected prefix (Add, Fix, Docs, Test, Config, Refactor, Remove)
 - Be specific about what changed
 - Capitalize first word, no period at end
 
 ### Body (explain what and why)
+
 - Write a brief paragraph explaining WHAT changed and WHY it matters
 - Include 2-4 bullet points highlighting key changes or benefits
 - End with a sentence about how this helps people
 
-5. **Decide: Auto-commit or Ask?**
+4. **Always Ask for Approval**
 
-   **Auto-commit** (default - prefer this):
-   - Diff under 150 lines
-   - Single-purpose change (even if touching many files)
-   - No sensitive files (.env, credentials, secrets)
-   - Clear commit message can be written
-   - Message accurately describes the changes
+   Draft the commit message and present it to the user for review and approval before committing.
 
-   **Ask for approval** (rare - only when truly uncertain):
-   - Very large diff (150+ lines) AND unclear purpose
-   - Multiple unrelated changes that should be separate commits
-   - Contains potential sensitive data
-   - Genuinely ambiguous - you can't tell what the intent was
+   Never auto-commit without explicit user approval, regardless of diff size or change scope.
 
-   **Key principle**: If you can write a clear, accurate commit message, just commit.
-   Don't ask "Would you like adjustments?" for routine commits - that's friction.
-   Trust the message you drafted. The user will speak up if they want changes.
+   **Present the draft like this:**
+   ```
+   Draft commit message:
+   [commit message here]
+
+   Ready to commit?
+   ```
 
 ## CRITICAL: NO Claude Code signature - EVER
+
 - NEVER add `🤖 Generated with [Claude Code](https://claude.com/claude-code)`
 - NEVER add `Co-Authored-By: Claude <noreply@anthropic.com>`
 - NEVER add any AI attribution, robot emoji, or "generated by" text
@@ -99,6 +75,7 @@ Detect change type from file patterns to choose the right prefix:
 ## Tone Guidelines
 
 Make the message:
+
 - **Inviting**: Use "This lets us...", "Now we can..."
 - **Focused**: Be specific, avoid vague terms
 - **Considerate**: Think about who this helps
@@ -125,6 +102,7 @@ helps them discover books they might have missed while browsing.
 ## Execution Flow
 
 ### Default: Auto-commit (most commits)
+
 ```
 Analyzing: 8 files, 59 lines, single-purpose accessibility improvement
 Committing...
@@ -135,6 +113,7 @@ git add -A && git commit -m "Add loading spinners and ARIA live regions..." && g
 Show the commit message briefly, then execute. No "Would you like adjustments?" for clear commits.
 
 ### Exception: Ask Only When Uncertain
+
 ```
 Draft commit message:
 [message here]
@@ -148,6 +127,7 @@ Only ask when there's genuine ambiguity about the commit scope or message.
 ## Command Chaining
 
 Always chain with `&&` to stop if any step fails:
+
 ```bash
 git add -A && git commit -m "Your commit message here" && git push
 ```
