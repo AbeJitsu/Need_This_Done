@@ -37,25 +37,25 @@ interface ArchitectureDiagramProps {
 
 export default function ArchitectureDiagram({ layers }: ArchitectureDiagramProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {layers.map((layer) => {
         const colors = layerColors[layer.color];
         return (
           <div
             key={layer.label}
-            className={`rounded-xl border ${colors.border} ${colors.bg} p-4 md:p-5 flex items-center gap-6`}
+            className={`rounded-xl border ${colors.border} ${colors.bg} p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-3 md:gap-6`}
           >
             {/* Label container */}
-            <div className={`text-xs font-bold tracking-wider uppercase ${colors.label} whitespace-nowrap flex-shrink-0`}>
+            <div className={`text-xs font-bold tracking-wider uppercase ${colors.label} flex-shrink-0`}>
               {layer.label}
             </div>
 
-            {/* Items - evenly distributed with equal spacing around */}
-            <div className="flex flex-1 justify-around items-center">
+            {/* Items - wrap on mobile, spread on desktop */}
+            <div className="flex flex-1 flex-wrap items-center gap-2 md:gap-3 md:justify-around">
               {layer.items.map((item) => (
                 <span
                   key={item}
-                  className="px-3 py-1 text-sm rounded-lg bg-white/5 text-slate-300 font-medium"
+                  className="px-3 py-1 text-xs sm:text-sm rounded-lg bg-white/5 text-slate-300 font-medium whitespace-nowrap"
                 >
                   {item}
                 </span>
