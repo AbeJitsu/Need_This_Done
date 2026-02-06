@@ -431,6 +431,7 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
     navLinks: [
       { href: '/work', label: 'Work' },
       { href: '/services', label: 'Services' },
+      { href: '/how-it-works', label: 'How It Works' },
       { href: '/pricing', label: 'Pricing' },
       { href: '/blog', label: 'Blog' },
     ],
