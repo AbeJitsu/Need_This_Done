@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { seoConfig } from '@/lib/seo-config';
+import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
 
 // ============================================================================
 // How It Works Page - /how-it-works
@@ -134,13 +135,17 @@ export default function HowItWorksPage() {
                 </span>
                 <div className="h-1 w-12 bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-500 rounded-full" />
               </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 tracking-tight leading-[0.95] mb-6">
-                How We Work Together
-              </h1>
-              <p className="text-lg md:text-xl text-gray-500 leading-relaxed">
-                A simple process designed to get you from idea to launch without the headaches.
-                No jargon, no surprises — just clear steps and honest communication.
-              </p>
+              <FadeIn direction="up" triggerOnScroll={false}>
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 tracking-tight leading-[0.95] mb-6">
+                  How We Work Together
+                </h1>
+              </FadeIn>
+              <FadeIn direction="up" delay={0.1} triggerOnScroll={false}>
+                <p className="text-lg md:text-xl text-gray-500 leading-relaxed">
+                  A simple process designed to get you from idea to launch without the headaches.
+                  No jargon, no surprises — just clear steps and honest communication.
+                </p>
+              </FadeIn>
             </div>
           </div>
         </div>
@@ -148,8 +153,10 @@ export default function HowItWorksPage() {
 
       {/* Trust Badges */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="flex items-center gap-4 p-5 rounded-2xl bg-emerald-50 border border-emerald-100">
+        <StaggerContainer staggerDelay={0.08}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <StaggerItem>
+              <div className="flex items-center gap-4 p-5 rounded-2xl bg-emerald-50 border border-emerald-100 transition-transform duration-300 hover:y-[-4px]" whileHover={{ y: -4 }}>
             <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center">
               <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -158,9 +165,10 @@ export default function HowItWorksPage() {
             <div>
               <p className="text-lg font-black text-gray-900">Human + AI</p>
               <p className="text-sm text-gray-500">Best of both worlds</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 p-5 rounded-2xl bg-blue-50 border border-blue-100">
+              </div>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="flex items-center gap-4 p-5 rounded-2xl bg-blue-50 border border-blue-100 transition-transform duration-300 hover:y-[-4px]" whileHover={{ y: -4 }}>
             <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
               <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -169,9 +177,10 @@ export default function HowItWorksPage() {
             <div>
               <p className="text-lg font-black text-gray-900">Clear Updates</p>
               <p className="text-sm text-gray-500">At every step</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 p-5 rounded-2xl bg-purple-50 border border-purple-100">
+              </div>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="flex items-center gap-4 p-5 rounded-2xl bg-purple-50 border border-purple-100 transition-transform duration-300 hover:y-[-4px]" whileHover={{ y: -4 }}>
             <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
               <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -181,19 +190,21 @@ export default function HowItWorksPage() {
               <p className="text-lg font-black text-gray-900">No Surprises</p>
               <p className="text-sm text-gray-500">Transparent pricing</p>
             </div>
+            </StaggerItem>
           </div>
-        </div>
+        </StaggerContainer>
       </section>
 
       {/* Vertical Timeline — Visually distinct from dark card grids */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pb-16 md:pb-24">
         <div className="max-w-3xl mx-auto">
-          <div className="space-y-8">
+          <StaggerContainer staggerDelay={0.1}>
             {steps.map((step, index) => {
               const isLast = index === steps.length - 1;
 
               return (
-                <div key={step.number} className="relative flex gap-6 md:gap-8">
+                <StaggerItem key={step.number}>
+                  <div className="relative flex gap-6 md:gap-8" whileHover={{ scale: 1.02 }}>
                   {/* Timeline connector */}
                   <div className="flex flex-col items-center">
                     <div
@@ -254,10 +265,11 @@ export default function HowItWorksPage() {
                       )}
                     </div>
                   </div>
-                </div>
+                  </div>
+                </StaggerItem>
               );
             })}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -273,28 +285,38 @@ export default function HowItWorksPage() {
               timeline from day one, so you can plan with confidence. Most projects take 1-4 weeks.
               Bigger ones take longer, but we&apos;ll keep you in the loop every step of the way.
             </p>
-            <div className="grid grid-cols-3 gap-4 max-w-lg mx-auto">
-              <div className="p-4 rounded-xl bg-white border border-gray-100 shadow-sm">
+            <StaggerContainer staggerDelay={0.06}>
+              <div className="grid grid-cols-3 gap-4 max-w-lg mx-auto">
+                <StaggerItem>
+                  <div className="p-4 rounded-xl bg-white border border-gray-100 shadow-sm transition-transform duration-300 hover:scale-105" whileHover={{ scale: 1.05 }}>
                 <p className="text-2xl font-black text-emerald-600">1-2</p>
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Weeks for simple sites</p>
-              </div>
-              <div className="p-4 rounded-xl bg-white border border-gray-100 shadow-sm">
+                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Weeks for simple sites</p>
+                  </div>
+                </StaggerItem>
+                <StaggerItem>
+                  <div className="p-4 rounded-xl bg-white border border-gray-100 shadow-sm transition-transform duration-300 hover:scale-105" whileHover={{ scale: 1.05 }}>
                 <p className="text-2xl font-black text-blue-600">2-4</p>
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Weeks for full builds</p>
-              </div>
-              <div className="p-4 rounded-xl bg-white border border-gray-100 shadow-sm">
+                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Weeks for full builds</p>
+                  </div>
+                </StaggerItem>
+                <StaggerItem>
+                  <div className="p-4 rounded-xl bg-white border border-gray-100 shadow-sm transition-transform duration-300 hover:scale-105" whileHover={{ scale: 1.05 }}>
                 <p className="text-2xl font-black text-purple-600">1-2</p>
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Weeks per automation</p>
+                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Weeks per automation</p>
+                  </div>
+                </StaggerItem>
               </div>
-            </div>
+            </StaggerContainer>
           </div>
         </div>
       </section>
 
       {/* Questions Section */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pb-16 md:pb-24">
-        <div className="text-center max-w-2xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-4">
+        <RevealSection>
+          <div className="text-center max-w-2xl mx-auto">
+            <FadeIn direction="up" triggerOnScroll={true}>
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-4">
             Questions about the process?
           </h2>
           <p className="text-gray-500 leading-relaxed mb-8">
@@ -313,13 +335,15 @@ export default function HowItWorksPage() {
             >
               Read the FAQ
             </Link>
+            </FadeIn>
           </div>
-        </div>
+        </RevealSection>
       </section>
 
       {/* Bottom CTA */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pb-16 md:pb-24">
-        <div className="relative rounded-3xl overflow-hidden">
+        <RevealSection>
+          <div className="relative rounded-3xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950" />
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/8 rounded-full blur-3xl" />
@@ -353,6 +377,7 @@ export default function HowItWorksPage() {
             </div>
           </div>
         </div>
+        </RevealSection>
       </section>
     </>
   );

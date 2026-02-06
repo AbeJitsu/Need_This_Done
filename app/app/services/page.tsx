@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { AllServicesJsonLd, ProfessionalServiceJsonLd } from '@/components/seo/JsonLd';
 import { seoConfig } from '@/lib/seo-config';
+import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
 
 // ============================================================================
 // Services Page - /services
@@ -121,24 +122,29 @@ export default function ServicesPage() {
               Our Services
             </span>
           </div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
-            What We Build
-          </h1>
-          <p className="text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed">
-            From your first website to fully automated operations. We build the technology
-            that lets you focus on what matters.
-          </p>
+          <FadeIn direction="up" triggerOnScroll={false}>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
+              What We Build
+            </h1>
+          </FadeIn>
+          <FadeIn direction="up" delay={0.1} triggerOnScroll={false}>
+            <p className="text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed">
+              From your first website to fully automated operations. We build the technology
+              that lets you focus on what matters.
+            </p>
+          </FadeIn>
         </div>
       </section>
 
       {/* Service Cards */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-24">
-        <div className="space-y-8">
+        <StaggerContainer>
           {services.map((service) => (
-            <div
-              key={service.number}
-              className={`relative overflow-hidden rounded-3xl p-8 md:p-10 lg:p-12 ${service.bg}`}
-            >
+            <StaggerItem key={service.number}>
+              <div
+                className={`relative overflow-hidden rounded-3xl p-8 md:p-10 lg:p-12 ${service.bg} transition-transform duration-300 hover:y-[-4px]`}
+                whileHover={{ y: -4 }}
+              >
               {/* Background gradient */}
               <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient}`} />
               {/* Decorative glows */}
@@ -187,13 +193,15 @@ export default function ServicesPage() {
                 </div>
               </div>
             </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </section>
 
       {/* Process Teaser — full details on /how-it-works */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pb-16 md:pb-24">
-        <div className="rounded-3xl bg-gradient-to-br from-slate-50 to-blue-50 border border-blue-100 p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <RevealSection>
+          <div className="rounded-3xl bg-gradient-to-br from-slate-50 to-blue-50 border border-blue-100 p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
             <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight mb-2">
               Wondering how it all works?
@@ -212,11 +220,13 @@ export default function ServicesPage() {
             </svg>
           </Link>
         </div>
+        </RevealSection>
       </section>
 
       {/* CTA Section */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pb-16 md:pb-24">
-        <div className="relative rounded-3xl overflow-hidden">
+        <RevealSection>
+          <div className="relative rounded-3xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950" />
           <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/8 rounded-full blur-3xl" />
@@ -244,6 +254,7 @@ export default function ServicesPage() {
             </div>
           </div>
         </div>
+        </RevealSection>
       </section>
     </>
   );
