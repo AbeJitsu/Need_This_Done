@@ -164,30 +164,9 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     </p>
 
                     {/* Hook */}
-                    <p className="text-emerald-200 mb-8 leading-relaxed max-w-md">
+                    <p className="text-emerald-200 leading-relaxed max-w-md">
                       {content.services.cards[0].modal.hook}
                     </p>
-
-                    {/* Bullet points */}
-                    {content.services.cards[0].modal.bulletHeader && (
-                      <div>
-                        <p className="text-xs font-bold text-emerald-300 uppercase tracking-widest mb-3">
-                          {content.services.cards[0].modal.bulletHeader}
-                        </p>
-                        <ul className="space-y-2.5" role="list">
-                          {content.services.cards[0].modal.bulletPoints.map((point, idx) => (
-                            <li key={idx} className="flex items-start gap-3">
-                              <div className="flex-shrink-0 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center mt-0.5" aria-hidden="true">
-                                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                </svg>
-                              </div>
-                              <span className="text-white/90 text-sm">{point}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
 
                   </div>
                 </motion.article>

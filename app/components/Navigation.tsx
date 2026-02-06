@@ -25,9 +25,9 @@ import { Editable } from '@/components/InlineEditor';
 
 // Fallback navigation links (used if layout content not loaded)
 const defaultNavLinks: NavLink[] = [
-  { href: '/#services-section', label: 'Services' },
+  { href: '/services', label: 'Services' },
   { href: '/pricing', label: 'Pricing' },
-  { href: '/#how-it-works-section', label: 'How It Works' },
+  { href: '/how-it-works', label: 'How It Works' },
 ];
 
 export default function Navigation() {
