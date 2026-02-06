@@ -90,11 +90,6 @@ const nextConfig = {
     return [
       // Consolidated pages - merged into homepage
       {
-        source: '/services',
-        destination: '/',
-        permanent: true,
-      },
-      {
         source: '/how-it-works',
         destination: '/',
         permanent: true,

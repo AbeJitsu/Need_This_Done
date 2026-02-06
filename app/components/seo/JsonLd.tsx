@@ -289,3 +289,52 @@ export function AllServicesJsonLd() {
 export function FAQPageJsonLd() {
   return <JsonLd type="FAQPage" />;
 }
+
+// Blog post structured data for individual articles
+interface BlogPostingJsonLdProps {
+  post: {
+    title: string;
+    excerpt?: string | null;
+    meta_description?: string | null;
+    featured_image?: string | null;
+    published_at?: string | null;
+    updated_at?: string | null;
+    author_name?: string | null;
+    tags?: string[] | null;
+    slug: string;
+  };
+}
+
+export function BlogPostingJsonLd({ post }: BlogPostingJsonLdProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.meta_description || post.excerpt || '',
+    ...(post.featured_image && { image: post.featured_image }),
+    datePublished: post.published_at || undefined,
+    ...(post.updated_at && { dateModified: post.updated_at }),
+    author: {
+      '@type': 'Person',
+      name: post.author_name || 'Abe Reyes',
+      url: `${seoConfig.baseUrl}/about`,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: seoConfig.siteName,
+      url: seoConfig.baseUrl,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${seoConfig.baseUrl}/blog/${post.slug}`,
+    },
+    ...(post.tags && post.tags.length > 0 && { keywords: post.tags.join(', ') }),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}

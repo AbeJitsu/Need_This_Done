@@ -10,22 +10,22 @@ import type { ArchLayer } from '@/lib/portfolio-data';
 
 const layerColors: Record<string, { border: string; bg: string; label: string }> = {
   emerald: {
-    border: 'border-emerald-500/30',
+    border: 'border-emerald-500/50',
     bg: 'bg-emerald-500/5',
     label: 'text-emerald-400',
   },
   blue: {
-    border: 'border-blue-500/30',
+    border: 'border-blue-500/50',
     bg: 'bg-blue-500/5',
     label: 'text-blue-400',
   },
   purple: {
-    border: 'border-purple-500/30',
+    border: 'border-purple-500/50',
     bg: 'bg-purple-500/5',
     label: 'text-purple-400',
   },
   amber: {
-    border: 'border-amber-500/30',
+    border: 'border-amber-500/50',
     bg: 'bg-amber-500/5',
     label: 'text-amber-400',
   },
@@ -43,22 +43,23 @@ export default function ArchitectureDiagram({ layers }: ArchitectureDiagramProps
         return (
           <div
             key={layer.label}
-            className={`rounded-xl border ${colors.border} ${colors.bg} p-4 md:p-5`}
+            className={`rounded-xl border ${colors.border} ${colors.bg} p-4 md:p-5 flex items-center gap-6`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-              <span className={`text-xs font-bold tracking-wider uppercase ${colors.label} sm:w-28 flex-shrink-0`}>
-                {layer.label}
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {layer.items.map((item) => (
-                  <span
-                    key={item}
-                    className="px-3 py-1 text-sm rounded-lg bg-white/5 text-slate-300 font-medium"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
+            {/* Label container */}
+            <div className={`text-xs font-bold tracking-wider uppercase ${colors.label} whitespace-nowrap flex-shrink-0`}>
+              {layer.label}
+            </div>
+
+            {/* Items - evenly distributed with equal spacing around */}
+            <div className="flex flex-1 justify-around items-center">
+              {layer.items.map((item) => (
+                <span
+                  key={item}
+                  className="px-3 py-1 text-sm rounded-lg bg-white/5 text-slate-300 font-medium"
+                >
+                  {item}
+                </span>
+              ))}
             </div>
           </div>
         );

@@ -68,7 +68,7 @@ const posts: BlogPost[] = [
 
 When your Redis connection fails, what happens to your application? If you're not careful, every single request starts waiting for a connection timeout. Your response times jump from 200ms to 30 seconds. Users see loading spinners. Your monitoring lights up. And you're scrambling at 2 AM wondering why the whole system is down when it's just one dependency.
 
-This is the exact problem the circuit breaker pattern solves. And it's one of the first reliability patterns I implemented in NeedThisDone.com.
+This is the exact problem the circuit breaker pattern solves. And it's one of the first reliability patterns I implemented in [NeedThisDone.com](/work).
 
 ## The Problem: Cascading Failures
 
@@ -207,7 +207,9 @@ After running this in production:
 
 The circuit breaker pattern isn't glamorous. It doesn't make your app faster or add features. But when Redis goes down at 2 AM, it's the difference between sleeping through the recovery and getting paged.
 
-Build your reliability patterns before you need them. By the time you're in an incident, it's too late to add them.`,
+Build your reliability patterns before you need them. By the time you're in an incident, it's too late to add them.
+
+If you're building something that needs this level of reliability, [let's connect](/contact).`,
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -230,11 +232,11 @@ Build your reliability patterns before you need them. By the time you're in an i
 
 Not long ago I was a finance manager at a Toyota dealership. I'd been tinkering with code since the early 2000s, but it was always a side thing. Something I did for fun. Not something I thought I could do professionally.
 
-Then I decided to build NeedThisDone.com from scratch, and everything changed.
+Then I decided to build NeedThisDone.com from scratch, and everything changed. You can see [what I've built](/work) for the full picture.
 
 ## The Background Nobody Expects
 
-My resume doesn't look like a typical developer's. Five years as an Army combat medic. Seven years selling cars and structuring finance deals at Toyota. A few years at Full Sail University helping military students navigate the GI Bill.
+[My resume](/about) doesn't look like a typical developer's. Five years as an Army combat medic. Seven years selling cars and structuring finance deals at Toyota. A few years at Full Sail University helping military students navigate the GI Bill.
 
 When I tell people in tech my background, I get one of two reactions: either "that's so cool" or a look that says "why would anyone hire you?"
 
@@ -288,6 +290,8 @@ I spent time building in private because I was embarrassed about my code. When I
 
 Nobody cares if your code is perfect. They care if you're building real things and learning visibly.
 
+If you're a veteran considering tech: your experience is an asset. [Connect with me](/contact) — I'm always happy to talk.
+
 ## The Hard Parts Nobody Talks About
 
 ### Zero Traction for Months
@@ -316,7 +320,9 @@ I'm not where I want to be yet. But I'm so far from where I started that the gap
 
 The self-taught path isn't easy. It's lonely, it's slow, and there's no curriculum telling you what to learn next. But if you have the discipline to build real things and the patience to keep going when nobody's watching, it works.
 
-It just takes longer than you think it should.`,
+It just takes longer than you think it should.
+
+If you're on a similar path and want to talk, [reach out](/contact) — I'm happy to share what I've learned.`,
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -347,7 +353,7 @@ Here's the honest breakdown of what I gained, what I lost, and whether I'd make 
 
 ## The Architecture
 
-NeedThisDone.com runs on four main services:
+[NeedThisDone.com](/work) runs on four main services:
 
 - **Next.js 14** for the frontend and API routes
 - **Medusa** for product management, cart, and order processing
@@ -436,7 +442,9 @@ The architecture itself — Next.js, Medusa, Supabase, Stripe — I'd keep exact
 
 There's no universal right answer. Shopify is the smart choice for most businesses. Custom builds are the smart choice for developers who need to prove they can build.
 
-Just go in with your eyes open about what each path costs. And if you choose the custom route, commit to it fully. Half-custom, half-platform is the worst of both worlds.`,
+Just go in with your eyes open about what each path costs. And if you choose the custom route, commit to it fully. Half-custom, half-platform is the worst of both worlds.
+
+Need help deciding which approach is right for your project? Check out [our services](/services) or [let's talk](/contact).`,
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -609,7 +617,7 @@ This pairs with the circuit breaker pattern. When Redis fails enough times, the 
 
 ## Real-World Results
 
-Since deploying this pattern on NeedThisDone.com:
+Since deploying this pattern on [NeedThisDone.com](/work):
 
 - **Zero duplicate form submissions** from double-clicks
 - **Zero duplicate payment attempts** at checkout
@@ -631,7 +639,9 @@ Not every endpoint needs deduplication. Here's my rule of thumb:
 | Search queries | No | Duplicates are harmless |
 | Webhook handlers | Maybe | Depends on the webhook provider |
 
-If processing a duplicate would cause harm (financial, data corruption, spam), add deduplication. If duplicates are harmless, don't add complexity.`,
+If processing a duplicate would cause harm (financial, data corruption, spam), add deduplication. If duplicates are harmless, don't add complexity.
+
+Want reliability patterns like this in your application? [Get in touch](/contact).`,
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -728,7 +738,7 @@ Software development can feel chaotic. Requirements change. Priorities shift. No
 
 But the core skills transfer: discipline to do the boring work (tests, documentation, maintenance), calmness when things break, attention to detail when it matters, and the understanding that preparation — not talent — is what separates reliable performance from luck.
 
-I didn't plan to become a developer when I left the Army. But the Army gave me the foundation that makes me the developer I am today.
+I didn't plan to become a developer when I left the Army. But the Army gave me the foundation that makes me the developer I am today. You can read more on [my resume](/resume) or learn [more about me](/about).
 
 If you're a veteran considering tech: your experience is an asset, not a gap. The discipline you learned under real pressure is exactly what software teams need. Don't let anyone tell you otherwise.`,
   },
@@ -742,27 +752,19 @@ async function seed() {
   console.log('Seeding blog posts...\n');
 
   for (const post of posts) {
-    // Check if post already exists
-    const { data: existing } = await supabase
-      .from('blog_posts')
-      .select('slug')
-      .eq('slug', post.slug)
-      .single();
-
-    if (existing) {
-      console.log(`  Skipping "${post.title}" (already exists)`);
-      continue;
-    }
-
-    const { error } = await supabase.from('blog_posts').insert({
-      ...post,
-      published_at: new Date().toISOString(),
-    });
+    // Upsert: insert new posts or update existing ones (e.g. to refresh internal links)
+    const { error } = await supabase.from('blog_posts').upsert(
+      {
+        ...post,
+        published_at: new Date().toISOString(),
+      },
+      { onConflict: 'slug' }
+    );
 
     if (error) {
       console.error(`  Failed: "${post.title}" — ${error.message}`);
     } else {
-      console.log(`  Created: "${post.title}"`);
+      console.log(`  Upserted: "${post.title}"`);
     }
   }
 
