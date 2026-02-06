@@ -71,7 +71,7 @@ export default function WorkPageClient() {
 
         <div className="relative max-w-5xl mx-auto px-6 sm:px-10 md:px-12 py-16 md:py-24">
           {/* Section header */}
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
             <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
               Featured Project
@@ -81,8 +81,8 @@ export default function WorkPageClient() {
           <CaseStudyCard study={caseStudies[0]} />
 
           {/* Architecture diagram */}
-          <div className="mt-10">
-            <h4 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-4">
+          <div className="mt-16 md:mt-20">
+            <h4 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-6">
               System Architecture
             </h4>
             <ArchitectureDiagram layers={architectureLayers} />
@@ -97,7 +97,7 @@ export default function WorkPageClient() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
         <div className="relative max-w-5xl mx-auto px-6 sm:px-10 md:px-12 py-16 md:py-24">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-1 rounded-full bg-gradient-to-r from-blue-400 to-purple-400" />
             <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
               Client Work
@@ -115,7 +115,7 @@ export default function WorkPageClient() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
         <div className="relative max-w-5xl mx-auto px-6 sm:px-10 md:px-12 py-16 md:py-24">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-400 to-amber-400" />
             <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
               Side Project

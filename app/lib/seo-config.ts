@@ -36,27 +36,27 @@ export const seoConfig = {
 
   // SEO keywords
   keywords: [
-    // Primary services
-    'web development',
-    'website design',
-    'automation services',
-    'AI solutions',
+    // Core skills (long-tail)
+    'full stack developer Orlando',
+    'React Next.js developer',
+    'TypeScript developer for hire',
+    'AI RAG developer',
+    'Python automation specialist',
+    // Differentiators
+    'veteran developer',
+    'Claude Code developer',
+    'e-commerce developer Next.js',
+    'Supabase developer',
+    // Services
+    'web development Orlando Florida',
+    'custom website development',
     'workflow automation',
+    'AI chatbot development',
+    'data automation Python',
     // Business terms
-    'professional services',
-    'project services',
-    'freelance developer',
-    'small business help',
+    'freelance full stack developer',
     'technical consulting',
-    // Location
-    'Orlando',
-    'Florida',
-    'remote services',
-    // Problem-solving
-    'get things done',
-    'task completion',
-    'business automation',
-    'custom website',
+    'remote developer',
   ],
 
   // Services for structured data

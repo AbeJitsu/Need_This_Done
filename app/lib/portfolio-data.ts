@@ -115,7 +115,7 @@ export const caseStudies: CaseStudy[] = [
     title: 'Bridgette Automation',
     subtitle: 'AI-Powered Development Automation',
     role: 'Creator & Maintainer',
-    period: '2025 - Present',
+    period: 'January 2026 - Present',
     description:
       'Claude Code CLI wrapper with scheduled automation. Uses launchd daemons to run development tasks on a schedule, combining AI capabilities with system-level automation.',
     impact: [

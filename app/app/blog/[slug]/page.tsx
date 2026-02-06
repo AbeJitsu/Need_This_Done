@@ -58,6 +58,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: 'article',
       publishedTime: post.published_at || undefined,
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.meta_title || post.title,
+      description: post.meta_description || post.excerpt || undefined,
+      images: post.featured_image ? [post.featured_image] : undefined,
+    },
   };
 }
 

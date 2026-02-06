@@ -37,7 +37,7 @@ interface ArchitectureDiagramProps {
 
 export default function ArchitectureDiagram({ layers }: ArchitectureDiagramProps) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
       {layers.map((layer) => {
         const colors = layerColors[layer.color];
         return (
