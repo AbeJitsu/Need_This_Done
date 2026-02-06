@@ -34,7 +34,11 @@ Speak like a friend over coffee. Easy to understand.
 
 ## What's Built
 
-**Latest additions (Feb 2, 2026):**
+**Latest additions (Feb 6, 2026):**
+- ✅ **Workflow Automation System (Phase 1A)**: Visual drag-and-drop workflow builder with React Flow canvas, 12 trigger types, 7 action types, 8 condition operators, BullMQ async execution engine, test run preview, Zod validation, and full CRUD API
+- ✅ **Shopify Plus Roadmap**: Strategic roadmap for building feature parity with Shopify Plus ($2,500/mo platform)
+
+**Previous additions (Feb 2, 2026):**
 - ✅ **Customer loyalty points system**: Earn 1 point per \$1 spent, redeem 100+ points for discounts at checkout with admin analytics (commit 6ef1f17)
 - ✅ **Build blockers fixed**: Supabase/Resend client initialization moved from module to handler level (16 routes), <img> tag warnings resolved (commit b5cfd40)
 - ✅ **Admin API hardening**: Standardized admin auth checks, campaign deduplication, N+1 query protection (commit a6a242f)
