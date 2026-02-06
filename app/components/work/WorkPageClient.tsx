@@ -81,7 +81,7 @@ export default function WorkPageClient() {
           <CaseStudyCard study={caseStudies[0]} />
 
           {/* Architecture diagram */}
-          <div className="mt-16 md:mt-20">
+          <div className="mt-20 md:mt-28">
             <h4 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-6">
               System Architecture
             </h4>
