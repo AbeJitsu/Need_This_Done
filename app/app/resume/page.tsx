@@ -196,6 +196,36 @@ export default function ResumePage() {
   return (
     <div className="min-h-screen">
       {/* ================================================================
+          Open to Opportunities Banner
+          ================================================================ */}
+      <section className="bg-gradient-to-r from-emerald-600 to-blue-600">
+        <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-3 text-white">
+            <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
+            <span className="text-sm font-semibold tracking-wide">
+              Open to full-time and contract opportunities
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <a
+              href="/abe-reyes-resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-semibold rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors"
+            >
+              Download PDF
+            </a>
+            <a
+              href="/contact"
+              className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-emerald-700 hover:bg-gray-100 transition-colors"
+            >
+              Get in Touch
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================
           Hero - Dark Editorial Header
           ================================================================ */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -476,6 +506,55 @@ export default function ResumePage() {
               )}
             </div>
           </div>
+
+          {/* Bridgette Automation */}
+          <div className="mt-8 p-8 md:p-12 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm">
+            <div className="mb-6">
+              <div className="flex items-center gap-3 mb-3">
+                <h3 className="font-playfair text-2xl md:text-3xl font-black text-white tracking-tight">
+                  Bridgette Automation
+                </h3>
+                <span className="px-3 py-1 text-xs font-semibold rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20 uppercase tracking-wider">
+                  Open Source
+                </span>
+              </div>
+              <p className="text-lg text-slate-300">
+                Claude Code CLI wrapper with scheduled automation via launchd daemons
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4 mb-6">
+              {[
+                'Claude Code CLI integration',
+                'Scheduled task automation',
+                'launchd daemon management',
+                'TypeScript 90%+ coverage',
+              ].map((feature) => (
+                <div key={feature} className="flex items-start gap-3 text-base text-slate-300">
+                  <span className="flex-shrink-0 w-2 h-2 rounded-full bg-purple-400 mt-2" />
+                  {feature}
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-2.5">
+              {['Next.js 14', 'TypeScript', 'Node.js', 'launchd'].map((tech) => (
+                <span
+                  key={tech}
+                  className="px-4 py-1.5 text-sm font-medium rounded-full bg-white/10 text-slate-200 border border-white/10"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* View full portfolio */}
+          <div className="mt-8 text-center">
+            <Button variant="blue" href="/work" size="lg" className="shadow-lg shadow-blue-500/25">
+              View Full Portfolio
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -558,14 +637,14 @@ export default function ResumePage() {
 
           {/* CTA buttons - BJJ belt progression */}
           <div className="flex flex-wrap justify-center gap-4">
-            <Button variant="green" href="/about" size="lg" className="shadow-lg shadow-emerald-500/25">
+            <Button variant="green" href="/work" size="lg" className="shadow-lg shadow-emerald-500/25">
+              View My Work
+            </Button>
+            <Button variant="blue" href="/about" size="lg" className="shadow-lg shadow-blue-500/25">
               About Me
             </Button>
-            <Button variant="blue" href="/#services-section" size="lg" className="shadow-lg shadow-blue-500/25">
-              Services
-            </Button>
             <Button variant="purple" href="/contact" size="lg" className="shadow-lg shadow-purple-500/25">
-              Get in Touch
+              Start a Project
             </Button>
           </div>
         </div>

@@ -77,6 +77,10 @@ See **memory/MEMORY.md** for full feature inventory and **FUNCTIONALITY_EVALUATI
 2. Run `cd app && npm run dev` to start
 3. Run `/dac` to draft commits (never commit directly)
 
+## Subagent Usage
+
+Use **haiku** subagents for straightforward tasks (file searches, simple code generation, boilerplate) to save tokens. Reserve **sonnet/opus** for tasks requiring deep reasoning, complex architecture decisions, or nuanced writing.
+
 ## Terminal
 
 Chain commands: `cmd1 && cmd2 && cmd3`

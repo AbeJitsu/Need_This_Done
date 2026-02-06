@@ -312,11 +312,11 @@ export default function AboutPage() {
 
           {/* CTA buttons - BJJ belt progression */}
           <div className="flex flex-wrap justify-center gap-4">
-            <Button variant="green" href="/resume" size="lg" className="shadow-lg shadow-emerald-500/25">
-              View Resume
+            <Button variant="green" href="/work" size="lg" className="shadow-lg shadow-emerald-500/25">
+              See My Work
             </Button>
-            <Button variant="blue" href="/#services-section" size="lg" className="shadow-lg shadow-blue-500/25">
-              See Services
+            <Button variant="blue" href="/resume" size="lg" className="shadow-lg shadow-blue-500/25">
+              View Resume
             </Button>
             <Button variant="purple" href="/contact" size="lg" className="shadow-lg shadow-purple-500/25">
               Start a Project
