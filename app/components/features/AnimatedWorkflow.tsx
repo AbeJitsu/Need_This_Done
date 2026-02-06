@@ -108,7 +108,7 @@ const DEMO_STEPS: DemoStep[] = [
   {
     annotation: 'Conditions filter the event. Here we check if the order total exceeds $100.',
     nodes: [
-      { id: 'condition-1', type: 'condition', position: { x: 200, y: 140 }, data: { label: 'Total > $100?' }, sourcePosition: Position.Bottom, targetPosition: Position.Top },
+      { id: 'condition-1', type: 'condition', position: { x: 200, y: 160 }, data: { label: 'Total > $100?' }, sourcePosition: Position.Bottom, targetPosition: Position.Top },
     ],
     edges: [
       { id: 'e-trigger-cond', source: 'trigger-1', target: 'condition-1', animated: true, style: { stroke: '#10b981', strokeWidth: 2 }, markerEnd: { type: MarkerType.ArrowClosed, color: '#10b981' } },
@@ -117,7 +117,7 @@ const DEMO_STEPS: DemoStep[] = [
   {
     annotation: 'If the condition is true, the "Yes" branch tags the customer as VIP.',
     nodes: [
-      { id: 'action-yes', type: 'action', position: { x: 60, y: 280 }, data: { label: 'Tag as VIP' }, sourcePosition: Position.Bottom, targetPosition: Position.Top },
+      { id: 'action-yes', type: 'action', position: { x: 60, y: 320 }, data: { label: 'Tag as VIP' }, sourcePosition: Position.Bottom, targetPosition: Position.Top },
     ],
     edges: [
       { id: 'e-cond-yes', source: 'condition-1', target: 'action-yes', animated: true, label: 'Yes', style: { stroke: '#8b5cf6', strokeWidth: 2 }, markerEnd: { type: MarkerType.ArrowClosed, color: '#8b5cf6' } },
@@ -126,7 +126,7 @@ const DEMO_STEPS: DemoStep[] = [
   {
     annotation: 'If not, the "No" branch sends a welcome email instead.',
     nodes: [
-      { id: 'action-no', type: 'action', position: { x: 340, y: 280 }, data: { label: 'Send Welcome Email' }, sourcePosition: Position.Bottom, targetPosition: Position.Top },
+      { id: 'action-no', type: 'action', position: { x: 340, y: 320 }, data: { label: 'Send Welcome Email' }, sourcePosition: Position.Bottom, targetPosition: Position.Top },
     ],
     edges: [
       { id: 'e-cond-no', source: 'condition-1', target: 'action-no', animated: true, label: 'No', style: { stroke: '#8b5cf6', strokeWidth: 2 }, markerEnd: { type: MarkerType.ArrowClosed, color: '#8b5cf6' } },
@@ -213,7 +213,7 @@ export default function AnimatedWorkflow() {
       </AnimatePresence>
 
       {/* React Flow Canvas */}
-      <div className="w-full h-[380px] rounded-2xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm">
+      <div className="w-full h-[480px] md:h-[520px] rounded-2xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm">
         <ReactFlow
           nodes={visibleNodes}
           edges={visibleEdges}
