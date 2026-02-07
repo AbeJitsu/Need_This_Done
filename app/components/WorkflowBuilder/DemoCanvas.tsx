@@ -36,7 +36,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'trigger-1',
         type: 'trigger',
-        position: { x: 50, y: CANVAS_CENTER_Y - NODE_SPACING_Y * 2 },
+        position: { x: 50, y: CANVAS_CENTER_Y - NODE_SPACING_Y },
         data: {
           label: 'Order Placed',
           triggerType: 'order.placed',
@@ -111,7 +111,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'trigger-2',
         type: 'trigger',
-        position: { x: 50, y: CANVAS_CENTER_Y - NODE_SPACING_Y * 2 },
+        position: { x: 50, y: CANVAS_CENTER_Y - NODE_SPACING_Y },
         data: {
           label: 'Low Stock Alert',
           triggerType: 'inventory.low_stock',
@@ -167,7 +167,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'trigger-3',
         type: 'trigger',
-        position: { x: 50, y: CANVAS_CENTER_Y - NODE_SPACING_Y * 2 },
+        position: { x: 50, y: CANVAS_CENTER_Y - NODE_SPACING_Y },
         data: {
           label: 'Cart Created',
           triggerType: 'manual',
