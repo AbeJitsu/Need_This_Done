@@ -5,7 +5,13 @@ import { FadeIn } from '@/components/motion/FadeIn';
 import { StaggerContainer } from '@/components/motion/StaggerContainer';
 import { StaggerItem } from '@/components/motion/StaggerItem';
 import StatCounter from '@/components/work/StatCounter';
-import AnimatedWorkflow from './AnimatedWorkflow';
+import dynamic from 'next/dynamic';
+
+// Import DemoCanvas dynamically to avoid hydration issues with React Flow
+const DemoCanvas = dynamic(() => import('@/components/WorkflowBuilder/DemoCanvas'), {
+  ssr: false,
+  loading: () => <div className="h-[700px] bg-gray-50 flex items-center justify-center">Loading demo...</div>,
+});
 
 // ============================================================================
 // STATIC DATA — trigger categories, action types, comparison table
@@ -99,21 +105,63 @@ export default function FlowAutomationDemo() {
       </section>
 
       {/* ================================================================ */}
-      {/* SECTION 2 — ANIMATED WORKFLOW DEMO (Dark)                        */}
+      {/* SECTION 2 — LIVE DEMO CANVAS (Dark)                             */}
       {/* ================================================================ */}
       <section className="bg-gradient-to-b from-slate-900 to-slate-800 py-16 md:py-24">
-        <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-12">
           <FadeIn>
             <h2 className="font-playfair text-3xl md:text-4xl font-black text-white mb-2">
-              See How It Works
+              See the Real Builder
             </h2>
-            <p className="text-slate-400 mb-12 max-w-xl">
-              Watch a real workflow take shape as you scroll. Every workflow follows the same pattern:
-              trigger listens → condition filters → actions execute.
+            <p className="text-slate-400 mb-8 max-w-xl">
+              This is the actual drag-and-drop workflow builder you'll use. Explore the interface,
+              see example workflows, and understand how powerful automation can be.
             </p>
           </FadeIn>
 
-          <AnimatedWorkflow />
+          {/* Live Demo Canvas */}
+          <div className="h-[700px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white mb-12">
+            <DemoCanvas />
+          </div>
+
+          {/* Feature highlights */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+              <div className="w-12 h-12 rounded-xl bg-emerald-400/20 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Visual Builder</h3>
+              <p className="text-slate-400 text-sm">
+                Drag and drop triggers, conditions, and actions. No code required.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+              <div className="w-12 h-12 rounded-xl bg-blue-400/20 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Conditional Logic</h3>
+              <p className="text-slate-400 text-sm">
+                Branch workflows based on order values, customer tags, inventory levels, and more.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+              <div className="w-12 h-12 rounded-xl bg-purple-400/20 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Test Before Publishing</h3>
+              <p className="text-slate-400 text-sm">
+                Run workflows with sample data to verify they work exactly as intended.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
