@@ -217,30 +217,41 @@ export default function DemoCanvas() {
 
   return (
     <div className="relative h-full flex flex-col">
-      {/* Demo Mode Banner */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-lg backdrop-blur-sm whitespace-nowrap">
-        🎨 Demo Mode — Explore (View Only)
-      </div>
+      {/* Top Bar: Demo Mode Banner + Workflow Selector */}
+      <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-white/95 to-white/80 backdrop-blur-sm border-b border-white/20 px-6 py-4">
+        <div className="flex items-center justify-between gap-4 max-w-full">
+          {/* Demo Mode Badge */}
+          <div className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-full shadow-lg whitespace-nowrap">
+            🎨 Demo Mode — View Only
+          </div>
 
-      {/* Workflow Selector */}
-      <div className="absolute top-4 left-4 z-40 flex gap-2 flex-wrap">
-        {EXAMPLE_WORKFLOWS.map((workflow) => (
-          <button
-            key={workflow.id}
-            onClick={() => setSelectedWorkflow(workflow)}
-            className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
-              selectedWorkflow.id === workflow.id
-                ? 'bg-emerald-600 text-white shadow-lg'
-                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-            }`}
-          >
-            {workflow.name.split(' ')[0]}
-          </button>
-        ))}
+          {/* Workflow Selector */}
+          <div className="flex gap-2 flex-wrap justify-end flex-1">
+            {EXAMPLE_WORKFLOWS.map((workflow) => (
+              <button
+                key={workflow.id}
+                onClick={() => setSelectedWorkflow(workflow)}
+                className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
+                  selectedWorkflow.id === workflow.id
+                    ? 'bg-emerald-600 text-white shadow-lg'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                }`}
+                title={workflow.name}
+              >
+                {workflow.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Selected Workflow Description */}
+        <p className="text-sm text-gray-600 mt-3 ml-0">
+          {selectedWorkflow.description}
+        </p>
       </div>
 
       {/* Canvas */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative mt-32">
         <WorkflowCanvas
           initialNodes={selectedWorkflow.nodes}
           initialEdges={selectedWorkflow.edges}
