@@ -63,7 +63,7 @@
 **Remaining (Phase 1A follow-up):**
 - [ ] Pre-built workflow templates (Abandoned Cart, VIP Tagging, etc.)
 - [x] Public demo page at `/features/flow-automation` — components created, needs page route
-- [ ] **⏳ IN PROGRESS: Demo Canvas Positioning** — Canvas panning enabled, debug overlay added (Feb 6). Need to: determine correct CANVAS_CENTER_Y values for each workflow, ensure condition nodes centered vertically, adjust trigger-condition connector length
+- [ ] **⏳ IN PROGRESS: Demo Canvas Positioning** — Canvas panning enabled, debug overlay added (Feb 6). Trigger-condition connector shortened (Feb 6 evening). Remaining: Use debug overlay to determine correct CANVAS_CENTER_Y values for all 3 workflows, verify condition nodes are centered vertically in viewport
 - [ ] Time-based triggers (daily, weekly, monthly)
 
 ---
