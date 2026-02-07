@@ -28,13 +28,19 @@ Speak like a friend over coffee. Easy to understand.
 | Start dev server        | `cd app && npm run dev`       |
 | Run all tests           | `cd app && npm run test:e2e`  |
 | Run accessibility tests | `cd app && npm run test:a11y` |
+| Build for production    | `cd app && npm run build`     |
 | Understand codebase     | Read `README.md`              |
 | Draft a commit          | Run `/dac`                    |
 | Check work status       | Run `/check-work`             |
 
+**⚠️ CRITICAL:** After running `npm run build`, the dev server must be **killed and restarted**. The build clobbers the `.next` directory, which breaks an already-running dev server. Kill it with `Ctrl+C` and run `cd app && npm run dev` again.
+
 ## What's Built
 
-**Latest additions (Feb 6, 2026 – Afternoon Update):**
+**Latest additions (Feb 6, 2026 – Late Afternoon):**
+- ✅ **Real Workflow Builder Demo**: `/features/flow-automation` now showcases the actual React Flow canvas with 3 pre-loaded example workflows (VIP Tagger, Low Stock Alert, Abandoned Cart Recovery). Canvas.tsx supports `readOnly` prop for view-only mode. DemoCanvas.tsx wraps builder with demo mode banner, workflow switcher, and "Get Started" CTA.
+
+**Earlier today (Feb 6 – Afternoon):**
 - ✅ **High-End Workflow Connectors**: Upgraded demo with Lucide React icons (Zap, HelpCircle, Play, ArrowDown, GitBranch) + Framer Motion animated SVG paths. Features emerald→blue→purple gradient strokes, progressive `pathLength` animations (Stripe/Apple style), spring-animated branch junction icon, and retriggerable on scroll. No new dependencies (Lucide already installed).
 
 **Earlier today (Feb 6, 2026 – Morning):**
@@ -81,8 +87,13 @@ See **memory/MEMORY.md** for full feature inventory and **FUNCTIONALITY_EVALUATI
 ## How to Work
 
 1. Check **memory/MEMORY.md** for project status and features
-2. Run `cd app && npm run dev` to start
+2. Run `cd app && npm run dev` to start the dev server
 3. Run `/dac` to draft commits (never commit directly)
+
+**Important Dev Server Notes:**
+- Dev server runs on port 3000 (`http://localhost:3000`)
+- After running `npm run build`, **restart the dev server** — the build clobbers `.next` and breaks rendering
+- To restart: kill with `Ctrl+C`, then run `cd app && npm run dev` again
 
 ## Subagent Usage
 
