@@ -253,6 +253,7 @@ export default function DemoCanvas() {
       {/* Canvas */}
       <div className="flex-1 relative mt-32">
         <WorkflowCanvas
+          key={selectedWorkflow.id}
           initialNodes={selectedWorkflow.nodes}
           initialEdges={selectedWorkflow.edges}
           initialName={selectedWorkflow.name}
