@@ -37,7 +37,10 @@ Speak like a friend over coffee. Easy to understand.
 
 ## What's Built
 
-**Latest additions (Feb 6, 2026 – Late Afternoon):**
+**Latest additions (Feb 6, 2026 – Evening):**
+- ⏳ **IN PROGRESS: Canvas Positioning & Debug Tools**: Canvas dragging enabled (`panOnDrag`, `panOnScroll`, `zoomOnScroll`). Debug overlay shows viewport x/y/zoom and node positions in real-time. All 3 example workflows switchable. Next: Calculate correct CANVAS_CENTER_Y values, fix trigger-condition connector length.
+
+**Earlier today (Feb 6 – Late Afternoon):**
 - ✅ **Real Workflow Builder Demo**: `/features/flow-automation` now showcases the actual React Flow canvas with 3 pre-loaded example workflows (VIP Tagger, Low Stock Alert, Abandoned Cart Recovery). Canvas.tsx supports `readOnly` prop for view-only mode. DemoCanvas.tsx wraps builder with demo mode banner, workflow switcher, and "Get Started" CTA.
 
 **Earlier today (Feb 6 – Afternoon):**
