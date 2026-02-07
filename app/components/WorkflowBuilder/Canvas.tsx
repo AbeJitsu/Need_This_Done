@@ -317,6 +317,8 @@ function WorkflowCanvasInner({
             onDrop={readOnly ? undefined : onDrop}
             nodeTypes={nodeTypes}
             fitView
+            minZoom={0.5}
+            maxZoom={2}
             deleteKeyCode={readOnly ? null : 'Delete'}
             className="bg-gray-50"
           >
