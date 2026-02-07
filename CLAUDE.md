@@ -34,7 +34,10 @@ Speak like a friend over coffee. Easy to understand.
 
 ## What's Built
 
-**Latest additions (Feb 6, 2026):**
+**Latest additions (Feb 6, 2026 – Afternoon Update):**
+- ✅ **High-End Workflow Connectors**: Upgraded demo with Lucide React icons (Zap, HelpCircle, Play, ArrowDown, GitBranch) + Framer Motion animated SVG paths. Features emerald→blue→purple gradient strokes, progressive `pathLength` animations (Stripe/Apple style), spring-animated branch junction icon, and retriggerable on scroll. No new dependencies (Lucide already installed).
+
+**Earlier today (Feb 6, 2026 – Morning):**
 - ✅ **Workflow Automation System (Phase 1A)**: Visual drag-and-drop workflow builder with React Flow canvas, 12 trigger types, 7 action types, 8 condition operators, BullMQ async execution engine, test run preview, Zod validation, and full CRUD API
 - ✅ **Shopify Plus Roadmap**: Strategic roadmap for building feature parity with Shopify Plus ($2,500/mo platform)
 

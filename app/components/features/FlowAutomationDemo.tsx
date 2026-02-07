@@ -1,19 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { FadeIn } from '@/components/motion/FadeIn';
 import { StaggerContainer } from '@/components/motion/StaggerContainer';
 import { StaggerItem } from '@/components/motion/StaggerItem';
 import StatCounter from '@/components/work/StatCounter';
-
-// Lazy-load the React Flow demo (heavy dependency)
-const AnimatedWorkflow = dynamic(() => import('./AnimatedWorkflow'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-[380px] rounded-2xl bg-white/5 border border-white/10 animate-pulse" />
-  ),
-});
+import AnimatedWorkflow from './AnimatedWorkflow';
 
 // ============================================================================
 // STATIC DATA — trigger categories, action types, comparison table
@@ -113,11 +105,11 @@ export default function FlowAutomationDemo() {
         <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
           <FadeIn>
             <h2 className="font-playfair text-3xl md:text-4xl font-black text-white mb-2">
-              See It Build Itself
+              See How It Works
             </h2>
-            <p className="text-slate-400 mb-8 max-w-xl">
-              A real workflow assembled step by step.
-              Trigger → Condition → Action — that&apos;s the whole pattern.
+            <p className="text-slate-400 mb-12 max-w-xl">
+              Watch a real workflow take shape as you scroll. Every workflow follows the same pattern:
+              trigger listens → condition filters → actions execute.
             </p>
           </FadeIn>
 
