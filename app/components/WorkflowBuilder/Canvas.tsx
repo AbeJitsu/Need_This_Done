@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import ReactFlow, {
   Node,
   Edge,
@@ -15,8 +15,10 @@ import ReactFlow, {
   Panel,
   ReactFlowProvider,
   useReactFlow,
+  useViewport,
   type NodeTypes,
   type OnConnect,
+  type ReactFlowInstance,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -40,6 +42,7 @@ export interface WorkflowCanvasProps {
   initialDescription?: string;
   initialTriggerType?: TriggerType;
   readOnly?: boolean;
+  showDebug?: boolean;
   onSave?: (data: {
     name: string;
     description: string;
@@ -70,6 +73,59 @@ function generateNodeId(type: string): string {
 }
 
 // ============================================================================
+// DEBUG OVERLAY (uses useViewport hook - needs to be inside ReactFlow context)
+// ============================================================================
+
+function DebugOverlay({ nodes }: { nodes: Node[] }) {
+  const viewport = useViewport();
+
+  return (
+    <div className="absolute top-32 right-4 z-50 bg-black/85 text-white p-4 rounded-lg text-xs font-mono max-w-xs max-h-96 overflow-y-auto">
+      <div className="font-bold mb-3 border-b border-white/20 pb-2">Debug Info</div>
+
+      <div className="space-y-2 text-white/90">
+        <div>
+          <span className="text-yellow-300">Viewport:</span>
+          <div className="ml-2">
+            x={viewport.x.toFixed(1)}
+          </div>
+          <div className="ml-2">
+            y={viewport.y.toFixed(1)}
+          </div>
+          <div className="ml-2">
+            zoom={viewport.zoom.toFixed(2)}
+          </div>
+        </div>
+
+        <div className="border-t border-white/20 pt-2 mt-2">
+          <span className="text-cyan-300">Canvas Center Y: {150}</span>
+        </div>
+
+        <div className="border-t border-white/20 pt-2 mt-2">
+          <span className="text-green-300 block mb-2">Nodes:</span>
+          <div className="space-y-1 ml-2">
+            {nodes.map((node) => (
+              <div key={node.id} className="text-white/75">
+                <div className="font-semibold">{node.id}</div>
+                <div className="ml-2 text-white/50">
+                  x={node.position.x} y={node.position.y}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="border-t border-white/20 pt-2 mt-2 text-purple-300">
+          <div className="text-sm">
+            💡 Drag canvas to reposition. When condition node is centered vertically, note the viewport Y value above and update CANVAS_CENTER_Y constant.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
 // CANVAS COMPONENT (Inner — needs ReactFlowProvider wrapper)
 // ============================================================================
 
@@ -81,6 +137,7 @@ function WorkflowCanvasInner({
   initialDescription = '',
   initialTriggerType = 'manual',
   readOnly = false,
+  showDebug = false,
   onSave,
 }: WorkflowCanvasProps) {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
@@ -100,6 +157,18 @@ function WorkflowCanvasInner({
   const [showTestRun, setShowTestRun] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
+
+  // Auto-fit nodes to viewport (skip in readOnly mode where positioning is explicit)
+  const { fitView } = useReactFlow();
+  useEffect(() => {
+    if (nodes.length > 0 && !readOnly) {
+      // Use setTimeout to ensure DOM is ready
+      const timeout = setTimeout(() => {
+        fitView({ padding: 0.15, maxZoom: 1, minZoom: 0.5 });
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [nodes, fitView, readOnly]);
 
   // Connect nodes
   const onConnect: OnConnect = useCallback(
@@ -321,6 +390,9 @@ function WorkflowCanvasInner({
             maxZoom={2}
             deleteKeyCode={readOnly ? null : 'Delete'}
             className="bg-gray-50"
+            panOnDrag={true}
+            panOnScroll={true}
+            zoomOnScroll={true}
           >
             <Controls className="!bg-white !border-gray-200 !shadow-lg" />
             <MiniMap
@@ -345,6 +417,9 @@ function WorkflowCanvasInner({
                 </div>
               </Panel>
             )}
+
+            {/* Debug Overlay */}
+            {showDebug && <DebugOverlay nodes={nodes} />}
           </ReactFlow>
         </div>
       </div>
