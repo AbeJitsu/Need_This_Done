@@ -28,7 +28,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'trigger-1',
         type: 'trigger',
-        position: { x: 50, y: 100 },
+        position: { x: 50, y: 20 },
         data: {
           label: 'Order Placed',
           triggerType: 'order.placed',
@@ -37,7 +37,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'condition-1',
         type: 'condition',
-        position: { x: 50, y: 250 },
+        position: { x: 50, y: 140 },
         data: {
           label: 'Total > $100?',
           field: 'total',
@@ -48,7 +48,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'action-1',
         type: 'action',
-        position: { x: -100, y: 400 },
+        position: { x: -80, y: 260 },
         data: {
           label: 'Tag as VIP',
           actionType: 'tag_customer',
@@ -58,7 +58,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'action-2',
         type: 'action',
-        position: { x: 150, y: 400 },
+        position: { x: 150, y: 260 },
         data: {
           label: 'Send Welcome Email',
           actionType: 'send_email',
@@ -103,7 +103,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'trigger-2',
         type: 'trigger',
-        position: { x: 50, y: 100 },
+        position: { x: 50, y: 20 },
         data: {
           label: 'Low Stock Alert',
           triggerType: 'inventory.low_stock',
@@ -112,7 +112,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'condition-2',
         type: 'condition',
-        position: { x: 50, y: 250 },
+        position: { x: 50, y: 140 },
         data: {
           label: 'Inventory < 10?',
           field: 'inventory_count',
@@ -123,7 +123,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'action-3',
         type: 'action',
-        position: { x: 50, y: 400 },
+        position: { x: 50, y: 260 },
         data: {
           label: 'Email Admin',
           actionType: 'send_email',
@@ -159,7 +159,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'trigger-3',
         type: 'trigger',
-        position: { x: 50, y: 100 },
+        position: { x: 50, y: 20 },
         data: {
           label: 'Cart Created',
           triggerType: 'manual',
@@ -168,7 +168,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'condition-3',
         type: 'condition',
-        position: { x: 50, y: 250 },
+        position: { x: 50, y: 140 },
         data: {
           label: 'Cart Abandoned?',
           field: 'status',
@@ -179,7 +179,7 @@ const EXAMPLE_WORKFLOWS: ExampleWorkflow[] = [
       {
         id: 'action-4',
         type: 'action',
-        position: { x: 50, y: 400 },
+        position: { x: 50, y: 260 },
         data: {
           label: 'Send Recovery Email',
           actionType: 'send_email',
