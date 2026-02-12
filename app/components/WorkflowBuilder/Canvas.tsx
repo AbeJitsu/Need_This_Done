@@ -18,7 +18,6 @@ import ReactFlow, {
   useViewport,
   type NodeTypes,
   type OnConnect,
-  type ReactFlowInstance,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -168,6 +167,7 @@ function WorkflowCanvasInner({
       }, 100);
       return () => clearTimeout(timeout);
     }
+    return undefined;
   }, [nodes, fitView, readOnly]);
 
   // Connect nodes
