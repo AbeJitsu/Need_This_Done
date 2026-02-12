@@ -37,14 +37,12 @@ Speak like a friend over coffee. Easy to understand.
 
 ## What's Built
 
-**Latest additions (Feb 6, 2026 – Evening):**
-- ⏳ **IN PROGRESS: Canvas Positioning & Debug Tools**: Canvas dragging enabled (`panOnDrag`, `panOnScroll`, `zoomOnScroll`). Debug overlay shows viewport x/y/zoom and node positions in real-time. All 3 example workflows switchable. Next: Calculate correct CANVAS_CENTER_Y values, fix trigger-condition connector length.
+**Latest additions (Feb 12, 2026):**
+- ✅ **Pricing FAQ sync**: Replaced 6 hardcoded FAQ items on `/pricing` with 3 conversion-focused Q&As + link to `/faq`
+- ✅ **Features page removed**: `/features/flow-automation` preserved on `experiment/features` branch, removed from `dev`. Nav updated.
 
-**Earlier today (Feb 6 – Late Afternoon):**
-- ✅ **Real Workflow Builder Demo**: `/features/flow-automation` now showcases the actual React Flow canvas with 3 pre-loaded example workflows (VIP Tagger, Low Stock Alert, Abandoned Cart Recovery). Canvas.tsx supports `readOnly` prop for view-only mode. DemoCanvas.tsx wraps builder with demo mode banner, workflow switcher, and "Get Started" CTA.
-
-**Earlier today (Feb 6 – Afternoon):**
-- ✅ **High-End Workflow Connectors**: Upgraded demo with Lucide React icons (Zap, HelpCircle, Play, ArrowDown, GitBranch) + Framer Motion animated SVG paths. Features emerald→blue→purple gradient strokes, progressive `pathLength` animations (Stripe/Apple style), spring-animated branch junction icon, and retriggerable on scroll. No new dependencies (Lucide already installed).
+**Earlier (Feb 6, 2026):**
+- ✅ **Workflow Automation System (Phase 1A)**: React Flow visual builder, BullMQ engine, 12 triggers, 7 actions, 8 operators, Zod validation, CRUD API, test runs. Admin at `/admin/automation/builder`.
 
 **Earlier today (Feb 6, 2026 – Morning):**
 - ✅ **Workflow Automation System (Phase 1A)**: Visual drag-and-drop workflow builder with React Flow canvas, 12 trigger types, 7 action types, 8 condition operators, BullMQ async execution engine, test run preview, Zod validation, and full CRUD API

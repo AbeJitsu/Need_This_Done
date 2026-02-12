@@ -1137,76 +1137,51 @@ export default function UnifiedPricingPage() {
       )}
 
       {/* ================================================================== */}
-      {/* COMPREHENSIVE FAQ - For chatbot indexing */}
+      {/* PRICING FAQ - Key purchase questions + link to full FAQ */}
       {/* ================================================================== */}
-      {/* This section is indexed by the chatbot to answer Q9 (payment integration) */}
-      {/* and Q10 (post-launch support) questions. Last updated: 2026-02-05 */}
+      {/* Indexed by chatbot for payment/support questions. Last updated: 2026-02-12 */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-12">
-            Frequently Asked Questions About Pricing, Support, and Payments
+            Common Questions
           </h2>
 
           <div className="space-y-8">
-            {/* Q: Payment Integration */}
             <div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Can you integrate payment processing on my website?
+                How does payment work?
               </h3>
               <p className="text-gray-700">
-                Yes! We offer Payment Integration for $250 as an add-on. We can integrate secure payment processing so you can accept credit card payments directly on your website. We work with industry-leading payment processors like Stripe, Square, and PayPal. Our Payment Integration service handles all the technical setup for processing payments securely. If you need a full online store with shopping cart and inventory management, we also offer E-commerce Integration for $400.
+                We collect a 50% deposit to get started, then the remaining 50% once you approve the finished site. No surprises, no hidden fees.
               </p>
             </div>
 
-            {/* Q: Online payments */}
             <div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                What payment methods can I accept online?
+                What if I need changes after delivery?
               </h3>
               <p className="text-gray-700">
-                With our Payment Integration, you can accept credit cards, debit cards, and digital payments through Stripe, Square, or PayPal. We handle the technical implementation so your customers can pay securely with their preferred payment method.
+                Every package includes a support period — 30 days for Starter, 60 for Growth, and 90 for Pro. During that time, we handle fixes and tweaks at no extra cost. After that, monthly retainer plans keep things running smoothly.
               </p>
             </div>
 
-            {/* Q: Post-launch support */}
             <div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                What happens after my website launches?
+                Can I start small and add more later?
               </h3>
               <p className="text-gray-700">
-                After your website launches, we provide comprehensive post-launch support. All our packages include ongoing support: Starter Site includes 30 days, Growth Site includes 60 days, and Pro Site includes 90 days. After the included support period, we offer monthly retainer subscriptions for continued maintenance, security updates, content updates, performance monitoring, and priority support. This ensures your website continues running smoothly and stays secure.
+                Absolutely. Our services are designed to build on each other. Start with a Starter Site and add features like a blog, online store, or booking system whenever you're ready.
               </p>
             </div>
+          </div>
 
-            {/* Q: Ongoing support options */}
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Do you offer ongoing maintenance and support after launch?
-              </h3>
-              <p className="text-gray-700">
-                Yes! Beyond the initial support period included with your package, we offer monthly retainer subscriptions for ongoing website management. These include regular backups, security updates, performance monitoring, content updates, and priority technical support. This keeps your website secure, fast, and up-to-date.
-              </p>
-            </div>
-
-            {/* Q: Support details */}
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                What's included in post-launch support?
-              </h3>
-              <p className="text-gray-700">
-                Post-launch support includes technical maintenance, security patches, performance optimization, content updates when needed, regular backups, and priority support for any issues. We monitor your site to catch problems early and keep everything running smoothly.
-              </p>
-            </div>
-
-            {/* Q: Support period lengths */}
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                How long is support included with my website package?
-              </h3>
-              <p className="text-gray-700">
-                Starter Site includes 30 days of post-launch support. Growth Site includes 60 days. Pro Site includes 90 days. After the included period ends, you can continue with a monthly retainer subscription for ongoing support and maintenance.
-              </p>
-            </div>
+          <div className="mt-12 text-center">
+            <a
+              href="/faq"
+              className="text-emerald-600 hover:text-emerald-700 font-medium text-lg transition-colors"
+            >
+              Have more questions? See our full FAQ &rarr;
+            </a>
           </div>
         </div>
       </section>
