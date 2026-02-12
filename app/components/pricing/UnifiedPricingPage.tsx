@@ -86,6 +86,9 @@ const ADDON_ICONS: Record<string, React.ElementType> = {
   'calendar-booking': Calendar,
   'payment-integration': CreditCard,
   'cms-integration': Edit3,
+  'customer-accounts': Shield,
+  'ai-chatbot': Bot,
+  'online-store': Globe,
 };
 
 // ============================================================================
@@ -520,8 +523,8 @@ export default function UnifiedPricingPage() {
               </p>
             </div>
             {/* Skeleton cards for visual continuity */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {[1, 2].map((i) => (
+            <div className="grid md:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
                 <div key={i} className="animate-pulse rounded-3xl bg-gray-100 h-80" />
               ))}
             </div>
@@ -565,32 +568,46 @@ export default function UnifiedPricingPage() {
               </div>
               </FadeIn>
 
-              <StaggerContainer className="grid md:grid-cols-2 gap-6">
-                {packages.map((pkg) => {
+              <StaggerContainer className="grid md:grid-cols-3 gap-6">
+                {packages.map((pkg, index) => {
                   const isLoading = checkingOutPackage === pkg.id;
                   const isPopular = pkg.popular;
                   const deposit = Math.round(pkg.price * (pkg.depositPercent / 100));
 
-                  // Color maps for dark card variants
-                  const cardStyles = isPopular
-                    ? {
-                        bg: 'bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950',
-                        glow1: 'bg-blue-500/15',
-                        glow2: 'bg-blue-400/10',
-                        check: 'bg-blue-500/20 text-blue-400',
-                        accent: 'text-blue-400',
-                        badge: 'from-blue-500 to-blue-600',
-                        shadow: 'shadow-blue-500/25',
-                      }
-                    : {
-                        bg: 'bg-gradient-to-br from-emerald-800 via-emerald-800 to-emerald-900',
-                        glow1: 'bg-emerald-400/15',
-                        glow2: 'bg-emerald-300/10',
-                        check: 'bg-emerald-500/20 text-emerald-400',
-                        accent: 'text-emerald-400',
-                        badge: 'from-emerald-500 to-emerald-600',
-                        shadow: 'shadow-emerald-500/25',
-                      };
+                  // Color maps for dark card variants — follows BJJ belt progression
+                  const cardStylesByIndex = [
+                    // Starter (emerald)
+                    {
+                      bg: 'bg-gradient-to-br from-emerald-800 via-emerald-800 to-emerald-900',
+                      glow1: 'bg-emerald-400/15',
+                      glow2: 'bg-emerald-300/10',
+                      check: 'bg-emerald-500/20 text-emerald-400',
+                      accent: 'text-emerald-400',
+                      badge: 'from-emerald-500 to-emerald-600',
+                      shadow: 'shadow-emerald-500/25',
+                    },
+                    // Growth (blue)
+                    {
+                      bg: 'bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950',
+                      glow1: 'bg-blue-500/15',
+                      glow2: 'bg-blue-400/10',
+                      check: 'bg-blue-500/20 text-blue-400',
+                      accent: 'text-blue-400',
+                      badge: 'from-blue-500 to-blue-600',
+                      shadow: 'shadow-blue-500/25',
+                    },
+                    // Pro (purple)
+                    {
+                      bg: 'bg-gradient-to-br from-purple-800 via-purple-800 to-purple-900',
+                      glow1: 'bg-purple-400/15',
+                      glow2: 'bg-purple-300/10',
+                      check: 'bg-purple-500/20 text-purple-400',
+                      accent: 'text-purple-400',
+                      badge: 'from-purple-500 to-purple-600',
+                      shadow: 'shadow-purple-500/25',
+                    },
+                  ];
+                  const cardStyles = cardStylesByIndex[index] || cardStylesByIndex[0];
 
                   return (
                     <StaggerItem key={pkg.id}>
@@ -599,7 +616,7 @@ export default function UnifiedPricingPage() {
                         relative rounded-3xl overflow-hidden transition-all duration-300
                         p-8 lg:p-10 hover:-translate-y-2
                         ${cardStyles.bg}
-                        ${isPopular ? 'ring-2 ring-blue-400/50 shadow-2xl shadow-blue-500/20 md:scale-[1.03]' : 'shadow-xl'}
+                        ${isPopular ? `ring-2 ring-purple-400/50 shadow-2xl shadow-purple-500/20 md:scale-[1.03]` : 'shadow-xl'}
                       `}
                     >
                       {/* Accent glows */}
@@ -1213,7 +1230,7 @@ export default function UnifiedPricingPage() {
                 What happens after my website launches?
               </h3>
               <p className="text-gray-700">
-                After your website launches, we provide comprehensive post-launch support. All our packages include ongoing support: Launch Site includes 30 days of support, and Growth Site includes 60 days. After the included support period, we offer monthly retainer subscriptions for continued maintenance, security updates, content updates, performance monitoring, and priority support. This ensures your website continues running smoothly and stays secure.
+                After your website launches, we provide comprehensive post-launch support. All our packages include ongoing support: Starter Site includes 30 days, Growth Site includes 60 days, and Pro Site includes 90 days. After the included support period, we offer monthly retainer subscriptions for continued maintenance, security updates, content updates, performance monitoring, and priority support. This ensures your website continues running smoothly and stays secure.
               </p>
             </div>
 
@@ -1243,7 +1260,7 @@ export default function UnifiedPricingPage() {
                 How long is support included with my website package?
               </h3>
               <p className="text-gray-700">
-                Launch Site includes 30 days of post-launch support. Growth Site includes 60 days of post-launch support. After the included period ends, you can continue with a monthly retainer subscription for ongoing support and maintenance.
+                Starter Site includes 30 days of post-launch support. Growth Site includes 60 days. Pro Site includes 90 days. After the included period ends, you can continue with a monthly retainer subscription for ongoing support and maintenance.
               </p>
             </div>
           </div>

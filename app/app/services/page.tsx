@@ -36,16 +36,18 @@ const services = [
     title: 'Website Builds',
     headline: 'Sites that convert visitors into customers',
     description:
-      'Professional website design and development. Mobile-optimized, SEO-ready, and built to grow with your business.',
+      'Professional website design and development. Mobile-friendly, search engine optimized, and built to grow with your business.',
     features: [
       'Custom design tailored to your brand',
-      'Mobile-first responsive layouts',
-      'SEO optimization built in from day one',
-      'Content management so you can update easily',
+      'Mobile-friendly responsive layouts',
+      'Search engine optimization built in from day one',
+      'Database, booking, and payments available',
       'Performance tuned for fast load times',
       'Ongoing support and maintenance available',
     ],
     price: 'From $500',
+    ctaHref: '/pricing#websites',
+    ctaLabel: 'See Website Packages',
     color: 'emerald' as const,
     bg: 'bg-emerald-800',
     gradient: 'from-emerald-700 via-emerald-800 to-emerald-900',
@@ -70,6 +72,8 @@ const services = [
       'Documentation so your team can maintain it',
     ],
     price: 'From $150',
+    ctaHref: '/pricing#automation',
+    ctaLabel: 'See Automation Pricing',
     color: 'blue' as const,
     bg: 'bg-slate-900',
     gradient: 'from-slate-800 via-slate-900 to-slate-950',
@@ -94,6 +98,8 @@ const services = [
       'Monthly reporting on AI performance and ROI',
     ],
     price: 'From $500/mo',
+    ctaHref: '/pricing#automation',
+    ctaLabel: 'See AI Pricing',
     color: 'purple' as const,
     bg: 'bg-gradient-to-br from-purple-700 to-purple-900',
     gradient: 'from-purple-700 via-purple-800 to-purple-900',
@@ -166,9 +172,18 @@ export default function ServicesPage() {
                     <p className={`${service.textAccent} leading-relaxed mb-6 max-w-lg`}>
                       {service.description}
                     </p>
-                    <p className={`text-2xl font-black ${service.priceAccent}`}>
+                    <p className={`text-2xl font-black ${service.priceAccent} mb-6`}>
                       {service.price}
                     </p>
+                    <Link
+                      href={service.ctaHref}
+                      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-white/15 border border-white/20 text-white font-semibold text-sm hover:bg-white/25 transition-colors"
+                    >
+                      {service.ctaLabel}
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
                   </div>
 
                   {/* Right: features */}

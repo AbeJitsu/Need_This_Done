@@ -26,6 +26,7 @@ import {
   coloredLinkText,
 } from '@/lib/colors';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
+import ConsultationCalendar from '@/components/ConsultationCalendar';
 
 // ============================================================================
 // Contact Page - Bold Editorial Treatment
@@ -124,9 +125,19 @@ export default function ContactPage() {
     }
   };
 
+  // Get duration of selected consultation in minutes
+  const selectedConsultationDuration = CONSULTATION_TYPES.find(
+    (t) => t.id === selectedConsultation
+  )?.duration;
+  const durationMinutes = selectedConsultationDuration
+    ? parseInt(selectedConsultationDuration)
+    : 30;
+
   // Handle consultation type selection with scroll to form (respects prefers-reduced-motion)
   const handleConsultationSelect = (typeId: string) => {
     setSelectedConsultation(typeId);
+    // Reset time slots when consultation type changes
+    setConsultationSlots({ first: null, second: null });
     // Scroll to form after a brief delay for visual feedback
     setTimeout(() => {
       scrollIntoViewWithMotionPreference(formSectionRef.current, { block: 'start' });
@@ -144,6 +155,12 @@ export default function ContactPage() {
   const [fileError, setFileError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Consultation time slot state
+  const [consultationSlots, setConsultationSlots] = useState<{
+    first: { date: Date; label: string } | null;
+    second: { date: Date; label: string } | null;
+  }>({ first: null, second: null });
 
   // Form handlers
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -208,6 +225,14 @@ export default function ContactPage() {
       submitData.append('service', formData.service);
       submitData.append('message', formData.message);
       submitData.append('consultationType', selectedConsultation);
+
+      // Include consultation time slots if selected
+      if (consultationSlots.first) {
+        submitData.append('preferredTime', consultationSlots.first.date.toISOString());
+      }
+      if (consultationSlots.second) {
+        submitData.append('alternateTime', consultationSlots.second.date.toISOString());
+      }
 
       files.forEach(file => {
         submitData.append('files', file);
@@ -511,6 +536,19 @@ export default function ContactPage() {
                     </button>
                   );
                 })}
+              </div>
+
+              {/* Calendar Time Slot Picker */}
+              <div className="mt-8">
+                <ConsultationCalendar
+                  durationMinutes={durationMinutes}
+                  onSlotsSelected={(first, second) => {
+                    setConsultationSlots({ first, second });
+                  }}
+                  onSlotsCleared={() => {
+                    setConsultationSlots({ first: null, second: null });
+                  }}
+                />
               </div>
             </motion.div>
           )}

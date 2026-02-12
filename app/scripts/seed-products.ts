@@ -54,9 +54,9 @@ const PRODUCTS: ProductDefinition[] = [
   // Website Packages
   // ========================================
   {
-    title: 'Launch Site',
-    description: 'Perfect for getting online fast. 3-5 page Next.js website deployed on Vercel.',
-    handle: 'launch-site',
+    title: 'Starter Site',
+    description: 'Get online with a professional website that looks great on any device. Perfect for new businesses and personal brands.',
+    handle: 'starter-site',
     price: 50000, // $500
     type: 'package',
     collection: 'website-packages',
@@ -64,20 +64,39 @@ const PRODUCTS: ProductDefinition[] = [
       type: 'package',
       deposit_percent: 50,
       features: [
-        '3-5 pages',
-        'Custom design',
-        'Mobile responsive',
-        'Contact form',
-        'Basic SEO',
+        '3–5 custom pages',
+        'Custom design, mobile-friendly',
+        'Contact form (sends you an email)',
+        'Basic search engine optimization',
         '30 days support',
       ],
     },
   },
   {
     title: 'Growth Site',
-    description: 'For businesses ready to scale. 5-8 page website with blog, CMS, and enhanced SEO.',
+    description: 'Grow your business with a site that saves form submissions, stores customer data, and lets people book appointments.',
     handle: 'growth-site',
-    price: 120000, // $1,200
+    price: 150000, // $1,500
+    type: 'package',
+    collection: 'website-packages',
+    metadata: {
+      type: 'package',
+      deposit_percent: 50,
+      features: [
+        '5–8 custom pages',
+        'Everything in Starter',
+        'Database (form submissions saved, customer data stored)',
+        'Appointment booking with email confirmations',
+        'Better search engine visibility so customers find you',
+        '60 days support',
+      ],
+    },
+  },
+  {
+    title: 'Pro Site',
+    description: 'Run your business from your website. Customer accounts, payments, email campaigns, analytics, and a full admin dashboard.',
+    handle: 'pro-site',
+    price: 500000, // $5,000
     type: 'package',
     collection: 'website-packages',
     metadata: {
@@ -85,12 +104,21 @@ const PRODUCTS: ProductDefinition[] = [
       deposit_percent: 50,
       popular: true,
       features: [
-        '5-8 pages',
-        'Everything in Launch',
-        'Blog with CMS',
-        'Content editing',
-        'Enhanced SEO',
-        '60 days support',
+        '10+ custom pages',
+        'Everything in Growth',
+        'Customer accounts (sign up, log in, save info, track orders)',
+        'Accept payments (one-time, subscriptions, deposits)',
+        'Blog with editor',
+        'Edit your own site (visual content editor with version history)',
+        'Customer reviews + admin moderation',
+        'Loyalty program (points + referral credits)',
+        'Email campaigns (templates, segments, analytics)',
+        'Product analytics (views, conversions, trends)',
+        'AI chatbot trained on your site content',
+        'Automated emails (order confirmations, reminders, restock alerts)',
+        'Appointment booking with Google Calendar sync + reminders',
+        'Admin dashboard (orders, customers, reviews, analytics)',
+        '90 days support',
       ],
     },
   },
@@ -100,7 +128,7 @@ const PRODUCTS: ProductDefinition[] = [
   // ========================================
   {
     title: 'Extra Page',
-    description: 'Add another page to your site. Design, development, and deployment included.',
+    description: 'One more custom page for your site. Design, development, and deployment included.',
     handle: 'additional-page',
     price: 10000, // $100
     type: 'addon',
@@ -108,12 +136,12 @@ const PRODUCTS: ProductDefinition[] = [
     metadata: {
       type: 'addon',
       deposit_percent: 50,
-      features: ['Custom page design', 'Mobile responsive', 'SEO optimized'],
+      features: ['Custom page design', 'Mobile-friendly', 'Search engine optimized'],
     },
   },
   {
     title: 'Blog',
-    description: 'Add a blog to your site with MDX support. Full SEO optimization included.',
+    description: 'Write and publish articles on your site. Includes formatting, categories, and search engine optimization.',
     handle: 'blog-setup',
     price: 30000, // $300
     type: 'addon',
@@ -121,12 +149,38 @@ const PRODUCTS: ProductDefinition[] = [
     metadata: {
       type: 'addon',
       deposit_percent: 50,
-      features: ['MDX blog support', 'Auto formatting', 'SEO optimization', 'RSS feed'],
+      features: ['Write and publish articles', 'Auto formatting', 'Search engine optimization', 'RSS feed'],
+    },
+  },
+  {
+    title: 'Edit Your Own Site',
+    description: 'Change text and images on your site without calling us. Visual editor with version history.',
+    handle: 'cms-integration',
+    price: 50000, // $500
+    type: 'addon',
+    collection: 'website-addons',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: ['Visual editor', 'Edit text & images', 'No code required', 'Version history'],
+    },
+  },
+  {
+    title: 'Calendar Booking',
+    description: 'Let customers book appointments on your site. Includes email confirmations and reminders.',
+    handle: 'calendar-booking',
+    price: 20000, // $200
+    type: 'addon',
+    collection: 'website-addons',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: ['Calendar integration', 'Online booking widget', 'Email confirmations'],
     },
   },
   {
     title: 'File Uploads',
-    description: 'Enhanced contact form with file attachment support. Up to 3 files, 5MB each.',
+    description: 'Customers can attach files to forms. Up to 3 files, 5MB each.',
     handle: 'contact-form-files',
     price: 15000, // $150
     type: 'addon',
@@ -138,21 +192,8 @@ const PRODUCTS: ProductDefinition[] = [
     },
   },
   {
-    title: 'Booking',
-    description: 'Integrate Calendly, Cal.com, or similar booking widget.',
-    handle: 'calendar-booking',
-    price: 20000, // $200
-    type: 'addon',
-    collection: 'website-addons',
-    metadata: {
-      type: 'addon',
-      deposit_percent: 50,
-      features: ['Calendar integration', 'Booking widget', 'Email confirmations'],
-    },
-  },
-  {
-    title: 'Payments',
-    description: 'Accept payments via Stripe. One-time payments, subscriptions, or donations.',
+    title: 'Accept Payments',
+    description: 'Take payments from customers: one-time, monthly subscriptions, or deposits.',
     handle: 'payment-integration',
     price: 40000, // $400
     type: 'addon',
@@ -160,20 +201,46 @@ const PRODUCTS: ProductDefinition[] = [
     metadata: {
       type: 'addon',
       deposit_percent: 50,
-      features: ['Stripe integration', 'One-time payments', 'Subscriptions', 'Donations'],
+      features: ['Secure payment processing', 'One-time payments', 'Subscriptions', 'Deposits'],
     },
   },
   {
-    title: 'CMS',
-    description: 'Add a content management system so you can update your site without code.',
-    handle: 'cms-integration',
-    price: 50000, // $500
+    title: 'Customer Accounts',
+    description: 'Let people sign up, log in, and save their info on your site.',
+    handle: 'customer-accounts',
+    price: 40000, // $400
     type: 'addon',
     collection: 'website-addons',
     metadata: {
       type: 'addon',
       deposit_percent: 50,
-      features: ['Visual editor', 'Edit text & images', 'No code required', 'Version history'],
+      features: ['User sign up & login', 'Save personal info', 'Order history', 'Account dashboard'],
+    },
+  },
+  {
+    title: 'AI Chatbot',
+    description: 'Smart assistant trained on your site content. Answers customer questions 24/7.',
+    handle: 'ai-chatbot',
+    price: 60000, // $600
+    type: 'addon',
+    collection: 'website-addons',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: ['Trained on your content', '24/7 availability', 'Natural conversation', 'Lead capture'],
+    },
+  },
+  {
+    title: 'Online Store',
+    description: 'Full shop: product catalog, cart, checkout, inventory tracking, and order management.',
+    handle: 'online-store',
+    price: 200000, // $2,000
+    type: 'addon',
+    collection: 'website-addons',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: ['Product catalog', 'Shopping cart', 'Secure checkout', 'Inventory tracking', 'Order management'],
     },
   },
 
@@ -353,8 +420,10 @@ async function createOrUpdateProduct(
   const existingProductId = await findProductByHandle(token, product.handle);
 
   if (existingProductId) {
-    // UPDATE existing product with collection and metadata
+    // UPDATE existing product with new data
     const updateData = {
+      title: product.title,
+      description: product.description,
       collection_id: collectionId,
       metadata: product.metadata,
     };
