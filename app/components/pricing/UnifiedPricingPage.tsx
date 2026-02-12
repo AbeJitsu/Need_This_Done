@@ -625,7 +625,7 @@ export default function UnifiedPricingPage() {
                     <div
                       className={`
                         relative rounded-3xl overflow-hidden transition-all duration-300
-                        p-8 lg:p-10 hover:-translate-y-2
+                        p-8 lg:p-10 hover:-translate-y-2 flex flex-col
                         ${cardStyles.bg}
                         ${isPopular ? `ring-2 ring-purple-400/50 shadow-2xl shadow-purple-500/20 md:scale-[1.03]` : 'shadow-xl'}
                       `}
@@ -634,21 +634,25 @@ export default function UnifiedPricingPage() {
                       <div className={`absolute -top-20 -right-20 w-64 h-64 rounded-full ${cardStyles.glow1} blur-3xl`} />
                       <div className={`absolute -bottom-10 -left-10 w-40 h-40 rounded-full ${cardStyles.glow2} blur-2xl`} />
 
-                      <div className="relative z-10">
-                        {isPopular && (
-                          <div className="mb-5">
+                      <div className="relative z-10 flex flex-col flex-1">
+                        {/* Badge area — fixed height so all cards align */}
+                        <div className="h-7 mb-5">
+                          {isPopular && (
                             <span className={`inline-block bg-gradient-to-r ${cardStyles.badge} text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg ${cardStyles.shadow}`}>
                               Most Popular
                             </span>
-                          </div>
-                        )}
+                          )}
+                        </div>
 
-                        <h3 className="text-2xl font-black text-white tracking-tight mb-2">
-                          {pkg.title}
-                        </h3>
-                        <p className="text-sm text-white/60 mb-6">{pkg.description}</p>
+                        {/* Title + description — min height keeps price aligned */}
+                        <div className="min-h-[5rem]">
+                          <h3 className="text-2xl font-black text-white tracking-tight mb-2">
+                            {pkg.title}
+                          </h3>
+                          <p className="text-sm text-white/60">{pkg.description}</p>
+                        </div>
 
-                        <div className="flex items-baseline gap-2 mb-8">
+                        <div className="flex items-baseline gap-2 mb-8 mt-6">
                           <span className="text-5xl font-black text-white">
                             ${(pkg.price / 100).toLocaleString()}
                           </span>
@@ -657,7 +661,8 @@ export default function UnifiedPricingPage() {
                           </span>
                         </div>
 
-                        <ul className="space-y-3 mb-8">
+                        {/* Feature list — flex-1 absorbs variable height */}
+                        <ul className="space-y-3 mb-8 flex-1">
                           {pkg.features.map((feature, i) => (
                             <li key={i} className="flex items-center gap-3">
                               <div className={`flex-shrink-0 w-5 h-5 rounded-full ${cardStyles.check} flex items-center justify-center`}>
@@ -668,24 +673,27 @@ export default function UnifiedPricingPage() {
                           ))}
                         </ul>
 
-                        <button
-                          onClick={() => handlePackageCheckout(pkg)}
-                          disabled={checkingOutPackage !== null}
-                          className={`w-full py-3.5 px-6 rounded-xl font-semibold text-base transition-all duration-300 bg-white text-gray-900 hover:bg-white/90 shadow-lg ${cardStyles.shadow} disabled:opacity-50 disabled:cursor-not-allowed`}
-                        >
-                          {isLoading ? (
-                            <span className="flex items-center justify-center gap-2">
-                              <Loader2 size={18} className="animate-spin" /> Processing...
-                            </span>
-                          ) : (
-                            <span className="flex items-center justify-center gap-2">
-                              Start for ${deposit / 100} <ArrowRight size={18} />
-                            </span>
-                          )}
-                        </button>
-                        <p className="text-center text-sm text-white/40 mt-3">
-                          {pkg.depositPercent}% deposit, remainder on delivery
-                        </p>
+                        {/* CTA pinned to bottom */}
+                        <div className="mt-auto">
+                          <button
+                            onClick={() => handlePackageCheckout(pkg)}
+                            disabled={checkingOutPackage !== null}
+                            className={`w-full py-3.5 px-6 rounded-xl font-semibold text-base transition-all duration-300 bg-white text-gray-900 hover:bg-white/90 shadow-lg ${cardStyles.shadow} disabled:opacity-50 disabled:cursor-not-allowed`}
+                          >
+                            {isLoading ? (
+                              <span className="flex items-center justify-center gap-2">
+                                <Loader2 size={18} className="animate-spin" /> Processing...
+                              </span>
+                            ) : (
+                              <span className="flex items-center justify-center gap-2">
+                                Start for ${deposit / 100} <ArrowRight size={18} />
+                              </span>
+                            )}
+                          </button>
+                          <p className="text-center text-sm text-white/40 mt-3">
+                            {pkg.depositPercent}% deposit, remainder on delivery
+                          </p>
+                        </div>
                       </div>
                     </div>
                     </StaggerItem>
