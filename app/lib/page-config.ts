@@ -431,7 +431,6 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
     navLinks: [
       { href: '/work', label: 'Work' },
       { href: '/services', label: 'Services' },
-      { href: '/how-it-works', label: 'How It Works' },
       { href: '/pricing', label: 'Pricing' },
       { href: '/blog', label: 'Blog' },
     ],
@@ -517,7 +516,7 @@ export const PAGE_CONFIGS = {
               ],
               ctas: {
                 primary: { text: 'Get a Website Quote', href: '/contact?service=website' },
-                secondary: { text: 'See Pricing', href: '/pricing' },
+                secondary: { text: 'See All Services', href: '/services' },
               },
             },
           },
@@ -541,7 +540,7 @@ export const PAGE_CONFIGS = {
               ],
               ctas: {
                 primary: { text: 'Explore Automation', href: '/contact?service=automation' },
-                secondary: { text: 'See Pricing', href: '/pricing' },
+                secondary: { text: 'See All Services', href: '/services' },
               },
             },
           },
@@ -565,7 +564,7 @@ export const PAGE_CONFIGS = {
               ],
               ctas: {
                 primary: { text: 'Learn About Managed AI', href: '/contact?service=managed-ai' },
-                secondary: { text: 'See Pricing', href: '/pricing' },
+                secondary: { text: 'See All Services', href: '/services' },
               },
             },
           },
@@ -594,10 +593,10 @@ export const PAGE_CONFIGS = {
       },
       cta: {
         title: 'Ready to Build?',
-        description: 'Tell us what you need. We\'ll get back to you within 2 business days with a clear quote.',
+        description: 'See exactly what we build and how it helps your business grow.',
         buttons: [
-          { text: 'Get a Quote', variant: 'gold', href: '/contact' },
-          { text: 'View Pricing', variant: 'blue', href: '/pricing' },
+          { text: 'See What We Build', variant: 'blue', href: '/services' },
+          { text: 'Book a Free Call', variant: 'green', href: '/contact' },
         ],
         footer: 'Questions first?',
         footerLinkText: 'Check the FAQ',
@@ -814,7 +813,7 @@ export const PAGE_CONFIGS = {
       },
       items: [
         { question: 'What do you build?', answer: 'Three main things: professional websites, automation workflows, and managed AI services. Most clients start with a website and add automation as they grow. Some go straight to managed AI. We\'ll help you figure out what makes sense for your situation.', links: [{ text: 'See all services', href: '/services' }] },
-        { question: 'How much does it cost?', answer: 'Website builds start at $500. Automation setup starts at $150 per workflow. Managed AI services start at $500/month. Every project gets a clear quote upfront—no hourly billing surprises.', links: [{ text: 'View pricing', href: '/pricing' }] },
+        { question: 'How much does it cost?', answer: 'Website builds start at $500. Automation setup starts at $150 per workflow. Managed AI services start at $500/month. Every project gets a clear quote upfront—no hourly billing surprises. View pricing for full details.', links: [{ text: 'View pricing', href: '/pricing' }] },
         { question: 'How long does it take?', answer: 'Websites typically take 1-4 weeks depending on complexity. Automation workflows take 1-2 weeks each. Managed AI is ongoing. We\'ll give you a realistic timeline before we start.', links: [{ text: 'How it works', href: '/how-it-works' }] },
         { question: 'Do I need to be technical?', answer: 'Not at all. Just describe what you want to accomplish in plain English. We handle the technical side and explain things without jargon.' },
         { question: 'What if I need changes after delivery?', answer: 'Website builds include 30 days of support and reasonable revisions. Automation setups include a training session and email support. Managed AI includes continuous optimization as part of the monthly fee.' },

@@ -21,6 +21,10 @@ export default defineConfig(({ mode }) => {
         '__tests__/lib/**/*.test.ts',
         // Unit tests for API routes
         '__tests__/api/**/*.test.ts',
+        // Unit tests for component logic (non-a11y, non-JSX)
+        '__tests__/components/**/*.test.ts',
+        // Top-level unit tests
+        '__tests__/*.test.ts',
       ],
       exclude: [
         // Integration tests run separately with vitest.integration.config.ts

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import ReactFlow, {
   Node,
   Edge,
@@ -15,6 +15,7 @@ import ReactFlow, {
   Panel,
   ReactFlowProvider,
   useReactFlow,
+  useViewport,
   type NodeTypes,
   type OnConnect,
 } from 'reactflow';
@@ -39,6 +40,8 @@ export interface WorkflowCanvasProps {
   initialName?: string;
   initialDescription?: string;
   initialTriggerType?: TriggerType;
+  readOnly?: boolean;
+  showDebug?: boolean;
   onSave?: (data: {
     name: string;
     description: string;
@@ -69,6 +72,59 @@ function generateNodeId(type: string): string {
 }
 
 // ============================================================================
+// DEBUG OVERLAY (uses useViewport hook - needs to be inside ReactFlow context)
+// ============================================================================
+
+function DebugOverlay({ nodes }: { nodes: Node[] }) {
+  const viewport = useViewport();
+
+  return (
+    <div className="absolute top-32 right-4 z-50 bg-black/85 text-white p-4 rounded-lg text-xs font-mono max-w-xs max-h-96 overflow-y-auto">
+      <div className="font-bold mb-3 border-b border-white/20 pb-2">Debug Info</div>
+
+      <div className="space-y-2 text-white/90">
+        <div>
+          <span className="text-yellow-300">Viewport:</span>
+          <div className="ml-2">
+            x={viewport.x.toFixed(1)}
+          </div>
+          <div className="ml-2">
+            y={viewport.y.toFixed(1)}
+          </div>
+          <div className="ml-2">
+            zoom={viewport.zoom.toFixed(2)}
+          </div>
+        </div>
+
+        <div className="border-t border-white/20 pt-2 mt-2">
+          <span className="text-cyan-300">Canvas Center Y: {150}</span>
+        </div>
+
+        <div className="border-t border-white/20 pt-2 mt-2">
+          <span className="text-green-300 block mb-2">Nodes:</span>
+          <div className="space-y-1 ml-2">
+            {nodes.map((node) => (
+              <div key={node.id} className="text-white/75">
+                <div className="font-semibold">{node.id}</div>
+                <div className="ml-2 text-white/50">
+                  x={node.position.x} y={node.position.y}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="border-t border-white/20 pt-2 mt-2 text-purple-300">
+          <div className="text-sm">
+            💡 Drag canvas to reposition. When condition node is centered vertically, note the viewport Y value above and update CANVAS_CENTER_Y constant.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
 // CANVAS COMPONENT (Inner — needs ReactFlowProvider wrapper)
 // ============================================================================
 
@@ -79,6 +135,8 @@ function WorkflowCanvasInner({
   initialName = '',
   initialDescription = '',
   initialTriggerType = 'manual',
+  readOnly = false,
+  showDebug = false,
   onSave,
 }: WorkflowCanvasProps) {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
@@ -98,6 +156,19 @@ function WorkflowCanvasInner({
   const [showTestRun, setShowTestRun] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
+
+  // Auto-fit nodes to viewport (skip in readOnly mode where positioning is explicit)
+  const { fitView } = useReactFlow();
+  useEffect(() => {
+    if (nodes.length > 0 && !readOnly) {
+      // Use setTimeout to ensure DOM is ready
+      const timeout = setTimeout(() => {
+        fitView({ padding: 0.15, maxZoom: 1, minZoom: 0.5 });
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+    return undefined;
+  }, [nodes, fitView, readOnly]);
 
   // Connect nodes
   const onConnect: OnConnect = useCallback(
@@ -222,68 +293,81 @@ function WorkflowCanvasInner({
   return (
     <div className="flex h-[calc(100vh-80px)] bg-gray-50">
       {/* Left: Node Palette */}
-      <NodePalette triggerType={triggerType} />
+      {!readOnly && <NodePalette triggerType={triggerType} />}
 
       {/* Center: Canvas */}
       <div className="flex-1 flex flex-col">
         {/* Top Bar: Workflow metadata */}
         <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-4">
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Workflow name..."
-            className="text-lg font-semibold bg-transparent border-b border-transparent hover:border-gray-300 focus:border-emerald-500 focus:outline-none px-1 py-0.5 flex-1 max-w-xs"
-          />
+          {readOnly ? (
+            <div>
+              <div className="text-lg font-semibold text-gray-800">{name}</div>
+              {description && <div className="text-sm text-gray-500">{description}</div>}
+            </div>
+          ) : (
+            <>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Workflow name..."
+                className="text-lg font-semibold bg-transparent border-b border-transparent hover:border-gray-300 focus:border-emerald-500 focus:outline-none px-1 py-0.5 flex-1 max-w-xs"
+              />
 
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Description (optional)"
-            className="text-sm bg-transparent border-b border-transparent hover:border-gray-300 focus:border-emerald-500 focus:outline-none px-1 py-0.5 flex-1 max-w-xs text-gray-500"
-          />
+              <input
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Description (optional)"
+                className="text-sm bg-transparent border-b border-transparent hover:border-gray-300 focus:border-emerald-500 focus:outline-none px-1 py-0.5 flex-1 max-w-xs text-gray-500"
+              />
 
-          <select
-            value={triggerType}
-            onChange={(e) => setTriggerType(e.target.value as TriggerType)}
-            className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-          >
-            <option value="" disabled>Select trigger...</option>
-            <option value="product.out_of_stock">Product Out of Stock</option>
-            <option value="product.back_in_stock">Product Back in Stock</option>
-            <option value="product.created">New Product Added</option>
-            <option value="product.updated">Product Updated</option>
-            <option value="order.placed">Order Placed</option>
-            <option value="order.fulfilled">Order Shipped</option>
-            <option value="order.cancelled">Order Cancelled</option>
-            <option value="order.refunded">Order Refunded</option>
-            <option value="customer.signup">Customer Signed Up</option>
-            <option value="customer.first_purchase">First Purchase</option>
-            <option value="inventory.low_stock">Low Stock Alert</option>
-            <option value="manual">Manual Trigger</option>
-          </select>
+              <select
+                value={triggerType}
+                onChange={(e) => setTriggerType(e.target.value as TriggerType)}
+                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              >
+                <option value="" disabled>Select trigger...</option>
+                <option value="product.out_of_stock">Product Out of Stock</option>
+                <option value="product.back_in_stock">Product Back in Stock</option>
+                <option value="product.created">New Product Added</option>
+                <option value="product.updated">Product Updated</option>
+                <option value="order.placed">Order Placed</option>
+                <option value="order.fulfilled">Order Shipped</option>
+                <option value="order.cancelled">Order Cancelled</option>
+                <option value="order.refunded">Order Refunded</option>
+                <option value="customer.signup">Customer Signed Up</option>
+                <option value="customer.first_purchase">First Purchase</option>
+                <option value="inventory.low_stock">Low Stock Alert</option>
+                <option value="manual">Manual Trigger</option>
+              </select>
+            </>
+          )}
 
           <div className="flex items-center gap-2 ml-auto">
-            <button
-              onClick={() => { setShowTestRun(true); setSelectedNode(null); }}
-              className="px-3 py-1.5 text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
-            >
-              Test Run
-            </button>
+            {!readOnly && (
+              <>
+                <button
+                  onClick={() => { setShowTestRun(true); setSelectedNode(null); }}
+                  className="px-3 py-1.5 text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                >
+                  Test Run
+                </button>
 
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="px-4 py-1.5 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 rounded-lg transition-colors shadow-sm"
-            >
-              {isSaving ? 'Saving...' : 'Save'}
-            </button>
+                <button
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className="px-4 py-1.5 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 rounded-lg transition-colors shadow-sm"
+                >
+                  {isSaving ? 'Saving...' : 'Save'}
+                </button>
 
-            {saveMessage && (
-              <span className={`text-sm ${saveMessage === 'Saved!' ? 'text-emerald-600' : 'text-red-600'}`}>
-                {saveMessage}
-              </span>
+                {saveMessage && (
+                  <span className={`text-sm ${saveMessage === 'Saved!' ? 'text-emerald-600' : 'text-red-600'}`}>
+                    {saveMessage}
+                  </span>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -293,17 +377,22 @@ function WorkflowCanvasInner({
           <ReactFlow
             nodes={nodes}
             edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            onNodeClick={onNodeClick}
-            onPaneClick={onPaneClick}
-            onDragOver={onDragOver}
-            onDrop={onDrop}
+            onNodesChange={readOnly ? undefined : onNodesChange}
+            onEdgesChange={readOnly ? undefined : onEdgesChange}
+            onConnect={readOnly ? undefined : onConnect}
+            onNodeClick={readOnly ? undefined : onNodeClick}
+            onPaneClick={readOnly ? undefined : onPaneClick}
+            onDragOver={readOnly ? undefined : onDragOver}
+            onDrop={readOnly ? undefined : onDrop}
             nodeTypes={nodeTypes}
             fitView
-            deleteKeyCode="Delete"
+            minZoom={0.5}
+            maxZoom={2}
+            deleteKeyCode={readOnly ? null : 'Delete'}
             className="bg-gray-50"
+            panOnDrag={true}
+            panOnScroll={true}
+            zoomOnScroll={true}
           >
             <Controls className="!bg-white !border-gray-200 !shadow-lg" />
             <MiniMap
@@ -328,12 +417,15 @@ function WorkflowCanvasInner({
                 </div>
               </Panel>
             )}
+
+            {/* Debug Overlay */}
+            {showDebug && <DebugOverlay nodes={nodes} />}
           </ReactFlow>
         </div>
       </div>
 
       {/* Right: Config Panel or Test Run */}
-      {(selectedNode || showTestRun) && (
+      {!readOnly && (selectedNode || showTestRun) && (
         <div className="w-80 bg-white border-l border-gray-200 overflow-y-auto">
           {showTestRun ? (
             <TestRunPanel

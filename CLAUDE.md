@@ -28,13 +28,23 @@ Speak like a friend over coffee. Easy to understand.
 | Start dev server        | `cd app && npm run dev`       |
 | Run all tests           | `cd app && npm run test:e2e`  |
 | Run accessibility tests | `cd app && npm run test:a11y` |
+| Build for production    | `cd app && npm run build`     |
 | Understand codebase     | Read `README.md`              |
 | Draft a commit          | Run `/dac`                    |
 | Check work status       | Run `/check-work`             |
 
+**⚠️ CRITICAL:** After running `npm run build`, the dev server must be **killed and restarted**. The build clobbers the `.next` directory, which breaks an already-running dev server. Kill it with `Ctrl+C` and run `cd app && npm run dev` again.
+
 ## What's Built
 
-**Latest additions (Feb 6, 2026):**
+**Latest additions (Feb 12, 2026):**
+- ✅ **Pricing FAQ sync**: Replaced 6 hardcoded FAQ items on `/pricing` with 3 conversion-focused Q&As + link to `/faq`
+- ✅ **Features page removed**: `/features/flow-automation` preserved on `experiment/features` branch, removed from `dev`. Nav updated.
+
+**Earlier (Feb 6, 2026):**
+- ✅ **Workflow Automation System (Phase 1A)**: React Flow visual builder, BullMQ engine, 12 triggers, 7 actions, 8 operators, Zod validation, CRUD API, test runs. Admin at `/admin/automation/builder`.
+
+**Earlier today (Feb 6, 2026 – Morning):**
 - ✅ **Workflow Automation System (Phase 1A)**: Visual drag-and-drop workflow builder with React Flow canvas, 12 trigger types, 7 action types, 8 condition operators, BullMQ async execution engine, test run preview, Zod validation, and full CRUD API
 - ✅ **Shopify Plus Roadmap**: Strategic roadmap for building feature parity with Shopify Plus ($2,500/mo platform)
 
@@ -78,8 +88,13 @@ See **memory/MEMORY.md** for full feature inventory and **FUNCTIONALITY_EVALUATI
 ## How to Work
 
 1. Check **memory/MEMORY.md** for project status and features
-2. Run `cd app && npm run dev` to start
+2. Run `cd app && npm run dev` to start the dev server
 3. Run `/dac` to draft commits (never commit directly)
+
+**Important Dev Server Notes:**
+- Dev server runs on port 3000 (`http://localhost:3000`)
+- After running `npm run build`, **restart the dev server** — the build clobbers `.next` and breaks rendering
+- To restart: kill with `Ctrl+C`, then run `cd app && npm run dev` again
 
 ## Subagent Usage
 

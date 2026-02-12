@@ -1,10 +1,94 @@
-# Shopify Plus Competitor Strategy - Roadmap
+# NeedThisDone — Product Roadmap
 
 ## Status: In Progress
 
 **Mission**: Build feature parity with Shopify Plus ($2,500/month), then market as a cost-effective alternative.
 
 **Market positioning**: "Shopify Plus features at a fraction of the cost—save $30K-45K/year"
+
+---
+
+## Phase 0: Pricing Restructure, Contact Booking & Services Update ⏳ IN PROGRESS
+
+**Status**: PRD complete (Feb 11, 2026). Ready for implementation.
+
+**Problem**: Pricing page has 2 tiers with developer jargon, no database offering, contact page can't schedule consultations, services page doesn't link to pricing.
+
+**Goal**: 3 clear tiers ($500 / $1,500 / $5,000) with plain-English descriptions, visual consultation booking on contact page, services → pricing flow.
+
+### 0A. Pricing Restructure
+
+**New Tiers:**
+
+| Tier | Name | Price | Tagline | Key Differentiator |
+|------|------|-------|---------|-------------------|
+| 1 | Starter Site | $500 | "Get online" | Static site + email contact form |
+| 2 | Growth Site | $1,500 | "Grow your business" | + Database + appointment booking |
+| 3 | Pro Site | $5,000 | "Run your business" | Full platform: accounts, payments, reviews, loyalty, AI chatbot, email campaigns, analytics, admin dashboard |
+
+**Starter Site ($500):** 3–5 pages, custom design, mobile-friendly, contact form (email only), basic SEO, 30 days support
+
+**Growth Site ($1,500):** 5–8 pages, everything in Starter + database (saves form data, customer info), appointment booking + email confirmations, enhanced SEO, 60 days support
+
+**Pro Site ($5,000):** 10+ pages, everything in Growth + customer accounts, payments (one-time/subscriptions/deposits), blog + editor, visual content editor, reviews + moderation, loyalty program, email campaigns, product analytics, AI chatbot, automated emails, Google Calendar sync, admin dashboard, 90 days support
+
+**Add-Ons (upgrade any tier):**
+
+| Display Name | Description | Price |
+|-------------|-------------|-------|
+| Extra Page | One more custom page | +$100 |
+| Blog | Write and publish articles | +$300 |
+| Edit Your Own Site | Change text and images without calling us | +$500 |
+| Calendar Booking | Let customers book appointments | +$200 |
+| File Uploads | Customers attach files to forms | +$150 |
+| Accept Payments | One-time, monthly, or deposits | +$400 |
+| Customer Accounts | Sign up, log in, save info | +$400 |
+| AI Chatbot | Smart assistant trained on your content | +$600 |
+| **Online Store** | **Full shop: catalog, cart, checkout, inventory, orders** | **+$2,000** |
+
+**Automation (unchanged):** Setup $150/workflow, Managed AI $500/mo
+
+**Language Rule:** No tech jargon. "Next.js" → "professional website". "MDX" → "blog". "Stripe" → "accept payments". "CMS" → "edit your own site".
+
+**Files:** `scripts/seed-products.ts`, `app/pricing/page.tsx`, `app/api/pricing/products/route.ts`
+
+### 0B. Contact Page Consultation Booking
+
+**Current:** Can pick consultation type (15/30/45 min) but no date/time picker. Just submits a form.
+
+**Build:** Visual mini-calendar showing next 48 hours. Customer picks two preferred time slots (weekdays, 9–5 EST, 30-min intervals). Submits to existing `/api/appointments/request` endpoint.
+
+**Reuse:** Validation logic from `AppointmentRequestForm`, existing appointment API (handles dedup, email notifications, database).
+
+**Files:** `app/contact/page.tsx`, NEW `app/components/ConsultationCalendar.tsx`
+
+### 0C. Services → Pricing Links
+
+**Current:** Service cards are dead ends. No link to pricing.
+
+**Build:** Each service card gets a CTA → `/pricing#websites` or `/pricing#automation`. Update descriptions to plain English. Add anchor IDs to pricing page sections.
+
+**Files:** `app/services/page.tsx`, `app/pricing/page.tsx`
+
+### Decisions Made
+
+| Decision | Answer |
+|----------|--------|
+| Tier count | 3 (Starter, Growth, Pro) |
+| Pricing | $500 / $1,500 / $5,000 |
+| Database | Included in Growth (not standalone add-on) |
+| Ecommerce | +$2,000 add-on (not a 4th tier) |
+| Payment add-on | Kept at +$400 AND included in Pro |
+| Time picker | Visual mini-calendar |
+| Consultation window | Next 24–48 hours |
+| "Most Popular" badge | Pro Site |
+
+### Verification
+1. `npx tsx scripts/seed-products.ts` — products created
+2. `cd app && npm run dev` — pricing shows 3 tiers, plain English, add-ons updated
+3. Contact page: consultation type → calendar → pick 2 times → submits
+4. Services page: each card links to pricing
+5. `cd app && npm run build` — zero errors
 
 ---
 
@@ -63,6 +147,7 @@
 **Remaining (Phase 1A follow-up):**
 - [ ] Pre-built workflow templates (Abandoned Cart, VIP Tagging, etc.)
 - [x] Public demo page at `/features/flow-automation` — components created, needs page route
+- [ ] **⏳ IN PROGRESS: Demo Canvas Positioning** — Canvas panning enabled, debug overlay added (Feb 6). Trigger-condition connector shortened (Feb 6 evening). Remaining: Use debug overlay to determine correct CANVAS_CENTER_Y values for all 3 workflows, verify condition nodes are centered vertically in viewport
 - [ ] Time-based triggers (daily, weekly, monthly)
 
 ---

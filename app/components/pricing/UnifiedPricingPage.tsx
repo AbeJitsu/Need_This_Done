@@ -19,7 +19,6 @@ import {
   Loader2,
   ArrowRight,
   Shield,
-  Clock,
   Sparkles,
 } from 'lucide-react';
 import Button from '@/components/Button';
@@ -86,6 +85,9 @@ const ADDON_ICONS: Record<string, React.ElementType> = {
   'calendar-booking': Calendar,
   'payment-integration': CreditCard,
   'cms-integration': Edit3,
+  'customer-accounts': Shield,
+  'ai-chatbot': Bot,
+  'online-store': Globe,
 };
 
 // ============================================================================
@@ -437,72 +439,84 @@ export default function UnifiedPricingPage() {
       </section>
 
       {/* ================================================================== */}
-      {/* VALUE PROPS - Always visible, loads instantly */}
+      {/* TRUST STRIP - Concise confidence builder */}
       {/* ================================================================== */}
-      <section className="py-16 border-b border-gray-100">
+      <section className="py-8">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-          <StaggerContainer className="grid md:grid-cols-3 gap-8" staggerDelay={0.1}>
-            {[
-              {
-                icon: Shield,
-                title: 'Transparent Pricing',
-                description: 'No hidden fees. What you see is what you pay.',
-              },
-              {
-                icon: Clock,
-                title: '50% Deposit Model',
-                description: 'Pay half upfront, half on delivery. Fair for everyone.',
-              },
-              {
-                icon: Sparkles,
-                title: 'Quality Guaranteed',
-                description: "Not happy? We'll make it right or refund your deposit.",
-              },
-            ].map((prop, i) => (
-              <StaggerItem key={i}>
-                <div className="text-center">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 mb-4">
-                    <prop.icon size={24} />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-2">{prop.title}</h3>
-                  <p className="text-gray-600 text-sm">{prop.description}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-gray-500">
+            <span className="flex items-center gap-2">
+              <Shield size={16} className="text-emerald-500" />
+              50% deposit to start. Pay the rest when you&apos;re happy.
+            </span>
+            <span className="hidden sm:inline text-gray-300">|</span>
+            <span className="flex items-center gap-2">
+              <Sparkles size={16} className="text-purple-500" />
+              Not satisfied? We make it right or refund your deposit.
+            </span>
+          </div>
         </div>
       </section>
 
       {/* ================================================================== */}
-      {/* HOW IT WORKS - Always visible, loads instantly */}
+      {/* HOW IT WORKS - Bridges trust strip → pricing cards */}
+      {/* Always visible (static JSX, no Medusa dependency) */}
       {/* ================================================================== */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-12 md:py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-          <FadeIn direction="up">
-            <div className="text-center mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+          <FadeIn direction="up" triggerOnScroll>
+            <div className="text-center mb-10">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-gray-400 mb-2">
                 How It Works
-              </h2>
-              <p className="text-gray-600 max-w-lg mx-auto">
-                From idea to launch in four simple steps
               </p>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                Three steps to your new site.
+              </h2>
             </div>
           </FadeIn>
 
-          <StaggerContainer className="grid md:grid-cols-4 gap-6" staggerDelay={0.08}>
+          <StaggerContainer staggerDelay={0.12} className="grid md:grid-cols-3 gap-8">
             {[
-              { step: '1', title: 'Choose', desc: 'Pick a package or build your own' },
-              { step: '2', title: 'Pay Deposit', desc: '50% upfront to start work' },
-              { step: '3', title: 'Collaborate', desc: 'We build, you review' },
-              { step: '4', title: 'Launch', desc: 'Pay balance, go live!' },
-            ].map((item, i) => (
-              <StaggerItem key={i}>
-                <div className="relative text-center">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-blue-500 text-white font-bold flex items-center justify-center mx-auto mb-3">
+              {
+                step: '1',
+                color: 'emerald',
+                title: 'Pick your package',
+                description:
+                  'Browse the options below — or mix and match from our à la carte menu.',
+              },
+              {
+                step: '2',
+                color: 'blue',
+                title: 'Pay 50% to start',
+                description:
+                  'We begin building while you keep running your business. No long contracts.',
+              },
+              {
+                step: '3',
+                color: 'purple',
+                title: 'Review and launch',
+                description:
+                  'Approve the finished product, pay the remainder, and go live.',
+              },
+            ].map((item) => (
+              <StaggerItem key={item.step}>
+                <div className="text-center">
+                  <div
+                    className={`inline-flex items-center justify-center w-10 h-10 rounded-full mb-4 text-sm font-bold text-white ${
+                      item.color === 'emerald'
+                        ? 'bg-emerald-500'
+                        : item.color === 'blue'
+                          ? 'bg-blue-500'
+                          : 'bg-purple-500'
+                    }`}
+                  >
                     {item.step}
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
-                  <p className="text-gray-600 text-sm">{item.desc}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">
+                    {item.description}
+                  </p>
                 </div>
               </StaggerItem>
             ))}
@@ -520,8 +534,8 @@ export default function UnifiedPricingPage() {
               </p>
             </div>
             {/* Skeleton cards for visual continuity */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {[1, 2].map((i) => (
+            <div className="grid md:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
                 <div key={i} className="animate-pulse rounded-3xl bg-gray-100 h-80" />
               ))}
             </div>
@@ -565,32 +579,46 @@ export default function UnifiedPricingPage() {
               </div>
               </FadeIn>
 
-              <StaggerContainer className="grid md:grid-cols-2 gap-6">
-                {packages.map((pkg) => {
+              <StaggerContainer className="grid md:grid-cols-3 gap-6">
+                {packages.map((pkg, index) => {
                   const isLoading = checkingOutPackage === pkg.id;
                   const isPopular = pkg.popular;
                   const deposit = Math.round(pkg.price * (pkg.depositPercent / 100));
 
-                  // Color maps for dark card variants
-                  const cardStyles = isPopular
-                    ? {
-                        bg: 'bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950',
-                        glow1: 'bg-blue-500/15',
-                        glow2: 'bg-blue-400/10',
-                        check: 'bg-blue-500/20 text-blue-400',
-                        accent: 'text-blue-400',
-                        badge: 'from-blue-500 to-blue-600',
-                        shadow: 'shadow-blue-500/25',
-                      }
-                    : {
-                        bg: 'bg-gradient-to-br from-emerald-800 via-emerald-800 to-emerald-900',
-                        glow1: 'bg-emerald-400/15',
-                        glow2: 'bg-emerald-300/10',
-                        check: 'bg-emerald-500/20 text-emerald-400',
-                        accent: 'text-emerald-400',
-                        badge: 'from-emerald-500 to-emerald-600',
-                        shadow: 'shadow-emerald-500/25',
-                      };
+                  // Color maps for dark card variants — follows BJJ belt progression
+                  const cardStylesByIndex = [
+                    // Starter (emerald)
+                    {
+                      bg: 'bg-gradient-to-br from-emerald-800 via-emerald-800 to-emerald-900',
+                      glow1: 'bg-emerald-400/15',
+                      glow2: 'bg-emerald-300/10',
+                      check: 'bg-emerald-500/20 text-emerald-400',
+                      accent: 'text-emerald-400',
+                      badge: 'from-emerald-500 to-emerald-600',
+                      shadow: 'shadow-emerald-500/25',
+                    },
+                    // Growth (blue)
+                    {
+                      bg: 'bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950',
+                      glow1: 'bg-blue-500/15',
+                      glow2: 'bg-blue-400/10',
+                      check: 'bg-blue-500/20 text-blue-400',
+                      accent: 'text-blue-400',
+                      badge: 'from-blue-500 to-blue-600',
+                      shadow: 'shadow-blue-500/25',
+                    },
+                    // Pro (purple)
+                    {
+                      bg: 'bg-gradient-to-br from-purple-800 via-purple-800 to-purple-900',
+                      glow1: 'bg-purple-400/15',
+                      glow2: 'bg-purple-300/10',
+                      check: 'bg-purple-500/20 text-purple-400',
+                      accent: 'text-purple-400',
+                      badge: 'from-purple-500 to-purple-600',
+                      shadow: 'shadow-purple-500/25',
+                    },
+                  ];
+                  const cardStyles = cardStylesByIndex[index] || cardStylesByIndex[0];
 
                   return (
                     <StaggerItem key={pkg.id}>
@@ -599,7 +627,7 @@ export default function UnifiedPricingPage() {
                         relative rounded-3xl overflow-hidden transition-all duration-300
                         p-8 lg:p-10 hover:-translate-y-2
                         ${cardStyles.bg}
-                        ${isPopular ? 'ring-2 ring-blue-400/50 shadow-2xl shadow-blue-500/20 md:scale-[1.03]' : 'shadow-xl'}
+                        ${isPopular ? `ring-2 ring-purple-400/50 shadow-2xl shadow-purple-500/20 md:scale-[1.03]` : 'shadow-xl'}
                       `}
                     >
                       {/* Accent glows */}
@@ -1176,76 +1204,51 @@ export default function UnifiedPricingPage() {
       )}
 
       {/* ================================================================== */}
-      {/* COMPREHENSIVE FAQ - For chatbot indexing */}
+      {/* PRICING FAQ - Key purchase questions + link to full FAQ */}
       {/* ================================================================== */}
-      {/* This section is indexed by the chatbot to answer Q9 (payment integration) */}
-      {/* and Q10 (post-launch support) questions. Last updated: 2026-02-05 */}
+      {/* Indexed by chatbot for payment/support questions. Last updated: 2026-02-12 */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-12">
-            Frequently Asked Questions About Pricing, Support, and Payments
+            Common Questions
           </h2>
 
           <div className="space-y-8">
-            {/* Q: Payment Integration */}
             <div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Can you integrate payment processing on my website?
+                How does payment work?
               </h3>
               <p className="text-gray-700">
-                Yes! We offer Payment Integration for $250 as an add-on. We can integrate secure payment processing so you can accept credit card payments directly on your website. We work with industry-leading payment processors like Stripe, Square, and PayPal. Our Payment Integration service handles all the technical setup for processing payments securely. If you need a full online store with shopping cart and inventory management, we also offer E-commerce Integration for $400.
+                We collect a 50% deposit to get started, then the remaining 50% once you approve the finished site. No surprises, no hidden fees.
               </p>
             </div>
 
-            {/* Q: Online payments */}
             <div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                What payment methods can I accept online?
+                What if I need changes after delivery?
               </h3>
               <p className="text-gray-700">
-                With our Payment Integration, you can accept credit cards, debit cards, and digital payments through Stripe, Square, or PayPal. We handle the technical implementation so your customers can pay securely with their preferred payment method.
+                Every package includes a support period — 30 days for Starter, 60 for Growth, and 90 for Pro. During that time, we handle fixes and tweaks at no extra cost. After that, monthly retainer plans keep things running smoothly.
               </p>
             </div>
 
-            {/* Q: Post-launch support */}
             <div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                What happens after my website launches?
+                Can I start small and add more later?
               </h3>
               <p className="text-gray-700">
-                After your website launches, we provide comprehensive post-launch support. All our packages include ongoing support: Launch Site includes 30 days of support, and Growth Site includes 60 days. After the included support period, we offer monthly retainer subscriptions for continued maintenance, security updates, content updates, performance monitoring, and priority support. This ensures your website continues running smoothly and stays secure.
+                Absolutely. Our services are designed to build on each other. Start with a Starter Site and add features like a blog, online store, or booking system whenever you're ready.
               </p>
             </div>
+          </div>
 
-            {/* Q: Ongoing support options */}
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Do you offer ongoing maintenance and support after launch?
-              </h3>
-              <p className="text-gray-700">
-                Yes! Beyond the initial support period included with your package, we offer monthly retainer subscriptions for ongoing website management. These include regular backups, security updates, performance monitoring, content updates, and priority technical support. This keeps your website secure, fast, and up-to-date.
-              </p>
-            </div>
-
-            {/* Q: Support details */}
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                What's included in post-launch support?
-              </h3>
-              <p className="text-gray-700">
-                Post-launch support includes technical maintenance, security patches, performance optimization, content updates when needed, regular backups, and priority support for any issues. We monitor your site to catch problems early and keep everything running smoothly.
-              </p>
-            </div>
-
-            {/* Q: Support period lengths */}
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                How long is support included with my website package?
-              </h3>
-              <p className="text-gray-700">
-                Launch Site includes 30 days of post-launch support. Growth Site includes 60 days of post-launch support. After the included period ends, you can continue with a monthly retainer subscription for ongoing support and maintenance.
-              </p>
-            </div>
+          <div className="mt-12 text-center">
+            <a
+              href="/faq"
+              className="text-emerald-600 hover:text-emerald-700 font-medium text-lg transition-colors"
+            >
+              Have more questions? See our full FAQ &rarr;
+            </a>
           </div>
         </div>
       </section>
