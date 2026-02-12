@@ -661,7 +661,7 @@ export default function UnifiedPricingPage() {
 
                       {/* Row 2: Description */}
                       <div className="relative z-10 mt-2">
-                        <p className="text-sm text-white/60">{pkg.description}</p>
+                        <p className="text-base text-white/90">{pkg.description}</p>
                       </div>
 
                       {/* Row 3: Price */}
@@ -681,7 +681,7 @@ export default function UnifiedPricingPage() {
                             <div className={`flex-shrink-0 w-5 h-5 rounded-full ${cardStyles.check} flex items-center justify-center`}>
                               <Check size={12} strokeWidth={3} />
                             </div>
-                            <span className="text-sm text-white/80">{feature}</span>
+                            <span className="text-sm text-white/90">{feature}</span>
                           </li>
                         ))}
                       </ul>
