@@ -98,6 +98,18 @@
         ]
       }
     ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash(npm run build*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '⚠️  Build complete. Run: ./scripts/dev-server.sh to restart dev server'",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "PreCompact": [
       {
         "hooks": [

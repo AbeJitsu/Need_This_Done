@@ -63,6 +63,7 @@ const PRODUCTS: ProductDefinition[] = [
     metadata: {
       type: 'package',
       deposit_percent: 50,
+      popular: false,
       features: [
         '3–5 custom pages',
         'Custom design, mobile-friendly',
@@ -82,6 +83,7 @@ const PRODUCTS: ProductDefinition[] = [
     metadata: {
       type: 'package',
       deposit_percent: 50,
+      popular: false,
       features: [
         '5–8 custom pages',
         'Everything in Starter',
