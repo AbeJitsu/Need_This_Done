@@ -29,12 +29,14 @@ export const metadata: Metadata = {
   },
 };
 
-// Service data expanded from seoConfig
+// Service data with problem/outcome framing for sales funnel
 const services = [
   {
     number: '01',
     title: 'Website Builds',
-    headline: 'Sites that convert visitors into customers',
+    headline: 'Stop losing customers to a bad first impression',
+    problem: 'Your website looks outdated, loads slowly, or doesn\'t show up on Google. Potential customers leave before they even know what you offer.',
+    outcome: 'A professional, fast-loading site that ranks on Google and turns visitors into paying customers — built in 1-4 weeks.',
     description:
       'Professional website design and development. Mobile-friendly, search engine optimized, and built to grow with your business.',
     features: [
@@ -60,7 +62,9 @@ const services = [
   {
     number: '02',
     title: 'Automation Setup',
-    headline: 'Eliminate the work you shouldn\'t be doing manually',
+    headline: 'Stop doing the same tasks every single day',
+    problem: 'You\'re copying data between tools, sending the same emails manually, and wasting hours on work a computer could do in seconds.',
+    outcome: 'Connected workflows that run automatically — so you reclaim hours every week and eliminate human error.',
     description:
       'Workflow automation and tool integration. Connect your apps and free up hours every week.',
     features: [
@@ -86,7 +90,9 @@ const services = [
   {
     number: '03',
     title: 'Managed AI Services',
-    headline: 'AI that works while you sleep',
+    headline: 'Get AI working for you, not the other way around',
+    problem: 'You know AI could help your business, but you don\'t have the time or expertise to build, train, and maintain AI systems yourself.',
+    outcome: 'Custom AI agents that handle customer support, data processing, and operations 24/7 — with monthly optimization and reporting.',
     description:
       'AI agent development and ongoing management. Custom solutions that run 24/7 while you focus on growth.',
     features: [
@@ -130,13 +136,14 @@ export default function ServicesPage() {
           </div>
           <FadeIn direction="up" triggerOnScroll={false}>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
-              What We Build
+              Technology that<br />
+              <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">works as hard as you do.</span>
             </h1>
           </FadeIn>
           <FadeIn direction="up" delay={0.1} triggerOnScroll={false}>
             <p className="text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed">
-              From your first website to fully automated operations. We build the technology
-              that lets you focus on what matters.
+              You shouldn&apos;t have to choose between growing your business and fighting with technology.
+              Here&apos;s how we fix that.
             </p>
           </FadeIn>
         </div>
@@ -166,12 +173,20 @@ export default function ServicesPage() {
                     <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-3">
                       {service.title}
                     </h2>
-                    <p className="text-lg font-semibold text-white/90 mb-2">
+                    <p className="text-lg font-semibold text-white/90 mb-4">
                       {service.headline}
                     </p>
-                    <p className={`${service.textAccent} leading-relaxed mb-6 max-w-lg`}>
-                      {service.description}
-                    </p>
+                    {/* Problem/Outcome framing */}
+                    <div className="space-y-3 mb-6 max-w-lg">
+                      <p className={`${service.textAccent} text-sm leading-relaxed`}>
+                        <span className="font-semibold text-white/70">The problem:</span>{' '}
+                        {service.problem}
+                      </p>
+                      <p className={`${service.textAccent} text-sm leading-relaxed`}>
+                        <span className="font-semibold text-white/70">What you walk away with:</span>{' '}
+                        {service.outcome}
+                      </p>
+                    </div>
                     <p className={`text-2xl font-black ${service.priceAccent} mb-6`}>
                       {service.price}
                     </p>
@@ -237,7 +252,41 @@ export default function ServicesPage() {
         </RevealSection>
       </section>
 
-      {/* CTA Section */}
+      {/* Value Props - Moved from pricing page */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-20">
+        <FadeIn direction="up">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-3">
+              Why Clients Trust Us
+            </h2>
+          </div>
+        </FadeIn>
+        <StaggerContainer className="grid md:grid-cols-3 gap-8" staggerDelay={0.1}>
+          {[
+            {
+              title: 'Transparent Pricing',
+              description: 'No hidden fees, no hourly surprises. You\'ll know exactly what you\'re paying before we start.',
+            },
+            {
+              title: '50% Deposit Model',
+              description: 'Pay half upfront, half when you\'re happy with the work. Fair for everyone.',
+            },
+            {
+              title: 'Quality Guaranteed',
+              description: 'Not satisfied? We\'ll make it right or refund your deposit. Your success is our reputation.',
+            },
+          ].map((prop, i) => (
+            <StaggerItem key={i}>
+              <div className="text-center p-6">
+                <h3 className="font-bold text-gray-900 text-lg mb-2">{prop.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{prop.description}</p>
+              </div>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+      </section>
+
+      {/* CTA Section — Funnel close: services → pricing */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pb-16 md:pb-24">
         <RevealSection>
           <div className="relative rounded-3xl overflow-hidden">
@@ -247,23 +296,24 @@ export default function ServicesPage() {
 
           <div className="relative z-10 py-16 px-8 md:px-16 text-center">
             <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-4">
-              Ready to Get Started?
+              You&apos;ve seen what we build.<br />
+              <span className="bg-gradient-to-r from-emerald-400 to-purple-400 bg-clip-text text-transparent">Now see what it costs.</span>
             </h2>
             <p className="text-lg text-slate-400 max-w-xl mx-auto mb-8">
-              Check out our transparent pricing or book a free strategy call. No pressure, just clarity.
+              Transparent packages with no surprises. Pick what fits or build your own.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 href="/pricing"
                 className="inline-flex items-center px-8 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-500 transition-colors shadow-lg shadow-emerald-500/25"
               >
-                View Pricing
+                See Pricing
               </Link>
               <Link
                 href="/contact"
                 className="inline-flex items-center px-8 py-3 rounded-xl bg-white/10 text-white font-semibold hover:bg-white/20 transition-colors border border-white/10"
               >
-                Start a Project
+                Or book a free call
               </Link>
             </div>
           </div>

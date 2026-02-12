@@ -442,6 +442,50 @@ async function createOrUpdateProduct(
       throw new Error(`Failed to update ${product.title}: ${JSON.stringify(error)}`);
     }
 
+    // Fetch product to check variant prices and update if needed
+    const productRes = await fetch(`${MEDUSA_URL}/admin/products/${existingProductId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const productData = await productRes.json();
+    const variant = productData.product?.variants?.[0];
+
+    if (variant) {
+      const currentPrice = variant.prices?.find(
+        (p: { currency_code: string; amount: number }) => p.currency_code === 'usd'
+      );
+
+      if (currentPrice && currentPrice.amount !== product.price) {
+        // Update variant price via Medusa admin API
+        const priceUpdateRes = await fetch(
+          `${MEDUSA_URL}/admin/products/${existingProductId}/variants/${variant.id}`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              prices: [
+                {
+                  amount: product.price,
+                  currency_code: 'usd',
+                  region_id: regionId,
+                },
+              ],
+            }),
+          }
+        );
+
+        if (priceUpdateRes.ok) {
+          console.log(
+            `  💰 Price updated: ${product.title} ($${currentPrice.amount / 100} → $${product.price / 100})`
+          );
+        } else {
+          console.warn(`  ⚠️  Could not update price for ${product.title}`);
+        }
+      }
+    }
+
     console.log(`  🔄 Updated: ${product.title} (linked to collection)`);
     return;
   }

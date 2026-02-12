@@ -517,7 +517,7 @@ export const PAGE_CONFIGS = {
               ],
               ctas: {
                 primary: { text: 'Get a Website Quote', href: '/contact?service=website' },
-                secondary: { text: 'See Pricing', href: '/pricing' },
+                secondary: { text: 'See All Services', href: '/services' },
               },
             },
           },
@@ -541,7 +541,7 @@ export const PAGE_CONFIGS = {
               ],
               ctas: {
                 primary: { text: 'Explore Automation', href: '/contact?service=automation' },
-                secondary: { text: 'See Pricing', href: '/pricing' },
+                secondary: { text: 'See All Services', href: '/services' },
               },
             },
           },
@@ -565,7 +565,7 @@ export const PAGE_CONFIGS = {
               ],
               ctas: {
                 primary: { text: 'Learn About Managed AI', href: '/contact?service=managed-ai' },
-                secondary: { text: 'See Pricing', href: '/pricing' },
+                secondary: { text: 'See All Services', href: '/services' },
               },
             },
           },
@@ -594,10 +594,10 @@ export const PAGE_CONFIGS = {
       },
       cta: {
         title: 'Ready to Build?',
-        description: 'Tell us what you need. We\'ll get back to you within 2 business days with a clear quote.',
+        description: 'See exactly what we build and how it helps your business grow.',
         buttons: [
-          { text: 'Get a Quote', variant: 'gold', href: '/contact' },
-          { text: 'View Pricing', variant: 'blue', href: '/pricing' },
+          { text: 'See What We Build', variant: 'blue', href: '/services' },
+          { text: 'Book a Free Call', variant: 'green', href: '/contact' },
         ],
         footer: 'Questions first?',
         footerLinkText: 'Check the FAQ',

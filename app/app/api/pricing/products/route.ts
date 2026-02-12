@@ -24,6 +24,16 @@ const COLLECTION_HANDLES = {
   services: 'automation-services',
 } as const;
 
+// Canonical product handles — filters out old/duplicate products
+const CANONICAL_HANDLES = {
+  packages: ['starter-site', 'growth-site', 'pro-site'],
+  addons: [
+    'additional-page', 'blog-setup', 'cms-integration', 'calendar-booking',
+    'contact-form-files', 'payment-integration', 'customer-accounts', 'ai-chatbot', 'online-store',
+  ],
+  services: ['automation-setup', 'managed-ai'],
+} as const;
+
 // ============================================================================
 // Types
 // ============================================================================
@@ -215,18 +225,22 @@ export async function GET() {
       servicesCollectionId ? getProductsByCollection(servicesCollectionId, regionId) : [],
     ]);
 
-    // Transform products
+    // Transform and filter to canonical products only, sorted by price
     const packages = packagesRaw
       .map(transformProduct)
-      .filter((p): p is PricingProduct => p !== null);
+      .filter((p): p is PricingProduct => p !== null)
+      .filter((p) => (CANONICAL_HANDLES.packages as readonly string[]).includes(p.handle))
+      .sort((a, b) => a.price - b.price);
 
     const addons = addonsRaw
       .map(transformProduct)
-      .filter((p): p is PricingProduct => p !== null);
+      .filter((p): p is PricingProduct => p !== null)
+      .filter((p) => (CANONICAL_HANDLES.addons as readonly string[]).includes(p.handle));
 
     const services = servicesRaw
       .map(transformProduct)
-      .filter((p): p is PricingProduct => p !== null);
+      .filter((p): p is PricingProduct => p !== null)
+      .filter((p) => (CANONICAL_HANDLES.services as readonly string[]).includes(p.handle));
 
     return NextResponse.json({
       packages,

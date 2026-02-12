@@ -19,7 +19,6 @@ import {
   Loader2,
   ArrowRight,
   Shield,
-  Clock,
   Sparkles,
 } from 'lucide-react';
 import Button from '@/components/Button';
@@ -440,76 +439,21 @@ export default function UnifiedPricingPage() {
       </section>
 
       {/* ================================================================== */}
-      {/* VALUE PROPS - Always visible, loads instantly */}
+      {/* TRUST STRIP - Concise confidence builder */}
       {/* ================================================================== */}
-      <section className="py-16 border-b border-gray-100">
+      <section className="py-8">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-          <StaggerContainer className="grid md:grid-cols-3 gap-8" staggerDelay={0.1}>
-            {[
-              {
-                icon: Shield,
-                title: 'Transparent Pricing',
-                description: 'No hidden fees. What you see is what you pay.',
-              },
-              {
-                icon: Clock,
-                title: '50% Deposit Model',
-                description: 'Pay half upfront, half on delivery. Fair for everyone.',
-              },
-              {
-                icon: Sparkles,
-                title: 'Quality Guaranteed',
-                description: "Not happy? We'll make it right or refund your deposit.",
-              },
-            ].map((prop, i) => (
-              <StaggerItem key={i}>
-                <div className="text-center">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 mb-4">
-                    <prop.icon size={24} />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-2">{prop.title}</h3>
-                  <p className="text-gray-600 text-sm">{prop.description}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* ================================================================== */}
-      {/* HOW IT WORKS - Always visible, loads instantly */}
-      {/* ================================================================== */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-          <FadeIn direction="up">
-            <div className="text-center mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-                How It Works
-              </h2>
-              <p className="text-gray-600 max-w-lg mx-auto">
-                From idea to launch in four simple steps
-              </p>
-            </div>
-          </FadeIn>
-
-          <StaggerContainer className="grid md:grid-cols-4 gap-6" staggerDelay={0.08}>
-            {[
-              { step: '1', title: 'Choose', desc: 'Pick a package or build your own' },
-              { step: '2', title: 'Pay Deposit', desc: '50% upfront to start work' },
-              { step: '3', title: 'Collaborate', desc: 'We build, you review' },
-              { step: '4', title: 'Launch', desc: 'Pay balance, go live!' },
-            ].map((item, i) => (
-              <StaggerItem key={i}>
-                <div className="relative text-center">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-blue-500 text-white font-bold flex items-center justify-center mx-auto mb-3">
-                    {item.step}
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
-                  <p className="text-gray-600 text-sm">{item.desc}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-gray-500">
+            <span className="flex items-center gap-2">
+              <Shield size={16} className="text-emerald-500" />
+              50% deposit to start. Pay the rest when you&apos;re happy.
+            </span>
+            <span className="hidden sm:inline text-gray-300">|</span>
+            <span className="flex items-center gap-2">
+              <Sparkles size={16} className="text-purple-500" />
+              Not satisfied? We make it right or refund your deposit.
+            </span>
+          </div>
         </div>
       </section>
 

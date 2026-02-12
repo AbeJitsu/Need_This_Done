@@ -131,11 +131,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   tabIndex={0}
                   role="button"
                   aria-labelledby="service-card-0-title"
-                  onClick={() => router.push('/pricing')}
+                  onClick={() => router.push('/services')}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      router.push('/pricing');
+                      router.push('/services');
                     }
                   }}
                   whileHover={{ y: -4 }}
@@ -191,11 +191,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-1-title"
-                    onClick={() => router.push('/pricing')}
+                    onClick={() => router.push('/services')}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        router.push('/pricing');
+                        router.push('/services');
                       }
                     }}
                     whileHover={{ y: -4 }}
@@ -247,11 +247,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-2-title"
-                    onClick={() => router.push('/pricing')}
+                    onClick={() => router.push('/services')}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        router.push('/pricing');
+                        router.push('/services');
                       }
                     }}
                     whileHover={{ y: -4 }}
@@ -293,11 +293,8 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           {/* Section CTA */}
           <FadeIn direction="up">
             <div className="flex flex-wrap justify-center gap-4 mt-10">
-              <Button variant="green" href="/pricing" size="lg" className="shadow-lg shadow-emerald-500/25">
-                View Pricing
-              </Button>
               <Button variant="blue" href="/services" size="lg" className="shadow-lg shadow-blue-500/25">
-                View All Services
+                Explore Our Services
               </Button>
             </div>
           </FadeIn>
@@ -438,21 +435,18 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                       <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">something great.</span>
                     </h2>
                     <p className="text-lg text-slate-400 max-w-md leading-relaxed">
-                      Not sure where to start? Book a free 30-minute strategy call. No pressure, just clarity.
+                      See exactly what we build and how it helps your business grow.
                     </p>
                   </div>
 
                   {/* Right: CTA stack */}
                   <div className="flex flex-col items-center md:items-start gap-4">
-                    <Button variant="green" href="/contact" size="lg" className="shadow-2xl shadow-emerald-500/30">
-                      Book a Free Call
+                    <Button variant="blue" href="/services" size="lg" className="shadow-2xl shadow-blue-500/30">
+                      See What We Build
                     </Button>
-                    <button
-                      onClick={() => window.dispatchEvent(new CustomEvent('open-chatbot'))}
-                      className="text-sm text-slate-500 hover:text-white transition-colors cursor-pointer rounded px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-                    >
-                      Or ask our chatbot anything →
-                    </button>
+                    <Button variant="green" href="/contact" size="md" className="shadow-lg shadow-emerald-500/25">
+                      Or book a free call
+                    </Button>
                   </div>
                 </div>
               </div>
