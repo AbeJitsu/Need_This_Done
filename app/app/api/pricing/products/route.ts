@@ -34,6 +34,86 @@ const CANONICAL_HANDLES = {
   services: ['automation-setup', 'managed-ai'],
 } as const;
 
+// Handle aliases — maps old product handles to their canonical names
+// so products created before a rename still match
+const HANDLE_ALIASES: Record<string, string> = {
+  'launch-site': 'starter-site',
+};
+
+// Fallback product data — used when Medusa is missing products
+// (e.g., seed script hasn't been re-run after adding new tiers)
+// These mirror the seed script definitions so the pricing page always shows all tiers
+const FALLBACK_PACKAGES: PricingProduct[] = [
+  {
+    id: 'fallback-starter',
+    title: 'Starter Site',
+    description: 'Get online with a professional website that looks great on any device. Perfect for new businesses and personal brands.',
+    handle: 'starter-site',
+    price: 50000,
+    variantId: '',
+    type: 'package',
+    depositPercent: 50,
+    features: [
+      '3\u20135 custom pages',
+      'Custom design, mobile-friendly',
+      'Contact form (sends you an email)',
+      'Basic search engine optimization',
+      '30 days support',
+    ],
+    billingPeriod: null,
+    popular: false,
+  },
+  {
+    id: 'fallback-growth',
+    title: 'Growth Site',
+    description: 'Grow your business with a site that saves form submissions, stores customer data, and lets people book appointments.',
+    handle: 'growth-site',
+    price: 150000,
+    variantId: '',
+    type: 'package',
+    depositPercent: 50,
+    features: [
+      '5\u20138 custom pages',
+      'Everything in Starter',
+      'Database (form submissions saved, customer data stored)',
+      'Appointment booking with email confirmations',
+      'Better search engine visibility so customers find you',
+      '60 days support',
+    ],
+    billingPeriod: null,
+    popular: false,
+  },
+  {
+    id: 'fallback-pro',
+    title: 'Pro Site',
+    description: 'Run your business from your website. Customer accounts, payments, email campaigns, analytics, and a full admin dashboard.',
+    handle: 'pro-site',
+    price: 500000,
+    variantId: '',
+    type: 'package',
+    depositPercent: 50,
+    features: [
+      '10+ custom pages',
+      'Everything in Growth',
+      'Customer accounts (sign up, log in, save info, track orders)',
+      'Accept payments (one-time, subscriptions, deposits)',
+      'Blog with editor',
+      'Edit your own site (visual content editor with version history)',
+      'Customer reviews + admin moderation',
+      'Loyalty program (points + referral credits)',
+      'Email campaigns (templates, segments, analytics)',
+      'Product analytics (views, conversions, trends)',
+      'AI chatbot trained on your site content',
+      'Automated emails (order confirmations, reminders, restock alerts)',
+      'Appointment booking with Google Calendar sync + reminders',
+      'Admin dashboard (orders, customers, reviews, analytics)',
+      '90 days support',
+    ],
+    billingPeriod: null,
+    popular: true,
+  },
+];
+
 // ============================================================================
 // Types
 // ============================================================================
@@ -169,11 +249,14 @@ function transformProduct(product: MedusaProduct): PricingProduct | null {
 
   const metadata = product.metadata || {};
 
+  // Normalize handle via aliases (e.g., old "launch-site" → "starter-site")
+  const canonicalHandle = HANDLE_ALIASES[product.handle] || product.handle;
+
   return {
     id: product.id,
     title: product.title,
     description: product.description || '',
-    handle: product.handle,
+    handle: canonicalHandle,
     price,
     variantId: variant.id,
     type: metadata.type || 'addon',
@@ -226,11 +309,23 @@ export async function GET() {
     ]);
 
     // Transform and filter to canonical products only, sorted by price
-    const packages = packagesRaw
+    const medusaPackages = packagesRaw
       .map(transformProduct)
       .filter((p): p is PricingProduct => p !== null)
       .filter((p) => (CANONICAL_HANDLES.packages as readonly string[]).includes(p.handle))
       .sort((a, b) => a.price - b.price);
+
+    // Fill in any missing packages from fallback data
+    // This handles the case where the seed script hasn't been re-run after adding new tiers
+    const medusaHandles = new Set(medusaPackages.map((p) => p.handle));
+    const packages = [...medusaPackages];
+    for (const fallback of FALLBACK_PACKAGES) {
+      if (!medusaHandles.has(fallback.handle)) {
+        console.warn(`[Pricing API] Package "${fallback.handle}" missing from Medusa — using fallback data. Run the seed script to fix.`);
+        packages.push(fallback);
+      }
+    }
+    packages.sort((a, b) => a.price - b.price);
 
     const addons = addonsRaw
       .map(transformProduct)

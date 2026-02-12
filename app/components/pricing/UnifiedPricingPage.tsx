@@ -669,7 +669,7 @@ export default function UnifiedPricingPage() {
                         </ul>
 
                         <button
-                          onClick={() => handlePackageCheckout(pkg)}
+                          onClick={() => pkg.variantId ? handlePackageCheckout(pkg) : router.push('/contact#consultation')}
                           disabled={checkingOutPackage !== null}
                           className={`w-full py-3.5 px-6 rounded-xl font-semibold text-base transition-all duration-300 bg-white text-gray-900 hover:bg-white/90 shadow-lg ${cardStyles.shadow} disabled:opacity-50 disabled:cursor-not-allowed`}
                         >
@@ -679,7 +679,7 @@ export default function UnifiedPricingPage() {
                             </span>
                           ) : (
                             <span className="flex items-center justify-center gap-2">
-                              Start for ${deposit / 100} <ArrowRight size={18} />
+                              {pkg.variantId ? `Start for $${deposit / 100}` : 'Get Started'} <ArrowRight size={18} />
                             </span>
                           )}
                         </button>
