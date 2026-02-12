@@ -579,7 +579,13 @@ export default function UnifiedPricingPage() {
               </div>
               </FadeIn>
 
-              <StaggerContainer className="grid md:grid-cols-3 gap-6 md:grid-rows-[repeat(6,auto)]">
+              {/*
+                Subgrid alignment: Parent defines 6 row tracks. StaggerItem and Card
+                both span all 6 rows with grid-rows-subgrid, so the browser sizes each
+                row to fit the tallest content across all 3 cards. gap-x-6 for column
+                spacing only; vertical spacing handled by margins on each section.
+              */}
+              <StaggerContainer className="grid md:grid-cols-3 gap-6 md:gap-x-6 md:gap-y-0 md:grid-rows-[repeat(6,auto)]">
                 {packages.map((pkg, index) => {
                   const isLoading = checkingOutPackage === pkg.id;
                   const isPopular = pkg.popular;
@@ -621,36 +627,40 @@ export default function UnifiedPricingPage() {
                   const cardStyles = cardStylesByIndex[index] || cardStylesByIndex[0];
 
                   return (
-                    <StaggerItem key={pkg.id} className="md:row-span-6 md:grid md:grid-rows-subgrid md:gap-0">
+                    <StaggerItem key={pkg.id} className="md:row-span-6 md:grid md:grid-rows-subgrid">
                     <div
                       className={`
-                        relative rounded-3xl overflow-hidden transition-all duration-300
+                        relative rounded-3xl transition-all duration-300
                         p-8 lg:p-10 hover:-translate-y-2
-                        md:row-span-6 md:grid md:grid-rows-subgrid md:gap-0
+                        md:row-span-6 md:grid md:grid-rows-subgrid
                         ${cardStyles.bg}
-                        ${isPopular ? `ring-2 ring-purple-400/50 shadow-2xl shadow-purple-500/20 md:scale-[1.03]` : 'shadow-xl'}
+                        ${isPopular ? `ring-2 ring-purple-400/50 shadow-2xl shadow-purple-500/20` : 'shadow-xl'}
                       `}
                     >
-                      {/* Accent glows */}
-                      <div className={`absolute -top-20 -right-20 w-64 h-64 rounded-full ${cardStyles.glow1} blur-3xl`} />
-                      <div className={`absolute -bottom-10 -left-10 w-40 h-40 rounded-full ${cardStyles.glow2} blur-2xl`} />
+                      {/* Glow wrapper — clips blurred orbs to card shape without clipping the badge */}
+                      <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
+                        <div className={`absolute -top-20 -right-20 w-64 h-64 rounded-full ${cardStyles.glow1} blur-3xl`} />
+                        <div className={`absolute -bottom-10 -left-10 w-40 h-40 rounded-full ${cardStyles.glow2} blur-2xl`} />
+                      </div>
 
-                      {/* Row 1: Badge */}
-                      <div className="relative z-10">
-                        {isPopular ? (
+                      {/* Badge — straddles top border, NOT clipped */}
+                      {isPopular && (
+                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20">
                           <span className={`inline-block bg-gradient-to-r ${cardStyles.badge} text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg ${cardStyles.shadow}`}>
                             Most Popular
                           </span>
-                        ) : (
-                          <div className="h-7" />
-                        )}
-                      </div>
+                        </div>
+                      )}
 
-                      {/* Row 2: Title + description */}
-                      <div className="relative z-10 mt-4">
-                        <h3 className="text-2xl font-black text-white tracking-tight mb-2">
+                      {/* Row 1: Title */}
+                      <div className="relative z-10 pt-1">
+                        <h3 className="text-2xl font-black text-white tracking-tight">
                           {pkg.title}
                         </h3>
+                      </div>
+
+                      {/* Row 2: Description */}
+                      <div className="relative z-10 mt-2">
                         <p className="text-sm text-white/60">{pkg.description}</p>
                       </div>
 
@@ -665,7 +675,7 @@ export default function UnifiedPricingPage() {
                       </div>
 
                       {/* Row 4: Feature list */}
-                      <ul className="relative z-10 space-y-3 mt-8">
+                      <ul className="relative z-10 space-y-3 mt-6">
                         {pkg.features.map((feature, i) => (
                           <li key={i} className="flex items-center gap-3">
                             <div className={`flex-shrink-0 w-5 h-5 rounded-full ${cardStyles.check} flex items-center justify-center`}>
@@ -677,7 +687,7 @@ export default function UnifiedPricingPage() {
                       </ul>
 
                       {/* Row 5: CTA button */}
-                      <div className="relative z-10 self-end mt-8">
+                      <div className="relative z-10 self-end mt-6">
                         <button
                           onClick={() => handlePackageCheckout(pkg)}
                           disabled={checkingOutPackage !== null}
@@ -696,7 +706,7 @@ export default function UnifiedPricingPage() {
                       </div>
 
                       {/* Row 6: Deposit text */}
-                      <p className="relative z-10 text-center text-sm text-white/40 mt-3 self-start">
+                      <p className="relative z-10 text-center text-sm text-white/40 mt-3">
                         {pkg.depositPercent}% deposit, remainder on delivery
                       </p>
                     </div>
