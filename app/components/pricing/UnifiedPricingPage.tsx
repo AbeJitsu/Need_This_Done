@@ -457,6 +457,73 @@ export default function UnifiedPricingPage() {
         </div>
       </section>
 
+      {/* ================================================================== */}
+      {/* HOW IT WORKS - Bridges trust strip → pricing cards */}
+      {/* Always visible (static JSX, no Medusa dependency) */}
+      {/* ================================================================== */}
+      <section className="py-12 md:py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+          <FadeIn direction="up" triggerOnScroll>
+            <div className="text-center mb-10">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-gray-400 mb-2">
+                How It Works
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                Three steps to your new site.
+              </h2>
+            </div>
+          </FadeIn>
+
+          <StaggerContainer staggerDelay={0.12} className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                step: '1',
+                color: 'emerald',
+                title: 'Pick your package',
+                description:
+                  'Browse the options below — or mix and match from our à la carte menu.',
+              },
+              {
+                step: '2',
+                color: 'blue',
+                title: 'Pay 50% to start',
+                description:
+                  'We begin building while you keep running your business. No long contracts.',
+              },
+              {
+                step: '3',
+                color: 'purple',
+                title: 'Review and launch',
+                description:
+                  'Approve the finished product, pay the remainder, and go live.',
+              },
+            ].map((item) => (
+              <StaggerItem key={item.step}>
+                <div className="text-center">
+                  <div
+                    className={`inline-flex items-center justify-center w-10 h-10 rounded-full mb-4 text-sm font-bold text-white ${
+                      item.color === 'emerald'
+                        ? 'bg-emerald-500'
+                        : item.color === 'blue'
+                          ? 'bg-blue-500'
+                          : 'bg-purple-500'
+                    }`}
+                  >
+                    {item.step}
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">
+                    {item.description}
+                  </p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </section>
+
       {/* Loading state - contextual, not jarring */}
       {isLoadingProducts && (
         <div className="py-16">
