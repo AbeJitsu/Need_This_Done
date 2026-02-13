@@ -183,7 +183,7 @@ export default function RootLayout({
         <ProfessionalServiceJsonLd />
         <WebSiteJsonLd />
       </head>
-      <body className="transition-colors duration-0">
+      <body className="antialiased transition-colors duration-0">
         <SessionProvider>
         <AuthProvider>
           <CartProvider>
