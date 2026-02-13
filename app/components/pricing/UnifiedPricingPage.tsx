@@ -370,13 +370,13 @@ export default function UnifiedPricingPage() {
               <div className="mb-10">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-purple-400" />
-                  <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Pricing</span>
+                  <span className="text-sm font-semibold tracking-widest uppercase text-white/95">Pricing</span>
                 </div>
-                <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[0.95] mb-4">
+                <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.05] mb-6">
                   Invest in what<br />
                   <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">moves you forward.</span>
                 </h1>
-                <p className="text-xl text-slate-400 max-w-xl leading-relaxed">
+                <p className="text-xl text-white/90 max-w-xl leading-relaxed">
                   Transparent packages. No hidden fees. Pick what fits or build your own.
                 </p>
               </div>
@@ -511,7 +511,7 @@ export default function UnifiedPricingPage() {
                   >
                     {item.step}
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
                     {item.title}
                   </h3>
                   <p className="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">
@@ -573,7 +573,7 @@ export default function UnifiedPricingPage() {
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-3">
                   Your site, built right.
                 </h2>
-                <p className="text-lg text-gray-500 max-w-lg">
+                <p className="text-lg text-gray-500 max-w-lg leading-relaxed">
                   Professional websites that get you online fast — designed to grow with you.
                 </p>
               </div>
@@ -663,8 +663,8 @@ export default function UnifiedPricingPage() {
                       </div>
 
                       {/* Row 2: Description */}
-                      <div className="relative z-10 mt-2">
-                        <p className="text-base text-white/90">{pkg.description}</p>
+                      <div className="relative z-10 mt-3">
+                        <p className="text-base text-white/90 leading-relaxed">{pkg.description}</p>
                       </div>
 
                       {/* Row 3: Price */}
@@ -672,19 +672,19 @@ export default function UnifiedPricingPage() {
                         <span className="text-5xl font-black text-white">
                           ${(pkg.price / 100).toLocaleString()}
                         </span>
-                        <span className="text-base font-medium text-white/50">
+                        <span className="text-base font-medium text-white/95">
                           one-time
                         </span>
                       </div>
 
                       {/* Row 4: Feature list */}
-                      <ul className="relative z-10 space-y-3 mt-6">
+                      <ul className="relative z-10 space-y-3.5 mt-6">
                         {pkg.features.map((feature, i) => (
                           <li key={i} className="flex items-center gap-3">
                             <div className={`flex-shrink-0 w-5 h-5 rounded-full ${cardStyles.check} flex items-center justify-center`}>
                               <Check size={12} strokeWidth={3} />
                             </div>
-                            <span className="text-sm text-white/90">{feature}</span>
+                            <span className="text-sm text-white/90 leading-relaxed">{feature}</span>
                           </li>
                         ))}
                       </ul>
@@ -709,7 +709,7 @@ export default function UnifiedPricingPage() {
                       </div>
 
                       {/* Row 6: Deposit text */}
-                      <p className="relative z-10 text-center text-sm text-white/40 mt-3">
+                      <p className="relative z-10 text-center text-sm text-white/95 mt-3">
                         {pkg.depositPercent}% deposit, remainder on delivery
                       </p>
                     </div>
@@ -739,7 +739,7 @@ export default function UnifiedPricingPage() {
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-3">
                   Let the machines handle it.
                 </h2>
-                <p className="text-lg text-gray-500 max-w-lg">
+                <p className="text-lg text-gray-500 max-w-lg leading-relaxed">
                   Work smarter with intelligent automation that runs while you sleep.
                 </p>
               </div>
@@ -761,12 +761,12 @@ export default function UnifiedPricingPage() {
                       <h3 className="text-2xl font-black text-white tracking-tight mb-2">
                         {automationService.title}
                       </h3>
-                      <p className="text-purple-200 mb-6 leading-relaxed">
+                      <p className="text-white/90 mb-6 leading-relaxed">
                         {automationService.description}
                       </p>
                       <div className="flex items-baseline gap-2 mb-8">
                         <span className="text-5xl font-black text-white">${automationService.price / 100}</span>
-                        <span className="text-base font-medium text-white/50">per workflow</span>
+                        <span className="text-base font-medium text-white/95">per workflow</span>
                       </div>
                       <Button
                         variant="purple"
@@ -796,12 +796,12 @@ export default function UnifiedPricingPage() {
                       <h3 className="text-2xl font-black text-white tracking-tight mb-2">
                         {subscriptionService.title}
                       </h3>
-                      <p className="text-slate-400 mb-6 leading-relaxed">
+                      <p className="text-white/90 mb-6 leading-relaxed">
                         {subscriptionService.description}
                       </p>
                       <div className="flex items-baseline gap-2 mb-8">
                         <span className="text-5xl font-black text-white">${subscriptionService.price / 100}</span>
-                        <span className="text-base font-medium text-white/50">per month</span>
+                        <span className="text-base font-medium text-white/95">per month</span>
                       </div>
                       <Button
                         variant="gold"
@@ -834,7 +834,7 @@ export default function UnifiedPricingPage() {
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-3">
                   Build your own.
                 </h2>
-                <p className="text-lg text-gray-500 max-w-lg">
+                <p className="text-lg text-gray-500 max-w-lg leading-relaxed">
                   Pick exactly what you need — nothing more, nothing less.
                 </p>
               </div>
@@ -875,10 +875,10 @@ export default function UnifiedPricingPage() {
                       </div>
 
                       {/* Text */}
-                      <h3 className={`font-bold text-base mb-1 ${isSelected ? 'text-white' : 'text-gray-900'}`}>
+                      <h3 className={`font-bold text-base mb-2 ${isSelected ? 'text-white' : 'text-gray-900'}`}>
                         {addon.title}
                       </h3>
-                      <p className={`text-sm mb-4 flex-grow ${isSelected ? 'text-white/60' : 'text-gray-500'}`}>
+                      <p className={`text-sm leading-relaxed mb-4 flex-grow ${isSelected ? 'text-white/60' : 'text-gray-500'}`}>
                         {addon.description}
                       </p>
 
@@ -906,14 +906,14 @@ export default function UnifiedPricingPage() {
 
                   <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                     <div>
-                      <p className="text-sm font-medium text-white/50 mb-2">
+                      <p className="text-sm font-medium text-white/95 mb-2">
                         {selectedAddons.size} item{selectedAddons.size > 1 ? 's' : ''} selected
                       </p>
                       <div className="flex items-baseline gap-2">
                         <span className="text-5xl font-black text-white">
                           ${(customTotal / 100).toLocaleString()}
                         </span>
-                        <span className="text-lg text-white/50">
+                        <span className="text-lg text-white/95">
                           total
                         </span>
                       </div>
@@ -934,7 +934,7 @@ export default function UnifiedPricingPage() {
                       )}
                     </button>
                   </div>
-                  <p className="text-sm text-white/40 mt-4">
+                  <p className="text-sm text-white/95 mt-4">
                     50% deposit to start, remainder on delivery
                   </p>
                 </motion.div>
@@ -960,12 +960,12 @@ export default function UnifiedPricingPage() {
                   <div className="max-w-lg">
                     <div className="flex items-center gap-3 mb-5">
                       <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-purple-400" />
-                      <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Free Consultation</span>
+                      <span className="text-sm font-semibold tracking-widest uppercase text-white/95">Free Consultation</span>
                     </div>
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
                       Not sure<br />what you need?
                     </h2>
-                    <p className="text-lg text-slate-400 leading-relaxed">
+                    <p className="text-lg text-white/90 leading-relaxed">
                       Book a free call. We&apos;ll help you figure out the right solution — no pressure, no commitment.
                     </p>
                   </div>
@@ -982,7 +982,7 @@ export default function UnifiedPricingPage() {
                         Book a Free Call
                       </span>
                     </Button>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-white/95">
                       15, 30, or 45 minute sessions
                     </p>
                   </div>
@@ -1091,12 +1091,12 @@ export default function UnifiedPricingPage() {
             <div className="mb-10">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-8 h-1 rounded-full bg-gradient-to-r from-gold-400 to-emerald-400" />
-                <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Authorize</span>
+                <span className="text-sm font-semibold tracking-widest uppercase text-white/95">Authorize</span>
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-3">
                 Already have a quote?
               </h2>
-              <p className="text-lg text-slate-400 max-w-lg">
+              <p className="text-lg text-white/90 max-w-lg leading-relaxed">
                 Authorize your project and pay your deposit to get started.
               </p>
             </div>
@@ -1240,28 +1240,28 @@ export default function UnifiedPricingPage() {
 
           <div className="space-y-8">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
                 How does payment work?
               </h3>
-              <p className="text-gray-700">
+              <p className="text-gray-700 leading-relaxed">
                 We collect a 50% deposit to get started, then the remaining 50% once you approve the finished site. No surprises, no hidden fees.
               </p>
             </div>
 
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
                 What if I need changes after delivery?
               </h3>
-              <p className="text-gray-700">
+              <p className="text-gray-700 leading-relaxed">
                 Every package includes a support period — 30 days for Starter, 60 for Growth, and 90 for Pro. During that time, we handle fixes and tweaks at no extra cost. After that, monthly retainer plans keep things running smoothly.
               </p>
             </div>
 
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
                 Can I start small and add more later?
               </h3>
-              <p className="text-gray-700">
+              <p className="text-gray-700 leading-relaxed">
                 Absolutely. Our services are designed to build on each other. Start with a Starter Site and add features like a blog, online store, or booking system whenever you're ready.
               </p>
             </div>
