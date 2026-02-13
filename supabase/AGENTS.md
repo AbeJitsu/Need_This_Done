@@ -34,6 +34,14 @@ Quick reference for CRUD operations on all tables.
 | `template_reviews` | Template reviews | Public read, user owns |
 | `quotes` | Project quotes | Admin manage, customer by email |
 | `changelog_entries` | Public changelog | Public read, admin write |
+| `user_roles` | Admin role assignments | Service role only |
+| `email_templates` | Marketing email templates | Admin only |
+| `email_campaigns` | Campaign tracking | Admin only |
+| `loyalty_points` | Customer rewards | User owns, admin all |
+| `referral_codes` | Referral program | User owns, admin all |
+| `workflows` | Automation definitions | Admin only |
+| `workflow_executions` | Automation run history | Admin only |
+| `workflow_logs` | Automation execution logs | Admin only |
 
 ---
 
@@ -479,7 +487,7 @@ VALUES ('new-feature', 'New Feature', 'Description here');
 
 ### Admin Check in RLS
 ```sql
-COALESCE((auth.jwt() ->> 'user_metadata')::jsonb ->> 'is_admin' = 'true', false)
+public.is_admin(auth.uid())
 ```
 
 ### Service Role Bypass
