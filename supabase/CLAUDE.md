@@ -302,7 +302,24 @@ CREATE FUNCTION get_token(token_id UUID) RETURNS TEXT AS $$
 $$ LANGUAGE SQL SECURITY DEFINER SET search_path = '';
 ```
 
-## Testing Migrations
+## Testing
+
+### Security Test Suite
+
+```bash
+cd app && npm run test:security
+# Runs ~58 tests verifying migrations 055-061:
+# - RLS on custom + Medusa tables (130+)
+# - Admin role system (is_admin function)
+# - SECURITY INVOKER views
+# - Token encryption (pgcrypto)
+# - Vector extension in extensions schema
+# - Zero linter errors
+# - Behavioral RLS enforcement
+# - No user_metadata references in policies
+# - Always-true policy fixes
+# - Fixed functions (generate_quote_reference, validate_coupon, get_product_rating)
+```
 
 ### Pre-Migration Checklist
 
@@ -322,11 +339,14 @@ supabase db reset
 supabase db lint
 # Expected: 0 errors (or same/fewer than baseline)
 
-# 5. Run app tests
-cd ../app && npm run test:e2e
+# 5. Run security tests
+cd ../app && npm run test:security
 # Verify no RLS policy breaks
 
-# 6. Deploy
+# 6. Run app tests
+cd ../app && npm run test:e2e
+
+# 7. Deploy
 supabase db push
 ```
 
