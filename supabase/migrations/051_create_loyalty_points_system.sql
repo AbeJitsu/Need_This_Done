@@ -85,22 +85,14 @@ CREATE POLICY "public_read_config" ON loyalty_points_config
 CREATE POLICY "users_read_own_points" ON loyalty_points
   FOR SELECT USING (auth.uid() = user_id OR auth.role() = 'authenticated');
 
-CREATE POLICY "admin_read_all_points" ON loyalty_points
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM public.admins
-      WHERE user_id = auth.uid()
-    )
-  );
+-- Admin access will be added by migration 055 with is_admin() function
+-- CREATE POLICY "admin_read_all_points" ON loyalty_points
+--   FOR SELECT USING (public.is_admin(auth.uid()));
 
 -- Users can only see their own redemptions
 CREATE POLICY "users_read_own_redemptions" ON loyalty_redemptions
   FOR SELECT USING (auth.uid() = user_id OR auth.role() = 'authenticated');
 
-CREATE POLICY "admin_read_all_redemptions" ON loyalty_redemptions
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM public.admins
-      WHERE user_id = auth.uid()
-    )
-  );
+-- Admin access will be added by migration 055 with is_admin() function
+-- CREATE POLICY "admin_read_all_redemptions" ON loyalty_redemptions
+--   FOR SELECT USING (public.is_admin(auth.uid()));

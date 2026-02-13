@@ -197,35 +197,20 @@ ALTER TABLE workflow_logs ENABLE ROW LEVEL SECURITY;
 -- ============================================================================
 -- All three tables: Only admins can view or modify
 
--- Workflows: Admin full access
-CREATE POLICY "admin_workflows_full_access" ON workflows
-  FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.admins
-      WHERE user_id = auth.uid()
-    )
-  );
+-- Workflows: Admin full access (will be enabled by migration 055 with is_admin() function)
+-- CREATE POLICY "admin_workflows_full_access" ON workflows
+--   FOR ALL
+--   USING (public.is_admin(auth.uid()));
 
--- Workflow Executions: Admin full access
-CREATE POLICY "admin_executions_full_access" ON workflow_executions
-  FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.admins
-      WHERE user_id = auth.uid()
-    )
-  );
+-- Workflow Executions: Admin full access (will be enabled by migration 055 with is_admin() function)
+-- CREATE POLICY "admin_executions_full_access" ON workflow_executions
+--   FOR ALL
+--   USING (public.is_admin(auth.uid()));
 
--- Workflow Logs: Admin full access
-CREATE POLICY "admin_logs_full_access" ON workflow_logs
-  FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.admins
-      WHERE user_id = auth.uid()
-    )
-  );
+-- Workflow Logs: Admin full access (will be enabled by migration 055 with is_admin() function)
+-- CREATE POLICY "admin_logs_full_access" ON workflow_logs
+--   FOR ALL
+--   USING (public.is_admin(auth.uid()));
 
 -- System can insert executions and logs (used by workflow engine API)
 CREATE POLICY "system_insert_executions" ON workflow_executions

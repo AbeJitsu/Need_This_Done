@@ -29,10 +29,13 @@
 -- For testing purposes, we'll insert a placeholder that matches the default
 -- Supabase test user. In production, you'd replace this with the real UUID.
 
--- Insert admin user role
--- Note: Replace 'placeholder-uuid-here' with actual admin user UUID from Supabase Studio
+-- Insert admin user role (only if a user exists in auth.users)
+-- In local dev, create a user via Supabase Studio first, then re-run seed
+-- or use: supabase db reset after creating a user
 INSERT INTO public.user_roles (user_id, role)
-VALUES ('00000000-0000-0000-0000-000000000000'::UUID, 'admin')
+SELECT id, 'admin'
+FROM auth.users
+LIMIT 1
 ON CONFLICT (user_id) DO NOTHING;
 
 -- ============================================================================
@@ -254,10 +257,9 @@ ON CONFLICT (slug) DO NOTHING;
 
 INSERT INTO public.product_waitlist (product_id, email, created_at)
 VALUES
-  ('prod_test_website_123', 'test.customer@example.com', NOW() - INTERVAL '15 days'),
-  ('prod_test_addon_456', 'another.user@example.com', NOW() - INTERVAL '8 days'),
-  ('prod_test_service_789', 'third.customer@example.com', NOW() - INTERVAL '3 days')
-ON CONFLICT (product_id, email) DO NOTHING;
+  ('00000000-0000-0000-0000-000000000101', 'test.customer@example.com', NOW() - INTERVAL '15 days'),
+  ('00000000-0000-0000-0000-000000000102', 'another.user@example.com', NOW() - INTERVAL '8 days'),
+  ('00000000-0000-0000-0000-000000000103', 'third.customer@example.com', NOW() - INTERVAL '3 days');
 
 -- ============================================================================
 -- SECTION 5: SAMPLE SAVED ADDRESSES
@@ -299,7 +301,7 @@ ON CONFLICT DO NOTHING;
 -- Seed pages with example content for testing inline editing.
 -- These are referenced by the frontend pages (e.g., /about, /services).
 
-INSERT INTO public.pages (slug, title, content, status)
+INSERT INTO public.pages (slug, title, content, is_published, published_at)
 VALUES
   (
     'services',
@@ -327,7 +329,8 @@ VALUES
         }
       ]
     }',
-    'published'
+    true,
+    NOW()
   )
 ON CONFLICT (slug) DO NOTHING;
 

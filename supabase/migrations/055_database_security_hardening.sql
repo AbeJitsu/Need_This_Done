@@ -6,11 +6,65 @@
 -- Impact: Zero-breaking changes to API (RLS policies transparent to service role)
 -- ============================================================================
 -- Timeline:
+-- - Section 0: Create user_roles table + is_admin() function (required for other sections)
 -- - Sections 1-2: Enable RLS + replace unsafe JWT metadata checks
 -- - Section 3: Secure views to SECURITY INVOKER pattern
 -- - Section 4: Encrypt OAuth tokens
 -- - Section 5: Remove auth.users exposure
 -- ============================================================================
+
+-- ============================================================================
+-- SECTION 0: CREATE SECURE ADMIN ROLE SYSTEM (Must come FIRST)
+-- ============================================================================
+-- Create user_roles table and is_admin() function that other sections depend on
+
+-- 0a. Create user_roles table if it doesn't exist
+CREATE TABLE IF NOT EXISTS public.user_roles (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  role TEXT NOT NULL CHECK (role IN ('admin', 'customer')),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Enable RLS on user_roles (only admins and self can read)
+ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can read own role" ON public.user_roles;
+CREATE POLICY "Users can read own role"
+  ON public.user_roles
+  FOR SELECT
+  USING (user_id = auth.uid());
+
+-- Index for faster lookups
+CREATE INDEX IF NOT EXISTS idx_user_roles_role ON public.user_roles(role);
+
+-- 0b. Create is_admin() helper function BEFORE using it in policies
+-- This function is SECURITY DEFINER, so it can safely query user_roles without RLS filtering
+CREATE OR REPLACE FUNCTION public.is_admin(check_user_id UUID)
+RETURNS BOOLEAN
+LANGUAGE SQL
+SECURITY DEFINER
+STABLE
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.user_roles
+    WHERE user_roles.user_id = check_user_id AND user_roles.role = 'admin'
+  );
+$$;
+
+-- Now create the admin read policy (uses is_admin function that now exists)
+DROP POLICY IF EXISTS "Admins can read all roles" ON public.user_roles;
+CREATE POLICY "Admins can read all roles"
+  ON public.user_roles
+  FOR SELECT
+  USING (public.is_admin(auth.uid()));
+
+DROP POLICY IF EXISTS "Service role can manage roles" ON public.user_roles;
+CREATE POLICY "Service role can manage roles"
+  ON public.user_roles
+  FOR ALL
+  USING (true);
 
 -- ============================================================================
 -- SECTION 1: ENABLE RLS ON CUSTOM TABLES (8 Tables, 134 Errors)
@@ -46,7 +100,7 @@ ALTER TABLE public.saved_addresses ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users access their own saved addresses"
   ON public.saved_addresses
   FOR ALL
-  USING (user_id = auth.uid());
+  USING (user_email = COALESCE(auth.jwt() ->> 'email', ''));
 
 -- Admins can access all addresses for support
 CREATE POLICY "Admins can access all saved addresses"
@@ -69,7 +123,7 @@ CREATE POLICY "Anyone can read product categories"
 -- Only admins can modify categories
 CREATE POLICY "Admins can modify product categories"
   ON public.product_categories
-  FOR INSERT, UPDATE, DELETE
+  FOR ALL
   USING (EXISTS (
     SELECT 1 FROM public.user_roles
     WHERE user_roles.user_id = auth.uid() AND user_roles.role = 'admin'
@@ -87,7 +141,7 @@ CREATE POLICY "Anyone can read product category mappings"
 -- Admin write access only
 CREATE POLICY "Admins can manage product category mappings"
   ON public.product_category_mappings
-  FOR INSERT, UPDATE, DELETE
+  FOR ALL
   USING (EXISTS (
     SELECT 1 FROM public.user_roles
     WHERE user_roles.user_id = auth.uid() AND user_roles.role = 'admin'
@@ -147,57 +201,13 @@ CREATE POLICY "Admins can view campaign click analytics"
 -- Service role can insert clicks (from email webhook handlers)
 
 -- ============================================================================
--- SECTION 2: CREATE SECURE ADMIN ROLE SYSTEM (23 Errors)
+-- SECTION 2: UPDATE EXISTING POLICIES (23 Errors)
 -- ============================================================================
 -- Problem: Existing policies reference JWT metadata (raw_user_meta_data)
--- Solution: Create user_roles table + is_admin() function for secure admin checks
+-- Solution: Replace with secure admin checks using is_admin() function
 -- This removes the dependency on user-editable JWT claims
 
--- 2a. Create user_roles table if it doesn't exist
-CREATE TABLE IF NOT EXISTS public.user_roles (
-  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  role TEXT NOT NULL CHECK (role IN ('admin', 'customer')),
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
-);
-
--- Enable RLS on user_roles (only admins and self can read)
-ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can read own role"
-  ON public.user_roles
-  FOR SELECT
-  USING (user_id = auth.uid());
-
-CREATE POLICY "Admins can read all roles"
-  ON public.user_roles
-  FOR SELECT
-  USING (is_admin(auth.uid()));
-
-CREATE POLICY "Service role can manage roles"
-  ON public.user_roles
-  FOR ALL
-  USING (true);
-
--- Index for faster lookups
-CREATE INDEX IF NOT EXISTS idx_user_roles_role ON public.user_roles(role);
-
--- 2b. Create is_admin() helper function
--- This function is SECURITY DEFINER, so it can safely query user_roles without RLS filtering
-CREATE OR REPLACE FUNCTION public.is_admin(user_id UUID)
-RETURNS BOOLEAN
-LANGUAGE SQL
-SECURITY DEFINER
-STABLE
-AS $$
-  SELECT EXISTS (
-    SELECT 1
-    FROM public.user_roles
-    WHERE user_roles.user_id = $1 AND user_roles.role = 'admin'
-  );
-$$;
-
--- 2c. Update all existing policies that reference raw_user_meta_data
+-- 2a. Update all existing policies that reference raw_user_meta_data
 -- These tables have problematic policies:
 -- - blog_posts (3 policies)
 -- - changelog_entries (3 policies)
@@ -396,15 +406,16 @@ SELECT
   r.user_id,
   r.rating,
   r.title,
-  r.comment,
-  r.verified_purchase,
+  r.content,
+  r.is_verified_purchase,
   r.created_at,
   r.updated_at,
-  COUNT(*) FILTER (WHERE helpful = true) AS helpful_count,
-  COUNT(*) FILTER (WHERE helpful = false) AS unhelpful_count
+  COUNT(*) FILTER (WHERE rv.vote_type = 'helpful') AS helpful_count,
+  COUNT(*) FILTER (WHERE rv.vote_type = 'not_helpful') AS unhelpful_count
 FROM public.reviews r
-GROUP BY r.id, r.product_id, r.user_id, r.rating, r.title, r.comment,
-         r.verified_purchase, r.created_at, r.updated_at;
+LEFT JOIN public.review_votes rv ON r.id = rv.review_id
+GROUP BY r.id, r.product_id, r.user_id, r.rating, r.title, r.content,
+         r.is_verified_purchase, r.created_at, r.updated_at;
 
 -- 3b. featured_templates view
 DROP VIEW IF EXISTS public.featured_templates CASCADE;
@@ -412,7 +423,7 @@ DROP VIEW IF EXISTS public.featured_templates CASCADE;
 CREATE VIEW public.featured_templates WITH (security_invoker = true) AS
 SELECT
   t.id,
-  t.title,
+  t.name,
   t.slug,
   t.description,
   t.thumbnail_url,
@@ -441,21 +452,18 @@ GROUP BY pv.page_id, DATE(pv.viewed_at)
 ORDER BY view_date DESC;
 
 -- 3d. trending_products view
+-- Note: Products live in Medusa (not Supabase), so this view aggregates
+-- interaction data by product_id. Product details are resolved client-side.
 DROP VIEW IF EXISTS public.trending_products CASCADE;
 
 CREATE VIEW public.trending_products WITH (security_invoker = true) AS
 SELECT
-  p.id,
-  p.title,
-  p.slug,
-  p.image_url,
-  p.price,
-  COUNT(DISTINCT ov.user_id) AS recent_views,
-  COUNT(DISTINCT oi.order_id) AS recent_orders
-FROM public.product p
-LEFT JOIN public.page_views ov ON ov.page_id = p.id AND ov.viewed_at > now() - interval '7 days'
-LEFT JOIN public.order_items oi ON oi.product_id = p.id AND oi.created_at > now() - interval '7 days'
-GROUP BY p.id, p.title, p.slug, p.image_url, p.price
+  pi.product_id,
+  COUNT(*) FILTER (WHERE pi.interaction_type = 'view') AS recent_views,
+  COUNT(*) FILTER (WHERE pi.interaction_type = 'purchase') AS recent_orders
+FROM public.product_interactions pi
+WHERE pi.created_at > now() - interval '7 days'
+GROUP BY pi.product_id
 ORDER BY recent_views DESC, recent_orders DESC;
 
 -- 3e. popular_templates view
@@ -464,7 +472,7 @@ DROP VIEW IF EXISTS public.popular_templates CASCADE;
 CREATE VIEW public.popular_templates WITH (security_invoker = true) AS
 SELECT
   t.id,
-  t.title,
+  t.name,
   t.slug,
   t.description,
   t.thumbnail_url,
@@ -478,21 +486,18 @@ WHERE t.status = 'approved'
 ORDER BY t.download_count DESC, t.average_rating DESC;
 
 -- 3f. popular_products view
+-- Note: Products live in Medusa (not Supabase), so this view aggregates
+-- interaction and review data by product_id. Product details resolved client-side.
 DROP VIEW IF EXISTS public.popular_products CASCADE;
 
 CREATE VIEW public.popular_products WITH (security_invoker = true) AS
 SELECT
-  p.id,
-  p.title,
-  p.slug,
-  p.image_url,
-  p.price,
-  COUNT(oi.id) AS order_count,
+  pi.product_id,
+  COUNT(*) FILTER (WHERE pi.interaction_type = 'purchase') AS order_count,
   AVG(r.rating) AS average_rating
-FROM public.product p
-LEFT JOIN public.order_items oi ON oi.product_id = p.id
-LEFT JOIN public.reviews r ON r.product_id = p.id
-GROUP BY p.id, p.title, p.slug, p.image_url, p.price
+FROM public.product_interactions pi
+LEFT JOIN public.reviews r ON r.product_id = pi.product_id
+GROUP BY pi.product_id
 ORDER BY order_count DESC, average_rating DESC;
 
 -- 3g. cart_reminder_stats view

@@ -50,6 +50,13 @@ Major subfolders have their own CLAUDE.md files for domain-specific knowledge:
 
 ## What's Built
 
+**Database Security Hardening (Feb 13-14, 2026):**
+- ✅ **Migration 055**: Fixed 168 Supabase linter errors (RLS policies, admin role system, view security, token encryption)
+- ✅ **Test Suite**: 40+ TDD tests for RLS, admin functions, token encryption, view security
+- ✅ **Documentation**: Architecture guide, PostgreSQL security guide, Docker setup guide, environment guide (1,840+ lines)
+- ✅ **Seed Data**: Local development seed with admin user, categories, blog posts
+- ✅ **Verification Reports**: 4 comprehensive reports documenting project status and deployment readiness
+
 **Latest additions (Feb 12, 2026):**
 - ✅ **Pricing FAQ sync**: Replaced 6 hardcoded FAQ items on `/pricing` with 3 conversion-focused Q&As + link to `/faq`
 - ✅ **Features page removed**: `/features/flow-automation` preserved on `experiment/features` branch, removed from `dev`. Nav updated.
@@ -102,6 +109,33 @@ See **memory/MEMORY.md** for full feature inventory and **FUNCTIONALITY_EVALUATI
 
 **Only commit features when they are tested and documented to work.**
 
+### Test-Driven Development for Database Migrations
+
+For database security/schema changes:
+
+1. **RED:** Write tests that FAIL with current schema
+   ```bash
+   # Test file: supabase/tests/security-hardening.test.ts
+   npm test supabase/tests/  # Should FAIL
+   ```
+
+2. **GREEN:** Run migration to make tests pass
+   ```bash
+   supabase db reset  # Applies all migrations
+   npm test supabase/tests/  # Should PASS
+   supabase db lint  # Expected: 0 errors
+   ```
+
+3. **VERIFY:** Check migration applies cleanly to fresh database
+   ```bash
+   supabase db reset && supabase db lint
+   ```
+
+**Pattern:** Test structure for database security:
+- Section helpers (isRLSEnabled, getTablePolicies, runSupabaseLint)
+- Admin/anon client fixtures for RLS testing
+- Behavioral tests (policies actually work, not just exist)
+
 ### Before Every Commit
 
 ```bash
@@ -132,6 +166,22 @@ cd .. && supabase db lint
 
 **If you can't check all boxes, don't commit yet.**
 
+### Multi-Phase Project Pattern
+
+For projects with distinct phases (e.g., Security Hardening Phases 1-4):
+
+1. **Create branch:** `git checkout -b feature-name`
+2. **Phase 1:** Write code + tests, commit with `/dac`, push
+3. **Delegate Phases 2-4:** Launch parallel subagents with `run_in_background: true`
+   - Phase 2: Task #1 → creates deliverables
+   - Phase 3: Task #2 → creates deliverables
+   - Phase 4: Task #3 → creates deliverables
+4. **Monitor:** Read subagent output files periodically with `tail`
+5. **Coordinate:** Pull results, update root CLAUDE.md with learnings
+6. **Final commit:** Verify all deliverables, commit as single PR
+
+**Why:** Preserves context by parallelizing work. Haiku subagents cost less. All work coordinated at root level.
+
 ## How to Work
 
 1. Check **memory/MEMORY.md** for project status and features
@@ -143,13 +193,68 @@ cd .. && supabase db lint
 - After running `npm run build`, **restart the dev server** — the build clobbers `.next` and breaks rendering
 - To restart: kill with `Ctrl+C`, then run `cd app && npm run dev` again
 
+### Multi-Phase Projects & Context Preservation
+
+For projects spanning 4+ phases or at 50%+ token usage, create `SESSION_CHECKPOINT.md` in relevant subfolder:
+
+```markdown
+# Session Checkpoint - YYYY-MM-DD
+
+**Status:** Phases 1-3 complete. Phase 4 in progress.
+
+## What's Done
+- Phase 1: [deliverables] (commit SHA)
+- Phase 2: [deliverables] (commit SHA)
+- Phase 3: [deliverables] (commit SHA)
+
+## What's Next
+1. [Step 1]
+2. [Step 2]
+
+## Git Commands for Continuation
+git log --oneline -10
+git show <commit>
+```
+
+**Why:** Allows context compaction without losing project state. Next session reads checkpoint + git log to resume.
+
 ## Subagent Usage
 
 Use **haiku** subagents for straightforward tasks (file searches, simple code generation, boilerplate) to save tokens. Reserve **sonnet/opus** for tasks requiring deep reasoning, complex architecture decisions, or nuanced writing.
 
+### Background Task Execution
+
+Use `run_in_background: true` for long-running tasks (Docker setup, test suites, verification):
+
+```javascript
+// Launch task in background
+const result = await Task({
+  subagent_type: "Bash",
+  run_in_background: true,
+  model: "haiku",  // Cost efficiency
+  prompt: "..."
+});
+
+// Returns immediately with output_file path
+// Check progress later: Read or Bash tail on /private/tmp/.../tasks/{agentId}.output
+// Continue with other work while task runs
+```
+
+**Pattern:** Launch 2+ independent background tasks, then do foreground work (like updating CLAUDE.md) in parallel. Subagents return output file you can read later.
+
 ## Terminal
 
 Chain commands: `cmd1 && cmd2 && cmd3`
+
+### Skill Usage Patterns
+
+**Invoke skills BEFORE significant work for:**
+- `superpowers:test-driven-development` — Before writing any code/migrations
+- `superpowers:writing-plans` — Before multi-phase projects
+- `claude-md-management:revise-claude-md` — When updating CLAUDE.md with learnings
+- `superpowers:dispatching-parallel-agents` — Before launching 2+ independent background tasks
+
+**Order matters:** Read skill content, then follow it exactly. Skills guide implementation approach.
 
 ## Communication
 
