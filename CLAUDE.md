@@ -21,6 +21,19 @@ Think of it like a good conversation: you don't start by asking for something, a
 
 Speak like a friend over coffee. Easy to understand.
 
+## Subfolder CLAUDE.md Pattern
+
+Major subfolders have their own CLAUDE.md files for domain-specific knowledge:
+
+- **`/supabase/CLAUDE.md`** - Database conventions, migration patterns, RLS security, Supabase CLI
+- **`/app/CLAUDE.md`** - Frontend patterns, Next.js conventions, component architecture
+- **`/medusa/CLAUDE.md`** - Backend API patterns, Medusa conventions (when needed)
+- **`/scripts/CLAUDE.md`** - Automation scripts, seed data patterns
+
+**Why:** Keeps context local to where work happens. Database learnings stay near migrations, frontend patterns near components.
+
+**When working in a subfolder:** Always read that folder's CLAUDE.md first to understand local conventions.
+
 ## Quick Reference
 
 | Task                    | Command                         |
@@ -85,11 +98,45 @@ Speak like a friend over coffee. Easy to understand.
 
 See **memory/MEMORY.md** for full feature inventory and **FUNCTIONALITY_EVALUATION_FIXES.md** for reliability fixes.
 
+## Commit Quality Standard
+
+**Only commit features when they are tested and documented to work.**
+
+### Before Every Commit
+
+```bash
+# 1. Run relevant tests
+npm run test:e2e          # Frontend features
+npm run test:a11y         # UI components
+npm test security-*.test  # Database changes (in supabase/tests/)
+
+# 2. Verify feature works manually
+cd app && npm run dev
+# Click through the feature, verify behavior
+
+# 3. For database changes: verify lint passes
+cd .. && supabase db lint
+# Expected: 0 errors
+
+# 4. THEN draft commit
+/dac
+```
+
+### Commit Checklist
+
+- [ ] Tests pass (automated)
+- [ ] Feature works (manual verification)
+- [ ] No lint errors (if database changes)
+- [ ] Code follows patterns in relevant CLAUDE.md
+- [ ] Breaking changes documented (if any)
+
+**If you can't check all boxes, don't commit yet.**
+
 ## How to Work
 
 1. Check **memory/MEMORY.md** for project status and features
 2. Run `cd app && npm run dev` to start the dev server
-3. Run `/dac` to draft commits (never commit directly)
+3. Run `/dac` to draft commits (only after tests pass and feature works)
 
 **Important Dev Server Notes:**
 - Dev server runs on port 3000 (`http://localhost:3000`)
