@@ -602,6 +602,7 @@ export default function UnifiedPricingPage() {
                       accent: 'text-emerald-400',
                       badge: 'from-emerald-500 to-emerald-600',
                       shadow: 'shadow-emerald-500/25',
+                      border: 'ring-4 ring-inset ring-emerald-400/60',
                     },
                     // Growth (blue)
                     {
@@ -612,6 +613,7 @@ export default function UnifiedPricingPage() {
                       accent: 'text-blue-400',
                       badge: 'from-blue-500 to-blue-600',
                       shadow: 'shadow-blue-500/25',
+                      border: 'ring-4 ring-inset ring-blue-400/60',
                     },
                     // Pro (purple)
                     {
@@ -622,6 +624,7 @@ export default function UnifiedPricingPage() {
                       accent: 'text-purple-400',
                       badge: 'from-purple-500 to-purple-600',
                       shadow: 'shadow-purple-500/25',
+                      border: 'ring-4 ring-inset ring-purple-400/60',
                     },
                   ];
                   const cardStyles = cardStylesByIndex[index] || cardStylesByIndex[0];
@@ -634,7 +637,7 @@ export default function UnifiedPricingPage() {
                         p-8 lg:p-10 hover:-translate-y-2
                         md:row-span-6 md:grid md:grid-rows-subgrid
                         ${cardStyles.bg}
-                        ${isPopular ? `ring-2 ring-purple-400/50 shadow-2xl shadow-purple-500/20` : 'shadow-xl'}
+                        ${cardStyles.border} ${isPopular ? 'shadow-2xl shadow-purple-500/20' : 'shadow-xl'}
                       `}
                     >
                       {/* Glow wrapper — clips blurred orbs to card shape without clipping the badge */}
