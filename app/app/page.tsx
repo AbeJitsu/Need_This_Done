@@ -18,7 +18,18 @@ export const revalidate = 3600;
 
 export const metadata = {
   title: 'NeedThisDone - Get Your Projects Done Right',
-  description: 'Professional project services - submit your project, get it done right.',
+  description: 'Professional web development, automation, and AI services. Custom websites from $500, workflow automation from $150, managed AI from $500/mo. Orlando-based, serving clients nationwide.',
+  alternates: { canonical: '/' },
+  openGraph: {
+    title: 'NeedThisDone - Get Your Projects Done Right',
+    description: 'Professional web development, automation, and AI services. Custom websites, workflow automation, and managed AI solutions.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image' as const,
+    title: 'NeedThisDone - Get Your Projects Done Right',
+    description: 'Professional web development, automation, and AI services. Custom websites, workflow automation, and managed AI solutions.',
+  },
 };
 
 // ============================================================================

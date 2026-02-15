@@ -10,7 +10,18 @@ import ProductListingPage from '@/components/shop/ProductListingPage';
 
 export const metadata: Metadata = {
   title: 'Shop - NeedThisDone',
-  description: 'Browse and discover our products and services',
+  description: 'Browse web development packages, add-ons, and professional services. Find the right solution for your project.',
+  alternates: { canonical: '/shop' },
+  openGraph: {
+    title: 'Shop - NeedThisDone',
+    description: 'Browse web development packages, add-ons, and professional services.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Shop - NeedThisDone',
+    description: 'Browse web development packages, add-ons, and professional services.',
+  },
 };
 
 export default function ShopPage() {

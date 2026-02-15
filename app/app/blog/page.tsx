@@ -19,6 +19,17 @@ export const metadata = {
   title: 'Blog - NeedThisDone',
   description:
     'Tips, insights, and behind-the-scenes looks at how we help busy professionals get things done.',
+  alternates: { canonical: '/blog' },
+  openGraph: {
+    title: 'Blog - NeedThisDone',
+    description: 'Tips, insights, and behind-the-scenes looks at web development, automation, and AI.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image' as const,
+    title: 'Blog - NeedThisDone',
+    description: 'Tips, insights, and behind-the-scenes looks at web development, automation, and AI.',
+  },
 };
 
 // ============================================================================

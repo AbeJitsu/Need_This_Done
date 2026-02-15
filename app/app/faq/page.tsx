@@ -17,7 +17,18 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'FAQ - NeedThisDone',
-  description: 'Frequently asked questions about our services.',
+  description: 'Answers to common questions about our web development, automation, and AI services — pricing, timelines, process, and support.',
+  alternates: { canonical: '/faq' },
+  openGraph: {
+    title: 'FAQ - NeedThisDone',
+    description: 'Common questions about our web development, automation, and AI services.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image' as const,
+    title: 'FAQ - NeedThisDone',
+    description: 'Common questions about our web development, automation, and AI services.',
+  },
 };
 
 // ============================================================================
