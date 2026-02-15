@@ -16,6 +16,11 @@ export const metadata = {
   title: 'Terms of Service - NeedThisDone',
   description: 'The agreement between you and NeedThisDone when using our services.',
   alternates: { canonical: '/terms' },
+  openGraph: {
+    title: 'Terms of Service - NeedThisDone',
+    description: 'The agreement between you and NeedThisDone when using our services.',
+    type: 'website',
+  },
 };
 
 // ============================================================================

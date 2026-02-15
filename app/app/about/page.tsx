@@ -13,6 +13,16 @@ export const metadata: Metadata = {
   description:
     'Meet Abe Reyes, the founder of Need This Done. Full-stack developer, Army veteran, Brazilian Jiu-Jitsu purple belt.',
   alternates: { canonical: '/about' },
+  openGraph: {
+    title: 'About Abe Reyes - Need This Done',
+    description: 'Full-stack developer, Army veteran, BJJ purple belt. Building professional web solutions in Orlando, FL.',
+    type: 'profile',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Abe Reyes - Need This Done',
+    description: 'Full-stack developer, Army veteran, BJJ purple belt. Building professional web solutions in Orlando, FL.',
+  },
 };
 
 export default function AboutPage() {
