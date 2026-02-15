@@ -19,6 +19,7 @@ export const revalidate = 3600;
 export const metadata = {
   title: 'NeedThisDone - Get Your Projects Done Right',
   description: 'Professional project services - submit your project, get it done right.',
+  alternates: { canonical: '/' },
 };
 
 // ============================================================================

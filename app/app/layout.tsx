@@ -150,11 +150,8 @@ export const metadata: Metadata = {
     images: [`${seoConfig.baseUrl}/og-image.png`],
   },
 
-  // Canonical URL
+  // Base URL for resolving relative metadata URLs (used by child pages)
   metadataBase: new URL(seoConfig.baseUrl),
-  alternates: {
-    canonical: '/',
-  },
 
   // Google Search Console verification
   verification: {

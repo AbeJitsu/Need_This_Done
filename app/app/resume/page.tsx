@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: 'Resume - Abe Reyes | Need This Done',
   description:
     'Full Stack Developer & AI Systems Builder. Production e-commerce, RAG chatbot, Python automation.',
+  alternates: { canonical: '/resume' },
   openGraph: {
     title: 'Resume - Abe Reyes | Full Stack Developer & AI Systems Builder',
     description:

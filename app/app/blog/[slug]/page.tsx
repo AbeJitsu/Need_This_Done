@@ -52,6 +52,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${post.meta_title || post.title} - NeedThisDone Blog`,
     description: post.meta_description || post.excerpt || undefined,
+    alternates: { canonical: `/blog/${slug}` },
     openGraph: {
       title: post.meta_title || post.title,
       description: post.meta_description || post.excerpt || undefined,

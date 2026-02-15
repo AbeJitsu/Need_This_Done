@@ -12,6 +12,7 @@ import UnifiedPricingPage from '@/components/pricing/UnifiedPricingPage';
 export const metadata: Metadata = {
   title: 'Pricing - NeedThisDone',
   description: 'Simple pricing for websites, automation, and AI. Pay 50% to start, remainder on delivery.',
+  alternates: { canonical: '/pricing' },
 };
 
 export default function PricingPage() {

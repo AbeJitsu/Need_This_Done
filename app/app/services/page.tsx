@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   title: 'Web Development, Automation & AI Services | NeedThisDone',
   description:
     'Professional web development, workflow automation, and managed AI services. Custom websites from $500, automation from $150, AI solutions from $500/mo. Orlando-based, serving clients nationwide.',
+  alternates: { canonical: '/services' },
   openGraph: {
     title: 'Web Development, Automation & AI Services | NeedThisDone',
     description:

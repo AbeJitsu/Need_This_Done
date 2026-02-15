@@ -19,6 +19,7 @@ export const metadata = {
   title: 'Blog - NeedThisDone',
   description:
     'Tips, insights, and behind-the-scenes looks at how we help busy professionals get things done.',
+  alternates: { canonical: '/blog' },
 };
 
 // ============================================================================

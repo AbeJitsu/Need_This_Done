@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Contact Us',
   description: 'Get in touch with NeedThisDone. Submit a project inquiry or book a consultation. Orlando-based professional project services.',
+  alternates: { canonical: '/contact' },
 };
 
 export default function ContactLayout({ children }: { children: React.ReactNode }) {

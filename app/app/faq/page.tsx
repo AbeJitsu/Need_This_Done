@@ -18,6 +18,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'FAQ - NeedThisDone',
   description: 'Frequently asked questions about our services.',
+  alternates: { canonical: '/faq' },
 };
 
 // ============================================================================

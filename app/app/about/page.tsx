@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: 'About - Abe Reyes | Need This Done',
   description:
     'Meet Abe Reyes, the founder of Need This Done. Full-stack developer, Army veteran, Brazilian Jiu-Jitsu purple belt.',
+  alternates: { canonical: '/about' },
 };
 
 export default function AboutPage() {
