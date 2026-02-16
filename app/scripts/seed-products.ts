@@ -125,7 +125,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 500000, // $5,000
     type: 'package',
     collection: 'website-packages',
-    thumbnail: 'https://images.unsplash.com/photo-1734441996803-6fe7d41491db?w=800&h=600&fit=crop&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'package',
       deposit_percent: 50,

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { Search, ChevronDown } from 'lucide-react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Search, ChevronDown, ArrowUpDown } from 'lucide-react';
 import Button from '@/components/Button';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
 import ProductCard from '@/components/ProductCard';
@@ -38,6 +38,7 @@ export default function ProductListingPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<string>('price-desc');
 
   // Fetch products based on search and filters
   const fetchProducts = useCallback(async () => {
@@ -99,6 +100,23 @@ export default function ProductListingPage() {
     }).format(dollars);
   };
 
+  // Sort products client-side based on selected sort option
+  const sortedProducts = useMemo(() => {
+    const sorted = [...products];
+    switch (sortBy) {
+      case 'price-asc':
+        return sorted.sort((a, b) => getProductPrice(a) - getProductPrice(b));
+      case 'price-desc':
+        return sorted.sort((a, b) => getProductPrice(b) - getProductPrice(a));
+      case 'name-asc':
+        return sorted.sort((a, b) => a.title.localeCompare(b.title));
+      case 'name-desc':
+        return sorted.sort((a, b) => b.title.localeCompare(a.title));
+      default:
+        return sorted;
+    }
+  }, [products, sortBy]);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Dark Editorial Hero Section */}
@@ -154,7 +172,7 @@ export default function ProductListingPage() {
               </div>
             </form>
 
-            {/* Category and Price Filters Row - styled for dark background */}
+            {/* Category, Sort, and Price Filters Row */}
             <div className="flex flex-col md:flex-row gap-4 mb-6">
               <CategoryFilter
                 selectedCategory={selectedCategory}
@@ -164,6 +182,26 @@ export default function ProductListingPage() {
                 }}
                 variant="dark"
               />
+
+              {/* Sort dropdown */}
+              <div className="relative md:w-auto w-full">
+                <label htmlFor="sort-select" className="sr-only">Sort products</label>
+                <div className="relative">
+                  <ArrowUpDown className="absolute left-3 top-2.5 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true" />
+                  <select
+                    id="sort-select"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="appearance-none w-full pl-9 pr-8 py-2 border border-white/10 rounded-lg bg-white/10 text-white text-sm font-medium hover:border-emerald-400 hover:bg-white/15 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 cursor-pointer"
+                  >
+                    <option value="price-asc" className="bg-slate-800">Price: Low to High</option>
+                    <option value="price-desc" className="bg-slate-800">Price: High to Low</option>
+                    <option value="name-asc" className="bg-slate-800">Name: A to Z</option>
+                    <option value="name-desc" className="bg-slate-800">Name: Z to A</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-2.5 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true" />
+                </div>
+              </div>
 
               <button
                 id="filter-toggle"
@@ -304,7 +342,7 @@ export default function ProductListingPage() {
               </div>
 
               <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.map((product) => {
+                {sortedProducts.map((product) => {
                   const price = getProductPrice(product);
                   return (
                     <StaggerItem key={product.id} className="h-full">
