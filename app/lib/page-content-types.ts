@@ -31,7 +31,6 @@ export type {
   TrustBadge,
   HowItWorksPageContent,
   ProcessPreviewStep,
-  ConsultationOption,
   HomeServiceCard,
   HomePageContent,
   ContactPageContent,
