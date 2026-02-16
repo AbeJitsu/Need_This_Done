@@ -32,7 +32,7 @@ async function fetchWithRetry(
   try {
     const finalOptions = {
       ...options,
-      // Removed credentials: "include" to test if it's causing response filtering
+      cache: 'no-store' as RequestCache,
       headers: {
         "Content-Type": "application/json",
         ...(PUBLISHABLE_KEY && { "x-publishable-api-key": PUBLISHABLE_KEY }),

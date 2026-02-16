@@ -8,20 +8,23 @@ interface ProductAvailabilityProps {
   productId: string;
   variantId?: string;
   inventoryQuantity?: number;
+  manageInventory?: boolean;
 }
 
 export default function ProductAvailability({
   productId,
   variantId,
   inventoryQuantity,
+  manageInventory,
 }: ProductAvailabilityProps) {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const isInStock = (inventoryQuantity ?? 0) > 0;
-  const lowStock = isInStock && (inventoryQuantity ?? 0) < 3;
+  // Services and digital products don't track inventory — always available
+  const isInStock = manageInventory === false ? true : (inventoryQuantity ?? 0) > 0;
+  const lowStock = isInStock && manageInventory !== false && (inventoryQuantity ?? 0) < 3;
 
   const handleWaitlistSignup = async (e: React.FormEvent) => {
     e.preventDefault();

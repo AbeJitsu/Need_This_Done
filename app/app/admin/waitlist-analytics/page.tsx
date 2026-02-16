@@ -332,6 +332,7 @@ export default function WaitlistAnalyticsDashboard() {
                           alt={product.productName}
                           width={48}
                           height={48}
+                          unoptimized
                           className="rounded object-cover"
                         />
                       )}

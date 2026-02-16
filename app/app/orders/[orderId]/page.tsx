@@ -302,6 +302,7 @@ export default function OrderDetailPage({
                       alt={item.title || 'Product'}
                       width={80}
                       height={80}
+                      unoptimized
                       className="object-cover rounded"
                     />
                   </div>

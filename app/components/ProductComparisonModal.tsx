@@ -70,6 +70,7 @@ export default function ProductComparisonModal() {
                               src={product.image}
                               alt={product.title}
                               fill
+                              unoptimized
                               className="object-cover"
                             />
                           </div>
