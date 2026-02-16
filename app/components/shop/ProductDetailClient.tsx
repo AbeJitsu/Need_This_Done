@@ -44,19 +44,15 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
 
   const inWishlist = isInWishlist(product.id);
 
-  // Get price from first variant's prices array (Medusa structure)
-  const price = product.variants?.[0]?.prices?.[0]?.amount ?? 0;
+  // Get price: Medusa v2 uses calculated_price (requires region_id), v1 uses prices array
+  const variant0 = product.variants?.[0];
+  const price = variant0?.calculated_price?.calculated_amount
+    ?? variant0?.prices?.find((p) => p.currency_code === 'usd')?.amount
+    ?? variant0?.prices?.[0]?.amount
+    ?? 0;
   const image = product.images?.[0]?.url;
   const variants = product.variants || [];
 
-  // Product metadata for smart display
-  const metadata = product.metadata as Record<string, unknown> | undefined;
-  const productType = metadata?.type as string | undefined;
-  const features = metadata?.features as string[] | undefined;
-  const depositPercent = (metadata?.deposit_percent as number) || 50;
-  const depositAmount = Math.round(price * (depositPercent / 100));
-  const remainingAmount = price - depositAmount;
-  const isPackage = productType === 'package';
   const hasMultipleVariants = variants.length > 1;
 
   // ========================================================================
@@ -197,8 +193,8 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             </div>
           )}
 
-          {/* Variant selection */}
-          {variants.length > 0 && (
+          {/* Variant selection — only show when there are multiple options to choose from */}
+          {hasMultipleVariants && (
             <div className="mb-6">
               <label htmlFor="variant-select" className={`block text-sm font-medium ${headingColors.primary} mb-2`}>
                 Select Variant

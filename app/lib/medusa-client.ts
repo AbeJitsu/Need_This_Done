@@ -137,6 +137,21 @@ interface PaginatedProducts {
   count: number;
 }
 
+// Cache region ID to avoid fetching it on every product request
+let cachedRegionId: string | null = null;
+
+async function getDefaultRegionId(): Promise<string | null> {
+  if (cachedRegionId) return cachedRegionId;
+  try {
+    const response = await fetchWithRetry(`${MEDUSA_URL}/store/regions`);
+    const data = await handleResponse<{ regions: { id: string }[] }>(response);
+    cachedRegionId = data.regions?.[0]?.id || null;
+    return cachedRegionId;
+  } catch {
+    return null;
+  }
+}
+
 export const products = {
   /**
    * List products with optional pagination
@@ -154,11 +169,13 @@ export const products = {
     const queryParams = new URLSearchParams();
 
     // Get default region for pricing context (Medusa v2 requires this)
-    const regionsResponse = await fetchWithRetry(`${MEDUSA_URL}/store/regions`);
-    const regionsData = await handleResponse<{ regions: { id: string }[] }>(regionsResponse);
-    if (regionsData.regions?.[0]) {
-      queryParams.append('region_id', regionsData.regions[0].id);
+    const regionId = await getDefaultRegionId();
+    if (regionId) {
+      queryParams.append('region_id', regionId);
     }
+
+    // Include metadata in response
+    queryParams.append('fields', '+metadata');
 
     // Add pagination if provided
     if (params) {
@@ -186,7 +203,12 @@ export const products = {
    * GET /store/products/:id
    */
   get: async (id: string): Promise<Product> => {
-    const response = await fetchWithRetry(`${MEDUSA_URL}/store/products/${id}`);
+    const regionId = await getDefaultRegionId();
+    const queryParams = new URLSearchParams();
+    if (regionId) queryParams.append('region_id', regionId);
+    queryParams.append('fields', '+metadata');
+
+    const response = await fetchWithRetry(`${MEDUSA_URL}/store/products/${id}?${queryParams.toString()}`);
     const data = await handleResponse<{ product: Product }>(response);
     return data.product;
   },
@@ -196,7 +218,13 @@ export const products = {
    * GET /store/products?handle=:handle
    */
   getByHandle: async (handle: string): Promise<Product | null> => {
-    const response = await fetchWithRetry(`${MEDUSA_URL}/store/products?handle=${encodeURIComponent(handle)}`);
+    const regionId = await getDefaultRegionId();
+    const queryParams = new URLSearchParams();
+    queryParams.append('handle', handle);
+    if (regionId) queryParams.append('region_id', regionId);
+    queryParams.append('fields', '+metadata');
+
+    const response = await fetchWithRetry(`${MEDUSA_URL}/store/products?${queryParams.toString()}`);
     const data = await handleResponse<{ products: Product[] }>(response);
     return data.products?.[0] || null;
   },

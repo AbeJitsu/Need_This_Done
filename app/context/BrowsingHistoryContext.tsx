@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useCallback, useEffect, useState } from 'react';
 
 // ============================================================================
 // BROWSING HISTORY CONTEXT
@@ -69,9 +69,12 @@ export function BrowsingHistoryProvider({ children }: { children: React.ReactNod
   // Add a product to recently viewed
   // Moves to front if already exists, removes old entries if exceeds limit
   // ========================================================================
-  const addViewedProduct = (product: ViewedProduct) => {
+  const addViewedProduct = useCallback((product: ViewedProduct) => {
     setViewedProducts((prev) => {
-      // Remove if already exists
+      // Skip if this product is already the most recent entry
+      if (prev[0]?.product_id === product.product_id) return prev;
+
+      // Remove if already exists elsewhere in the list
       const filtered = prev.filter((p) => p.product_id !== product.product_id);
 
       // Add to front with current timestamp
@@ -86,21 +89,21 @@ export function BrowsingHistoryProvider({ children }: { children: React.ReactNod
       // Keep only the most recent items
       return updated.slice(0, MAX_ITEMS);
     });
-  };
+  }, []);
 
   // ========================================================================
   // Remove specific product from history
   // ========================================================================
-  const removeViewedProduct = (productId: string) => {
+  const removeViewedProduct = useCallback((productId: string) => {
     setViewedProducts((prev) => prev.filter((p) => p.product_id !== productId));
-  };
+  }, []);
 
   // ========================================================================
   // Clear all history
   // ========================================================================
-  const clearHistory = () => {
+  const clearHistory = useCallback(() => {
     setViewedProducts([]);
-  };
+  }, []);
 
   return (
     <BrowsingHistoryContext.Provider
