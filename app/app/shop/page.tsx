@@ -1,29 +1,11 @@
-import { Metadata } from 'next';
-import ProductListingPage from '@/components/shop/ProductListingPage';
+import { redirect } from 'next/navigation';
 
 // ============================================================================
-// Shop Page - Product Listing with Search & Filtering
+// Shop Page — Redirects to /pricing
 // ============================================================================
-// What: Displays all products with search and price filtering
-// Why: Lets customers browse and discover products
-// How: Server component with client-side search and filtering
-
-export const metadata: Metadata = {
-  title: 'Shop - NeedThisDone',
-  description: 'Browse web development packages, add-ons, and professional services. Find the right solution for your project.',
-  alternates: { canonical: '/shop' },
-  openGraph: {
-    title: 'Shop - NeedThisDone',
-    description: 'Browse web development packages, add-ons, and professional services.',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Shop - NeedThisDone',
-    description: 'Browse web development packages, add-ons, and professional services.',
-  },
-};
+// The pricing page now serves as both the catalog and the storefront.
+// Product detail pages at /shop/{handle} still work — only the listing redirects.
 
 export default function ShopPage() {
-  return <ProductListingPage />;
+  redirect('/pricing');
 }

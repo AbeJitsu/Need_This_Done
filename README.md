@@ -38,7 +38,7 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║  ✅ Portfolio /work page + case studies  📊 Best Practices: 79%              ║
 ║  ✅ 5 Blog Posts Seeded                                                      ║
 ║  ✅ SEO: OG tags, sitemap, canonicals                                        ║
-║  ✅ Shop: sort dropdown, product images                                      ║
+║  ✅ Pricing + Shop merged (cart on /pricing)                                 ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -755,9 +755,9 @@ supabase db reset
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  MARKETING                    E-COMMERCE                   AUTH             │
-│  /                 (home)     /shop             (catalog)  /login           │
+│  /                 (home)     /pricing          (browse+buy) /login          │
 │  /services                    /shop/[productId] (detail)                    │
-│  /pricing                     /cart                        LEGAL            │
+│                               /cart                        LEGAL            │
 │  /pricing/success             /checkout                    /privacy         │
 │  /how-it-works               /dashboard        (orders)    /terms           │
 │  /faq                                                                       │

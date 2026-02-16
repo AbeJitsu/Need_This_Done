@@ -275,7 +275,7 @@ export default function OrderHistoryPage() {
             <p className="text-gray-600 mb-8">
               You haven't placed any orders yet.
             </p>
-            <Button variant="blue" href="/shop">
+            <Button variant="blue" href="/pricing">
               Browse Products
             </Button>
           </div>

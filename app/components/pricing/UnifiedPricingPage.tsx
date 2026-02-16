@@ -21,12 +21,12 @@ import Button from '@/components/Button';
 import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
 import { alertColors } from '@/lib/colors';
 import { scrollToRef } from '@/lib/scroll-utils';
+import AddToCartButton from '@/components/pricing/AddToCartButton';
 
 // ============================================================================
-// Unified Pricing Page — "Menu Board" Overview
+// Unified Pricing Page — Shoppable "Menu Board"
 // ============================================================================
-// Read-only pricing overview. No cart, no checkout, no commerce.
-// Purpose: Show what's available, link to /shop for purchasing.
+// Browse + buy in one page. Cart buttons alongside "View Details".
 // Quote authorization lives at /quote.
 
 // ============================================================================
@@ -416,13 +416,20 @@ export default function UnifiedPricingPage() {
                           ))}
                         </ul>
 
-                        {/* Row 5: CTA — links to shop detail page */}
-                        <div className="relative z-10 self-end mt-6">
+                        {/* Row 5: CTA — Add to Cart + View Details */}
+                        <div className="relative z-10 self-end mt-6 space-y-3">
+                          <AddToCartButton
+                            variantId={pkg.variantId}
+                            title={pkg.title}
+                            price={pkg.price}
+                            variant="primary"
+                            className={`shadow-lg ${cardStyles.shadow}`}
+                          />
                           <Link
                             href={`/shop/${pkg.handle}`}
-                            className={`w-full py-3.5 px-6 rounded-xl font-semibold text-base transition-all duration-300 bg-white text-gray-900 hover:bg-white/90 shadow-lg ${cardStyles.shadow} flex items-center justify-center gap-2`}
+                            className="w-full py-2.5 px-6 rounded-xl font-semibold text-sm transition-all duration-300 bg-white/10 border border-white/20 text-white hover:bg-white/20 flex items-center justify-center gap-2"
                           >
-                            View Details <ArrowRight size={18} />
+                            View Details <ArrowRight size={16} />
                           </Link>
                         </div>
 
@@ -480,12 +487,21 @@ export default function UnifiedPricingPage() {
                           <span className="text-5xl font-black text-white">${automationService.price / 100}</span>
                           <span className="text-base font-medium text-white/95">per workflow</span>
                         </div>
-                        <Link
-                          href={`/shop/${automationService.handle}`}
-                          className="w-full mt-auto py-3 px-6 rounded-xl font-semibold text-base text-center transition-all duration-300 bg-white/15 border border-white/20 text-white hover:bg-white/25 shadow-lg shadow-purple-500/25 flex items-center justify-center gap-2"
-                        >
-                          View Details <ArrowRight size={18} />
-                        </Link>
+                        <div className="mt-auto space-y-3">
+                          <AddToCartButton
+                            variantId={automationService.variantId}
+                            title={automationService.title}
+                            price={automationService.price}
+                            variant="primary"
+                            className="shadow-lg shadow-purple-500/25"
+                          />
+                          <Link
+                            href={`/shop/${automationService.handle}`}
+                            className="w-full py-2.5 px-6 rounded-xl font-semibold text-sm text-center transition-all duration-300 bg-white/10 border border-white/15 text-white hover:bg-white/20 flex items-center justify-center gap-2"
+                          >
+                            View Details <ArrowRight size={16} />
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </StaggerItem>
@@ -512,12 +528,21 @@ export default function UnifiedPricingPage() {
                           <span className="text-5xl font-black text-white">${subscriptionService.price / 100}</span>
                           <span className="text-base font-medium text-white/95">per month</span>
                         </div>
-                        <Link
-                          href={`/shop/${subscriptionService.handle}`}
-                          className="w-full mt-auto py-3 px-6 rounded-xl font-semibold text-base text-center transition-all duration-300 bg-white/10 border border-white/15 text-white hover:bg-white/20 shadow-lg shadow-gold-500/25 flex items-center justify-center gap-2"
-                        >
-                          View Details <ArrowRight size={18} />
-                        </Link>
+                        <div className="mt-auto space-y-3">
+                          <AddToCartButton
+                            variantId={subscriptionService.variantId}
+                            title={subscriptionService.title}
+                            price={subscriptionService.price}
+                            variant="primary"
+                            className="shadow-lg shadow-gold-500/25"
+                          />
+                          <Link
+                            href={`/shop/${subscriptionService.handle}`}
+                            className="w-full py-2.5 px-6 rounded-xl font-semibold text-sm text-center transition-all duration-300 bg-white/10 border border-white/15 text-white hover:bg-white/20 flex items-center justify-center gap-2"
+                          >
+                            View Details <ArrowRight size={16} />
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </StaggerItem>
@@ -527,7 +552,7 @@ export default function UnifiedPricingPage() {
           </section>
 
           {/* ================================================================== */}
-          {/* ADD-ONS TEASER — read-only preview, links to shop */}
+          {/* ADD-ONS — full catalog with cart buttons */}
           {/* ================================================================== */}
           {addons.length > 0 && (
             <section className="py-24 scroll-mt-8">
@@ -549,7 +574,7 @@ export default function UnifiedPricingPage() {
 
                 {/* Read-only add-on tiles (show first 6) */}
                 <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {addons.slice(0, 6).map((addon) => {
+                  {addons.map((addon) => {
                     const Icon = ADDON_ICONS[addon.handle] || FileText;
                     return (
                       <StaggerItem key={addon.id} className="h-full">
@@ -563,8 +588,16 @@ export default function UnifiedPricingPage() {
                           <p className="text-sm leading-relaxed mb-4 flex-grow text-gray-500">
                             {addon.description}
                           </p>
-                          <div className="text-2xl font-black text-gray-900 mt-auto">
-                            +${addon.price / 100}
+                          <div className="flex items-center justify-between mt-auto pt-2">
+                            <span className="text-2xl font-black text-gray-900">
+                              +${addon.price / 100}
+                            </span>
+                            <AddToCartButton
+                              variantId={addon.variantId}
+                              title={addon.title}
+                              price={addon.price}
+                              variant="secondary"
+                            />
                           </div>
                         </div>
                       </StaggerItem>
@@ -572,15 +605,6 @@ export default function UnifiedPricingPage() {
                   })}
                 </StaggerContainer>
 
-                {/* Link to shop */}
-                <div className="mt-10 text-center">
-                  <Link
-                    href="/shop"
-                    className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-colors shadow-lg"
-                  >
-                    Browse All Add-ons <ArrowRight size={18} />
-                  </Link>
-                </div>
               </div>
             </section>
           )}

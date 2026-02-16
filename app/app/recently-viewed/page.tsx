@@ -124,7 +124,7 @@ export default function RecentlyViewedPage() {
             <p className={`${formInputColors.helper} mb-6 leading-relaxed`}>
               When you explore our products, they'll appear here for quick access later.
             </p>
-            <Link href="/shop">
+            <Link href="/pricing">
               <Button variant="blue" size="lg" className="w-full">
                 Browse Products
               </Button>
@@ -227,7 +227,7 @@ export default function RecentlyViewedPage() {
         <p className={`${formInputColors.helper} mb-4`}>
           Want to explore more? Check out our full product catalog.
         </p>
-        <Link href="/shop">
+        <Link href="/pricing">
           <Button variant="purple">
             Browse All Products
           </Button>
