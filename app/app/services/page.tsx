@@ -311,8 +311,17 @@ export default function ServicesPage() {
                 See Pricing
               </Link>
               <Link
-                href="/contact"
+                href="/shop"
                 className="inline-flex items-center px-8 py-3 rounded-xl bg-white/10 text-white font-semibold hover:bg-white/20 transition-colors border border-white/10"
+              >
+                Browse Shop
+                <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center px-8 py-3 rounded-xl bg-white/5 text-slate-300 font-medium hover:bg-white/10 transition-colors border border-white/5"
               >
                 Or book a free call
               </Link>

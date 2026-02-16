@@ -16,6 +16,7 @@ interface Product {
   description?: string;
   handle: string;
   images?: { url: string }[];
+  metadata?: Record<string, unknown>;
   variants?: Array<{
     calculated_price?: { calculated_amount: number };
   }>;
@@ -100,138 +101,147 @@ export default function ProductListingPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section with Search */}
-      <section className="py-8 md:py-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-          <div className="relative overflow-hidden py-8">
-            {/* Gradient orbs - emerald/blue theme */}
-            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-emerald-100 to-blue-100 blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-gradient-to-tr from-blue-100 to-emerald-100 blur-2xl" />
-            <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-emerald-100 blur-xl" />
+      {/* Dark Editorial Hero Section */}
+      <section className="pt-8 md:pt-12 pb-4">
+        <div className="relative overflow-hidden py-12 md:py-16 md:max-w-6xl md:mx-auto md:rounded-3xl">
+          {/* Dark gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
 
-            <div className="relative z-10">
-          <FadeIn direction="up" triggerOnScroll={false}>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
-            Discover Our Products
-          </h1>
-          <p className="text-lg text-gray-600 mb-8">
-            Find exactly what you need with our advanced search and filtering
-          </p>
-          </FadeIn>
+          {/* Decorative glow orbs */}
+          <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl" />
 
-          {/* Search Form */}
-          <form onSubmit={handleSearch} className="mb-6">
-            <label htmlFor="product-search" className="sr-only">Search products</label>
-            <div className="flex gap-2">
-              <div className="flex-1 relative bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100">
-                <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" aria-hidden="true" />
-                <input
-                  id="product-search"
-                  type="text"
-                  placeholder="Search products by name or description..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-transparent rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors duration-200"
-                />
+          <div className="relative z-10 px-6 sm:px-8 md:px-12">
+            <FadeIn direction="up" triggerOnScroll={false}>
+              {/* Accent line + label */}
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-purple-400" />
+                <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Shop</span>
               </div>
-              <Button
-                variant="green"
-                type="submit"
-                className="px-6"
-              >
-                Search
-              </Button>
-            </div>
-          </form>
 
-          {/* Category and Price Filters Row */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <CategoryFilter
-              selectedCategory={selectedCategory}
-              onCategoryChange={(category) => {
-                setSelectedCategory(category);
-                setHasSearched(true);
-              }}
-            />
+              {/* Dramatic heading */}
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[0.95] mb-4">
+                Browse &amp; Build.
+              </h1>
+
+              <p className="text-xl text-slate-400 max-w-xl leading-relaxed mb-8">
+                Find exactly what you need for your next project
+              </p>
+            </FadeIn>
+
+            {/* Search Form - styled for dark background */}
+            <form onSubmit={handleSearch} className="mb-6">
+              <label htmlFor="product-search" className="sr-only">Search products</label>
+              <div className="flex gap-2">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-3 w-5 h-5 text-slate-400" aria-hidden="true" />
+                  <input
+                    id="product-search"
+                    type="text"
+                    placeholder="Search products by name or description..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl text-white placeholder-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 hover:border-emerald-400/50 transition-colors duration-200"
+                  />
+                </div>
+                <Button
+                  variant="green"
+                  type="submit"
+                  className="px-6"
+                >
+                  Search
+                </Button>
+              </div>
+            </form>
+
+            {/* Category and Price Filters Row - styled for dark background */}
+            <div className="flex flex-col md:flex-row gap-4 mb-6">
+              <CategoryFilter
+                selectedCategory={selectedCategory}
+                onCategoryChange={(category) => {
+                  setSelectedCategory(category);
+                  setHasSearched(true);
+                }}
+                variant="dark"
+              />
 
               <button
-              id="filter-toggle"
-              onClick={() => setShowFilters(!showFilters)}
-              aria-expanded={showFilters}
-              aria-controls="price-filters"
-              className="flex items-center justify-between gap-2 px-4 py-2 border border-gray-300 rounded-lg bg-white hover:border-emerald-500 hover:bg-emerald-50 transition-all duration-200 md:w-auto w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-safe:hover:scale-[1.02]"
-            >
-              <span className="text-sm font-medium text-gray-700">Price Range</span>
-              <ChevronDown
-                className={`w-5 h-5 text-gray-600 transition-transform ${
-                  showFilters ? 'rotate-180' : ''
-                }`}
-                aria-hidden="true"
-              />
-            </button>
-          </div>
+                id="filter-toggle"
+                onClick={() => setShowFilters(!showFilters)}
+                aria-expanded={showFilters}
+                aria-controls="price-filters"
+                className="flex items-center justify-between gap-2 px-4 py-2 border border-white/10 rounded-lg bg-white/10 text-white hover:border-emerald-400 hover:bg-white/15 transition-all duration-200 md:w-auto w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 motion-safe:hover:scale-[1.02]"
+              >
+                <span className="text-sm font-medium">Price Range</span>
+                <ChevronDown
+                  className={`w-5 h-5 transition-transform ${
+                    showFilters ? 'rotate-180' : ''
+                  }`}
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
 
-          {/* Price Filters */}
-          {showFilters && (
-            <div id="price-filters" className="bg-white border border-gray-200 rounded-lg p-4 mb-6" role="region" aria-labelledby="filter-toggle">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="min-price" className="block text-sm font-medium text-gray-700 mb-2">
-                    Min Price
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-2 text-gray-500" aria-hidden="true">$</span>
-                    <input
-                      type="number"
-                      id="min-price"
-                      placeholder="0"
-                      value={minPrice}
-                      onChange={(e) => {
-                        setMinPrice(e.target.value);
-                        handleFilterChange();
-                      }}
-                      aria-label="Minimum product price"
-                      className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors duration-200"
-                    />
+            {/* Price Filters - styled for dark background */}
+            {showFilters && (
+              <div id="price-filters" className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-lg p-4 mb-6" role="region" aria-labelledby="filter-toggle">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="min-price" className="block text-sm font-medium text-white mb-2">
+                      Min Price
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-2 text-slate-400" aria-hidden="true">$</span>
+                      <input
+                        type="number"
+                        id="min-price"
+                        placeholder="0"
+                        value={minPrice}
+                        onChange={(e) => {
+                          setMinPrice(e.target.value);
+                          handleFilterChange();
+                        }}
+                        aria-label="Minimum product price"
+                        className="w-full pl-8 pr-4 py-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-lg text-white placeholder-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 hover:border-emerald-400/50 transition-colors duration-200"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="max-price" className="block text-sm font-medium text-white mb-2">
+                      Max Price
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-2 text-slate-400" aria-hidden="true">$</span>
+                      <input
+                        type="number"
+                        id="max-price"
+                        placeholder="No limit"
+                        value={maxPrice}
+                        onChange={(e) => {
+                          setMaxPrice(e.target.value);
+                          handleFilterChange();
+                        }}
+                        aria-label="Maximum product price"
+                        className="w-full pl-8 pr-4 py-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-lg text-white placeholder-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 hover:border-emerald-400/50 transition-colors duration-200"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <label htmlFor="max-price" className="block text-sm font-medium text-gray-700 mb-2">
-                    Max Price
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-2 text-gray-500" aria-hidden="true">$</span>
-                    <input
-                      type="number"
-                      id="max-price"
-                      placeholder="No limit"
-                      value={maxPrice}
-                      onChange={(e) => {
-                        setMaxPrice(e.target.value);
-                        handleFilterChange();
-                      }}
-                      aria-label="Maximum product price"
-                      className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:border-emerald-400 dark:hover:border-emerald-500 transition-colors duration-200"
-                    />
-                  </div>
-                </div>
+                {(minPrice || maxPrice || selectedCategory) && (
+                  <button
+                    onClick={() => {
+                      setMinPrice('');
+                      setMaxPrice('');
+                      setSelectedCategory('');
+                      handleFilterChange();
+                    }}
+                    className="mt-3 text-sm text-slate-400 hover:text-emerald-400 underline transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded px-2 py-1"
+                  >
+                    Clear all filters
+                  </button>
+                )}
               </div>
-              {(minPrice || maxPrice || selectedCategory) && (
-                <button
-                  onClick={() => {
-                    setMinPrice('');
-                    setMaxPrice('');
-                    setSelectedCategory('');
-                    handleFilterChange();
-                  }}
-                  className="mt-3 text-sm text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 underline transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 rounded px-2 py-1"
-                >
-                  Clear all filters
-                </button>
-              )}
-            </div>
-          )}
-            </div>
+            )}
           </div>
         </div>
       </section>
@@ -301,6 +311,7 @@ export default function ProductListingPage() {
                       <ProductCard
                         product={product}
                         price={formatPrice(price)}
+                        priceCents={price}
                         href={`/shop/${product.handle || product.id}`}
                       />
                     </StaggerItem>

@@ -2,12 +2,10 @@ import { Metadata } from 'next';
 import UnifiedPricingPage from '@/components/pricing/UnifiedPricingPage';
 
 // ============================================================================
-// Pricing Page - All Services with Checkout
+// Pricing Page — Menu Board Overview
 // ============================================================================
-// Single unified page for:
-// - Website packages (Launch Site, Growth Site) with 50% deposit checkout
-// - Automation and Managed AI services (book a call)
-// - Custom build configurator with add-ons
+// Read-only pricing overview. No checkout here — commerce lives at /shop.
+// Quote authorization lives at /quote.
 
 export const metadata: Metadata = {
   title: 'Pricing - NeedThisDone',

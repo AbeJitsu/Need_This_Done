@@ -432,6 +432,7 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
       { href: '/work', label: 'Work' },
       { href: '/services', label: 'Services' },
       { href: '/pricing', label: 'Pricing' },
+      { href: '/shop', label: 'Shop' },
       { href: '/blog', label: 'Blog' },
     ],
     ctaButton: { text: 'Contact', href: '/contact' },
