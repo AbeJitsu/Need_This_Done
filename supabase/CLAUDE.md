@@ -428,6 +428,58 @@ These have RLS enabled with service-role SELECT policy (see "Medusa Tables" patt
 
 **Rule:** All 134 Medusa tables have RLS enabled with `FOR SELECT USING (true)`. The service_role bypasses RLS for writes.
 
+## Table Quick Reference
+
+55+ migrations, 30+ custom tables, 134 Medusa tables, 100+ RLS policies.
+
+| Table | Purpose | RLS Pattern |
+|-------|---------|-------------|
+| `projects` | Contact form submissions | Public insert, auth read |
+| `project_comments` | Client-admin communication | Auth only |
+| `page_content` | Marketing page content (JSONB) | Public read, admin write |
+| `page_content_history` | Content version history | Admin only |
+| `orders` | Medusa order links | User owns, admin all |
+| `blog_posts` | Blog content | Public read published, admin write |
+| `reviews` | Product reviews | Public read approved |
+| `quotes` | Project quotes + deposits | Admin manage, customer by email |
+| `appointment_requests` | Consultation bookings | Customer by email, admin all |
+| `user_roles` | Admin role assignments | Service role only |
+| `email_templates` | Marketing email templates | Admin only |
+| `email_campaigns` | Campaign tracking | Admin only |
+| `loyalty_points` | Customer rewards | User owns, admin all |
+| `referral_codes` | Referral program | User owns, admin all |
+| `workflows` | Automation definitions | Admin only |
+| `workflow_executions` | Automation run history | Admin only |
+| `coupons` | Discount codes | Public read active, service write |
+| `product_waitlist` | Shop waitlist signups | Email-based access |
+| `saved_addresses` | Customer addresses | User owns |
+| `google_calendar_tokens` | OAuth tokens (encrypted) | Service role only |
+
+### Key Functions
+
+| Function | Purpose |
+|----------|---------|
+| `is_admin(user_id)` | Check admin role via user_roles table |
+| `validate_coupon(code, ...)` | Check coupon validity, returns discount details |
+| `apply_coupon(coupon_id, ...)` | Record coupon usage after order |
+| `get_product_rating(product_id)` | Rating summary (avg, distribution, counts) |
+| `generate_quote_reference()` | Generate `NTD-MMDDYY-HHMM` reference |
+
+### Storage Buckets
+
+| Bucket | Purpose | Access |
+|--------|---------|--------|
+| `product-images` | Product photos | Auth upload, public read |
+| `media-library` | General media | Auth upload, public read |
+
+## Architecture Reference
+
+- **55+ migrations** in `migrations/` directory
+- **Three-tier RLS**: user ownership → admin access → service role bypass
+- **Admin system**: `user_roles` table (NOT JWT metadata) with `is_admin()` function
+- **pgvector**: Extension in `extensions` schema for chatbot embeddings (1536 dimensions)
+- **pgcrypto**: Extension in `extensions` schema for token encryption
+
 ## Resources
 
 - [Supabase RLS Guide](https://supabase.com/docs/guides/auth/row-level-security)

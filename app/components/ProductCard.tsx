@@ -23,15 +23,17 @@ interface ProductCardProps {
     title: string;
     description?: string;
     images?: Array<{ url: string }>;
+    metadata?: Record<string, unknown>;
     variants?: Array<{
       calculated_price?: { calculated_amount: number };
     }>;
   };
   price: string;
+  priceCents?: number;
   href: string;
 }
 
-export default function ProductCard({ product, price, href }: ProductCardProps) {
+export default function ProductCard({ product, price, priceCents, href }: ProductCardProps) {
   const router = useRouter();
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const inWishlist = isInWishlist(product.id);
@@ -42,6 +44,18 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
   const shortDescription = product.description
     ? product.description.slice(0, 80) + (product.description.length > 80 ? '...' : '')
     : '';
+
+  // Determine product icon and gradient based on metadata type
+  const getProductIcon = () => {
+    const type = product.metadata?.type as string | undefined;
+    if (type === 'package') return { icon: '🌐', gradient: 'from-emerald-500 to-blue-500' };
+    if (type === 'addon') return { icon: '✨', gradient: 'from-purple-500 to-blue-500' };
+    if (type === 'service') return { icon: '⚙️', gradient: 'from-blue-500 to-purple-500' };
+    if (type === 'subscription') return { icon: '🤖', gradient: 'from-purple-500 to-emerald-500' };
+    return { icon: '📦', gradient: 'from-slate-600 to-slate-800' };
+  };
+
+  const iconInfo = getProductIcon();
 
   // Navigate to detail page when button clicked
   const handleCartClick = (e: React.MouseEvent) => {
@@ -71,7 +85,8 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
     <Link href={href} className="group">
       <div className={`
         h-full ${cardBgColors.base} rounded-xl border-2 ${cardBorderColors.light}
-        transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-emerald-400
+        shadow-lg shadow-slate-200/50
+        transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 hover:border-emerald-500
         active:scale-[0.98] flex flex-col focus-within:outline-none focus-within:ring-2 focus-within:ring-emerald-500 focus-within:ring-offset-2 focus-within:ring-offset-white
         group-hover:border-emerald-500 dark:group-hover:border-emerald-300
       `}>
@@ -83,10 +98,14 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
               alt={product.title}
               fill
               className="object-cover"
+              unoptimized
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-              <span className="text-gray-400">No image</span>
+            <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${iconInfo.gradient}`}>
+              <div className="text-center">
+                <span className="text-5xl block mb-2">{iconInfo.icon}</span>
+                <span className="text-white/70 text-sm font-medium">{product.title}</span>
+              </div>
             </div>
           )}
 
@@ -128,11 +147,19 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
             </p>
           )}
 
-          {/* Price and Button */}
-          <div className="mt-auto flex items-center justify-between gap-3">
+          {/* Price and Deposit Info */}
+          <div className="mt-auto">
             <span className="text-2xl font-bold text-emerald-600">
               {price}
             </span>
+            {priceCents && priceCents >= 50000 && product.metadata?.type !== 'subscription' && (
+              <p className="text-sm text-emerald-600 font-medium mt-1">
+                Start for ${(Math.ceil(priceCents / 2) / 100).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} · 50% deposit
+              </p>
+            )}
+            {product.metadata?.billing_period === 'monthly' && (
+              <p className="text-sm text-purple-600 font-medium mt-1">/month</p>
+            )}
           </div>
         </div>
 
@@ -177,7 +204,7 @@ export default function ProductCard({ product, price, href }: ProductCardProps) 
             ) : (
               <>
                 <ShoppingCart className="w-5 h-5" />
-                View & Add
+                View Details
               </>
             )}
           </button>

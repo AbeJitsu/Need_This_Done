@@ -192,6 +192,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             src={post.featured_image}
             alt={post.title}
             fill
+            unoptimized
             className="object-cover"
             priority
           />

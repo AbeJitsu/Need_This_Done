@@ -429,7 +429,6 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
   header: {
     brand: 'Need This Done',
     navLinks: [
-      { href: '/work', label: 'Work' },
       { href: '/services', label: 'Services' },
       { href: '/pricing', label: 'Pricing' },
       { href: '/blog', label: 'Blog' },

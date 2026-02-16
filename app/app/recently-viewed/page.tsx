@@ -165,6 +165,7 @@ export default function RecentlyViewedPage() {
                     alt={product.title || 'Product'}
                     width={128}
                     height={128}
+                    unoptimized
                     className="w-full h-full object-cover"
                   />
                 </div>

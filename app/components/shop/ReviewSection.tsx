@@ -36,10 +36,12 @@ interface RatingStats {
 
 interface ReviewSectionProps {
   productId: string;
+  onReviewsLoaded?: (count: number) => void;
 }
 
 export default function ReviewSection({
   productId,
+  onReviewsLoaded,
 }: ReviewSectionProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [stats, setStats] = useState<RatingStats | null>(null);
@@ -64,7 +66,9 @@ export default function ReviewSection({
         }
 
         const data = await response.json();
-        setReviews(data.reviews || []);
+        const loadedReviews = data.reviews || [];
+        setReviews(loadedReviews);
+        onReviewsLoaded?.(loadedReviews.length);
 
         // Extract stats from first review or compute it
         if (data.reviews && data.reviews.length > 0) {
@@ -114,7 +118,7 @@ export default function ReviewSection({
     }
 
     loadReviews();
-  }, [productId]);
+  }, [productId, onReviewsLoaded]);
 
   // ========================================================================
   // Handle review votes
@@ -189,6 +193,11 @@ export default function ReviewSection({
         <div className="h-48 bg-gray-200 rounded-lg animate-pulse" />
       </div>
     );
+  }
+
+  // Hide entire section when there are no reviews
+  if (!loading && reviews.length === 0) {
+    return null;
   }
 
   // ========================================================================

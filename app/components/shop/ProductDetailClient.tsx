@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
@@ -39,13 +39,21 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   const [error, setError] = useState('');
   const [toastMessage, setToastMessage] = useState('');
   const [reviewsRefreshKey, setReviewsRefreshKey] = useState(0);
+  const [hasReviews, setHasReviews] = useState(false);
+  const handleReviewsLoaded = useCallback((count: number) => setHasReviews(count > 0), []);
 
   const inWishlist = isInWishlist(product.id);
 
-  // Get price from first variant's prices array (Medusa structure)
-  const price = product.variants?.[0]?.prices?.[0]?.amount ?? 0;
+  // Get price: Medusa v2 uses calculated_price (requires region_id), v1 uses prices array
+  const variant0 = product.variants?.[0];
+  const price = variant0?.calculated_price?.calculated_amount
+    ?? variant0?.prices?.find((p) => p.currency_code === 'usd')?.amount
+    ?? variant0?.prices?.[0]?.amount
+    ?? 0;
   const image = product.images?.[0]?.url;
   const variants = product.variants || [];
+
+  const hasMultipleVariants = variants.length > 1;
 
   // ========================================================================
   // Track product view in browsing history
@@ -132,7 +140,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Back link */}
       <Link href="/pricing" className={`${accentColors.blue.titleText} hover:underline mb-6 inline-block rounded ${focusRingClasses.blue}`}>
-        ← Back to Pricing
+        &larr; Back to Pricing
       </Link>
 
       {/* Main content */}
@@ -185,8 +193,8 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             </div>
           )}
 
-          {/* Variant selection */}
-          {variants.length > 0 && (
+          {/* Variant selection — only show when there are multiple options to choose from */}
+          {hasMultipleVariants && (
             <div className="mb-6">
               <label htmlFor="variant-select" className={`block text-sm font-medium ${headingColors.primary} mb-2`}>
                 Select Variant
@@ -252,6 +260,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               productId={product.id}
               variantId={selectedVariant || undefined}
               inventoryQuantity={product.variants?.[0]?.inventory_quantity}
+              manageInventory={product.variants?.[0]?.manage_inventory}
             />
           </div>
 
@@ -259,13 +268,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           <div className="flex flex-col gap-3 mt-auto">
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
-                variant="purple"
+                variant="green"
                 size="lg"
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
                 isLoading={isAddingToCart}
                 loadingText="Adding..."
-                className="flex-1"
+                className="flex-1 shadow-lg shadow-emerald-500/25"
               >
                 Add to Cart
               </Button>
@@ -307,18 +316,21 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         </div>
       </div>
 
-      {/* Reviews Section */}
-      <div className="border-t border-gray-200 pt-12">
-        <ReviewForm
-          productId={product.id}
-          onSubmitSuccess={handleReviewSubmitted}
-          isAuthenticated={!!user}
-        />
-        <ReviewSection
-          key={reviewsRefreshKey}
-          productId={product.id}
-        />
-      </div>
+      {/* Reviews Section — hidden when no reviews exist */}
+      {hasReviews && (
+        <div className="border-t border-gray-200 pt-12">
+          <ReviewForm
+            productId={product.id}
+            onSubmitSuccess={handleReviewSubmitted}
+            isAuthenticated={!!user}
+          />
+        </div>
+      )}
+      <ReviewSection
+        key={reviewsRefreshKey}
+        productId={product.id}
+        onReviewsLoaded={handleReviewsLoaded}
+      />
     </div>
   );
 }

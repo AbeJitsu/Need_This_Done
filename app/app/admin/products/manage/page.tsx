@@ -420,6 +420,7 @@ export default function ProductManagePage() {
                               alt={product.title}
                               width={64}
                               height={64}
+                              unoptimized
                               className="object-cover rounded-lg shadow-md group-hover:shadow-lg transition-shadow duration-200"
                             />
                           ) : (
@@ -585,6 +586,7 @@ export default function ProductManagePage() {
                       src={formData.thumbnail}
                       alt="Preview"
                       width={128}
+                      unoptimized
                       height={128}
                       className="object-cover rounded-lg border-2 border-gray-400"
                     />

@@ -39,6 +39,7 @@ interface ProductDefinition {
   price: number; // in cents
   type: ProductType;
   collection: string; // collection handle
+  thumbnail?: string; // Unsplash CDN URL for product image
   metadata: {
     type: ProductType;
     deposit_percent: number;
@@ -54,12 +55,34 @@ const PRODUCTS: ProductDefinition[] = [
   // Website Packages
   // ========================================
   {
+    title: 'Launch Site',
+    description: 'Perfect for getting online fast. 3-5 page Next.js website deployed on Vercel. Includes custom design, mobile responsive, contact form, and basic SEO setup.',
+    handle: 'launch-site',
+    price: 50000, // $500
+    type: 'package',
+    collection: 'website-packages',
+    thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80',
+    metadata: {
+      type: 'package',
+      deposit_percent: 50,
+      popular: false,
+      features: [
+        '3–5 custom pages',
+        'Custom design, mobile-friendly',
+        'Contact form (sends you an email)',
+        'Basic search engine optimization',
+        '30 days support',
+      ],
+    },
+  },
+  {
     title: 'Starter Site',
     description: 'Get online with a professional website that looks great on any device. Perfect for new businesses and personal brands.',
     handle: 'starter-site',
     price: 50000, // $500
     type: 'package',
     collection: 'website-packages',
+    thumbnail: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'package',
       deposit_percent: 50,
@@ -80,6 +103,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 150000, // $1,500
     type: 'package',
     collection: 'website-packages',
+    thumbnail: 'https://images.unsplash.com/photo-1637502877428-27e6553a8817?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'package',
       deposit_percent: 50,
@@ -101,6 +125,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 500000, // $5,000
     type: 'package',
     collection: 'website-packages',
+    thumbnail: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'package',
       deposit_percent: 50,
@@ -135,6 +160,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 10000, // $100
     type: 'addon',
     collection: 'website-addons',
+    thumbnail: 'https://images.unsplash.com/photo-1569322977266-acff659212fd?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'addon',
       deposit_percent: 50,
@@ -148,6 +174,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 30000, // $300
     type: 'addon',
     collection: 'website-addons',
+    thumbnail: 'https://images.unsplash.com/photo-1607703580120-4292969fcb0f?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'addon',
       deposit_percent: 50,
@@ -161,6 +188,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 50000, // $500
     type: 'addon',
     collection: 'website-addons',
+    thumbnail: 'https://images.unsplash.com/photo-1542744095-291d1f67b221?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'addon',
       deposit_percent: 50,
@@ -174,6 +202,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 20000, // $200
     type: 'addon',
     collection: 'website-addons',
+    thumbnail: 'https://images.unsplash.com/photo-1554325103-6985922f9a41?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'addon',
       deposit_percent: 50,
@@ -187,6 +216,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 15000, // $150
     type: 'addon',
     collection: 'website-addons',
+    thumbnail: 'https://images.unsplash.com/photo-1730993872148-83acdfb597e8?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'addon',
       deposit_percent: 50,
@@ -200,6 +230,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 40000, // $400
     type: 'addon',
     collection: 'website-addons',
+    thumbnail: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'addon',
       deposit_percent: 50,
@@ -213,6 +244,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 40000, // $400
     type: 'addon',
     collection: 'website-addons',
+    thumbnail: 'https://images.unsplash.com/photo-1613988753173-8db625c972c5?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'addon',
       deposit_percent: 50,
@@ -226,6 +258,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 60000, // $600
     type: 'addon',
     collection: 'website-addons',
+    thumbnail: 'https://images.unsplash.com/photo-1655393001768-d946c97d6fd1?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'addon',
       deposit_percent: 50,
@@ -239,6 +272,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 200000, // $2,000
     type: 'addon',
     collection: 'website-addons',
+    thumbnail: 'https://images.unsplash.com/photo-1658297063569-162817482fb6?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'addon',
       deposit_percent: 50,
@@ -256,6 +290,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 15000, // $150 per workflow
     type: 'service',
     collection: 'automation-services',
+    thumbnail: 'https://images.unsplash.com/photo-1598023707260-bb5987bf06e9?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'service',
       deposit_percent: 100, // Pay upfront for services
@@ -274,6 +309,7 @@ const PRODUCTS: ProductDefinition[] = [
     price: 50000, // $500/month
     type: 'subscription',
     collection: 'automation-services',
+    thumbnail: 'https://images.unsplash.com/photo-1675557009285-b55f562641b9?w=800&h=600&fit=crop&q=80',
     metadata: {
       type: 'subscription',
       deposit_percent: 0, // No deposit for subscriptions
@@ -423,12 +459,17 @@ async function createOrUpdateProduct(
 
   if (existingProductId) {
     // UPDATE existing product with new data
-    const updateData = {
+    const updateData: Record<string, unknown> = {
       title: product.title,
       description: product.description,
       collection_id: collectionId,
       metadata: product.metadata,
     };
+
+    if (product.thumbnail) {
+      updateData.thumbnail = product.thumbnail;
+      updateData.images = [{ url: product.thumbnail }];
+    }
 
     const updateResponse = await fetch(`${MEDUSA_URL}/admin/products/${existingProductId}`, {
       method: 'POST',
@@ -493,12 +534,13 @@ async function createOrUpdateProduct(
   }
 
   // CREATE new product
-  const productData = {
+  const productData: Record<string, unknown> = {
     title: product.title,
     description: product.description,
     handle: product.handle,
     status: 'published',
     collection_id: collectionId,
+    ...(product.thumbnail ? { thumbnail: product.thumbnail, images: [{ url: product.thumbnail }] } : {}),
     options: [
       {
         title: 'Default',

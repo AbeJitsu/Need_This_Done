@@ -12,7 +12,9 @@ import {
   focusRingClasses,
   type AccentColor,
 } from '@/lib/colors';
+import { Shield, Sparkles, CreditCard } from 'lucide-react';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
+import { calculateDeposit, calculateBalanceRemaining } from '@/lib/deposit-utils';
 
 // ============================================================================
 // Shopping Cart Page - /cart
@@ -119,7 +121,7 @@ function EmptyCartState() {
                   className="mt-6 text-lg md:text-xl text-gray-600 max-w-lg mx-auto lg:mx-0 leading-relaxed animate-fade-in-up"
                   style={{ animationDelay: '200ms', animationFillMode: 'both' }}
                 >
-                  Your cart is ready for something great. Explore our consultations to get expert guidance tailored to your needs.
+                  Your cart is ready for something great. Browse our packages to find the right fit for your project.
                 </p>
 
                 {/* CTA buttons */}
@@ -128,7 +130,7 @@ function EmptyCartState() {
                   style={{ animationDelay: '300ms', animationFillMode: 'both' }}
                 >
                   <Button variant="purple" href="/pricing" size="lg">
-                    Explore Consultations
+                    Browse Packages
                   </Button>
                   <Button variant="gray" href="/contact" size="lg">
                     Get in Touch
@@ -203,6 +205,7 @@ export default function CartPage() {
   const [localError, setLocalError] = useState('');
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
+  const [payInFull, setPayInFull] = useState(false);
 
   // ========================================================================
   // Handle quantity change
@@ -495,7 +498,7 @@ export default function CartPage() {
                 <div className="pt-6">
                   <Link href="/pricing" className={`inline-flex items-center gap-2 ${accentColors.blue.titleText} font-medium hover:underline rounded ${focusRingClasses.blue} transition-colors`}>
                     <span>←</span>
-                    <span>Browse More Consultations</span>
+                    <span>Continue Shopping</span>
                   </Link>
                 </div>
               </FadeIn>
@@ -517,14 +520,14 @@ export default function CartPage() {
                       <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Order Summary</span>
                     </div>
 
-                    <div className="space-y-4 mb-6 pb-6 border-b border-white/10">
+                    {/* Line items summary */}
+                    <div className="space-y-3 mb-6 pb-6 border-b border-white/10">
                       <div className="flex justify-between">
                         <span className="text-slate-400">Subtotal</span>
                         <span className="font-semibold text-white">
                           ${(subtotal / 100).toFixed(2)}
                         </span>
                       </div>
-
                       {tax > 0 && (
                         <div className="flex justify-between">
                           <span className="text-slate-400">Tax</span>
@@ -533,12 +536,68 @@ export default function CartPage() {
                           </span>
                         </div>
                       )}
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">Total</span>
+                        <span className="font-semibold text-white">
+                          ${(total / 100).toFixed(2)}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="flex justify-between items-baseline mb-8">
-                      <span className="text-lg font-bold text-white">Total</span>
-                      <span className="text-3xl font-black text-white">
-                        ${(total / 100).toFixed(2)}
+                    {/* Deposit vs Full payment toggle */}
+                    <div className="mb-6">
+                      {/* Amount Due - prominent display */}
+                      <div className="flex justify-between items-baseline mb-3">
+                        <span className="text-lg font-bold text-white">
+                          {payInFull ? 'Amount Due' : 'Deposit Due'}
+                        </span>
+                        <span className="text-3xl font-black text-white">
+                          ${payInFull
+                            ? (total / 100).toFixed(2)
+                            : (calculateDeposit(total) / 100).toFixed(2)
+                          }
+                        </span>
+                      </div>
+
+                      {/* Remaining balance notice (only when deposit) */}
+                      {!payInFull && (
+                        <div className="flex justify-between text-sm mb-4">
+                          <span className="text-slate-400">Due on delivery</span>
+                          <span className="text-slate-300">
+                            ${(calculateBalanceRemaining(total) / 100).toFixed(2)}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Pay in full checkbox */}
+                      <label className="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer transition-all">
+                        <input
+                          type="checkbox"
+                          checked={payInFull}
+                          onChange={(e) => setPayInFull(e.target.checked)}
+                          className="w-4 h-4 rounded border-white/30 bg-white/10 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0"
+                        />
+                        <span className="text-sm text-slate-300">
+                          Pay in full (${(total / 100).toFixed(2)})
+                        </span>
+                      </label>
+                    </div>
+
+                    {/* Trust badges */}
+                    <div className="flex items-center justify-center gap-4 mb-4 text-xs text-slate-400">
+                      <span className="flex items-center gap-1.5">
+                        <Shield size={14} className="text-emerald-400" />
+                        50% deposit
+                      </span>
+                      <span className="text-white/10">|</span>
+                      <span className="flex items-center gap-1.5">
+                        <Sparkles size={14} className="text-purple-400" />
+                        Guaranteed
+                      </span>
+                      <span className="text-white/10">|</span>
+                      <span className="flex items-center gap-1.5">
+                        <CreditCard size={14} className="text-blue-400" />
+                        Stripe
                       </span>
                     </div>
 
@@ -574,10 +633,13 @@ export default function CartPage() {
                         <span className="text-blue-400 text-sm">💡</span>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-white mb-1">What happens next?</p>
-                        <p className="text-sm text-slate-400 leading-relaxed">
-                          At checkout, you&apos;ll select your preferred appointment time. We&apos;ll confirm within 24 hours and send you calendar details.
-                        </p>
+                        <p className="text-sm font-semibold text-white mb-2">What happens next?</p>
+                        <ol className="text-sm text-slate-400 leading-relaxed space-y-1.5 list-decimal list-inside">
+                          <li>Kickoff call within 48 hours</li>
+                          <li>Share your content and brand assets</li>
+                          <li>We build, you review, we launch</li>
+                          <li>30–90 days of post-launch support included</li>
+                        </ol>
                       </div>
                     </div>
                   </div>
@@ -593,8 +655,8 @@ export default function CartPage() {
         isOpen={showRemoveDialog}
         onConfirm={confirmRemoveItem}
         onCancel={cancelRemoveItem}
-        title="Remove Consultation"
-        message="Are you sure you want to remove this consultation from your cart?"
+        title="Remove Item"
+        message="Are you sure you want to remove this item from your cart?"
         confirmLabel="Yes, Remove It"
         cancelLabel="Keep It"
         variant="warning"

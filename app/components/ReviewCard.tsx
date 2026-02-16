@@ -143,6 +143,7 @@ export default function ReviewCard({
               key={index}
               src={image}
               alt={`Review image ${index + 1}`}
+              unoptimized
               width={80}
               height={80}
               className="object-cover rounded-lg border border-gray-400 dark:border-gray-700"

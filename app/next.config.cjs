@@ -58,13 +58,22 @@ const nextConfig = {
     // This bypasses the /_next/image API which is causing issues
     unoptimized: true,
 
+    // Allowed external image hostnames
+    domains: [
+      'oxhjtmozsdstbokwtnwa.supabase.co',
+      'images.unsplash.com',
+    ],
+
     // Allowed remote patterns for external images
-    // Supabase storage domain for product images
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'oxhjtmozsdstbokwtnwa.supabase.co',
         pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
       },
     ],
   },
@@ -110,12 +119,7 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
-      // Legacy shop routes
-      {
-        source: '/shop',
-        destination: '/pricing',
-        permanent: true,
-      },
+      // Legacy routes
       {
         source: '/build',
         destination: '/pricing',

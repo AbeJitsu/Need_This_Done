@@ -12,12 +12,15 @@ interface Category {
 interface CategoryFilterProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
+  variant?: 'light' | 'dark';
 }
 
 export default function CategoryFilter({
   selectedCategory,
   onCategoryChange,
+  variant = 'light',
 }: CategoryFilterProps) {
+  const isDark = variant === 'dark';
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -58,14 +61,26 @@ export default function CategoryFilter({
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-controls="category-dropdown-menu"
-        className="w-full md:w-auto flex items-center justify-between gap-2 px-4 py-2 border border-gray-300 rounded-lg bg-white hover:border-emerald-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        className={`w-full md:w-auto flex items-center justify-between gap-2 px-4 py-2 border rounded-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+          isDark
+            ? 'border-white/10 bg-white/10 text-white hover:border-emerald-400 hover:bg-white/15 motion-safe:hover:scale-[1.02]'
+            : 'border-gray-300 bg-white text-gray-700 hover:border-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white'
+        }`}
       >
-        <span className="text-sm font-medium text-gray-700">{selectedCategoryName}</span>
-        <ChevronDown size={18} className={`text-gray-600 transition-transform ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+        <span className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-700'}`}>{selectedCategoryName}</span>
+        <ChevronDown size={18} className={`transition-transform ${isOpen ? 'rotate-180' : ''} ${isDark ? 'text-slate-400' : 'text-gray-600'}`} aria-hidden="true" />
       </button>
 
       {isOpen && (
-        <div id="category-dropdown-menu" className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-300 rounded-lg shadow-lg z-10" role="menu">
+        <div
+          id="category-dropdown-menu"
+          className={`absolute top-full left-0 mt-2 w-56 rounded-lg shadow-lg z-10 ${
+            isDark
+              ? 'bg-slate-800 border border-white/10 backdrop-blur-sm'
+              : 'bg-white border border-gray-300'
+          }`}
+          role="menu"
+        >
           {/* All Categories option */}
           <button
             role="menuitem"
@@ -73,13 +88,15 @@ export default function CategoryFilter({
               onCategoryChange('');
               setIsOpen(false);
             }}
-            className={`w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
-              !selectedCategory ? 'bg-emerald-50 text-emerald-700 font-medium' : 'text-gray-700'
+            className={`w-full text-left px-4 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+              isDark
+                ? `hover:bg-white/10 ${!selectedCategory ? 'bg-emerald-500/20 text-emerald-400 font-medium' : 'text-slate-300'}`
+                : `hover:bg-gray-100 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${!selectedCategory ? 'bg-emerald-50 text-emerald-700 font-medium' : 'text-gray-700'}`
             }`}
           >
             <div className="flex justify-between items-center">
               <span>All Categories</span>
-              <span className="text-xs text-gray-500">
+              <span className={`text-xs ${isDark ? 'text-slate-500' : 'text-gray-500'}`}>
                 {categories.reduce((sum, cat) => sum + cat.productCount, 0)}
               </span>
             </div>
@@ -94,15 +111,15 @@ export default function CategoryFilter({
                 onCategoryChange(category.handle);
                 setIsOpen(false);
               }}
-              className={`w-full text-left px-4 py-2 border-t border-gray-100 hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
-                selectedCategory === category.handle
-                  ? 'bg-emerald-50 text-emerald-700 font-medium'
-                  : 'text-gray-700'
+              className={`w-full text-left px-4 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+                isDark
+                  ? `border-t border-white/5 hover:bg-white/10 ${selectedCategory === category.handle ? 'bg-emerald-500/20 text-emerald-400 font-medium' : 'text-slate-300'}`
+                  : `border-t border-gray-100 hover:bg-gray-100 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${selectedCategory === category.handle ? 'bg-emerald-50 text-emerald-700 font-medium' : 'text-gray-700'}`
               }`}
             >
               <div className="flex justify-between items-center">
                 <span>{category.name}</span>
-                <span className="text-xs text-gray-500">{category.productCount}</span>
+                <span className={`text-xs ${isDark ? 'text-slate-500' : 'text-gray-500'}`}>{category.productCount}</span>
               </div>
             </button>
           ))}

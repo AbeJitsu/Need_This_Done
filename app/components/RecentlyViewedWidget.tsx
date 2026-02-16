@@ -43,6 +43,7 @@ export default function RecentlyViewedWidget() {
                   src={item.image}
                   alt={item.title || 'Product'}
                   width={64}
+                  unoptimized
                   height={64}
                   className="w-full h-full object-cover"
                 />

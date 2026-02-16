@@ -8,15 +8,15 @@
 
 ---
 
-## Phase 0: Pricing Restructure, Contact Booking & Services Update ⏳ IN PROGRESS
+## Phase 0: Pricing Restructure, Contact Booking & Services Update
 
-**Status**: PRD complete (Feb 11, 2026). Ready for implementation.
+**Status**: 0A complete. 0B and 0C remaining.
 
 **Problem**: Pricing page has 2 tiers with developer jargon, no database offering, contact page can't schedule consultations, services page doesn't link to pricing.
 
 **Goal**: 3 clear tiers ($500 / $1,500 / $5,000) with plain-English descriptions, visual consultation booking on contact page, services → pricing flow.
 
-### 0A. Pricing Restructure
+### 0A. Pricing Restructure ✅ COMPLETE
 
 **New Tiers:**
 
@@ -146,9 +146,8 @@
 
 **Remaining (Phase 1A follow-up):**
 - [ ] Pre-built workflow templates (Abandoned Cart, VIP Tagging, etc.)
-- [x] Public demo page at `/features/flow-automation` — components created, needs page route
-- [ ] **⏳ IN PROGRESS: Demo Canvas Positioning** — Canvas panning enabled, debug overlay added (Feb 6). Trigger-condition connector shortened (Feb 6 evening). Remaining: Use debug overlay to determine correct CANVAS_CENTER_Y values for all 3 workflows, verify condition nodes are centered vertically in viewport
 - [ ] Time-based triggers (daily, weekly, monthly)
+- Note: `/features/flow-automation` page was removed (Feb 12). DemoCanvas.tsx still exists in components if needed later.
 
 ---
 
@@ -546,14 +545,12 @@ npx lighthouse <url>           # SEO audit (90+ score)
 
 ## Next Steps
 
-**Priority 1 (Build Now):**
-1. ✅ Update roadmap (this file)
-2. ✅ Phase 1A: Visual automation builder — core system complete
-3. ✅ Database migration for workflows
-4. Phase 1A follow-up: Public demo page (`/features/flow-automation`)
-5. Phase 1A follow-up: Pre-built workflow templates
+**Priority 1 (In Progress):**
+1. Phase 0B: Contact page consultation booking (mini-calendar)
+2. Phase 0C: Services → Pricing linking
+3. Phase 1A follow-up: Pre-built workflow templates
 
-**Priority 2 (Next Session):**
+**Priority 2 (Next):**
 1. Phase 1B: Build B2B/wholesale portal
 2. Phase 1C: Add multi-currency support
 

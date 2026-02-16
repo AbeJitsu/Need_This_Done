@@ -246,11 +246,11 @@ export function Hero() {
               variant="green"
               size="lg"
               onClick={() => {
-                window.location.href = '/pricing';
+                window.location.href = '/services';
               }}
               className="relative px-12 py-4 text-lg font-semibold shadow-2xl shadow-emerald-500/40 motion-safe:hover:shadow-emerald-500/60 transition-all focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
-              Start Your Project
+              See What We Build
             </Button>
           </motion.div>
         </motion.div>
@@ -264,15 +264,15 @@ export function Hero() {
         >
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 bg-emerald-500 rounded-full" />
-            No templates
+            From $500
           </span>
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 bg-blue-500 rounded-full" />
-            Custom built
+            50% to start
           </span>
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 bg-purple-500 rounded-full" />
-            Full support
+            Live in 1–4 weeks
           </span>
         </motion.div>
 
