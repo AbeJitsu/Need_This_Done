@@ -50,7 +50,8 @@ const services = [
     ],
     price: 'From $500',
     ctaHref: '/pricing#websites',
-    ctaLabel: 'See Website Packages',
+    ctaLabel: 'Website Packages from $500 →',
+    timeline: 'Typical delivery: 1–4 weeks',
     color: 'emerald' as const,
     bg: 'bg-emerald-800',
     gradient: 'from-emerald-700 via-emerald-800 to-emerald-900',
@@ -78,7 +79,8 @@ const services = [
     ],
     price: 'From $150',
     ctaHref: '/pricing#automation',
-    ctaLabel: 'See Automation Pricing',
+    ctaLabel: 'Automation from $150 →',
+    timeline: 'Setup in 1–2 weeks',
     color: 'blue' as const,
     bg: 'bg-slate-900',
     gradient: 'from-slate-800 via-slate-900 to-slate-950',
@@ -106,7 +108,8 @@ const services = [
     ],
     price: 'From $500/mo',
     ctaHref: '/pricing#automation',
-    ctaLabel: 'See AI Pricing',
+    ctaLabel: 'AI Plans from $500/mo →',
+    timeline: 'Continuous monthly service',
     color: 'purple' as const,
     bg: 'bg-gradient-to-br from-purple-700 to-purple-900',
     gradient: 'from-purple-700 via-purple-800 to-purple-900',
@@ -196,10 +199,12 @@ export default function ServicesPage() {
                       className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-white/15 border border-white/20 text-white font-semibold text-sm hover:bg-white/25 transition-colors"
                     >
                       {service.ctaLabel}
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
                     </Link>
+                    {service.timeline && (
+                      <p className={`mt-3 text-xs ${service.textAccent} opacity-80`}>
+                        {service.timeline}
+                      </p>
+                    )}
                   </div>
 
                   {/* Right: features */}
@@ -265,16 +270,16 @@ export default function ServicesPage() {
         <StaggerContainer className="grid md:grid-cols-3 gap-8" staggerDelay={0.1}>
           {[
             {
-              title: 'Transparent Pricing',
-              description: 'No hidden fees, no hourly surprises. You\'ll know exactly what you\'re paying before we start.',
+              title: 'You See the Price Before We Start',
+              description: 'No hidden fees, no hourly surprises. You\'ll know exactly what you\'re paying before we write a single line of code.',
             },
             {
-              title: '50% Deposit Model',
-              description: 'Pay half upfront, half when you\'re happy with the work. Fair for everyone.',
+              title: 'Pay Half Now, Half When You Approve',
+              description: '50% deposit gets things moving. The rest is due when you\'re happy with the finished product.',
             },
             {
-              title: 'Quality Guaranteed',
-              description: 'Not satisfied? We\'ll make it right or refund your deposit. Your success is our reputation.',
+              title: 'Not Happy? Full Deposit Refund',
+              description: 'If we can\'t deliver what was promised, you get your deposit back. Your success is our reputation.',
             },
           ].map((prop, i) => (
             <StaggerItem key={i}>
@@ -308,16 +313,7 @@ export default function ServicesPage() {
                 href="/pricing"
                 className="inline-flex items-center px-8 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-500 transition-colors shadow-lg shadow-emerald-500/25"
               >
-                See Pricing
-              </Link>
-              <Link
-                href="/shop"
-                className="inline-flex items-center px-8 py-3 rounded-xl bg-white/10 text-white font-semibold hover:bg-white/20 transition-colors border border-white/10"
-              >
-                Browse Shop
-                <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                Choose Your Package
               </Link>
               <Link
                 href="/contact"

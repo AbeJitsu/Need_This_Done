@@ -49,6 +49,16 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   const image = product.images?.[0]?.url;
   const variants = product.variants || [];
 
+  // Product metadata for smart display
+  const metadata = product.metadata as Record<string, unknown> | undefined;
+  const productType = metadata?.type as string | undefined;
+  const features = metadata?.features as string[] | undefined;
+  const depositPercent = (metadata?.deposit_percent as number) || 50;
+  const depositAmount = Math.round(price * (depositPercent / 100));
+  const remainingAmount = price - depositAmount;
+  const isPackage = productType === 'package';
+  const hasMultipleVariants = variants.length > 1;
+
   // ========================================================================
   // Track product view in browsing history
   // ========================================================================
@@ -133,8 +143,8 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Back link */}
-      <Link href="/shop" className={`${accentColors.blue.titleText} hover:underline mb-6 inline-block rounded ${focusRingClasses.blue}`}>
-        &larr; Back to Shop
+      <Link href="/pricing" className={`${accentColors.blue.titleText} hover:underline mb-6 inline-block rounded ${focusRingClasses.blue}`}>
+        &larr; Back to Pricing
       </Link>
 
       {/* Main content */}
@@ -262,13 +272,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           <div className="flex flex-col gap-3 mt-auto">
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
-                variant="purple"
+                variant="green"
                 size="lg"
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
                 isLoading={isAddingToCart}
                 loadingText="Adding..."
-                className="flex-1"
+                className="flex-1 shadow-lg shadow-emerald-500/25"
               >
                 Add to Cart
               </Button>

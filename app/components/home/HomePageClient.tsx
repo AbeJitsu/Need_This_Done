@@ -316,7 +316,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 How it works
               </h2>
               <p className="text-lg text-gray-500 max-w-xl">
-                From idea to launch in four simple steps. No headaches.
+                From idea to launch in four simple steps. We take on 3–4 projects per month.
               </p>
             </div>
           </FadeIn>
