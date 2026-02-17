@@ -1,18 +1,17 @@
 // ============================================================================
-// MarkdownContent Component - Renders Markdown with Syntax Highlighting
+// MarkdownContent Component — Magazine Editorial Reading Experience
 // ============================================================================
-// Renders markdown content with proper styling for blog posts.
-// Supports GitHub-flavored markdown (tables, task lists, strikethrough)
-// and syntax highlighting for code blocks.
+// Renders markdown with editorial styling: accent bars on h2, comfortable
+// paragraph sizing, purple-themed blockquotes, and decorative hr separators.
+// Custom bullet dots are handled via CSS in globals.css (.markdown-content).
 
 'use client';
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
-import { headingColors, formInputColors, tableHeaderBg } from '@/lib/colors';
+import { tableHeaderBg } from '@/lib/colors';
 
-// Import highlight.js styles for syntax highlighting
 import 'highlight.js/styles/github-dark.css';
 
 interface MarkdownContentProps {
@@ -28,39 +27,40 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
         rehypePlugins={[rehypeHighlight]}
         components={{
           // ============================================
-          // Headings
+          // Headings — editorial accent bar on h2
           // ============================================
           h1: ({ children }) => (
-            <h1 className={`text-3xl font-bold mt-8 mb-4 ${headingColors.primary}`}>
+            <h1 className="text-3xl font-bold mt-10 mb-5 text-gray-900">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className={`text-2xl font-bold mt-8 mb-4 ${headingColors.primary}`}>
+            <h2 className="flex items-center gap-3 text-2xl font-bold mt-12 mb-5 text-gray-900">
+              <span className="inline-block w-6 h-1 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex-shrink-0" />
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className={`text-xl font-semibold mt-6 mb-3 ${headingColors.secondary}`}>
+            <h3 className="text-xl font-semibold mt-8 mb-4 text-gray-800">
               {children}
             </h3>
           ),
           h4: ({ children }) => (
-            <h4 className={`text-lg font-semibold mt-4 mb-2 ${headingColors.secondary}`}>
+            <h4 className="uppercase tracking-wide text-sm font-semibold mt-6 mb-2 text-gray-700">
               {children}
             </h4>
           ),
 
           // ============================================
-          // Paragraphs and Text
+          // Paragraphs and Text — 17px for reading comfort
           // ============================================
           p: ({ children }) => (
-            <p className={`mb-4 leading-relaxed ${formInputColors.helper}`}>
+            <p className="text-[1.0625rem] text-gray-700 mb-5 leading-relaxed">
               {children}
             </p>
           ),
           strong: ({ children }) => (
-            <strong className="font-semibold text-gray-900 dark:text-gray-100">
+            <strong className="font-semibold text-gray-900">
               {children}
             </strong>
           ),
@@ -76,22 +76,22 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
               href={href}
               target={href?.startsWith('http') ? '_blank' : undefined}
               rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-purple-600 hover:text-purple-800 underline decoration-purple-300 underline-offset-2 transition-colors"
             >
               {children}
             </a>
           ),
 
           // ============================================
-          // Lists
+          // Lists — CSS handles bullets via .markdown-content
           // ============================================
           ul: ({ children }) => (
-            <ul className={`list-disc list-inside mb-4 space-y-1 ${formInputColors.helper}`}>
+            <ul className="mb-5 space-y-1.5 text-[1.0625rem] text-gray-700">
               {children}
             </ul>
           ),
           ol: ({ children }) => (
-            <ol className={`list-decimal list-inside mb-4 space-y-1 ${formInputColors.helper}`}>
+            <ol className="list-decimal list-inside mb-5 space-y-1.5 text-[1.0625rem] text-gray-700">
               {children}
             </ol>
           ),
@@ -102,14 +102,13 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
           // ============================================
           // Code Blocks and Inline Code
           // ============================================
-          code: ({ className, children, ...props }) => {
-            // Check if this is an inline code block (no language class)
-            const isInline = !className;
+          code: ({ className: codeClassName, children, ...props }) => {
+            const isInline = !codeClassName;
 
             if (isInline) {
               return (
                 <code
-                  className="px-1.5 py-0.5 rounded text-sm font-mono bg-gray-100 dark:bg-gray-800 text-purple-600 dark:text-purple-400"
+                  className="px-1.5 py-0.5 rounded text-sm font-mono bg-gray-100 text-purple-600"
                   {...props}
                 >
                   {children}
@@ -117,15 +116,14 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
               );
             }
 
-            // Block code - let rehype-highlight handle syntax highlighting
             return (
-              <code className={className} {...props}>
+              <code className={codeClassName} {...props}>
                 {children}
               </code>
             );
           },
           pre: ({ children }) => (
-            <pre className="mb-4 p-4 rounded-lg overflow-x-auto bg-gray-900 dark:bg-gray-950 text-sm">
+            <pre className="mb-5 p-4 rounded-lg overflow-x-auto bg-gray-900 text-sm">
               {children}
             </pre>
           ),
@@ -134,8 +132,8 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
           // Tables
           // ============================================
           table: ({ children }) => (
-            <div className="overflow-x-auto mb-4">
-              <table className="min-w-full border-collapse border border-gray-400 dark:border-gray-700">
+            <div className="overflow-x-auto mb-5">
+              <table className="min-w-full border-collapse border border-gray-400">
                 {children}
               </table>
             </div>
@@ -145,33 +143,42 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
           ),
           tbody: ({ children }) => <tbody>{children}</tbody>,
           tr: ({ children }) => (
-            <tr className="border-b border-gray-400 dark:border-gray-700">{children}</tr>
+            <tr className="border-b border-gray-400">{children}</tr>
           ),
           th: ({ children }) => (
-            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-900">
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td className={`px-4 py-2 text-sm ${formInputColors.helper}`}>
+            <td className="px-4 py-2 text-sm text-gray-700">
               {children}
             </td>
           ),
 
           // ============================================
-          // Blockquotes
+          // Blockquotes — purple accent, decorative quote
           // ============================================
           blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-blue-500 pl-4 my-4 italic text-gray-600 dark:text-gray-400">
-              {children}
+            <blockquote className="relative border-l-4 border-purple-500 bg-purple-50 rounded-r-xl pl-6 pr-5 py-4 my-6">
+              <span className="absolute top-2 left-2 text-4xl leading-none text-purple-200 font-playfair select-none" aria-hidden="true">
+                &ldquo;
+              </span>
+              <div className="relative text-gray-700 italic">
+                {children}
+              </div>
             </blockquote>
           ),
 
           // ============================================
-          // Horizontal Rules
+          // Horizontal Rules — editorial separator with dot
           // ============================================
           hr: () => (
-            <hr className="my-8 border-gray-400 dark:border-gray-700" />
+            <div className="my-10 flex items-center gap-4">
+              <div className="flex-1 h-px bg-gray-200" />
+              <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+              <div className="flex-1 h-px bg-gray-200" />
+            </div>
           ),
 
           // ============================================

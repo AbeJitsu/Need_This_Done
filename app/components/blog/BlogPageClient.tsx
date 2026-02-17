@@ -142,7 +142,7 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
               {/* Featured Post - Full width highlight */}
               {featuredPost && (
                 <FadeIn direction="up" delay={0.1}>
-                  <div className="mb-16">
+                  <div className="mb-20">
                     {/* Editorial section header */}
                     <div className="flex items-center gap-3 mb-6">
                       <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-500 to-gold-500" />
