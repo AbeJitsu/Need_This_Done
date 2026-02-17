@@ -14,6 +14,7 @@ import { WishlistProvider } from '@/context/WishlistContext';
 import { ComparisonProvider } from '@/context/ComparisonContext';
 import { BrowsingHistoryProvider } from '@/context/BrowsingHistoryContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
+import { WizardWidget } from '@/components/Wizard';
 import { ServiceDetailModal } from '@/components/service-modal';
 import ProductComparisonModal from '@/components/ProductComparisonModal';
 import { AdminSidebarToggle, EditModeBar, EditModeTutorial, InlineTextEditor } from '@/components/InlineEditor';
@@ -214,6 +215,9 @@ export default function RootLayout({
                     <div data-noindex>
                       <Footer />
                     </div>
+
+                    {/* Sales assessment wizard - floating "Help me choose" button */}
+                    <WizardWidget />
 
                     {/* AI Chatbot - floating widget available on all pages */}
                     <PageIndexer />
