@@ -7,7 +7,6 @@ import { badRequest, handleApiError, serverError } from '@/lib/api-errors';
 import { sendWelcomeEmail } from '@/lib/email-service';
 import { withTimeout, TIMEOUT_LIMITS, TimeoutError } from '@/lib/api-timeout';
 import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from '@/lib/rate-limit';
-import { emitWorkflowEvent } from '@/lib/workflow-events';
 
 // Schema uses existing validation helpers for consistency with forms
 const SignupSchema = z.object({
@@ -122,23 +121,6 @@ export async function POST(request: NextRequest) {
     if (error) {
       // If signup fails (e.g., email already exists), return the error
       return badRequest(error.message);
-    }
-
-    // ========================================================================
-    // Emit workflow event for automation triggers (non-blocking)
-    // ========================================================================
-    if (data.user) {
-      try {
-        emitWorkflowEvent('customer.signup', {
-          customerId: data.user.id,
-          email: data.user.email || email,
-          name: (metadata?.name || metadata?.full_name || '') as string,
-          phone: (metadata?.phone as string) || undefined,
-          timestamp: Date.now(),
-        });
-      } catch (err) {
-        console.warn('[Signup] Workflow event emission failed (non-blocking):', err);
-      }
     }
 
     // ========================================================================
