@@ -11,6 +11,7 @@ const nextConfig = {
   // prevent it from trying to export /404 and /500 by setting the build stage
   // to 'all' and letting the app router handle error pages
   experimental: {
+    instrumentationHook: true,
     optimizePackageImports: ['@components', '@icons', '@ui'],
   },
   // Disable Pages Router file detection entirely since we use App Router

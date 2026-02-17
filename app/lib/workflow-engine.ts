@@ -727,6 +727,11 @@ async function handleEvent(
  * Call this once at app startup (e.g., in a server-side init file)
  */
 export function initWorkflowEngine(): void {
+  if (process.env.WORKFLOW_ENGINE_ENABLED !== 'true') {
+    console.log('[WorkflowEngine] Disabled (set WORKFLOW_ENGINE_ENABLED=true to enable)');
+    return;
+  }
+
   console.log('[WorkflowEngine] Initializing...');
 
   // Start the background worker

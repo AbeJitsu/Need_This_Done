@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdmin } from '@/lib/api-auth';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { sendOrderStatusUpdate } from '@/lib/email-service';
+import { emitWorkflowEvent } from '@/lib/workflow-events';
 
 export const dynamic = 'force-dynamic';
 
@@ -85,6 +86,30 @@ export async function PATCH(
     } catch (cacheError) {
       console.error('[Update Order Status] Cache invalidation failed:', cacheError);
       // Continue - cache invalidation failure shouldn't block the response
+    }
+
+    // Emit workflow events for automation triggers (non-blocking)
+    try {
+      if (newStatus === 'shipped') {
+        emitWorkflowEvent('order.fulfilled', {
+          orderId: order.medusa_order_id || id,
+          customerId: order.customer_id || '',
+          customerEmail: order.email || '',
+          trackingNumber: order.tracking_number || undefined,
+          shippingCarrier: order.shipping_carrier || undefined,
+          timestamp: Date.now(),
+        });
+      } else if (newStatus === 'canceled') {
+        emitWorkflowEvent('order.cancelled', {
+          orderId: order.medusa_order_id || id,
+          customerId: order.customer_id || '',
+          customerEmail: order.email || '',
+          reason: 'Admin status change',
+          timestamp: Date.now(),
+        });
+      }
+    } catch (err) {
+      console.warn('[Update Order Status] Workflow event emission failed (non-blocking):', err);
     }
 
     // Send status update email to customer

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdmin } from '@/lib/api-auth';
 import { handleApiError } from '@/lib/api-errors';
 import { products, Product } from '@/lib/medusa-client';
+import { emitWorkflowEvent } from '@/lib/workflow-events';
 
 export const dynamic = 'force-dynamic';
 
@@ -153,6 +154,32 @@ export async function PATCH(request: NextRequest) {
     const errors = results
       .map((r, i) => r.status === 'rejected' ? { variantId: updates[i].variantId, error: r.reason?.message || 'Unknown error' } : null)
       .filter(Boolean);
+
+    // Emit workflow events for stock changes (non-blocking)
+    const LOW_STOCK_THRESHOLD = 10;
+    for (const update of updates) {
+      try {
+        if (update.inventoryQuantity === 0) {
+          emitWorkflowEvent('product.out_of_stock', {
+            productId: update.productId || '',
+            productName: update.productName || '',
+            variantId: update.variantId,
+            timestamp: Date.now(),
+          });
+        } else if (update.inventoryQuantity <= LOW_STOCK_THRESHOLD) {
+          emitWorkflowEvent('inventory.low_stock', {
+            productId: update.productId || '',
+            productName: update.productName || '',
+            variantId: update.variantId,
+            currentQuantity: update.inventoryQuantity,
+            lowStockThreshold: LOW_STOCK_THRESHOLD,
+            timestamp: Date.now(),
+          });
+        }
+      } catch (err) {
+        console.warn('[Inventory] Workflow event emission failed (non-blocking):', err);
+      }
+    }
 
     return NextResponse.json({
       success: failed === 0,

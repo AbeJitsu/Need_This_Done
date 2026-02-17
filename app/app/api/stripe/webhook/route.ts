@@ -6,6 +6,7 @@ import { sendOrderConfirmation } from '@/lib/email-service';
 import { withWebhookRetry, validateWebhookData, getWebhookStatusCode, type WebhookHandlerResult } from '@/lib/webhook-reliability';
 import { validateRequestSize, SIZE_LIMITS } from '@/lib/request-size-limit';
 import { withTimeout, TIMEOUT_LIMITS } from '@/lib/api-timeout';
+import { emitWorkflowEvent } from '@/lib/workflow-events';
 import Stripe from 'stripe';
 
 export const dynamic = 'force-dynamic';
@@ -362,6 +363,24 @@ async function handlePaymentSuccess(
 
   if (!recordResult.success) {
     return recordResult;
+  }
+
+  // Emit workflow event for automation triggers (non-blocking)
+  if (orderId) {
+    try {
+      emitWorkflowEvent('order.placed', {
+        orderId,
+        customerId: paymentIntent.metadata?.customer_id || '',
+        customerEmail: email || '',
+        customerName: paymentIntent.metadata?.customer_name || '',
+        totalAmount: paymentIntent.amount,
+        currency: paymentIntent.currency?.toUpperCase() || 'USD',
+        items: [],
+        timestamp: Date.now(),
+      });
+    } catch (err) {
+      console.warn('[Webhook] Workflow event emission failed (non-blocking):', err);
+    }
   }
 
   // Send order confirmation email (fire and forget - don't block webhook response)

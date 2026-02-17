@@ -78,3 +78,9 @@ app/component-route-map.json
 content/changelog/auto-log.json
 .vercel
 .env*.local
+
+# Auto-eval runtime files (generated per-run, not committed)
+automations/.eval-lock
+automations/.eval-index
+automations/eval-log.json
+automations/launchd/*.log
