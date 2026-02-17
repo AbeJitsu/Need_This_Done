@@ -70,6 +70,21 @@ shadow-lg shadow-blue-500/25     /* blue */
 shadow-lg shadow-purple-500/25   /* purple */
 ```
 
+## Dark Hero Section Pattern
+
+All page hero sections use a consistent dark treatment with BJJ belt gradient accents:
+
+| Element | Pattern |
+|---------|---------|
+| Section bg | `bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900` |
+| Glow orb (top-left) | `bg-emerald-500/10` or `bg-blue-500/10` — w-[500px] h-[500px] blur-3xl -translate-x/y-1/2 |
+| Glow orb (bottom-right) | `bg-purple-500/10` — w-[400px] h-[400px] blur-3xl translate-x/y-1/3 |
+| Accent line | `bg-gradient-to-r from-emerald-400 to-blue-400` (or `via-blue-400 to-purple-400` for 3-stop) |
+| Title gradient text | `bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400` |
+| Content wrapper | `relative z-10 max-w-{5xl|6xl} mx-auto px-6 sm:px-8 md:px-12 pt-16 md:pt-20 pb-16 md:pb-20` |
+
+**Never use** `purple-400/gold-400` or `amber-400` for hero accent gradients — always green→blue→purple.
+
 ## Component Patterns
 
 Check `app/components/` before building new:

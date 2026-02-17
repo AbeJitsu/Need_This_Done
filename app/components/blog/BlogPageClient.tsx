@@ -36,82 +36,78 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
       {/* ================================================================
           Hero Section - Bold Dark Editorial
           ================================================================ */}
-      <section className="pt-8 md:pt-12 pb-4">
-        <div className="relative overflow-hidden py-16 md:py-20 md:max-w-6xl md:mx-auto md:rounded-3xl">
-          {/* Dark gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950" />
-          {/* Accent glows */}
-          <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-80 h-80 bg-gold-500/10 rounded-full blur-3xl" />
-          {/* Watermark */}
-          <div className="absolute -bottom-8 -right-4 text-[10rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">✎</div>
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        {/* Accent glows */}
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+        {/* Watermark */}
+        <div className="absolute -bottom-8 -right-4 text-[10rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">✎</div>
 
-          <div className="relative z-10 px-6 sm:px-8 md:px-12">
-            <EditableSection sectionKey="header" label="Page Header">
-              <FadeIn direction="up" triggerOnScroll={false}>
-                {/* Editorial header */}
-                <div className="mb-10">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-400 to-gold-400" />
-                    <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Blog</span>
-                  </div>
-                  <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[0.95] mb-4">
-                    Read. Learn.<br />
-                    <span className="bg-gradient-to-r from-purple-400 via-gold-400 to-purple-400 bg-clip-text text-transparent">Build.</span>
-                  </h1>
-                  <p className="text-xl text-slate-400 max-w-xl leading-relaxed">
-                    {content.header.description}
-                  </p>
+        <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-8 md:px-12 pt-16 md:pt-20 pb-16 md:pb-20">
+          <EditableSection sectionKey="header" label="Page Header">
+            <FadeIn direction="up" triggerOnScroll={false}>
+              {/* Editorial header */}
+              <div className="mb-10">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
+                  <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Blog</span>
                 </div>
-              </FadeIn>
-            </EditableSection>
+                <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[0.95] mb-4">
+                  Read. Learn.<br />
+                  <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">Build.</span>
+                </h1>
+                <p className="text-xl text-slate-400 max-w-xl leading-relaxed">
+                  {content.header.description}
+                </p>
+              </div>
+            </FadeIn>
+          </EditableSection>
 
-            {/* Category pills - styled like pricing nav */}
-            {posts.length > 0 && (
-              <StaggerContainer staggerDelay={0.06} className="flex flex-wrap gap-3">
-                <StaggerItem>
-                  <Link
-                    href="/blog"
-                    className={`
-                      group flex items-center gap-2 px-5 py-3 rounded-full
-                      border border-white/10 bg-white/5 backdrop-blur-sm
-                      transition-all duration-300 hover:-translate-y-0.5
-                      hover:border-purple-500/50 hover:bg-purple-500/10 text-purple-400
-                      ${focusRingClasses.purple}
-                    `}
-                  >
-                    <BookOpen size={18} className="group-hover:scale-110 transition-transform duration-300" />
-                    <span className="font-semibold text-sm text-white">{content.categoryFilterLabel}</span>
-                  </Link>
-                </StaggerItem>
-                {Object.entries(BLOG_CATEGORIES).slice(0, 5).map(([key, label]) => {
-                  const colorMap: Record<string, string> = {
-                    tutorials: 'hover:border-emerald-500/50 hover:bg-emerald-500/10 text-emerald-400',
-                    guides: 'hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400',
-                    case_studies: 'hover:border-gold-500/50 hover:bg-gold-500/10 text-gold-400',
-                    news: 'hover:border-purple-500/50 hover:bg-purple-500/10 text-purple-400',
-                    tips: 'hover:border-slate-400/50 hover:bg-slate-500/10 text-slate-400',
-                  };
-                  return (
-                    <StaggerItem key={key}>
-                      <Link
-                        href={`/blog?category=${key}`}
-                        className={`
-                          group flex items-center gap-2 px-5 py-3 rounded-full
-                          border border-white/10 bg-white/5 backdrop-blur-sm
-                          transition-all duration-300 hover:-translate-y-0.5
-                          ${colorMap[key] || 'hover:border-slate-500/50 hover:bg-slate-500/10 text-slate-400'}
-                          ${focusRingClasses.blue}
-                        `}
-                      >
-                        <span className="font-semibold text-sm text-white">{label}</span>
-                      </Link>
-                    </StaggerItem>
-                  );
-                })}
-              </StaggerContainer>
-            )}
-          </div>
+          {/* Category pills - styled like pricing nav */}
+          {posts.length > 0 && (
+            <StaggerContainer staggerDelay={0.06} className="flex flex-wrap gap-3">
+              <StaggerItem>
+                <Link
+                  href="/blog"
+                  className={`
+                    group flex items-center gap-2 px-5 py-3 rounded-full
+                    border border-white/10 bg-white/5 backdrop-blur-sm
+                    transition-all duration-300 hover:-translate-y-0.5
+                    hover:border-purple-500/50 hover:bg-purple-500/10 text-purple-400
+                    ${focusRingClasses.purple}
+                  `}
+                >
+                  <BookOpen size={18} className="group-hover:scale-110 transition-transform duration-300" />
+                  <span className="font-semibold text-sm text-white">{content.categoryFilterLabel}</span>
+                </Link>
+              </StaggerItem>
+              {Object.entries(BLOG_CATEGORIES).slice(0, 5).map(([key, label]) => {
+                const colorMap: Record<string, string> = {
+                  tutorials: 'hover:border-emerald-500/50 hover:bg-emerald-500/10 text-emerald-400',
+                  guides: 'hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400',
+                  case_studies: 'hover:border-gold-500/50 hover:bg-gold-500/10 text-gold-400',
+                  news: 'hover:border-purple-500/50 hover:bg-purple-500/10 text-purple-400',
+                  tips: 'hover:border-slate-400/50 hover:bg-slate-500/10 text-slate-400',
+                };
+                return (
+                  <StaggerItem key={key}>
+                    <Link
+                      href={`/blog?category=${key}`}
+                      className={`
+                        group flex items-center gap-2 px-5 py-3 rounded-full
+                        border border-white/10 bg-white/5 backdrop-blur-sm
+                        transition-all duration-300 hover:-translate-y-0.5
+                        ${colorMap[key] || 'hover:border-slate-500/50 hover:bg-slate-500/10 text-slate-400'}
+                        ${focusRingClasses.blue}
+                      `}
+                    >
+                      <span className="font-semibold text-sm text-white">{label}</span>
+                    </Link>
+                  </StaggerItem>
+                );
+              })}
+            </StaggerContainer>
+          )}
         </div>
       </section>
 
@@ -183,7 +179,7 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
                   <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
                     <div className="max-w-lg">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-400 to-gold-400" />
+                        <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
                         <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Get Started</span>
                       </div>
                       <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-3">

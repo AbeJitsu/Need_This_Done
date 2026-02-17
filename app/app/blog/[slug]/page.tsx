@@ -132,7 +132,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         {/* ================================================================
             Dark Editorial Hero
             ================================================================ */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950">
+        <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
           {/* Dot texture */}
           <div
             className="absolute inset-0 opacity-[0.03]"
@@ -143,8 +143,8 @@ export default async function BlogPostPage({ params }: PageProps) {
           />
 
           {/* Glow orbs */}
-          <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl" />
+          <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
 
           <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 md:px-12 pt-16 md:pt-24 pb-16 md:pb-20">
             {/* Back link */}
