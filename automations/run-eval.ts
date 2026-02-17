@@ -200,7 +200,7 @@ function runClaude(prompt: string): Promise<{ exitCode: number | null; error?: s
     const env = { ...process.env };
     delete env.CLAUDECODE;
 
-    const child = spawn('claude', ['--print', '--dangerously-skip-permissions', '--model', 'sonnet', '--max-budget-usd', '2', '-p', prompt], {
+    const child = spawn('claude', ['--print', '--dangerously-skip-permissions', '--model', 'haiku', '-p', prompt], {
       cwd: PROJECT_ROOT,
       stdio: ['pipe', 'inherit', 'inherit'],
       timeout: TIMEOUT_MS,
