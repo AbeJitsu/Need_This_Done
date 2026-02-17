@@ -21,6 +21,7 @@ Major subfolders have their own CLAUDE.md files for domain-specific knowledge:
 | Understand codebase     | Read `README.md`              |
 | Draft a commit          | Run `/dac`                    |
 | Check work status       | Run `/check-work`             |
+| Run auto-eval           | `tsx automations/run-eval.ts` |
 
 **CRITICAL:** After `npm run build`, the dev server must be **killed and restarted** — build clobbers `.next`.
 
@@ -64,11 +65,40 @@ Use `run_in_background: true` for long-running tasks (Docker setup, test suites,
 - `claude-md-management:revise-claude-md` — When updating CLAUDE.md
 - `superpowers:dispatching-parallel-agents` — Before launching 2+ background tasks
 
+## Auto-Eval System
+
+Automated codebase audits in `automations/`. Spawns Claude Code sessions that review and fix issues.
+
+| Command | What it does |
+|---------|-------------|
+| `tsx automations/run-eval.ts` | Auto-rotate through 4 eval types |
+| `tsx automations/run-eval.ts --type frontend` | Run specific eval type |
+| `tsx automations/run-eval.ts --dry-run` | Preview prompt without running |
+
+**Eval types:** `frontend` (UI/a11y), `backend` (APIs/security), `functionality` (tests/features), `memory` (docs/CLAUDE.md accuracy)
+
+**Scheduling:** launchd runs every 4 hours. Install: `cd automations/launchd && ./install.sh install`
+
+**Key files:** `automations/run-eval.ts` (runner), `automations/prompts/*.md` (templates), `automations/launchd/` (scheduling)
+
+## Workflow Automation
+
+The workflow engine (BullMQ + React Flow + Supabase) initializes on server boot via `app/instrumentation.ts`. Requires `WORKFLOW_ENGINE_ENABLED=true` in env.
+
+**Events emitted from production code:**
+- `order.placed` — Stripe webhook after payment success
+- `customer.signup` — Auth signup after account creation
+- `order.fulfilled` / `order.cancelled` — Admin order status changes
+- `product.out_of_stock` / `inventory.low_stock` — Inventory updates
+
+**Key files:** `app/lib/workflow-engine.ts` (engine), `app/lib/workflow-events.ts` (event bus), `app/instrumentation.ts` (startup)
+
 ## Environment Tips
 
 - **Frontend app** is in `/app` directory
 - **Supabase** migrations in `/supabase/migrations`
 - **Medusa backend** in `/medusa` (deployed on Railway)
+- **Automations** in `/automations` (standalone CLI, not part of web app)
 - **Environment variables** in `.env.local` (see README.md for required vars)
 
 ## Communication
