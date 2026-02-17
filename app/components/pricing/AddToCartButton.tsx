@@ -15,8 +15,8 @@ interface AddToCartButtonProps {
   title: string;
   price: number; // in cents
   thumbnail?: string;
-  /** Visual variant: 'primary' for packages, 'secondary' for add-ons */
-  variant?: 'primary' | 'secondary';
+  /** Visual variant: 'primary' for packages, 'secondary' for add-ons, 'dark-secondary' for add-ons on dark backgrounds */
+  variant?: 'primary' | 'secondary' | 'dark-secondary';
   className?: string;
 }
 
@@ -54,6 +54,9 @@ export default function AddToCartButton({
     secondary: showSuccess
       ? 'py-2 px-4 bg-emerald-500 text-white'
       : 'py-2 px-4 bg-gray-900 text-white hover:bg-gray-800',
+    'dark-secondary': showSuccess
+      ? 'py-2 px-4 bg-emerald-500 text-white'
+      : 'py-2 px-4 bg-white/15 text-white border border-white/20 hover:bg-white/25',
   };
 
   return (
