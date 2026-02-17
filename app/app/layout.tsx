@@ -180,7 +180,7 @@ export default function RootLayout({
         <ProfessionalServiceJsonLd />
         <WebSiteJsonLd />
       </head>
-      <body className="antialiased transition-colors duration-0">
+      <body className="antialiased">
         <SessionProvider>
         <AuthProvider>
           <CartProvider>
@@ -200,9 +200,7 @@ export default function RootLayout({
                     </a>
 
                     {/* Site-wide navigation (includes dark mode toggle) */}
-                    <div data-noindex>
-                      <Navigation />
-                    </div>
+                    <Navigation />
 
                     {/* Edit mode indicator bar - shows when admin is in edit mode */}
                     <EditModeBar />
