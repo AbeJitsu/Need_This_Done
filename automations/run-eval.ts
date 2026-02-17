@@ -29,7 +29,7 @@ const AUTOMATIONS_DIR = join(PROJECT_ROOT, 'automations');
 const LOCK_FILE = join(AUTOMATIONS_DIR, '.eval-lock');
 const INDEX_FILE = join(AUTOMATIONS_DIR, '.eval-index');
 const LOG_FILE = join(AUTOMATIONS_DIR, 'eval-log.json');
-const TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+const TIMEOUT_MS = 60 * 60 * 1000; // 60 minutes
 
 // ============================================================================
 // CLI Argument Parsing

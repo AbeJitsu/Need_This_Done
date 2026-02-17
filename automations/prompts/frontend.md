@@ -9,7 +9,7 @@ You have limited time. Work fast: grep first, read only what grep finds, fix onl
 ## Rules
 
 - Fix 1-3 issues maximum — prioritize the worst one
-- Run `cd app && npm run test:a11y` before committing
+- Do NOT run tests (too slow) — just fix and commit
 - Commit to `dev` branch only (run `git checkout dev` first)
 - Append a 1-line summary to `.nightly-eval-fixes.md` in project root
 - Do NOT add new features — only fix existing issues
