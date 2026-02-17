@@ -10,6 +10,7 @@
 // Usage:
 //   tsx automations/run-eval.ts                    # Auto-rotate through types
 //   tsx automations/run-eval.ts --type frontend    # Specific type
+//   tsx automations/run-eval.ts --all              # Run all 4 types sequentially
 //   tsx automations/run-eval.ts --dry-run          # Show what would run
 
 import { execSync, spawn } from 'child_process';
@@ -28,7 +29,7 @@ const AUTOMATIONS_DIR = join(PROJECT_ROOT, 'automations');
 const LOCK_FILE = join(AUTOMATIONS_DIR, '.eval-lock');
 const INDEX_FILE = join(AUTOMATIONS_DIR, '.eval-index');
 const LOG_FILE = join(AUTOMATIONS_DIR, 'eval-log.json');
-const TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
+const TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
 
 // ============================================================================
 // CLI Argument Parsing
@@ -36,12 +37,13 @@ const TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
 
 interface CliArgs {
   type?: EvalType;
+  all: boolean;
   dryRun: boolean;
 }
 
 function parseArgs(): CliArgs {
   const args = process.argv.slice(2);
-  const result: CliArgs = { dryRun: false };
+  const result: CliArgs = { all: false, dryRun: false };
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--type' && args[i + 1]) {
@@ -52,9 +54,16 @@ function parseArgs(): CliArgs {
       }
       result.type = type;
       i++;
+    } else if (args[i] === '--all') {
+      result.all = true;
     } else if (args[i] === '--dry-run') {
       result.dryRun = true;
     }
+  }
+
+  if (result.all && result.type) {
+    console.error('Cannot use --all with --type. Pick one.');
+    process.exit(1);
   }
 
   return result;
@@ -187,10 +196,15 @@ function loadPrompt(type: EvalType): string {
 
 function runClaude(prompt: string): Promise<{ exitCode: number | null; error?: string }> {
   return new Promise((resolve) => {
-    const child = spawn('claude', ['--print', '--dangerously-skip-permissions', '-p', prompt], {
+    // Remove CLAUDECODE env var so nested sessions don't get blocked
+    const env = { ...process.env };
+    delete env.CLAUDECODE;
+
+    const child = spawn('claude', ['--print', '--dangerously-skip-permissions', '--model', 'sonnet', '--max-budget-usd', '2', '-p', prompt], {
       cwd: PROJECT_ROOT,
       stdio: ['pipe', 'inherit', 'inherit'],
       timeout: TIMEOUT_MS,
+      env,
     });
 
     const timer = setTimeout(() => {
@@ -212,65 +226,98 @@ function runClaude(prompt: string): Promise<{ exitCode: number | null; error?: s
 }
 
 // ============================================================================
+// Single Eval Execution
+// ============================================================================
+
+function previewPrompt(type: EvalType): void {
+  const prompt = loadPrompt(type);
+  console.log(`\n--- ${type} Prompt Preview (${prompt.length} chars) ---`);
+  console.log(prompt.substring(0, 500));
+  if (prompt.length > 500) console.log(`... (${prompt.length - 500} more chars)`);
+  console.log(`--- End ${type} Preview ---\n`);
+}
+
+async function runSingleEval(type: EvalType): Promise<void> {
+  console.log(`\n[AutoEval] === Running ${type} eval ===`);
+
+  // Acquire lock per eval (so one failure doesn't block the rest in --all mode)
+  if (!acquireLock()) {
+    console.log(`[AutoEval] Skipping ${type} — another eval is running.`);
+    return;
+  }
+
+  const startTime = Date.now();
+
+  try {
+    if (!ensureDevBranch()) {
+      console.error(`[AutoEval] Failed to switch to dev branch for ${type}. Skipping.`);
+      return;
+    }
+
+    const prompt = loadPrompt(type);
+    console.log(`[AutoEval] Prompt loaded (${prompt.length} chars)`);
+    console.log(`[AutoEval] Starting Claude session...`);
+
+    const result = await runClaude(prompt);
+    const durationMs = Date.now() - startTime;
+
+    console.log(`[AutoEval] ${type} completed in ${(durationMs / 1000).toFixed(1)}s (exit code: ${result.exitCode})`);
+
+    appendLog({
+      timestamp: new Date().toISOString(),
+      type,
+      exitCode: result.exitCode,
+      durationMs,
+      error: result.error,
+    });
+  } finally {
+    releaseLock();
+  }
+}
+
+// ============================================================================
 // Main
 // ============================================================================
 
 async function main() {
   const args = parseArgs();
 
-  // Determine eval type
+  // --all mode: run all 4 evals sequentially
+  if (args.all) {
+    console.log(`[AutoEval] Running all evals${args.dryRun ? ' (dry run)' : ''}: ${EVAL_TYPES.join(' → ')}`);
+
+    if (args.dryRun) {
+      for (const type of EVAL_TYPES) {
+        previewPrompt(type);
+      }
+      console.log('[AutoEval] Dry run complete. No changes made.');
+      return;
+    }
+
+    for (const type of EVAL_TYPES) {
+      await runSingleEval(type);
+    }
+
+    // Don't increment rotation index — --all shouldn't affect auto-rotate position
+    console.log('\n[AutoEval] All evals complete.');
+    return;
+  }
+
+  // Single eval mode (auto-rotate or explicit --type)
   const evalType = args.type || EVAL_TYPES[getCurrentIndex()];
   console.log(`[AutoEval] Type: ${evalType}${args.dryRun ? ' (dry run)' : ''}`);
 
-  // Load prompt
-  const prompt = loadPrompt(evalType);
-  console.log(`[AutoEval] Prompt loaded (${prompt.length} chars)`);
-
   if (args.dryRun) {
-    console.log('\n--- Prompt Preview ---');
-    console.log(prompt.substring(0, 500));
-    if (prompt.length > 500) console.log(`... (${prompt.length - 500} more chars)`);
-    console.log('--- End Preview ---\n');
+    previewPrompt(evalType);
     console.log('[AutoEval] Dry run complete. No changes made.');
     return;
   }
 
-  // Acquire lock
-  if (!acquireLock()) {
-    process.exit(0);
-  }
+  await runSingleEval(evalType);
 
-  const startTime = Date.now();
-
-  try {
-    // Ensure we're on dev branch
-    if (!ensureDevBranch()) {
-      console.error('[AutoEval] Failed to switch to dev branch. Aborting.');
-      process.exit(1);
-    }
-
-    // Run Claude
-    console.log(`[AutoEval] Starting Claude session...`);
-    const result = await runClaude(prompt);
-    const durationMs = Date.now() - startTime;
-
-    console.log(`[AutoEval] Completed in ${(durationMs / 1000).toFixed(1)}s (exit code: ${result.exitCode})`);
-
-    // Log result
-    appendLog({
-      timestamp: new Date().toISOString(),
-      type: evalType,
-      exitCode: result.exitCode,
-      durationMs,
-      error: result.error,
-    });
-
-    // Increment rotation index (only for auto-rotate, not explicit --type)
-    if (!args.type) {
-      incrementIndex();
-    }
-  } finally {
-    releaseLock();
+  // Increment rotation index only for auto-rotate (not --type or --all)
+  if (!args.type) {
+    incrementIndex();
   }
 }
 
