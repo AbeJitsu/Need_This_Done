@@ -117,7 +117,12 @@ function parseFrontmatter(content: string): {
         currentKey = key;
       } else {
         currentArray = null;
-        metadata[key] = value;
+        // Strip surrounding quotes from YAML values
+        const unquoted = (value.startsWith('"') && value.endsWith('"')) ||
+                         (value.startsWith("'") && value.endsWith("'"))
+          ? value.slice(1, -1)
+          : value;
+        metadata[key] = unquoted;
       }
     }
   }
