@@ -56,7 +56,7 @@ const PRODUCTS: ProductDefinition[] = [
   // ========================================
   {
     title: 'Launch Site',
-    description: 'Perfect for getting online fast. 3-5 page Next.js website deployed on Vercel. Includes custom design, mobile responsive, contact form, and basic SEO setup.',
+    description: 'Perfect for getting online fast. A polished 3-5 page website with custom design, mobile responsive layout, contact form, and basic SEO setup.',
     handle: 'launch-site',
     price: 50000, // $500
     type: 'package',
