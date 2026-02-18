@@ -1,14 +1,13 @@
 'use client';
 
 import { useIndexingOptional, IndexingStatus } from './IndexingContext';
-import { getSolidButtonColors } from '@/lib/colors';
 
 // ============================================================================
 // Chatbot Button Component
 // ============================================================================
-// What: Floating action button to open the chatbot
+// What: Floating pill button to open the chatbot
 // Why: Always-accessible entry point for help on every page
-// How: Fixed position bottom-right, opens modal on click
+// How: Fixed position bottom-right, stacked above the wizard button
 
 interface ChatbotButtonProps {
   onClick: () => void;
@@ -53,14 +52,13 @@ function getStatusTooltip(status: IndexingStatus): string {
 }
 
 /**
- * Floating chat button that appears in the bottom-right corner.
+ * Floating chat pill button that appears in the bottom-right corner.
  *
  * Design features:
- * - Fixed position, always visible
- * - Blue accent matching site theme
- * - Chat bubble icon
+ * - Fixed position, stacked above the wizard button
+ * - Blue pill with "Ask a question" text label
+ * - Chat bubble icon + text for clear identification
  * - Hover and focus states for accessibility
- * - Dark mode support
  * - Dev mode: Shows indexing status indicator
  */
 export default function ChatbotButton({ onClick }: ChatbotButtonProps) {
@@ -72,21 +70,21 @@ export default function ChatbotButton({ onClick }: ChatbotButtonProps) {
   return (
     <button
       onClick={onClick}
-      className={`fixed bottom-6 right-6 z-40
-                 ${getSolidButtonColors('blue').bg} ${getSolidButtonColors('blue').hover}
-                 ${getSolidButtonColors('blue').text} rounded-full
-                 w-14 h-14 flex items-center justify-center
-                 shadow-lg hover:shadow-xl
+      className="fixed bottom-20 right-6 z-40
+                 bg-blue-600 hover:bg-blue-700 text-white
+                 rounded-full px-5 py-3
+                 flex items-center gap-2
+                 text-sm font-semibold
+                 shadow-lg shadow-blue-500/25
+                 hover:shadow-xl hover:shadow-blue-500/30
                  transition-all duration-200 ease-in-out
-                 hover:scale-105
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                 dark:focus:ring-offset-gray-900`}
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       aria-label="Open AI chat assistant"
-      title="Chat with AI assistant"
+      title="Ask a question"
     >
       {/* Chat bubble icon */}
       <svg
-        className="w-6 h-6"
+        className="w-5 h-5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -99,6 +97,7 @@ export default function ChatbotButton({ onClick }: ChatbotButtonProps) {
           d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
         />
       </svg>
+      Ask a question
 
       {/* Dev mode: Indexing status indicator */}
       {showDevIndicator && (
