@@ -114,7 +114,7 @@ export default function WizardStep({ title, subtitle, currentStep, totalSteps, c
       </div>
 
       {/* Step content (scenario cards) */}
-      <div className="flex-1 overflow-y-auto min-h-0">{children}</div>
+      <div className="flex-1 overflow-y-auto min-h-0 -mx-1">{children}</div>
 
       {/* Navigation buttons */}
       <div className="flex items-center justify-between pt-6 mt-4 border-t border-gray-100">
@@ -131,9 +131,9 @@ export default function WizardStep({ title, subtitle, currentStep, totalSteps, c
             type="button" onClick={onNext} disabled={nextDisabled}
             className={`text-sm font-semibold rounded-xl px-6 py-2.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2
               ${nextDisabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-500/25'}`}
-            whileHover={nextDisabled || prefersReducedMotion ? undefined : { scale: 1.03 }}
-            whileTap={nextDisabled || prefersReducedMotion ? undefined : { scale: 0.97 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+            whileHover={nextDisabled || prefersReducedMotion ? undefined : { y: -1 }}
+            whileTap={nextDisabled || prefersReducedMotion ? undefined : { y: 1 }}
+            transition={{ type: 'tween', duration: 0.15, ease: 'easeOut' }}
           >{nextLabel}</motion.button>
         )}
       </div>

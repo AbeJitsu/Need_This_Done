@@ -169,7 +169,7 @@ export default function WizardContent() {
           nextLabel={currentStepIndex === activeSteps.length - 1 ? 'See My Results' : 'Continue'}
           nextDisabled={step.selectionType === 'single' && !hasSelection}
         >
-          <div className="grid gap-3">
+          <div className="grid gap-2 px-1 py-3">
             {step.scenarios.map((scenario) => {
               const isSelected =
                 step.selectionType === 'single'
