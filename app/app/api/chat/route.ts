@@ -318,7 +318,7 @@ CITATION FORMAT:
               system: systemPrompt,
               messages: normalizedMessages,
               maxOutputTokens: Number(process.env.NEXT_PUBLIC_CHATBOT_MAX_TOKENS) || 1000,
-              temperature: Number(process.env.NEXT_PUBLIC_CHATBOT_TEMPERATURE) || 0.7,
+              temperature: Number(process.env.NEXT_PUBLIC_CHATBOT_TEMPERATURE) || 0.3,
             });
           })(),
           LLM_TIMEOUT_MS,

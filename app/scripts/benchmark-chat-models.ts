@@ -87,7 +87,7 @@ async function runSingle(
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: prompt }],
     maxOutputTokens: 300,
-    temperature: 0.7,
+    temperature: 0.3,
   });
 
   for await (const chunk of result.textStream) {
