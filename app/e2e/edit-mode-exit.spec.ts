@@ -137,7 +137,7 @@ test.describe('Edit Mode Exit', () => {
 
     // Step 2: Click toggle again to close (it's the floating button at bottom-right)
     // Use the floating button class to distinguish from sidebar close button
-    const closeToggle = page.locator('button.fixed.bottom-24.right-6[aria-label="Close editor"]');
+    const closeToggle = page.locator('button.fixed.bottom-6.left-6[aria-label="Close editor"]');
     await closeToggle.click();
 
     // Verify edit mode is off

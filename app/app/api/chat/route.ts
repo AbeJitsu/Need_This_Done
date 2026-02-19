@@ -314,11 +314,11 @@ CITATION FORMAT:
         const result = await withTimeout(
           (async () => {
             return await streamText({
-              model: openai('gpt-4o-mini'),
+              model: openai(process.env.NEXT_PUBLIC_CHATBOT_MODEL || 'gpt-4.1-nano'),
               system: systemPrompt,
               messages: normalizedMessages,
-              maxOutputTokens: 1000,
-              temperature: 0.7,
+              maxOutputTokens: Number(process.env.NEXT_PUBLIC_CHATBOT_MAX_TOKENS) || 1000,
+              temperature: Number(process.env.NEXT_PUBLIC_CHATBOT_TEMPERATURE) || 0.3,
             });
           })(),
           LLM_TIMEOUT_MS,

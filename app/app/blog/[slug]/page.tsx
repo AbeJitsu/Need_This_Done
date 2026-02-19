@@ -2,8 +2,9 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import Button from '@/components/Button';
+import { ArrowLeft } from 'lucide-react';
 import MarkdownContent from '@/components/blog/MarkdownContent';
+import BlogPostCTA from '@/components/blog/BlogPostCTA';
 import {
   BlogPost,
   formatPublishedDate,
@@ -11,25 +12,40 @@ import {
   BLOG_CATEGORIES,
 } from '@/lib/blog-types';
 import { BlogPostingJsonLd } from '@/components/seo/JsonLd';
-import {
-  headingColors,
-  formInputColors,
-  accentColors,
-  cardBgColors,
-  cardBorderColors,
-  focusRingClasses,
-  mutedTextColors,
-  hoverBgColors,
-  dividerColors,
-  coloredLinkText,
-} from '@/lib/colors';
 
 export const dynamic = 'force-dynamic';
 
 // ============================================================================
-// Single Blog Post Page - /blog/[slug]
+// Category accent colors for the dark hero — full class strings for Tailwind
 // ============================================================================
-// Displays a full blog post with rich formatting, author info, and sharing.
+
+const CATEGORY_ACCENTS: Record<string, {
+  badge: string;
+  bar: string;
+}> = {
+  tutorials: {
+    badge: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
+    bar: 'from-emerald-400 to-emerald-600',
+  },
+  guides: {
+    badge: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
+    bar: 'from-blue-400 to-blue-600',
+  },
+  case_studies: {
+    badge: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
+    bar: 'from-amber-400 to-amber-600',
+  },
+  news: {
+    badge: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
+    bar: 'from-purple-400 to-purple-600',
+  },
+  tips: {
+    badge: 'bg-gray-500/10 border-gray-500/20 text-gray-400',
+    bar: 'from-gray-400 to-gray-600',
+  },
+};
+
+const DEFAULT_ACCENT = CATEGORY_ACCENTS.news;
 
 // ============================================================================
 // Metadata Generation
@@ -107,174 +123,155 @@ export default async function BlogPostPage({ params }: PageProps) {
   const categoryLabel = post.category
     ? BLOG_CATEGORIES[post.category as keyof typeof BLOG_CATEGORIES] || post.category
     : null;
+  const accent = CATEGORY_ACCENTS[post.category || ''] || DEFAULT_ACCENT;
 
   return (
     <>
-    <BlogPostingJsonLd post={post} />
-    <article className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-      {/* Back Link */}
-      <Link
-        href="/blog"
-        className={`
-          inline-flex items-center gap-2 mb-8 rounded
-          ${formInputColors.helper} hover:${headingColors.primary}
-          transition-colors ${focusRingClasses.blue}
-        `}
-      >
-        ← Back to Blog
-      </Link>
+      <BlogPostingJsonLd post={post} />
+      <div>
+        {/* ================================================================
+            Dark Editorial Hero
+            ================================================================ */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+          {/* Dot texture */}
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
+            }}
+          />
 
-      {/* Header */}
-      <header className="mb-8">
-        {/* Category */}
-        {categoryLabel && (
-          <div className="mb-4">
-            <span
-              className={`
-                inline-block px-3 py-1 text-sm font-semibold rounded-full
-                ${accentColors.blue.bg} ${accentColors.blue.text}
-              `}
+          {/* Glow orbs */}
+          <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+
+          <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 md:px-12 pt-16 md:pt-24 pb-16 md:pb-20">
+            {/* Back link */}
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 transition-colors mb-8"
             >
-              {categoryLabel}
-            </span>
+              <ArrowLeft size={16} />
+              Back to Blog
+            </Link>
+
+            {/* Editorial bar + category */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className={`w-8 h-1 rounded-full bg-gradient-to-r ${accent.bar}`} />
+              {categoryLabel && (
+                <span
+                  className={`inline-block px-3 py-1 text-xs font-semibold rounded-full border backdrop-blur-sm ${accent.badge}`}
+                >
+                  {categoryLabel}
+                </span>
+              )}
+            </div>
+
+            {/* Title */}
+            <h1 className="font-playfair text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-8">
+              {post.title}
+            </h1>
+
+            {/* Author + date + reading time strip */}
+            <div className="flex flex-wrap items-center gap-4 text-sm">
+              {/* Author avatar */}
+              {post.author_name && (
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
+                    {post.author_name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-slate-300 font-medium">{post.author_name}</span>
+                </div>
+              )}
+
+              {post.author_name && post.published_at && (
+                <span className="text-slate-600">·</span>
+              )}
+
+              {post.published_at && (
+                <span className="text-slate-400">
+                  {formatPublishedDate(post.published_at)}
+                </span>
+              )}
+
+              <span className="text-slate-600">·</span>
+              <span className="text-slate-400">{readingTime} min read</span>
+            </div>
+          </div>
+        </section>
+
+        {/* ================================================================
+            Featured Image — bridging banner
+            ================================================================ */}
+        {post.featured_image && (
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 -mt-8">
+            <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden shadow-2xl">
+              <Image
+                src={post.featured_image}
+                alt={post.title}
+                fill
+                unoptimized
+                className="object-cover"
+                priority
+              />
+            </div>
           </div>
         )}
 
-        {/* Title */}
-        <h1
-          className={`
-            text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight
-            ${headingColors.primary} mb-6
-          `}
-        >
-          {post.title}
-        </h1>
+        {/* ================================================================
+            Article Content — narrower for reading comfort
+            ================================================================ */}
+        <article className="max-w-3xl mx-auto px-4 sm:px-6 md:px-8 py-12">
+          <MarkdownContent content={post.content} />
 
-        {/* Meta Row */}
-        <div className="flex flex-wrap items-center gap-4 text-sm">
-          {/* Author */}
-          {post.author_name && (
-            <div className="flex items-center gap-2">
-              <div
-                className={`
-                  w-10 h-10 rounded-full flex items-center justify-center
-                  ${accentColors.purple.bg} ${accentColors.purple.text} font-bold
-                `}
-              >
-                {post.author_name.charAt(0).toUpperCase()}
+          {/* Tags */}
+          {post.tags && post.tags.length > 0 && (
+            <div className="mt-12 pt-8 border-t border-gray-200">
+              <h3 className="text-sm font-semibold text-gray-500 mb-3">
+                Tags
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/blog?tag=${tag}`}
+                    className="px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-600 hover:bg-purple-50 hover:text-purple-600 transition-colors"
+                  >
+                    #{tag}
+                  </Link>
+                ))}
               </div>
-              <span className={headingColors.secondary}>{post.author_name}</span>
             </div>
           )}
 
-          {/* Separator */}
-          {post.author_name && post.published_at && (
-            <span className={`${mutedTextColors.light}`}>•</span>
+          {/* Source Attribution */}
+          {post.source && post.source !== 'original' && (
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <p className="text-sm text-gray-500">
+                Originally shared on{' '}
+                {post.source_url ? (
+                  <a
+                    href={post.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-purple-600 hover:underline"
+                  >
+                    {post.source.charAt(0).toUpperCase() + post.source.slice(1)}
+                  </a>
+                ) : (
+                  <span className="font-medium">
+                    {post.source.charAt(0).toUpperCase() + post.source.slice(1)}
+                  </span>
+                )}
+              </p>
+            </div>
           )}
 
-          {/* Date */}
-          {post.published_at && (
-            <span className={formInputColors.helper}>
-              {formatPublishedDate(post.published_at)}
-            </span>
-          )}
-
-          {/* Reading Time */}
-          <span className={mutedTextColors.light}>•</span>
-          <span className={formInputColors.helper}>{readingTime} min read</span>
-        </div>
-      </header>
-
-      {/* Featured Image */}
-      {post.featured_image && (
-        <div className="relative w-full h-64 md:h-96 rounded-xl overflow-hidden mb-8">
-          <Image
-            src={post.featured_image}
-            alt={post.title}
-            fill
-            unoptimized
-            className="object-cover"
-            priority
-          />
-        </div>
-      )}
-
-      {/* Content - renders markdown with syntax highlighting */}
-      <MarkdownContent content={post.content} />
-
-      {/* Tags */}
-      {post.tags && post.tags.length > 0 && (
-        <div className={`mt-12 pt-8 border-t ${dividerColors.border}`}>
-          <h3 className={`text-sm font-semibold ${headingColors.secondary} mb-3`}>
-            Tags
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {post.tags.map((tag) => (
-              <Link
-                key={tag}
-                href={`/blog?tag=${tag}`}
-                className={`
-                  px-3 py-1 rounded-full text-sm
-                  ${cardBgColors.elevated}
-                  ${mutedTextColors.normal}
-                  ${hoverBgColors.purple}
-                  transition-colors ${focusRingClasses.blue}
-                `}
-              >
-                #{tag}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Source Attribution */}
-      {post.source && post.source !== 'original' && (
-        <div className={`mt-8 pt-6 border-t ${dividerColors.border}`}>
-          <p className={`text-sm ${formInputColors.helper}`}>
-            Originally shared on{' '}
-            {post.source_url ? (
-              <a
-                href={post.source_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`${coloredLinkText.blue} hover:underline`}
-              >
-                {post.source.charAt(0).toUpperCase() + post.source.slice(1)}
-              </a>
-            ) : (
-              <span className="font-medium">
-                {post.source.charAt(0).toUpperCase() + post.source.slice(1)}
-              </span>
-            )}
-          </p>
-        </div>
-      )}
-
-      {/* CTA Section */}
-      <div
-        className={`
-          mt-12 p-8 rounded-xl text-center
-          ${cardBgColors.base} ${cardBorderColors.subtle}
-        `}
-      >
-        <h3 className={`text-2xl font-bold ${headingColors.primary} mb-3`}>
-          Need Help Getting Things Done?
-        </h3>
-        <p className={`${formInputColors.helper} mb-6 max-w-lg mx-auto`}>
-          Whether it's a project you've been putting off or ongoing support you need,
-          we're here to help.
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <Button variant="gold" href="/contact" size="lg">
-            Get Started
-          </Button>
-          <Button variant="gray" href="/services" size="lg">
-            View Services
-          </Button>
-        </div>
+          {/* CTA */}
+          <BlogPostCTA />
+        </article>
       </div>
-    </article>
     </>
   );
 }

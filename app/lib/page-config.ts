@@ -233,14 +233,6 @@ export interface ProcessPreviewStep {
   color: AccentVariant;
 }
 
-export interface ConsultationOption {
-  name: string;
-  duration: string;
-  price: string;
-  description: string;
-  color: AccentVariant;
-}
-
 /** Modal content structure for service cards */
 export interface ServiceModalContent {
   headline: string;
@@ -278,13 +270,6 @@ export interface HomePageContent {
     linkText: string;
     linkHref: string;
     cards: HomeServiceCard[];
-  };
-  consultations?: {
-    title: string;
-    description: string;
-    options: ConsultationOption[];
-    linkText: string;
-    linkHref: string;
   };
   processPreview: {
     title: string;
@@ -568,17 +553,6 @@ export const PAGE_CONFIGS = {
             },
           },
         ],
-      },
-      consultations: {
-        title: 'Not Sure Where to Start?',
-        description: 'Book a quick call. We\'ll figure out the best approach for your situation.',
-        options: [
-          { name: 'Quick Chat', duration: '15 min', price: '$20', description: 'Got a quick question?', color: 'green' },
-          { name: 'Strategy Call', duration: '30 min', price: '$35', description: 'Let\'s map out your needs', color: 'blue' },
-          { name: 'Deep Dive', duration: '55 min', price: '$50', description: 'Full project consultation', color: 'purple' },
-        ],
-        linkText: 'Book a consultation →',
-        linkHref: '/contact',
       },
       processPreview: {
         title: 'How It Works',

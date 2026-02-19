@@ -14,6 +14,7 @@ import { WishlistProvider } from '@/context/WishlistContext';
 import { ComparisonProvider } from '@/context/ComparisonContext';
 import { BrowsingHistoryProvider } from '@/context/BrowsingHistoryContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
+import { WizardWidget } from '@/components/Wizard';
 import { ServiceDetailModal } from '@/components/service-modal';
 import ProductComparisonModal from '@/components/ProductComparisonModal';
 import { AdminSidebarToggle, EditModeBar, EditModeTutorial, InlineTextEditor } from '@/components/InlineEditor';
@@ -180,7 +181,7 @@ export default function RootLayout({
         <ProfessionalServiceJsonLd />
         <WebSiteJsonLd />
       </head>
-      <body className="antialiased transition-colors duration-0">
+      <body className="antialiased">
         <SessionProvider>
         <AuthProvider>
           <CartProvider>
@@ -200,9 +201,7 @@ export default function RootLayout({
                     </a>
 
                     {/* Site-wide navigation (includes dark mode toggle) */}
-                    <div data-noindex>
-                      <Navigation />
-                    </div>
+                    <Navigation />
 
                     {/* Edit mode indicator bar - shows when admin is in edit mode */}
                     <EditModeBar />
@@ -216,6 +215,9 @@ export default function RootLayout({
                     <div data-noindex>
                       <Footer />
                     </div>
+
+                    {/* Sales assessment wizard - floating "Help me choose" button */}
+                    <WizardWidget />
 
                     {/* AI Chatbot - floating widget available on all pages */}
                     <PageIndexer />

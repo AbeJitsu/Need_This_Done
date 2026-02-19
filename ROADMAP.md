@@ -52,6 +52,29 @@
 
 **Files:** `scripts/seed-products.ts`, `app/pricing/page.tsx`, `app/api/pricing/products/route.ts`
 
+### 0A.1 Pricing + Shop Merge ✅ COMPLETE
+
+**Problem**: `/pricing` (read-only menu) and `/shop` (browse & buy) showed the same products in different layouts, creating a confusing fork in the funnel.
+
+**Solution**: Merged into a single `/pricing` page that educates AND converts. `/shop` now redirects to `/pricing`. Product detail pages (`/shop/{handle}`) unchanged.
+
+**What shipped:**
+- [x] "Add to Cart" buttons on all packages, services, and add-ons via Medusa cart
+- [x] All add-ons displayed (removed 6-item limit)
+- [x] `/shop` → `/pricing` redirect
+- [x] Dead code removed (ProductListingPage, CategoryFilter, RecentlyViewedWidget)
+- [x] Internal links updated (`/orders`, `/recently-viewed`)
+
+**Simplified funnel:**
+```
+BEFORE: Home → Services → Pricing (read-only) → Shop (buy) → Cart → Checkout
+AFTER:  Home → Services → Pricing (browse + buy) → Cart → Checkout
+```
+
+**Files:** `components/pricing/AddToCartButton.tsx`, `components/pricing/UnifiedPricingPage.tsx`, `app/shop/page.tsx`
+
+**PRD:** `docs/plans/2026-02-16-pricing-shop-merge-design.md`
+
 ### 0B. Contact Page Consultation Booking
 
 **Current:** Can pick consultation type (15/30/45 min) but no date/time picker. Just submits a form.

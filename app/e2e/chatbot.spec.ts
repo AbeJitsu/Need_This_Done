@@ -48,7 +48,7 @@ test.describe('Chatbot Widget', () => {
     const chatButton = page.getByLabel('Open AI chat assistant');
 
     // Check accessibility attributes
-    await expect(chatButton).toHaveAttribute('title', 'Chat with AI assistant');
+    await expect(chatButton).toHaveAttribute('title', 'Ask a question');
 
     // Check it's a button element
     await expect(chatButton).toHaveRole('button');

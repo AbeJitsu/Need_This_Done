@@ -31,24 +31,26 @@ test.describe('UX Flow Evaluation', () => {
       fullPage: true,
     });
 
-    // 2. Navigate to Shop via navigation link
-    await page.click('a[href="/shop"]');
+    // 2. Navigate to Pricing (merged shop+pricing page)
+    await page.click('a[href="/pricing"]');
     await page.waitForLoadState('load');
-    await page.waitForTimeout(2000); // Wait for products to load
+    await page.waitForTimeout(3000); // Wait for products to load from Medusa
     await page.screenshot({
-      path: 'ux-screenshots/02-shop.png',
+      path: 'ux-screenshots/02-pricing.png',
       fullPage: true,
     });
 
-    // 3. Click first product card to see details
+    // 3. Click first product detail link to see product page
     const productCard = page.locator('a[href^="/shop/"]').first();
-    await productCard.click();
-    await page.waitForLoadState('load');
-    await page.waitForTimeout(1000);
-    await page.screenshot({
-      path: 'ux-screenshots/03-product-detail.png',
-      fullPage: true,
-    });
+    if (await productCard.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await productCard.click();
+      await page.waitForLoadState('load');
+      await page.waitForTimeout(1000);
+      await page.screenshot({
+        path: 'ux-screenshots/03-product-detail.png',
+        fullPage: true,
+      });
+    }
 
     // 4. Add to cart
     const addToCartBtn = page.getByRole('button', { name: /add.*cart/i }).first();

@@ -7,8 +7,8 @@ import { focusRingClasses } from '@/lib/colors';
 // ============================================================================
 // Admin Sidebar Toggle - Floating button to open editing sidebar
 // ============================================================================
-// What: A floating gear button that appears for admins
-// Why: Provides easy access to page editing without cluttering the UI
+// What: A floating pencil button that appears for admins in the bottom-left corner
+// Why: Provides easy access to page editing without cluttering visitor-facing UI
 // How: Shows on all pages for admins, toggles the edit sidebar open/closed
 
 export default function AdminSidebarToggle() {
@@ -38,7 +38,7 @@ export default function AdminSidebarToggle() {
     <button
       onClick={handleToggle}
       className={`
-        fixed bottom-24 right-6 z-[60]
+        fixed bottom-6 left-6 z-[60]
         w-12 h-12 rounded-full
         bg-gray-900 dark:bg-gray-100
         text-white dark:text-gray-900

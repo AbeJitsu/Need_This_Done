@@ -56,7 +56,7 @@ const PRODUCTS: ProductDefinition[] = [
   // ========================================
   {
     title: 'Launch Site',
-    description: 'Perfect for getting online fast. 3-5 page Next.js website deployed on Vercel. Includes custom design, mobile responsive, contact form, and basic SEO setup.',
+    description: 'Perfect for getting online fast. A polished 3-5 page website with custom design, mobile responsive layout, contact form, and basic SEO setup.',
     handle: 'launch-site',
     price: 50000, // $500
     type: 'package',
@@ -263,6 +263,25 @@ const PRODUCTS: ProductDefinition[] = [
       type: 'addon',
       deposit_percent: 50,
       features: ['Trained on your content', '24/7 availability', 'Natural conversation', 'Lead capture'],
+    },
+  },
+  {
+    title: 'Logo Design',
+    description: 'Professional logo design or redesign for your brand.',
+    handle: 'logo-design',
+    price: 30000, // $300
+    type: 'addon',
+    collection: 'website-addons',
+    thumbnail: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&h=600&fit=crop&q=80',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: [
+        '2–3 unique concepts',
+        '2 rounds of revisions',
+        'Final files (PNG, SVG)',
+        'Transparent background versions',
+      ],
     },
   },
   {

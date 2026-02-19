@@ -48,7 +48,6 @@ const services = [
       'Performance tuned for fast load times',
       'Ongoing support and maintenance available',
     ],
-    price: 'From $500',
     ctaHref: '/pricing#websites',
     ctaLabel: 'Website Packages from $500 →',
     timeline: 'Typical delivery: 1–4 weeks',
@@ -59,7 +58,6 @@ const services = [
     glowSecondary: 'bg-emerald-300/15',
     badge: 'bg-white/15 text-white border-white/10',
     textAccent: 'text-emerald-200',
-    priceAccent: 'text-emerald-300',
   },
   {
     number: '02',
@@ -77,7 +75,6 @@ const services = [
       'Build custom dashboards for real-time visibility',
       'Documentation so your team can maintain it',
     ],
-    price: 'From $150',
     ctaHref: '/pricing#automation',
     ctaLabel: 'Automation from $150 →',
     timeline: 'Setup in 1–2 weeks',
@@ -88,7 +85,6 @@ const services = [
     glowSecondary: 'bg-blue-400/10',
     badge: 'bg-blue-500/20 text-blue-400 border-blue-500/20',
     textAccent: 'text-slate-400',
-    priceAccent: 'text-blue-400',
   },
   {
     number: '03',
@@ -106,7 +102,6 @@ const services = [
       'Continuous monitoring and improvement',
       'Monthly reporting on AI performance and ROI',
     ],
-    price: 'From $500/mo',
     ctaHref: '/pricing#automation',
     ctaLabel: 'AI Plans from $500/mo →',
     timeline: 'Continuous monthly service',
@@ -117,7 +112,6 @@ const services = [
     glowSecondary: 'bg-purple-300/15',
     badge: 'bg-white/15 text-purple-200 border-white/10',
     textAccent: 'text-purple-200',
-    priceAccent: 'text-purple-300',
   },
 ];
 
@@ -191,20 +185,19 @@ export default function ServicesPage() {
                         {service.outcome}
                       </p>
                     </div>
-                    <p className={`text-2xl font-black ${service.priceAccent} mb-6`}>
-                      {service.price}
-                    </p>
-                    <Link
-                      href={service.ctaHref}
-                      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-white/15 border border-white/20 text-white font-semibold text-sm hover:bg-white/25 transition-colors"
-                    >
-                      {service.ctaLabel}
-                    </Link>
-                    {service.timeline && (
-                      <p className={`mt-3 text-xs ${service.textAccent} opacity-80`}>
-                        {service.timeline}
-                      </p>
-                    )}
+                    <div className="inline-flex flex-col items-center">
+                      <Link
+                        href={service.ctaHref}
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-white/15 border border-white/20 text-white font-semibold text-sm hover:bg-white/25 transition-colors"
+                      >
+                        {service.ctaLabel}
+                      </Link>
+                      {service.timeline && (
+                        <p className={`mt-3 text-xs ${service.textAccent} opacity-80`}>
+                          {service.timeline}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   {/* Right: features */}
