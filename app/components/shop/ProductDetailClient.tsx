@@ -1,14 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Check, ArrowLeft, Heart, ShoppingCart } from 'lucide-react';
+import {
+  Check, ArrowLeft, Heart, ShoppingCart,
+  Palette, Smartphone, Mail, Search, CreditCard, Edit3, Bot, PenTool,
+  BarChart3, Lock, Zap, Globe, Users, Image as ImageIcon,
+  MessageSquare, Database, Calendar,
+} from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useWishlist } from '@/context/WishlistContext';
 import { useBrowsingHistory } from '@/context/BrowsingHistoryContext';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/Button';
 import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
+import { useReducedMotion } from '@/components/motion/useReducedMotion';
 import { getCheckmarkColors } from '@/lib/colors';
 import type { Product } from '@/lib/medusa-client';
 
@@ -117,12 +124,69 @@ const STEP_COLORS = [
 ];
 
 // ============================================================================
+// Value Comparison Anchor
+// ============================================================================
+// Psychology: Anchoring effect — the first number the brain sees becomes the
+// reference point. Showing "Agency: $15k+" makes our $5k feel like a bargain.
+
+function getComparisonAnchor(productType: string | undefined, price: number): { label: string; anchor: number } | null {
+  if (productType === 'package') {
+    return { label: 'Typical agency', anchor: price * 3 };
+  }
+  if (productType === 'service') {
+    return { label: 'Hiring a developer', anchor: 15000 }; // $150/hr × 100hrs baseline
+  }
+  return null; // addons and subscriptions skip this
+}
+
+// ============================================================================
+// Feature Icon Mapping
+// ============================================================================
+// Maps feature text to relevant icons via keyword matching.
+// Perceived value amplification: icon cards feel like more value than checkmarks.
+
+const FEATURE_ICON_MAP: [RegExp, React.ElementType][] = [
+  [/design|theme|brand|style|visual|aesthetic/i, Palette],
+  [/mobile|responsive|device/i, Smartphone],
+  [/form|contact|email|message/i, Mail],
+  [/seo|search|google|ranking/i, Search],
+  [/pay|stripe|checkout|credit|invoice/i, CreditCard],
+  [/cms|editor|content|edit/i, Edit3],
+  [/ai|chat|bot|assistant/i, Bot],
+  [/blog|post|article|write/i, PenTool],
+  [/analytic|metric|report|dashboard/i, BarChart3],
+  [/secur|auth|login|account|password/i, Lock],
+  [/automat|workflow|trigger|zapier/i, Zap],
+  [/page|site|web|domain|host/i, Globe],
+  [/team|user|member|customer|review/i, Users],
+  [/image|photo|gallery|media/i, ImageIcon],
+  [/notification|alert|remind/i, MessageSquare],
+  [/data|database|backup|storage/i, Database],
+  [/calendar|booking|appointment|schedule/i, Calendar],
+];
+
+function getFeatureIcon(feature: string) {
+  for (const [pattern, Icon] of FEATURE_ICON_MAP) {
+    if (pattern.test(feature)) return Icon;
+  }
+  return Check; // fallback to checkmark
+}
+
+// Product type icon for floating badge
+const PRODUCT_TYPE_ICONS: Record<string, React.ElementType> = {
+  package: Globe,
+  addon: Zap,
+  service: Zap,
+  subscription: Bot,
+};
+
+// ============================================================================
 // Product Detail Client Component
 // ============================================================================
 // Redesigned as a 4-section sales page:
-//   1. Dark Hero (title, price, deposit, image)
-//   2. What's Included (feature checklist)
-//   3. How It Works (3-step process)
+//   1. Dark Hero (title, price, deposit, image, comparison anchor)
+//   2. What's Included (icon grid cards)
+//   3. How It Works (scroll-animated timeline)
 //   4. CTA (add to cart, book a call, wishlist)
 
 interface ProductDetailClientProps {
@@ -167,6 +231,28 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   const deposit = Math.round(price * (depositPercent / 100));
   const steps = getHowItWorksSteps(productType);
   const checkColors = getCheckmarkColors(themeConfig.checkmarkColor);
+  const comparison = getComparisonAnchor(productType, price);
+  const TypeIcon = PRODUCT_TYPE_ICONS[productType || ''] || Globe;
+
+  // ========================================================================
+  // Scroll-driven animations (parallax hero + timeline progress)
+  // ========================================================================
+  const prefersReducedMotion = useReducedMotion();
+
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: heroScroll } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+  const orb1Y = useTransform(heroScroll, [0, 1], [0, -40]);
+  const orb2Y = useTransform(heroScroll, [0, 1], [0, -20]);
+
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: timelineProgress } = useScroll({
+    target: timelineRef,
+    offset: ['start end', 'end center'],
+  });
+  const lineScale = useTransform(timelineProgress, [0, 1], [0, 1]);
 
   // Product type label for section copy
   const typeLabel = productType === 'subscription' ? 'plan'
@@ -250,16 +336,22 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       )}
 
       {/* ================================================================== */}
-      {/* SECTION 1: Dark Hero */}
+      {/* SECTION 1: Dark Hero — parallax orbs, comparison anchor, floating badge */}
       {/* ================================================================== */}
-      <section className="relative overflow-hidden">
+      <section ref={heroRef} className="relative overflow-hidden">
         {/* Background gradient (matches pricing page card for this product type) */}
         <div className={`absolute inset-0 ${themeConfig.bg}`} />
 
-        {/* Glow orbs */}
+        {/* Glow orbs — parallax on scroll for kinetic depth */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className={`absolute -top-20 -right-20 w-96 h-96 rounded-full ${themeConfig.glow1} blur-3xl`} />
-          <div className={`absolute -bottom-10 -left-10 w-64 h-64 rounded-full ${themeConfig.glow2} blur-2xl`} />
+          <motion.div
+            className={`absolute -top-20 -right-20 w-96 h-96 rounded-full ${themeConfig.glow1} blur-3xl`}
+            style={{ y: prefersReducedMotion ? 0 : orb1Y }}
+          />
+          <motion.div
+            className={`absolute -bottom-10 -left-10 w-64 h-64 rounded-full ${themeConfig.glow2} blur-2xl`}
+            style={{ y: prefersReducedMotion ? 0 : orb2Y }}
+          />
         </div>
 
         {/* Dot pattern texture */}
@@ -323,12 +415,36 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                     {product.description}
                   </p>
                 )}
+
+                {/* Value comparison anchor — packages & services only */}
+                {comparison && (
+                  <div className="mt-6 max-w-lg bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="text-center flex-1">
+                        <p className="text-xs text-white/50 mb-1">{comparison.label}</p>
+                        <p className="text-2xl font-bold text-white/40 line-through">
+                          ${(comparison.anchor / 100).toLocaleString()}+
+                        </p>
+                      </div>
+                      <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/50 text-xs font-medium flex-shrink-0">
+                        vs
+                      </div>
+                      <div className="text-center flex-1">
+                        <p className="text-xs text-white/50 mb-1">This {typeLabel}</p>
+                        <p className="text-2xl font-black text-white">
+                          ${(price / 100).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-center text-xs text-white/40 mt-2">Same quality. Direct from the builder.</p>
+                  </div>
+                )}
               </div>
 
-              {/* Product image (small, accent) */}
-              {image && (
-                <div className="flex-shrink-0">
-                  <div className="relative w-48 h-48 md:w-52 md:h-52 rounded-2xl overflow-hidden ring-2 ring-white/20">
+              {/* Product image — larger with glow ring + floating type badge */}
+              <div className="flex-shrink-0">
+                {image ? (
+                  <div className="relative w-56 h-56 md:w-64 md:h-64 rounded-2xl overflow-hidden ring-2 ring-white/20 shadow-[0_0_30px_rgba(255,255,255,0.15)]">
                     <Image
                       src={image}
                       alt={product.title}
@@ -336,9 +452,21 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                       className="object-cover"
                       unoptimized
                     />
+                    <div className="absolute -top-3 -right-3 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs font-medium flex items-center gap-1.5 animate-float-slow">
+                      <TypeIcon size={14} />
+                      {typeLabel}
+                    </div>
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div className="relative w-56 h-56 md:w-64 md:h-64 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                    <TypeIcon size={48} className="text-white/30" />
+                    <div className="absolute -top-3 -right-3 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs font-medium flex items-center gap-1.5 animate-float-slow">
+                      <TypeIcon size={14} />
+                      {typeLabel}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </FadeIn>
         </div>
@@ -361,17 +489,20 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               </div>
             </FadeIn>
 
-            <StaggerContainer staggerDelay={0.06} className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-              {features.map((feature, i) => (
-                <StaggerItem key={i}>
-                  <div className="flex items-center gap-3 p-3 rounded-xl">
-                    <div className={`flex-shrink-0 w-6 h-6 rounded-full ${checkColors.bg} flex items-center justify-center`}>
-                      <Check size={14} strokeWidth={3} className={checkColors.icon} />
+            <StaggerContainer staggerDelay={0.04} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-w-4xl mx-auto auto-rows-fr">
+              {features.map((feature, i) => {
+                const FeatureIcon = getFeatureIcon(feature);
+                return (
+                  <StaggerItem key={i} className="h-full">
+                    <div className="group h-full flex flex-col items-center justify-center p-4 rounded-xl border border-gray-200 bg-white hover:border-gray-300 hover:shadow-md transition-all duration-300 text-center">
+                      <div className={`w-10 h-10 mx-auto mb-2 rounded-lg ${checkColors.bg} flex items-center justify-center`}>
+                        <FeatureIcon size={20} className={`${checkColors.icon} motion-safe:group-hover:scale-110 transition-transform duration-300`} />
+                      </div>
+                      <span className="text-sm font-medium text-gray-800">{feature}</span>
                     </div>
-                    <span className="text-sm text-gray-700 leading-relaxed">{feature}</span>
-                  </div>
-                </StaggerItem>
-              ))}
+                  </StaggerItem>
+                );
+              })}
             </StaggerContainer>
           </div>
         </section>
@@ -393,20 +524,23 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             </div>
           </FadeIn>
 
-          <div className="relative">
-            {/* Horizontal connector line (md+ only) */}
-            <div className="hidden md:block absolute top-6 left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-emerald-300 via-blue-300 to-purple-300 opacity-40" />
+          <div ref={timelineRef} className="relative">
+            {/* Horizontal progress line (md+) — draws as user scrolls */}
+            <div className="hidden md:block absolute top-6 left-[16.67%] right-[16.67%] h-0.5 bg-gray-200 overflow-hidden">
+              <motion.div
+                className="h-full bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 origin-left"
+                style={{ scaleX: prefersReducedMotion ? 1 : lineScale }}
+              />
+            </div>
 
-            <StaggerContainer staggerDelay={0.12} className="grid md:grid-cols-3 gap-8">
+            <StaggerContainer staggerDelay={0.15} className="grid md:grid-cols-3 gap-8">
               {steps.map((step, i) => (
                 <StaggerItem key={i}>
                   <div className="text-center relative">
-                    <div
-                      className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-4 text-sm font-bold text-white ring-4 ring-offset-2 ring-offset-white ${STEP_COLORS[i].ring} ${STEP_COLORS[i].bg}`}
-                    >
+                    <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-4 text-sm font-bold text-white ring-4 ring-offset-2 ring-offset-white ${STEP_COLORS[i].ring} ${STEP_COLORS[i].bg}`}>
                       {i + 1}
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3 font-[var(--font-manrope)]">
                       {step.title}
                     </h3>
                     <p className="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">

@@ -353,8 +353,9 @@ export default function UnifiedPricingPage() {
                 </div>
               </FadeIn>
 
-              <StaggerContainer className="grid md:grid-cols-3 gap-6 md:gap-x-6 md:gap-y-0 md:grid-rows-[repeat(6,auto)]">
+              <StaggerContainer staggerDelay={0.15} className="space-y-6">
                 {packages.map((pkg, index) => {
+                  const isReversed = index === 1;
                   const isPopular = pkg.popular;
                   const deposit = Math.round(pkg.price * (pkg.depositPercent / 100));
 
@@ -389,16 +390,16 @@ export default function UnifiedPricingPage() {
                     },
                   ];
                   const cardStyles = cardStylesByIndex[index] || cardStylesByIndex[0];
+                  const subtitles = ['Best for startups & small biz', 'Best for growing businesses', 'Best for established companies'];
 
                   return (
-                    <StaggerItem key={pkg.id} className="md:row-span-6 md:grid md:grid-rows-subgrid">
+                    <StaggerItem key={pkg.id}>
                       <div
                         className={`
-                          relative rounded-3xl transition-all duration-300
-                          p-8 lg:p-10 hover:-translate-y-2
-                          md:row-span-6 md:grid md:grid-rows-subgrid
-                          ${cardStyles.bg}
-                          ${cardStyles.border} ${isPopular ? 'shadow-2xl shadow-purple-500/20' : 'shadow-xl'}
+                          relative rounded-3xl p-8 lg:p-10
+                          transition-all duration-300 hover:-translate-y-1
+                          ${cardStyles.bg} ${cardStyles.border}
+                          ${isPopular ? 'shadow-2xl shadow-purple-500/20' : 'shadow-xl'}
                         `}
                       >
                         {/* Glow wrapper */}
@@ -407,7 +408,7 @@ export default function UnifiedPricingPage() {
                           <div className={`absolute -bottom-10 -left-10 w-40 h-40 rounded-full ${cardStyles.glow2} blur-2xl`} />
                         </div>
 
-                        {/* Badge */}
+                        {/* Popular badge */}
                         {isPopular && (
                           <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20">
                             <span className={`inline-block bg-gradient-to-r ${cardStyles.badge} text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg ${cardStyles.shadow}`}>
@@ -425,69 +426,69 @@ export default function UnifiedPricingPage() {
                           }}
                         />
 
-                        {/* Row 1: Title + "Best for" label */}
-                        <div className="relative z-10 pt-1">
-                          <h3 className="text-2xl font-black text-white tracking-tight">
-                            {pkg.title}
-                          </h3>
-                          <p className="text-xs font-medium text-white/60 uppercase tracking-wider mt-1">
-                            {['Best for startups & small biz', 'Best for growing businesses', 'Best for established companies'][index] || ''}
-                          </p>
-                        </div>
+                        {/* Two-column layout — alternates direction */}
+                        <div className={`relative z-10 flex flex-col md:flex-row ${isReversed ? 'md:flex-row-reverse' : ''} gap-8 md:gap-12`}>
+                          {/* Price/CTA column */}
+                          <div className="md:w-[35%] flex flex-col">
+                            <h3 className="text-2xl font-black text-white tracking-tight">
+                              {pkg.title}
+                            </h3>
+                            <p className="text-xs font-medium text-white/60 uppercase tracking-wider mt-1">
+                              {subtitles[index] || ''}
+                            </p>
 
-                        {/* Row 2: Description */}
-                        <div className="relative z-10 mt-3">
-                          <p className="text-base text-white/90 leading-relaxed">{pkg.description}</p>
-                        </div>
-
-                        {/* Row 3: Price with decorative dividers */}
-                        <div className="relative z-10 mt-6">
-                          <div className="h-px w-16 bg-white/20 mb-4" />
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-5xl font-black text-white">
-                              ${(pkg.price / 100).toLocaleString()}
-                            </span>
-                            <span className="text-base font-medium text-white/95">
-                              one-time
-                            </span>
-                          </div>
-                          <div className="h-px w-16 bg-white/20 mt-4" />
-                        </div>
-
-                        {/* Row 4: Feature list */}
-                        <ul className="relative z-10 space-y-3.5 mt-6">
-                          {pkg.features.map((feature, i) => (
-                            <li key={i} className="flex items-center gap-3">
-                              <div className={`flex-shrink-0 w-5 h-5 rounded-full ${cardStyles.check} flex items-center justify-center`}>
-                                <Check size={12} strokeWidth={3} />
+                            <div className="mt-6">
+                              <div className="h-px w-16 bg-white/20 mb-4" />
+                              <div className="flex items-baseline gap-2">
+                                <span className="text-5xl font-black text-white">
+                                  ${(pkg.price / 100).toLocaleString()}
+                                </span>
+                                <span className="text-base font-medium text-white/95">
+                                  one-time
+                                </span>
                               </div>
-                              <span className="text-sm text-white/90 leading-relaxed">{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
+                              <div className="h-px w-16 bg-white/20 mt-4" />
+                            </div>
 
-                        {/* Row 5: CTA — Add to Cart + View Details */}
-                        <div className="relative z-10 self-end mt-6 space-y-3">
-                          <AddToCartButton
-                            variantId={pkg.variantId}
-                            title={pkg.title}
-                            price={pkg.price}
-                            variant="primary"
-                            className={`shadow-lg ${cardStyles.shadow}`}
-                          />
-                          <Link
-                            href={`/shop/${pkg.handle}`}
-                            className="w-full py-2.5 px-6 rounded-xl font-semibold text-sm transition-all duration-300 bg-white/10 border border-white/20 text-white hover:bg-white/20 flex items-center justify-center gap-2"
-                          >
-                            View Details <ArrowRight size={16} />
-                          </Link>
-                        </div>
+                            <div className="mt-6 space-y-3">
+                              <AddToCartButton
+                                variantId={pkg.variantId}
+                                title={pkg.title}
+                                price={pkg.price}
+                                variant="primary"
+                                className={`shadow-lg ${cardStyles.shadow}`}
+                              />
+                              <Link
+                                href={`/shop/${pkg.handle}`}
+                                className="w-full py-2.5 px-6 rounded-xl font-semibold text-sm transition-all duration-300 bg-white/10 border border-white/20 text-white hover:bg-white/20 flex items-center justify-center gap-2"
+                              >
+                                View Details <ArrowRight size={16} />
+                              </Link>
+                            </div>
 
-                        {/* Row 6: Deposit pill badge */}
-                        <div className="relative z-10 text-center mt-3">
-                          <span className="inline-flex px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium">
-                            Start for ${deposit / 100} &middot; {pkg.depositPercent}% deposit
-                          </span>
+                            <div className="text-center mt-3">
+                              <span className="inline-flex px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium">
+                                Start for ${deposit / 100} &middot; {pkg.depositPercent}% deposit
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Content column */}
+                          <div className="md:w-[65%] flex flex-col justify-center">
+                            <p className="text-base text-white/90 leading-relaxed mb-6">
+                              {pkg.description}
+                            </p>
+                            <ul className="grid sm:grid-cols-2 gap-3">
+                              {pkg.features.map((feature, i) => (
+                                <li key={i} className="flex items-center gap-3">
+                                  <div className={`flex-shrink-0 w-5 h-5 rounded-full ${cardStyles.check} flex items-center justify-center`}>
+                                    <Check size={12} strokeWidth={3} />
+                                  </div>
+                                  <span className="text-sm text-white/90 leading-relaxed">{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
                       </div>
                     </StaggerItem>
@@ -664,8 +665,8 @@ export default function UnifiedPricingPage() {
                   </div>
                 </FadeIn>
 
-                <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {addons.map((addon, index) => {
+                <StaggerContainer className="grid md:grid-cols-2 gap-4 auto-rows-fr">
+                  {[...addons].sort((a, b) => b.price - a.price).map((addon, index) => {
                     const Icon = ADDON_ICONS[addon.handle] || FileText;
                     // Rotate BJJ belt colors for icon backgrounds
                     const iconColors = [
@@ -678,20 +679,31 @@ export default function UnifiedPricingPage() {
 
                     return (
                       <StaggerItem key={addon.id} className="h-full">
-                        <div className="relative w-full h-full text-left rounded-2xl p-6 bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 flex flex-col">
-                          <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${iconColor.bg}`}>
-                            <Icon size={22} className={iconColor.text} />
+                        <div className="relative h-full rounded-2xl p-5 bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 flex flex-col">
+                          <div className="flex gap-4">
+                            {/* Icon */}
+                            <div className={`flex-shrink-0 w-11 h-11 rounded-xl ${iconColor.bg} flex items-center justify-center`}>
+                              <Icon size={22} className={iconColor.text} />
+                            </div>
+
+                            {/* Content */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between gap-3">
+                                <h3 className="font-bold text-base text-white">{addon.title}</h3>
+                                <span className="text-xl font-black text-white whitespace-nowrap">+${addon.price / 100}</span>
+                              </div>
+                              <p className="text-sm text-slate-400 mt-1 leading-relaxed">{addon.description}</p>
+                            </div>
                           </div>
-                          <h3 className="font-bold text-base mb-2 text-white">
-                            {addon.title}
-                          </h3>
-                          <p className="text-sm leading-relaxed mb-4 flex-grow text-slate-400">
-                            {addon.description}
-                          </p>
+
+                          {/* Footer */}
                           <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10">
-                            <span className="text-2xl font-black text-white">
-                              +${addon.price / 100}
-                            </span>
+                            <Link
+                              href={`/shop/${addon.handle}`}
+                              className="text-xs text-white/50 hover:text-white/80 transition-colors"
+                            >
+                              View details <ArrowRight size={12} className="inline ml-0.5" />
+                            </Link>
                             <AddToCartButton
                               variantId={addon.variantId}
                               title={addon.title}
