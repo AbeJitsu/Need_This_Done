@@ -951,7 +951,7 @@ blog: {
     contentType: 'privacy_page',
     defaults: {
       header: { title: 'Privacy Policy', description: 'How we collect, use, and protect your information.' },
-      lastUpdated: 'January 2025',
+      lastUpdated: 'February 2026',
       quickSummary: {
         title: 'Quick Summary',
         items: ['We only collect what we need to serve you', 'We never sell your personal information', 'You can request deletion of your data anytime', 'We use industry-standard security measures'],
@@ -973,19 +973,20 @@ blog: {
     contentType: 'terms_page',
     defaults: {
       header: { title: 'Terms of Service', description: 'The terms and conditions that govern your use of our services.' },
-      lastUpdated: 'January 2025',
+      lastUpdated: 'February 2026',
       quickSummary: {
         title: 'The Short Version',
-        items: ['Be respectful and use our services lawfully', 'Pay for services you book', "We'll do our best to help you get things done", 'Either party can end the relationship anytime'],
+        items: ['We build custom websites, automation, and AI solutions', '50% deposit to start, remaining 50% on your approval', 'You own everything we build after final payment', '30 days of post-launch support included'],
       },
       sections: [
         { title: '1. Acceptance of Terms', content: "By using NeedThisDone.com, you agree to these terms. If you don't agree, please don't use our services.\n\nThese terms apply to all visitors, users, and customers of our website and services." },
-        { title: '2. Our Services', content: 'NeedThisDone provides personal assistance and errand services. We help you tackle your to-do list through scheduled consultations and task completion.\n\nService availability may vary. We reserve the right to modify, suspend, or discontinue services at any time with reasonable notice.' },
-        { title: '3. Payments & Refunds', content: 'All payments are processed securely through Stripe.\n\nRefund Policy:\n• Consultation fees: Non-refundable once the consultation is completed\n• Cancellations 24+ hours in advance: Full refund\n• Cancellations less than 24 hours: 50% refund\n• No-shows: No refund\n\nIf you have concerns about a charge, please contact us within 7 days.' },
-        { title: '4. User Responsibilities', content: 'When using our services, you agree to:\n\n• Provide accurate information when booking\n• Treat our team with respect and courtesy\n• Not use our services for illegal activities\n• Show up on time for scheduled appointments\n• Pay for services rendered\n• Keep your account credentials secure' },
-        { title: '5. Limitation of Liability', content: 'NeedThisDone provides services "as is." We do our best to help, but we can\'t guarantee specific outcomes.\n\nOur total liability is limited to the amount you paid for the specific service in question.' },
-        { title: '6. Privacy', content: 'Your privacy matters to us. Please review our Privacy Policy to understand how we collect, use, and protect your information.' },
-        { title: '7. Contact Us', content: 'Questions about these terms?\n\nEmail: hello@needthisdone.com\nWebsite: needthisdone.com/contact' },
+        { title: '2. Our Services', content: 'NeedThisDone provides custom web development, workflow automation, and managed AI services. Our offerings include:\n\n• Website Builds: Custom-designed websites tailored to your business, from single-page sites to full-featured platforms with e-commerce, booking, and content management.\n• Automation Setup: Workflow automation that connects your tools and eliminates repetitive tasks, so your business runs smoother without extra headcount.\n• Managed AI: Ongoing AI-powered services including intelligent chatbots, automated email campaigns, and data-driven insights — maintained and optimized by our team.\n\nService availability and scope are defined in your project proposal. We reserve the right to modify, suspend, or discontinue services at any time with reasonable notice.' },
+        { title: '3. Payments & Refunds', content: 'All payments are processed securely through Stripe.\n\nPayment Structure:\n• A 50% deposit is required to begin work on your project\n• The remaining 50% is due upon your approval of the completed work\n• Subscription services (such as Managed AI) are billed monthly\n\nRefund Policy:\n• If we haven\'t started work, your deposit is fully refundable\n• Once work has begun, the deposit covers time and resources already committed\n• If you\'re unsatisfied with the final deliverable, we\'ll work with you to make it right before requesting final payment\n\nIf you have concerns about a charge, please contact us within 7 days.' },
+        { title: '4. User Responsibilities', content: 'When using our services, you agree to:\n\n• Provide accurate information about your project and business needs\n• Treat our team with respect and courtesy\n• Not use our services for illegal activities\n• Provide content, feedback, and assets in a timely manner to keep your project on track\n• Review deliverables within the agreed-upon timeframe\n• Pay for services rendered\n• Keep your account credentials secure' },
+        { title: '5. Intellectual Property', content: 'Upon final payment, you own all custom code, designs, and content we create for your project. We retain the right to showcase the work in our portfolio unless you request otherwise.\n\nThird-party tools, libraries, and frameworks used in your project remain under their respective licenses.' },
+        { title: '6. Limitation of Liability', content: 'NeedThisDone provides services "as is." We do our best to deliver quality work, but we can\'t guarantee specific business outcomes such as traffic, revenue, or conversion rates.\n\nOur total liability is limited to the amount you paid for the specific service in question.' },
+        { title: '7. Privacy', content: 'Your privacy matters to us. Please review our Privacy Policy to understand how we collect, use, and protect your information.' },
+        { title: '8. Contact Us', content: 'Questions about these terms?\n\nEmail: hello@needthisdone.com\nWebsite: needthisdone.com/contact' },
       ],
     } as TermsPageContent,
   },
