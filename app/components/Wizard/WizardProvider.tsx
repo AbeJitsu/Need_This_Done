@@ -28,6 +28,7 @@ interface WizardContextType {
   isOnResults: boolean;
   goNext: () => void;
   goBack: () => void;
+  goToStep: (index: number) => void;
   restart: () => void;
   selectSingle: (stepId: StepId, scenarioId: string) => void;
   toggleMulti: (stepId: StepId, scenarioId: string) => void;
@@ -147,6 +148,11 @@ export default function WizardProvider({ source, children }: WizardProviderProps
     setCurrentStepIndex((prev: number) => Math.max(0, prev - 1));
   }, []);
 
+  // Navigate to a specific completed step (no skipping ahead)
+  const goToStep = useCallback((index: number) => {
+    setCurrentStepIndex((prev: number) => Math.max(0, Math.min(index, prev)));
+  }, []);
+
   const restart = useCallback(() => {
     setCurrentStepIndex(0);
     setResponses({});
@@ -209,6 +215,7 @@ export default function WizardProvider({ source, children }: WizardProviderProps
         isOnResults,
         goNext,
         goBack,
+        goToStep,
         restart,
         selectSingle,
         toggleMulti,

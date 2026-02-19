@@ -47,9 +47,10 @@ interface WizardResultsProps {
   recommendation: WizardRecommendation;
   onAddedToCart: () => void;
   onBookConsultation: () => void;
+  onBack: () => void;
 }
 
-export default function WizardResults({ recommendation, onAddedToCart, onBookConsultation }: WizardResultsProps) {
+export default function WizardResults({ recommendation, onAddedToCart, onBookConsultation, onBack }: WizardResultsProps) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
   const prefersReducedMotion = useReducedMotion();
@@ -165,6 +166,17 @@ export default function WizardResults({ recommendation, onAddedToCart, onBookCon
         >
           <Phone size={16} />Book a Free Call Instead
         </motion.button>
+      </motion.div>
+
+      {/* Change answers link */}
+      <motion.div className="text-center" variants={item}>
+        <button
+          type="button"
+          onClick={onBack}
+          className="text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded-lg px-4 py-2"
+        >
+          Change my answers
+        </button>
       </motion.div>
 
       {/* Footer text */}

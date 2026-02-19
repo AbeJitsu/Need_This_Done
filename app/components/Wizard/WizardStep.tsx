@@ -2,11 +2,13 @@
 
 import { type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { ChevronLeft } from 'lucide-react';
 import { TIMING } from '@/components/motion/variants';
 
 interface WizardStepProps {
   title: string; subtitle: string; currentStep: number; totalSteps: number;
   children: ReactNode; onBack: (() => void) | null; onNext: (() => void) | null;
+  onGoToStep?: (index: number) => void;
   nextLabel?: string; nextDisabled?: boolean;
 }
 
@@ -34,16 +36,24 @@ function AnimatedCheck({ reducedMotion }: { reducedMotion: boolean | null }) {
   );
 }
 
-// Step circle component
-function StepCircle({ index, currentStep, reducedMotion }: { index: number; currentStep: number; reducedMotion: boolean | null }) {
+// Step circle component — completed steps are clickable buttons
+function StepCircle({ index, currentStep, reducedMotion, onGoToStep }: {
+  index: number; currentStep: number; reducedMotion: boolean | null;
+  onGoToStep?: (index: number) => void;
+}) {
   const isCompleted = index < currentStep;
   const isActive = index === currentStep;
 
   if (isCompleted) {
     return (
-      <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center transition-colors duration-300">
+      <button
+        type="button"
+        onClick={() => onGoToStep?.(index)}
+        className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center transition-all duration-300 hover:ring-2 hover:ring-emerald-300 hover:ring-offset-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 cursor-pointer"
+        aria-label={`Go back to step ${index + 1}`}
+      >
         <AnimatedCheck reducedMotion={reducedMotion} />
-      </div>
+      </button>
     );
   }
 
@@ -60,7 +70,10 @@ function StepCircle({ index, currentStep, reducedMotion }: { index: number; curr
   }
 
   return (
-    <div className="w-8 h-8 rounded-full border-2 border-gray-200 bg-white flex items-center justify-center transition-colors duration-300">
+    <div
+      className="w-8 h-8 rounded-full border-2 border-gray-200 bg-white flex items-center justify-center transition-colors duration-300"
+      aria-disabled="true"
+    >
       <span className="text-xs font-medium text-gray-400">{index + 1}</span>
     </div>
   );
@@ -74,28 +87,24 @@ function ConnectingLine({ index, currentStep }: { index: number; currentStep: nu
   );
 }
 
-export default function WizardStep({ title, subtitle, currentStep, totalSteps, children, onBack, onNext, nextLabel = 'Continue', nextDisabled = false }: WizardStepProps) {
+export default function WizardStep({ title, subtitle, currentStep, totalSteps, children, onBack, onNext, onGoToStep, nextLabel = 'Continue', nextDisabled = false }: WizardStepProps) {
   const prefersReducedMotion = useReducedMotion();
   const progressPercent = ((currentStep + 1) / totalSteps) * 100;
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col flex-1 min-h-0">
       {/* Numbered step circles with connecting lines */}
-      <div
+      <nav
         className="flex items-center justify-center gap-1 mb-3"
-        role="progressbar"
-        aria-valuenow={currentStep + 1}
-        aria-valuemin={1}
-        aria-valuemax={totalSteps}
-        aria-label={`Step ${currentStep + 1} of ${totalSteps}`}
+        aria-label={`Wizard progress — step ${currentStep + 1} of ${totalSteps}`}
       >
         {Array.from({ length: totalSteps }, (_, i) => (
           <div key={i} className="flex items-center">
-            <StepCircle index={i} currentStep={currentStep} reducedMotion={prefersReducedMotion} />
+            <StepCircle index={i} currentStep={currentStep} reducedMotion={prefersReducedMotion} onGoToStep={onGoToStep} />
             {i < totalSteps - 1 && <ConnectingLine index={i} currentStep={currentStep} />}
           </div>
         ))}
-      </div>
+      </nav>
 
       {/* Thin gradient progress bar */}
       <div className="h-1 bg-gray-100 rounded-full max-w-xs mx-auto w-full mb-6">
@@ -121,10 +130,10 @@ export default function WizardStep({ title, subtitle, currentStep, totalSteps, c
         {onBack ? (
           <motion.button
             type="button" onClick={onBack}
-            className="text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded-lg px-4 py-2"
+            className="text-sm text-gray-600 hover:text-gray-800 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded-lg px-4 py-2 flex items-center gap-1"
             whileHover={prefersReducedMotion ? undefined : { x: -3 }}
             whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
-          >Back</motion.button>
+          ><ChevronLeft size={16} />Back</motion.button>
         ) : <div />}
         {onNext && (
           <motion.button

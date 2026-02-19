@@ -49,6 +49,7 @@ export type FeatureKey =
   | 'email_campaigns'
   | 'customer_accounts'
   | 'cms'
+  | 'logo_design'
   | 'automation'
   | 'managed_ai';
 
@@ -71,6 +72,7 @@ export const FEATURE_MAP: Record<FeatureKey, FeatureMapping> = {
   email_campaigns:  { includedInTiers: ['pro-site'], addonHandle: null },
   customer_accounts:{ includedInTiers: ['pro-site'], addonHandle: 'customer-accounts' },
   cms:              { includedInTiers: ['pro-site'], addonHandle: 'cms-integration' },
+  logo_design:      { includedInTiers: [], addonHandle: 'logo-design' },
   automation:       { includedInTiers: [], addonHandle: 'automation-setup', isService: true },
   managed_ai:       { includedInTiers: [], addonHandle: 'managed-ai', isService: true },
 };
@@ -114,6 +116,7 @@ export const WIZARD_STEPS: WizardStepDef[] = [
       { id: 'want_email', icon: '📧', title: 'Send emails to my customers', description: 'I want to run email campaigns and newsletters.', features: ['email_campaigns'] },
       { id: 'want_accounts', icon: '👤', title: 'Customer accounts', description: 'Customers need to sign in and track their orders.', features: ['customer_accounts'] },
       { id: 'want_cms', icon: '✏️', title: 'Edit my own website content', description: "I want to change text and images without calling anyone.", features: ['cms'] },
+      { id: 'want_logo', icon: '🎨', title: 'Get a professional logo', description: 'Custom logo design for your brand.', features: ['logo_design'] },
     ],
   },
   {

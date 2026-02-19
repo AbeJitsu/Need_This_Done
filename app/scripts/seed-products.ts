@@ -266,6 +266,25 @@ const PRODUCTS: ProductDefinition[] = [
     },
   },
   {
+    title: 'Logo Design',
+    description: 'Professional logo design or redesign for your brand.',
+    handle: 'logo-design',
+    price: 30000, // $300
+    type: 'addon',
+    collection: 'website-addons',
+    thumbnail: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&h=600&fit=crop&q=80',
+    metadata: {
+      type: 'addon',
+      deposit_percent: 50,
+      features: [
+        '2–3 unique concepts',
+        '2 rounds of revisions',
+        'Final files (PNG, SVG)',
+        'Transparent background versions',
+      ],
+    },
+  },
+  {
     title: 'Online Store',
     description: 'Full shop: product catalog, cart, checkout, inventory tracking, and order management.',
     handle: 'online-store',

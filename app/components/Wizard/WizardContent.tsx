@@ -65,6 +65,7 @@ export default function WizardContent() {
     isOnResults,
     goNext,
     goBack,
+    goToStep,
     selectSingle,
     toggleMulti,
     trackOutcome,
@@ -118,6 +119,7 @@ export default function WizardContent() {
       <AnimatePresence mode="wait">
         <motion.div
           key="results"
+          className="flex-1 min-h-0 overflow-y-auto"
           variants={variants}
           custom={directionRef.current}
           initial="enter"
@@ -132,6 +134,7 @@ export default function WizardContent() {
               trackOutcome('booked_consultation');
               router.push('/contact#consultation');
             }}
+            onBack={goBack}
           />
         </motion.div>
       </AnimatePresence>
@@ -152,6 +155,7 @@ export default function WizardContent() {
     <AnimatePresence mode="wait" custom={directionRef.current}>
       <motion.div
         key={animKey}
+        className="flex-1 min-h-0 flex flex-col"
         variants={variants}
         custom={directionRef.current}
         initial="enter"
@@ -166,6 +170,7 @@ export default function WizardContent() {
           totalSteps={activeSteps.length}
           onBack={currentStepIndex > 0 ? goBack : null}
           onNext={goNext}
+          onGoToStep={goToStep}
           nextLabel={currentStepIndex === activeSteps.length - 1 ? 'See My Results' : 'Continue'}
           nextDisabled={step.selectionType === 'single' && !hasSelection}
         >

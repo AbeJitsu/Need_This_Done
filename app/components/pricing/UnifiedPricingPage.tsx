@@ -9,6 +9,7 @@ import {
   Bot,
   FileText,
   PenTool,
+  Palette,
   Upload,
   Calendar,
   CreditCard,
@@ -56,6 +57,7 @@ interface PricingProduct {
 const ADDON_ICONS: Record<string, React.ElementType> = {
   'additional-page': FileText,
   'blog-setup': PenTool,
+  'logo-design': Palette,
   'contact-form-files': Upload,
   'calendar-booking': Calendar,
   'payment-integration': CreditCard,

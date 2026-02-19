@@ -71,8 +71,8 @@ export default function WizardModal({ isOpen, onClose, children }: WizardModalPr
             <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-emerald-100 blur-3xl opacity-60 pointer-events-none" />
             <div className="absolute -bottom-16 -left-16 w-32 h-32 rounded-full bg-blue-100 blur-2xl opacity-50 pointer-events-none" />
 
-            {/* Scrollable content wrapper */}
-            <div className="relative z-10 overflow-y-auto max-h-[85vh] p-6 sm:p-8">
+            {/* Height-constrained flex container — cards scroll inside, nav stays pinned */}
+            <div className="relative z-10 max-h-[85vh] overflow-hidden flex flex-col p-6 sm:p-8">
               {/* Close button */}
               <motion.button
                 type="button"

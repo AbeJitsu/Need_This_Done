@@ -28,7 +28,7 @@ const COLLECTION_HANDLES = {
 const CANONICAL_HANDLES = {
   packages: ['starter-site', 'growth-site', 'pro-site'],
   addons: [
-    'additional-page', 'blog-setup', 'cms-integration', 'calendar-booking',
+    'additional-page', 'blog-setup', 'logo-design', 'cms-integration', 'calendar-booking',
     'contact-form-files', 'payment-integration', 'customer-accounts', 'ai-chatbot', 'online-store',
   ],
   services: ['automation-setup', 'managed-ai'],
