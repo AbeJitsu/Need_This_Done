@@ -223,7 +223,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          From concept to launch. Your vision, our execution. Built with precision.
+          Small business tech that works as hard as you do. Ready in weeks, not months.
         </motion.p>
 
         {/* CTA Button — Magnetic, Glowing */}
@@ -246,11 +246,11 @@ export function Hero() {
               variant="green"
               size="lg"
               onClick={() => {
-                window.location.href = '/services';
+                window.location.href = '/pricing';
               }}
               className="relative px-12 py-4 text-lg font-semibold shadow-2xl shadow-emerald-500/40 motion-safe:hover:shadow-emerald-500/60 transition-all focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
-              See What We Build
+              See Packages from $500
             </Button>
           </motion.div>
         </motion.div>
@@ -264,7 +264,7 @@ export function Hero() {
         >
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 bg-emerald-500 rounded-full" />
-            From $500
+            Websites from $500
           </span>
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 bg-blue-500 rounded-full" />

@@ -1,11 +1,12 @@
 'use client';
 
+import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { EditableSection, EditableItem, Editable } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
 import Button from '@/components/Button';
-import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
+import { FadeIn, StaggerContainer, StaggerItem, useReducedMotion } from '@/components/motion';
 import { Hero } from '@/components/home/sections/Hero';
 import type { HomePageContent } from '@/lib/page-content-types';
 
@@ -25,6 +26,16 @@ interface HomePageClientProps {
 
 export default function HomePageClient({ content: initialContent }: HomePageClientProps) {
   const router = useRouter();
+  const prefersReducedMotion = useReducedMotion();
+
+  // Scroll-animated progress line for How It Works section
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: timelineProgress } = useScroll({
+    target: timelineRef,
+    offset: ['start end', 'end center'],
+  });
+  const lineScale = useTransform(timelineProgress, [0, 1], [0, 1]);
+
   // Use content from universal provider (auto-loaded by route)
   const { pageContent } = useInlineEdit();
   // Check that pageContent has expected structure before using it
@@ -96,6 +107,26 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
       </EditableSection>
       )}
 
+      {/* Social proof strip — addresses top 3 objections */}
+      <FadeIn direction="up">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-16">
+          <div className="grid grid-cols-3 gap-6 md:gap-8 text-center">
+            <div>
+              <p className="text-3xl md:text-4xl font-black text-emerald-600 mb-1">50%</p>
+              <p className="text-xs md:text-sm text-gray-500">deposit to start, rest when approved</p>
+            </div>
+            <div>
+              <p className="text-3xl md:text-4xl font-black text-blue-600 mb-1">1-4</p>
+              <p className="text-xs md:text-sm text-gray-500">weeks to launch, not months</p>
+            </div>
+            <div>
+              <p className="text-3xl md:text-4xl font-black text-purple-600 mb-1">100%</p>
+              <p className="text-xs md:text-sm text-gray-500">deposit refund if not delivered</p>
+            </div>
+          </div>
+        </div>
+      </FadeIn>
+
       {/* Rest of content in max-w container */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
         {/* Services Section - Bold Asymmetric Cards */}
@@ -127,7 +158,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 content={content.services.cards[0] as unknown as Record<string, unknown>}
               >
                 <motion.article
-                  className="group relative h-full rounded-3xl p-8 lg:p-10 cursor-pointer overflow-hidden bg-emerald-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
+                  className="group relative h-full rounded-3xl p-8 lg:p-10 cursor-pointer overflow-hidden bg-emerald-800 ring-4 ring-inset ring-emerald-400/60 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
                   tabIndex={0}
                   role="button"
                   aria-labelledby="service-card-0-title"
@@ -143,6 +174,8 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 >
                   {/* Subtle gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-emerald-700 via-emerald-800 to-emerald-900 opacity-100" />
+                  {/* Dot texture */}
+                  <div className="absolute inset-0 rounded-3xl opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
                   {/* Decorative glow */}
                   <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-emerald-400/20 blur-3xl" />
                   <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-emerald-300/15 blur-2xl" />
@@ -187,7 +220,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   content={content.services.cards[1] as unknown as Record<string, unknown>}
                 >
                   <motion.article
-                    className="group relative h-full rounded-3xl p-7 cursor-pointer overflow-hidden bg-slate-900 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+                    className="group relative h-full rounded-3xl p-7 cursor-pointer overflow-hidden bg-slate-900 ring-4 ring-inset ring-blue-400/60 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-1-title"
@@ -201,6 +234,8 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     whileHover={{ y: -4 }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
                   >
+                    {/* Dot texture */}
+                    <div className="absolute inset-0 rounded-3xl opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
                     {/* Blue accent glow */}
                     <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-blue-500/20 blur-3xl" />
                     <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-blue-400/10 blur-2xl" />
@@ -243,7 +278,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   content={content.services.cards[2] as unknown as Record<string, unknown>}
                 >
                   <motion.article
-                    className="group relative h-full rounded-3xl p-7 cursor-pointer overflow-hidden bg-gradient-to-br from-purple-700 to-purple-900 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-400 focus-visible:ring-offset-2"
+                    className="group relative h-full rounded-3xl p-7 cursor-pointer overflow-hidden bg-gradient-to-br from-purple-700 to-purple-900 ring-4 ring-inset ring-purple-400/60 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-400 focus-visible:ring-offset-2"
                     tabIndex={0}
                     role="button"
                     aria-labelledby="service-card-2-title"
@@ -257,6 +292,8 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                     whileHover={{ y: -4 }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
                   >
+                    {/* Dot texture */}
+                    <div className="absolute inset-0 rounded-3xl opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
                     {/* Purple accent glow */}
                     <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-purple-400/20 blur-3xl" />
                     <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-purple-300/15 blur-2xl" />
@@ -322,7 +359,14 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </FadeIn>
 
           {/* Desktop: Horizontal Steps */}
-          <div className="hidden md:block mb-10">
+          <div ref={timelineRef} className="hidden md:block mb-10 relative overflow-hidden rounded-3xl">
+            {/* Animated progress line — draws as user scrolls */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200 overflow-hidden z-20 pointer-events-none">
+              <motion.div
+                className="h-full origin-left"
+                style={{ backgroundImage: 'linear-gradient(to right, #34d399, #60a5fa, #c084fc, #a3764a)', scaleX: prefersReducedMotion ? 1 : lineScale }}
+              />
+            </div>
             <StaggerContainer className="grid grid-cols-4 gap-0">
               {content.processPreview.steps.map((step, index) => {
                 const stepStyles = [
@@ -339,8 +383,6 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   <StaggerItem key={index}>
                     <motion.div
                       className={`relative overflow-hidden p-8 h-full ${style.bg} ${isFirst ? 'rounded-l-3xl' : ''} ${isLast ? 'rounded-r-3xl' : ''}`}
-                      whileHover={{ y: -4 }}
-                      transition={{ duration: 0.3, ease: 'easeOut' }}
                     >
                       {/* Gradient overlay */}
                       <div className={`absolute inset-0 bg-gradient-to-br ${style.gradient}`} />
@@ -413,11 +455,13 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           <div className="relative rounded-3xl overflow-hidden">
             {/* Dark gradient background — slate with purple accent */}
             <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950" />
+            {/* Dot texture */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
             {/* Subtle glow accents */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/8 rounded-full blur-3xl" />
-            {/* Large decorative watermark */}
-            <div className="absolute -bottom-8 -right-4 text-[12rem] font-black text-white/5 leading-none select-none pointer-events-none">→</div>
+            {/* Ghost typography */}
+            <div className="absolute -bottom-4 -right-2 text-[8rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">&rarr;</div>
 
             {/* Content */}
             <div className="relative z-10 py-20 px-8 md:px-16">
@@ -441,11 +485,11 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
 
                   {/* Right: CTA stack */}
                   <div className="flex flex-col items-center md:items-start gap-4">
-                    <Button variant="blue" href="/services" size="lg" className="shadow-2xl shadow-blue-500/30">
-                      See What We Build
+                    <Button variant="blue" href="/pricing" size="lg" className="shadow-2xl shadow-blue-500/30">
+                      View Packages &amp; Pricing
                     </Button>
                     <Button variant="green" href="/contact" size="md" className="shadow-lg shadow-emerald-500/25">
-                      Or book a free call
+                      Book a Free 15-Min Call
                     </Button>
                   </div>
                 </div>
