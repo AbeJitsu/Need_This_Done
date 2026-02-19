@@ -310,13 +310,6 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     setTimeout(() => setShowCartSuccess(false), 1500);
   };
 
-  // CTA label — shows deposit anchor for one-time, clear price for subscriptions
-  const ctaLabel = showCartSuccess
-    ? 'Added!'
-    : isSubscription
-      ? `Subscribe — $${(price / 100).toLocaleString()}/mo`
-      : `Add to Cart — $${(deposit / 100).toLocaleString()} deposit`;
-
   // Trust/risk-reversal line below the CTA
   const trustLine = isSubscription
     ? 'Cancel anytime. No long-term contracts.'
@@ -612,7 +605,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                       size="md"
                       onClick={handleAddToCart}
                       disabled={showCartSuccess}
-                      className={`w-full whitespace-nowrap ${themeConfig.ctaButtonShadow}`}
+                      className={`w-full ${themeConfig.ctaButtonShadow}`}
                     >
                       {showCartSuccess ? (
                         <>
@@ -620,10 +613,17 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                           Added!
                         </>
                       ) : (
-                        <>
-                          <ShoppingCart size={18} />
-                          {ctaLabel}
-                        </>
+                        <span className="flex flex-col items-center leading-tight">
+                          <span className="flex items-center gap-2">
+                            <ShoppingCart size={18} />
+                            {isSubscription ? 'Subscribe' : 'Add to Cart'}
+                          </span>
+                          <span className="text-sm font-normal opacity-90">
+                            {isSubscription
+                              ? `$${(price / 100).toLocaleString()}/mo`
+                              : `$${(deposit / 100).toLocaleString()} deposit`}
+                          </span>
+                        </span>
                       )}
                     </Button>
                   )}
