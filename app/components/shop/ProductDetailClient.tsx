@@ -310,13 +310,6 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     setTimeout(() => setShowCartSuccess(false), 1500);
   };
 
-  // CTA label — shows deposit anchor for one-time, clear price for subscriptions
-  const ctaLabel = showCartSuccess
-    ? 'Added!'
-    : isSubscription
-      ? `Subscribe — $${(price / 100).toLocaleString()}/mo`
-      : `Add to Cart — $${(deposit / 100).toLocaleString()} deposit`;
-
   // Trust/risk-reversal line below the CTA
   const trustLine = isSubscription
     ? 'Cancel anytime. No long-term contracts.'
@@ -558,89 +551,118 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       {/* SECTION 4: CTA */}
       {/* ================================================================== */}
       <section className="py-16 md:py-20 bg-gray-50">
-        <div className="max-w-lg mx-auto px-6 sm:px-8 text-center">
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 md:px-12">
           <FadeIn direction="up" triggerOnScroll>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
-              Ready to get started?
-            </h2>
+            <div className="max-w-lg mx-auto">
+              {/* CTA card — elevated card with subtle shadow for visual grouping */}
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                {/* Card header — product recap with themed accent bar */}
+                <div className="relative px-6 pt-6 pb-4">
+                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${
+                    theme === 'emerald' ? 'from-emerald-400 to-emerald-600'
+                    : theme === 'blue' ? 'from-blue-400 to-blue-600'
+                    : 'from-purple-400 to-purple-600'
+                  }`} />
+                  <h2 className="text-xl font-bold text-gray-900 mb-1">
+                    Ready to get started?
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    {product.title}
+                    <span className="mx-1.5 text-gray-300">&middot;</span>
+                    <span className="font-semibold text-gray-700">
+                      ${(price / 100).toLocaleString()}{isSubscription ? '/mo' : ''}
+                    </span>
+                  </p>
+                </div>
 
-            {/* Variant selector — only shows when there are multiple options */}
-            {hasMultipleVariants && (
-              <div className="mb-6 text-left">
-                <label htmlFor="variant-select-cta" className="block text-sm font-medium text-gray-700 mb-2">
-                  Select Option
-                </label>
-                <select
-                  id="variant-select-cta"
-                  value={selectedVariant || ''}
-                  onChange={(e) => setSelectedVariant(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-300 bg-white text-gray-900 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 transition hover:border-gray-400"
-                >
-                  {variants.map((variant: any) => (
-                    <option key={variant.id} value={variant.id}>
-                      {variant.title || `Option ${variant.id.slice(0, 8)}`}
-                    </option>
-                  ))}
-                </select>
+                {/* Card body — actions */}
+                <div className="px-6 pb-6">
+                  {/* Variant selector — only shows when there are multiple options */}
+                  {hasMultipleVariants && (
+                    <div className="mb-4">
+                      <label htmlFor="variant-select-cta" className="block text-sm font-medium text-gray-700 mb-1.5">
+                        Select Option
+                      </label>
+                      <select
+                        id="variant-select-cta"
+                        value={selectedVariant || ''}
+                        onChange={(e) => setSelectedVariant(e.target.value)}
+                        className="w-full px-4 py-2.5 border border-gray-300 bg-white text-gray-900 rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 transition hover:border-gray-400"
+                      >
+                        {variants.map((variant: any) => (
+                          <option key={variant.id} value={variant.id}>
+                            {variant.title || `Option ${variant.id.slice(0, 8)}`}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Primary CTA button */}
+                  {selectedVariant && (
+                    <Button
+                      variant="green"
+                      size="md"
+                      onClick={handleAddToCart}
+                      disabled={showCartSuccess}
+                      className={`w-full ${themeConfig.ctaButtonShadow}`}
+                    >
+                      {showCartSuccess ? (
+                        <>
+                          <Check size={18} strokeWidth={3} />
+                          Added!
+                        </>
+                      ) : (
+                        <span className="flex flex-col items-center leading-tight">
+                          <span className="flex items-center gap-2">
+                            <ShoppingCart size={18} />
+                            {isSubscription ? 'Subscribe' : 'Add to Cart'}
+                          </span>
+                          <span className="text-sm font-normal opacity-90">
+                            {isSubscription
+                              ? `$${(price / 100).toLocaleString()}/mo`
+                              : `$${(deposit / 100).toLocaleString()} deposit`}
+                          </span>
+                        </span>
+                      )}
+                    </Button>
+                  )}
+
+                  {/* Trust / risk-reversal line */}
+                  <p className="text-xs text-gray-500 mt-2.5 text-center">
+                    {trustLine}
+                  </p>
+
+                  {/* Divider with secondary actions */}
+                  <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                    <Link
+                      href="/contact"
+                      className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                      Book a free consultation &rarr;
+                    </Link>
+
+                    <button
+                      onClick={handleWishlistToggle}
+                      disabled={isManagingWishlist}
+                      aria-label={inWishlist ? 'Remove from wishlist' : 'Save to wishlist'}
+                      aria-pressed={inWishlist}
+                      className={`inline-flex items-center gap-1.5 text-sm font-medium transition-colors ${
+                        inWishlist
+                          ? 'text-red-500 hover:text-red-600'
+                          : 'text-gray-400 hover:text-gray-600'
+                      } disabled:opacity-50`}
+                    >
+                      {isManagingWishlist ? (
+                        <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                      ) : (
+                        <Heart size={15} fill={inWishlist ? 'currentColor' : 'none'} />
+                      )}
+                      {inWishlist ? 'Saved' : 'Save'}
+                    </button>
+                  </div>
+                </div>
               </div>
-            )}
-
-            {/* Primary CTA — full-width, dominant green button */}
-            {selectedVariant && (
-              <Button
-                variant="green"
-                size="lg"
-                onClick={handleAddToCart}
-                disabled={showCartSuccess}
-                className={`w-full ${themeConfig.ctaButtonShadow}`}
-              >
-                {showCartSuccess ? (
-                  <>
-                    <Check size={20} strokeWidth={3} />
-                    Added!
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart size={20} />
-                    {ctaLabel}
-                  </>
-                )}
-              </Button>
-            )}
-
-            {/* Trust / risk-reversal line */}
-            <p className="text-sm text-gray-500 mt-3 mb-4">
-              {trustLine}
-            </p>
-
-            {/* Secondary CTA — understated text link */}
-            <Link
-              href="/contact"
-              className="text-sm text-gray-500 hover:text-gray-700 underline underline-offset-2 transition-colors"
-            >
-              or Book a free consultation &rarr;
-            </Link>
-
-            {/* Wishlist toggle (most subtle) */}
-            <div className="mt-5">
-              <button
-                onClick={handleWishlistToggle}
-                disabled={isManagingWishlist}
-                aria-label={inWishlist ? 'Remove from wishlist' : 'Save to wishlist'}
-                aria-pressed={inWishlist}
-                className={`inline-flex items-center gap-2 text-sm font-medium transition-colors ${
-                  inWishlist
-                    ? 'text-red-500 hover:text-red-600'
-                    : 'text-gray-400 hover:text-gray-600'
-                } disabled:opacity-50`}
-              >
-                {isManagingWishlist ? (
-                  <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-                ) : (
-                  <Heart size={16} fill={inWishlist ? 'currentColor' : 'none'} />
-                )}
-                {inWishlist ? 'Saved to wishlist' : 'Save to wishlist'}
-              </button>
             </div>
           </FadeIn>
         </div>
