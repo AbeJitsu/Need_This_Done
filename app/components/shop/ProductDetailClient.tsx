@@ -560,7 +560,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       <section className="py-16 md:py-20 bg-gray-50">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 md:px-12">
           <FadeIn direction="up" triggerOnScroll>
-            <div className="max-w-md mx-auto">
+            <div className="max-w-lg mx-auto">
               {/* CTA card — elevated card with subtle shadow for visual grouping */}
               <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
                 {/* Card header — product recap with themed accent bar */}
@@ -612,7 +612,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                       size="md"
                       onClick={handleAddToCart}
                       disabled={showCartSuccess}
-                      className={`w-full ${themeConfig.ctaButtonShadow}`}
+                      className={`w-full whitespace-nowrap ${themeConfig.ctaButtonShadow}`}
                     >
                       {showCartSuccess ? (
                         <>
