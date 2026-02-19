@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import Link from 'next/link';
 import { ShoppingCart, Check, Phone, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
@@ -91,6 +92,9 @@ export default function WizardResults({ recommendation, onAddedToCart, onBookCon
           <div>
             <p className="text-xs font-medium text-emerald-600 uppercase tracking-wide">Recommended Plan</p>
             <h3 className="text-lg font-bold text-gray-900 mt-1">{recommendation.tier.title}</h3>
+            <Link href={`/shop/${recommendation.tier.handle}`} className="text-xs text-emerald-600 hover:text-emerald-800 font-medium hover:underline" target="_blank">
+              Learn more →
+            </Link>
           </div>
           <p className="text-2xl font-bold text-gray-900">{fmt(recommendation.tier.price)}</p>
         </div>
@@ -102,13 +106,13 @@ export default function WizardResults({ recommendation, onAddedToCart, onBookCon
           <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Added to your plan</p>
           {recommendation.addOns.map((a) => (
             <motion.div key={a.handle} className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3" variants={item}>
-              <span className="text-sm font-medium text-gray-900">{a.title}</span>
+              <Link href={`/shop/${a.handle}`} className="text-sm font-medium text-gray-900 hover:text-emerald-700 hover:underline" target="_blank">{a.title}</Link>
               <span className="text-sm font-semibold text-gray-700">+{fmt(a.price)}</span>
             </motion.div>
           ))}
           {recommendation.services.map((s) => (
             <motion.div key={s.handle} className="flex items-center justify-between rounded-lg border border-blue-200 bg-blue-50/50 px-4 py-3" variants={item}>
-              <span className="text-sm font-medium text-gray-900">{s.title}</span>
+              <Link href={`/shop/${s.handle}`} className="text-sm font-medium text-gray-900 hover:text-emerald-700 hover:underline" target="_blank">{s.title}</Link>
               <span className="text-sm font-semibold text-gray-700">+{fmt(s.price)}{s.handle === 'managed-ai' && <span className="text-xs text-gray-500">/mo</span>}</span>
             </motion.div>
           ))}
@@ -129,9 +133,9 @@ export default function WizardResults({ recommendation, onAddedToCart, onBookCon
           type="button" onClick={handleAdd} disabled={added}
           className={`w-full flex items-center justify-center gap-2 rounded-xl py-3 px-6 font-semibold text-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2
             ${added ? 'bg-emerald-500 text-white' : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-500/25'}`}
-          whileHover={added || prefersReducedMotion ? undefined : { scale: 1.02 }}
-          whileTap={added || prefersReducedMotion ? undefined : { scale: 0.97 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+          whileHover={added || prefersReducedMotion ? undefined : { y: -2 }}
+          whileTap={added || prefersReducedMotion ? undefined : { y: 1 }}
+          transition={{ type: 'tween', duration: 0.15, ease: 'easeOut' }}
         >
           <AnimatePresence mode="wait">
             {added ? (
@@ -160,9 +164,9 @@ export default function WizardResults({ recommendation, onAddedToCart, onBookCon
         <motion.button
           type="button" onClick={onBookConsultation}
           className="w-full flex items-center justify-center gap-2 rounded-xl py-3 px-6 font-semibold text-sm text-gray-700 bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-          whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
-          whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+          whileHover={prefersReducedMotion ? undefined : { y: -2 }}
+          whileTap={prefersReducedMotion ? undefined : { y: 1 }}
+          transition={{ type: 'tween', duration: 0.15, ease: 'easeOut' }}
         >
           <Phone size={16} />Book a Free Call Instead
         </motion.button>
