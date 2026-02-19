@@ -177,19 +177,26 @@ async function seed() {
   console.log(`Found ${posts.length} posts. Seeding...\n`);
 
   for (const post of posts) {
-    // Upsert: insert new posts or update existing ones
+    // Check if post already exists to preserve its published_at date
+    const { data: existing } = await supabase
+      .from('blog_posts')
+      .select('slug')
+      .eq('slug', post.slug)
+      .single();
+
+    const upsertData = existing
+      ? { ...post } // Existing post: preserve original published_at
+      : { ...post, published_at: new Date().toISOString() }; // New post: set published_at
+
     const { error } = await supabase.from('blog_posts').upsert(
-      {
-        ...post,
-        published_at: new Date().toISOString(),
-      },
+      upsertData,
       { onConflict: 'slug' }
     );
 
     if (error) {
       console.error(`  ❌ Failed: "${post.title}" — ${error.message}`);
     } else {
-      console.log(`  ✅ Upserted: "${post.title}"`);
+      console.log(`  ✅ ${existing ? 'Updated' : 'Created'}: "${post.title}"`);
     }
   }
 
