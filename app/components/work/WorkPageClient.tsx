@@ -82,9 +82,9 @@ export default function WorkPageClient() {
 
           {/* Architecture diagram */}
           <div className="mt-20 md:mt-28">
-            <h4 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-6">
+            <h3 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-6">
               System Architecture
-            </h4>
+            </h3>
             <ArchitectureDiagram layers={architectureLayers} />
           </div>
         </div>
