@@ -158,7 +158,7 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                 content={content.services.cards[0] as unknown as Record<string, unknown>}
               >
                 <motion.article
-                  className="group relative h-full rounded-3xl p-8 lg:p-10 cursor-pointer overflow-hidden bg-emerald-800 ring-4 ring-inset ring-emerald-400/60 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
+                  className="group relative h-full rounded-3xl p-8 lg:p-10 cursor-pointer overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-800 to-emerald-900 ring-4 ring-inset ring-emerald-400/60 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
                   tabIndex={0}
                   role="button"
                   aria-labelledby="service-card-0-title"
@@ -172,8 +172,6 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.3, ease: 'easeOut' }}
                 >
-                  {/* Subtle gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-700 via-emerald-800 to-emerald-900 opacity-100" />
                   {/* Dot texture */}
                   <div className="absolute inset-0 rounded-3xl opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
                   {/* Decorative glow */}
