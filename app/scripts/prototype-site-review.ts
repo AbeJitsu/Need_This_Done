@@ -1,12 +1,17 @@
 /**
- * AI Website Reviewer — Prototype V2
+ * AI Website Reviewer — Prototype V3
  *
  * Multi-page site reviewer that crawls nav-linked pages and produces
  * specific, actionable feedback using AI analysis.
  *
- * V2 fixes:
- * - Text extraction handles <br> tags and inline sibling elements
- * - Crawls all pages linked from header/nav/footer (not just homepage)
+ * V3 improvements:
+ * - Scoring system (100-point rubric, A-F grade)
+ * - Executive summary at top of report
+ * - Technical findings fed to AI prompt
+ * - CTA detection filters out FAQ questions
+ * - SVG/background-image detection (not just <img>)
+ * - Clean report output (no progress noise)
+ * - 5 focused AI sections (no duplicate recommendations)
  *
  * Usage: cd app && npx tsx scripts/prototype-site-review.ts https://needthisdone.com
  *        cd app && npx tsx scripts/prototype-site-review.ts https://needthisdone.com https://example.com
@@ -23,15 +28,20 @@ import { openai } from '@ai-sdk/openai';
 import { JSDOM } from 'jsdom';
 
 // ============================================
-// DUAL OUTPUT — console + file
+// OUTPUT — separate report (deliverable) from progress (debug)
 // ============================================
 
-const outputLines: string[] = [];
+const reportLines: string[] = [];
 
-/** Log to both stdout and the output buffer */
-function log(line: string = '') {
+/** Write to the report deliverable AND console */
+function report(line: string = '') {
   console.log(line);
-  outputLines.push(line);
+  reportLines.push(line);
+}
+
+/** Write to console only (status/debug — not in the deliverable) */
+function progress(line: string = '') {
+  console.log(line);
 }
 
 // ============================================
@@ -50,7 +60,7 @@ interface TechnicalMetrics {
   headings: { tag: string; text: string }[];
   h1Count: number;
   headingHierarchyGaps: string[];
-  images: { total: number; withAlt: number; withoutAlt: number; altCoverage: string };
+  images: { total: number; withAlt: number; withoutAlt: number; altCoverage: string; svgCount: number; bgImageCount: number; pictureCount: number };
   links: { internal: number; external: number; total: number };
   ctas: string[];
   metaCompleteness: { title: boolean; description: boolean; viewport: boolean; ogTitle: boolean; ogDescription: boolean; ogImage: boolean };
@@ -158,11 +168,20 @@ function extractMetrics(html: string, url: string, httpStatus: number): Technica
     }
   }
 
-  // Images
+  // Images — <img>, SVG, background-image, <picture>
   const allImages = doc.querySelectorAll('img');
   const withAlt = Array.from(allImages).filter((img: Element) => {
     const alt = img.getAttribute('alt');
     return alt && alt.trim().length > 0;
+  });
+  const svgCount = doc.querySelectorAll('svg').length;
+  const pictureCount = doc.querySelectorAll('picture').length;
+  let bgImageCount = 0;
+  doc.querySelectorAll('[style]').forEach((el: Element) => {
+    const style = el.getAttribute('style') || '';
+    if (/background(-image)?\s*:/.test(style) && style.includes('url(')) {
+      bgImageCount++;
+    }
   });
 
   // Links
@@ -199,12 +218,19 @@ function extractMetrics(html: string, url: string, httpStatus: number): Technica
   const readingLevel = computeReadingLevel(visibleText);
 
   // CTA detection — buttons and links with action-oriented text
+  // Filters: skip questions (FAQ), long sentences, require word boundaries
   const ctas: string[] = [];
   const ctaSelectors = 'a, button, [role="button"]';
   doc.querySelectorAll(ctaSelectors).forEach((el: Element) => {
-    const text = getCleanText(el);
+    let text = getCleanText(el);
     if (text.length > 2 && text.length < 80) {
-      const actionWords = /get|start|book|schedule|contact|buy|order|sign|join|try|learn|download|request|claim|grab|reserve/i;
+      // Skip FAQ-style questions
+      if (text.includes('?')) return;
+      // Skip long sentences (real CTAs are short)
+      if (text.split(/\s+/).length > 10) return;
+      // Strip leading numbers (e.g., "8 Can I start...")
+      text = text.replace(/^\d+\s+/, '');
+      const actionWords = /\b(get|start|book|schedule|contact|buy|order|sign up|join|try|learn|download|request|claim|grab|reserve)\b/i;
       if (actionWords.test(text)) {
         ctas.push(text);
       }
@@ -229,7 +255,10 @@ function extractMetrics(html: string, url: string, httpStatus: number): Technica
       withoutAlt: allImages.length - withAlt.length,
       altCoverage: allImages.length > 0
         ? `${Math.round((withAlt.length / allImages.length) * 100)}%`
-        : 'N/A (no images)',
+        : 'N/A (no <img>)',
+      svgCount,
+      bgImageCount,
+      pictureCount,
     },
     links: { internal: internalCount, external: externalCount, total: internalCount + externalCount },
     ctas: [...new Set(ctas)],
@@ -422,18 +451,52 @@ function discoverNavPages(html: string, baseUrl: string): string[] {
 // AI EVALUATION PROMPT (multi-page)
 // ============================================
 
-function buildEvaluationPrompt(allMetrics: TechnicalMetrics[]): string {
+function buildTechnicalFindings(allMetrics: TechnicalMetrics[], score: ScoreBreakdown): string {
+  const lines: string[] = [];
+  lines.push(`- Overall Score: ${score.total}/100 (${score.grade})`);
+
+  // Call out specific issues from low-scoring categories
+  for (const cat of score.categories) {
+    if (cat.earned < cat.possible) {
+      lines.push(`- ${cat.name}: ${cat.note}`);
+    }
+  }
+
+  // Heading gaps by page
+  const allGaps = allMetrics.flatMap((m) =>
+    m.headingHierarchyGaps.map((gap) => `${new URL(m.url).pathname}: ${gap}`)
+  );
+  if (allGaps.length > 0) {
+    lines.push(`- Heading Gaps: ${allGaps.join(', ')}`);
+  }
+
+  // Per-page readability
+  const readabilities = allMetrics.map((m) => {
+    const path = new URL(m.url).pathname;
+    return `${path} ${m.readingLevel}`;
+  });
+  lines.push(`- Readability: ${readabilities.join(', ')}`);
+
+  return lines.join('\n');
+}
+
+function buildEvaluationPrompt(allMetrics: TechnicalMetrics[], score: ScoreBreakdown): string {
   const homepage = allMetrics[0];
   const totalPages = allMetrics.length;
 
-  // Build per-page technical summary
+  // Build per-page technical summary (with readability)
   const perPageSummary = allMetrics.map((m) => {
     const path = new URL(m.url).pathname;
-    return `  ${path.padEnd(25)} | ${(m.title || 'NO TITLE').slice(0, 35).padEnd(35)} | ${String(m.wordCount).padStart(5)} words | H1: ${m.h1Count} | Alt: ${m.images.altCoverage}`;
+    const gradeMatch = m.readingLevel.match(/Grade (\d+)/);
+    const readGrade = gradeMatch ? `G${gradeMatch[1]}` : 'N/A';
+    return `  ${path.padEnd(25)} | ${(m.title || 'NO TITLE').slice(0, 30).padEnd(30)} | ${String(m.wordCount).padStart(5)} words | H1: ${m.h1Count} | Read: ${readGrade}`;
   }).join('\n');
 
   // Aggregate CTAs across all pages
   const allCtas = [...new Set(allMetrics.flatMap((m) => m.ctas))];
+
+  // Technical findings block
+  const technicalFindings = buildTechnicalFindings(allMetrics, score);
 
   return `You are a senior website consultant who reviews small business websites. You give specific, actionable feedback — never generic advice.
 
@@ -443,6 +506,8 @@ RULES:
 - Do NOT say things like "add more keywords" or "improve your SEO." Those are useless.
 - Write as if speaking to a non-technical small business owner.
 - Be direct but encouraging. Start with what's working before what needs fixing.
+- Reference technical findings where relevant (e.g., missing OG tags, heading gaps).
+- Do NOT repeat the same recommendation across sections. Each insight should appear only once.
 
 SITE OVERVIEW:
 - Pages crawled: ${totalPages}
@@ -450,87 +515,239 @@ SITE OVERVIEW:
 - Homepage title: ${homepage.title ? `"${homepage.title}"` : 'MISSING'}
 - Homepage meta description: ${homepage.metaDescription ? `"${homepage.metaDescription.slice(0, 120)}"` : 'MISSING'}
 
+TECHNICAL FINDINGS (reference these in your analysis):
+${technicalFindings}
+
 PER-PAGE METRICS:
 ${perPageSummary}
 
 DETECTED CTAs ACROSS SITE:
 ${allCtas.length > 0 ? allCtas.map(c => `  "${c}"`).join('\n') : '  None detected'}
 
-ANALYZE THESE 7 AREAS:
+ANALYZE THESE 5 AREAS:
 
-## 1. First Impression
-Is it immediately clear what this business does and who it's for? Quote the homepage headline. Would a visitor from Google know in 5 seconds whether this site is for them?
+## 1. First Impression & Messaging
+Is it immediately clear what this business does and who it's for? Quote the homepage headline. Do pages tell a cohesive story, or does each feel disconnected? Reference specific messaging from at least 2 pages.
 
-## 2. Messaging Consistency
-Do pages tell a cohesive story? Or does each page feel disconnected? Reference specific messaging from at least 2 different pages.
+## 2. Service & Offer Clarity
+Are services and pricing explained clearly? Can a visitor understand what they'd get and what it costs? Quote specific descriptions — flag any that are vague, jargon-heavy, or missing key details.
 
-## 3. Service Clarity
-Are services explained clearly? Can a visitor understand what they'd get? Quote specific service descriptions — flag any that are vague or jargon-heavy.
+## 3. Trust Signals
+What trust elements exist (testimonials, case studies, credentials, guarantees, social proof)? What's missing? Be specific about where trust signals should appear and what form they should take.
 
-## 4. CTA Quality
-Quote CTAs from across the site. Are they specific and compelling? "Get Started" is weak. "Get Your Free Website Audit" is strong. Suggest improvements for weak ones.
+## 4. Technical Health
+Reference the technical findings above. Explain in plain language what the OG tag gaps, heading issues, readability scores, or other technical problems mean for the business. Focus on business impact, not developer jargon.
 
-## 5. Trust & Credibility
-Are there reviews, testimonials, credentials, guarantees, case studies, or social proof anywhere on the site? What's present and what's missing?
+## 5. Top 5 Action Items
+The 5 highest-impact changes this business owner could make this week, in priority order. Be specific — "Change the headline on /services from X to Y" not "improve your headlines." Do NOT repeat recommendations already made in sections 1-4. These should be NEW, additional improvements.
 
-## 6. Content Gaps
-What's missing from the site? Compare what pages exist vs. what a visitor would expect. Is there an About page? Pricing? Testimonials? Portfolio?
+FORMAT: Use markdown with ## headers for each section. Keep each section to 3-5 sentences. End with Action Items as a numbered list.`;
+}
 
-## 7. Quick Wins (Top 5)
-The 5 highest-impact changes this business owner could make this week, in priority order. Be specific — "Change the headline on /services from X to Y" not "improve your headlines." Reference specific pages and content.
+// ============================================
+// SCORING SYSTEM (100 points, A-F grade)
+// ============================================
 
-FORMAT: Use markdown with ## headers for each section. Keep each section to 3-5 sentences. End with the Quick Wins as a numbered list.`;
+interface ScoreBreakdown {
+  total: number;
+  grade: string;
+  categories: { name: string; earned: number; possible: number; note: string }[];
+}
+
+function computeSiteScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown {
+  const total = allMetrics.length;
+  const categories: ScoreBreakdown['categories'] = [];
+
+  // 1. HTTPS (5 points)
+  const httpsScore = allMetrics[0].https ? 5 : 0;
+  categories.push({ name: 'HTTPS', earned: httpsScore, possible: 5, note: httpsScore === 5 ? 'Secure' : 'Not secure — visitors see a warning' });
+
+  // 2. Meta completeness (15 points) — pages with both title AND description
+  const pagesWithMeta = allMetrics.filter((m) => m.metaCompleteness.title && m.metaCompleteness.description).length;
+  const metaScore = Math.round((pagesWithMeta / total) * 15);
+  categories.push({ name: 'Meta Tags', earned: metaScore, possible: 15, note: `${pagesWithMeta}/${total} pages have title + description` });
+
+  // 3. OG tags (10 points) — pages with og:title AND og:image
+  const pagesWithOg = allMetrics.filter((m) => m.metaCompleteness.ogTitle && m.metaCompleteness.ogImage).length;
+  const ogScore = Math.round((pagesWithOg / total) * 10);
+  categories.push({ name: 'OG Tags', earned: ogScore, possible: 10, note: `${pagesWithOg}/${total} pages — social shares ${pagesWithOg === 0 ? 'look broken' : pagesWithOg < total ? 'partially covered' : 'look great'}` });
+
+  // 4. Heading structure (15 points) — penalize pages with hierarchy gaps
+  const pagesWithGaps = allMetrics.filter((m) => m.headingHierarchyGaps.length > 0).length;
+  const headingScore = Math.max(0, 15 - (3 * pagesWithGaps));
+  categories.push({ name: 'Heading Structure', earned: headingScore, possible: 15, note: pagesWithGaps === 0 ? 'Clean hierarchy on all pages' : `${pagesWithGaps} page(s) have heading gaps` });
+
+  // 5. Content depth (15 points) — average word count
+  const avgWords = Math.round(allMetrics.reduce((sum, m) => sum + m.wordCount, 0) / total);
+  let contentScore: number;
+  if (avgWords >= 400) contentScore = 15;
+  else if (avgWords >= 200) contentScore = 10;
+  else if (avgWords >= 100) contentScore = 5;
+  else contentScore = 0;
+  categories.push({ name: 'Content Depth', earned: contentScore, possible: 15, note: `Avg ${avgWords} words/page` });
+
+  // 6. CTA presence (10 points) — unique CTAs across site
+  const uniqueCtas = [...new Set(allMetrics.flatMap((m) => m.ctas))];
+  const ctaScore = Math.round(Math.min(uniqueCtas.length / 3, 1) * 10);
+  categories.push({ name: 'CTA Presence', earned: ctaScore, possible: 10, note: `${uniqueCtas.length} unique CTAs detected` });
+
+  // 7. H1 consistency (10 points) — pages with exactly 1 H1
+  const pagesWithOneH1 = allMetrics.filter((m) => m.h1Count === 1).length;
+  const h1Score = Math.round((pagesWithOneH1 / total) * 10);
+  categories.push({ name: 'H1 Consistency', earned: h1Score, possible: 10, note: `${pagesWithOneH1}/${total} pages have exactly 1 H1` });
+
+  // 8. Page coverage (10 points) — min(pages / 5, 1) * 10
+  const coverageScore = Math.round(Math.min(total / 5, 1) * 10);
+  categories.push({ name: 'Page Coverage', earned: coverageScore, possible: 10, note: `${total} pages crawled` });
+
+  // 9. Readability (10 points) — parse grade from reading level string
+  const gradeNumbers = allMetrics.map((m) => {
+    const match = m.readingLevel.match(/Grade (\d+)/);
+    return match ? parseInt(match[1]) : 8;
+  });
+  const avgGrade = Math.round(gradeNumbers.reduce((s, g) => s + g, 0) / gradeNumbers.length);
+  let readabilityScore: number;
+  if (avgGrade >= 6 && avgGrade <= 8) readabilityScore = 10;
+  else if (avgGrade === 5 || avgGrade === 9) readabilityScore = 7;
+  else readabilityScore = 4;
+  categories.push({ name: 'Readability', earned: readabilityScore, possible: 10, note: `Avg Grade ${avgGrade}` });
+
+  const totalScore = categories.reduce((sum, c) => sum + c.earned, 0);
+
+  let grade: string;
+  if (totalScore >= 90) grade = 'A';
+  else if (totalScore >= 80) grade = 'B';
+  else if (totalScore >= 70) grade = 'C';
+  else if (totalScore >= 60) grade = 'D';
+  else grade = 'F';
+
+  return { total: totalScore, grade, categories };
+}
+
+// ============================================
+// EXECUTIVE SUMMARY (template-based, no AI)
+// ============================================
+
+function buildExecutiveSummary(score: ScoreBreakdown, allMetrics: TechnicalMetrics[]): string {
+  const lines: string[] = [];
+
+  // Opener based on grade
+  switch (score.grade) {
+    case 'A':
+      lines.push('This site is in excellent shape. The fundamentals are solid and it\'s well-positioned to convert visitors.');
+      break;
+    case 'B':
+      lines.push('This site has a strong foundation with a few areas that could be tightened up to improve performance.');
+      break;
+    case 'C':
+      lines.push('This site covers the basics but has notable gaps that are likely costing it visitors and conversions.');
+      break;
+    case 'D':
+      lines.push('This site needs significant work. Several key areas are underperforming and likely hurting first impressions.');
+      break;
+    case 'F':
+      lines.push('This site has critical issues across multiple areas that need immediate attention before other improvements will matter.');
+      break;
+  }
+
+  // Call out top issues (categories that lost the most points)
+  const lostPoints = score.categories
+    .map((c) => ({ ...c, lost: c.possible - c.earned }))
+    .filter((c) => c.lost > 0)
+    .sort((a, b) => b.lost - a.lost);
+
+  if (lostPoints.length > 0) {
+    const topIssues: string[] = [];
+    for (const issue of lostPoints.slice(0, 3)) {
+      if (issue.name === 'OG Tags' && issue.earned === 0) {
+        topIssues.push('no Open Graph tags (social media shares will look broken)');
+      } else if (issue.name === 'Heading Structure') {
+        topIssues.push('heading hierarchy gaps that hurt SEO');
+      } else if (issue.name === 'Content Depth' && issue.earned <= 5) {
+        const avgWords = Math.round(allMetrics.reduce((s, m) => s + m.wordCount, 0) / allMetrics.length);
+        topIssues.push(`thin content (avg ${avgWords} words/page)`);
+      } else if (issue.name === 'Meta Tags') {
+        topIssues.push('incomplete meta tags on some pages');
+      } else if (issue.name === 'CTA Presence' && issue.earned < 7) {
+        topIssues.push('too few clear calls-to-action');
+      } else if (issue.name === 'H1 Consistency') {
+        topIssues.push('inconsistent H1 usage');
+      }
+    }
+
+    if (topIssues.length > 0) {
+      lines.push(`The biggest opportunities: ${topIssues.join(', ')}.`);
+    }
+  }
+
+  return lines.join(' ');
 }
 
 // ============================================
 // DISPLAY RESULTS
 // ============================================
 
-function printSiteScorecard(allMetrics: TechnicalMetrics[]) {
+function printSiteScorecard(allMetrics: TechnicalMetrics[], score: ScoreBreakdown) {
   const LINE = '─'.repeat(70);
   const homepage = allMetrics[0];
 
-  log(`\n${LINE}`);
-  log(`  SITE-WIDE TECHNICAL SCORECARD`);
-  log(`  ${allMetrics.length} pages crawled | ${homepage.https ? 'HTTPS ✓' : 'HTTPS ✗'}`);
-  log(LINE);
+  report(`\n${LINE}`);
+  report(`  SITE SCORE: ${score.total}/100 (${score.grade})`);
+  report(`  ${allMetrics.length} pages crawled | ${homepage.https ? 'HTTPS ✓' : 'HTTPS ✗'}`);
+  report(LINE);
+
+  // Per-category score breakdown
+  report();
+  report('  Score Breakdown:');
+  for (const cat of score.categories) {
+    const bar = cat.earned === cat.possible ? '✓' : `${cat.earned}/${cat.possible}`;
+    report(`    ${cat.name.padEnd(20)} ${bar.padStart(5)}  ${cat.note}`);
+  }
+  report();
 
   // Per-page summary table
-  log('  PATH                      TITLE                                WORDS  H1  ALT');
-  log('  ' + '─'.repeat(66));
+  report('  PATH                      TITLE                                WORDS  H1  ALT');
+  report('  ' + '─'.repeat(66));
 
   for (const m of allMetrics) {
     const path = new URL(m.url).pathname;
     const title = (m.title || 'NO TITLE').slice(0, 35);
-    log(`  ${path.padEnd(26)} ${title.padEnd(37)} ${String(m.wordCount).padStart(5)}  ${String(m.h1Count).padStart(2)}  ${m.images.altCoverage}`);
+    report(`  ${path.padEnd(26)} ${title.padEnd(37)} ${String(m.wordCount).padStart(5)}  ${String(m.h1Count).padStart(2)}  ${m.images.altCoverage}`);
   }
 
-  log();
+  report();
 
   // Site-wide meta coverage
   const pagesWithTitle = allMetrics.filter((m) => m.metaCompleteness.title).length;
   const pagesWithDesc = allMetrics.filter((m) => m.metaCompleteness.description).length;
   const pagesWithOg = allMetrics.filter((m) => m.metaCompleteness.ogTitle && m.metaCompleteness.ogImage).length;
-  log(`  Meta Coverage:`);
-  log(`    Title .............. ${pagesWithTitle}/${allMetrics.length} pages`);
-  log(`    Description ........ ${pagesWithDesc}/${allMetrics.length} pages`);
-  log(`    OG Tags ............ ${pagesWithOg}/${allMetrics.length} pages`);
+  report(`  Meta Coverage:`);
+  report(`    Title .............. ${pagesWithTitle}/${allMetrics.length} pages`);
+  report(`    Description ........ ${pagesWithDesc}/${allMetrics.length} pages`);
+  report(`    OG Tags ............ ${pagesWithOg}/${allMetrics.length} pages`);
 
   // Aggregate stats
   const totalWords = allMetrics.reduce((sum, m) => sum + m.wordCount, 0);
   const totalImages = allMetrics.reduce((sum, m) => sum + m.images.total, 0);
   const totalImagesWithAlt = allMetrics.reduce((sum, m) => sum + m.images.withAlt, 0);
+  const totalSvgs = allMetrics.reduce((sum, m) => sum + m.images.svgCount, 0);
+  const totalBgImages = allMetrics.reduce((sum, m) => sum + m.images.bgImageCount, 0);
+  const totalPictures = allMetrics.reduce((sum, m) => sum + m.images.pictureCount, 0);
   const allCtas = [...new Set(allMetrics.flatMap((m) => m.ctas))];
 
-  log();
-  log(`  Totals:`);
-  log(`    Total Words ........ ${totalWords}`);
-  log(`    Total Images ....... ${totalImages} (${totalImages > 0 ? Math.round((totalImagesWithAlt / totalImages) * 100) : 'N/A'}% with alt text)`);
-  log(`    Unique CTAs ........ ${allCtas.length}`);
+  report();
+  report(`  Totals:`);
+  report(`    Total Words ........ ${totalWords}`);
+  const imgParts = [`${totalImages} <img>`];
+  if (totalSvgs > 0) imgParts.push(`${totalSvgs} SVG`);
+  if (totalBgImages > 0) imgParts.push(`${totalBgImages} bg-image`);
+  if (totalPictures > 0) imgParts.push(`${totalPictures} <picture>`);
+  report(`    Visual Assets ...... ${imgParts.join(' | ')}${totalImages > 0 ? ` (${Math.round((totalImagesWithAlt / totalImages) * 100)}% <img> alt text)` : ''}`);
+  report(`    Unique CTAs ........ ${allCtas.length}`);
 
   if (allCtas.length > 0) {
     allCtas.slice(0, 10).forEach((cta) => {
-      log(`      → "${cta}"`);
+      report(`      → "${cta}"`);
     });
   }
 
@@ -539,12 +756,12 @@ function printSiteScorecard(allMetrics: TechnicalMetrics[]) {
     m.headingHierarchyGaps.map((gap) => `${new URL(m.url).pathname}: ${gap}`)
   );
   if (allGaps.length > 0) {
-    log();
-    log(`  Heading Hierarchy Issues:`);
-    allGaps.forEach((gap) => log(`    ⚠ ${gap}`));
+    report();
+    report(`  Heading Hierarchy Issues:`);
+    allGaps.forEach((gap) => report(`    ⚠ ${gap}`));
   }
 
-  log(LINE);
+  report(LINE);
 }
 
 // ============================================
@@ -552,20 +769,20 @@ function printSiteScorecard(allMetrics: TechnicalMetrics[]) {
 // ============================================
 
 async function reviewSite(url: string) {
-  log(`\n${'═'.repeat(70)}`);
-  log(`  Reviewing: ${url}`);
-  log(`${'═'.repeat(70)}`);
+  report(`\n${'═'.repeat(70)}`);
+  report(`  Reviewing: ${url}`);
+  report(`${'═'.repeat(70)}`);
 
   // Step 1: Fetch homepage HTML
   process.stdout.write('  Fetching homepage... ');
   const { html: homepageHtml, status: homepageStatus } = await fetchHTML(url);
-  log(`  Fetching homepage... done (${homepageStatus}, ${Math.round(homepageHtml.length / 1024)}KB)`);
+  progress(`  Fetching homepage... done (${homepageStatus}, ${Math.round(homepageHtml.length / 1024)}KB)`);
 
   // Step 2: Discover pages from nav/header/footer links
   process.stdout.write('  Discovering nav pages... ');
   const pageUrls = discoverNavPages(homepageHtml, url);
-  log(`  Discovering nav pages... found ${pageUrls.length} pages`);
-  pageUrls.forEach((p) => log(`    → ${new URL(p).pathname}`));
+  progress(`  Discovering nav pages... found ${pageUrls.length} pages`);
+  pageUrls.forEach((p) => progress(`    → ${new URL(p).pathname}`));
 
   // Step 3: Fetch and process each page
   const pages: PageData[] = [];
@@ -590,19 +807,31 @@ async function reviewSite(url: string) {
       const metrics = extractMetrics(html, pageUrl, status);
       const content = extractVisibleContent(html, pageUrl, 6000);
       pages.push({ url: pageUrl, metrics, content });
-      log(`  Processing ${path}... done (${metrics.wordCount} words, ${content.length} chars)`);
+      progress(`  Processing ${path}... done (${metrics.wordCount} words, ${content.length} chars)`);
     } catch (err) {
-      log(`  Processing ${path}... FAILED: ${err instanceof Error ? err.message : err}`);
+      progress(`  Processing ${path}... FAILED: ${err instanceof Error ? err.message : err}`);
     }
   }
 
   if (pages.length === 0) {
-    log('  No pages could be processed. Aborting.');
+    progress('  No pages could be processed. Aborting.');
     return;
   }
 
-  // Step 4: Print site-wide scorecard
-  printSiteScorecard(pages.map((p) => p.metrics));
+  // Step 4: Compute score, executive summary, and scorecard
+  const allPageMetrics = pages.map((p) => p.metrics);
+  const score = computeSiteScore(allPageMetrics);
+
+  // Executive summary — printed first for at-a-glance orientation
+  const LINE = '─'.repeat(70);
+  report(`\n${LINE}`);
+  report(`  EXECUTIVE SUMMARY`);
+  report(LINE);
+  report();
+  report(`  ${buildExecutiveSummary(score, allPageMetrics)}`);
+  report();
+
+  printSiteScorecard(allPageMetrics, score);
 
   // Step 5: Build combined content for AI
   const combinedContent = pages.map((p) => {
@@ -610,7 +839,7 @@ async function reviewSite(url: string) {
     return `PAGE: ${path}\n[title] ${p.metrics.title || 'No title'}\n[content]\n${p.content}`;
   }).join('\n\n---\n\n');
 
-  log(`\n  Combined content for AI: ${combinedContent.length} chars across ${pages.length} pages`);
+  progress(`\n  Combined content for AI: ${combinedContent.length} chars across ${pages.length} pages`);
 
   // Step 6: AI analysis
   const model = process.env.NEXT_PUBLIC_CHATBOT_MODEL || 'gpt-4.1-nano';
@@ -619,26 +848,25 @@ async function reviewSite(url: string) {
 
   const { text, usage } = await generateText({
     model: openai(model),
-    system: buildEvaluationPrompt(pages.map((p) => p.metrics)),
+    system: buildEvaluationPrompt(allPageMetrics, score),
     messages: [{ role: 'user', content: `Here is the visible content from all pages on ${url}:\n\n${combinedContent}` }],
     temperature: 0.3,
     maxOutputTokens: 2000,
   });
 
   const elapsed = Math.round(performance.now() - startTime);
-  log(`  Running AI analysis (${model})... done (${elapsed}ms)`);
+  progress(`  Running AI analysis (${model})... done (${elapsed}ms)`);
 
   if (usage?.inputTokens) {
-    log(`  Tokens: ${usage.inputTokens} in / ${usage.outputTokens} out`);
+    progress(`  Tokens: ${usage.inputTokens} in / ${usage.outputTokens} out`);
   }
 
   // Step 7: Print AI analysis
-  const LINE = '─'.repeat(70);
-  log(`\n${LINE}`);
-  log(`  AI SITE ANALYSIS`);
-  log(LINE);
-  log(text);
-  log(LINE);
+  report(`\n${LINE}`);
+  report(`  AI SITE ANALYSIS`);
+  report(LINE);
+  report(text);
+  report(LINE);
 }
 
 async function main() {
@@ -658,35 +886,31 @@ async function main() {
   }
 
   const model = process.env.NEXT_PUBLIC_CHATBOT_MODEL || 'gpt-4.1-nano';
-  log('═'.repeat(70));
-  log('  AI Website Reviewer — Prototype V2');
-  log(`  Model: ${model}`);
-  log(`  Sites: ${urls.length}`);
-  log(`  Time: ${new Date().toISOString()}`);
-  log('═'.repeat(70));
+  report('═'.repeat(70));
+  report('  AI Website Reviewer — V3');
+  report(`  Model: ${model}`);
+  report(`  Sites: ${urls.length}`);
+  report(`  Time: ${new Date().toISOString()}`);
+  report('═'.repeat(70));
 
   for (const url of urls) {
     try {
       await reviewSite(url);
     } catch (err) {
-      log(`\n  ERROR reviewing ${url}: ${err instanceof Error ? err.message : err}`);
+      report(`\n  ERROR reviewing ${url}: ${err instanceof Error ? err.message : err}`);
     }
   }
 
-  log(`\n${'═'.repeat(70)}`);
-  log('  Done. Review the AI output above:');
-  log('  - Does it quote actual headlines/CTAs from specific pages?');
-  log('  - Does it reference content from multiple pages (not just homepage)?');
-  log('  - Is the advice specific to THIS site (not interchangeable)?');
-  log('  - Would a small business owner find it useful?');
-  log('═'.repeat(70));
+  report(`\n${'═'.repeat(70)}`);
+  report('  Done.');
+  report('═'.repeat(70));
 
-  // Write output to file for later review
+  // Write report (clean deliverable) to file
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
   const outputPath = join(__dirname, 'review-output.txt');
-  writeFileSync(outputPath, outputLines.join('\n'), 'utf-8');
-  console.log(`\n  Output saved to: ${outputPath}`);
+  writeFileSync(outputPath, reportLines.join('\n'), 'utf-8');
+  console.log(`\n  Report saved to: ${outputPath}`);
 }
 
 main().catch((err) => {
