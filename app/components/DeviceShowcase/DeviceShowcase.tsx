@@ -18,6 +18,7 @@ import { motion } from 'framer-motion';
 import {
   DEVICES,
   DEFAULT_POSITIONS,
+  SHOWCASE_PHASES,
   type LayoutMode,
   type DevicePosition,
 } from './device-config';
@@ -198,6 +199,8 @@ export default function DeviceShowcase() {
             activeId={activeId}
             isSomethingDragging={isSomethingDragging}
           />
+        ) : layoutMode === 'showcase' ? (
+          <ShowcaseLayout loadedUrl={loadedUrl} />
         ) : (
           <SpreadLayout loadedUrl={loadedUrl} />
         )}
@@ -401,6 +404,112 @@ function SpreadLayout({ loadedUrl }: { loadedUrl: string }) {
         <PhoneFrame>
           <ScaledIframe
             url={loadedUrl}
+            nativeWidth={phone.nativeWidth}
+            nativeHeight={phone.nativeHeight}
+          />
+        </PhoneFrame>
+      </motion.div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Showcase Layout — equal-screen height, each device at different hero phase
+// ============================================================================
+// All three iframe screen areas are the same height (V=350px). Frame heights
+// differ because each device has different bezel amounts (monitor=380, tablet=364,
+// phone=360). Visual order: Tablet → Monitor → Phone (left to right).
+//
+// Given target screen height V:
+//   Monitor: width = V × (1512/982) + 16, frame height = V + 30
+//   Tablet:  width = V × (820/1180) + 14, frame height = V + 14
+//   Phone:   width = V × (393/852) + 10, frame height = V + 10
+
+function ShowcaseLayout({ loadedUrl }: { loadedUrl: string }) {
+  const dimensions = useMemo(() => {
+    // Target: all three devices show V pixels of screen content inside their bezels.
+    // Frame heights will differ slightly (thicker bezel = taller frame), which is fine.
+    const V = 350; // screen height in pixels
+
+    // Each formula: screenWidth = V × (nativeW / nativeH), outerWidth = screenWidth + bezel
+    const monitorWidth = V * (1512 / 982) + 16;  // +16 for 8px padding L+R
+    const tabletWidth = V * (820 / 1180) + 14;   // +14 for 7px padding L+R
+    const phoneWidth = V * (393 / 852) + 10;     // +10 for 5px padding L+R
+
+    return {
+      monitor: { width: monitorWidth },
+      tablet: { width: tabletWidth },
+      phone: { width: phoneWidth },
+    };
+  }, []);
+
+  // Build per-device URLs with heroPhase query param
+  const deviceUrls = useMemo(() => {
+    const base = loadedUrl.replace(/[?#].*$/, ''); // strip existing params
+    const separator = '?';
+    return SHOWCASE_PHASES.map((p) => `${base}${separator}heroPhase=${p.phase}`);
+  }, [loadedUrl]);
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        gap: 32,
+        paddingBottom: 20,
+        maxWidth: 1100,
+        margin: '0 auto',
+      }}
+    >
+      {/* Tablet — phase 0 (left) */}
+      <motion.div
+        variants={deviceVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        style={{ width: dimensions.tablet.width, flexShrink: 0 }}
+      >
+        <DeviceLabel label={SHOWCASE_PHASES[0].label} resolution={tablet.resolution} />
+        <TabletFrame>
+          <ScaledIframe
+            url={deviceUrls[0]}
+            nativeWidth={tablet.nativeWidth}
+            nativeHeight={tablet.nativeHeight}
+          />
+        </TabletFrame>
+      </motion.div>
+
+      {/* Desktop — phase 1 (center) */}
+      <motion.div
+        variants={deviceVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        style={{ width: dimensions.monitor.width, flexShrink: 0 }}
+      >
+        <DeviceLabel label={SHOWCASE_PHASES[1].label} resolution={desktop.resolution} />
+        <MonitorFrame>
+          <ScaledIframe
+            url={deviceUrls[1]}
+            nativeWidth={desktop.nativeWidth}
+            nativeHeight={desktop.nativeHeight}
+          />
+        </MonitorFrame>
+      </motion.div>
+
+      {/* Phone — phase 2 (right) */}
+      <motion.div
+        variants={deviceVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.7, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        style={{ width: dimensions.phone.width, flexShrink: 0 }}
+      >
+        <DeviceLabel label={SHOWCASE_PHASES[2].label} resolution={phone.resolution} />
+        <PhoneFrame>
+          <ScaledIframe
+            url={deviceUrls[2]}
             nativeWidth={phone.nativeWidth}
             nativeHeight={phone.nativeHeight}
           />

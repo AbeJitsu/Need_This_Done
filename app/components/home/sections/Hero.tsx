@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Button from '@/components/Button';
 import { ChevronDown } from 'lucide-react';
@@ -12,18 +13,49 @@ const keywordColors = ['#059669', '#2563eb', '#9333ea']; // emerald, blue, purpl
 // Keyword rotation: 3s (readability > standard timing for this element)
 // Gradient drift: 8-12s (subtle, continuous background motion)
 
+// Outer wrapper provides Suspense boundary for useSearchParams
 export function Hero() {
-  const [currentKeywordIndex, setCurrentKeywordIndex] = useState(0);
+  return (
+    <Suspense fallback={<HeroInner initialPhase={0} autoRotate={false} />}>
+      <HeroWithParams />
+    </Suspense>
+  );
+}
+
+// Reads ?heroPhase=N from URL to set initial keyword rotation index
+// Used by DeviceShowcase to start each iframe at a different phase
+function HeroWithParams() {
+  const searchParams = useSearchParams();
+  const initialPhase = Number(searchParams.get('heroPhase')) || 0;
+  return <HeroInner initialPhase={initialPhase} />;
+}
+
+function HeroInner({ initialPhase, autoRotate = true }: { initialPhase: number; autoRotate?: boolean }) {
+  const [currentKeywordIndex, setCurrentKeywordIndex] = useState(initialPhase % keywords.length);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Rotate keywords every 2.0 seconds
+  // Wall-clock keyword sync: all iframes derive the same base index from
+  // Date.now(), so they never drift. initialPhase offsets each device to
+  // show a DIFFERENT keyword at any given moment.
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentKeywordIndex((prev) => (prev + 1) % keywords.length);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
+    if (!autoRotate) return;
+    const CYCLE_MS = 2000;
+    const TOTAL_CYCLE = CYCLE_MS * keywords.length;
+
+    const update = () => {
+      const now = Date.now();
+      const elapsed = now % TOTAL_CYCLE;
+      const baseIndex = Math.floor(elapsed / CYCLE_MS);
+      setCurrentKeywordIndex((baseIndex + initialPhase) % keywords.length);
+      // Schedule next update at the exact transition boundary (+50ms buffer)
+      const msUntilNext = CYCLE_MS - (elapsed % CYCLE_MS);
+      return setTimeout(update, msUntilNext + 50);
+    };
+
+    const timer = update();
+    return () => clearTimeout(timer);
+  }, [autoRotate, initialPhase]);
 
   // Track mouse position for cursor-reactive gradient
   useEffect(() => {

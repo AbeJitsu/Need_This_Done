@@ -44,24 +44,41 @@ export default function ShowcaseControls({
       }}
     >
       {/* URL input */}
-      <input
-        type="url"
-        value={url}
-        onChange={(e) => onUrlChange(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && onLoad()}
-        placeholder="http://localhost:3000"
-        style={{
-          background: '#1a1e28',
-          border: '1px solid rgba(255,255,255,0.12)',
-          borderRadius: 10,
-          padding: '12px 18px',
-          fontFamily: "'DM Sans', monospace",
-          fontSize: '0.85rem',
-          color: '#f0f0f2',
-          width: 340,
-          outline: 'none',
-        }}
-      />
+      <div style={{ position: 'relative', width: 340 }}>
+        <input
+          type="url"
+          value={url}
+          onChange={(e) => onUrlChange(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && onLoad()}
+          placeholder="http://localhost:3000"
+          style={{
+            background: '#1a1e28',
+            border: '1px solid rgba(255,255,255,0.12)',
+            borderRadius: 10,
+            padding: '12px 18px',
+            fontFamily: "'DM Sans', monospace",
+            fontSize: '0.85rem',
+            color: layoutMode === 'showcase' ? '#565a6e' : '#f0f0f2',
+            width: '100%',
+            outline: 'none',
+          }}
+        />
+        {layoutMode === 'showcase' && (
+          <span
+            style={{
+              position: 'absolute',
+              right: 14,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              fontSize: '0.7rem',
+              color: '#8b8fa3',
+              pointerEvents: 'none',
+            }}
+          >
+            +?heroPhase
+          </span>
+        )}
+      </div>
 
       {/* Load button */}
       <button
@@ -93,6 +110,12 @@ export default function ShowcaseControls({
         onClick={() => onLayoutChange('spread')}
       >
         Side by Side
+      </ToggleButton>
+      <ToggleButton
+        active={layoutMode === 'showcase'}
+        onClick={() => onLayoutChange('showcase')}
+      >
+        Showcase
       </ToggleButton>
 
       {/* Reset positions — only visible when devices have been moved */}

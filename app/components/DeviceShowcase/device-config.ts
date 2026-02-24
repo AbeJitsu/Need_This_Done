@@ -20,7 +20,15 @@ export interface DevicePosition {
   y: number;
 }
 
-export type LayoutMode = 'grouped' | 'spread';
+export type LayoutMode = 'grouped' | 'spread' | 'showcase';
+
+// Showcase mode phases — ordered to match visual layout (Tablet → Monitor → Phone)
+// so phases are sequential left-to-right: 0, 1, 2
+export const SHOWCASE_PHASES = [
+  { label: 'Automations', phase: 0 },  // [0] → Tablet (left)
+  { label: 'Websites', phase: 1 },     // [1] → Monitor (center)
+  { label: 'AI Tools', phase: 2 },     // [2] → Phone (right)
+] as const;
 
 // Native resolutions match real Apple devices:
 // Desktop: MacBook Pro 14" (1512x982 viewport at default scaling)
