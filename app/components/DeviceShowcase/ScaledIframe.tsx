@@ -15,12 +15,15 @@ interface ScaledIframeProps {
   url: string;
   nativeWidth: number;
   nativeHeight: number;
+  /** Called once when iframe content has loaded (or after 8s fallback) */
+  onLoad?: () => void;
 }
 
 export default function ScaledIframe({
   url,
   nativeWidth,
   nativeHeight,
+  onLoad,
 }: ScaledIframeProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
@@ -57,6 +60,11 @@ export default function ScaledIframe({
   useEffect(() => {
     setLoaded(false);
   }, [url]);
+
+  // Notify parent when content finishes loading (iframe onLoad or 8s fallback)
+  useEffect(() => {
+    if (loaded && onLoad) onLoad();
+  }, [loaded, onLoad]);
 
   return (
     <div
@@ -102,7 +110,7 @@ export default function ScaledIframe({
           sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
           onLoad={() => setLoaded(true)}
           style={{
-            width: nativeWidth,
+            width: nativeWidth + 1,
             height: nativeHeight,
             border: 'none',
             transformOrigin: '0 0',

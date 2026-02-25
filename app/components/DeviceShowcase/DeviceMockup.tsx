@@ -43,6 +43,8 @@ interface DeviceMockupProps {
   screenHeight?: number;
   className?: string;
   style?: React.CSSProperties;
+  /** Called when the iframe content has loaded */
+  onLoad?: () => void;
 }
 
 export default function DeviceMockup({
@@ -51,6 +53,7 @@ export default function DeviceMockup({
   screenHeight = 350,
   className,
   style,
+  onLoad,
 }: DeviceMockupProps) {
   const config = DEVICES.find((d) => d.id === device)!;
   const spec = FRAME_SPECS[device];
@@ -71,6 +74,7 @@ export default function DeviceMockup({
           url={url}
           nativeWidth={config.nativeWidth}
           nativeHeight={config.nativeHeight}
+          onLoad={onLoad}
         />
       </Frame>
     </div>

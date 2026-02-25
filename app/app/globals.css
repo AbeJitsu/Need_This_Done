@@ -764,7 +764,10 @@ class to <body>. It disables all interactive elements and hides chrome
   cursor: default !important;
 }
 
-.hero-preview-mode nav,
+.hero-preview-mode {
+  overflow-x: hidden !important;
+}
+
 .hero-preview-mode footer,
 .hero-preview-mode [data-noindex] {
   display: none !important;
