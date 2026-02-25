@@ -1,3 +1,7 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
 // ============================================================================
 // PhoneFrame — iPhone with Google Chrome browser chrome
 // ============================================================================
@@ -15,7 +19,32 @@ interface PhoneFrameProps {
   children: React.ReactNode;
 }
 
+function getFormattedTime(): string {
+  const now = new Date();
+  const h = now.getHours() % 12 || 12;
+  const m = String(now.getMinutes()).padStart(2, '0');
+  return `${h}:${m}`;
+}
+
 export default function PhoneFrame({ children }: PhoneFrameProps) {
+  const [time, setTime] = useState(getFormattedTime);
+
+  useEffect(() => {
+    const tick = () => setTime(getFormattedTime());
+    const now = new Date();
+    const msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+
+    let interval: ReturnType<typeof setInterval>;
+    const timeout = setTimeout(() => {
+      tick();
+      interval = setInterval(tick, 60_000);
+    }, msUntilNextMinute);
+
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
+  }, []);
   return (
     <div
       style={{
@@ -74,7 +103,7 @@ export default function PhoneFrame({ children }: PhoneFrameProps) {
             zIndex: 10,
           }}
         >
-          <span style={{ flex: 1 }}>7:37</span>
+          <span style={{ flex: 1 }}>{time}</span>
           <span
             style={{
               flex: 1,

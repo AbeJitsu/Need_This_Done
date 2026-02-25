@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Button from '@/components/Button';
 import { ChevronDown } from 'lucide-react';
+import { useIsDesktop } from '@/hooks/useIsDesktop';
+import { HeroDevice } from './HeroDevice';
 
 const keywords = ['Websites', 'Automations', 'AI Tools'];
 const keywordColors = ['#059669', '#2563eb', '#9333ea']; // emerald, blue, purple
@@ -31,6 +33,11 @@ function HeroWithParams() {
 }
 
 function HeroInner({ initialPhase, autoRotate = true }: { initialPhase: number; autoRotate?: boolean }) {
+  const isDesktop = useIsDesktop();
+  // When devices flank the hero, shift hero to phase 1 so reading
+  // left-to-right gives: Websites (tablet=0) -> Automations (hero=1) -> AI Tools (phone=2)
+  const effectivePhase = isDesktop ? 1 : initialPhase;
+
   const [currentKeywordIndex, setCurrentKeywordIndex] = useState(initialPhase % keywords.length);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -47,7 +54,7 @@ function HeroInner({ initialPhase, autoRotate = true }: { initialPhase: number; 
       const now = Date.now();
       const elapsed = now % TOTAL_CYCLE;
       const baseIndex = Math.floor(elapsed / CYCLE_MS);
-      setCurrentKeywordIndex((baseIndex + initialPhase) % keywords.length);
+      setCurrentKeywordIndex((baseIndex + effectivePhase) % keywords.length);
       // Schedule next update at the exact transition boundary (+50ms buffer)
       const msUntilNext = CYCLE_MS - (elapsed % CYCLE_MS);
       return setTimeout(update, msUntilNext + 50);
@@ -55,7 +62,7 @@ function HeroInner({ initialPhase, autoRotate = true }: { initialPhase: number; 
 
     const timer = update();
     return () => clearTimeout(timer);
-  }, [autoRotate, initialPhase]);
+  }, [autoRotate, effectivePhase]);
 
   // Track mouse position for cursor-reactive gradient
   useEffect(() => {
@@ -160,9 +167,15 @@ function HeroInner({ initialPhase, autoRotate = true }: { initialPhase: number; 
 
       {/* ============================================================
           CONTENT LAYER: Typography & Interactions
+          Three-column grid on xl: [tablet] [hero content] [phone]
+          Below xl: single column, no devices rendered
           ============================================================ */}
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 md:px-12 text-center pt-4 sm:pt-8 md:pt-12">
+      <div className="relative z-10 w-full max-w-[1600px] mx-auto xl:grid xl:grid-cols-[1fr_auto_1fr] xl:items-start xl:min-h-screen">
+        {/* Left device — Tablet (phase 0 → Websites) */}
+        {isDesktop && <HeroDevice side="left" />}
+
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 md:px-12 text-center pt-4 sm:pt-8 md:pt-12">
         {/* Main Headline — MASSIVE, Bold, Gradient Text */}
         <motion.div
           className="mb-10 md:mb-12"
@@ -334,6 +347,10 @@ function HeroInner({ initialPhase, autoRotate = true }: { initialPhase: number; 
             <ChevronDown className="w-6 h-6 text-emerald-600" strokeWidth={3} />
           </motion.div>
         </motion.button>
+        </div>
+
+        {/* Right device — Phone (phase 2 → AI Tools) */}
+        {isDesktop && <HeroDevice side="right" />}
       </div>
 
       {/* ============================================================
