@@ -749,6 +749,35 @@ Custom bullet styling (purple gradient dots) and drop cap for the first
 paragraph. These complement the MarkdownContent component renderers.
 */
 
+/* ========================================================================
+Hero Preview Mode — Device Iframe Sandboxing
+========================================================================
+When the page loads with ?heroPreview=true, HeroPreviewDetector adds this
+class to <body>. It disables all interactive elements and hides chrome
+(nav, footer, floating widgets) so the iframe looks like a clean preview.
+*/
+
+.hero-preview-mode a,
+.hero-preview-mode button,
+.hero-preview-mode [role="button"] {
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+.hero-preview-mode {
+  overflow-x: hidden !important;
+}
+
+.hero-preview-mode footer,
+.hero-preview-mode [data-noindex] {
+  display: none !important;
+}
+
+/* ========================================================================
+Blog Markdown Content — Reading Experience
+========================================================================
+*/
+
 .markdown-content ul {
   list-style: none;
 }

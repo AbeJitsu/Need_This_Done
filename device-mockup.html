@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Need This Done — Device Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       RESET & BASE
+    ======================================== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-deep: #0a0c10;
+      --bg-surface: #12151c;
+      --bg-elevated: #1a1e28;
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-accent: rgba(255,255,255,0.12);
+      --text-primary: #f0f0f2;
+      --text-secondary: #8b8fa3;
+      --text-muted: #565a6e;
+      --accent-green: #34d399;
+      --accent-blue: #60a5fa;
+      --accent-purple: #a78bfa;
+      --device-body: #1c1c1e;
+      --device-border: #2a2a2e;
+      --device-detail: #3a3a3e;
+      --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grain texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: var(--grain);
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ========================================
+       AMBIENT GLOW
+    ======================================== */
+    .ambient {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ambient--green {
+      width: 500px; height: 500px;
+      background: rgba(52, 211, 153, 0.12);
+      top: -100px; left: 10%;
+      animation: drift 20s ease-in-out infinite alternate;
+    }
+    .ambient--purple {
+      width: 400px; height: 400px;
+      background: rgba(167, 139, 250, 0.08);
+      bottom: -100px; right: 10%;
+      animation: drift 25s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes drift {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(30px, 20px); }
+    }
+
+    /* ========================================
+       LAYOUT
+    ======================================== */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 48px 40px 60px;
+    }
+
+    /* ========================================
+       HEADER
+    ======================================== */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .header__label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+      margin-bottom: 20px;
+      padding: 5px 14px;
+      border: 1px solid rgba(52, 211, 153, 0.2);
+      border-radius: 100px;
+      background: rgba(52, 211, 153, 0.05);
+    }
+    .header__label::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .header__title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .header__title em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-blue), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header__subtitle {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    /* ========================================
+       CONTROLS BAR
+    ======================================== */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 50px;
+      flex-wrap: wrap;
+    }
+    .controls__input {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-accent);
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-family: 'DM Sans', monospace;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      width: 340px;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .controls__input:focus {
+      border-color: var(--accent-green);
+      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.1);
+    }
+    .controls__input::placeholder { color: var(--text-muted); }
+
+    .controls__btn {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .controls__btn:hover { transform: translateY(-1px); }
+    .controls__btn:active { transform: translateY(0); }
+
+    .controls__btn--load {
+      background: linear-gradient(135deg, var(--accent-green), #2dd4a0);
+      color: #0a0c10;
+    }
+    .controls__btn--load:hover {
+      box-shadow: 0 6px 20px rgba(52, 211, 153, 0.25);
+    }
+
+    .controls__btn--toggle {
+      background: var(--bg-elevated);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-accent);
+    }
+    .controls__btn--toggle:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.2);
+    }
+    .controls__btn--toggle.active {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--accent-blue);
+      border-color: rgba(96, 165, 250, 0.3);
+    }
+
+    /* ========================================
+       SHOWCASE: GROUPED COMPOSITION
+       All three devices in one scene
+    ======================================== */
+    .showcase {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      /* Height set dynamically, but give a min */
+      min-height: 500px;
+    }
+
+    /* Shared device transitions */
+    .device {
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity 0.5s ease;
+    }
+
+    /* ========================================
+       GROUPED MODE (default)
+       All three side by side, vertically centered,
+       no overlapping. Desktop largest in center,
+       tablet and phone flanking it.
+    ======================================== */
+    .showcase--grouped {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      padding-bottom: 20px;
+    }
+
+    .showcase--grouped .monitor {
+      position: relative;
+      z-index: 1;
+      width: min(680px, 55vw);
+      flex-shrink: 0;
+    }
+
+    .showcase--grouped .tablet {
+      position: absolute;
+      z-index: 2;
+      width: min(220px, 18vw);
+      top: 50%;
+      /* Center of tablet aligns with monitor's left bezel edge */
+      left: calc(50% - min(340px, 27.5vw));
+      transform: translate(-50%, -50%);
+    }
+
+    .showcase--grouped .phone {
+      position: absolute;
+      z-index: 3;
+      width: min(130px, 11vw);
+      top: 50%;
+      /* Center of phone aligns with monitor's right bezel edge */
+      left: calc(50% + min(340px, 27.5vw));
+      transform: translate(-50%, -50%);
+    }
+
+    /* ========================================
+       SPREAD MODE
+       All three side by side, no overlap
+    ======================================== */
+    .showcase--spread {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 40px;
+      padding-bottom: 20px;
+    }
+
+    .showcase--spread .monitor {
+      width: min(650px, 52vw);
+      flex-shrink: 0;
+    }
+
+    .showcase--spread .tablet {
+      position: relative;
+      width: min(240px, 20vw);
+      flex-shrink: 0;
+    }
+
+    .showcase--spread .phone {
+      position: relative;
+      width: min(140px, 12vw);
+      flex-shrink: 0;
+    }
+
+    /* ========================================
+       DEVICE: iMAC MONITOR
+       Thin bezel top/sides, aluminum chin,
+       tapered stand, oval base
+    ======================================== */
+    .monitor__body {
+      /* The aluminum outer shell */
+      background: linear-gradient(180deg, #2c2c2e 0%, #3a3a3c 2%, #2c2c2e 100%);
+      border-radius: 12px;
+      padding: 8px 8px 0 8px;
+      box-shadow:
+        0 30px 80px rgba(0,0,0,0.5),
+        0 0 0 1px rgba(255,255,255,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .monitor__screen {
+      background: #000;
+      border-radius: 4px;
+      overflow: hidden;
+      aspect-ratio: 1512 / 982;
+      position: relative;
+    }
+    .monitor__screen iframe {
+      width: 1512px;
+      height: 982px;
+      border: none;
+      transform-origin: 0 0;
+      position: absolute;
+      top: 0; left: 0;
+    }
+    /* Aluminum chin below the screen */
+    .monitor__chin {
+      height: 22px;
+      background: linear-gradient(180deg, #3a3a3c, #2c2c2e);
+      border-radius: 0 0 12px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .monitor__chin-logo {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: transparent;
+      box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.1);
+    }
+    /* Tapered neck */
+    .monitor__stand {
+      width: 50px;
+      height: 48px;
+      margin: 0 auto;
+      background: linear-gradient(180deg, #3a3a3c 0%, #2c2c2e 100%);
+      clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    /* Flat oval foot */
+    .monitor__base {
+      width: 45%;
+      height: 5px;
+      margin: 0 auto;
+      background: linear-gradient(180deg, #3a3a3c, #2c2c2e);
+      border-radius: 0 0 50% 50% / 0 0 100% 100%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    /* Hide old toolbar elements -- keeping monitor clean like an iMac */
+    .monitor__toolbar { display: none; }
+
+    /* ========================================
+       DEVICE: iPAD (modern, edge-to-edge)
+       Uniform slim bezel, rounded screen corners
+    ======================================== */
+    .tablet__frame {
+      background: linear-gradient(180deg, #2c2c2e 0%, #3a3a3c 2%, #2c2c2e 100%);
+      border-radius: 14px;
+      padding: 7px;
+      box-shadow:
+        0 25px 60px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(255,255,255,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .tablet__screen {
+      background: #000;
+      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 820 / 1180;
+      position: relative;
+    }
+    .tablet__screen iframe {
+      width: 820px;
+      height: 1180px;
+      border: none;
+      transform-origin: 0 0;
+      position: absolute;
+      top: 0; left: 0;
+    }
+
+    /* ========================================
+       DEVICE: iPHONE (modern, edge-to-edge)
+       Slim bezel with realistic status bar,
+       notch, and Safari browser chrome
+    ======================================== */
+    .phone__frame {
+      background: linear-gradient(180deg, #2c2c2e 0%, #3a3a3c 2%, #2c2c2e 100%);
+      border-radius: 20px;
+      padding: 5px;
+      box-shadow:
+        0 25px 60px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(255,255,255,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .phone__screen {
+      background: #000;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 393 / 852;
+      position: relative;
+    }
+    .phone__screen iframe {
+      width: 393px;
+      height: 889px;
+      border: none;
+      transform-origin: 0 0;
+      position: absolute;
+      top: 8%; left: 0;
+    }
+
+    /* -- iPhone Status Bar (time + signal/battery) -- */
+    .phone__status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4%;
+      background: #fff;
+      z-index: 10;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 2.5% 6% 0;
+      font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      font-size: 7px;
+      font-weight: 600;
+      color: #1c1c1e;
+      letter-spacing: 0.01em;
+    }
+    .phone__status-time { flex: 1; }
+    .phone__status-icons {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 3px;
+    }
+    .phone__status-icons svg { display: block; }
+
+    /* -- iPhone Notch (classic sensor housing cutout) -- */
+    .phone__notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36%;
+      height: 2.2%;
+      background: #000;
+      border-radius: 0 0 16px 16px;
+      z-index: 12;
+    }
+
+    /* -- Chrome Top Omnibox (below status bar, above iframe) -- */
+    .phone__chrome-omnibox {
+      position: absolute;
+      top: 4%;
+      left: 0;
+      right: 0;
+      height: 4%;
+      background: #fff;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 5%;
+      border-bottom: 0.5px solid rgba(0,0,0,0.08);
+    }
+    .phone__chrome-omnibox-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      width: 100%;
+      height: 65%;
+      background: #e8eaed;
+      border-radius: 6px;
+      font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      font-size: 6.5px;
+      font-weight: 400;
+      color: #3c3c43;
+      padding: 0 6px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .phone__chrome-omnibox-pill svg { flex-shrink: 0; }
+
+    /* -- Chrome Bottom Toolbar (5 icons) -- */
+    .phone__chrome-toolbar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 7%;
+      background: #f9f9f9;
+      z-index: 10;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-around;
+      padding: 6% 6% 0;
+      border-top: 0.5px solid rgba(0,0,0,0.1);
+    }
+    .phone__chrome-toolbar svg {
+      display: block;
+    }
+    /* Home indicator line */
+    .phone__home-indicator {
+      position: absolute;
+      bottom: 1px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 32%;
+      height: 2.5px;
+      background: #000;
+      border-radius: 100px;
+      opacity: 0.15;
+      z-index: 11;
+    }
+
+    .phone__island { display: none; }
+    .phone__home { display: none; }
+
+    /* ========================================
+       DEVICE LABELS
+    ======================================== */
+    .device__label {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .device__label span {
+      color: var(--text-secondary);
+      font-weight: 300;
+      letter-spacing: normal;
+      text-transform: none;
+      margin-left: 4px;
+      font-size: 0.65rem;
+    }
+    /* Show labels in spread mode */
+    .showcase--spread .device__label { opacity: 1; }
+    /* Hide labels in grouped mode (too cluttered) */
+    .showcase--grouped .device__label { opacity: 0; }
+
+    /* ========================================
+       LOADING STATE
+    ======================================== */
+    .device__loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--bg-surface);
+      z-index: 5;
+      transition: opacity 0.5s ease;
+    }
+    .device__loading.hidden { opacity: 0; pointer-events: none; }
+    .device__spinner {
+      width: 24px; height: 24px;
+      border: 2px solid var(--border-subtle);
+      border-top-color: var(--accent-green);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .device__loading-text {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* ========================================
+       FOOTER
+    ======================================== */
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .footer__text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* ========================================
+       ENTRANCE ANIMATION
+    ======================================== */
+    .device {
+      opacity: 0;
+      transform: translateY(40px);
+      animation: deviceEnter 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .monitor  { animation-delay: 0.1s; }
+    .tablet   { animation-delay: 0.35s; }
+    .phone    { animation-delay: 0.55s; }
+
+    @keyframes deviceEnter {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================================
+       RESPONSIVE
+    ======================================== */
+    @media (max-width: 900px) {
+      .page { padding: 32px 16px 40px; }
+      .controls { gap: 8px; }
+      .controls__input { width: 100%; max-width: 280px; font-size: 0.8rem; padding: 10px 14px; }
+      .controls__btn { padding: 10px 16px; font-size: 0.8rem; }
+
+      /* On small screens, stack vertically */
+      .showcase--grouped,
+      .showcase--spread {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+      }
+      .showcase--grouped .monitor,
+      .showcase--spread .monitor { width: 95vw; }
+      .showcase--grouped .tablet,
+      .showcase--spread .tablet { position: static; width: 260px; transform: none; margin-left: 0; }
+      .showcase--grouped .phone,
+      .showcase--spread .phone { position: static; width: 180px; transform: none; margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient glow -->
+  <div class="ambient ambient--green"></div>
+  <div class="ambient ambient--purple"></div>
+
+  <div class="page">
+    <!-- Header -->
+    <header class="header">
+      <div class="header__label">Live Preview</div>
+      <h1 class="header__title">Responsive <em>Device Showcase</em></h1>
+      <p class="header__subtitle">All three breakpoints, one view.</p>
+    </header>
+
+    <!-- Controls -->
+    <div class="controls">
+      <input
+        type="url"
+        class="controls__input"
+        id="urlInput"
+        placeholder="http://localhost:3000"
+        value="http://localhost:3000"
+      />
+      <button class="controls__btn controls__btn--load" onclick="loadUrl()">Load</button>
+      <button class="controls__btn controls__btn--toggle active" id="groupedBtn" onclick="setLayout('grouped')">Grouped</button>
+      <button class="controls__btn controls__btn--toggle" id="spreadBtn" onclick="setLayout('spread')">Side by Side</button>
+    </div>
+
+    <!-- Device Showcase -->
+    <div class="showcase showcase--grouped" id="showcase">
+
+      <!-- iMac (center) -->
+      <div class="device monitor">
+        <div class="device__label">Desktop <span>1440 x 900</span></div>
+        <div class="monitor__body">
+          <div class="monitor__screen" id="desktopScreen">
+            <div class="device__loading" id="desktopLoading">
+              <div class="device__spinner"></div>
+              <div class="device__loading-text">Loading...</div>
+            </div>
+          </div>
+        </div>
+        <div class="monitor__chin"><div class="monitor__chin-logo"></div></div>
+        <div class="monitor__stand"></div>
+        <div class="monitor__base"></div>
+      </div>
+
+      <!-- Tablet (front-left) -->
+      <div class="device tablet">
+        <div class="device__label">Tablet <span>768 x 1024</span></div>
+        <div class="tablet__frame">
+          <div class="tablet__screen" id="tabletScreen">
+            <div class="device__loading" id="tabletLoading">
+              <div class="device__spinner"></div>
+              <div class="device__loading-text">Loading...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone (front-right) -->
+      <div class="device phone">
+        <div class="device__label">Phone <span>375 x 812</span></div>
+        <div class="phone__frame">
+          <div class="phone__screen" id="phoneScreen">
+            <!-- iPhone chrome: status bar -->
+            <div class="phone__status-bar">
+              <span class="phone__status-time">7:37</span>
+              <span class="phone__status-icons">
+                <!-- Cellular signal bars -->
+                <svg width="8" height="5" viewBox="0 0 17 10.7" fill="currentColor">
+                  <rect x="0" y="7.7" width="3" height="3" rx="0.5"/>
+                  <rect x="4.5" y="5" width="3" height="5.7" rx="0.5"/>
+                  <rect x="9" y="2.3" width="3" height="8.4" rx="0.5"/>
+                  <rect x="13.5" y="0" width="3" height="10.7" rx="0.5"/>
+                </svg>
+                <!-- Battery -->
+                <svg width="13" height="6" viewBox="0 0 27 13" fill="currentColor">
+                  <rect x="0.5" y="0.5" width="22" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1"/>
+                  <path d="M24 4v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <rect x="2" y="2" width="18" height="9" rx="1" fill="currentColor"/>
+                </svg>
+              </span>
+            </div>
+            <!-- iPhone chrome: notch -->
+            <div class="phone__notch"></div>
+            <!-- iPhone chrome: Chrome top omnibox -->
+            <div class="phone__chrome-omnibox">
+              <div class="phone__chrome-omnibox-pill">
+                <!-- Lock icon (gray, Chrome style) -->
+                <svg width="6" height="7" viewBox="0 0 12 14" fill="#5f6368">
+                  <rect x="1" y="6" width="10" height="7" rx="2"/>
+                  <path d="M3.5 6V4.5a2.5 2.5 0 0 1 5 0V6" fill="none" stroke="#5f6368" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                needthisdone.com
+                <!-- Three-dot menu (Chrome style) -->
+                <svg width="6" height="7" viewBox="0 0 12 14" fill="#5f6368" style="margin-left: auto;">
+                  <circle cx="6" cy="3" r="1.2"/>
+                  <circle cx="6" cy="7" r="1.2"/>
+                  <circle cx="6" cy="11" r="1.2"/>
+                </svg>
+              </div>
+            </div>
+            <!-- iPhone chrome: Chrome bottom toolbar -->
+            <div class="phone__chrome-toolbar">
+              <!-- Back (thin chevron, gray) -->
+              <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="#5f6368" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 2L4 7l5 5"/>
+              </svg>
+              <!-- Forward -->
+              <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="#5f6368" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 2l5 5-5 5"/>
+              </svg>
+              <!-- New tab (+) -->
+              <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="#5f6368" stroke-width="1.6" stroke-linecap="round">
+                <path d="M7 2v10M2 7h10"/>
+              </svg>
+              <!-- Tab count (rounded square with "1") -->
+              <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="#5f6368" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="10" height="10" rx="2"/>
+                <text x="7" y="10" text-anchor="middle" fill="#5f6368" stroke="none" font-size="7" font-weight="600" font-family="sans-serif">1</text>
+              </svg>
+              <!-- More (horizontal dots) -->
+              <svg width="8" height="8" viewBox="0 0 14 14" fill="#5f6368">
+                <circle cx="3" cy="7" r="1.2"/>
+                <circle cx="7" cy="7" r="1.2"/>
+                <circle cx="11" cy="7" r="1.2"/>
+              </svg>
+            </div>
+            <!-- Home indicator -->
+            <div class="phone__home-indicator"></div>
+            <!-- Loading state -->
+            <div class="device__loading" id="phoneLoading">
+              <div class="device__spinner"></div>
+              <div class="device__loading-text">Loading...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer__text">Need This Done -- Device Preview</p>
+    </footer>
+  </div>
+
+  <script>
+    // ============================================
+    // DEVICE CONFIG
+    // ============================================
+    const devices = [
+      { id: 'desktop',  screenEl: 'desktopScreen',  loadingEl: 'desktopLoading',  nativeWidth: 1512, nativeHeight: 982 },
+      { id: 'tablet',   screenEl: 'tabletScreen',   loadingEl: 'tabletLoading',   nativeWidth: 820,  nativeHeight: 1180 },
+      { id: 'phone',    screenEl: 'phoneScreen',    loadingEl: 'phoneLoading',    nativeWidth: 393,  nativeHeight: 889 }
+    ];
+
+    // ============================================
+    // LAYOUT TOGGLE
+    // Switch between grouped (overlapping) and spread (side by side)
+    // ============================================
+    function setLayout(mode) {
+      const showcase = document.getElementById('showcase');
+      const groupedBtn = document.getElementById('groupedBtn');
+      const spreadBtn = document.getElementById('spreadBtn');
+
+      showcase.className = 'showcase showcase--' + mode;
+      groupedBtn.classList.toggle('active', mode === 'grouped');
+      spreadBtn.classList.toggle('active', mode === 'spread');
+
+      // Re-scale iframes after layout transition
+      setTimeout(rescaleIframes, 100);
+      // Double-check after CSS transition completes
+      setTimeout(rescaleIframes, 700);
+    }
+
+    // ============================================
+    // LOAD URL INTO ALL DEVICES
+    // ============================================
+    function loadUrl() {
+      const url = document.getElementById('urlInput').value.trim();
+      if (!url) return;
+
+      // URL is ready to load
+
+      devices.forEach(device => {
+        const screen = document.getElementById(device.screenEl);
+        const loading = document.getElementById(device.loadingEl);
+
+        // Remove old iframe
+        const existing = screen.querySelector('iframe');
+        if (existing) existing.remove();
+
+        // Show spinner
+        loading.classList.remove('hidden');
+
+        // Create new iframe at native resolution
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.setAttribute('loading', 'lazy');
+        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups');
+
+        // Scale to fit container
+        const containerWidth = screen.offsetWidth;
+        const scale = containerWidth / device.nativeWidth;
+        iframe.style.transform = 'scale(' + scale + ')';
+        iframe.style.width = device.nativeWidth + 'px';
+        iframe.style.height = device.nativeHeight + 'px';
+
+        iframe.onload = () => {
+          setTimeout(() => loading.classList.add('hidden'), 300);
+        };
+
+        // Fallback timeout for loading spinner
+        setTimeout(() => loading.classList.add('hidden'), 8000);
+
+        screen.appendChild(iframe);
+      });
+    }
+
+    // ============================================
+    // RE-SCALE IFRAMES
+    // Called on resize and layout toggle
+    // ============================================
+    function rescaleIframes() {
+      devices.forEach(device => {
+        const screen = document.getElementById(device.screenEl);
+        const iframe = screen.querySelector('iframe');
+        if (!iframe) return;
+
+        const containerWidth = screen.offsetWidth;
+        const scale = containerWidth / device.nativeWidth;
+        iframe.style.transform = 'scale(' + scale + ')';
+      });
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(rescaleIframes, 80);
+    });
+
+    // ============================================
+    // URL PARAMS + AUTO-LOAD
+    // ============================================
+    const params = new URLSearchParams(window.location.search);
+    const presetUrl = params.get('url');
+    if (presetUrl) {
+      document.getElementById('urlInput').value = presetUrl;
+    }
+
+    // Check for layout param too
+    const presetLayout = params.get('layout');
+    if (presetLayout === 'spread') {
+      setLayout('spread');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(loadUrl, 400);
+    });
+  </script>
+</body>
+</html>
