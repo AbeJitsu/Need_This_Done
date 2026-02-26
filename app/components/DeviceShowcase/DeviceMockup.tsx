@@ -45,6 +45,8 @@ interface DeviceMockupProps {
   style?: React.CSSProperties;
   /** Called when the iframe content has loaded */
   onLoad?: () => void;
+  /** Static image shown instantly while iframe loads */
+  placeholderSrc?: string;
 }
 
 export default function DeviceMockup({
@@ -54,6 +56,7 @@ export default function DeviceMockup({
   className,
   style,
   onLoad,
+  placeholderSrc,
 }: DeviceMockupProps) {
   const config = DEVICES.find((d) => d.id === device)!;
   const spec = FRAME_SPECS[device];
@@ -75,6 +78,7 @@ export default function DeviceMockup({
           nativeWidth={config.nativeWidth}
           nativeHeight={config.nativeHeight}
           onLoad={onLoad}
+          placeholderSrc={placeholderSrc}
         />
       </Frame>
     </div>

@@ -17,6 +17,8 @@ interface ScaledIframeProps {
   nativeHeight: number;
   /** Called once when iframe content has loaded (or after 8s fallback) */
   onLoad?: () => void;
+  /** Static image shown instantly while iframe loads — same resolution as native content */
+  placeholderSrc?: string;
 }
 
 export default function ScaledIframe({
@@ -24,6 +26,7 @@ export default function ScaledIframe({
   nativeWidth,
   nativeHeight,
   onLoad,
+  placeholderSrc,
 }: ScaledIframeProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
@@ -71,8 +74,31 @@ export default function ScaledIframe({
       ref={containerRef}
       style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}
     >
-      {/* Loading spinner */}
-      {!loaded && (
+      {/* Placeholder image — shown instantly while iframe loads, then crossfades out */}
+      {placeholderSrc && scale > 0 && (
+        <img
+          src={placeholderSrc}
+          alt=""
+          aria-hidden
+          style={{
+            width: nativeWidth + 1,
+            height: nativeHeight,
+            objectFit: 'cover',
+            transformOrigin: '0 0',
+            transform: `scale(${scale})`,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: 2,
+            opacity: loaded ? 0 : 1,
+            transition: 'opacity 0.5s ease',
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+
+      {/* Loading spinner — only shown when no placeholder image is provided */}
+      {!placeholderSrc && (
         <div
           style={{
             position: 'absolute',
@@ -84,7 +110,9 @@ export default function ScaledIframe({
             gap: 10,
             background: '#12151c',
             zIndex: 5,
+            opacity: loaded ? 0 : 1,
             transition: 'opacity 0.5s ease',
+            pointerEvents: loaded ? 'none' : undefined,
           }}
         >
           <div
@@ -118,6 +146,8 @@ export default function ScaledIframe({
             position: 'absolute',
             top: 0,
             left: 0,
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 0.5s ease',
           }}
         />
       )}
