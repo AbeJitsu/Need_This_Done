@@ -19,6 +19,8 @@ interface ScaledIframeProps {
   onLoad?: () => void;
   /** Static image shown instantly while iframe loads — same resolution as native content */
   placeholderSrc?: string;
+  /** ms to wait after iframe onLoad before crossfading (lets page animations settle) */
+  loadDelay?: number;
 }
 
 export default function ScaledIframe({
@@ -27,8 +29,11 @@ export default function ScaledIframe({
   nativeHeight,
   onLoad,
   placeholderSrc,
+  loadDelay = 1500,
 }: ScaledIframeProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const loadDelayRef = useRef<number>(0);
   const [scale, setScale] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
@@ -62,7 +67,13 @@ export default function ScaledIframe({
   // Reset loaded state when URL changes
   useEffect(() => {
     setLoaded(false);
+    clearTimeout(loadDelayRef.current);
   }, [url]);
+
+  // Clean up delay timer on unmount
+  useEffect(() => {
+    return () => clearTimeout(loadDelayRef.current);
+  }, []);
 
   // Notify parent when content finishes loading (iframe onLoad or 8s fallback)
   useEffect(() => {
@@ -72,7 +83,7 @@ export default function ScaledIframe({
   return (
     <div
       ref={containerRef}
-      style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}
+      style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}
     >
       {/* Placeholder image — shown instantly while iframe loads, then crossfades out */}
       {placeholderSrc && scale > 0 && (
@@ -83,7 +94,7 @@ export default function ScaledIframe({
           style={{
             width: nativeWidth + 1,
             height: nativeHeight,
-            objectFit: 'cover',
+            maxWidth: 'none',
             transformOrigin: '0 0',
             transform: `scale(${scale})`,
             position: 'absolute',
@@ -132,11 +143,33 @@ export default function ScaledIframe({
       {/* Scaled iframe at native resolution */}
       {scale > 0 && (
         <iframe
+          ref={iframeRef}
           src={url}
           title="Device preview"
           loading="lazy"
           sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-          onLoad={() => setLoaded(true)}
+          onLoad={() => {
+            // Hide scrollbar visually but keep scroll functionality so
+            // content width matches the placeholder image (no ~15px shift)
+            try {
+              const doc = iframeRef.current?.contentDocument;
+              if (doc && !doc.getElementById('__hide-scrollbar')) {
+                const style = doc.createElement('style');
+                style.id = '__hide-scrollbar';
+                style.textContent =
+                  'html::-webkit-scrollbar{display:none}html{scrollbar-width:none;-ms-overflow-style:none}';
+                doc.head.appendChild(style);
+              }
+            } catch {
+              // Cross-origin — scrollbar stays visible, acceptable fallback
+            }
+
+            if (loadDelay > 0) {
+              loadDelayRef.current = window.setTimeout(() => setLoaded(true), loadDelay);
+            } else {
+              setLoaded(true);
+            }
+          }}
           style={{
             width: nativeWidth + 1,
             height: nativeHeight,
@@ -146,8 +179,7 @@ export default function ScaledIframe({
             position: 'absolute',
             top: 0,
             left: 0,
-            opacity: loaded ? 1 : 0,
-            transition: 'opacity 0.5s ease',
+            opacity: 1,
           }}
         />
       )}
