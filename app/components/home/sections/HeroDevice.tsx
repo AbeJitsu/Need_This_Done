@@ -6,6 +6,10 @@ import DeviceMockup from '@/components/DeviceShowcase/DeviceMockup';
 
 interface HeroDeviceProps {
   side: 'left' | 'right';
+  /** Dev-only: override screenHeight from layout debug tool */
+  screenHeightOverride?: number;
+  /** Dev-only: vertical offset in px from baseline position */
+  offsetY?: number;
 }
 
 /**
@@ -19,7 +23,7 @@ interface HeroDeviceProps {
  * The device stays invisible until the iframe content has loaded (or the
  * 8-second fallback fires), then fades in from the side.
  */
-export function HeroDevice({ side }: HeroDeviceProps) {
+export function HeroDevice({ side, screenHeightOverride, offsetY }: HeroDeviceProps) {
   const isTablet = side === 'left';
   const phase = isTablet ? 0 : 2;
   const url = `/?heroPhase=${phase}&heroPreview=true`;
@@ -34,18 +38,25 @@ export function HeroDevice({ side }: HeroDeviceProps) {
     });
   }, [controls]);
 
+  // Both devices: 453 + 10 (bezel) = 463px total
+  const defaultHeight = 453;
+  const screenHeight = screenHeightOverride ?? defaultHeight;
+
   return (
     <motion.div
-      className={`hidden xl:flex items-center ${isTablet ? 'justify-end' : 'justify-start'} mt-[calc(32.5vh-8.5rem)]`}
+      data-hero-device={side}
+      className="hidden xl:flex xl:h-[65vh] xl:flex-col xl:justify-center xl:items-center"
       initial={{ opacity: 0, x: isTablet ? -60 : 60 }}
       animate={controls}
     >
-      <DeviceMockup
-        device={isTablet ? 'tablet' : 'phone'}
-        url={url}
-        screenHeight={350}
-        onLoad={handleLoad}
-      />
+      <div style={offsetY != null ? { transform: `translateY(${offsetY}px)` } : undefined}>
+        <DeviceMockup
+          device={isTablet ? 'tablet' : 'phone'}
+          url={url}
+          screenHeight={screenHeight}
+          onLoad={handleLoad}
+        />
+      </div>
     </motion.div>
   );
 }

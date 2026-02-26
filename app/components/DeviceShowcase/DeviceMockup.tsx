@@ -20,13 +20,13 @@ import PhoneFrame from './PhoneFrame';
 // Bezel padding (horizontal total) and frame aspect height per device.
 // These come from the physical Frame components:
 //   Monitor: 8px padding L+R = 16, screen aspect uses 982
-//   Tablet:  7px padding all sides = 14, screen aspect uses 1180
+//   Tablet:  5px padding all sides = 10, screen aspect uses 1180
 //   Phone:   5px padding L+R = 10, frame aspect is 852 (includes Chrome chrome)
 //            — differs from nativeHeight (724) because the phone frame renders
 //            a simulated iOS status bar + Chrome toolbar around the content.
 const FRAME_SPECS = {
   desktop: { bezelPadding: 16, frameAspectHeight: 982 },
-  tablet: { bezelPadding: 14, frameAspectHeight: 1180 },
+  tablet: { bezelPadding: 10, frameAspectHeight: 1180 },
   phone: { bezelPadding: 10, frameAspectHeight: 852 },
 } as const;
 
