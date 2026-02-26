@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import Button from '@/components/Button';
@@ -63,9 +63,48 @@ function HeroInner({
   debugFromUrl?: boolean;
 }) {
   const isDesktop = useIsDesktop();
+  const router = useRouter();
   // When devices flank the hero, shift hero to phase 1 so reading
   // left-to-right gives: Websites (tablet=0) -> Automations (hero=1) -> AI Tools (phone=2)
   const effectivePhase = isDesktop ? 1 : initialPhase;
+
+  // Easter egg: listen for navigation messages from device preview iframes.
+  // When someone clicks a link inside the tiny tablet/phone preview, the
+  // iframe's HeroPreviewDetector intercepts it and postMessages the URL here.
+  useEffect(() => {
+    if (!isDesktop) return;
+
+    const handler = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+
+      // Handle widget button clicks (chatbot / wizard) from device iframes
+      if (event.data?.type === 'hero-device-action') {
+        const action = event.data.action as string;
+        if (action === 'open-chatbot' || action === 'open-wizard') {
+          window.dispatchEvent(new CustomEvent(action));
+        }
+        return;
+      }
+
+      if (event.data?.type !== 'hero-device-navigate') return;
+      const url = event.data.url as string;
+      if (!url) return;
+
+      try {
+        const parsed = new URL(url, window.location.origin);
+        if (parsed.origin === window.location.origin) {
+          router.push(parsed.pathname + parsed.search + parsed.hash);
+        } else {
+          window.location.href = url;
+        }
+      } catch {
+        // Invalid URL — ignore silently
+      }
+    };
+
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, [isDesktop, router]);
 
   // Mobile-specific breakpoint: matches Tailwind's `md:` threshold exactly.
   // Below 768px = mobile (dynamic gradient), 768px+ = Tailwind's md:bottom-[10%].
@@ -138,7 +177,7 @@ function HeroInner({
   // show a DIFFERENT keyword at any given moment.
   useEffect(() => {
     if (!autoRotate) return;
-    const CYCLE_MS = 2000;
+    const CYCLE_MS = 3000;
     const TOTAL_CYCLE = CYCLE_MS * keywords.length;
 
     const update = () => {

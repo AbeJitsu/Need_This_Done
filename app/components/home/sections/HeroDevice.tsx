@@ -32,12 +32,18 @@ export function HeroDevice({ side, screenHeightOverride, offsetY }: HeroDevicePr
   const defaultHeight = 453;
   const screenHeight = screenHeightOverride ?? defaultHeight;
 
+  // BJJ belt color glow: emerald for tablet (left), purple for phone (right)
+  const hoverGlow = isTablet
+    ? '0 0 20px rgba(52,211,153,0.15)'
+    : '0 0 20px rgba(147,51,234,0.15)';
+
   return (
     <motion.div
       data-hero-device={side}
-      className="hidden xl:flex xl:h-[65vh] xl:flex-col xl:justify-center xl:items-center"
+      className="hidden xl:flex xl:h-[65vh] xl:flex-col xl:justify-center xl:items-center rounded-2xl"
       initial={{ opacity: 0, x: isTablet ? -60 : 60 }}
       animate={{ opacity: 1, x: 0 }}
+      whileHover={{ scale: 1.015, boxShadow: hoverGlow }}
       transition={{ duration: 0.8, ease: 'easeOut' }}
     >
       <div style={offsetY != null ? { transform: `translateY(${offsetY}px)` } : undefined}>

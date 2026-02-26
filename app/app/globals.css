@@ -760,7 +760,7 @@ class to <body>. It disables all interactive elements and hides chrome
 .hero-preview-mode a,
 .hero-preview-mode button,
 .hero-preview-mode [role="button"] {
-  pointer-events: none !important;
+  /* Clicks intercepted by HeroPreviewDetector and forwarded to parent */
   cursor: default !important;
 }
 
