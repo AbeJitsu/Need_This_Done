@@ -7,7 +7,7 @@ import { useIndexingOptional, IndexingStatus } from './IndexingContext';
 // ============================================================================
 // What: Floating pill button to open the chatbot
 // Why: Always-accessible entry point for help on every page
-// How: Fixed position bottom-right, stacked above the wizard button
+// How: Mobile: left edge, vertically centered. Desktop: bottom-right, stacked above wizard
 
 interface ChatbotButtonProps {
   onClick: () => void;
@@ -55,7 +55,7 @@ function getStatusTooltip(status: IndexingStatus): string {
  * Floating chat pill button that appears in the bottom-right corner.
  *
  * Design features:
- * - Fixed position, stacked above the wizard button
+ * - Mobile: left edge, vertically centered; Desktop: bottom-right above wizard
  * - Blue pill with "Ask a question" text label
  * - Chat bubble icon + text for clear identification
  * - Hover and focus states for accessibility
@@ -70,12 +70,14 @@ export default function ChatbotButton({ onClick }: ChatbotButtonProps) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-20 right-0 sm:right-6 z-40
-                 bg-[#08334466] backdrop-blur-xl backdrop-brightness-50
-                 hover:bg-[#08334480]
-                 text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.3)]
-                 border border-white/20 hover:border-white/30
-                 rounded-l-2xl sm:rounded-full p-3 sm:px-5 sm:py-3
+      className="fixed top-1/2 -translate-y-1/2 left-0 sm:translate-y-0 sm:top-auto sm:left-auto sm:bottom-20 sm:right-6 z-40
+                 bg-white/40 backdrop-blur-xl
+                 border border-white/50
+                 text-gray-700
+                 animate-pulse [animation-duration:3s]
+                 hover:bg-gray-900 hover:text-white hover:border-transparent
+                 hover:[animation:none]
+                 rounded-r-2xl sm:rounded-full p-3 sm:px-5 sm:py-3
                  flex items-center gap-2
                  text-sm font-semibold
                  shadow-lg shadow-blue-500/20

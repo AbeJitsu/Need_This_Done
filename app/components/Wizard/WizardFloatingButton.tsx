@@ -3,8 +3,8 @@
 // ============================================
 // FLOATING "HELP ME CHOOSE" BUTTON
 // ============================================
-// Fixed-position pill button in the bottom-right corner (prime CTA spot).
-// Chatbot pill sits above at bottom-20; admin edit toggle is bottom-left.
+// Mobile: right edge, vertically centered. Desktop: bottom-right (prime CTA spot).
+// Chatbot pill mirrors on the left edge on mobile; both revert to bottom-right on desktop.
 
 interface WizardFloatingButtonProps {
   onClick: () => void;
@@ -15,12 +15,14 @@ export default function WizardFloatingButton({ onClick }: WizardFloatingButtonPr
     <button
       type="button"
       onClick={onClick}
-      className="fixed bottom-6 right-0 sm:right-6 z-40 flex items-center gap-2
+      className="fixed top-1/2 -translate-y-1/2 right-0 sm:translate-y-0 sm:top-auto sm:bottom-6 sm:right-6 z-40 flex items-center gap-2
                  rounded-l-2xl sm:rounded-full
-                 bg-[#08562666] backdrop-blur-xl backdrop-brightness-50
-                 hover:bg-[#08562680]
-                 text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.3)]
-                 border border-white/20 hover:border-white/30
+                 bg-white/40 backdrop-blur-xl
+                 border border-white/50
+                 text-gray-700
+                 animate-pulse [animation-duration:3s]
+                 hover:bg-gray-900 hover:text-white hover:border-transparent
+                 hover:[animation:none]
                  p-3 sm:px-5 sm:py-3 text-sm font-semibold
                  shadow-lg shadow-emerald-500/20
                  hover:shadow-xl hover:shadow-emerald-500/30

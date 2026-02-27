@@ -33,10 +33,9 @@ export const SHOWCASE_PHASES = [
 // Native resolutions match real Apple devices:
 // Desktop: MacBook Pro 14" (1512x982 viewport at default scaling)
 // Tablet: iPad 10th Gen (820x1180)
-// Phone: iPhone 15 (393x852 full screen, 724px visible viewport with Chrome chrome)
-// Chrome top: status bar (4%) + omnibox (4%) = ~68px
-// Chrome bottom: toolbar (6%) + home indicator (1%) = ~60px
-// Visible viewport: 852 - 68 - 60 = 724px
+// Phone: iPhone 17 Pro Max (440x956 full screen, ~860px visible viewport with Chrome chrome)
+// Chrome top: status bar (5%) + omnibox (5%) = ~96px
+// Visible viewport: 956 - 96 = ~860px
 export const DEVICES: DeviceConfig[] = [
   {
     id: 'desktop',
@@ -59,10 +58,10 @@ export const DEVICES: DeviceConfig[] = [
   {
     id: 'phone',
     label: 'Phone',
-    resolution: '375 × 812',
-    nativeWidth: 393,
-    nativeHeight: 724,
-    aspectRatio: '393 / 852',
+    resolution: '440 × 956',
+    nativeWidth: 440,
+    nativeHeight: 860,
+    aspectRatio: '440 / 956',
     isDraggable: true,
   },
 ];

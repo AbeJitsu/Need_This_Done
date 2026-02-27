@@ -21,13 +21,13 @@ import PhoneFrame from './PhoneFrame';
 // These come from the physical Frame components:
 //   Monitor: 8px padding L+R = 16, screen aspect uses 982
 //   Tablet:  5px padding all sides = 10, screen aspect uses 1180
-//   Phone:   5px padding L+R = 10, frame aspect is 852 (includes Chrome chrome)
-//            — differs from nativeHeight (724) because the phone frame renders
-//            a simulated iOS status bar + Chrome toolbar around the content.
+//   Phone:   5px padding L+R = 10, frame aspect is 890 (includes status bar + omnibox)
+//            — differs from nativeHeight (860) because the phone frame renders
+//            a simulated iOS status bar + Chrome omnibox around the content.
 const FRAME_SPECS = {
   desktop: { bezelPadding: 16, frameAspectHeight: 982 },
   tablet: { bezelPadding: 10, frameAspectHeight: 1180 },
-  phone: { bezelPadding: 10, frameAspectHeight: 852 },
+  phone: { bezelPadding: 10, frameAspectHeight: 890 },
 } as const;
 
 const FRAMES: Record<string, React.ComponentType<{ children: React.ReactNode }>> = {
@@ -45,6 +45,8 @@ interface DeviceMockupProps {
   style?: React.CSSProperties;
   /** Called when the iframe content has loaded */
   onLoad?: () => void;
+  /** Static image shown instantly while iframe loads */
+  placeholderSrc?: string;
 }
 
 export default function DeviceMockup({
@@ -54,6 +56,7 @@ export default function DeviceMockup({
   className,
   style,
   onLoad,
+  placeholderSrc,
 }: DeviceMockupProps) {
   const config = DEVICES.find((d) => d.id === device)!;
   const spec = FRAME_SPECS[device];
@@ -75,6 +78,7 @@ export default function DeviceMockup({
           nativeWidth={config.nativeWidth}
           nativeHeight={config.nativeHeight}
           onLoad={onLoad}
+          placeholderSrc={placeholderSrc}
         />
       </Frame>
     </div>

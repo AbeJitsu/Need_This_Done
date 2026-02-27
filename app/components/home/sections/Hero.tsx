@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import Button from '@/components/Button';
@@ -63,13 +63,96 @@ function HeroInner({
   debugFromUrl?: boolean;
 }) {
   const isDesktop = useIsDesktop();
+  const router = useRouter();
   // When devices flank the hero, shift hero to phase 1 so reading
   // left-to-right gives: Websites (tablet=0) -> Automations (hero=1) -> AI Tools (phone=2)
   const effectivePhase = isDesktop ? 1 : initialPhase;
 
+  // Easter egg: listen for navigation messages from device preview iframes.
+  // When someone clicks a link inside the tiny tablet/phone preview, the
+  // iframe's HeroPreviewDetector intercepts it and postMessages the URL here.
+  useEffect(() => {
+    if (!isDesktop) return;
+
+    const handler = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+
+      // Handle widget button clicks (chatbot / wizard) from device iframes
+      if (event.data?.type === 'hero-device-action') {
+        const action = event.data.action as string;
+        if (action === 'open-chatbot' || action === 'open-wizard') {
+          window.dispatchEvent(new CustomEvent(action));
+        }
+        return;
+      }
+
+      if (event.data?.type !== 'hero-device-navigate') return;
+      const url = event.data.url as string;
+      if (!url) return;
+
+      try {
+        const parsed = new URL(url, window.location.origin);
+        if (parsed.origin === window.location.origin) {
+          router.push(parsed.pathname + parsed.search + parsed.hash);
+        } else {
+          window.location.href = url;
+        }
+      } catch {
+        // Invalid URL — ignore silently
+      }
+    };
+
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, [isDesktop, router]);
+
+  // Mobile-specific breakpoint: matches Tailwind's `md:` threshold exactly.
+  // Below 768px = mobile (dynamic gradient), 768px+ = Tailwind's md:bottom-[10%].
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
+
   const [currentKeywordIndex, setCurrentKeywordIndex] = useState(initialPhase % keywords.length);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLDivElement>(null);
+  const subheadingRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  // Dynamic gradient bottom: measure the midpoint between subheading and CTA,
+  // then position the gradient's bottom edge there (mobile only).
+  const [gradientBottomPx, setGradientBottomPx] = useState<number | null>(null);
+
+  const measureGradient = useCallback(() => {
+    if (!sectionRef.current || !subheadingRef.current || !ctaRef.current) return;
+    const sectionRect = sectionRef.current.getBoundingClientRect();
+    const subRect = subheadingRef.current.getBoundingClientRect();
+    const ctaRect = ctaRef.current.getBoundingClientRect();
+
+    // Section-relative positions (scroll-independent)
+    const subBottom = subRect.bottom - sectionRect.top;
+    const ctaTop = ctaRect.top - sectionRect.top;
+    const midpoint = (subBottom + ctaTop) / 2;
+
+    // CSS `bottom` = distance from section's bottom edge
+    setGradientBottomPx(sectionRect.height - midpoint);
+  }, []);
+
+  useEffect(() => {
+    // Delay initial measure so entrance animations (y:20 transforms) settle.
+    // Subheading: delay 0.4 + duration 0.6 = 1s; CTA: delay 0.5 + duration 0.6 = 1.1s
+    const timer = setTimeout(measureGradient, 1200);
+
+    const observer = new ResizeObserver(measureGradient);
+    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    return () => { clearTimeout(timer); observer.disconnect(); };
+  }, [measureGradient]);
 
   // Layout debug tool state (dev only)
   const [debugActive, setDebugActive] = useState(debugFromUrl);
@@ -94,7 +177,7 @@ function HeroInner({
   // show a DIFFERENT keyword at any given moment.
   useEffect(() => {
     if (!autoRotate) return;
-    const CYCLE_MS = 2000;
+    const CYCLE_MS = 3000;
     const TOTAL_CYCLE = CYCLE_MS * keywords.length;
 
     const update = () => {
@@ -149,7 +232,18 @@ function HeroInner({
       <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-slate-100 z-0" />
 
       {/* Smooth directional gradient with subtle animation */}
-      <div className="absolute inset-x-0 top-0 bottom-[10%] md:bottom-[35%] z-0 overflow-hidden">
+      <div
+        className="absolute inset-x-0 top-0 bottom-[40%] md:bottom-[10%] z-0 overflow-hidden"
+        style={
+          isMobile && gradientBottomPx != null
+            ? {
+                bottom: `${gradientBottomPx}px`,
+                WebkitMaskImage: 'linear-gradient(to bottom, black calc(100% - 24px), transparent 100%)',
+                maskImage: 'linear-gradient(to bottom, black calc(100% - 24px), transparent 100%)',
+              }
+            : undefined
+        }
+      >
         {/* Main directional gradient: green and purple as edges, blue in middle */}
         <motion.div
           className="absolute inset-0"
@@ -323,6 +417,7 @@ function HeroInner({
 
         {/* Subheading — Refined, secondary */}
         <motion.p
+          ref={subheadingRef}
           className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-12 leading-relaxed font-light"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -333,6 +428,7 @@ function HeroInner({
 
         {/* CTA Button — Magnetic, Glowing */}
         <motion.div
+          ref={ctaRef}
           className="mb-16"
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}

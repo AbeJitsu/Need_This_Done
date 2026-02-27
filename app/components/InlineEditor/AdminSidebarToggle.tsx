@@ -38,15 +38,13 @@ export default function AdminSidebarToggle() {
     <button
       onClick={handleToggle}
       className={`
-        fixed bottom-6 left-6 z-[60]
+        fixed bottom-20 left-4 sm:bottom-6 sm:left-6 z-[60]
         w-12 h-12 rounded-full
-        bg-gray-900 dark:bg-gray-100
-        text-white dark:text-gray-900
-        shadow-lg hover:shadow-xl
         flex items-center justify-center
         transition-all duration-200
-        hover:scale-110
-        ${isEditMode ? 'ring-2 ring-blue-500 ring-offset-2' : ''}
+        ${isEditMode
+          ? 'bg-gray-900 text-white shadow-lg shadow-blue-500/20 ring-2 ring-blue-500 ring-offset-2 hover:shadow-xl hover:shadow-blue-500/30'
+          : 'bg-white/40 backdrop-blur-xl border border-white/50 text-gray-700 shadow-lg shadow-blue-500/20 animate-pulse [animation-duration:3s] hover:bg-gray-900 hover:text-white hover:border-transparent hover:shadow-xl hover:shadow-blue-500/30 hover:[animation:none]'}
         ${focusRingClasses.blue}
       `}
       title={isEditMode ? 'Close editor' : 'Edit this page'}

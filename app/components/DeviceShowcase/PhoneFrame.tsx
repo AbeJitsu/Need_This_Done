@@ -11,9 +11,9 @@ import { useState, useEffect } from 'react';
 //      flex children of the aspect-ratio container so percentage heights resolve
 //      correctly against the container's known height.
 //
-// The outer shell uses aspect-ratio 393/852 (full iPhone screen).
-// Chrome UI takes ~15% of the screen (8% top, 7% bottom).
-// The iframe sits in the remaining ~85% middle zone.
+// The outer shell uses aspect-ratio 440/890 (iPhone 17 Pro Max screen minus Chrome toolbar).
+// Chrome UI takes ~10% of the screen (status bar + omnibox at top).
+// The iframe sits in the remaining ~90% zone.
 
 interface PhoneFrameProps {
   children: React.ReactNode;
@@ -60,7 +60,7 @@ export default function PhoneFrame({ children }: PhoneFrameProps) {
           background: '#000',
           borderRadius: 16,
           overflow: 'hidden',
-          aspectRatio: '393 / 852',
+          aspectRatio: '440 / 890',
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
@@ -73,7 +73,7 @@ export default function PhoneFrame({ children }: PhoneFrameProps) {
             top: 0,
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '36%',
+            width: '28%',
             height: '2.2%',
             background: '#000',
             borderRadius: '0 0 16px 16px',
@@ -82,18 +82,18 @@ export default function PhoneFrame({ children }: PhoneFrameProps) {
         />
 
         {/* ══════════════════════════════════════════════════
-            iOS Status Bar — direct flex child (4% of screen)
+            iOS Status Bar — direct flex child (5% of screen)
             Dark bg matching notch area, white text
            ══════════════════════════════════════════════════ */}
         <div
           style={{
-            height: '4%',
+            height: '5%',
             flexShrink: 0,
             background: '#1c1c1e',
             display: 'flex',
             alignItems: 'flex-end',
             justifyContent: 'space-between',
-            padding: '2.5% 6% 0',
+            padding: '3% 6% 0.5%',
             fontFamily: "-apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif",
             fontSize: 7,
             fontWeight: 600,
@@ -130,12 +130,12 @@ export default function PhoneFrame({ children }: PhoneFrameProps) {
         </div>
 
         {/* ══════════════════════════════════════════════════
-            Chrome Omnibox — direct flex child (4% of screen)
+            Chrome Omnibox — direct flex child (5% of screen)
             Dark bg with translucent pill for URL
            ══════════════════════════════════════════════════ */}
         <div
           style={{
-            height: '4%',
+            height: '5%',
             flexShrink: 0,
             background: '#2c2c2e',
             display: 'flex',
@@ -158,7 +158,7 @@ export default function PhoneFrame({ children }: PhoneFrameProps) {
               background: 'rgba(255,255,255,0.12)',
               borderRadius: 6,
               fontFamily: "-apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif",
-              fontSize: 6.5,
+              fontSize: 9,
               fontWeight: 400,
               color: 'rgba(255,255,255,0.8)',
               padding: '0 6px',
@@ -171,7 +171,7 @@ export default function PhoneFrame({ children }: PhoneFrameProps) {
               <rect x="1" y="6" width="10" height="7" rx="2" />
               <path d="M3.5 6V4.5a2.5 2.5 0 0 1 5 0V6" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
-            <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'center' }}>
+            <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'center', letterSpacing: '0.2em' }}>
               needthisdone.com
             </span>
             {/* Three-dot menu icon (Chrome style) */}
@@ -191,74 +191,6 @@ export default function PhoneFrame({ children }: PhoneFrameProps) {
           {children}
         </div>
 
-        {/* ══════════════════════════════════════════════════
-            Chrome Toolbar — direct flex child (6% of screen)
-            5 navigation icons
-           ══════════════════════════════════════════════════ */}
-        <div
-          style={{
-            height: '6%',
-            flexShrink: 0,
-            background: '#f9f9f9',
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'space-around',
-            padding: '4% 6% 0',
-            borderTop: '0.5px solid rgba(0,0,0,0.1)',
-            position: 'relative',
-            zIndex: 10,
-          }}
-        >
-          {/* Back arrow — thin chevron */}
-          <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="#5f6368" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 2L4 7l5 5" />
-          </svg>
-          {/* Forward arrow */}
-          <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="#5f6368" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5 2l5 5-5 5" />
-          </svg>
-          {/* New tab (+) */}
-          <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="#5f6368" strokeWidth="1.6" strokeLinecap="round">
-            <path d="M7 2v10M2 7h10" />
-          </svg>
-          {/* Tab count — rounded square with "1" */}
-          <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="#5f6368" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="2" width="10" height="10" rx="2" />
-            <text x="7" y="10" textAnchor="middle" fill="#5f6368" stroke="none" fontSize="7" fontWeight="600" fontFamily="sans-serif">1</text>
-          </svg>
-          {/* More menu (···) — horizontal three dots */}
-          <svg width="8" height="8" viewBox="0 0 14 14" fill="#5f6368">
-            <circle cx="3" cy="7" r="1.2" />
-            <circle cx="7" cy="7" r="1.2" />
-            <circle cx="11" cy="7" r="1.2" />
-          </svg>
-        </div>
-
-        {/* ══════════════════════════════════════════════════
-            Home Indicator — direct flex child (1% of screen)
-           ══════════════════════════════════════════════════ */}
-        <div
-          style={{
-            height: '1%',
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: '#f9f9f9',
-            position: 'relative',
-            zIndex: 10,
-          }}
-        >
-          <div
-            style={{
-              width: '32%',
-              height: 2.5,
-              background: '#000',
-              borderRadius: 100,
-              opacity: 0.15,
-            }}
-          />
-        </div>
       </div>
     </div>
   );
