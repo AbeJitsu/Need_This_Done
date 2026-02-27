@@ -40,13 +40,19 @@ export function HeroDevice({ side, screenHeightOverride, offsetY }: HeroDevicePr
   return (
     <motion.div
       data-hero-device={side}
-      className="hidden xl:flex xl:h-[65vh] xl:flex-col xl:justify-center xl:items-center rounded-2xl"
+      className="hidden xl:flex xl:h-[65vh] xl:flex-col xl:justify-center xl:items-center"
       initial={{ opacity: 0, x: isTablet ? -60 : 60 }}
       animate={{ opacity: 1, x: 0 }}
-      whileHover={{ scale: 1.015, boxShadow: hoverGlow }}
       transition={{ duration: 0.8, ease: 'easeOut' }}
     >
-      <div style={offsetY != null ? { transform: `translateY(${offsetY}px)` } : undefined}>
+      <motion.div
+        whileHover={{ scale: 1.015, boxShadow: hoverGlow }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+        style={{
+          borderRadius: 20,
+          ...(offsetY != null ? { transform: `translateY(${offsetY}px)` } : undefined),
+        }}
+      >
         <DeviceMockup
           device={isTablet ? 'tablet' : 'phone'}
           url={url}
@@ -56,7 +62,7 @@ export function HeroDevice({ side, screenHeightOverride, offsetY }: HeroDevicePr
             : '/device-previews/hero-phone.png'
           }
         />
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
