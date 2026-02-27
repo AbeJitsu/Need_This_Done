@@ -11,9 +11,9 @@ import { useState, useEffect } from 'react';
 //      flex children of the aspect-ratio container so percentage heights resolve
 //      correctly against the container's known height.
 //
-// The outer shell uses aspect-ratio 393/793 (iPhone screen minus Chrome toolbar).
-// Chrome UI takes ~8% of the screen (status bar + omnibox at top).
-// The iframe sits in the remaining ~92% zone.
+// The outer shell uses aspect-ratio 440/890 (iPhone 17 Pro Max screen minus Chrome toolbar).
+// Chrome UI takes ~10% of the screen (status bar + omnibox at top).
+// The iframe sits in the remaining ~90% zone.
 
 interface PhoneFrameProps {
   children: React.ReactNode;
@@ -60,7 +60,7 @@ export default function PhoneFrame({ children }: PhoneFrameProps) {
           background: '#000',
           borderRadius: 16,
           overflow: 'hidden',
-          aspectRatio: '393 / 793',
+          aspectRatio: '440 / 890',
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
@@ -73,7 +73,7 @@ export default function PhoneFrame({ children }: PhoneFrameProps) {
             top: 0,
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '36%',
+            width: '28%',
             height: '2.2%',
             background: '#000',
             borderRadius: '0 0 16px 16px',
