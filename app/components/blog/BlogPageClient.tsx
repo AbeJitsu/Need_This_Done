@@ -33,16 +33,17 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
   const searchParams = useSearchParams();
   const activeCategory = searchParams.get('category');
 
-  // Derive category buttons from actual posts (only show categories that have posts)
-  const activeCategories: string[] = [];
+  // Derive category buttons from actual posts, sorted by post count (most first), top 5 only
   const categoryCountMap = new Map<string, number>();
   for (const post of posts) {
     if (post.category) {
-      const count = categoryCountMap.get(post.category) || 0;
-      if (count === 0) activeCategories.push(post.category);
-      categoryCountMap.set(post.category, count + 1);
+      categoryCountMap.set(post.category, (categoryCountMap.get(post.category) || 0) + 1);
     }
   }
+  const activeCategories = [...categoryCountMap.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([key]) => key);
 
   // Filter posts based on active category
   const filteredPosts = activeCategory
@@ -116,7 +117,7 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
                 return (
                   <StaggerItem key={key}>
                     <Link
-                      href={`/blog?category=${key}`}
+                      href={`/blog?category=${encodeURIComponent(key)}`}
                       className={`
                         group flex items-center gap-2 px-5 py-3 rounded-full
                         border backdrop-blur-sm
