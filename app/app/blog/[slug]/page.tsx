@@ -5,8 +5,10 @@ import { Metadata } from 'next';
 import { ArrowLeft } from 'lucide-react';
 import MarkdownContent from '@/components/blog/MarkdownContent';
 import BlogPostCTA from '@/components/blog/BlogPostCTA';
+import RelatedPosts from '@/components/blog/RelatedPosts';
 import {
   BlogPost,
+  BlogPostSummary,
   formatPublishedDate,
   calculateReadingTime,
   BLOG_CATEGORIES,
@@ -108,6 +110,35 @@ async function getBlogPost(slug: string): Promise<BlogPost | null> {
 }
 
 // ============================================================================
+// Related Posts — same category, excluding current post
+// ============================================================================
+
+async function getRelatedPosts(
+  currentSlug: string,
+  category: string | null,
+): Promise<BlogPostSummary[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const url = category
+      ? `${baseUrl}/api/blog?category=${encodeURIComponent(category)}`
+      : `${baseUrl}/api/blog`;
+    const response = await fetch(url, { next: { revalidate: 60 } });
+
+    if (response.ok) {
+      const data = await response.json();
+      const posts = (data.posts as BlogPostSummary[]).filter(
+        (p) => p.slug !== currentSlug,
+      );
+      return posts.slice(0, 3);
+    }
+  } catch (error) {
+    console.error('Failed to fetch related posts:', error);
+  }
+
+  return [];
+}
+
+// ============================================================================
 // Page Component
 // ============================================================================
 
@@ -124,6 +155,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     ? BLOG_CATEGORIES[post.category as keyof typeof BLOG_CATEGORIES] || post.category
     : null;
   const accent = CATEGORY_ACCENTS[post.category || ''] || DEFAULT_ACCENT;
+  const relatedPosts = await getRelatedPosts(slug, post.category);
 
   return (
     <>
@@ -267,6 +299,12 @@ export default async function BlogPostPage({ params }: PageProps) {
               </p>
             </div>
           )}
+
+          {/* Related Posts — internal cross-linking for SEO */}
+          <RelatedPosts
+            posts={relatedPosts}
+            categoryLabel={categoryLabel || undefined}
+          />
 
           {/* CTA */}
           <BlogPostCTA />

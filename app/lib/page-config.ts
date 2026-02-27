@@ -425,10 +425,14 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
     brand: 'Need This Done',
     tagline: 'Technology that works as hard as you do.',
     links: [
+      { href: '/services', label: 'Services' },
+      { href: '/pricing', label: 'Pricing' },
+      { href: '/shop', label: 'Shop' },
       { href: '/about', label: 'About' },
       { href: '/work', label: 'Work' },
       { href: '/blog', label: 'Blog' },
       { href: '/faq', label: 'FAQ' },
+      { href: '/contact', label: 'Contact' },
     ],
     legalLinks: [
       { href: '/privacy', label: 'Privacy' },
