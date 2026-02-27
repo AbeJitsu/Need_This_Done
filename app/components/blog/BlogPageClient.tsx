@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import BlogPostCard from '@/components/blog/BlogPostCard';
 import { EditableSection } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
@@ -28,8 +29,26 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
   const hasValidContent = pageContent && 'header' in pageContent && 'emptyState' in pageContent;
   const content = hasValidContent ? (pageContent as unknown as BlogPageContent) : initialContent;
 
-  // Separate featured (most recent) from the rest
-  const [featuredPost, ...otherPosts] = posts;
+  // URL-driven category filtering
+  const searchParams = useSearchParams();
+  const activeCategory = searchParams.get('category');
+
+  // Derive category buttons from actual posts (only show categories that have posts)
+  const activeCategories: string[] = [];
+  const categoryCountMap = new Map<string, number>();
+  for (const post of posts) {
+    if (post.category) {
+      const count = categoryCountMap.get(post.category) || 0;
+      if (count === 0) activeCategories.push(post.category);
+      categoryCountMap.set(post.category, count + 1);
+    }
+  }
+
+  // Filter posts based on active category
+  const filteredPosts = activeCategory
+    ? posts.filter(p => p.category === activeCategory)
+    : posts;
+  const [featuredPost, ...otherPosts] = filteredPosts;
 
   return (
     <div className="min-h-screen">
@@ -63,7 +82,7 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
             </FadeIn>
           </EditableSection>
 
-          {/* Category pills - styled like pricing nav */}
+          {/* Category pills - dynamic from actual posts, BJJ belt colors */}
           {posts.length > 0 && (
             <StaggerContainer staggerDelay={0.06} className="flex flex-wrap gap-3">
               <StaggerItem>
@@ -71,9 +90,11 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
                   href="/blog"
                   className={`
                     group flex items-center gap-2 px-5 py-3 rounded-full
-                    border border-white/10 bg-white/5 backdrop-blur-sm
+                    border backdrop-blur-sm
                     transition-all duration-300 hover:-translate-y-0.5
-                    hover:border-purple-500/50 hover:bg-purple-500/10 text-purple-400
+                    ${!activeCategory
+                      ? 'border-purple-500/50 bg-purple-500/20 text-purple-300'
+                      : 'border-white/10 bg-white/5 hover:border-purple-500/50 hover:bg-purple-500/10 text-purple-400'}
                     ${focusRingClasses.purple}
                   `}
                 >
@@ -81,24 +102,27 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
                   <span className="font-semibold text-sm text-white">{content.categoryFilterLabel}</span>
                 </Link>
               </StaggerItem>
-              {Object.entries(BLOG_CATEGORIES).slice(0, 5).map(([key, label]) => {
-                const colorMap: Record<string, string> = {
-                  tutorials: 'hover:border-emerald-500/50 hover:bg-emerald-500/10 text-emerald-400',
-                  guides: 'hover:border-blue-500/50 hover:bg-blue-500/10 text-blue-400',
-                  case_studies: 'hover:border-gold-500/50 hover:bg-gold-500/10 text-gold-400',
-                  news: 'hover:border-purple-500/50 hover:bg-purple-500/10 text-purple-400',
-                  tips: 'hover:border-slate-400/50 hover:bg-slate-500/10 text-slate-400',
+              {activeCategories.map((key) => {
+                const colorMap: Record<string, { hover: string; active: string; text: string; focus: string }> = {
+                  'tips':              { hover: 'hover:border-emerald-500/50 hover:bg-emerald-500/10', active: 'border-emerald-500/50 bg-emerald-500/20', text: 'text-emerald-400', focus: focusRingClasses.green },
+                  'tutorial':          { hover: 'hover:border-blue-500/50 hover:bg-blue-500/10',    active: 'border-blue-500/50 bg-blue-500/20',    text: 'text-blue-400',    focus: focusRingClasses.blue },
+                  'case-study':        { hover: 'hover:border-yellow-500/50 hover:bg-yellow-500/10', active: 'border-yellow-500/50 bg-yellow-500/20', text: 'text-yellow-400',  focus: focusRingClasses.blue },
+                  'behind-the-scenes': { hover: 'hover:border-purple-500/50 hover:bg-purple-500/10', active: 'border-purple-500/50 bg-purple-500/20', text: 'text-purple-400',  focus: focusRingClasses.purple },
+                  'news':              { hover: 'hover:border-slate-400/50 hover:bg-slate-500/10',   active: 'border-slate-400/50 bg-slate-500/20',   text: 'text-slate-400',   focus: focusRingClasses.blue },
                 };
+                const color = colorMap[key] || { hover: 'hover:border-slate-500/50 hover:bg-slate-500/10', active: 'border-slate-500/50 bg-slate-500/20', text: 'text-slate-400', focus: focusRingClasses.blue };
+                const isActive = activeCategory === key;
+                const label = BLOG_CATEGORIES[key as keyof typeof BLOG_CATEGORIES] || key.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
                 return (
                   <StaggerItem key={key}>
                     <Link
                       href={`/blog?category=${key}`}
                       className={`
                         group flex items-center gap-2 px-5 py-3 rounded-full
-                        border border-white/10 bg-white/5 backdrop-blur-sm
+                        border backdrop-blur-sm
                         transition-all duration-300 hover:-translate-y-0.5
-                        ${colorMap[key] || 'hover:border-slate-500/50 hover:bg-slate-500/10 text-slate-400'}
-                        ${focusRingClasses.blue}
+                        ${isActive ? `${color.active} ${color.text.replace('400', '300')}` : `border-white/10 bg-white/5 ${color.hover} ${color.text}`}
+                        ${color.focus}
                       `}
                     >
                       <span className="font-semibold text-sm text-white">{label}</span>

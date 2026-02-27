@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getDefaultContent } from '@/lib/default-page-content';
 import type { BlogPageContent } from '@/lib/page-content-types';
 import { BlogPostSummary } from '@/lib/blog-types';
@@ -79,5 +80,9 @@ async function getBlogPosts(): Promise<BlogPostSummary[]> {
 export default async function BlogPage() {
   const [content, posts] = await Promise.all([getContent(), getBlogPosts()]);
 
-  return <BlogPageClient initialContent={content} posts={posts} />;
+  return (
+    <Suspense>
+      <BlogPageClient initialContent={content} posts={posts} />
+    </Suspense>
+  );
 }
