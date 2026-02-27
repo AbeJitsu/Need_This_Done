@@ -5,10 +5,14 @@ import { useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { EditableSection, EditableItem, Editable } from '@/components/InlineEditor';
 import { useInlineEdit } from '@/context/InlineEditContext';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import Button from '@/components/Button';
+import BlogPostCard from '@/components/blog/BlogPostCard';
 import { FadeIn, StaggerContainer, StaggerItem, useReducedMotion } from '@/components/motion';
 import { Hero } from '@/components/home/sections/Hero';
 import type { HomePageContent } from '@/lib/page-content-types';
+import type { BlogPostSummary } from '@/lib/blog-types';
 
 // ============================================================================
 // Home Page Client - Enhanced Visual Design
@@ -22,9 +26,10 @@ import type { HomePageContent } from '@/lib/page-content-types';
 
 interface HomePageClientProps {
   content: HomePageContent;
+  recentBlogPosts?: BlogPostSummary[];
 }
 
-export default function HomePageClient({ content: initialContent }: HomePageClientProps) {
+export default function HomePageClient({ content: initialContent, recentBlogPosts = [] }: HomePageClientProps) {
   const router = useRouter();
   const prefersReducedMotion = useReducedMotion();
 
@@ -446,6 +451,38 @@ export default function HomePageClient({ content: initialContent }: HomePageClie
           </FadeIn>
         </div>
       </EditableSection>
+
+      {/* Latest from the Blog — homepage → blog internal links for SEO */}
+      {recentBlogPosts.length > 0 && (
+        <div className="mb-24">
+          <FadeIn direction="up">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-400" />
+              <h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
+                Latest from the Blog
+              </h2>
+            </div>
+          </FadeIn>
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {recentBlogPosts.map((post) => (
+              <StaggerItem key={post.id}>
+                <BlogPostCard post={post} />
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+          <FadeIn direction="up">
+            <div className="text-center">
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+              >
+                View All Posts
+                <ArrowRight size={18} />
+              </Link>
+            </div>
+          </FadeIn>
+        </div>
+      )}
 
       {/* CTA Section - Confident Close */}
       <EditableSection sectionKey="cta" label="Call to Action">

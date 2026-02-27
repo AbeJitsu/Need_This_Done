@@ -20,7 +20,7 @@ import ProductComparisonModal from '@/components/ProductComparisonModal';
 import { AdminSidebarToggle, EditModeBar, EditModeTutorial, InlineTextEditor } from '@/components/InlineEditor';
 import { Suspense } from 'react';
 import HeroPreviewDetector from '@/components/HeroPreviewDetector';
-import { ProfessionalServiceJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
+import { ProfessionalServiceJsonLd, WebSiteJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd';
 import { seoConfig } from '@/lib/seo-config';
 import { validateEnvironmentVariables } from '@/lib/env-validation';
 
@@ -182,6 +182,7 @@ export default function RootLayout({
         {/* JSON-LD Structured Data for rich search results */}
         <ProfessionalServiceJsonLd />
         <WebSiteJsonLd />
+        <LocalBusinessJsonLd />
       </head>
       <body className="antialiased">
         <SessionProvider>
