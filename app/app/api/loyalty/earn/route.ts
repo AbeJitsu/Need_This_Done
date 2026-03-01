@@ -7,14 +7,10 @@ export const dynamic = 'force-dynamic';
 // Why: Incentivize repeat purchases and engagement
 // How: Calculate points based on order amount and loyalty config
 
-import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+import { verifyAuth } from '@/lib/api-auth';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 const earnPointsSchema = z.object({
   userId: z.string().uuid(),
@@ -25,8 +21,25 @@ const earnPointsSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    // Require authentication — no anonymous point awards
+    const auth = await verifyAuth();
+    if (auth.error) {
+      return auth.error;
+    }
+
     const body = await req.json();
     const { userId, orderId, orderTotalCents, description } = earnPointsSchema.parse(body);
+
+    // Ownership check: users can only earn points for themselves
+    if (auth.user.id !== userId) {
+      return NextResponse.json(
+        { error: 'Forbidden. Cannot earn points for another user.' },
+        { status: 403 }
+      );
+    }
+
+    // Use admin client for DB writes (bypasses RLS)
+    const supabase = getSupabaseAdmin();
 
     // Get loyalty config
     const { data: config, error: configError } = await supabase

@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { verifyAuth } from '@/lib/api-auth';
+import { verifyAdmin } from '@/lib/api-auth';
 import { badRequest, serverError } from '@/lib/api-errors';
 import {
   MediaItem,
@@ -19,8 +19,8 @@ import {
 
 export async function GET(request: NextRequest) {
   try {
-    // Require authentication to list media
-    const auth = await verifyAuth();
+    // Admin-only: media library management requires admin privileges
+    const auth = await verifyAdmin();
     if (auth.error) {
       return auth.error;
     }
@@ -96,8 +96,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify authentication
-    const auth = await verifyAuth();
+    // Admin-only: uploading to media library requires admin privileges
+    const auth = await verifyAdmin();
     if (auth.error) {
       return auth.error;
     }

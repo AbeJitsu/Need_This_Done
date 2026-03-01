@@ -36,19 +36,17 @@ interface AbandonedCart {
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify cron secret for security
-    // Always require the secret when configured, regardless of environment
+    // Verify cron secret for security — required in ALL environments
     const authHeader = request.headers.get('authorization');
     const cronSecret = process.env.CRON_SECRET;
 
-    if (cronSecret) {
-      if (authHeader !== `Bearer ${cronSecret}`) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
-    } else if (process.env.NODE_ENV === 'production') {
-      // In production, CRON_SECRET must be configured
-      console.error('[Cron] CRON_SECRET not configured in production');
-      return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
+    if (!cronSecret) {
+      console.error('[Cron] CRON_SECRET not configured');
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (authHeader !== `Bearer ${cronSecret}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const supabase = await createSupabaseServerClient();
