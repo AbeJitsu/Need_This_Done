@@ -206,36 +206,39 @@ Open http://localhost:3000 and you're in! The app hot-reloads, so your changes a
 
 ### Branch Workflow
 
-Three-branch strategy with clear separation of concerns:
+Feature branch strategy — create branches for a purpose, merge when complete:
 
 | Branch | Purpose | Deploys To |
 |--------|---------|-----------|
 | `production` | Live production site | Vercel production (needthisdone.com) |
-| `testing` | QA and pre-production testing | Vercel staging preview |
-| `dev` | Active development | Vercel preview deployments |
+| `experiment/*` or `feature/*` | Purpose-built work branches | Vercel preview deployments |
 
 **Workflow:**
-1. Develop and test on `dev` branch locally
-2. Push to GitHub - Vercel creates preview deployment
-3. Test preview URL, then merge `dev` → `testing` for QA
-4. Test on staging, then merge `testing` → `production`
-5. Production deployment is automatic
+1. Create a branch for your task (`experiment/new-feature` or `feature/fix-bug`)
+2. Push to GitHub — Vercel creates a preview deployment
+3. Test the preview URL, then merge into `production`
+4. Delete the branch — it served its purpose
 
 ### Deploying Changes
 
 **Frontend (Vercel - Automatic):**
 ```bash
-# Standard workflow: dev → testing → production
-git checkout testing
-git merge dev
-git push origin testing
-# Vercel creates staging preview, test it
+# Create a work branch
+git checkout -b feature/my-change production
 
-# Then promote to production
+# Push for preview deployment
+git push -u origin feature/my-change
+# Vercel creates preview, test it
+
+# Merge to production when ready
 git checkout production
-git merge testing
+git merge feature/my-change
 git push origin production
-# Vercel deploys automatically to production
+# Vercel deploys automatically
+
+# Clean up
+git branch -d feature/my-change
+git push origin --delete feature/my-change
 ```
 
 **Medusa Backend (Railway):**
