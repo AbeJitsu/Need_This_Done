@@ -21,24 +21,24 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ║                                                                              ║
 ║  CODEBASE METRICS                        PRODUCTION READINESS                ║
 ║  ─────────────────                       ────────────────────                 ║
-║  📄 24 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
-║  🔐 18 Admin Pages                       ✅ Stripe Payments                  ║
-║  🔌 74+ API Routes                       ✅ Supabase Auth & Database         ║
-║  🧩 165+ React Components               ✅ Redis Caching (Upstash)          ║
-║  📦 7 Context Providers                  ✅ Email Notifications (Resend)     ║
-║  🔧 51+ Lib Utilities                    ✅ Google OAuth                     ║
-║  🪝 8 Custom Hooks                       ✅ Inline Editing (12 pages)        ║
-║  🧪 69+ E2E Test Files                   ✅ WCAG AA Color System (5:1)       ║
+║  📄 30 Public Pages                      ✅ Medusa E-commerce (Railway)      ║
+║  🔐 35 Admin Pages                       ✅ Stripe Payments                  ║
+║  🔌 122 API Routes                       ✅ Supabase Auth & Database         ║
+║  🧩 193 React Components                ✅ Redis Caching (Upstash)          ║
+║  📦 9 Context Providers                  ✅ Email Notifications (Resend)     ║
+║  🔧 74 Lib Utilities                     ✅ Google OAuth                     ║
+║  🪝 10 Custom Hooks                      ✅ Inline Editing (12 pages)        ║
+║  🧪 67 E2E Test Files                   ✅ WCAG AA Color System (5:1)       ║
+║  📧 21 Email Templates                   ✅ 63 DB Migrations                 ║
 ║                                                                              ║
-║  RECENT WORK (Feb 2026)                  LIGHTHOUSE SCORES                   ║
-║  ──────────────────────                  ──────────────────                   ║
-║  ✅ Workflow Automation (Phase 1A)       📊 SEO: 100%                        ║
-║  ✅ DB Security Hardening (055-061)      📊 Accessibility: 100%              ║
-║  ✅ Pricing Restructure (3 tiers)        📊 Performance: 78%                 ║
-║  ✅ Portfolio /work page + case studies  📊 Best Practices: 79%              ║
-║  ✅ 5 Blog Posts Seeded                                                      ║
-║  ✅ SEO: OG tags, sitemap, canonicals                                        ║
-║  ✅ Pricing + Shop merged (cart on /pricing)                                 ║
+║  RECENT WORK (Mar 2026)                  RECENT WORK (Feb 2026)              ║
+║  ──────────────────────                  ──────────────────────               ║
+║  ✅ API Security Audit (11 routes)       ✅ Workflow Automation (Phase 1A)   ║
+║  ✅ SEO: Internal linking, structured    ✅ DB Security Hardening (055-063)  ║
+║     data, sitemap boost                  ✅ Pricing Restructure (3 tiers)    ║
+║  ✅ Blog: 7 new posts (Feb 20-26)        ✅ Portfolio /work page             ║
+║  ✅ Glassmorphism floating buttons       ✅ 5 Blog Posts Seeded              ║
+║  ✅ Blog category pills by post count    ✅ SEO: OG tags, sitemap            ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -90,13 +90,14 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                           NEXT.JS APP (app/)                                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  23 PUBLIC   │  │  18 ADMIN    │  │  72 API      │  │  156 REACT   │      │
+│  │  30 PUBLIC   │  │  35 ADMIN    │  │  122 API     │  │  193 REACT   │      │
 │  │  PAGES       │  │  PAGES       │  │  ROUTES      │  │  COMPONENTS  │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘      │
 │                                                                              │
 │  ┌────────────────────────────────────────────────────────────────────────┐  │
-│  │                          6 CONTEXT PROVIDERS                            │  │
+│  │                          9 CONTEXT PROVIDERS                            │  │
 │  │  Auth │ Cart │ Toast │ Stripe │ ServiceModal │ InlineEdit               │  │
+│  │  BrowsingHistory │ Comparison │ Wishlist                                │  │
 │  └────────────────────────────────────────────────────────────────────────┘  │
 └──────────────────────────────────────┬───────────────────────────────────────┘
                                        │
@@ -131,23 +132,34 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 
 **Getting Started**
 - [Quick Start (30 seconds)](#quick-start)
-- [Development Setup](#development-setup)
+- [Local Development](#local-development)
 
 **Understanding the System**
 - [Current State at a Glance](#current-state-at-a-glance) ← *status dashboard, tech stack, architecture*
-- [Project Structure](#project-structure) ← *complete file map, 44 pages, 72 APIs, 165 components*
+- [Project Structure](#project-structure) ← *complete file map, 64 pages, 122 APIs, 193 components*
 - [Architecture Overview](#architecture-overview) ← *data flow diagrams*
 
 **Core Features**
 - [Shopping Cart & Ecommerce](#shopping-cart--ecommerce)
 - [Quotes System](#quotes-system) ← *inquiry → quote → deposit workflow*
 - [Authentication](#authentication)
-- [Email Notifications](#email-notifications)
+- [Email Notifications](#email-notifications) ← *21 templates via React Email + Resend*
 - [Caching Strategy](#caching-strategy)
+
+**Customer Features**
+- [Loyalty & Referrals](#loyalty--referrals) ← *points, rewards, referral tracking*
+- [Wishlist & Comparison](#wishlist--comparison) ← *save products, side-by-side compare*
+- [Reviews & Coupons](#reviews--coupons) ← *customer reviews, discount codes*
+
+**Platform Features**
+- [Workflow Automation](#workflow-automation) ← *visual builder, BullMQ engine, 12 triggers*
+- [Cron Jobs & Background Tasks](#cron-jobs--background-tasks) ← *5 automated jobs*
+- [Security & Reliability](#security--reliability) ← *rate limiting, dedup, input guards*
+- [SEO](#seo) ← *sitemap, robots.txt, JSON-LD, structured data*
 
 **Operations**
 - [Deployment](#deployment)
-- [Testing](#testing) ← *69 E2E test files*
+- [Testing](#testing) ← *65+ E2E test files, unit, a11y*
 - [Troubleshooting](#troubleshooting)
 
 **Reference**
@@ -155,7 +167,6 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 - [API Patterns](#api-patterns) ← *auth, error handling*
 - [Design System](#design-system)
 - [Key Files Reference](#key-files-reference)
-- [High-Priority Improvements](#high-priority-improvements) ← *3 high-value next steps*
 
 ---
 
@@ -250,11 +261,14 @@ MEDUSA_ADMIN_PASSWORD='xxx' node update-product-image.js consultation-15-min "ht
 
 A modern platform for professional services that combines:
 
-- **E-commerce platform**: Browse products, add to cart, checkout, manage orders
-- **User accounts**: Authentication, profiles, order history
-- **Admin dashboard**: Manage products, view orders, user management
-- **Visual page builder**: Non-technical users can create pages (Puck visual editor)
-- **Component library**: Reusable, accessible React components
+- **E-commerce platform**: Browse products, add to cart, checkout with Stripe, manage orders
+- **User accounts**: Authentication (Google OAuth + email), profiles, order history, saved addresses
+- **Admin dashboard**: 35 admin pages covering products, orders, users, analytics, reviews, loyalty, referrals, email campaigns, waitlists, and workflow automation
+- **Customer engagement**: Loyalty points, referral program, wishlist, product comparison, reviews, coupons
+- **Workflow automation**: Visual builder with 12 triggers, 7 actions, BullMQ async engine
+- **Content management**: Inline click-to-edit on 12 pages, blog CMS, version history
+- **AI chatbot**: RAG-powered chat with vector embeddings, trained on site content
+- **Component library**: 193 reusable, WCAG AA accessible React components
 
 > **Tech Stack**: See [Current State at a Glance](#current-state-at-a-glance) for the complete technology stack.
 
@@ -444,13 +458,18 @@ The following diagram shows how all system components interact for major user jo
   │ Form submit  │    │ - React Email   │
   └──────────────┘    └─────────────────┘
 
-  Email Types:
-  ├── Welcome (signup)
-  ├── Login Notification (security)
-  ├── Order Confirmation
-  ├── Appointment Confirmation
-  ├── Admin Notification (new project/order)
-  └── Client Confirmation (form submission)
+  Email Types (21 templates):
+  ├── Welcome (signup)                    ├── Order Canceled
+  ├── Login Notification (security)       ├── Order Ready for Delivery
+  ├── Order Confirmation                  ├── Order Status Update
+  ├── Purchase Receipt                    ├── Review Approved
+  ├── Appointment Confirmation            ├── Review Rejected
+  ├── Appointment Cancellation            ├── Waitlist Back in Stock
+  ├── Appointment Reminder                ├── Final Payment Failed
+  ├── Admin Notification (project/order)  ├── Campaign Email
+  ├── Client Confirmation (form)          ├── Abandoned Cart Recovery
+  ├── Quote Email                         └── Deposit Confirmation
+  └── Appointment Request Notification
 ```
 
 **Why This Design**:
@@ -462,24 +481,42 @@ The following diagram shows how all system components interact for major user jo
 
 ### Medusa Backend (Current State)
 
-Real Medusa implementation with database-persisted products, carts, and orders. All consultation products require appointment scheduling before fulfillment.
+Real Medusa implementation with database-persisted products, carts, and orders. Products are seeded via `scripts/seed-products.ts`.
 
-| Feature | Status | Tested | Details |
-|---------|--------|--------|---------|
-| Products | ✅ Working | 12 E2E tests | 3 consultation tiers, seeded via `npm run seed` |
-| Carts | ✅ Working | 8 E2E tests | Stored in Medusa PostgreSQL |
-| Checkout | ✅ Working | 6 E2E tests | Guest + authenticated checkout flows |
-| Orders | ✅ Working | 4 E2E tests | Full order objects, linked in Supabase |
-| Email | ✅ Working | 9 unit tests | 4 email types via Resend |
+| Feature | Status | Details |
+|---------|--------|---------|
+| Products | ✅ Working | 4 website packages + 10 add-ons + 2 services, seeded via script |
+| Carts | ✅ Working | Stored in Medusa PostgreSQL |
+| Checkout | ✅ Working | Guest + authenticated checkout flows |
+| Orders | ✅ Working | Full order objects, linked in Supabase |
+| Email | ✅ Working | 21 email templates via Resend |
 
-**All E2E tests passing** - 69 test files across 7 categories. See [Testing](#testing) for complete coverage map.
+**Website Packages** (seeded via `npx tsx scripts/seed-products.ts`):
+| Product | Price | Deposit | Handle |
+|---------|-------|---------|--------|
+| Starter Site | $500 | 50% | `starter-site` |
+| Growth Site | $1,500 | 50% | `growth-site` |
+| Pro Site | $5,000 | 50% | `pro-site` |
 
-**Consultation Products** (seeded via Admin API on Railway):
-| Product | Price | Duration | Handle |
-|---------|-------|----------|--------|
-| 15-Minute Quick Consultation | $20 | 15 min | `consultation-15-min` |
-| 30-Minute Strategy Consultation | $35 | 30 min | `consultation-30-min` |
-| 55-Minute Deep Dive Consultation | $50 | 55 min | `consultation-55-min` |
+**Add-ons** (`website-addons` collection):
+| Add-on | Price | Handle |
+|--------|-------|--------|
+| Extra Page | $100 | `additional-page` |
+| Blog | $300 | `blog-setup` |
+| Edit Your Own Site (CMS) | $500 | `cms-integration` |
+| Calendar Booking | $200 | `calendar-booking` |
+| File Uploads | $150 | `contact-form-files` |
+| Accept Payments | $400 | `payment-integration` |
+| Customer Accounts | $400 | `customer-accounts` |
+| AI Chatbot | $600 | `ai-chatbot` |
+| Logo Design | $300 | `logo-design` |
+| Online Store | $2,000 | `online-store` |
+
+**Services** (`automation-services` collection):
+| Service | Price | Type |
+|---------|-------|------|
+| Automation Setup | $150/workflow | One-time |
+| Managed AI | $500/month | Subscription |
 
 **Admin Credentials** (for Medusa Admin panel):
 - Email: Set via `MEDUSA_ADMIN_EMAIL` environment variable
@@ -705,10 +742,7 @@ All variables should be set in Vercel Environment Variables dashboard. Never com
 
 ```bash
 # Stop Next.js dev server
-# Press Ctrl+C in terminal 1
-
-# Stop Storybook
-# Press Ctrl+C in terminal 3
+# Press Ctrl+C in terminal
 
 # Stop Supabase
 supabase stop
@@ -726,65 +760,86 @@ supabase db reset
 │                            COMPLETE FILE MAP                                 │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-/home/user/Need_This_Done/
+Need_This_Done/
 ├── README.md              ← You are here (single source of truth)
 ├── CLAUDE.md              ← AI assistant instructions
 │
 ├── app/                   ← NEXT.JS APPLICATION
 │   ├── app/               ← Pages & API routes (Next.js App Router)
-│   ├── components/        ← 156 React components
-│   ├── context/           ← 6 state providers
-│   ├── lib/               ← 49 utility files
-│   ├── hooks/             ← 7 custom React hooks
-│   ├── emails/            ← Email templates (React Email)
-│   ├── e2e/               ← 69 Playwright test files
+│   ├── components/        ← 193 React components
+│   ├── context/           ← 9 state providers
+│   ├── lib/               ← 74 utility files
+│   ├── hooks/             ← 10 custom React hooks
+│   ├── emails/            ← 21 email templates (React Email)
+│   ├── scripts/           ← Seed scripts, automation
+│   ├── e2e/               ← 67 Playwright test files
 │   └── __tests__/         ← Unit & accessibility tests
 │
 └── supabase/              ← DATABASE
-    └── migrations/        ← Schema migrations
+    └── migrations/        ← 63 schema migrations
 
 # Note: Medusa backend is deployed on Railway (not in this repo)
 # See https://need-this-done-production.up.railway.app
 ```
 
-### Complete Page Inventory (41 pages total)
+### Complete Page Inventory (65 pages total)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                          PUBLIC PAGES (23 pages)                             │
+│                          PUBLIC PAGES (30 pages)                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  MARKETING                    E-COMMERCE                   AUTH             │
-│  /                 (home)     /pricing          (browse+buy) /login          │
-│  /services                    /shop/[productId] (detail)                    │
-│                               /cart                        LEGAL            │
-│  /pricing/success             /checkout                    /privacy         │
-│  /how-it-works               /dashboard        (orders)    /terms           │
-│  /faq                                                                       │
-│  /contact                     BUILD-A-PROJECT              CONTENT          │
-│  /get-started                 /build                       /blog            │
-│  /about                       /build/success               /blog/[slug]     │
-│  /resume                                                   /guide           │
+│  /                 (home)     /pricing          (packages)  /login          │
+│  /services                    /pricing/success                              │
+│  /how-it-works               /shop              (browse)   LEGAL            │
+│  /faq                         /shop/[productId]  (detail)   /privacy        │
+│  /contact                     /cart                         /terms           │
+│  /get-started                 /checkout                                     │
+│  /about                                                                     │
+│  /resume                      BUILD-A-PROJECT              CONTENT          │
+│  /work           (portfolio)  /build                        /blog           │
+│  /quote                       /build/success                /blog/[slug]    │
+│                                                             /guide          │
+│  CUSTOMER                                                                   │
+│  /account                     /orders                                       │
+│  /dashboard                   /orders/[orderId]                             │
+│  /wishlist                    /recently-viewed                              │
+│  /quotes/[ref]                                                              │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                          ADMIN PAGES (18 pages)                              │
+│                          ADMIN PAGES (35 pages)                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  SHOP MANAGEMENT              CONTENT                      OTHER            │
-│  /admin/shop                  /admin/content               /admin/users     │
-│  /admin/shop/products/new     /admin/content/[slug]/edit   /admin/appointments│
-│  /admin/shop/orders                                        /admin/quotes    │
-│  /admin/shop/inventory        BLOG                         /admin/dev       │
-│  /admin/orders                /admin/blog                  /admin/analytics │
-│  /admin/products              /admin/blog/new              /admin/colors    │
-│  /admin/products/manage       /admin/blog/[slug]/edit                       │
+│  SHOP MANAGEMENT              CONTENT & BLOG               ANALYTICS        │
+│  /admin/shop                  /admin/content               /admin/analytics │
+│  /admin/shop/inventory        /admin/content/[slug]/edit   /admin/product-  │
+│  /admin/shop/orders           /admin/blog                    analytics      │
+│  /admin/shop/products/new     /admin/blog/new                               │
+│  /admin/orders                /admin/blog/[slug]/edit      CUSTOMER         │
+│  /admin/products                                           /admin/reviews   │
+│  /admin/products/manage       ENGAGEMENT                   /admin/reviews/  │
+│  /admin/products/categories   /admin/loyalty                 analytics      │
+│                               /admin/referrals             /admin/enrollments│
+│  AUTOMATION                   /admin/communication                          │
+│  /admin/automation                                         SYSTEM           │
+│  /admin/automation/builder    WAITLIST                     /admin/users     │
+│  /admin/automation/[id]       /admin/waitlist-analytics    /admin/settings  │
+│                               /admin/waitlist-campaigns    /admin/dev       │
+│  QUOTES                       /admin/waitlist-campaigns/   /admin/dev/      │
+│  /admin/quotes                  new                          preview        │
+│  /admin/appointments          /admin/waitlist-campaigns/   /admin/colors    │
+│                                 [id]                                        │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Complete API Route Inventory (72 routes)
+### Complete API Route Inventory (122 routes)
+
+<details>
+<summary><strong>Click to expand full API inventory</strong></summary>
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -792,196 +847,426 @@ supabase db reset
 └─────────────────────────────────────────────────────────────────────────────┘
 
 AUTHENTICATION (4 routes)
-├── POST /api/auth/[...nextauth]     NextAuth handler (Google OAuth + credentials)
-├── POST /api/auth/login             Email/password login
-├── POST /api/auth/signup            New user registration
-└── POST /api/auth/logout            Session termination
+├── GET/POST /api/auth/[...nextauth]     NextAuth handler (Google OAuth + credentials)
+├── POST /api/auth/login                 Email/password login
+├── POST /api/auth/signup                New user registration
+└── POST /api/auth/logout                Session termination
 
-SHOPPING & E-COMMERCE (8 routes)
-├── GET/POST /api/cart               Create or get cart
-├── GET/POST/DELETE /api/cart/[cartId]/items   Manage cart items
-├── GET /api/shop/products           List all products (cached)
-├── GET /api/shop/products/[productId]   Single product detail
-├── POST /api/checkout/session       Create Stripe checkout session
-├── POST /api/checkout/check-appointment   Validate appointment requirements
-├── GET/POST /api/orders             Order management
-└── GET /api/user/orders             User's order history
+ACCOUNT (3 routes)
+├── GET/PUT /api/account/profile                    User profile CRUD
+├── GET/PUT /api/account/notification-preferences   Email notification settings
+└── GET/POST/PUT/DELETE /api/account/saved-addresses  Saved shipping addresses
 
-ADMIN MANAGEMENT (13 routes)
-├── GET/POST /api/admin/products     Product CRUD (Medusa Admin API)
-├── POST /api/admin/products/upload-image    Upload product images
-├── POST /api/admin/products/update-image    Update existing images
-├── GET/POST /api/admin/orders       View all orders
-├── PUT /api/admin/orders/[id]/status    Update order status
-├── GET/POST /api/admin/appointments     Appointment queue
-├── PUT /api/admin/appointments/[id]/approve   Approve booking
-├── PUT /api/admin/appointments/[id]/cancel    Cancel booking
-├── GET/POST /api/admin/quotes       Quote management (list, create)
-├── GET/PATCH/DELETE /api/admin/quotes/[id]   Single quote CRUD
-├── POST /api/admin/quotes/[id]/send     Send quote email to customer
-├── POST /api/quotes/authorize       Customer authorizes quote
-└── GET/POST /api/admin/users        User management
+SHOPPING & E-COMMERCE (6 routes)
+├── GET/POST /api/cart                       Create or get cart
+├── POST/PATCH/DELETE /api/cart/[cartId]/items  Manage cart items
+├── GET /api/shop/products                   List all products (cached)
+├── GET /api/shop/products/[productId]       Single product detail
+├── GET /api/pricing/products                Products for pricing page
+└── GET /api/orders                          Order listing
 
-PAYMENTS (3 routes)
+CHECKOUT (2 routes)
+├── POST /api/checkout/session               Create Stripe checkout session
+└── POST /api/checkout/check-appointment     Validate appointment requirements
+
+PAYMENTS (5 routes)
 ├── POST /api/stripe/create-payment-intent   One-time payments
 ├── POST /api/stripe/create-subscription     Recurring payments
-└── POST /api/stripe/webhook         Handle Stripe events
+├── POST /api/stripe/create-build-checkout   Build-a-project checkout
+├── POST /api/stripe/customer-portal         Stripe customer portal link
+└── POST /api/stripe/webhook                 Handle Stripe events
 
-CONTENT & PAGES (5 routes)
-├── GET/POST /api/pages              Dynamic page management
-├── GET /api/page-content/[slug]     Get page content by slug
-├── GET /api/pages/[slug]            Get full page data
-├── GET/POST /api/blog               Blog post listing and creation
-└── GET/PUT/DELETE /api/blog/[slug]  Single blog post CRUD
+USER (4 routes)
+├── GET /api/user/orders                     User's order history
+├── GET /api/user/appointments               User's appointments
+├── GET /api/user/reviews                    User's submitted reviews
+└── GET /api/user/spending-analytics         Spending analytics
 
-GOOGLE INTEGRATION (2 routes)
-├── POST /api/google/connect         Initiate OAuth flow
-└── GET /api/google/callback         Handle OAuth callback
+PRODUCTS — PUBLIC (3 routes)
+├── GET /api/products/categories             Product categories
+├── GET /api/products/search                 Product search
+└── GET/POST /api/products/waitlist          Join/view product waitlist
+
+CUSTOMER FEATURES (7 routes)
+├── GET/POST /api/wishlist                   View/add wishlist items
+├── DELETE /api/wishlist/[productId]         Remove from wishlist
+├── GET/POST /api/reviews                    View/submit product reviews
+├── GET/POST /api/coupons                    Validate/apply coupon codes
+├── GET /api/subscriptions                   View active subscriptions
+├── GET/POST /api/enrollments                Course enrollments
+└── GET/POST /api/recommendations            Product recommendations
+
+LOYALTY & REFERRALS (6 routes)
+├── GET /api/loyalty/balance                 Loyalty points balance
+├── POST /api/loyalty/earn                   Earn loyalty points
+├── POST /api/loyalty/redeem                 Redeem loyalty points
+├── POST /api/referrals/track                Track referral click
+├── POST /api/referrals/complete             Complete referral conversion
+└── GET /api/referrals/my-referral           User's referral info
+
+QUOTES (2 routes)
+├── POST /api/quotes/authorize               Customer authorizes quote
+└── POST /api/quotes/deposit-confirmed       Confirm deposit payment
+
+ADMIN — PRODUCTS (9 routes)
+├── GET/POST /api/admin/products             Product CRUD
+├── PUT/DELETE /api/admin/products/[id]      Single product management
+├── POST /api/admin/products/upload-image    Upload product images
+├── POST /api/admin/products/update-image    Update existing images
+├── GET /api/admin/products/export           Export products
+├── POST /api/admin/products/import          Import products
+├── POST /api/admin/products/notify-waitlist Notify waitlist customers
+├── GET/POST /api/admin/product-categories   Category CRUD
+└── PATCH/DELETE /api/admin/product-categories/[id]  Single category
+
+ADMIN — ORDERS (5 routes)
+├── GET /api/admin/orders                    View all orders
+├── GET /api/admin/orders/[id]/details       Order detail
+├── PATCH /api/admin/orders/[id]/status      Update order status
+├── POST /api/admin/orders/[id]/cancel       Cancel order
+└── POST /api/admin/orders/[id]/ready-for-delivery  Mark ready
+
+ADMIN — APPOINTMENTS (4 routes)
+├── GET /api/admin/appointments              Appointment queue
+├── POST /api/admin/appointments/[id]/approve    Approve booking
+├── POST /api/admin/appointments/[id]/cancel     Cancel booking
+└── GET /api/admin/appointments/failed-notifications  Failed notifications
+
+ADMIN — QUOTES (4 routes)
+├── GET/POST /api/admin/quotes               Quote listing and creation
+├── GET/PATCH/DELETE /api/admin/quotes/[id]   Single quote CRUD
+└── POST /api/admin/quotes/[id]/send         Send quote email
+
+ADMIN — REVIEWS & USERS (3 routes)
+├── GET/POST /api/admin/reviews              Review moderation
+├── GET/PATCH /api/admin/users               User management
+└── GET/DELETE /api/admin/enrollments        Enrollment management
+
+ADMIN — EMAIL CAMPAIGNS (4 routes)
+├── GET/POST /api/admin/email-campaigns      Campaign CRUD
+├── POST /api/admin/email-campaigns/send     Send campaign
+└── GET/POST /api/admin/email-templates      Email template management
+
+ADMIN — WAITLIST CAMPAIGNS (4 routes)
+├── GET/POST /api/admin/waitlist-campaigns         Campaign CRUD
+├── GET/PATCH/DELETE /api/admin/waitlist-campaigns/[id]  Single campaign
+└── POST /api/admin/waitlist-campaigns/[id]/send   Send campaign
+
+ADMIN — ANALYTICS (6 routes)
+├── GET /api/admin/analytics                 Dashboard analytics
+├── GET/POST /api/admin/cache-stats          Cache hit/miss rates
+├── GET /api/admin/product-analytics         Product performance
+├── GET /api/admin/loyalty-analytics         Loyalty program stats
+├── GET /api/admin/referral-analytics        Referral program stats
+├── GET /api/admin/waitlist-analytics        Waitlist metrics
+└── GET /api/admin/inventory                 Inventory management
+
+CONTENT & CMS (5 routes)
+├── GET/PUT /api/page-content/[slug]         Page content CRUD
+├── GET /api/page-content/[slug]/history     Version history
+├── POST /api/page-content/[slug]/restore    Restore version
+├── GET/PUT /api/layout-content              Layout content
+└── GET /api/changelog                       Public changelog
+
+BLOG (2 routes)
+├── GET/POST /api/blog                       Blog post listing and creation
+└── GET/PUT/DELETE /api/blog/[slug]          Single blog post CRUD
+
+WORKFLOWS (4 routes)
+├── GET/POST /api/workflows                  Workflow CRUD
+├── GET/PUT/DELETE /api/workflows/[id]       Single workflow
+├── POST /api/workflows/[id]/execute         Execute workflow
+└── POST /api/workflows/[id]/test-run        Test run workflow
+
+CRON JOBS (5 routes)
+├── GET/POST /api/cron/abandoned-carts       Abandoned cart recovery emails
+├── GET/POST /api/cron/appointment-reminders Appointment reminder emails
+├── GET/POST /api/cron/changelog             Auto-generate changelog entries
+├── POST /api/cron/retry-failed-emails       Retry failed email sends
+└── POST /api/cron/waitlist-notifications    Back-in-stock notifications
+
+GOOGLE INTEGRATION (4 routes)
+├── GET /api/google/connect                  Initiate OAuth flow
+├── GET /api/google/callback                 Handle OAuth callback
+├── POST /api/google/disconnect              Disconnect Google account
+└── GET /api/google/status                   Check Google connection
 
 PROJECTS (5 routes)
-├── GET/POST /api/projects           Project submissions
-├── GET /api/projects/mine           User's projects
-├── GET /api/projects/all            All projects (admin)
-├── PUT /api/projects/[id]/status    Update status
-└── POST /api/projects/[id]/comments Add comments
+├── POST /api/projects                       Submit project
+├── GET /api/projects/mine                   User's projects
+├── GET /api/projects/all                    All projects (admin)
+├── PATCH /api/projects/[id]/status          Update status
+└── GET/POST /api/projects/[id]/comments     Project comments
 
-MEDIA (3 routes)
-├── GET/POST /api/media              Upload/list media
-├── GET/DELETE /api/media/[id]       Get/delete media item
-└── GET /api/files/[...path]         Serve uploaded files
+MEDIA (2 routes)
+├── GET/POST /api/media                      Upload/list media
+└── GET/PATCH/DELETE /api/media/[id]         Single media management
 
-AI & SEARCH (5 routes)
-├── POST /api/chat                   AI chatbot (GPT-powered)
-├── POST /api/embeddings/index       Index content for search
-├── POST /api/embeddings/check       Check indexing status
-├── GET /api/embeddings/status       Embedding status
-└── GET /api/embeddings/debug        Debug embeddings
+AI & SEARCH (6 routes)
+├── POST /api/chat                           AI chatbot (GPT-powered)
+├── GET /api/chatbot/health                  Chatbot health check
+├── POST /api/embeddings/index               Index content for search
+├── GET /api/embeddings/check                Check indexing status
+├── GET /api/embeddings/status               Embedding status
+└── GET /api/embeddings/debug                Debug embeddings
 
-MISC (4 routes)
-├── GET /api/health                  Service health check
-├── POST /api/appointments/request   Request appointment
-├── POST /api/email-forward          Forward emails
-└── GET /api/demo/*                  Demo/testing endpoints
+MARKETPLACE & WIZARD (2 routes)
+├── GET/POST/PATCH/DELETE /api/marketplace   Template marketplace
+└── POST/PATCH /api/wizard/sessions          Wizard session management
+
+MISC (5 routes)
+├── GET /api/health                          Service health check
+├── POST /api/appointments/request           Request appointment
+├── POST /api/email-forward                  Forward emails
+├── GET /api/files/[...path]                 Serve uploaded files
+├── GET/POST /api/currencies                 Currency exchange rates
+├── GET /api/demo/items                      Demo items
+└── GET /api/demo/speed                      Speed test
+│
+└── POST /api/graphql                        GraphQL endpoint
 ```
 
-### Component Inventory (165 components)
+</details>
+
+### Component Inventory (193 components)
+
+<details>
+<summary><strong>Click to expand full component inventory</strong></summary>
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                        COMPONENTS BY MODULE                                  │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-CORE UI (37 components)
-├── Layout:        Navigation, Footer, DarkModeToggle
-├── Design System: Button, Card, PageHeader, CTASection, CircleBadge
+CORE UI (~53 root-level components)
+├── Layout:        Navigation, Footer, PageContainer, PageHeader
+├── Design System: Button, Card, CTASection, CircleBadge, StatusBadge
 ├── Cards:         PricingCard, ServiceCard, StepCard, FeatureCard, ProjectCard
-├── Dashboards:    AdminDashboard, UserDashboard
+│                  CourseCard, ReviewCard, ProductCard
+├── E-commerce:    ProductAvailability, ProductComparisonModal, CompareButton
+│                  ProductRecommendations, CouponInput, DepositPaymentCard
+│                  AddressSelector, CurrencySelector, OrderInvoice
+├── Dashboards:    AdminDashboard, UserDashboard, ReferralDashboard
 ├── Forms:         AppointmentRequestForm, AppointmentStepForm, PaymentForm
-├── Modals:        ProjectDetailModal, ServiceDetailModal
+│                  ConsultationCalendar, StarRating
+├── Modals:        ProjectDetailModal, ServiceDetailModal, ReadyForDeliveryModal
+├── Education:     Certificate, LessonPlayer, QuizBlock, ProgressBar, EnrollButton
+├── Marketing:     HowItWorks, FAQ, WhatCanYouBuild, SystemOverview
 └── Demos:         AuthDemo, DatabaseDemo, HealthStatus, SpeedDemo
 
-CHATBOT MODULE (6 components)
-├── ChatbotWidget      Main chat interface
-├── ChatbotModal       Modal wrapper
-├── ChatbotButton      Trigger button
-├── ChatMessage        Message bubbles
-├── PageIndexer        Content indexer
-└── IndexingContext    State management
+INLINE EDITOR MODULE (24 components)
+├── Core:      AdminSidebar, Editable, EditableCard, EditableSection, EditableItem
+├── Fields:    FieldEditors, InlineTextEditor, AlignmentToolbar, IconPicker
+├── Views:     SectionListView, ItemEditorView, SectionNavigation
+├── UI:        EditModeBar, EditModeTutorial, SidebarHeader, SidebarFooter
+│              AdminSidebarToggle, ChoiceMenu, ResizableWrapper
+├── Sorting:   SortableItemsWrapper, SortableSections
+├── History:   VersionHistoryPanel
+└── Preview:   HeroPreviewDetector
 
-CONTENT EDITOR MODULE (13 components)
+CONTENT EDITOR MODULE (14 components)
 ├── Core:     ContentEditor, PagePreview
 ├── Fields:   TextField, TextAreaField, SelectField, ArrayField
+│             ButtonField, FieldWrapper, CollapsibleSection
 ├── Forms:    HomepageForm, HowItWorksForm, FAQForm, PricingForm, ServicesForm
 └── Previews: HomepagePreview, HowItWorksPreview, FAQPreview, PricingPreview
+│             ServicesPreview
 
-PUCK PAGE BUILDER (3 helper components) ⛔ DISABLED
-├── ImageField        Custom image picker
-├── ProductPicker     Product selection
-└── RichTextField     WYSIWYG field
+WORKFLOW BUILDER MODULE (8 components)
+├── Canvas             Main drag-and-drop workflow canvas
+├── DemoCanvas         Read-only demo with 3 pre-loaded workflows
+├── TriggerNode        Workflow trigger node
+├── ActionNode         Workflow action node
+├── ConditionNode      Conditional branch node
+├── NodeConfigPanel    Node configuration side panel
+├── NodePalette        Palette of available node types
+└── TestRunPanel       Test workflow execution panel
+
+WIZARD MODULE (8 components)
+├── WizardModal, WizardWidget, WizardFloatingButton
+├── WizardProvider, WizardContent, WizardStep
+├── WizardResults, ScenarioCard
+
+DEVICE SHOWCASE MODULE (7 components)
+├── DeviceShowcase, DeviceMockup, DeviceFrame
+├── PhoneFrame, TabletFrame, MonitorFrame
+├── ScaledIframe, ShowcaseControls
+
+ACCOUNT MODULE (7 components)
+├── AccountSettingsClient, LoyaltyPointsSection
+├── MyReviewsSection, NotificationPreferencesSection
+├── SavedAddressesSection, SpendingAnalyticsSection
+└── SubscriptionSection
+
+HOME MODULE (6 components)
+├── HomePageClient, Hero, HeroDevice
+├── GeometricAccents, ServiceIcons
+└── HeroLayoutDebug
+
+CHATBOT MODULE (6 components)
+├── ChatbotWidget, ChatbotModal, ChatbotButton
+├── ChatMessage, PageIndexer, IndexingContext
+
+BLOG MODULE (5 components)
+├── BlogPageClient, BlogPostCard, BlogPostCTA
+├── MarkdownContent, RelatedPosts
+
+WORK/PORTFOLIO MODULE (5 components)
+├── WorkPageClient, CaseStudyCard, StatCounter
+├── ArchitectureDiagram, TechStackBadge
+
+MOTION MODULE (4 components)
+├── FadeIn, RevealSection, StaggerContainer, StaggerItem
+
+PROJECT MODAL MODULE (4 components)
+├── ProjectModalHeader, ProjectModalDetails
+├── ProjectComments, AdminStatusSection
+
+UI PRIMITIVES (9 components)
+├── ConfirmDialog, Toast, EmptyState, LoadingSpinner
+├── Skeleton, FieldError
+└── Icons: CheckIcon, CheckmarkCircle, CloseIcon
+
+PAGE CLIENT COMPONENTS (10+ components)
+├── PricingPageClient, UnifiedPricingPage, AddToCartButton
+├── ServicesPageClient, FAQPageClient, GuidePageClient
+├── PrivacyPageClient, TermsPageClient
+├── QuoteAuthorizationClient
+├── ShopClient (shop/), ProductDetailClient, ReviewForm, ReviewSection
+├── Dashboard: DashboardStatsOverview, ActiveAppointmentsSection
+└── Admin: AdminProductsClient, LoyaltyAnalyticsDashboard
 
 MEDIA MODULE (2 components)
 ├── ImageUpload       Upload interface
 └── MediaLibrary      Media browser
 
-PROJECT MODAL MODULE (4 components)
-├── ProjectModalHeader
-├── ProjectModalDetails
-├── ProjectComments
-└── AdminStatusSection
+SEO (1 component)
+└── JsonLd            JSON-LD structured data injector
 
-SHOP MODULE (2 components)
-├── ShopClient        Product grid
-└── ProductDetailClient   Product page
-
-UI PRIMITIVES (2 components)
-├── ConfirmDialog     Confirmation modals
-└── Toast             Notifications
-
-STORYBOOK STORIES (8 files)
-└── Button, Card, PageHeader, CTASection, CircleBadge, PricingCard, etc.
+PROVIDERS (1 component)
+└── SessionProvider   NextAuth session wrapper
 ```
 
-### Lib Utilities (51 files)
+</details>
+
+### Lib Utilities (74 files)
+
+<details>
+<summary><strong>Click to expand full lib inventory</strong></summary>
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                          UTILITY LIBRARIES                                   │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-EXTERNAL SERVICE CLIENTS
-├── medusa-client.ts     Medusa API (products, carts, orders) with retry logic
-├── supabase.ts          Supabase client (browser)
-├── supabase-server.ts   Supabase client (server)
-├── redis.ts             Upstash Redis with reconnection
-├── stripe.ts            Stripe client singleton
-├── email.ts             Resend email client
-├── email-service.ts     Email notification logic
-└── google-calendar.ts   Google Calendar OAuth + API
+EXTERNAL SERVICE CLIENTS (8 files)
+├── medusa-client.ts       Medusa API (products, carts, orders) with retry logic
+├── medusa-helpers.ts      Cart/order helpers for Medusa
+├── supabase.ts            Supabase admin client (server-side)
+├── supabase-server.ts     Supabase client (server, with user session)
+├── supabase-client-safe.ts  Safe client-side Supabase client
+├── redis.ts               Upstash Redis with circuit breaker
+├── stripe.ts              Stripe client singleton
+└── google-calendar.ts     Google Calendar OAuth + API
 
-AUTHENTICATION & API
-├── auth.ts              NextAuth session helpers
-├── auth-options.ts      NextAuth config (Google + credentials)
-├── api-auth.ts          API route authentication (verifyAdmin, verifyAuth)
-└── api-errors.ts        Standardized error responses (handleApiError, badRequest)
+EMAIL (4 files)
+├── email.ts                       Resend client + send helper
+├── email-service.ts               High-level email sending with retry + failure tracking
+├── appointment-notifications.ts   Appointment confirmation/cancellation/reminder emails
+└── review-notifications.ts        Review approved/rejected notification emails
 
-CACHING & PERFORMANCE
-├── cache.ts             Type-safe cache wrapper with TTL
-└── cache-stats.ts       Cache hit/miss rate monitoring
+AUTHENTICATION & API SECURITY (10 files)
+├── auth.ts                NextAuth session helpers
+├── auth-options.ts        NextAuth config (Google + credentials)
+├── auth-utils.ts          Session helpers, role checks
+├── api-auth.ts            API route authentication (verifyAdmin, verifyAuth)
+├── api-errors.ts          Standardized error responses
+├── api-input-guard.ts     Input sanitization and validation
+├── api-timeout.ts         Handler timeout protection
+├── api-validation.ts      Zod-based request body validators
+├── rate-limit.ts          Redis-backed rate limiting
+└── request-size-limit.ts  Rejects oversized request bodies
 
-DESIGN SYSTEM
-├── colors.ts            Central color definitions (WCAG AA anchors)
-├── service-colors.ts    Service type → accent color mapping
-└── wcag-contrast.ts     WCAG contrast ratio calculator
+RELIABILITY & SECURITY (3 files)
+├── request-dedup.ts       SHA-256 fingerprint deduplication
+├── supabase-retry.ts      Retry wrapper for flaky Supabase calls
+└── webhook-reliability.ts Idempotent webhook processing
 
-INLINE EDITING SYSTEM
-├── content-discovery.ts     Auto-discover editable content files
+CACHING & PERFORMANCE (3 files)
+├── cache.ts               In-memory + Redis cache layer with TTL
+├── cache-stats.ts         Cache hit/miss rate monitoring
+└── request-context.ts     Request ID and tracing context
+
+PAYMENTS (3 files)
+├── deposit-utils.ts       50% deposit calculation math
+├── deposit-validation.ts  Validates deposit payment amounts
+└── payment-attempts.ts    Tracks payment attempt history
+
+DESIGN SYSTEM (5 files)
+├── colors.ts              Central color definitions (WCAG AA anchors)
+├── contrast.ts            Color contrast ratio utilities
+├── service-colors.ts      Service type → accent color mapping
+├── wcag-contrast.ts       WCAG contrast ratio calculator
+└── premium-design.ts      Premium/glassmorphism design tokens
+
+INLINE EDITING SYSTEM (6 files)
 ├── content-path-mapper.ts   Click-to-edit JSON path finding
+├── default-page-content.ts  Default content templates
 ├── editable-routes.ts       Route → page slug mapping
 ├── fetch-page-content.ts    Page content fetching with fallback
-├── default-page-content.ts  Default content templates
+├── inline-edit-utils.ts     Shared inline edit state utilities
 └── page-content-types.ts    TypeScript type definitions
 
-UTILITIES
-├── format.ts            Price/date formatting (formatPrice)
-├── object-utils.ts      Nested value access (getNestedValue, setNestedValue)
-├── validation.ts        File upload & form validation rules
-├── appointment-utils.ts Appointment scheduling helpers
-├── loop-state.ts        Auto-loop state management (Claude Code)
-└── media-types.ts       Supported media format definitions
+WORKFLOW AUTOMATION (3 files)
+├── workflow-engine.ts     BullMQ async workflow execution engine
+├── workflow-events.ts     Workflow event emitters (triggers)
+└── workflow-validator.ts  Trigger/action/condition registries + Zod validation
 
-CONTENT TYPES
+WIZARD (2 files)
+├── wizard-engine.ts       Wizard step logic and scoring engine
+└── wizard-analytics.ts    Tracks wizard interactions and completions
+
+AI/CHATBOT (5 files)
+├── chatbot/index.ts               Chatbot query handler (vector search + OpenAI)
+├── chatbot/content-extractor.ts   Page text extraction for indexing
+├── chatbot/content-hash.ts        MD5 hash to detect changed content
+├── chatbot/text-chunker.ts        Split content into embedding-sized chunks
+└── embedding-utils.ts             OpenAI embedding generation helpers
+
+APPOINTMENTS (3 files)
+├── appointment-utils.ts     Time slot generation, duration filtering
+├── consultation-slots.ts    Consultation-specific slot generation
+└── appointment-notifications.ts  (see Email above)
+
+SEO & CONFIG (3 files)
+├── seo-config.ts          Site-wide SEO metadata defaults
+├── page-config.ts         Per-page metadata and configuration
+└── env-validation.ts      Validates required env vars at startup
+
+UTILITIES (9 files)
+├── format.ts              Price/date formatting
+├── object-utils.ts        Nested value access (getNestedValue, setNestedValue)
+├── validation.ts          File upload & form validation rules
+├── sanitize-html.ts       XSS prevention (strips dangerous HTML)
+├── media-types.ts         Supported media format definitions
+├── time-utils.ts          Time formatting, relative time
+├── timing.ts              Performance timing / benchmark helpers
+├── scroll-utils.ts        Smooth scroll utilities
+├── aria-utils.ts          ARIA attribute helpers for accessibility
+├── error-alerts.ts        Error reporting hooks
+├── error-recovery.ts      Graceful error recovery
+└── loop-state.ts          Auto-loop state management
+
+CONTENT & DATA (4 files)
 ├── service-modal-content.ts  Service modal content
 ├── blog-types.ts             Blog type definitions
-└── generated/content-manifest.ts  Auto-generated route manifest
-
-AI/CHATBOT
-├── chatbot/index.ts
-├── chatbot/content-extractor.ts
-├── chatbot/content-hash.ts
-└── chatbot/text-chunker.ts
+├── portfolio-data.ts         Portfolio/case study static data
+└── mockProjects.ts           Mock project data for dev/demos
 ```
 
-### Custom Hooks (8 files)
+</details>
+
+### Custom Hooks (10 files)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -994,10 +1279,11 @@ INLINE EDITING
 └── useUniversalClick.ts    Global click-to-edit handler for edit mode
                             Auto-detects JSON paths from clicked text
 
-ANALYTICS
-├── usePageViewTracking.ts  Tracks page views for Puck CMS analytics
-└── useProductTracking.ts   Product interactions for recommendations engine
-                            Events: view, cart_add, purchase, wishlist
+ANALYTICS & DATA
+├── useProductTracking.ts   Product interactions for recommendations engine
+│                           Events: view, cart_add, purchase, wishlist
+└── useDashboard.tsx        Aggregates data for the admin dashboard
+                            Fetches stats, recent orders, appointments
 
 PROJECT MANAGEMENT
 ├── useComments.ts          Comment CRUD operations for project modals
@@ -1008,8 +1294,12 @@ PROJECT MANAGEMENT
 UI UTILITIES
 ├── useBackdropClose.ts     Modal click-outside handler + Escape key
 │                           Consistent close behavior across all modals
-└── useCurrency.ts          Currency conversion and formatting
-                            Fetches rates, caches, converts, formats
+├── useCurrency.ts          Currency conversion and formatting
+│                           Fetches rates, caches, converts, formats
+├── useFocusTrap.ts         Traps keyboard focus inside modals (a11y)
+│                           Ensures Tab key stays within dialog boundaries
+└── useIsDesktop.ts         Media query hook for responsive breakpoints
+                            Returns true when viewport is desktop width
 ```
 
 **Feeling overwhelmed?** Don't worry - you don't need to understand everything at once. Most tasks only touch a few files. Start with the feature you're working on and explore outward from there.
@@ -1351,20 +1641,40 @@ await sendEmailWithRetry(
 );
 ```
 
-### Email Templates
+### Email Templates (21 total)
 
 React Email templates are in `app/emails/`:
+
+**Account & Auth:**
 - `WelcomeEmail.tsx` - Welcome message after account creation
 - `LoginNotificationEmail.tsx` - Security alert after each sign-in
+
+**Orders & Payments:**
+- `OrderConfirmationEmail.tsx` - Order confirmation after checkout
+- `PurchaseReceiptEmail.tsx` - Detailed receipt after payment
+- `OrderCanceledEmail.tsx` - Order cancellation notification
+- `OrderReadyForDeliveryEmail.tsx` - Ready for delivery notification
+- `OrderStatusUpdateEmail.tsx` - General order status change
+- `DepositConfirmationEmail.tsx` - Confirmation after customer pays deposit
+- `FinalPaymentFailedEmail.tsx` - Failed final payment alert
+
+**Appointments:**
+- `AppointmentConfirmationEmail.tsx` - Appointment confirmation for consultations
+- `AppointmentCancellationEmail.tsx` - Appointment cancellation notification
+- `AppointmentReminderEmail.tsx` - Upcoming appointment reminder
+- `AppointmentRequestNotificationEmail.tsx` - Admin notification for appointment requests
+
+**Customer Engagement:**
+- `ReviewApprovedEmail.tsx` - Review approved notification
+- `ReviewRejectedEmail.tsx` - Review rejected notification
+- `WaitlistBackInStockEmail.tsx` - Back-in-stock alert for waitlisted products
+- `AbandonedCartEmail.tsx` - Cart recovery reminder with optional discount
+- `CampaignEmail.tsx` - Marketing campaign emails
+
+**Admin & Business:**
 - `AdminNotification.tsx` - New project alert for admin
 - `ClientConfirmation.tsx` - Submission confirmation for clients
-- `OrderConfirmationEmail.tsx` - Order confirmation after checkout
-- `AppointmentConfirmationEmail.tsx` - Appointment confirmation for consultations
-- `AppointmentRequestNotificationEmail.tsx` - Admin notification for appointment requests
-- `PurchaseReceiptEmail.tsx` - Detailed receipt after payment
-- `AbandonedCartEmail.tsx` - Cart recovery reminder with optional discount
 - `QuoteEmail.tsx` - Quote details with payment link for customer
-- `DepositConfirmationEmail.tsx` - Confirmation after customer pays deposit
 
 ### Testing Emails
 
@@ -1475,22 +1785,310 @@ export async function GET(request: Request) {
 
 ---
 
+## Loyalty & Referrals
+
+### Loyalty Points
+
+Customers earn points for purchases and can redeem them for discounts. Points balance is tracked per-user in Supabase.
+
+| Action | Points Earned |
+|--------|--------------|
+| Purchase | Configurable per-product |
+| Referral conversion | Bonus points |
+| Redemption | Deducted from balance |
+
+**Key files:**
+
+| File | Purpose |
+|------|---------|
+| `app/api/loyalty/earn/route.ts` | Award points after purchase |
+| `app/api/loyalty/redeem/route.ts` | Redeem points at checkout |
+| `app/api/loyalty/balance/route.ts` | Check current balance |
+| `app/admin/loyalty/page.tsx` | Admin loyalty analytics dashboard |
+| `app/components/Account/LoyaltyPointsSection.tsx` | Customer-facing points display |
+
+### Referral Program
+
+Users get a unique referral link. When a referred user makes a purchase, the referrer earns bonus loyalty points.
+
+**Key files:**
+
+| File | Purpose |
+|------|---------|
+| `app/api/referrals/track/route.ts` | Track referral link click |
+| `app/api/referrals/complete/route.ts` | Complete referral conversion on purchase |
+| `app/api/referrals/my-referral/route.ts` | Get user's referral code and stats |
+| `app/admin/referrals/page.tsx` | Admin referral analytics |
+| `app/components/ReferralDashboard.tsx` | Customer referral stats and share link |
+
+---
+
+## Wishlist & Comparison
+
+### Wishlist
+
+Authenticated users can save products for later. Persisted in Supabase via the `WishlistContext`.
+
+**Key files:**
+
+| File | Purpose |
+|------|---------|
+| `app/api/wishlist/route.ts` | GET/POST wishlist items |
+| `app/api/wishlist/[productId]/route.ts` | DELETE from wishlist |
+| `app/app/wishlist/page.tsx` | Customer wishlist page |
+| `app/context/WishlistContext.tsx` | Client-side wishlist state |
+
+### Product Comparison
+
+Side-by-side comparison of up to 4 products. Client-side state — no API calls needed.
+
+**Key files:**
+
+| File | Purpose |
+|------|---------|
+| `app/components/ProductComparisonModal.tsx` | Comparison modal UI |
+| `app/components/CompareButton.tsx` | Add-to-compare toggle button |
+| `app/context/ComparisonContext.tsx` | Comparison state (max 4 products) |
+
+### Browse History
+
+Recently viewed products tracked via `BrowsingHistoryContext`. Persisted in localStorage for anonymous users.
+
+**Key files:**
+
+| File | Purpose |
+|------|---------|
+| `app/context/BrowsingHistoryContext.tsx` | Track viewed products |
+| `app/app/recently-viewed/page.tsx` | Recently viewed products page |
+
+---
+
+## Reviews & Coupons
+
+### Product Reviews
+
+Customers can submit reviews (1-5 stars + text). Reviews go through admin moderation before appearing publicly. Admin dashboard includes review analytics.
+
+**Key files:**
+
+| File | Purpose |
+|------|---------|
+| `app/api/reviews/route.ts` | GET (public) / POST (submit review) |
+| `app/admin/reviews/page.tsx` | Admin moderation queue |
+| `app/admin/reviews/analytics/page.tsx` | Review analytics dashboard |
+| `app/components/ReviewForm.tsx` | Customer review submission form |
+| `app/components/ReviewSection.tsx` | Public review display |
+| `app/lib/review-notifications.ts` | Approved/rejected email notifications |
+
+### Coupon System
+
+Discount codes validated at checkout. Supports percentage and fixed-amount discounts.
+
+**Key files:**
+
+| File | Purpose |
+|------|---------|
+| `app/api/coupons/route.ts` | Validate and apply coupon codes |
+| `app/components/CouponInput.tsx` | Coupon input component for cart/checkout |
+
+---
+
+## Workflow Automation
+
+A visual workflow builder that lets admins automate business processes without code. Built with drag-and-drop canvas, BullMQ async execution, and a registry-based architecture.
+
+### Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                        WORKFLOW SYSTEM                                │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  BUILDER (React)              ENGINE (BullMQ)          EVENTS        │
+│  ──────────────               ───────────────          ──────        │
+│  Canvas.tsx                   workflow-engine.ts        workflow-     │
+│  TriggerNode.tsx              - Async job queue          events.ts   │
+│  ActionNode.tsx               - Retry logic            - Direct      │
+│  ConditionNode.tsx            - Error handling            emitters   │
+│  NodeConfigPanel.tsx                                                 │
+│  NodePalette.tsx              VALIDATOR                              │
+│  TestRunPanel.tsx             ─────────                              │
+│  DemoCanvas.tsx               workflow-validator.ts                  │
+│                               - 12 triggers                         │
+│                               - 7 actions                           │
+│                               - 8 condition operators               │
+│                               - Zod validation                      │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+### Triggers (12)
+
+Events that start a workflow: order placed, payment received, appointment booked, user signup, form submission, review submitted, cart abandoned, loyalty milestone, referral completed, waitlist joined, product restocked, schedule (cron).
+
+### Actions (7)
+
+What happens when triggered: send email, create task, update record, send notification, award loyalty points, apply discount, webhook call.
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `app/lib/workflow-engine.ts` | BullMQ async execution engine |
+| `app/lib/workflow-events.ts` | Event emitters (trigger sources) |
+| `app/lib/workflow-validator.ts` | Trigger/action/condition registries + Zod validation |
+| `app/components/WorkflowBuilder/Canvas.tsx` | Drag-and-drop visual builder |
+| `app/components/WorkflowBuilder/DemoCanvas.tsx` | Read-only demo with 3 pre-loaded examples |
+| `app/api/workflows/route.ts` | Workflow CRUD |
+| `app/api/workflows/[id]/execute/route.ts` | Execute a workflow |
+| `app/api/workflows/[id]/test-run/route.ts` | Test run (dry run) |
+| `app/admin/automation/page.tsx` | Workflow list |
+| `app/admin/automation/builder/page.tsx` | Visual builder page |
+
+---
+
+## Cron Jobs & Background Tasks
+
+Five automated jobs run on schedules via Vercel Cron. Each is protected by `CRON_SECRET` authentication.
+
+| Cron Job | Schedule | Purpose | Key File |
+|----------|----------|---------|----------|
+| Abandoned Carts | Every 2 hours | Send recovery emails for carts idle > 2 hours | `api/cron/abandoned-carts/route.ts` |
+| Appointment Reminders | Daily | Remind users of upcoming appointments | `api/cron/appointment-reminders/route.ts` |
+| Changelog | Weekly | Auto-generate changelog from recent commits | `api/cron/changelog/route.ts` |
+| Retry Failed Emails | Every 30 min | Retry emails that failed to send | `api/cron/retry-failed-emails/route.ts` |
+| Waitlist Notifications | Every 4 hours | Notify waitlisted users when products restock | `api/cron/waitlist-notifications/route.ts` |
+
+### Configuration
+
+```bash
+CRON_SECRET=your-secret-here        # Required: authenticates cron requests
+ABANDONED_CART_HOURS=2               # Hours before cart is "abandoned"
+MAX_CART_REMINDERS=3                 # Max reminder emails per cart
+REMINDER_INTERVAL_HOURS=24          # Hours between reminders
+```
+
+---
+
+## Security & Reliability
+
+The API layer is protected by 10+ security utilities that guard against common attack vectors and reliability failures.
+
+| Utility | File | Protects Against |
+|---------|------|-----------------|
+| Rate Limiting | `lib/rate-limit.ts` | Brute force, DDoS, API abuse |
+| Request Dedup | `lib/request-dedup.ts` | Duplicate submissions (SHA-256 fingerprinting) |
+| API Timeout | `lib/api-timeout.ts` | Hung requests, resource exhaustion |
+| API Auth | `lib/api-auth.ts` | Unauthorized access (`verifyAdmin`, `verifyAuth`) |
+| Input Guard | `lib/api-input-guard.ts` | Malformed/malicious input, injection |
+| Request Size Limit | `lib/request-size-limit.ts` | Oversized payloads, memory exhaustion |
+| HTML Sanitization | `lib/sanitize-html.ts` | XSS attacks, script injection |
+| Supabase Retry | `lib/supabase-retry.ts` | Transient DB connection failures |
+| Webhook Reliability | `lib/webhook-reliability.ts` | Duplicate/replayed webhook events |
+| Env Validation | `lib/env-validation.ts` | Missing environment variables at startup |
+
+### Usage Pattern
+
+Most API routes wrap their handlers with security middleware:
+
+```typescript
+import { verifyAdmin } from '@/lib/api-auth';
+import { withRateLimit } from '@/lib/rate-limit';
+import { withTimeout } from '@/lib/api-timeout';
+
+export async function POST(request: Request) {
+  const authResult = await verifyAdmin();
+  if (authResult.error) return authResult.error;
+
+  return withRateLimit(request, 'admin-action', async () => {
+    return withTimeout(async () => {
+      // Protected handler logic
+    }, 10000);
+  });
+}
+```
+
+---
+
+## SEO
+
+### Dynamic Sitemap & Robots
+
+- `app/app/sitemap.ts` — Generates XML sitemap with all public pages, blog posts, and product pages
+- `app/app/robots.ts` — Dynamic robots.txt with sitemap reference
+
+### JSON-LD Structured Data
+
+The `JsonLd` component injects schema.org structured data for 5 page types:
+
+| Schema Type | Pages | What It Provides |
+|-------------|-------|-----------------|
+| `Organization` | Homepage | Business name, logo, contact |
+| `WebSite` | Homepage | Site search, URL |
+| `Service` | Services, Pricing | Service descriptions, pricing |
+| `Article` | Blog posts | Author, publish date, content |
+| `Product` | Shop products | Price, availability, reviews |
+
+### SEO Configuration
+
+Centralized in `app/lib/seo-config.ts`:
+- Site-wide defaults (title template, description, OG image)
+- Per-page metadata via `app/lib/page-config.ts`
+- Canonical URLs, OG tags, Twitter cards
+
+### Internal Linking
+
+Blog posts and content pages include contextual internal links to improve crawlability and page authority distribution.
+
+---
+
 ## Testing
 
 ### Test Summary
 
-| Category | Tests | Status | Command |
-|----------|-------|--------|---------|
-| E2E Shop & Cart | ~50 | ✅ Passing | `npm run test:e2e -- e2e/shop*.spec.ts` |
-| E2E Submissions | 5 | ✅ Passing | `npm run test:e2e -- e2e/submission.spec.ts` |
-| E2E Chatbot | 17 | ✅ Passing | `npm run test:e2e -- e2e/chatbot.spec.ts` |
-| E2E Appointments | 19 | ✅ Passing | `npm run test:e2e -- e2e/appointments.spec.ts` |
-| E2E Service Modals | 12 | ✅ Passing | `npm run test:e2e -- e2e/service-modals.spec.ts` |
-| E2E UX Flow | 3 | ✅ Passing | `npm run test:e2e -- e2e/ux-flow.spec.ts` |
-| E2E Accessibility | 10 | ✅ Passing | `npm run test:e2e -- e2e/accessibility.a11y.test.ts` |
-| E2E Visual Regression | 10 | ✅ Passing | `npm run test:e2e -- e2e/checkout-screenshots.spec.ts` |
-| E2E Admin Project Flow | 6 | ✅ Passing | `npm run test:e2e -- e2e/admin-project-flow.spec.ts` |
-| **Total** | **69 files** | ✅ **All Passing** | `npm run test:e2e` |
+**E2E Tests (67 spec files):**
+
+| Category | Tests | Command |
+|----------|-------|---------|
+| Shop & Cart | ~50 | `npm run test:e2e -- e2e/shop*.spec.ts` |
+| Submissions | 5 | `npm run test:e2e -- e2e/submission.spec.ts` |
+| Chatbot | 17 | `npm run test:e2e -- e2e/chatbot.spec.ts` |
+| Appointments | 19 | `npm run test:e2e -- e2e/appointments.spec.ts` |
+| Service Modals | 12 | `npm run test:e2e -- e2e/service-modals.spec.ts` |
+| UX Flow | 3 | `npm run test:e2e -- e2e/ux-flow.spec.ts` |
+| Accessibility | 10 | `npm run test:e2e -- e2e/accessibility.a11y.test.ts` |
+| Visual Regression | 14 | `npm run test:e2e -- e2e/checkout-screenshots.spec.ts` |
+| Admin Project Flow | 6 | `npm run test:e2e -- e2e/admin-project-flow.spec.ts` |
+| Page Render Stability | all pages | `npm run test:e2e -- e2e/page-render-stability.spec.ts` |
+| Inline Editing | 12 | `npm run test:e2e -- e2e/item-editing.spec.ts` |
+| Contrast Audit | per-page | `npm run test:e2e -- e2e/contrast-audit.spec.ts` |
+| Reviews | 8 | `npm run test:e2e -- e2e/reviews.spec.ts` |
+| Blog | 6 | `npm run test:e2e -- e2e/blog.spec.ts` |
+| Screenshots | full-page | `npm run test:e2e -- e2e/screenshots.spec.ts` |
+
+**Unit Tests (vitest):**
+
+| Category | Tests | Command |
+|----------|-------|---------|
+| Feature Inventory | 68 | `npm run test:unit -- __tests__/feature-inventory.test.ts` |
+| Pricing Restructure | 9 | `npm run test:unit -- __tests__/pricing-restructure.test.ts` |
+| Consultation Calendar | 12 | `npm run test:unit -- __tests__/components/consultation-calendar.test.ts` |
+| Deposit Calculations | 8 | `npm run test:unit -- __tests__/lib/deposit-calculations.test.ts` |
+| Deposit Validation | 6 | `npm run test:unit -- __tests__/lib/deposit-validation.test.ts` |
+| Deposit Payment Intent | 6 | `npm run test:unit -- __tests__/api/deposit-payment-intent.test.ts` |
+| Deposit Webhook | 8 | `npm run test:unit -- __tests__/api/deposit-webhook.test.ts` |
+| Request Dedup | 12 | `npm run test:unit -- __tests__/lib/request-dedup-atomicity.test.ts` |
+| Content Path Mapper | 8 | `npm run test:unit -- __tests__/lib/content-path-mapper.test.ts` |
+| WCAG Contrast | 6 | `npm run test:unit -- __tests__/lib/wcag-contrast.test.ts` |
+| Payment History | 6 | `npm run test:unit -- __tests__/lib/payment-history.test.ts` |
+| Security Hardening | 10+ | `npm run test:security` |
+| Email Templates | 10 | `npm run test:unit -- __tests__/lib/email.unit.test.ts` |
+
+**Accessibility Tests (vitest + jsdom):**
+
+| Category | Tests | Command |
+|----------|-------|---------|
+| Component a11y | 5 files | `npm run test:a11y` |
 
 ### Feature → Test Coverage Map
 
@@ -2077,22 +2675,34 @@ See [.claude/rules/design-system.md](.claude/rules/design-system.md) for:
 | `app/lib/auth.ts` | Authentication utilities (legacy) |
 | `app/lib/auth-options.ts` | NextAuth configuration (Google OAuth + Credentials) |
 | `app/lib/supabase.ts` | Supabase client setup |
-| `app/lib/redis.ts` | Redis cache client |
-| `app/lib/medusa-client.ts` | Medusa API wrapper |
+| `app/lib/redis.ts` | Redis cache client with circuit breaker |
+| `app/lib/medusa-client.ts` | Medusa API wrapper with retry logic |
 | `app/lib/cache.ts` | Caching utility & keys |
 | `app/lib/stripe.ts` | Stripe server client |
 | `app/lib/email.ts` | Resend email client & helpers |
 | `app/lib/email-service.ts` | Email business logic (notifications, confirmations) |
+| `app/lib/rate-limit.ts` | Redis-backed rate limiting |
+| `app/lib/request-dedup.ts` | SHA-256 request deduplication |
+| `app/lib/api-timeout.ts` | API handler timeout protection |
+| `app/lib/api-auth.ts` | Route authentication (verifyAdmin, verifyAuth) |
+| `app/lib/api-input-guard.ts` | Input sanitization and validation |
+| `app/lib/workflow-engine.ts` | BullMQ async workflow execution |
+| `app/lib/workflow-validator.ts` | Workflow trigger/action registries |
+| `app/lib/workflow-events.ts` | Workflow event emitters |
+| `app/lib/seo-config.ts` | Site-wide SEO metadata defaults |
 
-### State Management
+### State Management (9 providers)
 | File | Purpose |
 |------|---------|
-| `app/context/CartContext.tsx` | Shopping cart state |
 | `app/context/AuthContext.tsx` | User authentication state |
+| `app/context/CartContext.tsx` | Shopping cart state |
 | `app/context/StripeContext.tsx` | Stripe Elements provider |
 | `app/context/ToastContext.tsx` | Global toast notification state |
 | `app/context/ServiceModalContext.tsx` | Service detail modal state |
 | `app/context/InlineEditContext.tsx` | Inline editing state for admin |
+| `app/context/BrowsingHistoryContext.tsx` | Recently viewed product tracking |
+| `app/context/ComparisonContext.tsx` | Side-by-side product comparison state |
+| `app/context/WishlistContext.tsx` | Saved product wishlist |
 
 ### UI Components
 | File | Purpose |
@@ -2161,6 +2771,16 @@ See [.claude/rules/design-brief.md](.claude/rules/design-brief.md) for:
 
 ## Completed Features
 
+### March 2026
+
+| Feature | What It Does |
+|---------|-------------|
+| **API Security Audit** | Closed auth vulnerabilities across 11 API routes, Semgrep scan clean |
+| **SEO Boost** | Internal linking, structured data expansion, sitemap improvements |
+| **Blog Content** | 7 new posts covering Feb 20-26 development work |
+| **UI Polish** | Glassmorphism floating buttons, iPhone 17 Pro Max device frame |
+| **Blog UX** | Category pills sorted by post count, URL-encoded filter links |
+
 ### February 2026
 
 | Feature | What It Does |
@@ -2213,7 +2833,7 @@ Stuck on something? Here's where to look:
 
 | If you need help with... | Check out... |
 |--------------------------|--------------|
-| Getting the app running | [Quick Start](#quick-start) or [Development Setup](#development-setup) |
+| Getting the app running | [Quick Start](#quick-start) or [Local Development](#local-development) |
 | How the cart/shop works | [Shopping Cart & Ecommerce](#shopping-cart--ecommerce) |
 | Running or writing tests | [Testing](#testing) |
 | Colors, components, accessibility | [Design System](#design-system) |
@@ -2226,4 +2846,4 @@ Stuck on something? Here's where to look:
 
 Thanks for being here. This project is actively maintained and growing - your contributions make it better for everyone.
 
-**Last Updated**: February 2026
+**Last Updated**: March 2026
