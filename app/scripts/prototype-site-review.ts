@@ -1,8 +1,14 @@
 /**
- * AI Website Reviewer — Prototype V3
+ * AI Website Reviewer — Prototype V4
  *
  * Multi-page site reviewer that crawls nav-linked pages and produces
  * specific, actionable feedback using AI analysis.
+ *
+ * V4 improvements:
+ * - WCAG 2.1 AA accessibility audit (10 static HTML checks)
+ * - Accessibility scoring category (20 points in rebalanced 100-point rubric)
+ * - ADA compliance section in AI analysis (Section 5)
+ * - Accessibility issues section in scorecard display
  *
  * V3 improvements:
  * - Scoring system (100-point rubric, A-F grade)
@@ -11,7 +17,7 @@
  * - CTA detection filters out FAQ questions
  * - SVG/background-image detection (not just <img>)
  * - Clean report output (no progress noise)
- * - 5 focused AI sections (no duplicate recommendations)
+ * - 6 focused AI sections (no duplicate recommendations)
  *
  * Usage: cd app && npx tsx scripts/prototype-site-review.ts https://needthisdone.com
  *        cd app && npx tsx scripts/prototype-site-review.ts https://needthisdone.com https://example.com
@@ -48,6 +54,20 @@ function progress(line: string = '') {
 // TYPES
 // ============================================
 
+interface AccessibilityMetrics {
+  hasLangAttribute: boolean;
+  langValue: string | null;
+  hasSkipNav: boolean;
+  landmarks: { main: number; nav: number; header: number; footer: number; complementary: number };
+  formLabels: { total: number; labeled: number; unlabeled: string[] };
+  emptyInteractives: string[];
+  genericLinkText: string[];
+  positiveTabindex: number;
+  autoplayMedia: number;
+  missingAutocomplete: string[];
+  altTextIssues: { emptyAlt: number; longAlt: number };
+}
+
 interface TechnicalMetrics {
   url: string;
   httpStatus: number;
@@ -64,6 +84,7 @@ interface TechnicalMetrics {
   links: { internal: number; external: number; total: number };
   ctas: string[];
   metaCompleteness: { title: boolean; description: boolean; viewport: boolean; ogTitle: boolean; ogDescription: boolean; ogImage: boolean };
+  accessibility: AccessibilityMetrics;
 }
 
 interface PageData {
@@ -217,6 +238,129 @@ function extractMetrics(html: string, url: string, httpStatus: number): Technica
   // Flesch-Kincaid readability approximation
   const readingLevel = computeReadingLevel(visibleText);
 
+  // ── Accessibility checks (WCAG 2.1 AA, static HTML only) ──
+
+  // 1. Language attribute (WCAG 3.1.1)
+  const htmlEl = doc.querySelector('html');
+  const langValue = htmlEl?.getAttribute('lang')?.trim() || null;
+  const hasLangAttribute = !!langValue;
+
+  // 2. Skip navigation (WCAG 2.4.1) — look for early links pointing to #main, #content, etc.
+  const hasSkipNav = !!doc.querySelector('a[href^="#main"], a[href^="#content"], a[href="#skip"], a.skip-nav, a.skip-link, [class*="skip-to"]');
+
+  // 3. Landmark regions (WCAG 1.3.1)
+  const landmarks = {
+    main: doc.querySelectorAll('main, [role="main"]').length,
+    nav: doc.querySelectorAll('nav, [role="navigation"]').length,
+    header: doc.querySelectorAll('header, [role="banner"]').length,
+    footer: doc.querySelectorAll('footer, [role="contentinfo"]').length,
+    complementary: doc.querySelectorAll('aside, [role="complementary"]').length,
+  };
+
+  // 4. Form labels (WCAG 1.3.1, 4.1.2)
+  const formInputs = doc.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]), select, textarea');
+  const unlabeledInputs: string[] = [];
+  formInputs.forEach((input: Element) => {
+    const id = input.getAttribute('id');
+    const hasLabel = !!(
+      input.getAttribute('aria-label') ||
+      input.getAttribute('aria-labelledby') ||
+      input.getAttribute('title') ||
+      (id && doc.querySelector(`label[for="${id}"]`)) ||
+      input.closest('label')
+    );
+    if (!hasLabel) {
+      const type = input.getAttribute('type') || input.tagName.toLowerCase();
+      const name = input.getAttribute('name') || input.getAttribute('placeholder') || 'unnamed';
+      unlabeledInputs.push(`${type}[${name}]`);
+    }
+  });
+  const formLabels = { total: formInputs.length, labeled: formInputs.length - unlabeledInputs.length, unlabeled: unlabeledInputs };
+
+  // 5. Empty interactive elements (WCAG 4.1.2, 2.4.4)
+  const emptyInteractives: string[] = [];
+  doc.querySelectorAll('a[href], button, [role="button"], [role="link"]').forEach((el: Element) => {
+    const text = getCleanText(el).trim();
+    const ariaLabel = el.getAttribute('aria-label')?.trim();
+    const ariaLabelledBy = el.getAttribute('aria-labelledby');
+    const hasImgAlt = !!el.querySelector('img[alt]:not([alt=""])');
+    const hasSvgTitle = !!el.querySelector('svg title');
+    if (!text && !ariaLabel && !ariaLabelledBy && !hasImgAlt && !hasSvgTitle) {
+      const tag = el.tagName.toLowerCase();
+      const href = el.getAttribute('href') || '';
+      const cls = el.getAttribute('class')?.split(' ').slice(0, 2).join('.') || '';
+      emptyInteractives.push(`<${tag}${cls ? '.' + cls : ''}${href ? ' href="' + href.slice(0, 40) + '"' : ''}>`);
+    }
+  });
+
+  // 6. Generic link text (WCAG 2.4.4)
+  const GENERIC_PATTERNS = /^(click here|here|read more|learn more|more|link|go|continue|details|info)$/i;
+  const genericLinkText: string[] = [];
+  doc.querySelectorAll('a[href]').forEach((a: Element) => {
+    const text = getCleanText(a).trim();
+    if (GENERIC_PATTERNS.test(text)) {
+      const href = a.getAttribute('href') || '';
+      genericLinkText.push(`"${text}" → ${href.slice(0, 50)}`);
+    }
+  });
+
+  // 7. Positive tabindex (WCAG 2.4.3)
+  let positiveTabindex = 0;
+  doc.querySelectorAll('[tabindex]').forEach((el: Element) => {
+    const val = parseInt(el.getAttribute('tabindex') || '0', 10);
+    if (val > 0) positiveTabindex++;
+  });
+
+  // 8. Autocomplete on personal data inputs (WCAG 1.3.5)
+  const AUTOCOMPLETE_TYPES = new Set(['text', 'email', 'tel', 'url', 'search']);
+  const PERSONAL_NAMES = /\b(name|email|phone|tel|address|city|state|zip|postal|country|street)\b/i;
+  const missingAutocomplete: string[] = [];
+  formInputs.forEach((input: Element) => {
+    const type = input.getAttribute('type') || 'text';
+    const name = input.getAttribute('name') || '';
+    const id = input.getAttribute('id') || '';
+    if (AUTOCOMPLETE_TYPES.has(type) && PERSONAL_NAMES.test(name + ' ' + id)) {
+      if (!input.getAttribute('autocomplete')) {
+        missingAutocomplete.push(`${type}[${name || id}]`);
+      }
+    }
+  });
+
+  // 9. Auto-playing media (WCAG 1.4.2)
+  let autoplayMedia = 0;
+  doc.querySelectorAll('video[autoplay], audio[autoplay]').forEach((el: Element) => {
+    if (!el.hasAttribute('muted')) autoplayMedia++;
+  });
+
+  // 10. Alt text quality — empty alt on non-decorative images, overly long alt
+  let emptyAlt = 0;
+  let longAlt = 0;
+  allImages.forEach((img: Element) => {
+    const alt = img.getAttribute('alt');
+    if (alt === '') {
+      // Empty alt is correct for decorative images, but flag if image has role or meaningful src
+      const src = img.getAttribute('src') || '';
+      const isLikelyContent = img.getAttribute('role') === 'img' || /logo|hero|product|team|photo/i.test(src);
+      if (isLikelyContent) emptyAlt++;
+    } else if (alt && alt.length > 125) {
+      longAlt++;
+    }
+  });
+
+  const accessibility: AccessibilityMetrics = {
+    hasLangAttribute,
+    langValue,
+    hasSkipNav,
+    landmarks,
+    formLabels,
+    emptyInteractives,
+    genericLinkText,
+    positiveTabindex,
+    autoplayMedia,
+    missingAutocomplete,
+    altTextIssues: { emptyAlt, longAlt },
+  };
+
   // CTA detection — buttons and links with action-oriented text
   // Filters: skip questions (FAQ), long sentences, require word boundaries
   const ctas: string[] = [];
@@ -270,6 +414,7 @@ function extractMetrics(html: string, url: string, httpStatus: number): Technica
       ogDescription: !!ogDescription,
       ogImage: !!ogImage,
     },
+    accessibility,
   };
 }
 
@@ -477,6 +622,27 @@ function buildTechnicalFindings(allMetrics: TechnicalMetrics[], score: ScoreBrea
   });
   lines.push(`- Readability: ${readabilities.join(', ')}`);
 
+  // Accessibility findings for AI
+  const a11y = allMetrics[0].accessibility;
+  const a11yFindings: string[] = [];
+  if (!a11y.hasLangAttribute) a11yFindings.push('missing <html lang>');
+  if (!a11y.hasSkipNav) a11yFindings.push('no skip-nav link');
+  if (!allMetrics.some((m) => m.accessibility.landmarks.main > 0)) a11yFindings.push('no <main> landmark');
+  const unlabeledTotal = allMetrics.reduce((s, m) => s + m.accessibility.formLabels.unlabeled.length, 0);
+  if (unlabeledTotal > 0) a11yFindings.push(`${unlabeledTotal} unlabeled form inputs`);
+  const emptyTotal = allMetrics.reduce((s, m) => s + m.accessibility.emptyInteractives.length, 0);
+  if (emptyTotal > 0) a11yFindings.push(`${emptyTotal} empty links/buttons`);
+  const genericTotal = allMetrics.reduce((s, m) => s + m.accessibility.genericLinkText.length, 0);
+  if (genericTotal > 0) a11yFindings.push(`${genericTotal} generic link text instances`);
+  const tabTotal = allMetrics.reduce((s, m) => s + m.accessibility.positiveTabindex, 0);
+  if (tabTotal > 0) a11yFindings.push(`${tabTotal} positive tabindex elements`);
+
+  if (a11yFindings.length > 0) {
+    lines.push(`- Accessibility Issues: ${a11yFindings.join(', ')}`);
+  } else {
+    lines.push(`- Accessibility: No static HTML issues detected`);
+  }
+
   return lines.join('\n');
 }
 
@@ -524,7 +690,7 @@ ${perPageSummary}
 DETECTED CTAs ACROSS SITE:
 ${allCtas.length > 0 ? allCtas.map(c => `  "${c}"`).join('\n') : '  None detected'}
 
-ANALYZE THESE 5 AREAS:
+ANALYZE THESE 6 AREAS:
 
 ## 1. First Impression & Messaging
 Is it immediately clear what this business does and who it's for? Quote the homepage headline. Do pages tell a cohesive story, or does each feel disconnected? Reference specific messaging from at least 2 pages.
@@ -538,8 +704,11 @@ What trust elements exist (testimonials, case studies, credentials, guarantees, 
 ## 4. Technical Health
 Reference the technical findings above. Explain in plain language what the OG tag gaps, heading issues, readability scores, or other technical problems mean for the business. Focus on business impact, not developer jargon.
 
-## 5. Top 5 Action Items
-The 5 highest-impact changes this business owner could make this week, in priority order. Be specific — "Change the headline on /services from X to Y" not "improve your headlines." Do NOT repeat recommendations already made in sections 1-4. These should be NEW, additional improvements.
+## 5. Accessibility & ADA Compliance
+Based on the technical findings, what accessibility barriers exist? Explain each issue in plain language — what does it mean for someone using a screen reader, keyboard navigation, or assistive technology? Reference specific pages and elements. Prioritize fixes by legal risk (ADA lawsuits target missing alt text, missing form labels, and keyboard navigation issues most often).
+
+## 6. Top 5 Action Items
+The 5 highest-impact changes this business owner could make this week, in priority order. Be specific — "Change the headline on /services from X to Y" not "improve your headlines." Do NOT repeat recommendations already made in sections 1-5. These should be NEW, additional improvements.
 
 FORMAT: Use markdown with ## headers for each section. Keep each section to 3-5 sentences. End with Action Items as a numbered list.`;
 }
@@ -558,49 +727,49 @@ function computeSiteScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown {
   const total = allMetrics.length;
   const categories: ScoreBreakdown['categories'] = [];
 
-  // 1. HTTPS (5 points)
+  // 1. HTTPS (5 points — unchanged)
   const httpsScore = allMetrics[0].https ? 5 : 0;
   categories.push({ name: 'HTTPS', earned: httpsScore, possible: 5, note: httpsScore === 5 ? 'Secure' : 'Not secure — visitors see a warning' });
 
-  // 2. Meta completeness (15 points) — pages with both title AND description
+  // 2. Meta completeness (10 points, was 15) — pages with both title AND description
   const pagesWithMeta = allMetrics.filter((m) => m.metaCompleteness.title && m.metaCompleteness.description).length;
-  const metaScore = Math.round((pagesWithMeta / total) * 15);
-  categories.push({ name: 'Meta Tags', earned: metaScore, possible: 15, note: `${pagesWithMeta}/${total} pages have title + description` });
+  const metaScore = Math.round((pagesWithMeta / total) * 10);
+  categories.push({ name: 'Meta Tags', earned: metaScore, possible: 10, note: `${pagesWithMeta}/${total} pages have title + description` });
 
-  // 3. OG tags (10 points) — pages with og:title AND og:image
+  // 3. OG tags (10 points — unchanged)
   const pagesWithOg = allMetrics.filter((m) => m.metaCompleteness.ogTitle && m.metaCompleteness.ogImage).length;
   const ogScore = Math.round((pagesWithOg / total) * 10);
   categories.push({ name: 'OG Tags', earned: ogScore, possible: 10, note: `${pagesWithOg}/${total} pages — social shares ${pagesWithOg === 0 ? 'look broken' : pagesWithOg < total ? 'partially covered' : 'look great'}` });
 
-  // 4. Heading structure (15 points) — penalize pages with hierarchy gaps
+  // 4. Heading structure (10 points, was 15) — penalize pages with hierarchy gaps
   const pagesWithGaps = allMetrics.filter((m) => m.headingHierarchyGaps.length > 0).length;
-  const headingScore = Math.max(0, 15 - (3 * pagesWithGaps));
-  categories.push({ name: 'Heading Structure', earned: headingScore, possible: 15, note: pagesWithGaps === 0 ? 'Clean hierarchy on all pages' : `${pagesWithGaps} page(s) have heading gaps` });
+  const headingScore = Math.max(0, 10 - (2 * pagesWithGaps));
+  categories.push({ name: 'Heading Structure', earned: headingScore, possible: 10, note: pagesWithGaps === 0 ? 'Clean hierarchy on all pages' : `${pagesWithGaps} page(s) have heading gaps` });
 
-  // 5. Content depth (15 points) — average word count
+  // 5. Content depth (10 points, was 15) — average word count
   const avgWords = Math.round(allMetrics.reduce((sum, m) => sum + m.wordCount, 0) / total);
   let contentScore: number;
-  if (avgWords >= 400) contentScore = 15;
-  else if (avgWords >= 200) contentScore = 10;
-  else if (avgWords >= 100) contentScore = 5;
+  if (avgWords >= 400) contentScore = 10;
+  else if (avgWords >= 200) contentScore = 7;
+  else if (avgWords >= 100) contentScore = 4;
   else contentScore = 0;
-  categories.push({ name: 'Content Depth', earned: contentScore, possible: 15, note: `Avg ${avgWords} words/page` });
+  categories.push({ name: 'Content Depth', earned: contentScore, possible: 10, note: `Avg ${avgWords} words/page` });
 
-  // 6. CTA presence (10 points) — unique CTAs across site
+  // 6. CTA presence (10 points — unchanged)
   const uniqueCtas = [...new Set(allMetrics.flatMap((m) => m.ctas))];
   const ctaScore = Math.round(Math.min(uniqueCtas.length / 3, 1) * 10);
   categories.push({ name: 'CTA Presence', earned: ctaScore, possible: 10, note: `${uniqueCtas.length} unique CTAs detected` });
 
-  // 7. H1 consistency (10 points) — pages with exactly 1 H1
+  // 7. H1 consistency (5 points, was 10) — pages with exactly 1 H1
   const pagesWithOneH1 = allMetrics.filter((m) => m.h1Count === 1).length;
-  const h1Score = Math.round((pagesWithOneH1 / total) * 10);
-  categories.push({ name: 'H1 Consistency', earned: h1Score, possible: 10, note: `${pagesWithOneH1}/${total} pages have exactly 1 H1` });
+  const h1Score = Math.round((pagesWithOneH1 / total) * 5);
+  categories.push({ name: 'H1 Consistency', earned: h1Score, possible: 5, note: `${pagesWithOneH1}/${total} pages have exactly 1 H1` });
 
-  // 8. Page coverage (10 points) — min(pages / 5, 1) * 10
+  // 8. Page coverage (10 points — unchanged)
   const coverageScore = Math.round(Math.min(total / 5, 1) * 10);
   categories.push({ name: 'Page Coverage', earned: coverageScore, possible: 10, note: `${total} pages crawled` });
 
-  // 9. Readability (10 points) — parse grade from reading level string
+  // 9. Readability (10 points — unchanged)
   const gradeNumbers = allMetrics.map((m) => {
     const match = m.readingLevel.match(/Grade (\d+)/);
     return match ? parseInt(match[1]) : 8;
@@ -612,6 +781,10 @@ function computeSiteScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown {
   else readabilityScore = 4;
   categories.push({ name: 'Readability', earned: readabilityScore, possible: 10, note: `Avg Grade ${avgGrade}` });
 
+  // 10. Accessibility (20 points — NEW)
+  const a11y = computeAccessibilityScore(allMetrics);
+  categories.push(a11y);
+
   const totalScore = categories.reduce((sum, c) => sum + c.earned, 0);
 
   let grade: string;
@@ -622,6 +795,89 @@ function computeSiteScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown {
   else grade = 'F';
 
   return { total: totalScore, grade, categories };
+}
+
+function computeAccessibilityScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown['categories'][0] {
+  let earned = 0;
+  const issues: string[] = [];
+
+  // Language attribute present (2 pts) — check homepage
+  if (allMetrics[0].accessibility.hasLangAttribute) {
+    earned += 2;
+  } else {
+    issues.push('missing lang attribute');
+  }
+
+  // Skip navigation link (2 pts) — check homepage
+  if (allMetrics[0].accessibility.hasSkipNav) {
+    earned += 2;
+  } else {
+    issues.push('no skip navigation link');
+  }
+
+  // Landmarks: <main> + <nav> present (3 pts)
+  const hasMain = allMetrics.some((m) => m.accessibility.landmarks.main > 0);
+  const hasNav = allMetrics.some((m) => m.accessibility.landmarks.nav > 0);
+  if (hasMain && hasNav) earned += 3;
+  else if (hasMain || hasNav) { earned += 1; issues.push(`missing ${hasMain ? '<nav>' : '<main>'} landmark`); }
+  else issues.push('missing <main> and <nav> landmarks');
+
+  // Form labels — % labeled across all pages (4 pts)
+  const totalInputs = allMetrics.reduce((s, m) => s + m.accessibility.formLabels.total, 0);
+  const totalLabeled = allMetrics.reduce((s, m) => s + m.accessibility.formLabels.labeled, 0);
+  if (totalInputs === 0) {
+    earned += 4; // No forms = no label issues
+  } else {
+    const labelPct = totalLabeled / totalInputs;
+    const labelPts = Math.round(labelPct * 4);
+    earned += labelPts;
+    if (labelPts < 4) {
+      const unlabeledCount = totalInputs - totalLabeled;
+      issues.push(`${unlabeledCount} form input(s) without labels`);
+    }
+  }
+
+  // No empty interactive elements (3 pts)
+  const totalEmpty = allMetrics.reduce((s, m) => s + m.accessibility.emptyInteractives.length, 0);
+  if (totalEmpty === 0) {
+    earned += 3;
+  } else {
+    earned += Math.max(0, 3 - totalEmpty); // lose 1pt per empty element, min 0
+    issues.push(`${totalEmpty} empty link(s)/button(s)`);
+  }
+
+  // No generic link text (2 pts)
+  const totalGeneric = allMetrics.reduce((s, m) => s + m.accessibility.genericLinkText.length, 0);
+  if (totalGeneric === 0) {
+    earned += 2;
+  } else {
+    earned += Math.max(0, 2 - totalGeneric);
+    issues.push(`${totalGeneric} generic link text ("click here", "read more")`);
+  }
+
+  // No positive tabindex (2 pts)
+  const totalTabindex = allMetrics.reduce((s, m) => s + m.accessibility.positiveTabindex, 0);
+  if (totalTabindex === 0) {
+    earned += 2;
+  } else {
+    issues.push(`${totalTabindex} element(s) with positive tabindex`);
+  }
+
+  // No autoplay media (2 pts)
+  const totalAutoplay = allMetrics.reduce((s, m) => s + m.accessibility.autoplayMedia, 0);
+  if (totalAutoplay === 0) {
+    earned += 2;
+  } else {
+    issues.push(`${totalAutoplay} auto-playing media without muted`);
+  }
+
+  earned = Math.max(0, Math.min(20, earned));
+
+  const note = issues.length === 0
+    ? 'No accessibility issues detected'
+    : issues.slice(0, 3).join(', ');
+
+  return { name: 'Accessibility', earned, possible: 20, note };
 }
 
 // ============================================
@@ -672,6 +928,18 @@ function buildExecutiveSummary(score: ScoreBreakdown, allMetrics: TechnicalMetri
         topIssues.push('too few clear calls-to-action');
       } else if (issue.name === 'H1 Consistency') {
         topIssues.push('inconsistent H1 usage');
+      } else if (issue.name === 'Accessibility') {
+        // Build specific a11y summary from the data
+        const a11yParts: string[] = [];
+        const unlabeledCount = allMetrics.reduce((s, m) => s + m.accessibility.formLabels.unlabeled.length, 0);
+        if (unlabeledCount > 0) a11yParts.push(`missing form labels`);
+        if (!allMetrics[0].accessibility.hasSkipNav) a11yParts.push(`skip navigation link`);
+        if (!allMetrics[0].accessibility.hasLangAttribute) a11yParts.push(`lang attribute`);
+        const emptyCount = allMetrics.reduce((s, m) => s + m.accessibility.emptyInteractives.length, 0);
+        if (emptyCount > 0) a11yParts.push(`empty links/buttons`);
+        topIssues.push(a11yParts.length > 0
+          ? `accessibility gaps: ${a11yParts.join(', ')} (hurts screen reader users)`
+          : 'accessibility issues detected');
       }
     }
 
@@ -759,6 +1027,62 @@ function printSiteScorecard(allMetrics: TechnicalMetrics[], score: ScoreBreakdow
     report();
     report(`  Heading Hierarchy Issues:`);
     allGaps.forEach((gap) => report(`    ⚠ ${gap}`));
+  }
+
+  // Accessibility issues across all pages
+  const a11yIssues: string[] = [];
+  if (!allMetrics[0].accessibility.hasLangAttribute) {
+    a11yIssues.push('Missing lang attribute on <html>');
+  }
+  if (!allMetrics[0].accessibility.hasSkipNav) {
+    a11yIssues.push('No skip navigation link');
+  }
+  if (!allMetrics.some((m) => m.accessibility.landmarks.main > 0)) {
+    a11yIssues.push('No <main> landmark');
+  }
+  if (!allMetrics.some((m) => m.accessibility.landmarks.nav > 0)) {
+    a11yIssues.push('No <nav> landmark');
+  }
+  const totalUnlabeled = allMetrics.reduce((s, m) => s + m.accessibility.formLabels.unlabeled.length, 0);
+  if (totalUnlabeled > 0) {
+    a11yIssues.push(`${totalUnlabeled} form input(s) without labels`);
+  }
+  const totalEmpty = allMetrics.reduce((s, m) => s + m.accessibility.emptyInteractives.length, 0);
+  if (totalEmpty > 0) {
+    a11yIssues.push(`${totalEmpty} empty link(s)/button(s) (no text or aria-label)`);
+  }
+  const totalGenericLinks = allMetrics.reduce((s, m) => s + m.accessibility.genericLinkText.length, 0);
+  if (totalGenericLinks > 0) {
+    a11yIssues.push(`${totalGenericLinks} generic link text ("click here", "read more")`);
+  }
+  const totalPosTab = allMetrics.reduce((s, m) => s + m.accessibility.positiveTabindex, 0);
+  if (totalPosTab > 0) {
+    a11yIssues.push(`${totalPosTab} element(s) with positive tabindex (disrupts tab order)`);
+  }
+  const totalAutoplayMedia = allMetrics.reduce((s, m) => s + m.accessibility.autoplayMedia, 0);
+  if (totalAutoplayMedia > 0) {
+    a11yIssues.push(`${totalAutoplayMedia} auto-playing media without muted attribute`);
+  }
+  const totalMissingAuto = allMetrics.reduce((s, m) => s + m.accessibility.missingAutocomplete.length, 0);
+  if (totalMissingAuto > 0) {
+    a11yIssues.push(`${totalMissingAuto} personal data input(s) missing autocomplete`);
+  }
+  const totalEmptyAlt = allMetrics.reduce((s, m) => s + m.accessibility.altTextIssues.emptyAlt, 0);
+  const totalLongAlt = allMetrics.reduce((s, m) => s + m.accessibility.altTextIssues.longAlt, 0);
+  if (totalEmptyAlt > 0) {
+    a11yIssues.push(`${totalEmptyAlt} content image(s) with empty alt text`);
+  }
+  if (totalLongAlt > 0) {
+    a11yIssues.push(`${totalLongAlt} image(s) with alt text > 125 characters`);
+  }
+
+  if (a11yIssues.length > 0) {
+    report();
+    report(`  Accessibility Issues:`);
+    a11yIssues.forEach((issue) => report(`    ⚠ ${issue}`));
+  } else {
+    report();
+    report(`  Accessibility: No issues detected ✓`);
   }
 
   report(LINE);
@@ -887,7 +1211,7 @@ async function main() {
 
   const model = process.env.NEXT_PUBLIC_CHATBOT_MODEL || 'gpt-4.1-nano';
   report('═'.repeat(70));
-  report('  AI Website Reviewer — V3');
+  report('  AI Website Reviewer — V4');
   report(`  Model: ${model}`);
   report(`  Sites: ${urls.length}`);
   report(`  Time: ${new Date().toISOString()}`);
