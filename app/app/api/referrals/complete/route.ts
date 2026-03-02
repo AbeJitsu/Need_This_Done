@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import { createClient } from '@supabase/supabase-js';
 import { validateSupabaseAdminConfig } from '@/lib/supabase-client-safe';
+import { verifyAdmin } from '@/lib/api-auth';
 
 interface CompleteReferralRequest {
   referralTransactionId: string;
@@ -10,6 +11,12 @@ interface CompleteReferralRequest {
 
 export async function POST(request: Request) {
   try {
+    // Admin-only: completing referrals awards store credit
+    const auth = await verifyAdmin();
+    if (auth.error) {
+      return auth.error;
+    }
+
     const config = validateSupabaseAdminConfig();
     if (!config.isValid) return config.error;
 
@@ -64,24 +71,6 @@ export async function POST(request: Request) {
     }
 
     // Add credit to referrer's account
-    await supabase
-      .from('customer_referrals')
-      .update({
-        credit_balance: supabase.rpc('increment_credit_balance', {
-          user_id: transaction.referrer_id,
-          amount: transaction.credit_amount,
-        }),
-        total_earned: supabase.rpc('increment_total_earned', {
-          user_id: transaction.referrer_id,
-          amount: transaction.credit_amount,
-        }),
-        total_referrals: supabase.rpc('increment_total_referrals', {
-          user_id: transaction.referrer_id,
-        }),
-      })
-      .eq('user_id', transaction.referrer_id);
-
-    // For now, do simpler update
     const { data: referral } = await supabase
       .from('customer_referrals')
       .select('credit_balance, total_earned, total_referrals')
@@ -89,7 +78,7 @@ export async function POST(request: Request) {
       .single();
 
     if (referral) {
-      const { error: simpleUpdateError } = await supabase
+      const { error: creditUpdateError } = await supabase
         .from('customer_referrals')
         .update({
           credit_balance: (referral.credit_balance || 0) + transaction.credit_amount,
@@ -98,8 +87,8 @@ export async function POST(request: Request) {
         })
         .eq('user_id', transaction.referrer_id);
 
-      if (simpleUpdateError) {
-        console.error('Error updating referral credit:', simpleUpdateError);
+      if (creditUpdateError) {
+        console.error('Error updating referral credit:', creditUpdateError);
       }
     }
 
