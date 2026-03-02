@@ -47,9 +47,9 @@ export default function CaseStudyCard({ study }: CaseStudyCardProps) {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
-          <h3 className="font-playfair text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight">
+          <h2 className="font-playfair text-2xl md:text-3xl lg:text-4xl font-black text-white tracking-tight">
             {study.title}
-          </h3>
+          </h2>
           {study.links && study.links.length > 0 && (
             <span
               className={`px-3 py-1 text-xs font-semibold rounded-full border uppercase tracking-wider ${badgeBg[study.color]}`}
@@ -69,9 +69,9 @@ export default function CaseStudyCard({ study }: CaseStudyCardProps) {
 
       {/* Impact */}
       <div className="mb-8">
-        <h4 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-4">
+        <h3 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-4">
           Impact
-        </h4>
+        </h3>
         <ul className="space-y-2.5">
           {study.impact.map((item) => (
             <li key={item} className="flex items-start gap-3 text-base text-slate-300">
@@ -85,9 +85,9 @@ export default function CaseStudyCard({ study }: CaseStudyCardProps) {
       {/* Features grid */}
       {study.features.length > 5 && (
         <div className="mb-8">
-          <h4 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-4">
+          <h3 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-4">
             Key Features
-          </h4>
+          </h3>
           <div className="grid sm:grid-cols-2 gap-3">
             {study.features.map((feature) => (
               <div key={feature} className="flex items-start gap-3 text-sm text-slate-400">
@@ -101,9 +101,9 @@ export default function CaseStudyCard({ study }: CaseStudyCardProps) {
 
       {/* Tech stack */}
       <div className="mb-6">
-        <h4 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-3">
+        <h3 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-3">
           Tech Stack
-        </h4>
+        </h3>
         <div className="flex flex-wrap gap-2">
           {study.tech.map((t) => (
             <TechStackBadge key={t} name={t} />

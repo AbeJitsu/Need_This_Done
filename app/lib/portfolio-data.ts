@@ -47,12 +47,12 @@ export const caseStudies: CaseStudy[] = [
     role: 'Solo Developer & Architect',
     period: 'November 2025 - Present',
     description:
-      'Production e-commerce platform serving real customers. Built from scratch with Next.js 14, TypeScript, and a microservices architecture connecting Medusa, Supabase, Stripe, and Redis.',
+      'Online store and business platform built from scratch. Handles payments, bookings, email campaigns, and customer accounts — everything a growing business needs in one place.',
     impact: [
-      '1,300+ commits in under 3 months of intense development',
-      'Production-grade reliability: circuit breaker, retry logic, request deduplication',
-      'AI chatbot with RAG (pgvector + OpenAI) answering customer questions from indexed site content',
-      'WCAG AA accessibility compliance across all pages',
+      'Built from zero to production in under 3 months',
+      'Built-in safeguards so nothing breaks — if something goes wrong, the system recovers automatically',
+      'AI chatbot that learns from the website to answer customer questions automatically',
+      'Accessible to everyone, including visitors who use screen readers',
     ],
     features: [
       'Shopping cart & Stripe payments',
@@ -93,11 +93,11 @@ export const caseStudies: CaseStudy[] = [
     role: 'Contractor → Technical Operations Specialist',
     period: 'April 2025 - December 2025',
     description:
-      'Started as a contractor doing API work. Proved value and expanded into the go-to technical resource for leadership. Built automation pipelines that turned weeks of manual work into hours.',
+      'Started as a contractor building backend tools. Earned a promotion to full-time by turning weeks of manual work into automated pipelines.',
     impact: [
       'Promoted from contractor to Technical Operations Specialist based on performance',
       'PDF-to-HTML conversion pipeline eliminated weeks of manual formatting',
-      'FINRA regulatory content scraping with validation for compliance training',
+      'Automated extraction of regulated financial content for compliance training',
       'Automated flashcard generation from structured course content',
     ],
     features: [
@@ -117,10 +117,10 @@ export const caseStudies: CaseStudy[] = [
     role: 'Creator & Maintainer',
     period: 'January 2026 - Present',
     description:
-      'Claude Code CLI wrapper with scheduled automation. Uses launchd daemons to run development tasks on a schedule, combining AI capabilities with system-level automation.',
+      'Automation tool that runs development tasks on a schedule — no manual work required. Combines AI with background processes to keep projects moving.',
     impact: [
-      'TypeScript codebase with 90%+ type coverage',
-      'launchd daemon scheduling for hands-free automation',
+      'Clean, well-tested codebase',
+      'Runs tasks automatically in the background, hands-free',
       'Extensible plugin architecture for custom workflows',
     ],
     features: [
@@ -184,7 +184,7 @@ export const processSteps = [
   {
     number: 2,
     title: 'Plan the Architecture',
-    description: 'I design the system before writing code. Data models, API contracts, deployment strategy — all mapped out before the first commit.',
+    description: 'I map out the system design, integrations, and launch plan before writing a single line of code.',
     color: 'blue' as const,
   },
   {

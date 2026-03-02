@@ -291,10 +291,10 @@ export default function ContactPage() {
 
             {/* What happens next - dark card */}
             <div className="rounded-2xl bg-white/5 border border-white/10 p-6 text-left mb-8">
-              <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+              <h2 className="font-semibold text-white mb-4 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-blue-400" />
                 {content.success.nextStepsTitle}
-              </h3>
+              </h2>
               <ol className="space-y-3">
                 {content.success.nextSteps.map((step, index) => (
                   <li key={index} className="flex items-start gap-3 text-slate-300">
@@ -394,7 +394,7 @@ export default function ContactPage() {
                     <FileText className="w-5 h-5" />
                   </div>
 
-                  <h3 className="font-black text-xl text-white mb-1.5 tracking-tight">Get a Free Quote</h3>
+                  <h2 className="font-black text-xl text-white mb-1.5 tracking-tight">Get a Free Quote</h2>
                   <p className="text-sm text-slate-400 mb-3">
                     Tell us what you need — detailed quote within 2 business days.
                   </p>
@@ -436,7 +436,7 @@ export default function ContactPage() {
                     <Users className="w-5 h-5" />
                   </div>
 
-                  <h3 className="font-black text-xl text-white mb-1.5 tracking-tight">Book a Consultation</h3>
+                  <h2 className="font-black text-xl text-white mb-1.5 tracking-tight">Book a Consultation</h2>
                   <p className="text-sm text-slate-400 mb-3">
                     Talk through your project with an expert. We&apos;ll help you plan the best approach.
                   </p>

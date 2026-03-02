@@ -1,9 +1,9 @@
 export const dynamic = 'force-dynamic';
 
 import { createClient } from '@supabase/supabase-js';
-import { headers } from 'next/headers';
 import { Resend } from 'resend';
 import { validateSupabaseAdminConfig } from '@/lib/supabase-client-safe';
+import { verifyAdmin } from '@/lib/api-auth';
 import { withDeduplication, isDuplicateRequestError } from '@/lib/request-dedup';
 
 interface SendCampaignRequest {
@@ -15,25 +15,12 @@ export async function POST(request: Request) {
     const config = validateSupabaseAdminConfig();
     if (!config.isValid) return config.error;
 
-    const supabase = createClient(config.url, config.key, {
-      auth: { persistSession: false }
-    });
-
-    const headersList = headers();
-    const authHeader = headersList.get('authorization');
-
-    if (!authHeader?.startsWith('Bearer ')) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    // Admin-only: sending bulk email campaigns requires admin privileges
+    const auth = await verifyAdmin();
+    if (auth.error) {
+      return auth.error;
     }
-
-    const token = authHeader.slice(7);
-    const {
-      data: { user },
-    } = await supabase.auth.getUser(token);
-
-    if (!user) {
-      return Response.json({ error: 'User not found' }, { status: 401 });
-    }
+    const user = auth.user;
 
     const { campaignId } = (await request.json()) as SendCampaignRequest;
 

@@ -225,6 +225,12 @@ const config = {
     'hover:shadow-purple-500/20', 'hover:shadow-purple-500/30',
     'hover:shadow-blue-500/20', 'hover:shadow-blue-500/30',
 
+    // Architecture Diagram — text colors used via dynamic template literals
+    // (bg/border opacity handled via inline rgba styles, not Tailwind classes,
+    //  because emerald/blue/purple map to CSS vars which break /N modifiers)
+    'text-emerald-200', 'text-blue-200', 'text-purple-200', 'text-amber-200',
+    'text-amber-400',
+
     // Transform classes for hero card hover
     'hover:-translate-y-3', 'hover:-translate-y-2',
     'hover:scale-110',

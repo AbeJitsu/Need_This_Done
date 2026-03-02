@@ -18,7 +18,9 @@ import { WizardWidget } from '@/components/Wizard';
 import { ServiceDetailModal } from '@/components/service-modal';
 import ProductComparisonModal from '@/components/ProductComparisonModal';
 import { AdminSidebarToggle, EditModeBar, EditModeTutorial, InlineTextEditor } from '@/components/InlineEditor';
-import { ProfessionalServiceJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
+import { Suspense } from 'react';
+import HeroPreviewDetector from '@/components/HeroPreviewDetector';
+import { ProfessionalServiceJsonLd, WebSiteJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd';
 import { seoConfig } from '@/lib/seo-config';
 import { validateEnvironmentVariables } from '@/lib/env-validation';
 
@@ -180,6 +182,7 @@ export default function RootLayout({
         {/* JSON-LD Structured Data for rich search results */}
         <ProfessionalServiceJsonLd />
         <WebSiteJsonLd />
+        <LocalBusinessJsonLd />
       </head>
       <body className="antialiased">
         <SessionProvider>
@@ -199,6 +202,11 @@ export default function RootLayout({
                     >
                       Skip to main content
                     </a>
+
+                    {/* Hero preview mode — disables interactivity inside device iframes */}
+                    <Suspense fallback={null}>
+                      <HeroPreviewDetector />
+                    </Suspense>
 
                     {/* Site-wide navigation (includes dark mode toggle) */}
                     <Navigation />

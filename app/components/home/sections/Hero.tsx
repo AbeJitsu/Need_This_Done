@@ -1,9 +1,32 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import Button from '@/components/Button';
 import { ChevronDown } from 'lucide-react';
+import { useIsDesktop } from '@/hooks/useIsDesktop';
+import { HeroDevice } from './HeroDevice';
+
+// Dev-only debug overlay — tree-shaken in production via dynamic import
+const HeroLayoutDebug =
+  process.env.NODE_ENV === 'development'
+    ? dynamic(() => import('../debug/HeroLayoutDebug').then((m) => m.HeroLayoutDebug), { ssr: false })
+    : null;
+
+// Layout state type (inlined to avoid importing the debug module in production)
+interface HeroLayoutState {
+  tabletHeight: number;
+  phoneHeight: number;
+  tabletOffsetY: number;
+  phoneOffsetY: number;
+}
+
+const HERO_LAYOUT_DEFAULTS: HeroLayoutState = {
+  tabletHeight: 453, phoneHeight: 453,
+  tabletOffsetY: 0, phoneOffsetY: 0,
+};
 
 const keywords = ['Websites', 'Automations', 'AI Tools'];
 const keywordColors = ['#059669', '#2563eb', '#9333ea']; // emerald, blue, purple
@@ -12,18 +35,164 @@ const keywordColors = ['#059669', '#2563eb', '#9333ea']; // emerald, blue, purpl
 // Keyword rotation: 3s (readability > standard timing for this element)
 // Gradient drift: 8-12s (subtle, continuous background motion)
 
+// Outer wrapper provides Suspense boundary for useSearchParams
 export function Hero() {
-  const [currentKeywordIndex, setCurrentKeywordIndex] = useState(0);
+  return (
+    <Suspense fallback={<HeroInner initialPhase={0} autoRotate={false} />}>
+      <HeroWithParams />
+    </Suspense>
+  );
+}
+
+// Reads ?heroPhase=N from URL to set initial keyword rotation index
+// Used by DeviceShowcase to start each iframe at a different phase
+function HeroWithParams() {
+  const searchParams = useSearchParams();
+  const initialPhase = Number(searchParams.get('heroPhase')) || 0;
+  const debugFromUrl = searchParams.has('layout-debug');
+  return <HeroInner initialPhase={initialPhase} debugFromUrl={debugFromUrl} />;
+}
+
+function HeroInner({
+  initialPhase,
+  autoRotate = true,
+  debugFromUrl = false,
+}: {
+  initialPhase: number;
+  autoRotate?: boolean;
+  debugFromUrl?: boolean;
+}) {
+  const isDesktop = useIsDesktop();
+  const router = useRouter();
+  // When devices flank the hero, shift hero to phase 1 so reading
+  // left-to-right gives: Websites (tablet=0) -> Automations (hero=1) -> AI Tools (phone=2)
+  const effectivePhase = isDesktop ? 1 : initialPhase;
+
+  // Easter egg: listen for navigation messages from device preview iframes.
+  // When someone clicks a link inside the tiny tablet/phone preview, the
+  // iframe's HeroPreviewDetector intercepts it and postMessages the URL here.
+  useEffect(() => {
+    if (!isDesktop) return;
+
+    const handler = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+
+      // Handle widget button clicks (chatbot / wizard) from device iframes
+      if (event.data?.type === 'hero-device-action') {
+        const action = event.data.action as string;
+        if (action === 'open-chatbot' || action === 'open-wizard') {
+          window.dispatchEvent(new CustomEvent(action));
+        }
+        return;
+      }
+
+      if (event.data?.type !== 'hero-device-navigate') return;
+      const url = event.data.url as string;
+      if (!url) return;
+
+      try {
+        const parsed = new URL(url, window.location.origin);
+        if (parsed.origin === window.location.origin) {
+          router.push(parsed.pathname + parsed.search + parsed.hash);
+        } else {
+          window.location.href = url;
+        }
+      } catch {
+        // Invalid URL — ignore silently
+      }
+    };
+
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, [isDesktop, router]);
+
+  // Mobile-specific breakpoint: matches Tailwind's `md:` threshold exactly.
+  // Below 768px = mobile (dynamic gradient), 768px+ = Tailwind's md:bottom-[10%].
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
+
+  const [currentKeywordIndex, setCurrentKeywordIndex] = useState(initialPhase % keywords.length);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLDivElement>(null);
+  const subheadingRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
-  // Rotate keywords every 2.0 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentKeywordIndex((prev) => (prev + 1) % keywords.length);
-    }, 2000);
-    return () => clearInterval(interval);
+  // Dynamic gradient bottom: measure the midpoint between subheading and CTA,
+  // then position the gradient's bottom edge there (mobile only).
+  const [gradientBottomPx, setGradientBottomPx] = useState<number | null>(null);
+
+  const measureGradient = useCallback(() => {
+    if (!sectionRef.current || !subheadingRef.current || !ctaRef.current) return;
+    const sectionRect = sectionRef.current.getBoundingClientRect();
+    const subRect = subheadingRef.current.getBoundingClientRect();
+    const ctaRect = ctaRef.current.getBoundingClientRect();
+
+    // Section-relative positions (scroll-independent)
+    const subBottom = subRect.bottom - sectionRect.top;
+    const ctaTop = ctaRect.top - sectionRect.top;
+    const midpoint = (subBottom + ctaTop) / 2;
+
+    // CSS `bottom` = distance from section's bottom edge
+    setGradientBottomPx(sectionRect.height - midpoint);
   }, []);
+
+  useEffect(() => {
+    // Delay initial measure so entrance animations (y:20 transforms) settle.
+    // Subheading: delay 0.4 + duration 0.6 = 1s; CTA: delay 0.5 + duration 0.6 = 1.1s
+    const timer = setTimeout(measureGradient, 1200);
+
+    const observer = new ResizeObserver(measureGradient);
+    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    return () => { clearTimeout(timer); observer.disconnect(); };
+  }, [measureGradient]);
+
+  // Layout debug tool state (dev only)
+  const [debugActive, setDebugActive] = useState(debugFromUrl);
+  const [layoutState, setLayoutState] = useState<HeroLayoutState>(HERO_LAYOUT_DEFAULTS);
+  const onLayoutChange = useCallback((s: HeroLayoutState) => setLayoutState(s), []);
+
+  // Ctrl+Shift+L / Cmd+Shift+L toggles debug overlay
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'development') return;
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'L') {
+        e.preventDefault();
+        setDebugActive((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  // Wall-clock keyword sync: all iframes derive the same base index from
+  // Date.now(), so they never drift. initialPhase offsets each device to
+  // show a DIFFERENT keyword at any given moment.
+  useEffect(() => {
+    if (!autoRotate) return;
+    const CYCLE_MS = 3000;
+    const TOTAL_CYCLE = CYCLE_MS * keywords.length;
+
+    const update = () => {
+      const now = Date.now();
+      const elapsed = now % TOTAL_CYCLE;
+      const baseIndex = Math.floor(elapsed / CYCLE_MS);
+      setCurrentKeywordIndex((baseIndex + effectivePhase) % keywords.length);
+      // Schedule next update at the exact transition boundary (+50ms buffer)
+      const msUntilNext = CYCLE_MS - (elapsed % CYCLE_MS);
+      return setTimeout(update, msUntilNext + 50);
+    };
+
+    const timer = update();
+    return () => clearTimeout(timer);
+  }, [autoRotate, effectivePhase]);
 
   // Track mouse position for cursor-reactive gradient
   useEffect(() => {
@@ -63,7 +232,18 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-slate-100 z-0" />
 
       {/* Smooth directional gradient with subtle animation */}
-      <div className="absolute inset-x-0 top-0 bottom-[10%] md:bottom-[35%] z-0 overflow-hidden">
+      <div
+        className="absolute inset-x-0 top-0 bottom-[40%] md:bottom-[10%] z-0 overflow-hidden"
+        style={
+          isMobile && gradientBottomPx != null
+            ? {
+                bottom: `${gradientBottomPx}px`,
+                WebkitMaskImage: 'linear-gradient(to bottom, black calc(100% - 24px), transparent 100%)',
+                maskImage: 'linear-gradient(to bottom, black calc(100% - 24px), transparent 100%)',
+              }
+            : undefined
+        }
+      >
         {/* Main directional gradient: green and purple as edges, blue in middle */}
         <motion.div
           className="absolute inset-0"
@@ -128,9 +308,28 @@ export function Hero() {
 
       {/* ============================================================
           CONTENT LAYER: Typography & Interactions
+          Three-column grid on xl: [tablet] [hero content] [phone]
+          Below xl: single column, no devices rendered
           ============================================================ */}
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 md:px-12 text-center pt-4 sm:pt-8 md:pt-12">
+      {/* Layout debug overlay (dev only) — positioned over full section, outside grid */}
+      {debugActive && HeroLayoutDebug && (
+        <HeroLayoutDebug state={layoutState} onChange={onLayoutChange} />
+      )}
+
+      <div data-hero-container className="relative z-10 w-full xl:flex xl:justify-evenly xl:items-start xl:min-h-screen">
+        {/* Left device — Tablet (phase 0 → Websites) */}
+        {isDesktop && (
+          <HeroDevice
+            side="left"
+            {...(debugActive ? { screenHeightOverride: layoutState.tabletHeight, offsetY: layoutState.tabletOffsetY } : {})}
+          />
+        )}
+
+        <div
+          data-hero-center
+          className="max-w-5xl mx-auto xl:mx-0 xl:w-fit xl:px-0 px-6 sm:px-8 md:px-12 text-center pt-4 sm:pt-8 md:pt-12"
+        >
         {/* Main Headline — MASSIVE, Bold, Gradient Text */}
         <motion.div
           className="mb-10 md:mb-12"
@@ -218,6 +417,7 @@ export function Hero() {
 
         {/* Subheading — Refined, secondary */}
         <motion.p
+          ref={subheadingRef}
           className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-12 leading-relaxed font-light"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -228,6 +428,7 @@ export function Hero() {
 
         {/* CTA Button — Magnetic, Glowing */}
         <motion.div
+          ref={ctaRef}
           className="mb-16"
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -302,6 +503,15 @@ export function Hero() {
             <ChevronDown className="w-6 h-6 text-emerald-600" strokeWidth={3} />
           </motion.div>
         </motion.button>
+        </div>
+
+        {/* Right device — Phone (phase 2 → AI Tools) */}
+        {isDesktop && (
+          <HeroDevice
+            side="right"
+            {...(debugActive ? { screenHeightOverride: layoutState.phoneHeight, offsetY: layoutState.phoneOffsetY } : {})}
+          />
+        )}
       </div>
 
       {/* ============================================================

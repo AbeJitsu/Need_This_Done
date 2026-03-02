@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { createRequestFingerprint, checkAndMarkRequest } from '@/lib/request-dedup';
+import { z } from 'zod';
 
 // ============================================================================
 // Reviews API - /api/reviews
@@ -218,12 +219,28 @@ export async function POST(request: NextRequest) {
           // Don't block the request if dedup fails - log and proceed
         }
 
-        // Check for verified purchase (simplified check)
+        // Validate images array: max 5 items, each must be a valid URL
+        const imagesSchema = z.array(z.string().url()).max(5).optional();
+        const imagesParsed = imagesSchema.safeParse(images);
+        if (images && !imagesParsed.success) {
+          return NextResponse.json(
+            { error: 'Images must be an array of up to 5 valid URLs' },
+            { status: 400 }
+          );
+        }
+        const validatedImages = imagesParsed.success ? (imagesParsed.data || []) : [];
+
+        // Verify purchase: check that the order belongs to the authenticated user
         let isVerifiedPurchase = false;
         if (order_id && user) {
-          // In production, verify order belongs to user and contains product
-          // For now, just check if order_id is provided
-          isVerifiedPurchase = true;
+          const { data: order } = await supabase
+            .from('orders')
+            .select('id')
+            .eq('user_id', user.id)
+            .or(`id.eq.${order_id},medusa_order_id.eq.${order_id}`)
+            .single();
+
+          isVerifiedPurchase = !!order;
         }
 
         // Create review
@@ -236,7 +253,7 @@ export async function POST(request: NextRequest) {
           reviewer_email: reviewer_email || null,
           order_id: order_id || null,
           is_verified_purchase: isVerifiedPurchase,
-          images: images || [],
+          images: validatedImages,
           status: 'pending', // Requires moderation
         };
 

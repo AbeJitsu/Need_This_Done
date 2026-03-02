@@ -129,8 +129,8 @@ export default function AboutPage() {
                   Toyota Finance
                 </h3>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Automotive finance. Learned to explain complicated things simply
-                  and follow through on commitments.
+                  Seven years in finance taught me how to explain complicated things
+                  in plain English — and follow through on every commitment.
                 </p>
               </div>
             </div>
@@ -284,11 +284,11 @@ export default function AboutPage() {
                   On AI
                 </h3>
                 <p className="text-gray-700 leading-relaxed mb-3">
-                  I use AI tools to deliver better work faster. But AI doesn&apos;t replace expertise—it amplifies it.
+                  I use AI tools to deliver better work faster. But AI doesn&apos;t replace expertise — it makes it go further.
                 </p>
                 <p className="text-gray-600 text-sm">
                   The strategy, quality control, and client relationships are 100% human.
-                  You get cutting-edge technology guided by real experience.
+                  You get modern tools guided by real experience.
                 </p>
               </div>
             </div>

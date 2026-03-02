@@ -7,14 +7,10 @@ export const dynamic = 'force-dynamic';
 // Why: Give customers incentive to use accumulated points
 // How: Deduct points, record redemption, return discount amount
 
-import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+import { verifyAuth } from '@/lib/api-auth';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 const redeemSchema = z.object({
   userId: z.string().uuid(),
@@ -24,8 +20,25 @@ const redeemSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    // Require authentication — no anonymous point redemptions
+    const auth = await verifyAuth();
+    if (auth.error) {
+      return auth.error;
+    }
+
     const body = await req.json();
     const { userId, pointsToRedeem, orderId } = redeemSchema.parse(body);
+
+    // Ownership check: users can only redeem their own points
+    if (auth.user.id !== userId) {
+      return NextResponse.json(
+        { error: 'Forbidden. Cannot redeem points for another user.' },
+        { status: 403 }
+      );
+    }
+
+    // Use admin client for DB writes (bypasses RLS)
+    const supabase = getSupabaseAdmin();
 
     // Get loyalty config
     const { data: config, error: configError } = await supabase
