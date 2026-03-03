@@ -9,7 +9,21 @@
 
 import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
-import { JSDOM } from 'jsdom';
+
+// Lazy-load jsdom to prevent serverless function initialization failures.
+// Top-level imports crash the entire module if jsdom can't load, which
+// causes Next.js to return 405 (handler never registers). Dynamic import
+// makes failures catchable per-request instead.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let _JSDOMClass: any = null;
+
+async function loadJSDOM() {
+  if (!_JSDOMClass) {
+    const mod = await import('jsdom');
+    _JSDOMClass = mod.JSDOM;
+  }
+  return _JSDOMClass as typeof import('jsdom').JSDOM;
+}
 
 // ============================================
 // TYPES
@@ -159,7 +173,8 @@ function computeReadingLevel(text: string): string {
 // CONTENT EXTRACTION (jsdom-based)
 // ============================================
 
-export function extractMetrics(html: string, url: string, httpStatus: number): TechnicalMetrics {
+export async function extractMetrics(html: string, url: string, httpStatus: number): Promise<TechnicalMetrics> {
+  const JSDOM = await loadJSDOM();
   const dom = new JSDOM(html, { url });
   const doc = dom.window.document;
 
@@ -384,7 +399,8 @@ export function extractMetrics(html: string, url: string, httpStatus: number): T
 // EXTRACT VISIBLE TEXT FOR AI PROMPT
 // ============================================
 
-export function extractVisibleContent(html: string, url: string, maxChars: number = 2000): string {
+export async function extractVisibleContent(html: string, url: string, maxChars: number = 2000): Promise<string> {
+  const JSDOM = await loadJSDOM();
   const dom = new JSDOM(html, { url });
   const doc = dom.window.document;
 
@@ -442,7 +458,8 @@ export function extractVisibleContent(html: string, url: string, maxChars: numbe
 // MULTI-PAGE CRAWL — Discover nav-linked pages
 // ============================================
 
-export function discoverNavPages(html: string, baseUrl: string): string[] {
+export async function discoverNavPages(html: string, baseUrl: string): Promise<string[]> {
+  const JSDOM = await loadJSDOM();
   const dom = new JSDOM(html, { url: baseUrl });
   const doc = dom.window.document;
   const parsedBase = new URL(baseUrl);
@@ -782,7 +799,7 @@ export async function analyzeSite(url: string, onProgress?: (msg: string) => voi
 
   // 2. Discover nav pages
   log('Discovering pages...');
-  const pageUrls = discoverNavPages(homepageHtml, url);
+  const pageUrls = await discoverNavPages(homepageHtml, url);
   log(`Found ${pageUrls.length} pages`);
 
   // 3. Fetch + extract metrics for each page
@@ -804,8 +821,8 @@ export async function analyzeSite(url: string, onProgress?: (msg: string) => voi
         status = result.status;
       }
 
-      const metrics = extractMetrics(html, pageUrl, status);
-      const content = extractVisibleContent(html, pageUrl, 6000);
+      const metrics = await extractMetrics(html, pageUrl, status);
+      const content = await extractVisibleContent(html, pageUrl, 6000);
       pages.push({ url: pageUrl, metrics, content });
     } catch {
       log(`Failed to process ${path}`);
