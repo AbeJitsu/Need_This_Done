@@ -13,30 +13,48 @@ import { useIndexingOptional } from './IndexingContext';
 // ============================================================================
 // Page Indexer Component
 // ============================================================================
-// What: Automatically indexes pages for the chatbot's knowledge base
+// What: Indexes pages for the chatbot's knowledge base when content changes
 // Why: Keeps the chatbot up-to-date without manual intervention
-// How: Runs on page load, checks if indexing needed, triggers if so
+// How: Compares content hash against localStorage cache. Only calls API
+//      when the hash changes — meaning the page was actually edited.
+
+const HASH_CACHE_KEY = 'page-indexer-hashes';
+
+/**
+ * Read the hash cache from localStorage.
+ * Returns a map of pathname → contentHash.
+ */
+function getHashCache(): Record<string, string> {
+  try {
+    const raw = localStorage.getItem(HASH_CACHE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * Write a single hash entry to the cache.
+ */
+function setHashCache(pathname: string, hash: string) {
+  try {
+    const cache = getHashCache();
+    cache[pathname] = hash;
+    localStorage.setItem(HASH_CACHE_KEY, JSON.stringify(cache));
+  } catch {
+    // localStorage might be full or unavailable — ignore
+  }
+}
 
 /**
  * Invisible component that handles automatic page indexing.
  *
- * On every page load:
+ * On page load:
  * 1. Checks if the page should be indexed (excludes admin, auth, etc.)
- * 2. Extracts content from the DOM
- * 3. Generates a hash of the content
- * 4. Checks if already indexed with this hash
- * 5. If not indexed (or content changed), triggers indexing
- *
- * Also updates the IndexingContext (if available) with the current status
- * for the debug indicator.
- *
- * Add to layout.tsx to enable site-wide automatic indexing:
- * ```tsx
- * import PageIndexer from '@/components/chatbot/PageIndexer';
- *
- * // In your layout:
- * <PageIndexer />
- * ```
+ * 2. Extracts content from the DOM and generates a hash
+ * 3. Compares the hash against a localStorage cache
+ * 4. If the hash matches the cache → content hasn't changed → done (no API calls)
+ * 5. If the hash differs → content changed → check server, re-index if needed
  */
 export default function PageIndexer() {
   const pathname = usePathname();
@@ -51,55 +69,52 @@ export default function PageIndexer() {
     if (pathname !== previousPathnameRef.current) {
       hasIndexedRef.current = false;
       previousPathnameRef.current = pathname;
-      // Reset status when navigating to a new page
       indexing?.setStatus('unknown');
     }
   }, [pathname, indexing]);
 
   useEffect(() => {
-    // Skip if already indexed this page load
     if (hasIndexedRef.current) return;
 
-    // Skip pages that shouldn't be indexed
     if (!shouldIndexPage(pathname)) {
       indexing?.setStatus('not_indexed');
       return;
     }
 
-    // Wait for page to fully load before extracting content
     const indexPage = async () => {
-      // Prevent multiple indexing attempts
       if (hasIndexedRef.current) return;
       hasIndexedRef.current = true;
 
       indexing?.setStatus('checking');
 
       try {
-        // ====================================================================
-        // Step 1: Extract content from the page
-        // ====================================================================
+        // ==================================================================
+        // Step 1: Extract content and generate hash (local, no API call)
+        // ==================================================================
         const { text, title, metadata } = extractPageContent();
 
-        // Skip if not enough content
         if (!text || text.length < 100) {
-          console.debug(`[PageIndexer] Skipping ${pathname}: not enough content (${text.length} chars)`);
           indexing?.setStatus('not_indexed');
-          indexing?.setErrorMessage('Not enough content to index');
           return;
         }
 
-        console.debug(`[PageIndexer] Extracted ${text.length} characters from ${pathname}`);
-        console.debug(`[PageIndexer] First 500 chars:`, text.substring(0, 500));
-
-        // ====================================================================
-        // Step 2: Generate content hash
-        // ====================================================================
         const contentHash = await generateContentHash(text);
-        console.debug(`[PageIndexer] Generated hash for ${pathname}:`, contentHash);
 
-        // ====================================================================
-        // Step 3: Check if already indexed with this hash
-        // ====================================================================
+        // ==================================================================
+        // Step 2: Compare hash against localStorage cache
+        // ==================================================================
+        // If the hash matches what we saw last time, the page hasn't changed.
+        // Skip all API calls — no need to bother the server.
+        const cachedHash = getHashCache()[pathname];
+
+        if (cachedHash === contentHash) {
+          indexing?.setStatus('indexed');
+          return;
+        }
+
+        // ==================================================================
+        // Step 3: Hash differs — check with the server
+        // ==================================================================
         const checkUrl = `/api/embeddings/check?page_url=${encodeURIComponent(
           pathname
         )}&content_hash=${contentHash}`;
@@ -107,43 +122,30 @@ export default function PageIndexer() {
         const checkResponse = await fetch(checkUrl);
 
         if (!checkResponse.ok) {
-          // 401/403 = not an admin, silently skip (indexing is admin-only)
           if (checkResponse.status === 401 || checkResponse.status === 403) {
+            // Not an admin — silently skip (indexing is admin-only)
+            // Still cache the hash so we don't re-check next visit
+            setHashCache(pathname, contentHash);
             indexing?.setStatus('not_indexed');
             return;
           }
-          console.warn(`[PageIndexer] Failed to check indexing status for ${pathname}`);
           indexing?.setStatus('error');
           indexing?.setErrorMessage('Failed to check indexing status');
           return;
         }
 
-        const checkResult = await checkResponse.json();
-        const { indexed } = checkResult;
-        console.debug(`[PageIndexer] Check result for ${pathname}:`, checkResult);
+        const { indexed } = await checkResponse.json();
 
-        // Skip if already indexed with same content
-        // Exception: Force re-index pages listed in FORCE_REINDEX_PATHS env var
-        const forceReindexEnv = typeof window !== 'undefined'
-          ? undefined
-          : process.env.NEXT_PUBLIC_FORCE_REINDEX_PATHS;
-        const forcedReindexPaths = forceReindexEnv ? forceReindexEnv.split(',') : ['/pricing', '/services'];
-        const shouldForceReindex = forcedReindexPaths.includes(pathname);
-
-        if (indexed && !shouldForceReindex) {
-          console.debug(`[PageIndexer] ${pathname} already indexed (hash matches)`);
+        if (indexed) {
+          // Server already has this version — update local cache and done
+          setHashCache(pathname, contentHash);
           indexing?.setStatus('indexed');
           return;
         }
 
-        if (indexed && shouldForceReindex) {
-          console.debug(`[PageIndexer] Force re-indexing ${pathname} (dynamic content page)`);
-        }
-
-        // ====================================================================
-        // Step 4: Index the page
-        // ====================================================================
-        console.debug(`[PageIndexer] Indexing ${pathname}...`);
+        // ==================================================================
+        // Step 4: Content changed and server needs re-indexing
+        // ==================================================================
         indexing?.setStatus('indexing');
 
         const pageType = getPageType(pathname);
@@ -162,14 +164,13 @@ export default function PageIndexer() {
         });
 
         if (indexResponse.ok) {
-          const result = await indexResponse.json();
-          console.debug(
-            `[PageIndexer] Successfully indexed ${pathname}: ${result.chunks_indexed} chunk(s)`
-          );
+          // Success — cache the hash so we don't re-index next visit
+          setHashCache(pathname, contentHash);
           indexing?.setStatus('indexed');
           indexing?.setLastIndexedAt(new Date().toISOString());
         } else if (indexResponse.status === 401 || indexResponse.status === 403) {
-          // Not an admin — silently skip indexing (expected for regular visitors)
+          // Not an admin — cache hash to avoid repeated attempts
+          setHashCache(pathname, contentHash);
           indexing?.setStatus('not_indexed');
         } else {
           const error = await indexResponse.json();
@@ -184,22 +185,14 @@ export default function PageIndexer() {
       }
     };
 
-    // ========================================================================
-    // Wait for page to be fully loaded before indexing
-    // ========================================================================
-    // This ensures all dynamic content is rendered
+    // Wait for page to fully load before extracting content
     let cleanup: (() => void) | undefined;
 
     if (document.readyState === 'complete') {
-      // Wait for async content to load (Medusa API, React state updates, etc.)
-      // 5000ms ensures FAQ content and products are fully rendered
       const timeoutId = setTimeout(indexPage, 5000);
       cleanup = () => clearTimeout(timeoutId);
     } else {
-      // Wait for load event
-      const handleLoad = () => {
-        setTimeout(indexPage, 5000);
-      };
+      const handleLoad = () => setTimeout(indexPage, 5000);
       window.addEventListener('load', handleLoad);
       cleanup = () => window.removeEventListener('load', handleLoad);
     }
@@ -207,6 +200,5 @@ export default function PageIndexer() {
     return cleanup;
   }, [pathname, indexing]);
 
-  // This component doesn't render anything
   return null;
 }
