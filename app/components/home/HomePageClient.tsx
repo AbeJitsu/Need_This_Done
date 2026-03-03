@@ -11,6 +11,7 @@ import Button from '@/components/Button';
 import BlogPostCard from '@/components/blog/BlogPostCard';
 import { FadeIn, StaggerContainer, StaggerItem, useReducedMotion } from '@/components/motion';
 import { Hero } from '@/components/home/sections/Hero';
+import SiteAnalyzerTeaser from '@/components/home/sections/SiteAnalyzerTeaser';
 import type { HomePageContent } from '@/lib/page-content-types';
 import type { BlogPostSummary } from '@/lib/blog-types';
 
@@ -483,6 +484,11 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
           </FadeIn>
         </div>
       )}
+
+      {/* Site Analyzer Teaser — value-add driving to free tool */}
+      <FadeIn direction="up">
+        <SiteAnalyzerTeaser />
+      </FadeIn>
 
       {/* CTA Section - Confident Close */}
       <EditableSection sectionKey="cta" label="Call to Action">
