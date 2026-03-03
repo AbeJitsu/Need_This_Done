@@ -108,18 +108,21 @@ export async function POST(request: NextRequest) {
     const reportId = report.id;
     const reportUrl = `/report/${reportId}`;
 
-    // 5. Send email async (don't block response)
-    sendSiteReportEmail({
-      email,
-      url: validatedUrl,
-      score: result.score,
-      grade: result.grade,
-      categories: result.categories,
-      executiveSummary: result.executiveSummary,
-      reportUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com'}${reportUrl}`,
-    }).catch((err) => {
+    // 5. Send email (awaited — serverless functions freeze after response)
+    try {
+      await sendSiteReportEmail({
+        email,
+        url: validatedUrl,
+        score: result.score,
+        grade: result.grade,
+        categories: result.categories,
+        executiveSummary: result.executiveSummary,
+        reportUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com'}${reportUrl}`,
+      });
+    } catch (err) {
+      // Email failure shouldn't block the response — report is already saved
       console.error('[site-analyzer] Email send failed:', err);
-    });
+    }
 
     // 6. Return report info for redirect
     return NextResponse.json({
