@@ -63,6 +63,9 @@ export default function RichTextEditor({
         heading: {
           levels: [1, 2, 3],
         },
+        // Disable extensions we add separately with custom config
+        link: false,
+        underline: false,
       }),
       Image.configure({
         HTMLAttributes: {

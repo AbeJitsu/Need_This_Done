@@ -234,6 +234,7 @@ function HeroInner({
       {/* Smooth directional gradient with subtle animation */}
       <div
         className="absolute inset-x-0 top-0 bottom-[40%] md:bottom-[10%] z-0 overflow-hidden"
+        suppressHydrationWarning
         style={
           isMobile && gradientBottomPx != null
             ? {
@@ -410,6 +411,7 @@ function HeroInner({
             }}
             role="region"
             aria-label="Rotating keywords"
+            suppressHydrationWarning
           >
             {keywords[currentKeywordIndex]}
           </span>

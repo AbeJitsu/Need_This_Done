@@ -73,6 +73,10 @@ export function IndexingProvider({ children }: { children: ReactNode }) {
       if (response.ok) {
         setStatus('indexed');
         setLastIndexedAt(new Date().toISOString());
+      } else if (response.status === 401 || response.status === 403) {
+        // Not an admin — indexing is admin-only
+        setStatus('not_indexed');
+        setErrorMessage('Admin access required for indexing');
       } else {
         const error = await response.json();
         setStatus('error');

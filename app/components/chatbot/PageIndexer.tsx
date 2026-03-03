@@ -107,6 +107,11 @@ export default function PageIndexer() {
         const checkResponse = await fetch(checkUrl);
 
         if (!checkResponse.ok) {
+          // 401/403 = not an admin, silently skip (indexing is admin-only)
+          if (checkResponse.status === 401 || checkResponse.status === 403) {
+            indexing?.setStatus('not_indexed');
+            return;
+          }
           console.warn(`[PageIndexer] Failed to check indexing status for ${pathname}`);
           indexing?.setStatus('error');
           indexing?.setErrorMessage('Failed to check indexing status');
@@ -163,6 +168,9 @@ export default function PageIndexer() {
           );
           indexing?.setStatus('indexed');
           indexing?.setLastIndexedAt(new Date().toISOString());
+        } else if (indexResponse.status === 401 || indexResponse.status === 403) {
+          // Not an admin — silently skip indexing (expected for regular visitors)
+          indexing?.setStatus('not_indexed');
         } else {
           const error = await indexResponse.json();
           console.warn(`[PageIndexer] Failed to index ${pathname}:`, error);

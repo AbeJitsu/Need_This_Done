@@ -26,7 +26,11 @@ export default function InlineTextEditor() {
   // TipTap editor - immediatelyRender: false required for SSR/Next.js
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        // Disable extensions we add separately with custom config
+        link: false,
+        underline: false,
+      }),
       TextStyle,
       Color,
       Underline,

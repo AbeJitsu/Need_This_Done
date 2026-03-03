@@ -65,7 +65,7 @@ export const supabase = createBrowserClient(
 //
 // NEVER expose this to the browser - the service role key is like the master key
 
-if (!isBuildTime && !supabaseServiceRoleKey) {
+if (!isBuildTime && !supabaseServiceRoleKey && process.env.NODE_ENV !== 'production') {
   console.warn(
     'SUPABASE_SERVICE_ROLE_KEY not set. ' +
     'Some admin operations will fail. This is OK for development.'
