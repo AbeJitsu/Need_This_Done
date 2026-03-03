@@ -27,6 +27,7 @@ import { Editable } from '@/components/InlineEditor';
 const defaultNavLinks: NavLink[] = [
   { href: '/services', label: 'Services' },
   { href: '/pricing', label: 'Pricing' },
+  { href: '/site-analyzer', label: 'Free Site Audit' },
   { href: '/how-it-works', label: 'How It Works' },
 ];
 

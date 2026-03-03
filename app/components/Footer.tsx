@@ -18,6 +18,8 @@ const defaultFooterLinks: FooterLink[] = [
   { href: '/about', label: 'About' },
   { href: '/faq', label: 'FAQ' },
   { href: '/blog', label: 'Blog' },
+  { href: '/site-analyzer', label: 'Site Analyzer' },
+  { href: '/ada-compliance', label: 'ADA Compliance' },
 ];
 
 export default function Footer() {

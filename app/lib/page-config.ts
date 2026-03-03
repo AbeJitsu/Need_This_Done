@@ -416,6 +416,7 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
     navLinks: [
       { href: '/services', label: 'Services' },
       { href: '/pricing', label: 'Pricing' },
+      { href: '/site-analyzer', label: 'Free Site Audit' },
       { href: '/blog', label: 'Blog' },
     ],
     ctaButton: { text: 'Contact', href: '/contact' },
@@ -432,6 +433,8 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
       { href: '/work', label: 'Work' },
       { href: '/blog', label: 'Blog' },
       { href: '/faq', label: 'FAQ' },
+      { href: '/site-analyzer', label: 'Site Analyzer' },
+      { href: '/ada-compliance', label: 'ADA Compliance' },
       { href: '/contact', label: 'Contact' },
     ],
     legalLinks: [
