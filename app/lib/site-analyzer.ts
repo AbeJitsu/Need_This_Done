@@ -14,7 +14,6 @@ import { openai } from '@ai-sdk/openai';
 // Top-level imports crash the entire module if jsdom can't load, which
 // causes Next.js to return 405 (handler never registers). Dynamic import
 // makes failures catchable per-request instead.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let _JSDOMClass: any = null;
 
 async function loadJSDOM() {
