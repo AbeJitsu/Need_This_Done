@@ -4,25 +4,15 @@
  * Core analysis engine extracted from the CLI prototype. Importable by
  * API routes, scripts, and any other consumer.
  *
- * Runs on jsdom (static HTML) — no browser required.
+ * Uses cheerio for HTML parsing — lightweight, serverless-compatible,
+ * no native dependencies. Replaced jsdom which fails on Vercel due to
+ * ESM/CJS incompatibilities with parse5.
  */
 
 import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
-
-// Lazy-load jsdom to prevent serverless function initialization failures.
-// Top-level imports crash the entire module if jsdom can't load, which
-// causes Next.js to return 405 (handler never registers). Dynamic import
-// makes failures catchable per-request instead.
-let _JSDOMClass: any = null;
-
-async function loadJSDOM() {
-  if (!_JSDOMClass) {
-    const mod = await import('jsdom');
-    _JSDOMClass = mod.JSDOM;
-  }
-  return _JSDOMClass as typeof import('jsdom').JSDOM;
-}
+import * as cheerio from 'cheerio';
+import type { Element as DomElement } from 'domhandler';
 
 // ============================================
 // TYPES
@@ -84,6 +74,9 @@ interface PageData {
   content: string;
 }
 
+// Cheerio's loaded document type
+type CheerioAPI = ReturnType<typeof cheerio.load>;
+
 // ============================================
 // HTML FETCHING
 // ============================================
@@ -113,21 +106,23 @@ const INLINE_TAGS = new Set([
   'abbr', 'cite', 'code', 'kbd', 'samp', 'var', 'time', 'data', 'label',
 ]);
 
-export function getCleanText(el: Element): string {
+/**
+ * Extract clean text from a cheerio element, walking child nodes.
+ * Equivalent to the old jsdom getCleanText but uses cheerio's node tree.
+ */
+export function getCleanText($: CheerioAPI, el: DomElement): string {
   const parts: string[] = [];
 
   for (const child of el.childNodes) {
-    if (child.nodeType === 3 /* TEXT_NODE */) {
-      const text = child.textContent || '';
+    if (child.type === 'text') {
+      const text = (child as any).data || '';
       if (text.trim()) parts.push(text.trim());
-    } else if (child.nodeType === 1 /* ELEMENT_NODE */) {
-      const childEl = child as Element;
-      const tag = childEl.tagName.toLowerCase();
-
+    } else if (child.type === 'tag') {
+      const tag = (child as DomElement).tagName.toLowerCase();
       if (tag === 'br') {
         parts.push(' ');
       } else {
-        const childText = getCleanText(childEl);
+        const childText = getCleanText($, child as DomElement);
         if (childText) parts.push(childText);
       }
     }
@@ -169,26 +164,25 @@ function computeReadingLevel(text: string): string {
 }
 
 // ============================================
-// CONTENT EXTRACTION (jsdom-based)
+// CONTENT EXTRACTION (cheerio-based)
 // ============================================
 
-export async function extractMetrics(html: string, url: string, httpStatus: number): Promise<TechnicalMetrics> {
-  const JSDOM = await loadJSDOM();
-  const dom = new JSDOM(html, { url });
-  const doc = dom.window.document;
+export function extractMetrics(html: string, url: string, httpStatus: number): TechnicalMetrics {
+  const $ = cheerio.load(html);
+  const parsedUrl = new URL(url);
 
   // Title & meta tags
-  const title = doc.querySelector('title')?.textContent?.trim() || null;
-  const metaDescription = doc.querySelector('meta[name="description"]')?.getAttribute('content') || null;
-  const hasViewportMeta = !!doc.querySelector('meta[name="viewport"]');
-  const ogTitle = doc.querySelector('meta[property="og:title"]')?.getAttribute('content') || null;
-  const ogDescription = doc.querySelector('meta[property="og:description"]')?.getAttribute('content') || null;
-  const ogImage = doc.querySelector('meta[property="og:image"]')?.getAttribute('content') || null;
+  const title = $('title').text().trim() || null;
+  const metaDescription = $('meta[name="description"]').attr('content') || null;
+  const hasViewportMeta = $('meta[name="viewport"]').length > 0;
+  const ogTitle = $('meta[property="og:title"]').attr('content') || null;
+  const ogDescription = $('meta[property="og:description"]').attr('content') || null;
+  const ogImage = $('meta[property="og:image"]').attr('content') || null;
 
   // Headings
   const headings: { tag: string; text: string }[] = [];
-  doc.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((el: Element) => {
-    const text = getCleanText(el);
+  $('h1, h2, h3, h4, h5, h6').each((_, el) => {
+    const text = getCleanText($, el);
     if (text) headings.push({ tag: el.tagName.toLowerCase(), text });
   });
 
@@ -205,29 +199,27 @@ export async function extractMetrics(html: string, url: string, httpStatus: numb
   }
 
   // Images
-  const allImages = doc.querySelectorAll('img');
-  const withAlt = Array.from(allImages).filter((img: Element) => {
-    const alt = img.getAttribute('alt');
+  const allImages = $('img').toArray();
+  const withAlt = allImages.filter((img) => {
+    const alt = $(img).attr('alt');
     return alt && alt.trim().length > 0;
   });
-  const svgCount = doc.querySelectorAll('svg').length;
-  const pictureCount = doc.querySelectorAll('picture').length;
+  const svgCount = $('svg').length;
+  const pictureCount = $('picture').length;
   let bgImageCount = 0;
-  doc.querySelectorAll('[style]').forEach((el: Element) => {
-    const style = el.getAttribute('style') || '';
+  $('[style]').each((_, el) => {
+    const style = $(el).attr('style') || '';
     if (/background(-image)?\s*:/.test(style) && style.includes('url(')) {
       bgImageCount++;
     }
   });
 
   // Links
-  const allLinks = doc.querySelectorAll('a[href]');
-  const parsedUrl = new URL(url);
   let internalCount = 0;
   let externalCount = 0;
 
-  allLinks.forEach((a: Element) => {
-    const href = a.getAttribute('href') || '';
+  $('a[href]').each((_, a) => {
+    const href = $(a).attr('href') || '';
     if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
     try {
       const linkUrl = new URL(href, url);
@@ -241,108 +233,106 @@ export async function extractMetrics(html: string, url: string, httpStatus: numb
     }
   });
 
-  // Visible text content
-  const clone = doc.body?.cloneNode(true) as Element;
-  if (clone) {
-    clone.querySelectorAll('script, style, noscript, svg, nav').forEach((el) => el.remove());
-  }
-  const visibleText = clone?.textContent?.replace(/\s+/g, ' ').trim() || '';
+  // Visible text content — clone body, strip non-content elements
+  const $clone = $.load($('body').html() || '');
+  $clone('script, style, noscript, svg, nav').remove();
+  const visibleText = $clone.text().replace(/\s+/g, ' ').trim();
   const wordCount = visibleText.split(/\s+/).filter((w) => w.length > 0).length;
 
   const readingLevel = computeReadingLevel(visibleText);
 
   // ── Accessibility checks (WCAG 2.1 AA, static HTML only) ──
 
-  const htmlEl = doc.querySelector('html');
-  const langValue = htmlEl?.getAttribute('lang')?.trim() || null;
+  const langValue = $('html').attr('lang')?.trim() || null;
   const hasLangAttribute = !!langValue;
 
-  const hasSkipNav = !!doc.querySelector('a[href^="#main"], a[href^="#content"], a[href="#skip"], a.skip-nav, a.skip-link, [class*="skip-to"]');
+  const hasSkipNav = $('a[href^="#main"], a[href^="#content"], a[href="#skip"], a.skip-nav, a.skip-link, [class*="skip-to"]').length > 0;
 
   const landmarks = {
-    main: doc.querySelectorAll('main, [role="main"]').length,
-    nav: doc.querySelectorAll('nav, [role="navigation"]').length,
-    header: doc.querySelectorAll('header, [role="banner"]').length,
-    footer: doc.querySelectorAll('footer, [role="contentinfo"]').length,
-    complementary: doc.querySelectorAll('aside, [role="complementary"]').length,
+    main: $('main, [role="main"]').length,
+    nav: $('nav, [role="navigation"]').length,
+    header: $('header, [role="banner"]').length,
+    footer: $('footer, [role="contentinfo"]').length,
+    complementary: $('aside, [role="complementary"]').length,
   };
 
-  const formInputs = doc.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]), select, textarea');
+  const formInputSelector = 'input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]), select, textarea';
+  const formInputs = $(formInputSelector).toArray();
   const unlabeledInputs: string[] = [];
-  formInputs.forEach((input: Element) => {
-    const id = input.getAttribute('id');
+  formInputs.forEach((input) => {
+    const id = $(input).attr('id');
     const hasLabel = !!(
-      input.getAttribute('aria-label') ||
-      input.getAttribute('aria-labelledby') ||
-      input.getAttribute('title') ||
-      (id && doc.querySelector(`label[for="${id}"]`)) ||
-      input.closest('label')
+      $(input).attr('aria-label') ||
+      $(input).attr('aria-labelledby') ||
+      $(input).attr('title') ||
+      (id && $(`label[for="${id}"]`).length > 0) ||
+      $(input).closest('label').length > 0
     );
     if (!hasLabel) {
-      const type = input.getAttribute('type') || input.tagName.toLowerCase();
-      const name = input.getAttribute('name') || input.getAttribute('placeholder') || 'unnamed';
+      const type = $(input).attr('type') || input.tagName.toLowerCase();
+      const name = $(input).attr('name') || $(input).attr('placeholder') || 'unnamed';
       unlabeledInputs.push(`${type}[${name}]`);
     }
   });
   const formLabels = { total: formInputs.length, labeled: formInputs.length - unlabeledInputs.length, unlabeled: unlabeledInputs };
 
   const emptyInteractives: string[] = [];
-  doc.querySelectorAll('a[href], button, [role="button"], [role="link"]').forEach((el: Element) => {
-    const text = getCleanText(el).trim();
-    const ariaLabel = el.getAttribute('aria-label')?.trim();
-    const ariaLabelledBy = el.getAttribute('aria-labelledby');
-    const hasImgAlt = !!el.querySelector('img[alt]:not([alt=""])');
-    const hasSvgTitle = !!el.querySelector('svg title');
+  $('a[href], button, [role="button"], [role="link"]').each((_, el) => {
+    const text = getCleanText($, el).trim();
+    const ariaLabel = $(el).attr('aria-label')?.trim();
+    const ariaLabelledBy = $(el).attr('aria-labelledby');
+    const hasImgAlt = $(el).find('img[alt]:not([alt=""])').length > 0;
+    const hasSvgTitle = $(el).find('svg title').length > 0;
     if (!text && !ariaLabel && !ariaLabelledBy && !hasImgAlt && !hasSvgTitle) {
       const tag = el.tagName.toLowerCase();
-      const href = el.getAttribute('href') || '';
-      const cls = el.getAttribute('class')?.split(' ').slice(0, 2).join('.') || '';
+      const href = $(el).attr('href') || '';
+      const cls = ($(el).attr('class') || '').split(' ').slice(0, 2).join('.');
       emptyInteractives.push(`<${tag}${cls ? '.' + cls : ''}${href ? ' href="' + href.slice(0, 40) + '"' : ''}>`);
     }
   });
 
   const GENERIC_PATTERNS = /^(click here|here|read more|learn more|more|link|go|continue|details|info)$/i;
   const genericLinkText: string[] = [];
-  doc.querySelectorAll('a[href]').forEach((a: Element) => {
-    const text = getCleanText(a).trim();
+  $('a[href]').each((_, a) => {
+    const text = getCleanText($, a).trim();
     if (GENERIC_PATTERNS.test(text)) {
-      const href = a.getAttribute('href') || '';
+      const href = $(a).attr('href') || '';
       genericLinkText.push(`"${text}" → ${href.slice(0, 50)}`);
     }
   });
 
   let positiveTabindex = 0;
-  doc.querySelectorAll('[tabindex]').forEach((el: Element) => {
-    const val = parseInt(el.getAttribute('tabindex') || '0', 10);
+  $('[tabindex]').each((_, el) => {
+    const val = parseInt($(el).attr('tabindex') || '0', 10);
     if (val > 0) positiveTabindex++;
   });
 
   const AUTOCOMPLETE_TYPES = new Set(['text', 'email', 'tel', 'url', 'search']);
   const PERSONAL_NAMES = /\b(name|email|phone|tel|address|city|state|zip|postal|country|street)\b/i;
   const missingAutocomplete: string[] = [];
-  formInputs.forEach((input: Element) => {
-    const type = input.getAttribute('type') || 'text';
-    const name = input.getAttribute('name') || '';
-    const id = input.getAttribute('id') || '';
+  formInputs.forEach((input) => {
+    const type = $(input).attr('type') || 'text';
+    const name = $(input).attr('name') || '';
+    const id = $(input).attr('id') || '';
     if (AUTOCOMPLETE_TYPES.has(type) && PERSONAL_NAMES.test(name + ' ' + id)) {
-      if (!input.getAttribute('autocomplete')) {
+      if (!$(input).attr('autocomplete')) {
         missingAutocomplete.push(`${type}[${name || id}]`);
       }
     }
   });
 
   let autoplayMedia = 0;
-  doc.querySelectorAll('video[autoplay], audio[autoplay]').forEach((el: Element) => {
-    if (!el.hasAttribute('muted')) autoplayMedia++;
+  $('video[autoplay], audio[autoplay]').each((_, el) => {
+    if (!$(el).attr('muted')) autoplayMedia++;
   });
 
   let emptyAlt = 0;
   let longAlt = 0;
-  allImages.forEach((img: Element) => {
-    const alt = img.getAttribute('alt');
+  allImages.forEach((img) => {
+    const alt = $(img).attr('alt');
     if (alt === '') {
-      const src = img.getAttribute('src') || '';
-      const isLikelyContent = img.getAttribute('role') === 'img' || /logo|hero|product|team|photo/i.test(src);
+      const src = $(img).attr('src') || '';
+      const isLikelyContent = $(img).attr('role') === 'img' || /logo|hero|product|team|photo/i.test(src);
       if (isLikelyContent) emptyAlt++;
     } else if (alt && alt.length > 125) {
       longAlt++;
@@ -358,8 +348,8 @@ export async function extractMetrics(html: string, url: string, httpStatus: numb
   // CTA detection
   const ctas: string[] = [];
   const ctaSelectors = 'a, button, [role="button"]';
-  doc.querySelectorAll(ctaSelectors).forEach((el: Element) => {
-    let text = getCleanText(el);
+  $(ctaSelectors).each((_, el) => {
+    let text = getCleanText($, el);
     if (text.length > 2 && text.length < 80) {
       if (text.includes('?')) return;
       if (text.split(/\s+/).length > 10) return;
@@ -385,7 +375,7 @@ export async function extractMetrics(html: string, url: string, httpStatus: numb
       svgCount, bgImageCount, pictureCount,
     },
     links: { internal: internalCount, external: externalCount, total: internalCount + externalCount },
-    ctas: [...new Set(ctas)],
+    ctas: Array.from(new Set(ctas)),
     metaCompleteness: {
       title: !!title, description: !!metaDescription, viewport: hasViewportMeta,
       ogTitle: !!ogTitle, ogDescription: !!ogDescription, ogImage: !!ogImage,
@@ -398,38 +388,33 @@ export async function extractMetrics(html: string, url: string, httpStatus: numb
 // EXTRACT VISIBLE TEXT FOR AI PROMPT
 // ============================================
 
-export async function extractVisibleContent(html: string, url: string, maxChars: number = 2000): Promise<string> {
-  const JSDOM = await loadJSDOM();
-  const dom = new JSDOM(html, { url });
-  const doc = dom.window.document;
+export function extractVisibleContent(html: string, _url: string, maxChars: number = 2000): string {
+  const $ = cheerio.load(html);
 
-  const clone = doc.body?.cloneNode(true) as Element;
-  if (!clone) return '';
-
-  clone.querySelectorAll('script, style, noscript, svg, iframe, template').forEach((el) => el.remove());
+  // Remove non-content elements
+  $('script, style, noscript, svg, iframe, template').remove();
 
   const parts: string[] = [];
 
-  function walk(node: ChildNode) {
-    if (node.nodeType === 3) {
-      const text = node.textContent?.trim();
+  function walk(node: any) {
+    if (node.type === 'text') {
+      const text = (node.data || '').trim();
       if (text) parts.push(text);
       return;
     }
 
-    if (node.nodeType !== 1) return;
+    if (node.type !== 'tag') return;
 
-    const el = node as Element;
-    const tag = el.tagName.toLowerCase();
+    const tag = node.tagName.toLowerCase();
 
-    const style = el.getAttribute('style') || '';
+    const style = $(node).attr('style') || '';
     if (style.includes('display: none') || style.includes('display:none')) return;
     if (style.includes('visibility: hidden') || style.includes('visibility:hidden')) return;
 
     if (tag === 'br') { parts.push('\n'); return; }
 
     if (/^h[1-6]$/.test(tag)) {
-      const text = getCleanText(el);
+      const text = getCleanText($, node);
       if (text) { parts.push(`\n\n[${tag.toUpperCase()}] ${text}\n`); return; }
     }
 
@@ -438,12 +423,15 @@ export async function extractVisibleContent(html: string, url: string, maxChars:
     if (isBlock) parts.push('\n');
     if (INLINE_TAGS.has(tag)) parts.push(' ');
 
-    for (const child of node.childNodes) { walk(child); }
+    for (const child of node.childNodes || []) { walk(child); }
 
     if (isBlock) parts.push('\n');
   }
 
-  walk(clone);
+  const body = $('body')[0];
+  if (body) {
+    for (const child of body.childNodes) { walk(child); }
+  }
 
   return parts.join('')
     .replace(/[ \t]+/g, ' ')
@@ -457,13 +445,10 @@ export async function extractVisibleContent(html: string, url: string, maxChars:
 // MULTI-PAGE CRAWL — Discover nav-linked pages
 // ============================================
 
-export async function discoverNavPages(html: string, baseUrl: string): Promise<string[]> {
-  const JSDOM = await loadJSDOM();
-  const dom = new JSDOM(html, { url: baseUrl });
-  const doc = dom.window.document;
+export function discoverNavPages(html: string, baseUrl: string): string[] {
+  const $ = cheerio.load(html);
   const parsedBase = new URL(baseUrl);
 
-  const navContainers = doc.querySelectorAll('header, nav, footer');
   const seen = new Set<string>();
   const pages: string[] = [];
 
@@ -473,29 +458,27 @@ export async function discoverNavPages(html: string, baseUrl: string): Promise<s
 
   const SKIP_PATHS = new Set(['/cart', '/wishlist', '/checkout', '/login', '/signup', '/register', '/privacy', '/terms', '/cookie-policy']);
 
-  navContainers.forEach((container: Element) => {
-    container.querySelectorAll('a[href]').forEach((a: Element) => {
-      const href = a.getAttribute('href') || '';
-      if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
+  $('header, nav, footer').find('a[href]').each((_, a) => {
+    const href = $(a).attr('href') || '';
+    if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
 
-      try {
-        const linkUrl = new URL(href, baseUrl);
-        if (linkUrl.hostname !== parsedBase.hostname) return;
+    try {
+      const linkUrl = new URL(href, baseUrl);
+      if (linkUrl.hostname !== parsedBase.hostname) return;
 
-        const path = linkUrl.pathname.replace(/\/$/, '') || '/';
-        if (SKIP_PATHS.has(path)) return;
+      const path = linkUrl.pathname.replace(/\/$/, '') || '/';
+      if (SKIP_PATHS.has(path)) return;
 
-        linkUrl.hash = '';
-        const normalized = linkUrl.href.replace(/\/$/, '') || linkUrl.origin;
+      linkUrl.hash = '';
+      const normalized = linkUrl.href.replace(/\/$/, '') || linkUrl.origin;
 
-        if (seen.has(normalized) || seen.has(normalized + '/')) return;
-        seen.add(normalized);
+      if (seen.has(normalized) || seen.has(normalized + '/')) return;
+      seen.add(normalized);
 
-        pages.push(linkUrl.href);
-      } catch {
-        // Malformed URL — skip
-      }
-    });
+      pages.push(linkUrl.href);
+    } catch {
+      // Malformed URL — skip
+    }
   });
 
   return pages;
@@ -562,7 +545,7 @@ export function buildEvaluationPrompt(allMetrics: TechnicalMetrics[], score: Sco
     return `  ${path.padEnd(25)} | ${(m.title || 'NO TITLE').slice(0, 30).padEnd(30)} | ${String(m.wordCount).padStart(5)} words | H1: ${m.h1Count} | Read: ${readGrade}`;
   }).join('\n');
 
-  const allCtas = [...new Set(allMetrics.flatMap((m) => m.ctas))];
+  const allCtas = Array.from(new Set(allMetrics.flatMap((m) => m.ctas)));
   const technicalFindings = buildTechnicalFindings(allMetrics, score);
 
   return `You are a senior website consultant who reviews small business websites. You give specific, actionable feedback — never generic advice.
@@ -690,7 +673,7 @@ export function computeSiteScore(allMetrics: TechnicalMetrics[]): ScoreBreakdown
   else contentScore = 0;
   categories.push({ name: 'Content Depth', earned: contentScore, possible: 10, note: `Avg ${avgWords} words/page` });
 
-  const uniqueCtas = [...new Set(allMetrics.flatMap((m) => m.ctas))];
+  const uniqueCtas = Array.from(new Set(allMetrics.flatMap((m) => m.ctas)));
   const ctaScore = Math.round(Math.min(uniqueCtas.length / 3, 1) * 10);
   categories.push({ name: 'CTA Presence', earned: ctaScore, possible: 10, note: `${uniqueCtas.length} unique CTAs detected` });
 
@@ -798,7 +781,7 @@ export async function analyzeSite(url: string, onProgress?: (msg: string) => voi
 
   // 2. Discover nav pages
   log('Discovering pages...');
-  const pageUrls = await discoverNavPages(homepageHtml, url);
+  const pageUrls = discoverNavPages(homepageHtml, url);
   log(`Found ${pageUrls.length} pages`);
 
   // 3. Fetch + extract metrics for each page
@@ -820,8 +803,8 @@ export async function analyzeSite(url: string, onProgress?: (msg: string) => voi
         status = result.status;
       }
 
-      const metrics = await extractMetrics(html, pageUrl, status);
-      const content = await extractVisibleContent(html, pageUrl, 6000);
+      const metrics = extractMetrics(html, pageUrl, status);
+      const content = extractVisibleContent(html, pageUrl, 6000);
       pages.push({ url: pageUrl, metrics, content });
     } catch {
       log(`Failed to process ${path}`);
