@@ -727,3 +727,35 @@ export async function sendOrderCanceledEmail(
     return null;
   }
 }
+
+// ============================================================================
+// Site Analyzer Emails
+// ============================================================================
+
+export type SiteReportEmailProps = {
+  email: string;
+  url: string;
+  score: number;
+  grade: string;
+  categories: { name: string; earned: number; possible: number; note: string }[];
+  executiveSummary: string;
+  reportUrl: string;
+};
+
+/**
+ * Send site report email with score summary and link to full report.
+ * Drives click-through to the report page with tiered CTAs.
+ *
+ * @param data - Report data (score, grade, categories, summary, report URL)
+ * @returns Email ID if successful, null if failed
+ */
+export async function sendSiteReportEmail(
+  data: SiteReportEmailProps,
+): Promise<string | null> {
+  const { default: SiteReportEmail } = await import('../emails/SiteReportEmail');
+
+  const domain = new URL(data.url).hostname;
+  const subject = `Your Site Report: ${domain} scored ${data.score}/100`;
+
+  return sendEmailWithRetry(data.email, subject, SiteReportEmail(data));
+}
