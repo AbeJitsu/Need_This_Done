@@ -6,6 +6,7 @@ import {
   createStaggerContainerVariants,
   TIMING,
 } from './variants';
+import { StaggerItem } from './StaggerItem';
 
 // ============================================================================
 // StaggerContainer Component
@@ -36,6 +37,26 @@ interface StaggerContainerProps {
   as?: keyof JSX.IntrinsicElements;
 }
 
+// Keep animation-only props inside StaggerItem. Passing these props to a native
+// child (for example, a plain div) makes React try to render them as DOM attrs.
+export function enhanceStaggerChildren(
+  children: ReactNode,
+  staggerDelay: number,
+  once: boolean
+) {
+  return Children.map(children, (child, index) => {
+    if (isValidElement(child) && child.type === StaggerItem) {
+      return cloneElement(child, {
+        staggerIndex: index,
+        staggerDelay,
+        triggerOnScroll: true,
+        once,
+      });
+    }
+    return child;
+  });
+}
+
 export function StaggerContainer({
   children,
   staggerDelay = TIMING.stagger.normal,
@@ -57,17 +78,7 @@ export function StaggerContainer({
   const enhancedChildren = useMemo(() => {
     if (!triggerOnScroll) return children;
 
-    return Children.map(children, (child, index) => {
-      if (isValidElement(child)) {
-        return cloneElement(child, {
-          staggerIndex: index,
-          staggerDelay,
-          triggerOnScroll: true,
-          once,
-        } as any);
-      }
-      return child;
-    });
+    return enhanceStaggerChildren(children, staggerDelay, once);
   }, [children, triggerOnScroll, staggerDelay, once]);
 
   const motionProps = {
