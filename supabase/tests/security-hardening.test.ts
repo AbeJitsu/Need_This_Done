@@ -264,7 +264,6 @@ describe('Section 7: Broad RLS Coverage', () => {
   const NON_CUSTOM_RLS_TABLES = [
     'blog_posts',
     'orders',
-    'workflows',
     'loyalty_points',
     'email_templates',
   ];
@@ -275,7 +274,7 @@ describe('Section 7: Broad RLS Coverage', () => {
     });
   });
 
-  test('at least 55 public tables have RLS enabled', async () => {
+  test('at least 52 public tables have RLS enabled', async () => {
     const rows = await sql<{ count: string }>(
       `SELECT COUNT(*)::text AS count
        FROM pg_class c
@@ -284,7 +283,7 @@ describe('Section 7: Broad RLS Coverage', () => {
          AND c.relkind = 'r'
          AND c.relrowsecurity = true`
     );
-    expect(parseInt(rows[0].count)).toBeGreaterThanOrEqual(55);
+    expect(parseInt(rows[0].count)).toBeGreaterThanOrEqual(52);
   });
 });
 

@@ -125,10 +125,6 @@ Core tables organized by feature:
 - `email_template`, `campaign`, `campaign_recipient`
 - `campaign_opens`, `campaign_clicks`, `waitlist_campaign`
 
-**Workflows & Automation:**
-- `workflow`, `workflow_trigger`, `workflow_action`, `workflow_execution`
-- `workflow_test_run`
-
 **Admin & Security:**
 - `user_roles` - Admin role system
 - `google_calendar_tokens` - OAuth credentials (encrypted)

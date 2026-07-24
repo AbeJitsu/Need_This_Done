@@ -73,15 +73,6 @@ Shop-specific features beyond core Medusa:
 - `product_category_mappings` - Products to categories (RLS: public read, admin write)
 - `reviews` - Customer product reviews (RLS: public read, admin moderation)
 
-### Automation
-
-Workflow automation system:
-- `workflows` - Workflow definitions with React Flow JSON
-- `workflow_triggers` - Event mappings
-- `workflow_actions` - Action configurations
-- `workflow_conditions` - Condition logic
-- `workflow_executions` - Execution logs and test runs
-
 ### OAuth & Integrations
 
 Third-party authentication and API tokens:
@@ -275,25 +266,6 @@ Several tables use JSONB to store flexible structured data:
   ]
 }
 ```
-
-**`workflows`** - React Flow canvas saved as JSON:
-```json
-{
-  "nodes": [
-    {
-      "id": "trigger_1",
-      "type": "trigger",
-      "data": { "triggerType": "order_created" }
-    }
-  ],
-  "edges": [...]
-}
-```
-
-**Benefits:**
-- Schema evolution without migrations
-- Rich queries with `@>`, `->` operators
-- GIN indexes for performance
 
 ### Materialized Views: Pre-Aggregated Analytics
 

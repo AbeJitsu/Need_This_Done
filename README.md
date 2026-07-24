@@ -152,7 +152,6 @@ Here's where we are right now - what's working, what's almost ready, and what's 
 - [Reviews & Coupons](#reviews--coupons) ← *customer reviews, discount codes*
 
 **Platform Features**
-- [Workflow Automation](#workflow-automation) ← *visual builder, BullMQ engine, 12 triggers*
 - [Cron Jobs & Background Tasks](#cron-jobs--background-tasks) ← *5 automated jobs*
 - [Security & Reliability](#security--reliability) ← *rate limiting, dedup, input guards*
 - [SEO](#seo) ← *sitemap, robots.txt, JSON-LD, structured data*
@@ -826,10 +825,9 @@ Need_This_Done/
 │  /admin/products/manage       ENGAGEMENT                   /admin/reviews/  │
 │  /admin/products/categories   /admin/loyalty                 analytics      │
 │                               /admin/referrals             /admin/enrollments│
-│  AUTOMATION                   /admin/communication                          │
-│  /admin/automation                                         SYSTEM           │
-│  /admin/automation/builder    WAITLIST                     /admin/users     │
-│  /admin/automation/[id]       /admin/waitlist-analytics    /admin/settings  │
+│  /admin/communication                                      SYSTEM           │
+│                               WAITLIST                     /admin/users     │
+│                               /admin/waitlist-analytics    /admin/settings  │
 │                               /admin/waitlist-campaigns    /admin/dev       │
 │  QUOTES                       /admin/waitlist-campaigns/   /admin/dev/      │
 │  /admin/quotes                  new                          preview        │
@@ -975,12 +973,6 @@ BLOG (2 routes)
 ├── GET/POST /api/blog                       Blog post listing and creation
 └── GET/PUT/DELETE /api/blog/[slug]          Single blog post CRUD
 
-WORKFLOWS (4 routes)
-├── GET/POST /api/workflows                  Workflow CRUD
-├── GET/PUT/DELETE /api/workflows/[id]       Single workflow
-├── POST /api/workflows/[id]/execute         Execute workflow
-└── POST /api/workflows/[id]/test-run        Test run workflow
-
 CRON JOBS (5 routes)
 ├── GET/POST /api/cron/abandoned-carts       Abandoned cart recovery emails
 ├── GET/POST /api/cron/appointment-reminders Appointment reminder emails
@@ -1074,16 +1066,6 @@ CONTENT EDITOR MODULE (14 components)
 ├── Forms:    HomepageForm, HowItWorksForm, FAQForm, PricingForm, ServicesForm
 └── Previews: HomepagePreview, HowItWorksPreview, FAQPreview, PricingPreview
 │             ServicesPreview
-
-WORKFLOW BUILDER MODULE (8 components)
-├── Canvas             Main drag-and-drop workflow canvas
-├── DemoCanvas         Read-only demo with 3 pre-loaded workflows
-├── TriggerNode        Workflow trigger node
-├── ActionNode         Workflow action node
-├── ConditionNode      Conditional branch node
-├── NodeConfigPanel    Node configuration side panel
-├── NodePalette        Palette of available node types
-└── TestRunPanel       Test workflow execution panel
 
 WIZARD MODULE (8 components)
 ├── WizardModal, WizardWidget, WizardFloatingButton
@@ -1219,11 +1201,6 @@ INLINE EDITING SYSTEM (6 files)
 ├── fetch-page-content.ts    Page content fetching with fallback
 ├── inline-edit-utils.ts     Shared inline edit state utilities
 └── page-content-types.ts    TypeScript type definitions
-
-WORKFLOW AUTOMATION (3 files)
-├── workflow-engine.ts     BullMQ async workflow execution engine
-├── workflow-events.ts     Workflow event emitters (triggers)
-└── workflow-validator.ts  Trigger/action/condition registries + Zod validation
 
 WIZARD (2 files)
 ├── wizard-engine.ts       Wizard step logic and scoring engine
@@ -1893,60 +1870,6 @@ Discount codes validated at checkout. Supports percentage and fixed-amount disco
 |------|---------|
 | `app/api/coupons/route.ts` | Validate and apply coupon codes |
 | `app/components/CouponInput.tsx` | Coupon input component for cart/checkout |
-
----
-
-## Workflow Automation
-
-A visual workflow builder that lets admins automate business processes without code. Built with drag-and-drop canvas, BullMQ async execution, and a registry-based architecture.
-
-### Architecture
-
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                        WORKFLOW SYSTEM                                │
-├──────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  BUILDER (React)              ENGINE (BullMQ)          EVENTS        │
-│  ──────────────               ───────────────          ──────        │
-│  Canvas.tsx                   workflow-engine.ts        workflow-     │
-│  TriggerNode.tsx              - Async job queue          events.ts   │
-│  ActionNode.tsx               - Retry logic            - Direct      │
-│  ConditionNode.tsx            - Error handling            emitters   │
-│  NodeConfigPanel.tsx                                                 │
-│  NodePalette.tsx              VALIDATOR                              │
-│  TestRunPanel.tsx             ─────────                              │
-│  DemoCanvas.tsx               workflow-validator.ts                  │
-│                               - 12 triggers                         │
-│                               - 7 actions                           │
-│                               - 8 condition operators               │
-│                               - Zod validation                      │
-│                                                                      │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
-### Triggers (12)
-
-Events that start a workflow: order placed, payment received, appointment booked, user signup, form submission, review submitted, cart abandoned, loyalty milestone, referral completed, waitlist joined, product restocked, schedule (cron).
-
-### Actions (7)
-
-What happens when triggered: send email, create task, update record, send notification, award loyalty points, apply discount, webhook call.
-
-### Key Files
-
-| File | Purpose |
-|------|---------|
-| `app/lib/workflow-engine.ts` | BullMQ async execution engine |
-| `app/lib/workflow-events.ts` | Event emitters (trigger sources) |
-| `app/lib/workflow-validator.ts` | Trigger/action/condition registries + Zod validation |
-| `app/components/WorkflowBuilder/Canvas.tsx` | Drag-and-drop visual builder |
-| `app/components/WorkflowBuilder/DemoCanvas.tsx` | Read-only demo with 3 pre-loaded examples |
-| `app/api/workflows/route.ts` | Workflow CRUD |
-| `app/api/workflows/[id]/execute/route.ts` | Execute a workflow |
-| `app/api/workflows/[id]/test-run/route.ts` | Test run (dry run) |
-| `app/admin/automation/page.tsx` | Workflow list |
-| `app/admin/automation/builder/page.tsx` | Visual builder page |
 
 ---
 
@@ -2689,9 +2612,6 @@ See [.claude/rules/design-system.md](.claude/rules/design-system.md) for:
 | `app/lib/api-timeout.ts` | API handler timeout protection |
 | `app/lib/api-auth.ts` | Route authentication (verifyAdmin, verifyAuth) |
 | `app/lib/api-input-guard.ts` | Input sanitization and validation |
-| `app/lib/workflow-engine.ts` | BullMQ async workflow execution |
-| `app/lib/workflow-validator.ts` | Workflow trigger/action registries |
-| `app/lib/workflow-events.ts` | Workflow event emitters |
 | `app/lib/seo-config.ts` | Site-wide SEO metadata defaults |
 
 ### State Management (9 providers)
@@ -2788,7 +2708,6 @@ See [.claude/rules/design-brief.md](.claude/rules/design-brief.md) for:
 
 | Feature | What It Does |
 |---------|-------------|
-| **Workflow Automation (Phase 1A)** | React Flow visual builder, BullMQ engine, 12 triggers, 7 actions, 8 operators, Zod validation, CRUD API, test runs. Admin at `/admin/automation/builder` |
 | **DB Security Hardening** | Migrations 055-061: Fixed 168 linter errors, RLS on all tables, admin role system, token encryption, 40+ tests |
 | **Pricing Restructure** | 3 tiers ($500/$1,500/$5,000), plain-English descriptions, 9 add-ons, Medusa products seeded |
 | **Portfolio Page** | `/work` with 3 case studies, stat counters, architecture diagram |

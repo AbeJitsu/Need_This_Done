@@ -448,8 +448,6 @@ These have RLS enabled with service-role SELECT policy (see "Medusa Tables" patt
 | `email_campaigns` | Campaign tracking | Admin only |
 | `loyalty_points` | Customer rewards | User owns, admin all |
 | `referral_codes` | Referral program | User owns, admin all |
-| `workflows` | Automation definitions | Admin only |
-| `workflow_executions` | Automation run history | Admin only |
 | `coupons` | Discount codes | Public read active, service write |
 | `product_waitlist` | Shop waitlist signups | Email-based access |
 | `saved_addresses` | Customer addresses | User owns |
