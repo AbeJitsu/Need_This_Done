@@ -22,7 +22,7 @@ Documentation
 | Phase | Status | Objective | Validation and rollback |
 | --- | --- | --- | --- |
 | 0. Documentation and tracking | Complete | Establish the retained-product narrative, tracker, and `dev` CI gate | Revert the documentation or CI-baseline commit |
-| 1. Owner dashboard inventory | Planned | Classify existing admin screens and define retained workflow | Route/API/data inventory; no behavior change |
+| 1. Owner dashboard inventory | Complete | Classify existing admin screens and define the retained owner workflow and pricing boundary | Static route/API/data/navigation inventory; documentation-only diff checks; revert the inventory commit |
 | 2. Core safety and portal | Planned | Harden analyzer and contact lead capture; retain focused client collaboration | Unit/API/authorization tests; revert focused commits |
 | 3. Hosted Stripe payments | Planned | Replace custom commerce checkout with Stripe-hosted flows | Stripe test-mode and route tests; retain old flow until replacement passes |
 | 4. Retire old systems | Planned | Remove LMS, editor, ecommerce, Medusa/Railway, and related docs | Build/tests/searches per subsystem; one reversible subsystem commit at a time |
@@ -34,6 +34,7 @@ Documentation
 | --- | --- |
 | Blog | Keep database-administered |
 | Payments | Stripe-hosted Payment Links, invoices, subscriptions, and Customer Portal |
+| Pricing model | Public, clearly scoped services use repository-owned catalog entries and Stripe-hosted standard checkout; custom work starts as a project request and is paid by Stripe invoice |
 | Client login | Keep and reshape as a project-sharing portal |
 | Ecommerce/LMS data | Disposable after code removal and separately reviewed schema cleanup |
 | Retired documentation | Delete operational manuals; retain only current mission-relevant records |
@@ -47,6 +48,7 @@ Add an entry here when a slice is completed.
 | --- | --- | --- | --- | --- |
 | 2026-07-24 | System audit | `9d7b658` | Captured repository, service, route, and browser baseline | Revert `9d7b658` if necessary |
 | 2026-07-25 | CI and retained-core baseline | This commit | CI now verifies `dev` pushes and `production` pull requests with type checking, self-contained unit tests, and a production build. The retained-route desktop/mobile smoke suite is non-mutating; the live-site analyzer and local-Supabase RLS suites are explicit opt-in integration checks. | Revert this commit |
+| 2026-07-25 | Owner dashboard inventory | `docs: inventory retained owner dashboard` | Classified 33 admin routes, 37 admin APIs, retained/transitional data surfaces, and visible owner navigation. Recorded the repository-owned catalog and Stripe-hosted payment boundary without changing behavior. | Revert `docs: inventory retained owner dashboard` |
 
 ### CI and retained-core baseline results (2026-07-25)
 
