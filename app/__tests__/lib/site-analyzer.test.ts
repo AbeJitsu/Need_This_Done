@@ -330,7 +330,9 @@ describe('buildExecutiveSummary', () => {
 // INTEGRATION TEST — Real site analysis
 // ============================================
 
-describe('Live site analysis (needthisdone.com)', () => {
+const describeLiveSite = process.env.RUN_LIVE_SITE_TESTS === 'true' ? describe : describe.skip;
+
+describeLiveSite('Live site analysis (needthisdone.com)', () => {
   it('fetches HTML from needthisdone.com', async () => {
     const { html, status } = await fetchHTML('https://needthisdone.com');
     expect(status).toBe(200);

@@ -21,7 +21,7 @@ Documentation
 
 | Phase | Status | Objective | Validation and rollback |
 | --- | --- | --- | --- |
-| 0. Documentation and tracking | In progress | Replace stale product narrative and establish this tracker | Markdown review, `git diff --check`; revert the documentation commit |
+| 0. Documentation and tracking | Complete | Establish the retained-product narrative, tracker, and `dev` CI gate | Revert the documentation or CI-baseline commit |
 | 1. Owner dashboard inventory | Planned | Classify existing admin screens and define retained workflow | Route/API/data inventory; no behavior change |
 | 2. Core safety and portal | Planned | Harden analyzer and contact lead capture; retain focused client collaboration | Unit/API/authorization tests; revert focused commits |
 | 3. Hosted Stripe payments | Planned | Replace custom commerce checkout with Stripe-hosted flows | Stripe test-mode and route tests; retain old flow until replacement passes |
@@ -45,12 +45,23 @@ Add an entry here when a slice is completed.
 
 | Date | Slice | Commit | Result | Rollback |
 | --- | --- | --- | --- | --- |
-| 2026-07-24 | System audit | Pending commit | Captured repository, service, route, and browser baseline | Remove the documentation commit if necessary |
+| 2026-07-24 | System audit | `9d7b658` | Captured repository, service, route, and browser baseline | Revert `9d7b658` if necessary |
+| 2026-07-25 | CI and retained-core baseline | This commit | CI now verifies `dev` pushes and `production` pull requests with type checking, self-contained unit tests, and a production build. The retained-route desktop/mobile smoke suite is non-mutating; the live-site analyzer and local-Supabase RLS suites are explicit opt-in integration checks. | Revert this commit |
+
+### CI and retained-core baseline results (2026-07-25)
+
+- `npm run type-check` passed.
+- `npm run test:unit` passed: 247 tests passed and 64 opt-in integration tests skipped.
+- `npm run build` passed with one existing `@next/next/no-img-element` warning in `components/DeviceShowcase/ScaledIframe.tsx`.
+- `npm run test:retained-smoke` passed: six desktop/mobile route checks passed; two report checks skipped because `E2E_REPORT_ID` was not configured.
+- `npm run test:site-analyzer-live` and `npm run test:security` remain on-demand checks. They were not run because this environment cannot resolve the public site or reach a local Supabase instance.
+
 ## Required checks before a `dev` review
 
 - `git diff --check`
 - Targeted unit/API tests
 - `npm run type-check` and `npm run build` when application code changes
+- `npm run test:retained-smoke` for retained-route desktop/mobile coverage
 - Critical desktop and mobile route smoke checks
 - Search for callers of a removed subsystem
 - Confirm `production` has not changed

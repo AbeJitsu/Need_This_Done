@@ -2,9 +2,9 @@ name: Build Verification
 
 on:
   push:
-    branches: [main]
+    branches: [dev]
   pull_request:
-    branches: [main]
+    branches: [production]
 
 jobs:
   build:
@@ -25,6 +25,14 @@ jobs:
       - name: Install dependencies
         working-directory: ./app
         run: npm ci
+
+      - name: Type-check
+        working-directory: ./app
+        run: npm run type-check
+
+      - name: Run unit tests
+        working-directory: ./app
+        run: npm run test:unit
 
       - name: Build Next.js app
         working-directory: ./app

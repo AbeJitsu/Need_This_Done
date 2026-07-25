@@ -105,6 +105,16 @@ export default defineConfig({
       // Exclude auth setup and accessibility tests (run a11y separately via test:a11y:e2e)
       testIgnore: [/auth\.setup\.ts/, /\.a11y\.test\.ts$/],
     },
+
+    // Mobile counterpart for retained-route smoke checks without saved auth state.
+    {
+      name: 'e2e-bypass-mobile',
+      use: {
+        ...devices['iPhone 12'],
+        browserName: 'chromium',
+      },
+      testIgnore: [/auth\.setup\.ts/, /\.a11y\.test\.ts$/],
+    },
   ],
 
   // ============================================================================

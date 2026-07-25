@@ -13,7 +13,7 @@
  * Run: cd app && npx vitest run ../supabase/tests/security-hardening.test.ts
  */
 
-import { describe, test, expect, beforeAll, afterAll } from 'vitest';
+import { describe as vitestDescribe, test, expect, beforeAll, afterAll } from 'vitest';
 import {
   sql,
   closePool,
@@ -33,6 +33,9 @@ import {
 // ============================================
 // Test Configuration
 // ============================================
+
+const runLocalSupabaseTests = process.env.RUN_LOCAL_SUPABASE_TESTS === 'true';
+const describe = runLocalSupabaseTests ? vitestDescribe : vitestDescribe.skip;
 
 const CUSTOM_TABLES = [
   'product_waitlist',
@@ -62,10 +65,12 @@ let testAdminId: string;
 // ============================================
 
 beforeAll(async () => {
+  if (!runLocalSupabaseTests) return;
   testAdminId = await createTestAdmin();
 });
 
 afterAll(async () => {
+  if (!runLocalSupabaseTests) return;
   await cleanupTestData();
   await closePool();
 });
