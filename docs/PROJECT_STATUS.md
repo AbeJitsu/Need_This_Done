@@ -43,6 +43,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Report queue dashboard link | This commit | Added a direct operator-dashboard link to the report queue so the daily decision work is reachable from the retained project workspace. | Revert this commit. |
 | 2026-07-25 | Report queue access transition | This commit | Prevented the queue shell from rendering while a non-operator is redirected; protected data was already server-gated. | Revert this commit. |
 | 2026-07-25 | Report queue decision focus | This commit | Made undecided reports the default view, with a deliberate all-report history view for prior decisions. | Revert this commit. |
+| 2026-07-25 | Report queue manual-action wording | This commit | Clarified queue labels so approval means manual follow-up only; no decision label implies automatic outreach. | Revert this commit. |
 
 ## Latest validation record
 
@@ -57,3 +58,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - Report queue dashboard link: `npm run type-check`, `npm run build`, and `git diff --check` passed.
 - Report queue access transition: `npm run type-check`, `npm run build`, and `git diff --check` passed.
 - Report queue decision focus: `npm run type-check`, `npm run build`, and `git diff --check` passed.
+- Report queue manual-action wording: 4 focused route tests, `npm run type-check`, `npm run build`, and `git diff --check` passed.

@@ -29,6 +29,17 @@ function reportDomain(url: string) {
   }
 }
 
+function statusLabel(status: string) {
+  const labels: Record<string, string> = {
+    pending_review: 'Needs decision',
+    approved: 'Approved for manual follow-up',
+    rejected: 'Rejected',
+    manual_action_required: 'Needs manual review',
+  };
+
+  return labels[status] || status.replace(/_/g, ' ');
+}
+
 export default function ReportQueuePage() {
   const router = useRouter();
   const { isAuthenticated, isAdmin, isLoading } = useAuth();
@@ -142,7 +153,7 @@ export default function ReportQueuePage() {
                     <p className="text-sm text-slate-500">Received {new Date(run.created_at).toLocaleString()}</p>
                   </div>
                   <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
-                    {run.status.replace(/_/g, ' ')}
+                    {statusLabel(run.status)}
                   </span>
                 </div>
 
@@ -178,13 +189,13 @@ export default function ReportQueuePage() {
                     />
                     <div className="flex flex-wrap gap-3">
                       <button disabled={saving === run.id} onClick={() => decide(run.id, 'approved')} className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">
-                        Approve follow-up
+                        Approve for manual follow-up
                       </button>
                       <button disabled={saving === run.id} onClick={() => decide(run.id, 'manual_action_required')} className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 disabled:opacity-50">
-                        Needs review
+                        Flag for manual review
                       </button>
                       <button disabled={saving === run.id} onClick={() => decide(run.id, 'rejected')} className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 disabled:opacity-50">
-                        Reject
+                        Reject report
                       </button>
                     </div>
                   </div>
