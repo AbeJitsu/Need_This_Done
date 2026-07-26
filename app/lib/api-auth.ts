@@ -10,6 +10,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import { authOptions } from '@/lib/auth-options';
 import type { User } from '@supabase/supabase-js';
 
@@ -119,9 +120,7 @@ export async function verifyAdmin(): Promise<AuthResult> {
     return authResult;
   }
 
-  const isAdmin = authResult.user.user_metadata?.is_admin === true;
-
-  if (!isAdmin) {
+  if (!(await hasAdminRole(authResult.user.id))) {
     return {
       error: NextResponse.json(
         { error: 'Forbidden. Admin access required.' },
@@ -138,8 +137,25 @@ export async function verifyAdmin(): Promise<AuthResult> {
 // ============================================================================
 // Simple helper to check if a user object has admin privileges.
 
-export function isUserAdmin(user: User): boolean {
-  return user.user_metadata?.is_admin === true;
+export async function hasAdminRole(userId: string): Promise<boolean> {
+  try {
+    const { data, error } = await getSupabaseAdmin()
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .eq('role', 'admin')
+      .maybeSingle();
+
+    if (error) {
+      console.error('[hasAdminRole] Failed to check operator role:', error);
+      return false;
+    }
+
+    return data !== null;
+  } catch (error) {
+    console.error('[hasAdminRole] Failed to initialize operator role check:', error);
+    return false;
+  }
 }
 
 // ============================================================================
@@ -165,7 +181,7 @@ export async function verifyProjectAccess(
   }
 
   const user = authResult.user;
-  const isAdmin = isUserAdmin(user);
+  const isAdmin = await hasAdminRole(user.id);
 
   // Fetch project to check ownership
   const supabase = await createSupabaseServerClient();

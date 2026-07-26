@@ -12,13 +12,13 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 **In scope:** Harden the site analyzer and contact-to-lead capture, establish safe operator-only workflow foundations, and preserve the focused client portal while those changes are made.
 
-**Current implementation:** Analyzer SSRF and report-access hardening is complete. Requested and redirected targets are validated against public DNS results, and migration `067` removes anonymous direct reads of `site_reports`. Contact-to-lead consultation capture is complete: valid consultation type and preferred/alternate times are stored as project context, included in the owner notification, and shown in project details without creating an appointment.
+**Current implementation:** Analyzer SSRF and report-access hardening is complete. Requested and redirected targets are validated against public DNS results, and migration `067` removes anonymous direct reads of `site_reports`. Contact-to-lead consultation capture is complete: valid consultation type and preferred/alternate times are stored as project context, included in the owner notification, and shown in project details without creating an appointment. Database-backed operator authorization is implemented and migration `069` provisions Abe and Andrea as the only initial operators.
 
 **Before review:** Run `git diff --check`, targeted unit/API and authorization tests, and the relevant retained-route smoke checks. Run `npm run type-check` and `npm run build` when application code changes. Record any unavailable integration checks below.
 
 **Rollback:** Revert the focused implementation commit. Do not pair an irreversible schema change with a broad removal.
 
-**Blockers:** None recorded.
+**Blockers:** None recorded. Migrations `067`–`069` require the reviewed hosted migration pass before this authorization path can be released.
 
 **No-broken-windows policy:** Every warning, failing check, stale route or document, broken interaction, and unresolved TODO is a defect. Fix it in the current slice, or record an owner-approved exception here with scope and removal date. An open exception blocks production promotion.
 
@@ -32,6 +32,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Analyzer SSRF and report-access hardening | This commit | Blocked private-network analyzer targets and unsafe redirects; added migration `067` to remove anonymous direct `site_reports` reads. | Revert this commit; apply the rollback migration only after review if `067` has been deployed. |
 | 2026-07-25 | Contact consultation capture | This commit | Preserved validated consultation preferences on project leads, owner notification, and project detail view; added migration `068`. | Revert this commit; apply a rollback migration only after review if `068` has been deployed. |
 | 2026-07-25 | No-broken-windows baseline | This commit | Replaced the remaining production-build `<img>` warning and established the policy for future slices. | Revert this commit. |
+| 2026-07-25 | Database-backed operator authorization | This commit | Added fail-closed server authorization using `user_roles` and migration `069` to provision Abe and Andrea only. | Revert this commit; remove the two role rows only through a separately reviewed rollback migration after deployment. |
 
 ## Latest validation record
 
