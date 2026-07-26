@@ -45,6 +45,8 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Report queue decision focus | This commit | Made undecided reports the default view, with a deliberate all-report history view for prior decisions. | Revert this commit. |
 | 2026-07-25 | Report queue manual-action wording | This commit | Clarified queue labels so approval means manual follow-up only; no decision label implies automatic outreach. | Revert this commit. |
 | 2026-07-25 | Owner inventory alignment | This commit | Marked the post-snapshot report queue as implemented in the evidence inventory and linked that note to this execution ledger. | Revert this documentation-only commit. |
+| 2026-07-25 | Truthful operator-role administration | `0ae7d57` | Made the transitional Users view read `user_roles` live and removed its misleading metadata-based operator-role controls. | Revert `0ae7d57`. |
+| 2026-07-25 | Explicit iframe placeholder image handling | This commit | Marked the scaled iframe placeholder as explicitly unoptimized, matching the Next.js external-image safety requirement and the image validation test. | Revert this focused application-and-ledger commit. |
 
 ## Latest validation record
 
@@ -61,3 +63,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - Report queue decision focus: `npm run type-check`, `npm run build`, and `git diff --check` passed.
 - Report queue manual-action wording: 4 focused route tests, `npm run type-check`, `npm run build`, and `git diff --check` passed.
 - Truthful operator-role administration: 2 focused API tests, `npm run type-check`, `npm run build`, and `git diff --check` passed.
+- Full local gate after image handling repair: 23 test files passed (283 tests); 64 opt-in security/live tests skipped. Type checking, production build, and `git diff --check` passed. Redis-dependent test assertions self-skip when the local sandbox cannot reach Upstash; no external state was changed.

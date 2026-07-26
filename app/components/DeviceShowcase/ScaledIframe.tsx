@@ -94,6 +94,7 @@ export default function ScaledIframe({
           aria-hidden
           width={nativeWidth + 1}
           height={nativeHeight}
+          unoptimized
           style={{
             width: nativeWidth + 1,
             height: nativeHeight,
