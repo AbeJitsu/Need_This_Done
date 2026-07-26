@@ -8,11 +8,11 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Active execution slice
 
-**Roadmap alignment:** Phase 2 — Core safety and workflow foundation.
+**Roadmap alignment:** Phase 3 — Focused operator and client workspace.
 
-**In scope:** Harden the site analyzer and contact-to-lead capture, establish safe operator-only workflow foundations, and preserve the focused client portal while those changes are made.
+**In scope:** Deliver the Supabase-Auth operator workspace for Abe and Andrea, beginning with a site-report decision queue on the durable workflow-run foundation. Preserve the focused client portal while this workspace is introduced.
 
-**Current implementation:** Analyzer SSRF and contact-to-lead implementation are complete in `dev` and their hosted schema changes are applied. Database-backed operator authorization is implemented and exactly two hosted `user_roles` admin records exist for Abe and Andrea. The remaining Phase 2 work is the durable workflow-run foundation.
+**Current implementation:** Phase 2 is complete: analyzer and lead-capture hardening, database-backed operator authorization, hosted migrations `066`–`070`, and the durable site-audit workflow-run trigger are verified. Phase 3 starts with the operator report queue.
 
 **Before review:** Run `git diff --check`, targeted unit/API and authorization tests, and the relevant retained-route smoke checks. Run `npm run type-check` and `npm run build` when application code changes. Record any unavailable integration checks below.
 
@@ -35,6 +35,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Database-backed operator authorization | This commit | Added fail-closed server authorization using `user_roles` and migration `069` to provision Abe and Andrea only. | Revert this commit; remove the two role rows only through a separately reviewed rollback migration after deployment. |
 | 2026-07-25 | Hosted operator role provisioning | External state | Upserted and verified exactly two `user_roles` admin records for Abe and Andrea through the service API. | Remove only those two role rows through a separately reviewed rollback migration. |
 | 2026-07-25 | Hosted migrations `066`–`069` | External state | Applied and verified the reviewed migration set. `066` was a no-op because its legacy workflow tables were already absent; `067` isolates reports from anonymous reads; `068` adds consultation fields; `069` records the two operator roles. | Apply a separately reviewed rollback migration for any needed schema or role reversal. |
+| 2026-07-25 | Operator workflow-run foundation | This commit | Added and applied migration `070`; every new site report now creates an idempotent, operator-only review record with no external automation. | Apply a separately reviewed rollback migration to remove the trigger and table if needed. |
 
 ## Latest validation record
 
@@ -42,3 +43,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - `npm run type-check` and `npm run build` passed with no warnings after the `ScaledIframe.tsx` repair.
 - Database-backed authorization checks passed: 30 focused tests passed; `npm run type-check` and `npm run build` passed with no warnings.
 - Hosted Supabase migration history matches local migrations through `069`; post-migration checks confirmed a server-only report count of 1 versus anonymous count 0, the project consultation columns, and exactly two database-backed admin roles.
+- Hosted Supabase migration history matches local migrations through `070`; `workflow_runs` schema check returned HTTP 200. No synthetic production report was created solely to test the trigger.
