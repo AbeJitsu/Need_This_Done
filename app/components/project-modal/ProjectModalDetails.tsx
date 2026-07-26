@@ -13,6 +13,9 @@ interface Project {
   company?: string;
   message: string;
   attachments?: string[];
+  consultation_type?: string | null;
+  preferred_consultation_at?: string | null;
+  alternate_consultation_at?: string | null;
 }
 
 interface ProjectModalDetailsProps {
@@ -53,6 +56,32 @@ export default function ProjectModalDetails({
           <p className="mt-2 text-gray-900 dark:text-gray-100">
             {project.company}
           </p>
+        </div>
+      )}
+
+      {project.consultation_type && (
+        <div>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Consultation Preference
+          </label>
+          <dl className="mt-2 space-y-1 text-gray-900 dark:text-gray-100">
+            <div>
+              <dt className="inline font-medium">Type: </dt>
+              <dd className="inline">{project.consultation_type}</dd>
+            </div>
+            {project.preferred_consultation_at && (
+              <div>
+                <dt className="inline font-medium">Preferred: </dt>
+                <dd className="inline">{new Date(project.preferred_consultation_at).toLocaleString()}</dd>
+              </div>
+            )}
+            {project.alternate_consultation_at && (
+              <div>
+                <dt className="inline font-medium">Alternate: </dt>
+                <dd className="inline">{new Date(project.alternate_consultation_at).toLocaleString()}</dd>
+              </div>
+            )}
+          </dl>
         </div>
       )}
 

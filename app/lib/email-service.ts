@@ -24,6 +24,9 @@ export type AdminNotificationProps = {
   message: string;
   attachmentCount: number;
   submittedAt: string;
+  consultationType?: string;
+  preferredConsultationAt?: string;
+  alternateConsultationAt?: string;
 };
 
 export type ClientConfirmationProps = {

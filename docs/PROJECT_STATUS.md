@@ -12,7 +12,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 **In scope:** Harden the site analyzer and contact-to-lead capture, establish safe operator-only workflow foundations, and preserve the focused client portal while those changes are made.
 
-**Current implementation:** Analyzer SSRF and report-access hardening is complete. Requested and redirected targets are validated against public DNS results, and migration `067` removes anonymous direct reads of `site_reports`.
+**Current implementation:** Analyzer SSRF and report-access hardening is complete. Requested and redirected targets are validated against public DNS results, and migration `067` removes anonymous direct reads of `site_reports`. Contact-to-lead consultation capture is complete: valid consultation type and preferred/alternate times are stored as project context, included in the owner notification, and shown in project details without creating an appointment.
 
 **Before review:** Run `git diff --check`, targeted unit/API and authorization tests, and the relevant retained-route smoke checks. Run `npm run type-check` and `npm run build` when application code changes. Record any unavailable integration checks below.
 
@@ -28,10 +28,10 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | CI and retained-core baseline | This commit | CI verifies `dev` pushes and `production` pull requests with type checking, unit tests, and a production build. Retained-route smoke checks are non-mutating; live analyzer and local-Supabase RLS checks are opt-in. | Revert this commit. |
 | 2026-07-25 | Owner dashboard inventory | `docs: inventory retained owner dashboard` | Classified owner routes, APIs, data dependencies, and the hosted-payment boundary. | Revert `docs: inventory retained owner dashboard`. |
 | 2026-07-25 | Analyzer SSRF and report-access hardening | This commit | Blocked private-network analyzer targets and unsafe redirects; added migration `067` to remove anonymous direct `site_reports` reads. | Revert this commit; apply the rollback migration only after review if `067` has been deployed. |
+| 2026-07-25 | Contact consultation capture | This commit | Preserved validated consultation preferences on project leads, owner notification, and project detail view; added migration `068`. | Revert this commit; apply a rollback migration only after review if `068` has been deployed. |
 
 ## Latest validation record
 
-- Targeted analyzer checks passed: 56 tests passed; 4 opt-in live-site tests skipped.
-- `npm run type-check` passed.
-- `npm run build` passed with the existing `@next/next/no-img-element` warning in `components/DeviceShowcase/ScaledIframe.tsx`.
-- The local-Supabase RLS integration check was not run because no local Supabase instance was available; migration `067` remains separately reviewable before deployment.
+- Targeted analyzer and consultation checks passed: 62 tests passed; 4 opt-in live-site tests skipped.
+- `npm run type-check` and `npm run build` passed; the build still reports the known `ScaledIframe.tsx` image warning, which will be cleared under the no-broken-windows policy.
+- The local-Supabase migration/RLS integration checks were not run because no local Supabase instance was available; migrations `067` and `068` remain separately reviewable before deployment.

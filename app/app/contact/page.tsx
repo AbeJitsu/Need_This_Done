@@ -224,14 +224,15 @@ export default function ContactPage() {
       submitData.append('company', formData.company);
       submitData.append('service', formData.service);
       submitData.append('message', formData.message);
-      submitData.append('consultationType', selectedConsultation);
+      if (contactPath === 'consultation') {
+        submitData.append('consultationType', selectedConsultation);
 
-      // Include consultation time slots if selected
-      if (consultationSlots.first) {
-        submitData.append('preferredTime', consultationSlots.first.date.toISOString());
-      }
-      if (consultationSlots.second) {
-        submitData.append('alternateTime', consultationSlots.second.date.toISOString());
+        if (consultationSlots.first) {
+          submitData.append('preferredTime', consultationSlots.first.date.toISOString());
+        }
+        if (consultationSlots.second) {
+          submitData.append('alternateTime', consultationSlots.second.date.toISOString());
+        }
       }
 
       files.forEach(file => {

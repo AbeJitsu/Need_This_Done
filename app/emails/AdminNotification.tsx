@@ -24,6 +24,9 @@ export interface AdminNotificationProps {
   message: string;
   attachmentCount: number;
   submittedAt: string;
+  consultationType?: string;
+  preferredConsultationAt?: string;
+  alternateConsultationAt?: string;
 }
 
 export default function AdminNotification({
@@ -35,6 +38,9 @@ export default function AdminNotification({
   message,
   attachmentCount,
   submittedAt,
+  consultationType,
+  preferredConsultationAt,
+  alternateConsultationAt,
 }: AdminNotificationProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com';
   const dashboardUrl = `${siteUrl}/admin/projects/${projectId}`;
@@ -82,6 +88,25 @@ export default function AdminNotification({
               <Text style={cardTitle}>Project Details</Text>
               <Text style={messageText}>{message}</Text>
             </Section>
+
+            {consultationType && (
+              <Section style={card}>
+                <Text style={cardTitle}>Consultation Preference</Text>
+                <Text style={field}>
+                  <strong>Type:</strong> {consultationType}
+                </Text>
+                {preferredConsultationAt && (
+                  <Text style={field}>
+                    <strong>Preferred time:</strong> {new Date(preferredConsultationAt).toLocaleString('en-US')}
+                  </Text>
+                )}
+                {alternateConsultationAt && (
+                  <Text style={field}>
+                    <strong>Alternate time:</strong> {new Date(alternateConsultationAt).toLocaleString('en-US')}
+                  </Text>
+                )}
+              </Section>
+            )}
 
             {/* Attachments (if any) */}
             {attachmentCount > 0 && (

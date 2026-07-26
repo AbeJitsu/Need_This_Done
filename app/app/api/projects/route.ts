@@ -21,6 +21,7 @@ import {
   checkAndMarkRequest,
 } from '@/lib/request-dedup';
 import { withTimeout } from '@/lib/api-timeout';
+import { parseConsultationRequestDetails } from '@/lib/consultation-request';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,6 +54,13 @@ export async function POST(request: Request) {
     const service = formData.get('service') as string;
     const message = formData.get('message') as string;
     const files = formData.getAll('files') as File[];
+    const consultationTypeValue = formData.get('consultationType');
+    const preferredTimeValue = formData.get('preferredTime');
+    const alternateTimeValue = formData.get('alternateTime');
+
+    const consultationType = typeof consultationTypeValue === 'string' ? consultationTypeValue : null;
+    const preferredTime = typeof preferredTimeValue === 'string' ? preferredTimeValue : null;
+    const alternateTime = typeof alternateTimeValue === 'string' ? alternateTimeValue : null;
 
     // ====================================================================
     // Validate Required Fields
@@ -86,6 +94,17 @@ export async function POST(request: Request) {
       if (service) validateStringLength(service.trim(), 100, 'Service');
     } catch (err) {
       return badRequest(err instanceof Error ? err.message : 'Input validation failed');
+    }
+
+    let consultationDetails;
+    try {
+      consultationDetails = parseConsultationRequestDetails({
+        consultationType,
+        preferredTime,
+        alternateTime,
+      });
+    } catch (err) {
+      return badRequest(err instanceof Error ? err.message : 'Invalid consultation details');
     }
 
     // ====================================================================
@@ -200,6 +219,9 @@ export async function POST(request: Request) {
             status: 'submitted',
             attachments: attachmentPaths.length > 0 ? attachmentPaths : null,
             user_id: userId,
+            consultation_type: consultationDetails.consultationType,
+            preferred_consultation_at: consultationDetails.preferredConsultationAt,
+            alternate_consultation_at: consultationDetails.alternateConsultationAt,
           })
           .select()
           .single();
@@ -249,6 +271,9 @@ export async function POST(request: Request) {
             dateStyle: 'medium',
             timeStyle: 'short',
           }),
+          consultationType: project.consultation_type || undefined,
+          preferredConsultationAt: project.preferred_consultation_at || undefined,
+          alternateConsultationAt: project.alternate_consultation_at || undefined,
         },
         // Client confirmation
         project.email,
