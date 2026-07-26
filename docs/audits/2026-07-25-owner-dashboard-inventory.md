@@ -145,9 +145,11 @@ This table covers the 12 destinations rendered by `AdminSidebar`; `Quick link` m
 | `/admin/waitlist-campaigns` | Campaigns | — | Retirement-targeted |
 | `/admin/dev` | Dev Tools | Dev Tools | Retirement-targeted |
 
-## Missing retained capabilities (recorded, not implemented)
+## Retained capabilities at the inventory snapshot
 
-1. **Owner report queue:** an authenticated owner view of `site_reports`, with enough metadata to prioritize follow-up. The current analyzer produces a customer-facing report but no dashboard queue.
+The items below describe the state of the July 25 inventory snapshot. Subsequent delivery is recorded in the [implementation ledger](../PROJECT_STATUS.md), rather than rewriting this evidence document.
+
+1. **Owner report queue — implemented after this snapshot:** `/admin/reports` and `/api/admin/workflow-runs` now provide an authenticated queue over durable `workflow_runs`, with human decisions and no automated outreach. The retained `AdminSidebar` and Project Dashboard link to it.
 2. **Slim Stripe-payment reference view:** an owner/client view limited to hosted payment, invoice, subscription, and reconciliation references—not a replacement order-management UI.
 3. **Project-focused client-access administration:** a narrow owner view for granting/revoking access to active project collaboration, rather than general user administration.
 

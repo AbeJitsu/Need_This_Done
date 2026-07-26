@@ -44,6 +44,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Report queue access transition | This commit | Prevented the queue shell from rendering while a non-operator is redirected; protected data was already server-gated. | Revert this commit. |
 | 2026-07-25 | Report queue decision focus | This commit | Made undecided reports the default view, with a deliberate all-report history view for prior decisions. | Revert this commit. |
 | 2026-07-25 | Report queue manual-action wording | This commit | Clarified queue labels so approval means manual follow-up only; no decision label implies automatic outreach. | Revert this commit. |
+| 2026-07-25 | Owner inventory alignment | This commit | Marked the post-snapshot report queue as implemented in the evidence inventory and linked that note to this execution ledger. | Revert this documentation-only commit. |
 
 ## Latest validation record
 
