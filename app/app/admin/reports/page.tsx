@@ -86,6 +86,7 @@ export default function ReportQueuePage() {
   };
 
   if (isLoading || loading) return <p className="text-slate-500">Loading report queue…</p>;
+  if (!isAuthenticated || !isAdmin) return null;
 
   return (
     <section className="max-w-5xl space-y-6">
