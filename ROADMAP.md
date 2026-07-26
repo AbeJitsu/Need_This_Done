@@ -94,3 +94,4 @@ Phase 1 evidence: [system audit](docs/audits/2026-07-24-system-audit.md) and [ow
 - Never place browser-accessible secrets in the application. Keep credentials server-side and minimize each integration's authority.
 - Treat Supabase as durable memory: workflow state, decisions, outcomes, and idempotency records belong there rather than in agent context or external-tool history.
 - Do not depend on OpenClaw, Hermes, or another external automation system until its authenticated, callback-verified adapter is ready.
+- Apply a no-broken-windows policy: do not introduce, ignore, or normalize failing checks, warnings, dead routes, stale documentation, broken UI, or unresolved TODOs. Fix the defect in the current slice or record a narrow, owner-approved exception with a removal date in the implementation ledger; production cannot advance with an open exception.

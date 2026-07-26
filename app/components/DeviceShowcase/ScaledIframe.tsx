@@ -10,6 +10,7 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 
 interface ScaledIframeProps {
   url: string;
@@ -87,10 +88,12 @@ export default function ScaledIframe({
     >
       {/* Placeholder image — shown instantly while iframe loads, then crossfades out */}
       {placeholderSrc && scale > 0 && (
-        <img
+        <Image
           src={placeholderSrc}
           alt=""
           aria-hidden
+          width={nativeWidth + 1}
+          height={nativeHeight}
           style={{
             width: nativeWidth + 1,
             height: nativeHeight,

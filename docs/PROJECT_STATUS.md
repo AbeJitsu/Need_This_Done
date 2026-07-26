@@ -20,6 +20,8 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 **Blockers:** None recorded.
 
+**No-broken-windows policy:** Every warning, failing check, stale route or document, broken interaction, and unresolved TODO is a defect. Fix it in the current slice, or record an owner-approved exception here with scope and removal date. An open exception blocks production promotion.
+
 ## Change log
 
 | Date | Slice | Commit | Result | Rollback |
@@ -29,9 +31,10 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Owner dashboard inventory | `docs: inventory retained owner dashboard` | Classified owner routes, APIs, data dependencies, and the hosted-payment boundary. | Revert `docs: inventory retained owner dashboard`. |
 | 2026-07-25 | Analyzer SSRF and report-access hardening | This commit | Blocked private-network analyzer targets and unsafe redirects; added migration `067` to remove anonymous direct `site_reports` reads. | Revert this commit; apply the rollback migration only after review if `067` has been deployed. |
 | 2026-07-25 | Contact consultation capture | This commit | Preserved validated consultation preferences on project leads, owner notification, and project detail view; added migration `068`. | Revert this commit; apply a rollback migration only after review if `068` has been deployed. |
+| 2026-07-25 | No-broken-windows baseline | This commit | Replaced the remaining production-build `<img>` warning and established the policy for future slices. | Revert this commit. |
 
 ## Latest validation record
 
 - Targeted analyzer and consultation checks passed: 62 tests passed; 4 opt-in live-site tests skipped.
-- `npm run type-check` and `npm run build` passed; the build still reports the known `ScaledIframe.tsx` image warning, which will be cleared under the no-broken-windows policy.
+- `npm run type-check` and `npm run build` passed with no warnings after the `ScaledIframe.tsx` repair.
 - The local-Supabase migration/RLS integration checks were not run because no local Supabase instance was available; migrations `067` and `068` remain separately reviewable before deployment.
