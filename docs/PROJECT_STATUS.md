@@ -42,6 +42,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Report-decision rationale | `a56af04` | Added an optional decision note to the operator queue and display of the saved rationale; corrected stale queue commit references in this ledger. | Revert `a56af04`. |
 | 2026-07-25 | Report queue dashboard link | This commit | Added a direct operator-dashboard link to the report queue so the daily decision work is reachable from the retained project workspace. | Revert this commit. |
 | 2026-07-25 | Report queue access transition | This commit | Prevented the queue shell from rendering while a non-operator is redirected; protected data was already server-gated. | Revert this commit. |
+| 2026-07-25 | Report queue decision focus | This commit | Made undecided reports the default view, with a deliberate all-report history view for prior decisions. | Revert this commit. |
 
 ## Latest validation record
 
@@ -55,3 +56,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - Report-decision rationale: 4 focused route tests, `npm run type-check`, `npm run build`, and `git diff --check` passed.
 - Report queue dashboard link: `npm run type-check`, `npm run build`, and `git diff --check` passed.
 - Report queue access transition: `npm run type-check`, `npm run build`, and `git diff --check` passed.
+- Report queue decision focus: `npm run type-check`, `npm run build`, and `git diff --check` passed.

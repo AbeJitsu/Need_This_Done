@@ -34,6 +34,7 @@ export default function ReportQueuePage() {
   const { isAuthenticated, isAdmin, isLoading } = useAuth();
   const [runs, setRuns] = useState<Run[]>([]);
   const [notes, setNotes] = useState<Record<string, string>>({});
+  const [view, setView] = useState<'pending' | 'all'>('pending');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState<string | null>(null);
@@ -88,6 +89,9 @@ export default function ReportQueuePage() {
   if (isLoading || loading) return <p className="text-slate-500">Loading report queue…</p>;
   if (!isAuthenticated || !isAdmin) return null;
 
+  const pendingRuns = runs.filter((run) => run.status === 'pending_review');
+  const displayedRuns = view === 'pending' ? pendingRuns : runs;
+
   return (
     <section className="max-w-5xl space-y-6">
       <div>
@@ -98,13 +102,34 @@ export default function ReportQueuePage() {
         </p>
       </div>
 
+      <div className="flex flex-wrap gap-3" aria-label="Report queue view">
+        <button
+          type="button"
+          onClick={() => setView('pending')}
+          aria-pressed={view === 'pending'}
+          className={`rounded-md px-4 py-2 text-sm font-semibold ${view === 'pending' ? 'bg-emerald-600 text-white' : 'border border-slate-300 text-slate-700'}`}
+        >
+          Needs decisions ({pendingRuns.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setView('all')}
+          aria-pressed={view === 'all'}
+          className={`rounded-md px-4 py-2 text-sm font-semibold ${view === 'all' ? 'bg-emerald-600 text-white' : 'border border-slate-300 text-slate-700'}`}
+        >
+          All reports ({runs.length})
+        </button>
+      </div>
+
       {error && <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-red-700">{error}</p>}
 
-      {runs.length === 0 ? (
-        <p className="rounded-xl border border-slate-200 bg-white p-6 text-slate-600">No site reports need review.</p>
+      {displayedRuns.length === 0 ? (
+        <p className="rounded-xl border border-slate-200 bg-white p-6 text-slate-600">
+          {view === 'pending' ? 'No site reports need a decision.' : 'No site reports are available.'}
+        </p>
       ) : (
         <div className="space-y-4">
-          {runs.map((run) => {
+          {displayedRuns.map((run) => {
             const domain = run.report ? reportDomain(run.report.url) : 'Report unavailable';
             const pending = run.status === 'pending_review';
             const decisionNote = run.outcome?.decision_note;
