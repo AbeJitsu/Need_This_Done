@@ -12,13 +12,13 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 **In scope:** Harden the site analyzer and contact-to-lead capture, establish safe operator-only workflow foundations, and preserve the focused client portal while those changes are made.
 
-**Current implementation:** Analyzer SSRF and report-access hardening is complete. Requested and redirected targets are validated against public DNS results, and migration `067` removes anonymous direct reads of `site_reports`. Contact-to-lead consultation capture is complete: valid consultation type and preferred/alternate times are stored as project context, included in the owner notification, and shown in project details without creating an appointment. Database-backed operator authorization is implemented and migration `069` provisions Abe and Andrea as the only initial operators.
+**Current implementation:** Analyzer SSRF and contact-to-lead implementation are complete in `dev`; their schema changes remain pending on hosted Supabase. Database-backed operator authorization is implemented and exactly two hosted `user_roles` admin records have been provisioned for Abe and Andrea.
 
 **Before review:** Run `git diff --check`, targeted unit/API and authorization tests, and the relevant retained-route smoke checks. Run `npm run type-check` and `npm run build` when application code changes. Record any unavailable integration checks below.
 
 **Rollback:** Revert the focused implementation commit. Do not pair an irreversible schema change with a broad removal.
 
-**Blockers:** None recorded. Migrations `067`–`069` require the reviewed hosted migration pass before this authorization path can be released.
+**Blockers:** Hosted migrations `067` and `068` cannot yet be run through the CLI because the configured Supabase management token is not a valid CLI token and no database connection password is configured. Do not deploy the analyzer or contact-capture slices until those migrations have been applied through a valid linked CLI or the Supabase SQL editor. Migration `069` is idempotently represented in the repository, but its two role rows have already been provisioned and verified through the service API.
 
 **No-broken-windows policy:** Every warning, failing check, stale route or document, broken interaction, and unresolved TODO is a defect. Fix it in the current slice, or record an owner-approved exception here with scope and removal date. An open exception blocks production promotion.
 
@@ -33,9 +33,12 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Contact consultation capture | This commit | Preserved validated consultation preferences on project leads, owner notification, and project detail view; added migration `068`. | Revert this commit; apply a rollback migration only after review if `068` has been deployed. |
 | 2026-07-25 | No-broken-windows baseline | This commit | Replaced the remaining production-build `<img>` warning and established the policy for future slices. | Revert this commit. |
 | 2026-07-25 | Database-backed operator authorization | This commit | Added fail-closed server authorization using `user_roles` and migration `069` to provision Abe and Andrea only. | Revert this commit; remove the two role rows only through a separately reviewed rollback migration after deployment. |
+| 2026-07-25 | Hosted operator role provisioning | External state | Upserted and verified exactly two `user_roles` admin records for Abe and Andrea through the service API. | Remove only those two role rows through a separately reviewed rollback migration. |
 
 ## Latest validation record
 
 - Targeted analyzer and consultation checks passed: 62 tests passed; 4 opt-in live-site tests skipped.
 - `npm run type-check` and `npm run build` passed with no warnings after the `ScaledIframe.tsx` repair.
 - The local-Supabase migration/RLS integration checks were not run because no local Supabase instance was available; migrations `067` and `068` remain separately reviewable before deployment.
+- Database-backed authorization checks passed: 30 focused tests passed; `npm run type-check` and `npm run build` passed with no warnings.
+- Hosted Supabase verification confirmed exactly two database-backed admin roles. The hosted migration pass remains blocked as described above.
