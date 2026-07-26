@@ -8,11 +8,11 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Active execution slice
 
-**Roadmap alignment:** Phase 3 — Focused operator and client workspace.
+**Roadmap alignment:** Phase 4 — Hosted payments and service boundary.
 
-**In scope:** Deliver the Supabase-Auth operator workspace for Abe and Andrea, including project-focused client access and GitHub handoffs. Preserve the focused client portal while this workspace is introduced.
+**In scope:** Replace order-centric checkout with repository-owned offerings and Stripe-hosted payment links, invoices, subscriptions, and Customer Portal references. Preserve the completed focused operator/client workspace while payment callers are safely narrowed.
 
-**Current implementation:** Phase 3 is complete pending the final full validation and hosted migration `071`: operators use a database-backed Supabase workspace for reports and projects; a guest project can be explicitly linked only to an existing exact-email account; and a linked client can receive project-scoped GitHub handoffs. Publishing a handoff sends a client email, records any failure visibly, and permits an explicit retry. GitHub repository membership remains in GitHub. No outreach automation is introduced.
+**Current implementation:** Phase 3 is complete: operators use a database-backed Supabase workspace for reports and projects; a guest project can be explicitly linked only to an existing exact-email account; and a linked client can receive project-scoped GitHub handoffs. Publishing a handoff sends a client email, records any failure visibly, and permits an explicit retry. Hosted migration `071` is verified. Phase 4 is now current; it begins with a repository-owned offering catalog and Stripe-hosted handoffs, without removing order-dependent appointment or payment paths until their replacements pass validation.
 
 **Before review:** Run `git diff --check`, targeted unit/API and authorization tests, and the relevant retained-route smoke checks. Run `npm run type-check` and `npm run build` when application code changes. Record any unavailable integration checks below.
 
@@ -49,6 +49,8 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Explicit iframe placeholder image handling | This commit | Marked the scaled iframe placeholder as explicitly unoptimized, matching the Next.js external-image safety requirement and the image validation test. | Revert this focused application-and-ledger commit. |
 | 2026-07-26 | Safe existing-account client access | This commit | Added operator-confirmed project link/unlink actions that require an already-existing exact-email account, invalidate client/project-comment caches, and extended attachment downloads to enforce project-level authorization. No account creation, invitation, reassignment, or role change occurs. | Revert this focused application-and-ledger commit. |
 | 2026-07-26 | Project GitHub handoffs | This commit | Added project-scoped GitHub handoff records and operator publishing/retry controls. A linked client sees only their project handoffs; automatic notification failures remain visible and retryable. Migration `071` is additive and pending hosted validation. | Revert this focused application-and-ledger commit; apply a separately reviewed rollback migration only after `071` is deployed. |
+| 2026-07-26 | Hosted migration `071` | External state | Applied and read-only verified the additive `project_github_handoffs` table. No project, client link, handoff, or email was created as verification data. | Apply a separately reviewed rollback migration only if removal is required. |
+| 2026-07-26 | Phase 3 completion | This commit | Marked the focused operator/client workspace complete after full unit, build, smoke, and hosted migration validation; Phase 4 hosted payments is now current. | Revert this documentation-only commit if the roadmap state must be corrected. |
 
 ## Latest validation record
 
@@ -68,3 +70,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - Full local gate after image handling repair: 23 test files passed (283 tests); 64 opt-in security/live tests skipped. Type checking, production build, and `git diff --check` passed. Redis-dependent test assertions self-skip when the local sandbox cannot reach Upstash; no external state was changed.
 - Safe existing-account client access: 8 focused API tests and `npm run type-check` passed. Full suite, production build, and retained-route smoke checks remain required before the Phase 3 slice is promoted.
 - Project GitHub handoffs: 7 focused API tests and `npm run type-check` passed. Full suite, production build, retained-route smoke checks, `git diff --check`, and hosted migration `071` verification remain required before Phase 3 is marked complete.
+- Phase 3 completion: 27 unit files passed (298 tests; 64 opt-in tests skipped because the sandbox cannot reach Redis or a local security service), `npm run type-check` passed, and the production build completed successfully. Retained-route smoke checks passed 6 routes; 2 public-report checks were skipped because no report UUID is configured. Migration `071` dry run listed only that migration, then the hosted table returned HTTP 200 with a server credential. `git diff --check` passed.
