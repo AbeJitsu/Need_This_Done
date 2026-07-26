@@ -12,7 +12,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 **In scope:** Deliver the Supabase-Auth operator workspace for Abe and Andrea, beginning with a site-report decision queue on the durable workflow-run foundation. Preserve the focused client portal while this workspace is introduced.
 
-**Current implementation:** Phase 2 is complete: analyzer and lead-capture hardening, database-backed operator authorization, hosted migrations `066`–`070`, and the durable site-audit workflow-run trigger are verified. Phase 3 starts with the operator report queue.
+**Current implementation:** Phase 2 is complete: analyzer and lead-capture hardening, database-backed operator authorization, hosted migrations `066`–`070`, and the durable site-audit workflow-run trigger are verified. Phase 3 starts with the operator report queue. Browser-side operator visibility now also comes from the server-backed role endpoint rather than editable metadata.
 
 **Before review:** Run `git diff --check`, targeted unit/API and authorization tests, and the relevant retained-route smoke checks. Run `npm run type-check` and `npm run build` when application code changes. Record any unavailable integration checks below.
 
@@ -36,6 +36,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Hosted operator role provisioning | External state | Upserted and verified exactly two `user_roles` admin records for Abe and Andrea through the service API. | Remove only those two role rows through a separately reviewed rollback migration. |
 | 2026-07-25 | Hosted migrations `066`–`069` | External state | Applied and verified the reviewed migration set. `066` was a no-op because its legacy workflow tables were already absent; `067` isolates reports from anonymous reads; `068` adds consultation fields; `069` records the two operator roles. | Apply a separately reviewed rollback migration for any needed schema or role reversal. |
 | 2026-07-25 | Operator workflow-run foundation | This commit | Added and applied migration `070`; every new site report now creates an idempotent, operator-only review record with no external automation. | Apply a separately reviewed rollback migration to remove the trigger and table if needed. |
+| 2026-07-25 | Browser operator authorization | This commit | Replaced metadata-derived admin UI state with a server-backed database-role check. | Revert this commit. |
 
 ## Latest validation record
 

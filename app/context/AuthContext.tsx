@@ -51,6 +51,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Supabase auth state (for email/password fallback)
   const [supabaseUser, setSupabaseUser] = useState<User | null>(null);
   const [supabaseLoading, setSupabaseLoading] = useState(true);
+  const [databaseAdmin, setDatabaseAdmin] = useState(false);
+  const [roleLoading, setRoleLoading] = useState(true);
 
   useEffect(() => {
     // ====================================================================
@@ -86,8 +88,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Merge Auth Sources - NextAuth takes precedence
   // ============================================================================
 
-  const isLoading = sessionStatus === 'loading' || supabaseLoading;
-
   // Determine the active user - NextAuth session takes precedence
   const sessionUser = session?.user as { id?: string; email?: string | null; name?: string | null; image?: string | null; isAdmin?: boolean } | undefined;
   const user: User | null = sessionUser
@@ -104,8 +104,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     : supabaseUser;
 
+  useEffect(() => {
+    if (!user) {
+      setDatabaseAdmin(false);
+      setRoleLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setRoleLoading(true);
+    fetch('/api/auth/operator-role')
+      .then(async (response) => response.ok && (await response.json()).isAdmin === true)
+      .then((isAdmin) => {
+        if (!cancelled) setDatabaseAdmin(isAdmin);
+      })
+      .catch(() => {
+        if (!cancelled) setDatabaseAdmin(false);
+      })
+      .finally(() => {
+        if (!cancelled) setRoleLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [user?.id]);
+
+  const isLoading = sessionStatus === 'loading' || supabaseLoading || roleLoading;
+
   // ============================================================================
-  // Derive Admin Status and Role from User Metadata
+  // Derive Admin Status and Role from the server-side database role
   // ============================================================================
   // E2E_ADMIN_BYPASS: When set to 'true' in .env.local, bypasses auth for testing
   // This only works in development mode and should NEVER be set in production
@@ -113,7 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const e2eBypass = process.env.NEXT_PUBLIC_E2E_ADMIN_BYPASS === 'true' &&
                     process.env.NODE_ENV === 'development';
 
-  const isAdmin = e2eBypass || user?.user_metadata?.is_admin === true;
+  const isAdmin = e2eBypass || databaseAdmin;
   const userRole: 'admin' | 'user' | null = user
     ? isAdmin
       ? 'admin'
