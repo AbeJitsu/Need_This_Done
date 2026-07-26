@@ -34,6 +34,14 @@ export type ClientConfirmationProps = {
   service?: string;
 };
 
+export type ProjectGithubHandoffProps = {
+  email: string;
+  name: string;
+  githubUrl: string;
+  note?: string | null;
+  portalUrl: string;
+};
+
 export type WelcomeEmailProps = {
   email: string;
   name?: string;
@@ -236,6 +244,18 @@ export async function sendClientConfirmation(
   const subject = "✨ We Got Your Message! (Response in 2 Business Days)";
 
   return sendEmailWithRetry(to, subject, ClientConfirmation(data));
+}
+
+export async function sendProjectGithubHandoff(
+  data: ProjectGithubHandoffProps,
+): Promise<string | null> {
+  const { default: ProjectGithubHandoffEmail } = await import('../emails/ProjectGithubHandoffEmail');
+
+  return sendEmailWithRetry(
+    data.email,
+    'Your GitHub project handoff is ready',
+    ProjectGithubHandoffEmail(data),
+  );
 }
 
 /**

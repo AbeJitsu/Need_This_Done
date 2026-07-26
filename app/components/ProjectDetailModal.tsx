@@ -9,6 +9,7 @@ import ProjectModalHeader from './project-modal/ProjectModalHeader';
 import ProjectModalDetails from './project-modal/ProjectModalDetails';
 import AdminStatusSection from './project-modal/AdminStatusSection';
 import ClientAccessSection from './project-modal/ClientAccessSection';
+import ProjectGithubHandoffs from './project-modal/ProjectGithubHandoffs';
 import ProjectComments from './project-modal/ProjectComments';
 import { alertColors, cardBgColors } from '@/lib/colors';
 
@@ -194,6 +195,11 @@ export default function ProjectDetailModal({
             <>
               {/* Project Details */}
               <ProjectModalDetails project={project} />
+
+              <ProjectGithubHandoffs
+                projectId={project.id}
+                isAdmin={isAdmin}
+              />
 
               {/* Admin: Status Update Section */}
               {isAdmin && (

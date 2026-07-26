@@ -47,6 +47,8 @@ export const CACHE_KEYS = {
   // Project data
   projectComments: (projectId: string, isAdmin: boolean) =>
     `project:comments:${projectId}${isAdmin ? ':admin' : ''}`,
+  projectDeliveries: (projectId: string, isAdmin: boolean) =>
+    `project:deliveries:${projectId}${isAdmin ? ':admin' : ''}`,
 
   // Page data
   page: (slug: string) => `page:${slug}`,

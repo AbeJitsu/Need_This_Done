@@ -94,7 +94,7 @@ These handlers are outside the `/api/admin/*` namespace but are part of the reta
 
 | Classification | Handlers | Current callers / role |
 | --- | --- | --- |
-| Retain | `/api/projects`, `/api/projects/all`, `/api/projects/mine`, `/api/projects/[id]/status`, `/api/projects/[id]/comments`, `/api/projects/[id]/access`, `/api/files/[...path]` | `contact/page.tsx` creates projects; `AdminDashboard`, `UserDashboard`, `ProjectDetailModal`, `useDashboard`, `useComments`, and `useProjectStatus` supply the owner/client project portal. Operators can link/unlink an existing exact-email account without creating an account or invitation. Files are project attachments viewed through the detail modal and require project-level authorization. |
+| Retain | `/api/projects`, `/api/projects/all`, `/api/projects/mine`, `/api/projects/[id]/status`, `/api/projects/[id]/comments`, `/api/projects/[id]/access`, `/api/projects/[id]/deliveries`, `/api/files/[...path]` | `contact/page.tsx` creates projects; `AdminDashboard`, `UserDashboard`, `ProjectDetailModal`, `useDashboard`, `useComments`, and `useProjectStatus` supply the owner/client project portal. Operators can link/unlink an existing exact-email account without creating an account or invitation, then publish project-scoped GitHub handoffs. Files are project attachments viewed through the detail modal and require project-level authorization. |
 | Retain | `/api/appointments/request`, `/api/user/appointments` | `AppointmentRequestForm`, checkout's existing appointment step, `ActiveAppointmentsSection`, and `DashboardStatsOverview` create/show appointments. |
 | Retain | `/api/google/connect`, `/api/google/callback`, `/api/google/disconnect`, `/api/google/status` | `/admin/settings` connects the owner's calendar; approval creates the calendar-side outcome. |
 | Retain | `/api/blog`, `/api/blog/[slug]` | Owner blog pages create, update, and delete posts; public home, blog list, post, and sitemap readers consume published posts. |
@@ -152,7 +152,7 @@ The items below describe the state of the July 25 inventory snapshot. Subsequent
 1. **Owner report queue — implemented after this snapshot:** `/admin/reports` and `/api/admin/workflow-runs` now provide an authenticated queue over durable `workflow_runs`, with human decisions and no automated outreach. The retained `AdminSidebar` and Project Dashboard link to it.
 2. **Slim Stripe-payment reference view:** an owner/client view limited to hosted payment, invoice, subscription, and reconciliation references—not a replacement order-management UI.
 3. **Project-focused client-access administration — implemented after this snapshot:** the project detail modal can link a guest project only to an existing same-email account or remove that link. It neither creates accounts nor exposes the user directory; portal, comment, and attachment access remain project-scoped.
-4. **GitHub project handoffs:** the next Phase 3 slice will record project-scoped GitHub links, notify the linked client, and visibly support notification retry. GitHub repository membership remains outside the application.
+4. **GitHub project handoffs — implemented after this snapshot:** the project detail modal records project-scoped GitHub links, emails the linked client, and visibly supports a deliberate retry after notification failure. GitHub repository membership remains outside the application.
 
 ## Sequencing and non-goals
 

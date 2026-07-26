@@ -12,7 +12,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 **In scope:** Deliver the Supabase-Auth operator workspace for Abe and Andrea, including project-focused client access and GitHub handoffs. Preserve the focused client portal while this workspace is introduced.
 
-**Current implementation:** Phase 2 is complete: analyzer and lead-capture hardening, database-backed operator authorization, hosted migrations `066`–`070`, and the durable site-audit workflow-run trigger are verified. Phase 3 is underway on `dev`: an operator-only site-report queue reads durable workflow records, exposes the linked customer report, and records a human decision with an optional rationale. A project operator can now explicitly link a guest project only to an existing account with the same normalized email, or remove that link; no account, invitation, or role is created. The next slice adds project-scoped GitHub handoffs and delivery-notification retry. No outreach automation is introduced.
+**Current implementation:** Phase 3 is complete pending the final full validation and hosted migration `071`: operators use a database-backed Supabase workspace for reports and projects; a guest project can be explicitly linked only to an existing exact-email account; and a linked client can receive project-scoped GitHub handoffs. Publishing a handoff sends a client email, records any failure visibly, and permits an explicit retry. GitHub repository membership remains in GitHub. No outreach automation is introduced.
 
 **Before review:** Run `git diff --check`, targeted unit/API and authorization tests, and the relevant retained-route smoke checks. Run `npm run type-check` and `npm run build` when application code changes. Record any unavailable integration checks below.
 
@@ -48,6 +48,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Truthful operator-role administration | `0ae7d57` | Made the transitional Users view read `user_roles` live and removed its misleading metadata-based operator-role controls. | Revert `0ae7d57`. |
 | 2026-07-25 | Explicit iframe placeholder image handling | This commit | Marked the scaled iframe placeholder as explicitly unoptimized, matching the Next.js external-image safety requirement and the image validation test. | Revert this focused application-and-ledger commit. |
 | 2026-07-26 | Safe existing-account client access | This commit | Added operator-confirmed project link/unlink actions that require an already-existing exact-email account, invalidate client/project-comment caches, and extended attachment downloads to enforce project-level authorization. No account creation, invitation, reassignment, or role change occurs. | Revert this focused application-and-ledger commit. |
+| 2026-07-26 | Project GitHub handoffs | This commit | Added project-scoped GitHub handoff records and operator publishing/retry controls. A linked client sees only their project handoffs; automatic notification failures remain visible and retryable. Migration `071` is additive and pending hosted validation. | Revert this focused application-and-ledger commit; apply a separately reviewed rollback migration only after `071` is deployed. |
 
 ## Latest validation record
 
@@ -66,3 +67,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - Truthful operator-role administration: 2 focused API tests, `npm run type-check`, `npm run build`, and `git diff --check` passed.
 - Full local gate after image handling repair: 23 test files passed (283 tests); 64 opt-in security/live tests skipped. Type checking, production build, and `git diff --check` passed. Redis-dependent test assertions self-skip when the local sandbox cannot reach Upstash; no external state was changed.
 - Safe existing-account client access: 8 focused API tests and `npm run type-check` passed. Full suite, production build, and retained-route smoke checks remain required before the Phase 3 slice is promoted.
+- Project GitHub handoffs: 7 focused API tests and `npm run type-check` passed. Full suite, production build, retained-route smoke checks, `git diff --check`, and hosted migration `071` verification remain required before Phase 3 is marked complete.
