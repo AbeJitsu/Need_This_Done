@@ -60,3 +60,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - Report queue access transition: `npm run type-check`, `npm run build`, and `git diff --check` passed.
 - Report queue decision focus: `npm run type-check`, `npm run build`, and `git diff --check` passed.
 - Report queue manual-action wording: 4 focused route tests, `npm run type-check`, `npm run build`, and `git diff --check` passed.
+- Truthful operator-role administration: 2 focused API tests, `npm run type-check`, `npm run build`, and `git diff --check` passed.

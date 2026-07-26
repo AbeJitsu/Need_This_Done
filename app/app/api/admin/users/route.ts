@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { verifyAdmin as verifyAdminAuth } from '@/lib/api-auth';
 import { badRequest, serverError, handleApiError } from '@/lib/api-errors';
-import { cache, CACHE_KEYS, CACHE_TTL } from '@/lib/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,45 +24,37 @@ export async function GET() {
     const authResult = await verifyAdminAuth();
     if (authResult.error) return authResult.error;
 
-    // Use admin client to list users (with caching)
-    // TTL: 5 minutes (user data changes infrequently)
+    // Read both identities and database-backed operator roles live. Roles are
+    // intentionally not derived from mutable browser-visible user metadata.
     const adminClient = getSupabaseAdmin();
+    const [{ data, error: listError }, { data: roles, error: rolesError }] = await Promise.all([
+      adminClient.auth.admin.listUsers(),
+      adminClient.from('user_roles').select('user_id').eq('role', 'admin'),
+    ]);
 
-    const result = await cache.wrap(
-      CACHE_KEYS.adminUsers(),
-      async () => {
-        const { data, error: listError } = await adminClient.auth.admin.listUsers();
+    if (listError || rolesError) {
+      throw new Error('Failed to load users');
+    }
 
-        if (listError) {
-          throw new Error('Failed to load users');
-        }
-
-        // Transform user data for the frontend
-        // Note: banned_until is not in the TypeScript types but exists in the API response
-        const users = data.users.map((user) => {
-          const userData = user as typeof user & { banned_until?: string | null };
-          return {
-            id: user.id,
-            email: user.email,
-            created_at: user.created_at,
-            last_sign_in_at: user.last_sign_in_at,
-            email_confirmed_at: user.email_confirmed_at,
-            is_admin: user.user_metadata?.is_admin === true,
-            is_disabled: userData.banned_until !== null && userData.banned_until !== undefined,
-            name: user.user_metadata?.name || user.user_metadata?.full_name || null,
-          };
-        });
-
-        return users;
-      },
-      CACHE_TTL.LONG // 5 minutes
-    );
+    const operatorIds = new Set((roles || []).map((role) => role.user_id));
+    // Note: banned_until is not in the TypeScript types but exists in the API response.
+    const users = data.users.map((user) => {
+      const userData = user as typeof user & { banned_until?: string | null };
+      return {
+        id: user.id,
+        email: user.email,
+        created_at: user.created_at,
+        last_sign_in_at: user.last_sign_in_at,
+        email_confirmed_at: user.email_confirmed_at,
+        is_admin: operatorIds.has(user.id),
+        is_disabled: userData.banned_until !== null && userData.banned_until !== undefined,
+        name: user.user_metadata?.name || user.user_metadata?.full_name || null,
+      };
+    });
 
     return NextResponse.json({
-      users: result.data,
-      count: result.data.length,
-      cached: result.cached,
-      source: result.source,
+      users,
+      count: users.length,
     });
   } catch (error) {
     return handleApiError(error, 'Admin users GET');
@@ -87,6 +78,10 @@ export async function PATCH(request: NextRequest) {
       return badRequest('Missing required fields: userId and action');
     }
 
+    if (action === 'setAdmin') {
+      return badRequest('Operator roles are provisioned through the reviewed user_roles process.');
+    }
+
     // Prevent admins from modifying their own account
     if (userId === adminUser.id) {
       return badRequest('Cannot modify your own account');
@@ -96,28 +91,6 @@ export async function PATCH(request: NextRequest) {
 
     // Handle different actions
     switch (action) {
-      case 'setAdmin': {
-        // Set or remove admin role
-        const { error: updateError } = await adminClient.auth.admin.updateUserById(
-          userId,
-          {
-            user_metadata: { is_admin: value === true },
-          }
-        );
-
-        if (updateError) {
-          return serverError('Failed to update user role');
-        }
-
-        // Invalidate user list cache
-        await cache.invalidate(CACHE_KEYS.adminUsers());
-
-        return NextResponse.json({
-          success: true,
-          message: value ? 'User promoted to admin' : 'Admin role removed',
-        });
-      }
-
       case 'disable': {
         // Ban/unban user (disable/enable account)
         // Note: ban_duration must be a valid Go duration string (e.g., '87600h' for ~10 years)
@@ -132,9 +105,6 @@ export async function PATCH(request: NextRequest) {
         if (updateError) {
           return serverError('Failed to update user status');
         }
-
-        // Invalidate user list cache
-        await cache.invalidate(CACHE_KEYS.adminUsers());
 
         return NextResponse.json({
           success: true,

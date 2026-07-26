@@ -14,8 +14,9 @@ import { getAriaSortValue } from '@/lib/aria-utils';
 // ============================================================================
 // Admin Users Page - User Management
 // ============================================================================
-// What: Displays all users and allows admins to manage roles and accounts.
-// Why: Admins need to view users, change roles, disable accounts, and trigger resets.
+// What: Displays account state and the database-backed operator role.
+// Why: Operators need truthful account context while this transitional page is
+// narrowed to project-focused client access.
 // How: Fetches from /api/admin/users and provides action buttons for each user.
 
 interface User {
@@ -125,7 +126,7 @@ export default function AdminUsersPage() {
 
   const handleAction = async (
     userId: string,
-    action: 'setAdmin' | 'disable' | 'resetPassword',
+    action: 'disable' | 'resetPassword',
     value?: boolean
   ) => {
     setActionLoading(userId);
@@ -281,7 +282,7 @@ export default function AdminUsersPage() {
         {/* Header */}
         <PageHeader
           title="User Management"
-          description="View and manage all user accounts."
+          description="Review client accounts. Operator access is provisioned separately for Abe and Andrea."
         />
 
         {/* Messages */}
@@ -309,7 +310,7 @@ export default function AdminUsersPage() {
             <div className={`text-3xl font-bold ${coloredLinkText.purple}`}>
               {users.filter((u) => u.is_admin).length}
             </div>
-            <div className={`text-sm ${headingColors.secondary}`}>Admins</div>
+            <div className={`text-sm ${headingColors.secondary}`}>Operators</div>
           </Card>
           <Card hoverColor="green" hoverEffect="glow" className="text-center">
             <div className={`text-3xl font-bold ${coloredLinkText.green}`}>
@@ -382,7 +383,7 @@ export default function AdminUsersPage() {
                       : filterButtonColors.inactive
                   }`}
                 >
-                  Admins
+                  Operators
                 </button>
                 <button
                   onClick={() => setRoleFilter('user')}
@@ -640,7 +641,7 @@ export default function AdminUsersPage() {
                                 : `${statusBadgeColors.user.bg} ${statusBadgeColors.user.text}`
                             }`}
                           >
-                            {user.is_admin ? 'Admin' : 'User'}
+                            {user.is_admin ? 'Operator' : 'Client'}
                           </span>
                         </td>
                       )}
@@ -665,18 +666,6 @@ export default function AdminUsersPage() {
                       {visibleColumns.actions && (
                         <td className="py-4 px-4">
                           <div className="flex justify-end gap-2">
-                            {/* Toggle Admin */}
-                            <button
-                              onClick={() =>
-                                handleAction(user.id, 'setAdmin', !user.is_admin)
-                              }
-                              disabled={actionLoading === user.id}
-                              aria-label={user.is_admin ? `Remove admin role from ${user.email}` : `Grant admin role to ${user.email}`}
-                              className={`text-xs px-3 py-1 rounded-full border ${outlineButtonColors.purple.base} ${outlineButtonColors.purple.hover} disabled:opacity-50 transition-colors`}
-                            >
-                              {user.is_admin ? 'Remove Admin' : 'Make Admin'}
-                            </button>
-
                             {/* Toggle Disabled */}
                             <button
                               onClick={() =>
