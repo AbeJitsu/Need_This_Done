@@ -12,7 +12,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 **In scope:** Deliver the Supabase-Auth operator workspace for Abe and Andrea, beginning with a site-report decision queue on the durable workflow-run foundation. Preserve the focused client portal while this workspace is introduced.
 
-**Current implementation:** Phase 2 is complete: analyzer and lead-capture hardening, database-backed operator authorization, hosted migrations `066`–`070`, and the durable site-audit workflow-run trigger are verified. The first Phase 3 slice is ready for approval: an operator-only site-report queue reads durable workflow records, exposes the linked customer report, and records a human decision. It does not send outreach or invoke an external automation system. Browser-side operator visibility also comes from the server-backed role endpoint rather than editable metadata.
+**Current implementation:** Phase 2 is complete: analyzer and lead-capture hardening, database-backed operator authorization, hosted migrations `066`–`070`, and the durable site-audit workflow-run trigger are verified. Phase 3 is underway on `dev`: an operator-only site-report queue reads durable workflow records, exposes the linked customer report, and records a human decision with an optional rationale. It does not send outreach or invoke an external automation system. Browser-side operator visibility also comes from the server-backed role endpoint rather than editable metadata.
 
 **Before review:** Run `git diff --check`, targeted unit/API and authorization tests, and the relevant retained-route smoke checks. Run `npm run type-check` and `npm run build` when application code changes. Record any unavailable integration checks below.
 
@@ -39,7 +39,8 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Browser operator authorization | This commit | Replaced metadata-derived admin UI state with a server-backed database-role check. | Revert this commit. |
 | 2026-07-25 | Operator report queue | `ed2b15e` | Added the protected `/admin/reports` queue and decision API over existing `workflow_runs`; a human can approve, reject, or flag manual action, with no automated outreach. | Revert `ed2b15e`. |
 | 2026-07-25 | Operator report queue API coverage | `aa6a5ea` | Added focused tests for authorization, report enrichment, operator attribution, and one-time decisions. | Revert `aa6a5ea`. |
-| 2026-07-25 | Report-decision rationale | Pending commit | Added an optional decision note to the operator queue and display of the saved rationale; corrected stale queue commit references in this ledger. | Revert this focused application-and-ledger commit. |
+| 2026-07-25 | Report-decision rationale | `a56af04` | Added an optional decision note to the operator queue and display of the saved rationale; corrected stale queue commit references in this ledger. | Revert `a56af04`. |
+| 2026-07-25 | Report queue dashboard link | This commit | Added a direct operator-dashboard link to the report queue so the daily decision work is reachable from the retained project workspace. | Revert this commit. |
 
 ## Latest validation record
 
@@ -51,3 +52,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - Operator report queue: the focused database-role tests passed (3 tests); `npm run type-check`, `npm run build`, and `git diff --check` passed. The expected simulated role-database failure was logged by the fail-closed test.
 - Operator report queue API coverage: 4 focused route tests and `npm run type-check` passed; `git diff --check` passed.
 - Report-decision rationale: 4 focused route tests, `npm run type-check`, `npm run build`, and `git diff --check` passed.
+- Report queue dashboard link: `npm run type-check`, `npm run build`, and `git diff --check` passed.
