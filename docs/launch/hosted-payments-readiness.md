@@ -7,6 +7,25 @@
 - Missing or malformed link configuration safely routes to `/contact?offering=:slug`.
 - Existing pricing, cart, checkout, appointment, and order behavior remains unchanged.
 
+## Local Stripe test Payment Link batch
+
+The local scripts create and verify a test-only batch for the three website-package deposits, Automation Setup paid in full, and the Managed AI monthly subscription. Add a real `STRIPE_TEST_SECRET_KEY=sk_test_...` only to `app/.env.local`; it is separate from the app's `STRIPE_SECRET_KEY` and is never committed.
+
+### Next action — July 27, 2026
+
+First, open the Stripe Dashboard in **Test mode**, go to **Developers → API keys**, and copy the Stripe-issued **Secret key** into `app/.env.local` as `STRIPE_TEST_SECRET_KEY`. A made-up key that merely starts with `sk_test_` will be rejected. Do not paste the key into chat, source control, or any public environment. Then run the three commands below in order.
+
+```bash
+cd app
+npm run stripe:test-links
+npm run stripe:test-links -- --apply
+npm run stripe:test-links:verify
+```
+
+The default command is read-only. `--apply` creates or reuses only Stripe assets marked as repository-managed test assets, then writes `app/.stripe-test-payment-links.json`, which is ignored by Git. The verifier checks the manifest, Stripe test mode, hosted test URL, amount, and recurring interval against the repository catalog.
+
+Use Stripe test cards only for checkout testing. Do not copy these test URLs into `STRIPE_PAYMENT_LINK_*`, change a public CTA, create standalone links for add-ons/custom work, or make a live payment until the live-launch checklist below is explicitly complete.
+
 ## Required before enabling a direct-payment CTA
 
 For each offering to sell directly:

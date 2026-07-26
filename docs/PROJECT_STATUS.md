@@ -18,7 +18,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 **Rollback:** Revert the focused implementation commit. Do not pair an irreversible schema change with a broad removal.
 
-**Blockers:** None recorded.
+**Blockers:** First action on 2026-07-27: the owner creates/copies a Stripe-issued **test-mode** secret key from Stripe Dashboard → Developers → API keys into `app/.env.local` as `STRIPE_TEST_SECRET_KEY`. The current made-up value is rejected by Stripe; no test asset, manifest, public link, or live payment was created. Then run the local dry run, apply, and verifier in that order, followed by a Stripe test-card checkout. Resolve or explicitly cancel this local-only validation by 2026-08-02.
 
 **No-broken-windows policy:** Every warning, failing check, stale route or document, broken interaction, and unresolved TODO is a defect. Fix it in the current slice, or record an owner-approved exception here with scope and removal date. An open exception blocks production promotion.
 
@@ -53,6 +53,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-26 | Phase 3 completion | This commit | Marked the focused operator/client workspace complete after full unit, build, smoke, and hosted migration validation; Phase 4 hosted payments is now current. | Revert this documentation-only commit if the roadmap state must be corrected. |
 | 2026-07-26 | Repository-owned offering catalog | This commit | Added the initial public `/api/offerings` catalog as the Phase 4 source of truth for current displayed prices, included scope, optional Payment Links, and the custom-work fallback. It does not change the current pricing page or checkout path. | Revert this focused catalog-and-ledger commit. |
 | 2026-07-26 | Hosted Payment Link handoff | This commit | Added a guarded offering checkout endpoint that redirects only to configured Stripe-hosted Payment Links; all missing or invalid link configuration falls back to the project request. Current pricing UI and legacy checkout behavior are unchanged. | Revert this focused handoff-and-ledger commit. |
+| 2026-07-26 | Local Stripe test Payment Link tooling | This commit | Added an idempotent, test-key-only local script for the three package deposits, Automation Setup, and Managed AI, plus manifest verification. It does not configure public links, alter checkout, or create add-on/custom-work links. | Revert this focused tooling, documentation, and test commit; Stripe test assets can be archived in the Stripe test dashboard if desired. |
 
 ## Latest validation record
 
@@ -76,3 +77,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - Repository-owned offering catalog: 2 focused catalog tests, `npm run type-check`, and `git diff --check` passed. No hosted payment link has been configured or followed; the public API therefore exposes `null` for payment links and `/contact` as the deliberate fallback.
 - Hosted Payment Link handoff: 3 focused route tests, the catalog tests, `npm run type-check`, and `git diff --check` passed. No Payment Link configuration or live Stripe checkout was changed.
 - Hosted payments launch readiness: documented the required Stripe configuration and end-to-end verification; added optional server-only Payment Link placeholders. Until values are reviewed and configured, the handoff remains on the project-request fallback.
+- Local Stripe test Payment Link tooling: 10 focused tests, strict compilation of both local scripts, 313 unit tests total (64 opt-in tests skipped), `npm run type-check`, `npm run build`, and `git diff --check` passed. The read-only test-mode dry run made no changes because Stripe rejected the supplied local test key; creation, remote verification, and a test-card checkout remain blocked until it is replaced. No public environment variable or public CTA is changed by the tooling.
