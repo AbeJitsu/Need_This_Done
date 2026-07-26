@@ -8,17 +8,19 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Active execution slice
 
-**Roadmap alignment:** Phase 4 — Hosted payments and service boundary.
+**Roadmap alignment:** Phase 5 — Retire legacy systems, independent slices only.
 
-**In scope:** Replace order-centric checkout with repository-owned offerings and Stripe-hosted payment links, invoices, subscriptions, and Customer Portal references. Preserve the completed focused operator/client workspace while payment callers are safely narrowed.
+**In scope:** Remove the disconnected LMS/enrollment application surface identified by the system audit while preserving historical migrations and database records. Commerce and order-linked systems remain out of scope until hosted-payment validation and caller-removal evidence are complete.
 
-**Current implementation:** Phase 3 is complete: operators use a database-backed Supabase workspace for reports and projects; a guest project can be explicitly linked only to an existing exact-email account; and a linked client can receive project-scoped GitHub handoffs. Publishing a handoff sends a client email, records any failure visibly, and permits an explicit retry. Hosted migration `071` is verified. Phase 4 is now current: the repository-owned offering catalog is available at `/api/offerings` with the existing public prices and scope, plus a safe project-request fallback until reviewed Stripe Payment Links are configured. The current pricing UI and legacy checkout behavior are unchanged; no order-dependent appointment or payment path is removed before its replacement passes validation.
+**Current implementation:** The repository-owned offering catalog, guarded hosted-link handoff, and local Stripe test tooling remain ready, but Stripe asset creation and end-to-end checkout validation are unfinished and owner-deferred. Work has moved to Phase 5 only for independent legacy surfaces: the LMS enrollment routes, APIs, dashboard section, components, navigation, mocks, and LMS-only tests are removed. Historical database migrations and records are unchanged.
 
 **Before review:** Run `git diff --check`, targeted unit/API and authorization tests, and the relevant retained-route smoke checks. Run `npm run type-check` and `npm run build` when application code changes. Record any unavailable integration checks below.
 
 **Rollback:** Revert the focused implementation commit. Do not pair an irreversible schema change with a broad removal.
 
-**Blockers:** First action on 2026-07-27: the owner creates/copies a Stripe-issued **test-mode** secret key from Stripe Dashboard → Developers → API keys into `app/.env.local` as `STRIPE_TEST_SECRET_KEY`. The current made-up value is rejected by Stripe; no test asset, manifest, public link, or live payment was created. Then run the local dry run, apply, and verifier in that order, followed by a Stripe test-card checkout. Resolve or explicitly cancel this local-only validation by 2026-08-02.
+**Blockers:** None for the independent LMS retirement slice.
+
+**Deferred work:** Stripe test Payment Link creation and checkout verification remain undone by owner decision. Resume only when the owner chooses to obtain a Stripe-issued test secret key. Until then, do not configure public Payment Links or retire commerce, order-linked appointments, or payment records.
 
 **No-broken-windows policy:** Every warning, failing check, stale route or document, broken interaction, and unresolved TODO is a defect. Fix it in the current slice, or record an owner-approved exception here with scope and removal date. An open exception blocks production promotion.
 
@@ -54,6 +56,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-26 | Repository-owned offering catalog | This commit | Added the initial public `/api/offerings` catalog as the Phase 4 source of truth for current displayed prices, included scope, optional Payment Links, and the custom-work fallback. It does not change the current pricing page or checkout path. | Revert this focused catalog-and-ledger commit. |
 | 2026-07-26 | Hosted Payment Link handoff | This commit | Added a guarded offering checkout endpoint that redirects only to configured Stripe-hosted Payment Links; all missing or invalid link configuration falls back to the project request. Current pricing UI and legacy checkout behavior are unchanged. | Revert this focused handoff-and-ledger commit. |
 | 2026-07-26 | Local Stripe test Payment Link tooling | This commit | Added an idempotent, test-key-only local script for the three package deposits, Automation Setup, and Managed AI, plus manifest verification. It does not configure public links, alter checkout, or create add-on/custom-work links. | Revert this focused tooling, documentation, and test commit; Stripe test assets can be archived in the Stripe test dashboard if desired. |
+| 2026-07-26 | Retire LMS application surface | This commit | Removed enrollment routes/APIs, LMS-only components and tests, the client learning section, and owner enrollment navigation. Historical migrations and stored records remain untouched; added a retirement guard and made local auth debugging opt-in. | Revert this focused application, test, and documentation commit. |
 
 ## Latest validation record
 
@@ -78,3 +81,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - Hosted Payment Link handoff: 3 focused route tests, the catalog tests, `npm run type-check`, and `git diff --check` passed. No Payment Link configuration or live Stripe checkout was changed.
 - Hosted payments launch readiness: documented the required Stripe configuration and end-to-end verification; added optional server-only Payment Link placeholders. Until values are reviewed and configured, the handoff remains on the project-request fallback.
 - Local Stripe test Payment Link tooling: 10 focused tests, strict compilation of both local scripts, 313 unit tests total (64 opt-in tests skipped), `npm run type-check`, `npm run build`, and `git diff --check` passed. The read-only test-mode dry run made no changes because Stripe rejected the supplied local test key; creation, remote verification, and a test-card checkout remain blocked until it is replaced. No public environment variable or public CTA is changed by the tooling.
+- LMS application retirement: 2 focused retirement checks and the full unit suite passed (315 tests; 64 opt-in tests skipped because Redis/local security services are unavailable). `npm run type-check`, `npm run build`, and `git diff --check` passed. Retained-route smoke checks passed 6 desktop/mobile checks; 2 report checks skipped because no report UUID is configured. No database migration or external state changed.

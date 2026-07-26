@@ -207,7 +207,7 @@ export const authOptions: NextAuthOptions = {
   },
 
   // ==========================================================================
-  // Debug mode (only in development)
+  // Debug mode is opt-in so routine development and smoke checks stay quiet.
   // ==========================================================================
-  debug: process.env.NODE_ENV === 'development',
+  debug: process.env.NEXTAUTH_DEBUG === 'true',
 };

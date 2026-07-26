@@ -11,9 +11,9 @@
 
 The local scripts create and verify a test-only batch for the three website-package deposits, Automation Setup paid in full, and the Managed AI monthly subscription. Add a real `STRIPE_TEST_SECRET_KEY=sk_test_...` only to `app/.env.local`; it is separate from the app's `STRIPE_SECRET_KEY` and is never committed.
 
-### Next action — July 27, 2026
+### Status — deferred and unfinished
 
-First, open the Stripe Dashboard in **Test mode**, go to **Developers → API keys**, and copy the Stripe-issued **Secret key** into `app/.env.local` as `STRIPE_TEST_SECRET_KEY`. A made-up key that merely starts with `sk_test_` will be rejected. Do not paste the key into chat, source control, or any public environment. Then run the three commands below in order.
+The owner has deferred all work that requires obtaining a new API key. No Stripe test assets or local manifest have been created. When the owner explicitly resumes this work, first open the Stripe Dashboard in **Test mode**, go to **Developers → API keys**, and copy the Stripe-issued **Secret key** into `app/.env.local` as `STRIPE_TEST_SECRET_KEY`. A made-up key that merely starts with `sk_test_` will be rejected. Do not paste the key into chat, source control, or any public environment. Then run the three commands below in order.
 
 ```bash
 cd app

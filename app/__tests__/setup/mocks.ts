@@ -16,12 +16,4 @@ export const handlers = [
       message: '10% discount applied',
     });
   }),
-
-  // Mock enrollment API
-  http.post('/api/enrollments', () => {
-    return HttpResponse.json({
-      success: true,
-      enrollment_id: 'test-enrollment-123',
-    });
-  }),
 ];
