@@ -13,6 +13,7 @@ import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import * as cheerio from 'cheerio';
 import type { Element as DomElement } from 'domhandler';
+import { parsePublicHttpUrl } from '@/lib/public-url';
 
 // ============================================
 // TYPES
@@ -81,20 +82,40 @@ type CheerioAPI = ReturnType<typeof cheerio.load>;
 // HTML FETCHING
 // ============================================
 
-export async function fetchHTML(url: string): Promise<{ html: string; status: number }> {
-  const response = await fetch(url, {
-    headers: {
-      'User-Agent': 'NeedThisDone-SiteReviewer/1.0',
-      'Accept': 'text/html,application/xhtml+xml',
-    },
-    redirect: 'follow',
-  });
+export async function fetchHTML(url: string): Promise<{ html: string; status: number; url: string }> {
+  let target = await parsePublicHttpUrl(url);
 
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  for (let redirects = 0; redirects <= 5; redirects++) {
+    const response = await fetch(target, {
+      headers: {
+        'User-Agent': 'NeedThisDone-SiteReviewer/1.0',
+        'Accept': 'text/html,application/xhtml+xml',
+      },
+      redirect: 'manual',
+    });
+
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get('location');
+      if (!location) throw new Error('Website returned a redirect without a location.');
+      if (redirects === 5) throw new Error('Website redirected too many times.');
+
+      target = await parsePublicHttpUrl(new URL(location, target).href);
+      continue;
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('text/html') && !contentType.includes('application/xhtml+xml')) {
+      throw new Error('Website did not return an HTML page.');
+    }
+
+    return { html: await response.text(), status: response.status, url: target.href };
   }
 
-  return { html: await response.text(), status: response.status };
+  throw new Error('Website redirected too many times.');
 }
 
 // ============================================
@@ -777,11 +798,11 @@ export async function analyzeSite(url: string, onProgress?: (msg: string) => voi
 
   // 1. Fetch homepage
   log('Fetching homepage...');
-  const { html: homepageHtml, status: homepageStatus } = await fetchHTML(url);
+  const { html: homepageHtml, status: homepageStatus, url: homepageUrl } = await fetchHTML(url);
 
   // 2. Discover nav pages
   log('Discovering pages...');
-  const pageUrls = discoverNavPages(homepageHtml, url);
+  const pageUrls = discoverNavPages(homepageHtml, homepageUrl);
   log(`Found ${pageUrls.length} pages`);
 
   // 3. Fetch + extract metrics for each page

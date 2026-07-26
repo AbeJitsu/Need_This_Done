@@ -6,6 +6,7 @@ import { withTimeout } from '@/lib/api-timeout';
 import { handleApiError, badRequest } from '@/lib/api-errors';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { sendSiteReportEmail } from '@/lib/email-service';
+import { parsePublicHttpUrl } from '@/lib/public-url';
 
 // ============================================================================
 // POST /api/site-analyzer
@@ -24,16 +25,12 @@ export async function POST(request: NextRequest) {
       return badRequest('Missing required fields: url and email');
     }
 
-    // Validate URL
+    // Validate URL and reject targets that could reach private server networks.
     let validatedUrl: string;
     try {
-      const parsed = new URL(body.url);
-      if (!['http:', 'https:'].includes(parsed.protocol)) {
-        return badRequest('URL must start with http:// or https://');
-      }
-      validatedUrl = parsed.href;
-    } catch {
-      return badRequest('Invalid URL format');
+      validatedUrl = (await parsePublicHttpUrl(body.url)).href;
+    } catch (error) {
+      return badRequest(error instanceof Error ? error.message : 'Invalid URL format');
     }
 
     // Validate and sanitize email
