@@ -8,6 +8,7 @@ import { useBackdropClose } from '@/hooks/useBackdropClose';
 import ProjectModalHeader from './project-modal/ProjectModalHeader';
 import ProjectModalDetails from './project-modal/ProjectModalDetails';
 import AdminStatusSection from './project-modal/AdminStatusSection';
+import ClientAccessSection from './project-modal/ClientAccessSection';
 import ProjectComments from './project-modal/ProjectComments';
 import { alertColors, cardBgColors } from '@/lib/colors';
 
@@ -138,6 +139,13 @@ export default function ProjectDetailModal({
     }
   };
 
+  const handleClientAccessChanged = (portalAccessEnabled: boolean) => {
+    setProject((currentProject: any) => currentProject
+      ? { ...currentProject, user_id: portalAccessEnabled ? 'linked-client' : null }
+      : currentProject);
+    if (onUpdate) onUpdate();
+  };
+
   // ============================================================================
   // Render
   // ============================================================================
@@ -189,15 +197,23 @@ export default function ProjectDetailModal({
 
               {/* Admin: Status Update Section */}
               {isAdmin && (
-                <AdminStatusSection
-                  newStatus={newStatus}
-                  setNewStatus={setNewStatus}
-                  statusNote={statusNote}
-                  setStatusNote={setStatusNote}
-                  submittingStatus={submittingStatus}
-                  handleUpdateStatus={handleUpdateStatus}
-                  currentStatus={project.status}
-                />
+                <>
+                  <AdminStatusSection
+                    newStatus={newStatus}
+                    setNewStatus={setNewStatus}
+                    statusNote={statusNote}
+                    setStatusNote={setStatusNote}
+                    submittingStatus={submittingStatus}
+                    handleUpdateStatus={handleUpdateStatus}
+                    currentStatus={project.status}
+                  />
+                  <ClientAccessSection
+                    projectId={project.id}
+                    email={project.email}
+                    portalAccessEnabled={Boolean(project.user_id)}
+                    onChanged={handleClientAccessChanged}
+                  />
+                </>
               )}
 
               {/* Comments Thread */}

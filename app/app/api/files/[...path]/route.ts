@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { verifyAuth } from '@/lib/api-auth';
+import { verifyAuth, verifyProjectAccess } from '@/lib/api-auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,8 +10,8 @@ export const dynamic = 'force-dynamic';
 // Serves files from Supabase Storage via time-limited signed URLs.
 // Used by ProjectDetailModal to let admins view/download attachments.
 //
-// Security: Requires authentication. Uses signed URLs that expire after 24
-// hours. Files in the project-attachments bucket are not publicly accessible.
+// Security: Requires project-level authorization. Uses signed URLs that expire
+// after 24 hours. Files in the project-attachments bucket are not public.
 // Path traversal attempts (.. segments) are rejected.
 
 export async function GET(
@@ -45,6 +45,22 @@ export async function GET(
     console.error('Supabase configuration error for file download:', error);
     return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
   }
+
+  // Resolve the attachment to its project before signing it. The service-role
+  // lookup is safe because project ownership is verified immediately after;
+  // this endpoint never returns project metadata to an unauthorized caller.
+  const { data: project, error: projectError } = await supabase
+    .from('projects')
+    .select('id')
+    .contains('attachments', [filePath])
+    .maybeSingle();
+
+  if (projectError || !project) {
+    return NextResponse.json({ error: 'File not found' }, { status: 404 });
+  }
+
+  const access = await verifyProjectAccess(project.id);
+  if (access.error) return access.error;
 
   // Generate a signed URL (valid for 24 hours)
   const { data, error } = await supabase.storage

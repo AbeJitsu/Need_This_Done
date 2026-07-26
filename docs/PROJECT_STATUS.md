@@ -10,9 +10,9 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 **Roadmap alignment:** Phase 3 — Focused operator and client workspace.
 
-**In scope:** Deliver the Supabase-Auth operator workspace for Abe and Andrea, beginning with a site-report decision queue on the durable workflow-run foundation. Preserve the focused client portal while this workspace is introduced.
+**In scope:** Deliver the Supabase-Auth operator workspace for Abe and Andrea, including project-focused client access and GitHub handoffs. Preserve the focused client portal while this workspace is introduced.
 
-**Current implementation:** Phase 2 is complete: analyzer and lead-capture hardening, database-backed operator authorization, hosted migrations `066`–`070`, and the durable site-audit workflow-run trigger are verified. Phase 3 is underway on `dev`: an operator-only site-report queue reads durable workflow records, exposes the linked customer report, and records a human decision with an optional rationale. It does not send outreach or invoke an external automation system. Browser-side operator visibility also comes from the server-backed role endpoint rather than editable metadata.
+**Current implementation:** Phase 2 is complete: analyzer and lead-capture hardening, database-backed operator authorization, hosted migrations `066`–`070`, and the durable site-audit workflow-run trigger are verified. Phase 3 is underway on `dev`: an operator-only site-report queue reads durable workflow records, exposes the linked customer report, and records a human decision with an optional rationale. A project operator can now explicitly link a guest project only to an existing account with the same normalized email, or remove that link; no account, invitation, or role is created. The next slice adds project-scoped GitHub handoffs and delivery-notification retry. No outreach automation is introduced.
 
 **Before review:** Run `git diff --check`, targeted unit/API and authorization tests, and the relevant retained-route smoke checks. Run `npm run type-check` and `npm run build` when application code changes. Record any unavailable integration checks below.
 
@@ -47,6 +47,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Owner inventory alignment | This commit | Marked the post-snapshot report queue as implemented in the evidence inventory and linked that note to this execution ledger. | Revert this documentation-only commit. |
 | 2026-07-25 | Truthful operator-role administration | `0ae7d57` | Made the transitional Users view read `user_roles` live and removed its misleading metadata-based operator-role controls. | Revert `0ae7d57`. |
 | 2026-07-25 | Explicit iframe placeholder image handling | This commit | Marked the scaled iframe placeholder as explicitly unoptimized, matching the Next.js external-image safety requirement and the image validation test. | Revert this focused application-and-ledger commit. |
+| 2026-07-26 | Safe existing-account client access | This commit | Added operator-confirmed project link/unlink actions that require an already-existing exact-email account, invalidate client/project-comment caches, and extended attachment downloads to enforce project-level authorization. No account creation, invitation, reassignment, or role change occurs. | Revert this focused application-and-ledger commit. |
 
 ## Latest validation record
 
@@ -64,3 +65,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - Report queue manual-action wording: 4 focused route tests, `npm run type-check`, `npm run build`, and `git diff --check` passed.
 - Truthful operator-role administration: 2 focused API tests, `npm run type-check`, `npm run build`, and `git diff --check` passed.
 - Full local gate after image handling repair: 23 test files passed (283 tests); 64 opt-in security/live tests skipped. Type checking, production build, and `git diff --check` passed. Redis-dependent test assertions self-skip when the local sandbox cannot reach Upstash; no external state was changed.
+- Safe existing-account client access: 8 focused API tests and `npm run type-check` passed. Full suite, production build, and retained-route smoke checks remain required before the Phase 3 slice is promoted.
