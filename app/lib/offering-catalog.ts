@@ -100,3 +100,13 @@ export function publicOfferings() {
     paymentLink: paymentLinkEnv ? process.env[paymentLinkEnv] || null : null,
   }));
 }
+
+export function resolveOffering(slug: string) {
+  const offering = OFFERING_CATALOG.find((candidate) => candidate.slug === slug);
+  if (!offering) return null;
+
+  return {
+    ...offering,
+    paymentLink: offering.paymentLinkEnv ? process.env[offering.paymentLinkEnv] || null : null,
+  };
+}
