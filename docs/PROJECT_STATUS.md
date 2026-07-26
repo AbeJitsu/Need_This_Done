@@ -38,6 +38,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 | 2026-07-25 | Operator workflow-run foundation | This commit | Added and applied migration `070`; every new site report now creates an idempotent, operator-only review record with no external automation. | Apply a separately reviewed rollback migration to remove the trigger and table if needed. |
 | 2026-07-25 | Browser operator authorization | This commit | Replaced metadata-derived admin UI state with a server-backed database-role check. | Revert this commit. |
 | 2026-07-25 | Operator report queue | Pending approval | Added the protected `/admin/reports` queue and decision API over existing `workflow_runs`; a human can approve, reject, or flag manual action, with no automated outreach. | Revert this focused application commit. |
+| 2026-07-25 | Operator report queue API coverage | Pending commit | Added focused tests for authorization, report enrichment, operator attribution, and one-time decisions. | Revert this focused test-and-ledger commit. |
 
 ## Latest validation record
 
@@ -47,3 +48,4 @@ This is the implementation ledger. Update it in the same commit as every complet
 - Hosted Supabase migration history matches local migrations through `069`; post-migration checks confirmed a server-only report count of 1 versus anonymous count 0, the project consultation columns, and exactly two database-backed admin roles.
 - Hosted Supabase migration history matches local migrations through `070`; `workflow_runs` schema check returned HTTP 200. No synthetic production report was created solely to test the trigger.
 - Operator report queue: the focused database-role tests passed (3 tests); `npm run type-check`, `npm run build`, and `git diff --check` passed. The expected simulated role-database failure was logged by the fail-closed test.
+- Operator report queue API coverage: 4 focused route tests and `npm run type-check` passed; `git diff --check` passed.
