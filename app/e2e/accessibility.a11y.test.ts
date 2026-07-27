@@ -40,7 +40,6 @@ const PUBLIC_PAGES = [
 
 // Admin pages that require authentication
 const ADMIN_CORE_PAGES = [
-  { path: '/admin/dev', name: 'Admin Dev' },
   { path: '/admin/users', name: 'Admin Users' },
   { path: '/admin/orders', name: 'Admin Orders' },
   { path: '/admin/appointments', name: 'Admin Appointments' },

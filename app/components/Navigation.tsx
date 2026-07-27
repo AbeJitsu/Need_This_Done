@@ -277,13 +277,6 @@ export default function Navigation() {
                           >
                             Manage Users
                           </Link>
-                          <Link
-                            href="/admin/dev"
-                            onClick={() => setShowDropdown(false)}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            Dev Dashboard
-                          </Link>
                         </>
                       )}
                       <button

@@ -45,7 +45,7 @@ export function Hero() {
 }
 
 // Reads ?heroPhase=N from URL to set initial keyword rotation index
-// Used by DeviceShowcase to start each iframe at a different phase
+// Used by embedded device previews to start each iframe at a different phase.
 function HeroWithParams() {
   const searchParams = useSearchParams();
   const initialPhase = Number(searchParams.get('heroPhase')) || 0;

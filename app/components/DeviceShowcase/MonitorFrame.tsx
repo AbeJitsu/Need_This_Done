@@ -6,7 +6,7 @@
 // How: Aluminum gradient body → screen area → chin with logo → tapered stand → oval base
 //
 // The forwarded ref wraps only the body (shell + chin), NOT the stand/base.
-// This lets DeviceShowcase measure just the screen area for centering
+// This lets responsive preview layouts measure just the screen area for centering.
 // tablet/phone devices correctly.
 
 import { forwardRef } from 'react';

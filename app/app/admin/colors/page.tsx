@@ -476,8 +476,8 @@ ${colorName}: {
 
       {/* Back to Dashboard */}
       <div className="mt-8 text-center">
-        <Button variant="gray" href="/admin/dev">
-          Back to Dev Dashboard
+        <Button variant="gray" href="/dashboard">
+          Back to Dashboard
         </Button>
       </div>
     </div>

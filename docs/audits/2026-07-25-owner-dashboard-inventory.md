@@ -154,6 +154,7 @@ The items below describe the state of the July 25 inventory snapshot. Subsequent
 3. **Project-focused client-access administration — implemented after this snapshot:** the project detail modal can link a guest project only to an existing same-email account or remove that link. It neither creates accounts nor exposes the user directory; portal, comment, and attachment access remain project-scoped.
 4. **GitHub project handoffs — implemented after this snapshot:** the project detail modal records project-scoped GitHub links, emails the linked client, and visibly supports a deliberate retry after notification failure. GitHub repository membership remains outside the application.
 5. **LMS application retirement — implemented after this snapshot:** the enrollment routes and APIs, client learning section, owner enrollment navigation, LMS-only components, mocks, and tests are removed. Historical database migrations and stored records remain untouched.
+6. **Developer-tools application retirement — implemented after this snapshot:** `/admin/dev`, its device preview, route-only demo APIs/components, owner navigation, stale accessibility target, and route snapshots are removed. The retained home-page device mockup remains.
 
 ## Sequencing and non-goals
 
