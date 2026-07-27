@@ -4,7 +4,7 @@ import UnifiedPricingPage from '@/components/pricing/UnifiedPricingPage';
 // ============================================================================
 // Pricing Page — Menu Board Overview
 // ============================================================================
-// Read-only pricing overview. No checkout here — commerce lives at /shop.
+// Repository-owned pricing overview with guarded hosted-payment handoffs.
 // Quote authorization lives at /quote.
 
 export const metadata: Metadata = {

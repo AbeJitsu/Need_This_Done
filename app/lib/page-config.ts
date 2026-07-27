@@ -428,7 +428,6 @@ export const DEFAULT_LAYOUT_CONTENT: LayoutContent = {
     links: [
       { href: '/services', label: 'Services' },
       { href: '/pricing', label: 'Pricing' },
-      { href: '/shop', label: 'Shop' },
       { href: '/about', label: 'About' },
       { href: '/work', label: 'Work' },
       { href: '/blog', label: 'Blog' },

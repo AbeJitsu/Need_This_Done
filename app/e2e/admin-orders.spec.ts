@@ -8,7 +8,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Admin Orders Dashboard', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/admin/shop/orders');
+    await page.goto('/admin/orders');
     // Wait for page to load
     await page.waitForSelector('h1', { timeout: 15000 });
   });
@@ -73,7 +73,7 @@ test.describe('Admin Orders Dashboard', () => {
 
 test.describe('Order Status Updates', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/admin/shop/orders');
+    await page.goto('/admin/orders');
     await page.waitForSelector('h1', { timeout: 15000 });
   });
 
@@ -111,7 +111,7 @@ test.describe('Order Status Updates', () => {
 
 test.describe('Order Display', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/admin/shop/orders');
+    await page.goto('/admin/orders');
     await page.waitForSelector('h1', { timeout: 15000 });
   });
 

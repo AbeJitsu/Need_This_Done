@@ -43,8 +43,6 @@ const ADMIN_CORE_PAGES = [
   { path: '/admin/users', name: 'Admin Users' },
   { path: '/admin/orders', name: 'Admin Orders' },
   { path: '/admin/appointments', name: 'Admin Appointments' },
-  { path: '/admin/products', name: 'Admin Products' },
-  { path: '/admin/shop', name: 'Admin Shop' },
 ];
 
 const ADMIN_CONTENT_PAGES = [
@@ -52,13 +50,10 @@ const ADMIN_CONTENT_PAGES = [
   { path: '/admin/pages/new', name: 'Admin Pages New' },
   { path: '/admin/blog', name: 'Admin Blog' },
   { path: '/admin/blog/new', name: 'Admin Blog New' },
-  { path: '/admin/shop/orders', name: 'Admin Shop Orders' },
-  { path: '/admin/shop/products/new', name: 'Admin Shop Products New' },
 ];
 
 // Pages that require Medusa backend (skip in standard tests)
 const BACKEND_DEPENDENT_PAGES = [
-  { path: '/shop', name: 'Shop' },
   { path: '/cart', name: 'Cart' },
   { path: '/checkout', name: 'Checkout' },
   { path: '/dashboard', name: 'Dashboard' },

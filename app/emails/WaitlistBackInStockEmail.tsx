@@ -35,7 +35,7 @@ export default function WaitlistBackInStockEmail({
 }: WaitlistBackInStockEmailProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com';
   const displayName = customerName || customerEmail.split('@')[0];
-  const shopLink = productUrl || `${siteUrl}/shop`;
+  const shopLink = productUrl || `${siteUrl}/pricing`;
 
   return (
     <Html>

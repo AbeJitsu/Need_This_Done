@@ -9,13 +9,9 @@ import { CartProvider } from '@/context/CartContext';
 import { StripeProvider } from '@/context/StripeContext';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';
 import { ToastProvider } from '@/context/ToastContext';
-import { WishlistProvider } from '@/context/WishlistContext';
-import { ComparisonProvider } from '@/context/ComparisonContext';
-import { BrowsingHistoryProvider } from '@/context/BrowsingHistoryContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { WizardWidget } from '@/components/Wizard';
 import { ServiceDetailModal } from '@/components/service-modal';
-import ProductComparisonModal from '@/components/ProductComparisonModal';
 import { Suspense } from 'react';
 import HeroPreviewDetector from '@/components/HeroPreviewDetector';
 import { ProfessionalServiceJsonLd, WebSiteJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd';
@@ -186,9 +182,6 @@ export default function RootLayout({
         <SessionProvider>
         <AuthProvider>
           <CartProvider>
-            <WishlistProvider>
-              <ComparisonProvider>
-                <BrowsingHistoryProvider>
                 <StripeProvider>
                   <ServiceModalProvider>
                     <ToastProvider>
@@ -228,15 +221,9 @@ export default function RootLayout({
                     {/* Service detail modal - available on all pages */}
                     <ServiceDetailModal />
 
-                    {/* Product comparison modal - available on all pages */}
-                    <ProductComparisonModal />
-
                   </ToastProvider>
                 </ServiceModalProvider>
               </StripeProvider>
-                </BrowsingHistoryProvider>
-            </ComparisonProvider>
-            </WishlistProvider>
           </CartProvider>
         </AuthProvider>
         </SessionProvider>

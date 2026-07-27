@@ -37,7 +37,7 @@ export default function ReviewApprovedEmail({
 }: ReviewApprovedEmailProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com';
   const displayName = customerName || customerEmail.split('@')[0];
-  const reviewLink = productUrl || `${siteUrl}/shop`;
+  const reviewLink = productUrl || `${siteUrl}/pricing`;
   const stars = '⭐'.repeat(rating);
 
   return (

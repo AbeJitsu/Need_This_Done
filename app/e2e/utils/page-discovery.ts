@@ -136,7 +136,7 @@ export function getPublicScreenshotPages(appDir?: string): ScreenshotPage[] {
 /**
  * Get admin pages formatted for screenshot tests.
  *
- * Example: `/admin/products` → { path: '/admin/products', name: 'admin-products', folder: 'admin/products' }
+ * Example: `/admin/reports` → { path: '/admin/reports', name: 'admin-reports', folder: 'admin/reports' }
  */
 export function getAdminScreenshotPages(appDir?: string): ScreenshotPage[] {
   return discoverAdminPages(appDir).map((p) => {

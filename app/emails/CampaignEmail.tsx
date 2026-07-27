@@ -75,7 +75,7 @@ export default function CampaignEmail({
             <Section style={ctaSection}>
               <Button
                 style={ctaButton}
-                href={`${process.env.NEXT_PUBLIC_BASE_URL || 'https://needthisdone.com'}/shop`}
+                href={`${process.env.NEXT_PUBLIC_BASE_URL || 'https://needthisdone.com'}/pricing`}
               >
                 {callToActionText}
               </Button>

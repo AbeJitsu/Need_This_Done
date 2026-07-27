@@ -205,7 +205,7 @@ async function notifyWaitlistCustomers(
         customerName: customer.customer_name,
         productTitle: product.product_title,
         productImage: product.product_image,
-        productUrl: `${siteUrl}/shop/${product.product_id}`,
+        productUrl: `${siteUrl}/pricing`,
         stockQuantity: product.stock_quantity,
       });
 

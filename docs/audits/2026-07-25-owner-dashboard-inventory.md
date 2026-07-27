@@ -157,6 +157,7 @@ The items below describe the state of the July 25 inventory snapshot. Subsequent
 6. **Developer-tools application retirement — implemented after this snapshot:** `/admin/dev`, its device preview, route-only demo APIs/components, owner navigation, stale accessibility target, and route snapshots are removed. The retained home-page device mockup remains.
 7. **Inline-editor application retirement — implemented after this snapshot:** retained public pages now use repository-owned defaults; `/admin/content`, page-content mutation/history APIs, global editor providers, editor/page-builder components, and editor-only tests and proof artifacts are removed. Historical migrations and stored records remain unchanged.
 8. **Commerce retirement boundary — verified after this snapshot:** a read-only hosted check found zero `orders` and `payments` rows; the hosted appointment-request, appointment-reminder, and payment-attempt tables are absent. Retained pricing and wizard callers now use the repository offering catalog and guarded project-request handoff, allowing commerce code retirement without historical order migration. Schema removal remains separately reviewed.
+9. **Product storefront retirement — implemented after this snapshot:** public shop/product routes, product administration and APIs, wishlist/comparison/history providers, product tracking, dedicated tests, and stale route artifacts are removed. Cart, checkout, orders, legacy Stripe, reviews, loyalty, referrals, and waitlists remain explicitly outside this slice.
 
 ## Sequencing and non-goals
 

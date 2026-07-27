@@ -15,7 +15,6 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { glob } from 'glob';
 
 // Configuration
 const OUTPUT_FILE = path.join(process.cwd(), 'component-route-map.json');
@@ -36,6 +35,23 @@ interface FullMap {
   routes: RouteInfo[];
   componentToRoutes: ComponentRouteMap;
   globalFiles: string[];
+}
+
+function findPageFiles(root: string, relativeRoot = ''): string[] {
+  const directory = path.join(root, relativeRoot);
+  const pages: string[] = [];
+
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if (entry.name === 'node_modules' || entry.name === '.next') continue;
+    const relativePath = path.join(relativeRoot, entry.name);
+    if (entry.isDirectory()) {
+      pages.push(...findPageFiles(root, relativePath));
+    } else if (entry.name === 'page.tsx') {
+      pages.push(relativePath);
+    }
+  }
+
+  return pages;
 }
 
 // Files that affect ALL routes when changed
@@ -113,10 +129,7 @@ async function main() {
   console.log('🔍 Scanning page files...\n');
 
   // Find all page.tsx files
-  const pageFiles = await glob('app/**/page.tsx', {
-    cwd: process.cwd(),
-    ignore: ['node_modules/**', '.next/**'],
-  });
+  const pageFiles = findPageFiles(process.cwd(), 'app').sort();
 
   console.log(`Found ${pageFiles.length} pages\n`);
 

@@ -277,16 +277,6 @@ describe('Pro Site Features (includes Growth)', () => {
     });
   });
 
-  describe('Product analytics (views, conversions, trends)', () => {
-    it('has product analytics API', () => {
-      allExist(['app/api/admin/product-analytics/route.ts']);
-    });
-
-    it('has product analytics admin page', () => {
-      allExist(['app/admin/product-analytics/page.tsx']);
-    });
-  });
-
   describe('AI chatbot trained on site content', () => {
     it('has chatbot components', () => {
       allExist([
@@ -357,7 +347,6 @@ describe('Pro Site Features (includes Growth)', () => {
         'app/admin/users/page.tsx',
         'app/admin/reviews/page.tsx',
         'app/admin/appointments/page.tsx',
-        'app/admin/products/page.tsx',
       ]);
     });
 
@@ -370,48 +359,6 @@ describe('Pro Site Features (includes Growth)', () => {
 
     it('has admin layout components', () => {
       allExist(['components/AdminSidebar.tsx']);
-    });
-  });
-});
-
-// ============================================================================
-// ADD-ONS — Each must exist independently
-// ============================================================================
-
-describe('Add-on Features', () => {
-  describe('Online Store add-on (+$2,000)', () => {
-    it('has shop pages', () => {
-      allExist([
-        'app/shop/page.tsx',
-      ]);
-    });
-
-    it('has cart system', () => {
-      allExist([
-        'app/cart/page.tsx',
-        'context/CartContext.tsx',
-      ]);
-    });
-
-    it('has product waitlist', () => {
-      allExist([
-        'app/api/products/waitlist/route.ts',
-      ]);
-    });
-
-    it('has product comparison', () => {
-      allExist(['context/ComparisonContext.tsx']);
-    });
-
-    it('has wishlist', () => {
-      allExist([
-        'app/wishlist/page.tsx',
-        'context/WishlistContext.tsx',
-      ]);
-    });
-
-    it('has recently viewed tracking', () => {
-      allExist(['context/BrowsingHistoryContext.tsx']);
     });
   });
 });

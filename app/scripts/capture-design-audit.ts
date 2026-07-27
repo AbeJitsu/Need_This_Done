@@ -19,7 +19,6 @@ const PUBLIC_PAGES = [
   { path: '/terms', name: 'terms' },
   { path: '/get-started', name: 'get-started' },
   { path: '/build', name: 'build' },
-  { path: '/shop', name: 'shop' },
 ];
 
 const OUTPUT_DIR = path.join(__dirname, '../../design-audit-screenshots');

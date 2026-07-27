@@ -280,13 +280,9 @@ export function shouldIndexPage(pathname: string): boolean {
  * Determines the page type based on the URL pathname.
  *
  * @param pathname - The current URL pathname
- * @returns Page type: "static", "cms", or "product"
+ * @returns Page type: "static" or "cms"
  */
-export function getPageType(pathname: string): 'static' | 'cms' | 'product' {
-  if (pathname.startsWith('/shop/')) {
-    return 'product';
-  }
-
+export function getPageType(pathname: string): 'static' | 'cms' {
   // Static pages have known paths
   const staticPaths = ['/', '/services', '/pricing', '/faq', '/how-it-works', '/contact'];
   if (staticPaths.includes(pathname)) {

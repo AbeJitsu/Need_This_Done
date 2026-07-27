@@ -275,11 +275,9 @@ export async function POST(request: NextRequest) {
       .eq('id', review.product_id)
       .single();
 
-    // Fetch product URL for email (using Medusa product ID)
+    // The legacy storefront is retired; review emails fall back to pricing.
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://needthisdone.com';
-    const productUrl = product
-      ? `${siteUrl}/shop/${review.product_id}`
-      : undefined;
+    const productUrl = product ? `${siteUrl}/pricing` : undefined;
 
     // Send email based on action
     let emailSent = false;

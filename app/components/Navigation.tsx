@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
-import { useWishlist } from '@/context/WishlistContext';
 import { signOut } from '@/lib/auth';
 import { getBadgeColor } from '@/lib/colors';
 import { DEFAULT_LAYOUT_CONTENT, type NavLink } from '@/lib/page-config';
@@ -35,7 +34,6 @@ export default function Navigation() {
   const router = useRouter();
   const { user, isAuthenticated, isAdmin, isLoading } = useAuth();
   const { itemCount } = useCart();
-  const { items: wishlistItems } = useWishlist();
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -160,22 +158,6 @@ export default function Navigation() {
               >
                 <span>{headerContent.ctaButton.text}</span>
               </ContentValue>
-            </Link>
-
-            {/* Wishlist Icon */}
-            <Link
-              href="/wishlist"
-              className="relative p-2 text-gray-500 hover:text-gray-700 transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              aria-label={wishlistItems.length > 0 ? `My wishlist with ${wishlistItems.length} item${wishlistItems.length !== 1 ? 's' : ''}` : 'My wishlist'}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-              {wishlistItems.length > 0 && (
-                <span className={`absolute top-0 -right-1 ${getBadgeColor('red')} text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center leading-none`} aria-hidden="true">
-                  {wishlistItems.length > 99 ? '99+' : wishlistItems.length}
-                </span>
-              )}
             </Link>
 
             {/* Cart Icon */}

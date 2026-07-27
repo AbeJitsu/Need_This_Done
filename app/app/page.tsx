@@ -64,32 +64,14 @@ async function getRecentBlogPosts(): Promise<BlogPostSummary[]> {
 }
 
 // ============================================================================
-// Prefetch Products (for instant navigation)
-// ============================================================================
-// Warms the cache so /pricing loads instantly when users click CTAs
-
-async function prefetchProducts() {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    // Fire-and-forget fetch to warm Redis cache
-    await fetch(`${baseUrl}/api/shop/products`, {
-      next: { revalidate: 3600 }, // Match product cache TTL
-    });
-  } catch {
-    // Silent fail - prefetch is optional optimization
-  }
-}
-
-// ============================================================================
 // Page Component
 // ============================================================================
 
 export default async function HomePage() {
-  // Fetch content, blog posts, and prefetch products in parallel for speed
+  // Fetch repository content and recent blog posts in parallel.
   const [content, recentPosts] = await Promise.all([
     getContent(),
     getRecentBlogPosts(),
-    prefetchProducts(), // Warms cache for instant /pricing navigation
   ]);
 
   // Render using the client component which supports inline editing
