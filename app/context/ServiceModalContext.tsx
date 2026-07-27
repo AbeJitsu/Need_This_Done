@@ -10,7 +10,7 @@ import type { ServiceModalContent as PageModalContent } from '@/lib/page-config'
 // ============================================================================
 // What: Manages service detail modal state across the app
 // Why: ServiceCards on any page can open a detailed modal with friendly info
-// How: Context provider pattern (same as CartContext, ChatbotWidget)
+// How: Context provider pattern shared across the application
 //
 // Modal content priority:
 // 1. Page content passed via openModalWithContent - allows inline editing

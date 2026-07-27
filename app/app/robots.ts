@@ -17,8 +17,6 @@ export default function robots(): MetadataRoute.Robots {
           '/admin/',      // Admin dashboard - private
           '/api/',        // API routes - not for indexing
           '/dashboard/',  // User dashboard - private
-          '/checkout/',   // Checkout flow - private
-          '/cart/',       // Shopping cart - private
           '/auth/',       // Auth pages - private
           '/login/',      // Login page - private
         ],

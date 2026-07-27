@@ -40,7 +40,7 @@ function discoverNavPages(html: string, baseUrl: string): string[] {
   const dom = new JSDOM(html, { url: baseUrl });
   const doc = dom.window.document;
   const parsedBase = new URL(baseUrl);
-  const SKIP_PATHS = new Set(['/cart', '/wishlist', '/checkout', '/login', '/signup', '/register', '/privacy', '/terms', '/cookie-policy']);
+  const SKIP_PATHS = new Set(['/login', '/signup', '/register', '/privacy', '/terms', '/cookie-policy']);
 
   const seen = new Set<string>();
   const pages: string[] = [];

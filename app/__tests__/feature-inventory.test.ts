@@ -98,23 +98,6 @@ describe('Growth Site Features (includes Starter)', () => {
     });
   });
 
-  describe('Appointment booking with email confirmations', () => {
-    it('has appointment request API', () => {
-      allExist(['app/api/appointments/request/route.ts']);
-    });
-
-    it('has consultation calendar component', () => {
-      allExist(['components/ConsultationCalendar.tsx']);
-    });
-
-    it('has consultation slot generation logic', () => {
-      allExist(['lib/consultation-slots.ts']);
-    });
-
-    it('has email service for appointment notifications', () => {
-      allExist(['lib/email-service.ts']);
-    });
-  });
 });
 
 // ============================================================================
@@ -150,38 +133,6 @@ describe('Pro Site Features (includes Growth)', () => {
     });
   });
 
-  describe('Accept payments (one-time, subscriptions, deposits)', () => {
-    it('has checkout API', () => {
-      allExist(['app/api/checkout/session/route.ts']);
-    });
-
-    it('has Stripe webhook handler', () => {
-      allExist(['app/api/stripe/webhook/route.ts']);
-    });
-
-    it('has payment intent creation', () => {
-      allExist(['app/api/stripe/create-payment-intent/route.ts']);
-    });
-
-    it('has subscription creation', () => {
-      allExist(['app/api/stripe/create-subscription/route.ts']);
-    });
-
-    it('has Stripe client and deposit utilities', () => {
-      allExist([
-        'lib/stripe.ts',
-        'lib/deposit-utils.ts',
-        'lib/deposit-validation.ts',
-      ]);
-    });
-
-    it('has cart and Stripe context providers', () => {
-      allExist([
-        'context/CartContext.tsx',
-        'context/StripeContext.tsx',
-      ]);
-    });
-  });
 
   describe('Blog with editor', () => {
     it('has blog pages', () => {
@@ -305,11 +256,9 @@ describe('Pro Site Features (includes Growth)', () => {
     });
   });
 
-  describe('Automated emails (order confirmations, reminders, restock alerts)', () => {
+  describe('Automated emails', () => {
     it('has cron jobs for automated emails', () => {
       allExist([
-        'app/api/cron/abandoned-carts/route.ts',
-        'app/api/cron/appointment-reminders/route.ts',
         'app/api/cron/waitlist-notifications/route.ts',
         'app/api/cron/retry-failed-emails/route.ts',
       ]);
@@ -320,39 +269,17 @@ describe('Pro Site Features (includes Growth)', () => {
     });
   });
 
-  describe('Appointment booking with Google Calendar sync + reminders', () => {
-    it('has Google Calendar integration', () => {
-      allExist(['lib/google-calendar.ts']);
-    });
-
-    it('has Google OAuth API routes', () => {
-      allExist([
-        'app/api/google/connect/route.ts',
-        'app/api/google/callback/route.ts',
-        'app/api/google/disconnect/route.ts',
-        'app/api/google/status/route.ts',
-      ]);
-    });
-
-    it('has appointment reminder cron', () => {
-      allExist(['app/api/cron/appointment-reminders/route.ts']);
-    });
-  });
-
-  describe('Admin dashboard (orders, customers, reviews, analytics)', () => {
+  describe('Admin dashboard (customers, reviews, analytics)', () => {
     it('has core admin pages', () => {
       allExist([
         'app/admin/analytics/page.tsx',
-        'app/admin/orders/page.tsx',
         'app/admin/users/page.tsx',
         'app/admin/reviews/page.tsx',
-        'app/admin/appointments/page.tsx',
       ]);
     });
 
     it('has admin API routes', () => {
       allExist([
-        'app/api/admin/appointments/route.ts',
         'app/api/admin/reviews/route.ts',
       ]);
     });

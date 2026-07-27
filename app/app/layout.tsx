@@ -5,8 +5,6 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import SessionProvider from '@/components/providers/SessionProvider';
 import { AuthProvider } from '@/context/AuthContext';
-import { CartProvider } from '@/context/CartContext';
-import { StripeProvider } from '@/context/StripeContext';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
@@ -181,8 +179,6 @@ export default function RootLayout({
       <body className="antialiased">
         <SessionProvider>
         <AuthProvider>
-          <CartProvider>
-                <StripeProvider>
                   <ServiceModalProvider>
                     <ToastProvider>
                     {/* Skip to main content link for keyboard users */}
@@ -222,9 +218,7 @@ export default function RootLayout({
                     <ServiceDetailModal />
 
                   </ToastProvider>
-                </ServiceModalProvider>
-              </StripeProvider>
-          </CartProvider>
+                  </ServiceModalProvider>
         </AuthProvider>
         </SessionProvider>
       </body>

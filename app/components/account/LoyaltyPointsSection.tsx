@@ -133,7 +133,7 @@ export default function LoyaltyPointsSection() {
               className="mt-3 w-full"
               onClick={() => {
                 // Scroll to checkout or show redemption modal
-                window.location.href = '/checkout?redeem-points=true';
+                window.location.href = '/pricing';
               }}
             >
               Redeem Points at Checkout

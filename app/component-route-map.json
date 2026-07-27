@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-27T03:52:57.577Z",
+  "generatedAt": "2026-07-27T04:40:50.898Z",
   "routes": [
     {
       "path": "/about",
@@ -29,17 +29,6 @@
       "file": "app/admin/analytics/page.tsx",
       "imports": [
         "components/Card",
-        "lib/auth",
-        "lib/colors",
-        "context/AuthContext"
-      ]
-    },
-    {
-      "path": "/admin/appointments",
-      "file": "app/admin/appointments/page.tsx",
-      "imports": [
-        "components/Card",
-        "components/Button",
         "lib/auth",
         "lib/colors",
         "context/AuthContext"
@@ -114,30 +103,6 @@
       "file": "app/admin/loyalty/page.tsx",
       "imports": [
         "components/admin/loyalty/LoyaltyAnalyticsDashboard",
-        "context/AuthContext"
-      ]
-    },
-    {
-      "path": "/admin/orders",
-      "file": "app/admin/orders/page.tsx",
-      "imports": [
-        "components/Card",
-        "components/Button",
-        "components/DepositPaymentCard",
-        "components/ReadyForDeliveryModal",
-        "lib/auth",
-        "lib/colors",
-        "context/AuthContext"
-      ]
-    },
-    {
-      "path": "/admin/quotes",
-      "file": "app/admin/quotes/page.tsx",
-      "imports": [
-        "components/Card",
-        "components/Button",
-        "lib/auth",
-        "lib/colors",
         "context/AuthContext"
       ]
     },
@@ -257,38 +222,6 @@
       ]
     },
     {
-      "path": "/cart",
-      "file": "app/cart/page.tsx",
-      "imports": [
-        "components/Button",
-        "components/ui/ConfirmDialog",
-        "components/motion",
-        "lib/colors",
-        "lib/deposit-utils",
-        "context/CartContext"
-      ]
-    },
-    {
-      "path": "/checkout",
-      "file": "app/checkout/page.tsx",
-      "imports": [
-        "components/Button",
-        "components/PaymentForm",
-        "components/AppointmentStepForm",
-        "components/AddressSelector",
-        "components/ui/icons",
-        "components/motion",
-        "lib/hooks/useSavedAddresses",
-        "lib/deposit-utils",
-        "lib/colors",
-        "lib/timing",
-        "lib/time-utils",
-        "context/CartContext",
-        "context/AuthContext",
-        "context/StripeContext"
-      ]
-    },
-    {
       "path": "/contact",
       "file": "app/contact/page.tsx",
       "imports": [
@@ -343,28 +276,6 @@
       "imports": []
     },
     {
-      "path": "/orders/[orderId]",
-      "file": "app/orders/[orderId]/page.tsx",
-      "imports": [
-        "components/Button",
-        "components/StatusBadge",
-        "components/OrderInvoice",
-        "lib/colors",
-        "lib/medusa-client",
-        "lib/medusa-client"
-      ]
-    },
-    {
-      "path": "/orders",
-      "file": "app/orders/page.tsx",
-      "imports": [
-        "components/Button",
-        "components/StatusBadge",
-        "lib/colors",
-        "context/CartContext"
-      ]
-    },
-    {
       "path": "/",
       "file": "app/page.tsx",
       "imports": [
@@ -382,38 +293,12 @@
       ]
     },
     {
-      "path": "/pricing/success",
-      "file": "app/pricing/success/page.tsx",
-      "imports": [
-        "lib/contrast",
-        "lib/stripe",
-        "lib/colors"
-      ]
-    },
-    {
       "path": "/privacy",
       "file": "app/privacy/page.tsx",
       "imports": [
         "components/privacy/PrivacyPageClient",
         "lib/page-content-types",
         "lib/default-page-content"
-      ]
-    },
-    {
-      "path": "/quote",
-      "file": "app/quote/page.tsx",
-      "imports": [
-        "components/quote/QuoteAuthorizationClient",
-        "lib/seo-config"
-      ]
-    },
-    {
-      "path": "/quotes/[ref]",
-      "file": "app/quotes/[ref]/page.tsx",
-      "imports": [
-        "components/Button",
-        "components/Card",
-        "lib/colors"
       ]
     },
     {
@@ -471,24 +356,16 @@
   "componentToRoutes": {
     "components/Button": [
       "/about",
-      "/admin/appointments",
       "/admin/blog/[slug]/edit",
       "/admin/blog/new",
       "/admin/blog",
       "/admin/colors",
-      "/admin/orders",
-      "/admin/quotes",
       "/admin/reviews",
       "/admin/settings",
       "/admin/users",
       "/admin/waitlist-campaigns/[id]",
       "/admin/waitlist-campaigns/new",
       "/admin/waitlist-campaigns",
-      "/cart",
-      "/checkout",
-      "/orders/[orderId]",
-      "/orders",
-      "/quotes/[ref]",
       "/resume"
     ],
     "components/account/AccountSettingsClient": [
@@ -499,41 +376,31 @@
     ],
     "components/motion": [
       "/ada-compliance",
-      "/cart",
-      "/checkout",
       "/contact",
       "/how-it-works"
     ],
     "lib/seo-config": [
       "/ada-compliance",
       "/how-it-works",
-      "/quote",
       "/services"
     ],
     "components/Card": [
       "/admin/analytics",
-      "/admin/appointments",
       "/admin/blog/[slug]/edit",
       "/admin/blog/new",
       "/admin/blog",
       "/admin/colors",
-      "/admin/orders",
-      "/admin/quotes",
       "/admin/reviews",
       "/admin/settings",
       "/admin/users",
       "/admin/waitlist-analytics",
       "/admin/waitlist-campaigns/[id]",
       "/admin/waitlist-campaigns/new",
-      "/admin/waitlist-campaigns",
-      "/quotes/[ref]"
+      "/admin/waitlist-campaigns"
     ],
     "lib/auth": [
       "/admin/analytics",
-      "/admin/appointments",
       "/admin/communication",
-      "/admin/orders",
-      "/admin/quotes",
       "/admin/referrals",
       "/admin/reviews",
       "/admin/settings",
@@ -541,43 +408,30 @@
     ],
     "lib/colors": [
       "/admin/analytics",
-      "/admin/appointments",
       "/admin/blog/[slug]/edit",
       "/admin/blog/new",
       "/admin/blog",
       "/admin/colors",
-      "/admin/orders",
-      "/admin/quotes",
       "/admin/reviews",
       "/admin/settings",
       "/admin/users",
       "/admin/waitlist-analytics",
-      "/cart",
-      "/checkout",
-      "/contact",
-      "/orders/[orderId]",
-      "/orders",
-      "/pricing/success",
-      "/quotes/[ref]"
+      "/contact"
     ],
     "context/AuthContext": [
       "/admin/analytics",
-      "/admin/appointments",
       "/admin/blog/[slug]/edit",
       "/admin/blog/new",
       "/admin/blog",
       "/admin/colors",
       "/admin/communication",
       "/admin/loyalty",
-      "/admin/orders",
-      "/admin/quotes",
       "/admin/referrals",
       "/admin/reports",
       "/admin/reviews",
       "/admin/settings",
       "/admin/users",
       "/admin/waitlist-analytics",
-      "/checkout",
       "/dashboard"
     ],
     "components/editor/RichTextEditor": [
@@ -601,8 +455,7 @@
       "/admin/waitlist-campaigns/new"
     ],
     "components/ui/ConfirmDialog": [
-      "/admin/blog",
-      "/cart"
+      "/admin/blog"
     ],
     "components/PageHeader": [
       "/admin/colors",
@@ -616,12 +469,6 @@
     ],
     "components/admin/loyalty/LoyaltyAnalyticsDashboard": [
       "/admin/loyalty"
-    ],
-    "components/DepositPaymentCard": [
-      "/admin/orders"
-    ],
-    "components/ReadyForDeliveryModal": [
-      "/admin/orders"
     ],
     "lib/aria-utils": [
       "/admin/users"
@@ -660,39 +507,6 @@
       "/privacy",
       "/terms"
     ],
-    "lib/deposit-utils": [
-      "/cart",
-      "/checkout"
-    ],
-    "context/CartContext": [
-      "/cart",
-      "/checkout",
-      "/orders"
-    ],
-    "components/PaymentForm": [
-      "/checkout"
-    ],
-    "components/AppointmentStepForm": [
-      "/checkout"
-    ],
-    "components/AddressSelector": [
-      "/checkout"
-    ],
-    "components/ui/icons": [
-      "/checkout"
-    ],
-    "lib/hooks/useSavedAddresses": [
-      "/checkout"
-    ],
-    "lib/timing": [
-      "/checkout"
-    ],
-    "lib/time-utils": [
-      "/checkout"
-    ],
-    "context/StripeContext": [
-      "/checkout"
-    ],
     "components/ConsultationCalendar": [
       "/contact"
     ],
@@ -714,33 +528,14 @@
     "components/guide/GuidePageClient": [
       "/guide"
     ],
-    "components/StatusBadge": [
-      "/orders/[orderId]",
-      "/orders"
-    ],
-    "components/OrderInvoice": [
-      "/orders/[orderId]"
-    ],
-    "lib/medusa-client": [
-      "/orders/[orderId]"
-    ],
     "components/home/HomePageClient": [
       "/"
     ],
     "components/pricing/UnifiedPricingPage": [
       "/pricing"
     ],
-    "lib/contrast": [
-      "/pricing/success"
-    ],
-    "lib/stripe": [
-      "/pricing/success"
-    ],
     "components/privacy/PrivacyPageClient": [
       "/privacy"
-    ],
-    "components/quote/QuoteAuthorizationClient": [
-      "/quote"
     ],
     "components/report/ReportHero": [
       "/report/[id]"

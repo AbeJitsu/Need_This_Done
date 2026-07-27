@@ -726,7 +726,7 @@ export default function UnifiedPricingPage() {
               Already have a quote?
             </p>
             <Link
-              href="/quote"
+              href="/contact"
               className="inline-flex items-center gap-1.5 text-purple-400 font-semibold hover:text-purple-300 transition-colors whitespace-nowrap"
             >
               Authorize it here <ArrowRight size={16} />

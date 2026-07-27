@@ -94,7 +94,7 @@ const nextConfig = {
   // ========================================================================
   // Redirects - Consolidate pages
   // ========================================================================
-  // Redirect old pages to unified pricing page
+  // Redirect retired application surfaces to the retained project request.
   async redirects() {
     return [
       // Consolidated pages - merged into homepage
@@ -106,7 +106,7 @@ const nextConfig = {
       // Removed pages - redirect to closest equivalent
       {
         source: '/get-started',
-        destination: '/pricing',
+        destination: '/contact',
         permanent: true,
       },
       {
@@ -122,12 +122,47 @@ const nextConfig = {
       // Legacy routes
       {
         source: '/build',
-        destination: '/pricing',
+        destination: '/contact',
         permanent: true,
       },
       {
         source: '/build/success',
-        destination: '/pricing/success',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/cart',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/checkout',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/orders',
+        destination: '/dashboard',
+        permanent: true,
+      },
+      {
+        source: '/orders/:path*',
+        destination: '/dashboard',
+        permanent: true,
+      },
+      {
+        source: '/quote',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/quotes/:path*',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/pricing/success',
+        destination: '/contact',
         permanent: true,
       },
     ];

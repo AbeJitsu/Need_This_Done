@@ -1,27 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Button from './Button';
-import Card from './Card';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
-import ActiveAppointmentsSection from './dashboard/ActiveAppointmentsSection';
-import DashboardStatsOverview from './dashboard/DashboardStatsOverview';
 import { useDashboard, LoadingSkeleton, ErrorDisplay } from '@/hooks/useDashboard';
-import { headingColors, formInputColors, cardBgColors, dividerColors, statusBadgeColors } from '@/lib/colors';
-
-// ============================================================================
-// User Dashboard Component - View My Projects
-// ============================================================================
-// What: Displays only the logged-in user's projects.
-// Why: Users need to track their submitted projects and updates.
-// How: Uses shared useDashboard hook with user-specific endpoint.
+import { headingColors, formInputColors, cardBgColors } from '@/lib/colors';
 
 export default function UserDashboard() {
-  // ============================================================================
-  // Shared Dashboard Logic
-  // ============================================================================
-
   const {
     projects,
     loading,
@@ -33,55 +18,11 @@ export default function UserDashboard() {
     handleProjectUpdate,
   } = useDashboard({
     endpoint: '/api/projects/mine',
-    mockDataSlice: [0, 2], // Show 2 projects for user view in dev preview
+    mockDataSlice: [0, 2],
   });
-
-  // ============================================================================
-  // Orders State
-  // ============================================================================
-
-  const [orders, setOrders] = useState<any[]>([]);
-  const [ordersLoading, setOrdersLoading] = useState(true);
-  const [ordersError, setOrdersError] = useState('');
-
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        setOrdersLoading(true);
-        const response = await fetch('/api/user/orders');
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to load orders');
-        }
-
-        setOrders(data.orders || []);
-      } catch (err) {
-        setOrdersError(err instanceof Error ? err.message : 'Failed to load orders');
-      } finally {
-        setOrdersLoading(false);
-      }
-    };
-
-    fetchOrders();
-  }, []);
-
-  // ============================================================================
-  // Render
-  // ============================================================================
 
   return (
     <div className="space-y-6">
-      {/* ====================================================================
-          Quick Stats Overview
-          ==================================================================== */}
-
-      <DashboardStatsOverview />
-
-      {/* ====================================================================
-          Header
-          ==================================================================== */}
-
       <div>
         <h1 className={`text-3xl font-bold ${headingColors.primary} mb-2`}>
           Your Projects
@@ -90,10 +31,6 @@ export default function UserDashboard() {
           Here&apos;s where things stand. Click any project for details.
         </p>
       </div>
-
-      {/* ====================================================================
-          Projects Grid or Empty State
-          ==================================================================== */}
 
       {error ? (
         <ErrorDisplay message={error} />
@@ -111,7 +48,7 @@ export default function UserDashboard() {
             When you&apos;re ready to get something done, we&apos;ll be here.
           </p>
           <p className={`${formInputColors.helper} text-sm mb-6`}>
-            Your projects will show up right here so you can track progress and stay in the loop.
+            Your projects will show up here so you can track progress and stay in the loop.
           </p>
           <Button variant="purple" href="/contact" size="md">
             Start a Project
@@ -134,18 +71,12 @@ export default function UserDashboard() {
                   ? project.project_comments[0].count
                   : 0
               }
-              attachmentCount={
-                project.attachments ? project.attachments.length : 0
-              }
+              attachmentCount={project.attachments ? project.attachments.length : 0}
               onClick={() => handleOpenProject(project.id)}
             />
           ))}
         </div>
       )}
-
-      {/* ====================================================================
-          Additional Actions
-          ==================================================================== */}
 
       {projects.length > 0 && (
         <div className="text-center">
@@ -157,106 +88,6 @@ export default function UserDashboard() {
           </Button>
         </div>
       )}
-
-      {/* ====================================================================
-          Active Appointments Section
-          ==================================================================== */}
-
-      <div className={`mt-12 border-t ${dividerColors.border} pt-8`}>
-        <div className="mb-6">
-          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
-            Active Appointments
-          </h2>
-          <p className={formInputColors.helper}>
-            Your scheduled consultations
-          </p>
-        </div>
-
-        <ActiveAppointmentsSection />
-      </div>
-
-      {/* ====================================================================
-          My Orders Section
-          ==================================================================== */}
-
-      <div className={`mt-12 border-t ${dividerColors.border} pt-8`}>
-        <div className="mb-6">
-          <h2 className={`text-2xl font-bold ${headingColors.primary} mb-2`}>
-            My Orders
-          </h2>
-          <p className={formInputColors.helper}>
-            Your purchases and order history
-          </p>
-        </div>
-
-        {ordersError ? (
-          <ErrorDisplay message={ordersError} />
-        ) : ordersLoading ? (
-          <div className="flex items-center justify-center py-8">
-            <p className={formInputColors.helper}>Loading orders...</p>
-          </div>
-        ) : orders.length === 0 ? (
-          <Card hoverEffect="none">
-            <div className="p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                <span className="text-2xl">🛍️</span>
-              </div>
-              <h3 className={`text-lg font-semibold ${headingColors.primary} mb-2`}>
-                No orders yet
-              </h3>
-              <p className={`${formInputColors.helper} mb-6`}>
-                When you make purchases, they&apos;ll appear here so you can track them.
-              </p>
-              <Button variant="purple" href="/pricing" size="md">
-                Browse Consultations
-              </Button>
-            </div>
-          </Card>
-        ) : (
-          <div className="space-y-3">
-            {orders.map((order) => (
-              <Card key={order.id} hoverEffect="lift">
-                <div className="p-4">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-grow">
-                      <p className={`font-semibold ${headingColors.primary}`}>
-                        Order #{order.medusa_order_id?.slice(0, 8)}
-                      </p>
-                      <p className={`text-sm ${formInputColors.helper}`}>
-                        {new Date(order.created_at).toLocaleDateString()} at{' '}
-                        {new Date(order.created_at).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className={`text-lg font-semibold ${headingColors.primary}`}>
-                        ${(order.total / 100).toFixed(2)}
-                      </p>
-                      <span
-                        className={`inline-block px-2 py-1 text-xs font-medium rounded mt-1 ${
-                          order.status === 'completed'
-                            ? statusBadgeColors.completed
-                            : order.status === 'pending'
-                            ? statusBadgeColors.pending
-                            : statusBadgeColors.cancelled
-                        }`}
-                      >
-                        {order.status}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* ====================================================================
-          Project Detail Modal
-          ==================================================================== */}
 
       {selectedProjectId && (
         <ProjectDetailModal

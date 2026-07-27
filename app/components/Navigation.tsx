@@ -4,9 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { useCart } from '@/context/CartContext';
 import { signOut } from '@/lib/auth';
-import { getBadgeColor } from '@/lib/colors';
 import { DEFAULT_LAYOUT_CONTENT, type NavLink } from '@/lib/page-config';
 // import DarkModeToggle from './DarkModeToggle'; // Temporarily disabled
 import { CloseIcon } from '@/components/ui/icons';
@@ -33,7 +31,6 @@ export default function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, isAuthenticated, isAdmin, isLoading } = useAuth();
-  const { itemCount } = useCart();
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -160,22 +157,6 @@ export default function Navigation() {
               </ContentValue>
             </Link>
 
-            {/* Cart Icon */}
-            <Link
-              href="/cart"
-              className="relative p-2 text-gray-500 hover:text-gray-700 transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              aria-label={itemCount > 0 ? `Shopping cart with ${itemCount} items` : 'Shopping cart'}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-              {itemCount > 0 && (
-                <span className={`absolute top-0 -right-1 ${getBadgeColor('red')} text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center leading-none`} aria-hidden="true">
-                  {itemCount > 99 ? '99+' : itemCount}
-                </span>
-              )}
-            </Link>
-
             {/* Mobile Sign In Icon - visible on small screens when not authenticated */}
             {!isAuthenticated && !isLoading && (
               <Link
@@ -239,16 +220,6 @@ export default function Navigation() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                             Manage Blog
-                          </Link>
-                          <Link
-                            href="/admin/appointments"
-                            onClick={() => setShowDropdown(false)}
-                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            Appointments
                           </Link>
                           <Link
                             href="/admin/users"

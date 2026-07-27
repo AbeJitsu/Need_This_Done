@@ -41,8 +41,6 @@ const PUBLIC_PAGES = [
 // Admin pages that require authentication
 const ADMIN_CORE_PAGES = [
   { path: '/admin/users', name: 'Admin Users' },
-  { path: '/admin/orders', name: 'Admin Orders' },
-  { path: '/admin/appointments', name: 'Admin Appointments' },
 ];
 
 const ADMIN_CONTENT_PAGES = [
@@ -54,8 +52,6 @@ const ADMIN_CONTENT_PAGES = [
 
 // Pages that require Medusa backend (skip in standard tests)
 const BACKEND_DEPENDENT_PAGES = [
-  { path: '/cart', name: 'Cart' },
-  { path: '/checkout', name: 'Checkout' },
   { path: '/dashboard', name: 'Dashboard' },
 ];
 
