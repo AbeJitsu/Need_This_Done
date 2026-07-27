@@ -155,6 +155,7 @@ The items below describe the state of the July 25 inventory snapshot. Subsequent
 4. **GitHub project handoffs — implemented after this snapshot:** the project detail modal records project-scoped GitHub links, emails the linked client, and visibly supports a deliberate retry after notification failure. GitHub repository membership remains outside the application.
 5. **LMS application retirement — implemented after this snapshot:** the enrollment routes and APIs, client learning section, owner enrollment navigation, LMS-only components, mocks, and tests are removed. Historical database migrations and stored records remain untouched.
 6. **Developer-tools application retirement — implemented after this snapshot:** `/admin/dev`, its device preview, route-only demo APIs/components, owner navigation, stale accessibility target, and route snapshots are removed. The retained home-page device mockup remains.
+7. **Inline-editor application retirement — implemented after this snapshot:** retained public pages now use repository-owned defaults; `/admin/content`, page-content mutation/history APIs, global editor providers, editor/page-builder components, and editor-only tests and proof artifacts are removed. Historical migrations and stored records remain unchanged.
 
 ## Sequencing and non-goals
 

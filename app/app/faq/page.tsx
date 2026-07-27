@@ -1,9 +1,7 @@
-import { fetchPageContent } from '@/lib/fetch-page-content';
 import type { FAQPageContent } from '@/lib/page-content-types';
+import { defaultFAQContent } from '@/lib/default-page-content';
 import FAQPageClient from '@/components/faq/FAQPageClient';
 import { FAQPageJsonLd } from '@/components/seo/JsonLd';
-
-export const dynamic = 'force-dynamic';
 
 // ============================================================================
 // FAQ Page - Common Questions
@@ -35,8 +33,8 @@ export const metadata = {
 // Page Component
 // ============================================================================
 
-export default async function FAQPage() {
-  const content = await fetchPageContent<FAQPageContent>('faq');
+export default function FAQPage() {
+  const content = defaultFAQContent as FAQPageContent;
 
   return (
     <>

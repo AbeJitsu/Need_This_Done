@@ -37,21 +37,7 @@ export const metadata = {
 // Content Fetching
 // ============================================================================
 
-async function getContent(): Promise<HomePageContent> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/page-content/home`, {
-      next: { revalidate: 60 },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.content as HomePageContent;
-    }
-  } catch (error) {
-    console.error('Failed to fetch home content:', error);
-  }
-
+function getContent(): HomePageContent {
   return getDefaultContent('home') as HomePageContent;
 }
 

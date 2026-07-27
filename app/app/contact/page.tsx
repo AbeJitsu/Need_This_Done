@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { getServices } from '@/config/site.config';
-import { useEditableContent } from '@/hooks/useEditableContent';
 import type { ContactPageContent } from '@/lib/page-content-types';
 import { defaultContactContent } from '@/lib/default-page-content';
 import { scrollIntoViewWithMotionPreference } from '@/lib/scroll-utils';
@@ -78,7 +77,7 @@ const CONSULTATION_TYPES = [
 ];
 
 export default function ContactPage() {
-  const { content } = useEditableContent<ContactPageContent>(defaultContactContent);
+  const content: ContactPageContent = defaultContactContent;
   const services = getServices();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formSectionRef = useRef<HTMLElement>(null);

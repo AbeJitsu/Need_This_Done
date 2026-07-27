@@ -6,13 +6,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
-import { useInlineEdit } from '@/context/InlineEditContext';
 import { signOut } from '@/lib/auth';
 import { getBadgeColor } from '@/lib/colors';
-import { DEFAULT_LAYOUT_CONTENT, type LayoutContent, type NavLink } from '@/lib/page-config';
+import { DEFAULT_LAYOUT_CONTENT, type NavLink } from '@/lib/page-config';
 // import DarkModeToggle from './DarkModeToggle'; // Temporarily disabled
 import { CloseIcon } from '@/components/ui/icons';
-import { Editable } from '@/components/InlineEditor';
+import { ContentValue } from '@/components/content/ContentStructure';
 
 // ============================================================================
 // Navigation Component - Persistent Site Navigation
@@ -37,13 +36,12 @@ export default function Navigation() {
   const { user, isAuthenticated, isAdmin, isLoading } = useAuth();
   const { itemCount } = useCart();
   const { items: wishlistItems } = useWishlist();
-  const { layoutContent } = useInlineEdit();
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Get header content from layoutContent or use defaults
-  const headerContent = (layoutContent as LayoutContent | null)?.header || DEFAULT_LAYOUT_CONTENT.header;
+  const headerContent = DEFAULT_LAYOUT_CONTENT.header;
   const navigationLinks = headerContent.navLinks || defaultNavLinks;
 
   // ============================================================================
@@ -95,9 +93,9 @@ export default function Navigation() {
             className="flex-shrink-0 font-bold text-xl text-gray-900 hover:opacity-80 transition-opacity mr-6"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
-            <Editable path="_layout.header.brand">
+            <ContentValue path="_layout.header.brand">
               <span>{headerContent.brand}</span>
-            </Editable>
+            </ContentValue>
           </Link>
 
           {/* Navigation Links + Auth */}
@@ -124,9 +122,9 @@ export default function Navigation() {
                       }
                     `}
                   >
-                    <Editable path={`_layout.header.navLinks.${index}.label`}>
+                    <ContentValue path={`_layout.header.navLinks.${index}.label`}>
                       <span>{link.label}</span>
-                    </Editable>
+                    </ContentValue>
                   </Link>
                 );
               })}
@@ -155,13 +153,13 @@ export default function Navigation() {
               href={headerContent.ctaButton.href}
               className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-semibold rounded-full whitespace-nowrap transition-all duration-300 hover:scale-105 active:scale-95 bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm shadow-emerald-500/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
-              <Editable
+              <ContentValue
                 path="_layout.header.ctaButton.text"
                 hrefPath="_layout.header.ctaButton.href"
                 href={headerContent.ctaButton.href}
               >
                 <span>{headerContent.ctaButton.text}</span>
-              </Editable>
+              </ContentValue>
             </Link>
 
             {/* Wishlist Icon */}
@@ -295,9 +293,9 @@ export default function Navigation() {
                   href="/login"
                   className="hidden sm:inline-flex text-xs text-gray-500 hover:text-gray-700 transition-colors"
                 >
-                  <Editable path="_layout.header.signInText">
+                  <ContentValue path="_layout.header.signInText">
                     <span>{headerContent.signInText}</span>
-                  </Editable>
+                  </ContentValue>
                 </Link>
               )}
             </div>
@@ -329,9 +327,9 @@ export default function Navigation() {
                     }
                   `}
                 >
-                  <Editable path={`_layout.header.navLinks.${index}.label`}>
+                  <ContentValue path={`_layout.header.navLinks.${index}.label`}>
                     <span>{link.label}</span>
-                  </Editable>
+                  </ContentValue>
                 </Link>
               );
             })}
@@ -342,9 +340,9 @@ export default function Navigation() {
               onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 text-base font-semibold rounded-full transition-all duration-300 hover:scale-105 active:scale-95 mt-2 bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm shadow-emerald-500/25 text-center"
             >
-              <Editable path="_layout.header.ctaButton.text">
+              <ContentValue path="_layout.header.ctaButton.text">
                 <span>{headerContent.ctaButton.text}</span>
-              </Editable>
+              </ContentValue>
             </Link>
 
             {/* Dark Mode Toggle in mobile menu */}
@@ -361,9 +359,9 @@ export default function Navigation() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 text-sm text-gray-500 hover:text-gray-700"
               >
-                <Editable path="_layout.header.signInText">
+                <ContentValue path="_layout.header.signInText">
                   <span>{headerContent.signInText}</span>
-                </Editable>
+                </ContentValue>
               </Link>
             ) : (
               <div className="pt-2 mt-2 border-t border-gray-200">

@@ -3,8 +3,7 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import BlogPostCard from '@/components/blog/BlogPostCard';
-import { EditableSection } from '@/components/InlineEditor';
-import { useInlineEdit } from '@/context/InlineEditContext';
+import { ContentSection } from '@/components/content/ContentStructure';
 import type { BlogPageContent } from '@/lib/page-content-types';
 import { BlogPostSummary, BLOG_CATEGORIES } from '@/lib/blog-types';
 import { focusRingClasses } from '@/lib/colors';
@@ -24,10 +23,7 @@ interface BlogPageClientProps {
 
 export default function BlogPageClient({ initialContent, posts }: BlogPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
-  const { pageContent } = useInlineEdit();
-  // Check that pageContent has expected structure before using it
-  const hasValidContent = pageContent && 'header' in pageContent && 'emptyState' in pageContent;
-  const content = hasValidContent ? (pageContent as unknown as BlogPageContent) : initialContent;
+  const content = initialContent;
 
   // URL-driven category filtering
   const searchParams = useSearchParams();
@@ -64,7 +60,7 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
         <div className="absolute -bottom-8 -right-4 text-[10rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">✎</div>
 
         <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-8 md:px-12 pt-16 md:pt-20 pb-16 md:pb-20">
-          <EditableSection sectionKey="header" label="Page Header">
+          <ContentSection sectionKey="header" label="Page Header">
             <FadeIn direction="up" triggerOnScroll={false}>
               {/* Editorial header */}
               <div className="mb-10">
@@ -81,7 +77,7 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
                 </p>
               </div>
             </FadeIn>
-          </EditableSection>
+          </ContentSection>
 
           {/* Category pills - dynamic from actual posts, BJJ belt colors */}
           {posts.length > 0 && (

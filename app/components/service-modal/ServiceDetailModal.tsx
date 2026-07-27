@@ -1,7 +1,6 @@
 'use client';
 import { accentText } from '@/lib/contrast';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import {
   Check, CheckCircle, Star, Heart, ThumbsUp, Award, Trophy,
@@ -13,10 +12,9 @@ import {
   ArrowRight, X,
 } from 'lucide-react';
 import { useServiceModal } from '@/context/ServiceModalContext';
-import { useInlineEdit } from '@/context/InlineEditContext';
 import { useBackdropClose } from '@/hooks/useBackdropClose';
 import { type AccentVariant } from '@/lib/colors';
-import { Editable, IconPicker } from '@/components/InlineEditor';
+import { ContentValue } from '@/components/content/ContentStructure';
 import { serviceColors } from '@/lib/service-colors';
 
 // ============================================================================
@@ -159,45 +157,19 @@ function BulletIcon({
 }
 
 export default function ServiceDetailModal() {
-  const { isOpen, activeService, activeServiceType, cardIndex, closeModal, updateBulletIcon } = useServiceModal();
-  const { isEditMode, updateField } = useInlineEdit();
+  const { isOpen, activeService, activeServiceType, cardIndex, closeModal } = useServiceModal();
   const { handleBackdropClick, modalRef } = useBackdropClose({
     isOpen,
     onClose: closeModal,
     includeEscape: true,
   });
 
-  // Icon picker state
-  const [iconPickerState, setIconPickerState] = useState<{
-    isOpen: boolean;
-    bulletIndex: number;
-    position: { top: number; left: number };
-  }>({ isOpen: false, bulletIndex: -1, position: { top: 0, left: 0 } });
-
   // Get theme for current service
   const color = activeServiceType ? serviceColors[activeServiceType] : 'blue';
   const theme = SERVICE_THEMES[color] || SERVICE_THEMES.blue;
 
-  // Can we edit?
-  const canEdit = isEditMode && cardIndex !== null;
-
-  // Handle icon click
-  const handleIconClick = (e: React.MouseEvent, bulletIndex: number) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setIconPickerState({
-      isOpen: true,
-      bulletIndex,
-      position: { top: rect.bottom + 8, left: rect.left },
-    });
-  };
-
-  // Handle icon selection
-  const handleIconSelect = (iconName: string) => {
-    if (cardIndex === null) return;
-    updateBulletIcon(iconPickerState.bulletIndex, iconName);
-    updateField('services', `cards.${cardIndex}.modal.bulletIcons.${iconPickerState.bulletIndex}`, iconName);
-    setIconPickerState({ isOpen: false, bulletIndex: -1, position: { top: 0, left: 0 } });
-  };
+  const canEdit = false;
+  const handleIconClick = (_event: React.MouseEvent, _bulletIndex: number) => {};
 
   if (!isOpen || !activeService) return null;
 
@@ -257,20 +229,20 @@ export default function ServiceDetailModal() {
                 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 pr-12 tracking-tight"
               >
                 {canEdit ? (
-                  <Editable path={`services.cards.${cardIndex}.title`}>
+                  <ContentValue path={`services.cards.${cardIndex}.title`}>
                     <span>{activeService.title}</span>
-                  </Editable>
+                  </ContentValue>
                 ) : (
                   activeService.title
                 )}
               </h2>
 
               {canEdit ? (
-                <Editable path={`services.cards.${cardIndex}.modal.headline`}>
+                <ContentValue path={`services.cards.${cardIndex}.modal.headline`}>
                   <p className="text-xl text-gray-700 font-medium mb-3">
                     {activeService.headline}
                   </p>
-                </Editable>
+                </ContentValue>
               ) : (
                 <p className="text-xl text-gray-700 font-medium mb-3">
                   {activeService.headline}
@@ -278,11 +250,11 @@ export default function ServiceDetailModal() {
               )}
 
               {canEdit ? (
-                <Editable path={`services.cards.${cardIndex}.modal.hook`}>
+                <ContentValue path={`services.cards.${cardIndex}.modal.hook`}>
                   <p className="text-gray-500 text-base leading-relaxed">
                     {activeService.hook}
                   </p>
-                </Editable>
+                </ContentValue>
               ) : (
                 <p className="text-gray-500 text-base leading-relaxed">
                   {activeService.hook}
@@ -294,9 +266,9 @@ export default function ServiceDetailModal() {
             <div className="mb-8">
               <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
                 {canEdit ? (
-                  <Editable path={`services.cards.${cardIndex}.modal.bulletHeader`}>
+                  <ContentValue path={`services.cards.${cardIndex}.modal.bulletHeader`}>
                     <span>{activeService.bulletHeader || 'What we handle'}</span>
-                  </Editable>
+                  </ContentValue>
                 ) : (
                   <span>{activeService.bulletHeader || 'What we handle'}</span>
                 )}
@@ -323,9 +295,9 @@ export default function ServiceDetailModal() {
                         <BulletIcon iconName={iconName} theme={theme} />
                       )}
                       {canEdit ? (
-                        <Editable path={`services.cards.${cardIndex}.modal.bulletPoints.${index}`}>
+                        <ContentValue path={`services.cards.${cardIndex}.modal.bulletPoints.${index}`}>
                           <span className="text-gray-700 font-medium">{point}</span>
-                        </Editable>
+                        </ContentValue>
                       ) : (
                         <span className="text-gray-700 font-medium">{point}</span>
                       )}
@@ -339,7 +311,7 @@ export default function ServiceDetailModal() {
             <div className="flex flex-col sm:flex-row sm:items-stretch gap-3">
               {/* Primary CTA */}
               {canEdit ? (
-                <Editable
+                <ContentValue
                   path={`services.cards.${cardIndex}.modal.ctas.primary.text`}
                   hrefPath={`services.cards.${cardIndex}.modal.ctas.primary.href`}
                   href={activeService.ctas.primary.href}
@@ -356,7 +328,7 @@ export default function ServiceDetailModal() {
                     {activeService.ctas.primary.text}
                     <ArrowRight size={18} />
                   </span>
-                </Editable>
+                </ContentValue>
               ) : (
                 <Link
                   href={activeService.ctas.primary.href}
@@ -376,7 +348,7 @@ export default function ServiceDetailModal() {
 
               {/* Secondary CTA */}
               {canEdit ? (
-                <Editable
+                <ContentValue
                   path={`services.cards.${cardIndex}.modal.ctas.secondary.text`}
                   hrefPath={`services.cards.${cardIndex}.modal.ctas.secondary.href`}
                   href={activeService.ctas.secondary.href}
@@ -392,7 +364,7 @@ export default function ServiceDetailModal() {
                   >
                     {activeService.ctas.secondary.text}
                   </span>
-                </Editable>
+                </ContentValue>
               ) : (
                 <Link
                   href={activeService.ctas.secondary.href}
@@ -412,16 +384,6 @@ export default function ServiceDetailModal() {
           </div>
         </div>
       </div>
-
-      {/* Icon Picker */}
-      {iconPickerState.isOpen && (
-        <IconPicker
-          currentIcon={activeService.bulletIcons?.[iconPickerState.bulletIndex] || 'Check'}
-          onSelect={handleIconSelect}
-          onClose={() => setIconPickerState({ isOpen: false, bulletIndex: -1, position: { top: 0, left: 0 } })}
-          position={iconPickerState.position}
-        />
-      )}
 
       {/* Animation */}
       <style jsx>{`

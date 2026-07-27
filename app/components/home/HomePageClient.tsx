@@ -3,8 +3,7 @@
 import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { EditableSection, EditableItem, Editable } from '@/components/InlineEditor';
-import { useInlineEdit } from '@/context/InlineEditContext';
+import { ContentSection, ContentItem, ContentValue } from '@/components/content/ContentStructure';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import Button from '@/components/Button';
@@ -42,11 +41,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
   });
   const lineScale = useTransform(timelineProgress, [0, 1], [0, 1]);
 
-  // Use content from universal provider (auto-loaded by route)
-  const { pageContent } = useInlineEdit();
-  // Check that pageContent has expected structure before using it
-  const hasValidContent = pageContent && 'hero' in pageContent && 'services' in pageContent;
-  const content = hasValidContent ? (pageContent as unknown as HomePageContent) : initialContent;
+  const content = initialContent;
 
   return (
     <div>
@@ -54,7 +49,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
       <Hero />
 
       {/* Legacy Hero Section - Temporarily disabled to use new Hero */}
-      {false && (<EditableSection sectionKey="hero" label="Hero Section">
+      {false && (<ContentSection sectionKey="hero" label="Hero Section">
         {/* Gradient container - full width on mobile, contained+rounded on desktop */}
         <div className="relative overflow-hidden md:max-w-6xl md:mx-auto md:rounded-2xl py-16 md:py-24 mb-20">
           {/* Background gradients - BJJ color orbs (green, blue, purple) */}
@@ -68,7 +63,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
           {/* Hero content - CENTERED */}
           <div className="relative z-10 px-4 sm:px-6 md:px-8 text-center">
             <FadeIn direction="none" triggerOnScroll={false}>
-              <Editable path="hero.title">
+              <ContentValue path="hero.title">
                 <h1 className="text-5xl sm:text-6xl md:text-7xl font-manrope font-extrabold tracking-tight mb-6 leading-[1.1]">
                   <span className="bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
                     Websites.
@@ -80,14 +75,14 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
                     AI.
                   </span>
                 </h1>
-              </Editable>
+              </ContentValue>
             </FadeIn>
             <FadeIn direction="up" delay={0.15} triggerOnScroll={false}>
-              <Editable path="hero.description">
+              <ContentValue path="hero.description">
                 <p className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto">
                   From your first website to fully automated operations. We build the technology that lets you focus on what matters.
                 </p>
-              </Editable>
+              </ContentValue>
             </FadeIn>
             {/* Scroll indicator - functional smooth scroll */}
             <FadeIn direction="up" delay={0.3} triggerOnScroll={false}>
@@ -110,7 +105,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
             </FadeIn>
           </div>
         </div>
-      </EditableSection>
+      </ContentSection>
       )}
 
       {/* Social proof strip — addresses top 3 objections */}
@@ -136,7 +131,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
       {/* Rest of content in max-w container */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
         {/* Services Section - Bold Asymmetric Cards */}
-        <EditableSection sectionKey="services" label="Services">
+        <ContentSection sectionKey="services" label="Services">
         <div id="services-section" className="mb-24 scroll-mt-24">
           {/* Section header — editorial style with accent line */}
           <FadeIn direction="up">
@@ -156,7 +151,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
             {/* Hero Card — Website Builds */}
             {content.services.cards[0] && content.services.cards[0].modal && (
               <StaggerItem>
-              <EditableItem
+              <ContentItem
                 sectionKey="services"
                 arrayField="cards"
                 index={0}
@@ -207,7 +202,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
 
                   </div>
                 </motion.article>
-              </EditableItem>
+              </ContentItem>
               </StaggerItem>
             )}
 
@@ -216,7 +211,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
               {/* Automation Setup Card */}
               {content.services.cards[1] && content.services.cards[1].modal && (
                 <StaggerItem>
-                <EditableItem
+                <ContentItem
                   sectionKey="services"
                   arrayField="cards"
                   index={1}
@@ -267,14 +262,14 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
 
                     </div>
                   </motion.article>
-                </EditableItem>
+                </ContentItem>
                 </StaggerItem>
               )}
 
               {/* Managed AI Card */}
               {content.services.cards[2] && content.services.cards[2].modal && (
                 <StaggerItem>
-                <EditableItem
+                <ContentItem
                   sectionKey="services"
                   arrayField="cards"
                   index={2}
@@ -325,7 +320,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
 
                     </div>
                   </motion.article>
-                </EditableItem>
+                </ContentItem>
                 </StaggerItem>
               )}
             </div>
@@ -341,10 +336,10 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
           </FadeIn>
 
         </div>
-      </EditableSection>
+      </ContentSection>
 
       {/* How It Works - Bold Editorial Redesign */}
-      <EditableSection sectionKey="processPreview" label="Process Preview">
+      <ContentSection sectionKey="processPreview" label="Process Preview">
         <div id="how-it-works-section" className="mb-24 scroll-mt-28">
           {/* Section header — editorial style matching Services */}
           <FadeIn direction="up">
@@ -451,7 +446,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
             </div>
           </FadeIn>
         </div>
-      </EditableSection>
+      </ContentSection>
 
       {/* Latest from the Blog — homepage → blog internal links for SEO */}
       {recentBlogPosts.length > 0 && (
@@ -491,7 +486,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
       </FadeIn>
 
       {/* CTA Section - Confident Close */}
-      <EditableSection sectionKey="cta" label="Call to Action">
+      <ContentSection sectionKey="cta" label="Call to Action">
         <FadeIn direction="up">
           <div className="relative rounded-3xl overflow-hidden">
             {/* Dark gradient background — slate with purple accent */}
@@ -538,7 +533,7 @@ export default function HomePageClient({ content: initialContent, recentBlogPost
             </div>
           </div>
         </FadeIn>
-      </EditableSection>
+      </ContentSection>
       </div>{/* End max-w container */}
       <div className="h-16" />
     </div>

@@ -5,8 +5,7 @@ import Card from '@/components/Card';
 import Button from '@/components/Button';
 import CTASection from '@/components/CTASection';
 import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
-import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
-import { useInlineEdit } from '@/context/InlineEditContext';
+import { ContentSection, ContentItem, ContentCollection } from '@/components/content/ContentStructure';
 import type { GuidePageContent, GuideGroup, GuideSection } from '@/lib/page-content-types';
 import {
   headingColors,
@@ -56,10 +55,7 @@ function groupSections(sections: GuideSection[]): Map<GuideGroup, Array<{ sectio
 
 export default function GuidePageClient({ initialContent }: GuidePageClientProps) {
   // Use content from universal provider (auto-loaded by route)
-  const { pageContent } = useInlineEdit();
-  // Check that pageContent has expected structure before using it
-  const hasValidContent = pageContent && 'sections' in pageContent && 'header' in pageContent;
-  const content = hasValidContent ? (pageContent as unknown as GuidePageContent) : initialContent;
+  const content = initialContent;
 
   // Group sections dynamically by their group field
   const grouped = groupSections(content.sections);
@@ -75,7 +71,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header Section - Editable */}
-      <EditableSection sectionKey="header" label="Page Header">
+      <ContentSection sectionKey="header" label="Page Header">
         <FadeIn direction="up" triggerOnScroll={false}>
         <PageHeader
           title={content.header.title}
@@ -83,7 +79,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
           color="green"
         />
         </FadeIn>
-      </EditableSection>
+      </ContentSection>
 
       {/* Quick Navigation - Jump Links */}
       <FadeIn direction="up" delay={0.15} triggerOnScroll={false}>
@@ -109,9 +105,9 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
       </nav>
       </FadeIn>
 
-      {/* All Sections - Single EditableSection with SortableItemsWrapper */}
-      <EditableSection sectionKey="sections" label="Guide Sections">
-        <SortableItemsWrapper
+      {/* All Sections - Single ContentSection with ContentCollection */}
+      <ContentSection sectionKey="sections" label="Guide Sections">
+        <ContentCollection
           sectionKey="sections"
           arrayField="sections"
           itemIds={content.sections.map((_, i) => `section-${i}`)}
@@ -119,7 +115,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
         >
           {/* Hero Section - First section in getting-started group */}
           {heroItem && (
-            <EditableItem
+            <ContentItem
               key={`section-${heroItem.index}`}
               sectionKey="sections"
               arrayField="sections"
@@ -147,7 +143,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
                   </div>
                 </div>
               </Card>
-            </EditableItem>
+            </ContentItem>
           )}
 
           {/* Grouped Sections - Dynamically computed from section.group field */}
@@ -174,7 +170,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
 
                     return (
                       <StaggerItem key={`section-${index}`} direction={direction}>
-                      <EditableItem
+                      <ContentItem
                         sectionKey="sections"
                         arrayField="sections"
                         index={index}
@@ -200,7 +196,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
                             </div>
                           </div>
                         </article>
-                      </EditableItem>
+                      </ContentItem>
                       </StaggerItem>
                     );
                   })}
@@ -213,7 +209,7 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
           <RevealSection as="section" className="mb-0">
           <div id="support">
             {supportSections.map(({ section, index }) => (
-              <EditableItem
+              <ContentItem
                 key={`section-${index}`}
                 sectionKey="sections"
                 arrayField="sections"
@@ -232,12 +228,12 @@ export default function GuidePageClient({ initialContent }: GuidePageClientProps
                   ]}
                   hoverColor="gold"
                 />
-              </EditableItem>
+              </ContentItem>
             ))}
           </div>
           </RevealSection>
-        </SortableItemsWrapper>
-      </EditableSection>
+        </ContentCollection>
+      </ContentSection>
     </div>
   );
 }

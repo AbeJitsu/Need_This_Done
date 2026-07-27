@@ -6,8 +6,7 @@ import Link from 'next/link';
 import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
 import CircleBadge from '@/components/CircleBadge';
 import CTASection from '@/components/CTASection';
-import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
-import { useInlineEdit } from '@/context/InlineEditContext';
+import { ContentSection, ContentItem, ContentCollection } from '@/components/content/ContentStructure';
 import type { FAQPageContent } from '@/lib/page-content-types';
 import { ChevronDown } from 'lucide-react';
 
@@ -15,7 +14,7 @@ import { ChevronDown } from 'lucide-react';
 // FAQ Page Client - Dark Glass Redesign
 // ============================================================================
 // Dark hero → Dark glass accordion section → Dark CTA
-// Preserves inline editing and Framer Motion accordion.
+// Preserves the Framer Motion accordion interaction.
 
 interface FAQPageClientProps {
   content: FAQPageContent;
@@ -73,14 +72,11 @@ function renderAnswer(answer: string, links?: Array<{ text: string; href: string
 }
 
 export default function FAQPageClient({ content: initialContent }: FAQPageClientProps) {
-  const { pageContent, isEditMode } = useInlineEdit();
-  const hasValidContent = pageContent && 'items' in pageContent && 'header' in pageContent;
-  const content = hasValidContent ? (pageContent as unknown as FAQPageContent) : initialContent;
+  const content = initialContent;
 
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   const toggleExpanded = (index: number) => {
-    if (isEditMode) return;
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
@@ -95,7 +91,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 pt-16 md:pt-24 pb-14 md:pb-20">
-          <EditableSection sectionKey="header" label="Page Header">
+          <ContentSection sectionKey="header" label="Page Header">
             <FadeIn direction="up" triggerOnScroll={false}>
               {/* Accent line + label */}
               <div className="flex items-center gap-3 mb-6">
@@ -112,7 +108,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
                 {content.header.description}
               </p>
             </FadeIn>
-          </EditableSection>
+          </ContentSection>
         </div>
       </section>
 
@@ -133,9 +129,9 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
           </div>
 
           {/* FAQ List */}
-          <EditableSection sectionKey="items" label="FAQ Items">
+          <ContentSection sectionKey="items" label="FAQ Items">
             <StaggerContainer as="div">
-            <SortableItemsWrapper
+            <ContentCollection
               sectionKey="items"
               arrayField="items"
               itemIds={content.items.map((_, i) => `faq-item-${i}`)}
@@ -148,7 +144,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
 
                 return (
                   <StaggerItem key={`faq-item-${index}`}>
-                  <EditableItem
+                  <ContentItem
                     sectionKey="items"
                     arrayField="items"
                     index={index}
@@ -215,13 +211,13 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
                       )}
                       </AnimatePresence>
                     </div>
-                  </EditableItem>
+                  </ContentItem>
                   </StaggerItem>
                 );
               })}
-            </SortableItemsWrapper>
+            </ContentCollection>
             </StaggerContainer>
-          </EditableSection>
+          </ContentSection>
         </div>
       </section>
 
@@ -234,7 +230,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-24">
-          <EditableSection sectionKey="cta" label="Call to Action">
+          <ContentSection sectionKey="cta" label="Call to Action">
             <RevealSection>
             <CTASection
               title={content.cta.title}
@@ -243,7 +239,7 @@ export default function FAQPageClient({ content: initialContent }: FAQPageClient
               hoverColor={content.cta.hoverColor || 'gold'}
             />
             </RevealSection>
-          </EditableSection>
+          </ContentSection>
         </div>
       </section>
     </div>

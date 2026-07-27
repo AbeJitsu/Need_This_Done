@@ -1,5 +1,5 @@
-import { fetchPageContent } from '@/lib/fetch-page-content';
 import type { GuidePageContent } from '@/lib/page-content-types';
+import { defaultGuideContent } from '@/lib/default-page-content';
 import GuidePageClient from '@/components/guide/GuidePageClient';
 
 // ============================================================================
@@ -21,8 +21,8 @@ export const metadata = {
 // Page Component
 // ============================================================================
 
-export default async function GuidePage() {
-  const content = await fetchPageContent<GuidePageContent>('guide');
+export default function GuidePage() {
+  const content = defaultGuideContent as GuidePageContent;
 
   return <GuidePageClient initialContent={content} />;
 }

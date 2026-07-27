@@ -1,8 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
-import { useInlineEdit } from '@/context/InlineEditContext';
+import { ContentSection, ContentItem, ContentCollection } from '@/components/content/ContentStructure';
 import type { PrivacyPageContent } from '@/lib/page-content-types';
 import { FadeIn, RevealSection, StaggerContainer, StaggerItem } from '@/components/motion';
 import { Shield, Check, Mail, ArrowRight } from 'lucide-react';
@@ -19,10 +18,7 @@ interface PrivacyPageClientProps {
 
 export default function PrivacyPageClient({ initialContent }: PrivacyPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
-  const { pageContent } = useInlineEdit();
-  // Check that pageContent has expected structure before using it
-  const hasValidContent = pageContent && 'sections' in pageContent && 'header' in pageContent && 'quickSummary' in pageContent;
-  const content = hasValidContent ? (pageContent as unknown as PrivacyPageContent) : initialContent;
+  const content = initialContent;
 
   return (
     <div className="min-h-screen">
@@ -40,7 +36,7 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
           <div className="absolute -bottom-8 -right-4 text-[10rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">🔒</div>
 
           <div className="relative z-10 px-6 sm:px-8 md:px-12">
-            <EditableSection sectionKey="header" label="Page Header">
+            <ContentSection sectionKey="header" label="Page Header">
               <FadeIn direction="up" triggerOnScroll={false}>
                 {/* Editorial header */}
                 <div className="mb-8">
@@ -57,17 +53,17 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
                   </p>
                 </div>
               </FadeIn>
-            </EditableSection>
+            </ContentSection>
 
             {/* Last Updated badge */}
-            <EditableSection sectionKey="lastUpdated" label="Last Updated">
+            <ContentSection sectionKey="lastUpdated" label="Last Updated">
               <FadeIn direction="up" delay={0.1}>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-slate-400 text-sm">
                   <Shield size={16} className="text-blue-400" />
                   Last updated: {content.lastUpdated}
                 </div>
               </FadeIn>
-            </EditableSection>
+            </ContentSection>
           </div>
         </div>
       </section>
@@ -77,7 +73,7 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
           ================================================================ */}
       <section className="py-8">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-          <EditableSection sectionKey="quickSummary" label="Quick Summary">
+          <ContentSection sectionKey="quickSummary" label="Quick Summary">
             <RevealSection>
               <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 md:p-10">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl" />
@@ -106,7 +102,7 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
                 </div>
               </div>
             </RevealSection>
-          </EditableSection>
+          </ContentSection>
         </div>
       </section>
 
@@ -116,15 +112,15 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
       <section className="py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           {/* Dynamic Sections - All from JSON and Editable */}
-          <EditableSection sectionKey="sections" label="Content Sections">
-            <SortableItemsWrapper
+          <ContentSection sectionKey="sections" label="Content Sections">
+            <ContentCollection
               sectionKey="sections"
               arrayField="sections"
               itemIds={content.sections.map((_, i) => `section-${i}`)}
               className="space-y-12"
             >
               {content.sections.map((section, index) => (
-                <EditableItem
+                <ContentItem
                   key={`section-${index}`}
                   sectionKey="sections"
                   arrayField="sections"
@@ -149,10 +145,10 @@ export default function PrivacyPageClient({ initialContent }: PrivacyPageClientP
                       </div>
                     </div>
                   </FadeIn>
-                </EditableItem>
+                </ContentItem>
               ))}
-            </SortableItemsWrapper>
-          </EditableSection>
+            </ContentCollection>
+          </ContentSection>
 
           {/* Contact CTA - Dark card */}
           <RevealSection>

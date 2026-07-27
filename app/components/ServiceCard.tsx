@@ -11,7 +11,7 @@ import {
   cardBorderColors,
 } from '@/lib/colors';
 import { CheckmarkCircle } from '@/components/ui/icons/CheckmarkCircle';
-import { Editable } from '@/components/InlineEditor';
+import { ContentValue } from '@/components/content/ContentStructure';
 
 // ============================================================================
 // ServiceCard Component
@@ -60,10 +60,10 @@ export default function ServiceCard({
     ? details.split(',').map(s => s.trim()).filter(s => s.length > 0)
     : [];
 
-  // Helper to wrap content in Editable if editBasePath is provided
+  // Preserve the existing card structure for callers that provide a content path.
   const editable = (field: string, children: React.ReactNode) => {
     if (!editBasePath) return children;
-    return <Editable path={`${editBasePath}.${field}`}>{children}</Editable>;
+    return <ContentValue path={`${editBasePath}.${field}`}>{children}</ContentValue>;
   };
 
   const cardContent = (

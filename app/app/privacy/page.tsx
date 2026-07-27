@@ -1,5 +1,5 @@
-import { fetchPageContent } from '@/lib/fetch-page-content';
 import type { PrivacyPageContent } from '@/lib/page-content-types';
+import { defaultPrivacyContent } from '@/lib/default-page-content';
 import PrivacyPageClient from '@/components/privacy/PrivacyPageClient';
 
 // ============================================================================
@@ -27,8 +27,8 @@ export const metadata = {
 // Page Component
 // ============================================================================
 
-export default async function PrivacyPage() {
-  const content = await fetchPageContent<PrivacyPageContent>('privacy');
+export default function PrivacyPage() {
+  const content = defaultPrivacyContent as PrivacyPageContent;
 
   return <PrivacyPageClient initialContent={content} />;
 }

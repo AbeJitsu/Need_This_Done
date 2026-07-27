@@ -1,5 +1,5 @@
-import { fetchPageContent } from '@/lib/fetch-page-content';
 import type { TermsPageContent } from '@/lib/page-content-types';
+import { defaultTermsContent } from '@/lib/default-page-content';
 import TermsPageClient from '@/components/terms/TermsPageClient';
 
 // ============================================================================
@@ -27,8 +27,8 @@ export const metadata = {
 // Page Component
 // ============================================================================
 
-export default async function TermsPage() {
-  const content = await fetchPageContent<TermsPageContent>('terms');
+export default function TermsPage() {
+  const content = defaultTermsContent as TermsPageContent;
 
   return <TermsPageClient initialContent={content} />;
 }

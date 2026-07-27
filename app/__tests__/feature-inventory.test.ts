@@ -218,32 +218,6 @@ describe('Pro Site Features (includes Growth)', () => {
     });
   });
 
-  describe('Edit your own site (visual content editor with version history)', () => {
-    it('has inline edit context', () => {
-      allExist(['context/InlineEditContext.tsx']);
-    });
-
-    it('has inline editor components', () => {
-      allExist([
-        'components/InlineEditor/AdminSidebar.tsx',
-        'components/InlineEditor/Editable.tsx',
-        'components/InlineEditor/VersionHistoryPanel.tsx',
-      ]);
-    });
-
-    it('has page content API with history and restore', () => {
-      allExist([
-        'app/api/page-content/[slug]/route.ts',
-        'app/api/page-content/[slug]/history/route.ts',
-        'app/api/page-content/[slug]/restore/route.ts',
-      ]);
-    });
-
-    it('has content path mapping utility', () => {
-      allExist(['lib/content-path-mapper.ts']);
-    });
-  });
-
   describe('Customer reviews + admin moderation', () => {
     it('has reviews API', () => {
       allExist([

@@ -37,21 +37,7 @@ export const metadata = {
 // Content Fetching
 // ============================================================================
 
-async function getContent(): Promise<BlogPageContent> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/page-content/blog`, {
-      next: { revalidate: 60 },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.content as BlogPageContent;
-    }
-  } catch (error) {
-    console.error('Failed to fetch blog content:', error);
-  }
-
+function getContent(): BlogPageContent {
   return getDefaultContent('blog') as BlogPageContent;
 }
 

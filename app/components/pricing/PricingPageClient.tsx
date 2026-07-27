@@ -8,8 +8,7 @@ import Card from '@/components/Card';
 import CircleBadge from '@/components/CircleBadge';
 import PaymentForm from '@/components/PaymentForm';
 import { StripeElementsWrapper } from '@/context/StripeContext';
-import { EditableSection, EditableItem, SortableItemsWrapper } from '@/components/InlineEditor';
-import { useInlineEdit } from '@/context/InlineEditContext';
+import { ContentSection, ContentItem, ContentCollection } from '@/components/content/ContentStructure';
 import type { PricingPageContent, AccentVariant } from '@/lib/page-content-types';
 import { formInputColors, headingColors, dividerColors, accentColors, accentBorderWidth, checkmarkColors, featureCardColors, stepBadgeColors, mutedTextColors, alertColors } from '@/lib/colors';
 import { scrollToId } from '@/lib/scroll-utils';
@@ -17,8 +16,7 @@ import { scrollToId } from '@/lib/scroll-utils';
 // ============================================================================
 // Pricing Page Client - Universal Editing Version
 // ============================================================================
-// Uses universal content loading from InlineEditProvider.
-// EditableSection/EditableItem wrappers provide click-to-select functionality.
+// Repository-owned content is passed in by the page.
 
 // Quote data returned from authorization API
 interface AuthorizedQuote {
@@ -37,14 +35,7 @@ interface PricingPageClientProps {
 
 export default function PricingPageClient({ content: initialContent }: PricingPageClientProps) {
   // Use content from universal provider (auto-loaded by route)
-  const { pageContent } = useInlineEdit();
-  // Check that pageContent has expected structure and non-null values before using it
-  const hasValidContent = pageContent &&
-    'tiers' in pageContent && pageContent.tiers != null &&
-    'header' in pageContent && pageContent.header != null &&
-    'ctaPaths' in pageContent && pageContent.ctaPaths != null &&
-    'ctaSection' in pageContent && pageContent.ctaSection != null;
-  const content = hasValidContent ? (pageContent as unknown as PricingPageContent) : initialContent;
+  const content = initialContent;
 
   // ============================================================================
   // Quote Authorization State
@@ -143,13 +134,13 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
     <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Header */}
       {content.header && (
-        <EditableSection sectionKey="header" label="Page Header">
+        <ContentSection sectionKey="header" label="Page Header">
           <PageHeader
             title={content.header.title}
             description={content.header.description}
             color="purple"
           />
-        </EditableSection>
+        </ContentSection>
       )}
 
       {/* Quick Navigation Pills */}
@@ -198,8 +189,8 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
             Purchase a website package online right now
           </p>
         </div>
-        <EditableSection sectionKey="tiers" label="Pricing Tiers">
-          <SortableItemsWrapper
+        <ContentSection sectionKey="tiers" label="Pricing Tiers">
+          <ContentCollection
           sectionKey="tiers"
           arrayField="tiers"
           itemIds={content.tiers.map((_, i) => `tier-${i}`)}
@@ -210,7 +201,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
               : index === 1 ? 'motion-safe:animate-fade-in-delay-100'
               : 'motion-safe:animate-fade-in-delay-200';
             return (
-              <EditableItem
+              <ContentItem
                 key={`tier-${index}`}
                 sectionKey="tiers"
                 arrayField="tiers"
@@ -224,11 +215,11 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
                 <div className={`h-full opacity-0 translate-x-[-30px] motion-reduce:opacity-100 motion-reduce:translate-x-0 ${delayClass}`}>
                   <PricingCard {...tier} />
                 </div>
-              </EditableItem>
+              </ContentItem>
             );
           })}
-        </SortableItemsWrapper>
-        </EditableSection>
+        </ContentCollection>
+        </ContentSection>
       </div>
 
       {/* Section Divider */}
@@ -252,7 +243,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
       {/* Choose Your Path - CTA Section Header (Services) */}
       <div id="services" className="scroll-mt-24">
         {content.ctaSection && (
-          <EditableSection sectionKey="ctaSection" label="CTA Section">
+          <ContentSection sectionKey="ctaSection" label="CTA Section">
             <div className="text-center mb-8">
               <h2 className={`text-3xl font-bold ${headingColors.primary} mb-3`}>
                 Ongoing Services
@@ -261,7 +252,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
                 Let's discuss your service needs
               </p>
             </div>
-          </EditableSection>
+          </ContentSection>
         )}
       </div>
 
@@ -281,8 +272,8 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
 
         {/* CTA Path Cards */}
         {content.ctaPaths && content.ctaPaths.length > 0 && (
-        <EditableSection sectionKey="ctaPaths" label="CTA Paths">
-        <SortableItemsWrapper
+        <ContentSection sectionKey="ctaPaths" label="CTA Paths">
+        <ContentCollection
           sectionKey="ctaPaths"
           arrayField="ctaPaths"
           itemIds={content.ctaPaths.map((_, i) => `path-${i}`)}
@@ -293,7 +284,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
             const checkmarkClass = checkmarkColors[colorKey]?.icon || checkmarkColors.green.icon;
 
             return (
-              <EditableItem
+              <ContentItem
                 key={`path-${index}`}
                 sectionKey="ctaPaths"
                 arrayField="ctaPaths"
@@ -335,17 +326,17 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
                     </Button>
                   </div>
                 </Card>
-              </EditableItem>
+              </ContentItem>
             );
           })}
-        </SortableItemsWrapper>
-      </EditableSection>
+        </ContentCollection>
+      </ContentSection>
       )}
       </div>
 
       {/* Payment Structure Note */}
       {content.paymentNote?.enabled && (
-        <EditableSection sectionKey="paymentNote" label="Payment Structure">
+        <ContentSection sectionKey="paymentNote" label="Payment Structure">
           <Card hoverColor="purple" hoverEffect="glow" className="mb-10">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">
               <div className="flex items-center gap-4">
@@ -373,7 +364,7 @@ export default function PricingPageClient({ content: initialContent }: PricingPa
               </div>
             </div>
           </Card>
-        </EditableSection>
+        </ContentSection>
       )}
 
       {/* Section Divider */}

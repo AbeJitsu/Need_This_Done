@@ -9,7 +9,6 @@ import { CartProvider } from '@/context/CartContext';
 import { StripeProvider } from '@/context/StripeContext';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';
 import { ToastProvider } from '@/context/ToastContext';
-import { InlineEditProvider } from '@/context/InlineEditContext';
 import { WishlistProvider } from '@/context/WishlistContext';
 import { ComparisonProvider } from '@/context/ComparisonContext';
 import { BrowsingHistoryProvider } from '@/context/BrowsingHistoryContext';
@@ -17,7 +16,6 @@ import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { WizardWidget } from '@/components/Wizard';
 import { ServiceDetailModal } from '@/components/service-modal';
 import ProductComparisonModal from '@/components/ProductComparisonModal';
-import { AdminSidebarToggle, EditModeBar, EditModeTutorial, InlineTextEditor } from '@/components/InlineEditor';
 import { Suspense } from 'react';
 import HeroPreviewDetector from '@/components/HeroPreviewDetector';
 import { ProfessionalServiceJsonLd, WebSiteJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd';
@@ -194,7 +192,6 @@ export default function RootLayout({
                 <StripeProvider>
                   <ServiceModalProvider>
                     <ToastProvider>
-                      <InlineEditProvider>
                     {/* Skip to main content link for keyboard users */}
                     <a
                       href="#main-content"
@@ -210,9 +207,6 @@ export default function RootLayout({
 
                     {/* Site-wide navigation (includes dark mode toggle) */}
                     <Navigation />
-
-                    {/* Edit mode indicator bar - shows when admin is in edit mode */}
-                    <EditModeBar />
 
                     {/* Page content - gradient background applied here once for all pages */}
                     <main id="main-content" className="min-h-screen bg-white">
@@ -237,13 +231,6 @@ export default function RootLayout({
                     {/* Product comparison modal - available on all pages */}
                     <ProductComparisonModal />
 
-                    {/* Inline editing - click any text to edit it directly */}
-                    <AdminSidebarToggle />
-                    <InlineTextEditor />
-
-                    {/* Edit mode tutorial - shows on first edit mode activation */}
-                    <EditModeTutorial />
-                    </InlineEditProvider>
                   </ToastProvider>
                 </ServiceModalProvider>
               </StripeProvider>

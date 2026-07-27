@@ -1,10 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useInlineEdit } from '@/context/InlineEditContext';
-import { DEFAULT_LAYOUT_CONTENT, type LayoutContent, type FooterLink } from '@/lib/page-config';
+import { DEFAULT_LAYOUT_CONTENT, type FooterLink } from '@/lib/page-config';
 import { OPEN_CHATBOT_EVENT } from './chatbot/ChatbotWidget';
-import { Editable } from '@/components/InlineEditor';
+import { ContentValue } from '@/components/content/ContentStructure';
 
 // ============================================================================
 // Footer Component - Dark Glass Site-wide Footer
@@ -24,10 +23,8 @@ const defaultFooterLinks: FooterLink[] = [
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const { layoutContent } = useInlineEdit();
-
   // Get footer content from layoutContent or use defaults
-  const footerContent = (layoutContent as LayoutContent | null)?.footer || DEFAULT_LAYOUT_CONTENT.footer;
+  const footerContent = DEFAULT_LAYOUT_CONTENT.footer;
   const footerLinks = footerContent.links || defaultFooterLinks;
   const legalLinks = footerContent.legalLinks || DEFAULT_LAYOUT_CONTENT.footer.legalLinks;
 
@@ -46,9 +43,9 @@ export default function Footer() {
             className="font-bold text-white hover:text-slate-300 transition-colors"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
-            <Editable path="_layout.footer.brand">
+            <ContentValue path="_layout.footer.brand">
               <span>{footerContent.brand}</span>
-            </Editable>
+            </ContentValue>
           </Link>
 
           {/* Navigation links */}
@@ -59,9 +56,9 @@ export default function Footer() {
                   href={link.href}
                   className="text-sm text-slate-400 hover:text-white transition-colors py-1.5 px-2.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
                 >
-                  <Editable path={`_layout.footer.links.${index}.label`}>
+                  <ContentValue path={`_layout.footer.links.${index}.label`}>
                     <span>{link.label}</span>
-                  </Editable>
+                  </ContentValue>
                 </Link>
                 {index < footerLinks.length - 1 && (
                   <span className="mx-1.5 text-sm text-slate-600 hidden sm:inline" aria-hidden="true">·</span>
@@ -97,18 +94,18 @@ export default function Footer() {
         {/* Bottom row: Tagline + Legal + Copyright */}
         <div className="mt-3 pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-sm text-slate-400">
           {/* Tagline - Editable */}
-          <Editable path="_layout.footer.tagline">
+          <ContentValue path="_layout.footer.tagline">
             <p>{footerContent.tagline}</p>
-          </Editable>
+          </ContentValue>
 
           {/* Legal links */}
           <p className="flex items-center gap-2 text-slate-500">
             {legalLinks.map((link, index) => (
               <span key={link.href} className="flex items-center gap-2">
                 <Link href={link.href} className="text-slate-500 hover:text-white transition-colors py-1 px-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900">
-                  <Editable path={`_layout.footer.legalLinks.${index}.label`}>
+                  <ContentValue path={`_layout.footer.legalLinks.${index}.label`}>
                     <span>{link.label}</span>
-                  </Editable>
+                  </ContentValue>
                 </Link>
                 {index < legalLinks.length - 1 && <span>·</span>}
               </span>

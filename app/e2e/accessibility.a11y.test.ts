@@ -48,7 +48,6 @@ const ADMIN_CORE_PAGES = [
 ];
 
 const ADMIN_CONTENT_PAGES = [
-  { path: '/admin/content', name: 'Admin Content' },
   { path: '/admin/pages', name: 'Admin Pages' },
   { path: '/admin/pages/new', name: 'Admin Pages New' },
   { path: '/admin/blog', name: 'Admin Blog' },
