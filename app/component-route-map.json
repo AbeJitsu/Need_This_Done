@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-27T04:40:50.898Z",
+  "generatedAt": "2026-07-27T04:53:00.820Z",
   "routes": [
     {
       "path": "/about",
@@ -33,11 +33,6 @@
         "lib/colors",
         "context/AuthContext"
       ]
-    },
-    {
-      "path": "/admin/automation/[[...path]]",
-      "file": "app/admin/automation/[[...path]]/page.tsx",
-      "imports": []
     },
     {
       "path": "/admin/blog/[slug]/edit",
@@ -99,23 +94,6 @@
       ]
     },
     {
-      "path": "/admin/loyalty",
-      "file": "app/admin/loyalty/page.tsx",
-      "imports": [
-        "components/admin/loyalty/LoyaltyAnalyticsDashboard",
-        "context/AuthContext"
-      ]
-    },
-    {
-      "path": "/admin/referrals",
-      "file": "app/admin/referrals/page.tsx",
-      "imports": [
-        "lib/auth",
-        "context/AuthContext",
-        "context/ToastContext"
-      ]
-    },
-    {
       "path": "/admin/reports",
       "file": "app/admin/reports/page.tsx",
       "imports": [
@@ -162,45 +140,6 @@
       ]
     },
     {
-      "path": "/admin/waitlist-analytics",
-      "file": "app/admin/waitlist-analytics/page.tsx",
-      "imports": [
-        "components/Card",
-        "lib/auth",
-        "lib/colors",
-        "context/AuthContext"
-      ]
-    },
-    {
-      "path": "/admin/waitlist-campaigns/[id]",
-      "file": "app/admin/waitlist-campaigns/[id]/page.tsx",
-      "imports": [
-        "components/Button",
-        "components/Card",
-        "components/PageHeader",
-        "context/ToastContext"
-      ]
-    },
-    {
-      "path": "/admin/waitlist-campaigns/new",
-      "file": "app/admin/waitlist-campaigns/new/page.tsx",
-      "imports": [
-        "components/Button",
-        "components/Card",
-        "components/PageHeader",
-        "context/ToastContext"
-      ]
-    },
-    {
-      "path": "/admin/waitlist-campaigns",
-      "file": "app/admin/waitlist-campaigns/page.tsx",
-      "imports": [
-        "components/Button",
-        "components/Card",
-        "components/PageHeader"
-      ]
-    },
-    {
       "path": "/blog/[slug]",
       "file": "app/blog/[slug]/page.tsx",
       "imports": [
@@ -224,14 +163,7 @@
     {
       "path": "/contact",
       "file": "app/contact/page.tsx",
-      "imports": [
-        "components/motion",
-        "components/ConsultationCalendar",
-        "lib/page-content-types",
-        "lib/default-page-content",
-        "lib/scroll-utils",
-        "lib/colors"
-      ]
+      "imports": []
     },
     {
       "path": "/dashboard",
@@ -240,6 +172,14 @@
         "components/AdminDashboard",
         "components/UserDashboard",
         "lib/mockProjects",
+        "context/AuthContext"
+      ]
+    },
+    {
+      "path": "/employee",
+      "file": "app/employee/page.tsx",
+      "imports": [
+        "components/employee/EmployeeWorkspace",
         "context/AuthContext"
       ]
     },
@@ -363,9 +303,6 @@
       "/admin/reviews",
       "/admin/settings",
       "/admin/users",
-      "/admin/waitlist-campaigns/[id]",
-      "/admin/waitlist-campaigns/new",
-      "/admin/waitlist-campaigns",
       "/resume"
     ],
     "components/account/AccountSettingsClient": [
@@ -376,7 +313,6 @@
     ],
     "components/motion": [
       "/ada-compliance",
-      "/contact",
       "/how-it-works"
     ],
     "lib/seo-config": [
@@ -392,19 +328,13 @@
       "/admin/colors",
       "/admin/reviews",
       "/admin/settings",
-      "/admin/users",
-      "/admin/waitlist-analytics",
-      "/admin/waitlist-campaigns/[id]",
-      "/admin/waitlist-campaigns/new",
-      "/admin/waitlist-campaigns"
+      "/admin/users"
     ],
     "lib/auth": [
       "/admin/analytics",
       "/admin/communication",
-      "/admin/referrals",
       "/admin/reviews",
-      "/admin/settings",
-      "/admin/waitlist-analytics"
+      "/admin/settings"
     ],
     "lib/colors": [
       "/admin/analytics",
@@ -414,9 +344,7 @@
       "/admin/colors",
       "/admin/reviews",
       "/admin/settings",
-      "/admin/users",
-      "/admin/waitlist-analytics",
-      "/contact"
+      "/admin/users"
     ],
     "context/AuthContext": [
       "/admin/analytics",
@@ -425,14 +353,12 @@
       "/admin/blog",
       "/admin/colors",
       "/admin/communication",
-      "/admin/loyalty",
-      "/admin/referrals",
       "/admin/reports",
       "/admin/reviews",
       "/admin/settings",
       "/admin/users",
-      "/admin/waitlist-analytics",
-      "/dashboard"
+      "/dashboard",
+      "/employee"
     ],
     "components/editor/RichTextEditor": [
       "/admin/blog/[slug]/edit"
@@ -449,26 +375,17 @@
       "/admin/blog/[slug]/edit",
       "/admin/blog/new",
       "/admin/blog",
-      "/admin/communication",
-      "/admin/referrals",
-      "/admin/waitlist-campaigns/[id]",
-      "/admin/waitlist-campaigns/new"
+      "/admin/communication"
     ],
     "components/ui/ConfirmDialog": [
       "/admin/blog"
     ],
     "components/PageHeader": [
       "/admin/colors",
-      "/admin/users",
-      "/admin/waitlist-campaigns/[id]",
-      "/admin/waitlist-campaigns/new",
-      "/admin/waitlist-campaigns"
+      "/admin/users"
     ],
     "lib/wcag-contrast": [
       "/admin/colors"
-    ],
-    "components/admin/loyalty/LoyaltyAnalyticsDashboard": [
-      "/admin/loyalty"
     ],
     "lib/aria-utils": [
       "/admin/users"
@@ -491,7 +408,6 @@
     ],
     "lib/default-page-content": [
       "/blog",
-      "/contact",
       "/faq",
       "/guide",
       "/",
@@ -500,18 +416,11 @@
     ],
     "lib/page-content-types": [
       "/blog",
-      "/contact",
       "/faq",
       "/guide",
       "/",
       "/privacy",
       "/terms"
-    ],
-    "components/ConsultationCalendar": [
-      "/contact"
-    ],
-    "lib/scroll-utils": [
-      "/contact"
     ],
     "components/AdminDashboard": [
       "/dashboard"
@@ -521,6 +430,9 @@
     ],
     "lib/mockProjects": [
       "/dashboard"
+    ],
+    "components/employee/EmployeeWorkspace": [
+      "/employee"
     ],
     "components/faq/FAQPageClient": [
       "/faq"

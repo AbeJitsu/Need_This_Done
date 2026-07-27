@@ -189,31 +189,6 @@ describe('Pro Site Features (includes Growth)', () => {
     });
   });
 
-  describe('Loyalty program (points + referral credits)', () => {
-    it('has loyalty API routes', () => {
-      allExist([
-        'app/api/loyalty/balance/route.ts',
-        'app/api/loyalty/earn/route.ts',
-        'app/api/loyalty/redeem/route.ts',
-      ]);
-    });
-
-    it('has referral API routes', () => {
-      allExist([
-        'app/api/referrals/my-referral/route.ts',
-        'app/api/referrals/track/route.ts',
-        'app/api/referrals/complete/route.ts',
-      ]);
-    });
-
-    it('has admin loyalty and referral pages', () => {
-      allExist([
-        'app/admin/loyalty/page.tsx',
-        'app/admin/referrals/page.tsx',
-      ]);
-    });
-  });
-
   describe('Email campaigns (templates, segments, analytics)', () => {
     it('has email template and campaign APIs', () => {
       allExist([
@@ -259,7 +234,6 @@ describe('Pro Site Features (includes Growth)', () => {
   describe('Automated emails', () => {
     it('has cron jobs for automated emails', () => {
       allExist([
-        'app/api/cron/waitlist-notifications/route.ts',
         'app/api/cron/retry-failed-emails/route.ts',
       ]);
     });

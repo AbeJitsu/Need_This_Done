@@ -8,22 +8,22 @@ import ServicesPageClient from '@/components/services/ServicesPageClient';
 // Keeps metadata server-rendered for SEO. All JSX + animations in client component.
 
 export const metadata: Metadata = {
-  title: 'Web Development, Automation & AI Services | NeedThisDone',
+  title: 'What Your AI Growth Employee Handles | NeedThisDone',
   description:
-    'Professional web development, workflow automation, and managed AI services. Custom websites from $500, automation from $150, AI solutions from $500/mo. Orlando-based, serving clients nationwide.',
+    'Research, evidence-backed audits, prepared follow-up, prioritized decisions, and outcome tracking under human supervision.',
   alternates: { canonical: '/services' },
   openGraph: {
-    title: 'Web Development, Automation & AI Services | NeedThisDone',
+    title: 'What Your AI Growth Employee Handles | NeedThisDone',
     description:
-      'Custom websites, workflow automation, and AI solutions built for your business. Transparent pricing, reliable delivery.',
+      'A supervised growth role that prepares the work and keeps you in control.',
     url: `${seoConfig.baseUrl}/services`,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Web Development, Automation & AI Services | NeedThisDone',
+    title: 'What Your AI Growth Employee Handles | NeedThisDone',
     description:
-      'Custom websites, workflow automation, and AI solutions built for your business.',
+      'A supervised growth role that prepares the work and keeps you in control.',
   },
 };
 

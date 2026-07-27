@@ -104,7 +104,7 @@ export default function Navigation() {
 
                 return (
                   <Link
-                    key={link.href}
+                    key={`${link.href}-${link.label}`}
                     href={link.href}
                     aria-current={isActive ? 'page' : undefined}
                     className={`
@@ -267,7 +267,7 @@ export default function Navigation() {
 
               return (
                 <Link
-                  key={link.href}
+                  key={`${link.href}-${link.label}`}
                   href={link.href}
                   aria-current={isActive ? 'page' : undefined}
                   onClick={() => setMobileMenuOpen(false)}

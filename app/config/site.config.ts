@@ -37,8 +37,8 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   project: {
     name: 'NeedThisDone',
-    tagline: 'Websites. Automation. AI.',
-    description: 'From your first website to fully automated operations. We build the technology that lets you focus on what matters.',
+    tagline: 'Your supervised AI Growth Employee.',
+    description: 'Growth work moves forward between focused check-ins while you stay in control.',
     url: 'https://needthisdone.com',
   },
 
@@ -48,24 +48,24 @@ const siteConfig: SiteConfig = {
   // Core service offerings - colors match page-config.ts: Website=green, Automation=blue, AI=purple
   services: [
     {
-      title: 'Website Builds',
-      tagline: 'Your digital foundation',
-      description: 'Professional websites that work. From landing pages to full e-commerce, built to convert visitors into customers.',
-      details: 'Custom Design, Mobile-First, SEO-Ready, Easy to Update',
+      title: 'AI Growth Employee Pilot',
+      tagline: 'Design and prove the role',
+      description: 'Discovery, operating brief, first workflows, guardrails, and a measured supervised trial.',
+      details: 'Role Design, Guardrails, Check-ins, Measured Trial',
       color: 'green',
     },
     {
-      title: 'Automation Setup',
-      tagline: 'Stop doing repetitive work',
-      description: 'Connect your tools, automate your workflows, and reclaim hours every week. We set it up, you reap the benefits.',
-      details: 'Workflow Design, Tool Integration, Testing, Training',
+      title: 'Managed AI Growth Employee',
+      tagline: 'Operate and improve the role',
+      description: 'Ongoing operation, monitoring, improvement, reporting, and support.',
+      details: 'Daily Queues, Monitoring, Outcomes, Support',
       color: 'blue',
     },
     {
-      title: 'Managed AI',
-      tagline: 'AI that runs while you sleep',
-      description: 'We build, deploy, and maintain AI agents that handle your operations. You get the results without the complexity.',
-      details: 'Custom AI Agents, Monitoring, Optimization, Support',
+      title: 'Implementation Capabilities',
+      tagline: 'Used only when the plan requires them',
+      description: 'Website improvements, integrations, and automation support an approved growth plan rather than being headline products.',
+      details: 'Web Improvements, Integrations, Custom Automation',
       color: 'purple',
     },
   ],
@@ -75,7 +75,7 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   metadata: {
     siteName: 'NeedThisDone',
-    siteDescription: 'Professional website builds, automation setup, and managed AI services for growing businesses.',
+    siteDescription: 'Supervised AI Growth Employees for busy owners and managers.',
     author: 'NeedThisDone',
   },
 };

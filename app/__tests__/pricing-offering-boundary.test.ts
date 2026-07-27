@@ -8,8 +8,6 @@ describe('pricing offering boundary', () => {
   it('keeps the retained pricing page independent of Medusa and carts', () => {
     const sources = [
       'components/pricing/UnifiedPricingPage.tsx',
-      'components/Wizard/WizardProvider.tsx',
-      'components/Wizard/WizardResults.tsx',
     ].map((source) => readFileSync(resolve(APP_ROOT, source), 'utf8'));
 
     for (const source of sources) {
@@ -19,12 +17,10 @@ describe('pricing offering boundary', () => {
     }
   });
 
-  it('routes pricing actions through the guarded offering checkout', () => {
-    const actionLink = readFileSync(
-      resolve(APP_ROOT, 'components/pricing/OfferingCheckoutLink.tsx'),
-      'utf8',
-    );
-
-    expect(actionLink).toContain('/api/offerings/${slug}/checkout');
+  it('routes proposal-based stages to role design without exposing checkout', () => {
+    const pricing = readFileSync(resolve(APP_ROOT, 'components/pricing/UnifiedPricingPage.tsx'), 'utf8');
+    expect(pricing).toContain('Proposal-based');
+    expect(pricing).toContain('href="/contact"');
+    expect(pricing).not.toContain('/checkout');
   });
 });

@@ -11,12 +11,12 @@ test.describe('Retained core smoke checks', () => {
     );
   });
 
-  test('contact page renders its project enquiry path', async ({ page }) => {
+  test('contact page renders its AI employee role-design path', async ({ page }) => {
     const response = await page.goto('/contact');
 
     expect(response?.ok()).toBe(true);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByRole('button', { name: /start a project|book a consultation/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /design my ai employee/i })).toBeVisible();
   });
 
   test('site analyzer page renders the audit form', async ({ page }) => {

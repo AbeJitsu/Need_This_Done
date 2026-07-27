@@ -1,541 +1,184 @@
-'use client';
-
-import { useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { ContentSection, ContentItem, ContentValue } from '@/components/content/ContentStructure';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import Button from '@/components/Button';
-import BlogPostCard from '@/components/blog/BlogPostCard';
-import { FadeIn, StaggerContainer, StaggerItem, useReducedMotion } from '@/components/motion';
-import { Hero } from '@/components/home/sections/Hero';
-import SiteAnalyzerTeaser from '@/components/home/sections/SiteAnalyzerTeaser';
+import {
+  ArrowRight,
+  BarChart3,
+  Check,
+  ClipboardCheck,
+  Clock3,
+  MessageSquareText,
+  Search,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import type { HomePageContent } from '@/lib/page-content-types';
 import type { BlogPostSummary } from '@/lib/blog-types';
-
-// ============================================================================
-// Home Page Client - Enhanced Visual Design
-// ============================================================================
-// Features:
-// - Geometric accent backgrounds for visual depth
-// - Staggered entrance animations for sections and cards
-// - Service icons for visual anchors
-// - Process step connectors for visual flow
-// - Refined typography hierarchy
 
 interface HomePageClientProps {
   content: HomePageContent;
   recentBlogPosts?: BlogPostSummary[];
 }
 
-export default function HomePageClient({ content: initialContent, recentBlogPosts = [] }: HomePageClientProps) {
-  const router = useRouter();
-  const prefersReducedMotion = useReducedMotion();
+const checkIns = [
+  {
+    time: 'Morning · 8:30',
+    title: 'Choose today’s priorities',
+    description: 'Review the strongest opportunities, conversion risks, and the three decisions most likely to move the business.',
+    icon: Search,
+  },
+  {
+    time: 'Midday · 12:30',
+    title: 'Approve prepared work',
+    description: 'See the evidence, proposed action, expected outcome, and risk before approving, revising, deferring, or rejecting.',
+    icon: ClipboardCheck,
+  },
+  {
+    time: 'End of day · 4:30',
+    title: 'Review outcomes',
+    description: 'Close the loop on replies, leads, unresolved work, and the follow-ups already prepared for tomorrow.',
+    icon: BarChart3,
+  },
+];
 
-  // Scroll-animated progress line for How It Works section
-  const timelineRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: timelineProgress } = useScroll({
-    target: timelineRef,
-    offset: ['start end', 'end center'],
-  });
-  const lineScale = useTransform(timelineProgress, [0, 1], [0, 1]);
+const handles = [
+  'Researches growth opportunities and customer signals',
+  'Audits websites and conversion paths for costly gaps',
+  'Prepares follow-up and messages for your approval',
+  'Prioritizes a short queue instead of creating more noise',
+  'Tracks replies, meetings, projects, and time saved',
+  'Learns from every edit, rejection, deferral, and outcome',
+];
 
-  const content = initialContent;
-
+export default function HomePageClient({ recentBlogPosts = [] }: HomePageClientProps) {
   return (
-    <div>
-      {/* New Hero Section */}
-      <Hero />
-
-      {/* Legacy Hero Section - Temporarily disabled to use new Hero */}
-      {false && (<ContentSection sectionKey="hero" label="Hero Section">
-        {/* Gradient container - full width on mobile, contained+rounded on desktop */}
-        <div className="relative overflow-hidden md:max-w-6xl md:mx-auto md:rounded-2xl py-16 md:py-24 mb-20">
-          {/* Background gradients - BJJ color orbs (green, blue, purple) */}
-          {/* Green orb - bottom left */}
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 md:w-80 md:h-80 rounded-full bg-gradient-to-tr from-emerald-200 to-emerald-100 blur-2xl" />
-          {/* Blue/Purple orb - top right */}
-          <div className="absolute -top-32 -right-32 w-96 h-96 md:w-[28rem] md:h-[28rem] rounded-full bg-gradient-to-br from-blue-200 to-purple-200 blur-3xl" />
-          {/* Small purple accent - right side */}
-          <div className="absolute top-1/2 right-10 w-24 h-32 md:w-32 md:h-40 rounded-full bg-purple-200/80 blur-2xl" />
-
-          {/* Hero content - CENTERED */}
-          <div className="relative z-10 px-4 sm:px-6 md:px-8 text-center">
-            <FadeIn direction="none" triggerOnScroll={false}>
-              <ContentValue path="hero.title">
-                <h1 className="text-5xl sm:text-6xl md:text-7xl font-manrope font-extrabold tracking-tight mb-6 leading-[1.1]">
-                  <span className="bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
-                    Websites.
-                  </span>{' '}
-                  <span className="bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                    Automation.
-                  </span>{' '}
-                  <span className="bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
-                    AI.
-                  </span>
-                </h1>
-              </ContentValue>
-            </FadeIn>
-            <FadeIn direction="up" delay={0.15} triggerOnScroll={false}>
-              <ContentValue path="hero.description">
-                <p className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto">
-                  From your first website to fully automated operations. We build the technology that lets you focus on what matters.
-                </p>
-              </ContentValue>
-            </FadeIn>
-            {/* Scroll indicator - functional smooth scroll */}
-            <FadeIn direction="up" delay={0.3} triggerOnScroll={false}>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  const servicesSection = document.getElementById('services-section');
-                  if (servicesSection) {
-                    servicesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                }}
-                className="mt-10 inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors cursor-pointer rounded-lg px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                aria-label="Scroll to services section"
-              >
-                <span>Scroll to explore</span>
-                <svg className="w-4 h-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-            </FadeIn>
-          </div>
-        </div>
-      </ContentSection>
-      )}
-
-      {/* Social proof strip — addresses top 3 objections */}
-      <FadeIn direction="up">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-16">
-          <div className="grid grid-cols-3 gap-6 md:gap-8 text-center">
-            <div>
-              <p className="text-3xl md:text-4xl font-black text-emerald-600 mb-1">50%</p>
-              <p className="text-xs md:text-sm text-gray-500">deposit to start, rest when approved</p>
-            </div>
-            <div>
-              <p className="text-3xl md:text-4xl font-black text-blue-600 mb-1">1-4</p>
-              <p className="text-xs md:text-sm text-gray-500">weeks to launch, not months</p>
-            </div>
-            <div>
-              <p className="text-3xl md:text-4xl font-black text-purple-600 mb-1">100%</p>
-              <p className="text-xs md:text-sm text-gray-500">deposit refund if not delivered</p>
-            </div>
-          </div>
-        </div>
-      </FadeIn>
-
-      {/* Rest of content in max-w container */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-        {/* Services Section - Bold Asymmetric Cards */}
-        <ContentSection sectionKey="services" label="Services">
-        <div id="services-section" className="mb-24 scroll-mt-24">
-          {/* Section header — editorial style with accent line */}
-          <FadeIn direction="up">
-            <div className="mb-14">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="h-1 w-12 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 rounded-full" />
-                <span className="text-sm font-semibold uppercase tracking-widest text-gray-500">Our Services</span>
-              </div>
-              <h2 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tight leading-[0.95]">
-                What we build
-              </h2>
-            </div>
-          </FadeIn>
-
-          {/* Service cards — asymmetric grid */}
-          <StaggerContainer className="grid lg:grid-cols-[1.4fr_1fr] gap-5 lg:gap-6 mb-10">
-            {/* Hero Card — Website Builds */}
-            {content.services.cards[0] && content.services.cards[0].modal && (
-              <StaggerItem>
-              <ContentItem
-                sectionKey="services"
-                arrayField="cards"
-                index={0}
-                label={content.services.cards[0].title}
-                content={content.services.cards[0] as unknown as Record<string, unknown>}
-              >
-                <motion.article
-                  className="group relative h-full rounded-3xl p-8 lg:p-10 cursor-pointer overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-800 to-emerald-900 ring-4 ring-inset ring-emerald-400/60 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
-                  tabIndex={0}
-                  role="button"
-                  aria-labelledby="service-card-0-title"
-                  onClick={() => router.push('/services')}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      router.push('/services');
-                    }
-                  }}
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                >
-                  {/* Dot texture */}
-                  <div className="absolute inset-0 rounded-3xl opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                  {/* Decorative glow */}
-                  <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-emerald-400/20 blur-3xl" />
-                  <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-emerald-300/15 blur-2xl" />
-
-                  <div className="relative z-10">
-                    {/* Number badge */}
-                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/15 text-white/80 text-sm font-bold mb-6 backdrop-blur-sm border border-white/10">
-                      01
-                    </div>
-
-                    {/* Title */}
-                    <h3 id="service-card-0-title" className="text-3xl lg:text-4xl font-black text-white mb-3 tracking-tight">
-                      {content.services.cards[0].title}
-                    </h3>
-
-                    {/* Headline */}
-                    <p className="text-lg font-semibold text-white/90 mb-2">
-                      {content.services.cards[0].modal.headline}
-                    </p>
-
-                    {/* Hook */}
-                    <p className="text-emerald-200 leading-relaxed max-w-md">
-                      {content.services.cards[0].modal.hook}
-                    </p>
-
-                  </div>
-                </motion.article>
-              </ContentItem>
-              </StaggerItem>
-            )}
-
-            {/* Right column — stacked cards */}
-            <div className="flex flex-col gap-5 lg:gap-6">
-              {/* Automation Setup Card */}
-              {content.services.cards[1] && content.services.cards[1].modal && (
-                <StaggerItem>
-                <ContentItem
-                  sectionKey="services"
-                  arrayField="cards"
-                  index={1}
-                  label={content.services.cards[1].title}
-                  content={content.services.cards[1] as unknown as Record<string, unknown>}
-                >
-                  <motion.article
-                    className="group relative h-full rounded-3xl p-7 cursor-pointer overflow-hidden bg-slate-900 ring-4 ring-inset ring-blue-400/60 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
-                    tabIndex={0}
-                    role="button"
-                    aria-labelledby="service-card-1-title"
-                    onClick={() => router.push('/services')}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        router.push('/services');
-                      }
-                    }}
-                    whileHover={{ y: -4 }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                  >
-                    {/* Dot texture */}
-                    <div className="absolute inset-0 rounded-3xl opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                    {/* Blue accent glow */}
-                    <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-blue-500/20 blur-3xl" />
-                    <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-blue-400/10 blur-2xl" />
-
-                    <div className="relative z-10">
-                      {/* Number badge */}
-                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold mb-5 border border-blue-500/20">
-                        02
-                      </div>
-
-                      {/* Title */}
-                      <h3 id="service-card-1-title" className="text-2xl font-black text-white mb-2 tracking-tight">
-                        {content.services.cards[1].title}
-                      </h3>
-
-                      {/* Headline */}
-                      <p className="text-base font-semibold text-blue-200 mb-2">
-                        {content.services.cards[1].modal.headline}
-                      </p>
-
-                      {/* Hook */}
-                      <p className="text-sm text-slate-400 leading-relaxed">
-                        {content.services.cards[1].modal.hook}
-                      </p>
-
-                    </div>
-                  </motion.article>
-                </ContentItem>
-                </StaggerItem>
-              )}
-
-              {/* Managed AI Card */}
-              {content.services.cards[2] && content.services.cards[2].modal && (
-                <StaggerItem>
-                <ContentItem
-                  sectionKey="services"
-                  arrayField="cards"
-                  index={2}
-                  label={content.services.cards[2].title}
-                  content={content.services.cards[2] as unknown as Record<string, unknown>}
-                >
-                  <motion.article
-                    className="group relative h-full rounded-3xl p-7 cursor-pointer overflow-hidden bg-gradient-to-br from-purple-700 to-purple-900 ring-4 ring-inset ring-purple-400/60 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-400 focus-visible:ring-offset-2"
-                    tabIndex={0}
-                    role="button"
-                    aria-labelledby="service-card-2-title"
-                    onClick={() => router.push('/services')}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        router.push('/services');
-                      }
-                    }}
-                    whileHover={{ y: -4 }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                  >
-                    {/* Dot texture */}
-                    <div className="absolute inset-0 rounded-3xl opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                    {/* Purple accent glow */}
-                    <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-purple-400/20 blur-3xl" />
-                    <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-purple-300/15 blur-2xl" />
-
-                    <div className="relative z-10">
-                      {/* Number badge */}
-                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/15 text-purple-200 text-sm font-bold mb-5 border border-white/10">
-                        03
-                      </div>
-
-                      {/* Title */}
-                      <h3 id="service-card-2-title" className="text-2xl font-black text-white mb-2 tracking-tight">
-                        {content.services.cards[2].title}
-                      </h3>
-
-                      {/* Headline */}
-                      <p className="text-base font-semibold text-purple-200 mb-2">
-                        {content.services.cards[2].modal.headline}
-                      </p>
-
-                      {/* Hook */}
-                      <p className="text-sm text-purple-200 leading-relaxed">
-                        {content.services.cards[2].modal.hook}
-                      </p>
-
-                    </div>
-                  </motion.article>
-                </ContentItem>
-                </StaggerItem>
-              )}
-            </div>
-          </StaggerContainer>
-
-          {/* Section CTA */}
-          <FadeIn direction="up">
-            <div className="flex flex-wrap justify-center gap-4 mt-10">
-              <Button variant="blue" href="/services" size="lg" className="shadow-lg shadow-blue-500/25">
-                Explore Our Services
-              </Button>
-            </div>
-          </FadeIn>
-
-        </div>
-      </ContentSection>
-
-      {/* How It Works - Bold Editorial Redesign */}
-      <ContentSection sectionKey="processPreview" label="Process Preview">
-        <div id="how-it-works-section" className="mb-24 scroll-mt-28">
-          {/* Section header — editorial style matching Services */}
-          <FadeIn direction="up">
-            <div className="mb-14">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="h-1 w-12 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 rounded-full" />
-                <span className="text-sm font-semibold uppercase tracking-widest text-gray-500">Our Process</span>
-              </div>
-              <h2 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tight leading-[0.95] mb-4">
-                How it works
-              </h2>
-              <p className="text-lg text-gray-500 max-w-xl">
-                From idea to launch in four simple steps. We take on 3–4 projects per month.
-              </p>
-            </div>
-          </FadeIn>
-
-          {/* Desktop: Horizontal Steps */}
-          <div ref={timelineRef} className="hidden md:block mb-10 relative overflow-hidden rounded-3xl">
-            {/* Animated progress line — draws as user scrolls */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200 overflow-hidden z-20 pointer-events-none">
-              <motion.div
-                className="h-full origin-left"
-                style={{ backgroundImage: 'linear-gradient(to right, #34d399, #60a5fa, #c084fc, #a3764a)', scaleX: prefersReducedMotion ? 1 : lineScale }}
-              />
-            </div>
-            <StaggerContainer className="grid grid-cols-4 gap-0">
-              {content.processPreview.steps.map((step, index) => {
-                const stepStyles = [
-                  { bg: 'bg-emerald-800', gradient: 'from-emerald-700 via-emerald-800 to-emerald-900', badge: 'bg-white/15 text-white', title: 'text-white', desc: 'text-emerald-200', num: 'text-emerald-300/10' },
-                  { bg: 'bg-slate-900', gradient: 'from-slate-800 via-slate-900 to-slate-950', badge: 'bg-white/15 text-white', title: 'text-white', desc: 'text-slate-400', num: 'text-blue-500/10' },
-                  { bg: 'bg-purple-800', gradient: 'from-purple-700 via-purple-800 to-purple-900', badge: 'bg-white/15 text-purple-200', title: 'text-white', desc: 'text-purple-200', num: 'text-purple-400/10' },
-                  { bg: 'bg-yellow-900', gradient: 'from-yellow-800 via-yellow-900 to-yellow-950', badge: 'bg-white/15 text-yellow-200', title: 'text-white', desc: 'text-yellow-200', num: 'text-yellow-500/10' },
-                ];
-                const style = stepStyles[index] || stepStyles[0];
-                const isFirst = index === 0;
-                const isLast = index === content.processPreview.steps.length - 1;
-
-                return (
-                  <StaggerItem key={index}>
-                    <motion.div
-                      className={`relative overflow-hidden p-8 h-full ${style.bg} ${isFirst ? 'rounded-l-3xl' : ''} ${isLast ? 'rounded-r-3xl' : ''}`}
-                    >
-                      {/* Gradient overlay */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${style.gradient}`} />
-
-                      <div className="relative z-10">
-                        {/* Step badge */}
-                        <div className={`inline-flex items-center justify-center w-10 h-10 rounded-full ${style.badge} text-sm font-bold mb-6 border border-white/10`}>
-                          {step.number}
-                        </div>
-
-                        <h3 className={`text-xl font-black ${style.title} mb-2 tracking-tight`}>
-                          {step.title}
-                        </h3>
-                        <p className={`text-sm ${style.desc} leading-relaxed`}>
-                          {step.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  </StaggerItem>
-                );
-              })}
-            </StaggerContainer>
-          </div>
-
-          {/* Mobile: Vertical timeline */}
-          <div className="md:hidden mb-10">
-            <div className="space-y-4">
-              {content.processPreview.steps.map((step, index) => {
-                const mobileStyles = [
-                  { bg: 'bg-emerald-800', badge: 'text-white', title: 'text-white', desc: 'text-emerald-200' },
-                  { bg: 'bg-slate-900', badge: 'text-blue-400', title: 'text-white', desc: 'text-slate-400' },
-                  { bg: 'bg-purple-800', badge: 'text-purple-200', title: 'text-white', desc: 'text-purple-200' },
-                  { bg: 'bg-slate-800', badge: 'text-amber-400', title: 'text-white', desc: 'text-slate-400' },
-                ];
-                const style = mobileStyles[index] || mobileStyles[0];
-
-                return (
-                  <div key={index} className={`${style.bg} rounded-2xl p-6 flex gap-5 items-start`}>
-                    <div className={`flex-shrink-0 w-12 h-12 rounded-full bg-white/15 flex items-center justify-center ${style.badge} font-bold text-lg border border-white/10`}>
-                      {step.number}
-                    </div>
-                    <div className="flex-1 pt-1">
-                      <h3 className={`font-black ${style.title} text-lg mb-1`}>
-                        {step.title}
-                      </h3>
-                      <p className={`text-sm ${style.desc}`}>
-                        {step.description}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* CTA — drives to dedicated page */}
-          <FadeIn direction="up">
-            <div className="text-center">
-              <Button variant="blue" href="/how-it-works" size="lg" className="shadow-lg shadow-blue-500/25">
-                See How We Work
-              </Button>
-            </div>
-          </FadeIn>
-        </div>
-      </ContentSection>
-
-      {/* Latest from the Blog — homepage → blog internal links for SEO */}
-      {recentBlogPosts.length > 0 && (
-        <div className="mb-24">
-          <FadeIn direction="up">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-400 to-blue-400" />
-              <h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
-                Latest from the Blog
-              </h2>
-            </div>
-          </FadeIn>
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {recentBlogPosts.map((post) => (
-              <StaggerItem key={post.id}>
-                <BlogPostCard post={post} />
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-          <FadeIn direction="up">
-            <div className="text-center">
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold transition-colors"
-              >
-                View All Posts
-                <ArrowRight size={18} />
+    <main className="overflow-hidden bg-[#f7f4ed] text-[#183229]">
+      <section className="relative border-b border-[#183229]/10">
+        <div className="absolute inset-y-0 right-0 hidden w-[38%] border-l border-[#183229]/10 bg-[#e4eee6] lg:block" />
+        <div className="relative mx-auto grid max-w-7xl gap-14 px-5 py-20 sm:px-8 md:py-28 lg:grid-cols-[1.15fr_.85fr] lg:px-12">
+          <div className="max-w-3xl">
+            <p className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-900/15 bg-white/60 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-emerald-900">
+              <Sparkles className="h-4 w-4" aria-hidden="true" />
+              A managed AI employee, supervised by you
+            </p>
+            <h1 className="font-playfair text-5xl font-black leading-[.98] tracking-tight sm:text-6xl md:text-8xl">
+              Growth work moves forward—even when you’re busy.
+            </h1>
+            <p className="mt-8 max-w-2xl text-lg leading-8 text-[#40564e] md:text-xl">
+              Your AI Growth Employee researches, audits, prepares, and tracks the work between check-ins. You make the important decisions in three focused 15–20 minute sessions.
+            </p>
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <Link href="/contact" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white transition hover:bg-[#0c563e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#126b4e] focus-visible:ring-offset-4">
+                Design My AI Employee <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+              <Link href="#example-day" className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#183229]/20 bg-white/50 px-7 py-3 font-bold hover:bg-white">
+                See an example day
               </Link>
             </div>
-          </FadeIn>
-        </div>
-      )}
+            <p className="mt-5 flex items-center gap-2 text-sm text-[#50675e]">
+              <ShieldCheck className="h-4 w-4 text-[#126b4e]" aria-hidden="true" />
+              Nothing is sent, published, changed, or purchased without your approval.
+            </p>
+          </div>
 
-      {/* Site Analyzer Teaser — value-add driving to free tool */}
-      <FadeIn direction="up">
-        <SiteAnalyzerTeaser />
-      </FadeIn>
-
-      {/* CTA Section - Confident Close */}
-      <ContentSection sectionKey="cta" label="Call to Action">
-        <FadeIn direction="up">
-          <div className="relative rounded-3xl overflow-hidden">
-            {/* Dark gradient background — slate with purple accent */}
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950" />
-            {/* Dot texture */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
-            {/* Subtle glow accents */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/8 rounded-full blur-3xl" />
-            {/* Ghost typography */}
-            <div className="absolute -bottom-4 -right-2 text-[8rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">&rarr;</div>
-
-            {/* Content */}
-            <div className="relative z-10 py-20 px-8 md:px-16">
-              <div className="max-w-4xl mx-auto">
-                {/* Two-column: text left, CTA right */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-10">
-                  {/* Left: headline + subtext */}
-                  <div className="md:max-w-xl">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-purple-400" />
-                      <span className="text-sm font-semibold tracking-widest uppercase text-purple-300">Ready?</span>
-                    </div>
-                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-[0.95] tracking-tight mb-5">
-                      Let&apos;s build<br />
-                      <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">something great.</span>
-                    </h2>
-                    <p className="text-lg text-slate-400 max-w-md leading-relaxed">
-                      See exactly what we build and how it helps your business grow.
-                    </p>
-                  </div>
-
-                  {/* Right: CTA stack */}
-                  <div className="flex flex-col items-center md:items-start gap-4">
-                    <Button variant="blue" href="/pricing" size="lg" className="shadow-2xl shadow-blue-500/30">
-                      View Packages &amp; Pricing
-                    </Button>
-                    <Button variant="green" href="/contact" size="md" className="shadow-lg shadow-emerald-500/25">
-                      Book a Free 15-Min Call
-                    </Button>
-                  </div>
-                </div>
+          <div className="self-center rounded-[2rem] border border-[#183229]/15 bg-[#17372d] p-5 text-white shadow-2xl shadow-emerald-950/15 sm:p-7">
+            <div className="flex items-center justify-between border-b border-white/15 pb-5">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-200">Morning brief</p>
+                <p className="mt-1 text-xl font-bold">3 decisions · about 16 min</p>
+              </div>
+              <Clock3 className="h-6 w-6 text-emerald-300" aria-hidden="true" />
+            </div>
+            <div className="mt-5 rounded-2xl bg-white p-5 text-[#183229]">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Highest opportunity</p>
+              <h2 className="mt-2 text-xl font-bold">Follow up with 4 warm audit leads</h2>
+              <dl className="mt-5 grid grid-cols-2 gap-4 text-sm">
+                <div><dt className="text-[#6c7d76]">Evidence</dt><dd className="mt-1 font-semibold">Opened report twice</dd></div>
+                <div><dt className="text-[#6c7d76]">Expected</dt><dd className="mt-1 font-semibold">1–2 conversations</dd></div>
+                <div><dt className="text-[#6c7d76]">Risk</dt><dd className="mt-1 font-semibold">Low · manual send</dd></div>
+                <div><dt className="text-[#6c7d76]">Prepared</dt><dd className="mt-1 font-semibold">4 tailored drafts</dd></div>
+              </dl>
+              <div className="mt-5 flex gap-2">
+                <span className="rounded-full bg-[#126b4e] px-4 py-2 text-sm font-bold text-white">Approve</span>
+                <span className="rounded-full border border-[#183229]/20 px-4 py-2 text-sm font-bold">Revise</span>
               </div>
             </div>
           </div>
-        </FadeIn>
-      </ContentSection>
-      </div>{/* End max-w container */}
-      <div className="h-16" />
-    </div>
+        </div>
+      </section>
+
+      <section id="example-day" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 md:py-28 lg:px-12">
+        <div className="max-w-3xl">
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">An example day</p>
+          <h2 className="mt-4 font-playfair text-4xl font-black leading-tight md:text-6xl">Three check-ins. No endless task list.</h2>
+          <p className="mt-5 text-lg leading-8 text-[#50675e]">The employee works between sessions and brings only the decisions that need your judgment.</p>
+        </div>
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {checkIns.map(({ time, title, description, icon: Icon }, index) => (
+            <article key={time} className="rounded-3xl border border-[#183229]/15 bg-white/65 p-7">
+              <div className="flex items-center justify-between">
+                <Icon className="h-6 w-6 text-[#126b4e]" aria-hidden="true" />
+                <span className="font-playfair text-4xl text-[#126b4e]/25">0{index + 1}</span>
+              </div>
+              <p className="mt-8 text-xs font-bold uppercase tracking-[.18em] text-[#126b4e]">{time}</p>
+              <h3 className="mt-3 text-2xl font-bold">{title}</h3>
+              <p className="mt-4 leading-7 text-[#50675e]">{description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-[#18372e] text-white">
+        <div className="mx-auto grid max-w-7xl gap-14 px-5 py-20 sm:px-8 md:py-28 lg:grid-cols-2 lg:px-12">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">What it handles</p>
+            <h2 className="mt-4 font-playfair text-4xl font-black leading-tight md:text-6xl">A focused growth role, designed around your business.</h2>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-emerald-50/75">Websites, integrations, and automation are implementation tools—not the product. They are used only when the approved growth plan calls for them.</p>
+          </div>
+          <ul className="grid content-start gap-3">
+            {handles.map((item) => (
+              <li key={item} className="flex gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+                <Check className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" aria-hidden="true" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section id="outcomes" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 md:py-28 lg:px-12">
+        <div className="grid gap-12 lg:grid-cols-[.85fr_1.15fr]">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Start supervised</p>
+            <h2 className="mt-4 font-playfair text-4xl font-black md:text-6xl">Prove the role before scaling it.</h2>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <article className="rounded-3xl border border-[#183229]/15 bg-white p-7">
+              <p className="text-sm font-bold text-[#126b4e]">AI Growth Employee Pilot</p>
+              <h3 className="mt-3 text-2xl font-bold">Design and test the role</h3>
+              <p className="mt-4 leading-7 text-[#50675e]">Discovery, operating brief, first workflows, guardrails, check-in design, and a measured trial.</p>
+              <p className="mt-6 text-sm font-bold">Proposal-based</p>
+            </article>
+            <article className="rounded-3xl bg-[#e4eee6] p-7">
+              <p className="text-sm font-bold text-[#126b4e]">Managed AI Growth Employee</p>
+              <h3 className="mt-3 text-2xl font-bold">Operate and improve it</h3>
+              <p className="mt-4 leading-7 text-[#50675e]">Ongoing operation, monitoring, reporting, workflow improvement, and human support.</p>
+              <p className="mt-6 text-sm font-bold">Proposal-based</p>
+            </article>
+          </div>
+        </div>
+        <div className="mt-16 rounded-[2rem] bg-[#d9b96e] px-6 py-10 text-center sm:px-10">
+          <MessageSquareText className="mx-auto h-7 w-7" aria-hidden="true" />
+          <h2 className="mx-auto mt-4 max-w-3xl font-playfair text-3xl font-black md:text-5xl">What growth work would you stop carrying if the right employee brought you only the decisions?</h2>
+          <Link href="/contact" className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#18372e] px-7 py-3 font-bold text-white">
+            Design My AI Employee <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
+
+      {recentBlogPosts.length > 0 && (
+        <section className="border-t border-[#183229]/10 px-5 py-14 text-center">
+          <Link href="/blog" className="font-bold text-[#126b4e] hover:underline">Read growth operating insights →</Link>
+        </section>
+      )}
+    </main>
   );
 }

@@ -18,18 +18,18 @@ import HomePageClient from '@/components/home/HomePageClient';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'NeedThisDone - Get Your Projects Done Right',
-  description: 'Professional web development, automation, and AI services. Custom websites from $500, workflow automation from $150, managed AI from $500/mo. Orlando-based, serving clients nationwide.',
+  title: 'NeedThisDone | Your AI Growth Employee',
+  description: 'A supervised AI Growth Employee that researches, prepares, prioritizes, and tracks growth work between three short daily check-ins.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'NeedThisDone - Get Your Projects Done Right',
-    description: 'Professional web development, automation, and AI services. Custom websites, workflow automation, and managed AI solutions.',
+    title: 'NeedThisDone | Your AI Growth Employee',
+    description: 'Growth work moves forward between check-ins. You stay in control of every external action.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
-    title: 'NeedThisDone - Get Your Projects Done Right',
-    description: 'Professional web development, automation, and AI services. Custom websites, workflow automation, and managed AI solutions.',
+    title: 'NeedThisDone | Your AI Growth Employee',
+    description: 'Growth work moves forward between check-ins. You stay in control of every external action.',
   },
 };
 

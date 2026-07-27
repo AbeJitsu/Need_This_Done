@@ -8,18 +8,18 @@ import UnifiedPricingPage from '@/components/pricing/UnifiedPricingPage';
 // Quote authorization lives at /quote.
 
 export const metadata: Metadata = {
-  title: 'Pricing - NeedThisDone',
-  description: 'Simple pricing for websites, automation, and AI. Pay 50% to start, remainder on delivery.',
+  title: 'AI Growth Employee Engagements | NeedThisDone',
+  description: 'Start with an AI Growth Employee Pilot, then continue with a managed employee when the role is proven.',
   alternates: { canonical: '/pricing' },
   openGraph: {
-    title: 'Pricing - NeedThisDone',
-    description: 'Transparent pricing for web development, automation, and AI services. Pay 50% to start.',
+    title: 'AI Growth Employee Engagements | NeedThisDone',
+    description: 'A supervised pilot followed by ongoing managed operation.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Pricing - NeedThisDone',
-    description: 'Transparent pricing for web development, automation, and AI services. Pay 50% to start.',
+    title: 'AI Growth Employee Engagements | NeedThisDone',
+    description: 'A supervised pilot followed by ongoing managed operation.',
   },
 };
 
