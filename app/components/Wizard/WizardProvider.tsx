@@ -9,6 +9,7 @@ import {
   collectFeatures,
 } from './wizard-data';
 import { getRecommendation, type WizardRecommendation, type ProductCatalog, type CatalogProduct } from '@/lib/wizard-engine';
+import { OFFERING_CATALOG, type Offering } from '@/lib/offering-catalog';
 
 // ============================================
 // WIZARD CONTEXT
@@ -49,23 +50,23 @@ interface WizardProviderProps {
 }
 
 // Transform the pricing API response into the shape the engine expects
-function toCatalogProduct(p: {
-  handle: string;
-  title: string;
-  price: number;
-  variantId: string;
-  depositPercent: number;
-  features: string[];
-}): CatalogProduct {
+function toCatalogProduct(offering: Offering): CatalogProduct {
   return {
-    handle: p.handle,
-    title: p.title,
-    price: p.price,
-    variantId: p.variantId,
-    depositPercent: p.depositPercent,
-    features: p.features,
+    handle: offering.slug,
+    title: offering.name,
+    price: offering.priceCents,
+    depositPercent: offering.kind === 'subscription' ? 0 : offering.kind === 'service' ? 100 : 50,
+    features: [...offering.included],
   };
 }
+
+const catalog: ProductCatalog = {
+  packages: OFFERING_CATALOG.filter((offering) => offering.kind === 'package').map(toCatalogProduct),
+  addons: OFFERING_CATALOG.filter((offering) => offering.kind === 'add_on').map(toCatalogProduct),
+  services: OFFERING_CATALOG.filter((offering) =>
+    offering.kind === 'service' || offering.kind === 'subscription'
+  ).map(toCatalogProduct),
+};
 
 export default function WizardProvider({ source, children }: WizardProviderProps) {
   // Try to restore state from sessionStorage (overlay persistence)
@@ -87,8 +88,6 @@ export default function WizardProvider({ source, children }: WizardProviderProps
     return {};
   });
 
-  const [catalog, setCatalog] = useState<ProductCatalog | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const sessionIdRef = useRef<string | null>(null);
 
   // Persist state to sessionStorage on changes
@@ -100,24 +99,6 @@ export default function WizardProvider({ source, children }: WizardProviderProps
       }));
     } catch { /* ignore */ }
   }, [currentStepIndex, responses]);
-
-  // Fetch product catalog from Medusa on mount
-  useEffect(() => {
-    fetch('/api/pricing/products')
-      .then((res) => res.json())
-      .then((data) => {
-        setCatalog({
-          packages: (data.packages || []).map(toCatalogProduct),
-          addons: (data.addons || []).map(toCatalogProduct),
-          services: (data.services || []).map(toCatalogProduct),
-        });
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error('[Wizard] Failed to load catalog:', err);
-        setIsLoading(false);
-      });
-  }, []);
 
   // Create analytics session on mount (fire-and-forget)
   useEffect(() => {
@@ -135,7 +116,7 @@ export default function WizardProvider({ source, children }: WizardProviderProps
   const isOnResults = currentStepIndex >= activeSteps.length;
 
   // Compute recommendation when on results step
-  const recommendation = isOnResults && catalog
+  const recommendation = isOnResults
     ? getRecommendation(collectFeatures(responses), catalog)
     : null;
 
@@ -211,7 +192,7 @@ export default function WizardProvider({ source, children }: WizardProviderProps
         responses,
         activeSteps,
         recommendation,
-        isLoading,
+        isLoading: false,
         isOnResults,
         goNext,
         goBack,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import {
   Check,
@@ -22,15 +22,15 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import Button from '@/components/Button';
 import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
-import { alertColors } from '@/lib/colors';
 import { scrollToRef } from '@/lib/scroll-utils';
-import AddToCartButton from '@/components/pricing/AddToCartButton';
+import OfferingCheckoutLink from '@/components/pricing/OfferingCheckoutLink';
+import { OFFERING_CATALOG } from '@/lib/offering-catalog';
 
 // ============================================================================
-// Unified Pricing Page — Shoppable "Menu Board"
+// Unified Pricing Page — Repository-owned service menu
 // ============================================================================
-// Browse + buy in one page. Cart buttons alongside "View Details".
-// Quote authorization lives at /quote.
+// Offering actions use the guarded hosted-payment handoff. Until a reviewed
+// Stripe Payment Link exists, that route sends the visitor to /contact.
 
 // ============================================================================
 // Data Types
@@ -44,14 +44,25 @@ interface PricingProduct {
   description: string;
   handle: string;
   price: number; // in cents
-  variantId: string;
   type: ProductType;
   depositPercent: number;
   features: string[];
   billingPeriod: 'monthly' | null;
   popular: boolean;
-  stripePriceId?: string;
 }
+
+const pricingProducts: PricingProduct[] = OFFERING_CATALOG.map((offering) => ({
+  id: offering.slug,
+  title: offering.name,
+  description: offering.description,
+  handle: offering.slug,
+  price: offering.priceCents,
+  type: offering.kind === 'add_on' ? 'addon' : offering.kind,
+  depositPercent: offering.kind === 'subscription' ? 0 : offering.kind === 'service' ? 100 : 50,
+  features: [...offering.included],
+  billingPeriod: offering.billingPeriod,
+  popular: offering.slug === 'pro-site',
+}));
 
 // Icon mapping for add-on tiles
 const ADDON_ICONS: Record<string, React.ElementType> = {
@@ -72,12 +83,11 @@ const ADDON_ICONS: Record<string, React.ElementType> = {
 // ============================================================================
 
 export default function UnifiedPricingPage() {
-  // Product state (fetched from Medusa)
-  const [packages, setPackages] = useState<PricingProduct[]>([]);
-  const [addons, setAddons] = useState<PricingProduct[]>([]);
-  const [services, setServices] = useState<PricingProduct[]>([]);
-  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
-  const [productError, setProductError] = useState('');
+  const packages = pricingProducts.filter((offering) => offering.type === 'package');
+  const addons = pricingProducts.filter((offering) => offering.type === 'addon');
+  const services = pricingProducts.filter((offering) =>
+    offering.type === 'service' || offering.type === 'subscription'
+  );
 
   // FAQ accordion state
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
@@ -85,35 +95,6 @@ export default function UnifiedPricingPage() {
   // Section refs for smooth scrolling
   const websitesRef = useRef<HTMLElement>(null);
   const automationRef = useRef<HTMLElement>(null);
-
-  // ========================================================================
-  // Fetch products from Medusa on mount
-  // ========================================================================
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        setIsLoadingProducts(true);
-        setProductError('');
-
-        const response = await fetch('/api/pricing/products');
-        if (!response.ok) {
-          throw new Error('Failed to load products');
-        }
-
-        const data = await response.json();
-        setPackages(data.packages || []);
-        setAddons(data.addons || []);
-        setServices(data.services || []);
-      } catch (err) {
-        console.error('Failed to fetch pricing products:', err);
-        setProductError('Unable to load products. Please refresh the page.');
-      } finally {
-        setIsLoadingProducts(false);
-      }
-    }
-
-    fetchProducts();
-  }, []);
 
   // Scroll helper that respects prefers-reduced-motion
   const scrollToSection = (ref: React.RefObject<HTMLElement | null>) => {
@@ -300,38 +281,7 @@ export default function UnifiedPricingPage() {
         </div>
       </section>
 
-      {/* Loading state */}
-      {isLoadingProducts && (
-        <div className="py-16">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
-            <div className="text-center mb-8">
-              <p className="text-gray-500 text-sm font-medium">
-                Loading your options...
-              </p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="animate-pulse rounded-3xl bg-gray-100 h-80" />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Error state */}
-      {productError && (
-        <div className="max-w-5xl mx-auto px-4 py-12">
-          <div className={`p-6 ${alertColors.error.bg} ${alertColors.error.border} rounded-lg text-center`}>
-            <p className={alertColors.error.text}>{productError}</p>
-            <Button variant="gray" onClick={() => window.location.reload()} className="mt-4">
-              Refresh Page
-            </Button>
-          </div>
-        </div>
-      )}
-
       {/* Product sections */}
-      {!isLoadingProducts && !productError && (
         <>
           {/* ================================================================== */}
           {/* WEBSITES SECTION */}
@@ -451,15 +401,14 @@ export default function UnifiedPricingPage() {
                             </div>
 
                             <div className="mt-6 space-y-3">
-                              <AddToCartButton
-                                variantId={pkg.variantId}
+                              <OfferingCheckoutLink
+                                slug={pkg.handle}
                                 title={pkg.title}
-                                price={pkg.price}
                                 variant="primary"
                                 className={`shadow-lg ${cardStyles.shadow}`}
                               />
                               <Link
-                                href={`/shop/${pkg.handle}`}
+                                href={`/contact?offering=${pkg.handle}`}
                                 className="w-full py-2.5 px-6 rounded-xl font-semibold text-sm transition-all duration-300 bg-white/10 border border-white/20 text-white hover:bg-white/20 flex items-center justify-center gap-2"
                               >
                                 View Details <ArrowRight size={16} />
@@ -561,15 +510,14 @@ export default function UnifiedPricingPage() {
                           <span className="text-base font-medium text-white/95">per workflow</span>
                         </div>
                         <div className="mt-auto space-y-3">
-                          <AddToCartButton
-                            variantId={automationService.variantId}
+                          <OfferingCheckoutLink
+                            slug={automationService.handle}
                             title={automationService.title}
-                            price={automationService.price}
                             variant="primary"
                             className="shadow-lg shadow-purple-500/25"
                           />
                           <Link
-                            href={`/shop/${automationService.handle}`}
+                            href={`/contact?offering=${automationService.handle}`}
                             className="w-full py-2.5 px-6 rounded-xl font-semibold text-sm text-center transition-all duration-300 bg-white/10 border border-white/15 text-white hover:bg-white/20 flex items-center justify-center gap-2"
                           >
                             View Details <ArrowRight size={16} />
@@ -622,15 +570,14 @@ export default function UnifiedPricingPage() {
                           <span className="text-base font-medium text-white/95">per month</span>
                         </div>
                         <div className="mt-auto space-y-3">
-                          <AddToCartButton
-                            variantId={subscriptionService.variantId}
+                          <OfferingCheckoutLink
+                            slug={subscriptionService.handle}
                             title={subscriptionService.title}
-                            price={subscriptionService.price}
                             variant="primary"
                             className="shadow-lg shadow-gold-500/25"
                           />
                           <Link
-                            href={`/shop/${subscriptionService.handle}`}
+                            href={`/contact?offering=${subscriptionService.handle}`}
                             className="w-full py-2.5 px-6 rounded-xl font-semibold text-sm text-center transition-all duration-300 bg-white/10 border border-white/15 text-white hover:bg-white/20 flex items-center justify-center gap-2"
                           >
                             View Details <ArrowRight size={16} />
@@ -699,15 +646,14 @@ export default function UnifiedPricingPage() {
                           {/* Footer */}
                           <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10">
                             <Link
-                              href={`/shop/${addon.handle}`}
+                              href={`/contact?offering=${addon.handle}`}
                               className="text-xs text-white/50 hover:text-white/80 transition-colors"
                             >
                               View details <ArrowRight size={12} className="inline ml-0.5" />
                             </Link>
-                            <AddToCartButton
-                              variantId={addon.variantId}
+                            <OfferingCheckoutLink
+                              slug={addon.handle}
                               title={addon.title}
-                              price={addon.price}
                               variant="dark-secondary"
                             />
                           </div>
@@ -768,7 +714,6 @@ export default function UnifiedPricingPage() {
             </div>
           </section>
         </>
-      )}
 
       {/* ================================================================== */}
       {/* QUOTE BANNER — link to /quote */}

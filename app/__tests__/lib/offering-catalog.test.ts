@@ -11,6 +11,7 @@ describe('repository-owned offering catalog', () => {
       'pro-site': 500_000,
       'automation-setup': 15_000,
       'managed-ai': 50_000,
+      'logo-design': 30_000,
     });
   });
 

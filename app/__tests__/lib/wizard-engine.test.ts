@@ -7,22 +7,22 @@ import type { FeatureKey } from '@/components/Wizard/wizard-data';
 
 const mockCatalog: ProductCatalog = {
   packages: [
-    { handle: 'starter-site', title: 'Starter Site', price: 50000, variantId: 'variant_starter', depositPercent: 50, features: [] },
-    { handle: 'growth-site', title: 'Growth Site', price: 150000, variantId: 'variant_growth', depositPercent: 50, features: [] },
-    { handle: 'pro-site', title: 'Pro Site', price: 500000, variantId: 'variant_pro', depositPercent: 50, features: [] },
+    { handle: 'starter-site', title: 'Starter Site', price: 50000, depositPercent: 50, features: [] },
+    { handle: 'growth-site', title: 'Growth Site', price: 150000, depositPercent: 50, features: [] },
+    { handle: 'pro-site', title: 'Pro Site', price: 500000, depositPercent: 50, features: [] },
   ],
   addons: [
-    { handle: 'calendar-booking', title: 'Calendar Booking', price: 20000, variantId: 'variant_calendar', depositPercent: 50, features: [] },
-    { handle: 'blog-setup', title: 'Blog', price: 30000, variantId: 'variant_blog', depositPercent: 50, features: [] },
-    { handle: 'cms-integration', title: 'Edit Your Own Site', price: 50000, variantId: 'variant_cms', depositPercent: 50, features: [] },
-    { handle: 'payment-integration', title: 'Accept Payments', price: 40000, variantId: 'variant_payments', depositPercent: 50, features: [] },
-    { handle: 'customer-accounts', title: 'Customer Accounts', price: 40000, variantId: 'variant_accounts', depositPercent: 50, features: [] },
-    { handle: 'ai-chatbot', title: 'AI Chatbot', price: 60000, variantId: 'variant_chatbot', depositPercent: 50, features: [] },
-    { handle: 'online-store', title: 'Online Store', price: 200000, variantId: 'variant_store', depositPercent: 50, features: [] },
+    { handle: 'calendar-booking', title: 'Calendar Booking', price: 20000, depositPercent: 50, features: [] },
+    { handle: 'blog-setup', title: 'Blog', price: 30000, depositPercent: 50, features: [] },
+    { handle: 'cms-integration', title: 'Edit Your Own Site', price: 50000, depositPercent: 50, features: [] },
+    { handle: 'payment-integration', title: 'Accept Payments', price: 40000, depositPercent: 50, features: [] },
+    { handle: 'customer-accounts', title: 'Customer Accounts', price: 40000, depositPercent: 50, features: [] },
+    { handle: 'ai-chatbot', title: 'AI Chatbot', price: 60000, depositPercent: 50, features: [] },
+    { handle: 'online-store', title: 'Online Store', price: 200000, depositPercent: 50, features: [] },
   ],
   services: [
-    { handle: 'automation-setup', title: 'Automation Setup', price: 15000, variantId: 'variant_automation', depositPercent: 100, features: [] },
-    { handle: 'managed-ai', title: 'Managed AI', price: 50000, variantId: 'variant_managed_ai', depositPercent: 0, features: [] },
+    { handle: 'automation-setup', title: 'Automation Setup', price: 15000, depositPercent: 100, features: [] },
+    { handle: 'managed-ai', title: 'Managed AI', price: 50000, depositPercent: 0, features: [] },
   ],
 };
 
@@ -121,9 +121,9 @@ describe('Wizard Recommendation Engine', () => {
     expect(result.totalCents).toBe(765000);
   });
 
-  it('includes variantIds for cart integration', () => {
+  it('returns stable offering handles for the guarded handoff', () => {
     const result = getRecommendation(['blog'], mockCatalog);
-    expect(result.tier.variantId).toBe('variant_starter');
-    expect(result.addOns[0].variantId).toBe('variant_blog');
+    expect(result.tier.handle).toBe('starter-site');
+    expect(result.addOns[0].handle).toBe('blog-setup');
   });
 });

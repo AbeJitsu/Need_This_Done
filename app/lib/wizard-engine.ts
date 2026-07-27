@@ -4,7 +4,6 @@ export interface CatalogProduct {
   handle: string;
   title: string;
   price: number;
-  variantId: string;
   depositPercent: number;
   features: string[];
 }
@@ -19,7 +18,6 @@ export interface RecommendedProduct {
   handle: string;
   title: string;
   price: number;
-  variantId: string;
   depositPercent: number;
 }
 
@@ -109,5 +107,5 @@ export function getRecommendation(
 }
 
 function toRecommended(p: CatalogProduct): RecommendedProduct {
-  return { handle: p.handle, title: p.title, price: p.price, variantId: p.variantId, depositPercent: p.depositPercent };
+  return { handle: p.handle, title: p.title, price: p.price, depositPercent: p.depositPercent };
 }

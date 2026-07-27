@@ -48,6 +48,11 @@ export const OFFERING_CATALOG: readonly Offering[] = [
     paymentLinkEnv: 'STRIPE_PAYMENT_LINK_BLOG_SETUP', customWorkFallback: contactFallback,
   },
   {
+    slug: 'logo-design', name: 'Logo Design', kind: 'add_on', description: 'Professional logo design or redesign for your brand.',
+    priceCents: 30_000, billingPeriod: null, included: ['Custom logo concepts', 'Revision round', 'Web-ready files'],
+    paymentLinkEnv: 'STRIPE_PAYMENT_LINK_LOGO_DESIGN', customWorkFallback: contactFallback,
+  },
+  {
     slug: 'cms-integration', name: 'Edit Your Own Site', kind: 'add_on', description: 'Visual editing for site text and images.',
     priceCents: 50_000, billingPeriod: null, included: ['Visual editor', 'Text and image edits', 'No-code changes', 'Version history'],
     paymentLinkEnv: 'STRIPE_PAYMENT_LINK_CMS_INTEGRATION', customWorkFallback: contactFallback,

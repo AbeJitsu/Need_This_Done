@@ -129,7 +129,6 @@ export default function WizardContent() {
         >
           <WizardResults
             recommendation={recommendation}
-            onAddedToCart={() => trackOutcome('added_to_cart')}
             onBookConsultation={() => {
               trackOutcome('booked_consultation');
               router.push('/contact#consultation');
