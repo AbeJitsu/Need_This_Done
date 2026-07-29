@@ -1,20 +1,21 @@
 # NeedThisDone
 
-NeedThisDone helps businesses generate more customers through website improvements, conversion optimization, and practical AI-powered automation.
+NeedThisDone sells and operates a supervised AI Growth Employee that prepares evidence-backed growth decisions for a human owner or manager.
 
 The website is both the sales surface and the first proof of the service: visitors can request an audit, begin a project, collaborate through a client portal, and pay through Stripe-hosted flows.
 
 ## Current direction
 
-The application is being simplified on `dev`. The retained product is:
+The retained product is:
 
-- Marketing site, services, work, blog, and contact flow.
-- Site analyzer and report experience.
-- Lead, project, appointment, and client collaboration workflows.
-- A small owner dashboard for managing that work.
-- Stripe-hosted invoices, Payment Links, subscriptions, and customer portal.
+- A marketing, audit, and proposal surface for the managed service.
+- A customer-scoped employee workspace with three daily check-ins.
+- A maximum of five scheduled decisions per employee, queue, and day.
+- Immutable decisions and manual action/outcome records in Supabase.
+- Owner/manager approval; viewers remain read-only.
+- Existing operator, project, and client collaboration needed to deliver the service.
 
-Medusa/Railway ecommerce, LMS, visual page editing, workflow automation, and dark-mode support are being retired. They must not be extended.
+The Medusa/Railway ecommerce runtime, product reviews, carts, inventory, LMS, visual page editing, workflow automation, and dark-mode support are retired. Historical database migrations remain for audit history and are not runtime dependencies.
 
 Read [the system audit](docs/audits/2026-07-24-system-audit.md) for the evidence and [the project tracker](docs/PROJECT_STATUS.md) for current work.
 
@@ -35,9 +36,23 @@ cd app
 npm run type-check
 npm run test:unit
 npm run build
+npm run test:employee-workspace
 ```
 
 After a production build, restart the development server because the build replaces `.next`.
+
+Local database behavior tests require the Supabase CLI and a running Docker-compatible
+container engine. They reset only the local database:
+
+```bash
+supabase start
+supabase db reset
+cd app
+RUN_LOCAL_SUPABASE_TESTS=true npm run test:unit -- __tests__/lib/ai-employee-rls.test.ts
+```
+
+Production uses hosted Supabase. Migration `072` must pass the local gate before a
+separately approved hosted dry run or deployment.
 
 ## How the business works
 
@@ -94,7 +109,7 @@ Vercel / Next.js
                short-lived cache
 ```
 
-Retiring from the application:
+Retired from the application:
 
 ```text
 Medusa/Railway ecommerce - carts - inventory - LMS
