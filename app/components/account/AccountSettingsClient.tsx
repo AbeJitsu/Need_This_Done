@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { User, LogOut, Mail, Save, Loader2, Check, AlertCircle } from 'lucide-react';
 import Button from '@/components/Button';
-import MyReviewsSection from './MyReviewsSection';
 import NotificationPreferencesSection from './NotificationPreferencesSection';
 import SavedAddressesSection from './SavedAddressesSection';
 import { accentColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors } from '@/lib/colors';
@@ -241,9 +240,6 @@ export default function AccountSettingsClient() {
 
         {/* Notification Preferences Section */}
         <NotificationPreferencesSection />
-
-        {/* My Reviews Section */}
-        <MyReviewsSection />
 
         {/* Danger Zone */}
         <div className="rounded-xl border-2 border-red-200 bg-red-50 p-8 mt-8">

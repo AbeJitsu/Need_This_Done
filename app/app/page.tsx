@@ -46,6 +46,7 @@ function getContent(): HomePageContent {
 // ============================================================================
 
 async function getRecentBlogPosts(): Promise<BlogPostSummary[]> {
+  if (process.env.NEXT_PHASE === 'phase-production-build') return [];
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/blog`, {

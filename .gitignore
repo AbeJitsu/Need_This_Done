@@ -18,6 +18,8 @@ build/
 
 # Node modules - install fresh from package.json on each machine
 node_modules/
+# Preserve any developer-local artifacts after the retired backend is removed.
+medusa-v2/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

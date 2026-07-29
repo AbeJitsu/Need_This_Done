@@ -155,14 +155,6 @@ export function validateEnvironmentVariables(): void {
       errorMessage: 'Must start with sk_',
     },
 
-    // Medusa (required if ecommerce enabled)
-    NEXT_PUBLIC_MEDUSA_BACKEND_URL: {
-      name: 'NEXT_PUBLIC_MEDUSA_BACKEND_URL',
-      required: false,
-      validate: (v) => v.startsWith('http://') || v.startsWith('https://'),
-      errorMessage: 'Must be HTTP or HTTPS URL',
-    },
-
     // Google Calendar (optional)
     GOOGLE_CLIENT_ID: {
       name: 'GOOGLE_CLIENT_ID',
