@@ -38,9 +38,15 @@ describe('hasAdminRole', () => {
   });
 
   it('fails closed when the role lookup fails', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const query = roleQuery({ data: null, error: { message: 'database unavailable' } });
     getSupabaseAdmin.mockReturnValue({ from: query.from });
 
     await expect(hasAdminRole('11111111-1111-1111-1111-111111111111')).resolves.toBe(false);
+    expect(consoleError).toHaveBeenCalledWith(
+      '[hasAdminRole] Failed to check operator role:',
+      { message: 'database unavailable' },
+    );
+    consoleError.mockRestore();
   });
 });

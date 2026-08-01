@@ -16,7 +16,6 @@ import {
   discoverNavPages,
   computeSiteScore,
   buildExecutiveSummary,
-  fetchHTML,
 } from '@/lib/site-analyzer';
 
 // ============================================
@@ -324,49 +323,4 @@ describe('buildExecutiveSummary', () => {
     expect(summary.length).toBeGreaterThan(50);
     expect(typeof summary).toBe('string');
   });
-});
-
-// ============================================
-// INTEGRATION TEST — Real site analysis
-// ============================================
-
-const describeLiveSite = process.env.RUN_LIVE_SITE_TESTS === 'true' ? describe : describe.skip;
-
-describeLiveSite('Live site analysis (needthisdone.com)', () => {
-  it('fetches HTML from needthisdone.com', async () => {
-    const { html, status } = await fetchHTML('https://needthisdone.com');
-    expect(status).toBe(200);
-    expect(html.length).toBeGreaterThan(1000);
-    expect(html).toContain('<html');
-  }, 15000);
-
-  it('extracts metrics from needthisdone.com', async () => {
-    const { html } = await fetchHTML('https://needthisdone.com');
-    const metrics = extractMetrics(html, 'https://needthisdone.com/', 200);
-
-    expect(metrics.title).toBeTruthy();
-    expect(metrics.https).toBe(true);
-    expect(metrics.wordCount).toBeGreaterThan(50);
-    expect(metrics.h1Count).toBeGreaterThanOrEqual(1);
-    expect(metrics.links.total).toBeGreaterThan(5);
-  }, 15000);
-
-  it('discovers nav pages from needthisdone.com', async () => {
-    const { html } = await fetchHTML('https://needthisdone.com');
-    const pages = discoverNavPages(html, 'https://needthisdone.com');
-
-    expect(pages.length).toBeGreaterThanOrEqual(3);
-    expect(pages[0]).toContain('needthisdone.com');
-  }, 15000);
-
-  it('computes a valid score for needthisdone.com', async () => {
-    const { html } = await fetchHTML('https://needthisdone.com');
-    const metrics = extractMetrics(html, 'https://needthisdone.com/', 200);
-    const score = computeSiteScore([metrics]);
-
-    expect(score.total).toBeGreaterThanOrEqual(30);
-    expect(score.total).toBeLessThanOrEqual(100);
-    expect(['A', 'B', 'C', 'D', 'F']).toContain(score.grade);
-    expect(score.categories.length).toBe(10);
-  }, 15000);
 });

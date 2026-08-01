@@ -2,6 +2,12 @@ import { render } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import Button from '@/components/Button';
 
+vi.mock('next/link', () => ({
+  default: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+    <a href={typeof href === 'string' ? href : String(href)} {...props}>{children}</a>
+  ),
+}));
+
 expect.extend(toHaveNoViolations);
 
 // ============================================================================

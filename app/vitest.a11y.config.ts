@@ -11,6 +11,8 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
+    fileParallelism: false,
+    maxWorkers: 1,
     setupFiles: ['./vitest.setup.ts'],
     include: [
       '__tests__/components/**/*.a11y.test.ts?(x)',

@@ -26,17 +26,6 @@ jobs:
         working-directory: ./app
         run: npm ci
 
-      - name: Type-check
+      - name: Run required code gate
         working-directory: ./app
-        run: npm run type-check
-
-      - name: Run unit tests
-        working-directory: ./app
-        run: npm run test:unit
-
-      - name: Build Next.js app
-        working-directory: ./app
-        run: npm run build
-        env:
-          NEXT_PUBLIC_MEDUSA_URL: http://localhost:3000
-          MEDUSA_BACKEND_URL: http://localhost:9000
+        run: npm run verify:code
