@@ -69,17 +69,7 @@ export default function AdminDashboard() {
           Quick Links
           ==================================================================== */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Link
-          href="/admin/blog"
-          className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all group`}
-        >
-          <div className="text-2xl mb-2">📰</div>
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
-            Blog
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Posts & drafts</p>
-        </Link>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link
           href="/admin/reports"
           className={`${cardBgColors.base} rounded-xl p-4 ${cardBorderColors.subtle} hover:border-green-400 dark:hover:border-green-500 hover:shadow-md transition-all group`}

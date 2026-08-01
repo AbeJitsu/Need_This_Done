@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { DEFAULT_LAYOUT_CONTENT, type FooterLink } from '@/lib/page-config';
-import { OPEN_CHATBOT_EVENT } from './chatbot/ChatbotWidget';
 import { ContentValue } from '@/components/content/ContentStructure';
 
 // ============================================================================
@@ -27,10 +26,6 @@ export default function Footer() {
   const footerContent = DEFAULT_LAYOUT_CONTENT.footer;
   const footerLinks = footerContent.links || defaultFooterLinks;
   const legalLinks = footerContent.legalLinks || DEFAULT_LAYOUT_CONTENT.footer.legalLinks;
-
-  const openChatbot = () => {
-    window.dispatchEvent(new CustomEvent(OPEN_CHATBOT_EVENT));
-  };
 
   return (
     <footer className="bg-slate-900">
@@ -66,11 +61,10 @@ export default function Footer() {
               </span>
             ))}
             <span className="hidden sm:inline mx-1.5 text-sm text-slate-600" aria-hidden="true">·</span>
-            <button
-              type="button"
-              onClick={openChatbot}
+            <Link
+              href="/contact"
               className="text-sm text-slate-400 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 py-1.5 px-2.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-              aria-label="Open AI chatbot to ask questions"
+              aria-label="Contact NeedThisDone"
             >
               <svg
                 className="w-3.5 h-3.5"
@@ -86,8 +80,8 @@ export default function Footer() {
                   d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                 />
               </svg>
-              <span className="sr-only sm:not-sr-only">Chat</span>
-            </button>
+              <span className="sr-only sm:not-sr-only">Contact</span>
+            </Link>
           </nav>
         </div>
 

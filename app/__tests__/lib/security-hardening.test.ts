@@ -211,23 +211,3 @@ describe('Section 9: Always-True Policy Fixes', () => {
   });
 
 });
-
-// ============================================
-// SECTION 10: VECTOR EXTENSION
-// ============================================
-
-describe('Section 10: Vector Extension', () => {
-  test('vector extension is in extensions schema', async () => {
-    const rows = await sql<{ nspname: string }>(
-      `SELECT n.nspname
-       FROM pg_extension e
-       JOIN pg_namespace n ON e.extnamespace = n.oid
-       WHERE e.extname = 'vector'`
-    );
-    expect(rows[0]?.nspname).toBe('extensions');
-  });
-
-  test('match_page_embeddings function exists', async () => {
-    expect(await functionExists('match_page_embeddings')).toBe(true);
-  });
-});

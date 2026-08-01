@@ -7,7 +7,6 @@ import SessionProvider from '@/components/providers/SessionProvider';
 import { AuthProvider } from '@/context/AuthContext';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';
 import { ToastProvider } from '@/context/ToastContext';
-import { ChatbotWidget, PageIndexer } from '@/components/chatbot';
 import { ServiceDetailModal } from '@/components/service-modal';
 import { Suspense } from 'react';
 import HeroPreviewDetector from '@/components/HeroPreviewDetector';
@@ -205,10 +204,6 @@ export default function RootLayout({
                     <div data-noindex>
                       <Footer />
                     </div>
-
-                    {/* AI Chatbot - floating widget available on all pages */}
-                    <PageIndexer />
-                    <ChatbotWidget />
 
                     {/* Service detail modal - available on all pages */}
                     <ServiceDetailModal />

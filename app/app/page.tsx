@@ -1,7 +1,7 @@
 import { getDefaultContent } from '@/lib/default-page-content';
 import type { HomePageContent } from '@/lib/page-content-types';
-import type { BlogPostSummary } from '@/lib/blog-types';
 import HomePageClient from '@/components/home/HomePageClient';
+import { listBlogPosts } from '@/lib/blog-content';
 
 // ============================================================================
 // Home Page - NeedThisDone Landing Page
@@ -45,35 +45,13 @@ function getContent(): HomePageContent {
 // Recent Blog Posts (for homepage "Latest from the Blog" section)
 // ============================================================================
 
-async function getRecentBlogPosts(): Promise<BlogPostSummary[]> {
-  if (process.env.NEXT_PHASE === 'phase-production-build') return [];
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/blog`, {
-      next: { revalidate: 3600 },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return (data.posts as BlogPostSummary[]).slice(0, 3);
-    }
-  } catch {
-    // Silent fail — blog section just won't render
-  }
-
-  return [];
-}
-
 // ============================================================================
 // Page Component
 // ============================================================================
 
-export default async function HomePage() {
-  // Fetch repository content and recent blog posts in parallel.
-  const [content, recentPosts] = await Promise.all([
-    getContent(),
-    getRecentBlogPosts(),
-  ]);
+export default function HomePage() {
+  const content = getContent();
+  const recentPosts = listBlogPosts().slice(0, 3);
 
   // Render using the client component which supports inline editing
   return <HomePageClient content={content} recentBlogPosts={recentPosts} />;

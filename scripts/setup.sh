@@ -14,7 +14,7 @@
 # - Supabase credentials (URL and keys)
 # - Stripe API keys (test keys for development)
 # - Resend API key (for email notifications)
-# - OpenAI API key (for AI chatbot)
+# - OpenAI API key (for the retained site analyzer)
 #
 # What it will generate:
 # - .env.local file with all 31 required environment variables
@@ -145,13 +145,13 @@ echo "6. OpenAI Configuration"
 echo "======================================================================="
 echo ""
 echo "Get your API key from: https://platform.openai.com/api-keys"
-echo "This powers the AI chatbot on your site."
+echo "This powers AI-assisted site analysis."
 echo ""
 
 read -p "OpenAI API Key (sk-proj-...): " openai_api_key
 
 while [ -z "$openai_api_key" ]; do
-  echo "OpenAI API key is required for the chatbot to work."
+  echo "OpenAI API key is required for AI-assisted site analysis."
   read -p "OpenAI API Key (sk-proj-...): " openai_api_key
 done
 
@@ -250,24 +250,6 @@ RESEND_ADMIN_EMAIL=admin@needthisdone.com
 OPENAI_API_KEY=$openai_api_key
 
 # ============================================================================
-# Chatbot Configuration (OPTIONAL - has defaults)
-# ============================================================================
-NEXT_PUBLIC_CHATBOT_MODEL=gpt-4o-mini
-NEXT_PUBLIC_CHATBOT_MAX_TOKENS=1000
-NEXT_PUBLIC_CHATBOT_TEMPERATURE=0.7
-
-# ============================================================================
-# Embedding Configuration (OPTIONAL - has defaults)
-# ============================================================================
-OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-EMBEDDING_BATCH_SIZE=100
-
-# ============================================================================
-# Vector Search Configuration (REQUIRED)
-# ============================================================================
-# Threshold: 0.3 is recommended for semantic search (0.3-0.45 is typical for relevant content)
-# Higher values (0.5+) are too strict and filter out most semantic matches
-# Lower values (<0.2) risk including low-quality matches
 VECTOR_SEARCH_SIMILARITY_THRESHOLD=0.3
 VECTOR_SEARCH_MAX_RESULTS=5
 EOF

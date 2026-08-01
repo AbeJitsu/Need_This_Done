@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import { getDefaultContent } from '@/lib/default-page-content';
 import type { BlogPageContent } from '@/lib/page-content-types';
-import { BlogPostSummary } from '@/lib/blog-types';
 import BlogPageClient from '@/components/blog/BlogPageClient';
+import { listBlogPosts } from '@/lib/blog-content';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
 
 // ============================================================================
 // Blog Page - Public Blog Listing
@@ -41,31 +41,13 @@ function getContent(): BlogPageContent {
   return getDefaultContent('blog') as BlogPageContent;
 }
 
-async function getBlogPosts(): Promise<BlogPostSummary[]> {
-  if (process.env.NEXT_PHASE === 'phase-production-build') return [];
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/blog`, {
-      next: { revalidate: 60 },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.posts as BlogPostSummary[];
-    }
-  } catch (error) {
-    console.error('Failed to fetch blog posts:', error);
-  }
-
-  return [];
-}
-
 // ============================================================================
 // Page Component
 // ============================================================================
 
-export default async function BlogPage() {
-  const [content, posts] = await Promise.all([getContent(), getBlogPosts()]);
+export default function BlogPage() {
+  const content = getContent();
+  const posts = listBlogPosts();
 
   return (
     <Suspense>

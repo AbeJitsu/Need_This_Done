@@ -13,6 +13,7 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 | Hosted payment handoff works. | Test-mode Stripe contract and checkout smoke test for every enabled offering. | Fallback path is tested; hosted test links are owner-deferred. | Claim only the project-request fallback. |
 | Transactional email succeeds or exposes a retryable failure. | Provider contract tests, durable failure records/replay tests, and one controlled pre-release delivery check. | Immediate provider retry exists, but durable failure replay was removed because its table and faithful message replay did not exist. | Live delivery and durable recovery are not yet claimable. |
 | Retained public and workspace routes work on desktop and mobile. | Playwright smoke tests with no console errors, overflow, accessibility violations, or unexplained skips. | Core smoke and employee bypass suites passed; report checks need a fixture. | Partial. |
+| Public blog content does not depend on hosted content tables or APIs. | Versioned content count/checksum, route retirement guard, metadata/rendering tests, redirects, and sitemap verification. | All 27 published hosted rows were exported before removal; nine versioned posts and three redirect classes are guarded locally. | Focused local guard passed; full code/build and browser gates pending. |
 | The code is safe to promote. | Lint, TypeScript, unit tests, accessibility tests, production build, retirement guards, database gate when applicable, and `git diff --check`. | The deterministic code gate passes with zero skips. After a fresh reset through pending `074`, the database gate passes 29/29 checks including the retained-schema manifest. | Local gates proven; hosted behavior and deployment approval remain separate. |
 
 ## Release gates
@@ -26,4 +27,5 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 
 The retained-schema manifest is mandatory within `npm run verify:database`. It asserts 16 retained
 RLS tables, critical columns, isolation policies, decision and cascade constraints, exact RPC grants,
-and the private project-attachment bucket against a real local PostgreSQL catalog.
+and the private project-attachment bucket against a real local PostgreSQL catalog. `health_check`
+replaces the retired `blog_posts` table in that final manifest.

@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import { permanentRedirect } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
@@ -7,15 +7,19 @@ import MarkdownContent from '@/components/blog/MarkdownContent';
 import BlogPostCTA from '@/components/blog/BlogPostCTA';
 import RelatedPosts from '@/components/blog/RelatedPosts';
 import {
-  BlogPost,
-  BlogPostSummary,
   formatPublishedDate,
   calculateReadingTime,
   BLOG_CATEGORIES,
 } from '@/lib/blog-types';
+import {
+  getBlogPost,
+  getRelatedBlogPosts,
+  getRetiredBlogDestination,
+  listBlogPosts,
+} from '@/lib/blog-content';
 import { BlogPostingJsonLd } from '@/components/seo/JsonLd';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
 
 // ============================================================================
 // Category accent colors for the dark hero — full class strings for Tailwind
@@ -88,54 +92,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 // ============================================================================
-// Content Fetching
+// Repository-owned content and retirement redirects
 // ============================================================================
 
-async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/blog/${slug}`, {
-      next: { revalidate: 60 },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.post as BlogPost;
-    }
-  } catch (error) {
-    console.error('Failed to fetch blog post:', error);
-  }
-
-  return null;
-}
-
-// ============================================================================
-// Related Posts — same category, excluding current post
-// ============================================================================
-
-async function getRelatedPosts(
-  currentSlug: string,
-  category: string | null,
-): Promise<BlogPostSummary[]> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const url = category
-      ? `${baseUrl}/api/blog?category=${encodeURIComponent(category)}`
-      : `${baseUrl}/api/blog`;
-    const response = await fetch(url, { next: { revalidate: 60 } });
-
-    if (response.ok) {
-      const data = await response.json();
-      const posts = (data.posts as BlogPostSummary[]).filter(
-        (p) => p.slug !== currentSlug,
-      );
-      return posts.slice(0, 3);
-    }
-  } catch (error) {
-    console.error('Failed to fetch related posts:', error);
-  }
-
-  return [];
+export function generateStaticParams() {
+  return listBlogPosts().map(({ slug }) => ({ slug }));
 }
 
 // ============================================================================
@@ -147,7 +108,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = await getBlogPost(slug);
 
   if (!post) {
-    notFound();
+    permanentRedirect(getRetiredBlogDestination(slug));
   }
 
   const readingTime = calculateReadingTime(post.content);
@@ -155,7 +116,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     ? BLOG_CATEGORIES[post.category as keyof typeof BLOG_CATEGORIES] || post.category
     : null;
   const accent = CATEGORY_ACCENTS[post.category || ''] || DEFAULT_ACCENT;
-  const relatedPosts = await getRelatedPosts(slug, post.category);
+  const relatedPosts = getRelatedBlogPosts(slug, post.category);
 
   return (
     <>

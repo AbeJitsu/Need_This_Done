@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
-import { BlogPostSummary } from '@/lib/blog-types';
 import { seoConfig } from '@/lib/seo-config';
+import { listBlogPosts } from '@/lib/blog-content';
 
 // ============================================================================
 // Dynamic Sitemap Generator
@@ -8,32 +8,9 @@ import { seoConfig } from '@/lib/seo-config';
 // Generates sitemap.xml for search engines to discover all pages.
 // Next.js automatically serves this at /sitemap.xml
 //
-// What: Outputs all static pages plus dynamically fetched blog posts
+// What: Outputs all static pages plus repository-owned blog posts
 // Why: Helps search engines discover and index all content
-// How: Fetches published blog posts from API and merges with static pages
-
-// ============================================================================
-// Blog Post Fetching
-// ============================================================================
-
-async function getBlogPosts(): Promise<BlogPostSummary[]> {
-  if (process.env.NEXT_PHASE === 'phase-production-build') return [];
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/blog`, {
-      next: { revalidate: 3600 }, // Revalidate sitemap hourly
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.posts as BlogPostSummary[];
-    }
-  } catch (error) {
-    console.error('Sitemap: Failed to fetch blog posts:', error);
-  }
-
-  return [];
-}
+// How: Reads the versioned content adapter and merges it with static pages
 
 // ============================================================================
 // Sitemap Generator
@@ -67,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Fetch and build blog post entries
-  const blogPosts = await getBlogPosts();
+  const blogPosts = listBlogPosts();
   const blogEntries: MetadataRoute.Sitemap = blogPosts.map((post) => ({
     url: `${seoConfig.baseUrl}/blog/${post.slug}`,
     lastModified: post.published_at ? new Date(post.published_at) : now,

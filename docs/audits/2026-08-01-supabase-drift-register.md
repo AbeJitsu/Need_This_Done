@@ -100,8 +100,8 @@ review even though they do not appear as table drift.
 | Retain | `projects`, `project_comments`, `project_github_handoffs`, `site_reports`, `user_roles`, `workflow_runs` | Direct current callers; central to intake, collaboration, reports, decisions, and operator access. | Add/complete real local authorization and browser proofs listed in `RELEASE_EVIDENCE.md`. |
 | Retain — Phase 6 | `customer_accounts`, `customer_memberships`, `ai_employees`, and the five `ai_employee_*` work/decision/outcome/brief/schedule tables | Migration `072` and focused real local RLS tests pass. | Complete hosted anonymous and cross-customer behavior verification. |
 | Retain with a pending security transition | `google_calendar_tokens` | Current connect/status/disconnect callers; hosted row count was zero at the 2026-07-31 read-only check. | Provision the server secret, separately approve `073`, reconnect, and prove token/event idempotency behavior. |
-| Retain for current public content | `blog_posts` | Public and operator API callers remain. | Keep only while blog publishing is part of the roadmap; preserve published-versus-draft authorization tests. |
-| Operational/supporting — review | `health_check`, `changelog_entries`, `page_embeddings` | Active health, changelog, embedding, and chatbot callers remain. | Confirm each advances the final vision and add a focused contract test, or retire its callers first. |
+| Retain | `health_check` | Active health route and retained-schema manifest. | Preserve read-only health behavior and narrow policy. |
+| Application-retired; schema cleanup candidate | `blog_posts`, `changelog_entries`, `page_embeddings` | Hosted blog export completed; public blog is repository-owned; CMS, changelog, chatbot, indexing, embeddings, and media callers are removed with regression guards. | Remove only through the post-cutover content/chat/media cleanup migration after backup, dry run, and explicit approval. |
 | Active contradiction — urgent | `orders` | `/api/admin/analytics` and `/admin/analytics` still present an order/revenue dashboard; navigation still links to it although the roadmap classifies it as retirement-targeted. | Remove or replace this surface with project/outcome metrics before declaring order commerce retired. Then verify no callers and inspect hosted data before table cleanup. |
 | Likely retired code/schema residue | `marketplace_templates`, `template_categories`, `template_purchases`, `template_reviews` | A large `/api/marketplace` handler remains, but no retained UI caller was found. | Confirm no external caller, remove the API in a focused commit, then test absence before schema review. |
 | Likely retired code/schema residue | `media` and media storage | Media APIs/components remain through an editor component after inline-editor retirement. | Confirm no retained blog workflow needs it; either explicitly retain and test it or remove the orphaned caller chain first. |
@@ -117,8 +117,8 @@ its browser spec were removed, and the product-inventory guard now keeps that ro
 marketplace tables remain schema-retirement candidates under the same backup, dependency-review, and
 approval boundary.
 
-`profiles` is referenced by an embeddings debug route but is not a local `public` base table. Its view,
-schema, or hosted origin must be resolved before the embeddings/debug surface can be called reproducible.
+The former embeddings debug route and its unreproducible `profiles` reference were removed with the
+chatbot/indexing surface. No retained caller depends on that object.
 
 ## Local replacement confidence gate
 
@@ -151,7 +151,8 @@ backups are the reproducible assets.
    a fresh local reset. The test now covers 16 retained RLS tables, critical columns, policies,
    constraints, RPC signatures/grants, and the private project-attachment bucket.
 2. Resolve the active `orders` analytics contradiction in one focused application commit.
-3. Remove confirmed orphaned marketplace/media callers in separate focused commits.
+3. **Completed locally 2026-08-01:** remove confirmed marketplace, chatbot/embeddings,
+   changelog, database-blog, media, and design-tool callers with retirement guards.
 4. Add a new local-only cleanup migration for the 22 already-absent-hosted legacy tables and other
    proven local retirement targets; reset and run the complete database/code/browser gate.
 5. Re-run the linked diff. The expected result is only classified hosted residue plus intentionally

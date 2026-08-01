@@ -77,10 +77,10 @@ function HeroInner({
     const handler = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
 
-      // Handle widget button clicks (chatbot / wizard) from device iframes
+      // Handle widget button clicks from device iframes
       if (event.data?.type === 'hero-device-action') {
         const action = event.data.action as string;
-        if (action === 'open-chatbot' || action === 'open-wizard') {
+        if (action === 'open-wizard') {
           window.dispatchEvent(new CustomEvent(action));
         }
         return;

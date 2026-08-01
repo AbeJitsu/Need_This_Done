@@ -77,7 +77,7 @@ Adapters authenticate every call and verify callbacks. A retry reuses the idempo
 | 2. Core safety and workflow foundation | Complete | Fix analyzer and lead-capture risks; define durable, authenticated workflow records and operator-only access. | Phases 0–1. | Security and data-flow tests pass; workflows can be reviewed safely without external automation. |
 | 3. Focused operator and client workspace | Complete | Deliver the Supabase-Auth dashboard for Abe and Andrea, project collaboration, report queue, appointments, decision cards, existing-account client access, and GitHub handoffs. | Phase 2. | Operators can run the daily loop from one authenticated workspace; a client can access only projects explicitly linked to their existing exact-email account and can receive project-scoped GitHub handoffs. GitHub repository membership remains managed in GitHub. |
 | 4. Hosted payments and service boundary | Deferred external validation | Replace custom commerce checkout with repository-owned offerings and Stripe Payment Links, invoices, subscriptions, and Customer Portal. | Phase 3. | Hosted payment paths reconcile reliably and no retained workflow depends on order-centric checkout. |
-| 5. Retire legacy systems | Complete | Remove Medusa/Railway, product reviews, LMS, editor, old commerce, and obsolete APIs, jobs, tests, providers, and docs. | Phase 3 plus caller-removal evidence; destructive schema cleanup remains separately reviewed. | Runtime callers and deployment files are absent; build and retained-route checks pass; historical schema cleanup remains optional. |
+| 5. Retire legacy systems | **Current — application retirement gate in progress** | Remove Medusa/Railway, product reviews, LMS, editor, old commerce, chatbot/embeddings, changelog, database-blog/media administration, design tools, and obsolete APIs, jobs, tests, providers, and docs. | Phase 3 plus caller-removal evidence; destructive schema cleanup remains separately reviewed. | Runtime callers and deployment files are absent; repository-owned blog content and redirects are verified; the complete code gate passes; historical schema cleanup remains post-cutover work. |
 | 6. AI employee customer boundary | **Current — deployed; hosted behavior verification pending** | Deliver durable customer membership, employee roles, day-specific capped queues, immutable versioned decisions, outcomes, schedules, and RLS isolation. | Phase 5 and additive migration review. | The workspace reads durable records, owner/manager decisions update atomically, viewers are denied, exact retries are idempotent, and behavioral cross-customer tests pass before migration deployment. |
 | 7. NeedThisDone internal pilot | Planned — production promotion paused | Provision NeedThisDone as the first customer and operate the three daily check-ins against real audit and follow-up work. | Phase 6 deployed and verified. | Each queue is routinely cleared in 15–20 minutes and decisions, manual sends, replies, outcomes, and next actions are recorded. |
 | 8. Prospect and audit intelligence | Planned | Turn approved discovery and Playwright/Lighthouse audits into prioritized, evidence-backed opportunities. | Phase 7. | New opportunities and audit findings are durable, reviewable, and attributable to a workflow run. |
@@ -107,6 +107,13 @@ truthful and repeatable. The required proof for each retained claim is tracked i
 [the release evidence matrix](docs/RELEASE_EVIDENCE.md). Phase 7 starts with a controlled
 internal pilot only after the code gate, real local-RLS gate, retained browser workflows,
 and hosted `072` behavior checks all pass without unexplained warnings or skips.
+
+The final retained hosted contract contains the 16 RLS tables `projects`,
+`project_comments`, `project_github_handoffs`, `site_reports`, `user_roles`,
+`workflow_runs`, `customer_accounts`, `customer_memberships`, `ai_employees`, the five
+`ai_employee_*` tables, `google_calendar_tokens`, and `health_check`; its narrow retained
+RPCs and the private `project-attachments` bucket are part of the same contract. Blog,
+chat, embeddings, changelog, media, marketplace, and commerce schema are not retained.
 
 Consultations remain intentionally small: intake records a requested type and preferred
 times on the project; Abe or Andrea confirms the appointment; Google Calendar owns the

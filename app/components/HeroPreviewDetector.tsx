@@ -25,14 +25,13 @@ export default function HeroPreviewDetector() {
     };
   }, [isPreview]);
 
-  // Intercept chatbot/wizard button clicks and forward to parent window.
+  // Intercept wizard button clicks and forward to parent window.
   // These widgets use onClick state changes (not navigation), so the
   // Navigation API and <a> click handler below won't catch them.
   useEffect(() => {
     if (!isPreview || window === window.parent) return;
 
     const BUTTON_ACTIONS: Record<string, string> = {
-      'Open AI chat assistant': 'open-chatbot',
       'Help me choose the right plan': 'open-wizard',
     };
 

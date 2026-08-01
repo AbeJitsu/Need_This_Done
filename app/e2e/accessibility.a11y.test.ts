@@ -46,8 +46,6 @@ const ADMIN_CORE_PAGES = [
 const ADMIN_CONTENT_PAGES = [
   { path: '/admin/pages', name: 'Admin Pages' },
   { path: '/admin/pages/new', name: 'Admin Pages New' },
-  { path: '/admin/blog', name: 'Admin Blog' },
-  { path: '/admin/blog/new', name: 'Admin Blog New' },
 ];
 
 // Pages that require Medusa backend (skip in standard tests)
