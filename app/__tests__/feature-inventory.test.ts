@@ -54,11 +54,24 @@ describe('retained product inventory', () => {
       'app/api/admin/email-campaigns',
       'app/api/admin/email-templates',
       'app/api/cron/retry-failed-emails',
+      'app/api/marketplace/route.ts',
     ]) {
       expect(exists(path), `Expected retired surface ${path} to be absent`).toBe(false);
     }
     expect(existsSync(resolve(ROOT, 'medusa-v2/package.json'))).toBe(false);
     expect(source('app/api/health/route.ts')).not.toMatch(/medusa|railway/i);
     expect(source('lib/cache.ts')).not.toMatch(/medusa:/i);
+  });
+
+  it('does not preserve retired marketplace database callers', () => {
+    const retainedInventory = [
+      source('components/AdminSidebar.tsx'),
+      source('components/AdminDashboard.tsx'),
+    ].join('\n');
+
+    expect(retainedInventory).not.toContain('/api/marketplace');
+    expect(retainedInventory).not.toMatch(
+      /marketplace_templates|template_categories|template_purchases|template_reviews/,
+    );
   });
 });

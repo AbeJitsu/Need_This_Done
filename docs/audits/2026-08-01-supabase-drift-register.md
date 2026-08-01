@@ -112,6 +112,11 @@ navigation, and browser spec were removed, a legacy UI redirect was added, and t
 now asserts that the routes stay absent. The `orders` table remains a schema-retirement candidate;
 its removal still requires dependency inspection, backup, review, and separate approval.
 
+The marketplace caller recorded at audit time was also resolved on 2026-08-01: the orphaned API and
+its browser spec were removed, and the product-inventory guard now keeps that route absent. The four
+marketplace tables remain schema-retirement candidates under the same backup, dependency-review, and
+approval boundary.
+
 `profiles` is referenced by an embeddings debug route but is not a local `public` base table. Its view,
 schema, or hosted origin must be resolved before the embeddings/debug surface can be called reproducible.
 
