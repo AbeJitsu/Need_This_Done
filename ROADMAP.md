@@ -96,6 +96,12 @@ separately approved, and applied to hosted Supabase. Its objects no longer appea
 linked schema diff. A broader diff exposed historical local/hosted drift outside `072`;
 that generated destructive diff must never be applied blindly.
 
+The classified [Supabase drift register](docs/audits/2026-08-01-supabase-drift-register.md)
+is the authority for local-replacement confidence and database retirement sequencing. Local
+and hosted Supabase must match the retained schema and behavior contract; retired historical
+objects are classified and removed through separately reviewed migrations rather than copied
+between environments merely to force a zero-line whole-schema diff.
+
 Production application promotion remains paused while the release evidence is made
 truthful and repeatable. The required proof for each retained claim is tracked in
 [the release evidence matrix](docs/RELEASE_EVIDENCE.md). Phase 7 starts with a controlled

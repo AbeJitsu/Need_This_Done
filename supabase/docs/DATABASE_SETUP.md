@@ -1,5 +1,10 @@
 # Local Database Setup
 
+> **Historical snapshot:** The quick-start commands remain useful, but the “55 migrations” and legacy
+> commerce inventory below are not the current product boundary. Use the [canonical roadmap](../../ROADMAP.md)
+> and [2026-08-01 Supabase drift register](../../docs/audits/2026-08-01-supabase-drift-register.md)
+> for the current local-replacement gate and retain/retire classifications.
+
 A quick-start guide to running NeedThisDone's Supabase database locally with Docker.
 
 ## Quick Start (3 Commands)

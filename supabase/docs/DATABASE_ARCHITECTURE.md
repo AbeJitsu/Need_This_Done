@@ -1,5 +1,10 @@
 # Database Architecture
 
+> **Historical snapshot:** This document describes the legacy 55-migration commerce architecture and
+> is not the current retained product boundary. Use the [canonical roadmap](../../ROADMAP.md) and the
+> [2026-08-01 Supabase drift register](../../docs/audits/2026-08-01-supabase-drift-register.md) for
+> current retain/retire decisions. Historical migrations remain immutable.
+
 ## Overview
 
 NeedThisDone's database is a production-grade PostgreSQL schema built on Supabase, spanning 55 migrations and 30+ tables organized around distinct business domains. The architecture prioritizes security (100+ RLS policies), scalability (50+ performance indexes), and maintainability (comprehensive audit trails on every table).
