@@ -8,7 +8,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Active execution slice
 
-**Roadmap alignment:** Phase 7 preparation — truthful release evidence and internal pilot readiness.
+**Roadmap alignment:** Phase 6 completion — hosted behavior verification and truthful release evidence. Phase 7 internal-pilot preparation remains blocked until the Phase 6 exit gates pass.
 
 **In scope:** Make product claims match repeatable evidence, strengthen the code/CI gate, remove runtime callers for retired hosted tables, prove consultation persistence, and secure the retained Google Calendar connection before production promotion.
 
