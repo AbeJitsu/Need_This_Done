@@ -219,6 +219,7 @@ export async function createTestAdmin(): Promise<string> {
 
 export async function cleanupTestData(): Promise<void> {
   const testAdminId = '00000000-0000-0000-0000-000000000042';
+  await sql(`DELETE FROM public.google_calendar_tokens WHERE user_id = $1`, [testAdminId]);
   await sql(`DELETE FROM public.user_roles WHERE user_id = $1`, [testAdminId]);
   await sql(`DELETE FROM auth.users WHERE id = $1`, [testAdminId]);
 }

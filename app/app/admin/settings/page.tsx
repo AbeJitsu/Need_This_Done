@@ -12,8 +12,8 @@ import { accentColors, alertColors, cardBgColors, cardBorderColors, headingColor
 // Admin Settings Page - /admin/settings
 // ============================================================================
 // What: Admin settings for Google Calendar integration and other configurations
-// Why: Admins need to connect their Google Calendar for appointment syncing
-// How: OAuth flow to connect/disconnect Google Calendar, display connection status
+// Why: Admins may connect Google Calendar for a future verified consultation workflow
+// How: OAuth flow to connect/disconnect Google Calendar and display connection status
 
 // ============================================================================
 // Types
@@ -128,7 +128,7 @@ export default function AdminSettingsPage() {
   // Disconnect Google Calendar
   // ========================================================================
   const handleDisconnectCalendar = async () => {
-    if (!confirm('Are you sure you want to disconnect Google Calendar? New appointments will not sync to your calendar.')) {
+    if (!confirm('Are you sure you want to disconnect Google Calendar?')) {
       return;
     }
 
@@ -209,7 +209,7 @@ export default function AdminSettingsPage() {
                   Google Calendar Integration
                 </h2>
                 <p className={mutedTextColors.normal}>
-                  Connect your Google Calendar to automatically create events when you approve appointments
+                  Connect an operator calendar. Consultation event creation is not enabled yet.
                 </p>
               </div>
 
@@ -246,25 +246,13 @@ export default function AdminSettingsPage() {
 
                 {/* Features List */}
                 <div className={`${cardBgColors.base} rounded-lg p-4`}>
-                  <p className={`text-sm font-medium ${headingColors.primary} mb-3`}>Active Features:</p>
+                  <p className={`text-sm font-medium ${headingColors.primary} mb-3`}>Current capability:</p>
                   <ul className="space-y-2">
                     <li className="flex items-start">
                       <svg className={`w-5 h-5 ${alertColors.success.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className={mutedTextColors.normal}>Automatic event creation when appointments are approved</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className={`w-5 h-5 ${alertColors.success.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className={mutedTextColors.normal}>Calendar invites sent to customers automatically</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className={`w-5 h-5 ${alertColors.success.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className={mutedTextColors.normal}>Automatic reminders (1 day and 30 minutes before)</span>
+                      <span className={mutedTextColors.normal}>The operator calendar connection is available for a future human-confirmed consultation workflow.</span>
                     </li>
                   </ul>
                 </div>
@@ -285,26 +273,26 @@ export default function AdminSettingsPage() {
                 {/* Not Connected State */}
                 <div className={`${cardBgColors.base} rounded-lg p-4`}>
                   <p className={mutedTextColors.normal}>
-                    When you connect Google Calendar, approved appointments will automatically:
+                    Connecting authorizes calendar access. It does not automatically create events or send invitations.
                   </p>
                   <ul className="mt-3 space-y-2">
                     <li className="flex items-start">
                       <svg className={`w-5 h-5 ${accentColors.blue.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
-                      <span className={mutedTextColors.normal}>Create events on your Google Calendar</span>
+                      <span className={mutedTextColors.normal}>Show the connected operator account here</span>
                     </li>
                     <li className="flex items-start">
                       <svg className={`w-5 h-5 ${accentColors.blue.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
-                      <span className={mutedTextColors.normal}>Send calendar invites to customers</span>
+                      <span className={mutedTextColors.normal}>Prepare for a separately reviewed confirmation workflow</span>
                     </li>
                     <li className="flex items-start">
                       <svg className={`w-5 h-5 ${accentColors.blue.text} mr-2 flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
-                      <span className={mutedTextColors.normal}>Include automatic email and popup reminders</span>
+                      <span className={mutedTextColors.normal}>Keep event creation, invitations, and reminders disabled until that workflow is tested</span>
                     </li>
                   </ul>
                 </div>

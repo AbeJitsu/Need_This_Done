@@ -55,6 +55,13 @@ export interface CalendarEventInput {
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const getCalendarEncryptionKey = (): string => {
+  const key = process.env.CALENDAR_TOKEN_ENCRYPTION_KEY;
+  if (!key || key.length < 32) {
+    throw new Error('CALENDAR_TOKEN_ENCRYPTION_KEY must be configured with at least 32 characters.');
+  }
+  return key;
+};
 const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI ||
   (process.env.NODE_ENV === 'production'
     ? 'https://needthisdone.com/api/google/callback'
@@ -209,7 +216,7 @@ export async function getValidAccessToken(userId: string): Promise<string> {
   // Get stored tokens
   const { data: tokenData, error } = await supabase
     .from('google_calendar_tokens')
-    .select('*')
+    .select('id, expires_at, token_type, google_email')
     .eq('user_id', userId)
     .single();
 
@@ -222,21 +229,28 @@ export async function getValidAccessToken(userId: string): Promise<string> {
   const isExpired = expiresAt.getTime() - 5 * 60 * 1000 < Date.now();
 
   if (!isExpired) {
-    return tokenData.access_token;
+    const { data: accessToken, error: accessError } = await supabase
+      .rpc('get_calendar_access_token', {
+        token_id: tokenData.id,
+        p_encryption_key: getCalendarEncryptionKey(),
+      });
+    if (accessError || !accessToken) {
+      throw new Error('Unable to read the encrypted Google Calendar access token.');
+    }
+    return accessToken;
   }
 
   // Refresh the token
-  const newTokens = await refreshAccessToken(tokenData.refresh_token);
-
-  // Update stored tokens
-  await supabase
-    .from('google_calendar_tokens')
-    .update({
-      access_token: newTokens.access_token,
-      expires_at: newTokens.expires_at.toISOString(),
-      updated_at: new Date().toISOString(),
-    })
-    .eq('user_id', userId);
+  const { data: refreshToken, error: refreshError } = await supabase
+    .rpc('get_calendar_refresh_token', {
+      token_id: tokenData.id,
+      p_encryption_key: getCalendarEncryptionKey(),
+    });
+  if (refreshError || !refreshToken) {
+    throw new Error('Unable to read the encrypted Google Calendar refresh token.');
+  }
+  const newTokens = await refreshAccessToken(refreshToken);
+  await storeTokens(userId, newTokens, tokenData.google_email || '');
 
   return newTokens.access_token;
 }
@@ -255,19 +269,15 @@ export async function storeTokens(
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  const { error } = await supabase
-    .from('google_calendar_tokens')
-    .upsert({
-      user_id: userId,
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token,
-      token_type: tokens.token_type,
-      expires_at: tokens.expires_at.toISOString(),
-      google_email: googleEmail,
-      updated_at: new Date().toISOString(),
-    }, {
-      onConflict: 'user_id',
-    });
+  const { error } = await supabase.rpc('store_google_calendar_tokens', {
+    p_user_id: userId,
+    p_access_token: tokens.access_token,
+    p_refresh_token: tokens.refresh_token,
+    p_token_type: tokens.token_type,
+    p_expires_at: tokens.expires_at.toISOString(),
+    p_google_email: googleEmail,
+    p_encryption_key: getCalendarEncryptionKey(),
+  });
 
   if (error) {
     throw new Error(`Failed to store tokens: ${error.message}`);
@@ -317,7 +327,7 @@ export async function disconnectCalendar(userId: string): Promise<void> {
 
 /**
  * Create a calendar event
- * Used when admin approves an appointment
+ * Low-level adapter used only by a separately verified confirmation workflow.
  */
 export async function createCalendarEvent(
   accessToken: string,
@@ -379,7 +389,7 @@ export async function createCalendarEvent(
 
 /**
  * Update a calendar event
- * Used when admin modifies appointment time
+ * Low-level adapter used only by a separately verified rescheduling workflow.
  */
 export async function updateCalendarEvent(
   accessToken: string,
@@ -433,7 +443,7 @@ export async function updateCalendarEvent(
 
 /**
  * Delete a calendar event
- * Used when appointment is cancelled
+ * Low-level adapter used only by a separately verified cancellation workflow.
  */
 export async function deleteCalendarEvent(
   accessToken: string,

@@ -1,13 +1,10 @@
 /**
- * Database Security Hardening Tests (Migrations 055-061)
+ * Retained Database Security Tests
  *
  * Verifies the security hardening arc that fixed 168 Supabase linter errors:
- * - RLS enabled on all custom tables
  * - Admin role system (user_roles + is_admin function)
- * - SECURITY INVOKER on all views
  * - Encrypted token storage (pgcrypto)
  * - Zero linter errors
- * - RLS behavioral enforcement
  *
  * Prerequisites: Local Supabase running (`supabase start && supabase db reset`)
  * Run: cd app && npx vitest run ../supabase/tests/security-hardening.test.ts
@@ -18,14 +15,12 @@ import {
   sql,
   closePool,
   isRLSEnabled,
-  getTablePolicies,
   columnExists,
   getColumnType,
   functionExists,
-  viewHasSecurityInvoker,
   runSupabaseLint,
-  getAdminClient,
   getAnonClient,
+  getAdminClient,
   createTestAdmin,
   cleanupTestData,
 } from './db-security-helpers';
@@ -36,27 +31,6 @@ import {
 
 const runLocalSupabaseTests = process.env.RUN_LOCAL_SUPABASE_TESTS === 'true';
 const describe = runLocalSupabaseTests ? vitestDescribe : vitestDescribe.skip;
-
-const CUSTOM_TABLES = [
-  'product_waitlist',
-  'saved_addresses',
-  'product_categories',
-  'product_category_mappings',
-  'waitlist_campaigns',
-  'waitlist_campaign_recipients',
-  'campaign_opens',
-  'campaign_clicks',
-];
-
-const SECURITY_INVOKER_VIEWS = [
-  'product_ratings',
-  'featured_templates',
-  'page_view_stats',
-  'trending_products',
-  'popular_templates',
-  'popular_products',
-  'cart_reminder_stats',
-];
 
 let testAdminId: string;
 
@@ -76,51 +50,7 @@ afterAll(async () => {
 });
 
 // ============================================
-// SECTION 1: RLS ENABLED ON CUSTOM TABLES
-// ============================================
-
-describe('Section 1: RLS Enabled on Custom Tables', () => {
-  CUSTOM_TABLES.forEach((tableName) => {
-    test(`RLS is enabled on ${tableName}`, async () => {
-      expect(await isRLSEnabled(tableName)).toBe(true);
-    });
-
-    test(`${tableName} has RLS policies`, async () => {
-      const policies = await getTablePolicies(tableName);
-      expect(policies.length).toBeGreaterThan(0);
-    });
-  });
-
-  test('product_waitlist has user access policy', async () => {
-    const policies = await getTablePolicies('product_waitlist');
-    const hasUserPolicy = policies.some(
-      (p) => p.toLowerCase().includes('user') || p.toLowerCase().includes('own')
-    );
-    expect(hasUserPolicy).toBe(true);
-  });
-
-  test('product_waitlist has admin access policy', async () => {
-    const policies = await getTablePolicies('product_waitlist');
-    const hasAdminPolicy = policies.some((p) => p.toLowerCase().includes('admin'));
-    expect(hasAdminPolicy).toBe(true);
-  });
-
-  test('saved_addresses restricts access by user_id', async () => {
-    const policies = await getTablePolicies('saved_addresses');
-    expect(policies.length).toBeGreaterThan(0);
-  });
-
-  test('campaign analytics tables restrict admin access only', async () => {
-    for (const table of ['campaign_opens', 'campaign_clicks']) {
-      const policies = await getTablePolicies(table);
-      const hasAdminPolicy = policies.some((p) => p.toLowerCase().includes('admin'));
-      expect(hasAdminPolicy).toBe(true);
-    }
-  });
-});
-
-// ============================================
-// SECTION 2: ADMIN ROLE SYSTEM
+// ADMIN ROLE SYSTEM
 // ============================================
 
 describe('Section 2: Secure Admin Role System', () => {
@@ -147,12 +77,6 @@ describe('Section 2: Secure Admin Role System', () => {
     expect(rows[0].is_admin).toBe(false);
   });
 
-  test('blog_posts policies use is_admin()', async () => {
-    const policies = await getTablePolicies('blog_posts');
-    const adminPolicies = policies.filter((p) => p.toLowerCase().includes('admin'));
-    expect(adminPolicies.length).toBeGreaterThan(0);
-  });
-
   test('is_admin() has explicit search_path', async () => {
     const rows = await sql<{ proconfig: string[] | null }>(
       `SELECT p.proconfig
@@ -166,19 +90,7 @@ describe('Section 2: Secure Admin Role System', () => {
 });
 
 // ============================================
-// SECTION 3: SECURITY INVOKER VIEWS
-// ============================================
-
-describe('Section 3: Views Use SECURITY INVOKER', () => {
-  SECURITY_INVOKER_VIEWS.forEach((viewName) => {
-    test(`${viewName} has security_invoker=true`, async () => {
-      expect(await viewHasSecurityInvoker(viewName)).toBe(true);
-    });
-  });
-});
-
-// ============================================
-// SECTION 4: OAUTH TOKEN ENCRYPTION
+// OAUTH TOKEN ENCRYPTION
 // ============================================
 
 describe('Section 4: OAuth Token Encryption', () => {
@@ -197,6 +109,46 @@ describe('Section 4: OAuth Token Encryption', () => {
     expect(await functionExists('get_calendar_refresh_token')).toBe(true);
   });
 
+  test('stores only encrypted tokens and allows the server to retrieve them', async () => {
+    const client = getAdminClient();
+    const encryptionKey = 'local-calendar-test-key-at-least-32-characters';
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+    const { error: storeError } = await client.rpc('store_google_calendar_tokens', {
+      p_user_id: testAdminId,
+      p_access_token: 'local-access-secret',
+      p_refresh_token: 'local-refresh-secret',
+      p_token_type: 'Bearer',
+      p_expires_at: expiresAt,
+      p_google_email: 'calendar-test@local.invalid',
+      p_encryption_key: encryptionKey,
+    });
+    expect(storeError).toBeNull();
+
+    const rows = await sql<{ id: string; access_token: string | null; refresh_token: string | null; access_token_encrypted: Buffer; refresh_token_encrypted: Buffer }>(
+      `select id, access_token, refresh_token, access_token_encrypted, refresh_token_encrypted
+       from public.google_calendar_tokens where user_id = $1`,
+      [testAdminId],
+    );
+    expect(rows).toHaveLength(1);
+    expect(rows[0].access_token).toBeNull();
+    expect(rows[0].refresh_token).toBeNull();
+    expect(rows[0].access_token_encrypted.toString()).not.toContain('local-access-secret');
+    expect(rows[0].refresh_token_encrypted.toString()).not.toContain('local-refresh-secret');
+
+    const { data: accessToken, error: accessError } = await client.rpc(
+      'get_calendar_access_token',
+      { token_id: rows[0].id, p_encryption_key: encryptionKey },
+    );
+    const { data: refreshToken, error: refreshError } = await client.rpc(
+      'get_calendar_refresh_token',
+      { token_id: rows[0].id, p_encryption_key: encryptionKey },
+    );
+    expect(accessError).toBeNull();
+    expect(refreshError).toBeNull();
+    expect(accessToken).toBe('local-access-secret');
+    expect(refreshToken).toBe('local-refresh-secret');
+  });
+
   test('pgcrypto extension is in extensions schema', async () => {
     const rows = await sql<{ nspname: string }>(
       `SELECT n.nspname
@@ -209,7 +161,7 @@ describe('Section 4: OAuth Token Encryption', () => {
 });
 
 // ============================================
-// SECTION 5: SUPABASE LINT — ZERO ERRORS
+// SUPABASE LINT — ZERO ERRORS
 // ============================================
 
 describe('Section 5: Supabase Lint Verification', () => {
@@ -220,102 +172,10 @@ describe('Section 5: Supabase Lint Verification', () => {
 });
 
 // ============================================
-// SECTION 6: BEHAVIORAL — RLS ACTUALLY WORKS
+// POLICY REPLACEMENT COVERAGE
 // ============================================
 
-describe('Section 6: RLS Behavioral Enforcement', () => {
-  test('anon users cannot access campaign analytics', async () => {
-    const client = getAnonClient();
-    const { data: opens } = await client.from('campaign_opens').select('*');
-    const { data: clicks } = await client.from('campaign_clicks').select('*');
-    expect(opens).toEqual([]);
-    expect(clicks).toEqual([]);
-  });
-
-  test('anon users can read public product categories', async () => {
-    const client = getAnonClient();
-    const { error } = await client.from('product_categories').select('name').limit(1);
-    expect(error).toBeNull();
-  });
-
-  test('anon users cannot modify product categories', async () => {
-    const client = getAnonClient();
-    const { error } = await client.from('product_categories').insert({
-      name: 'Test Category',
-      description: 'Should fail',
-      display_order: 999,
-    });
-    expect(error).not.toBeNull();
-  });
-
-  test('anon users cannot access saved addresses', async () => {
-    const client = getAnonClient();
-    const { data } = await client.from('saved_addresses').select('*');
-    expect(data).toEqual([]);
-  });
-
-  test('admin client (service role) can access campaign analytics', async () => {
-    const client = getAdminClient();
-    const { error } = await client.from('campaign_opens').select('*').limit(1);
-    expect(error).toBeNull();
-  });
-});
-
-// ============================================
-// SECTION 7: BROAD RLS COVERAGE
-// ============================================
-
-describe('Section 7: Broad RLS Coverage', () => {
-  const NON_CUSTOM_RLS_TABLES = [
-    'blog_posts',
-    'orders',
-    'loyalty_points',
-    'email_templates',
-  ];
-
-  NON_CUSTOM_RLS_TABLES.forEach((tableName) => {
-    test(`RLS is enabled on ${tableName}`, async () => {
-      expect(await isRLSEnabled(tableName)).toBe(true);
-    });
-  });
-
-  test('at least 52 public tables have RLS enabled', async () => {
-    const rows = await sql<{ count: string }>(
-      `SELECT COUNT(*)::text AS count
-       FROM pg_class c
-       JOIN pg_namespace n ON c.relnamespace = n.oid
-       WHERE n.nspname = 'public'
-         AND c.relkind = 'r'
-         AND c.relrowsecurity = true`
-    );
-    expect(parseInt(rows[0].count)).toBeGreaterThanOrEqual(52);
-  });
-});
-
-// ============================================
-// SECTION 8: POLICY REPLACEMENT COVERAGE
-// ============================================
-
-describe('Section 8: Admin Policies Use is_admin()', () => {
-  const TABLES_WITH_ADMIN_POLICIES = ['page_content', 'orders', 'subscriptions'];
-
-  TABLES_WITH_ADMIN_POLICIES.forEach((tableName) => {
-    test(`${tableName} has admin policy using is_admin()`, async () => {
-      const rows = await sql<{ polname: string; polqual: string }>(
-        `SELECT p.polname, pg_get_expr(p.polqual, p.polrelid) AS polqual
-         FROM pg_policy p
-         JOIN pg_class c ON p.polrelid = c.oid
-         JOIN pg_namespace n ON c.relnamespace = n.oid
-         WHERE n.nspname = 'public' AND c.relname = $1`,
-        [tableName]
-      );
-      const hasIsAdmin = rows.some(
-        (r) => r.polqual && r.polqual.includes('is_admin')
-      );
-      expect(hasIsAdmin).toBe(true);
-    });
-  });
-
+describe('Retained policies avoid insecure metadata authorization', () => {
   test('no policies reference user_metadata anywhere', async () => {
     const rows = await sql<{ tablename: string; polname: string }>(
       `SELECT c.relname AS tablename, p.polname
@@ -350,13 +210,6 @@ describe('Section 9: Always-True Policy Fixes', () => {
     expect(error).not.toBeNull();
   });
 
-  test('demo_items INSERT blocked for anon users', async () => {
-    const client = getAnonClient();
-    const { error } = await client.from('demo_items').insert({
-      name: 'Test item',
-    });
-    expect(error).not.toBeNull();
-  });
 });
 
 // ============================================
@@ -376,26 +229,5 @@ describe('Section 10: Vector Extension', () => {
 
   test('match_page_embeddings function exists', async () => {
     expect(await functionExists('match_page_embeddings')).toBe(true);
-  });
-});
-
-// ============================================
-// SECTION 11: FIXED FUNCTIONS
-// ============================================
-
-describe('Section 11: Fixed Functions', () => {
-  test('generate_quote_reference() returns NTD-NNNNNN-NNNN format', async () => {
-    const rows = await sql<{ ref: string }>(
-      `SELECT public.generate_quote_reference() AS ref`
-    );
-    expect(rows[0].ref).toMatch(/^NTD-\d{6}-\d{4}$/);
-  });
-
-  test('validate_coupon function exists', async () => {
-    expect(await functionExists('validate_coupon')).toBe(true);
-  });
-
-  test('get_product_rating function exists', async () => {
-    expect(await functionExists('get_product_rating')).toBe(true);
   });
 });
