@@ -12,10 +12,12 @@ describe('retired order commerce surface', () => {
       'app/orders/page.tsx',
       'app/quote/page.tsx',
       'app/admin/orders/page.tsx',
+      'app/admin/analytics/page.tsx',
       'app/admin/appointments/page.tsx',
       'app/api/cart/route.ts',
       'app/api/checkout/session/route.ts',
       'app/api/orders/route.ts',
+      'app/api/admin/analytics/route.ts',
       'app/api/stripe/webhook/route.ts',
       'context/CartContext.tsx',
       'context/StripeContext.tsx',
@@ -25,6 +27,20 @@ describe('retired order commerce surface', () => {
     for (const path of retiredPaths) {
       expect(existsSync(resolve(APP_ROOT, path)), path).toBe(false);
     }
+  });
+
+  it('keeps order analytics callers out of retained operator navigation', () => {
+    for (const path of ['components/AdminSidebar.tsx', 'components/AdminDashboard.tsx']) {
+      const source = readFileSync(resolve(APP_ROOT, path), 'utf8');
+      expect(source).not.toContain('/admin/analytics');
+      expect(source).not.toMatch(/revenue\s*&\s*trends/i);
+    }
+
+    const appSources = [
+      'components/AdminSidebar.tsx',
+      'components/AdminDashboard.tsx',
+    ].map((path) => readFileSync(resolve(APP_ROOT, path), 'utf8'));
+    expect(appSources.join('\n')).not.toMatch(/\.from\(['"]orders['"]\)/);
   });
 
   it('preserves the repository catalog and guarded hosted-payment handoff', () => {

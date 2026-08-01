@@ -107,6 +107,11 @@ review even though they do not appear as table drift.
 | Likely retired code/schema residue | `media` and media storage | Media APIs/components remain through an editor component after inline-editor retirement. | Confirm no retained blog workflow needs it; either explicitly retain and test it or remove the orphaned caller chain first. |
 | Retirement candidates with no current non-test table caller found | `cart_reminders`, `coupons`, `coupon_usage`, `currencies`, `exchange_rates`, `user_currency_preferences`, `demo_items`, `enrollments`, `pages`, `page_content`, `page_content_history`, `page_views`, `payments`, `product_interactions`, `product_similarities`, `quotes`, `reviews`, `review_votes`, `review_reports`, `stripe_customers`, `subscriptions`, `wizard_sessions` | They are common to local and hosted, but the current caller scan found no direct runtime table use. | Check views, functions, triggers, storage, provider callbacks, hosted row counts, and legal retention before proposing cleanup. “No direct caller” alone is not deletion proof. |
 
+The order analytics contradiction recorded at audit time was resolved on 2026-08-01: the page, API,
+navigation, and browser spec were removed, a legacy UI redirect was added, and the retirement guard
+now asserts that the routes stay absent. The `orders` table remains a schema-retirement candidate;
+its removal still requires dependency inspection, backup, review, and separate approval.
+
 `profiles` is referenced by an embeddings debug route but is not a local `public` base table. Its view,
 schema, or hosted origin must be resolved before the embeddings/debug surface can be called reproducible.
 

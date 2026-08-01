@@ -151,6 +151,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/admin/analytics',
+        destination: '/dashboard',
+        permanent: true,
+      },
+      {
         source: '/quote',
         destination: '/contact',
         permanent: true,

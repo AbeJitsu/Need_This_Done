@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-27T04:53:00.820Z",
+  "generatedAt": "2026-08-01T05:08:39.837Z",
   "routes": [
     {
       "path": "/about",
@@ -22,16 +22,6 @@
       "imports": [
         "components/motion",
         "lib/seo-config"
-      ]
-    },
-    {
-      "path": "/admin/analytics",
-      "file": "app/admin/analytics/page.tsx",
-      "imports": [
-        "components/Card",
-        "lib/auth",
-        "lib/colors",
-        "context/AuthContext"
       ]
     },
     {
@@ -85,34 +75,9 @@
       ]
     },
     {
-      "path": "/admin/communication",
-      "file": "app/admin/communication/page.tsx",
-      "imports": [
-        "lib/auth",
-        "context/AuthContext",
-        "context/ToastContext"
-      ]
-    },
-    {
       "path": "/admin/reports",
       "file": "app/admin/reports/page.tsx",
       "imports": [
-        "context/AuthContext"
-      ]
-    },
-    {
-      "path": "/admin/reviews/analytics",
-      "file": "app/admin/reviews/analytics/page.tsx",
-      "imports": []
-    },
-    {
-      "path": "/admin/reviews",
-      "file": "app/admin/reviews/page.tsx",
-      "imports": [
-        "components/Card",
-        "components/Button",
-        "lib/auth",
-        "lib/colors",
         "context/AuthContext"
       ]
     },
@@ -300,7 +265,6 @@
       "/admin/blog/new",
       "/admin/blog",
       "/admin/colors",
-      "/admin/reviews",
       "/admin/settings",
       "/admin/users",
       "/resume"
@@ -321,44 +285,12 @@
       "/services"
     ],
     "components/Card": [
-      "/admin/analytics",
       "/admin/blog/[slug]/edit",
       "/admin/blog/new",
       "/admin/blog",
       "/admin/colors",
-      "/admin/reviews",
       "/admin/settings",
       "/admin/users"
-    ],
-    "lib/auth": [
-      "/admin/analytics",
-      "/admin/communication",
-      "/admin/reviews",
-      "/admin/settings"
-    ],
-    "lib/colors": [
-      "/admin/analytics",
-      "/admin/blog/[slug]/edit",
-      "/admin/blog/new",
-      "/admin/blog",
-      "/admin/colors",
-      "/admin/reviews",
-      "/admin/settings",
-      "/admin/users"
-    ],
-    "context/AuthContext": [
-      "/admin/analytics",
-      "/admin/blog/[slug]/edit",
-      "/admin/blog/new",
-      "/admin/blog",
-      "/admin/colors",
-      "/admin/communication",
-      "/admin/reports",
-      "/admin/reviews",
-      "/admin/settings",
-      "/admin/users",
-      "/dashboard",
-      "/employee"
     ],
     "components/editor/RichTextEditor": [
       "/admin/blog/[slug]/edit"
@@ -371,11 +303,29 @@
       "/blog",
       "/"
     ],
-    "context/ToastContext": [
+    "lib/colors": [
       "/admin/blog/[slug]/edit",
       "/admin/blog/new",
       "/admin/blog",
-      "/admin/communication"
+      "/admin/colors",
+      "/admin/settings",
+      "/admin/users"
+    ],
+    "context/AuthContext": [
+      "/admin/blog/[slug]/edit",
+      "/admin/blog/new",
+      "/admin/blog",
+      "/admin/colors",
+      "/admin/reports",
+      "/admin/settings",
+      "/admin/users",
+      "/dashboard",
+      "/employee"
+    ],
+    "context/ToastContext": [
+      "/admin/blog/[slug]/edit",
+      "/admin/blog/new",
+      "/admin/blog"
     ],
     "components/ui/ConfirmDialog": [
       "/admin/blog"
@@ -386,6 +336,9 @@
     ],
     "lib/wcag-contrast": [
       "/admin/colors"
+    ],
+    "lib/auth": [
+      "/admin/settings"
     ],
     "lib/aria-utils": [
       "/admin/users"
