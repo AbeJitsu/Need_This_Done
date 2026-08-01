@@ -128,6 +128,7 @@ create policy "members read decisions" on public.ai_employee_decisions for selec
     where w.id = work_item_id and public.is_customer_member(e.customer_id)
   )
 );
+revoke insert, update, delete on table public.ai_employee_decisions from anon, authenticated;
 create policy "members read outcomes" on public.ai_employee_outcomes for select using (
   exists (select 1 from public.ai_employees e where e.id = employee_id and public.is_customer_member(e.customer_id))
 );
