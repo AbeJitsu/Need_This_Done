@@ -243,23 +243,6 @@ async function sendLoginEmailInBackground(
       ipAddress,
     });
 
-    // Track failed email for retry cron job
-    // This is best-effort - if tracking fails, we just log it
-    try {
-      const supabaseClient = await createSupabaseServerClient();
-      await supabaseClient.from('email_failures').insert({
-        type: 'login_notification',
-        recipient_email: email,
-        subject: `Sign-In Notification for ${email}`,
-        user_id: userId,
-        attempt_count: 1,
-        last_error: err instanceof Error ? err.message : 'Unknown error',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      });
-    } catch (logErr) {
-      // If we can't even log the failure, just log locally
-      logger.error('Failed to log login notification failure', logErr as Error);
-    }
+    // Durable email-failure replay is not implemented; provider failures stay visible in logs.
   }
 }

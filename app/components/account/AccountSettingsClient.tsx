@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { User, LogOut, Mail, Save, Loader2, Check, AlertCircle } from 'lucide-react';
 import Button from '@/components/Button';
-import NotificationPreferencesSection from './NotificationPreferencesSection';
-import SavedAddressesSection from './SavedAddressesSection';
 import { accentColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors } from '@/lib/colors';
 
 // ============================================================================
@@ -232,14 +230,6 @@ export default function AccountSettingsClient() {
             </div>
           </div>
         </div>
-
-        {/* Saved Addresses Section */}
-        <div className="mb-8">
-          <SavedAddressesSection />
-        </div>
-
-        {/* Notification Preferences Section */}
-        <NotificationPreferencesSection />
 
         {/* Danger Zone */}
         <div className="rounded-xl border-2 border-red-200 bg-red-50 p-8 mt-8">

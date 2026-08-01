@@ -45,6 +45,15 @@ describe('retained product inventory', () => {
       'app/api/reviews',
       'app/api/admin/reviews',
       'app/api/user/reviews',
+      'app/api/account/saved-addresses',
+      'components/account/SavedAddressesSection.tsx',
+      'lib/hooks/useSavedAddresses.ts',
+      'app/api/account/notification-preferences',
+      'components/account/NotificationPreferencesSection.tsx',
+      'app/admin/communication',
+      'app/api/admin/email-campaigns',
+      'app/api/admin/email-templates',
+      'app/api/cron/retry-failed-emails',
     ]) {
       expect(exists(path), `Expected retired surface ${path} to be absent`).toBe(false);
     }

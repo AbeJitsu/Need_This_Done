@@ -154,26 +154,11 @@ export async function POST(request: NextRequest) {
             email: data.user?.email,
           });
 
-          // Track failed email for manual follow-up (best-effort, don't block response)
-          try {
-            const supabaseClient = await import('@/lib/supabase').then(m => m.supabase);
-            await supabaseClient
-              .from('email_failures')
-              .insert({
-                type: 'welcome_email',
-                recipient_email: data.user?.email,
-                subject: 'Welcome to NeedThisDone!',
-                user_id: data.user?.id,
-                error_message: err instanceof Error ? err.message : 'Unknown error',
-                created_at: new Date().toISOString(),
-              });
-          } catch (logErr) {
-            console.error('[Signup] Failed to log welcome email failure:', logErr);
-          }
         }
       })();
 
-      // Attach catch handler to prevent unhandled promise rejections
+      // Attach catch handler to prevent unhandled promise rejections.
+      // Durable email-failure replay is not implemented; provider failures stay visible in logs.
       sendWelcomeEmailAsync.catch((err) => {
         console.error('[Signup] Unhandled error in async welcome email task:', err);
       });

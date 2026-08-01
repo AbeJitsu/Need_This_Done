@@ -91,7 +91,6 @@ async function main() {
     sendLoginNotification,
     sendAdminNotification,
     sendClientConfirmation,
-    sendAbandonedCartEmail,
   } = await import("../lib/email-service.js");
 
   const TEST_EMAIL = process.env.RESEND_ADMIN_EMAIL || "test@example.com";
@@ -177,38 +176,9 @@ async function main() {
 
   await delay(1000); // Wait 1 second to avoid rate limit
 
-  // Test 5: Abandoned Cart Email (with discount)
-  console.log("5️⃣ Sending Abandoned Cart Email...");
-  try {
-    const result = await sendAbandonedCartEmail({
-      customerEmail: TEST_EMAIL,
-      customerName: "Sarah Johnson",
-      cartId: "cart-test-" + Date.now(),
-      items: [
-        {
-          name: "Website Redesign Consultation",
-          quantity: 1,
-          price: 19900, // $199.00
-        },
-        {
-          name: "SEO Audit & Strategy",
-          quantity: 1,
-          price: 29900, // $299.00
-        },
-      ],
-      subtotal: 49800, // $498.00
-      discountCode: "COMEBACK15",
-      discountAmount: 7470, // $74.70 (15% off)
-      cartUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://needthisdone.com"}/cart`,
-    });
-    console.log(`   ✅ Abandoned cart email sent! ID: ${result}\n`);
-  } catch (error) {
-    console.error(`   ❌ Abandoned cart email failed:`, error);
-  }
-
   console.log("====================");
   console.log("✨ Done! Check your inbox at:", TEST_EMAIL);
-  console.log("   Look for 5 emails from hello@needthisdone.com");
+  console.log("   Look for 4 emails from hello@needthisdone.com");
 }
 
 main().catch(console.error);
