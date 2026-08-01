@@ -37,6 +37,7 @@ npm run type-check
 npm run test:unit
 npm run build
 npm run test:employee-workspace
+npm run verify:code
 ```
 
 After a production build, restart the development server because the build replaces `.next`.
@@ -51,8 +52,10 @@ cd app
 RUN_LOCAL_SUPABASE_TESTS=true npm run test:unit -- __tests__/lib/ai-employee-rls.test.ts
 ```
 
-Production uses hosted Supabase. Migration `072` must pass the local gate before a
-separately approved hosted dry run or deployment.
+Production uses hosted Supabase. Migration `072` passed the local database gate and was
+separately approved and applied on 2026-07-29. Read
+[the release evidence matrix](docs/RELEASE_EVIDENCE.md) before promoting application code;
+local layout tests that use the development bypass do not prove authentication or RLS.
 
 ## How the business works
 
@@ -76,7 +79,7 @@ Visitor
               v
         Client Portal
   (updates, files, comments,
-   reports, appointments)
+   reports, consultation requests)
               |
               v
       Measurable client outcome
