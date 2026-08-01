@@ -1,0 +1,215 @@
+import { afterAll, describe, expect, it } from 'vitest';
+import { closePool, getPool } from '../../../supabase/tests/helpers';
+
+const localDescribe = process.env.RUN_LOCAL_SUPABASE_TESTS === 'true' ? describe : describe.skip;
+
+const retainedTables = [
+  'ai_employee_check_in_schedules',
+  'ai_employee_decisions',
+  'ai_employee_operating_briefs',
+  'ai_employee_outcomes',
+  'ai_employee_work_items',
+  'ai_employees',
+  'blog_posts',
+  'customer_accounts',
+  'customer_memberships',
+  'google_calendar_tokens',
+  'project_comments',
+  'project_github_handoffs',
+  'projects',
+  'site_reports',
+  'user_roles',
+  'workflow_runs',
+] as const;
+
+const requiredPolicies = [
+  ['ai_employee_check_in_schedules', 'members read schedules', 'SELECT'],
+  ['ai_employee_decisions', 'members read decisions', 'SELECT'],
+  ['ai_employee_operating_briefs', 'members read briefs', 'SELECT'],
+  ['ai_employee_outcomes', 'members read outcomes', 'SELECT'],
+  ['ai_employee_work_items', 'members read work', 'SELECT'],
+  ['ai_employees', 'members read employees', 'SELECT'],
+  ['customer_accounts', 'members read customer', 'SELECT'],
+  ['customer_memberships', 'members read memberships', 'SELECT'],
+  ['project_comments', 'Users can read own project comments', 'SELECT'],
+  ['projects', 'Users can read own projects, admins read all', 'SELECT'],
+  ['site_reports', 'No direct insert', 'INSERT'],
+  ['user_roles', 'Users can read own role', 'SELECT'],
+  ['workflow_runs', 'Operators can read workflow runs', 'SELECT'],
+  ['workflow_runs', 'Operators can update workflow runs', 'UPDATE'],
+] as const;
+
+localDescribe.sequential('retained Supabase schema manifest', () => {
+  afterAll(async () => {
+    await closePool();
+  });
+
+  it('rebuilds every retained public table with RLS enabled', async () => {
+    const result = await getPool().query<{ relname: string; relrowsecurity: boolean }>(
+      `select c.relname, c.relrowsecurity
+       from pg_class c
+       join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public'
+         and c.relkind = 'r'
+         and c.relname = any($1::text[])
+       order by c.relname`,
+      [retainedTables],
+    );
+
+    expect(result.rows.map((row) => row.relname)).toEqual([...retainedTables]);
+    expect(result.rows.every((row) => row.relrowsecurity)).toBe(true);
+  });
+
+  it('preserves the critical retained columns and types', async () => {
+    const expected = [
+      ['ai_employee_decisions', 'idempotency_key', 'uuid'],
+      ['ai_employee_work_items', 'predecessor_work_item_id', 'uuid'],
+      ['ai_employee_work_items', 'scheduled_date', 'date'],
+      ['google_calendar_tokens', 'access_token_encrypted', 'bytea'],
+      ['google_calendar_tokens', 'refresh_token_encrypted', 'bytea'],
+      ['project_github_handoffs', 'notification_status', 'text'],
+      ['projects', 'alternate_consultation_at', 'timestamptz'],
+      ['projects', 'attachments', '_text'],
+      ['projects', 'consultation_type', 'text'],
+      ['projects', 'preferred_consultation_at', 'timestamptz'],
+      ['workflow_runs', 'idempotency_key', 'text'],
+    ];
+    const result = await getPool().query<{ table_name: string; column_name: string; udt_name: string }>(
+      `select table_name, column_name, udt_name
+       from information_schema.columns
+       where table_schema = 'public'
+         and (table_name, column_name) in (
+           select * from unnest($1::text[], $2::text[])
+         )
+       order by table_name, column_name`,
+      [expected.map(([table]) => table), expected.map(([, column]) => column)],
+    );
+
+    expect(result.rows.map((row) => [row.table_name, row.column_name, row.udt_name])).toEqual(expected);
+  });
+
+  it('preserves isolation policies without anonymous site-report reads', async () => {
+    const result = await getPool().query<{ tablename: string; policyname: string; cmd: string }>(
+      `select tablename, policyname, cmd
+       from pg_policies
+       where schemaname = 'public'
+         and tablename = any($1::text[])`,
+      [retainedTables],
+    );
+    const actual = new Set(result.rows.map((row) => `${row.tablename}|${row.policyname}|${row.cmd}`));
+
+    for (const [table, policy, command] of requiredPolicies) {
+      expect(actual.has(`${table}|${policy}|${command}`)).toBe(true);
+    }
+    expect(result.rows.some((row) => row.tablename === 'site_reports' && row.cmd === 'SELECT')).toBe(false);
+  });
+
+  it('preserves decision, queue, history, and cascading-cleanup constraints', async () => {
+    const requiredConstraints = [
+      'ai_employee_decisions_idempotency_key_key',
+      'ai_employee_decisions_work_item_id_key',
+      'ai_employee_work_items_predecessor_work_item_id_key',
+      'customer_memberships_pkey',
+      'projects_consultation_preference_check',
+      'projects_consultation_type_check',
+      'workflow_runs_idempotency_key_key',
+      'workflow_runs_source_type_source_id_key',
+    ];
+    const constraints = await getPool().query<{ conname: string }>(
+      `select conname from pg_constraint where conname = any($1::text[]) order by conname`,
+      [requiredConstraints],
+    );
+    expect(constraints.rows.map((row) => row.conname)).toEqual([...requiredConstraints].sort());
+
+    const queueIndex = await getPool().query<{ indexdef: string }>(
+      `select indexdef from pg_indexes
+       where schemaname = 'public' and indexname = 'ai_employee_pending_queue_slot'`,
+    );
+    expect(queueIndex.rows[0]?.indexdef).toContain('UNIQUE INDEX');
+    expect(queueIndex.rows[0]?.indexdef).toContain("WHERE (status = 'pending'::text)");
+
+    const cascading = await getPool().query<{ conname: string; confdeltype: string }>(
+      `select conname, confdeltype
+       from pg_constraint
+       where conname in (
+         'customer_memberships_customer_id_fkey',
+         'ai_employees_customer_id_fkey',
+         'ai_employee_work_items_employee_id_fkey',
+         'ai_employee_decisions_work_item_id_fkey',
+         'project_comments_project_id_fkey',
+         'project_github_handoffs_project_id_fkey'
+       )
+       order by conname`,
+    );
+    expect(cascading.rows).toHaveLength(6);
+    expect(cascading.rows.every((row) => row.confdeltype === 'c')).toBe(true);
+  });
+
+  it('keeps retained RPC signatures and execution grants narrow', async () => {
+    const rpcChecks = [
+      ['public.record_ai_employee_decision(uuid,text,text,uuid,date)', true, true, false],
+      ['public.store_google_calendar_tokens(uuid,text,text,text,timestamp with time zone,text,text)', true, false, false],
+      ['public.get_calendar_access_token(uuid,text)', true, false, false],
+      ['public.get_calendar_refresh_token(uuid,text)', true, false, false],
+    ] as const;
+
+    for (const [signature, serviceRole, authenticated, anon] of rpcChecks) {
+      const result = await getPool().query<{
+        procedure_exists: boolean;
+        service_role: boolean;
+        authenticated: boolean;
+        anon: boolean;
+        security_definer: boolean;
+      }>(
+        `select
+           to_regprocedure($1) is not null as procedure_exists,
+           has_function_privilege('service_role', $1, 'EXECUTE') as service_role,
+           has_function_privilege('authenticated', $1, 'EXECUTE') as authenticated,
+           has_function_privilege('anon', $1, 'EXECUTE') as anon,
+           coalesce((select prosecdef from pg_proc where oid = to_regprocedure($1)), false) as security_definer`,
+        [signature],
+      );
+      expect(result.rows[0]).toEqual({
+        procedure_exists: true,
+        service_role: serviceRole,
+        authenticated,
+        anon,
+        security_definer: true,
+      });
+    }
+  });
+
+  it('rebuilds project attachments as a private, server-controlled bucket', async () => {
+    const bucket = await getPool().query<{
+      public: boolean;
+      file_size_limit: number;
+      allowed_mime_types: string[];
+    }>(
+      `select public, file_size_limit::integer, allowed_mime_types
+       from storage.buckets where id = 'project-attachments'`,
+    );
+    expect(bucket.rows).toHaveLength(1);
+    expect(bucket.rows[0]).toEqual({
+      public: false,
+      file_size_limit: 5 * 1024 * 1024,
+      allowed_mime_types: [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'text/plain',
+      ],
+    });
+
+    const policies = await getPool().query<{ policyname: string }>(
+      `select policyname from pg_policies
+       where schemaname = 'storage'
+         and tablename = 'objects'
+         and (qual like '%project-attachments%' or with_check like '%project-attachments%')`,
+    );
+    expect(policies.rows).toEqual([]);
+  });
+});

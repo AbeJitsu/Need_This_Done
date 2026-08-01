@@ -27,7 +27,7 @@ the entire hosted database can be replaced or restored from the repository.
 
 - `supabase status`: local Supabase is running.
 - Local catalog query: the migration-built `public` schema contains **69 tables**.
-- `supabase migration list`: local and hosted histories match through `072`; only `073` is local-only.
+- `supabase migration list`: local and hosted histories matched through `072`; `073` was local-only at audit time.
 - `supabase db diff --linked --schema public`: fresh read-only comparison completed.
 - Runtime caller scan: current non-test application code was checked for Supabase table and RPC use.
 - Roadmap and release-evidence review: retained scope was evaluated against the human-led AI Growth Employee mission.
@@ -70,12 +70,18 @@ removal, inspect dependencies and confirm that no retained table, function, view
 them. Any hosted cleanup is destructive and requires its own backup, reviewed migration, dry run,
 and explicit approval.
 
-### Expected pending change: migration 073
+### Expected pending changes: migrations 073 and 074
 
 `073_secure_google_calendar_tokens.sql` is intentionally local-only. The linked diff therefore shows
 the encrypted token columns and key-aware token functions as absent from hosted Supabase. This is
 planned migration state, not unexplained drift. Hosted deployment remains blocked until a server-only
 `CALENDAR_TOKEN_ENCRYPTION_KEY` exists and a separate deployment is approved.
+
+`074_create_private_project_attachments_bucket.sql` was added after this audit exposed that the
+retained private attachment bucket had no migration. A fresh local reset now reproduces its 5 MB
+limit and allowed file types without granting browser-direct object access. It remains pending and
+requires separate hosted review and approval. A read-only hosted dry run lists exactly `073` and
+`074`; neither migration was applied.
 
 ### Other local-only legacy shape
 
@@ -131,7 +137,9 @@ backups are the reproducible assets.
 
 ## Safe execution order
 
-1. Create the retained schema-manifest test and make it pass after a fresh local reset.
+1. **Completed locally 2026-08-01:** create the retained schema-manifest test and make it pass after
+   a fresh local reset. The test now covers 16 retained RLS tables, critical columns, policies,
+   constraints, RPC signatures/grants, and the private project-attachment bucket.
 2. Resolve the active `orders` analytics contradiction in one focused application commit.
 3. Remove confirmed orphaned marketplace/media callers in separate focused commits.
 4. Add a new local-only cleanup migration for the 22 already-absent-hosted legacy tables and other

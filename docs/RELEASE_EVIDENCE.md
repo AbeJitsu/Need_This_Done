@@ -13,7 +13,7 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 | Hosted payment handoff works. | Test-mode Stripe contract and checkout smoke test for every enabled offering. | Fallback path is tested; hosted test links are owner-deferred. | Claim only the project-request fallback. |
 | Transactional email succeeds or exposes a retryable failure. | Provider contract tests, durable failure records/replay tests, and one controlled pre-release delivery check. | Immediate provider retry exists, but durable failure replay was removed because its table and faithful message replay did not exist. | Live delivery and durable recovery are not yet claimable. |
 | Retained public and workspace routes work on desktop and mobile. | Playwright smoke tests with no console errors, overflow, accessibility violations, or unexplained skips. | Core smoke and employee bypass suites passed; report checks need a fixture. | Partial. |
-| The code is safe to promote. | Lint, TypeScript, unit tests, accessibility tests, production build, retirement guards, database gate when applicable, and `git diff --check`. | Local gates passed for migration `072`; CI previously enforced only a subset. | Gate is being strengthened. |
+| The code is safe to promote. | Lint, TypeScript, unit tests, accessibility tests, production build, retirement guards, database gate when applicable, and `git diff --check`. | The deterministic code gate passes with zero skips. After a fresh reset through pending `074`, the database gate passes 29/29 checks including the retained-schema manifest. | Local gates proven; hosted behavior and deployment approval remain separate. |
 
 ## Release gates
 
@@ -23,3 +23,7 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 4. External services require deterministic contract tests and a controlled pre-release check. Tests must not print production credentials or create unapproved customer data.
 5. A warning or skipped required check is a failed release unless its owner, reason, scope, and removal date are recorded in `docs/PROJECT_STATUS.md`.
 6. No generated local/hosted schema diff may be applied without classifying every statement against the retained product boundary.
+
+The retained-schema manifest is mandatory within `npm run verify:database`. It asserts 16 retained
+RLS tables, critical columns, isolation policies, decision and cascade constraints, exact RPC grants,
+and the private project-attachment bucket against a real local PostgreSQL catalog.
