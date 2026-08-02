@@ -118,7 +118,6 @@ async function createFixture(): Promise<Fixture> {
 
 async function login(page: Page, user: FixtureUser, employeeName = 'Authenticated Growth Employee') {
   await page.goto('/login');
-  await page.getByRole('button', { name: /use the recovery path/i }).click();
   await page.getByLabel('Email Address').fill(user.email);
   await page.getByLabel('Password').fill(user.password);
   await page.getByRole('button', { name: 'Sign In', exact: true }).click();

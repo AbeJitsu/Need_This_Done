@@ -324,7 +324,6 @@ export async function loginAsAdmin(page: Page) {
   }
 
   await page.goto('/login');
-  await page.getByRole('button', { name: /use the recovery path/i }).click();
   await fillFormField(page, 'Email', adminEmail);
   await fillFormField(page, 'Password', adminPassword);
   await submitForm(page, 'Sign In');
@@ -344,7 +343,6 @@ export async function loginAsUser(page: Page) {
   }
 
   await page.goto('/login');
-  await page.getByRole('button', { name: /use the recovery path/i }).click();
   await fillFormField(page, 'Email', userEmail);
   await fillFormField(page, 'Password', userPassword);
   await submitForm(page, 'Sign In');

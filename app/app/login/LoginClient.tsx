@@ -24,11 +24,10 @@ export default function LoginClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
 
   // Derive a key for AnimatePresence mode transitions
-  const modeKey = isForgotPassword ? 'forgot' : isRecoveryMode ? 'recovery' : 'google';
+  const modeKey = isForgotPassword ? 'forgot' : 'signin';
 
   // ============================================================================
   // Redirect if Already Logged In
@@ -46,8 +45,6 @@ export default function LoginClient() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!isRecoveryMode) return;
 
     if (!email) {
       setError('We\'ll need your email to proceed');
@@ -160,10 +157,10 @@ export default function LoginClient() {
     return null;
   }
 
-  const title = getAuthTitle(isForgotPassword, isRecoveryMode);
+  const title = getAuthTitle(isForgotPassword, false);
 
   // Uppercase label text based on mode
-  const labelText = isForgotPassword || isRecoveryMode ? 'Account Recovery' : 'Sign In';
+  const labelText = isForgotPassword ? 'Account Recovery' : 'Sign In';
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-slate-900">
@@ -234,7 +231,7 @@ export default function LoginClient() {
                 </span>
               </h1>
               <p className="text-slate-400">
-                {getAuthDescription(isForgotPassword, isRecoveryMode)}
+                {getAuthDescription(isForgotPassword, false)}
               </p>
             </div>
           </FadeIn>
@@ -256,7 +253,7 @@ export default function LoginClient() {
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.25, ease: 'easeInOut' }}
                 >
-                  {!isRecoveryMode && (
+                  {!isForgotPassword && (
                     <div className="space-y-5">
                       {error && (
                         <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-sm">
@@ -282,25 +279,18 @@ export default function LoginClient() {
                         </svg>
                         Continue with Google
                       </button>
-                      <p className="text-center text-sm text-slate-400">
-                        Need emergency account recovery?{' '}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsRecoveryMode(true);
-                            setError('');
-                            setSuccessMessage('');
-                          }}
-                          className="text-blue-400 hover:text-blue-300 transition-colors"
-                        >
-                          Use the recovery path
-                        </button>
-                      </p>
                     </div>
                   )}
 
-                  {isRecoveryMode && (
                   <form onSubmit={handleAuth} className="space-y-5">
+
+                    {!isForgotPassword && (
+                      <div className="flex items-center gap-3 py-1" aria-hidden="true">
+                        <div className="h-px flex-1 bg-white/[0.12]" />
+                        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">or use email</span>
+                        <div className="h-px flex-1 bg-white/[0.12]" />
+                      </div>
+                    )}
 
                     {/* Error Message */}
                     {error && (
@@ -388,9 +378,9 @@ export default function LoginClient() {
                         : isForgotPassword ? 'Send Reset Link' : 'Sign In'}
                     </motion.button>
 
-                    {/* Toggle Mode */}
-                    <div className="text-center pt-2">
-                      {isForgotPassword ? (
+                    {/* Return from password reset mode */}
+                    {isForgotPassword && (
+                      <div className="text-center pt-2">
                         <button
                           type="button"
                           onClick={() => {
@@ -401,25 +391,11 @@ export default function LoginClient() {
                           disabled={isSubmitting}
                           className="text-sm text-slate-400 hover:text-white transition-colors"
                         >
-                          &larr; Back to Google Sign-In
+                          &larr; Back to Sign In
                         </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsRecoveryMode(false);
-                            setError('');
-                            setSuccessMessage('');
-                          }}
-                          disabled={isSubmitting}
-                          className="text-sm text-slate-400 hover:text-white transition-colors"
-                        >
-                          &larr; Back to Google Sign-In
-                        </button>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </form>
-                  )}
                 </motion.div>
               </AnimatePresence>
             </div>

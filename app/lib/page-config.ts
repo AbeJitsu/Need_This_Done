@@ -941,7 +941,7 @@ blog: {
         { title: 'Browse Our Services', icon: '🔍', group: 'getting-started', content: 'Explore what we offer and find the right fit for your needs:\n\n• Visit the Services page to see our full range of professional services\n• Each service includes detailed descriptions, pricing, and what\'s included\n• Check our Pricing page to compare packages and find the best value\n• Use our FAQ for quick answers to common questions' },
         { title: 'Request a Consultation', icon: '📅', group: 'getting-started', content: 'Ready for expert guidance?\n\n1. Visit the Contact page\n2. Tell us what you need and choose your preferred consultation timing\n3. Submit your request\n4. We\'ll review the details and follow up with the next step' },
         { title: 'Start a Project', icon: '🚀', group: 'getting-started', content: 'Here\'s how to get started:\n\n1. Review the Services and Pricing pages\n2. Choose a package or tell us about custom work\n3. Submit the project request\n4. We\'ll confirm scope, price, and next steps before work begins' },
-        { title: 'Create Your Account', icon: '👤', group: 'account', content: 'An account gives you access to your project workspace:\n\n• Sign in with Google for one-click access\n• Or create an account with email and password\n• An operator can securely link your account to your project\n• Access your dashboard anytime to check project progress' },
+        { title: 'Access Your Account', icon: '👤', group: 'account', content: 'An account gives you access to your project workspace:\n\n• Sign in with Google using the email linked to your workspace\n• An operator can securely link your account to your project\n• Use password recovery only for an existing recovery-enabled account\n• Access your dashboard anytime to check project progress' },
         { title: 'Your Dashboard', icon: '📊', group: 'account', content: 'Once your account is linked to a project, your dashboard is your home base:\n\n• View project status and details\n• Read and add project comments\n• Access project files and delivery handoffs\n• Start another project when you are ready' },
         { title: 'Explore Our Content', icon: '📚', group: 'explore', content: 'Stay informed with our regularly updated content:\n\n• Blog: Tips, insights, and industry updates\n• How It Works: Step-by-step breakdown of our process\n• FAQ: Quick answers to common questions' },
         { title: 'Project Updates', icon: '✏️', group: 'admin', content: 'Project operators manage work from the protected dashboard:\n\n• Review new project requests\n• Update project status and notes\n• Link an existing client account after confirming the exact email\n• Publish delivery handoffs and retry failed notifications\n• Keep human approval in control of report follow-up' },
@@ -1005,10 +1005,10 @@ blog: {
     defaults: {
       header: {
         signIn: { title: 'Welcome Back', description: 'Good to see you! Sign in to check on your projects' },
-        signUp: { title: 'Join Us', description: 'Create an account to track your projects and stay in the loop' },
+        signUp: { title: 'Account Access', description: 'Use Google to access an operator-linked project workspace' },
         forgotPassword: { title: 'Reset Your Password', description: "No worries. We'll send you a reset link" },
       },
-      buttons: { signIn: 'Sign In', signUp: 'Create Account', resetPassword: 'Send Reset Link', googleSignIn: 'Sign in with Google' },
+      buttons: { signIn: 'Sign In', signUp: 'Request Access', resetPassword: 'Send Reset Link', googleSignIn: 'Sign in with Google' },
       links: { backToHome: '← Back to Home', seeWhatWeDo: 'See what we do', getFreeQuote: 'Get a free quote' },
     } as LoginPageContent,
   },
