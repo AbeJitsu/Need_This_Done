@@ -11,7 +11,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ```text
 production/origin/production 8b8d429          -> old hosted production product
-local dev                    4f68790+         -> new candidate with uncommitted dependency patch
+local dev                    HEAD             -> proven new candidate
 origin/dev                   4f68790          -> remote candidate before dependency patch
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
