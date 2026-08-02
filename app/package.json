@@ -23,7 +23,7 @@
     "test:schema-manifest": "RUN_LOCAL_SUPABASE_TESTS=true vitest run --config vitest.unit.config.ts __tests__/lib/retained-schema-manifest.test.ts",
     "test:consultation-integration": "vitest run --config vitest.integration.config.ts __tests__/api/consultation-persistence.integration.test.ts",
     "test:retained-smoke": "env -u NO_COLOR NODE_ENV=development playwright test e2e/retained-core-smoke.spec.ts --project=public --project=public-mobile",
-    "test:employee-workspace": "env -u NO_COLOR NODE_ENV=development playwright test e2e/ai-employee-workspace.spec.ts --project=chromium",
+    "test:employee-workspace": "env -u NO_COLOR NODE_ENV=development playwright test e2e/ai-employee-workspace.spec.ts --project=auth-contract",
     "test:quick": "npm run test:unit && npm run test:a11y",
     "verify:code": "npm run lint && npm run type-check && npm run test:unit:required && npm run test:a11y && npm run build",
     "verify:database": "cd .. && ./scripts/use-env.sh local && cd app && npm run test:schema-manifest && npm run test:security && RUN_LOCAL_SUPABASE_TESTS=true npm run test:unit -- __tests__/lib/ai-employee-rls.test.ts && npm run test:consultation-integration",

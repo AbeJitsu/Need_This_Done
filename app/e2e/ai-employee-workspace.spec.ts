@@ -1,4 +1,11 @@
 import { expect, test } from '@playwright/test';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+
+const localUrl = 'http://127.0.0.1:54321';
+const password = 'local-workspace-ui-123!';
+const email = `workspace-ui-${Date.now()}@example.test`;
+let admin: SupabaseClient;
+let userId: string;
 
 const workspace = {
   customer: { id: 'customer-1', name: 'NeedThisDone' },
@@ -35,12 +42,40 @@ const workspace = {
   operatorMinutes: 20,
 };
 
-test.beforeEach(async ({ page }) => {
+test.beforeAll(async () => {
+  if (process.env.ENV_TARGET !== 'local' || process.env.NEXT_PUBLIC_SUPABASE_URL !== localUrl) {
+    throw new Error('Employee workspace UI proof is local-only.');
+  }
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceRoleKey) throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY for workspace UI proof.');
+
+  admin = createClient(localUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+  const { data, error } = await admin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+  });
+  if (error || !data.user) throw new Error(error?.message || 'Could not create workspace UI fixture user.');
+  userId = data.user.id;
+});
+
+test.afterAll(async () => {
+  if (admin && userId) await admin.auth.admin.deleteUser(userId);
+});
+
+test.beforeEach(async ({ page }, testInfo) => {
   await page.route('**/api/employee/workspace', (route) => route.fulfill({
     status: 200,
     contentType: 'application/json',
     body: JSON.stringify({ workspace }),
   }));
+  const loginResponse = await page.request.post('/api/auth/login', {
+    headers: { 'x-forwarded-for': `127.0.0.${testInfo.workerIndex + 10}` },
+    data: { email, password },
+  });
+  expect(loginResponse.ok()).toBe(true);
 });
 
 test('renders capped evidence-first queues and records a decision request', async ({ page }) => {
