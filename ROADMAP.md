@@ -77,8 +77,8 @@ Adapters authenticate every call and verify callbacks. A retry reuses the idempo
 | 2. Core safety and workflow foundation | Complete | Fix analyzer and lead-capture risks; define durable, authenticated workflow records and operator-only access. | Phases 0–1. | Security and data-flow tests pass; workflows can be reviewed safely without external automation. |
 | 3. Focused operator and client workspace | Complete | Deliver the Supabase-Auth dashboard for Abe and Andrea, project collaboration, report queue, appointments, decision cards, existing-account client access, and GitHub handoffs. | Phase 2. | Operators can run the daily loop from one authenticated workspace; a client can access only projects explicitly linked to their existing exact-email account and can receive project-scoped GitHub handoffs. GitHub repository membership remains managed in GitHub. |
 | 4. Hosted payments and service boundary | Deferred external validation | Replace custom commerce checkout with repository-owned offerings and Stripe Payment Links, invoices, subscriptions, and Customer Portal. | Phase 3. | Hosted payment paths reconcile reliably and no retained workflow depends on order-centric checkout. |
-| 5. Retire legacy systems | **Current — application retirement gate in progress** | Remove Medusa/Railway, product reviews, LMS, editor, old commerce, chatbot/embeddings, changelog, database-blog/media administration, design tools, and obsolete APIs, jobs, tests, providers, and docs. | Phase 3 plus caller-removal evidence; destructive schema cleanup remains separately reviewed. | Runtime callers and deployment files are absent; repository-owned blog content and redirects are verified; the complete code gate passes; historical schema cleanup remains post-cutover work. |
-| 6. AI employee customer boundary | **Current — deployed; hosted behavior verification pending** | Deliver durable customer membership, employee roles, day-specific capped queues, immutable versioned decisions, outcomes, schedules, and RLS isolation. | Phase 5 and additive migration review. | The workspace reads durable records, owner/manager decisions update atomically, viewers are denied, exact retries are idempotent, and behavioral cross-customer tests pass before migration deployment. |
+| 5. Retire legacy systems | **Local contract complete; hosted cleanup approval pending** | Remove Medusa/Railway, product reviews, LMS, editor, old commerce, chatbot/embeddings, changelog, database-blog/media administration, design tools, and obsolete APIs, jobs, tests, providers, docs, tables, views, functions, triggers, policies, and buckets. | Phase 3 plus caller-removal evidence; hosted destructive cleanup remains separately reviewed. | Runtime callers and deployment files are absent; repository-owned blog content and redirects are verified; migrations `076`–`078` remove classified local residue with `RESTRICT`; the complete code/database/browser gate passes. Hosted backups, dependency inspection, dry runs, and approvals remain. |
+| 6. AI employee customer boundary and measurement | **Local retained contract complete; hosted behavior verification pending** | Deliver durable customer membership, employee roles, day-specific capped queues, immutable versioned decisions, operational outcomes, financial revenue/cost outcomes, daily net scorecards, schedules, and RLS isolation. | Phase 5 and additive migration review. | The workspace reads durable records, owner/manager decisions update atomically, viewers are denied, exact retries are idempotent, financial amounts are positive integer cents with ISO currencies and cost categories, and authenticated cross-customer tests pass before hosted migration deployment. |
 | 7. NeedThisDone internal pilot | Planned — production promotion paused | Provision NeedThisDone as the first customer and operate the three daily check-ins against real audit and follow-up work. | Phase 6 deployed and verified. | Each queue is routinely cleared in 15–20 minutes and decisions, manual sends, replies, outcomes, and next actions are recorded. |
 | 8. Prospect and audit intelligence | Planned | Turn approved discovery and Playwright/Lighthouse audits into prioritized, evidence-backed opportunities. | Phase 7. | New opportunities and audit findings are durable, reviewable, and attributable to a workflow run. |
 | 9. Approval-based outreach operations | Planned | Prepare follow-up drafts and tracking through adapters while keeping Abe and Andrea in the approval and sending loop. | Phase 8 and a ready adapter. | Every outreach action has an approver, a durable history, and an idempotent outcome; sending remains manual unless explicitly changed. |
@@ -86,15 +86,22 @@ Adapters authenticate every call and verify callbacks. A retry reuses the idempo
 
 Phase 1 evidence: [system audit](docs/audits/2026-07-24-system-audit.md) and [owner-dashboard inventory](docs/audits/2026-07-25-owner-dashboard-inventory.md). Those documents preserve the detailed baseline; this roadmap is the decision and sequencing record.
 
+### Current finish line and next gate
+
+The current finish line is a reproducible local retained database and human-led workspace that measures progress toward net $500/day without autonomous outreach. Local migrations `001`–`078` now rebuild exactly the 16 retained public tables, including the private project-attachment bucket and encrypted Calendar token contract. The sanitized reset fixture proves intake → audit → approved work item → outcome → daily scorecard; the workspace reports gross revenue, categorized costs, net revenue, funnel movement, operator minutes, and per-currency progress toward the goal.
+
+The next gate is hosted retained-contract parity, not production replacement. It requires restricted schema/data backups with checksums, Calendar secret provisioning, an approved maintenance window, hosted verification of `073` and `074`, separate dry runs and approvals for destructive `076`–`078`, authenticated anonymous/role/cross-customer checks, removal of temporary fixtures, and a final local/hosted parity review. Only then may the `dev` → `production` review and merge proceed.
+
 Phase 4's repository catalog, guarded hosted-link handoff, and test-link tooling remain in place, but Stripe test creation and end-to-end validation are unfinished and owner-deferred. A read-only hosted check on 2026-07-26 confirmed zero `orders` and `payments` rows; `appointment_requests`, `appointment_reminders`, and `payment_attempts` are absent. Phase 5 commerce application-code retirement may therefore proceed without a historical-data migration or Stripe validation, provided retained pricing and consultation callers are converted first. Destructive schema cleanup remains a separate reviewed step after all callers are gone.
 
-Phase 6 passed its disposable local-database gate on 2026-07-29 using Docker Desktop
-and the Supabase CLI. Fresh migration reset, database lint, customer isolation,
-role denial, idempotency, concurrency, queue uniqueness, immutable history, successor
-creation, and privileged cleanup checks passed. Migration `072` was then dry-run,
-separately approved, and applied to hosted Supabase. Its objects no longer appear in a
-linked schema diff. A broader diff exposed historical local/hosted drift outside `072`;
-that generated destructive diff must never be applied blindly.
+Phase 6 passed its disposable local-database gate on 2026-08-01 using Docker Desktop
+and the Supabase CLI. Fresh migration reset through `078`, database lint, exact 16-table
+manifest, customer isolation, role denial, idempotency, concurrency, queue uniqueness,
+immutable history, successor creation, financial validation, per-currency daily net,
+and privileged cleanup checks passed. The sanitized seed restores the retained workflow
+without production identities or customer content. Migration `072` was previously
+dry-run, separately approved, and applied to hosted Supabase. Migrations `073`–`078`
+remain pending hosted review; the generated destructive diff must never be applied blindly.
 
 The classified [Supabase drift register](docs/audits/2026-08-01-supabase-drift-register.md)
 is the authority for local-replacement confidence and database retirement sequencing. Local
@@ -102,11 +109,12 @@ and hosted Supabase must match the retained schema and behavior contract; retire
 objects are classified and removed through separately reviewed migrations rather than copied
 between environments merely to force a zero-line whole-schema diff.
 
-Production application promotion remains paused while the release evidence is made
-truthful and repeatable. The required proof for each retained claim is tracked in
-[the release evidence matrix](docs/RELEASE_EVIDENCE.md). Phase 7 starts with a controlled
-internal pilot only after the code gate, real local-RLS gate, retained browser workflows,
-and hosted `072` behavior checks all pass without unexplained warnings or skips.
+Production application promotion remains paused while hosted parity and release evidence
+are completed. The required proof for each retained claim is tracked in [the release
+evidence matrix](docs/RELEASE_EVIDENCE.md). Phase 7 starts with a controlled internal
+pilot only after the code gate, real local-RLS gate, retained browser workflows, hosted
+`072`–`078` behavior/parity checks, and the production PR review all pass without
+unexplained warnings or skips.
 
 The final retained hosted contract contains the 16 RLS tables `projects`,
 `project_comments`, `project_github_handoffs`, `site_reports`, `user_roles`,

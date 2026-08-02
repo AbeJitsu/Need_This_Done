@@ -61,7 +61,7 @@ export async function GET() {
       .eq('employee_id', employee.id).eq('scheduled_date', scheduledDate)
       .order('priority', { ascending: true }).order('created_at', { ascending: true }),
     supabase.from('ai_employee_outcomes')
-      .select('id, kind, value, notes, occurred_at').eq('employee_id', employee.id)
+      .select('id, kind, value, amount_cents, currency, cost_category, notes, occurred_at').eq('employee_id', employee.id)
       .order('occurred_at', { ascending: false }).limit(100),
   ]);
 
@@ -80,6 +80,29 @@ export async function GET() {
     return NextResponse.json({ error: 'Employee activity could not be loaded.' }, { status: 500 });
   }
 
+  const outcomes = outcomeResult.data || [];
+  const todaysOutcomes = outcomes.filter((outcome) => outcome.occurred_at.slice(0, 10) === scheduledDate);
+  const scorecards = new Map<string, { currency: string; grossRevenueCents: number; totalCostCents: number }>();
+  for (const outcome of todaysOutcomes) {
+    if ((outcome.kind !== 'revenue' && outcome.kind !== 'cost') || !outcome.currency || !outcome.amount_cents) continue;
+    const scorecard = scorecards.get(outcome.currency) || {
+      currency: outcome.currency, grossRevenueCents: 0, totalCostCents: 0,
+    };
+    if (outcome.kind === 'revenue') scorecard.grossRevenueCents += outcome.amount_cents;
+    else scorecard.totalCostCents += outcome.amount_cents;
+    scorecards.set(outcome.currency, scorecard);
+  }
+
+  const funnel = { leads: 0, replies: 0, meetings: 0, projects: 0 };
+  let operatorMinutes = 0;
+  for (const outcome of todaysOutcomes) {
+    if (outcome.kind === 'lead') funnel.leads += Number(outcome.value);
+    if (outcome.kind === 'reply') funnel.replies += Number(outcome.value);
+    if (outcome.kind === 'meeting') funnel.meetings += Number(outcome.value);
+    if (outcome.kind === 'project') funnel.projects += Number(outcome.value);
+    if (outcome.kind === 'time_saved') operatorMinutes += Number(outcome.value);
+  }
+
   return NextResponse.json({
     workspace: {
       customer,
@@ -90,7 +113,14 @@ export async function GET() {
       schedules: scheduleResult.data || [],
       workItems,
       decisions: decisionResult.data || [],
-      outcomes: outcomeResult.data || [],
+      outcomes,
+      dailyScorecards: [...scorecards.values()].map((scorecard) => ({
+        ...scorecard,
+        netRevenueCents: scorecard.grossRevenueCents - scorecard.totalCostCents,
+        goalCents: 50_000,
+      })).sort((left, right) => left.currency.localeCompare(right.currency)),
+      funnel,
+      operatorMinutes,
     },
   });
 }

@@ -128,4 +128,42 @@ localDescribe.sequential('AI employee customer isolation and decision behavior',
     await asUser(ownerA, `select public.record_ai_employee_decision($1, 'approve', '', $2, null)`, [cleanupWork, '40000000-0000-4000-8000-0000000000d1']);
     await expect(getPool().query(`delete from public.customer_accounts where id = $1`, [cleanupCustomer])).resolves.toBeDefined();
   });
+
+  it('records isolated financial outcomes and calculates daily net by currency', async () => {
+    await getPool().query(`
+      insert into public.ai_employee_outcomes
+        (employee_id, kind, value, amount_cents, currency, cost_category, notes)
+      values
+        ($1, 'revenue', 1, 75000, 'USD', null, 'Approved project'),
+        ($1, 'cost', 1, 12000, 'USD', 'contractor', 'Delivery help'),
+        ($1, 'cost', 1, 3000, 'USD', 'model', 'Model usage'),
+        ($1, 'revenue', 1, 20000, 'EUR', null, 'European project'),
+        ($1, 'lead', 3, null, null, null, 'Qualified leads'),
+        ($2, 'revenue', 1, 99900, 'USD', null, 'Other customer')
+    `, [employeeA, employeeB]);
+
+    const own = await asUser<{ currency: string; gross: string; costs: string; net: string }>(ownerA, `
+      select currency,
+        sum(amount_cents) filter (where kind = 'revenue')::text as gross,
+        coalesce(sum(amount_cents) filter (where kind = 'cost'), 0)::text as costs,
+        (coalesce(sum(amount_cents) filter (where kind = 'revenue'), 0)
+          - coalesce(sum(amount_cents) filter (where kind = 'cost'), 0))::text as net
+      from public.ai_employee_outcomes
+      where occurred_at::date = current_date and kind in ('revenue', 'cost')
+      group by currency order by currency
+    `);
+    expect(own).toEqual([
+      { currency: 'EUR', gross: '20000', costs: '0', net: '20000' },
+      { currency: 'USD', gross: '75000', costs: '15000', net: '60000' },
+    ]);
+    const foreign = await asUser<{ id: string }>(ownerB, `select id from public.ai_employee_outcomes where employee_id = $1`, [employeeA]);
+    expect(foreign).toEqual([]);
+  });
+
+  it('rejects invalid financial and nonfinancial field combinations', async () => {
+    await expect(getPool().query(`insert into public.ai_employee_outcomes (employee_id, kind, amount_cents, currency) values ($1, 'revenue', -1, 'USD')`, [employeeA])).rejects.toThrow();
+    await expect(getPool().query(`insert into public.ai_employee_outcomes (employee_id, kind, amount_cents, currency) values ($1, 'revenue', 100, 'usd')`, [employeeA])).rejects.toThrow();
+    await expect(getPool().query(`insert into public.ai_employee_outcomes (employee_id, kind, amount_cents, currency) values ($1, 'lead', 100, 'USD')`, [employeeA])).rejects.toThrow();
+    await expect(getPool().query(`insert into public.ai_employee_outcomes (employee_id, kind, amount_cents, currency) values ($1, 'cost', 100, 'USD')`, [employeeA])).rejects.toThrow();
+  });
 });

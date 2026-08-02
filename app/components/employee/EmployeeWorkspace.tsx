@@ -36,6 +36,10 @@ function readable(value: unknown) {
   return String(value);
 }
 
+function money(cents: number, currency: string) {
+  return new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(cents / 100);
+}
+
 function EmptyState({ title, description }: { title: string; description: string }) {
   return (
     <div className="rounded-3xl border border-dashed border-[#183229]/25 bg-white/60 px-6 py-14 text-center">
@@ -204,8 +208,23 @@ export default function EmployeeWorkspace() {
           )}
 
           {view === 'outcomes' && (
-            workspace.outcomes.length === 0 ? <EmptyState title="No outcomes recorded yet" description="Leads, replies, meetings, projects, and time saved will appear after an operator closes the loop." /> :
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{workspace.outcomes.map((outcome) => <article key={outcome.id} className="rounded-2xl border border-[#183229]/15 bg-white p-5"><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">{outcome.kind.replace('_', ' ')}</p><p className="mt-3 text-3xl font-black">{outcome.value}</p>{outcome.notes && <p className="mt-2 text-sm text-[#50675e]">{outcome.notes}</p>}<time className="mt-4 block text-xs text-[#50675e]">{new Date(outcome.occurred_at).toLocaleDateString()}</time></article>)}</div>
+            <div className="space-y-6">
+              <section aria-labelledby="daily-scorecard-title">
+                <h2 id="daily-scorecard-title" className="text-2xl font-black">Today&apos;s scorecard</h2>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  {workspace.dailyScorecards.map((scorecard) => [
+                    ['Gross revenue', money(scorecard.grossRevenueCents, scorecard.currency)],
+                    ['Costs', money(scorecard.totalCostCents, scorecard.currency)],
+                    ['Net revenue', money(scorecard.netRevenueCents, scorecard.currency)],
+                    ['Net $500/day progress', `${Math.round((scorecard.netRevenueCents / scorecard.goalCents) * 100)}%`],
+                  ].map(([label, value]) => <article key={`${scorecard.currency}-${label}`} className="rounded-2xl border border-[#183229]/15 bg-white p-5"><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">{label} · {scorecard.currency}</p><p className="mt-3 text-2xl font-black">{value}</p></article>))}
+                  <article className="rounded-2xl border border-[#183229]/15 bg-white p-5"><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Funnel movement</p><p className="mt-3 font-black">{workspace.funnel.leads} leads · {workspace.funnel.replies} replies · {workspace.funnel.meetings} meetings · {workspace.funnel.projects} projects</p></article>
+                  <article className="rounded-2xl border border-[#183229]/15 bg-white p-5"><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Operator time</p><p className="mt-3 text-2xl font-black">{workspace.operatorMinutes} minutes</p></article>
+                </div>
+              </section>
+              {workspace.outcomes.length === 0 ? <EmptyState title="No outcomes recorded yet" description="Revenue, costs, funnel movement, and time spent will appear after an operator closes the loop." /> :
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{workspace.outcomes.map((outcome) => <article key={outcome.id} className="rounded-2xl border border-[#183229]/15 bg-white p-5"><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">{outcome.kind.replace('_', ' ')}</p><p className="mt-3 text-3xl font-black">{outcome.amount_cents && outcome.currency ? money(outcome.amount_cents, outcome.currency) : outcome.value}</p>{outcome.cost_category && <p className="mt-2 text-sm capitalize text-[#50675e]">{outcome.cost_category} cost</p>}{outcome.notes && <p className="mt-2 text-sm text-[#50675e]">{outcome.notes}</p>}<time className="mt-4 block text-xs text-[#50675e]">{new Date(outcome.occurred_at).toLocaleDateString()}</time></article>)}</div>}
+            </div>
           )}
 
           {view === 'guardrails' && (

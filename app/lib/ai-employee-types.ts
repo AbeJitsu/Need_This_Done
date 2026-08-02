@@ -29,10 +29,21 @@ export interface EmployeeDecisionRecord {
 
 export interface EmployeeOutcome {
   id: string;
-  kind: 'lead' | 'reply' | 'meeting' | 'project' | 'time_saved';
+  kind: 'lead' | 'reply' | 'meeting' | 'project' | 'time_saved' | 'revenue' | 'cost';
   value: number;
+  amount_cents: number | null;
+  currency: string | null;
+  cost_category: 'model' | 'tooling' | 'payment' | 'advertising' | 'contractor' | 'delivery' | null;
   notes: string | null;
   occurred_at: string;
+}
+
+export interface EmployeeDailyScorecard {
+  currency: string;
+  grossRevenueCents: number;
+  totalCostCents: number;
+  netRevenueCents: number;
+  goalCents: number;
 }
 
 export interface EmployeeWorkspaceData {
@@ -51,4 +62,7 @@ export interface EmployeeWorkspaceData {
   workItems: EmployeeWorkItem[];
   decisions: EmployeeDecisionRecord[];
   outcomes: EmployeeOutcome[];
+  dailyScorecards: EmployeeDailyScorecard[];
+  funnel: { leads: number; replies: number; meetings: number; projects: number };
+  operatorMinutes: number;
 }

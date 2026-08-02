@@ -29,7 +29,10 @@ const workspace = {
     created_at: '2026-07-27T12:00:00.000Z',
   }],
   decisions: [],
-  outcomes: [{ id: 'outcome-1', kind: 'time_saved', value: 20, notes: 'Research preparation', occurred_at: '2026-07-27T12:00:00.000Z' }],
+  outcomes: [{ id: 'outcome-1', kind: 'time_saved', value: 20, amount_cents: null, currency: null, cost_category: null, notes: 'Research preparation', occurred_at: '2026-07-27T12:00:00.000Z' }],
+  dailyScorecards: [{ currency: 'USD', grossRevenueCents: 65000, totalCostCents: 15000, netRevenueCents: 50000, goalCents: 50000 }],
+  funnel: { leads: 3, replies: 2, meetings: 1, projects: 1 },
+  operatorMinutes: 20,
 };
 
 test.beforeEach(async ({ page }) => {
@@ -66,6 +69,8 @@ test('renders capped evidence-first queues and records a decision request', asyn
 test('shows outcomes and guardrails without horizontal overflow', async ({ page }) => {
   await page.goto('/employee');
   await page.getByRole('button', { name: 'Outcomes' }).click();
+  await expect(page.getByText('$500.00')).toBeVisible();
+  await expect(page.getByText('3 leads · 2 replies · 1 meetings · 1 projects')).toBeVisible();
   await expect(page.getByText('Research preparation')).toBeVisible();
   await page.getByRole('button', { name: 'Role & Guardrails' }).click();
   await expect(page.getByText('Send outreach without approval')).toBeVisible();

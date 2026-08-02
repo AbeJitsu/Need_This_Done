@@ -67,8 +67,19 @@ export function validateEnvironmentVariables(): void {
     NEXT_PUBLIC_SUPABASE_URL: {
       name: 'NEXT_PUBLIC_SUPABASE_URL',
       required: true,
-      validate: (v) => v.startsWith('https://') && v.includes('.supabase.co'),
-      errorMessage: 'Must be HTTPS URL pointing to supabase.co',
+      validate: (v) => {
+        try {
+          const url = new URL(v);
+          const hosted = url.protocol === 'https:' && url.hostname.endsWith('.supabase.co');
+          const local = process.env.NODE_ENV !== 'production'
+            && url.protocol === 'http:'
+            && ['127.0.0.1', 'localhost'].includes(url.hostname);
+          return hosted || local;
+        } catch {
+          return false;
+        }
+      },
+      errorMessage: 'Must be hosted Supabase HTTPS or a local-development URL',
     },
     NEXT_PUBLIC_SUPABASE_ANON_KEY: {
       name: 'NEXT_PUBLIC_SUPABASE_ANON_KEY',

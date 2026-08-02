@@ -51,9 +51,7 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
        join pg_namespace n on n.oid = c.relnamespace
        where n.nspname = 'public'
          and c.relkind = 'r'
-         and c.relname = any($1::text[])
        order by c.relname`,
-      [retainedTables],
     );
 
     expect(result.rows.map((row) => row.relname)).toEqual([...retainedTables]);
@@ -63,6 +61,9 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
   it('preserves the critical retained columns and types', async () => {
     const expected = [
       ['ai_employee_decisions', 'idempotency_key', 'uuid'],
+      ['ai_employee_outcomes', 'amount_cents', 'int8'],
+      ['ai_employee_outcomes', 'cost_category', 'text'],
+      ['ai_employee_outcomes', 'currency', 'text'],
       ['ai_employee_work_items', 'predecessor_work_item_id', 'uuid'],
       ['ai_employee_work_items', 'scheduled_date', 'date'],
       ['google_calendar_tokens', 'access_token_encrypted', 'bytea'],
@@ -108,6 +109,8 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
     const requiredConstraints = [
       'ai_employee_decisions_idempotency_key_key',
       'ai_employee_decisions_work_item_id_key',
+      'ai_employee_outcomes_financial_fields_check',
+      'ai_employee_outcomes_kind_check',
       'ai_employee_work_items_predecessor_work_item_id_key',
       'customer_memberships_pkey',
       'projects_consultation_preference_check',
@@ -143,6 +146,24 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
     );
     expect(cascading.rows).toHaveLength(6);
     expect(cascading.rows.every((row) => row.confdeltype === 'c')).toBe(true);
+  });
+
+  it('keeps the retained trigger set and no retired public views', async () => {
+    const triggers = await getPool().query<{ trigger_name: string }>(
+      `select trigger_name from information_schema.triggers
+       where trigger_schema = 'public'
+       order by trigger_name`,
+    );
+    expect(triggers.rows.map((row) => row.trigger_name)).toEqual([
+      'create_site_audit_workflow_run_after_insert',
+      'project_status_change_comment',
+      'update_google_calendar_tokens_updated_at',
+      'update_project_github_handoffs_updated_at',
+      'update_projects_updated_at',
+      'update_workflow_runs_updated_at',
+    ]);
+    const views = await getPool().query(`select table_name from information_schema.views where table_schema = 'public'`);
+    expect(views.rows).toEqual([]);
   });
 
   it('keeps retained RPC signatures and execution grants narrow', async () => {
@@ -211,5 +232,8 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
          and (qual like '%project-attachments%' or with_check like '%project-attachments%')`,
     );
     expect(policies.rows).toEqual([]);
+
+    const allBuckets = await getPool().query<{ id: string }>(`select id from storage.buckets order by id`);
+    expect(allBuckets.rows).toEqual([{ id: 'project-attachments' }]);
   });
 });

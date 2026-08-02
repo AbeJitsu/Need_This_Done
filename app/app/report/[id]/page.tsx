@@ -63,6 +63,11 @@ export default async function ReportPage({ params }: ReportPageProps) {
   }
 
   const domain = new URL(report.url).hostname;
+  const categories = Array.isArray(report.categories) ? report.categories : [];
+  const metrics = Array.isArray(report.metrics) ? report.metrics : [];
+  const accessibility = report.accessibility && typeof report.accessibility === 'object' && !Array.isArray(report.accessibility)
+    ? report.accessibility
+    : {};
 
   return (
     <div className="min-h-screen">
@@ -76,9 +81,9 @@ export default async function ReportPage({ params }: ReportPageProps) {
       />
 
       <div className="max-w-5xl mx-auto px-6 sm:px-8 md:px-12 py-12 space-y-12">
-        <ScoreBreakdown categories={report.categories} />
-        <AccessibilityCallout accessibility={report.accessibility} />
-        <PageMetricsTable metrics={report.metrics} />
+        <ScoreBreakdown categories={categories} />
+        <AccessibilityCallout accessibility={accessibility} />
+        <PageMetricsTable metrics={metrics} />
         <AIAnalysis aiAnalysis={report.ai_analysis} />
         <ReportCTA />
       </div>
