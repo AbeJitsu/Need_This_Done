@@ -18,7 +18,6 @@ export default function UserDashboard() {
     handleProjectUpdate,
   } = useDashboard({
     endpoint: '/api/projects/mine',
-    mockDataSlice: [0, 2],
   });
 
   return (

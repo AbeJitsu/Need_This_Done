@@ -5,13 +5,12 @@
 // patterns of verifying users, checking admin status, and validating
 // project access - reducing duplication across route handlers.
 //
-// Supports both Supabase sessions (email/password) and NextAuth sessions (Google OAuth)
+// Supabase Auth is the only application session accepted here. This is
+// intentional: the same identity must reach database RLS and API checks.
 
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { authOptions } from '@/lib/auth-options';
 import type { User } from '@supabase/supabase-js';
 
 // ============================================================================
@@ -32,46 +31,15 @@ type ProjectAccessResult = {
 // ============================================================================
 // Verify Authentication
 // ============================================================================
-// Checks if a user is authenticated via Supabase OR NextAuth.
+// Checks if a user is authenticated via Supabase Auth.
 // Returns the user object on success, or a 401 NextResponse error if not.
-//
-// Priority: Supabase session first (email/password), then NextAuth (Google OAuth)
 
 export async function verifyAuth(): Promise<AuthResult> {
-  // First, try Supabase session (email/password login)
   const supabase = await createSupabaseServerClient();
   const { data: { user: supabaseUser } } = await supabase.auth.getUser();
 
   if (supabaseUser) {
     return { user: supabaseUser };
-  }
-
-  // Fall back to NextAuth session (Google OAuth)
-  try {
-    const nextAuthSession = await getServerSession(authOptions);
-
-    if (nextAuthSession?.user?.id) {
-      // NextAuth user - construct a compatible User object
-      // The user.id from NextAuth is the Supabase user ID (synced during sign-in)
-      const sessionUser = nextAuthSession.user;
-      const pseudoUser = {
-        id: sessionUser.id,
-        email: sessionUser.email || undefined,
-        user_metadata: {
-          name: sessionUser.name,
-          avatar_url: sessionUser.image,
-          is_admin: sessionUser.isAdmin ?? false,
-        },
-        app_metadata: {},
-        aud: 'authenticated',
-        created_at: '',
-      } as User;
-
-      return { user: pseudoUser };
-    }
-  } catch (error) {
-    console.error('[verifyAuth] NextAuth session check failed:', error);
-    // Continue to return unauthorized error below
   }
 
   // No valid session found
@@ -89,31 +57,7 @@ export async function verifyAuth(): Promise<AuthResult> {
 // Checks if the user is authenticated AND has admin privileges.
 // Returns 401 for unauthenticated, 403 for non-admin users.
 //
-// E2E_ADMIN_BYPASS: When NEXT_PUBLIC_E2E_ADMIN_BYPASS=true in development,
-// bypasses auth and returns a fake admin user for testing.
-
 export async function verifyAdmin(): Promise<AuthResult> {
-  // E2E bypass for local testing (development only)
-  const e2eBypass = process.env.NEXT_PUBLIC_E2E_ADMIN_BYPASS === 'true' &&
-                    process.env.NODE_ENV === 'development';
-
-  if (e2eBypass) {
-    // Return a fake admin user for E2E testing
-    // Using a valid UUID format for database compatibility
-    const fakeAdminUser = {
-      id: '00000000-0000-0000-0000-000000000000',
-      email: 'e2e@test.local',
-      user_metadata: {
-        is_admin: true,
-        full_name: 'E2E Test Admin',
-      },
-      app_metadata: {},
-      aud: 'authenticated',
-      created_at: new Date().toISOString(),
-    } as User;
-    return { user: fakeAdminUser };
-  }
-
   const authResult = await verifyAuth();
 
   if (authResult.error) {

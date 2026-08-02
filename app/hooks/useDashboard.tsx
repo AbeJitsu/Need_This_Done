@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { mockProjects, isDevPreview } from '@/lib/mockProjects';
 import { alertColors } from '@/lib/colors';
 
 // ============================================================================
@@ -9,7 +8,8 @@ import { alertColors } from '@/lib/colors';
 // ============================================================================
 // What: Manages project fetching, loading states, and modal interactions.
 // Why: Both dashboards share the same core logic, just with different endpoints.
-// How: Accepts configuration for endpoint, filters, and mock data slicing.
+// How: Accepts configuration for endpoint and filters, then relies on the
+// authenticated API response for all project data.
 
 // ============================================================================
 // Type Definitions
@@ -31,7 +31,6 @@ export interface Project {
 
 export interface DashboardConfig {
   endpoint: string;
-  mockDataSlice?: [number, number?]; // [start, end] for mock data
   filters?: Record<string, string>;
 }
 
@@ -55,7 +54,7 @@ export interface DashboardActions {
 // ============================================================================
 
 export function useDashboard(config: DashboardConfig): DashboardState & DashboardActions {
-  const { endpoint, mockDataSlice, filters = {} } = config;
+  const { endpoint, filters = {} } = config;
 
   // State
   const [projects, setProjects] = useState<Project[]>([]);
@@ -71,16 +70,6 @@ export function useDashboard(config: DashboardConfig): DashboardState & Dashboar
   const fetchProjects = useCallback(async () => {
     setLoading(true);
     setError(null);
-
-    // Dev preview mode - use mock data
-    if (isDevPreview()) {
-      const data = mockDataSlice
-        ? mockProjects.slice(mockDataSlice[0], mockDataSlice[1])
-        : mockProjects;
-      setProjects(data);
-      setLoading(false);
-      return;
-    }
 
     try {
       // Build query string from filters
@@ -112,7 +101,7 @@ export function useDashboard(config: DashboardConfig): DashboardState & Dashboar
     } finally {
       setLoading(false);
     }
-  }, [endpoint, filters, mockDataSlice]);
+  }, [endpoint, filters]);
 
   // ============================================================================
   // Modal Handlers

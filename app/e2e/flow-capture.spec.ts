@@ -7,12 +7,11 @@ import { discoverPublicPages, discoverAdminPages } from './utils/page-discovery'
 // User Flow Capture - Screenshots + Copy for UX evaluation
 // ============================================================================
 // Purpose: Capture all pages for comprehensive site redesign planning
-// Run: npx playwright test flow-capture.spec.ts --project=e2e-bypass
+// Run: npx playwright test flow-capture.spec.ts --project=public
 // Output: ux-screenshots/services-page-redesign/
 //
-// NOTE: This test runs with E2E_ADMIN_BYPASS enabled, meaning user is logged in.
-// Public pages are captured. Admin pages are captured as authenticated user.
-// The /login page redirects to /dashboard when authenticated, so we capture that instead.
+// Public pages are captured anonymously. Admin pages require the normal saved
+// auth state when this capture is run with an authenticated project.
 //
 // RULE: Tests must be FLEXIBLE - auto-discover pages.
 // See: .claude/rules/testing-flexibility.md
@@ -51,7 +50,7 @@ test('Capture public pages', async ({ page }) => {
 });
 
 // ============================================================================
-// Admin Pages Capture (requires auth - uses E2E_ADMIN_BYPASS)
+// Admin Pages Capture (requires the normal saved auth state)
 // ============================================================================
 test('Capture admin pages', async ({ page }) => {
   test.setTimeout(120000); // 2 minutes - capturing many pages

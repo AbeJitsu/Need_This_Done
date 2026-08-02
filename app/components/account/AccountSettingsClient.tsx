@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession, signOut } from 'next-auth/react';
 import { User, LogOut, Mail, Save, Loader2, Check, AlertCircle } from 'lucide-react';
 import Button from '@/components/Button';
+import { useAuth } from '@/context/AuthContext';
+import { signOut } from '@/lib/auth';
 import { accentColors, cardBgColors, cardBorderColors, headingColors, mutedTextColors } from '@/lib/colors';
 
 // ============================================================================
@@ -20,7 +21,7 @@ interface UserProfile {
 }
 
 export default function AccountSettingsClient() {
-  const { data: session } = useSession();
+  const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [editedName, setEditedName] = useState('');
   const [isSaving, setSaving] = useState(false);
@@ -30,16 +31,16 @@ export default function AccountSettingsClient() {
 
   // Load profile data
   useEffect(() => {
-    if (session?.user?.email) {
+    if (user?.email) {
       setProfile({
-        email: session.user.email,
-        name: session.user.name || undefined,
-        image: session.user.image || undefined,
+        email: user.email,
+        name: user.name || undefined,
+        image: user.image || undefined,
       });
-      setEditedName(session.user.name || '');
+      setEditedName(user.name || '');
     }
     setIsLoading(false);
-  }, [session]);
+  }, [user]);
 
   // Handle save profile
   const handleSaveProfile = async () => {
@@ -80,7 +81,8 @@ export default function AccountSettingsClient() {
 
   // Handle sign out
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/' });
+    await signOut();
+    window.location.assign('/');
   };
 
   if (isLoading) {

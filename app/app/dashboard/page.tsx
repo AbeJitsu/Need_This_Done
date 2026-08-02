@@ -2,12 +2,11 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import AdminDashboard from '@/components/AdminDashboard';
 import UserDashboard from '@/components/UserDashboard';
-import { getPreviewMode } from '@/lib/mockProjects';
 
 // ============================================================================
 // Dashboard Page - Router for Admin/User Views
@@ -19,38 +18,16 @@ import { getPreviewMode } from '@/lib/mockProjects';
 export default function DashboardPage() {
   const router = useRouter();
   const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
-  const [previewMode, setPreviewMode] = useState<'admin' | 'user' | null>(null);
 
   // ============================================================================
-  // Check for Dev Preview Mode
-  // ============================================================================
-
-  useEffect(() => {
-    setPreviewMode(getPreviewMode());
-  }, []);
-
-  // ============================================================================
-  // Redirect if Not Authenticated (skip in preview mode)
+  // Redirect if Not Authenticated
   // ============================================================================
 
   useEffect(() => {
-    if (previewMode) return; // Skip auth redirect in dev preview mode
     if (!authLoading && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isAuthenticated, authLoading, router, previewMode]);
-
-  // ============================================================================
-  // Dev Preview Mode - Bypass Auth for Development
-  // ============================================================================
-
-  if (previewMode) {
-    return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-        {previewMode === 'admin' ? <AdminDashboard /> : <UserDashboard />}
-      </div>
-    );
-  }
+  }, [isAuthenticated, authLoading, router]);
 
   // ============================================================================
   // Show Loading State

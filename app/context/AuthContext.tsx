@@ -1,17 +1,11 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { onAuthStateChange } from '@/lib/auth';
 
 // ============================================================================
-// Auth Context - Share User Session Across the App
+// Auth Context - Share the canonical Supabase Auth session across the app
 // ============================================================================
-// This context makes the current user's information available to any component.
-// Components can check if a user is logged in, get their email/ID, etc.
-// without having to pass props all the way down the component tree.
-//
-// HYBRID AUTH: Supports both NextAuth (Google OAuth) and Supabase (email/password)
 
 interface User {
   id: string;
@@ -20,8 +14,7 @@ interface User {
   image?: string;
   user_metadata?: {
     name?: string;
-    is_admin?: boolean;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 
@@ -35,74 +28,28 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// ============================================================================
-// Auth Provider Component
-// ============================================================================
-// Wrap your app with this provider to enable auth context everywhere.
-// Typically placed in the root layout or a top-level component.
-//
-// Checks both NextAuth session (for Google OAuth) and Supabase auth
-// (for email/password users). NextAuth takes precedence if both exist.
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // NextAuth session
-  const { data: session, status: sessionStatus } = useSession();
-
-  // Supabase auth state (for email/password fallback)
-  const [supabaseUser, setSupabaseUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [supabaseLoading, setSupabaseLoading] = useState(true);
   const [databaseAdmin, setDatabaseAdmin] = useState(false);
   const [roleLoading, setRoleLoading] = useState(true);
 
   useEffect(() => {
-    // ====================================================================
-    // Listen for Supabase Auth State Changes
-    // ====================================================================
-    // For users who signed in with email/password through Supabase
-
     const unsubscribe = onAuthStateChange((authUser) => {
-      if (authUser) {
-        setSupabaseUser({
-          id: authUser.id,
-          email: authUser.email,
-          name: authUser.user_metadata?.name,
-          user_metadata: authUser.user_metadata,
-        });
-      } else {
-        setSupabaseUser(null);
-      }
+      setUser(authUser ? {
+        id: authUser.id,
+        email: authUser.email,
+        name: authUser.user_metadata?.name,
+        image: authUser.user_metadata?.avatar_url,
+        user_metadata: authUser.user_metadata,
+      } : null);
       setSupabaseLoading(false);
     });
 
-    // ====================================================================
-    // Cleanup
-    // ====================================================================
     return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
+      if (unsubscribe) unsubscribe();
     };
   }, []);
-
-  // ============================================================================
-  // Merge Auth Sources - NextAuth takes precedence
-  // ============================================================================
-
-  // Determine the active user - NextAuth session takes precedence
-  const sessionUser = session?.user as { id?: string; email?: string | null; name?: string | null; image?: string | null; isAdmin?: boolean } | undefined;
-  const user: User | null = sessionUser
-    ? {
-        id: sessionUser.id || sessionUser.email || '',
-        email: sessionUser.email || undefined,
-        name: sessionUser.name || undefined,
-        image: sessionUser.image || undefined,
-        user_metadata: {
-          name: sessionUser.name || undefined,
-          avatar_url: sessionUser.image || undefined,
-          is_admin: sessionUser.isAdmin ?? false,
-        },
-      }
-    : supabaseUser;
 
   useEffect(() => {
     if (!user) {
@@ -113,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     let cancelled = false;
     setRoleLoading(true);
-    fetch('/api/auth/operator-role')
+    fetch('/api/auth/operator-role', { cache: 'no-store' })
       .then(async (response) => response.ok && (await response.json()).isAdmin === true)
       .then((isAdmin) => {
         if (!cancelled) setDatabaseAdmin(isAdmin);
@@ -128,51 +75,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => { cancelled = true; };
   }, [user?.id]);
 
-  const isLoading = sessionStatus === 'loading' || supabaseLoading || roleLoading;
-
-  // ============================================================================
-  // Derive Admin Status and Role from the server-side database role
-  // ============================================================================
-  // E2E_ADMIN_BYPASS: When set to 'true' in .env.local, bypasses auth for testing
-  // This only works in development mode and should NEVER be set in production
-
-  const e2eBypass = process.env.NEXT_PUBLIC_E2E_ADMIN_BYPASS === 'true' &&
-                    process.env.NODE_ENV === 'development';
-
-  const isAdmin = e2eBypass || databaseAdmin;
+  const isLoading = supabaseLoading || roleLoading;
+  const isAdmin = databaseAdmin;
   const userRole: 'admin' | 'user' | null = user
-    ? isAdmin
-      ? 'admin'
-      : 'user'
+    ? isAdmin ? 'admin' : 'user'
     : null;
 
-  // When E2E bypass is active, create a fake admin user if none exists
-  const effectiveUser = e2eBypass && !user
-    ? { id: 'e2e-test-user', email: 'e2e@test.local', user_metadata: { is_admin: true } }
-    : user;
-
-  const value: AuthContextType = {
-    user: effectiveUser,
-    isLoading: e2eBypass ? false : isLoading,
-    isAuthenticated: e2eBypass || effectiveUser !== null,
-    isAdmin,
-    userRole: e2eBypass ? 'admin' : userRole,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{
+      user,
+      isLoading,
+      isAuthenticated: user !== null,
+      isAdmin,
+      userRole,
+    }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
-
-// ============================================================================
-// useAuth Hook - Use This in Your Components
-// ============================================================================
-// Instead of importing AuthContext directly, use this hook.
-// It makes the code cleaner and easier to read.
-//
-// Example usage:
-// const { user, isAuthenticated, isLoading } = useAuth();
-// if (isAuthenticated) {
-//   return <div>Welcome, {user?.email}</div>;
-// }
 
 export function useAuth() {
   const context = useContext(AuthContext);

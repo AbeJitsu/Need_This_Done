@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { signIn } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -25,11 +24,11 @@ export default function LoginClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [isSignUpMode, setIsSignUpMode] = useState(false);
+  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
 
   // Derive a key for AnimatePresence mode transitions
-  const modeKey = isForgotPassword ? 'forgot' : isSignUpMode ? 'signup' : 'signin';
+  const modeKey = isForgotPassword ? 'forgot' : isRecoveryMode ? 'recovery' : 'google';
 
   // ============================================================================
   // Redirect if Already Logged In
@@ -47,6 +46,8 @@ export default function LoginClient() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isRecoveryMode) return;
 
     if (!email) {
       setError('We\'ll need your email to proceed');
@@ -92,8 +93,7 @@ export default function LoginClient() {
     setSuccessMessage('');
 
     try {
-      const endpoint = isSignUpMode ? '/api/auth/signup' : '/api/auth/login';
-      const response = await fetch(endpoint, {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -107,19 +107,14 @@ export default function LoginClient() {
         return;
       }
 
-      if (!isSignUpMode && data.session) {
+      if (data.session) {
         await supabase.auth.setSession({
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token,
         });
       }
 
-      if (isSignUpMode) {
-        setSuccessMessage('Account created! Check your email to confirm, then sign in.');
-        setIsSignUpMode(false);
-        setEmail('');
-        setPassword('');
-      }
+      router.push('/dashboard');
     } catch {
       setError('Hmm, something went wrong on our end. Please try again or reach out.');
     } finally {
@@ -128,7 +123,8 @@ export default function LoginClient() {
   };
 
   // ============================================================================
-  // Handle Google Sign-In (via NextAuth)
+  // Handle Google Sign-In through Supabase Auth so the browser session is
+  // also the session used by API routes and database RLS.
   // ============================================================================
 
   const handleGoogleSignIn = async () => {
@@ -136,7 +132,16 @@ export default function LoginClient() {
     setError('');
 
     try {
-      await signIn('google', { callbackUrl: '/dashboard' });
+      const { error: authError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+          queryParams: {
+            prompt: 'select_account',
+          },
+        },
+      });
+      if (authError) throw authError;
     } catch {
       setError('We couldn\'t sign you in with Google. Want to try again?');
       setIsSubmitting(false);
@@ -155,10 +160,10 @@ export default function LoginClient() {
     return null;
   }
 
-  const title = getAuthTitle(isForgotPassword, isSignUpMode);
+  const title = getAuthTitle(isForgotPassword, isRecoveryMode);
 
   // Uppercase label text based on mode
-  const labelText = isForgotPassword ? 'Account Recovery' : isSignUpMode ? 'Join Us' : 'Sign In';
+  const labelText = isForgotPassword || isRecoveryMode ? 'Account Recovery' : 'Sign In';
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-slate-900">
@@ -229,7 +234,7 @@ export default function LoginClient() {
                 </span>
               </h1>
               <p className="text-slate-400">
-                {getAuthDescription(isForgotPassword, isSignUpMode)}
+                {getAuthDescription(isForgotPassword, isRecoveryMode)}
               </p>
             </div>
           </FadeIn>
@@ -251,6 +256,50 @@ export default function LoginClient() {
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.25, ease: 'easeInOut' }}
                 >
+                  {!isRecoveryMode && (
+                    <div className="space-y-5">
+                      {error && (
+                        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-sm">
+                          <p className="text-sm text-red-300">{error}</p>
+                        </div>
+                      )}
+                      {successMessage && (
+                        <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/20 backdrop-blur-sm">
+                          <p className="text-sm text-green-300">{successMessage}</p>
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        onClick={handleGoogleSignIn}
+                        disabled={isSubmitting}
+                        className="w-full py-3.5 px-6 text-white font-semibold rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 flex items-center justify-center gap-3"
+                      >
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                        Continue with Google
+                      </button>
+                      <p className="text-center text-sm text-slate-400">
+                        Need emergency account recovery?{' '}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsRecoveryMode(true);
+                            setError('');
+                            setSuccessMessage('');
+                          }}
+                          className="text-blue-400 hover:text-blue-300 transition-colors"
+                        >
+                          Use the recovery path
+                        </button>
+                      </p>
+                    </div>
+                  )}
+
+                  {isRecoveryMode && (
                   <form onSubmit={handleAuth} className="space-y-5">
 
                     {/* Error Message */}
@@ -299,16 +348,16 @@ export default function LoginClient() {
                           <input
                             id="password"
                             type="password"
-                            autoComplete={isSignUpMode ? 'new-password' : 'current-password'}
+                            autoComplete="current-password"
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full pl-10 pr-4 py-3.5 rounded-xl bg-white/[0.08] border border-white/[0.1] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all"
-                            placeholder={isSignUpMode ? 'Min 6 characters' : 'Your password'}
+                            placeholder="Your password"
                             disabled={isSubmitting}
                           />
                         </div>
-                        {!isSignUpMode && (
+                        {!isForgotPassword && (
                           <div className="text-right">
                             <button
                               type="button"
@@ -335,49 +384,9 @@ export default function LoginClient() {
                       className="w-full py-3.5 px-6 font-semibold rounded-xl text-white bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40"
                     >
                       {isSubmitting
-                        ? isForgotPassword
-                          ? 'Sending link...'
-                          : isSignUpMode
-                            ? 'Creating account...'
-                            : 'Signing in...'
-                        : isForgotPassword
-                          ? 'Send Reset Link'
-                          : isSignUpMode
-                            ? 'Create Account'
-                            : 'Sign In'}
+                        ? isForgotPassword ? 'Sending link...' : 'Signing in...'
+                        : isForgotPassword ? 'Send Reset Link' : 'Sign In'}
                     </motion.button>
-
-                    {/* Divider */}
-                    {!isForgotPassword && (
-                      <div className="relative py-4">
-                        <div className="absolute inset-0 flex items-center">
-                          <div className="w-full border-t border-white/[0.1]"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                          <span className="px-4 bg-slate-800 text-slate-400">
-                            or continue with
-                          </span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Google Sign-In Button */}
-                    {!isForgotPassword && (
-                      <button
-                        type="button"
-                        onClick={handleGoogleSignIn}
-                        disabled={isSubmitting}
-                        className="w-full py-3.5 px-6 backdrop-blur-sm bg-white/[0.05] text-white font-medium rounded-xl border border-white/[0.1] hover:bg-white/[0.1] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3"
-                      >
-                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                        </svg>
-                        Sign in with Google
-                      </button>
-                    )}
 
                     {/* Toggle Mode */}
                     <div className="text-center pt-2">
@@ -392,26 +401,25 @@ export default function LoginClient() {
                           disabled={isSubmitting}
                           className="text-sm text-slate-400 hover:text-white transition-colors"
                         >
-                          &larr; Back to Sign In
+                          &larr; Back to Google Sign-In
                         </button>
                       ) : (
                         <button
                           type="button"
                           onClick={() => {
-                            setIsSignUpMode(!isSignUpMode);
+                            setIsRecoveryMode(false);
                             setError('');
                             setSuccessMessage('');
                           }}
                           disabled={isSubmitting}
                           className="text-sm text-slate-400 hover:text-white transition-colors"
                         >
-                          {isSignUpMode
-                            ? 'Already have an account? Sign in'
-                            : "Don't have an account? Sign up"}
+                          &larr; Back to Google Sign-In
                         </button>
                       )}
                     </div>
                   </form>
+                  )}
                 </motion.div>
               </AnimatePresence>
             </div>

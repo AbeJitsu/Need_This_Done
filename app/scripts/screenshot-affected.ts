@@ -226,7 +226,7 @@ async function main() {
   } else {
     console.log('\n🎭 Running Playwright...');
     try {
-      execSync('npx playwright test e2e/targeted-screenshots.spec.ts --project=e2e-bypass', {
+      execSync('npx playwright test e2e/targeted-screenshots.spec.ts --project=public', {
         cwd: process.cwd(),
         stdio: 'inherit',
         env: {

@@ -3,31 +3,23 @@
 // ============================================================================
 // What: Get and update customer profile information
 // Why: Allow customers to manage their account details
-// How: Fetch/update user data from Supabase or NextAuth session
+// How: Read the authenticated Supabase user and return the app profile.
 
 export const dynamic = 'force-dynamic';
 
 import { NextResponse, NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth-options';
+import { verifyAuth } from '@/lib/api-auth';
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const auth = await verifyAuth();
+    if (auth.error) return auth.error;
+    const authUser = auth.user;
 
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    // For NextAuth/Google OAuth users, we return the session info
-    // For Supabase users, we can fetch more details if needed
     const user = {
-      email: session.user.email,
-      name: session.user.name,
-      image: session.user.image,
+      email: authUser.email,
+      name: authUser.user_metadata?.name || authUser.user_metadata?.full_name,
+      image: authUser.user_metadata?.avatar_url,
     };
 
     return NextResponse.json({ user });
@@ -42,14 +34,9 @@ export async function GET() {
 
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
+    const auth = await verifyAuth();
+    if (auth.error) return auth.error;
+    const authUser = auth.user;
 
     const { name } = await request.json();
 
@@ -60,15 +47,15 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Note: Name is read-only from NextAuth/Google OAuth
-    // User cannot change their name through this API as it comes from their Google account
+    // Note: Google-provided names are not changed in Auth metadata by this
+    // endpoint. A separate profile table can own editable display names later.
     // In the future, if we implement profile customization, we'd store it separately in a user profiles table
 
     return NextResponse.json({
       user: {
-        email: session.user.email,
+        email: authUser.email,
         name: name.trim(),
-        image: session.user.image,
+        image: authUser.user_metadata?.avatar_url,
       }
     });
   } catch (error) {

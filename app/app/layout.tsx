@@ -3,7 +3,6 @@ import { Inter, Poppins, Playfair_Display, Manrope } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import SessionProvider from '@/components/providers/SessionProvider';
 import { AuthProvider } from '@/context/AuthContext';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';
 import { ToastProvider } from '@/context/ToastContext';
@@ -175,7 +174,6 @@ export default function RootLayout({
         <LocalBusinessJsonLd />
       </head>
       <body className="antialiased">
-        <SessionProvider>
         <AuthProvider>
                   <ServiceModalProvider>
                     <ToastProvider>
@@ -211,7 +209,6 @@ export default function RootLayout({
                   </ToastProvider>
                   </ServiceModalProvider>
         </AuthProvider>
-        </SessionProvider>
       </body>
     </html>
   );

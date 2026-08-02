@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test';
 
-const bypassProjects = new Set(['e2e-bypass', 'e2e-bypass-mobile']);
+const publicSmokeProjects = new Set(['public', 'public-mobile']);
 const reportId = process.env.E2E_REPORT_ID;
 
 test.describe('Retained core smoke checks', () => {
   test.beforeEach(async ({}, testInfo) => {
     test.skip(
-      !bypassProjects.has(testInfo.project.name),
-      'Retained-core smoke checks use the local development bypass projects only.'
+      !publicSmokeProjects.has(testInfo.project.name),
+      'Retained-core smoke checks run anonymously against public routes.'
     );
   });
 
@@ -27,11 +27,10 @@ test.describe('Retained core smoke checks', () => {
     await expect(page.getByRole('textbox', { name: /website url|your website/i })).toBeVisible();
   });
 
-  test('project dashboard renders in development preview mode', async ({ page }) => {
-    const response = await page.goto('/dashboard?preview=admin');
-
-    expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: 'Project Dashboard' })).toBeVisible();
+  test('project dashboard requires an authenticated session', async ({ page }) => {
+    await page.goto('/dashboard');
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(page.getByRole('button', { name: /continue with google/i })).toBeVisible();
   });
 
   test('public report renders when a report UUID is configured', async ({ page }) => {

@@ -30,6 +30,7 @@ setup('authenticate as admin', async ({ page }) => {
   try {
     // Try to find login form first (fast check)
     const emailField = page.getByLabel('Email Address');
+    await page.getByRole('button', { name: /use the recovery path/i }).click();
     await emailField.waitFor({ state: 'visible', timeout: 5000 });
 
     // Login form visible - perform login

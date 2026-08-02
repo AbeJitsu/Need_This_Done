@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
-import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
-import { authOptions } from '@/lib/auth-options';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import AccountSettingsClient from '@/components/account/AccountSettingsClient';
 
 // ============================================================================
@@ -18,10 +17,11 @@ export const metadata: Metadata = {
 
 export default async function AccountPage() {
   // Protect the page - require authentication
-  const session = await getServerSession(authOptions);
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!session?.user?.email) {
-    redirect('/api/auth/signin');
+  if (!user) {
+    redirect('/login');
   }
 
   return <AccountSettingsClient />;

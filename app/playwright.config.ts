@@ -96,9 +96,9 @@ export default defineConfig({
       testIgnore: [/auth\.setup\.ts/, /\.a11y\.test\.ts$/],
     },
 
-    // E2E Bypass mode - no auth required (for local dev with NEXT_PUBLIC_E2E_ADMIN_BYPASS=true)
+    // Anonymous public-route checks. No application authentication bypass is enabled.
     {
-      name: 'e2e-bypass',
+      name: 'public',
       use: {
         ...devices['Desktop Chrome'],
       },
@@ -108,7 +108,7 @@ export default defineConfig({
 
     // Mobile counterpart for retained-route smoke checks without saved auth state.
     {
-      name: 'e2e-bypass-mobile',
+      name: 'public-mobile',
       use: {
         ...devices['iPhone 12'],
         browserName: 'chromium',
@@ -117,7 +117,7 @@ export default defineConfig({
     },
 
     // Real local Supabase-authenticated proof. This project has no saved state
-    // and never enables the development admin bypass.
+    // and uses real fixture sessions.
     {
       name: 'auth-contract',
       use: {

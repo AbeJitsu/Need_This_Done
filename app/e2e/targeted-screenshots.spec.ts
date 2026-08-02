@@ -11,7 +11,7 @@ import { waitForPageReady, loginAsAdmin, setDarkMode } from './helpers';
 //
 // Usage:
 //   npm run screenshot:affected  (runs this automatically)
-//   npx playwright test e2e/targeted-screenshots.spec.ts --project=e2e-bypass
+//   npx playwright test e2e/targeted-screenshots.spec.ts --project=public
 
 interface AffectedRoutesConfig {
   routes: string[];

@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
+import { safeAuthNextPath } from '@/lib/auth-redirect';
 
 // ============================================================================
 // Auth Callback Handler
@@ -29,14 +30,13 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
-  const next = requestUrl.searchParams.get('next') || '/dashboard';
+  const next = safeAuthNextPath(requestUrl.searchParams.get('next'));
 
   // Use NEXT_PUBLIC_SITE_URL for the redirect base
   // This ensures we redirect to the correct public URL
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin;
   const redirectUrl = new URL(next, siteUrl);
   const response = NextResponse.redirect(redirectUrl);
-
   if (code) {
     // Create a Supabase client that reads cookies from request and writes to response
     // This ensures the session cookies are included in the redirect
@@ -58,8 +58,13 @@ export async function GET(request: NextRequest) {
     );
 
     // Exchange the code for a session - this sets cookies on the response
-    await supabase.auth.exchangeCodeForSession(code);
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) {
+      return NextResponse.redirect(new URL('/login?error=auth_callback_failed', siteUrl));
+    }
+
+    return response;
   }
 
-  return response;
+  return NextResponse.redirect(new URL('/login?error=missing_code', siteUrl));
 }

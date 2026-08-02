@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cache } from '@/lib/cache';
 import { resetStats } from '@/lib/cache-stats';
-import { isAdmin } from '@/lib/auth';
+import { verifyAdmin } from '@/lib/api-auth';
 
 // ============================================================================
 // Admin Cache Stats API
@@ -25,10 +25,8 @@ import { isAdmin } from '@/lib/auth';
 export async function GET() {
   try {
     // Verify admin access
-    const adminCheck = await isAdmin();
-    if (!adminCheck) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const auth = await verifyAdmin();
+    if (auth.error) return auth.error;
 
     const stats = cache.getStats();
 
@@ -54,10 +52,8 @@ export async function GET() {
 export async function POST() {
   try {
     // Verify admin access
-    const adminCheck = await isAdmin();
-    if (!adminCheck) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const auth = await verifyAdmin();
+    if (auth.error) return auth.error;
 
     resetStats();
 

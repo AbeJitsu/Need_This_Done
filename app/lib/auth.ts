@@ -60,20 +60,15 @@ export const getSession = async () => {
 // Sign Out / Log Out
 // ============================================================================
 // Clear the user's session and log them out.
-// Handles both Supabase sessions (email/password) and NextAuth sessions (Google OAuth).
+// Handles the canonical Supabase Auth session used by both password recovery
+// and Google OAuth.
 export const signOut = async () => {
   try {
-    // Sign out from Supabase (for email/password users)
     const { error } = await supabase.auth.signOut();
 
     if (error) {
       console.error('Error signing out from Supabase:', error);
     }
-
-    // Sign out from NextAuth (for Google OAuth users)
-    // Import dynamically to avoid bundling issues on server
-    const { signOut: nextAuthSignOut } = await import('next-auth/react');
-    await nextAuthSignOut({ redirect: false });
 
     return true;
   } catch (err) {
@@ -105,8 +100,8 @@ export const onAuthStateChange = (callback: (user: any | null) => void) => {
 // ============================================================================
 // Check if User is Admin
 // ============================================================================
-// Checks the user's metadata to see if they are marked as admin.
-// Admins have access to all projects and can manage others' work.
+// Admin capability is read from the server-side user_roles table. Mutable
+// browser-visible metadata is never an authorization source.
 export const isAdmin = async (): Promise<boolean> => {
   try {
     const user = await getCurrentUser();
@@ -115,9 +110,9 @@ export const isAdmin = async (): Promise<boolean> => {
       return false;
     }
 
-    // Check user_metadata for is_admin flag
-    const isAdminFlag = (user.user_metadata as any)?.is_admin === true;
-    return isAdminFlag;
+    if (typeof window === 'undefined') return false;
+    const response = await fetch('/api/auth/operator-role', { cache: 'no-store' });
+    return response.ok && (await response.json()).isAdmin === true;
   } catch (err) {
     console.error('Error checking admin status:', err);
     return false;
@@ -139,8 +134,7 @@ export const getUserRole = async (): Promise<
       return null;
     }
 
-    const isAdminFlag = (user.user_metadata as any)?.is_admin === true;
-    return isAdminFlag ? 'admin' : 'user';
+    return (await isAdmin()) ? 'admin' : 'user';
   } catch (err) {
     console.error('Error getting user role:', err);
     return null;
