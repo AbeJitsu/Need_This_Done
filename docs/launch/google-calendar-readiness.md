@@ -5,8 +5,8 @@
 There are two separate Google integrations:
 
 ```text
-Google sign-in                 Google Calendar
-Supabase Auth Google provider  OAuth + Calendar REST adapter
+Google application sign-in      Google Calendar
+NextAuth -> Supabase ID bridge   OAuth + Calendar REST adapter
         |                              |
         v                              v
    app session                 consultation scheduling

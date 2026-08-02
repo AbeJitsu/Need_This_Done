@@ -17,7 +17,7 @@ The retained product is:
 
 The Medusa/Railway ecommerce runtime, product reviews, carts, inventory, LMS, visual page editing, workflow automation, and dark-mode support are retired. Historical database migrations remain for audit history and are not runtime dependencies.
 
-Read [the system audit](docs/audits/2026-07-24-system-audit.md) for the evidence and [the project tracker](docs/PROJECT_STATUS.md) for current work.
+Read [the technology stack](docs/TECH_STACK.md) for component responsibilities, [the system audit](docs/audits/2026-07-24-system-audit.md) for the evidence, and [the project tracker](docs/PROJECT_STATUS.md) for current work.
 
 ## Local development
 
@@ -27,7 +27,7 @@ npm install
 npm run dev
 ```
 
-The app runs at `http://localhost:3000`. Local admin review can use the development-only bypass in `.env.local`; it must never be enabled in production.
+The app runs at `http://localhost:3000`. Authentication and authorization tests use real local Supabase users; there is no application admin or preview bypass.
 
 Environment credentials are kept in ignored `.env.local.profile` and `.env.cloud.profile` files. Switch targets with `npm run env:local` or `npm run env:cloud`; see [the environment switching guide](docs/ENVIRONMENT_SWITCHING.md). Keep the app on `local` before running database verification.
 
@@ -57,7 +57,7 @@ RUN_LOCAL_SUPABASE_TESTS=true npm run test:unit -- __tests__/lib/ai-employee-rls
 Production uses hosted Supabase. Migration `072` passed the local database gate and was
 separately approved and applied on 2026-07-29. Read
 [the release evidence matrix](docs/RELEASE_EVIDENCE.md) before promoting application code;
-local layout tests that use the development bypass do not prove authentication or RLS.
+only real-session tests prove authentication and RLS.
 
 ## How the business works
 
@@ -112,6 +112,14 @@ Vercel / Next.js
    +--------> Upstash Redis
                rate limits, deduplication,
                short-lived cache
+
+Planned supervised agent layer
+   |
+   +--------> Hermes: orchestration
+   +--------> Codex + GitHub: reviewed engineering
+   +--------> OpenClaw: approved long-running execution
+   +--------> OpenRouter: budgeted model routing
+   +--------> Supabase pgvector: later retrieval memory
 ```
 
 Retired from the application:
@@ -129,6 +137,10 @@ inline/page editing - workflow automation - dark mode
 | OpenAI | Site analysis and selected AI-assisted workflows |
 | Resend | Transactional email |
 | Upstash Redis | Rate limiting, deduplication, and small retained caches |
+| Hermes | Planned workflow orchestration and capability coordination |
+| OpenClaw | Planned long-running execution through authenticated adapters |
+| Codex + GitHub | Reviewed software engineering and delivery history |
+| OpenRouter | Planned cost-aware routing for non-coding model work |
 
 ## How changes reach production
 
@@ -158,6 +170,8 @@ Merge to production
 ## Documentation policy
 
 - `README.md` explains the current product and how to work on it.
+- `docs/TECH_STACK.md` is the canonical component and responsibility map.
+- `ROADMAP.md` is the canonical product architecture and delivery sequence.
 - `docs/PROJECT_STATUS.md` is the authoritative implementation tracker.
 - `docs/audits/` contains evidence and architecture reviews.
 - Design documents stay only when they support the current mission.

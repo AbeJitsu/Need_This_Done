@@ -47,7 +47,7 @@ These are three different states today. The new product is proven locally on `de
 
  Git production                         Git dev
  origin/production                      local dev / origin/dev
- 8b8d429                                f410722 / 22a9c6e
+ 8b8d429                                95e1070+ / 22a9c6e
  old production product                 new AI Growth Employee product
  rollback/reference only                proven local release candidate
         |                                      |
@@ -95,10 +95,13 @@ Three short decision check-ins keep the loop moving without making outreach auto
 
 ## Technology architecture
 
+The canonical component responsibility map is [docs/TECH_STACK.md](docs/TECH_STACK.md). The short rule is: **Hermes orchestrates, Codex engineers, OpenClaw executes, OpenRouter routes models, and Supabase remembers.**
+
 | Status | Systems | Role and boundary |
 | --- | --- | --- |
 | Retained | Next.js on Vercel; Supabase Database, Auth, and RLS; Stripe boundary; Google Calendar boundary; transactional email | The public site and dashboard run on Next.js/Vercel. Supabase is the durable source of truth and controls operator access. Stripe handles approved payment collection; Google Calendar handles confirmed consultation invites and reminders. Both provider boundaries require controlled validation before public claims. |
-| Planned | Operator dashboard; durable `workflow_runs`; OpenClaw and Hermes adapters; OpenRouter; Playwright/Lighthouse; Codex and GitHub | The dashboard turns work into decisions. Agents use OpenRouter and audit tools to prepare work. OpenClaw and Hermes are optional execution capabilities behind authenticated adapters. Codex/GitHub provide reviewed delivery and history. |
+| Planned agent layer | Hermes; OpenClaw; OpenRouter; Supabase pgvector | Hermes coordinates bounded workflows. OpenClaw performs approved long-running work. OpenRouter routes non-coding models with budgets. Supabase remains durable workflow and retrieval memory. These are committed roadmap roles but are added only through authenticated, callback-verified adapters. |
+| Delivery tooling | Codex and GitHub; Playwright and Lighthouse | Codex/GitHub provide reviewed engineering and history. Playwright/Lighthouse provide browser and audit evidence. They do not own production workflow state. |
 | Retired runtime | Medusa/Railway commerce deployment; product reviews; LMS; inline editor/page builder; old commerce, growth-tool, and developer-tool surfaces | Runtime callers and deployable services are removed. Historical migrations remain untouched pending any separately reviewed cleanup. |
 
 ```text
@@ -119,7 +122,8 @@ Prospects / public site --> Next.js on Vercel <--> Operator dashboard
         |                           |                                             |
   Playwright/Lighthouse          OpenRouter                         authenticated adapters
         |                           |                                  |          |
-      audits                     agents                            OpenClaw    Hermes
+      audits                routed models                         Hermes ---> OpenClaw
+                                                                       plan      execute
 ```
 
 Each workflow crosses a controlled boundary:
@@ -139,7 +143,7 @@ Authenticated adapter call ----> OpenClaw / Hermes / approved service
 Idempotent state update -> refreshed decision card -> human decision
 ```
 
-Adapters authenticate every call and verify callbacks. A retry reuses the idempotency key, so it cannot silently create a duplicate external action. No adapter is a prerequisite for the dashboard or daily loop.
+Adapters authenticate every call and verify callbacks. A retry reuses the idempotency key, so it cannot silently create a duplicate external action. Hermes and OpenClaw are part of the intended operating stack, but their unproven adapters are not prerequisites for the first dashboard cutover or manual internal pilot.
 
 ## Phased delivery
 
@@ -163,17 +167,19 @@ Phase 1 evidence: [system audit](docs/audits/2026-07-24-system-audit.md) and [ow
 
 **Stripe exists as a boundary, not as a working payment product yet.** The Stripe SDK is installed and the offering checkout route safely falls back to `/contact`. The current catalog has proposal-based prices and no Payment Links. The old order-centric Stripe routes were retired. The next bounded task is one test-mode payment path, not a full commerce rebuild.
 
-**Google APIs exist in two separate forms.** Supabase Auth now owns the normal Google sign-in flow, so the same browser session reaches application routes and database RLS. `app/lib/google-calendar.ts` remains an optional, separate Calendar OAuth/token adapter with low-level free/busy, create, update, and delete calls. Local encrypted-token tests pass, but no live Calendar event has been created or cleaned up by the retained consultation workflow. Before any live Calendar test, its callback state must become signed, one-time, and bound to the authenticated operator session; it currently trusts an unsigned encoded user ID.
+**Google APIs exist in two separate forms.** Application sign-in preserves production's branded NextAuth Google redirect, then exchanges Google's signed ID token only after Supabase verifies it and issues the real application/RLS session. `app/lib/google-calendar.ts` remains an optional, separate Calendar OAuth/token adapter with low-level free/busy, create, update, and delete calls. Local encrypted-token tests pass, but no live Calendar event has been created or cleaned up by the retained consultation workflow. Before any live Calendar test, its callback state must become signed, one-time, and bound to the authenticated operator session; it currently trusts an unsigned encoded user ID.
 
 The login boundary is intentionally simple:
 
 ```text
-Google OAuth -> Supabase Auth session -> NeedThisDone -> Supabase RLS
+Google -> branded NextAuth callback -> Supabase ID-token verification -> Supabase RLS session
+
+Password ------------------------------> Supabase password verification -> Supabase RLS session
 
 Calendar OAuth -> optional future calendar connection
 ```
 
-Google and email/password are both normal, visible sign-in methods. Supabase Auth owns both sessions; the email address is the password account's username. Public password self-signup is retired, while password reset remains available for existing accounts. No client-side preview, fake admin, or environment-variable bypass authorizes access; browser proofs use real local Supabase users.
+Google and email/password are both normal, visible sign-in methods. Both finish with a Supabase session before the protected app trusts the user; the email address is the password account's username. Public password self-signup is retired, while password reset remains available for existing accounts. No client-side preview, fake admin, or environment-variable bypass authorizes access; browser proofs use real local Supabase users.
 
 The detailed checklists are [Stripe readiness](docs/launch/hosted-payments-readiness.md) and [Google Calendar readiness](docs/launch/google-calendar-readiness.md).
 

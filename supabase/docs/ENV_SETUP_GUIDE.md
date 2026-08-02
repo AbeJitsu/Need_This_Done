@@ -94,10 +94,11 @@ MEDUSA_ADMIN_PASSWORD=your_secure_password_here
 # AUTHENTICATION
 # ============================================================================
 
-# Supabase Auth owns Google and email/password application sessions.
-# Configure the Google provider and redirect URLs in the Supabase dashboard.
-# The Supabase URL and keys above are the application auth configuration;
-# no NextAuth secret or URL is used.
+# NextAuth preserves the branded Google redirect. Supabase then verifies the
+# Google ID token and issues the application/RLS session. Email/password uses
+# Supabase directly. Both providers must use the same Google OAuth client.
+NEXTAUTH_SECRET=replace_with_at_least_32_random_characters
+NEXTAUTH_URL=http://localhost:3000
 
 # ============================================================================
 # API & SERVICES
