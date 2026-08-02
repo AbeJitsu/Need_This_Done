@@ -94,18 +94,10 @@ MEDUSA_ADMIN_PASSWORD=your_secure_password_here
 # AUTHENTICATION
 # ============================================================================
 
-# [REQUIRED] NextAuth Secret
-# Generate with: openssl rand -base64 32
-NEXTAUTH_SECRET=your_nextauth_secret_here
-
-# [OPTIONAL] NextAuth URL
-# Auto-detected in production. Set for local HTTPS testing.
-# Default: http://localhost:3000
-NEXTAUTH_URL=http://localhost:3000
-
-# [OPTIONAL] NextAuth URL Internal
-# Used when NextAuth is called internally (within Docker, etc.)
-NEXTAUTH_URL_INTERNAL=http://localhost:3000
+# Supabase Auth owns Google and email/password application sessions.
+# Configure the Google provider and redirect URLs in the Supabase dashboard.
+# The Supabase URL and keys above are the application auth configuration;
+# no NextAuth secret or URL is used.
 
 # ============================================================================
 # API & SERVICES

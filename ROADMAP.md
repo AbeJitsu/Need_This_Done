@@ -6,6 +6,79 @@ NeedThisDone helps businesses get more customers through useful website audits, 
 
 The operating model is deliberately human-led: agents prepare research, audits, drafts, and next actions; Supabase holds the durable record; the dashboard presents decisions; and Abe and Andrea approve what happens next. The first version is for Abe and Andrea only. It is not an autonomous sales machine or a general-purpose CRM.
 
+## Final vision in plain English
+
+NeedThisDone is a human-operated AI Growth Employee service. A customer asks for help, the system creates a durable project and operating brief, the AI employee prepares useful work, and Abe or Andrea makes the decision before anything external is sent or scheduled.
+
+```text
+Customer request
+      |
+      v
+Public site -> Project + AI employee brief -> Daily decision queues
+                                      |
+                                      v
+                         Abe / Andrea approve or edit
+                                      |
+                                      v
+             Manual follow-up -> Outcomes -> Financial scorecard
+                                      ^                 |
+                                      +---- Learn ------+
+```
+
+The two provider boundaries support that loop; they do not become the product's source of truth:
+
+```text
+Confirmed consultation -> Google Calendar event + reminders
+
+Chosen paid offer ------> Stripe payment / invoice / subscription
+                                  |
+                                  v
+                    Supabase stores only needed references
+```
+
+The rule is simple: agents prepare, humans approve, Supabase records, and provider actions are idempotent and reversible.
+
+## Current state: production, dev, and cloud
+
+These are three different states today. The new product is proven locally on `dev`, but it has not replaced the old production deployment or hosted database.
+
+```text
+                         TODAY
+
+ Git production                         Git dev
+ origin/production                      local dev / origin/dev
+ 8b8d429                                f410722 / 22a9c6e
+ old production product                 new AI Growth Employee product
+ rollback/reference only                proven local release candidate
+        |                                      |
+        | old hosted relationship              | local proof only
+        v                                      v
+ Approved cloud Supabase project       Disposable local Supabase
+ oxhjtmozsdstbokwtnwa                   migrations 001-078
+ remote history through 072             fresh reset + RLS/security proof
+ old hosted state retained              dev schema/workflows proven
+ pending dry-run: 073-078
+
+                 NO DEV -> CLOUD CUTOVER YET
+```
+
+The approved cloud project has not received migrations `073`–`078`, the new application has not been deployed there, and no old hosted data has been deleted. The restricted backup and rollback path remain available.
+
+The intended future state is:
+
+```text
+Backup old hosted state
+          |
+          v
+Review/apply 073-078 -> Verify hosted parity -> Deploy proven dev commit
+          |                                      |
+          v                                      v
+ Keep old app rollback path                    New production app
+                                               AI Growth Employee loop
+```
+
+After cutover, `production` should point to the reviewed `dev` product, while the old deployment and backup exist only for recovery. This is a future state, not the current state.
+
 ## Daily operating loop
 
 ```text
@@ -24,7 +97,7 @@ Three short decision check-ins keep the loop moving without making outreach auto
 
 | Status | Systems | Role and boundary |
 | --- | --- | --- |
-| Retained | Next.js on Vercel; Supabase Database, Auth, and RLS; Stripe; transactional email | The public site and dashboard run on Next.js/Vercel. Supabase is the durable source of truth and controls operator access. Stripe hosts payments; email delivers approved communication. |
+| Retained | Next.js on Vercel; Supabase Database, Auth, and RLS; Stripe boundary; Google Calendar boundary; transactional email | The public site and dashboard run on Next.js/Vercel. Supabase is the durable source of truth and controls operator access. Stripe handles approved payment collection; Google Calendar handles confirmed consultation invites and reminders. Both provider boundaries require controlled validation before public claims. |
 | Planned | Operator dashboard; durable `workflow_runs`; OpenClaw and Hermes adapters; OpenRouter; Playwright/Lighthouse; Codex and GitHub | The dashboard turns work into decisions. Agents use OpenRouter and audit tools to prepare work. OpenClaw and Hermes are optional execution capabilities behind authenticated adapters. Codex/GitHub provide reviewed delivery and history. |
 | Retired runtime | Medusa/Railway commerce deployment; product reviews; LMS; inline editor/page builder; old commerce, growth-tool, and developer-tool surfaces | Runtime callers and deployable services are removed. Historical migrations remain untouched pending any separately reviewed cleanup. |
 
@@ -76,23 +149,41 @@ Adapters authenticate every call and verify callbacks. A retry reuses the idempo
 | 1. Inventory and retained-product boundary | Complete | Audit the existing system and classify the owner-dashboard, payment, and data surfaces. | Phase 0. | Evidence identifies retained, transitional, and retirement-targeted work. |
 | 2. Core safety and workflow foundation | Complete | Fix analyzer and lead-capture risks; define durable, authenticated workflow records and operator-only access. | Phases 0–1. | Security and data-flow tests pass; workflows can be reviewed safely without external automation. |
 | 3. Focused operator and client workspace | Complete | Deliver the Supabase-Auth dashboard for Abe and Andrea, project collaboration, report queue, appointments, decision cards, existing-account client access, and GitHub handoffs. | Phase 2. | Operators can run the daily loop from one authenticated workspace; a client can access only projects explicitly linked to their existing exact-email account and can receive project-scoped GitHub handoffs. GitHub repository membership remains managed in GitHub. |
-| 4. Hosted payments and service boundary | Deferred external validation | Replace custom commerce checkout with repository-owned offerings and Stripe Payment Links, invoices, subscriptions, and Customer Portal. | Phase 3. | Hosted payment paths reconcile reliably and no retained workflow depends on order-centric checkout. |
+| 4. Hosted payments and service boundary | **Next provider setup; direct payment not yet claimable** | Decide the first paid pilot offer, then prove one Stripe test-mode path without restoring order commerce. Use a Payment Link for a fixed offer or an invoice for custom work; add subscriptions and Customer Portal only when the managed service has a defined recurring price. | Phase 3 plus owner-approved offer/pricing and a Stripe test key. | One selected payment path redirects or invoices correctly, handles success/failure/refund signals idempotently, stores only minimal Stripe references, and passes a controlled test checkout. |
 | 5. Retire legacy systems | **Local contract complete; hosted cleanup approval pending** | Remove Medusa/Railway, product reviews, LMS, editor, old commerce, chatbot/embeddings, changelog, database-blog/media administration, design tools, and obsolete APIs, jobs, tests, providers, docs, tables, views, functions, triggers, policies, and buckets. | Phase 3 plus caller-removal evidence; hosted destructive cleanup remains separately reviewed. | Runtime callers and deployment files are absent; repository-owned blog content and redirects are verified; migrations `076`–`078` remove classified local residue with `RESTRICT`; the complete code/database/browser gate passes. Hosted backups, dependency inspection, dry runs, and approvals remain. |
-| 6. AI employee customer boundary and measurement | **Local retained contract complete; hosted behavior verification pending** | Deliver durable customer membership, employee roles, day-specific capped queues, immutable versioned decisions, operational outcomes, financial revenue/cost outcomes, daily net scorecards, schedules, and RLS isolation. | Phase 5 and additive migration review. | The workspace reads durable records, owner/manager decisions update atomically, viewers are denied, exact retries are idempotent, financial amounts are positive integer cents with ISO currencies and cost categories, and authenticated cross-customer tests pass before hosted migration deployment. |
-| 7. NeedThisDone internal pilot | Planned — production promotion paused | Provision NeedThisDone as the first customer and operate the three daily check-ins against real audit and follow-up work. | Phase 6 deployed and verified. | Each queue is routinely cleared in 15–20 minutes and decisions, manual sends, replies, outcomes, and next actions are recorded. |
+| 6. AI employee customer boundary, measurement, and consultation boundary | **Local retained contract complete; hosted behavior and Google validation pending** | Deliver durable customer membership, employee roles, day-specific capped queues, immutable versioned decisions, operational outcomes, financial revenue/cost outcomes, daily net scorecards, schedules, RLS isolation, and a safe human-confirmed Calendar handoff. | Phase 5 and additive migration review; Google OAuth security repair before live use. | The workspace reads durable records, owner/manager decisions update atomically, viewers are denied, exact retries are idempotent, financial amounts are positive integer cents with ISO currencies and cost categories, and a confirmed consultation creates at most one test Calendar event with update/cancel cleanup. |
+| 7. NeedThisDone internal pilot | Planned — production promotion paused | Provision NeedThisDone as the first customer and operate the three daily check-ins against real audit and follow-up work. Calendar may remain manual for the first pilot; Stripe must be either a tested invoice path or a tested fixed-offer path before charging anyone. | Phase 6 deployed and verified, plus the selected provider checks. | Each queue is routinely cleared in 15–20 minutes and decisions, manual sends, replies, outcomes, next actions, and any payment/consultation references are recorded. |
 | 8. Prospect and audit intelligence | Planned | Turn approved discovery and Playwright/Lighthouse audits into prioritized, evidence-backed opportunities. | Phase 7. | New opportunities and audit findings are durable, reviewable, and attributable to a workflow run. |
 | 9. Approval-based outreach operations | Planned | Prepare follow-up drafts and tracking through adapters while keeping Abe and Andrea in the approval and sending loop. | Phase 8 and a ready adapter. | Every outreach action has an approver, a durable history, and an idempotent outcome; sending remains manual unless explicitly changed. |
 | 10. Learning and measured scale | Planned | Improve conversion, follow-up quality, and offer mix toward the $500/day target. | Phase 9. | Outcome data informs weekly decisions without expanding the system beyond verified, human-controlled workflows. |
 
 Phase 1 evidence: [system audit](docs/audits/2026-07-24-system-audit.md) and [owner-dashboard inventory](docs/audits/2026-07-25-owner-dashboard-inventory.md). Those documents preserve the detailed baseline; this roadmap is the decision and sequencing record.
 
+### Provider readiness: what exists and what is missing
+
+**Stripe exists as a boundary, not as a working payment product yet.** The Stripe SDK is installed and the offering checkout route safely falls back to `/contact`. The current catalog has proposal-based prices and no Payment Links. The old order-centric Stripe routes were retired. The next bounded task is one test-mode payment path, not a full commerce rebuild.
+
+**Google APIs exist in two separate forms.** Supabase Auth now owns the normal Google sign-in flow, so the same browser session reaches application routes and database RLS. `app/lib/google-calendar.ts` remains an optional, separate Calendar OAuth/token adapter with low-level free/busy, create, update, and delete calls. Local encrypted-token tests pass, but no live Calendar event has been created or cleaned up by the retained consultation workflow. Before any live Calendar test, its callback state must become signed, one-time, and bound to the authenticated operator session; it currently trusts an unsigned encoded user ID.
+
+The login boundary is intentionally simple:
+
+```text
+Google OAuth -> Supabase Auth session -> NeedThisDone -> Supabase RLS
+
+Calendar OAuth -> optional future calendar connection
+```
+
+Google and email/password are both normal, visible sign-in methods. Supabase Auth owns both sessions; the email address is the password account's username. Public password self-signup is retired, while password reset remains available for existing accounts. No client-side preview, fake admin, or environment-variable bypass authorizes access; browser proofs use real local Supabase users.
+
+The detailed checklists are [Stripe readiness](docs/launch/hosted-payments-readiness.md) and [Google Calendar readiness](docs/launch/google-calendar-readiness.md).
+
 ### Current finish line and next gate
 
-The current finish line is a reproducible local retained database and human-led workspace that measures progress toward net $500/day without autonomous outreach. Local migrations `001`–`078` now rebuild exactly the 16 retained public tables, including the private project-attachment bucket and encrypted Calendar token contract. The sanitized reset fixture proves intake → audit → approved work item → outcome → daily scorecard; the workspace reports gross revenue, categorized costs, net revenue, funnel movement, operator minutes, and per-currency progress toward the goal.
+The current finish line is a reproducible retained database and human-led workspace that measures progress toward net $500/day without autonomous outreach. Local migrations `001`–`078` now rebuild exactly the 16 retained public tables, including the private project-attachment bucket and encrypted Calendar token contract. The sanitized reset fixture proves intake → audit → approved work item → outcome → daily scorecard; the workspace reports gross revenue, categorized costs, net revenue, funnel movement, operator minutes, and per-currency progress toward the goal.
 
-The next gate is hosted retained-contract parity, not production replacement. It requires restricted schema/data backups with checksums, Calendar secret provisioning, an approved maintenance window, hosted verification of `073` and `074`, separate dry runs and approvals for destructive `076`–`078`, authenticated anonymous/role/cross-customer checks, removal of temporary fixtures, and a final local/hosted parity review. Only then may the `dev` → `production` review and merge proceed.
+The next gate is hosted retained-contract parity, not production replacement. It requires restricted schema/data backups with checksums, Calendar secret provisioning, an approved maintenance window, hosted verification of `073` and `074`, separate dry runs and approvals for destructive `076`–`078`, authenticated anonymous/role/cross-customer checks, removal of temporary fixtures, and a final local/hosted parity review. In parallel, the first Stripe test path and the Google Calendar security/live test must be completed before the corresponding public provider claims are enabled. Only then may the `dev` → `production` review and merge proceed.
 
-Phase 4's repository catalog, guarded hosted-link handoff, and test-link tooling remain in place, but Stripe test creation and end-to-end validation are unfinished and owner-deferred. A read-only hosted check on 2026-07-26 confirmed zero `orders` and `payments` rows; `appointment_requests`, `appointment_reminders`, and `payment_attempts` are absent. Phase 5 commerce application-code retirement may therefore proceed without a historical-data migration or Stripe validation, provided retained pricing and consultation callers are converted first. Destructive schema cleanup remains a separate reviewed step after all callers are gone.
+Phase 4's repository catalog and guarded hosted-link handoff remain in place, but the catalog is still proposal-based and direct Stripe payment is not claimable. The former documentation referenced Stripe test-link commands that are not present in the current repository; the readiness document now treats test setup as a future, explicitly bounded task. A read-only hosted check on 2026-07-26 confirmed zero `orders` and `payments` rows; `appointment_requests`, `appointment_reminders`, and `payment_attempts` are absent. Phase 5 commerce application-code retirement may therefore proceed without a historical-data migration, provided retained pricing and consultation callers are converted first. Destructive schema cleanup remains a separate reviewed step after all callers are gone.
 
 Phase 6 passed its disposable local-database gate on 2026-08-01 using Docker Desktop
 and the Supabase CLI. Fresh migration reset through `078`, database lint, exact 16-table

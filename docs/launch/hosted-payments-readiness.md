@@ -1,47 +1,62 @@
-# Hosted Payments Launch Readiness
+# Stripe readiness
 
-## Ready now
+## Current truth
 
-- The repository owns the public offering names, prices, scope, and contact fallback at `/api/offerings`.
-- `/api/offerings/:slug/checkout` redirects only to an HTTPS Stripe-hosted Payment Link.
-- Missing or malformed link configuration safely routes to `/contact?offering=:slug`.
-- Existing pricing, cart, checkout, appointment, and order behavior remains unchanged.
+Stripe is a planned provider boundary, not a live payment product yet.
 
-## Local Stripe test Payment Link batch
+- The Stripe SDK dependency remains installed for future server-side work.
+- The repository-owned catalog currently contains two proposal-based offers with no fixed price and no Payment Link.
+- The offering checkout route accepts only reviewed HTTPS Stripe links; with the current empty catalog it safely redirects to `/contact`.
+- The old order-centric checkout, cart, and Stripe webhook routes were retired.
+- The retained product has no active payment-reference or webhook reconciliation path to claim as production-ready.
+- There is no committed `stripe:test-links` command in the current repository. Do not run the old commands that appeared in earlier documentation.
 
-The local scripts create and verify a test-only batch for the three website-package deposits, Automation Setup paid in full, and the Managed AI monthly subscription. Add a real `STRIPE_TEST_SECRET_KEY=sk_test_...` only to `app/.env.local`; it is separate from the app's `STRIPE_SECRET_KEY` and is never committed.
+## Recommended first payment decision
 
-### Status — deferred and unfinished
+For the internal pilot, choose one bounded path:
 
-The owner has deferred all work that requires obtaining a new API key. No Stripe test assets or local manifest have been created. When the owner explicitly resumes this work, first open the Stripe Dashboard in **Test mode**, go to **Developers → API keys**, and copy the Stripe-issued **Secret key** into `app/.env.local` as `STRIPE_TEST_SECRET_KEY`. A made-up key that merely starts with `sk_test_` will be rejected. Do not paste the key into chat, source control, or any public environment. Then run the three commands below in order.
+```text
+Custom/proposal-based pilot -> Stripe Invoice -> human confirms payment
 
-```bash
-cd app
-npm run stripe:test-links
-npm run stripe:test-links -- --apply
-npm run stripe:test-links:verify
+Fixed, repeatable pilot offer -> Stripe Test Payment Link -> test checkout
+
+Managed recurring service -> subscriptions + Customer Portal later
 ```
 
-The default command is read-only. `--apply` creates or reuses only Stripe assets marked as repository-managed test assets, then writes `app/.stripe-test-payment-links.json`, which is ignored by Git. The verifier checks the manifest, Stripe test mode, hosted test URL, amount, and recurring interval against the repository catalog.
+Recommendation: start with an invoice if the pilot price is still being learned. Create a Payment Link only after the offer, price, currency, refund terms, and delivery scope are fixed. Do not build subscriptions, a portal, and custom checkout at the same time.
 
-Use Stripe test cards only for checkout testing. Do not copy these test URLs into `STRIPE_PAYMENT_LINK_*`, change a public CTA, create standalone links for add-ons/custom work, or make a live payment until the live-launch checklist below is explicitly complete.
+## Test-mode work required
 
-## Required before enabling a direct-payment CTA
+1. Owner selects the first paid offer, amount, currency, tax behavior, refund policy, and success/cancel experience.
+2. Obtain a real Stripe **test-mode** secret key from the Stripe Dashboard. Keep it only in an ignored local/server environment; never paste it into chat or source control.
+3. Create or reuse the test product, price, Payment Link, or invoice configuration in Stripe test mode.
+4. Implement the smallest retained application reference needed: Stripe customer/payment/invoice/subscription IDs, not an `orders` replacement.
+5. Add a signed webhook endpoint and idempotent event record before relying on asynchronous payment status.
+6. Run a controlled test-card checkout or invoice payment, then verify success, decline, duplicate webhook delivery, refund/cancellation, and the operator-visible reference.
+7. Remove all test fixtures and keep production payment links unset until the hosted release gate passes.
 
-For each offering to sell directly:
+## Proof required before a public payment CTA
 
-1. Create the Stripe product and confirm its displayed name, currency, price, tax settings, and one-time or recurring billing.
-2. Create its Payment Link and test it in Stripe test mode.
-3. Set the matching `STRIPE_PAYMENT_LINK_*` variable in the production server environment—not browser code.
-4. Confirm the success and cancel destinations, receipt email, and webhook event handling.
-5. Make one controlled end-to-end purchase and verify the Stripe event, local payment reference, client visibility, and refund/cancellation process.
+```text
+Stripe test event
+        |
+        v
+Verify signature -> deduplicate event -> update minimal reference
+        |                         |
+        +-------------------------+
+                      v
+             Supabase project/account view
+```
 
-## Do not launch yet
+The proof must show that a retry cannot create a duplicate payment record or advance a project twice. It must also show that an invalid signature is rejected and that the app does not trust browser-supplied prices or customer IDs.
 
-- Do not point the public pricing buttons to the new checkout handoff until each selected offer has passed the checklist above.
-- Do not remove Medusa/cart or order-dependent appointment/payment paths until their hosted replacements are validated.
-- Do not use a Payment Link for custom work; keep custom scope on the project-request and invoice path.
+## Not yet in scope
+
+- Restoring carts, orders, Medusa, custom checkout, or legacy payment tables.
+- Creating Payment Links for every historical offering.
+- Subscriptions or Customer Portal before the managed service has a stable recurring offer.
+- Live-mode charges before a separate production approval and rollback plan.
 
 ## Rollback
 
-Remove the relevant `STRIPE_PAYMENT_LINK_*` value. The checkout handoff immediately returns to the project-request fallback without a code or database rollback.
+Remove the reviewed Payment Link or invoice configuration and leave the catalog link unset. The public route returns to `/contact`; no database rollback is needed for the guarded handoff. If webhook/reference code has been deployed, disable the provider endpoint only through a reviewed deployment and preserve its event audit trail.
