@@ -6,6 +6,7 @@
 // and managing session state.
 
 import { supabase } from './supabase';
+import { signOut as signOutFromNextAuth } from 'next-auth/react';
 
 // ============================================================================
 // Get Current User Session
@@ -60,8 +61,8 @@ export const getSession = async () => {
 // Sign Out / Log Out
 // ============================================================================
 // Clear the user's session and log them out.
-// Handles the canonical Supabase Auth session used by both password recovery
-// and Google OAuth.
+// Clears both layers. Google uses NextAuth for the branded redirect and a
+// canonical Supabase session for application APIs and RLS.
 export const signOut = async () => {
   try {
     const { error } = await supabase.auth.signOut();
@@ -69,6 +70,8 @@ export const signOut = async () => {
     if (error) {
       console.error('Error signing out from Supabase:', error);
     }
+
+    await signOutFromNextAuth({ redirect: false });
 
     return true;
   } catch (err) {

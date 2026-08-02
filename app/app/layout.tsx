@@ -4,6 +4,7 @@ import './globals.css';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { AuthProvider } from '@/context/AuthContext';
+import SessionProvider from '@/components/providers/SessionProvider';
 import { ServiceModalProvider } from '@/context/ServiceModalContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { ServiceDetailModal } from '@/components/service-modal';
@@ -174,6 +175,7 @@ export default function RootLayout({
         <LocalBusinessJsonLd />
       </head>
       <body className="antialiased">
+        <SessionProvider>
         <AuthProvider>
                   <ServiceModalProvider>
                     <ToastProvider>
@@ -209,6 +211,7 @@ export default function RootLayout({
                   </ToastProvider>
                   </ServiceModalProvider>
         </AuthProvider>
+        </SessionProvider>
       </body>
     </html>
   );

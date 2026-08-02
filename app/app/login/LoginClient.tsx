@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { signIn as signInWithNextAuth } from 'next-auth/react';
 import { supabase } from '@/lib/supabase';
 import { getAuthTitle, getAuthDescription } from '@/lib/auth-utils';
 import { FadeIn } from '@/components/motion/FadeIn';
@@ -120,8 +121,8 @@ export default function LoginClient() {
   };
 
   // ============================================================================
-  // Handle Google Sign-In through Supabase Auth so the browser session is
-  // also the session used by API routes and database RLS.
+  // Keep the existing branded NextAuth Google redirect. After Google returns,
+  // AuthProvider exchanges the signed Google ID token for a Supabase session.
   // ============================================================================
 
   const handleGoogleSignIn = async () => {
@@ -129,16 +130,7 @@ export default function LoginClient() {
     setError('');
 
     try {
-      const { error: authError } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
-          queryParams: {
-            prompt: 'select_account',
-          },
-        },
-      });
-      if (authError) throw authError;
+      await signInWithNextAuth('google', { callbackUrl: '/dashboard' });
     } catch {
       setError('We couldn\'t sign you in with Google. Want to try again?');
       setIsSubmitting(false);

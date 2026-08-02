@@ -1,6 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { supabase } from '@/lib/supabase';
 import { onAuthStateChange } from '@/lib/auth';
 
 // ============================================================================
@@ -29,10 +31,13 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { data: nextAuthSession, status: nextAuthStatus } = useSession();
   const [user, setUser] = useState<User | null>(null);
   const [supabaseLoading, setSupabaseLoading] = useState(true);
+  const [bridgeLoading, setBridgeLoading] = useState(false);
   const [databaseAdmin, setDatabaseAdmin] = useState(false);
   const [roleLoading, setRoleLoading] = useState(true);
+  const bridgeAttemptedFor = useRef<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChange((authUser) => {
@@ -50,6 +55,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (unsubscribe) unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    const email = nextAuthSession?.user?.email;
+    if (nextAuthStatus !== 'authenticated' || !email || user || supabaseLoading) return;
+    if (bridgeAttemptedFor.current === email) return;
+
+    bridgeAttemptedFor.current = email;
+    let cancelled = false;
+    setBridgeLoading(true);
+
+    fetch('/api/auth/supabase-bridge', { method: 'POST', cache: 'no-store' })
+      .then(async (response) => {
+        const body = await response.json();
+        if (!response.ok || !body.session) throw new Error(body.error || 'Google session bridge failed');
+        const { error } = await supabase.auth.setSession(body.session);
+        if (error) throw error;
+      })
+      .catch((error) => {
+        console.error('[AuthProvider] Google session bridge failed:', error);
+      })
+      .finally(() => {
+        if (!cancelled) setBridgeLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [nextAuthSession?.user?.email, nextAuthStatus, supabaseLoading, user]);
 
   useEffect(() => {
     if (!user) {
@@ -75,7 +106,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => { cancelled = true; };
   }, [user?.id]);
 
-  const isLoading = supabaseLoading || roleLoading;
+  const nextAuthEmail = nextAuthSession?.user?.email || null;
+  const bridgeHasNotStarted = nextAuthStatus === 'authenticated'
+    && !user
+    && bridgeAttemptedFor.current !== nextAuthEmail;
+  const isLoading = supabaseLoading
+    || roleLoading
+    || bridgeLoading
+    || bridgeHasNotStarted
+    || nextAuthStatus === 'loading';
   const isAdmin = databaseAdmin;
   const userRole: 'admin' | 'user' | null = user
     ? isAdmin ? 'admin' : 'user'

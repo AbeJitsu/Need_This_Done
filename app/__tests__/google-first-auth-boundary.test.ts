@@ -16,8 +16,12 @@ describe('Google-first authentication boundary', () => {
     expect(login).toContain('Email Address');
     expect(login).toContain('Password');
     expect(login).not.toContain('Use the recovery path');
-    expect(login).toContain('signInWithOAuth');
-    expect(login).toContain("provider: 'google'");
+    expect(login).toContain("signInWithNextAuth('google'");
+
+    const bridge = source('app/api/auth/supabase-bridge/route.ts');
+    expect(bridge).toContain('signInWithIdToken');
+    expect(bridge).toContain("provider: 'google'");
+    expect(bridge).not.toContain('SUPABASE_SERVICE_ROLE_KEY');
   });
 
   it('does not restore browser or dashboard authorization bypasses', () => {

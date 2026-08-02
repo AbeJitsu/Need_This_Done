@@ -174,18 +174,25 @@ export function validateEnvironmentVariables(): void {
       errorMessage: 'Must start with sk_',
     },
 
-    // Google Calendar (optional)
+    // Branded Google application login (required). The same OAuth client may
+    // later be used by the separately controlled Calendar connection.
     GOOGLE_CLIENT_ID: {
       name: 'GOOGLE_CLIENT_ID',
-      required: false,
+      required: true,
       validate: (v) => v.length > 20,
       errorMessage: 'Invalid client ID format',
     },
     GOOGLE_CLIENT_SECRET: {
       name: 'GOOGLE_CLIENT_SECRET',
-      required: false,
+      required: true,
       validate: (v) => v.length > 20,
       errorMessage: 'Invalid client secret format',
+    },
+    NEXTAUTH_SECRET: {
+      name: 'NEXTAUTH_SECRET',
+      required: true,
+      validate: (v) => v.length >= 32,
+      errorMessage: 'Must be at least 32 characters',
     },
   };
 
