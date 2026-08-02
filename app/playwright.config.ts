@@ -115,6 +115,16 @@ export default defineConfig({
       },
       testIgnore: [/auth\.setup\.ts/, /\.a11y\.test\.ts$/],
     },
+
+    // Real local Supabase-authenticated proof. This project has no saved state
+    // and never enables the development admin bypass.
+    {
+      name: 'auth-contract',
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+      testMatch: /authenticated-employee-workspace\.spec\.ts/,
+    },
   ],
 
   // ============================================================================

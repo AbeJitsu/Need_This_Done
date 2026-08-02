@@ -80,6 +80,7 @@ app/component-route-map.json
 content/changelog/auto-log.json
 .vercel
 .env*.local
+.env.*.profile
 
 # Local Stripe test Payment Link output (contains test-only URLs and Stripe IDs)
 app/.stripe-test-payment-links.json

@@ -29,6 +29,8 @@ npm run dev
 
 The app runs at `http://localhost:3000`. Local admin review can use the development-only bypass in `.env.local`; it must never be enabled in production.
 
+Environment credentials are kept in ignored `.env.local.profile` and `.env.cloud.profile` files. Switch targets with `npm run env:local` or `npm run env:cloud`; see [the environment switching guide](docs/ENVIRONMENT_SWITCHING.md). Keep the app on `local` before running database verification.
+
 Useful checks:
 
 ```bash

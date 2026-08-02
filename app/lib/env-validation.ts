@@ -17,6 +17,15 @@ interface EnvValidationRule {
   errorMessage?: string;
 }
 
+const APPROVED_CLOUD_SUPABASE_URL = 'https://oxhjtmozsdstbokwtnwa.supabase.co';
+const LOCAL_SUPABASE_URL = 'http://127.0.0.1:54321';
+
+function isApprovedSupabaseUrl(value: string, target: string | undefined): boolean {
+  if (target === 'local') return value === LOCAL_SUPABASE_URL;
+  if (target === 'cloud') return value === APPROVED_CLOUD_SUPABASE_URL;
+  return false;
+}
+
 /**
  * Validate a single environment variable
  * @param name Variable name
@@ -63,23 +72,22 @@ export function validateEnvironmentVariables(): void {
   }
 
   const rules: Record<string, EnvValidationRule> = {
+    // The marker is required so credentials cannot be used against an
+    // unintended database target.
+    ENV_TARGET: {
+      name: 'ENV_TARGET',
+      required: true,
+      validate: (v) => v === 'local' || v === 'cloud',
+      errorMessage: 'Must be exactly local or cloud',
+    },
     // Supabase (critical - required for auth and database)
     NEXT_PUBLIC_SUPABASE_URL: {
       name: 'NEXT_PUBLIC_SUPABASE_URL',
       required: true,
       validate: (v) => {
-        try {
-          const url = new URL(v);
-          const hosted = url.protocol === 'https:' && url.hostname.endsWith('.supabase.co');
-          const local = process.env.NODE_ENV !== 'production'
-            && url.protocol === 'http:'
-            && ['127.0.0.1', 'localhost'].includes(url.hostname);
-          return hosted || local;
-        } catch {
-          return false;
-        }
+        return isApprovedSupabaseUrl(v, process.env.ENV_TARGET);
       },
-      errorMessage: 'Must be hosted Supabase HTTPS or a local-development URL',
+      errorMessage: 'Must match the selected approved local or hosted development target',
     },
     NEXT_PUBLIC_SUPABASE_ANON_KEY: {
       name: 'NEXT_PUBLIC_SUPABASE_ANON_KEY',

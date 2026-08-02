@@ -62,7 +62,7 @@ export async function checkRateLimit(
     // If concurrent requests both check THEN increment, they can both pass
     // By incrementing first, we ensure count is accurate before checking
     const newCount = await withTimeout(
-      redis.raw.incr(key),
+      redis.incr(key),
       TIMEOUT_LIMITS.CACHE,
       `Rate limit increment for ${context}`
     );
@@ -70,7 +70,7 @@ export async function checkRateLimit(
     // Set TTL only on first increment (when newCount becomes 1)
     if (newCount === 1) {
       await withTimeout(
-        redis.raw.expire(key, limitConfig.windowSeconds),
+        redis.expire(key, limitConfig.windowSeconds),
         TIMEOUT_LIMITS.CACHE,
         `Rate limit TTL set for ${context}`
       );
@@ -82,7 +82,7 @@ export async function checkRateLimit(
 
     // Calculate reset time
     const ttl = await withTimeout(
-      redis.raw.ttl(key),
+      redis.ttl(key),
       TIMEOUT_LIMITS.CACHE,
       `Rate limit TTL check for ${context}`
     );

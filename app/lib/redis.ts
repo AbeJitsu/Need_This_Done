@@ -251,6 +251,16 @@ async function expire(key: string, seconds: number): Promise<boolean> {
   }
 }
 
+async function ttl(key: string): Promise<number> {
+  try {
+    await ensureConnected();
+    return await redis.ttl(key);
+  } catch (error) {
+    console.error(`[Redis] TTL ${key} failed:`, error);
+    throw error;
+  }
+}
+
 async function rpush(key: string, ...values: string[]): Promise<number> {
   try {
     await ensureConnected();
@@ -301,11 +311,9 @@ async function gracefulShutdown(signal: string): Promise<void> {
 // SIGTERM: Docker/Kubernetes graceful shutdown
 // SIGINT: Ctrl+C in terminal
 // beforeExit: Node.js event loop is about to exit
-if (typeof process !== 'undefined') {
+if (typeof process !== 'undefined' && !isBuildTime) {
   process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
   process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-  process.on('beforeExit', () => gracefulShutdown('beforeExit'));
-
   // Handle uncaught errors that would crash the process
   process.on('uncaughtException', async (error) => {
     console.error('[Redis] Uncaught exception, closing connection:', error);
@@ -372,6 +380,7 @@ const safeRedis = {
   rpush,
   lrange,
   expire,
+  ttl,
   // Circuit breaker state accessors
   isCircuitBreakerOpen,
   getCircuitBreakerState,

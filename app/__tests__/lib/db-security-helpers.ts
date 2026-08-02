@@ -49,6 +49,28 @@ export async function sql<T = Record<string, unknown>>(
 // ============================================
 
 function getKeys(): { url: string; anonKey: string; serviceKey: string } {
+  if (process.env.ENV_TARGET !== 'local') {
+    throw new Error(
+      'Database behavior tests are local-only. Run `npm run env:local` before starting them.'
+    );
+  }
+
+  const configuredUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const configuredAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+  const configuredServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (
+    configuredUrl === 'http://127.0.0.1:54321' &&
+    configuredAnonKey &&
+    configuredServiceKey
+  ) {
+    return {
+      url: configuredUrl,
+      anonKey: configuredAnonKey,
+      serviceKey: configuredServiceKey,
+    };
+  }
+
   // Parse from supabase status if env vars not set
   if (
     process.env.SUPABASE_URL &&

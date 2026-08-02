@@ -1,6 +1,12 @@
 {
   "scripts": {
     "dev": "cd app && npm run dev",
+    "env:local": "./scripts/use-env.sh local",
+    "env:cloud": "./scripts/use-env.sh cloud",
+    "env:cloud:dry-run": "./scripts/use-env.sh cloud --dry-run",
+    "verify:database": "cd app && npm run verify:database",
+    "verify:code": "cd app && npm run verify:code",
+    "test:auth:e2e": "cd app && npm run test:auth:e2e",
     "build": "cd app && npm run build",
     "start": "cd app && npm run start",
     "test": "cd app && npm run test:e2e",

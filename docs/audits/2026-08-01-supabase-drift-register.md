@@ -27,7 +27,7 @@ the entire hosted database can be replaced or restored from the repository.
 
 - `supabase status`: local Supabase is running.
 - Local catalog query: the migration-built `public` schema contains **69 tables**.
-- `supabase migration list`: local and hosted histories matched through `072`; `073` was local-only at audit time.
+- `supabase migration list`: local and hosted histories matched through `072`; `073` was local-only at audit time. The 2026-08-02 follow-up is recorded in `docs/audits/2026-08-02-pre-cutover-recovery.md`.
 - `supabase db diff --linked --schema public`: fresh read-only comparison completed.
 - Runtime caller scan: current non-test application code was checked for Supabase table and RPC use.
 - Roadmap and release-evidence review: retained scope was evaluated against the human-led AI Growth Employee mission.
@@ -80,8 +80,9 @@ planned migration state, not unexplained drift. Hosted deployment remains blocke
 `074_create_private_project_attachments_bucket.sql` was added after this audit exposed that the
 retained private attachment bucket had no migration. A fresh local reset now reproduces its 5 MB
 limit and allowed file types without granting browser-direct object access. It remains pending and
-requires separate hosted review and approval. A read-only hosted dry run lists exactly `073` and
-`074`; neither migration was applied.
+requires separate hosted review and approval. Migrations `075`–`078` were subsequently added for the
+financial retained schema and fail-closed legacy cleanup. The 2026-08-02 read-only hosted dry run
+listed exactly `073` through `078`; none was applied.
 
 ### Other local-only legacy shape
 

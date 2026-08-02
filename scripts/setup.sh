@@ -4,7 +4,7 @@
 # Need This Done - Project Setup Script
 # ============================================================================
 # What does this script do?
-# Initializes your .env.local file with all required environment variables.
+# Initializes one ignored environment profile with all required environment variables.
 # It will ask for your API keys and auto-generate secure secrets.
 #
 # When to run it?
@@ -17,7 +17,7 @@
 # - OpenAI API key (for the retained site analyzer)
 #
 # What it will generate:
-# - .env.local file with all 31 required environment variables
+# - .env.local.profile or .env.cloud.profile with all required environment variables
 # - Auto-generated secrets for Medusa (DB password, JWT secrets, etc.)
 
 set -e  # Exit if any command fails (safety first)
@@ -26,7 +26,7 @@ echo "======================================================================="
 echo "Need This Done - Environment Setup"
 echo "======================================================================="
 echo ""
-echo "This script will create your .env.local file with all required settings."
+echo "This script will create a selected ignored environment profile and activate it."
 echo "You'll be asked for API keys from external services."
 echo ""
 echo "Don't have all the keys yet? No problem!"
@@ -50,6 +50,21 @@ read -p "Supabase Anon Key (public key): " supabase_anon_key
 echo "Supabase Service Role Key (keep this secret!):"
 read -s -p "> " supabase_service_role_key
 echo ""
+
+case "$supabase_url" in
+  "http://127.0.0.1:54321")
+    env_target="local"
+    profile_path=".env.local.profile"
+    ;;
+  "https://oxhjtmozsdstbokwtnwa.supabase.co")
+    env_target="cloud"
+    profile_path=".env.cloud.profile"
+    ;;
+  *)
+    echo "Unsupported Supabase URL. Use the disposable local URL or the approved hosted development URL." >&2
+    exit 1
+    ;;
+esac
 echo ""
 
 # ============================================================================
@@ -180,15 +195,15 @@ echo "✓ Cookie secret generated"
 echo ""
 
 # ============================================================================
-# Create .env.local File
+# Create the selected environment profile
 # ============================================================================
 
 echo "======================================================================="
-echo "8. Creating .env.local File"
+echo "8. Creating $profile_path"
 echo "======================================================================="
 echo ""
 
-cat > .env.local <<EOF
+cat > "$profile_path" <<EOF
 # ============================================================================
 # Local Development Environment Variables
 # ============================================================================
@@ -198,6 +213,7 @@ cat > .env.local <<EOF
 # ============================================================================
 # Supabase Configuration (REQUIRED)
 # ============================================================================
+ENV_TARGET=$env_target
 NEXT_PUBLIC_SUPABASE_URL=$supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=$supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=$supabase_service_role_key
@@ -254,7 +270,11 @@ VECTOR_SEARCH_SIMILARITY_THRESHOLD=0.3
 VECTOR_SEARCH_MAX_RESULTS=5
 EOF
 
-echo "✓ .env.local file created successfully!"
+chmod 600 "$profile_path"
+
+./scripts/use-env.sh "$env_target"
+
+echo "✓ $profile_path created successfully!"
 echo ""
 
 # ============================================================================
@@ -265,11 +285,11 @@ echo "======================================================================="
 echo "✓ Setup Complete!"
 echo "======================================================================="
 echo ""
-echo "Your .env.local file has been created with all 31 environment variables."
+echo "Your $profile_path file has been created with all environment variables."
 echo ""
 echo "📝 Next steps:"
 echo ""
-echo "1. Review your .env.local file and update any placeholder values"
+echo "1. Review $profile_path and update any placeholder values"
 echo "2. Save your credentials to a secure password manager (Keeper, 1Password, etc.)"
 echo ""
 

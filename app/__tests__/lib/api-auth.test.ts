@@ -1,12 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { getSupabaseAdmin } = vi.hoisted(() => ({
+const { getSupabaseAdmin, createSupabaseServerClient, getServerSession } = vi.hoisted(() => ({
   getSupabaseAdmin: vi.fn(),
+  createSupabaseServerClient: vi.fn(),
+  getServerSession: vi.fn(),
 }));
 
 vi.mock('@/lib/supabase', () => ({ getSupabaseAdmin }));
+vi.mock('@/lib/supabase-server', () => ({ createSupabaseServerClient }));
+vi.mock('next-auth', () => ({ getServerSession }));
+vi.mock('@/lib/auth-options', () => ({ authOptions: {} }));
 
-import { hasAdminRole } from '@/lib/api-auth';
+import { hasAdminRole, verifyAdmin } from '@/lib/api-auth';
 
 function roleQuery(result: { data: { role: string } | null; error: unknown }) {
   const maybeSingle = vi.fn().mockResolvedValue(result);
@@ -48,5 +53,28 @@ describe('hasAdminRole', () => {
       { message: 'database unavailable' },
     );
     consoleError.mockRestore();
+  });
+});
+
+describe('verifyAdmin bypass boundary', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    createSupabaseServerClient.mockResolvedValue({
+      auth: { getUser: vi.fn().mockResolvedValue({ data: { user: null } }) },
+    });
+    getServerSession.mockResolvedValue(null);
+  });
+
+  it('does not honor the development bypass in production', async () => {
+    vi.stubEnv('NEXT_PUBLIC_E2E_ADMIN_BYPASS', 'true');
+    vi.stubEnv('NODE_ENV', 'production');
+
+    const result = await verifyAdmin();
+
+    expect(result.user).toBeUndefined();
+    expect(result.error?.status).toBe(401);
+    expect(getSupabaseAdmin).not.toHaveBeenCalled();
+
+    vi.unstubAllEnvs();
   });
 });
