@@ -2,6 +2,10 @@
 -- narrowly granted server-side functions. This migration does not create events.
 
 alter table public.google_calendar_tokens
+  add column if not exists access_token_encrypted bytea,
+  add column if not exists refresh_token_encrypted bytea;
+
+alter table public.google_calendar_tokens
   alter column access_token drop not null,
   alter column refresh_token drop not null;
 

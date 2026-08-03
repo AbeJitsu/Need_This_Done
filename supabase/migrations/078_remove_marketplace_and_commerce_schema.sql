@@ -72,3 +72,75 @@ drop table if exists public.stripe_customers restrict;
 drop table if exists public.subscriptions restrict;
 drop table if exists public.demo_items restrict;
 drop table if exists public.wizard_sessions restrict;
+
+-- Remove the hosted Medusa v2 schema that was created outside repository
+-- migrations. The list is explicit from the restricted pre-cutover schema
+-- inventory. Only foreign keys owned by these retired tables are removed;
+-- retained or unknown dependencies still stop each RESTRICTed table drop.
+do $$
+declare
+  retired_tables text[] := array[
+    'account_holder','api_key','application_method_buy_rules','application_method_target_rules',
+    'auth_identity','capture','cart','cart_address','cart_line_item','cart_line_item_adjustment',
+    'cart_line_item_tax_line','cart_payment_collection','cart_promotion','cart_shipping_method',
+    'cart_shipping_method_adjustment','cart_shipping_method_tax_line','credit_line','currency',
+    'customer','customer_account_holder','customer_address','customer_group','customer_group_customer',
+    'fulfillment','fulfillment_address','fulfillment_item','fulfillment_label','fulfillment_provider',
+    'fulfillment_set','geo_zone','image','inventory_item','inventory_level','invite',
+    'link_module_migrations','location_fulfillment_provider','location_fulfillment_set',
+    'mikro_orm_migrations','notification','notification_provider','order','order_address','order_cart',
+    'order_change','order_change_action','order_claim','order_claim_item','order_claim_item_image',
+    'order_credit_line','order_exchange','order_exchange_item','order_fulfillment','order_item',
+    'order_line_item','order_line_item_adjustment','order_line_item_tax_line','order_payment_collection',
+    'order_promotion','order_shipping','order_shipping_method','order_shipping_method_adjustment',
+    'order_shipping_method_tax_line','order_summary','order_transaction','payment','payment_collection',
+    'payment_collection_payment_providers','payment_provider','payment_session','price','price_list',
+    'price_list_rule','price_preference','price_rule','price_set','product','product_category',
+    'product_category_product','product_collection','product_option','product_option_value',
+    'product_sales_channel','product_shipping_profile','product_tag','product_tags','product_type',
+    'product_variant','product_variant_inventory_item','product_variant_option','product_variant_price_set',
+    'product_variant_product_image','promotion','promotion_application_method','promotion_campaign',
+    'promotion_campaign_budget','promotion_campaign_budget_usage','promotion_promotion_rule',
+    'promotion_rule','promotion_rule_value','provider_identity','publishable_api_key_sales_channel',
+    'refund','refund_reason','region','region_country','region_payment_provider','reservation_item',
+    'return','return_fulfillment','return_item','return_reason','sales_channel',
+    'sales_channel_stock_location','script_migrations','service_zone','shipping_option',
+    'shipping_option_price_set','shipping_option_rule','shipping_option_type','shipping_profile',
+    'stock_location','stock_location_address','store','store_currency','store_locale','tax_provider',
+    'tax_rate','tax_rate_rule','tax_region','user','user_preference','user_rbac_role',
+    'view_configuration','workflow_execution'
+  ];
+  object record;
+  table_name text;
+begin
+  for object in
+    select n.nspname as schema_name, c.relname as table_name, constraint_record.conname
+    from pg_constraint constraint_record
+    join pg_class c on c.oid = constraint_record.conrelid
+    join pg_namespace n on n.oid = c.relnamespace
+    where constraint_record.contype = 'f'
+      and n.nspname = 'public'
+      and c.relname = any(retired_tables)
+  loop
+    execute format(
+      'alter table %I.%I drop constraint %I',
+      object.schema_name,
+      object.table_name,
+      object.conname
+    );
+  end loop;
+
+  foreach table_name in array retired_tables
+  loop
+    if to_regclass(format('public.%I', table_name)) is not null then
+      execute format('drop table public.%I restrict', table_name);
+    end if;
+  end loop;
+end $$;
+
+do $$
+begin
+  if exists (select 1 from pg_namespace where nspname = 'medusa') then
+    drop schema medusa restrict;
+  end if;
+end $$;

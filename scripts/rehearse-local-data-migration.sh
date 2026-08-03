@@ -121,25 +121,47 @@ if pgrep -f 'next dev|next start|npm run dev|npm run start' >/dev/null 2>&1; the
 fi
 
 cleanup_required=false
+baseline_root=""
 restore_sanitized_local_state() {
   if $cleanup_required; then
     echo "Restoring the normal sanitized local Supabase state."
     supabase db reset --local
   fi
+  if [ -n "$baseline_root" ] && [[ "$baseline_root" == /tmp/needthisdone-supabase-baseline.* ]]; then
+    rm -rf -- "$baseline_root"
+  fi
 }
 trap restore_sanitized_local_state EXIT
 
-echo "Resetting disposable local Supabase through migration 071."
+echo "Resetting disposable local Supabase to its platform baseline."
 cleanup_required=true
-supabase db reset --local --version 071 --no-seed
+baseline_root="$(mktemp -d /tmp/needthisdone-supabase-baseline.XXXXXX)"
+mkdir -p "$baseline_root/supabase/migrations"
+cp supabase/config.toml "$baseline_root/supabase/config.toml"
+mkdir -p "$baseline_root/supabase/.temp"
+for version_file in postgres-version rest-version storage-version gotrue-version; do
+  cp "supabase/.temp/$version_file" "$baseline_root/supabase/.temp/$version_file"
+done
+supabase db reset --local --workdir "$baseline_root" --no-seed
+
+echo "Using platform-managed local roles; restricted role backup was checksum-verified."
+
+echo "Restoring restricted hosted schema without printing object definitions."
+"$DOCKER_BIN" exec -i "$LOCAL_DB_CONTAINER" \
+  psql --username postgres --dbname postgres --set ON_ERROR_STOP=on \
+  < "$SCHEMA_FILE" >/dev/null
 
 echo "Restoring restricted historical data without printing row contents."
 "$DOCKER_BIN" exec -i "$LOCAL_DB_CONTAINER" \
   psql --username postgres --dbname postgres --set ON_ERROR_STOP=on \
   < "$DATA_FILE" >/dev/null
 
-echo "Applying local forward migrations 072 through 078."
-supabase migration up --local
+echo "Applying forward migrations 072 through 078."
+for migration in supabase/migrations/07{2..8}_*.sql; do
+  "$DOCKER_BIN" exec -i "$LOCAL_DB_CONTAINER" \
+    psql --username postgres --dbname postgres --set ON_ERROR_STOP=on \
+    < "$migration" >/dev/null
+done
 
 echo "Running the required retained database gate against migrated historical data."
 npm run verify:database
