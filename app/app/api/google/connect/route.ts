@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdmin } from '@/lib/api-auth';
 import { getAuthUrl } from '@/lib/google-calendar';
+import {
+  createGoogleOAuthState,
+  GOOGLE_OAUTH_STATE_COOKIE,
+  GOOGLE_OAUTH_STATE_MAX_AGE_SECONDS,
+} from '@/lib/google-oauth-state';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,18 +26,22 @@ export async function GET(_request: NextRequest) {
 
     const user = authResult.user;
 
-    // Generate state parameter (includes user ID for security)
-    const state = Buffer.from(JSON.stringify({
-      user_id: user.id,
-      timestamp: Date.now(),
-    })).toString('base64');
+    const { state, nonce } = createGoogleOAuthState(user.id);
 
     // Get the OAuth authorization URL
     const authUrl = getAuthUrl(state);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       auth_url: authUrl,
     });
+    response.cookies.set(GOOGLE_OAUTH_STATE_COOKIE, nonce, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/api/google/callback',
+      maxAge: GOOGLE_OAUTH_STATE_MAX_AGE_SECONDS,
+    });
+    return response;
 
   } catch (error) {
     console.error('[Google Connect] Error:', error);

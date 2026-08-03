@@ -4,6 +4,11 @@ import {
   getGoogleEmail,
   storeTokens,
 } from '@/lib/google-calendar';
+import { verifyAdmin } from '@/lib/api-auth';
+import {
+  GOOGLE_OAUTH_STATE_COOKIE,
+  verifyGoogleOAuthState,
+} from '@/lib/google-oauth-state';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,6 +20,18 @@ export const dynamic = 'force-dynamic';
 // How: Validates state, exchanges code, stores tokens in Supabase
 
 export async function GET(request: NextRequest) {
+  const redirect = (query: string) => {
+    const response = NextResponse.redirect(new URL(`/admin/settings?${query}`, request.url));
+    response.cookies.set(GOOGLE_OAUTH_STATE_COOKIE, '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/api/google/callback',
+      maxAge: 0,
+    });
+    return response;
+  };
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const code = searchParams.get('code');
@@ -24,34 +41,30 @@ export async function GET(request: NextRequest) {
     // Handle OAuth errors
     if (error) {
       console.error('[Google Callback] OAuth error:', error);
-      return NextResponse.redirect(
-        new URL('/admin/settings?error=google_auth_failed', request.url)
-      );
+      return redirect('error=google_auth_failed');
     }
 
     // Validate required parameters
     if (!code || !state) {
-      return NextResponse.redirect(
-        new URL('/admin/settings?error=missing_params', request.url)
-      );
+      return redirect('error=missing_params');
     }
 
-    // Decode and validate state
-    let stateData: { user_id: string; timestamp: number };
+    const authResult = await verifyAdmin();
+    if (authResult.error) {
+      return redirect('error=invalid_state');
+    }
+
     try {
-      stateData = JSON.parse(Buffer.from(state, 'base64').toString());
-    } catch {
-      return NextResponse.redirect(
-        new URL('/admin/settings?error=invalid_state', request.url)
+      verifyGoogleOAuthState(
+        state,
+        request.cookies.get(GOOGLE_OAUTH_STATE_COOKIE)?.value,
+        authResult.user.id
       );
-    }
-
-    // Check state is not too old (15 minutes max)
-    const stateAge = Date.now() - stateData.timestamp;
-    if (stateAge > 15 * 60 * 1000) {
-      return NextResponse.redirect(
-        new URL('/admin/settings?error=state_expired', request.url)
-      );
+    } catch (stateError) {
+      const reason = stateError instanceof Error && stateError.message === 'state_expired'
+        ? 'state_expired'
+        : 'invalid_state';
+      return redirect(`error=${reason}`);
     }
 
     // Exchange code for tokens
@@ -61,17 +74,13 @@ export async function GET(request: NextRequest) {
     const googleEmail = await getGoogleEmail(tokens.access_token);
 
     // Store tokens in Supabase
-    await storeTokens(stateData.user_id, tokens, googleEmail);
+    await storeTokens(authResult.user.id, tokens, googleEmail);
 
     // Redirect to success page
-    return NextResponse.redirect(
-      new URL('/admin/settings?success=google_connected', request.url)
-    );
+    return redirect('success=google_connected');
 
   } catch (error) {
     console.error('[Google Callback] Error:', error);
-    return NextResponse.redirect(
-      new URL('/admin/settings?error=token_exchange_failed', request.url)
-    );
+    return redirect('error=token_exchange_failed');
   }
 }
