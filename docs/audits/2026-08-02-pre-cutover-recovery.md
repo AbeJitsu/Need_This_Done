@@ -32,6 +32,20 @@ The directory is mode `700`; its SQL files are mode `600`:
 
 This snapshot is the recoverable historical baseline, not a claim that it is a current production export. A fresh restricted schema/data/roles snapshot and new hashes are required immediately before any approved hosted migration or destructive cleanup.
 
+A fresh current snapshot was exported after the repaired hosted dry run and is retained outside the repository at:
+
+`/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-02-pre-cutover-current-072/`
+
+The directory is mode `700`; its SQL files are mode `600`:
+
+| Asset | Size | SHA-256 |
+| --- | ---: | --- |
+| `schema.sql` | 379,484 bytes | `b4c3bc0d7ad4c66fab7981a72078197957dcb4ea9578ce2e9e13ddaf329e81f9` |
+| `data.sql` | 47,341,533 bytes | `c40f93962acdbe4988baeb27a629b48d883f1ea820eb07e1975b70bc0471a59e` |
+| `roles.sql` | 692 bytes | `30860dc01d9e2a7f836f187c92aef9b8027784ffb38780d0182175e16983aa7b` |
+
+All three files are non-empty. The data dump reported circular-foreign-key restore warnings for historical commerce and retained work-item tables; the already completed full-schema local rehearsal is therefore the applicable restoration evidence. The export was read-only: hosted migration history remains through `072`, and no row, schema, secret, provider, or deployment was changed.
+
 ## Recovery ownership and rollback
 
 - **Recovery owner:** the NeedThisDone owner/release approver authorizing the cutover.
