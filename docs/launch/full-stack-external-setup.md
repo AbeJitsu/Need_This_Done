@@ -105,7 +105,7 @@ Context7 key revoked
 OpenRouter account + hard limit
         |
         v
-Hermes -> Codex harmless proof
+Hermes -> Codex read-only proof (complete)
         |
         v
 OpenClaw foreground + deny/approval proof
