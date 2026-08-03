@@ -137,7 +137,7 @@ inline/page editing - workflow automation - dark mode
 | OpenAI | Site analysis and selected AI-assisted workflows |
 | Resend | Transactional email |
 | Upstash Redis | Rate limiting, deduplication, and small retained caches |
-| Hermes | Local orchestration runtime installed with Codex app-server mode selected; provider proof and adapter pending |
+| Hermes | Local orchestration runtime with separate ChatGPT/Codex OAuth; harmless read-only Codex-runtime proof passed; adapter pending |
 | OpenClaw | Local CLI installed; onboarding, provider, daemon, channels, and authenticated adapter pending |
 | Codex + GitHub | Reviewed software engineering and delivery history |
 | OpenRouter | Selected cost-aware model boundary; owner account, hard limit, model allowlist, and agent connections pending |

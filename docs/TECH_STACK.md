@@ -87,7 +87,7 @@ No agent is the source of truth. Agent context may be lost; the durable workflow
 | Product UI/API | Next.js, React, TypeScript, Vercel | Public site, operator workspace, client collaboration, protected server routes | Implemented locally; production cutover pending |
 | Authentication | Patched NextAuth Google transport plus Supabase Auth | Branded Google redirect; Google-token verification into a Supabase/RLS session; email/password and recovery | Bridge implemented and locally tested; controlled hosted Google proof pending |
 | Authorization/data | Supabase Postgres, Auth, RLS, Storage | Durable users, roles, customer isolation, projects, decisions, outcomes, files, financial measurements | Core local contract proven; hosted migrations `073`-`078` pending |
-| Orchestration | Hermes Agent `0.19.1` | Convert approved goals and decision cards into bounded workflows; coordinate model, coding, and execution capabilities | CLI/browser runtime installed locally; Codex app-server mode selected and skills imported; provider proof, adapter, and gateway remain unproven |
+| Orchestration | Hermes Agent `0.19.1` | Convert approved goals and decision cards into bounded workflows; coordinate model, coding, and execution capabilities | CLI/browser runtime installed locally; separate ChatGPT/Codex OAuth configured; harmless read-only repository prompt passed through Codex runtime; coding-edit proof, adapter, and gateway remain unproven |
 | Automation | OpenClaw `2026.7.1-2` | Approved long-running browsing, email preparation, scheduled work, file/tool operations, and callbacks | CLI installed only; no onboarding, provider, config, daemon, channel, host execution, or production access |
 | Software engineering | Codex + GitHub | Implement, test, review, and preserve application changes | In active use |
 | Model routing | OpenRouter | Route low-risk/non-coding work to suitable free or paid models with budgets | Selected provider boundary; account/key, hard spending limit, model allowlist, and agent connections remain external setup |
@@ -138,7 +138,7 @@ This order makes Hermes and OpenClaw part of the committed architecture without 
 
 ## Explicitly unresolved
 
-- Hermes' official Codex app-server mechanism is selected and locally configured, but a controlled end-to-end prompt is not yet proven.
+- Hermes' official Codex app-server mechanism is selected and locally configured; a harmless read-only end-to-end prompt passed. Coding-edit approval behavior, authenticated adapters, gateway hosting, and production authorization remain unproven.
 - The OpenClaw host, authentication method, and emergency-stop owner have not been selected.
 - Model allowlists, per-workflow budgets, and data-sharing rules for OpenRouter are not defined.
 - Vector retention, deletion, customer isolation, and embedding-provider policy are not defined.

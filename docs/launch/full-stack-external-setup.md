@@ -7,8 +7,8 @@ This checklist separates software installed on the Mac from accounts, billing, O
 | Component | Installed state | Not yet authorized |
 | --- | --- | --- |
 | Node.js | Homebrew Node `24.18.1` is the active runtime. | Nothing. Node 25 remains installed but unlinked. |
-| Codex | `codex-cli 0.145.0`; existing ChatGPT OAuth file is present. | Hermes-to-Codex execution has not completed a controlled prompt. |
-| Hermes | Hermes Agent `0.19.1`; config schema 33; Chromium/browser tools; 71 bundled skills; two NeedThisDone/Codex workflow skills imported; `model.openai_runtime=codex_app_server`. | Hermes still reports no Hermes-owned OpenAI Codex provider login. No gateway, messaging platform, or scheduled job is running. |
+| Codex | `codex-cli 0.145.0`; existing ChatGPT OAuth file is present. | Direct Codex CLI remains available; Hermes has separately authenticated and passed a read-only runtime proof. |
+| Hermes | Hermes Agent `0.19.1`; config schema 33; Chromium/browser tools; 71 bundled skills; two NeedThisDone/Codex workflow skills imported; `model.openai_runtime=codex_app_server`; separate ChatGPT/Codex OAuth session. | Read-only Hermes-to-Codex execution passed. No coding-edit proof, gateway, messaging platform, or scheduled job is running. |
 | OpenClaw | OpenClaw `2026.7.1-2` CLI. | No onboarding, provider, workspace, channel, gateway daemon, host execution, or production access. |
 | Stripe | Stripe CLI `1.45.0`; application SDK and guarded `/contact` fallback already exist. | No CLI account login, selected offer, sandbox checkout, Payment Link/invoice, webhook, or production key. |
 | OpenRouter | No key or OAuth profile. | Account, billing choice, limits, model allowlist, and both agent connections remain unconfigured. |
@@ -43,8 +43,8 @@ Exit proof: each agent completes one harmless prompt, reports the intended model
 
 ### 3. Finish Hermes and Codex deliberately
 
-1. Complete Hermes' OpenAI Codex provider authentication only if its controlled Codex-runtime check cannot use the existing Codex OAuth directly.
-2. Confirm a harmless read-only prompt runs through the Codex app-server runtime.
+1. Keep Hermes' separate OpenAI Codex provider authentication scoped to local testing; do not import or share credential files with Codex CLI.
+2. Follow the read-only proof with one explicitly approved, reversible workspace edit and test run before treating Hermes as a coding operator.
 3. Keep command approvals enabled; never use `--yolo` for NeedThisDone work.
 4. Do not install the Hermes gateway service until an allowed user/channel and emergency-stop owner are documented.
 
