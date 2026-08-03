@@ -87,15 +87,15 @@ No agent is the source of truth. Agent context may be lost; the durable workflow
 | Product UI/API | Next.js, React, TypeScript, Vercel | Public site, operator workspace, client collaboration, protected server routes | Implemented locally; production cutover pending |
 | Authentication | Patched NextAuth Google transport plus Supabase Auth | Branded Google redirect; Google-token verification into a Supabase/RLS session; email/password and recovery | Bridge implemented and locally tested; controlled hosted Google proof pending |
 | Authorization/data | Supabase Postgres, Auth, RLS, Storage | Durable users, roles, customer isolation, projects, decisions, outcomes, files, financial measurements | Core local contract proven; hosted migrations `073`-`078` pending |
-| Orchestration | Hermes | Convert approved goals and decision cards into bounded workflows; coordinate model, coding, and execution capabilities | Planned core layer; adapter and deployment not selected or proven |
-| Automation | OpenClaw | Approved long-running browsing, email preparation, scheduled work, file/tool operations, and callbacks | Planned core layer; adapter and deployment not selected or proven |
+| Orchestration | Hermes Agent `0.19.1` | Convert approved goals and decision cards into bounded workflows; coordinate model, coding, and execution capabilities | CLI/browser runtime installed locally; Codex app-server mode selected and skills imported; provider proof, adapter, and gateway remain unproven |
+| Automation | OpenClaw `2026.7.1-2` | Approved long-running browsing, email preparation, scheduled work, file/tool operations, and callbacks | CLI installed only; no onboarding, provider, config, daemon, channel, host execution, or production access |
 | Software engineering | Codex + GitHub | Implement, test, review, and preserve application changes | In active use |
-| Model routing | OpenRouter | Route low-risk/non-coding work to suitable free or paid models with budgets | Planned; no runtime dependency yet |
+| Model routing | OpenRouter | Route low-risk/non-coding work to suitable free or paid models with budgets | Selected provider boundary; account/key, hard spending limit, model allowlist, and agent connections remain external setup |
 | Retrieval memory | Supabase pgvector initially | Store approved reusable knowledge and references without creating another source of truth | Later; schema and retention policy not designed |
 | Browser evidence | Playwright and Lighthouse | Authenticated workflows, accessibility, layout, audit evidence | Playwright active; Lighthouse workflow planned |
-| Payments | Stripe-hosted paths | Invoices or fixed Payment Links first; subscriptions later | Boundary exists; first test-mode path unproven |
+| Payments | Stripe SDK + Stripe CLI `1.45.0` + hosted paths | Invoices or fixed Payment Links first; subscriptions later | CLI installed but not logged in; boundary exists; offer decision and first test-mode path remain unproven |
 | Communication | Resend | Transactional application email | Retained; controlled delivery/recovery proof incomplete |
-| Scheduling | Google Calendar | Human-confirmed consultation events and reminders | Optional later integration; live use blocked on OAuth-state repair |
+| Scheduling | Google Calendar | Human-confirmed consultation events and reminders | OAuth state hardened locally; optional live integration still blocked on hosted secret/provider proof |
 | Rate limits/cache | Redis/Upstash | Rate limiting, deduplication, and short-lived cache only | Retained supporting service |
 
 ## Agent safety contract
@@ -128,18 +128,21 @@ Hermes and OpenClaw must not receive unrestricted production database credential
 
 1. Promote the secure retained application and Supabase contract.
 2. Run the NeedThisDone internal pilot manually through the three daily check-ins.
-3. Add one authenticated Hermes adapter for planning a non-destructive workflow.
-4. Add one authenticated OpenClaw adapter for an approved long-running research task.
-5. Prove callbacks, retries, timeouts, audit history, and emergency disable controls.
-6. Add OpenRouter budgets and Supabase vector retrieval only when real pilot work requires them.
+3. Configure OpenRouter with a hard limit and narrow model allowlist; prove one harmless Hermes/Codex prompt and one foreground OpenClaw prompt.
+4. Add one authenticated Hermes adapter for planning a non-destructive workflow.
+5. Add one authenticated OpenClaw adapter for an approved long-running research task.
+6. Prove callbacks, retries, timeouts, audit history, and emergency disable controls.
+7. Add Supabase vector retrieval only when real pilot work requires it.
 
 This order makes Hermes and OpenClaw part of the committed architecture without making an unproven automation stack a prerequisite for the first production cutover.
 
 ## Explicitly unresolved
 
-- The exact Hermes-to-Codex integration mechanism has not been selected or proven.
+- Hermes' official Codex app-server mechanism is selected and locally configured, but a controlled end-to-end prompt is not yet proven.
 - The OpenClaw host, authentication method, and emergency-stop owner have not been selected.
 - Model allowlists, per-workflow budgets, and data-sharing rules for OpenRouter are not defined.
 - Vector retention, deletion, customer isolation, and embedding-provider policy are not defined.
 
 These are implementation decisions, not permission to add overlapping agents or expose production credentials.
+
+The canonical owner-action checklist is [full-stack setup outside the terminal](launch/full-stack-external-setup.md).

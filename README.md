@@ -113,7 +113,7 @@ Vercel / Next.js
                rate limits, deduplication,
                short-lived cache
 
-Planned supervised agent layer
+Installed but not yet authorized supervised agent foundation
    |
    +--------> Hermes: orchestration
    +--------> Codex + GitHub: reviewed engineering
@@ -133,14 +133,16 @@ inline/page editing - workflow automation - dark mode
 | --- | --- |
 | Vercel | Next.js hosting and scheduled work that supports the retained product |
 | Supabase | Authentication, leads, projects, collaboration data, storage, blog, and reports |
-| Stripe | Hosted payment links, invoices, subscriptions, and customer self-service portal |
+| Stripe | Installed SDK/CLI and guarded hosted handoff; first test Payment Link or invoice still requires owner setup |
 | OpenAI | Site analysis and selected AI-assisted workflows |
 | Resend | Transactional email |
 | Upstash Redis | Rate limiting, deduplication, and small retained caches |
-| Hermes | Planned workflow orchestration and capability coordination |
-| OpenClaw | Planned long-running execution through authenticated adapters |
+| Hermes | Local orchestration runtime installed with Codex app-server mode selected; provider proof and adapter pending |
+| OpenClaw | Local CLI installed; onboarding, provider, daemon, channels, and authenticated adapter pending |
 | Codex + GitHub | Reviewed software engineering and delivery history |
-| OpenRouter | Planned cost-aware routing for non-coding model work |
+| OpenRouter | Selected cost-aware model boundary; owner account, hard limit, model allowlist, and agent connections pending |
+
+Provider accounts, billing limits, OAuth consent, and production permissions are tracked in [the outside-terminal full-stack checklist](docs/launch/full-stack-external-setup.md).
 
 ## How changes reach production
 
