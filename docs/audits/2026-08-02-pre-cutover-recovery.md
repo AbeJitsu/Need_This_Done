@@ -41,3 +41,18 @@ This snapshot is the recoverable historical baseline, not a claim that it is a c
 - **Required cutover record:** capture the new backup hashes, deployed `dev` commit, migration output, verification results, and fixture cleanup before declaring the window complete.
 
 The former production application and hosted data remain outside this repository's mutation path. This record does not authorize pausing, deploying, applying migrations, deleting legacy objects, or restoring data.
+
+## Local historical-data migration rehearsal
+
+`npm run rehearse:local-data` performs a read-only preflight: it verifies the restricted directory/file modes and the three recorded checksums without querying, restoring, or changing a database.
+
+The separately approved execution form is:
+
+```bash
+ALLOW_LOCAL_RESTORE_REHEARSAL=I_UNDERSTAND_THIS_RESETS_LOCAL_SUPABASE \
+  npm run rehearse:local-data -- --execute
+```
+
+Execution is fail-closed. It requires the active application profile to point to local Supabase, refuses to run beside a Next.js server, resets only the disposable local database through migration `071`, restores the restricted historical data without printing rows, applies `072`–`078`, and runs the retained database gate. An exit trap then rebuilds the normal sanitized local state whether the rehearsal passes or fails.
+
+This is a forward-data compatibility rehearsal, not a complete disaster-recovery proof: repository migrations reproduce the schema through `071`, while the restricted dump supplies historical data. A full schema/roles/data restoration into an isolated Supabase project remains a separate recovery exercise.

@@ -26,6 +26,9 @@ jobs:
         working-directory: ./app
         run: npm ci
 
+      - name: Validate release scripts
+        run: bash -n scripts/use-env.sh scripts/rehearse-local-data-migration.sh
+
       - name: Run required code gate
         working-directory: ./app
         run: npm run verify:code
