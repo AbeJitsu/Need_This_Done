@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import AccountSettingsClient from '@/components/account/AccountSettingsClient';
 
+export const dynamic = 'force-dynamic';
+
 // ============================================================================
 // Account Settings Page - /account
 // ============================================================================
