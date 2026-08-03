@@ -17,9 +17,9 @@ Installed does not mean trusted, connected, running, or production-ready.
 
 ## Abe's browser/dashboard actions
 
-### 1. Retire the unused Context7 credential
+### 1. Retire the unused Context7 credential — complete
 
-- Sign in to Context7 and revoke the old `CONTEXT7_API_KEY`.
+- Owner attestation on 2026-08-02 confirms the Context7 API keys were revoked.
 - The plaintext export has already been removed from `~/.zshrc` without retaining a backup.
 - Do not create a replacement because Context7 is not part of the retained stack.
 
@@ -99,7 +99,7 @@ provider-specific restricted credential
 ## Recommended activation order
 
 ```text
-Revoke Context7 key
+Context7 key revoked
         |
         v
 OpenRouter account + hard limit
