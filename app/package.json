@@ -12,7 +12,7 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "test": "npm run test:e2e",
-    "test:a11y": "NODE_OPTIONS=--localstorage-file=/tmp/needthisdone-vitest-localstorage vitest run --config vitest.a11y.config.ts",
+    "test:a11y": "node scripts/run-a11y-tests.mjs",
     "test:unit": "vitest run --config vitest.unit.config.ts",
     "test:unit:required": "vitest run --config vitest.unit.config.ts --exclude __tests__/lib/security-hardening.test.ts --exclude __tests__/lib/ai-employee-rls.test.ts --exclude __tests__/lib/retained-schema-manifest.test.ts --exclude __tests__/lib/request-dedup-atomicity.test.ts --exclude __tests__/lib/site-analyzer-live.test.ts",
     "test:site-analyzer-live": "RUN_LIVE_SITE_TESTS=true vitest run --config vitest.unit.config.ts __tests__/lib/site-analyzer.test.ts",
