@@ -11,7 +11,7 @@ This checklist separates software installed on the Mac from accounts, billing, O
 | Hermes | Hermes Agent `0.19.1`; config schema 33; Chromium/browser tools; 71 bundled skills; two NeedThisDone/Codex workflow skills imported; `model.openai_runtime=codex_app_server`; separate ChatGPT/Codex OAuth session. | Read-only Hermes-to-Codex execution passed. No coding-edit proof, gateway, messaging platform, or scheduled job is running. |
 | OpenClaw | OpenClaw `2026.7.1-2` CLI. | No onboarding, provider, workspace, channel, gateway daemon, host execution, or production access. |
 | Stripe | Stripe CLI `1.45.0`; application SDK and guarded `/contact` fallback already exist. | No CLI account login, selected offer, sandbox checkout, Payment Link/invoice, webhook, or production key. |
-| OpenRouter | No key or OAuth profile. | Account, billing choice, limits, model allowlist, and both agent connections remain unconfigured. |
+| OpenRouter | $10 in purchased credits; `needthisdone-local` API key with a $1 total limit and no usage. | Key has not been stored in Hermes or OpenClaw; model allowlist and agent connections remain untested. |
 
 Installed does not mean trusted, connected, running, or production-ready.
 

@@ -80,6 +80,42 @@ The components do not compete:
 
 No agent is the source of truth. Agent context may be lost; the durable workflow must still be recoverable from Supabase.
 
+## Browser access and agent connection
+
+People use the product from any location through a normal HTTPS browser session:
+
+```text
+Abe / Andrea / approved client
+            |
+            v
+       Chrome browser
+            |
+            v
+  NeedThisDone on Vercel
+       |              |
+       v              v
+ Google/password   Supabase Auth + RLS
+       |              |
+       +-------> protected app/workspace
+                              |
+                              v
+                    workflow_runs: pending
+```
+
+The browser never receives Hermes, Codex, OpenRouter, or OpenClaw credentials and does not connect directly to an agent. The initial agent integration should use an outbound connection from the Mac mini:
+
+```text
+Mac mini Hermes ---> signed NeedThisDone task endpoint
+       |                         |
+       v                         v
+ Codex/OpenRouter          Supabase workflow state
+       |                         ^
+       v                         |
+ OpenClaw later --------> verified callback
+```
+
+The adapter sends only a bounded task, an authenticated actor, and an idempotency key. The callback records success, failure, or `needs_review` in Supabase. If the Mac mini is offline, the application remains usable and the agent workflow stays pending. Hermes is currently local and is not yet connected to the NeedThisDone application.
+
 ## Responsibilities and status
 
 | Layer | Technology | Responsibility | Status |
@@ -90,7 +126,7 @@ No agent is the source of truth. Agent context may be lost; the durable workflow
 | Orchestration | Hermes Agent `0.19.1` | Convert approved goals and decision cards into bounded workflows; coordinate model, coding, and execution capabilities | CLI/browser runtime installed locally; separate ChatGPT/Codex OAuth configured; harmless read-only repository prompt passed through Codex runtime; coding-edit proof, adapter, and gateway remain unproven |
 | Automation | OpenClaw `2026.7.1-2` | Approved long-running browsing, email preparation, scheduled work, file/tool operations, and callbacks | CLI installed only; no onboarding, provider, config, daemon, channel, host execution, or production access |
 | Software engineering | Codex + GitHub | Implement, test, review, and preserve application changes | In active use |
-| Model routing | OpenRouter | Route low-risk/non-coding work to suitable free or paid models with budgets | Selected provider boundary; account/key, hard spending limit, model allowlist, and agent connections remain external setup |
+| Model routing | OpenRouter | Route low-risk/non-coding work to suitable free or paid models with budgets | Owner purchased $10 in credits and created `needthisdone-local` with a $1 lifetime key limit; no usage yet and Hermes/OpenClaw connections remain untested |
 | Retrieval memory | Supabase pgvector initially | Store approved reusable knowledge and references without creating another source of truth | Later; schema and retention policy not designed |
 | Browser evidence | Playwright and Lighthouse | Authenticated workflows, accessibility, layout, audit evidence | Playwright active; Lighthouse workflow planned |
 | Payments | Stripe SDK + Stripe CLI `1.45.0` + hosted paths | Invoices or fixed Payment Links first; subscriptions later | CLI installed but not logged in; boundary exists; offer decision and first test-mode path remain unproven |
@@ -128,7 +164,7 @@ Hermes and OpenClaw must not receive unrestricted production database credential
 
 1. Promote the secure retained application and Supabase contract.
 2. Run the NeedThisDone internal pilot manually through the three daily check-ins.
-3. Configure OpenRouter with a hard limit and narrow model allowlist; prove one harmless Hermes/Codex prompt and one foreground OpenClaw prompt.
+3. Configure OpenRouter with a hard limit and narrow model allowlist; prove one harmless OpenRouter request through Hermes and one foreground OpenClaw prompt.
 4. Add one authenticated Hermes adapter for planning a non-destructive workflow.
 5. Add one authenticated OpenClaw adapter for an approved long-running research task.
 6. Prove callbacks, retries, timeouts, audit history, and emergency disable controls.
