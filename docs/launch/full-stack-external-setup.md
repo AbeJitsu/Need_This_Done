@@ -2,6 +2,8 @@
 
 This checklist separates software installed on the Mac from accounts, billing, OAuth consent, secrets, production permissions, and business choices that require Abe in a browser or provider dashboard.
 
+> This entire checklist is outside the repository-only internal-pilot finish line. None of these account or machine actions blocks the manual local pilot.
+
 ## Current local foundation
 
 | Component | Installed state | Not yet authorized |

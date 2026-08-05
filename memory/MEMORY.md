@@ -1,16 +1,18 @@
-# Project Memory
+# Archived Project Memory — Ecommerce Era
+
+> Historical snapshot only. The commerce, loyalty, reviews, inventory, and campaign systems below are retired and must not be treated as current product requirements. Current authority is [`ROADMAP.md`](../ROADMAP.md), with implementation truth in [`docs/PROJECT_STATUS.md`](../docs/PROJECT_STATUS.md).
 
 Key learnings and patterns discovered during development.
 
 ## Documentation Note
 
-**Evaluation Reports** (Feb 2, 2026): Root directory contains auto-evaluation summaries (BACKEND_EVAL_SUMMARY.md, FRONTEND_EVAL_SUMMARY.md, etc.). These capture work completed and are archived. **Primary source of truth**: This MEMORY.md file.
+**Evaluation Reports** (Feb 2, 2026): Root evaluation summaries and this file preserve historical context only. They are not current sources of truth.
 
 ---
 
-## Project Status — Feb 2, 2026 (Final)
+## Historical Project Status — Feb 2, 2026
 
-**Current State:** Mature, production-ready with comprehensive reliability hardening and complete feature set
+**Historical state (not current):** Former ecommerce product was described as mature and production-ready at the time.
 - **Customer loyalty points system**: Earn 1 point per \$1 spent, redeem 100+ for discounts, admin analytics (Feb 2 07:05)
 - **Build blockers fixed**: Supabase/Resend clients moved from module to handler level, <img> warnings resolved (Feb 2 07:00)
 - **Recently viewed products**: Browse history tracking + dashboard widget (Feb 2 06:37)

@@ -4,6 +4,8 @@
 
 Stripe is a planned provider boundary, not a live payment product yet.
 
+Hosted payment setup is outside the repository-only internal-pilot finish line and does not block manual pilot operation.
+
 - The Stripe SDK dependency remains installed for future server-side work.
 - The repository-owned catalog currently contains two proposal-based offers with no fixed price and no Payment Link.
 - The offering checkout route accepts only reviewed HTTPS Stripe links; with the current empty catalog it safely redirects to `/contact`.

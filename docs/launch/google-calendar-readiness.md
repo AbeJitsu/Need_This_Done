@@ -1,5 +1,7 @@
 # Google API and Calendar readiness
 
+> Live Calendar setup is outside the repository-only internal-pilot finish line. Scheduling may remain manual during the pilot.
+
 ## What we have
 
 There are two separate Google integrations:

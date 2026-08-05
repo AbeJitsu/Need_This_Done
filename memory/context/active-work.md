@@ -1,10 +1,12 @@
-# Active Work
+# Archived Active Work — 2026-02-02
+
+> Historical snapshot only. It describes the retired ecommerce product and is not current project direction. Use [`ROADMAP.md`](../../ROADMAP.md) for the finish line and [`docs/PROJECT_STATUS.md`](../../docs/PROJECT_STATUS.md) for active implementation evidence.
 
 What's currently being built or fixed.
 
-## Current Focus — Feb 2, 2026 (Final)
+## Historical Focus — Feb 2, 2026
 
-**Status:** Fully mature, production-ready e-commerce platform with comprehensive customer features, admin tools, and backend reliability
+**Historical status (not current):** Former ecommerce platform was described as production-ready at the time.
 
 Core Platform Complete:
 - Customer account management (profile, addresses, spending analytics, notification preferences)

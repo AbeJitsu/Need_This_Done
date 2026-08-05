@@ -2,7 +2,7 @@
 
 NeedThisDone sells and operates a supervised AI Growth Employee that prepares evidence-backed growth decisions for a human owner or manager.
 
-The website is both the sales surface and the first proof of the service: visitors can request an audit, begin a project, collaborate through a client portal, and pay through Stripe-hosted flows.
+The website is both the sales surface and the first proof of the service: visitors can request an audit or project, operators can provision that project as a supervised pilot, and linked clients can collaborate through a project-scoped portal. Direct payment is not configured; paid work still begins through a project request.
 
 ## Current direction
 
@@ -40,7 +40,10 @@ npm run test:unit
 npm run build
 npm run test:employee-workspace
 npm run verify:code
+npm run verify:assembly
 ```
+
+`verify:assembly` is the delivery gate for the manual internal pilot. It removes optional provider credentials from the proof process and verifies the full lifecycle with local Supabase. The retained browser suite has four intentional Playwright specs: 18 public desktop/mobile checks, 4 real-session lifecycle checks, and 2 employee-workspace UI checks. `npm run verify:assembly:fresh` additionally erases and rebuilds only the disposable local database. See [provider-free final assembly](docs/FINAL_ASSEMBLY.md).
 
 After a production build, restart the development server because the build replaces `.next`.
 
@@ -54,8 +57,9 @@ cd app
 RUN_LOCAL_SUPABASE_TESTS=true npm run test:unit -- __tests__/lib/ai-employee-rls.test.ts
 ```
 
-Production uses hosted Supabase. Migration `072` passed the local database gate and was
-separately approved and applied on 2026-07-29. Read
+Production uses hosted Supabase. The local code contract is rebuilt through migration `081`;
+the last recorded hosted migration is `072`, so `073`–`081` remain deployment work outside
+the code-only internal-pilot finish line. Read
 [the release evidence matrix](docs/RELEASE_EVIDENCE.md) before promoting application code;
 only real-session tests prove authentication and RLS.
 
@@ -71,20 +75,21 @@ Visitor
               |
               v
       Owner Dashboard
-   (qualify, schedule, quote)
-              |
-              +--> Stripe-hosted payment
+   (qualify and start pilot)
               |
               v
-           Project
+  Customer + Employee Brief
               |
               v
-        Client Portal
-  (updates, files, comments,
-   reports, consultation requests)
+       Daily Queues
+  (author, approve, complete)
               |
               v
-      Measurable client outcome
+ Outcomes + Financial Scorecard
+
+Optional provider work after the code-only finish:
+confirmed consultation -> Google Calendar
+chosen paid offer       -> Stripe-hosted payment
 ```
 
 ## How the software fits together
@@ -95,8 +100,8 @@ Browser
    v
 Vercel / Next.js
    |--------> Supabase
-   |           auth, leads, projects,
-   |           blog, reports, files
+   |           auth, projects, reports,
+   |           employee records, files
    |
    |--------> Stripe
    |           hosted payments,
@@ -132,15 +137,15 @@ inline/page editing - workflow automation - dark mode
 | Service | Retained responsibility |
 | --- | --- |
 | Vercel | Next.js hosting and scheduled work that supports the retained product |
-| Supabase | Authentication, leads, projects, collaboration data, storage, blog, and reports |
+| Supabase | Authentication, projects, collaboration data, reports, employee queues/decisions/outcomes, and storage |
 | Stripe | Installed SDK/CLI and guarded hosted handoff; first test Payment Link or invoice still requires owner setup |
-| OpenAI | Site analysis and selected AI-assisted workflows |
-| Resend | Transactional email |
+| OpenAI | Optional prose enhancement; deterministic site-analysis evidence works without it |
+| Resend | Optional transactional delivery; durable project/report records work without it |
 | Upstash Redis | Rate limiting, deduplication, and small retained caches |
 | Hermes | Local orchestration runtime with separate ChatGPT/Codex OAuth; harmless read-only Codex-runtime proof passed; adapter pending |
 | OpenClaw | Local CLI installed; onboarding, provider, daemon, channels, and authenticated adapter pending |
 | Codex + GitHub | Reviewed software engineering and delivery history |
-| OpenRouter | Selected cost-aware model boundary; owner account, hard limit, model allowlist, and agent connections pending |
+| OpenRouter | Selected cost-aware model boundary; a capped local key exists, but model allowlisting and agent connections remain outside the code-only pilot |
 
 Provider accounts, billing limits, OAuth consent, and production permissions are tracked in [the outside-terminal full-stack checklist](docs/launch/full-stack-external-setup.md).
 
