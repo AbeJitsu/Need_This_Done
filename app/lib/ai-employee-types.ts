@@ -16,6 +16,10 @@ export interface EmployeeWorkItem {
   risk_level: 'low' | 'medium' | 'high';
   priority: number;
   status: WorkItemStatus;
+  created_by: string | null;
+  completed_by: string | null;
+  completed_at: string | null;
+  completion_notes: string | null;
   created_at: string;
 }
 
@@ -29,12 +33,14 @@ export interface EmployeeDecisionRecord {
 
 export interface EmployeeOutcome {
   id: string;
+  work_item_id: string | null;
   kind: 'lead' | 'reply' | 'meeting' | 'project' | 'time_saved' | 'revenue' | 'cost';
   value: number;
   amount_cents: number | null;
   currency: string | null;
   cost_category: 'model' | 'tooling' | 'payment' | 'advertising' | 'contractor' | 'delivery' | null;
   notes: string | null;
+  recorded_by: string | null;
   occurred_at: string;
 }
 
@@ -48,8 +54,10 @@ export interface EmployeeDailyScorecard {
 
 export interface EmployeeWorkspaceData {
   customer: { id: string; name: string };
+  availableCustomers: Array<{ id: string; name: string; role: 'owner' | 'manager' | 'viewer' }>;
   membershipRole: 'owner' | 'manager' | 'viewer';
   scheduledDate: string;
+  timezone: string;
   employee: { id: string; name: string; role_name: string; status: 'pilot' | 'managed' | 'paused' };
   brief: {
     responsibilities: unknown[];

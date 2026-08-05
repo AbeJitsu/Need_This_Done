@@ -73,6 +73,50 @@ localDescribe.sequential('AI employee customer isolation and decision behavior',
     expect(foreign).toEqual([]);
   });
 
+  it('atomically provisions an internal pilot from a project for an operator', async () => {
+    const projectId = '50000000-0000-4000-8000-0000000000a1';
+    await getPool().query(`insert into public.user_roles (user_id, role) values ($1, 'admin')`, [ownerA]);
+    await getPool().query(`
+      insert into public.projects (id, name, email, company, message)
+      values ($1, 'Pilot Lead', 'pilot@example.test', 'Pilot Company', 'Need a supervised growth employee')
+    `, [projectId]);
+
+    const provisioned = await asUser<{ result: { customer_id: string; employee_id: string; duplicate: boolean } }>(ownerA, `
+      select public.provision_ai_employee_pilot(
+        $1, 'Pilot Growth Desk', 'AI Growth Employee', 'America/New_York',
+        '09:00'::time, '13:00'::time, '17:00'::time,
+        '["Review opportunities"]'::jsonb,
+        '["No outreach without approval"]'::jsonb,
+        '["Operator workspace"]'::jsonb,
+        'Clear and direct',
+        '["Every external action requires approval"]'::jsonb
+      ) as result
+    `, [projectId]);
+    const replay = await asUser<{ result: { customer_id: string; employee_id: string; duplicate: boolean } }>(ownerA, `
+      select public.provision_ai_employee_pilot(
+        $1, 'Ignored retry details', 'AI Growth Employee', 'America/New_York',
+        '09:00'::time, '13:00'::time, '17:00'::time,
+        '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '', '[]'::jsonb
+      ) as result
+    `, [projectId]);
+
+    expect(provisioned[0].result.duplicate).toBe(false);
+    expect(replay[0].result).toMatchObject({
+      customer_id: provisioned[0].result.customer_id,
+      employee_id: provisioned[0].result.employee_id,
+      duplicate: true,
+    });
+    const schedules = await getPool().query(
+      `select check_in_type from public.ai_employee_check_in_schedules where employee_id = $1`,
+      [provisioned[0].result.employee_id],
+    );
+    expect(schedules.rows).toHaveLength(3);
+
+    await getPool().query(`delete from public.projects where id = $1`, [projectId]);
+    await getPool().query(`delete from public.customer_accounts where id = $1`, [provisioned[0].result.customer_id]);
+    await getPool().query(`delete from public.user_roles where user_id = $1`, [ownerA]);
+  });
+
   it('allows owners and managers to decide while viewers and other customers are denied', async () => {
     await expect(asUser(ownerA, `select public.record_ai_employee_decision($1, 'approve', '', $2, null)`, [work('a1'), '40000000-0000-4000-8000-0000000000a1'])).resolves.toHaveLength(1);
     await expect(asUser(managerA, `select public.record_ai_employee_decision($1, 'reject', '', $2, null)`, [work('a2'), '40000000-0000-4000-8000-0000000000a2'])).resolves.toHaveLength(1);
@@ -114,6 +158,50 @@ localDescribe.sequential('AI employee customer isolation and decision behavior',
       insert into public.ai_employee_work_items (employee_id, queue, scheduled_date, title, proposed_action, priority)
       values ($1, 'evening', current_date + 5, 'Sixth item', 'Review', 5)
     `, [employeeA])).rejects.toThrow();
+  });
+
+  it('lets managers author work, complete approvals, and record idempotent outcomes', async () => {
+    const workItemKey = '60000000-0000-4000-8000-0000000000a1';
+    const completionKey = '60000000-0000-4000-8000-0000000000a2';
+    const outcomeKey = '60000000-0000-4000-8000-0000000000a3';
+    const created = await asUser<{ result: { id: string; duplicate: boolean } }>(managerA, `
+      select public.create_ai_employee_work_item(
+        $1, 'morning', current_date + 20, 'Prepare retained proof',
+        '["Project context"]'::jsonb, 'Draft the manual follow-up',
+        'A qualified reply', 'low', 1, 'project', 'project-fixture', $2
+      ) as result
+    `, [employeeA, workItemKey]);
+    const itemId = created[0].result.id;
+    expect(created[0].result.duplicate).toBe(false);
+    await expect(asUser(viewerA, `
+      select public.create_ai_employee_work_item(
+        $1, 'morning', current_date + 20, 'Viewer item', '[]'::jsonb,
+        'Act', '', 'low', 2, 'manual', '', $2
+      )
+    `, [employeeA, crypto.randomUUID()])).rejects.toThrow();
+
+    await asUser(managerA, `select public.record_ai_employee_decision($1, 'approve', '', $2, null)`, [itemId, crypto.randomUUID()]);
+    const completed = await asUser<{ result: { status: string; duplicate: boolean } }>(managerA, `
+      select public.complete_ai_employee_work_item($1, 'Sent manually and saved the reply URL', $2) as result
+    `, [itemId, completionKey]);
+    const completionReplay = await asUser<{ result: { status: string; duplicate: boolean } }>(managerA, `
+      select public.complete_ai_employee_work_item($1, 'Sent manually and saved the reply URL', $2) as result
+    `, [itemId, completionKey]);
+    expect(completed[0].result).toMatchObject({ status: 'completed', duplicate: false });
+    expect(completionReplay[0].result).toMatchObject({ status: 'completed', duplicate: true });
+
+    const outcome = await asUser<{ result: { id: string; duplicate: boolean } }>(managerA, `
+      select public.record_ai_employee_outcome(
+        $1, $2, 'reply', 1, null, null, null, 'Qualified reply received', null, $3
+      ) as result
+    `, [employeeA, itemId, outcomeKey]);
+    const outcomeReplay = await asUser<{ result: { id: string; duplicate: boolean } }>(managerA, `
+      select public.record_ai_employee_outcome(
+        $1, $2, 'reply', 1, null, null, null, 'Qualified reply received', null, $3
+      ) as result
+    `, [employeeA, itemId, outcomeKey]);
+    expect(outcomeReplay[0].result).toMatchObject({ id: outcome[0].result.id, duplicate: true });
+    await expect(asUser(managerA, `update public.ai_employee_outcomes set value = 2 where id = $1`, [outcome[0].result.id])).rejects.toThrow();
   });
 
   it('keeps history immutable to authenticated users and permits privileged customer cleanup', async () => {

@@ -24,8 +24,7 @@ describe('employee workspace API', () => {
   });
 
   it('returns a truthful empty state when the user has no customer membership', async () => {
-    const limit = vi.fn().mockResolvedValue({ data: [], error: null });
-    const order = vi.fn(() => ({ limit }));
+    const order = vi.fn().mockResolvedValue({ data: [], error: null });
     const eq = vi.fn(() => ({ order }));
     const select = vi.fn(() => ({ eq }));
     const from = vi.fn(() => ({ select }));
@@ -42,8 +41,7 @@ describe('employee workspace API', () => {
   });
 
   it('does not disguise a missing migration as an empty customer account', async () => {
-    const limit = vi.fn().mockResolvedValue({ data: null, error: { code: '42P01' } });
-    const order = vi.fn(() => ({ limit }));
+    const order = vi.fn().mockResolvedValue({ data: null, error: { code: '42P01' } });
     const eq = vi.fn(() => ({ order }));
     const select = vi.fn(() => ({ eq }));
     createSupabaseServerClient.mockResolvedValue({
@@ -56,15 +54,14 @@ describe('employee workspace API', () => {
     await expect(response.json()).resolves.toEqual({ error: 'Employee workspace is not configured yet.' });
   });
 
-  it('fails clearly instead of selecting one of multiple customer memberships', async () => {
-    const limit = vi.fn().mockResolvedValue({
+  it('requires an explicit selected customer to belong to a multi-customer operator', async () => {
+    const order = vi.fn().mockResolvedValue({
       data: [
         { customer_id: 'customer-1', role: 'owner' },
         { customer_id: 'customer-2', role: 'manager' },
       ],
       error: null,
     });
-    const order = vi.fn(() => ({ limit }));
     const eq = vi.fn(() => ({ order }));
     const select = vi.fn(() => ({ eq }));
     createSupabaseServerClient.mockResolvedValue({
@@ -72,8 +69,8 @@ describe('employee workspace API', () => {
       from: vi.fn(() => ({ select })),
     });
 
-    const response = await GET();
-    expect(response.status).toBe(409);
-    await expect(response.json()).resolves.toMatchObject({ workspace: null, reason: 'multiple_memberships' });
+    const response = await GET(new Request('http://localhost/api/employee/workspace?customerId=customer-3'));
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toEqual({ error: 'You do not have access to that customer workspace.' });
   });
 });

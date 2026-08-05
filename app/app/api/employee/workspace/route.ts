@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { dateInTimeZone, isValidTimeZone } from '@/lib/timezone';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: Request) {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -12,8 +13,7 @@ export async function GET() {
     .from('customer_memberships')
     .select('customer_id, role, created_at')
     .eq('user_id', user.id)
-    .order('created_at', { ascending: true })
-    .limit(2);
+    .order('created_at', { ascending: true });
 
   if (membershipError) {
     return NextResponse.json({ error: 'Employee workspace is not configured yet.' }, { status: 503 });
@@ -21,16 +21,19 @@ export async function GET() {
   if (!memberships?.length) {
     return NextResponse.json({ workspace: null, reason: 'no_membership' });
   }
-  if (memberships.length > 1) {
-    return NextResponse.json(
-      { workspace: null, reason: 'multiple_memberships', error: 'This account is linked to multiple customers.' },
-      { status: 409 },
-    );
-  }
-  const membership = memberships[0];
 
-  const [{ data: customer, error: customerError }, { data: employees, error: employeeError }] = await Promise.all([
+  const requestedCustomerId = new URL(request.url).searchParams.get('customerId');
+  const membership = requestedCustomerId
+    ? memberships.find((candidate) => candidate.customer_id === requestedCustomerId)
+    : memberships[0];
+  if (!membership) {
+    return NextResponse.json({ error: 'You do not have access to that customer workspace.' }, { status: 403 });
+  }
+
+  const customerIds = memberships.map((candidate) => candidate.customer_id);
+  const [{ data: customer, error: customerError }, { data: availableCustomerRows }, { data: employees, error: employeeError }] = await Promise.all([
     supabase.from('customer_accounts').select('id, name').eq('id', membership.customer_id).single(),
+    supabase.from('customer_accounts').select('id, name').in('id', customerIds).order('created_at', { ascending: true }),
     supabase.from('ai_employees').select('id, name, role_name, status, created_at')
       .eq('customer_id', membership.customer_id).order('created_at', { ascending: true }).limit(2),
   ]);
@@ -48,7 +51,6 @@ export async function GET() {
     );
   }
   const employee = employees[0];
-  const scheduledDate = new Date().toISOString().slice(0, 10);
 
   const [briefResult, scheduleResult, workResult, outcomeResult] = await Promise.all([
     supabase.from('ai_employee_operating_briefs')
@@ -57,17 +59,22 @@ export async function GET() {
     supabase.from('ai_employee_check_in_schedules')
       .select('check_in_type, local_time, timezone, enabled').eq('employee_id', employee.id),
     supabase.from('ai_employee_work_items')
-      .select('id, predecessor_work_item_id, source_type, source_id, queue, scheduled_date, title, evidence, proposed_action, expected_outcome, risk_level, priority, status, created_at')
-      .eq('employee_id', employee.id).eq('scheduled_date', scheduledDate)
-      .order('priority', { ascending: true }).order('created_at', { ascending: true }),
+      .select('id, predecessor_work_item_id, source_type, source_id, queue, scheduled_date, title, evidence, proposed_action, expected_outcome, risk_level, priority, status, created_by, completed_by, completed_at, completion_notes, created_at')
+      .eq('employee_id', employee.id)
+      .order('created_at', { ascending: false }).limit(100),
     supabase.from('ai_employee_outcomes')
-      .select('id, kind, value, amount_cents, currency, cost_category, notes, occurred_at').eq('employee_id', employee.id)
+      .select('id, work_item_id, kind, value, amount_cents, currency, cost_category, notes, recorded_by, occurred_at')
+      .eq('employee_id', employee.id)
       .order('occurred_at', { ascending: false }).limit(100),
   ]);
 
   const queryError = briefResult.error || scheduleResult.error || workResult.error || outcomeResult.error;
   if (queryError) return NextResponse.json({ error: 'Employee workspace could not be loaded.' }, { status: 500 });
 
+  const schedules = scheduleResult.data || [];
+  const configuredTimezone = schedules.find((schedule) => schedule.enabled)?.timezone || 'UTC';
+  const timezone = isValidTimeZone(configuredTimezone) ? configuredTimezone : 'UTC';
+  const scheduledDate = dateInTimeZone(new Date(), timezone);
   const workItems = workResult.data || [];
   const workIds = workItems.map((item) => item.id);
   const decisionResult = workIds.length
@@ -81,7 +88,7 @@ export async function GET() {
   }
 
   const outcomes = outcomeResult.data || [];
-  const todaysOutcomes = outcomes.filter((outcome) => outcome.occurred_at.slice(0, 10) === scheduledDate);
+  const todaysOutcomes = outcomes.filter((outcome) => dateInTimeZone(new Date(outcome.occurred_at), timezone) === scheduledDate);
   const scorecards = new Map<string, { currency: string; grossRevenueCents: number; totalCostCents: number }>();
   for (const outcome of todaysOutcomes) {
     if ((outcome.kind !== 'revenue' && outcome.kind !== 'cost') || !outcome.currency || !outcome.amount_cents) continue;
@@ -103,14 +110,22 @@ export async function GET() {
     if (outcome.kind === 'time_saved') operatorMinutes += Number(outcome.value);
   }
 
+  const customerById = new Map((availableCustomerRows || []).map((candidate) => [candidate.id, candidate]));
+  const availableCustomers = memberships.flatMap((candidate) => {
+    const account = customerById.get(candidate.customer_id);
+    return account ? [{ ...account, role: candidate.role }] : [];
+  });
+
   return NextResponse.json({
     workspace: {
       customer,
+      availableCustomers,
       membershipRole: membership.role,
       scheduledDate,
+      timezone,
       employee,
       brief: briefResult.data,
-      schedules: scheduleResult.data || [],
+      schedules,
       workItems,
       decisions: decisionResult.data || [],
       outcomes,
