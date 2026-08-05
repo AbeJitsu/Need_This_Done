@@ -3,13 +3,16 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 const localUrl = 'http://127.0.0.1:54321';
 const password = 'local-workspace-ui-123!';
-const email = `workspace-ui-${Date.now()}@example.test`;
+let email: string;
 let admin: SupabaseClient;
 let userId: string;
 
 const workspace = {
   customer: { id: 'customer-1', name: 'NeedThisDone' },
+  availableCustomers: [{ id: 'customer-1', name: 'NeedThisDone', role: 'owner' }],
   membershipRole: 'owner',
+  scheduledDate: '2026-07-27',
+  timezone: 'America/New_York',
   employee: { id: 'employee-1', name: 'Growth Desk', role_name: 'AI Growth Employee', status: 'pilot' },
   brief: {
     responsibilities: ['Research qualified growth opportunities'],
@@ -25,7 +28,11 @@ const workspace = {
   ],
   workItems: [{
     id: 'work-1',
+    predecessor_work_item_id: null,
+    source_type: 'manual',
+    source_id: null,
     queue: 'morning',
+    scheduled_date: '2026-07-27',
     title: 'Review a warm audit lead',
     evidence: ['The prospect opened the report twice.'],
     proposed_action: 'Review the prepared follow-up.',
@@ -33,16 +40,20 @@ const workspace = {
     risk_level: 'low',
     priority: 1,
     status: 'pending',
+    created_by: null,
+    completed_by: null,
+    completed_at: null,
+    completion_notes: null,
     created_at: '2026-07-27T12:00:00.000Z',
   }],
   decisions: [],
-  outcomes: [{ id: 'outcome-1', kind: 'time_saved', value: 20, amount_cents: null, currency: null, cost_category: null, notes: 'Research preparation', occurred_at: '2026-07-27T12:00:00.000Z' }],
+  outcomes: [{ id: 'outcome-1', work_item_id: null, kind: 'time_saved', value: 20, amount_cents: null, currency: null, cost_category: null, notes: 'Research preparation', recorded_by: null, occurred_at: '2026-07-27T12:00:00.000Z' }],
   dailyScorecards: [{ currency: 'USD', grossRevenueCents: 65000, totalCostCents: 15000, netRevenueCents: 50000, goalCents: 50000 }],
   funnel: { leads: 3, replies: 2, meetings: 1, projects: 1 },
   operatorMinutes: 20,
 };
 
-test.beforeAll(async () => {
+test.beforeAll(async ({}, workerInfo) => {
   if (process.env.ENV_TARGET !== 'local' || process.env.NEXT_PUBLIC_SUPABASE_URL !== localUrl) {
     throw new Error('Employee workspace UI proof is local-only.');
   }
@@ -52,6 +63,7 @@ test.beforeAll(async () => {
   admin = createClient(localUrl, serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
+  email = `workspace-${Date.now()}-${workerInfo.workerIndex}-${crypto.randomUUID().slice(0, 8)}@example.test`;
   const { data, error } = await admin.auth.admin.createUser({
     email,
     password,

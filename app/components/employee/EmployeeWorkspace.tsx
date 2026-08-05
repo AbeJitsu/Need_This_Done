@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Activity, AlertCircle, BarChart3, Check, Clock3, FileText, History,
   Loader2, RefreshCw, ShieldCheck, SunMedium, Target,
@@ -11,6 +12,7 @@ import type {
   EmployeeWorkItem,
   EmployeeWorkspaceData,
 } from '@/lib/ai-employee-types';
+import { AddWorkItemForm, CompletionForm, OutcomeForm } from './EmployeeLifecycleForms';
 
 type View = EmployeeQueue | 'activity' | 'outcomes' | 'guardrails';
 const MAX_QUEUE_ITEMS = 5;
@@ -51,6 +53,8 @@ function EmptyState({ title, description }: { title: string; description: string
 }
 
 export default function EmployeeWorkspace() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [view, setView] = useState<View>('morning');
   const [workspace, setWorkspace] = useState<EmployeeWorkspaceData | null>(null);
   const [reason, setReason] = useState<string | null>(null);
@@ -61,11 +65,12 @@ export default function EmployeeWorkspace() {
   const [deferDates, setDeferDates] = useState<Record<string, string>>({});
   const pendingRequests = useRef<Record<string, { fingerprint: string; idempotencyKey: string }>>({});
 
-  const loadWorkspace = useCallback(async () => {
+  const loadWorkspace = useCallback(async (customerId?: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/employee/workspace', { cache: 'no-store' });
+      const query = customerId ? `?customerId=${encodeURIComponent(customerId)}` : '';
+      const response = await fetch(`/api/employee/workspace${query}`, { cache: 'no-store' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || 'Workspace could not be loaded.');
       setWorkspace(payload.workspace);
@@ -77,15 +82,16 @@ export default function EmployeeWorkspace() {
     }
   }, []);
 
-  useEffect(() => { void loadWorkspace(); }, [loadWorkspace]);
+  useEffect(() => { void loadWorkspace(searchParams.get('customerId') || undefined); }, [loadWorkspace, searchParams]);
 
   const pendingByQueue = useMemo(() => {
     const grouped: Record<EmployeeQueue, EmployeeWorkItem[]> = { morning: [], midday: [], evening: [] };
     for (const item of workspace?.workItems || []) {
-      if (item.status === 'pending' && grouped[item.queue].length < MAX_QUEUE_ITEMS) {
+      if (item.status === 'pending' && item.scheduled_date === workspace?.scheduledDate && grouped[item.queue].length < MAX_QUEUE_ITEMS) {
         grouped[item.queue].push(item);
       }
     }
+    for (const items of Object.values(grouped)) items.sort((left, right) => left.priority - right.priority);
     return grouped;
   }, [workspace]);
 
@@ -159,9 +165,10 @@ export default function EmployeeWorkspace() {
         <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">{workspace.customer.name} · {workspace.employee.status}</p>
           <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
-            <div><h1 className="font-playfair text-4xl font-black">{workspace.employee.name}</h1><p className="mt-2 text-[#50675e]">{workspace.employee.role_name} · {workspace.workItems.filter((item) => item.status === 'pending').length} decisions for {workspace.scheduledDate}</p></div>
+            <div><h1 className="font-playfair text-4xl font-black">{workspace.employee.name}</h1><p className="mt-2 text-[#50675e]">{workspace.employee.role_name} · {workspace.workItems.filter((item) => item.status === 'pending' && item.scheduled_date === workspace.scheduledDate).length} decisions for {workspace.scheduledDate}</p></div>
             <span className="rounded-full bg-[#e4eee6] px-4 py-2 text-sm font-bold text-[#126b4e]">Supervised mode</span>
           </div>
+          {workspace.availableCustomers.length > 1 && <label className="mt-5 block max-w-sm text-sm font-bold">Customer workspace<select value={workspace.customer.id} onChange={(event) => router.replace(`/employee?customerId=${encodeURIComponent(event.target.value)}`)} className="mt-2 min-h-11 w-full rounded-xl border border-[#183229]/20 bg-white px-3">{workspace.availableCustomers.map((customer) => <option key={customer.id} value={customer.id}>{customer.name} · {customer.role}</option>)}</select></label>}
         </div>
       </header>
 
@@ -179,7 +186,9 @@ export default function EmployeeWorkspace() {
 
         <section className="mt-8">
           {(view === 'morning' || view === 'midday' || view === 'evening') && (
-            queueItems.length === 0
+            <>
+            {workspace.membershipRole !== 'viewer' && <AddWorkItemForm workspace={workspace} queue={view} onRefresh={() => loadWorkspace(workspace.customer.id)} onError={setError} />}
+            {queueItems.length === 0
               ? <EmptyState title="This check-in is clear" description="There are no pending decisions in this capped queue. Completed and deferred work remains available in Activity." />
               : <div className="space-y-5">{queueItems.map((item, index) => (
                 <article key={item.id} className="rounded-3xl border border-[#183229]/15 bg-white p-6 sm:p-8">
@@ -196,19 +205,21 @@ export default function EmployeeWorkspace() {
                   {workspace.membershipRole === 'viewer' && <p className="mt-5 rounded-xl bg-[#f7f4ed] p-3 text-sm font-semibold">Viewers can review this queue but only owners and managers can record decisions.</p>}
                   <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">{(['approve', 'revise', 'defer', 'reject'] as EmployeeDecision[]).map((action) => <button key={action} disabled={submittingId === item.id || workspace.membershipRole === 'viewer' || (action === 'revise' && !instructions[item.id]?.trim()) || (action === 'defer' && !deferDates[item.id])} onClick={() => void decide(item, action)} className={action === 'approve' ? 'min-h-11 rounded-full bg-[#126b4e] px-4 font-bold capitalize text-white disabled:opacity-60' : 'min-h-11 rounded-full border border-[#183229]/20 px-4 font-bold capitalize disabled:opacity-60'}>{submittingId === item.id ? 'Saving…' : action}</button>)}</div>
                 </article>
-              ))}</div>
+              ))}</div>}
+            </>
           )}
 
           {view === 'activity' && (
             workspace.decisions.length === 0 ? <EmptyState title="No decisions recorded yet" description="Approved, revised, deferred, and rejected work will form the immutable activity history." /> :
             <div className="space-y-3">{workspace.decisions.map((decision) => {
               const item = workspace.workItems.find((candidate) => candidate.id === decision.work_item_id);
-              return <article key={decision.id} className="rounded-2xl border border-[#183229]/15 bg-white p-5"><div className="flex flex-wrap justify-between gap-2"><h2 className="font-bold">{item?.title || 'Work item'}</h2><time className="text-sm text-[#50675e]">{new Date(decision.created_at).toLocaleString()}</time></div><p className="mt-2 text-sm capitalize"><Activity className="mr-2 inline h-4 w-4 text-[#126b4e]" />{decision.decision}</p>{decision.instructions && <p className="mt-3 rounded-xl bg-[#f7f4ed] p-3 text-sm">{decision.instructions}</p>}</article>;
+              return <article key={decision.id} className="rounded-2xl border border-[#183229]/15 bg-white p-5"><div className="flex flex-wrap justify-between gap-2"><h2 className="font-bold">{item?.title || 'Work item'}</h2><time className="text-sm text-[#50675e]">{new Date(decision.created_at).toLocaleString()}</time></div><p className="mt-2 text-sm capitalize"><Activity className="mr-2 inline h-4 w-4 text-[#126b4e]" />{decision.decision}{item?.status === 'completed' ? ' · completed' : ''}</p>{decision.instructions && <p className="mt-3 rounded-xl bg-[#f7f4ed] p-3 text-sm">{decision.instructions}</p>}{item?.completion_notes && <p className="mt-3 rounded-xl bg-[#e4eee6] p-3 text-sm"><strong>Completion evidence:</strong> {item.completion_notes}</p>}{item?.status === 'approved' && workspace.membershipRole !== 'viewer' && <CompletionForm item={item} onRefresh={() => loadWorkspace(workspace.customer.id)} onError={setError} />}</article>;
             })}</div>
           )}
 
           {view === 'outcomes' && (
             <div className="space-y-6">
+              {workspace.membershipRole !== 'viewer' && <OutcomeForm workspace={workspace} onRefresh={() => loadWorkspace(workspace.customer.id)} onError={setError} />}
               <section aria-labelledby="daily-scorecard-title">
                 <h2 id="daily-scorecard-title" className="text-2xl font-black">Today&apos;s scorecard</h2>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

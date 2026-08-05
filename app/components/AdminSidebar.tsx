@@ -25,6 +25,16 @@ const adminNavItems = [
     iconColorKey: 'dashboard' as const,
   },
   {
+    href: '/employee',
+    label: 'Employee Workspace',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 3a2.25 2.25 0 00-2.25 2.25v.75h-1.5A2.25 2.25 0 003.75 8.25v8.25a2.25 2.25 0 002.25 2.25h12a2.25 2.25 0 002.25-2.25V8.25A2.25 2.25 0 0018 6h-1.5v-.75A2.25 2.25 0 0014.25 3h-4.5zM9 13.5h.008v.008H9V13.5zm6 0h.008v.008H15V13.5zM9 16.5h6" />
+      </svg>
+    ),
+    iconColorKey: 'dashboard' as const,
+  },
+  {
     href: '/admin/reports',
     label: 'Report Queue',
     icon: (

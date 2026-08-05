@@ -9,6 +9,7 @@ import ProjectModalHeader from './project-modal/ProjectModalHeader';
 import ProjectModalDetails from './project-modal/ProjectModalDetails';
 import AdminStatusSection from './project-modal/AdminStatusSection';
 import ClientAccessSection from './project-modal/ClientAccessSection';
+import PilotSetupSection from './project-modal/PilotSetupSection';
 import ProjectGithubHandoffs from './project-modal/ProjectGithubHandoffs';
 import ProjectComments from './project-modal/ProjectComments';
 import { alertColors, cardBgColors } from '@/lib/colors';
@@ -218,6 +219,16 @@ export default function ProjectDetailModal({
                     email={project.email}
                     portalAccessEnabled={Boolean(project.user_id)}
                     onChanged={handleClientAccessChanged}
+                  />
+                  <PilotSetupSection
+                    projectId={project.id}
+                    projectName={project.name}
+                    company={project.company}
+                    customerId={project.customer_id}
+                    onProvisioned={(customerId) => {
+                      setProject((currentProject: any) => ({ ...currentProject, customer_id: customerId }));
+                      if (onUpdate) onUpdate();
+                    }}
                   />
                 </>
               )}

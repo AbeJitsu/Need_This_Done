@@ -209,6 +209,13 @@ export default function Navigation() {
                       >
                         Dashboard
                       </Link>
+                      <Link
+                        href="/employee"
+                        onClick={() => setShowDropdown(false)}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Employee Workspace
+                      </Link>
                       {isAdmin && (
                         <>
                           <Link
@@ -317,6 +324,13 @@ export default function Navigation() {
                   className={"block px-3 py-2 text-sm text-gray-600 hover:text-gray-900"}
                 >
                   Dashboard
+                </Link>
+                <Link
+                  href="/employee"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900"
+                >
+                  Employee Workspace
                 </Link>
                 {isAdmin && (
                   <Link

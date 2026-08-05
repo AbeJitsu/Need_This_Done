@@ -26,6 +26,8 @@ export interface Project {
   message: string;
   created_at: string;
   attachments: string[] | null;
+  customer_id?: string | null;
+  company?: string | null;
   project_comments?: { count: number }[];
 }
 
