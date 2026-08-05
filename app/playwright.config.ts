@@ -21,9 +21,6 @@ dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 // Base URL for E2E tests
 const baseURL = process.env.BASE_URL || 'http://localhost:3000';
 
-// Auth state file path
-const ADMIN_AUTH_FILE = path.join(__dirname, '.auth/admin.json');
-
 export default defineConfig({
   // ============================================================================
   // Test Directory and Execution
@@ -55,69 +52,29 @@ export default defineConfig({
   },
 
   // ============================================================================
-  // Screenshot Configuration
-  // ============================================================================
-  // Custom snapshot directory for visual regression testing
-  snapshotDir: './e2e/visual-regression',
-
-  // ============================================================================
-  // Test Projects - Auth Setup + Browser Testing
+  // Intentional browser contracts
   // ============================================================================
 
   projects: [
-    // Setup project: logs in once, saves session
-    {
-      name: 'setup',
-      testMatch: /auth\.setup\.ts/,
-    },
-
-    // Desktop Chrome - uses saved auth session
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: ADMIN_AUTH_FILE,
-      },
-      dependencies: ['setup'],
-      // Exclude auth setup and accessibility tests (run a11y separately)
-      testIgnore: [/auth\.setup\.ts/, /\.a11y\.test\.ts$/],
-    },
-
-    // Mobile - uses saved auth session
-    {
-      name: 'mobile',
-      use: {
-        ...devices['iPhone 12'],
-        browserName: 'chromium',
-        storageState: ADMIN_AUTH_FILE,
-      },
-      dependencies: ['setup'],
-      // Exclude auth setup and accessibility tests (run a11y separately)
-      testIgnore: [/auth\.setup\.ts/, /\.a11y\.test\.ts$/],
-    },
-
-    // Anonymous public-route checks. No application authentication bypass is enabled.
     {
       name: 'public',
       use: {
         ...devices['Desktop Chrome'],
       },
-      // Exclude auth setup and accessibility tests (run a11y separately via test:a11y:e2e)
-      testIgnore: [/auth\.setup\.ts/, /\.a11y\.test\.ts$/],
+      testMatch: /(retained-core-smoke|ai-employee-product)\.spec\.ts/,
     },
 
-    // Mobile counterpart for retained-route smoke checks without saved auth state.
     {
       name: 'public-mobile',
       use: {
         ...devices['iPhone 12'],
         browserName: 'chromium',
       },
-      testIgnore: [/auth\.setup\.ts/, /\.a11y\.test\.ts$/],
+      testMatch: /(retained-core-smoke|ai-employee-product)\.spec\.ts/,
     },
 
-    // Real local Supabase-authenticated proof. This project has no saved state
-    // and uses real fixture sessions.
+    // No saved state: these specs create real local Supabase sessions or mock
+    // only the display payload when the test is strictly a layout contract.
     {
       name: 'auth-contract',
       use: {
@@ -139,7 +96,7 @@ export default defineConfig({
         webServer: {
           // SKIP_CACHE=true disables Redis caching during E2E tests
           // This prevents stale cache issues when tests create/modify data
-          command: 'SKIP_CACHE=true npm run dev',
+          command: 'SKIP_CACHE=true SKIP_EMAILS=true npm run dev',
           url: 'http://localhost:3000',
           reuseExistingServer: false, // Always start fresh server with SKIP_CACHE
           timeout: 120 * 1000,

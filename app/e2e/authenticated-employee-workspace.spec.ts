@@ -28,6 +28,14 @@ type Fixture = {
 const localUrl = 'http://127.0.0.1:54321';
 const password = 'local-auth-contract-123!';
 
+function dateInNewYork() {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
 function requiredEnvironment(name: string) {
   const value = process.env[name];
   if (!value) throw new Error(`Missing ${name} for authenticated browser proof.`);
@@ -43,6 +51,19 @@ async function createFixture(): Promise<Fixture> {
   if (process.env.ENV_TARGET !== 'local') throw new Error('Authenticated browser proof is local-only.');
   if (process.env.NEXT_PUBLIC_SUPABASE_URL !== localUrl) {
     throw new Error('Authenticated browser proof must use local Supabase.');
+  }
+  if (process.env.OFFLINE_ASSEMBLY_PROOF === 'true') {
+    const externalProviderVariables = [
+      'REDIS_URL', 'OPENAI_API_KEY', 'RESEND_API_KEY', 'RESEND_ADMIN_EMAIL',
+      'RESEND_FROM_EMAIL', 'RESEND_WEBHOOK_SECRET', 'GOOGLE_CLIENT_ID',
+      'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI', 'GOOGLE_OAUTH_STATE_SECRET',
+      'CALENDAR_TOKEN_ENCRYPTION_KEY', 'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
+      'STRIPE_SECRET_KEY', 'STRIPE_TEST_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET',
+      'OPENROUTER_API_KEY',
+    ];
+    const configured = externalProviderVariables.filter((name) => Boolean(process.env[name]));
+    if (configured.length) throw new Error(`Offline assembly received provider credentials: ${configured.join(', ')}`);
+    if (process.env.SKIP_EMAILS !== 'true') throw new Error('Offline assembly must disable provider email delivery.');
   }
 
   const admin = createClient(
@@ -78,7 +99,7 @@ async function createFixture(): Promise<Fixture> {
     manager: crypto.randomUUID(),
     viewer: crypto.randomUUID(),
   };
-  const scheduledDate = new Date().toISOString().slice(0, 10);
+  const scheduledDate = dateInNewYork();
 
   await expectNoError(await admin.from('customer_accounts').insert([
     { id: customerA, name: 'Authenticated Customer A' },
@@ -117,11 +138,11 @@ async function createFixture(): Promise<Fixture> {
 }
 
 async function login(page: Page, user: FixtureUser, employeeName = 'Authenticated Growth Employee') {
-  await page.goto('/login');
-  await page.getByLabel('Email Address').fill(user.email);
-  await page.getByLabel('Password').fill(user.password);
-  await page.getByRole('button', { name: 'Sign In', exact: true }).click();
-  await page.waitForURL('**/dashboard', { timeout: 15_000 });
+  const loginResponse = await page.request.post('/api/auth/login', {
+    headers: { 'x-forwarded-for': `127.0.0.${Number.parseInt(user.id.slice(-2), 16) % 200 + 20}` },
+    data: { email: user.email, password: user.password },
+  });
+  expect(loginResponse.ok()).toBe(true);
   await page.goto('/employee');
   await expect(page.getByRole('heading', { name: employeeName })).toBeVisible({ timeout: 15_000 });
 }
@@ -155,6 +176,11 @@ test.describe('real authenticated employee authorization', () => {
     await page.goto('/');
     const result = await api(page, '/api/employee/workspace');
     expect(result.status).toBe(401);
+    if (process.env.OFFLINE_ASSEMBLY_PROOF === 'true') {
+      await page.goto('/login');
+      await expect(page.getByRole('button', { name: 'Continue with Google' })).toHaveCount(0);
+      await expect(page.getByLabel('Email Address')).toBeVisible();
+    }
     await context.close();
   });
 
@@ -214,5 +240,110 @@ test.describe('real authenticated employee authorization', () => {
     });
     expect(crossCustomerDecision.status).toBe(403);
     await otherContext.close();
+  });
+
+  test('an operator provisions and closes one retained pilot lifecycle through authenticated APIs', async ({ browser }) => {
+    const projectId = crypto.randomUUID();
+    let pilotCustomerId: string | undefined;
+    const projectInsert = await fixture.admin.from('projects').insert({
+      id: projectId,
+      name: 'Lifecycle Pilot',
+      email: fixture.users.owner.email,
+      company: 'Lifecycle Company',
+      message: 'Prove the retained internal pilot lifecycle.',
+      user_id: fixture.users.owner.id,
+    });
+    await expectNoError(projectInsert);
+    await expectNoError(await fixture.admin.from('user_roles').upsert({ user_id: fixture.users.owner.id, role: 'admin' }));
+
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    try {
+      await login(page, fixture.users.owner);
+      const provision = await api(page, `/api/projects/${projectId}/pilot`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          employeeName: 'Lifecycle Growth Desk',
+          roleName: 'AI Growth Employee',
+          timezone: 'America/New_York',
+          morningTime: '09:00',
+          middayTime: '13:00',
+          eveningTime: '17:00',
+          responsibilities: ['Prepare retained work'],
+          prohibitedActions: ['No external action without approval'],
+          channels: ['Operator workspace'],
+          tone: 'Clear and direct',
+          approvalRules: ['Every external action requires approval'],
+        }),
+      });
+      expect(provision.status).toBe(201);
+      pilotCustomerId = provision.body.pilot.customer_id;
+      const employeeId = provision.body.pilot.employee_id;
+
+      const selectedWorkspace = await api(page, `/api/employee/workspace?customerId=${pilotCustomerId}`);
+      expect(selectedWorkspace.status).toBe(200);
+      expect(selectedWorkspace.body.workspace.availableCustomers.length).toBeGreaterThan(1);
+
+      const authored = await api(page, '/api/employee/work-items', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          employeeId,
+          queue: 'morning',
+          scheduledDate: selectedWorkspace.body.workspace.scheduledDate,
+          title: 'Review the retained pilot follow-up',
+          evidence: ['Project requested a supervised lifecycle'],
+          proposedAction: 'Send the approved follow-up manually',
+          expectedOutcome: 'Receive a qualified reply',
+          riskLevel: 'low',
+          priority: 1,
+          sourceType: 'project',
+          sourceId: projectId,
+          idempotencyKey: crypto.randomUUID(),
+        }),
+      });
+      expect(authored.status).toBe(201);
+      const workItemId = authored.body.workItem.id;
+
+      const decision = await api(page, `/api/employee/work-items/${workItemId}/decision`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ decision: 'approve', instructions: 'Keep the evidence URL.', idempotencyKey: crypto.randomUUID() }),
+      });
+      expect(decision.status).toBe(201);
+      const completion = await api(page, `/api/employee/work-items/${workItemId}/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes: 'Sent manually; reply saved in project notes.', idempotencyKey: crypto.randomUUID() }),
+      });
+      expect(completion.status).toBe(201);
+      const outcome = await api(page, '/api/employee/outcomes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          employeeId,
+          workItemId,
+          kind: 'reply',
+          value: 1,
+          notes: 'Qualified reply from lifecycle proof.',
+          idempotencyKey: crypto.randomUUID(),
+        }),
+      });
+      expect(outcome.status).toBe(201);
+
+      await page.goto(`/employee?customerId=${pilotCustomerId}`);
+      await expect(page.getByRole('heading', { name: 'Lifecycle Growth Desk' })).toBeVisible();
+      await page.getByRole('button', { name: 'Activity' }).click();
+      await expect(page.getByText('approve · completed')).toBeVisible();
+      await expect(page.getByText(/Sent manually; reply saved/)).toBeVisible();
+      await page.getByRole('button', { name: 'Outcomes' }).click();
+      await expect(page.getByText('Qualified reply from lifecycle proof.')).toBeVisible();
+    } finally {
+      await context.close();
+      await fixture.admin.from('user_roles').delete().eq('user_id', fixture.users.owner.id);
+      await fixture.admin.from('projects').delete().eq('id', projectId);
+      if (pilotCustomerId) await fixture.admin.from('customer_accounts').delete().eq('id', pilotCustomerId);
+    }
   });
 });

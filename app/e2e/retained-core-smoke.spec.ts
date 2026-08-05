@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 const publicSmokeProjects = new Set(['public', 'public-mobile']);
-const reportId = process.env.E2E_REPORT_ID;
+const reportId = process.env.E2E_REPORT_ID || '40000000-0000-4000-8000-000000000001';
 
 test.describe('Retained core smoke checks', () => {
   test.beforeEach(async ({}, testInfo) => {
@@ -30,12 +30,10 @@ test.describe('Retained core smoke checks', () => {
   test('project dashboard requires an authenticated session', async ({ page }) => {
     await page.goto('/dashboard');
     await expect(page).toHaveURL(/\/login$/);
-    await expect(page.getByRole('button', { name: /continue with google/i })).toBeVisible();
+    await expect(page.getByLabel('Email Address')).toBeVisible();
   });
 
-  test('public report renders when a report UUID is configured', async ({ page }) => {
-    test.skip(!reportId, 'Set E2E_REPORT_ID to a non-production report UUID to enable this check.');
-
+  test('sanitized public report renders from the local seed', async ({ page }) => {
     const response = await page.goto(`/report/${reportId}`);
 
     expect(response?.ok()).toBe(true);

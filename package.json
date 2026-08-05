@@ -7,16 +7,14 @@
     "rehearse:local-data": "./scripts/rehearse-local-data-migration.sh",
     "verify:database": "cd app && npm run verify:database",
     "verify:code": "cd app && npm run verify:code",
+    "verify:assembly": "cd app && npm run verify:assembly",
+    "verify:assembly:fresh": "cd app && npm run verify:assembly:fresh",
     "test:auth:e2e": "cd app && npm run test:auth:e2e",
     "build": "cd app && npm run build",
     "start": "cd app && npm run start",
     "test": "cd app && npm run test:e2e",
     "test:a11y": "cd app && npm run test:a11y",
     "lint": "cd app && npm run lint",
-    "type-check": "cd app && npm run type-check",
-    "storybook": "cd app && npm run storybook"
-  },
-  "dependencies": {
-    "dotenv": "^17.2.3"
+    "type-check": "cd app && npm run type-check"
   }
 }
