@@ -16,6 +16,7 @@ import {
   discoverNavPages,
   computeSiteScore,
   buildExecutiveSummary,
+  buildDeterministicAnalysis,
 } from '@/lib/site-analyzer';
 
 // ============================================
@@ -311,6 +312,15 @@ describe('computeSiteScore', () => {
   it('gives full meta tag score when title + description present', () => {
     const metaCat = score.categories.find(c => c.name === 'Meta Tags');
     expect(metaCat?.earned).toBe(10);
+  });
+});
+
+describe('provider-free analysis', () => {
+  it('turns measured category gaps into a useful local priority list', () => {
+    const metrics = extractMetrics(SAMPLE_HTML, 'https://example.com/', 200);
+    const analysis = buildDeterministicAnalysis(computeSiteScore([metrics]));
+    expect(analysis).toContain('no external model service was used');
+    expect(analysis).toMatch(/1\. .+ \(\d+\/\d+\):/);
   });
 });
 

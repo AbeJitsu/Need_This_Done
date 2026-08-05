@@ -789,6 +789,30 @@ export function buildExecutiveSummary(score: ScoreBreakdown, allMetrics: Technic
   return lines.join(' ');
 }
 
+export function buildDeterministicAnalysis(score: ScoreBreakdown): string {
+  const priorities = score.categories
+    .map((category) => ({
+      ...category,
+      lost: category.possible - category.earned,
+      percentage: category.possible ? Math.round((category.earned / category.possible) * 100) : 100,
+    }))
+    .filter((category) => category.lost > 0)
+    .sort((left, right) => right.lost - left.lost || left.percentage - right.percentage)
+    .slice(0, 3);
+
+  if (!priorities.length) {
+    return 'Local evidence review: the measured website fundamentals passed every retained check. Keep monitoring accessibility, calls to action, content clarity, and metadata as the site changes.';
+  }
+
+  const recommendations = priorities.map((category, index) =>
+    `${index + 1}. ${category.name} (${category.earned}/${category.possible}): ${category.note}.`,
+  );
+  return [
+    'Local evidence review: these priorities come directly from the measured page data; no external model service was used.',
+    ...recommendations,
+  ].join('\n');
+}
+
 // ============================================
 // ORCHESTRATOR — Full site analysis
 // ============================================
@@ -843,8 +867,10 @@ export async function analyzeSite(url: string, onProgress?: (msg: string) => voi
   // 5. Build executive summary
   const executiveSummary = buildExecutiveSummary(score, allMetrics);
 
-  // 6. Run AI analysis
-  log('Running AI analysis...');
+  // 6. Build a useful local evidence analysis first. An optional model may
+  // improve the prose, but provider availability never decides whether the
+  // retained report succeeds.
+  let aiAnalysis = buildDeterministicAnalysis(score);
   const model = process.env.NEXT_PUBLIC_CHATBOT_MODEL || 'gpt-4.1-nano';
 
   const combinedContent = pages.map((p) => {
@@ -852,13 +878,23 @@ export async function analyzeSite(url: string, onProgress?: (msg: string) => voi
     return `PAGE: ${path}\n[title] ${p.metrics.title || 'No title'}\n[content]\n${p.content}`;
   }).join('\n\n---\n\n');
 
-  const { text: aiAnalysis } = await generateText({
-    model: openai(model),
-    system: buildEvaluationPrompt(allMetrics, score),
-    messages: [{ role: 'user', content: `Here is the visible content from all pages on ${url}:\n\n${combinedContent}` }],
-    temperature: 0.3,
-    maxOutputTokens: 2000,
-  });
+  if (process.env.OPENAI_API_KEY && process.env.OFFLINE_ASSEMBLY_PROOF !== 'true') {
+    log('Improving analysis with the configured model...');
+    try {
+      const result = await generateText({
+        model: openai(model),
+        system: buildEvaluationPrompt(allMetrics, score),
+        messages: [{ role: 'user', content: `Here is the visible content from all pages on ${url}:\n\n${combinedContent}` }],
+        temperature: 0.3,
+        maxOutputTokens: 2000,
+      });
+      if (result.text.trim()) aiAnalysis = result.text;
+    } catch {
+      log('Model analysis unavailable; using local evidence analysis.');
+    }
+  } else {
+    log('Using local evidence analysis.');
+  }
 
   // 7. Return structured result
   return {

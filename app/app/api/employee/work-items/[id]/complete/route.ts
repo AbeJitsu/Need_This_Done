@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 const completionSchema = z.object({
-  notes: z.string().trim().max(4000).optional(),
+  notes: z.string().trim().min(1).max(4000),
   idempotencyKey: z.string().uuid(),
 });
 
@@ -25,7 +25,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
 
   const { data, error } = await supabase.rpc('complete_ai_employee_work_item', {
     target_work_item_id: params.id,
-    target_completion_notes: parsed.data.notes || '',
+    target_completion_notes: parsed.data.notes,
     target_idempotency_key: parsed.data.idempotencyKey,
   });
   if (error) {

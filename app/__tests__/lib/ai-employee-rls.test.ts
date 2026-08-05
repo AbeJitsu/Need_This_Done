@@ -181,6 +181,9 @@ localDescribe.sequential('AI employee customer isolation and decision behavior',
     `, [employeeA, crypto.randomUUID()])).rejects.toThrow();
 
     await asUser(managerA, `select public.record_ai_employee_decision($1, 'approve', '', $2, null)`, [itemId, crypto.randomUUID()]);
+    await expect(asUser(managerA, `
+      select public.complete_ai_employee_work_item($1, '   ', $2)
+    `, [itemId, crypto.randomUUID()])).rejects.toThrow();
     const completed = await asUser<{ result: { status: string; duplicate: boolean } }>(managerA, `
       select public.complete_ai_employee_work_item($1, 'Sent manually and saved the reply URL', $2) as result
     `, [itemId, completionKey]);

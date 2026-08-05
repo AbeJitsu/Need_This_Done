@@ -110,18 +110,19 @@ export function validateEnvironmentVariables(): void {
       errorMessage: 'Must be HTTP or HTTPS URL',
     },
 
-    // OpenAI (required for chat and embeddings)
+    // OpenAI is optional. The retained analyzer has a deterministic local
+    // evidence fallback when no model provider is configured.
     OPENAI_API_KEY: {
       name: 'OPENAI_API_KEY',
-      required: true,
+      required: false,
       validate: (v) => v.startsWith('sk-'),
       errorMessage: 'Must start with sk-',
     },
 
-    // Vector search configuration (required if chat enabled)
+    // Retired chat/vector settings are accepted when present but are not core.
     VECTOR_SEARCH_SIMILARITY_THRESHOLD: {
       name: 'VECTOR_SEARCH_SIMILARITY_THRESHOLD',
-      required: true,
+      required: false,
       validate: (v) => {
         const num = parseFloat(v);
         return !isNaN(num) && num >= 0 && num <= 1;
@@ -130,7 +131,7 @@ export function validateEnvironmentVariables(): void {
     },
     VECTOR_SEARCH_MAX_RESULTS: {
       name: 'VECTOR_SEARCH_MAX_RESULTS',
-      required: true,
+      required: false,
       validate: (v) => {
         const num = parseInt(v);
         return !isNaN(num) && num > 0 && num < 100;
@@ -138,24 +139,26 @@ export function validateEnvironmentVariables(): void {
       errorMessage: 'Must be an integer between 1 and 99',
     },
 
-    // Redis (required for rate limiting and caching)
+    // Redis is optional acceleration/protection. Retained caches and rate
+    // limiting already degrade safely when it is unavailable.
     REDIS_URL: {
       name: 'REDIS_URL',
-      required: true,
+      required: false,
       validate: (v) => v.startsWith('redis://') || v.startsWith('rediss://'),
       errorMessage: 'Must be redis:// or rediss:// URL',
     },
 
-    // Email service (required for notifications)
+    // Email is an optional provider boundary. Durable application records must
+    // still succeed when delivery is not configured.
     RESEND_API_KEY: {
       name: 'RESEND_API_KEY',
-      required: true,
+      required: false,
       validate: (v) => v.startsWith('re_'),
       errorMessage: 'Must start with re_',
     },
     RESEND_ADMIN_EMAIL: {
       name: 'RESEND_ADMIN_EMAIL',
-      required: true,
+      required: false,
       validate: (v) => v.includes('@'),
       errorMessage: 'Must be valid email',
     },
@@ -174,23 +177,23 @@ export function validateEnvironmentVariables(): void {
       errorMessage: 'Must start with sk_',
     },
 
-    // Branded Google application login (required). The same OAuth client may
-    // later be used by the separately controlled Calendar connection.
+    // Google is optional because email/password remains the canonical local
+    // Supabase sign-in path. Calendar is a separate provider boundary.
     GOOGLE_CLIENT_ID: {
       name: 'GOOGLE_CLIENT_ID',
-      required: true,
+      required: false,
       validate: (v) => v.length > 20,
       errorMessage: 'Invalid client ID format',
     },
     GOOGLE_CLIENT_SECRET: {
       name: 'GOOGLE_CLIENT_SECRET',
-      required: true,
+      required: false,
       validate: (v) => v.length > 20,
       errorMessage: 'Invalid client secret format',
     },
     NEXTAUTH_SECRET: {
       name: 'NEXTAUTH_SECRET',
-      required: true,
+      required: false,
       validate: (v) => v.length >= 32,
       errorMessage: 'Must be at least 32 characters',
     },

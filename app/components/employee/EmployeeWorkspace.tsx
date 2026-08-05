@@ -120,7 +120,7 @@ export default function EmployeeWorkspace() {
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || 'Decision could not be recorded.');
       delete pendingRequests.current[item.id];
-      await loadWorkspace();
+      await loadWorkspace(workspace?.customer.id);
     } catch (decisionError) {
       setError(decisionError instanceof Error ? decisionError.message : 'Decision could not be recorded.');
     } finally {
@@ -139,7 +139,7 @@ export default function EmployeeWorkspace() {
           <AlertCircle className="mx-auto h-7 w-7 text-red-700" />
           <h1 className="mt-4 text-2xl font-black">The workspace is unavailable</h1>
           <p className="mt-3 text-[#50675e]">{error}</p>
-          <button onClick={() => void loadWorkspace()} className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-[#126b4e] px-5 font-bold text-white"><RefreshCw className="h-4 w-4" />Try again</button>
+          <button onClick={() => void loadWorkspace(searchParams.get('customerId') || undefined)} className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-[#126b4e] px-5 font-bold text-white"><RefreshCw className="h-4 w-4" />Try again</button>
         </div>
       </div>
     );

@@ -131,6 +131,7 @@ async function wrap<T>(
  * @returns Parsed value or null if not found or error
  */
 async function get<T>(key: string): Promise<T | null> {
+  if (skipCache) return null;
   try {
     const value = await redis.get(key);
     if (!value) return null;
@@ -153,6 +154,7 @@ async function set<T>(
   value: T,
   ttl: number = CACHE_TTL.MEDIUM
 ): Promise<void> {
+  if (skipCache) return;
   try {
     const serialized = JSON.stringify(value);
     await redis.setEx(key, ttl, serialized);
@@ -172,6 +174,7 @@ async function set<T>(
  * @param key - Cache key to delete
  */
 async function invalidate(key: string): Promise<void> {
+  if (skipCache) return;
   try {
     await redis.del(key);
   } catch (error) {
@@ -190,6 +193,7 @@ async function invalidate(key: string): Promise<void> {
  * @param pattern - Redis pattern (e.g., "user:projects:*", "admin:projects:*")
  */
 async function invalidatePattern(pattern: string): Promise<void> {
+  if (skipCache) return;
   try {
     const keys = await redis.keys(pattern);
     if (keys.length > 0) {

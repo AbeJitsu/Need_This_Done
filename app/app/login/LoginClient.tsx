@@ -17,7 +17,7 @@ import { FadeIn } from '@/components/motion/FadeIn';
 // Matches the site-wide editorial aesthetic: accent line + uppercase label,
 // font-black headings, dark glass card, emerald primary CTA.
 
-export default function LoginClient() {
+export default function LoginClient({ googleEnabled }: { googleEnabled: boolean }) {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
   const [email, setEmail] = useState('');
@@ -245,18 +245,8 @@ export default function LoginClient() {
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.25, ease: 'easeInOut' }}
                 >
-                  {!isForgotPassword && (
+                  {!isForgotPassword && googleEnabled && (
                     <div className="space-y-5">
-                      {error && (
-                        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-sm">
-                          <p className="text-sm text-red-300">{error}</p>
-                        </div>
-                      )}
-                      {successMessage && (
-                        <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/20 backdrop-blur-sm">
-                          <p className="text-sm text-green-300">{successMessage}</p>
-                        </div>
-                      )}
                       <button
                         type="button"
                         onClick={handleGoogleSignIn}
@@ -276,7 +266,7 @@ export default function LoginClient() {
 
                   <form onSubmit={handleAuth} className="space-y-5">
 
-                    {!isForgotPassword && (
+                    {!isForgotPassword && googleEnabled && (
                       <div className="flex items-center gap-3 py-1" aria-hidden="true">
                         <div className="h-px flex-1 bg-white/[0.12]" />
                         <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">or use email</span>

@@ -116,7 +116,7 @@ export function CompletionForm({ item, onRefresh, onError }: Pick<RefreshProps, 
     }
   };
 
-  return <form onSubmit={submit} className="mt-4 rounded-xl bg-[#e4eee6] p-4"><label className="text-sm font-semibold">Manual action notes<textarea maxLength={4000} value={notes} onChange={(event) => setNotes(event.target.value)} className="mt-2 min-h-20 w-full rounded-xl border border-[#183229]/20 bg-white p-3" placeholder="What was done, where, and any evidence or follow-up…" /></label><button disabled={submitting} className="mt-3 min-h-11 rounded-full bg-[#126b4e] px-4 font-bold text-white disabled:opacity-60">{submitting ? 'Completing…' : 'Mark manual action complete'}</button></form>;
+  return <form onSubmit={submit} className="mt-4 rounded-xl bg-[#e4eee6] p-4"><label className="text-sm font-semibold">Manual action evidence<textarea required maxLength={4000} value={notes} onChange={(event) => setNotes(event.target.value)} className="mt-2 min-h-20 w-full rounded-xl border border-[#183229]/20 bg-white p-3" placeholder="What was done, where, and the evidence or follow-up…" /></label><button disabled={submitting} className="mt-3 min-h-11 rounded-full bg-[#126b4e] px-4 font-bold text-white disabled:opacity-60">{submitting ? 'Completing…' : 'Mark manual action complete'}</button></form>;
 }
 
 export function OutcomeForm({ workspace, onRefresh, onError }: RefreshProps) {

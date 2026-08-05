@@ -25,6 +25,32 @@ export const RATE_LIMITS = {
 };
 
 const RATE_LIMIT_KEY_PREFIX = 'rate-limit:';
+type LocalRateLimitEntry = { count: number; resetAt: number };
+const localRateLimitEntries = new Map<string, LocalRateLimitEntry>();
+
+function checkLocalRateLimit(
+  key: string,
+  limitConfig: { maxAttempts: number; windowSeconds: number }
+) {
+  const now = Date.now();
+  const existing = localRateLimitEntries.get(key);
+  const entry = !existing || existing.resetAt <= now
+    ? { count: 1, resetAt: now + limitConfig.windowSeconds * 1000 }
+    : { count: existing.count + 1, resetAt: existing.resetAt };
+
+  localRateLimitEntries.set(key, entry);
+  if (localRateLimitEntries.size > 10_000) {
+    for (const [candidateKey, candidate] of localRateLimitEntries) {
+      if (candidate.resetAt <= now) localRateLimitEntries.delete(candidateKey);
+    }
+  }
+
+  return {
+    allowed: entry.count <= limitConfig.maxAttempts,
+    remaining: Math.max(0, limitConfig.maxAttempts - entry.count),
+    resetAt: new Date(entry.resetAt),
+  };
+}
 
 // ============================================================================
 // Rate Limit Check
@@ -45,6 +71,13 @@ export async function checkRateLimit(
   context: string = 'request'
 ): Promise<{ allowed: boolean; remaining: number; resetAt: Date }> {
   const key = `${RATE_LIMIT_KEY_PREFIX}${identifier}`;
+
+  // Provider-free/local assembly deliberately has no Redis process. Preserve
+  // rate limiting within this application process instead of connecting to a
+  // fallback address or silently allowing unlimited requests.
+  if (process.env.SKIP_CACHE === 'true') {
+    return checkLocalRateLimit(key, limitConfig);
+  }
 
   try {
     // Check if Redis circuit breaker is open

@@ -12,5 +12,6 @@ import LoginClient from './LoginClient';
 export const dynamic = 'force-dynamic';
 
 export default function LoginPage() {
-  return <LoginClient />;
+  const googleEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
+  return <LoginClient googleEnabled={googleEnabled} />;
 }

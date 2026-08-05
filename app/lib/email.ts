@@ -125,6 +125,10 @@ export async function sendEmailWithRetry(
     return 'test-email-id';
   }
 
+  // Email delivery is optional for the manual internal pilot. The durable
+  // project/report record remains the source of truth when no provider exists.
+  if (!process.env.RESEND_API_KEY) return null;
+
   const resend = getResend();
   const idempotencyKey = randomUUID();
 
@@ -222,6 +226,8 @@ export async function sendEmail(
   text?: string
 ): Promise<string | null> {
   try {
+    if (process.env.SKIP_EMAILS === 'true' || process.env.NODE_ENV === 'test') return 'test-email-id';
+    if (!process.env.RESEND_API_KEY) return null;
     const resend = getResend();
     const emailConfig = getEmailConfig();
 
