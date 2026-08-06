@@ -4,6 +4,8 @@ import { closePool, getPool } from '../../../supabase/tests/helpers';
 const localDescribe = process.env.RUN_LOCAL_SUPABASE_TESTS === 'true' ? describe : describe.skip;
 
 const retainedTables = [
+  'agent_task_events',
+  'agent_tasks',
   'ai_employee_check_in_schedules',
   'ai_employee_decisions',
   'ai_employee_operating_briefs',
@@ -13,12 +15,20 @@ const retainedTables = [
   'customer_accounts',
   'customer_memberships',
   'google_calendar_tokens',
+  'growth_profiles',
   'health_check',
+  'outreach_messages',
   'project_comments',
   'project_github_handoffs',
   'projects',
+  'prospect_outcomes',
+  'prospect_sources',
+  'prospects',
+  'sender_events',
   'site_reports',
+  'suppression_records',
   'user_roles',
+  'worker_callback_nonces',
   'workflow_runs',
 ] as const;
 
@@ -37,6 +47,12 @@ const requiredPolicies = [
   ['user_roles', 'Users can read own role', 'SELECT'],
   ['workflow_runs', 'Operators can read workflow runs', 'SELECT'],
   ['workflow_runs', 'Operators can update workflow runs', 'UPDATE'],
+  ['growth_profiles', 'admins read growth profiles', 'SELECT'],
+    ['prospects', 'admins read prospects', 'SELECT'],
+    ['outreach_messages', 'admins read outreach', 'SELECT'],
+    ['suppression_records', 'admins read suppression', 'SELECT'],
+    ['agent_tasks', 'admins read agent tasks', 'SELECT'],
+    ['sender_events', 'admins read sender events', 'SELECT'],
 ] as const;
 
 localDescribe.sequential('retained Supabase schema manifest', () => {
@@ -167,8 +183,12 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
        order by trigger_name`,
     );
     expect(triggers.rows.map((row) => row.trigger_name)).toEqual([
+      'agent_tasks_updated_at',
       'create_site_audit_workflow_run_after_insert',
+      'growth_profiles_updated_at',
+      'outreach_messages_updated_at',
       'project_status_change_comment',
+      'prospects_updated_at',
       'update_google_calendar_tokens_updated_at',
       'update_project_github_handoffs_updated_at',
       'update_projects_updated_at',
