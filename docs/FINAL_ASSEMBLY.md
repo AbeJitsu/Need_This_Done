@@ -24,7 +24,7 @@ The command removes optional provider credentials from its process, disables pro
 
 1. Local Supabase health and schema lint.
 2. Lint, TypeScript, required unit tests, accessibility tests, and production build.
-3. Exact 16-table retained manifest, database security, RLS/lifecycle, and consultation persistence checks.
+3. Exact 26-table retained manifest, database security, RLS/lifecycle, and consultation persistence checks.
 4. Real Supabase sessions for anonymous, owner, manager, viewer, and cross-customer behavior.
 5. Project → pilot provisioning → queue authoring → approval → manual completion evidence → outcome → historical reload.
 6. Employee workspace UI behavior without horizontal overflow or provider delivery.

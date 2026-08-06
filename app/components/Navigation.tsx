@@ -219,6 +219,13 @@ export default function Navigation() {
                       {isAdmin && (
                         <>
                           <Link
+                            href="/prospecting"
+                            onClick={() => setShowDropdown(false)}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            Prospecting & Outreach
+                          </Link>
+                          <Link
                             href="/admin/users"
                             onClick={() => setShowDropdown(false)}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -333,13 +340,10 @@ export default function Navigation() {
                   Employee Workspace
                 </Link>
                 {isAdmin && (
-                  <Link
-                    href="/admin/users"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={"block px-3 py-2 text-sm text-gray-600 hover:text-gray-900"}
-                  >
-                    Manage Users
-                  </Link>
+                  <>
+                    <Link href="/prospecting" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">Prospecting & Outreach</Link>
+                    <Link href="/admin/users" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900">Manage Users</Link>
+                  </>
                 )}
                 <button
                   type="button"

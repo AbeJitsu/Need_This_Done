@@ -35,6 +35,16 @@ const adminNavItems = [
     iconColorKey: 'dashboard' as const,
   },
   {
+    href: '/prospecting',
+    label: 'Prospecting & Outreach',
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8.25A2.25 2.25 0 015.25 6h13.5A2.25 2.25 0 0121 8.25v7.5A2.25 2.25 0 0118.75 18H9l-4.5 3v-3.75A2.25 2.25 0 013 15.75v-7.5z" />
+      </svg>
+    ),
+    iconColorKey: 'users' as const,
+  },
+  {
     href: '/admin/reports',
     label: 'Report Queue',
     icon: (

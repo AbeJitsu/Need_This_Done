@@ -54,10 +54,10 @@ These are three different states today. The new product is proven locally on `de
         | old hosted relationship              | local proof only
         v                                      v
  Approved cloud Supabase project       Local Supabase
- oxhjtmozsdstbokwtnwa                   migrations 001-081
+ oxhjtmozsdstbokwtnwa                   migrations 001-082
  remote history through 072             fresh reset + RLS/security proof
  old hosted state retained              dev schema/workflows proven
- pending repository migrations: 073-081
+ pending repository migrations: 073-082
 
                  NO DEV -> CLOUD CUTOVER YET
 ```
@@ -70,7 +70,7 @@ The intended future state is:
 Backup old hosted state
           |
           v
-Review/apply 073-081 -> Verify hosted parity -> Deploy proven dev commit
+Review/apply 073-082 -> Verify hosted parity -> Deploy proven dev commit
           |                                      |
           v                                      v
  Keep old app rollback path                    New production app
@@ -79,15 +79,21 @@ Review/apply 073-081 -> Verify hosted parity -> Deploy proven dev commit
 
 After cutover, `production` should point to the reviewed `dev` product, while the old deployment and backup exist only for recovery. This is a future state, not the current state.
 
-## Daily operating loop
+## Daily operating loop: prospecting first
 
 ```text
-Discover -> Audit -> Draft -> Approve -> Manually send -> Track -> Follow up -> Learn
+Configured ICP -> Public discovery -> Evidence -> Draft -> Batch approve -> Approved sender -> Reply/bounce -> Follow up -> Learn
     ^                                                                          |
     +--------------------------------------------------------------------------+
 ```
 
-Three short decision check-ins keep the loop moving without making outreach automatic:
+The first live channel is email. Contact-form, social, payment, private-system access, and autonomous sending remain outside the first sellable campaign. Three short decision check-ins keep the loop moving:
+
+- **Morning:** configure capacity, review public prospects, and approve research work.
+- **Midday:** preview, edit, approve, reject, or defer each personalized message.
+- **Evening:** review delivery, replies, bounces, unsubscribes, follow-ups, and outcomes.
+
+Hermes plans tasks, OpenClaw performs public-web research, OpenRouter supplies the configured model route, and Supabase stores the durable record. Codex builds and reviews the software; it is not the unattended business executor.
 
 - **Morning (15–20 minutes):** review new prospects, audits, and priorities.
 - **Midday (15–20 minutes):** approve, revise, defer, or reject prepared drafts.
@@ -156,10 +162,10 @@ Adapters authenticate every call and verify callbacks. A retry reuses the idempo
 | 4. Hosted payments and service boundary | **Next provider setup; direct payment not yet claimable** | Decide the first paid pilot offer, then prove one Stripe test-mode path without restoring order commerce. Use a Payment Link for a fixed offer or an invoice for custom work; add subscriptions and Customer Portal only when the managed service has a defined recurring price. | Phase 3 plus owner-approved offer/pricing and a Stripe test key. | One selected payment path redirects or invoices correctly, handles success/failure/refund signals idempotently, stores only minimal Stripe references, and passes a controlled test checkout. |
 | 5. Retire legacy systems | **Local contract complete; hosted cleanup approval pending** | Remove Medusa/Railway, product reviews, LMS, editor, old commerce, chatbot/embeddings, changelog, database-blog/media administration, design tools, and obsolete APIs, jobs, tests, providers, docs, tables, views, functions, triggers, policies, and buckets. | Phase 3 plus caller-removal evidence; hosted destructive cleanup remains separately reviewed. | Runtime callers and deployment files are absent; repository-owned blog content and redirects are verified; obsolete screenshot/debug/CMS/LMS/commerce tests and about 80 MB of generated image artifacts are removed; migrations `076`–`078` remove classified local residue with `RESTRICT`; the complete code/database/browser gate passes. Hosted backups, dependency inspection, dry runs, and approvals remain. |
 | 6. Operable AI employee boundary and measurement | **Code complete for the manual internal pilot** | Deliver project-to-customer provisioning, operator memberships, employee briefs, timezone-aware capped queues, immutable versioned decisions, auditable completion, operational/financial outcomes, scorecards, and RLS isolation. | Phase 5 and additive migration review. | A real authenticated local browser session provisions a project, authors work, approves it, records manual completion evidence and an outcome, and reloads durable history; owner/manager/viewer/cross-customer rules pass at the database and API boundaries. |
-| 7. NeedThisDone internal pilot | **Code ready; real operating data and production promotion remain owner operations** | Provision NeedThisDone as the first real customer and use the three daily check-ins for audit and follow-up work. Calendar and payment may remain manual and are not prerequisites for the internal pilot. | Phase 6 local code/database/browser gates. | Abe and Andrea routinely clear each queue in 15–20 minutes and record decisions, manual sends, replies, outcomes, and next actions. This is an operating result, not another application feature. |
-| 8. Prospect and audit intelligence | Planned | Turn approved discovery and Playwright/Lighthouse audits into prioritized, evidence-backed opportunities. | Phase 7. | New opportunities and audit findings are durable, reviewable, and attributable to a workflow run. |
-| 9. Approval-based outreach operations | Planned | Prepare follow-up drafts and tracking through adapters while keeping Abe and Andrea in the approval and sending loop. | Phase 8 and a ready adapter. | Every outreach action has an approver, a durable history, and an idempotent outcome; sending remains manual unless explicitly changed. |
-| 10. Learning and measured scale | Planned | Improve conversion, follow-up quality, and offer mix toward the $500/day target. | Phase 9. | Outcome data informs weekly decisions without expanding the system beyond verified, human-controlled workflows. |
+| 7. Prospecting and outreach foundation | **Code complete locally; sender and controlled campaign remain** | Configure one growth profile, discover public prospects, retain evidence and suppression, prepare personalized drafts, batch-review messages, lease worker tasks, and record provider events/costs. | Phase 6 local code/database/browser gates. | The three check-ins work from `/prospecting`; no unapproved message can be sent; deterministic discovery and sender boundaries are covered by tests. |
+| 8. Real sender and first controlled campaign | Planned | Select one provider-neutral-compatible sender, prove delivery/bounce/reply/unsubscribe correlation, and run a small approved batch. | Phase 7 plus owner-approved sender configuration. | Real matching prospects receive only Abe/Andrea-approved messages; delivery, replies, suppressions, follow-ups, and spend are durable. |
+| 9. Follow-up and outcome learning | Planned | Generate eligible follow-up work from replies and next-action dates, then measure qualification, meetings, customers, and offer fit. | Phase 8. | Operators clear follow-up work without developer intervention and weekly decisions use recorded outcomes. |
+| 10. Contact-form fallback and measured scale | Planned | Add contact-form automation only after email safety and performance are proven; expand channels only with separate approval paths. | Phase 9 and explicit channel approval. | Additional channels remain bounded, attributable, and reversible while conversion improves toward the $500/day target. |
 
 Phase 1 evidence: [system audit](docs/audits/2026-07-24-system-audit.md) and [owner-dashboard inventory](docs/audits/2026-07-25-owner-dashboard-inventory.md). Those documents preserve the detailed baseline; this roadmap is the decision and sequencing record.
 
@@ -205,7 +211,7 @@ The next product step is to run the pilot with real NeedThisDone work and learn 
 Phase 4's repository catalog and guarded hosted-link handoff remain in place, but the catalog is still proposal-based and direct Stripe payment is not claimable. The former documentation referenced Stripe test-link commands that are not present in the current repository; the readiness document now treats test setup as a future, explicitly bounded task. A read-only hosted check on 2026-07-26 confirmed zero `orders` and `payments` rows; `appointment_requests`, `appointment_reminders`, and `payment_attempts` are absent. Phase 5 commerce application-code retirement may therefore proceed without a historical-data migration, provided retained pricing and consultation callers are converted first. Destructive schema cleanup remains a separate reviewed step after all callers are gone.
 
 Phase 6 passed its retained local-database and authenticated lifecycle gates through
-migration `081` on 2026-08-05 using Docker Desktop and the Supabase CLI. The exact 16-table
+migrations `081`–`082` on 2026-08-05 using Docker Desktop and the Supabase CLI. The exact 26-table
 manifest, customer isolation, role denial, idempotency, concurrency, queue uniqueness,
 immutable history, successor creation, provisioning, completion, outcome recording,
 financial validation, per-currency daily net, and privileged cleanup checks passed. The authenticated
@@ -227,7 +233,7 @@ pilot only after the code gate, real local-RLS gate, retained browser workflows,
 `072`–`078` behavior/parity checks, and the production PR review all pass without
 unexplained warnings or skips.
 
-The final retained hosted contract contains the 16 RLS tables `projects`,
+The final retained hosted contract contains the 26 RLS tables `projects`,
 `project_comments`, `project_github_handoffs`, `site_reports`, `user_roles`,
 `workflow_runs`, `customer_accounts`, `customer_memberships`, `ai_employees`, the five
 `ai_employee_*` tables, `google_calendar_tokens`, and `health_check`; its narrow retained
