@@ -130,7 +130,7 @@ The adapter sends only a bounded task, an authenticated actor, and an idempotenc
 | Retrieval memory | Supabase pgvector initially | Store approved reusable knowledge and references without creating another source of truth | Later; schema and retention policy not designed |
 | Browser evidence | Playwright and Lighthouse | Authenticated workflows, accessibility, layout, audit evidence | Playwright active; Lighthouse workflow planned |
 | Payments | Stripe SDK + Stripe CLI `1.45.0` + hosted paths | Invoices or fixed Payment Links first; subscriptions later | CLI installed but not logged in; boundary exists; offer decision and first test-mode path remain unproven |
-| Communication | Resend | Transactional application email | Retained; controlled delivery/recovery proof incomplete |
+| Communication | Resend plus explicit prospecting sender adapter | Transactional application email stays separate from approved prospecting sends and provider events | Transactional boundary retained; prospecting fake mode and separately keyed Resend adapter are implemented, but no real outbound provider is approved |
 | Scheduling | Google Calendar | Human-confirmed consultation events and reminders | OAuth state hardened locally; optional live integration still blocked on hosted secret/provider proof |
 | Rate limits/cache | Redis/Upstash | Rate limiting, deduplication, and short-lived cache only | Retained supporting service |
 
