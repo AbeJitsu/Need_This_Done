@@ -8,13 +8,15 @@ The operating model is deliberately human-led: agents prepare research, audits, 
 
 ## Final vision in plain English
 
-NeedThisDone is a human-operated AI Growth Employee service. A customer asks for help, the system creates a durable project and operating brief, the AI employee prepares useful work, and Abe or Andrea makes the decision before anything external is sent or scheduled.
+NeedThisDone is a human-operated AI Growth Employee service. A configured growth profile turns public market evidence into a prospecting queue, while customer projects still create durable operating briefs and decision queues. Abe or Andrea makes the decision before anything external is sent or scheduled.
 
 ```text
-Customer request
+Configured ICP / customer request
       |
       v
-Public site -> Project + AI employee brief -> Daily decision queues
+Public discovery -> Evidence-backed prospect/message queues
+       |                              |
+       +--> Project + AI employee brief -> Daily decision queues
                                       |
                                       v
                          Abe / Andrea approve or edit
@@ -47,7 +49,7 @@ These are three different states today. The new product is proven locally on `de
 
  Git production                         Git dev
  origin/production                      local dev / origin/dev
- 8b8d429                                37cb999+ / abbd82a
+ 8b8d429                                caceac5 + docs / eae47ce
  old production product                 new AI Growth Employee product
  rollback/reference only                proven local release candidate
         |                                      |
@@ -62,7 +64,7 @@ These are three different states today. The new product is proven locally on `de
                  NO DEV -> CLOUD CUTOVER YET
 ```
 
-The approved cloud project has not received migrations `073`–`078`, the new application has not been deployed there, and no old hosted data has been deleted. The restricted backup and rollback path remain available.
+The approved cloud project has not received migrations `073`–`082`, the new application has not been deployed there, and no old hosted data has been deleted. The restricted backup and rollback path remain available.
 
 The intended future state is:
 
@@ -95,10 +97,6 @@ The first live channel is email. Contact-form, social, payment, private-system a
 
 Hermes plans tasks, OpenClaw performs public-web research, OpenRouter supplies the configured model route, and Supabase stores the durable record. Codex builds and reviews the software; it is not the unattended business executor.
 
-- **Morning (15–20 minutes):** review new prospects, audits, and priorities.
-- **Midday (15–20 minutes):** approve, revise, defer, or reject prepared drafts.
-- **End of day (15–20 minutes):** record replies and outcomes, choose follow-ups, and capture what should improve tomorrow.
-
 ## Technology architecture
 
 The canonical component responsibility map is [docs/TECH_STACK.md](docs/TECH_STACK.md). The short rule is: **Hermes orchestrates, Codex engineers, OpenClaw executes, OpenRouter routes models, and Supabase remembers.**
@@ -123,7 +121,7 @@ Prospects / public site --> Next.js on Vercel <--> Operator dashboard
               +-----------------+------------------------+----------------+
               |                 |                        |                |
             Stripe       Transactional email       workflow_runs     Decision cards
-                                                        |
+                                                        | agent_tasks / outreach_messages
         +---------------------------+-------------------+-------------------------+
         |                           |                                             |
   Playwright/Lighthouse          OpenRouter                         authenticated adapters
@@ -159,11 +157,11 @@ Adapters authenticate every call and verify callbacks. A retry reuses the idempo
 | 1. Inventory and retained-product boundary | Complete | Audit the existing system and classify the owner-dashboard, payment, and data surfaces. | Phase 0. | Evidence identifies retained, transitional, and retirement-targeted work. |
 | 2. Core safety and workflow foundation | Complete | Fix analyzer and lead-capture risks; define durable, authenticated workflow records and operator-only access. | Phases 0–1. | Security and data-flow tests pass; workflows can be reviewed safely without external automation. |
 | 3. Focused operator and client workspace | Complete | Deliver the Supabase-Auth dashboard for Abe and Andrea, project collaboration, report queue, appointments, decision cards, existing-account client access, and GitHub handoffs. | Phase 2. | Operators can run the daily loop from one authenticated workspace; a client can access only projects explicitly linked to their existing exact-email account and can receive project-scoped GitHub handoffs. GitHub repository membership remains managed in GitHub. |
-| 4. Hosted payments and service boundary | **Next provider setup; direct payment not yet claimable** | Decide the first paid pilot offer, then prove one Stripe test-mode path without restoring order commerce. Use a Payment Link for a fixed offer or an invoice for custom work; add subscriptions and Customer Portal only when the managed service has a defined recurring price. | Phase 3 plus owner-approved offer/pricing and a Stripe test key. | One selected payment path redirects or invoices correctly, handles success/failure/refund signals idempotently, stores only minimal Stripe references, and passes a controlled test checkout. |
+| 4. Hosted payments and service boundary | Deferred behind the first outreach campaign | Decide the first paid pilot offer, then prove one Stripe test-mode path without restoring order commerce. Use a Payment Link for a fixed offer or an invoice for custom work; add subscriptions and Customer Portal only when the managed service has a defined recurring price. | Phase 3 plus owner-approved offer/pricing and a Stripe test key. | One selected payment path redirects or invoices correctly, handles success/failure/refund signals idempotently, stores only minimal Stripe references, and passes a controlled test checkout. |
 | 5. Retire legacy systems | **Local contract complete; hosted cleanup approval pending** | Remove Medusa/Railway, product reviews, LMS, editor, old commerce, chatbot/embeddings, changelog, database-blog/media administration, design tools, and obsolete APIs, jobs, tests, providers, docs, tables, views, functions, triggers, policies, and buckets. | Phase 3 plus caller-removal evidence; hosted destructive cleanup remains separately reviewed. | Runtime callers and deployment files are absent; repository-owned blog content and redirects are verified; obsolete screenshot/debug/CMS/LMS/commerce tests and about 80 MB of generated image artifacts are removed; migrations `076`–`078` remove classified local residue with `RESTRICT`; the complete code/database/browser gate passes. Hosted backups, dependency inspection, dry runs, and approvals remain. |
 | 6. Operable AI employee boundary and measurement | **Code complete for the manual internal pilot** | Deliver project-to-customer provisioning, operator memberships, employee briefs, timezone-aware capped queues, immutable versioned decisions, auditable completion, operational/financial outcomes, scorecards, and RLS isolation. | Phase 5 and additive migration review. | A real authenticated local browser session provisions a project, authors work, approves it, records manual completion evidence and an outcome, and reloads durable history; owner/manager/viewer/cross-customer rules pass at the database and API boundaries. |
-| 7. Prospecting and outreach foundation | **Code complete locally; sender and controlled campaign remain** | Configure one growth profile, discover public prospects, retain evidence and suppression, prepare personalized drafts, batch-review messages, lease worker tasks, and record provider events/costs. | Phase 6 local code/database/browser gates. | The three check-ins work from `/prospecting`; no unapproved message can be sent; deterministic discovery and sender boundaries are covered by tests. |
-| 8. Real sender and first controlled campaign | Planned | Select one provider-neutral-compatible sender, prove delivery/bounce/reply/unsubscribe correlation, and run a small approved batch. | Phase 7 plus owner-approved sender configuration. | Real matching prospects receive only Abe/Andrea-approved messages; delivery, replies, suppressions, follow-ups, and spend are durable. |
+| 7. Prospecting and outreach foundation | **Local code, database, and authenticated browser proof complete** | Configure one growth profile, discover public prospects, retain evidence and suppression, prepare personalized drafts, batch-review messages, lease worker tasks, and record provider events/costs. | Phase 6 local code/database/browser gates. | The three check-ins work from `/prospecting`; no unapproved message can be sent; deterministic discovery and sender boundaries are covered by tests. |
+| 8. Real sender and first controlled campaign | **Next owner/provider gate** | Select one provider-neutral-compatible sender, prove delivery/bounce/reply/unsubscribe correlation, and run a small approved batch. | Phase 7 plus owner-approved sender configuration. | Real matching prospects receive only Abe/Andrea-approved messages; delivery, replies, suppressions, follow-ups, and spend are durable. |
 | 9. Follow-up and outcome learning | Planned | Generate eligible follow-up work from replies and next-action dates, then measure qualification, meetings, customers, and offer fit. | Phase 8. | Operators clear follow-up work without developer intervention and weekly decisions use recorded outcomes. |
 | 10. Contact-form fallback and measured scale | Planned | Add contact-form automation only after email safety and performance are proven; expand channels only with separate approval paths. | Phase 9 and explicit channel approval. | Additional channels remain bounded, attributable, and reversible while conversion improves toward the $500/day target. |
 
@@ -202,23 +200,25 @@ The **code-only internal-pilot finish line is complete** when this repository ca
 5. Activity survives day boundaries, scorecards use the employee timezone, operators can select among multiple customer workspaces, and navigation exposes the workspace.
 6. A fresh local schema plus real-session browser proof covers provision → author → approve → complete → measure → reload history.
 
-Migrations `079`–`081` and the authenticated lifecycle gate implement that finish line. Migration `081` requires manual completion evidence at the database boundary. Local proof does not configure or claim Stripe checkout, Google Calendar event creation, email delivery/recovery, hosted Supabase parity, deployment, or autonomous agent execution. Those are separate release/provider gates and must not be allowed to expand the internal-pilot code scope.
+Migrations `079`–`081` and the authenticated lifecycle gate implement that finish line. Migration `081` requires manual completion evidence at the database boundary. Migration `082` adds the additive prospecting/outreach contract and the authenticated `/prospecting` browser gate. Local proof does not configure or claim Stripe checkout, Google Calendar event creation, real sender delivery, hosted Supabase parity, deployment, or autonomous agent execution. Those are separate release/provider gates and must not be allowed to expand the internal-pilot code scope.
 
-The reproducible delivery command is `npm run verify:assembly` from `app/`; `npm run verify:assembly:fresh` adds a destructive reset of only the disposable local database. On 2026-08-05 the fresh assembly rebuilt migrations `001`–`081`; after repairing the cache-disabled invalidation path it exposed, a clean assembly run against that database passed 187 unit, 48 accessibility, 32 database/security, 18 public desktop/mobile, 4 real-session lifecycle, and 2 employee-workspace UI checks. The retained Playwright suite contains four intentional specs. The exact contract and recorded result are [provider-free final assembly](docs/FINAL_ASSEMBLY.md).
+The reproducible delivery command is `npm run verify:assembly` from `app/`; `npm run verify:assembly:fresh` adds a destructive reset of only the disposable local database. The current local assembly includes migrations `001`–`082`, deterministic prospecting unit/RLS checks, and the authenticated prospecting browser proof. The retained Playwright suite now contains five intentional specs. The exact contract and recorded result are [provider-free final assembly](docs/FINAL_ASSEMBLY.md).
 
-The next product step is to run the pilot with real NeedThisDone work and learn from it. The next production-release step is separately governed: review hosted migrations `073`–`081`, prove hosted authentication/RLS behavior, resolve or explicitly accept dependency advisories, then promote the exact reviewed `dev` commit. Stripe and Calendar become prerequisites only for claims that explicitly depend on them.
+The next product step is to select and configure one approved outbound sender, then run a small campaign whose messages are approved in the dashboard. The next production-release step is separately governed: review hosted migrations `073`–`082`, prove hosted authentication/RLS behavior, resolve or explicitly accept dependency advisories, then promote the exact reviewed `dev` commit. Stripe and Calendar remain deferred prerequisites only for claims that explicitly depend on them.
 
 Phase 4's repository catalog and guarded hosted-link handoff remain in place, but the catalog is still proposal-based and direct Stripe payment is not claimable. The former documentation referenced Stripe test-link commands that are not present in the current repository; the readiness document now treats test setup as a future, explicitly bounded task. A read-only hosted check on 2026-07-26 confirmed zero `orders` and `payments` rows; `appointment_requests`, `appointment_reminders`, and `payment_attempts` are absent. Phase 5 commerce application-code retirement may therefore proceed without a historical-data migration, provided retained pricing and consultation callers are converted first. Destructive schema cleanup remains a separate reviewed step after all callers are gone.
 
 Phase 6 passed its retained local-database and authenticated lifecycle gates through
-migrations `081`–`082` on 2026-08-05 using Docker Desktop and the Supabase CLI. The exact 26-table
-manifest, customer isolation, role denial, idempotency, concurrency, queue uniqueness,
-immutable history, successor creation, provisioning, completion, outcome recording,
-financial validation, per-currency daily net, and privileged cleanup checks passed. The authenticated
-browser gate proves the complete manual lifecycle and historical UI. The sanitized seed restores the retained workflow
-without production identities or customer content. Migration `072` was previously
-dry-run, separately approved, and applied to hosted Supabase. Migrations `073`–`081`
-remain pending hosted review; the generated destructive diff must never be applied blindly.
+migrations `079`–`081` on 2026-08-05 using Docker Desktop and the Supabase CLI. Migration `082`
+then added the prospecting/outreach contract. The exact 26-table manifest, customer isolation,
+role denial, idempotency, concurrency, queue uniqueness, immutable history, successor creation,
+provisioning, completion, outcome recording, financial validation, per-currency daily net,
+prospecting suppression, and privileged cleanup checks passed. The authenticated browser gates prove
+the complete manual lifecycle and the profile → discovery → draft → approval → sender-event path.
+The sanitized seed restores the retained workflow without production identities or customer content.
+Migration `072` was previously dry-run, separately approved, and applied to hosted Supabase.
+Migrations `073`–`082` remain pending hosted review; the generated destructive diff must never be
+applied blindly.
 
 The classified [Supabase drift register](docs/audits/2026-08-01-supabase-drift-register.md)
 is the authority for local-replacement confidence and database retirement sequencing. Local
@@ -228,16 +228,19 @@ between environments merely to force a zero-line whole-schema diff.
 
 Production application promotion remains paused while hosted parity and release evidence
 are completed. The required proof for each retained claim is tracked in [the release
-evidence matrix](docs/RELEASE_EVIDENCE.md). Phase 7 starts with a controlled internal
-pilot only after the code gate, real local-RLS gate, retained browser workflows, hosted
-`072`–`078` behavior/parity checks, and the production PR review all pass without
-unexplained warnings or skips.
+evidence matrix](docs/RELEASE_EVIDENCE.md). Phase 7 is locally proven. Phase 8 starts only
+after an owner selects a real sender and reviews its sending, bounce, reply, unsubscribe,
+idempotency, and suppression behavior. Hosted promotion still requires the code gate, real
+local-RLS gate, retained browser workflows, hosted `072`–`082` behavior/parity checks, and the
+production PR review without unexplained warnings or skips.
 
 The final retained hosted contract contains the 26 RLS tables `projects`,
 `project_comments`, `project_github_handoffs`, `site_reports`, `user_roles`,
 `workflow_runs`, `customer_accounts`, `customer_memberships`, `ai_employees`, the five
-`ai_employee_*` tables, `google_calendar_tokens`, and `health_check`; its narrow retained
-RPCs and the private `project-attachments` bucket are part of the same contract. Blog,
+`ai_employee_*` tables, `google_calendar_tokens`, `health_check`, `growth_profiles`,
+`prospects`, `prospect_sources`, `outreach_messages`, `suppression_records`, `agent_tasks`,
+`agent_task_events`, `worker_callback_nonces`, `sender_events`, and `prospect_outcomes`; its
+narrow retained RPCs and the private `project-attachments` bucket are part of the same contract. Blog,
 chat, embeddings, changelog, media, marketplace, and commerce schema are not retained.
 
 Consultations remain intentionally small: intake records a requested type and preferred
