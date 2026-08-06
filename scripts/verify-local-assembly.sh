@@ -90,6 +90,7 @@ npm run verify:code
 npm run verify:database
 npm run test:retained-smoke
 npm run test:auth:e2e
+npm run test:prospecting-workspace
 npm run test:employee-workspace
 
 echo "Provider-free assembly passed: local Supabase + repository code only."

@@ -16,6 +16,7 @@
     "test:unit": "vitest run --config vitest.unit.config.ts --exclude __tests__/lib/security-hardening.test.ts --exclude __tests__/lib/ai-employee-rls.test.ts --exclude __tests__/lib/retained-schema-manifest.test.ts",
     "test:unit:required": "npm run test:unit",
     "test:auth:e2e": "env -u NO_COLOR NODE_ENV=development playwright test e2e/authenticated-employee-workspace.spec.ts --project=auth-contract",
+    "test:prospecting-workspace": "env -u NO_COLOR NODE_ENV=development playwright test e2e/prospecting-workspace.spec.ts --project=auth-contract",
     "test:security": "RUN_LOCAL_SUPABASE_TESTS=true vitest run --config vitest.unit.config.ts __tests__/lib/security-hardening.test.ts",
     "test:schema-manifest": "RUN_LOCAL_SUPABASE_TESTS=true vitest run --config vitest.unit.config.ts __tests__/lib/retained-schema-manifest.test.ts",
     "test:ai-employee-rls": "RUN_LOCAL_SUPABASE_TESTS=true vitest run --config vitest.unit.config.ts __tests__/lib/ai-employee-rls.test.ts",
