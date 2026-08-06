@@ -162,6 +162,20 @@ export function validateEnvironmentVariables(): void {
       validate: (v) => v.includes('@'),
       errorMessage: 'Must be valid email',
     },
+    // Prospecting delivery is a separate opt-in boundary. It must not reuse
+    // the transactional Resend key or activate merely because one exists.
+    PROSPECTING_SENDER_PROVIDER: {
+      name: 'PROSPECTING_SENDER_PROVIDER',
+      required: false,
+      validate: (v) => v === 'fake' || v === 'resend' || v === 'disabled',
+      errorMessage: 'Must be fake, resend, or disabled',
+    },
+    PROSPECTING_RESEND_API_KEY: {
+      name: 'PROSPECTING_RESEND_API_KEY',
+      required: false,
+      validate: (v) => v.startsWith('re_'),
+      errorMessage: 'Must start with re_',
+    },
 
     // Stripe (required if payments enabled)
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: {

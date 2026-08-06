@@ -45,7 +45,7 @@ test.afterAll(async () => {
   await admin.auth.admin.deleteUser(userId);
 });
 
-test('configures, reviews, dispatches, and suppresses an approved prospecting message', async ({ page }) => {
+test('configures, reviews, sends, and suppresses an approved prospecting message', async ({ page }) => {
   const loginResponse = await page.request.post('/api/auth/login', {
     headers: { 'x-forwarded-for': '127.0.0.48' },
     data: { email, password },
@@ -113,12 +113,12 @@ test('configures, reviews, dispatches, and suppresses an approved prospecting me
   expect(draft.status).toBe(201);
   const messageId = draft.body.message.id as string;
 
-  const blockedDispatch = await api(page, '/api/prospecting/sender/dispatch', {
+  const blockedSend = await api(page, '/api/prospecting/sender/send', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messageId, providerMessageId: 'blocked-before-approval' }),
+    body: JSON.stringify({ messageId }),
   });
-  expect(blockedDispatch.status).toBe(409);
+  expect(blockedSend.status).toBe(409);
 
   await page.goto('/prospecting');
   await expect(page.getByRole('heading', { name: 'Prospecting & outreach' })).toBeVisible();
@@ -126,21 +126,23 @@ test('configures, reviews, dispatches, and suppresses an approved prospecting me
   await page.getByRole('button', { name: 'Midday · review drafts' }).click();
   await expect(page.getByRole('heading', { name: 'Message preview' })).toBeVisible();
   await page.getByRole('button', { name: 'Approve' }).click();
-  await expect(page.getByText('Draft review is clear')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Approved and ready to send' })).toBeVisible();
+  await page.getByRole('button', { name: 'Send approved message' }).click();
+  await expect(page.getByText('Approved message sent through the configured sender.')).toBeVisible();
 
-  const dispatch = await api(page, '/api/prospecting/sender/dispatch', {
+  const sentQueue = await api(page, '/api/prospecting/queue');
+  expect(sentQueue.status).toBe(200);
+  const sentMessage = sentQueue.body.messages.find((item: { id: string }) => item.id === messageId);
+  expect(sentMessage.approval_status).toBe('sent');
+  expect(sentMessage.provider_message_id).toMatch(/^fake-/);
+
+  const duplicateSend = await api(page, '/api/prospecting/sender/send', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messageId, providerMessageId: 'browser-proof-message' }),
+    body: JSON.stringify({ messageId }),
   });
-  expect(dispatch.status).toBe(201);
-  const duplicateDispatch = await api(page, '/api/prospecting/sender/dispatch', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messageId, providerMessageId: 'browser-proof-message' }),
-  });
-  expect(duplicateDispatch.status).toBe(200);
-  expect(duplicateDispatch.body.duplicate).toBe(true);
+  expect(duplicateSend.status).toBe(200);
+  expect(duplicateSend.body.duplicate).toBe(true);
 
   const bounce = await api(page, '/api/prospecting/sender/events', {
     method: 'POST',
@@ -148,7 +150,7 @@ test('configures, reviews, dispatches, and suppresses an approved prospecting me
     body: JSON.stringify({
       providerEventId: bounceEventId,
       eventType: 'bounced',
-      providerMessageId: 'browser-proof-message',
+      providerMessageId: sentMessage.provider_message_id,
       address: prospectEmail,
       payload: { reason: 'test-double' },
     }),
@@ -160,7 +162,7 @@ test('configures, reviews, dispatches, and suppresses an approved prospecting me
     body: JSON.stringify({
       providerEventId: bounceEventId,
       eventType: 'bounced',
-      providerMessageId: 'browser-proof-message',
+      providerMessageId: sentMessage.provider_message_id,
       address: prospectEmail,
     }),
   });

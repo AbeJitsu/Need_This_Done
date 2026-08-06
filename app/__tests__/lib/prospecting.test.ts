@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { InMemoryOutboundSender } from '@/lib/outbound-sender';
 import { createWorkerSignature, isPublicSourceUrl, modelBudgetAllowed, normalizeEmail, prospectDeduplicationKey, verifyWorkerSignature } from '@/lib/prospecting';
+import { createProspectingSender, getProspectingSenderProvider } from '@/lib/prospecting-sender';
 import { ForegroundProspectingWorker } from '@/lib/prospecting-worker';
 
 describe('prospecting safety helpers', () => {
@@ -20,6 +21,25 @@ describe('prospecting safety helpers', () => {
     expect(modelBudgetAllowed(0.8, 0.1)).toBe(true);
     expect(modelBudgetAllowed(0.8, 0.11)).toBe(false);
     expect(modelBudgetAllowed(0.95, 0.1)).toBe(false);
+  });
+
+  it('keeps real prospecting delivery disabled unless an explicit provider is selected', async () => {
+    const previousProvider = process.env.PROSPECTING_SENDER_PROVIDER;
+    const previousOffline = process.env.OFFLINE_ASSEMBLY_PROOF;
+    try {
+      delete process.env.PROSPECTING_SENDER_PROVIDER;
+      delete process.env.OFFLINE_ASSEMBLY_PROOF;
+      expect(getProspectingSenderProvider()).toBe('disabled');
+      expect(createProspectingSender()).toBeNull();
+      process.env.PROSPECTING_SENDER_PROVIDER = 'fake';
+      expect(getProspectingSenderProvider()).toBe('fake');
+      expect(createProspectingSender()).not.toBeNull();
+    } finally {
+      if (previousProvider === undefined) delete process.env.PROSPECTING_SENDER_PROVIDER;
+      else process.env.PROSPECTING_SENDER_PROVIDER = previousProvider;
+      if (previousOffline === undefined) delete process.env.OFFLINE_ASSEMBLY_PROOF;
+      else process.env.OFFLINE_ASSEMBLY_PROOF = previousOffline;
+    }
   });
 
   it('rejects stale or altered worker signatures', () => {

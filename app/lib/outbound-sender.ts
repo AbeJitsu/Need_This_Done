@@ -1,5 +1,6 @@
 export interface ApprovedOutboundMessage {
   id: string;
+  senderName?: string;
   senderEmail: string;
   recipientEmail: string;
   subject: string;
