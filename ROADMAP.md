@@ -56,15 +56,15 @@ These are three different states today. The new product is proven locally on `de
         | old hosted relationship              | local proof only
         v                                      v
  Approved cloud Supabase project       Local Supabase
- oxhjtmozsdstbokwtnwa                   migrations 001-082
+ oxhjtmozsdstbokwtnwa                   migrations 001-083
  remote history through 072             fresh reset + RLS/security proof
  old hosted state retained              dev schema/workflows proven
- pending repository migrations: 073-082
+ pending repository migrations: 073-083
 
                  NO DEV -> CLOUD CUTOVER YET
 ```
 
-The approved cloud project has not received migrations `073`–`082`, the new application has not been deployed there, and no old hosted data has been deleted. The restricted backup and rollback path remain available.
+The approved cloud project has not received migrations `073`–`083`, the new application has not been deployed there, and no old hosted data has been deleted. The restricted backup and rollback path remain available.
 
 The intended future state is:
 
@@ -72,7 +72,7 @@ The intended future state is:
 Backup old hosted state
           |
           v
-Review/apply 073-082 -> Verify hosted parity -> Deploy proven dev commit
+Review/apply 073-083 -> Verify hosted parity -> Deploy proven dev commit
           |                                      |
           v                                      v
  Keep old app rollback path                    New production app
@@ -200,24 +200,25 @@ The **code-only internal-pilot finish line is complete** when this repository ca
 5. Activity survives day boundaries, scorecards use the employee timezone, operators can select among multiple customer workspaces, and navigation exposes the workspace.
 6. A fresh local schema plus real-session browser proof covers provision → author → approve → complete → measure → reload history.
 
-Migrations `079`–`081` and the authenticated lifecycle gate implement that finish line. Migration `081` requires manual completion evidence at the database boundary. Migration `082` adds the additive prospecting/outreach contract and the authenticated `/prospecting` browser gate. The local send path now executes only approved records through an explicit fake or separately keyed Resend adapter; local proof does not configure or claim real sender delivery, webhook registration, Stripe checkout, Google Calendar event creation, hosted Supabase parity, deployment, or autonomous agent execution. Those are separate release/provider gates and must not be allowed to expand the internal-pilot code scope.
+Migrations `079`–`081` and the authenticated lifecycle gate implement that finish line. Migration `081` requires manual completion evidence at the database boundary. Migration `082` adds the additive prospecting/outreach contract and the authenticated `/prospecting` browser gate. Migration `083` adds the owner-scoped weekly-priority, daily-action, and reflection contract behind the unified `/dashboard` cockpit; its authenticated browser gate proves create → execute/defer → reload → reflect. The local send path now executes only approved records through an explicit fake or separately keyed Resend adapter; local proof does not configure or claim real sender delivery, webhook registration, Stripe checkout, Google Calendar event creation, hosted Supabase parity, deployment, or autonomous agent execution. Those are separate release/provider gates and must not be allowed to expand the internal-pilot code scope.
 
-The reproducible delivery command is `npm run verify:assembly` from `app/`; `npm run verify:assembly:fresh` adds a destructive reset of only the disposable local database. The current local assembly includes migrations `001`–`082`, deterministic prospecting unit/RLS checks, and the authenticated prospecting browser proof. The retained Playwright suite now contains five intentional specs. The exact contract and recorded result are [provider-free final assembly](docs/FINAL_ASSEMBLY.md).
+The reproducible delivery command is `npm run verify:assembly` from `app/`; `npm run verify:assembly:fresh` adds a destructive reset of only the disposable local database. The current local assembly includes migrations `001`–`083`, deterministic prospecting/cockpit unit-RLS checks, and authenticated prospecting, cockpit, and workspace browser proofs. The retained Playwright suite now contains six intentional specs. The exact contract and recorded result are [provider-free final assembly](docs/FINAL_ASSEMBLY.md).
 
-The next product step is to select and configure one approved outbound sender, register its signed delivery/reply webhook, then run a small campaign whose messages are approved and sent from the dashboard. The next production-release step is separately governed: review hosted migrations `073`–`082`, prove hosted authentication/RLS behavior, resolve or explicitly accept dependency advisories, then promote the exact reviewed `dev` commit. Stripe and Calendar remain deferred prerequisites only for claims that explicitly depend on them.
+The next product step is to add the deterministic local worker so discovery, drafting, retries, and follow-ups populate the cockpit automatically. After that, select and configure one approved outbound sender, register its signed delivery/reply webhook, and run a small campaign whose messages are approved and sent from the dashboard. The next production-release step is separately governed: review hosted migrations `073`–`083`, prove hosted authentication/RLS behavior, resolve or explicitly accept dependency advisories, then promote the exact reviewed `dev` commit. Stripe and Calendar remain deferred prerequisites only for claims that explicitly depend on them.
 
 Phase 4's repository catalog and guarded hosted-link handoff remain in place, but the catalog is still proposal-based and direct Stripe payment is not claimable. The former documentation referenced Stripe test-link commands that are not present in the current repository; the readiness document now treats test setup as a future, explicitly bounded task. A read-only hosted check on 2026-07-26 confirmed zero `orders` and `payments` rows; `appointment_requests`, `appointment_reminders`, and `payment_attempts` are absent. Phase 5 commerce application-code retirement may therefore proceed without a historical-data migration, provided retained pricing and consultation callers are converted first. Destructive schema cleanup remains a separate reviewed step after all callers are gone.
 
 Phase 6 passed its retained local-database and authenticated lifecycle gates through
 migrations `079`–`081` on 2026-08-05 using Docker Desktop and the Supabase CLI. Migration `082`
-then added the prospecting/outreach contract. The exact 26-table manifest, customer isolation,
+then added the prospecting/outreach contract, and migration `083` added the daily cockpit contract.
+The exact 29-table manifest, customer isolation,
 role denial, idempotency, concurrency, queue uniqueness, immutable history, successor creation,
 provisioning, completion, outcome recording, financial validation, per-currency daily net,
 prospecting suppression, and privileged cleanup checks passed. The authenticated browser gates prove
 the complete manual lifecycle and the profile → discovery → draft → approval → sender-event path.
 The sanitized seed restores the retained workflow without production identities or customer content.
 Migration `072` was previously dry-run, separately approved, and applied to hosted Supabase.
-Migrations `073`–`082` remain pending hosted review; the generated destructive diff must never be
+Migrations `073`–`083` remain pending hosted review; the generated destructive diff must never be
 applied blindly.
 
 The classified [Supabase drift register](docs/audits/2026-08-01-supabase-drift-register.md)
@@ -228,13 +229,14 @@ between environments merely to force a zero-line whole-schema diff.
 
 Production application promotion remains paused while hosted parity and release evidence
 are completed. The required proof for each retained claim is tracked in [the release
-evidence matrix](docs/RELEASE_EVIDENCE.md). Phase 7 is locally proven. Phase 8 starts only
-after an owner selects a real sender and reviews its sending, bounce, reply, unsubscribe,
-idempotency, and suppression behavior. Hosted promotion still requires the code gate, real
-local-RLS gate, retained browser workflows, hosted `072`–`082` behavior/parity checks, and the
+evidence matrix](docs/RELEASE_EVIDENCE.md). Phase 7 and the daily cockpit slice are locally
+proven. The next product slice is the deterministic local worker; sender selection and review
+of its sending, bounce, reply, unsubscribe, idempotency, and suppression behavior follow that
+slice. Hosted promotion still requires the code gate, real
+local-RLS gate, retained browser workflows, hosted `072`–`083` behavior/parity checks, and the
 production PR review without unexplained warnings or skips.
 
-The final retained hosted contract contains the 26 RLS tables `projects`,
+The final retained hosted contract contains the 29 RLS tables `projects`,
 `project_comments`, `project_github_handoffs`, `site_reports`, `user_roles`,
 `workflow_runs`, `customer_accounts`, `customer_memberships`, `ai_employees`, the five
 `ai_employee_*` tables, `google_calendar_tokens`, `health_check`, `growth_profiles`,
