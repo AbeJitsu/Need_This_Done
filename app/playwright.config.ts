@@ -80,7 +80,7 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
       },
-      testMatch: /(authenticated-employee-workspace|ai-employee-workspace|prospecting-workspace)\.spec\.ts/,
+      testMatch: /(authenticated-employee-workspace|ai-employee-workspace|prospecting-workspace|daily-cockpit)\.spec\.ts/,
     },
   ],
 
