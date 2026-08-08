@@ -5,19 +5,17 @@ export const dynamic = 'force-dynamic';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import AdminDashboard from '@/components/AdminDashboard';
-import UserDashboard from '@/components/UserDashboard';
+import DailyCockpit from '@/components/DailyCockpit';
 
 // ============================================================================
-// Dashboard Page - Router for Admin/User Views
+// Dashboard Page - Primary Daily Cockpit
 // ============================================================================
-// What: Displays different dashboard views based on user role.
-// Why: Admins need to manage all projects; users see only theirs.
-// How: Routes to AdminDashboard or UserDashboard based on isAdmin context.
+// The project and provider workspaces remain available as detailed secondary
+// views. This route is the operator's shared daily rhythm.
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   // ============================================================================
   // Redirect if Not Authenticated
@@ -49,13 +47,5 @@ export default function DashboardPage() {
     return null;
   }
 
-  // ============================================================================
-  // Render Appropriate Dashboard Based on Role
-  // ============================================================================
-
-  return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-      {isAdmin ? <AdminDashboard /> : <UserDashboard />}
-    </div>
-  );
+  return <DailyCockpit />;
 }
