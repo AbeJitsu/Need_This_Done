@@ -95,16 +95,16 @@ The first live channel is email. Contact-form, social, payment, private-system a
 - **Midday:** preview, edit, approve, reject, or defer each personalized message.
 - **Evening:** review delivery, replies, bounces, unsubscribes, follow-ups, and outcomes.
 
-Hermes plans tasks, OpenClaw performs public-web research, OpenRouter supplies the configured model route, and Supabase stores the durable record. Codex builds and reviews the software; it is not the unattended business executor.
+OpenClaw is the deferred operations boundary for approved public-web and external-tool work. OpenRouter is an unevaluated model boundary whose candidates must be benchmarked. Supabase stores the durable record, Redis supports only transient coordination, and Codex builds and reviews the software; no unattended agent is a product dependency.
 
 ## Technology architecture
 
-The canonical component responsibility map is [docs/TECH_STACK.md](docs/TECH_STACK.md). The short rule is: **Hermes orchestrates, Codex engineers, OpenClaw executes, OpenRouter routes models, and Supabase remembers.**
+The canonical component responsibility map is [docs/TECH_STACK.md](docs/TECH_STACK.md). The short rule is: **Supabase records durable truth, Redis supports transient work, Codex engineers, OpenClaw operates through approved adapters, and OpenRouter models remain unevaluated candidates.** Hermes is deferred and Qdrant is not integrated.
 
 | Status | Systems | Role and boundary |
 | --- | --- | --- |
 | Retained | Next.js on Vercel; Supabase Database, Auth, and RLS; Stripe boundary; Google Calendar boundary; transactional email | The public site and dashboard run on Next.js/Vercel. Supabase is the durable source of truth and controls operator access. Stripe handles approved payment collection; Google Calendar handles confirmed consultation invites and reminders. Both provider boundaries require controlled validation before public claims. |
-| Installed agent foundation | Hermes; OpenClaw; Codex; OpenRouter boundary; Supabase pgvector later | Hermes and OpenClaw CLIs are installed locally. Hermes has a separate ChatGPT/Codex OAuth session and passed a harmless read-only Codex-runtime proof. OpenRouter has $10 in purchased credits and a `needthisdone-local` key capped at $1 total, but the key has no usage and is not yet connected to an agent. No agent gateway, daemon, or production adapter is authorized. Supabase remains durable workflow state. |
+| Architecture-review-gated boundaries | OpenClaw; Codex; OpenRouter candidate boundary; Redis transient support | OpenClaw and Codex tooling exist locally, but no operations adapter or autonomous execution is authorized. OpenRouter candidates must be resolved from its current catalog and evaluated on fixed sanitized tasks. Redis remains optional cache/rate-limit/deduplication support. Qdrant is not integrated; Hermes is deferred. Supabase remains durable workflow state. |
 | Delivery tooling | Codex and GitHub; Playwright and Lighthouse | Codex/GitHub provide reviewed engineering and history. Playwright/Lighthouse provide browser and audit evidence. They do not own production workflow state. |
 | Retired runtime | Medusa/Railway commerce deployment; product reviews; LMS; inline editor/page builder; old commerce, growth-tool, and developer-tool surfaces | Runtime callers and deployable services are removed. Historical migrations remain untouched pending any separately reviewed cleanup. |
 
@@ -126,8 +126,9 @@ Prospects / public site --> Next.js on Vercel <--> Operator dashboard
         |                           |                                             |
   Playwright/Lighthouse          OpenRouter                         authenticated adapters
         |                           |                                  |          |
-      audits                routed models                         Hermes ---> OpenClaw
-                                                                       plan      execute
+      audits                candidate models                    OpenClaw adapter
+        |                           |                                  |
+        +---------------------------+------------------------------ approved operation
 ```
 
 Each workflow crosses a controlled boundary:
@@ -139,21 +140,25 @@ Dashboard decision card
 Supabase workflow_runs (state, owner, audit trail, idempotency key)
         |
         v
-Authenticated adapter call ----> OpenClaw / Hermes / approved service
-        |                                      |
-        +<--------- signed or verified callback+
+Authenticated adapter call ----> OpenClaw / approved service
+        |                              |
+        +<----- signed or verified callback
         |
         v
 Idempotent state update -> refreshed decision card -> human decision
 ```
 
-Adapters authenticate every call and verify callbacks. A retry reuses the idempotency key, so it cannot silently create a duplicate external action. Hermes and OpenClaw are part of the intended operating stack, but their unproven adapters are not prerequisites for the first dashboard cutover or manual internal pilot.
+Adapters authenticate every call and verify callbacks. A retry reuses the idempotency key, so it cannot silently create a duplicate external action. OpenClaw is not a prerequisite for the first dashboard cutover or manual internal pilot, and Hermes is not part of the primary architecture unless a distinct orchestration need is proven.
+
+### Phase 0 architecture gate
+
+Before the next architecture implementation, read the [technology-stack review](docs/TECH_STACK.md) and explicitly approve its inventory, source-of-truth map, service deferrals, model-evaluation protocol, safety boundaries, and rollback plan. Challenge every proposed service, model, agent, database, queue, and abstraction with the question: **What problem does this solve?** If the answer is not specific and measurable, remove or postpone it.
 
 ## Phased delivery
 
 | Phase | Status | Objective | Prerequisite | Exit condition |
 | --- | --- | --- | --- | --- |
-| 0. Documentation and tracking | Complete | Establish a canonical roadmap, execution ledger, and `dev` CI baseline. | None. | Roadmap and status responsibilities are clear; `dev` validation is documented. |
+| 0. Architecture review and tracking | **Complete for the current slice; required before the next architecture change** | Establish the canonical roadmap and execution ledger, inspect existing infrastructure, and challenge every proposed service, model, agent, database, queue, and abstraction. | None. | The source-of-truth map, transient-state map, model-evaluation protocol, safety boundaries, explicit deferrals, and rollback plan are reviewed before new architecture is implemented. |
 | 1. Inventory and retained-product boundary | Complete | Audit the existing system and classify the owner-dashboard, payment, and data surfaces. | Phase 0. | Evidence identifies retained, transitional, and retirement-targeted work. |
 | 2. Core safety and workflow foundation | Complete | Fix analyzer and lead-capture risks; define durable, authenticated workflow records and operator-only access. | Phases 0–1. | Security and data-flow tests pass; workflows can be reviewed safely without external automation. |
 | 3. Focused operator and client workspace | Complete | Deliver the Supabase-Auth dashboard for Abe and Andrea, project collaboration, report queue, appointments, decision cards, existing-account client access, and GitHub handoffs. | Phase 2. | Operators can run the daily loop from one authenticated workspace; a client can access only projects explicitly linked to their existing exact-email account and can receive project-scoped GitHub handoffs. GitHub repository membership remains managed in GitHub. |
@@ -171,7 +176,7 @@ Phase 1 evidence: [system audit](docs/audits/2026-07-24-system-audit.md) and [ow
 
 **Stripe exists as a boundary, not as a working payment product yet.** The Stripe SDK is installed and the offering checkout route safely falls back to `/contact`. The current catalog has proposal-based prices and no Payment Links. The old order-centric Stripe routes were retired. The next bounded task is one test-mode payment path, not a full commerce rebuild.
 
-**The local agent CLIs now exist, but automation remains off.** Hermes Agent `0.19.1`, OpenClaw `2026.7.1-2`, Stripe CLI `1.45.0`, Codex CLI `0.145.0`, and supported Node `24.18.1` are installed. Hermes has Chromium, imported NeedThisDone skills, `codex_app_server` selected, a separate ChatGPT/Codex OAuth session, and a passed harmless read-only repository proof. OpenClaw has no onboarding/config/daemon. Stripe has no account login. OpenRouter has $10 in purchased credits and a `needthisdone-local` key capped at $1 total, but no usage or agent connection yet. The local prospecting sender path now has an explicit fake mode and separately keyed Resend adapter; neither activates from the transactional Resend key. The exact owner actions are tracked in [full-stack setup outside the terminal](docs/launch/full-stack-external-setup.md).
+**The local tooling exists, but automation remains off.** OpenClaw `2026.7.1-2`, Stripe CLI `1.45.0`, Codex CLI `0.145.0`, and supported Node `24.18.1` are installed. OpenClaw has no onboarding/config/daemon or authenticated application adapter. Stripe has no account login. OpenRouter has no approved model default or connected application call; its current catalog must drive any future candidate evaluation. The local prospecting sender path now has an explicit fake mode and separately keyed Resend adapter; neither activates from the transactional Resend key. Hermes is deferred and is not a product prerequisite. The exact owner actions are tracked in [full-stack setup outside the terminal](docs/launch/full-stack-external-setup.md).
 
 **Google APIs exist in two separate forms.** Application sign-in preserves production's branded NextAuth Google redirect, then exchanges Google's signed ID token only after Supabase verifies it and issues the real application/RLS session. `app/lib/google-calendar.ts` remains an optional, separate Calendar OAuth/token adapter with low-level free/busy, create, update, and delete calls. Local encrypted-token and signed/session-bound OAuth-state tests pass, but no live Calendar event has been created or cleaned up by the retained consultation workflow.
 
@@ -258,5 +263,5 @@ tables, custom reminder engine, or separate appointment administration system.
 - Keep human approval for outreach. Initial outreach is manually sent by Abe or Andrea.
 - Never place browser-accessible secrets in the application. Keep credentials server-side and minimize each integration's authority.
 - Treat Supabase as durable memory: workflow state, decisions, outcomes, and idempotency records belong there rather than in agent context or external-tool history.
-- Do not depend on OpenClaw, Hermes, or another external automation system until its authenticated, callback-verified adapter is ready.
+- Do not depend on OpenClaw or another external automation system until its authenticated, callback-verified adapter is ready; do not add Hermes without a distinct approved need.
 - Apply a no-broken-windows policy: do not introduce, ignore, or normalize failing checks, warnings, dead routes, stale documentation, broken UI, or unresolved TODOs. Fix the defect in the current slice or record a narrow, owner-approved exception with a removal date in the implementation ledger; production cannot advance with an open exception.

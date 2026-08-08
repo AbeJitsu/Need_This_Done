@@ -1,185 +1,160 @@
 # NeedThisDone Technology Stack
 
+**This document is a collaborative design exercise. Challenge my assumptions. If a simpler, cheaper, or more maintainable approach exists, recommend it even if it differs from my initial proposal.**
+
 This is the canonical technology-responsibility map. `ROADMAP.md` defines product sequence, and `docs/PROJECT_STATUS.md` records what is actually implemented and proven.
 
-## Simple final model
+## Phase 0 — Architecture review gate
+
+Do not implement a new architecture slice until this review is complete and explicitly accepted.
+
+The review must determine:
+
+- what already exists and what it actually does;
+- what is redundant, retired, or merely historical;
+- what should be kept, simplified, expanded, removed, or postponed;
+- which system owns each durable record;
+- which proposed service, model, agent, database, queue, or abstraction solves a named problem;
+- how failure, cost, privacy, rollback, and operational ownership will be handled.
+
+The gate fails when a component has no clear problem statement, duplicates an existing responsibility, has no owner, or is being introduced only because it is technically interesting. The gate passes when the source-of-truth map, transient-state map, candidate model evaluation plan, safety boundaries, and explicit deferrals are documented.
+
+This gate applies before adding a database, vector store, queue, agent runtime, model default, provider adapter, or broad abstraction. It does not block the already-proven local cockpit and internal-pilot code; it governs the next architecture change.
+
+## Existing infrastructure
+
+Before proposing anything new, inspect the current repository and local proof. The current evidence is:
+
+| Component | What exists now | Responsibility now | Recommendation |
+| --- | --- | --- | --- |
+| Supabase | Postgres, Auth, RLS, Storage, and migrations through local `083` | Durable source of truth for users, roles, projects, customer boundaries, approvals, work, outreach, cockpit state, outcomes, and idempotency records | **Keep as-is as the source of truth; expand only for a demonstrated workflow need.** Hosted migrations `073`–`083` still require separate review. |
+| Redis | Node Redis client plus optional `REDIS_URL` integration | Short-lived cache, rate limiting, request deduplication, and transient counters; the provider-free proof deliberately runs with Redis disabled | **Keep as optional transient support.** Add locks or active-job state only when a measured worker need exists. Never move durable business state into Redis. |
+| Qdrant | No package, configuration, deployment, client, route, or call site found | None | **Do not add now.** There is no current Qdrant integration to preserve or connect. Reconsider only if a measured retrieval scale, latency, or isolation problem cannot reasonably be handled by the existing source of truth. |
+| Historical pgvector/search | Early migrations created `page_embeddings` and `match_page_embeddings`; migration `077` retired the table, function, callers, and content/search surface | Historical schema lineage only; no active application retrieval feature | **Keep the migration history for auditability; keep the runtime feature retired.** Reintroduce retrieval only through a new Phase 0 review with retention, tenant isolation, deletion, and cost evidence. |
+| Codex + GitHub | Active reviewed engineering workflow | Implement, test, review, and preserve application changes | **Keep as the engineering system.** Coding changes remain in this boundary. |
+| OpenClaw | Local CLI exists; no production provider, daemon, channel, or authenticated application adapter | Intended operations system for approved long-running browser, schedule, and external-tool work | **Keep as a deferred operations boundary.** Prove one narrow authenticated adapter before treating it as a product dependency. |
+| Hermes | Mentioned in older planning; no current product adapter or gateway is required by the retained app | No current product responsibility | **Remove from the primary architecture and defer.** Reconsider only when a distinct orchestration problem, owner, boundary, and measured benefit are proven. |
+| OpenRouter | Provider boundary and optional environment variables; no model call is part of the provider-free assembly | Candidate routing layer for evaluated non-coding work | **Keep as an evaluation boundary, not a default.** Resolve model IDs, pricing, context, capabilities, and routing metadata from the live catalog. |
+
+The preferred separation is:
+
+```text
+Supabase
+  durable source of truth: users, businesses/projects, outreach,
+  approvals, work, outcomes, cockpit state, and durable analytics records
+
+Redis
+  transient support: queues when justified, locks, active jobs,
+  rate limits, deduplication, and short-lived cache
+
+Qdrant
+  not installed and not integrated; no semantic-memory responsibility today
+
+Codex + GitHub
+  reviewed software engineering
+
+OpenClaw
+  approved operations execution, only through narrow authenticated adapters
+```
+
+The rule is simple: durable facts and decisions belong in Supabase; Redis may accelerate or coordinate temporary work; an agent or model never becomes the source of truth.
+
+## Current architecture and boundaries
 
 ```text
 Humans decide
      |
      v
-NeedThisDone app ---------> Supabase remembers
+NeedThisDone on Next.js/Vercel
      |
-     v
-Hermes thinks and coordinates
+     +----------------------> Supabase: Auth + RLS + durable truth
+     |                              users, projects, work, outreach,
+     |                              approvals, outcomes, cockpit history
      |
-     +----------> Codex builds reviewed software
+     +----------------------> Redis: optional transient support
+     |                              cache, rate limits, deduplication
      |
-     v
-OpenClaw performs approved long-running work
-     |
-     +----------> web / email / schedules / external tools
+     +----------------------> OpenClaw: deferred operations adapter
+                                    approved browsing, schedules, tools
 
-OpenRouter routes non-coding model calls at controlled cost.
+Codex + GitHub ---------------> reviewed application changes
+
+OpenRouter -------------------> evaluated model candidates only
+Hermes -----------------------> deferred; not a product dependency
+Qdrant -----------------------> no integration
 ```
 
-The components do not compete:
+The browser receives neither provider secrets nor agent credentials. Application routes authenticate the user, enforce Supabase RLS, and write durable decisions before any future adapter can act. External email, publishing, spending, customer-system changes, and destructive actions remain human-approved. A future adapter must carry a bounded task, authenticated actor, and idempotency key, then record a verified result in Supabase.
 
-- **Hermes orchestrates:** turns an approved objective into bounded work, chooses capabilities, and maintains workflow context.
-- **Codex engineers:** changes and tests the application through reviewed Git commits.
-- **OpenClaw executes:** runs approved, long-lived browsing, email, scheduled, and external-tool workflows.
-- **OpenRouter routes models:** supplies inexpensive or specialized models for non-critical agent work.
-- **Supabase remembers:** stores application data, memberships, decisions, outcomes, workflow state, idempotency keys, and later retrieval vectors.
+## Model evaluation strategy
 
-## End-state architecture
+Do not assume DeepSeek V4 Flash 0731 is automatically the best model. Do not assume explicit routing is always better than OpenRouter Auto. Evaluate candidates against fixed, sanitized tasks before selecting any production default.
 
-```text
- Public visitor       Approved client        Abe / Andrea
-       |                     |                     |
-       +---------------------+---------------------+
-                             |
-                             v
-                 Next.js application on Vercel
-                    public site + workspaces
-                             |
-          +------------------+------------------+
-          |                  |                  |
-          v                  v                  v
-   Authentication       Supabase truth      Human decisions
-   Google + password    RLS + Storage       three daily queues
-          |                  |                  |
-          +------------------+------------------+
-                             |
-                             v
-                 durable workflow_runs / agent_tasks / outreach record
-                             |
-                             v
-                    authenticated adapter
-                             |
-                             v
-                          Hermes
-                    plan + orchestration
-                      /      |       \
-                     v       v        v
-                 OpenRouter Codex   OpenClaw
-                   models   code    long-running work
-                              |        |
-                              v        v
-                           GitHub   web/email/schedules
-                              |        |
-                              +---+----+
-                                  v
-                         verified callback/result
-                                  |
-                                  v
-                       Supabase outcome + audit trail
-                                  |
-                                  v
-                         Abe / Andrea review again
-```
+The OpenRouter model catalog exposes model IDs, canonical slugs, context lengths, modalities, pricing, supported parameters, and sorting metadata. The catalog should be queried at evaluation time rather than copied into permanent configuration. The Auto Router response identifies the model selected, and its request cost is the selected model's normal cost. See the [model catalog](https://openrouter.ai/docs/api/api-reference/models/get-models) and [Auto Router documentation](https://openrouter.ai/docs/guides/routing/routers/auto-router).
 
-No agent is the source of truth. Agent context may be lost; the durable workflow must still be recoverable from Supabase.
+### Catalog snapshot for candidate discovery
 
-## Browser access and agent connection
+The following is a discovery snapshot observed on 2026-08-08, not a set of pinned defaults. Re-fetch the catalog immediately before a benchmark and store the returned metadata with the results.
 
-People use the product from any location through a normal HTTPS browser session:
+| Candidate | Catalog ID observed | Context | Catalog capabilities or cost signal | Role in evaluation |
+| --- | --- | ---: | --- | --- |
+| DeepSeek V4 Flash 0731 | `deepseek/deepseek-v4-flash-0731` | 1,048,576 | Prompt `$0.09/M`, completion `$0.18/M`; tools and structured outputs listed | Required low-cost candidate for planning, workers, research, and writing comparisons |
+| DeepSeek V4 Flash latest alias | `~deepseek/deepseek-v4-flash-latest` | 1,048,576 | Redirects to the latest V4 Flash family member | Compare alias stability with the dated slug; never assume the alias is identical forever |
+| OpenRouter Auto | `openrouter/auto` | 2,000,000 router metadata | Catalog pricing is not a direct model price; selected model is billed normally; tools listed | Required routing candidate; current docs mark it deprecated, so test alongside `openrouter/auto-beta` |
+| OpenRouter Auto Beta | `openrouter/auto-beta` | 2,000,000 router metadata | Task-aware routing; supports allowed/excluded models and cost tiers | Current routing candidate for new experiments; log the selected model on every trial |
+| Qwen Qwen3.7 Flash | `qwen/qwen3.7-flash` | 1,000,000 | Multimodal text/image/video input; tools listed; low catalog prompt/completion price | Browser, research, website-audit, and cheap-worker candidate |
+| Google Gemini 3.6 Flash | `google/gemini-3.6-flash` | 1,048,576 | Multimodal input; tools, structured outputs, and web-search metadata listed | Website-audit, research, browser, and long-context candidate |
+| Anthropic Claude Opus 5 | `anthropic/claude-opus-5` | 1,000,000 | Multimodal input; tools and structured outputs; higher-cost quality candidate | Planner, long-context, audit, and writing comparison |
 
-```text
-Abe / Andrea / approved client
-            |
-            v
-       Chrome browser
-            |
-            v
-  NeedThisDone on Vercel
-       |              |
-       v              v
- Google/password   Supabase Auth + RLS
-       |              |
-       +-------> protected app/workspace
-                              |
-                              v
-                    workflow_runs: pending
-```
+Prices, slugs, aliases, availability, and capability flags are volatile. The table is a candidate inventory, not a recommendation. OpenRouter Auto can select a model outside an assumed budget unless the experiment applies an explicit allowed-model pattern and budget guard.
 
-The browser never receives Hermes, Codex, OpenRouter, or OpenClaw credentials and does not connect directly to an agent. The initial agent integration should use an outbound connection from the Mac mini:
+### Categories and initial candidate pools
 
-```text
-Mac mini Hermes ---> signed NeedThisDone task endpoint
-       |                         |
-       v                         v
- Codex/OpenRouter          Supabase workflow state
-       |                         ^
-       v                         |
- OpenClaw later --------> verified callback
-```
+| Category | Initial pool | Decision rule |
+| --- | --- | --- |
+| Coordinator | Auto Beta, Auto, Claude Opus 5, DeepSeek V4 Flash | Optimize end-to-end task success and safe tool routing, not single-turn prose quality |
+| Planner | Claude Opus 5, DeepSeek V4 Flash, Auto Beta | Measure decomposition quality, missed constraints, and repair burden |
+| Cheap worker | DeepSeek V4 Flash, Qwen3.7 Flash, Gemini 3.5 Flash Lite or another catalog-current low-cost model | Optimize cost per accepted result while preserving schema and safety compliance |
+| Research/tool use | Auto Beta, Qwen3.7 Flash, Gemini 3.6 Flash, DeepSeek V4 Flash | Measure source selection, citation fidelity, tool-call validity, and refusal behavior |
+| Browser automation | OpenClaw remains the operations system; compare models only through a fixed tool adapter | Measure successful task completion, recovery from page changes, and unsafe-action prevention |
+| Long-context analysis | Claude Opus 5, Qwen Qwen3.8 Max, DeepSeek V4 Flash | Measure recall, contradiction handling, latency, and cost at realistic context sizes |
+| Website auditing | Gemini 3.6 Flash, Qwen3.7 Flash, Claude Opus 5, Auto Beta | Measure issue precision, severity calibration, accessibility reasoning, and evidence quality |
+| Writing | Claude Opus 5, Gemini 3.6 Flash, DeepSeek V4 Flash, Auto Beta | Measure factuality, voice adherence, edit distance, and human acceptance |
+| Coding | Codex remains the engineering system; OpenRouter models may be comparison baselines only | No OpenRouter model becomes the coding default without a separate decision; production code stays in reviewed Codex workflow |
+| Image, video, speech, music | Deferred | Do not add media providers or evaluation cost until a product requirement exists |
 
-The adapter sends only a bounded task, an authenticated actor, and an idempotency key. The callback records success, failure, or `needs_review` in Supabase. If the Mac mini is offline, the application remains usable and the agent workflow stays pending. Hermes is currently local and is not yet connected to the NeedThisDone application.
+For every eventual recommendation, record why the model won, why the nearest alternative lost, typical latency, tool-calling quality, context window, approximate cost, strengths, weaknesses, failure modes, and repair rate. If the evidence is incomplete, leave the category unselected.
 
-## Responsibilities and status
+### Fixed evaluation protocol
 
-| Layer | Technology | Responsibility | Status |
-| --- | --- | --- | --- |
-| Product UI/API | Next.js, React, TypeScript, Vercel | Public site, operator workspace, client collaboration, protected server routes | Implemented locally; production cutover pending |
-| Authentication | Patched NextAuth Google transport plus Supabase Auth | Branded Google redirect; Google-token verification into a Supabase/RLS session; email/password and recovery | Bridge implemented and locally tested; controlled hosted Google proof pending |
-| Authorization/data | Supabase Postgres, Auth, RLS, Storage | Durable users, roles, customer isolation, projects, decisions, outcomes, prospects, outreach, suppression, files, financial measurements | Core local contract proven through migration `082`; hosted migrations `073`-`082` pending |
-| Orchestration | Hermes Agent `0.19.1` | Convert approved goals and decision cards into bounded workflows; coordinate model, coding, and execution capabilities | CLI/browser runtime installed locally; separate ChatGPT/Codex OAuth configured; harmless read-only repository prompt passed through Codex runtime; coding-edit proof, adapter, and gateway remain unproven |
-| Automation | OpenClaw `2026.7.1-2` | Approved long-running browsing, email preparation, scheduled work, file/tool operations, and callbacks | CLI installed only; no onboarding, provider, config, daemon, channel, host execution, or production access |
-| Software engineering | Codex + GitHub | Implement, test, review, and preserve application changes | In active use |
-| Model routing | OpenRouter | Route low-risk/non-coding work to suitable free or paid models with budgets | Owner purchased $10 in credits and created `needthisdone-local` with a $1 lifetime key limit; no usage yet and Hermes/OpenClaw connections remain untested |
-| Retrieval memory | Supabase pgvector initially | Store approved reusable knowledge and references without creating another source of truth | Later; schema and retention policy not designed |
-| Browser evidence | Playwright and Lighthouse | Authenticated workflows, accessibility, layout, audit evidence | Playwright active; Lighthouse workflow planned |
-| Payments | Stripe SDK + Stripe CLI `1.45.0` + hosted paths | Invoices or fixed Payment Links first; subscriptions later | CLI installed but not logged in; boundary exists; offer decision and first test-mode path remain unproven |
-| Communication | Resend plus explicit prospecting sender adapter | Transactional application email stays separate from approved prospecting sends and provider events | Transactional boundary retained; prospecting fake mode and separately keyed Resend adapter are implemented, but no real outbound provider is approved |
-| Scheduling | Google Calendar | Human-confirmed consultation events and reminders | OAuth state hardened locally; optional live integration still blocked on hosted secret/provider proof |
-| Rate limits/cache | Redis/Upstash | Rate limiting, deduplication, and short-lived cache only | Retained supporting service |
+1. Build a sanitized task set that cannot contain customer secrets or production actions. Keep the prompts, expected outputs, tools, and scoring rubric fixed across models.
+2. Run the same tasks with the same limits and adapter behavior. Use enough repeated trials to expose variance, not one impressive example.
+3. Score task quality, factuality, schema compliance, tool-call validity, successful tool completion, safety-boundary adherence, latency, token cost, failure rate, retry count, and repair rate.
+4. For Auto, record the router slug, selected response model, provider, cost, and latency for every request. For explicit models, record the exact catalog ID and catalog snapshot.
+5. Review failures and repairs by category. A cheaper model that needs repeated repair may be more expensive and less safe than a stronger model.
+6. Select a default only after the evidence is reviewed, budgets are enforced, and a rollback/fallback route is documented. Re-run the suite when a model slug, provider, prompt, tool adapter, or task distribution changes.
 
-## Agent safety contract
+No model call, OpenRouter key, OpenClaw action, or hosted provider configuration is required for the current local assembly. This section defines the gate for future work.
 
-```text
-Human approval
-      |
-      v
-workflow_runs: pending
-      |
-      v
-signed/authenticated adapter request + idempotency key
-      |
-      v
-Hermes plan or OpenClaw action
-      |
-      v
-verified callback
-      |
-      v
-workflow_runs: succeeded / failed / needs review
-      |
-      v
-Human sees result before the next consequential action
-```
+## Delivery and safety rules
 
-Hermes and OpenClaw must not receive unrestricted production database credentials. They operate through narrow adapters. External email, publishing, spending, customer-system changes, and destructive actions remain human-approved. Retries reuse one idempotency key and cannot silently duplicate an external action.
+- Keep Supabase RLS and server-side authorization as the application security boundary.
+- Keep durable workflow state, approvals, outcomes, idempotency keys, and audit history in Supabase.
+- Treat Redis failure as a degraded transient-support condition where safe; never make it the only copy of a business decision.
+- Keep OpenClaw disconnected until one narrow adapter proves authentication, callback verification, timeout behavior, emergency stop, and idempotent retry.
+- Keep Codex responsible for software changes, tests, reviews, and commits.
+- Do not add Hermes, Qdrant, another queue, or another vector store without a new problem statement and Phase 0 approval.
+- Keep real sender, payment, calendar, model, and deployment claims behind their separate provider gates.
 
-## Delivery order
+## Explicitly deferred
 
-1. Review the local prospecting foundation and its migration `082` contract.
-2. Select one approved outbound sender and run a small dashboard-approved campaign.
-3. Configure OpenRouter with a hard limit and narrow model allowlist; prove one harmless OpenRouter request through Hermes and one foreground OpenClaw prompt.
-4. Add one authenticated Hermes adapter for planning a non-destructive workflow.
-5. Add one authenticated OpenClaw adapter for an approved long-running research task.
-6. Prove callbacks, retries, timeouts, audit history, and emergency disable controls.
-7. Promote the secure retained application and Supabase contract after hosted parity review.
-8. Add Supabase vector retrieval only when real pilot work requires it.
+- Hosted Supabase migrations `073`–`083` and production parity review.
+- A real outbound sender and signed delivery/reply webhook.
+- OpenClaw authentication, operations adapter, daemon, and production access.
+- Any Hermes-based orchestration layer unless a distinct need is demonstrated.
+- Qdrant or any new vector database.
+- Active semantic retrieval and long-term vector memory.
+- Model defaults until the fixed evaluation protocol produces category-level evidence.
+- Image, video, speech, and music model integrations.
 
-This order makes Hermes and OpenClaw part of the committed architecture without making an unproven automation stack a prerequisite for the first production cutover.
-
-## Explicitly unresolved
-
-- Hermes' official Codex app-server mechanism is selected and locally configured; a harmless read-only end-to-end prompt passed. Coding-edit approval behavior, authenticated adapters, gateway hosting, and production authorization remain unproven.
-- The OpenClaw host, authentication method, and emergency-stop owner have not been selected.
-- Model allowlists, per-workflow budgets, and data-sharing rules for OpenRouter are not defined.
-- Vector retention, deletion, customer isolation, and embedding-provider policy are not defined.
-
-These are implementation decisions, not permission to add overlapping agents or expose production credentials.
-
-The canonical owner-action checklist is [full-stack setup outside the terminal](launch/full-stack-external-setup.md).
+The canonical owner-action checklist remains [full-stack setup outside the terminal](launch/full-stack-external-setup.md).

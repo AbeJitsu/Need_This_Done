@@ -17,7 +17,9 @@ The retained product is:
 
 The Medusa/Railway ecommerce runtime, product reviews, carts, inventory, LMS, visual page editing, workflow automation, and dark-mode support are retired. Historical database migrations remain for audit history and are not runtime dependencies.
 
-Read [the technology stack](docs/TECH_STACK.md) for component responsibilities, [the system audit](docs/audits/2026-07-24-system-audit.md) for the evidence, and [the project tracker](docs/PROJECT_STATUS.md) for current work.
+Read [the technology stack](docs/TECH_STACK.md) for the architecture-review gate and component responsibilities, [the system audit](docs/audits/2026-07-24-system-audit.md) for the evidence, and [the project tracker](docs/PROJECT_STATUS.md) for current work.
+
+Before adding infrastructure, agents, models, queues, or abstractions, complete the Phase 0 architecture review in [the technology stack](docs/TECH_STACK.md). The simplest maintainable solution wins when it solves the same problem.
 
 ## Local development
 
@@ -43,7 +45,7 @@ npm run verify:code
 npm run verify:assembly
 ```
 
-`verify:assembly` is the delivery gate for the manual internal pilot. It removes optional provider credentials from the proof process and verifies the full lifecycle with local Supabase. The retained browser suite has four intentional Playwright specs: 18 public desktop/mobile checks, 4 real-session lifecycle checks, and 2 employee-workspace UI checks. `npm run verify:assembly:fresh` additionally erases and rebuilds only the disposable local database. See [provider-free final assembly](docs/FINAL_ASSEMBLY.md).
+`verify:assembly` is the delivery gate for the manual internal pilot. It removes optional provider credentials from the proof process and verifies the full lifecycle with local Supabase. The retained browser suite has six intentional Playwright specs: 18 public desktop/mobile checks, 4 real-session lifecycle checks, 1 prospecting check, 1 daily-cockpit check, and 2 employee-workspace UI checks. `npm run verify:assembly:fresh` additionally erases and rebuilds only the disposable local database. See [provider-free final assembly](docs/FINAL_ASSEMBLY.md).
 
 After a production build, restart the development server because the build replaces `.next`.
 
@@ -57,8 +59,8 @@ cd app
 RUN_LOCAL_SUPABASE_TESTS=true npm run test:unit -- __tests__/lib/ai-employee-rls.test.ts
 ```
 
-Production uses hosted Supabase. The local code contract is rebuilt through migration `081`;
-the last recorded hosted migration is `072`, so `073`–`081` remain deployment work outside
+Production uses hosted Supabase. The local code contract is rebuilt through migration `083`;
+the last recorded hosted migration is `072`, so `073`–`083` remain deployment work outside
 the code-only internal-pilot finish line. Read
 [the release evidence matrix](docs/RELEASE_EVIDENCE.md) before promoting application code;
 only real-session tests prove authentication and RLS.
@@ -118,13 +120,13 @@ Vercel / Next.js
                rate limits, deduplication,
                short-lived cache
 
-Installed but not yet authorized supervised agent foundation
+Architecture-review-gated operations and model boundaries
    |
-   +--------> Hermes: orchestration
    +--------> Codex + GitHub: reviewed engineering
-   +--------> OpenClaw: approved long-running execution
-   +--------> OpenRouter: budgeted model routing
-   +--------> Supabase pgvector: later retrieval memory
+   +--------> OpenClaw: approved operations, adapter pending
+   +--------> OpenRouter: evaluated model candidates
+   +--------> Qdrant: no integration
+   +--------> Hermes: deferred, not a product dependency
 ```
 
 Retired from the application:
@@ -141,11 +143,12 @@ inline/page editing - workflow automation - dark mode
 | Stripe | Installed SDK/CLI and guarded hosted handoff; first test Payment Link or invoice still requires owner setup |
 | OpenAI | Optional prose enhancement; deterministic site-analysis evidence works without it |
 | Resend | Optional transactional delivery; durable project/report records work without it |
-| Upstash Redis | Rate limiting, deduplication, and small retained caches |
-| Hermes | Local orchestration runtime with separate ChatGPT/Codex OAuth; harmless read-only Codex-runtime proof passed; adapter pending |
-| OpenClaw | Local CLI installed; onboarding, provider, daemon, channels, and authenticated adapter pending |
+| Upstash Redis | Optional rate limiting, deduplication, transient coordination, and short-lived cache; durable state remains in Supabase |
+| Qdrant | Not present and not integrated; no semantic-memory service is authorized |
+| OpenClaw | Operations system boundary; local CLI exists, but onboarding, provider, daemon, channels, and authenticated adapter remain pending |
 | Codex + GitHub | Reviewed software engineering and delivery history |
-| OpenRouter | Selected cost-aware model boundary; a capped local key exists, but model allowlisting and agent connections remain outside the code-only pilot |
+| OpenRouter | Candidate model-evaluation boundary; resolve current IDs, pricing, context, capabilities, and Auto selection from the live catalog before any call |
+| Hermes | Deferred; not part of the primary product architecture unless a distinct orchestration need is proven |
 
 Provider accounts, billing limits, OAuth consent, and production permissions are tracked in [the outside-terminal full-stack checklist](docs/launch/full-stack-external-setup.md).
 
