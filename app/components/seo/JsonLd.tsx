@@ -105,7 +105,7 @@ const schemas = {
       '@type': 'Country',
       name: 'United States',
     },
-    serviceType: ['Website Improvement', 'Managed AI Operations'],
+    serviceType: ['Targeted Fix', 'Automation System Setup'],
   },
 
   FAQPage: {
@@ -114,7 +114,7 @@ const schemas = {
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'What is the Website Improvement?',
+        name: 'What is the targeted fix?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'It is a $500 evidence-backed website review plus one mutually agreed contained fix, such as a page, component, accessibility, SEO, performance, or conversion correction.',
@@ -125,20 +125,20 @@ const schemas = {
         name: 'How does website payment work?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'After the contained scope is confirmed, the Website Improvement uses manual invoices: $250 to begin and $250 after the agreed fix is delivered.',
+          text: 'After the contained scope is confirmed, the targeted fix uses manual invoices: $250 to begin and $250 after the agreed fix is delivered.',
         },
       },
       {
         '@type': 'Question',
-        name: 'What is the Managed AI Operator?',
+        name: 'What is automation system setup?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'It is a proposal-based 30-day pilot operated privately by Abe and Andrea. The role prepares work and brings decisions for human review; clients receive weekly briefs rather than a dashboard to operate.',
+          text: 'It is a proposal-based engagement to map recurring work, connect approved tools and multiple LLMs or agents, and provide a browser workspace for runs, evidence, costs, artifacts, and approvals.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Can the AI operator take external actions on its own?',
+        name: 'Can the automation system take external actions on its own?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'No. External messages, publishing, system changes, and spending require explicit human approval.',
@@ -237,7 +237,7 @@ export function AllServicesJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Professional Services',
-    description: 'A contained website improvement and a human-led managed AI operator pilot.',
+    description: 'A $500 targeted fix or a proposal-based automation system setup.',
     itemListElement: seoConfig.services.map((service, index) => ({
       '@type': 'ListItem',
       position: index + 1,

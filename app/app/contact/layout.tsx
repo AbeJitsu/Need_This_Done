@@ -1,18 +1,18 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Start a Project | NeedThisDone',
-  description: 'Choose a $500 website improvement or a proposal-based managed AI operator pilot and share the context needed to scope it.',
+  title: 'Contact | NeedThisDone',
+  description: 'Share the context needed to begin. Scope is confirmed before work starts.',
   alternates: { canonical: '/contact' },
   openGraph: {
-    title: 'Start a Project | NeedThisDone',
-    description: 'Choose a focused website improvement or a human-led managed AI operator pilot.',
+    title: 'Contact | NeedThisDone',
+    description: 'Share the context needed to begin. Scope is confirmed before work starts.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Start a Project | NeedThisDone',
-    description: 'Choose a focused website improvement or a human-led managed AI operator pilot.',
+    title: 'Contact | NeedThisDone',
+    description: 'Share the context needed to begin. Scope is confirmed before work starts.',
   },
 };
 

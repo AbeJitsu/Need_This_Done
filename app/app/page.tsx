@@ -1,7 +1,4 @@
-import { getDefaultContent } from '@/lib/default-page-content';
-import type { HomePageContent } from '@/lib/page-content-types';
 import HomePageClient from '@/components/home/HomePageClient';
-import { listBlogPosts } from '@/lib/blog-content';
 
 // ============================================================================
 // Home Page - NeedThisDone Landing Page
@@ -18,18 +15,18 @@ import { listBlogPosts } from '@/lib/blog-content';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'NeedThisDone | Website Improvement & Managed AI Operator',
-  description: 'Choose a $500 website audit plus one contained fix, or a proposal-based 30-day managed AI operator pilot with weekly briefs.',
+  title: 'NeedThisDone | Targeted Fixes & Automation Systems',
+  description: 'Choose a $500 targeted website fix, or set up a supervised automation system that brings LLMs, agents, evidence, and approvals into one browser workspace.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'NeedThisDone | Website Improvement & Managed AI Operator',
-    description: 'Two human-led offers: a contained website fix or a supervised operator pilot.',
+    title: 'NeedThisDone | Targeted Fixes & Automation Systems',
+    description: 'Two focused paths: fix one contained problem or set up the automation system around recurring work.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
-    title: 'NeedThisDone | Website Improvement & Managed AI Operator',
-    description: 'Two human-led offers: a contained website fix or a supervised operator pilot.',
+    title: 'NeedThisDone | Targeted Fixes & Automation Systems',
+    description: 'Two focused paths: fix one contained problem or set up the automation system around recurring work.',
   },
 };
 
@@ -37,22 +34,10 @@ export const metadata = {
 // Content Fetching
 // ============================================================================
 
-function getContent(): HomePageContent {
-  return getDefaultContent('home') as HomePageContent;
-}
-
-// ============================================================================
-// Recent Blog Posts (for homepage "Latest from the Blog" section)
-// ============================================================================
-
 // ============================================================================
 // Page Component
 // ============================================================================
 
 export default function HomePage() {
-  const content = getContent();
-  const recentPosts = listBlogPosts().slice(0, 3);
-
-  // Render using the client component which supports inline editing
-  return <HomePageClient content={content} recentBlogPosts={recentPosts} />;
+  return <HomePageClient />;
 }

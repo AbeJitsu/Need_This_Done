@@ -21,9 +21,9 @@ import { ContentValue } from '@/components/content/ContentStructure';
 
 // Fallback navigation links (used if layout content not loaded)
 const defaultNavLinks: NavLink[] = [
-  { href: '/services#website-improvement', label: 'Website Improvement' },
-  { href: '/services#ai-operator', label: 'AI Operator' },
+  { href: '/services', label: 'Services' },
   { href: '/how-it-works', label: 'How It Works' },
+  { href: '/pricing', label: 'Pricing' },
   { href: '/work', label: 'Work' },
   { href: '/blog', label: 'Insights' },
 ];

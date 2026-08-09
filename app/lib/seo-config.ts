@@ -11,7 +11,7 @@ export const seoConfig = {
   // Site identity
   siteName: 'NeedThisDone',
   description:
-    'A $500 website audit and contained fix, or a human-led managed AI operator pilot with explicit approval boundaries.',
+    'Fix one website problem for $500, or set up a browser-based automation system for recurring work.',
 
   // Business information for structured data
   business: {
@@ -62,15 +62,15 @@ export const seoConfig = {
   // Services for structured data
   services: [
     {
-      name: 'Website Improvement',
-      description: 'A $500 website audit plus one agreed contained accessibility, SEO, performance, conversion, page, or component-level fix.',
-      serviceType: 'Website Improvement',
+      name: 'Targeted Fix',
+      description: 'A $500 review plus one agreed website fix.',
+      serviceType: 'Targeted Fix',
       price: '$500',
     },
     {
-      name: 'Managed AI Operator',
-      description: 'A proposal-based 30-day supervised pilot operated privately by Abe and Andrea with weekly client briefs and human approval for external actions.',
-      serviceType: 'Managed AI Operations',
+      name: 'Automation System Setup',
+      description: 'A proposal-based system for recurring work using multiple LLMs and agents.',
+      serviceType: 'Automation System Setup',
       price: 'Proposal-based',
     },
   ],
