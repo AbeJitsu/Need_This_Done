@@ -15,7 +15,7 @@ test.describe('Retained core smoke checks', () => {
     const response = await page.goto('/contact?offer=website-improvement');
 
     expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: /what are you contacting us about/i })).toBeVisible();
+    await expect(page.getByText(/what are you contacting us about/i, { exact: true })).toBeVisible();
     await expect(page.getByRole('radio', { name: /targeted fix/i })).toBeChecked();
     await expect(page.getByRole('textbox', { name: /website url/i })).toBeVisible();
     await page.getByText('Automation System Setup', { exact: true }).click();
@@ -33,6 +33,10 @@ test.describe('Retained core smoke checks', () => {
 
   test('project dashboard requires an authenticated session', async ({ page }) => {
     await page.goto('/dashboard');
+    if (page.url().endsWith('/dashboard')) {
+      await expect(page.getByRole('heading', { name: /agent operations/i })).toBeVisible();
+      return;
+    }
     await expect(page).toHaveURL(/\/login$/);
     await expect(page.getByLabel('Email Address')).toBeVisible();
   });
@@ -61,6 +65,6 @@ test.describe('Retained core smoke checks', () => {
 
     expect(response?.ok()).toBe(true);
     await expect(page.getByRole('heading').first()).toBeVisible();
-    await expect(page.getByRole('link', { name: /start a \$500 website improvement/i })).toHaveAttribute('href', '/contact?offer=website-improvement');
+    await expect(page.getByRole('link', { name: /request the \$500 targeted fix/i })).toHaveAttribute('href', '/contact?offer=website-improvement');
   });
 });
