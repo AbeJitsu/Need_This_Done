@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, ChevronDown, HelpCircle } from 'lucide-react';
 import { ContentSection, ContentItem, ContentCollection } from '@/components/content/ContentStructure';
-import { FadeIn, RevealSection, StaggerContainer, StaggerItem } from '@/components/motion';
+import { FadeIn, RevealSection } from '@/components/motion';
 import type { FAQPageContent } from '@/lib/page-content-types';
 
 interface FAQPageClientProps {
@@ -94,8 +94,8 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.72fr_1.28fr] lg:gap-20 lg:px-12">
-        <div className="lg:sticky lg:top-24 lg:self-start">
+      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-8 md:py-24 xl:grid-cols-[.72fr_1.28fr] xl:gap-20 lg:px-12">
+        <div>
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">The short version</p>
           <h2 className="mt-4 font-playfair text-4xl font-black leading-tight md:text-5xl">Keep the open questions small.</h2>
           <p className="mt-5 max-w-md text-lg leading-8 text-[#50675e]">
@@ -111,7 +111,6 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
         </div>
 
         <ContentSection sectionKey="items" label="FAQ Items">
-          <StaggerContainer as="div" className="space-y-4">
             <ContentCollection
               sectionKey="items"
               arrayField="items"
@@ -123,7 +122,7 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
                 const answerId = `faq-answer-${index}`;
 
                 return (
-                  <StaggerItem key={`faq-item-${index}`}>
+                  <div key={`faq-item-${index}`}>
                     <ContentItem
                       sectionKey="items"
                       arrayField="items"
@@ -166,11 +165,10 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
                         </AnimatePresence>
                       </article>
                     </ContentItem>
-                  </StaggerItem>
+                  </div>
                 );
               })}
             </ContentCollection>
-          </StaggerContainer>
         </ContentSection>
       </section>
 
