@@ -24,19 +24,19 @@ export interface ServiceModalContent {
 }
 
 // ============================================================================
-// Managed AI Modal Content
+// Automation System Setup Modal Content
 // ============================================================================
 
 export const virtualAssistantModal: ServiceModalContent = {
-  title: 'Managed AI',
-  headline: 'AI that runs while you sleep. We handle the complexity.',
-  hook: 'We build, deploy, and maintain AI agents that handle your operations. You get the results without the complexity.',
+  title: 'Automation System Setup',
+  headline: 'Make recurring work easier to coordinate.',
+  hook: 'We shape tools, LLMs, agents, evidence, and approvals around a defined result.',
   bulletHeader: 'What we handle:',
   bulletPoints: [
-    'Custom AI agent development',
-    '24/7 monitoring and optimization',
-    'Continuous improvement and updates',
-    'Dedicated support and training',
+    'A defined result and workflow',
+    'Coordinated tools, LLMs, and agents',
+    'Evidence and approval records',
+    'A browser workspace for review',
   ],
   ctas: {
     primary: {
@@ -44,7 +44,7 @@ export const virtualAssistantModal: ServiceModalContent = {
       href: '/services',
     },
     secondary: {
-      text: 'Get a Quote',
+      text: 'Contact',
       href: '/contact',
     },
   },
@@ -55,15 +55,15 @@ export const virtualAssistantModal: ServiceModalContent = {
 // ============================================================================
 
 export const dataDocumentsModal: ServiceModalContent = {
-  title: 'Automation Setup',
-  headline: 'Stop doing the same manual tasks every single day.',
-  hook: 'We connect your tools and automate your workflows. You reclaim hours every week.',
+  title: 'Automation System Setup',
+  headline: 'Stop losing work between tools.',
+  hook: 'We map the repeating workflow before selecting the smallest useful coordination layer.',
   bulletHeader: 'What we handle:',
   bulletPoints: [
-    'Workflow design and optimization',
-    'Tool integration and connection',
-    'Automated task sequences',
-    'Training and documentation',
+    'Workflow mapping',
+    'Tool and source coordination',
+    'Evidence-backed handoffs',
+    'Approval boundaries',
   ],
   ctas: {
     primary: {
@@ -71,7 +71,7 @@ export const dataDocumentsModal: ServiceModalContent = {
       href: '/services',
     },
     secondary: {
-      text: 'Get a Quote',
+      text: 'Contact',
       href: '/contact',
     },
   },
@@ -82,15 +82,15 @@ export const dataDocumentsModal: ServiceModalContent = {
 // ============================================================================
 
 export const websiteServicesModal: ServiceModalContent = {
-  title: 'Website Builds',
-  headline: 'Your digital foundation. Built to convert visitors into customers.',
-  hook: 'Professional websites that work. From landing pages to full e-commerce, built right from the start.',
+  title: 'Targeted Fix',
+  headline: 'Fix one website problem.',
+  hook: 'A focused review turns one visible issue into one contained change for $500.',
   bulletHeader: 'What we handle:',
   bulletPoints: [
-    'Custom website design and development',
-    'Mobile-first, SEO-optimized builds',
-    'E-commerce setup and configuration',
-    '30 days of post-launch support',
+    'One focused review',
+    'One agreed page or component fix',
+    'Accessibility, SEO, performance, or conversion focus',
+    'A before-and-after handoff',
   ],
   ctas: {
     primary: {
@@ -98,7 +98,7 @@ export const websiteServicesModal: ServiceModalContent = {
       href: '/services',
     },
     secondary: {
-      text: 'Get a Quote',
+      text: 'Contact',
       href: '/contact',
     },
   },
@@ -123,6 +123,8 @@ export const serviceModalContentMap: Record<ServiceType, ServiceModalContent> = 
 // Used by ServiceModalContext and any component that needs to resolve titles
 
 export const TITLE_TO_SERVICE_TYPE: Record<string, ServiceType> = {
+  'Automation System Setup': 'virtual-assistant',
+  'Targeted Fix': 'website-services',
   'Managed AI': 'virtual-assistant',
   'Automation Setup': 'data-documents',
   'Website Builds': 'website-services',
@@ -189,80 +191,79 @@ export interface ServiceFullContent {
 }
 
 export const serviceFullContentMap: Record<ServiceType, ServiceFullContent> = {
-  // Order: green, blue, purple (Website Builds, Automation Setup, Managed AI)
+  // Retained internal order: website, automation, automation detail.
   'website-services': {
-    title: 'Website Builds',
-    headline: 'Your digital foundation. Built to convert visitors into customers.',
-    subtitle: 'Professional websites that work, from landing pages to full e-commerce.',
+    title: 'Targeted Fix',
+    headline: 'Fix one website problem.',
+    subtitle: 'A focused review and one agreed page, component, accessibility, SEO, performance, or conversion fix.',
     bulletPoints: [
-      'Custom website design and development',
-      'Mobile-first, SEO-optimized builds',
-      'E-commerce setup and configuration',
-      '30 days of post-launch support',
+      'One contained scope',
+      'One agreed fix',
+      'A clear before-and-after handoff',
     ],
     examples: {
       title: 'What we do:',
       items: [
-        'Custom design, built for you',
-        'Mobile-ready from day one',
-        'SEO foundation included',
-        'Easy updates after launch',
+        'Name the problem',
+        'Agree on the result',
+        'Deliver one change',
+        'Record the handoff',
       ],
     },
-    reassurance: 'Your site, your way. Built right.',
+    reassurance: 'Keep the promise narrow enough to deliver.',
     ctas: {
       primary: { text: 'See Pricing', href: '/pricing' },
-      secondary: { text: 'Get a Free Quote', href: '/contact' },
+      secondary: { text: 'Contact', href: '/contact?offer=website-improvement' },
     },
   },
   'data-documents': {
-    title: 'Automation Setup',
-    headline: 'Stop doing the same manual tasks every single day.',
-    subtitle: 'We connect your tools and automate your workflows.',
+    title: 'Automation System Setup',
+    headline: 'Make recurring work easier to coordinate.',
+    subtitle: 'Map the workflow, connect the pieces, and keep evidence with each handoff.',
     bulletPoints: [
-      'Workflow design and optimization',
-      'Tool integration and connection',
-      'Automated task sequences',
-      'Training and documentation',
+      'Workflow mapping',
+      'Tool and source coordination',
+      'Evidence-backed handoffs',
+      'Approval boundaries',
     ],
     examples: {
       title: 'What we do:',
       items: [
-        'Connect your tools seamlessly',
-        'Automate repetitive tasks',
-        'Save hours every week',
-        'Training included',
+        'Define the outcome',
+        'Coordinate the work',
+        'Review the evidence',
+        'Improve the next run',
       ],
     },
-    reassurance: 'Set it up once. Benefit forever.',
+    reassurance: 'Use the smallest useful system for the work at hand.',
     ctas: {
       primary: { text: 'See Pricing', href: '/pricing' },
-      secondary: { text: 'Get a Free Quote', href: '/contact' },
+      secondary: { text: 'Contact', href: '/contact?offer=ai-operator' },
     },
   },
   'virtual-assistant': {
-    title: 'Managed AI',
-    headline: 'AI that runs while you sleep. We handle the complexity.',
-    subtitle: 'We build, deploy, and maintain AI agents that handle your operations.',
+    title: 'Automation System Setup',
+    headline: 'Keep recurring work, evidence, and decisions together.',
+    subtitle: 'Multiple tools, LLMs, and agents can prepare work while a person keeps the approval boundary.',
     bulletPoints: [
-      'Custom AI agent development',
-      '24/7 monitoring and optimization',
-      'Continuous improvement and updates',
-      'Dedicated support and training',
+      'A defined result and workflow',
+      'Coordinated specialists',
+      'Durable evidence and costs',
+      'Human review before external action',
     ],
     examples: {
       title: 'What we do:',
       items: [
-        'AI agents that work around the clock',
-        'Automated customer interactions',
-        'Data processing and analysis',
-        'Workflow automation with intelligence',
+        'Research with sources',
+        'Drafts with versions',
+        'Decisions with context',
+        'Outcomes with a record',
       ],
     },
-    reassurance: 'You get the results without the complexity.',
+    reassurance: 'Visibility keeps automation useful.',
     ctas: {
       primary: { text: 'See Pricing', href: '/pricing' },
-      secondary: { text: 'Get a Free Quote', href: '/contact' },
+      secondary: { text: 'Contact', href: '/contact?offer=ai-operator' },
     },
   },
 };
