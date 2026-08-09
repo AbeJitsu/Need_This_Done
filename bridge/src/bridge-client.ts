@@ -105,7 +105,7 @@ export class BridgeApiClient {
     const timestamp = Math.floor(this.now() / 1000).toString();
     const nonce = this.nonceFactory();
     const signature = createHmac('sha256', this.secret)
-      .update(`agent-bridge.${path}.${timestamp}.${nonce}.${body}`)
+      .update(`${path}.${timestamp}.${nonce}.${body}`)
       .digest('hex');
     const response = await this.fetchImpl(new URL(path, this.baseUrl), {
       method: 'POST',
