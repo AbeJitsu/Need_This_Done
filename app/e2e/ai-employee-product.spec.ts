@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-for (const route of ['/', '/services', '/pricing', '/work', '/blog', '/contact', '/login']) {
+for (const route of ['/', '/services', '/how-it-works', '/pricing', '/work', '/blog', '/contact', '/faq', '/login']) {
   test(`${route} renders without browser defects`, async ({ page }) => {
     const errors: string[] = [];
     page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
@@ -37,6 +37,31 @@ test('contact gives the targeted fix context a clear working area', async ({ pag
   await expect(page.getByRole('textbox', { name: /what needs attention/i })).toBeVisible();
   await expect(page.getByRole('textbox', { name: /what should improve/i })).toBeVisible();
   await expect(page.getByText(/keep it specific/i)).toBeVisible();
+});
+
+test('how it works makes the process and review boundary visible', async ({ page }) => {
+  await page.goto('/how-it-works');
+  await expect(page.getByRole('heading', { name: /work backward from the result/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /make the handoffs visible/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /review is the boundary/i })).toBeVisible();
+});
+
+test('faq answers questions without overlapping its summary and list', async ({ page }) => {
+  await page.goto('/faq');
+  const question = page.getByRole('button', { name: /what does the targeted fix commit to/i });
+  await question.click();
+  await expect(page.getByText(/a \$500 review and one agreed website fix/i)).toBeVisible();
+
+  const overlap = await page.locator('main > section').nth(1).evaluate((section) => {
+    const children = Array.from(section.children).map((child) => child.getBoundingClientRect());
+    if (children.length < 2) return false;
+    const [summary, questions] = children;
+    return summary.right > questions.left
+      && questions.right > summary.left
+      && summary.bottom > questions.top
+      && questions.bottom > summary.top;
+  });
+  expect(overlap).toBe(false);
 });
 
 test('homepage makes the problem and the two starting points clear', async ({ page }) => {
