@@ -16,7 +16,7 @@ origin/dev                   eae47ce          -> prior reviewed dev candidate
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> hosted history through 072
-  -> 073-084 are repository-only and unapplied there
+  -> 073-086 are repository-only and unapplied there
   -> old hosted state remains recoverable
 
 local Supabase
@@ -30,13 +30,13 @@ There is no current `dev` application-to-cloud cutover. The future cutover is ba
 
 **Roadmap alignment:** Public pages now add one layer at a time: problem → choice → outcome/process → commitment → proof → action. Visitors choose between a $500 Targeted Fix and a proposal-based Automation System Setup; the authenticated dashboard remains the deeper operations surface. The Seven-Habits influence is implicit in the sequence, outcome-first copy, scope boundaries, context-first intake, evidence, and approval review rather than named in public copy.
 
-**Implemented in this working slice:** Reworked the primary navigation, homepage, Services, How It Works, Pricing, Work, Insights, FAQ, and Contact so each page contributes a distinct next layer. The homepage and Services page are the only public pages that explain both paths in full; later pages refer to the selected path. Removed founder-centered, pilot-centered, and managed-AI language from public copy, while preserving internal route identifiers such as `website-improvement` and `ai-operator`. The existing dashboard still exposes coordinated runs, agent providers, evidence, costs, approvals, and worker health behind its authentication boundary.
+**Implemented in this working slice:** Reworked the primary navigation, homepage, Services, How It Works, Pricing, Work, Insights, FAQ, and Contact so each page contributes a distinct next layer. The homepage and Services page are the only public pages that explain both paths in full; later pages refer to the selected path. Removed founder-centered, pilot-centered, and managed-AI language from public copy, while preserving internal route identifiers such as `website-improvement` and `ai-operator`. The follow-up polish paired Services and How It Works heroes with visible decision/process previews, brought FAQ into the cream/forest system, removed its responsive overlap and mobile hydration warning, and added browser contracts for the new interactions. The existing dashboard still exposes coordinated runs, agent providers, evidence, costs, approvals, and worker health behind its authentication boundary.
 
-**Verification:** On 2026-08-09, lint, TypeScript, the unit suite (205 passing tests with two existing skips), `git diff --check`, and the production build passed. Public desktop/mobile browser coverage passed 23 checks with one intentional skip. No database, provider, deployment, payment, or external action was introduced.
+**Verification:** On 2026-08-09, lint, TypeScript, the unit suite (205 passing tests with two existing skips), 50 accessibility checks, `git diff --check`, and the production build (49/49 pages) passed. Public desktop/mobile browser coverage passed 43 checks with one intentional skip, including the FAQ overlap/accordion contract and the process-page contract. The Mac bridge build and 5 offline bridge tests also passed. No database, provider, deployment, payment, or external action was introduced.
 
-**Still required:** Hosted review and deployment remain separately gated. Any future provider activation, payment collection, or authenticated customer release still requires its own external proof; this public copy change does not authorize those actions.
+**Still required:** Hosted review and deployment remain separately gated. Migration `086` is present in the repository but is not applied to hosted Supabase or enabled on the Mac. Any future provider activation, payment collection, worker supervision, or authenticated customer release still requires its own external proof; this public copy change does not authorize those actions.
 
-**Rollback:** Revert the focused public-site commits `3130f75`, `15c2595`, `ebe16f3`, `4ff36b9`, `a79c240`, `33b99b6`, and this documentation commit as a group. Preserve the unrelated bridge changes and any existing route/data history.
+**Rollback:** Revert the focused public-site commits `3130f75`, `15c2595`, `ebe16f3`, `4ff36b9`, `a79c240`, `33b99b6`, `6aa6963`, `371a7a6`, `ba5aaf6`, `c28ef16`, and this documentation commit as a group. Preserve the unrelated bridge changes and any existing route/data history.
 
 ## Historical active execution slice
 
@@ -60,6 +60,7 @@ There is no current `dev` application-to-cloud cutover. The future cutover is ba
 
 | Date | Slice | Commit | Result | Rollback |
 | --- | --- | --- | --- | --- |
+| 2026-08-09 | Public frontend polish follow-up | `6aa6963`, `371a7a6`, `ba5aaf6`, `c28ef16` | Paired the Services and How It Works heroes with visible choice/process previews, aligned FAQ to the cream/forest system, removed its responsive overlap and mobile hydration mismatch, and added 8 public browser contracts. Lint, TypeScript, 43/44 public desktop/mobile browser checks, 50 accessibility checks, and the 49-page production build passed; no external state changed. | Revert these focused public frontend and browser-contract commits; preserve the bridge and route/data history. |
 | 2026-08-09 | Mac OpenClaw agent bridge foundation | This commit | Added a runnable Node 22+ bridge entrypoint, path-bound signed API client, loopback-only Gateway client, leased-task runner, private artifact upload boundary, daily media reservation/reconciliation guard, and five offline bridge tests. `npm ci && npm test` passed; migration `086`, provider credentials, worker supervision, hosted deployment, and external actions remain unenabled. | Revert this focused bridge, test, README, and documentation commit; no database or external rollback is required. |
 | 2026-08-09 | Insights and contact reading flow | This commit | Refreshed the Insights hub, retained article routes, cards, reading content, and CTAs into the cream/forest public system; updated the Contact hero and intake shell; and gave the Targeted Fix context a dedicated URL/problem/result layout with a clear scope note. Lint, TypeScript, unit, accessibility, diff, and 23/24 public desktop/mobile browser checks passed; no external state changed. | Revert this focused Insights, Contact, test, and documentation commit. |
 | 2026-08-09 | Private workspace login surface | This commit | Rebuilt `/login` around the public site's light canvas and forest/emerald palette, with a clear review boundary, accessible form states, and a visible route back to the public site. Focused lint, TypeScript, unit, diff, and desktop/mobile browser checks passed; no authentication behavior or external state changed. | Revert this focused login, auth-copy, test, and documentation commit. |
