@@ -3,7 +3,7 @@
 **Owner:** NeedThisDone
 **Active branch:** `dev`
 **Canonical product architecture and milestone plan:** [ROADMAP.md](../ROADMAP.md)
-**Canonical technology responsibility map:** [TECH_STACK.md](TECH_STACK.md)
+**Current release claims and validation:** [RELEASE_EVIDENCE.md](RELEASE_EVIDENCE.md)
 
 This is the implementation ledger. Update it in the same commit as every completed or materially changed implementation slice. It records only current execution state, validation, commits, rollback, and blockers.
 
@@ -16,17 +16,29 @@ origin/dev                   eae47ce          -> prior reviewed dev candidate
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> hosted history through 072
-  -> 073-083 are repository-only and unapplied there
+  -> 073-084 are repository-only and unapplied there
   -> old hosted state remains recoverable
 
 local Supabase
-  -> additive migrations applied through 083
+  -> additive migrations applied through 084; local lint/RLS/assembly proof passed
   -> retained schema, provisioning, RLS, completion, outcome, prospecting, cockpit, and auth proof passed
 ```
 
 There is no current `dev` application-to-cloud cutover. The future cutover is backup → reviewed migrations → hosted parity checks → deploy the proven `dev` commit → post-cutover verification. Until that sequence is approved and completed, `production` remains the old rollback/reference system.
 
-## Active execution slice
+## Current service-proof slice — 2026-08-08
+
+**Roadmap alignment:** Preserve the existing lead flow and private operator surfaces while presenting two equal managed offers: a $500 Website Improvement with a contained fix and manual 50/50 invoice, and a proposal-based private 30-day Managed AI Operator pilot with weekly briefs.
+
+**Implemented in this working slice:** Public navigation, homepage, services, pricing, shared process, compact work proof, adaptive `/contact` intake, audit-report handoff, current legal/support language, route consolidation, sitemap/robots hygiene, Insights curation, and route/accessibility/browser coverage. The selected offer is persisted through the existing project-request message; no payment provider or external action is introduced. The model boundary now fails closed at `evaluation-required`, records evaluation measures durably through pending migration `084`, and enforces a $0.25/day cap without calling a provider.
+
+**Verification:** On 2026-08-08, local migration `084` applied cleanly; local schema lint and `npm run verify:assembly` passed. The provider-free assembly covered lint, TypeScript, 199 required unit tests (one existing isolated skip), 50 accessibility checks, production build, schema/security/RLS/integration checks, 23 public browser checks (one intentional mobile-only desktop-nav skip), 4 authenticated lifecycle checks, prospecting, daily-cockpit, and employee-workspace browser flows. No optional provider credential was used.
+
+**Still required:** Rehearse backup and the pending hosted migration before hosted review; collect measured model-evaluation records; and complete the two real paid proofs. No hosted migration, provider activation, deployment, client dashboard, payment collection, or paid engagement has occurred in this slice.
+
+**Rollback:** Revert the focused application/documentation changes. If `084` is ever applied, preserve evaluation history and use a separately reviewed forward migration rather than deleting records.
+
+## Historical active execution slice
 
 **Roadmap alignment:** Phase 7 prospecting foundation and the daily cockpit slice are code-complete locally, including authenticated browser gates. The next product slice is the deterministic local worker that can populate cockpit actions; sender selection and the first controlled campaign remain later provider-gated work.
 
@@ -48,6 +60,7 @@ There is no current `dev` application-to-cloud cutover. The future cutover is ba
 
 | Date | Slice | Commit | Result | Rollback |
 | --- | --- | --- | --- | --- |
+| 2026-08-08 | Preserve-first dual-offer proof path | This working slice | Repositioned the public site around a $500 Website Improvement and a proposal-based private Managed AI Operator pilot; preserved audit-to-report-to-contact conversion; added adaptive stored intake, route/sitemap/redirect/metadata/robot hygiene, work consolidation, current Insights curation, legal/support updates, and route/accessibility/browser coverage. Added pending migration `084` for the fail-closed model-evaluation record and $0.25/day cap; no model/provider call, hosted migration, deployment, payment, client engagement, or external action occurred. | Revert the focused application/test/docs changes. If `084` is ever applied, retain evaluation records and use a reviewed forward migration rather than destructive deletion. |
 | 2026-08-06 | Daily cockpit | This working slice | Added migration `083` with owner-scoped weekly priorities, suggested daily actions, and daily reflections. `/dashboard` is now the primary cockpit with mission, growth profile, three big rocks, three next actions, waiting/reply/follow-up signals, durable complete/defer state, and an evening reflection. Detailed employee/prospecting views remain available as secondary routes, and the production-facing test-prospect control was removed. The authenticated cockpit browser proof passed 1/1; no hosted or provider state changed. | Revert this focused cockpit/API/UI/test/documentation slice; if `083` is applied, preserve priority, action, and reflection history with a reviewed forward migration rather than destructive rollback. |
 | 2026-08-06 | Approved sender execution boundary | This commit | Added an explicit dashboard send action for approved messages, deterministic fake delivery for offline assembly, a separately keyed Resend adapter with provider idempotency, and environment guards. Removed the unsafe manual provider-ID dispatch endpoint. The authenticated browser proof now covers no pre-approval send, dashboard send, idempotent retry, and suppression. No real provider call or external message occurred. | Revert this focused sender/API/UI/test/documentation commit; keep outreach history and provider-event records if the sender path has been exercised. |
 | 2026-08-06 | Prospecting and outreach foundation | `2099f06`, `8b291be`, `2320168`, `caceac5`, plus this documentation commit | Added migration `082`, durable growth profiles/prospects/sources/outreach/suppression/tasks/events/outcomes, protected APIs, the `/prospecting` three-check-in dashboard, a provider-neutral sender boundary, and an authenticated browser proof. The focused prospecting proof passed 1/1 against local Supabase and verifies no pre-approval send, idempotent send, bounce replay, and suppression. No real sender, hosted migration, deployment, production data, or external message changed. | Revert these focused code/test/docs commits; if migration `082` is applied anywhere, preserve outreach and suppression history with a reviewed forward migration rather than destructive rollback. |

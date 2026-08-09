@@ -1,27 +1,65 @@
 # NeedThisDone
 
-NeedThisDone sells and operates a supervised AI Growth Employee that prepares evidence-backed growth decisions for a human owner or manager.
+NeedThisDone has two equal, human-led service paths:
 
-The website is both the sales surface and the first proof of the service: visitors can request an audit or project, operators can provision that project as a supervised pilot, and linked clients can collaborate through a project-scoped portal. Direct payment is not configured; paid work still begins through a project request.
+- **Website Improvement** — a $500 evidence-based audit and one agreed contained fix, invoiced manually as $250 to begin and $250 on delivery.
+- **Managed AI Operator** — a proposal-based 30-day pilot operated privately by Abe and Andrea, with four weekly client briefs.
 
-## Current direction
+The finish line is business proof, not a redesign: one paid, delivered engagement from each offer. The software supports the work but does not replace human scope, judgment, approval, or client communication.
 
-The retained product is:
+## The three living documents
 
-- A marketing, audit, and proposal surface for the managed service.
-- A customer-scoped employee workspace with three daily check-ins.
-- A maximum of five scheduled decisions per employee, queue, and day.
-- Immutable decisions and manual action/outcome records in Supabase.
-- Owner/manager approval; viewers remain read-only.
-- Existing operator, project, and client collaboration needed to deliver the service.
+These are the current decision sources:
 
-The Medusa/Railway ecommerce runtime, product reviews, carts, inventory, LMS, visual page editing, workflow automation, and dark-mode support are retired. Historical database migrations remain for audit history and are not runtime dependencies.
+- [README](README.md): product boundary, architecture, and local workflow.
+- [Roadmap](ROADMAP.md): the next work and the paid-proof finish line.
+- [Release evidence](docs/RELEASE_EVIDENCE.md): what is verified, pending, or not claimable.
 
-Read [the technology stack](docs/TECH_STACK.md) for the architecture-review gate and component responsibilities, [the system audit](docs/audits/2026-07-24-system-audit.md) for the evidence, and [the project tracker](docs/PROJECT_STATUS.md) for current work.
+Historical audits, launch notes, `docs/TECH_STACK.md`, and `docs/PROJECT_STATUS.md` remain supporting evidence or an execution ledger. They are not competing product plans.
 
-Before adding infrastructure, agents, models, queues, or abstractions, complete the Phase 0 architecture review in [the technology stack](docs/TECH_STACK.md). The simplest maintainable solution wins when it solves the same problem.
+## Public experience
 
-## Local development
+The public navigation is **Website Improvement · AI Operator · How It Works · Work · Insights**, followed by **Start a Project**.
+
+`/site-analyzer → /report/[id] → /contact?offer=website-improvement` is the website-improvement path. The report is a free evidence-based starting point, not a promised score increase or accessibility certification. `/contact` is one adaptive intake that stores the selected offer and its tailored context through the existing project-request flow.
+
+`/work` is the compact proof destination. `/about` and `/resume` permanently redirect there; `/guide` redirects to `/faq`; and `/build` redirects to the website-improvement intake. The sitemap contains only maintained public pages and the curated Insights posts.
+
+## Private operator boundary
+
+`/dashboard`, `/employee`, `/prospecting`, and `/admin/*` are private operational surfaces. Clients do not operate the dashboard. The operator may prepare research, drafts, and internal queues, but a human must approve every external message, publication, system change, or spend.
+
+Production outreach additionally requires the scoped worker boundary, public-evidence sourcing, suppression/unsubscribe handling, verified sender events, and a human-approved send. No public route reaches the Mac mini worker.
+
+## Architecture
+
+```text
+Public site and private operator UI
+                |
+             Next.js
+                |
+     +----------+----------+
+     |                     |
+Supabase              Redis (optional)
+durable truth         transient cache, rate-limit,
+auth, RLS, records    deduplication, coordination
+```
+
+Supabase is the durable source of truth for projects, reports, private work, approvals, outcomes, suppression, and model-evaluation records. Redis is transient only. Qdrant and any replacement database are not part of this product.
+
+Provider boundaries are deliberately inactive unless separately approved. There is no implied deployment, hosted migration, Stripe checkout, model-provider activation, real sender, or client portal in this repository change.
+
+## Model-evaluation boundary
+
+No live worker model is selected by default. The pending evaluation protocol uses sanitized fixed tasks to record quality, tool use, latency, cost, failures, and repair rate for:
+
+- Poolside Laguna S 2.1 Free;
+- two current eligible free candidates, resolved and pinned from the catalog at evaluation time; and
+- pinned `deepseek/deepseek-v4-flash` only as a fallback.
+
+The code enforces a $0.25 daily evaluation ceiling and a $0.10 per-run ceiling. All three free candidates must complete the fixed task set before any default is selected. DeepSeek can be selected only if every free candidate completed the set and none cleared the shared threshold. Recording a result does not activate a provider or permit external action.
+
+## Local development and verification
 
 ```bash
 cd app
@@ -29,160 +67,23 @@ npm install
 npm run dev
 ```
 
-The app runs at `http://localhost:3000`. Authentication and authorization tests use real local Supabase users; there is no application admin or preview bypass.
-
-Environment credentials are kept in ignored `.env.local.profile` and `.env.cloud.profile` files. Switch targets with `npm run env:local` or `npm run env:cloud`; see [the environment switching guide](docs/ENVIRONMENT_SWITCHING.md). Keep the app on `local` before running database verification.
-
 Useful checks:
 
 ```bash
 cd app
 npm run type-check
 npm run test:unit
+npm run test:a11y
 npm run build
-npm run test:employee-workspace
+npm run test:retained-smoke
 npm run verify:code
 npm run verify:assembly
 ```
 
-`verify:assembly` is the delivery gate for the manual internal pilot. It removes optional provider credentials from the proof process and verifies the full lifecycle with local Supabase. The retained browser suite has six intentional Playwright specs: 18 public desktop/mobile checks, 4 real-session lifecycle checks, 1 prospecting check, 1 daily-cockpit check, and 2 employee-workspace UI checks. `npm run verify:assembly:fresh` additionally erases and rebuilds only the disposable local database. See [provider-free final assembly](docs/FINAL_ASSEMBLY.md).
+`verify:assembly:fresh` resets only the disposable local Supabase database. It is not a hosted-migration command. Keep the environment on `local` before database checks; authenticated/RLS tests require a running local Supabase stack.
 
-After a production build, restart the development server because the build replaces `.next`.
+## Hosted and provider release boundary
 
-Local database behavior tests require the Supabase CLI and a running Docker-compatible
-container engine. They reset only the local database:
+Hosted changes are separately approved work. Before any hosted migration or deployment: rehearse the backup and pending migrations, inspect the dry run, verify parity, and record the result in [release evidence](docs/RELEASE_EVIDENCE.md). Before any provider is activated: approve the exact sender/model/payment configuration and prove its bounded behavior.
 
-```bash
-supabase start
-supabase db reset
-cd app
-RUN_LOCAL_SUPABASE_TESTS=true npm run test:unit -- __tests__/lib/ai-employee-rls.test.ts
-```
-
-Production uses hosted Supabase. The local code contract is rebuilt through migration `083`;
-the last recorded hosted migration is `072`, so `073`–`083` remain deployment work outside
-the code-only internal-pilot finish line. Read
-[the release evidence matrix](docs/RELEASE_EVIDENCE.md) before promoting application code;
-only real-session tests prove authentication and RLS.
-
-## How the business works
-
-```text
-Visitor
-   |
-   +--> Site Analyzer / Contact Form
-              |
-              v
-            Lead
-              |
-              v
-      Owner Dashboard
-   (qualify and start pilot)
-              |
-              v
-  Customer + Employee Brief
-              |
-              v
-       Daily Queues
-  (author, approve, complete)
-              |
-              v
- Outcomes + Financial Scorecard
-
-Optional provider work after the code-only finish:
-confirmed consultation -> Google Calendar
-chosen paid offer       -> Stripe-hosted payment
-```
-
-## How the software fits together
-
-```text
-Browser
-   |
-   v
-Vercel / Next.js
-   |--------> Supabase
-   |           auth, projects, reports,
-   |           employee records, files
-   |
-   |--------> Stripe
-   |           hosted payments,
-   |           invoices, subscriptions,
-   |           customer portal
-   |
-   |--------> OpenAI
-   |           website analysis
-   |
-   |--------> Resend
-   |           transactional email
-   |
-   +--------> Upstash Redis
-               rate limits, deduplication,
-               short-lived cache
-
-Architecture-review-gated operations and model boundaries
-   |
-   +--------> Codex + GitHub: reviewed engineering
-   +--------> OpenClaw: approved operations, adapter pending
-   +--------> OpenRouter: evaluated model candidates
-   +--------> Qdrant: no integration
-   +--------> Hermes: deferred, not a product dependency
-```
-
-Retired from the application:
-
-```text
-Medusa/Railway ecommerce - carts - inventory - LMS
-inline/page editing - workflow automation - dark mode
-```
-
-| Service | Retained responsibility |
-| --- | --- |
-| Vercel | Next.js hosting and scheduled work that supports the retained product |
-| Supabase | Authentication, projects, collaboration data, reports, employee queues/decisions/outcomes, and storage |
-| Stripe | Installed SDK/CLI and guarded hosted handoff; first test Payment Link or invoice still requires owner setup |
-| OpenAI | Optional prose enhancement; deterministic site-analysis evidence works without it |
-| Resend | Optional transactional delivery; durable project/report records work without it |
-| Upstash Redis | Optional rate limiting, deduplication, transient coordination, and short-lived cache; durable state remains in Supabase |
-| Qdrant | Not present and not integrated; no semantic-memory service is authorized |
-| OpenClaw | Operations system boundary; local CLI exists, but onboarding, provider, daemon, channels, and authenticated adapter remain pending |
-| Codex + GitHub | Reviewed software engineering and delivery history |
-| OpenRouter | Candidate model-evaluation boundary; resolve current IDs, pricing, context, capabilities, and Auto selection from the live catalog before any call |
-| Hermes | Deferred; not part of the primary product architecture unless a distinct orchestration need is proven |
-
-Provider accounts, billing limits, OAuth consent, and production permissions are tracked in [the outside-terminal full-stack checklist](docs/launch/full-stack-external-setup.md).
-
-## How changes reach production
-
-```text
-Plan and document
-       |
-       v
-Implement on dev
-       |
-       v
-Tests + desktop/mobile review
-       |
-       v
-Explicit approval
-       |
-       v
-Merge to production
-```
-
-## Branch policy
-
-- `dev` is the integration branch for reviewed work.
-- `production` is deployed, approved code only.
-- No long-lived branches beyond those two.
-- Each change must be validated on `dev` before an explicit production approval.
-
-## Documentation policy
-
-- `README.md` explains the current product and how to work on it.
-- `docs/TECH_STACK.md` is the canonical component and responsibility map.
-- `ROADMAP.md` is the canonical product architecture and delivery sequence.
-- `docs/PROJECT_STATUS.md` is the authoritative implementation tracker.
-- `docs/audits/` contains evidence and architecture reviews.
-- Design documents stay only when they support the current mission.
-- Retired-system manuals are deleted with the systems they described.
+The paid website engagement and paid AI-operator pilot are still operational milestones. Record their actual delivery, weekly briefs, and outcomes in release evidence only after they occur.
