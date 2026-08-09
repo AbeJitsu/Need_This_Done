@@ -4,6 +4,14 @@ import { closePool, getPool } from '../../../supabase/tests/helpers';
 const localDescribe = process.env.RUN_LOCAL_SUPABASE_TESTS === 'true' ? describe : describe.skip;
 
 const retainedTables = [
+  'agent_approval_decisions',
+  'agent_artifact_versions',
+  'agent_artifacts',
+  'agent_orchestration_tasks',
+  'agent_run_commands',
+  'agent_run_events',
+  'agent_runs',
+  'agent_task_dependencies',
   'agent_task_events',
   'agent_tasks',
   'ai_employee_check_in_schedules',
@@ -12,11 +20,14 @@ const retainedTables = [
   'ai_employee_outcomes',
   'ai_employee_work_items',
   'ai_employees',
+  'brand_profiles',
+  'content_schedules',
   'customer_accounts',
   'customer_memberships',
   'google_calendar_tokens',
   'growth_profiles',
   'health_check',
+  'media_usage_reservations',
   'model_benchmark_candidates',
   'model_evaluation_records',
   'model_usage_ledger',
@@ -36,6 +47,7 @@ const retainedTables = [
   'suppression_records',
   'user_roles',
   'worker_callback_nonces',
+  'worker_heartbeats',
   'workflow_runs',
 ] as const;
 
@@ -208,7 +220,7 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
 
   it('keeps the retained trigger set and no retired public views', async () => {
     const triggers = await getPool().query<{ trigger_name: string }>(
-      `select trigger_name from information_schema.triggers
+      `select distinct trigger_name from information_schema.triggers
        where trigger_schema = 'public'
        order by trigger_name`,
     );
@@ -221,12 +233,22 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
       'operator_daily_reflections_updated_at',
       'operator_weekly_priorities_updated_at',
       'outreach_messages_updated_at',
+      'prevent_agent_approval_decision_mutation',
+      'prevent_agent_artifact_version_update',
+      'prevent_agent_run_command_mutation',
+      'prevent_agent_run_event_mutation',
       'project_status_change_comment',
       'prospect_dossiers_updated_at',
       'prospects_updated_at',
+      'update_agent_artifacts_updated_at',
+      'update_agent_orchestration_tasks_updated_at',
+      'update_agent_runs_updated_at',
+      'update_brand_profiles_updated_at',
+      'update_content_schedules_updated_at',
       'update_google_calendar_tokens_updated_at',
       'update_project_github_handoffs_updated_at',
       'update_projects_updated_at',
+      'update_worker_heartbeats_updated_at',
       'update_workflow_runs_updated_at',
     ]);
     const views = await getPool().query(`select table_name from information_schema.views where table_schema = 'public'`);
@@ -310,7 +332,34 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
     );
     expect(policies.rows).toEqual([]);
 
+    const agentBucket = await getPool().query<{
+      public: boolean;
+      file_size_limit: number;
+      allowed_mime_types: string[];
+    }>(
+      `select public, file_size_limit::integer, allowed_mime_types
+       from storage.buckets where id = 'agent-media-private'`,
+    );
+    expect(agentBucket.rows).toEqual([{
+      public: false,
+      file_size_limit: 50 * 1024 * 1024,
+      allowed_mime_types: [
+        'image/png',
+        'image/jpeg',
+        'image/webp',
+        'video/mp4',
+        'audio/mpeg',
+        'audio/wav',
+        'text/vtt',
+        'application/x-subrip',
+        'text/plain',
+      ],
+    }]);
+
     const allBuckets = await getPool().query<{ id: string }>(`select id from storage.buckets order by id`);
-    expect(allBuckets.rows).toEqual([{ id: 'project-attachments' }]);
+    expect(allBuckets.rows).toEqual([
+      { id: 'agent-media-private' },
+      { id: 'project-attachments' },
+    ]);
   });
 });

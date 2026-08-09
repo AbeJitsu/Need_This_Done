@@ -808,7 +808,6 @@ declare
   content_text text;
   storage_path text;
   mime_type text;
-  next_version integer;
   final_status text;
 begin
   if not public.private_worker_access()
