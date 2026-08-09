@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import DailyCockpit from '@/components/DailyCockpit';
+import AgentOperationsDashboard from '@/components/AgentOperationsDashboard';
 
 // ============================================================================
 // Dashboard Page - Primary Daily Cockpit
@@ -16,16 +17,22 @@ import DailyCockpit from '@/components/DailyCockpit';
 export default function DashboardPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const localPreview = process.env.NODE_ENV === 'development'
+    && process.env.NEXT_PUBLIC_DASHBOARD_PREVIEW === 'true';
 
   // ============================================================================
   // Redirect if Not Authenticated
   // ============================================================================
 
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
+    if (!localPreview && !authLoading && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isAuthenticated, authLoading, router]);
+  }, [isAuthenticated, authLoading, localPreview, router]);
+
+  if (localPreview) {
+    return <AgentOperationsDashboard previewMode />;
+  }
 
   // ============================================================================
   // Show Loading State
@@ -47,5 +54,10 @@ export default function DashboardPage() {
     return null;
   }
 
-  return <DailyCockpit />;
+  return (
+    <>
+      <DailyCockpit />
+      <AgentOperationsDashboard />
+    </>
+  );
 }
