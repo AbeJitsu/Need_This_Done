@@ -122,8 +122,8 @@ test('configures, reviews, sends, and suppresses an approved prospecting message
 
   await page.goto('/prospecting');
   await expect(page.getByRole('heading', { name: 'Prospecting & outreach' })).toBeVisible();
-  await expect(page.getByText('Browser Example Studio')).toBeVisible();
   await page.getByRole('button', { name: 'Midday · review drafts' }).click();
+  await expect(page.getByText('Browser Example Studio')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Message preview' })).toBeVisible();
   await page.getByRole('button', { name: 'Approve' }).click();
   await expect(page.getByRole('heading', { name: 'Approved and ready to send' })).toBeVisible();
