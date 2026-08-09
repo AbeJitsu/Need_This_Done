@@ -38,6 +38,8 @@ export type {
   GuideGroup,
   GuideSection,
   GuidePageContent,
+  LegalPageSection,
+  LegalPageContent,
   PrivacyPageContent,
   TermsPageContent,
   LoginPageContent,

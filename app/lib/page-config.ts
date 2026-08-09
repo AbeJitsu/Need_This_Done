@@ -347,21 +347,23 @@ export interface GuidePageContent {
   sections: GuideSection[];
 }
 
-// --- Privacy Page ---
-export interface PrivacyPageContent {
-  header: PageHeader;
-  lastUpdated: string;
-  quickSummary: { title: string; items: string[] };
-  sections: Array<{ title: string; content: string }>;
+// --- Shared Legal Pages ---
+export interface LegalPageSection {
+  title: string;
+  content: string;
 }
 
-// --- Terms Page ---
-export interface TermsPageContent {
+export interface LegalPageContent {
   header: PageHeader;
   lastUpdated: string;
   quickSummary: { title: string; items: string[] };
-  sections: Array<{ title: string; content: string }>;
+  sections: LegalPageSection[];
 }
+
+// Keep named page types for callers that import the route-specific shapes.
+export interface PrivacyPageContent extends LegalPageContent {}
+
+export interface TermsPageContent extends LegalPageContent {}
 
 // --- Login Page ---
 export interface LoginPageContent {
@@ -876,15 +878,15 @@ blog: {
     displayName: 'Privacy Policy',
     contentType: 'privacy_page',
     defaults: {
-      header: { title: 'Privacy Policy', description: 'How project-request and private-workspace information is handled.' },
-      lastUpdated: 'August 8, 2026',
+      header: { title: 'Privacy Policy', description: 'How project requests, technical signals, and authenticated private-workspace records are handled.' },
+      lastUpdated: 'August 9, 2026',
       quickSummary: {
         title: 'Quick Summary',
-        items: ['We collect the information needed to respond to a project request and deliver agreed work', 'The public site does not collect payment-card details or activate checkout', 'We do not sell personal information', 'Private system records are available only through authenticated, role-scoped surfaces'],
+        items: ['We collect the contact, project, technical, and private-workspace information needed to respond and deliver agreed work', 'A public request does not create a subscription, and the public flow does not collect payment-card details', 'We do not sell personal information', 'Private records remain behind authenticated, role-scoped access'],
       },
       sections: [
-        { title: '1. Information We Collect', content: 'When you submit a project request, we collect the contact details and project context you provide. For a targeted fix, that can include a website URL, the problem you want addressed, and the outcome you want. For automation system setup, that can include recurring workflows, tools, approval boundaries, and desired outcomes.\n\nIf a private workspace is created for an agreed engagement, it may contain the project, decisions, evidence, outcomes, and files needed to deliver that work. We also receive basic technical request and security information needed to operate the site.' },
-        { title: '2. How We Use Information', content: 'We use project-request information to respond, scope work, send relevant service communications, and deliver an accepted engagement. Private-workspace information is used to operate and document the agreed work, including approvals and outcomes.\n\nWe do not sell personal information. We do not use a public request to enroll you in an automatic subscription. Payment-card data is not collected by the current public site flow.' },
+        { title: '1. Information We Collect', content: 'When you submit a project request, we collect the contact details and project context you provide. For a targeted fix, that can include a website URL, the problem you want addressed, and the outcome you want. For automation system setup, that can include recurring workflows, tools, approval boundaries, and desired outcomes.\n\nIf a private workspace is created for an agreed engagement, it may contain the project, decisions, evidence, outcomes, and files needed to deliver that work. We also receive basic technical request and security information needed to operate and protect the site.' },
+        { title: '2. How We Use Information', content: 'We use project-request information to respond, scope work, send relevant service communications, and deliver an accepted engagement. Private-workspace information is used to operate and document the agreed work, including approvals and outcomes.\n\nWe do not sell personal information. A public request does not enroll you in an automatic subscription or purchase, and payment-card data is not collected by the current public site flow.' },
         { title: '3. Service Providers and Access', content: 'NeedThisDone uses service providers for hosting, database/authentication, email delivery when configured, and security/operational support. Providers may process information only as needed to provide those services.\n\nAccess to private operator records is limited by authenticated, role-scoped controls. The dashboard, employee, prospecting, and administrative surfaces are not public client portals.' },
         { title: '4. Retention and Your Choices', content: 'We retain request and delivery information for as long as reasonably needed to respond, deliver work, meet legal or operational obligations, resolve disputes, and maintain accurate records. You may ask to access, correct, or request deletion of personal information by contacting us. Some records may need to be retained where required for legitimate operational or legal reasons.' },
         { title: '5. Contact Us', content: 'Questions or requests about privacy?\n\nEmail: hello@needthisdone.com\nWebsite: needthisdone.com/contact' },
@@ -898,17 +900,17 @@ blog: {
     displayName: 'Terms of Service',
     contentType: 'terms_page',
     defaults: {
-      header: { title: 'Terms of Service', description: 'The public-site terms and the service boundaries that apply before an accepted proposal.' },
-      lastUpdated: 'August 8, 2026',
+      header: { title: 'Terms of Service', description: 'The public-site terms for project requests, a contained $500 fix, and proposal-based automation setup.' },
+      lastUpdated: 'August 9, 2026',
       quickSummary: {
         title: 'The Short Version',
-        items: ['A project request is not an automatic purchase or a binding service agreement', 'The targeted fix is $500: 50% manual invoice to begin and 50% after the agreed contained fix is delivered', 'Automation system setup is proposal-based and requires written scope before work begins', 'External actions remain subject to explicit human approval'],
+        items: ['A request starts a conversation; it is not an automatic purchase, subscription, or binding agreement', '$500 targeted fix: $250 manual invoice to begin and $250 after the agreed contained fix is delivered', 'Automation setup is proposal-based, with written scope, price, payment, and approval boundaries', 'Messages, publishing, system changes, and spending require explicit human approval'],
       },
       sections: [
         { title: '1. Acceptance and Project Requests', content: "By using NeedThisDone.com, you agree to these terms for your use of the public site. A project request invites a follow-up conversation; it does not create an automatic purchase, subscription, or binding service agreement. Accepted work is governed by the specific written scope, proposal, and invoice agreed for that engagement." },
         { title: '2. Targeted Fix Scope', content: 'The public targeted fix is $500 and includes an evidence-backed review plus one mutually agreed contained fix. A contained fix is one page- or component-level improvement, accessibility/SEO/performance correction, or focused conversion change.\n\nIt does not include a redesign, integration, multi-page build, or other work outside the written scope. Additional work requires a separate agreement.' },
-        { title: '3. Targeted Fix Payment', content: 'After the contained scope is confirmed, the targeted fix uses manual invoices: $250 (50%) to begin and $250 (50%) after the agreed fix is delivered. The current public site does not activate a checkout or recurring payment flow. Any payment questions or changes are handled directly in the agreed written scope.' },
-        { title: '4. Automation System Setup', content: 'Automation system setup is a proposal-based engagement. The system uses an agreed operating brief, success measures, payment terms, and prohibited-action list. Authenticated operators can review runs, evidence, costs, artifacts, and approvals through the browser workspace.\n\nThe system does not create automatic external authority. Any expansion or continuation requires a separate decision and agreement.' },
+        { title: '3. Targeted Fix Payment', content: 'After the contained scope is confirmed, the targeted fix uses two manual invoices: $250 (50%) to begin and $250 (50%) after the agreed fix is delivered. The current public site does not activate a checkout or recurring payment flow. Any payment questions or changes are handled directly in the agreed written scope.' },
+        { title: '4. Automation System Setup', content: 'Automation system setup is a proposal-based engagement. Before work begins, the written proposal or scope sets the requested result, scope, price, payment terms, success measures, approval boundaries, and prohibited-action list. Authenticated operators can review runs, evidence, costs, artifacts, and approvals through the browser workspace.\n\nThe system does not create automatic external authority. Any expansion or continuation requires a separate decision and agreement.' },
         { title: '5. Human Approval and Client Responsibilities', content: 'External messages, publishing, system changes, and spending require explicit human approval. You agree to provide accurate context, timely access or feedback when needed, and authority for any requested work. You remain responsible for your business decisions, content, accounts, and approvals.' },
         { title: '6. Results, Intellectual Property, and Liability', content: 'NeedThisDone does not guarantee traffic, revenue, legal compliance, accessibility certification, conversion results, or any other business outcome. Ownership, license, confidentiality, and portfolio terms for an accepted engagement are defined in its written scope. To the extent allowed by law, liability is limited to the amounts paid for the specific engagement giving rise to the claim.' },
         { title: '7. Privacy and Contact', content: 'Please review the Privacy Policy for how information is handled. Questions about these terms or a project scope can be sent to:\n\nEmail: hello@needthisdone.com\nWebsite: needthisdone.com/contact' },

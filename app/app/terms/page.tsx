@@ -14,11 +14,11 @@ import TermsPageClient from '@/components/terms/TermsPageClient';
 
 export const metadata = {
   title: 'Terms of Service - NeedThisDone',
-  description: 'The agreement between you and NeedThisDone when using our services.',
+  description: 'Terms for project requests, the $500 targeted fix, and proposal-based automation system setup.',
   alternates: { canonical: '/terms' },
   openGraph: {
     title: 'Terms of Service - NeedThisDone',
-    description: 'The agreement between you and NeedThisDone when using our services.',
+    description: 'Terms for project requests, the $500 targeted fix, and proposal-based automation system setup.',
     type: 'website',
   },
 };

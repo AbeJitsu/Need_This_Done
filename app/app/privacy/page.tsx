@@ -14,11 +14,11 @@ import PrivacyPageClient from '@/components/privacy/PrivacyPageClient';
 
 export const metadata = {
   title: 'Privacy Policy - NeedThisDone',
-  description: 'How we collect, use, and protect your personal information.',
+  description: 'How NeedThisDone handles project requests, technical information, and authenticated private-workspace records.',
   alternates: { canonical: '/privacy' },
   openGraph: {
     title: 'Privacy Policy - NeedThisDone',
-    description: 'How we collect, use, and protect your personal information.',
+    description: 'How NeedThisDone handles project requests, technical information, and authenticated private-workspace records.',
     type: 'website',
   },
 };
