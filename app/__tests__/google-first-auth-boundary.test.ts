@@ -28,11 +28,15 @@ describe('Google-first authentication boundary', () => {
     const protectedSources = [
       'context/AuthContext.tsx',
       'lib/api-auth.ts',
-      'app/dashboard/page.tsx',
     ].map(source).join('\n');
 
     expect(protectedSources).not.toContain('NEXT_PUBLIC_E2E_ADMIN_BYPASS');
     expect(protectedSources).not.toContain('getPreviewMode');
     expect(protectedSources).not.toContain('previewMode');
+
+    const dashboard = source('app/dashboard/page.tsx');
+    expect(dashboard).toContain("process.env.NODE_ENV === 'development'");
+    expect(dashboard).toContain('NEXT_PUBLIC_DASHBOARD_PREVIEW');
+    expect(dashboard).toContain('if (!localPreview && !authLoading && !isAuthenticated)');
   });
 });
