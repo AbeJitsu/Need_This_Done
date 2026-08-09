@@ -72,10 +72,10 @@ test('configures, reviews, sends, and suppresses an approved prospecting message
       workingHoursEnd: '17:00',
       timezone: 'America/New_York',
       followUpDays: [3, 7],
-      modelRoute: 'openrouter/free',
+      modelRoute: 'evaluation-required',
       fallbackModel: '',
       perRunModelCap: 0.1,
-      dailyModelCap: 1,
+      dailyModelCap: 0.25,
     }),
   });
   expect(profile.status).toBe(200);

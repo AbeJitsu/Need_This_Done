@@ -18,9 +18,10 @@ describe('prospecting safety helpers', () => {
   });
 
   it('enforces both per-run and daily model budgets', () => {
-    expect(modelBudgetAllowed(0.8, 0.1)).toBe(true);
-    expect(modelBudgetAllowed(0.8, 0.11)).toBe(false);
-    expect(modelBudgetAllowed(0.95, 0.1)).toBe(false);
+    expect(modelBudgetAllowed(0.15, 0.1)).toBe(true);
+    expect(modelBudgetAllowed(0.15, 0.11)).toBe(false);
+    expect(modelBudgetAllowed(0.2, 0.1)).toBe(false);
+    expect(modelBudgetAllowed(0, 0.1, 1, 0.1)).toBe(false);
   });
 
   it('keeps real prospecting delivery disabled unless an explicit provider is selected', async () => {

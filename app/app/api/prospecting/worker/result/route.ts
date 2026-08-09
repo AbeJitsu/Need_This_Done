@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { modelBudgetAllowed, verifyWorkerSignature } from '@/lib/prospecting';
+import { MODEL_EVALUATION_PER_RUN_CAP_USD } from '@/lib/model-evaluation';
 
-const schema = z.object({ taskId: z.string().uuid(), workerId: z.string().trim().min(1).max(160), status: z.enum(['succeeded', 'failed']), output: z.record(z.string(), z.unknown()).optional(), error: z.string().trim().max(4000).optional(), modelName: z.string().trim().max(200).optional(), promptTokens: z.number().int().nonnegative().optional(), completionTokens: z.number().int().nonnegative().optional(), cost: z.number().nonnegative().max(0.1).optional() });
+const schema = z.object({ taskId: z.string().uuid(), workerId: z.string().trim().min(1).max(160), status: z.enum(['succeeded', 'failed']), output: z.record(z.string(), z.unknown()).optional(), error: z.string().trim().max(4000).optional(), modelName: z.string().trim().max(200).optional(), promptTokens: z.number().int().nonnegative().optional(), completionTokens: z.number().int().nonnegative().optional(), cost: z.number().nonnegative().max(MODEL_EVALUATION_PER_RUN_CAP_USD).optional() });
 
 export async function POST(request: Request) {
   const body = await request.text();
@@ -21,8 +22,9 @@ export async function POST(request: Request) {
   if (nonceError) return NextResponse.json({ error: 'Worker callback has already been used.' }, { status: 409 });
   const { data: task } = await admin.from('agent_tasks').select('id, leased_by, status').eq('id', parsed.data.taskId).maybeSingle();
   if (!task || task.status !== 'leased' || task.leased_by !== parsed.data.workerId) return NextResponse.json({ error: 'Task lease is invalid or expired.' }, { status: 409 });
-  const { data: profile } = await admin.from('growth_profiles').select('id, per_run_model_cap, daily_model_cap').eq('id', (await admin.from('agent_tasks').select('profile_id').eq('id', parsed.data.taskId).single()).data?.profile_id || '').single();
+  const { data: profile } = await admin.from('growth_profiles').select('id, model_route, per_run_model_cap, daily_model_cap').eq('id', (await admin.from('agent_tasks').select('profile_id').eq('id', parsed.data.taskId).single()).data?.profile_id || '').single();
   const runCost = parsed.data.cost || 0;
+  if (profile?.model_route === 'evaluation-required' && (runCost > 0 || parsed.data.modelName)) return NextResponse.json({ error: 'Model evaluation is required before a live worker model can report work.' }, { status: 409 });
   const { data: todayTasks } = profile ? await admin.from('agent_tasks').select('cost').eq('profile_id', profile.id).eq('status', 'succeeded').gte('completed_at', new Date(new Date().setHours(0, 0, 0, 0)).toISOString()) : { data: [] };
   const dailySpend = (todayTasks || []).reduce((sum, item) => sum + Number(item.cost || 0), 0);
   if (!profile || !modelBudgetAllowed(dailySpend, runCost, Number(profile.daily_model_cap), Number(profile.per_run_model_cap))) return NextResponse.json({ error: 'Model budget exceeded.' }, { status: 409 });

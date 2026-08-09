@@ -1,4 +1,5 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
+import { MODEL_EVALUATION_DAILY_CAP_USD, MODEL_EVALUATION_PER_RUN_CAP_USD } from '@/lib/model-evaluation';
 
 export function normalizeEmail(value: string | null | undefined) {
   return (value || '').trim().toLowerCase();
@@ -21,8 +22,20 @@ export function isPublicSourceUrl(value: string) {
   }
 }
 
-export function modelBudgetAllowed(dailySpend: number, runSpend: number, dailyCap = 1, runCap = 0.1) {
-  return dailySpend >= 0 && runSpend >= 0 && runSpend <= runCap && dailySpend + runSpend <= dailyCap;
+export function modelBudgetAllowed(
+  dailySpend: number,
+  runSpend: number,
+  dailyCap = MODEL_EVALUATION_DAILY_CAP_USD,
+  runCap = MODEL_EVALUATION_PER_RUN_CAP_USD,
+) {
+  return dailySpend >= 0
+    && runSpend >= 0
+    && dailyCap >= 0
+    && dailyCap <= MODEL_EVALUATION_DAILY_CAP_USD
+    && runCap >= 0
+    && runCap <= MODEL_EVALUATION_PER_RUN_CAP_USD
+    && runSpend <= runCap
+    && dailySpend + runSpend <= dailyCap;
 }
 
 export function createWorkerSignature(body: string, timestamp: string, nonce: string, secret: string) {

@@ -3,9 +3,10 @@ import { z } from 'zod';
 import { verifyAdmin } from '@/lib/api-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { normalizedFollowUpDays } from '@/lib/prospecting';
+import { MODEL_EVALUATION_DAILY_CAP_USD, MODEL_EVALUATION_PER_RUN_CAP_USD } from '@/lib/model-evaluation';
 
 const profileSchema = z.object({
-  name: z.string().trim().min(1).max(120), targetMarket: z.string().trim().min(1).max(300), geography: z.string().trim().min(1).max(300), businessSize: z.string().trim().max(200), painSignals: z.array(z.string().trim().min(1).max(300)).max(20), exclusionRules: z.array(z.string().trim().min(1).max(300)).max(20), offer: z.string().trim().min(1).max(2000), senderName: z.string().trim().min(1).max(160), senderEmail: z.string().email().max(320), dailyProspectCap: z.number().int().min(1).max(100), dailySendCap: z.number().int().min(1).max(100), workingHoursStart: z.string().regex(/^\d{2}:\d{2}$/), workingHoursEnd: z.string().regex(/^\d{2}:\d{2}$/), timezone: z.string().min(1).max(120), followUpDays: z.array(z.number().int()).max(20), modelRoute: z.string().trim().min(1).max(120), fallbackModel: z.string().trim().max(120), perRunModelCap: z.number().min(0).max(0.1), dailyModelCap: z.number().min(0).max(1), emergencyStop: z.boolean().optional(),
+  name: z.string().trim().min(1).max(120), targetMarket: z.string().trim().min(1).max(300), geography: z.string().trim().min(1).max(300), businessSize: z.string().trim().max(200), painSignals: z.array(z.string().trim().min(1).max(300)).max(20), exclusionRules: z.array(z.string().trim().min(1).max(300)).max(20), offer: z.string().trim().min(1).max(2000), senderName: z.string().trim().min(1).max(160), senderEmail: z.string().email().max(320), dailyProspectCap: z.number().int().min(1).max(100), dailySendCap: z.number().int().min(1).max(100), workingHoursStart: z.string().regex(/^\d{2}:\d{2}$/), workingHoursEnd: z.string().regex(/^\d{2}:\d{2}$/), timezone: z.string().min(1).max(120), followUpDays: z.array(z.number().int()).max(20), modelRoute: z.literal('evaluation-required'), fallbackModel: z.literal(''), perRunModelCap: z.number().min(0).max(MODEL_EVALUATION_PER_RUN_CAP_USD), dailyModelCap: z.number().min(0).max(MODEL_EVALUATION_DAILY_CAP_USD), emergencyStop: z.boolean().optional(),
 });
 
 export async function GET() {
