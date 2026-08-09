@@ -8,6 +8,7 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_ROOT="$PROJECT_ROOT/app"
 FRESH=false
+ASSEMBLY_SERVER_PID=""
 
 case "${1:-}" in
   "") ;;
@@ -17,6 +18,15 @@ esac
 
 cd "$PROJECT_ROOT"
 ./scripts/use-env.sh local
+
+cleanup_assembly_server() {
+  if [ -n "${ASSEMBLY_SERVER_PID:-}" ]; then
+    kill "$ASSEMBLY_SERVER_PID" >/dev/null 2>&1 || true
+    wait "$ASSEMBLY_SERVER_PID" >/dev/null 2>&1 || true
+  fi
+}
+
+trap cleanup_assembly_server EXIT
 
 wait_for_local_auth() {
   local attempts=0
@@ -88,6 +98,29 @@ export OPENROUTER_API_KEY=
 cd "$APP_ROOT"
 npm run verify:code
 npm run verify:database
+
+if [ "${ASSEMBLY_PRODUCTION_SERVER:-false}" = "true" ]; then
+  if [ -n "${BASE_URL:-}" ]; then
+    echo "BASE_URL must be unset when ASSEMBLY_PRODUCTION_SERVER=true." >&2
+    exit 2
+  fi
+  assembly_port="${ASSEMBLY_SERVER_PORT:-3001}"
+  export BASE_URL="http://localhost:${assembly_port}"
+  echo "Starting provider-free local production server at ${BASE_URL} after code and database gates."
+  NODE_ENV=production npm run start -- -p "$assembly_port" >/tmp/needthisdone-assembly-server.log 2>&1 &
+  ASSEMBLY_SERVER_PID=$!
+  server_attempts=0
+  until curl -fsS "${BASE_URL}/" >/dev/null 2>&1; do
+    server_attempts=$((server_attempts + 1))
+    if [ "$server_attempts" -ge 30 ]; then
+      echo "Provider-free local production server did not become ready." >&2
+      sed -n '1,160p' /tmp/needthisdone-assembly-server.log >&2 || true
+      exit 1
+    fi
+    sleep 1
+  done
+fi
+
 npm run test:retained-smoke
 npm run test:auth:e2e
 npm run test:prospecting-workspace
