@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, ChevronDown, HelpCircle } from 'lucide-react';
 import { ContentSection, ContentItem, ContentCollection } from '@/components/content/ContentStructure';
-import { FadeIn, RevealSection } from '@/components/motion';
+import { RevealSection } from '@/components/motion';
 import type { FAQPageContent } from '@/lib/page-content-types';
 
 interface FAQPageClientProps {
@@ -50,8 +50,7 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
 
         <div className="relative mx-auto grid max-w-7xl items-end gap-12 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[1.05fr_.95fr] lg:gap-20 lg:px-12">
           <ContentSection sectionKey="header" label="Page Header">
-            <FadeIn direction="up" triggerOnScroll={false}>
-              <div className="max-w-3xl">
+            <div className="max-w-3xl">
                 <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.2em] text-emerald-200">
                   <HelpCircle className="h-4 w-4" aria-hidden="true" />
                   FAQ
@@ -62,8 +61,7 @@ export default function FAQPageClient({ content }: FAQPageClientProps) {
                 <p className="mt-7 max-w-2xl text-lg leading-8 text-emerald-50/75 md:text-xl">
                   {content.header.description}
                 </p>
-              </div>
-            </FadeIn>
+            </div>
           </ContentSection>
 
           <aside className="rounded-[2rem] border border-white/15 bg-white/[.08] p-6 backdrop-blur-sm sm:p-8" aria-labelledby="faq-overview-heading">
