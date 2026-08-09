@@ -33,12 +33,16 @@ test.describe('Retained core smoke checks', () => {
 
   test('project dashboard requires an authenticated session', async ({ page }) => {
     await page.goto('/dashboard');
-    if (page.url().endsWith('/dashboard')) {
-      await expect(page.getByRole('heading', { name: /agent operations/i })).toBeVisible();
+    const dashboardHeading = page.getByRole('heading', { name: /agent operations/i });
+    const loginBoundary = page.getByLabel('Email Address');
+    await expect(dashboardHeading.or(loginBoundary)).toBeVisible();
+
+    if (await dashboardHeading.isVisible()) {
       return;
     }
+
     await expect(page).toHaveURL(/\/login$/);
-    await expect(page.getByLabel('Email Address')).toBeVisible();
+    await expect(loginBoundary).toBeVisible();
   });
 
   test('private operator surfaces require authentication', async ({ page }) => {
@@ -69,17 +73,6 @@ test.describe('Retained core smoke checks', () => {
   });
 
   test('privacy and terms keep their legal boundaries readable at public widths', async ({ page }) => {
-    const errors: string[] = [];
-    page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
-    page.on('pageerror', (error) => errors.push(error.message));
-    // Legal pages are anonymous. Keep the global auth provider from turning a
-    // missing local NextAuth session into an unrelated console error.
-    await page.route('**/api/auth/session', (route) => route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: '{}',
-    }));
-
     const legalRoutes = [
       {
         path: '/privacy',
@@ -103,42 +96,59 @@ test.describe('Retained core smoke checks', () => {
       await page.setViewportSize(viewport);
 
       for (const route of legalRoutes) {
-        errors.length = 0;
-        const response = await page.goto(route.path);
+        const legalPage = await page.context().newPage();
+        const errors: string[] = [];
+        legalPage.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+        legalPage.on('pageerror', (error) => errors.push(error.message));
+        // Legal pages are anonymous. Keep the global auth provider from turning
+        // a missing local NextAuth session into an unrelated console error.
+        await legalPage.route('**/api/auth/session', (request) => request.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: '{}',
+        }));
 
-        expect(response?.ok()).toBe(true);
-        await expect(page.getByRole('heading', { level: 1, name: route.heading, exact: true })).toBeVisible();
-        await expect(page.getByText('At a glance', { exact: true })).toBeVisible();
-        await expect(page.getByText(route.boundary)).toBeVisible();
-        await expect(page.getByRole('link', { name: 'Contact us', exact: true })).toHaveAttribute('href', '/contact');
+        await legalPage.setViewportSize(viewport);
 
-        const sectionLinks = page.locator('nav[aria-labelledby="on-this-page-heading"] a');
-        await expect(sectionLinks).toHaveCount(route.sectionCount);
-        await expect(sectionLinks.first()).toHaveAttribute('href', '#legal-section-1');
-        await expect(page.locator('[id="legal-section-1"]')).toHaveCount(1);
+        try {
+          const response = await legalPage.goto(route.path);
 
-        const layout = await page.evaluate(() => {
-          const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-legal-panel]'));
-          const overlap = panels.some((panel, index) => {
-            const first = panel.getBoundingClientRect();
-            return panels.slice(index + 1).some((other) => {
-              const second = other.getBoundingClientRect();
-              return first.left < second.right
-                && first.right > second.left
-                && first.top < second.bottom
-                && first.bottom > second.top;
+          expect(response?.ok()).toBe(true);
+          await expect(legalPage.getByRole('heading', { level: 1, name: route.heading, exact: true })).toBeVisible();
+          await expect(legalPage.getByText('At a glance', { exact: true })).toBeVisible();
+          await expect(legalPage.getByText(route.boundary)).toBeVisible();
+          await expect(legalPage.getByRole('link', { name: 'Contact us', exact: true })).toHaveAttribute('href', '/contact');
+
+          const sectionLinks = legalPage.locator('nav[aria-labelledby="on-this-page-heading"] a');
+          await expect(sectionLinks).toHaveCount(route.sectionCount);
+          await expect(sectionLinks.first()).toHaveAttribute('href', '#legal-section-1');
+          await expect(legalPage.locator('[id="legal-section-1"]')).toHaveCount(1);
+
+          const layout = await legalPage.evaluate(() => {
+            const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-legal-panel]'));
+            const overlap = panels.some((panel, index) => {
+              const first = panel.getBoundingClientRect();
+              return panels.slice(index + 1).some((other) => {
+                const second = other.getBoundingClientRect();
+                return first.left < second.right
+                  && first.right > second.left
+                  && first.top < second.bottom
+                  && first.bottom > second.top;
+              });
             });
+
+            return {
+              overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+              overlap,
+            };
           });
 
-          return {
-            overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
-            overlap,
-          };
-        });
-
-        expect(layout.overflow).toBe(false);
-        expect(layout.overlap).toBe(false);
-        expect(errors).toEqual([]);
+          expect(layout.overflow).toBe(false);
+          expect(layout.overlap).toBe(false);
+          expect(errors).toEqual([]);
+        } finally {
+          await legalPage.close();
+        }
       }
     }
   });
