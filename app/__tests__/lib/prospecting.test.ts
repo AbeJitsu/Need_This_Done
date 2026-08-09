@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { InMemoryOutboundSender } from '@/lib/outbound-sender';
 import { createWorkerSignature, isPublicSourceUrl, modelBudgetAllowed, normalizeEmail, prospectDeduplicationKey, verifyWorkerSignature } from '@/lib/prospecting';
 import { createProspectingSender, getProspectingSenderProvider } from '@/lib/prospecting-sender';
-import { ForegroundProspectingWorker } from '@/lib/prospecting-worker';
+import { ForegroundProspectingWorker, privateResearchModelAllowed } from '@/lib/prospecting-worker';
 
 describe('prospecting safety helpers', () => {
   it('normalizes email and deduplicates by email before website', () => {
@@ -22,6 +22,12 @@ describe('prospecting safety helpers', () => {
     expect(modelBudgetAllowed(0.15, 0.11)).toBe(false);
     expect(modelBudgetAllowed(0.2, 0.1)).toBe(false);
     expect(modelBudgetAllowed(0, 0.1, 1, 0.1)).toBe(false);
+  });
+
+  it('refuses research while the profile remains evaluation-required', () => {
+    expect(privateResearchModelAllowed({ emergencyStop: false, modelRoute: 'evaluation-required', selectedModelId: null })).toBe(false);
+    expect(privateResearchModelAllowed({ emergencyStop: true, modelRoute: 'selected-free', selectedModelId: 'catalog/pinned' })).toBe(false);
+    expect(privateResearchModelAllowed({ emergencyStop: false, modelRoute: 'selected-free', selectedModelId: 'catalog/pinned' })).toBe(true);
   });
 
   it('keeps real prospecting delivery disabled unless an explicit provider is selected', async () => {
@@ -46,10 +52,13 @@ describe('prospecting safety helpers', () => {
   it('rejects stale or altered worker signatures', () => {
     const body = JSON.stringify({ taskId: 'one' });
     const timestamp = String(Math.floor(Date.now() / 1000));
-    const signature = createWorkerSignature(body, timestamp, 'nonce-1', 'secret');
-    expect(verifyWorkerSignature({ body, timestamp, nonce: 'nonce-1', signature, secret: 'secret' })).toBe(true);
-    expect(verifyWorkerSignature({ body: `${body}!`, timestamp, nonce: 'nonce-1', signature, secret: 'secret' })).toBe(false);
-    expect(verifyWorkerSignature({ body, timestamp: String(Number(timestamp) - 600), nonce: 'nonce-1', signature, secret: 'secret' })).toBe(false);
+    const nonce = 'nonce-1234567890';
+    const purpose = '/api/prospecting/worker/result';
+    const signature = createWorkerSignature(body, timestamp, nonce, 'secret', purpose);
+    expect(verifyWorkerSignature({ body, timestamp, nonce, signature, secret: 'secret', purpose })).toBe(true);
+    expect(verifyWorkerSignature({ body: `${body}!`, timestamp, nonce, signature, secret: 'secret', purpose })).toBe(false);
+    expect(verifyWorkerSignature({ body, timestamp, nonce, signature, secret: 'secret', purpose: '/api/prospecting/worker/claim' })).toBe(false);
+    expect(verifyWorkerSignature({ body, timestamp: String(Number(timestamp) - 600), nonce, signature, secret: 'secret', purpose })).toBe(false);
   });
 
   it('sends only complete approved records and is idempotent', async () => {
