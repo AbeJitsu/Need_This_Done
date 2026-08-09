@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { GET } from '@/app/api/offerings/[slug]/checkout/route';
 
 describe('offering checkout handoff', () => {
-  it('keeps the Website Improvement on the project-request fallback', async () => {
+  it('keeps the targeted fix on the project-request fallback', async () => {
     const response = await GET(new Request('https://needthisdone.com/api/offerings/website-improvement/checkout') as never, {
       params: Promise.resolve({ slug: 'website-improvement' }),
     });
@@ -11,7 +11,7 @@ describe('offering checkout handoff', () => {
     expect(response.headers.get('location')).toBe('https://needthisdone.com/contact?offer=website-improvement');
   });
 
-  it('keeps the Managed AI Operator on the project-request fallback', async () => {
+  it('keeps automation setup on the project-request fallback', async () => {
     const response = await GET(new Request('https://needthisdone.com/api/offerings/ai-operator/checkout') as never, {
       params: Promise.resolve({ slug: 'ai-operator' }),
     });

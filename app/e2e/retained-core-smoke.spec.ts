@@ -15,10 +15,10 @@ test.describe('Retained core smoke checks', () => {
     const response = await page.goto('/contact?offer=website-improvement');
 
     expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: /choose the path/i })).toBeVisible();
-    await expect(page.getByRole('radio', { name: /website improvement/i })).toBeChecked();
+    await expect(page.getByRole('heading', { name: /what are you contacting us about/i })).toBeVisible();
+    await expect(page.getByRole('radio', { name: /targeted fix/i })).toBeChecked();
     await expect(page.getByRole('textbox', { name: /website url/i })).toBeVisible();
-    await page.getByText('Managed AI Operator', { exact: true }).click();
+    await page.getByText('Automation System Setup', { exact: true }).click();
     await expect(page.getByRole('textbox', { name: /where does work get stuck/i })).toBeVisible();
     await expect(page.getByRole('textbox', { name: /website url/i })).toHaveCount(0);
   });

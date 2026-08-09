@@ -8,16 +8,16 @@ import { DEFAULT_LAYOUT_CONTENT } from '@/lib/page-config';
 const appRoot = resolve(__dirname, '..');
 const repositoryRoot = resolve(appRoot, '..');
 
-describe('dual-offer route hygiene', () => {
-  it('keeps the public navigation limited to the two offers and maintained destinations', () => {
+describe('public route hygiene', () => {
+  it('keeps the public navigation on the intended page progression', () => {
     expect(DEFAULT_LAYOUT_CONTENT.header.navLinks).toEqual([
-      { href: '/services#website-improvement', label: 'Website Improvement' },
-      { href: '/services#ai-operator', label: 'AI Operator' },
+      { href: '/services', label: 'Services' },
       { href: '/how-it-works', label: 'How It Works' },
+      { href: '/pricing', label: 'Pricing' },
       { href: '/work', label: 'Work' },
       { href: '/blog', label: 'Insights' },
     ]);
-    expect(DEFAULT_LAYOUT_CONTENT.header.ctaButton).toEqual({ text: 'Start a Project', href: '/contact' });
+    expect(DEFAULT_LAYOUT_CONTENT.header.ctaButton).toEqual({ text: 'Contact', href: '/contact' });
   });
 
   it('does not publish retired route entries in the sitemap and keeps private surfaces out of indexing', async () => {
