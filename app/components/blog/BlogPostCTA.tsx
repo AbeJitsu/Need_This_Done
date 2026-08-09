@@ -1,8 +1,8 @@
 // ============================================================================
-// BlogPostCTA — Dark editorial CTA for individual blog posts
+// BlogPostCTA — Calm next-step CTA for individual insight posts
 // ============================================================================
 // Client component so it can use RevealSection (which depends on useInView).
-// Matches the dark editorial CTA on the blog listing page.
+// Keeps the article handoff aligned with the public site's forest palette.
 
 'use client';
 
@@ -13,29 +13,25 @@ import { RevealSection } from '@/components/motion';
 export default function BlogPostCTA() {
   return (
     <RevealSection>
-      <div className="mt-16 relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950 p-10 md:p-14">
-        {/* Glow orbs */}
-        <div className="absolute top-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
+      <div className="relative mt-16 overflow-hidden rounded-[2rem] bg-[#18372e] p-8 text-white sm:p-12">
+        <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-emerald-300/15 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-[#d9b96e]/20 blur-3xl" aria-hidden="true" />
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-          <div className="max-w-lg">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-400 to-amber-400" />
-              <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Get Started</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-3">
+        <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">Make it concrete</p>
+            <h2 className="mb-3 mt-4 font-playfair text-3xl font-black tracking-tight sm:text-4xl">
               Have a workflow to untangle?
             </h2>
-            <p className="text-lg text-slate-400">
+            <p className="text-lg leading-8 text-emerald-50/75">
               Bring the context and the result you want. We&apos;ll help define the smallest useful next step.
             </p>
           </div>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base bg-white text-gray-900 hover:bg-white/90 shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-1 whitespace-nowrap"
+            className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[#18372e] transition hover:bg-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#18372e]"
           >
-            Contact <ArrowRight size={18} />
+            Contact <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
       </div>

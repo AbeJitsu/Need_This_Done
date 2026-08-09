@@ -22,32 +22,32 @@ import { BlogPostingJsonLd } from '@/components/seo/JsonLd';
 export const dynamic = 'force-static';
 
 // ============================================================================
-// Category accent colors for the dark hero — full class strings for Tailwind
+// Category accent colors for the reading hero — full class strings for Tailwind
 // ============================================================================
 
 const CATEGORY_ACCENTS: Record<string, {
   badge: string;
   bar: string;
 }> = {
-  tutorials: {
-    badge: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
-    bar: 'from-emerald-400 to-emerald-600',
+  tutorial: {
+    badge: 'bg-[#eeeaf9] border-[#6d58a5]/20 text-[#6d58a5]',
+    bar: 'from-[#d9b96e] to-[#a16a24]',
   },
-  guides: {
-    badge: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
-    bar: 'from-blue-400 to-blue-600',
+  'case-study': {
+    badge: 'bg-[#fbf0d4] border-[#d9b96e]/30 text-[#7a5b20]',
+    bar: 'from-[#d9b96e] to-[#a16a24]',
   },
-  case_studies: {
-    badge: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
-    bar: 'from-amber-400 to-amber-600',
+  'behind-the-scenes': {
+    badge: 'bg-[#e3edf0] border-[#286274]/20 text-[#286274]',
+    bar: 'from-[#8ed3ac] to-[#286274]',
   },
   news: {
-    badge: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
-    bar: 'from-purple-400 to-purple-600',
+    badge: 'bg-[#eeeaf9] border-[#6d58a5]/20 text-[#6d58a5]',
+    bar: 'from-[#b8d9c7] to-[#126b4e]',
   },
   tips: {
-    badge: 'bg-gray-500/10 border-gray-500/20 text-gray-400',
-    bar: 'from-gray-400 to-gray-600',
+    badge: 'bg-[#e4eee6] border-emerald-900/15 text-[#126b4e]',
+    bar: 'from-[#8ed3ac] to-[#126b4e]',
   },
 };
 
@@ -121,40 +121,30 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <>
       <BlogPostingJsonLd post={post} />
-      <div>
+      <div className="bg-[#f7f4ed]">
         {/* ================================================================
-            Dark Editorial Hero
+            Reading Hero
             ================================================================ */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-          {/* Dot texture */}
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-              backgroundSize: '24px 24px',
-            }}
-          />
+        <section className="relative overflow-hidden border-b border-[#183229]/10 bg-[#18372e] text-white">
+          <div className="pointer-events-none absolute -right-40 -top-48 h-[34rem] w-[34rem] rounded-full bg-emerald-300/15 blur-3xl" aria-hidden="true" />
+          <div className="pointer-events-none absolute -bottom-56 left-1/3 h-[28rem] w-[28rem] rounded-full bg-[#d9b96e]/20 blur-3xl" aria-hidden="true" />
 
-          {/* Glow orbs */}
-          <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
-
-          <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 md:px-12 pt-16 md:pt-24 pb-16 md:pb-20">
+          <div className="relative z-10 mx-auto max-w-5xl px-5 py-16 sm:px-8 md:py-24">
             {/* Back link */}
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 transition-colors mb-8"
+              className="mb-8 inline-flex items-center gap-2 text-sm text-emerald-50/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#18372e]"
             >
               <ArrowLeft size={16} />
               Back to Blog
             </Link>
 
             {/* Editorial bar + category */}
-            <div className="flex items-center gap-3 mb-6">
-              <div className={`w-8 h-1 rounded-full bg-gradient-to-r ${accent.bar}`} />
+            <div className="mb-6 flex items-center gap-3">
+              <div className={`h-1 w-8 rounded-full bg-gradient-to-r ${accent.bar}`} />
               {categoryLabel && (
                 <span
-                  className={`inline-block px-3 py-1 text-xs font-semibold rounded-full border backdrop-blur-sm ${accent.badge}`}
+                    className={`inline-block rounded-full border px-3 py-1 text-xs font-bold ${accent.badge}`}
                 >
                   {categoryLabel}
                 </span>
@@ -162,34 +152,34 @@ export default async function BlogPostPage({ params }: PageProps) {
             </div>
 
             {/* Title */}
-            <h1 className="font-playfair text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-8">
+            <h1 className="mb-8 max-w-4xl font-playfair text-4xl font-black leading-[1.08] tracking-tight text-white sm:text-5xl md:text-6xl">
               {post.title}
             </h1>
 
             {/* Author + date + reading time strip */}
-            <div className="flex flex-wrap items-center gap-4 text-sm">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-emerald-50/70">
               {/* Author avatar */}
               {post.author_name && (
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
+                  <div className="grid h-10 w-10 place-items-center rounded-full bg-emerald-300 text-sm font-bold text-[#18372e]">
                     {post.author_name.charAt(0).toUpperCase()}
                   </div>
-                  <span className="text-slate-300 font-medium">{post.author_name}</span>
+                  <span className="font-medium text-white">{post.author_name}</span>
                 </div>
               )}
 
               {post.author_name && post.published_at && (
-                <span className="text-slate-600">·</span>
+                <span className="text-emerald-50/35">·</span>
               )}
 
               {post.published_at && (
-                <span className="text-slate-400">
+                <span>
                   {formatPublishedDate(post.published_at)}
                 </span>
               )}
 
-              <span className="text-slate-600">·</span>
-              <span className="text-slate-400">{readingTime} min read</span>
+              <span className="text-emerald-50/35">·</span>
+              <span>{readingTime} min read</span>
             </div>
           </div>
         </section>
@@ -215,13 +205,13 @@ export default async function BlogPostPage({ params }: PageProps) {
         {/* ================================================================
             Article Content — narrower for reading comfort
             ================================================================ */}
-        <article className="max-w-3xl mx-auto px-4 sm:px-6 md:px-8 py-12">
+        <article className="mx-auto max-w-3xl bg-[#f7f4ed] px-4 py-14 sm:px-6 md:py-20">
           <MarkdownContent content={post.content} />
 
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
-            <div className="mt-12 pt-8 border-t border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-500 mb-3">
+            <div className="mt-12 border-t border-[#183229]/10 pt-8">
+              <h3 className="mb-3 text-sm font-bold text-[#50675e]">
                 Tags
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -229,7 +219,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                   <Link
                     key={tag}
                     href={`/blog?tag=${tag}`}
-                    className="px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-600 hover:bg-purple-50 hover:text-purple-600 transition-colors"
+                    className="rounded-full bg-white px-3 py-1 text-sm text-[#50675e] ring-1 ring-[#183229]/10 transition-colors hover:bg-[#e4eee6] hover:text-[#126b4e]"
                   >
                     #{tag}
                   </Link>
@@ -240,15 +230,15 @@ export default async function BlogPostPage({ params }: PageProps) {
 
           {/* Source Attribution */}
           {post.source && post.source !== 'original' && (
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-500">
+            <div className="mt-8 border-t border-[#183229]/10 pt-6">
+              <p className="text-sm text-[#50675e]">
                 Originally shared on{' '}
                 {post.source_url ? (
                   <a
                     href={post.source_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-purple-600 hover:underline"
+                    className="text-[#126b4e] hover:underline"
                   >
                     {post.source.charAt(0).toUpperCase() + post.source.slice(1)}
                   </a>

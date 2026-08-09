@@ -843,7 +843,7 @@ blog: {
     displayName: 'Blog',
     contentType: 'blog_page',
     defaults: {
-      header: { title: 'Insights', description: 'Practical notes for making workflows clearer, smaller, and easier to review.' },
+      header: { title: 'Insights', description: 'Short notes on turning scattered work into clearer decisions, cleaner handoffs, and useful next steps.' },
       emptyState: { emoji: '📝', title: 'Fresh notes soon', description: 'New notes will focus on clearer decisions and more useful workflows.' },
       morePostsTitle: 'More Articles',
       categoryFilterLabel: 'All Insights',

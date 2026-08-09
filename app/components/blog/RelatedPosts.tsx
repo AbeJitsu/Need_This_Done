@@ -20,9 +20,9 @@ export default function RelatedPosts({ posts, categoryLabel }: RelatedPostsProps
     : 'Keep Reading';
 
   return (
-    <section className="mt-16 pt-12 border-t border-gray-200">
-      <h2 className="text-2xl font-bold text-gray-900 mb-8">{heading}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <section className="mt-16 border-t border-[#183229]/10 pt-12">
+      <h2 className="mb-8 font-playfair text-3xl font-black text-[#183229]">{heading}</h2>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {posts.map((post) => (
           <BlogPostCard key={post.id} post={post} />
         ))}

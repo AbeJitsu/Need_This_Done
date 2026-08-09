@@ -19,17 +19,17 @@ export const dynamic = 'force-static';
 export const metadata = {
   title: 'Insights | NeedThisDone',
   description:
-    'Practical notes for making workflows clearer, smaller, and easier to review.',
+    'Short notes on turning scattered work into clearer decisions, cleaner handoffs, and useful next steps.',
   alternates: { canonical: '/blog' },
   openGraph: {
     title: 'Insights | NeedThisDone',
-    description: 'Practical notes for making workflows clearer, smaller, and easier to review.',
+    description: 'Short notes on turning scattered work into clearer decisions, cleaner handoffs, and useful next steps.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
     title: 'Insights | NeedThisDone',
-    description: 'Practical notes for making workflows clearer, smaller, and easier to review.',
+    description: 'Short notes on turning scattered work into clearer decisions, cleaner handoffs, and useful next steps.',
   },
 };
 

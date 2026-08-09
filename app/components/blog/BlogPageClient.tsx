@@ -2,227 +2,209 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { ArrowRight, BookOpen, CheckCircle2, Lightbulb } from 'lucide-react';
 import BlogPostCard from '@/components/blog/BlogPostCard';
 import { ContentSection } from '@/components/content/ContentStructure';
 import type { BlogPageContent } from '@/lib/page-content-types';
-import { BlogPostSummary, BLOG_CATEGORIES } from '@/lib/blog-types';
-import { focusRingClasses } from '@/lib/colors';
-import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
-import { BookOpen, ArrowRight } from 'lucide-react';
-
-// ============================================================================
-// Insights Page Client - Bold Editorial Design
-// ============================================================================
-// Dark hero with gradient accents, editorial header, styled category pills,
-// staggered animations. Matches pricing/homepage aesthetic.
+import { BLOG_CATEGORIES, type BlogPostSummary } from '@/lib/blog-types';
 
 interface BlogPageClientProps {
   initialContent: BlogPageContent;
   posts: BlogPostSummary[];
 }
 
-export default function BlogPageClient({ initialContent, posts }: BlogPageClientProps) {
-  // Use content from universal provider (auto-loaded by route)
-  const content = initialContent;
+function categoryLabel(category: string) {
+  return BLOG_CATEGORIES[category as keyof typeof BLOG_CATEGORIES]
+    || category.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
 
-  // URL-driven category filtering
+export default function BlogPageClient({ initialContent, posts }: BlogPageClientProps) {
   const searchParams = useSearchParams();
   const activeCategory = searchParams.get('category');
 
-  // Derive category buttons from actual posts, sorted by post count (most first), top 5 only
   const categoryCountMap = new Map<string, number>();
   for (const post of posts) {
     if (post.category) {
       categoryCountMap.set(post.category, (categoryCountMap.get(post.category) || 0) + 1);
     }
   }
-  const activeCategories = [...categoryCountMap.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .map(([key]) => key);
 
-  // Filter posts based on active category
+  const activeCategories = [...categoryCountMap.entries()]
+    .sort((left, right) => right[1] - left[1])
+    .map(([category]) => category);
+
   const filteredPosts = activeCategory
-    ? posts.filter(p => p.category === activeCategory)
+    ? posts.filter((post) => post.category === activeCategory)
     : posts;
   const [featuredPost, ...otherPosts] = filteredPosts;
+  const noteCountLabel = `${filteredPosts.length} ${filteredPosts.length === 1 ? 'note' : 'notes'}`;
 
   return (
-    <div className="min-h-screen">
-      {/* ================================================================
-          Hero Section - Bold Dark Editorial
-          ================================================================ */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        {/* Accent glows */}
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
-        {/* Watermark */}
-        <div className="absolute -bottom-8 -right-4 text-[10rem] font-black text-white/[0.03] leading-none select-none pointer-events-none">✎</div>
+    <main className="bg-[#f7f4ed] text-[#183229]">
+      <section className="relative overflow-hidden border-b border-[#183229]/10 bg-[#18372e] text-white">
+        <div className="pointer-events-none absolute -right-40 -top-48 h-[34rem] w-[34rem] rounded-full bg-emerald-300/15 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -bottom-56 left-1/3 h-[28rem] w-[28rem] rounded-full bg-[#d9b96e]/20 blur-3xl" aria-hidden="true" />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-8 md:px-12 pt-16 md:pt-20 pb-16 md:pb-20">
-          <ContentSection sectionKey="header" label="Page Header">
-            <FadeIn direction="up" triggerOnScroll={false}>
-              {/* Editorial header */}
-              <div className="mb-10">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
-                  <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Insights</span>
-                </div>
-                <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[0.95] mb-4">
-                  Make the next step<br />
-                  <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">clearer.</span>
+        <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24 lg:px-12">
+          <div className="grid items-end gap-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-20">
+            <ContentSection sectionKey="header" label="Page Header">
+              <div className="max-w-3xl">
+                <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.2em] text-emerald-200">
+                  <BookOpen className="h-4 w-4" aria-hidden="true" />
+                  Insights
+                </p>
+                <h1 className="mt-6 max-w-3xl font-playfair text-5xl font-black leading-[1.02] tracking-tight sm:text-6xl md:text-7xl">
+                  Make the next step <span className="text-emerald-300">clearer.</span>
                 </h1>
-                <p className="text-xl text-slate-400 max-w-xl leading-relaxed">
-                  {content.header.description}
+                <p className="mt-7 max-w-2xl text-lg leading-8 text-emerald-50/75 md:text-xl">
+                  {initialContent.header.description}
                 </p>
               </div>
-            </FadeIn>
-          </ContentSection>
+            </ContentSection>
 
-          {/* Category pills - dynamic from actual posts, BJJ belt colors */}
+            <aside className="rounded-[2rem] border border-white/15 bg-white/[.08] p-6 backdrop-blur-sm sm:p-8" aria-labelledby="reading-filter-heading">
+              <div className="flex items-center gap-3 text-emerald-200">
+                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-emerald-300 text-[#18372e]">
+                  <Lightbulb className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <p className="text-xs font-bold uppercase tracking-[.2em]">A useful reading filter</p>
+              </div>
+              <h2 id="reading-filter-heading" className="mt-6 font-playfair text-3xl font-black">Look for the handoff.</h2>
+              <p className="mt-3 leading-7 text-emerald-50/70">
+                The most useful note usually makes one part of the work easier to see.
+              </p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                {[
+                  ['01', 'What is unclear?'],
+                  ['02', 'What result matters?'],
+                  ['03', 'What is the next decision?'],
+                ].map(([number, question]) => (
+                  <div key={number} className="rounded-2xl border border-white/10 bg-black/10 p-4">
+                    <span className="text-xs font-bold text-emerald-300">{number}</span>
+                    <p className="mt-3 text-sm font-bold leading-5 text-white">{question}</p>
+                  </div>
+                ))}
+              </div>
+            </aside>
+          </div>
+
           {posts.length > 0 && (
-            <StaggerContainer staggerDelay={0.06} className="flex flex-wrap gap-3">
-              <StaggerItem>
-                <Link
-                  href="/blog"
-                  className={`
-                    group flex items-center gap-2 px-5 py-3 rounded-full
-                    border backdrop-blur-sm
-                    transition-all duration-300 hover:-translate-y-0.5
-                    ${!activeCategory
-                      ? 'border-purple-500/50 bg-purple-500/20 text-purple-300'
-                      : 'border-white/10 bg-white/5 hover:border-purple-500/50 hover:bg-purple-500/10 text-purple-400'}
-                    ${focusRingClasses.purple}
-                  `}
-                >
-                  <BookOpen size={18} className="group-hover:scale-110 transition-transform duration-300" />
-                  <span className="font-semibold text-sm text-white">{content.categoryFilterLabel}</span>
-                </Link>
-              </StaggerItem>
-              {activeCategories.map((key) => {
-                const colorMap: Record<string, { hover: string; active: string; text: string; focus: string }> = {
-                  'tips':              { hover: 'hover:border-emerald-500/50 hover:bg-emerald-500/10', active: 'border-emerald-500/50 bg-emerald-500/20', text: 'text-emerald-400', focus: focusRingClasses.green },
-                  'tutorial':          { hover: 'hover:border-blue-500/50 hover:bg-blue-500/10',    active: 'border-blue-500/50 bg-blue-500/20',    text: 'text-blue-400',    focus: focusRingClasses.blue },
-                  'case-study':        { hover: 'hover:border-yellow-500/50 hover:bg-yellow-500/10', active: 'border-yellow-500/50 bg-yellow-500/20', text: 'text-yellow-400',  focus: focusRingClasses.blue },
-                  'behind-the-scenes': { hover: 'hover:border-purple-500/50 hover:bg-purple-500/10', active: 'border-purple-500/50 bg-purple-500/20', text: 'text-purple-400',  focus: focusRingClasses.purple },
-                  'news':              { hover: 'hover:border-slate-400/50 hover:bg-slate-500/10',   active: 'border-slate-400/50 bg-slate-500/20',   text: 'text-slate-400',   focus: focusRingClasses.blue },
-                };
-                const color = colorMap[key] || { hover: 'hover:border-slate-500/50 hover:bg-slate-500/10', active: 'border-slate-500/50 bg-slate-500/20', text: 'text-slate-400', focus: focusRingClasses.blue };
-                const isActive = activeCategory === key;
-                const label = BLOG_CATEGORIES[key as keyof typeof BLOG_CATEGORIES] || key.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            <nav className="mt-12 flex flex-wrap gap-2" aria-label="Insight categories">
+              <Link
+                href="/blog"
+                aria-current={!activeCategory ? 'page' : undefined}
+                className={`inline-flex min-h-10 items-center rounded-full px-4 py-2 text-sm font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#18372e] ${
+                  !activeCategory
+                    ? 'bg-emerald-300 text-[#18372e]'
+                    : 'border border-white/15 bg-white/[.06] text-emerald-50/75 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                {initialContent.categoryFilterLabel}
+              </Link>
+              {activeCategories.map((category) => {
+                const isActive = activeCategory === category;
                 return (
-                  <StaggerItem key={key}>
-                    <Link
-                      href={`/blog?category=${encodeURIComponent(key)}`}
-                      className={`
-                        group flex items-center gap-2 px-5 py-3 rounded-full
-                        border backdrop-blur-sm
-                        transition-all duration-300 hover:-translate-y-0.5
-                        ${isActive ? `${color.active} ${color.text.replace('400', '300')}` : `border-white/10 bg-white/5 ${color.hover} ${color.text}`}
-                        ${color.focus}
-                      `}
-                    >
-                      <span className="font-semibold text-sm text-white">{label}</span>
-                    </Link>
-                  </StaggerItem>
+                  <Link
+                    key={category}
+                    href={`/blog?category=${encodeURIComponent(category)}`}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`inline-flex min-h-10 items-center gap-2 rounded-full px-4 py-2 text-sm font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#18372e] ${
+                      isActive
+                        ? 'bg-emerald-300 text-[#18372e]'
+                        : 'border border-white/15 bg-white/[.06] text-emerald-50/75 hover:bg-white/10 hover:text-white'
+                    }`}
+                  >
+                    {categoryLabel(category)}
+                    <span className="text-xs font-semibold opacity-70">{categoryCountMap.get(category)}</span>
+                  </Link>
                 );
               })}
-            </StaggerContainer>
+            </nav>
           )}
         </div>
       </section>
 
-      {/* ================================================================
-          Main Content Section - Clean white with editorial headers
-          ================================================================ */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
-          {posts.length === 0 ? (
-            /* Empty State - Dark card treatment */
-            <RevealSection>
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-12 text-center">
-                <div className="absolute top-0 left-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
-                <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-gold-500/10 rounded-full blur-3xl" />
-                <div className="relative z-10">
-                  <div className="text-7xl mb-6">{content.emptyState.emoji}</div>
-                  <h2 className="text-3xl font-black text-white mb-3">
-                    {content.emptyState.title}
-                  </h2>
-                  <p className="text-slate-400 max-w-md mx-auto text-lg">
-                    {content.emptyState.description}
-                  </p>
+      <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-24 lg:px-12">
+        {posts.length === 0 ? (
+          <div className="rounded-[2rem] border border-[#183229]/15 bg-white p-10 text-center sm:p-16">
+            <p className="text-5xl" aria-hidden="true">{initialContent.emptyState.emoji}</p>
+            <h2 className="mt-6 font-playfair text-4xl font-black">{initialContent.emptyState.title}</h2>
+            <p className="mx-auto mt-4 max-w-lg leading-7 text-[#50675e]">{initialContent.emptyState.description}</p>
+          </div>
+        ) : !featuredPost ? (
+          <div className="rounded-[2rem] border border-[#183229]/15 bg-white p-10 text-center sm:p-16">
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">No notes in this filter yet</p>
+            <h2 className="mt-4 font-playfair text-4xl font-black">Keep the question open.</h2>
+            <Link href="/blog" className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-[#126b4e] px-6 py-3 font-bold text-white">
+              View all insights <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-wrap items-end justify-between gap-5">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Latest thinking</p>
+                <h2 className="mt-4 font-playfair text-4xl font-black leading-tight md:text-6xl">Read what helps you move.</h2>
+              </div>
+              <span className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#50675e] ring-1 ring-[#183229]/10">{noteCountLabel}</span>
+            </div>
+
+            <div className="mt-12">
+              <BlogPostCard post={featuredPost} featured />
+            </div>
+
+            {otherPosts.length > 0 && (
+              <section className="mt-16" aria-labelledby="more-notes-heading">
+                <div className="flex flex-wrap items-end justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Keep reading</p>
+                    <h2 id="more-notes-heading" className="mt-3 font-playfair text-3xl font-black">{initialContent.morePostsTitle}</h2>
+                  </div>
+                  <span className="text-sm text-[#50675e]">Short, practical notes</span>
+                </div>
+                <div className="mt-7 grid gap-5 md:grid-cols-2">
+                  {otherPosts.map((post) => <BlogPostCard key={post.id} post={post} />)}
+                </div>
+              </section>
+            )}
+
+            <section className="mt-16 rounded-[2rem] border border-[#183229]/10 bg-white p-7 sm:p-10" aria-labelledby="takeaway-heading">
+              <div className="grid gap-8 md:grid-cols-[.75fr_1.25fr] md:items-start">
+                <div>
+                  <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]"><CheckCircle2 className="h-4 w-4" aria-hidden="true" /> Carry it forward</p>
+                  <h2 id="takeaway-heading" className="mt-4 font-playfair text-3xl font-black">A small note can change the next move.</h2>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {[
+                    ['Name the friction', 'Write down where the work slows or gets repeated.'],
+                    ['Choose the result', 'Describe what should be easier when it is done.'],
+                    ['Make one decision', 'Start with the smallest useful change you can review.'],
+                  ].map(([title, description], index) => (
+                    <div key={title} className="rounded-2xl bg-[#f7f4ed] p-4">
+                      <span className="text-xs font-bold text-[#126b4e]">{String(index + 1).padStart(2, '0')}</span>
+                      <h3 className="mt-4 font-black">{title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-[#50675e]">{description}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </RevealSection>
-          ) : (
-            <>
-              {/* Featured Post - Full width highlight */}
-              {featuredPost && (
-                <FadeIn direction="up" delay={0.1}>
-                  <div className="mb-20">
-                    {/* Editorial section header */}
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-500 to-gold-500" />
-                      <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">Featured</span>
-                    </div>
-                    <BlogPostCard post={featuredPost} featured />
-                  </div>
-                </FadeIn>
-              )}
+            </section>
 
-              {/* Post Grid */}
-              {otherPosts.length > 0 && (
-                <div>
-                  {/* Editorial section header */}
-                  <FadeIn direction="up">
-                    <div className="flex items-center gap-3 mb-8">
-                      <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500" />
-                      <span className="text-sm font-semibold tracking-widest uppercase text-gray-500">More Articles</span>
-                    </div>
-                  </FadeIn>
-
-                  <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {otherPosts.map((post) => (
-                      <StaggerItem key={post.id}>
-                        <BlogPostCard post={post} />
-                      </StaggerItem>
-                    ))}
-                  </StaggerContainer>
+            <section className="mt-16 overflow-hidden rounded-[2rem] bg-[#18372e] p-8 text-white sm:p-12" aria-labelledby="insights-contact-heading">
+              <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+                <div className="max-w-2xl">
+                  <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">When the question is yours</p>
+                  <h2 id="insights-contact-heading" className="mt-4 font-playfair text-4xl font-black leading-tight md:text-5xl">Bring the workflow that keeps resisting clarity.</h2>
+                  <p className="mt-4 text-lg leading-8 text-emerald-50/75">Share the context and the result you want. We will help define the first useful move.</p>
                 </div>
-              )}
-
-              {/* Bottom CTA - Dark card */}
-              <RevealSection>
-                <div className="mt-20 relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-purple-950 p-10 md:p-14">
-                  <div className="absolute top-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3" />
-                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-gold-500/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
-
-                  <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-                    <div className="max-w-lg">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
-                        <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Get Started</span>
-                      </div>
-                      <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-3">
-                        Have a workflow to untangle?
-                      </h2>
-                      <p className="text-lg text-slate-400">
-                        Bring the context and the result you want. We&apos;ll help define the smallest useful next step.
-                      </p>
-                    </div>
-                    <Link
-                      href="/contact"
-                      className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base bg-white text-gray-900 hover:bg-white/90 shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-1 whitespace-nowrap"
-                    >
-                      Contact <ArrowRight size={18} />
-                    </Link>
-                  </div>
-                </div>
-              </RevealSection>
-            </>
-          )}
-        </div>
+                <Link href="/contact" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[#18372e] transition hover:bg-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#18372e]">
+                  Contact <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </div>
+            </section>
+          </>
+        )}
       </section>
-    </div>
+    </main>
   );
 }
