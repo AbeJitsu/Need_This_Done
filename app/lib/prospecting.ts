@@ -22,6 +22,10 @@ export function isPublicSourceUrl(value: string) {
   }
 }
 
+export function isApprovedSenderConfigured(senderName: string | null | undefined, senderEmail: string | null | undefined) {
+  return Boolean(senderName?.trim() && senderEmail?.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(senderEmail.trim()));
+}
+
 export function modelBudgetAllowed(
   dailySpend: number,
   runSpend: number,
@@ -38,16 +42,17 @@ export function modelBudgetAllowed(
     && dailySpend + runSpend <= dailyCap;
 }
 
-export function createWorkerSignature(body: string, timestamp: string, nonce: string, secret: string) {
-  return createHmac('sha256', secret).update(`${timestamp}.${nonce}.${body}`).digest('hex');
+export function createWorkerSignature(body: string, timestamp: string, nonce: string, secret: string, purpose = '') {
+  const signedPayload = purpose ? `${purpose}.${timestamp}.${nonce}.${body}` : `${timestamp}.${nonce}.${body}`;
+  return createHmac('sha256', secret).update(signedPayload).digest('hex');
 }
 
-export function verifyWorkerSignature({ body, timestamp, nonce, signature, secret, now = Date.now(), maxAgeMs = 5 * 60 * 1000 }: {
-  body: string; timestamp: string; nonce: string; signature: string; secret: string; now?: number; maxAgeMs?: number;
+export function verifyWorkerSignature({ body, timestamp, nonce, signature, secret, purpose = '', now = Date.now(), maxAgeMs = 5 * 60 * 1000 }: {
+  body: string; timestamp: string; nonce: string; signature: string; secret: string; purpose?: string; now?: number; maxAgeMs?: number;
 }) {
   const timestampMs = Number(timestamp) * 1000;
-  if (!Number.isFinite(timestampMs) || Math.abs(now - timestampMs) > maxAgeMs || !nonce || !signature) return false;
-  const expected = createWorkerSignature(body, timestamp, nonce, secret);
+  if (!Number.isFinite(timestampMs) || !Number.isInteger(timestampMs / 1000) || Math.abs(now - timestampMs) > maxAgeMs || nonce.length < 16 || !signature) return false;
+  const expected = createWorkerSignature(body, timestamp, nonce, secret, purpose);
   const provided = Buffer.from(signature, 'hex');
   const expectedBuffer = Buffer.from(expected, 'hex');
   return provided.length === expectedBuffer.length && timingSafeEqual(provided, expectedBuffer);
@@ -60,4 +65,19 @@ export function taskIdempotencyKey(taskType: string, value: string) {
 
 export function normalizedFollowUpDays(value: number[]) {
   return [...new Set(value.filter((day) => Number.isInteger(day) && day > 0 && day <= 90))].sort((a, b) => a - b).slice(0, 6);
+}
+
+export function localDateForTimezone(timezone: string, now = new Date()) {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(now);
+    const values = Object.fromEntries(parts.filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]));
+    return `${values.year}-${values.month}-${values.day}`;
+  } catch {
+    return null;
+  }
 }

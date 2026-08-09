@@ -7,4 +7,10 @@ export interface AgentTask {
   attempt_count: number;
   max_attempts: number;
   idempotency_key: string;
+  last_error?: string | null;
+  model_name?: string | null;
+  cost?: number;
+  output?: Record<string, unknown> | null;
+  created_at?: string;
+  completed_at?: string | null;
 }
