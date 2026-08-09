@@ -29,10 +29,10 @@ export interface StatItem {
 // ============================================================================
 
 export const heroStats: StatItem[] = [
-  { label: 'Public offers', value: '2', color: 'emerald' },
-  { label: 'Audit-to-intake path', value: '1', color: 'blue' },
-  { label: 'Weekly briefs per pilot', value: '4', color: 'purple' },
-  { label: 'Human approval for external actions', value: '100%', color: 'amber' },
+  { label: 'Shared browser workspace', value: '1', color: 'emerald' },
+  { label: 'Evidence layers', value: '4', color: 'blue' },
+  { label: 'Automatic external actions', value: '0', color: 'purple' },
+  { label: 'Review boundary', value: '100%', color: 'amber' },
 ];
 
 // ============================================================================
@@ -43,21 +43,21 @@ export const caseStudies: CaseStudy[] = [
   {
     id: 'needthisdone',
     title: 'NeedThisDone.com',
-    subtitle: 'Lead Capture and Supervised-Operator Platform',
-    role: 'Founder, Builder, and Operator',
+    subtitle: 'Coordinated Work and Review System',
+    role: 'Product system',
     period: 'Current',
     description:
-      'A public site that turns an audit or project request into a durable, human-led delivery workflow. The public offers stay simple while private operator surfaces preserve evidence, approvals, and outcomes.',
+      'A browser-based system that turns a project request into durable work records, evidence, approvals, and outcomes.',
     impact: [
-      'A site report opens a preselected Website Improvement request',
+      'A site report opens a preselected targeted-fix request',
       'Project, brief, decision, and outcome records are durable in Supabase',
-      'Operator surfaces remain private instead of becoming a client dashboard',
+      'Authenticated surfaces keep work, evidence, and decisions role-scoped',
       'Every external outreach action remains behind a human approval and sender boundary',
     ],
     features: [
       'Public site analyzer and report pages',
-      'Dual-offer project intake',
-      'Private dashboard, employee, and prospecting workspaces',
+      'Adaptive project intake',
+      'Browser workspace for runs, artifacts, and approvals',
       'Supabase RLS and authenticated lifecycle checks',
       'Accessibility, route, and browser coverage',
       'Optional model and sender boundaries that fail closed',
@@ -74,18 +74,17 @@ export const caseStudies: CaseStudy[] = [
     ],
     links: [
       { label: 'Live Site', href: 'https://needthisdone.com' },
-      { label: 'GitHub', href: 'https://github.com/AbeJitsu/Need_This_Done' },
     ],
     color: 'emerald',
   },
   {
     id: 'acadio',
     title: 'Acadio',
-    subtitle: 'Technical Operations Delivery',
-    role: 'Contractor and Technical Operations Specialist',
+    subtitle: 'Reviewable Content Delivery',
+    role: 'Technical operations system',
     period: '2025',
     description:
-      'Technical-operations work for an educational platform, focused on converting repetitive content and data preparation into reviewable delivery pipelines.',
+      'A content-delivery workflow that converts repetitive preparation into reviewable, documented handoffs.',
     impact: [
       'Built a PDF-to-HTML conversion pipeline for variable source material',
       'Created validation and data-migration tooling for repeatable delivery',
@@ -115,12 +114,12 @@ export interface ArchLayer {
 export const architectureLayers: ArchLayer[] = [
   {
     label: 'Public conversion',
-    items: ['Website Audit', 'Dual Offers', 'Adaptive Intake', 'Report CTA'],
+    items: ['Site Audit', 'Offer Choice', 'Adaptive Intake', 'Report Handoff'],
     color: 'emerald',
   },
   {
     label: 'Private operations',
-    items: ['Operator Cockpit', 'Approval Queues', 'Weekly Briefs', 'Outcome Records'],
+    items: ['Run Records', 'Approval Queues', 'Artifacts', 'Outcome Records'],
     color: 'blue',
   },
   {
@@ -161,7 +160,7 @@ export const processSteps = [
   {
     number: 4,
     title: 'Hand off the next decision',
-    description: 'Deliver the contained fix or a weekly brief with clear outcomes and the next recommended action.',
+    description: 'Deliver the contained work with a clear outcome and the next recommended action.',
     color: 'amber' as const,
   },
 ];

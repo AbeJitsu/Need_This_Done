@@ -11,7 +11,7 @@ import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/componen
 import { BookOpen, ArrowRight } from 'lucide-react';
 
 // ============================================================================
-// Blog Page Client - Bold Editorial Design
+// Insights Page Client - Bold Editorial Design
 // ============================================================================
 // Dark hero with gradient accents, editorial header, styled category pills,
 // staggered animations. Matches pricing/homepage aesthetic.
@@ -66,11 +66,11 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
               <div className="mb-10">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
-                  <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Blog</span>
+                  <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Insights</span>
                 </div>
                 <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[0.95] mb-4">
-                  Read. Learn.<br />
-                  <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">Build.</span>
+                  Make the next step<br />
+                  <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">clearer.</span>
                 </h1>
                 <p className="text-xl text-slate-400 max-w-xl leading-relaxed">
                   {content.header.description}
@@ -204,17 +204,17 @@ export default function BlogPageClient({ initialContent, posts }: BlogPageClient
                         <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Get Started</span>
                       </div>
                       <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-3">
-                        Ready to improve what is already working?
+                        Have a workflow to untangle?
                       </h2>
                       <p className="text-lg text-slate-400">
-                        Choose a contained website improvement or a managed AI operator pilot. We&apos;ll confirm the fit before work begins.
+                        Bring the context and the result you want. We&apos;ll help define the smallest useful next step.
                       </p>
                     </div>
                     <Link
                       href="/contact"
                       className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base bg-white text-gray-900 hover:bg-white/90 shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-1 whitespace-nowrap"
                     >
-                      Start a Project <ArrowRight size={18} />
+                      Contact <ArrowRight size={18} />
                     </Link>
                   </div>
                 </div>

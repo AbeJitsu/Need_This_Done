@@ -10,19 +10,19 @@ import WorkPageClient from '@/components/work/WorkPageClient';
 export const metadata: Metadata = {
   title: 'Work | NeedThisDone',
   description:
-    'Selected work, practical experience, and the delivery approach behind NeedThisDone.',
+    'Evidence of clear scope, coordinated systems, and reviewable delivery.',
   alternates: { canonical: '/work' },
   openGraph: {
     title: 'Work | NeedThisDone',
     description:
-      'Public conversion paths, private operator controls, and practical technical-operations delivery.',
+    'Evidence of durable workflows, browser-based coordination, and reviewable outcomes.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Work | NeedThisDone',
     description:
-      'Public conversion paths, private operator controls, and practical technical-operations delivery.',
+    'Evidence of durable workflows, browser-based coordination, and reviewable outcomes.',
   },
 };
 

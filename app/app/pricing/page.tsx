@@ -9,17 +9,17 @@ import UnifiedPricingPage from '@/components/pricing/UnifiedPricingPage';
 
 export const metadata: Metadata = {
   title: 'Pricing | NeedThisDone',
-  description: 'Website Improvement is $500 with manual 50/50 invoicing. The managed AI operator is a proposal-based 30-day pilot.',
+  description: 'A $500 targeted fix with manual 50/50 invoicing, plus proposal-based automation system setup.',
   alternates: { canonical: '/pricing' },
   openGraph: {
-    title: 'Website Improvement & Managed AI Operator Pricing | NeedThisDone',
-    description: 'One published $500 website engagement and one proposal-based, human-led operator pilot.',
+    title: 'Targeted Fixes & Automation Setup Pricing | NeedThisDone',
+    description: 'One published $500 targeted fix and one proposal-based automation system setup.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Website Improvement & Managed AI Operator Pricing | NeedThisDone',
-    description: 'One published $500 website engagement and one proposal-based, human-led operator pilot.',
+    title: 'Targeted Fixes & Automation Setup Pricing | NeedThisDone',
+    description: 'One published $500 targeted fix and one proposal-based automation system setup.',
   },
 };
 

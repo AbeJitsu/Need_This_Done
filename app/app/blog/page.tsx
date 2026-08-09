@@ -19,17 +19,17 @@ export const dynamic = 'force-static';
 export const metadata = {
   title: 'Insights | NeedThisDone',
   description:
-    'Practical notes on website improvement, clear conversion paths, and safely managed AI operations.',
+    'Practical notes for making workflows clearer, smaller, and easier to review.',
   alternates: { canonical: '/blog' },
   openGraph: {
     title: 'Insights | NeedThisDone',
-    description: 'Practical notes on website improvement, conversion clarity, and managed AI operations.',
+    description: 'Practical notes for making workflows clearer, smaller, and easier to review.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
     title: 'Insights | NeedThisDone',
-    description: 'Practical notes on website improvement, conversion clarity, and managed AI operations.',
+    description: 'Practical notes for making workflows clearer, smaller, and easier to review.',
   },
 };
 

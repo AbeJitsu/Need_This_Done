@@ -25,17 +25,17 @@ export default function BlogPostCTA() {
               <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">Get Started</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-3">
-              Want practical help with the next improvement?
+              Have a workflow to untangle?
             </h2>
             <p className="text-lg text-slate-400">
-              Choose a $500 contained website improvement or ask about a managed AI operator pilot. Scope comes first.
+              Bring the context and the result you want. We&apos;ll help define the smallest useful next step.
             </p>
           </div>
           <Link
             href="/contact"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base bg-white text-gray-900 hover:bg-white/90 shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-1 whitespace-nowrap"
           >
-            Start a Project <ArrowRight size={18} />
+            Contact <ArrowRight size={18} />
           </Link>
         </div>
       </div>

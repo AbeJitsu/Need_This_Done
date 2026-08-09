@@ -18,19 +18,19 @@ export interface PublicOffer {
 export const PUBLIC_OFFERS: Record<PublicOfferId, PublicOffer> = {
   'website-improvement': {
     id: 'website-improvement',
-    name: 'Website Improvement',
-    serviceName: 'Website Improvement',
+    name: 'Targeted Fix',
+    serviceName: 'Targeted Fix',
     contactHref: '/contact?offer=website-improvement',
-    summary: 'A $500 audit plus one agreed, contained website fix.',
+    summary: 'A $500 review plus one agreed website fix.',
     payment: '50% by manual invoice to begin and 50% after the agreed fix is delivered.',
   },
   'ai-operator': {
     id: 'ai-operator',
-    name: 'Managed AI Operator',
-    serviceName: 'Managed AI Operator',
+    name: 'Automation System Setup',
+    serviceName: 'Automation System Setup',
     contactHref: '/contact?offer=ai-operator',
-    summary: 'A proposal-based 30-day pilot operated privately by Abe and Andrea, with weekly briefs.',
-    payment: 'Pilot scope and payment terms are agreed in the proposal before work begins.',
+    summary: 'A proposal-based system for recurring work.',
+    payment: 'We agree on the system, price, and payment terms before work begins.',
   },
 };
 

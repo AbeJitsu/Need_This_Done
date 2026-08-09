@@ -1,201 +1,124 @@
-'use client';
-
-// ============================================================================
-// Work Page Client - Client wrapper for animations and interactivity
-// ============================================================================
-
-import Button from '@/components/Button';
-import StatCounter from './StatCounter';
-import CaseStudyCard from './CaseStudyCard';
-import ArchitectureDiagram from './ArchitectureDiagram';
+import Link from 'next/link';
 import {
-  heroStats,
-  caseStudies,
-  architectureLayers,
-  processSteps,
-} from '@/lib/portfolio-data';
+  ArrowRight,
+  CircleCheck,
+  Clock3,
+  Database,
+  FileCheck2,
+  ShieldCheck,
+  Workflow,
+} from 'lucide-react';
 
-const processColors: Record<string, { icon: string; border: string }> = {
-  emerald: { icon: 'bg-emerald-100 border-emerald-200', border: 'text-emerald-700' },
-  blue: { icon: 'bg-blue-100 border-blue-200', border: 'text-blue-700' },
-  purple: { icon: 'bg-purple-100 border-purple-200', border: 'text-purple-700' },
-  amber: { icon: 'bg-amber-100 border-amber-200', border: 'text-amber-700' },
-};
+const evidenceCards = [
+  {
+    title: 'Runs have a record',
+    description: 'A run keeps its status, tasks, model choices, failures, and controls together so progress can be inspected instead of guessed.',
+    icon: Workflow,
+  },
+  {
+    title: 'Evidence travels with work',
+    description: 'Sources, notes, drafts, previews, and versions stay attached to the work that produced them.',
+    icon: Database,
+  },
+  {
+    title: 'Decisions are explicit',
+    description: 'Approval, revision, defer, rejection, and stop are recorded actions—not assumptions hidden in a chat thread.',
+    icon: ShieldCheck,
+  },
+];
 
-const stepEmojis = ['🎯', '📐', '🧪', '🚀'];
+function EvidencePanel() {
+  return (
+    <div className="overflow-hidden rounded-[2rem] border border-[#183229]/20 bg-[#18372e] shadow-2xl shadow-emerald-950/20">
+      <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 text-white sm:px-6">
+        <div className="flex items-center gap-3"><span className="h-2.5 w-2.5 rounded-full bg-emerald-300" /><p className="text-sm font-bold">Run record</p></div>
+        <span className="rounded-full bg-emerald-300/15 px-3 py-1 text-xs font-bold text-emerald-200">Review ready</span>
+      </div>
+      <div className="p-5 sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div><p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-300">Research → draft → review</p><h2 className="mt-2 text-2xl font-black text-white">One work package</h2><p className="mt-2 text-sm text-emerald-50/65">Every handoff remains visible.</p></div>
+          <div className="text-right"><p className="text-xs text-emerald-50/55">Cost so far</p><p className="mt-1 text-xl font-black text-white">$0.74</p></div>
+        </div>
+        <div className="mt-6 space-y-2">
+          {[
+            ['Researcher', '3 public sources attached', 'Complete'],
+            ['Writer', 'Draft version 2 ready', 'Complete'],
+            ['Reviewer', 'One approval waiting', 'Review'],
+          ].map(([role, detail, status]) => (
+            <div key={role} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[.07] p-4">
+              <div className="flex items-center gap-3"><span className="grid h-8 w-8 place-items-center rounded-xl bg-emerald-300 text-[#18372e]"><CircleCheck className="h-4 w-4" aria-hidden="true" /></span><div><p className="text-sm font-bold text-white">{role}</p><p className="text-xs text-emerald-50/60">{detail}</p></div></div>
+              <span className="text-xs font-bold text-emerald-200">{status}</span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-2xl bg-[#f7f4ed] p-4 text-[#183229]"><p className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#126b4e]"><FileCheck2 className="h-4 w-4" aria-hidden="true" />Evidence</p><p className="mt-3 font-bold">Sources and versions attached</p></div>
+          <div className="rounded-2xl bg-[#d9b96e] p-4 text-[#183229]"><p className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest"><Clock3 className="h-4 w-4" aria-hidden="true" />Human gate</p><p className="mt-3 font-bold">No external action yet</p></div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function WorkPageClient() {
   return (
-    <div className="min-h-screen">
-      {/* ================================================================
-          Hero Section - Dark Editorial
-          ================================================================ */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
-
-        <div className="relative max-w-5xl mx-auto px-6 sm:px-10 md:px-12 pt-16 md:pt-24 pb-16 md:pb-20">
-          {/* Accent line + label */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
-            <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-              Portfolio
-            </span>
+    <main className="bg-[#f7f4ed] text-[#183229]">
+      <section className="bg-[#18372e] text-white">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.8fr_1.2fr] lg:px-12">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">Work</p>
+            <h1 className="mt-5 font-playfair text-5xl font-black leading-tight md:text-7xl">See the record behind the work.</h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-emerald-50/75">A useful system makes progress, evidence, cost, and the next decision easier to inspect. This is what that looks like in practice.</p>
           </div>
-
-          <h1 className="font-playfair text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] mb-6">
-            Proof of{' '}
-            <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-              work
-            </span>
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-400 leading-relaxed max-w-2xl mb-12">
-            NeedThisDone is led by Abe Reyes: a full-stack builder and operator focused on clear scope, durable systems, and human-controlled delivery.
-          </p>
-
-          {/* Stat counters - BJJ belt progression */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {heroStats.map((stat) => (
-              <StatCounter key={stat.label} {...stat} />
-            ))}
-          </div>
+          <EvidencePanel />
         </div>
       </section>
 
-      {/* ================================================================
-          Case Study: NeedThisDone.com
-          ================================================================ */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 to-slate-900">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-        <div className="relative max-w-5xl mx-auto px-6 sm:px-10 md:px-12 py-16 md:py-24">
-          {/* Section header */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
-            <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-              Featured Project
-            </span>
-          </div>
-
-          <CaseStudyCard study={caseStudies[0]} />
-
-          {/* Architecture diagram */}
-          <div className="mt-20 md:mt-28">
-            <h3 className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-6">
-              System Architecture
-            </h3>
-            <ArchitectureDiagram layers={architectureLayers} />
-          </div>
+      <section aria-labelledby="evidence-heading" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 md:py-28 lg:px-12">
+        <div className="max-w-3xl">
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">System evidence</p>
+          <h2 id="evidence-heading" className="mt-4 font-playfair text-4xl font-black leading-tight md:text-6xl">Useful work leaves a trail.</h2>
+          <p className="mt-5 text-lg leading-8 text-[#50675e]">The point of coordination is not more activity. It is a clearer record of what happened and what should happen next.</p>
+        </div>
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
+          {evidenceCards.map(({ title, description, icon: Icon }) => (
+            <article key={title} className="rounded-3xl border border-[#183229]/15 bg-white p-7">
+              <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#e4eee6] text-[#126b4e]"><Icon className="h-5 w-5" aria-hidden="true" /></div>
+              <h3 className="mt-6 text-2xl font-black">{title}</h3>
+              <p className="mt-3 leading-7 text-[#50675e]">{description}</p>
+            </article>
+          ))}
         </div>
       </section>
 
-      {/* ================================================================
-          Case Study: Acadio
-          ================================================================ */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 to-slate-900">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-        <div className="relative max-w-5xl mx-auto px-6 sm:px-10 md:px-12 py-16 md:py-24">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-1 rounded-full bg-gradient-to-r from-blue-400 to-purple-400" />
-            <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-              Client Work
-            </span>
-          </div>
-
-          <CaseStudyCard study={caseStudies[1]} />
-        </div>
-      </section>
-
-      {/* ================================================================
-          Background and practice - consolidates former About/Resume routes
-          ================================================================ */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
-          <div className="mb-10 md:mb-16">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
-              <span className="text-sm font-semibold tracking-widest uppercase text-slate-500">
-              Process
-            </span>
-          </div>
-          <h2 className="font-playfair text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
-              Experience and working style
-          </h2>
-          <p className="mt-4 max-w-3xl text-gray-600 leading-relaxed">Abe brings a background in U.S. Army medical service, seven years at Toyota Finance, and technical-operations work at Acadio to full-stack product delivery. The through line is calm communication, documented decisions, and follow-through under real constraints.</p>
-        </div>
-
-          <div className="mb-12 grid gap-5 md:grid-cols-3">
-            {[
-              ['Clear communication', 'Explain scope, evidence, and tradeoffs in plain language.'],
-              ['Reliable follow-through', 'Keep commitments visible and turn handoffs into the next clear decision.'],
-              ['Practical systems', 'Use Next.js, TypeScript, Supabase, PostgreSQL, Redis, Playwright, and Vitest where each one solves a defined problem.'],
-            ].map(([title, description]) => <article key={title} className="rounded-2xl border border-[#183229]/10 bg-[#f7f4ed] p-5"><h3 className="font-black text-[#183229]">{title}</h3><p className="mt-2 text-sm leading-6 text-gray-600">{description}</p></article>)}
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 md:gap-10">
-            {processSteps.map((step, i) => {
-              const colors = processColors[step.color];
-              return (
-                <div key={step.number}>
-                  <div className={`w-14 h-14 mb-5 rounded-2xl bg-gradient-to-br ${colors.icon} border flex items-center justify-center`}>
-                    <span className="text-2xl">{stepEmojis[i]}</span>
-                  </div>
-                  <h3 className={`font-black text-lg mb-2 tracking-tight ${colors.border}`}>
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {step.description}
-                  </p>
+      <section className="border-y border-[#183229]/10 bg-white">
+        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
+          <div className="grid gap-10 md:grid-cols-[.75fr_1.25fr] md:items-start">
+            <div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Follow the handoff</p><h2 className="mt-4 font-playfair text-4xl font-black">From context to outcome.</h2></div>
+            <div className="grid gap-3 sm:grid-cols-5">
+              {[
+                ['Context', 'The request is specific'],
+                ['Work', 'Tasks have owners'],
+                ['Evidence', 'Sources stay attached'],
+                ['Review', 'A decision is visible'],
+                ['Outcome', 'The record closes the loop'],
+              ].map(([title, description], index) => (
+                <div key={title} className="relative rounded-2xl bg-[#f7f4ed] p-4 sm:min-h-36">
+                  <span className="text-xs font-bold text-[#126b4e]">{String(index + 1).padStart(2, '0')}</span>
+                  <h3 className="mt-4 font-black">{title}</h3>
+                  <p className="mt-2 text-sm leading-5 text-[#50675e]">{description}</p>
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ================================================================
-          CTA Section - Dark Editorial
-          ================================================================ */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-16 md:py-24">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
-
-        <div className="relative max-w-4xl mx-auto px-6 sm:px-10 md:px-12 text-center">
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
-            <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-              Let&apos;s Connect
-            </span>
-            <div className="w-8 h-1 rounded-full bg-gradient-to-r from-blue-400 to-purple-400" />
-          </div>
-
-          <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight mb-4">
-            Choose the proof that fits the problem
-          </h2>
-          <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto">
-            Start with one contained website improvement or discuss a human-led managed AI operator pilot.
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button variant="green" href="/contact?offer=website-improvement" size="lg" className="shadow-lg shadow-emerald-500/25">
-              Improve My Website
-            </Button>
-            <Button variant="blue" href="/contact?offer=ai-operator" size="lg" className="shadow-lg shadow-blue-500/25">
-              Discuss an AI Operator
-            </Button>
-            <a
-              href="https://github.com/AbeJitsu"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold rounded-xl border border-white/10 text-slate-300 hover:border-white/20 hover:text-white transition-colors"
-            >
-              GitHub
-              <span className="text-xs">&#8599;</span>
-            </a>
-          </div>
-        </div>
+      <section className="mx-auto max-w-5xl px-5 py-16 text-center sm:px-8 md:py-24">
+        <h2 className="font-playfair text-3xl font-black md:text-5xl">Bring the work that is hard to see.</h2>
+        <p className="mx-auto mt-4 max-w-2xl leading-7 text-[#50675e]">Share the context and the result you want. We will help define the smallest useful next step.</p>
+        <Link href="/contact" className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white">Contact <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
       </section>
-    </div>
+    </main>
   );
 }
