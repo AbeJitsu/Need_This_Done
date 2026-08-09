@@ -1,6 +1,6 @@
 import { permanentRedirect } from 'next/navigation';
 
-/** The founder/background material now lives beside the proof on /work. */
+/** Keep the legacy route pointed at the public proof layer. */
 export default function AboutPage() {
   permanentRedirect('/work');
 }
