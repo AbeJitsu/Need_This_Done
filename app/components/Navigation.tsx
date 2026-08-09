@@ -21,11 +21,20 @@ import { ContentValue } from '@/components/content/ContentStructure';
 
 // Fallback navigation links (used if layout content not loaded)
 const defaultNavLinks: NavLink[] = [
-  { href: '/services', label: 'Services' },
-  { href: '/pricing', label: 'Pricing' },
-  { href: '/site-analyzer', label: 'Free Site Audit' },
+  { href: '/services#website-improvement', label: 'Website Improvement' },
+  { href: '/services#ai-operator', label: 'AI Operator' },
   { href: '/how-it-works', label: 'How It Works' },
+  { href: '/work', label: 'Work' },
+  { href: '/blog', label: 'Insights' },
 ];
+
+function isCurrentNavigationLink(pathname: string, href: string): boolean {
+  const [targetPath, hash] = href.split('#');
+  // usePathname intentionally omits hashes. Do not mark both offer anchors
+  // current when the visitor is simply on /services.
+  if (hash) return false;
+  return pathname === targetPath || (targetPath !== '/' && pathname.startsWith(targetPath));
+}
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -98,9 +107,7 @@ export default function Navigation() {
             {/* Desktop Page Links - hidden on mobile/tablet */}
             <div className="hidden lg:flex gap-1">
               {navigationLinks.map((link, index) => {
-                const isActive =
-                  pathname === link.href ||
-                  (link.href !== '/' && pathname.startsWith(link.href));
+                const isActive = isCurrentNavigationLink(pathname, link.href);
 
                 return (
                   <Link
@@ -265,9 +272,7 @@ export default function Navigation() {
         <div id="mobile-menu" className="lg:hidden border-t border-gray-200/60 bg-white/80 backdrop-blur-md animate-slide-up">
           <nav aria-label="Mobile navigation" className="px-4 py-3 space-y-1">
             {navigationLinks.map((link, index) => {
-              const isActive =
-                pathname === link.href ||
-                (link.href !== '/' && pathname.startsWith(link.href));
+              const isActive = isCurrentNavigationLink(pathname, link.href);
 
               return (
                 <Link

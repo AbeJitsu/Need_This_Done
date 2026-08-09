@@ -1,10 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
-import {
-  getRetiredBlogDestination,
-  listBlogPosts,
-} from '@/lib/blog-content';
+import { getRetiredBlogDestination, listBlogPosts, RETAINED_POST_SLUGS } from '@/lib/blog-content';
 
 const APP = resolve(__dirname, '..');
 const ROOT = resolve(APP, '..');
@@ -64,10 +61,12 @@ describe('retired content systems', () => {
     }
   });
 
-  it('serves exactly nine versioned posts and preserves retirement destinations', () => {
-    expect(listBlogPosts()).toHaveLength(9);
-    expect(getRetiredBlogDestination('combat-medic-to-developer-skills-transfer')).toBe('/about');
+  it('keeps only the three current, relevant posts and preserves retirement destinations', () => {
+    expect(listBlogPosts()).toHaveLength(3);
+    expect(listBlogPosts().map((post) => post.slug).sort()).toEqual([...RETAINED_POST_SLUGS].sort());
+    expect(getRetiredBlogDestination('combat-medic-to-developer-skills-transfer')).toBe('/work');
     expect(getRetiredBlogDestination('custom-stripe-checkout-nextjs-server-actions')).toBe('/services');
+    expect(getRetiredBlogDestination('glassmorphism-that-actually-works')).toBe('/blog');
     expect(getRetiredBlogDestination('jquery-shaped-modern-web')).toBe('/blog');
   });
 });

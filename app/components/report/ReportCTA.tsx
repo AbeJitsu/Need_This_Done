@@ -1,7 +1,7 @@
 // ============================================================================
 // Report CTA — Tiered call-to-action at bottom of report
 // ============================================================================
-// Primary: Book a free consultation (emerald). Secondary: See packages (blue outline).
+// The audit conversion path always opens the contained Website Improvement intake.
 
 import Link from 'next/link';
 
@@ -14,25 +14,24 @@ export default function ReportCTA() {
 
       <div className="relative z-10">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
-          Ready to Improve Your Score?
+          Ready to address one of these findings?
         </h2>
         <p className="text-slate-400 max-w-xl mx-auto mb-8">
-          Our team fixes the exact issues flagged above — accessibility, SEO, content, and
-          technical health. Most sites see a 20-40 point improvement.
+          Turn this report into a focused Website Improvement: a $500 evidence review plus one agreed, contained accessibility, SEO, performance, conversion, page, or component fix.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
-            href="/contact"
+            href="/contact?offer=website-improvement"
             className="px-8 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg shadow-lg shadow-emerald-500/25 transition-all"
           >
-            Book a Free 15-Min Call
+            Start a $500 Website Improvement
           </Link>
           <Link
-            href="/pricing"
+            href="/how-it-works"
             className="px-8 py-4 rounded-xl border-2 border-blue-500 text-blue-400 hover:bg-blue-500/10 font-bold text-lg transition-all"
           >
-            See Our Packages from $500
+            See the delivery process
           </Link>
         </div>
       </div>

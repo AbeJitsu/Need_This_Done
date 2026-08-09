@@ -1,12 +1,12 @@
-export type OfferingKind = 'pilot' | 'managed_service';
+export type OfferingKind = 'website_improvement' | 'ai_operator';
 
 export interface Offering {
   slug: string;
   name: string;
   kind: OfferingKind;
   description: string;
-  /** Pricing remains proposal-based while the internal pilot establishes cost. */
-  priceCents: null;
+  /** A public fixed price is optional; proposal-based work remains null. */
+  priceCents: number | null;
   billingPeriod: null;
   included: readonly string[];
   paymentLinkEnv: null;
@@ -15,35 +15,35 @@ export interface Offering {
 
 export const OFFERING_CATALOG: readonly Offering[] = [
   {
-    slug: 'ai-growth-employee-pilot',
-    name: 'AI Growth Employee Pilot',
-    kind: 'pilot',
-    description: 'Design the role, establish guardrails, build the first workflows, and measure a supervised trial.',
-    priceCents: null,
+    slug: 'website-improvement',
+    name: 'Website Improvement',
+    kind: 'website_improvement',
+    description: 'A focused $500 audit and one agreed page- or component-level improvement.',
+    priceCents: 50000,
     billingPeriod: null,
     included: [
-      'Growth discovery and operating brief',
-      'Role, responsibilities, and prohibited actions',
-      'Morning, midday, and end-of-day check-ins',
-      'First evidence-backed workflows',
-      'Measured pilot and recommendations',
+      'Evidence-backed review of the selected website path',
+      'A prioritized finding and a contained implementation plan',
+      'One agreed page/component, accessibility, SEO, performance, or conversion fix',
+      'A before/after handoff describing what changed',
+      'Manual 50/50 invoicing: $250 to begin and $250 on delivery',
     ],
     paymentLinkEnv: null,
     customWorkFallback: '/contact',
   },
   {
-    slug: 'managed-ai-growth-employee',
-    name: 'Managed AI Growth Employee',
-    kind: 'managed_service',
-    description: 'Ongoing operation, monitoring, improvement, reporting, and human support.',
+    slug: 'ai-operator',
+    name: 'Managed AI Operator',
+    kind: 'ai_operator',
+    description: 'A proposal-based 30-day pilot operated privately by Abe and Andrea, with weekly client briefs.',
     priceCents: null,
     billingPeriod: null,
     included: [
-      'Managed daily decision queues',
-      'Workflow operation and monitoring',
-      'Outcome and time-saved reporting',
-      'Continuous improvement from decisions',
-      'Human support and guardrail reviews',
+      'A written operating brief and explicit approval boundaries',
+      'Private research, preparation, and queue operation by Abe and Andrea',
+      'Human review before every external action',
+      'Four weekly client briefs during the 30-day pilot',
+      'Recorded outcomes and a recommendation for the next step',
     ],
     paymentLinkEnv: null,
     customWorkFallback: '/contact',

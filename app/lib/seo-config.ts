@@ -11,7 +11,7 @@ export const seoConfig = {
   // Site identity
   siteName: 'NeedThisDone',
   description:
-    'Professional project services for businesses and individuals. From web development to data solutions, we help you get things done right the first time.',
+    'A $500 website audit and contained fix, or a human-led managed AI operator pilot with explicit approval boundaries.',
 
   // Business information for structured data
   business: {
@@ -62,22 +62,16 @@ export const seoConfig = {
   // Services for structured data
   services: [
     {
-      name: 'Website Builds',
-      description: 'Professional website design and development. Custom sites built to convert visitors into customers, mobile-optimized and SEO-ready.',
-      serviceType: 'Web Development',
-      price: 'From $500',
+      name: 'Website Improvement',
+      description: 'A $500 website audit plus one agreed contained accessibility, SEO, performance, conversion, page, or component-level fix.',
+      serviceType: 'Website Improvement',
+      price: '$500',
     },
     {
-      name: 'Automation Setup',
-      description: 'Workflow automation and tool integration. Connect your apps and eliminate repetitive manual tasks.',
-      serviceType: 'Business Process Automation',
-      price: 'From $150',
-    },
-    {
-      name: 'Managed AI Services',
-      description: 'AI agent development and ongoing management. Custom AI solutions that run 24/7 while you focus on growth.',
-      serviceType: 'AI Consulting',
-      price: 'From $500/month',
+      name: 'Managed AI Operator',
+      description: 'A proposal-based 30-day supervised pilot operated privately by Abe and Andrea with weekly client briefs and human approval for external actions.',
+      serviceType: 'Managed AI Operations',
+      price: 'Proposal-based',
     },
   ],
 };

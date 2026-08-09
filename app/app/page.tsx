@@ -18,18 +18,18 @@ import { listBlogPosts } from '@/lib/blog-content';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'NeedThisDone | Your AI Growth Employee',
-  description: 'A supervised AI Growth Employee that researches, prepares, prioritizes, and tracks growth work between three short daily check-ins.',
+  title: 'NeedThisDone | Website Improvement & Managed AI Operator',
+  description: 'Choose a $500 website audit plus one contained fix, or a proposal-based 30-day managed AI operator pilot with weekly briefs.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'NeedThisDone | Your AI Growth Employee',
-    description: 'Growth work moves forward between check-ins. You stay in control of every external action.',
+    title: 'NeedThisDone | Website Improvement & Managed AI Operator',
+    description: 'Two human-led offers: a contained website fix or a supervised operator pilot.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
-    title: 'NeedThisDone | Your AI Growth Employee',
-    description: 'Growth work moves forward between check-ins. You stay in control of every external action.',
+    title: 'NeedThisDone | Website Improvement & Managed AI Operator',
+    description: 'Two human-led offers: a contained website fix or a supervised operator pilot.',
   },
 };
 

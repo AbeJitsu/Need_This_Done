@@ -1,18 +1,18 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Contact Us - NeedThisDone',
-  description: 'Get in touch with NeedThisDone. Submit a project inquiry or book a consultation. Orlando-based professional project services.',
+  title: 'Start a Project | NeedThisDone',
+  description: 'Choose a $500 website improvement or a proposal-based managed AI operator pilot and share the context needed to scope it.',
   alternates: { canonical: '/contact' },
   openGraph: {
-    title: 'Contact Us - NeedThisDone',
-    description: 'Submit a project inquiry or book a consultation. Orlando-based professional project services.',
+    title: 'Start a Project | NeedThisDone',
+    description: 'Choose a focused website improvement or a human-led managed AI operator pilot.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Contact Us - NeedThisDone',
-    description: 'Submit a project inquiry or book a consultation. Orlando-based professional project services.',
+    title: 'Start a Project | NeedThisDone',
+    description: 'Choose a focused website improvement or a human-led managed AI operator pilot.',
   },
 };
 

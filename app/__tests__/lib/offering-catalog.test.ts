@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { OFFERING_CATALOG, publicOfferings } from '@/lib/offering-catalog';
 
 describe('repository-owned offering catalog', () => {
-  it('publishes the two proposal-based employee stages', () => {
+  it('publishes the two public offer paths with only the website price fixed', () => {
     const prices = Object.fromEntries(OFFERING_CATALOG.map((offering) => [offering.slug, offering.priceCents]));
 
     expect(prices).toEqual({
-      'ai-growth-employee-pilot': null,
-      'managed-ai-growth-employee': null,
+      'website-improvement': 50000,
+      'ai-operator': null,
     });
   });
 

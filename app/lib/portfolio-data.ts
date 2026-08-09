@@ -29,10 +29,10 @@ export interface StatItem {
 // ============================================================================
 
 export const heroStats: StatItem[] = [
-  { label: 'API Routes', value: '74', color: 'emerald' },
-  { label: 'Components', value: '160+', color: 'blue' },
-  { label: 'Test Files', value: '71', color: 'purple' },
-  { label: 'DB Migrations', value: '53', color: 'amber' },
+  { label: 'Public offers', value: '2', color: 'emerald' },
+  { label: 'Audit-to-intake path', value: '1', color: 'blue' },
+  { label: 'Weekly briefs per pilot', value: '4', color: 'purple' },
+  { label: 'Human approval for external actions', value: '100%', color: 'amber' },
 ];
 
 // ============================================================================
@@ -43,28 +43,24 @@ export const caseStudies: CaseStudy[] = [
   {
     id: 'needthisdone',
     title: 'NeedThisDone.com',
-    subtitle: 'Full-Stack E-Commerce Platform',
-    role: 'Solo Developer & Architect',
-    period: 'November 2025 - Present',
+    subtitle: 'Lead Capture and Supervised-Operator Platform',
+    role: 'Founder, Builder, and Operator',
+    period: 'Current',
     description:
-      'Online store and business platform built from scratch. Handles payments, bookings, email campaigns, and customer accounts — everything a growing business needs in one place.',
+      'A public site that turns an audit or project request into a durable, human-led delivery workflow. The public offers stay simple while private operator surfaces preserve evidence, approvals, and outcomes.',
     impact: [
-      'Built from zero to production in under 3 months',
-      'Built-in safeguards so nothing breaks — if something goes wrong, the system recovers automatically',
-      'AI chatbot that learns from the website to answer customer questions automatically',
-      'Accessible to everyone, including visitors who use screen readers',
+      'A site report opens a preselected Website Improvement request',
+      'Project, brief, decision, and outcome records are durable in Supabase',
+      'Operator surfaces remain private instead of becoming a client dashboard',
+      'Every external outreach action remains behind a human approval and sender boundary',
     ],
     features: [
-      'Shopping cart & Stripe payments',
-      'Appointment booking system',
-      'Admin dashboards (10+ panels)',
-      'AI chatbot with semantic search',
-      'Inline CMS page editor',
-      'Customer loyalty points',
-      'Referral program',
-      'Email campaign system',
-      'Product waitlist & notifications',
-      'Playwright E2E + Vitest unit tests',
+      'Public site analyzer and report pages',
+      'Dual-offer project intake',
+      'Private dashboard, employee, and prospecting workspaces',
+      'Supabase RLS and authenticated lifecycle checks',
+      'Accessibility, route, and browser coverage',
+      'Optional model and sender boundaries that fail closed',
     ],
     tech: [
       'Next.js 14',
@@ -73,12 +69,8 @@ export const caseStudies: CaseStudy[] = [
       'Supabase',
       'PostgreSQL',
       'Redis',
-      'Stripe',
-      'Medusa',
-      'OpenAI',
       'Playwright',
-      'Docker',
-      'Vercel',
+      'Vitest',
     ],
     links: [
       { label: 'Live Site', href: 'https://needthisdone.com' },
@@ -89,51 +81,24 @@ export const caseStudies: CaseStudy[] = [
   {
     id: 'acadio',
     title: 'Acadio',
-    subtitle: 'Educational LMS Platform',
-    role: 'Contractor → Technical Operations Specialist',
-    period: 'April 2025 - December 2025',
+    subtitle: 'Technical Operations Delivery',
+    role: 'Contractor and Technical Operations Specialist',
+    period: '2025',
     description:
-      'Started as a contractor building backend tools. Earned a promotion to full-time by turning weeks of manual work into automated pipelines.',
+      'Technical-operations work for an educational platform, focused on converting repetitive content and data preparation into reviewable delivery pipelines.',
     impact: [
-      'Promoted from contractor to Technical Operations Specialist based on performance',
-      'PDF-to-HTML conversion pipeline eliminated weeks of manual formatting',
-      'Automated extraction of regulated financial content for compliance training',
-      'Automated flashcard generation from structured course content',
+      'Built a PDF-to-HTML conversion pipeline for variable source material',
+      'Created validation and data-migration tooling for repeatable delivery',
+      'Worked with regulated educational content under defined review steps',
+      'Turned recurring preparation work into documented, reusable workflows',
     ],
     features: [
       'PDF to clean HTML conversion pipeline',
-      'FINRA regulatory content scraping',
-      'Automated flashcard generation',
       'Data migration tooling',
       'Content validation workflows',
     ],
     tech: ['Python', 'Puppeteer', 'BeautifulSoup', 'Selenium', 'TinyMCE'],
     color: 'blue',
-  },
-  {
-    id: 'bridgette',
-    title: 'Bridgette Automation',
-    subtitle: 'AI-Powered Development Automation',
-    role: 'Creator & Maintainer',
-    period: 'January 2026 - Present',
-    description:
-      'Automation tool that runs development tasks on a schedule — no manual work required. Combines AI with background processes to keep projects moving.',
-    impact: [
-      'Clean, well-tested codebase',
-      'Runs tasks automatically in the background, hands-free',
-      'Extensible plugin architecture for custom workflows',
-    ],
-    features: [
-      'Claude Code CLI integration',
-      'Scheduled task automation',
-      'launchd daemon management',
-      'Plugin system for workflows',
-    ],
-    tech: ['Next.js 14', 'TypeScript', 'Node.js', 'launchd'],
-    links: [
-      { label: 'GitHub', href: 'https://github.com/AbeJitsu/bridgette-automation' },
-    ],
-    color: 'purple',
   },
 ];
 
@@ -149,23 +114,23 @@ export interface ArchLayer {
 
 export const architectureLayers: ArchLayer[] = [
   {
-    label: 'Frontend',
-    items: ['Next.js 14', 'React', 'TypeScript', 'Tailwind CSS'],
+    label: 'Public conversion',
+    items: ['Website Audit', 'Dual Offers', 'Adaptive Intake', 'Report CTA'],
     color: 'emerald',
   },
   {
-    label: 'Backend & APIs',
-    items: ['Next.js API Routes', 'Medusa Commerce', 'Redis Cache'],
+    label: 'Private operations',
+    items: ['Operator Cockpit', 'Approval Queues', 'Weekly Briefs', 'Outcome Records'],
     color: 'blue',
   },
   {
-    label: 'Data & Auth',
-    items: ['Supabase (PostgreSQL)', 'pgvector Embeddings', 'Google OAuth'],
+    label: 'Durable truth',
+    items: ['Supabase', 'PostgreSQL', 'RLS', 'Idempotency'],
     color: 'purple',
   },
   {
-    label: 'Infrastructure',
-    items: ['Vercel', 'Stripe Payments', 'Docker', 'GitHub Actions'],
+    label: 'Transient support',
+    items: ['Redis Cache', 'Rate Limits', 'Deduplication', 'Short-lived Coordination'],
     color: 'amber',
   },
 ];
@@ -177,26 +142,26 @@ export const architectureLayers: ArchLayer[] = [
 export const processSteps = [
   {
     number: 1,
-    title: 'Understand the Problem',
-    description: 'I start by listening. What are you trying to accomplish? What have you tried? What does success look like?',
+    title: 'Make the scope observable',
+    description: 'Start with the page, bottleneck, evidence, and desired result—not a broad promise to build everything.',
     color: 'emerald' as const,
   },
   {
     number: 2,
-    title: 'Plan the Architecture',
-    description: 'I map out the system design, integrations, and launch plan before writing a single line of code.',
+    title: 'Set the approval boundary',
+    description: 'Write down what the work may prepare and what must still wait for a human decision.',
     color: 'blue' as const,
   },
   {
     number: 3,
-    title: 'Build with Tests',
-    description: 'Test-driven development from day one. Every feature gets automated tests. Every deploy runs the full suite. No surprises.',
+    title: 'Verify the work',
+    description: 'Use route, accessibility, browser, and workflow coverage to confirm the intended path still works.',
     color: 'purple' as const,
   },
   {
     number: 4,
-    title: 'Ship and Support',
-    description: 'I deploy to production with monitoring and stick around to make sure everything works. Your project doesn\'t end at launch.',
+    title: 'Hand off the next decision',
+    description: 'Deliver the contained fix or a weekly brief with clear outcomes and the next recommended action.',
     color: 'amber' as const,
   },
 ];

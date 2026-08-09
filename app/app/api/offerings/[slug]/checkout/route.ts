@@ -28,6 +28,6 @@ export async function GET(
   }
 
   const contactUrl = new URL('/contact', request.url);
-  contactUrl.searchParams.set('offering', offering.slug);
+  contactUrl.searchParams.set('offer', offering.slug);
   return NextResponse.redirect(contactUrl, 303);
 }

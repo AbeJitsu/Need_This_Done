@@ -11,19 +11,23 @@ test.describe('Retained core smoke checks', () => {
     );
   });
 
-  test('contact page renders its AI employee role-design path', async ({ page }) => {
-    const response = await page.goto('/contact');
+  test('contact intake adapts to the selected offer', async ({ page }) => {
+    const response = await page.goto('/contact?offer=website-improvement');
 
     expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByRole('button', { name: /design my ai employee/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /choose the path/i })).toBeVisible();
+    await expect(page.getByRole('radio', { name: /website improvement/i })).toBeChecked();
+    await expect(page.getByRole('textbox', { name: /website url/i })).toBeVisible();
+    await page.getByText('Managed AI Operator', { exact: true }).click();
+    await expect(page.getByRole('textbox', { name: /where does work get stuck/i })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /website url/i })).toHaveCount(0);
   });
 
   test('site analyzer page renders the audit form', async ({ page }) => {
     const response = await page.goto('/site-analyzer');
 
     expect(response?.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: /how does your website stack up/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /see where your website/i })).toBeVisible();
     await expect(page.getByRole('textbox', { name: /website url|your website/i })).toBeVisible();
   });
 
@@ -33,10 +37,30 @@ test.describe('Retained core smoke checks', () => {
     await expect(page.getByLabel('Email Address')).toBeVisible();
   });
 
+  test('private operator surfaces require authentication', async ({ page }) => {
+    for (const route of ['/employee', '/prospecting']) {
+      await page.goto(route);
+      await expect(page).toHaveURL(/\/login/);
+    }
+  });
+
+  test('consolidated public paths redirect to their maintained destinations', async ({ page }) => {
+    for (const [route, destination] of [
+      ['/about', '/work'],
+      ['/resume', '/work'],
+      ['/guide', '/faq'],
+      ['/build', '/contact?offer=website-improvement'],
+    ]) {
+      await page.goto(route);
+      await expect(page).toHaveURL(new RegExp(destination.replace(/[?]/g, '\\?') + '$'));
+    }
+  });
+
   test('sanitized public report renders from the local seed', async ({ page }) => {
     const response = await page.goto(`/report/${reportId}`);
 
     expect(response?.ok()).toBe(true);
     await expect(page.getByRole('heading').first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /start a \$500 website improvement/i })).toHaveAttribute('href', '/contact?offer=website-improvement');
   });
 });

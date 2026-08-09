@@ -8,22 +8,22 @@ import ServicesPageClient from '@/components/services/ServicesPageClient';
 // Keeps metadata server-rendered for SEO. All JSX + animations in client component.
 
 export const metadata: Metadata = {
-  title: 'What Your AI Growth Employee Handles | NeedThisDone',
+  title: 'Website Improvement & Managed AI Operator | NeedThisDone',
   description:
-    'Research, evidence-backed audits, prepared follow-up, prioritized decisions, and outcome tracking under human supervision.',
+    'Choose a $500 website audit plus one contained fix, or a proposal-based 30-day managed AI operator pilot with weekly briefs.',
   alternates: { canonical: '/services' },
   openGraph: {
-    title: 'What Your AI Growth Employee Handles | NeedThisDone',
+    title: 'Website Improvement & Managed AI Operator | NeedThisDone',
     description:
-      'A supervised growth role that prepares the work and keeps you in control.',
+      'Two focused, human-led offers with clear scope and approval boundaries.',
     url: `${seoConfig.baseUrl}/services`,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'What Your AI Growth Employee Handles | NeedThisDone',
+    title: 'Website Improvement & Managed AI Operator | NeedThisDone',
     description:
-      'A supervised growth role that prepares the work and keeps you in control.',
+      'Two focused, human-led offers with clear scope and approval boundaries.',
   },
 };
 

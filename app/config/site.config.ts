@@ -37,8 +37,8 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   project: {
     name: 'NeedThisDone',
-    tagline: 'Your supervised AI Growth Employee.',
-    description: 'Growth work moves forward between focused check-ins while you stay in control.',
+    tagline: 'Website improvements and a managed AI operator.',
+    description: 'A focused $500 website improvement or a proposal-based managed AI operator pilot, both run with clear human accountability.',
     url: 'https://needthisdone.com',
   },
 
@@ -48,25 +48,18 @@ const siteConfig: SiteConfig = {
   // Core service offerings - colors match page-config.ts: Website=green, Automation=blue, AI=purple
   services: [
     {
-      title: 'AI Growth Employee Pilot',
-      tagline: 'Design and prove the role',
-      description: 'Discovery, operating brief, first workflows, guardrails, and a measured supervised trial.',
-      details: 'Role Design, Guardrails, Check-ins, Measured Trial',
+      title: 'Website Improvement',
+      tagline: '$500 audit + one contained fix',
+      description: 'A focused review of one website path, followed by one agreed page-, component-, accessibility-, SEO-, performance-, or conversion-level improvement.',
+      details: 'Audit, Contained Fix, Before/After Handoff, Manual 50/50 Invoice',
       color: 'green',
     },
     {
-      title: 'Managed AI Growth Employee',
-      tagline: 'Operate and improve the role',
-      description: 'Ongoing operation, monitoring, improvement, reporting, and support.',
-      details: 'Daily Queues, Monitoring, Outcomes, Support',
+      title: 'Managed AI Operator',
+      tagline: 'A private 30-day supervised pilot',
+      description: 'Abe and Andrea operate a bounded role privately, bring decisions for human approval, and send weekly client briefs.',
+      details: 'Operating Brief, Approval Boundaries, Weekly Briefs, Recorded Outcomes',
       color: 'blue',
-    },
-    {
-      title: 'Implementation Capabilities',
-      tagline: 'Used only when the plan requires them',
-      description: 'Website improvements, integrations, and automation support an approved growth plan rather than being headline products.',
-      details: 'Web Improvements, Integrations, Custom Automation',
-      color: 'purple',
     },
   ],
 
@@ -75,7 +68,7 @@ const siteConfig: SiteConfig = {
   // ========================================================================
   metadata: {
     siteName: 'NeedThisDone',
-    siteDescription: 'Supervised AI Growth Employees for busy owners and managers.',
+    siteDescription: 'Focused website improvements and human-led managed AI operator pilots for busy owners and managers.',
     author: 'NeedThisDone',
   },
 };

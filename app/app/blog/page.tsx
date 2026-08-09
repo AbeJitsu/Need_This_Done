@@ -17,19 +17,19 @@ export const dynamic = 'force-static';
 // then click on any section to edit its content directly.
 
 export const metadata = {
-  title: 'Blog - NeedThisDone',
+  title: 'Insights | NeedThisDone',
   description:
-    'Tips, insights, and behind-the-scenes looks at how we help busy professionals get things done.',
+    'Practical notes on website improvement, clear conversion paths, and safely managed AI operations.',
   alternates: { canonical: '/blog' },
   openGraph: {
-    title: 'Blog - NeedThisDone',
-    description: 'Tips, insights, and behind-the-scenes looks at web development, automation, and AI.',
+    title: 'Insights | NeedThisDone',
+    description: 'Practical notes on website improvement, conversion clarity, and managed AI operations.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
-    title: 'Blog - NeedThisDone',
-    description: 'Tips, insights, and behind-the-scenes looks at web development, automation, and AI.',
+    title: 'Insights | NeedThisDone',
+    description: 'Practical notes on website improvement, conversion clarity, and managed AI operations.',
   },
 };
 

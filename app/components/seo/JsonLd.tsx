@@ -94,7 +94,7 @@ const schemas = {
   Service: {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    name: 'Professional Project Services',
+    name: 'NeedThisDone Services',
     provider: {
       '@type': 'LocalBusiness',
       name: businessInfo.name,
@@ -105,7 +105,7 @@ const schemas = {
       '@type': 'Country',
       name: 'United States',
     },
-    serviceType: ['Web Development', 'Data Solutions', 'Technical Consulting'],
+    serviceType: ['Website Improvement', 'Managed AI Operations'],
   },
 
   FAQPage: {
@@ -114,66 +114,42 @@ const schemas = {
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'What types of tasks do you handle?',
+        name: 'What is the Website Improvement?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: "We help with all kinds of tasks: spreadsheets and data cleanup, document preparation, administrative work, computer help, and even website builds and updates. If you're not sure whether we can help, just ask!",
+          text: 'It is a $500 evidence-backed website review plus one mutually agreed contained fix, such as a page, component, accessibility, SEO, performance, or conversion correction.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Do I need to be tech-savvy to work with you?',
+        name: 'How does website payment work?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: "Not at all! We work with people of all backgrounds. Just describe what you need in your own words, and we'll take it from there. No technical terms needed.",
+          text: 'After the contained scope is confirmed, the Website Improvement uses manual invoices: $250 to begin and $250 after the agreed fix is delivered.',
         },
       },
       {
         '@type': 'Question',
-        name: 'How long does a typical task take?',
+        name: 'What is the Managed AI Operator?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Most projects are completed within 1-2 weeks, depending on scope. Quick tasks can be done in days, while bigger builds may take longer. We always provide a clear timeline upfront so you know what to expect.',
+          text: 'It is a proposal-based 30-day pilot operated privately by Abe and Andrea. The role prepares work and brings decisions for human review; clients receive weekly briefs rather than a dashboard to operate.',
         },
       },
       {
         '@type': 'Question',
-        name: 'How much does it cost?',
+        name: 'Can the AI operator take external actions on its own?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Pricing depends on complexity, not service type. Quick tasks across any service start at $50. Standard projects that need more steps run $150+. Bigger builds like full websites or complex data migrations start at $500+. We provide transparent quotes with no hidden fees.',
+          text: 'No. External messages, publishing, system changes, and spending require explicit human approval.',
         },
       },
       {
         '@type': 'Question',
-        name: 'How do I get started?',
+        name: 'Does the site audit certify accessibility or legal compliance?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: "Simply reach out through our contact form and describe what you need help with. We'll review your request and get back to you within 2 business days with questions or a quote.",
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Can you help with one-time tasks or just ongoing work?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: "Both! Whether you have a single task that needs attention or want regular ongoing support, we're here to help. Many clients start with a one-time task and come back when something else comes up.",
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'What if I need changes after delivery?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: "We want you to be completely satisfied. We include reasonable revisions as part of every task. If something isn't quite right, just let us know and we'll make it right.",
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'How does payment work?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'We use a simple 50/50 structure: 50% deposit to start work, and the remaining 50% when you approve the final delivery. We accept major credit cards and other common payment methods. No surprises, just straightforward pricing.',
+          text: 'No. The audit surfaces selected technical signals and may support one focused improvement. It is not legal advice or an accessibility certification.',
         },
       },
     ],
@@ -261,7 +237,7 @@ export function AllServicesJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Professional Services',
-    description: 'Web development, automation, and AI services for businesses',
+    description: 'A contained website improvement and a human-led managed AI operator pilot.',
     itemListElement: seoConfig.services.map((service, index) => ({
       '@type': 'ListItem',
       position: index + 1,
@@ -317,7 +293,7 @@ export function BlogPostingJsonLd({ post }: BlogPostingJsonLdProps) {
     author: {
       '@type': 'Person',
       name: post.author_name || 'Abe Reyes',
-      url: `${seoConfig.baseUrl}/about`,
+      url: `${seoConfig.baseUrl}/work`,
     },
     publisher: {
       '@type': 'Organization',

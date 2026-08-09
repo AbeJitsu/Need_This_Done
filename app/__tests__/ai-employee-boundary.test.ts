@@ -6,13 +6,13 @@ const root = path.resolve(process.cwd(), '..');
 const read = (file: string) => fs.readFileSync(path.join(root, file), 'utf8');
 
 describe('AI employee product boundary', () => {
-  it('publishes only the pilot and managed employee offerings', async () => {
+  it('publishes only the current website-improvement and managed-operator offerings', async () => {
     const { OFFERING_CATALOG } = await import('@/lib/offering-catalog');
     expect(OFFERING_CATALOG.map((item) => item.slug)).toEqual([
-      'ai-growth-employee-pilot',
-      'managed-ai-growth-employee',
+      'website-improvement',
+      'ai-operator',
     ]);
-    expect(OFFERING_CATALOG.every((item) => item.priceCents === null)).toBe(true);
+    expect(OFFERING_CATALOG.map((item) => item.priceCents)).toEqual([50000, null]);
   });
 
   it('adds isolated customer records and idempotent decisions', () => {

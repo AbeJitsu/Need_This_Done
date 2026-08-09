@@ -17,6 +17,10 @@ export default function robots(): MetadataRoute.Robots {
           '/admin/',      // Admin dashboard - private
           '/api/',        // API routes - not for indexing
           '/dashboard/',  // User dashboard - private
+          '/employee/',   // Private operator workspace
+          '/prospecting/', // Private prospecting workspace
+          '/account/',    // Authenticated account surfaces
+          '/report/',     // Capability-linked audit reports are individually noindex
           '/auth/',       // Auth pages - private
           '/login/',      // Login page - private
         ],

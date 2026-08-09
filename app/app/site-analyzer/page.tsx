@@ -8,19 +8,19 @@ import AnalyzerForm from '@/components/site-analyzer/AnalyzerForm';
 // analysis report emailed to them and viewable at /report/[id].
 
 export const metadata: Metadata = {
-  title: 'Free Site Analyzer - NeedThisDone',
+  title: 'Free Website Audit - NeedThisDone',
   description:
-    'Get a free website audit with SEO, accessibility, and performance scoring. Enter your URL and get a detailed report with specific recommendations.',
+    'Get an evidence-based website audit with SEO, accessibility, and performance signals, then request a focused $500 website improvement if it fits.',
   alternates: { canonical: '/site-analyzer' },
   openGraph: {
-    title: 'Free Website Analyzer - NeedThisDone',
-    description: 'Score your website on SEO, accessibility, and performance. Get a detailed report with AI-powered recommendations.',
+    title: 'Free Website Audit - NeedThisDone',
+    description: 'Review SEO, accessibility, and performance signals before choosing a contained website improvement.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Free Website Analyzer - NeedThisDone',
-    description: 'Score your website on SEO, accessibility, and performance. Get a detailed report with AI-powered recommendations.',
+    title: 'Free Website Audit - NeedThisDone',
+    description: 'Review SEO, accessibility, and performance signals before choosing a contained website improvement.',
   },
 };
 
@@ -38,21 +38,20 @@ export default function SiteAnalyzerPage() {
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
             <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-              Free Tool
+              Free Audit
             </span>
           </div>
 
           <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] mb-6">
-            How Does Your Website{' '}
+            See where your website{' '}
             <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
               Stack Up?
             </span>
           </h1>
 
           <p className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-2xl mb-12">
-            Get a free, instant audit of your website&apos;s SEO, accessibility, and
-            performance — scored on a 100-point scale with specific, actionable
-            recommendations from AI analysis.
+            Get a free evidence-based review of your website&apos;s SEO, accessibility, and
+            performance. Use the report to decide whether one contained $500 Website Improvement is the right next step.
           </p>
 
           {/* Form */}
@@ -64,19 +63,19 @@ export default function SiteAnalyzerPage() {
               <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              10-second analysis
+              Report-first improvement path
             </span>
             <span className="flex items-center gap-2">
               <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              ADA compliance check
+              Accessibility signal check
             </span>
             <span className="flex items-center gap-2">
               <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              AI-powered review
+              No obligation to proceed
             </span>
           </div>
         </div>

@@ -44,14 +44,13 @@ export default function WorkPageClient() {
           </div>
 
           <h1 className="font-playfair text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] mb-6">
-            What I{' '}
+            Proof of{' '}
             <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Build
+              work
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-slate-400 leading-relaxed max-w-2xl mb-12">
-            Full-stack applications, data automation, and AI integrations.
-            Here&apos;s what that looks like in practice.
+            NeedThisDone is led by Abe Reyes: a full-stack builder and operator focused on clear scope, durable systems, and human-controlled delivery.
           </p>
 
           {/* Stat counters - BJJ belt progression */}
@@ -109,25 +108,7 @@ export default function WorkPageClient() {
       </section>
 
       {/* ================================================================
-          Case Study: Bridgette Automation
-          ================================================================ */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 to-slate-900">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-        <div className="relative max-w-5xl mx-auto px-6 sm:px-10 md:px-12 py-16 md:py-24">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-400 to-amber-400" />
-            <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-              Side Project
-            </span>
-          </div>
-
-          <CaseStudyCard study={caseStudies[2]} />
-        </div>
-      </section>
-
-      {/* ================================================================
-          How I Work - Light Section
+          Background and practice - consolidates former About/Resume routes
           ================================================================ */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-5xl mx-auto px-6 sm:px-10 md:px-12">
@@ -135,12 +116,21 @@ export default function WorkPageClient() {
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
               <span className="text-sm font-semibold tracking-widest uppercase text-slate-500">
-                Process
-              </span>
-            </div>
-            <h2 className="font-playfair text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
-              How I work
-            </h2>
+              Process
+            </span>
+          </div>
+          <h2 className="font-playfair text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
+              Experience and working style
+          </h2>
+          <p className="mt-4 max-w-3xl text-gray-600 leading-relaxed">Abe brings a background in U.S. Army medical service, seven years at Toyota Finance, and technical-operations work at Acadio to full-stack product delivery. The through line is calm communication, documented decisions, and follow-through under real constraints.</p>
+        </div>
+
+          <div className="mb-12 grid gap-5 md:grid-cols-3">
+            {[
+              ['Clear communication', 'Explain scope, evidence, and tradeoffs in plain language.'],
+              ['Reliable follow-through', 'Keep commitments visible and turn handoffs into the next clear decision.'],
+              ['Practical systems', 'Use Next.js, TypeScript, Supabase, PostgreSQL, Redis, Playwright, and Vitest where each one solves a defined problem.'],
+            ].map(([title, description]) => <article key={title} className="rounded-2xl border border-[#183229]/10 bg-[#f7f4ed] p-5"><h3 className="font-black text-[#183229]">{title}</h3><p className="mt-2 text-sm leading-6 text-gray-600">{description}</p></article>)}
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 md:gap-10">
@@ -181,18 +171,18 @@ export default function WorkPageClient() {
           </div>
 
           <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight mb-4">
-            Let&apos;s build something together
+            Choose the proof that fits the problem
           </h2>
           <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto">
-            Whether you need a full application, data automation, or just want to chat about a project idea — I&apos;m here to help.
+            Start with one contained website improvement or discuss a human-led managed AI operator pilot.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">
-            <Button variant="green" href="/contact" size="lg" className="shadow-lg shadow-emerald-500/25">
-              Start a Project
+            <Button variant="green" href="/contact?offer=website-improvement" size="lg" className="shadow-lg shadow-emerald-500/25">
+              Improve My Website
             </Button>
-            <Button variant="blue" href="/resume" size="lg" className="shadow-lg shadow-blue-500/25">
-              View Resume
+            <Button variant="blue" href="/contact?offer=ai-operator" size="lg" className="shadow-lg shadow-blue-500/25">
+              Discuss an AI Operator
             </Button>
             <a
               href="https://github.com/AbeJitsu"

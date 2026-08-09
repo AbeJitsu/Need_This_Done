@@ -15,17 +15,17 @@ import { FAQPageJsonLd } from '@/components/seo/JsonLd';
 
 export const metadata = {
   title: 'FAQ - NeedThisDone',
-  description: 'Answers to common questions about our web development, automation, and AI services — pricing, timelines, process, and support.',
+  description: 'Answers about the $500 Website Improvement and proposal-based Managed AI Operator pilot.',
   alternates: { canonical: '/faq' },
   openGraph: {
     title: 'FAQ - NeedThisDone',
-    description: 'Common questions about our web development, automation, and AI services.',
+    description: 'Common questions about scope, payment, approval, and the two offers.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image' as const,
     title: 'FAQ - NeedThisDone',
-    description: 'Common questions about our web development, automation, and AI services.',
+    description: 'Common questions about scope, payment, approval, and the two offers.',
   },
 };
 

@@ -1,321 +1,57 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { ArrowRight, Check, FileSearch, ShieldCheck } from 'lucide-react';
 import { seoConfig } from '@/lib/seo-config';
-import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
-
-// ============================================================================
-// ADA Compliance Page - /ada-compliance
-// ============================================================================
-// SEO content page targeting "ADA website compliance" search traffic.
-// Educates prospects on the problem, then offers the solution.
-// Dual purpose: SEO magnet + sales funnel.
 
 export const metadata: Metadata = {
-  title: 'ADA Website Compliance: What Small Businesses Need to Know | NeedThisDone',
-  description:
-    'ADA website compliance explained in plain language. Learn what it means for your business, common issues to fix, and how to avoid costly lawsuits.',
+  title: 'Website Accessibility Checks | NeedThisDone',
+  description: 'Learn what a focused website accessibility review can check, what it cannot certify, and how a contained improvement engagement works.',
+  alternates: { canonical: '/ada-compliance' },
   openGraph: {
-    title: 'ADA Website Compliance for Small Businesses | NeedThisDone',
-    description:
-      'ADA lawsuits against websites are surging. Learn what compliance means, what issues to look for, and how to protect your business.',
+    title: 'Website Accessibility Checks | NeedThisDone',
+    description: 'Practical accessibility signals, a clear scope, and no compliance guarantees.',
     url: `${seoConfig.baseUrl}/ada-compliance`,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ADA Website Compliance for Small Businesses',
-    description:
-      'ADA lawsuits against websites are surging. Learn what compliance means and how to protect your business.',
+    title: 'Website Accessibility Checks | NeedThisDone',
+    description: 'Practical accessibility signals, a clear scope, and no compliance guarantees.',
   },
 };
 
-const commonIssues = [
-  {
-    issue: 'Missing alt text on images',
-    impact: 'Screen readers can\'t describe images to blind users, and it\'s the #1 issue cited in ADA lawsuits.',
-    fix: 'Add descriptive alt text to every meaningful image. Decorative images get empty alt="".',
-  },
-  {
-    issue: 'Unlabeled form inputs',
-    impact: 'Screen reader users can\'t tell what information to enter. Contact forms become unusable.',
-    fix: 'Every input needs a visible <label> element connected to it.',
-  },
-  {
-    issue: 'No keyboard navigation',
-    impact: 'Users who can\'t use a mouse — including those with motor disabilities — can\'t navigate your site.',
-    fix: 'Ensure all interactive elements (buttons, links, menus) are reachable with Tab and activatable with Enter.',
-  },
-  {
-    issue: 'Missing skip navigation',
-    impact: 'Keyboard users must tab through every single navigation link on every page before reaching content.',
-    fix: 'Add a "Skip to main content" link as the first focusable element on every page.',
-  },
-  {
-    issue: 'Low color contrast',
-    impact: 'Users with low vision or color blindness can\'t read text. WCAG requires at least 4.5:1 contrast ratio.',
-    fix: 'Test your color combinations. Light gray text on white backgrounds is the most common offender.',
-  },
-  {
-    issue: 'Generic link text',
-    impact: 'Screen reader users who navigate by links hear "click here" and "read more" with no context about where the link goes.',
-    fix: 'Use descriptive link text: "View our pricing packages" instead of "click here."',
-  },
-  {
-    issue: 'Missing page language',
-    impact: 'Screen readers don\'t know which pronunciation rules to use. English text might be read with French pronunciation.',
-    fix: 'Add lang="en" (or your language) to the <html> element.',
-  },
-  {
-    issue: 'No heading structure',
-    impact: 'Screen reader users rely on headings to navigate. Without a proper H1 → H2 → H3 hierarchy, pages feel like a wall of text.',
-    fix: 'Use one H1 per page, then H2s for sections, H3s for subsections. Never skip levels.',
-  },
+const commonChecks = [
+  ['Text alternatives', 'Meaningful images need useful text alternatives; decorative images should not create noise for screen-reader users.'],
+  ['Form labels', 'Inputs need visible, connected labels so people know what information is being requested.'],
+  ['Keyboard access', 'Links, controls, menus, and forms should be reachable and usable without a mouse.'],
+  ['Heading structure', 'A clear heading order helps people scan a page and navigate it with assistive technology.'],
+  ['Color contrast', 'Text and essential controls need enough contrast to remain readable in real use.'],
+  ['Clear links and errors', 'Link text and form feedback should explain what happens next instead of relying only on visual context.'],
 ];
 
 export default function AdaCompliancePage() {
   return (
-    <div>
-      {/* Hero — dark hero matching site pattern */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
-
-        <div className="relative max-w-5xl mx-auto px-6 sm:px-8 md:px-12 pt-16 md:pt-24 pb-16 md:pb-20">
-          <FadeIn direction="none" triggerOnScroll={false}>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
-              <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-                ADA Compliance
-              </span>
-            </div>
-
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.1] mb-6">
-              Is Your Website ADA Compliant?
-            </h1>
-
-            <p className="text-lg text-slate-300 leading-relaxed max-w-3xl mb-8">
-              If your website isn&apos;t accessible to people with disabilities, you&apos;re
-              not just missing customers — you may be facing legal risk. Here&apos;s what
-              you need to know, explained in plain language.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/site-analyzer"
-                className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg shadow-lg shadow-emerald-500/25 transition-all"
-              >
-                Check Your Site Now
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center px-8 py-4 rounded-xl border-2 border-blue-500 text-blue-400 hover:bg-blue-500/10 font-bold text-lg transition-all"
-              >
-                Book a Free Call
-              </Link>
-            </div>
-          </FadeIn>
+    <main className="bg-[#f7f4ed] text-[#183229]">
+      <section className="relative overflow-hidden bg-[#18372e] text-white">
+        <div className="absolute -left-28 -top-28 h-80 w-80 rounded-full bg-emerald-400/10 blur-3xl" />
+        <div className="relative mx-auto max-w-5xl px-5 py-20 sm:px-8 md:py-28">
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">Website accessibility</p>
+          <h1 className="mt-5 max-w-4xl font-playfair text-5xl font-black leading-tight md:text-7xl">Accessibility checks are a practical starting point—not a certification.</h1>
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-emerald-50/75">The free audit surfaces selected accessibility, SEO, and performance signals. A focused Website Improvement can address one agreed issue; it does not promise legal compliance or replace specialist legal or accessibility advice.</p>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row"><Link href="/site-analyzer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-300 px-7 py-3 font-bold text-[#18372e]">Run the free site audit <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link><Link href="/contact?offer=website-improvement" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/20 px-7 py-3 font-bold">Discuss one contained fix</Link></div>
         </div>
       </section>
 
-      {/* Content sections */}
-      <div className="max-w-5xl mx-auto px-6 sm:px-8 md:px-12 py-16 space-y-20">
+      <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8 md:py-24">
+        <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
+          <div><FileSearch className="h-8 w-8 text-[#126b4e]" aria-hidden="true" /><h2 className="mt-5 font-playfair text-4xl font-black">What the audit can help you see</h2></div>
+          <div><p className="text-lg leading-8 text-[#50675e]">Automated checks are useful for finding patterns worth reviewing, such as missing labels, weak structure, or page-level signals. They cannot assess every interaction, content decision, assistive-technology experience, or legal requirement.</p><p className="mt-5 rounded-2xl border border-[#183229]/10 bg-white p-5 text-sm leading-6 text-[#40564e]"><strong className="text-[#183229]">Use this information as an implementation conversation starter.</strong> If you need a legal assessment or a full accessibility conformance review, work with a qualified specialist for that purpose.</p></div>
+        </div>
+      </section>
 
-        {/* Section 1: What ADA compliance means */}
-        <FadeIn direction="up">
-          <section>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
-              <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-                The Basics
-              </span>
-            </div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-6">
-              What Does ADA Compliance Mean for Websites?
-            </h2>
-            <div className="space-y-4 text-slate-600 leading-relaxed">
-              <p>
-                The Americans with Disabilities Act (ADA) requires businesses to be
-                accessible to people with disabilities. While the law was originally
-                written for physical spaces, courts have consistently ruled that it
-                applies to websites too.
-              </p>
-              <p>
-                In practice, this means your website needs to work for people who
-                use screen readers, keyboard navigation, or other assistive technology.
-                The standard most businesses follow is called <strong>WCAG 2.1 Level AA</strong> —
-                a set of technical guidelines published by the World Wide Web Consortium.
-              </p>
-              <p>
-                You don&apos;t need to memorize the WCAG spec. You just need to make sure your
-                website doesn&apos;t create barriers for people trying to use it.
-              </p>
-            </div>
-          </section>
-        </FadeIn>
+      <section className="border-y border-[#183229]/10 bg-white"><div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 md:py-24"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Useful implementation checks</p><h2 className="mt-4 font-playfair text-4xl font-black">Six places a contained improvement may focus</h2><div className="mt-10 grid gap-4 md:grid-cols-2">{commonChecks.map(([title, description]) => <article key={title} className="rounded-2xl border border-[#183229]/10 bg-[#f7f4ed] p-5"><Check className="h-5 w-5 text-[#126b4e]" aria-hidden="true" /><h3 className="mt-4 text-xl font-black">{title}</h3><p className="mt-2 text-sm leading-6 text-[#50675e]">{description}</p></article>)}</div></div></section>
 
-        {/* Section 2: Why it matters */}
-        <FadeIn direction="up">
-          <section>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-blue-400 to-purple-400" />
-              <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-                The Stakes
-              </span>
-            </div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-6">
-              Why This Matters for Your Business
-            </h2>
-
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
-              {[
-                {
-                  stat: '4,600+',
-                  label: 'ADA lawsuits filed in 2023 alone',
-                  detail: 'And the number keeps growing year over year. Small businesses are increasingly targeted.',
-                  color: 'text-red-600',
-                },
-                {
-                  stat: '26%',
-                  label: 'of U.S. adults have a disability',
-                  detail: 'That\'s roughly 1 in 4 potential customers who may struggle to use your website.',
-                  color: 'text-blue-600',
-                },
-                {
-                  stat: '$10K–$75K',
-                  label: 'typical settlement range',
-                  detail: 'Most ADA website lawsuits settle without going to trial, but settlements aren\'t cheap.',
-                  color: 'text-amber-600',
-                },
-              ].map((item) => (
-                <div key={item.stat} className="bg-slate-50 rounded-xl p-6 border border-slate-100">
-                  <p className={`text-3xl font-black ${item.color} mb-1`}>{item.stat}</p>
-                  <p className="text-sm font-semibold text-slate-800 mb-2">{item.label}</p>
-                  <p className="text-sm text-slate-500">{item.detail}</p>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-slate-600 leading-relaxed">
-              Beyond legal risk, accessibility is good business. Accessible websites tend
-              to have better SEO, faster load times, and lower bounce rates. When your
-              site works well for people with disabilities, it works better for everyone.
-            </p>
-          </section>
-        </FadeIn>
-
-        {/* Section 3: Common issues */}
-        <FadeIn direction="up">
-          <section>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-400 to-emerald-400" />
-              <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-                What to Look For
-              </span>
-            </div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-4">
-              The Most Common Accessibility Issues
-            </h2>
-            <p className="text-slate-500 mb-8">
-              Our site analyzer checks for all of these automatically. Here&apos;s what each one
-              means and why it matters.
-            </p>
-
-            <StaggerContainer className="space-y-4">
-              {commonIssues.map((item) => (
-                <StaggerItem key={item.issue}>
-                  <div className="border border-slate-200 rounded-xl p-5 hover:border-slate-300 transition-colors">
-                    <h3 className="font-bold text-slate-800 mb-2">{item.issue}</h3>
-                    <p className="text-sm text-slate-600 mb-2">
-                      <span className="font-semibold text-amber-700">Impact: </span>
-                      {item.impact}
-                    </p>
-                    <p className="text-sm text-slate-600">
-                      <span className="font-semibold text-emerald-700">Fix: </span>
-                      {item.fix}
-                    </p>
-                  </div>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </section>
-        </FadeIn>
-
-        {/* Section 4: How we help */}
-        <FadeIn direction="up">
-          <section>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400" />
-              <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-                How We Help
-              </span>
-            </div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-6">
-              From Audit to Compliant — We Handle It
-            </h2>
-            <div className="space-y-4 text-slate-600 leading-relaxed mb-8">
-              <p>
-                Our free site analyzer scans your website for the most common accessibility
-                issues in seconds. You get a detailed report with specific problems and
-                their business impact — no dev jargon, just plain-language explanations.
-              </p>
-              <p>
-                If you want help fixing what we find, our team handles the remediation.
-                We fix the accessibility issues, test the results, and give you a clean
-                report. Most sites can be brought into compliance within 1–2 weeks.
-              </p>
-            </div>
-
-            <div className="grid sm:grid-cols-3 gap-5">
-              {[
-                { step: '1', title: 'Scan', desc: 'Run our free analyzer to see where you stand', color: 'bg-emerald-500' },
-                { step: '2', title: 'Fix', desc: 'Our team resolves the issues we find', color: 'bg-blue-500' },
-                { step: '3', title: 'Verify', desc: 'Get a clean report you can share', color: 'bg-purple-500' },
-              ].map((item) => (
-                <div key={item.step} className="text-center p-6 rounded-xl bg-slate-50 border border-slate-100">
-                  <div className={`inline-flex items-center justify-center w-10 h-10 rounded-full ${item.color} text-white font-bold mb-3`}>
-                    {item.step}
-                  </div>
-                  <h3 className="font-bold text-slate-800 mb-1">{item.title}</h3>
-                  <p className="text-sm text-slate-500">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-        </FadeIn>
-
-        {/* Bottom CTA */}
-        <FadeIn direction="up">
-          <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-8 py-12 text-center">
-            <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/3 -translate-y-1/3" />
-            <div className="absolute bottom-0 right-0 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl translate-x-1/4 translate-y-1/4" />
-
-            <div className="relative z-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                Find Out Where You Stand
-              </h2>
-              <p className="text-slate-400 max-w-xl mx-auto mb-8">
-                Our free site analyzer checks for all the issues listed above — plus
-                SEO, content quality, and technical health. Takes about 10 seconds.
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link
-                  href="/site-analyzer"
-                  className="px-8 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg shadow-lg shadow-emerald-500/25 transition-all"
-                >
-                  Analyze My Site Free
-                </Link>
-                <Link
-                  href="/contact"
-                  className="px-8 py-4 rounded-xl border-2 border-blue-500 text-blue-400 hover:bg-blue-500/10 font-bold text-lg transition-all"
-                >
-                  Book a Free 15-Min Call
-                </Link>
-              </div>
-            </div>
-          </section>
-        </FadeIn>
-      </div>
-    </div>
+      <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8 md:py-24"><div className="rounded-3xl bg-[#e4eee6] p-8 text-center"><ShieldCheck className="mx-auto h-7 w-7 text-[#126b4e]" aria-hidden="true" /><h2 className="mt-4 text-3xl font-black">Keep the promise narrower than the problem.</h2><p className="mx-auto mt-3 max-w-2xl leading-7 text-[#50675e]">The $500 Website Improvement includes an evidence review and one agreed correction. Larger remediation programs, redesigns, and compliance certification are outside that contained scope.</p><Link href="/contact?offer=website-improvement" className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#126b4e] px-7 py-3 font-bold text-white">Start a website improvement <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></div></section>
+    </main>
   );
 }

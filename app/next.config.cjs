@@ -97,10 +97,15 @@ const nextConfig = {
   // Redirect retired application surfaces to the retained project request.
   async redirects() {
     return [
-      // Consolidated pages - merged into homepage
+      // Consolidated proof and support pages
       {
-        source: '/how-it-works',
-        destination: '/',
+        source: '/about',
+        destination: '/work',
+        permanent: true,
+      },
+      {
+        source: '/resume',
+        destination: '/work',
         permanent: true,
       },
       // Removed pages - redirect to closest equivalent
@@ -116,18 +121,18 @@ const nextConfig = {
       },
       {
         source: '/guide',
-        destination: '/',
+        destination: '/faq',
         permanent: true,
       },
       // Legacy routes
       {
         source: '/build',
-        destination: '/contact',
+        destination: '/contact?offer=website-improvement',
         permanent: true,
       },
       {
         source: '/build/success',
-        destination: '/contact',
+        destination: '/contact?offer=website-improvement',
         permanent: true,
       },
       {

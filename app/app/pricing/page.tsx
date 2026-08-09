@@ -8,18 +8,18 @@ import UnifiedPricingPage from '@/components/pricing/UnifiedPricingPage';
 // Quote authorization lives at /quote.
 
 export const metadata: Metadata = {
-  title: 'AI Growth Employee Engagements | NeedThisDone',
-  description: 'Start with an AI Growth Employee Pilot, then continue with a managed employee when the role is proven.',
+  title: 'Pricing | NeedThisDone',
+  description: 'Website Improvement is $500 with manual 50/50 invoicing. The managed AI operator is a proposal-based 30-day pilot.',
   alternates: { canonical: '/pricing' },
   openGraph: {
-    title: 'AI Growth Employee Engagements | NeedThisDone',
-    description: 'A supervised pilot followed by ongoing managed operation.',
+    title: 'Website Improvement & Managed AI Operator Pricing | NeedThisDone',
+    description: 'One published $500 website engagement and one proposal-based, human-led operator pilot.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Growth Employee Engagements | NeedThisDone',
-    description: 'A supervised pilot followed by ongoing managed operation.',
+    title: 'Website Improvement & Managed AI Operator Pricing | NeedThisDone',
+    description: 'One published $500 website engagement and one proposal-based, human-led operator pilot.',
   },
 };
 
