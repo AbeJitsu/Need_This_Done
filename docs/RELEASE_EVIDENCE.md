@@ -2,9 +2,21 @@
 
 This matrix defines what NeedThisDone may claim and the proof required before production promotion. A passing mock proves application branching, not database security or a third-party service.
 
-## Current paid-proof gate — 2026-08-08
+## Current local release-candidate gate — 2026-08-09
 
-This section supersedes older product-positioning entries below. The code change is deliberately preserve-first: it does not activate a model, sender, payment provider, hosted migration, or deployment.
+**Decision:** **Local release candidate proven.** This does not authorize hosted migration, production promotion, provider activation, payment, deployment, or legal publication.
+
+`ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh` reset only disposable local Supabase, replayed migrations `001`–`086`, restored the sanitized seed, and passed lint with zero warnings, TypeScript, 205/205 required unit tests with zero skips, 50/50 accessibility checks, the 49-page production build, local schema lint with no errors, schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, prospecting RLS 2/2, consultation integration 1/1, retained smoke 45 passed with one intentional mobile exclusion for a desktop-only navigation assertion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2. The bridge build and 5/5 offline bridge tests passed.
+
+**Provider and secret boundary:** OpenRouter is not configured: no API key or OAuth profile has been set up, and no provider request was made. The active local environment is one profile, with root `.env.local` linked to `.env.local.profile` and `app/.env.local` linked to the root active profile. If a key is later approved for local app work, it belongs only in `.env.local.profile`; a future Mac worker must use its own chmod-600 `--env-file` outside the repository. The assembly clears provider credentials and uses no payment, sender, calendar, deployment, publish, spend, account, or external-message action.
+
+**Release blockers and exceptions:** Hosted history is through `072`; local migrations `073`–`086` remain repository-only, and no hosted write occurred. `npm audit` reports 16 findings overall and 11 production-tree findings, so production promotion is blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.113.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
+
+**Rollback:** No hosted rollback is needed because no hosted state changed. Repeat the disposable local reset/assembly gate to reproduce the evidence. Revert focused local commits if necessary; preserve migration history, approval evidence, and media records. Treat any future hosted application of `073`–`086` as a separate backup, dry-run, approval, and forward-rollback gate.
+
+## Paid-proof gate history — 2026-08-08
+
+This historical section records the paid-proof position at that point. The current local backend gate above supersedes its older validation counts. The code change remains preserve-first: it does not activate a model, sender, payment provider, hosted migration, or deployment.
 
 | Product claim | Required proof | Current evidence | Release status |
 | --- | --- | --- | --- |
@@ -47,8 +59,8 @@ Latest current-slice verification (2026-08-08): `npm run verify:assembly` passed
 6. No generated local/hosted schema diff may be applied without classifying every statement against the retained product boundary.
 7. `npm run verify:assembly:fresh` is the final local delivery gate. It may reset only the local Supabase database and must run with optional external-provider credentials absent.
 
-The retained-schema manifest is mandatory within `npm run verify:database`. After pending migration `084`, it asserts 30 retained
+The retained-schema manifest is mandatory within `npm run verify:database`. After local migration `086`, it asserts the current retained
 RLS tables, including the growth profile, prospect, outreach, suppression, worker-task, sender-event,
-outcome, and model-evaluation tables, plus critical pilot/audit columns, isolation policies, lifecycle and cascade constraints, exact RPC grants,
-and the private project-attachment bucket against a real local PostgreSQL catalog. `health_check`
+outcome, model-evaluation, agent-run, approval, artifact, schedule, reservation, and heartbeat tables, plus critical pilot/audit columns, isolation policies, lifecycle and cascade constraints, exact RPC grants,
+and the private project-attachment and agent-media buckets against a real local PostgreSQL catalog. `health_check`
 replaces the retired `blog_posts` table in that final manifest.

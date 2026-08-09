@@ -21,9 +21,10 @@ the operator can see how the final artifact was produced.
 
 - The Mac mini initiates outbound HTTPS requests to Vercel and loopback
   WebSocket/RPC requests to OpenClaw. OpenClaw is never publicly exposed.
-- OPENROUTER_API_KEY and the OpenClaw gateway credential remain on the Mac
-  mini/OpenClaw host. They are never stored in Supabase or sent to the
-  browser.
+- No OpenRouter API key or OAuth profile is currently configured. If a worker
+  is later approved, its provider credential and OpenClaw gateway credential
+  remain only on the Mac mini/OpenClaw host. They are never stored in Supabase
+  or sent to the browser.
 - Agents may research public sources and prepare drafts or media. They cannot
   publish content, send email, spend money, or change connected accounts.
 - Generated media is private Supabase Storage content and previews use
@@ -34,6 +35,16 @@ the operator can see how the final artifact was produced.
 - Daily content defaults to one 7–15 second, 9:16 MP4 package per local day,
   with a 10-second default, thumbnail, script/storyboard, caption, and
   SRT/VTT subtitles. Voiceover is optional. Publishing is never automatic.
+
+## Environment-file boundary
+
+There is one active local profile, not two independent app environments: the
+root `.env.local` links to `.env.local.profile`, and `app/.env.local` links to
+the root active profile. If OpenRouter is later approved for local app work,
+store `OPENROUTER_API_KEY` only in the root `.env.local.profile`; never copy it
+to `app/.env.local`, an example file, or `.env.cloud.profile`. The private
+worker script intentionally requires a separate regular chmod-600 file passed
+with `--env-file`, kept outside the repository.
 
 ## Initial team
 
@@ -64,8 +75,9 @@ Before enabling a real worker:
 
 1. Apply and rehearse migration 086 locally.
 2. Set OPENCLAW_BRIDGE_SECRET only on Vercel and the Mac mini.
-3. Configure the Mac mini with the Vercel URL, operator owner UUID, worker ID,
-   OpenClaw loopback URL/token, and OpenRouter credentials.
+3. If worker activation is approved, configure the Mac mini with the Vercel
+   URL, operator owner UUID, worker ID, OpenClaw loopback URL/token, and the
+   separately stored OpenRouter credential.
 4. Pair or authorize the pinned OpenClaw Gateway protocol version and run the
    loopback smoke test.
 5. Install the launchd supervisor only after signed heartbeat, lease, artifact,
