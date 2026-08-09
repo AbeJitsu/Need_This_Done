@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { verifyAdmin } from '@/lib/api-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { createProspectingSender, getProspectingSenderProvider } from '@/lib/prospecting-sender';
+import { isApprovedSenderConfigured } from '@/lib/prospecting';
 
 const schema = z.object({ messageId: z.string().uuid() });
 
@@ -17,8 +18,9 @@ export async function POST(request: Request) {
   if (!message) return NextResponse.json({ error: 'Message not found.' }, { status: 404 });
   if (message.approval_status === 'sent' && message.provider_message_id) return NextResponse.json({ message, duplicate: true });
   if (message.approval_status !== 'approved') return NextResponse.json({ error: 'Only approved messages may be sent.' }, { status: 409 });
-  const { data: profile } = await supabase.from('growth_profiles').select('sender_name, emergency_stop').eq('id', message.profile_id).single();
+  const { data: profile } = await supabase.from('growth_profiles').select('sender_name, sender_email, emergency_stop').eq('id', message.profile_id).single();
   if (!profile || profile.emergency_stop) return NextResponse.json({ error: 'Outreach is stopped.' }, { status: 409 });
+  if (!isApprovedSenderConfigured(profile.sender_name, profile.sender_email) || message.sender_email !== profile.sender_email) return NextResponse.json({ error: 'No approved sender is configured for this draft.' }, { status: 409 });
   const sender = createProspectingSender();
   if (!sender) return NextResponse.json({ error: `No approved prospecting sender is configured (provider: ${getProspectingSenderProvider()}).` }, { status: 503 });
 

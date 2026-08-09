@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { verifyAdmin } from '@/lib/api-auth';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
-import { isPublicSourceUrl, taskIdempotencyKey } from '@/lib/prospecting';
+import { isPublicSourceUrl, localDateForTimezone, taskIdempotencyKey } from '@/lib/prospecting';
 
 const prospectSchema = z.object({ companyName: z.string().trim().min(1).max(240), contactName: z.string().trim().max(160).optional(), contactTitle: z.string().trim().max(160).optional(), email: z.string().email().optional(), websiteUrl: z.string().url(), icpMatchScore: z.number().int().min(0).max(100), icpMatchReason: z.string().trim().min(1).max(2000), sourceUrl: z.string().url(), evidence: z.array(z.string().trim().min(1).max(1000)).min(1).max(20), contactPath: z.string().trim().max(500).optional(), emailStatus: z.enum(['unknown', 'public', 'verified', 'invalid']).default('unknown') });
 const schema = z.object({ prospects: z.array(prospectSchema).max(100).optional(), requestedDate: z.string().date().optional() });
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid discovery request.' }, { status: 400 });
   if ((parsed.data.prospects || []).some((prospect) => !isPublicSourceUrl(prospect.sourceUrl) || !isPublicSourceUrl(prospect.websiteUrl))) return NextResponse.json({ error: 'Discovery only accepts public HTTPS source URLs.' }, { status: 400 });
   const supabase = await createSupabaseServerClient();
-  const { data: profile, error: profileError } = await supabase.from('growth_profiles').select('id, daily_prospect_cap, emergency_stop').eq('owner_id', auth.user.id).maybeSingle();
+  const { data: profile, error: profileError } = await supabase.from('growth_profiles').select('id, daily_prospect_cap, emergency_stop, timezone, model_route, selected_model_id').eq('owner_id', auth.user.id).maybeSingle();
   if (profileError) return NextResponse.json({ error: 'Growth profile is not available yet.' }, { status: 503 });
   if (!profile) return NextResponse.json({ error: 'Configure a growth profile first.' }, { status: 409 });
   if (profile.emergency_stop) return NextResponse.json({ error: 'Emergency stop is active.' }, { status: 409 });
@@ -28,8 +28,13 @@ export async function POST(request: Request) {
     inserted.push(data);
   }
   if (!candidates.length) {
-    const key = taskIdempotencyKey('discover_prospects', `${profile.id}:${parsed.data.requestedDate || new Date().toISOString().slice(0, 10)}`);
-    const { data: task, error } = await supabase.from('agent_tasks').upsert({ profile_id: profile.id, task_type: 'discover_prospects', input: { requestedDate: parsed.data.requestedDate || new Date().toISOString().slice(0, 10), publicWebOnly: true }, idempotency_key: key }, { onConflict: 'idempotency_key' }).select('*').single();
+    if (profile.model_route === 'evaluation-required' || !profile.selected_model_id) return NextResponse.json({ error: 'Queueing is unavailable until a measured model is selected.' }, { status: 409 });
+    const profileDate = localDateForTimezone(profile.timezone);
+    const requestedDate = parsed.data.requestedDate || profileDate;
+    if (!requestedDate) return NextResponse.json({ error: 'The profile timezone is invalid.' }, { status: 409 });
+    if (parsed.data.requestedDate && parsed.data.requestedDate !== profileDate) return NextResponse.json({ error: 'The manual fallback can queue today only.' }, { status: 400 });
+    const key = taskIdempotencyKey('discover_prospects', `${profile.id}:${requestedDate}`);
+    const { data: task, error } = await supabase.from('agent_tasks').upsert({ profile_id: profile.id, task_type: 'discover_prospects', input: { requestedDate, timezone: profile.timezone, targetAcceptedDossiers: 2, publicWebOnly: true, manuallyQueued: true }, idempotency_key: key }, { onConflict: 'idempotency_key' }).select('*').single();
     if (error) return NextResponse.json({ error: 'Discovery task could not be queued.' }, { status: 500 });
     return NextResponse.json({ queued: true, task });
   }
