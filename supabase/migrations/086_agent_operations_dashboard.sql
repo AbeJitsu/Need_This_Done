@@ -45,6 +45,7 @@ create table public.agent_runs (
   input jsonb not null default '{}'::jsonb,
   output jsonb,
   idempotency_key uuid not null,
+  request_hash text not null,
   requested_by uuid not null references auth.users(id) on delete restrict,
   paused_at timestamptz,
   completed_at timestamptz,
@@ -378,6 +379,13 @@ declare
   reviewer_id uuid;
   brand_row public.brand_profiles;
   schedule_row public.content_schedules;
+  request_hash text := md5(
+    target_workflow_type || ':' || trim(coalesce(target_title, '')) || ':'
+    || coalesce(target_input, '{}'::jsonb)::text || ':'
+    || coalesce(target_local_date::text, '') || ':'
+    || coalesce(target_timezone, '') || ':'
+    || coalesce(target_scheduled_for::text, '')
+  );
 begin
   if actor_id is null or not public.is_admin(actor_id) then
     raise exception 'admin_required' using errcode = '42501';
@@ -394,6 +402,9 @@ begin
   where owner_id = actor_id and idempotency_key = target_idempotency_key
   for update;
   if found then
+    if existing_run.request_hash <> request_hash then
+      raise exception 'agent_run_idempotency_conflict' using errcode = '23505';
+    end if;
     return jsonb_build_object('run', to_jsonb(existing_run), 'duplicate', true);
   end if;
 
@@ -417,8 +428,8 @@ begin
     end if;
   end if;
 
-  insert into public.agent_runs (owner_id, workflow_type, title, input, idempotency_key, requested_by)
-  values (actor_id, target_workflow_type, trim(target_title), coalesce(target_input, '{}'::jsonb), target_idempotency_key, actor_id)
+  insert into public.agent_runs (owner_id, workflow_type, title, input, idempotency_key, request_hash, requested_by)
+  values (actor_id, target_workflow_type, trim(target_title), coalesce(target_input, '{}'::jsonb), target_idempotency_key, request_hash, actor_id)
   returning * into run_row;
 
   insert into public.agent_orchestration_tasks (owner_id, run_id, task_key, agent_role, agent_provider, model_id, task_type, input)
