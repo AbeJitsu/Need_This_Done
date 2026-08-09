@@ -17,10 +17,36 @@ const automationIncludes = [
 export default function ServicesPageClient() {
   return (
     <main className="bg-[#f7f4ed] text-[#183229]">
-      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28">
-        <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Services</p>
-        <h1 className="mt-5 max-w-4xl font-playfair text-5xl font-black leading-tight md:text-7xl">Choose the shape of the fix.</h1>
-        <p className="mt-6 max-w-3xl text-lg leading-8 text-[#50675e]">One visible website problem calls for a targeted fix. Work that keeps repeating across tools calls for an automation system.</p>
+      <section className="border-b border-[#183229]/10 bg-[#f7f4ed]">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[1.18fr_.82fr] lg:gap-16 lg:px-12">
+          <div className="max-w-3xl">
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">Services</p>
+            <h1 className="mt-5 max-w-none font-playfair text-[2.75rem] font-black leading-[.98] tracking-tight sm:max-w-[12ch] sm:text-7xl lg:text-[clamp(4rem,5vw,6rem)]">Choose the shape of the fix.</h1>
+            <p className="mt-7 max-w-2xl text-lg leading-8 text-[#50675e] md:text-xl">One visible website problem calls for a targeted fix. Work that keeps repeating across tools calls for an automation system.</p>
+          </div>
+
+          <aside className="relative overflow-hidden rounded-[2rem] bg-[#18372e] p-7 text-white sm:p-9" aria-labelledby="services-choice-heading">
+            <div className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-emerald-300/15 blur-3xl" aria-hidden="true" />
+            <div className="pointer-events-none absolute -bottom-24 -left-12 h-44 w-44 rounded-full bg-[#d9b96e]/20 blur-3xl" aria-hidden="true" />
+            <div className="relative">
+              <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">Start with what is stuck</p>
+              <h2 id="services-choice-heading" className="mt-4 max-w-sm font-playfair text-3xl font-black leading-tight sm:text-4xl">Choose by the shape of the work.</h2>
+              <div className="mt-8 divide-y divide-white/10 border-y border-white/10">
+                <Link href="#website-improvement" className="group flex items-start gap-4 py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200">
+                  <span className="text-xs font-bold text-emerald-300">01</span>
+                  <span className="flex-1"><span className="block font-black">One visible issue</span><span className="mt-1 block text-sm leading-6 text-emerald-50/70">Targeted fix, contained to one agreed change.</span></span>
+                  <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-emerald-300 transition group-hover:translate-x-1" aria-hidden="true" />
+                </Link>
+                <Link href="#ai-operator" className="group flex items-start gap-4 py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200">
+                  <span className="text-xs font-bold text-emerald-300">02</span>
+                  <span className="flex-1"><span className="block font-black">Repeating work</span><span className="mt-1 block text-sm leading-6 text-emerald-50/70">Automation setup, shaped around the desired result.</span></span>
+                  <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-emerald-300 transition group-hover:translate-x-1" aria-hidden="true" />
+                </Link>
+              </div>
+              <p className="mt-6 text-sm leading-6 text-emerald-50/65">The detailed scope, boundary, and next step are below.</p>
+            </div>
+          </aside>
+        </div>
       </section>
 
       <section className="mx-auto grid max-w-6xl gap-6 px-5 pb-20 sm:px-8 md:pb-28 lg:grid-cols-2">

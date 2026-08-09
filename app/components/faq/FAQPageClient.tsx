@@ -1,247 +1,205 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
-import { FadeIn, StaggerContainer, StaggerItem, RevealSection } from '@/components/motion';
-import CircleBadge from '@/components/CircleBadge';
-import CTASection from '@/components/CTASection';
+import { ArrowRight, CheckCircle2, ChevronDown, HelpCircle } from 'lucide-react';
 import { ContentSection, ContentItem, ContentCollection } from '@/components/content/ContentStructure';
+import { FadeIn, RevealSection, StaggerContainer, StaggerItem } from '@/components/motion';
 import type { FAQPageContent } from '@/lib/page-content-types';
-import { ChevronDown } from 'lucide-react';
-
-// ============================================================================
-// FAQ Page Client - Dark Glass Redesign
-// ============================================================================
-// Dark hero → Dark glass accordion section → Dark CTA
-// Preserves the Framer Motion accordion interaction.
 
 interface FAQPageClientProps {
   content: FAQPageContent;
 }
 
-// Color maps for dark-on-dark card styling (BJJ belt progression)
-const cardHoverRing: Record<string, string> = {
-  green: 'hover:border-emerald-500/40 hover:ring-1 hover:ring-emerald-500/20',
-  blue: 'hover:border-blue-500/40 hover:ring-1 hover:ring-blue-500/20',
-  purple: 'hover:border-purple-500/40 hover:ring-1 hover:ring-purple-500/20',
-  gold: 'hover:border-amber-500/40 hover:ring-1 hover:ring-amber-500/20',
-};
+function renderAnswer(answer: string, links?: Array<{ text: string; href: string }>): ReactNode {
+  if (!links || links.length === 0) return answer;
 
-const questionText: Record<string, string> = {
-  green: 'text-emerald-400',
-  blue: 'text-blue-400',
-  purple: 'text-purple-400',
-  gold: 'text-amber-400',
-};
-
-// Helper: Render Answer with Links
-function renderAnswer(answer: string, links?: Array<{ text: string; href: string }>) {
-  if (!links || links.length === 0) {
-    return answer;
-  }
-
-  const result = answer;
-  const parts: (string | JSX.Element)[] = [];
+  const parts: ReactNode[] = [];
   let lastIndex = 0;
 
-  links.forEach((link, idx) => {
-    const linkIndex = result.indexOf(link.text, lastIndex);
-    if (linkIndex !== -1) {
-      if (linkIndex > lastIndex) {
-        parts.push(result.slice(lastIndex, linkIndex));
-      }
-      parts.push(
-        <Link
-          key={idx}
-          href={link.href}
-          className="text-blue-400 font-medium hover:underline"
-        >
-          {link.text}
-        </Link>
-      );
-      lastIndex = linkIndex + link.text.length;
-    }
+  links.forEach((link, index) => {
+    const linkIndex = answer.indexOf(link.text, lastIndex);
+    if (linkIndex === -1) return;
+
+    if (linkIndex > lastIndex) parts.push(answer.slice(lastIndex, linkIndex));
+    parts.push(
+      <Link
+        key={`${link.href}-${index}`}
+        href={link.href}
+        className="font-bold text-[#126b4e] underline decoration-[#126b4e]/30 underline-offset-4 transition hover:decoration-[#126b4e]"
+      >
+        {link.text}
+      </Link>,
+    );
+    lastIndex = linkIndex + link.text.length;
   });
 
-  if (lastIndex < result.length) {
-    parts.push(result.slice(lastIndex));
-  }
-
+  if (lastIndex < answer.length) parts.push(answer.slice(lastIndex));
   return parts.length > 0 ? parts : answer;
 }
 
-export default function FAQPageClient({ content: initialContent }: FAQPageClientProps) {
-  const content = initialContent;
-
+export default function FAQPageClient({ content }: FAQPageClientProps) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
-  const toggleExpanded = (index: number) => {
-    setExpandedIndex(expandedIndex === index ? null : index);
-  };
-
   return (
-    <div className="min-h-screen">
-      {/* ================================================================
-          Hero Section - Dark Editorial
-          ================================================================ */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        {/* Decorative blurs */}
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-amber-500/8 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+    <main className="bg-[#f7f4ed] text-[#183229]">
+      <section className="relative overflow-hidden border-b border-[#183229]/10 bg-[#18372e] text-white">
+        <div className="pointer-events-none absolute -right-40 -top-48 h-[34rem] w-[34rem] rounded-full bg-emerald-300/15 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -bottom-56 left-1/3 h-[28rem] w-[28rem] rounded-full bg-[#d9b96e]/20 blur-3xl" aria-hidden="true" />
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 pt-16 md:pt-24 pb-14 md:pb-20">
+        <div className="relative mx-auto grid max-w-7xl items-end gap-12 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[1.05fr_.95fr] lg:gap-20 lg:px-12">
           <ContentSection sectionKey="header" label="Page Header">
             <FadeIn direction="up" triggerOnScroll={false}>
-              {/* Accent line + label */}
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-1 rounded-full bg-gradient-to-r from-amber-400 to-purple-400" />
-                <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
+              <div className="max-w-3xl">
+                <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.2em] text-emerald-200">
+                  <HelpCircle className="h-4 w-4" aria-hidden="true" />
                   FAQ
-                </span>
+                </p>
+                <h1 className="mt-6 max-w-3xl font-playfair text-5xl font-black leading-[1.02] tracking-tight sm:text-6xl md:text-7xl">
+                  {content.header.title}
+                </h1>
+                <p className="mt-7 max-w-2xl text-lg leading-8 text-emerald-50/75 md:text-xl">
+                  {content.header.description}
+                </p>
               </div>
-
-              <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4">
-                {content.header.title}
-              </h1>
-              <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
-                {content.header.description}
-              </p>
             </FadeIn>
           </ContentSection>
+
+          <aside className="rounded-[2rem] border border-white/15 bg-white/[.08] p-6 backdrop-blur-sm sm:p-8" aria-labelledby="faq-overview-heading">
+            <div className="flex items-center gap-3 text-emerald-200">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-emerald-300 text-[#18372e]">
+                <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <p className="text-xs font-bold uppercase tracking-[.2em]">A clear starting point</p>
+            </div>
+            <h2 id="faq-overview-heading" className="mt-6 font-playfair text-3xl font-black">Know what stays visible.</h2>
+            <p className="mt-3 leading-7 text-emerald-50/70">
+              The useful answer is usually the one that makes the next decision easier.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+              {[
+                ['01', 'Commitment', 'What is included?'],
+                ['02', 'Boundary', 'What needs review?'],
+                ['03', 'Next step', 'What happens after?'],
+              ].map(([number, title, description]) => (
+                <div key={number} className="rounded-2xl border border-white/10 bg-black/10 p-4">
+                  <span className="text-xs font-bold text-emerald-300">{number}</span>
+                  <p className="mt-3 text-sm font-bold text-white">{title}</p>
+                  <p className="mt-1 text-sm leading-5 text-emerald-50/65">{description}</p>
+                </div>
+              ))}
+            </div>
+          </aside>
         </div>
       </section>
 
-      {/* ================================================================
-          FAQ List - Dark glass cards
-          ================================================================ */}
-      <section className="py-12 md:py-20 bg-gradient-to-b from-slate-900 to-slate-900">
-        {/* Subtle divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12 md:mb-20" />
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          {/* Section intro */}
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-8 h-1 rounded-full bg-gradient-to-r from-emerald-400 to-blue-400" />
-            <span className="text-sm font-semibold tracking-widest uppercase text-slate-400">
-              Click any question to reveal the answer
-            </span>
+      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[.72fr_1.28fr] lg:gap-20 lg:px-12">
+        <div className="lg:sticky lg:top-24 lg:self-start">
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-[#126b4e]">The short version</p>
+          <h2 className="mt-4 font-playfair text-4xl font-black leading-tight md:text-5xl">Keep the open questions small.</h2>
+          <p className="mt-5 max-w-md text-lg leading-8 text-[#50675e]">
+            Open a question when you need it. Each answer is written to clarify the work, the boundary, or the next useful move.
+          </p>
+          <div className="mt-8 rounded-[1.5rem] border border-[#183229]/10 bg-[#e4eee6] p-5">
+            <p className="text-sm font-bold text-[#183229]">Still unsure?</p>
+            <p className="mt-2 text-sm leading-6 text-[#50675e]">Share the context you have and we can clarify the right starting point.</p>
+            <Link href="/contact" className="mt-5 inline-flex items-center gap-2 font-bold text-[#126b4e]">
+              Contact <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
           </div>
+        </div>
 
-          {/* FAQ List */}
-          <ContentSection sectionKey="items" label="FAQ Items">
-            <StaggerContainer as="div">
+        <ContentSection sectionKey="items" label="FAQ Items">
+          <StaggerContainer as="div" className="space-y-4">
             <ContentCollection
               sectionKey="items"
               arrayField="items"
-              itemIds={content.items.map((_, i) => `faq-item-${i}`)}
-              className="space-y-4 mb-10"
+              itemIds={content.items.map((_, index) => `faq-item-${index}`)}
+              className="space-y-4"
             >
               {content.items.map((faq, index) => {
-                const colors = ['green', 'blue', 'purple', 'gold'] as const;
-                const color = colors[index % 4];
                 const isExpanded = expandedIndex === index;
+                const answerId = `faq-answer-${index}`;
 
                 return (
                   <StaggerItem key={`faq-item-${index}`}>
-                  <ContentItem
-                    sectionKey="items"
-                    arrayField="items"
-                    index={index}
-                    label={faq.question}
-                    content={faq as unknown as Record<string, unknown>}
-                    sortable
-                    sortId={`faq-item-${index}`}
-                  >
-                    <div
-                      className={`
-                        group
-                        bg-white/5 rounded-2xl backdrop-blur-sm
-                        border ${isExpanded ? 'border-white/20' : 'border-white/10'}
-                        ${cardHoverRing[color]}
-                        transition-all duration-300 ease-out
-                        ${isExpanded ? 'shadow-lg shadow-black/20' : 'shadow-sm shadow-black/10'}
-                      `}
+                    <ContentItem
+                      sectionKey="items"
+                      arrayField="items"
+                      index={index}
+                      label={faq.question}
+                      content={faq as unknown as Record<string, unknown>}
+                      sortable
+                      sortId={`faq-item-${index}`}
                     >
-                      {/* Question - clickable header */}
-                      <button
-                        onClick={() => toggleExpanded(index)}
-                        className={`
-                          w-full p-5 md:p-6
-                          flex items-center gap-4
-                          text-left
-                          cursor-pointer
-                          transition-colors duration-200
-                          ${isExpanded ? 'bg-white/5' : 'hover:bg-white/5'}
-                          rounded-t-2xl
-                          ${!isExpanded && 'rounded-b-2xl'}
-                        `}
-                        aria-expanded={isExpanded}
-                      >
-                        <CircleBadge number={index + 1} color={color} size="sm" />
-                        <h2 className={`flex-1 text-lg md:text-xl font-bold tracking-tight ${questionText[color]}`}>
-                          {faq.question}
-                        </h2>
-                        <motion.div
-                          animate={{ rotate: isExpanded ? 180 : 0 }}
-                          transition={{ duration: 0.3 }}
+                      <article className={`overflow-hidden rounded-[1.5rem] border bg-white transition ${isExpanded ? 'border-[#126b4e]/40 shadow-lg shadow-emerald-950/5' : 'border-[#183229]/10 hover:border-[#126b4e]/35'}`}>
+                        <button
+                          type="button"
+                          onClick={() => setExpandedIndex(isExpanded ? null : index)}
+                          className="flex min-h-20 w-full items-center gap-4 px-5 py-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#126b4e] sm:px-7"
+                          aria-expanded={isExpanded}
+                          aria-controls={answerId}
                         >
-                          <ChevronDown
-                            className="w-5 h-5 text-slate-500 group-hover:text-slate-300"
-                          />
-                        </motion.div>
-                      </button>
+                          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#e4eee6] text-xs font-black text-[#126b4e]">
+                            {String(index + 1).padStart(2, '0')}
+                          </span>
+                          <span className="flex-1 text-lg font-black leading-7 text-[#183229] sm:text-xl">{faq.question}</span>
+                          <ChevronDown className={`h-5 w-5 shrink-0 text-[#126b4e] transition-transform ${isExpanded ? 'rotate-180' : ''}`} aria-hidden="true" />
+                        </button>
 
-                      {/* Answer - expandable content */}
-                      <AnimatePresence initial={false}>
-                      {isExpanded && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3, ease: 'easeOut' }}
-                          className="overflow-hidden"
-                        >
-                          <div className="px-5 md:px-6 pb-5 md:pb-6 pt-2 ml-12 md:ml-14 border-t border-white/10">
-                            <p className="text-slate-400 leading-relaxed">
-                              {renderAnswer(faq.answer, faq.links)}
-                            </p>
-                          </div>
-                        </motion.div>
-                      )}
-                      </AnimatePresence>
-                    </div>
-                  </ContentItem>
+                        <AnimatePresence initial={false}>
+                          {isExpanded && (
+                            <motion.div
+                              id={answerId}
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.25, ease: 'easeOut' }}
+                              className="overflow-hidden"
+                            >
+                              <div className="border-t border-[#183229]/10 px-5 pb-6 pt-5 sm:px-7 sm:pl-[6.75rem]">
+                                <p className="max-w-2xl text-base leading-8 text-[#50675e]">{renderAnswer(faq.answer, faq.links)}</p>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </article>
+                    </ContentItem>
                   </StaggerItem>
                 );
               })}
             </ContentCollection>
-            </StaggerContainer>
-          </ContentSection>
-        </div>
+          </StaggerContainer>
+        </ContentSection>
       </section>
 
-      {/* ================================================================
-          CTA Section - Dark Editorial
-          ================================================================ */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-        <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
-
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-24">
-          <ContentSection sectionKey="cta" label="Call to Action">
-            <RevealSection>
-            <CTASection
-              title={content.cta.title}
-              description={content.cta.description}
-              buttons={content.cta.buttons}
-              hoverColor={content.cta.hoverColor || 'gold'}
-            />
-            </RevealSection>
-          </ContentSection>
-        </div>
+      <section className="mx-auto max-w-7xl px-5 pb-16 sm:px-8 md:pb-24 lg:px-12">
+        <ContentSection sectionKey="cta" label="Call to Action">
+          <RevealSection>
+            <div className="overflow-hidden rounded-[2rem] bg-[#18372e] p-8 text-white sm:p-12">
+              <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+                <div className="max-w-2xl">
+                  <p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-200">The next useful move</p>
+                  <h2 className="mt-4 font-playfair text-4xl font-black leading-tight md:text-5xl">{content.cta.title}</h2>
+                  {content.cta.description && <p className="mt-4 text-lg leading-8 text-emerald-50/75">{content.cta.description}</p>}
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  {content.cta.buttons.map((button, index) => (
+                    <Link
+                      key={`${button.href}-${index}`}
+                      href={button.href}
+                      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-7 py-3 font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#18372e] ${index === 0 ? 'bg-emerald-300 text-[#18372e] hover:bg-emerald-200' : 'border border-white/20 text-white hover:bg-white/10'}`}
+                    >
+                      {button.text} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </RevealSection>
+        </ContentSection>
       </section>
-    </div>
+    </main>
   );
 }
