@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-for (const route of ['/', '/services', '/pricing', '/contact']) {
+for (const route of ['/', '/services', '/pricing', '/contact', '/login']) {
   test(`${route} renders without browser defects`, async ({ page }) => {
     const errors: string[] = [];
     page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
@@ -13,6 +13,14 @@ for (const route of ['/', '/services', '/pricing', '/contact']) {
     expect(errors).toEqual([]);
   });
 }
+
+test('login keeps the private workspace boundary visible', async ({ page }) => {
+  await page.goto('/login');
+  await expect(page.getByRole('heading', { name: /continue where the work is clear/i })).toBeVisible();
+  await expect(page.getByText('A deliberate boundary', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible();
+  await expect(page.getByLabel('Email Address')).toBeVisible();
+});
 
 test('homepage makes the problem and the two starting points clear', async ({ page }) => {
   await page.goto('/');

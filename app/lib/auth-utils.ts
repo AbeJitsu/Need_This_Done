@@ -31,5 +31,5 @@ export function getAuthDescription(isForgotPassword: boolean, isRecoveryMode: bo
     return 'Use the emergency account path if Google sign-in is unavailable';
   }
   
-  return 'Good to see you! Sign in to check on your projects';
+  return 'Sign in to review your work, evidence, and next step';
 }
