@@ -1,16 +1,17 @@
 import { createWorkerSignature } from '@/lib/prospecting';
 import { DEEPSEEK_V4_FLASH_FALLBACK, MODEL_EVALUATION_TASKS, type ModelEvaluationTaskId } from '@/lib/model-evaluation';
+import type { OpenRouterModelConfig } from '@/lib/openrouter-model-config';
 import { OpenRouterClient, estimateOpenRouterRequestCost, resolveBenchmarkCandidates, type OpenRouterModel, type ResolvedBenchmarkCandidate } from '@/lib/openrouter-core';
 
 type FetchLike = typeof fetch;
 
 type BenchmarkConfig = {
   profile: { id: string; timezone: string; modelRoute: string; selectedModelId: string | null; perRunModelCap: number; dailyModelCap: number };
-  candidates: Array<{ candidate_id: string; provider_model_id: string; candidate_kind: 'free' | 'deepseek-fallback' }>;
+  candidates: Array<{ candidate_id: string; provider_model_id: string; candidate_kind: 'free' | 'deepseek-fallback' | 'configured-primary' | 'configured-test' }>;
   policy: { status: string; defaultModel: string | null; rationale: string };
 };
 
-type BenchmarkCandidate = ResolvedBenchmarkCandidate & { candidateKind: 'free' | 'deepseek-fallback' };
+type BenchmarkCandidate = ResolvedBenchmarkCandidate & { candidateKind: 'free' | 'deepseek-fallback' | 'configured-primary' | 'configured-test' };
 
 const benchmarkResponseSchema = {
   type: 'object',
@@ -95,6 +96,7 @@ async function runCandidate(options: {
   transport: SignedBenchmarkTransport;
   openRouter: OpenRouterClient;
   perRunCap: number;
+  comparisonOnly?: boolean;
 }) {
   const estimate = estimateOpenRouterRequestCost(options.catalogModel, { maxPromptTokens: 1_000, maxCompletionTokens: 350, maxWebSearchCalls: 0 });
   if (estimate === null || estimate > options.perRunCap || estimate > 0.10) {
@@ -128,6 +130,7 @@ async function runCandidate(options: {
         repairRequired: !valid,
         notes: valid ? 'Structured benchmark response validated against the fixed sanitized task.' : 'The structured benchmark response was malformed.',
         providerUsage: completion.usage.raw,
+        comparisonOnly: options.comparisonOnly === true,
       });
       if (result.overage) throw new Error('OpenRouter reported a benchmark cost over the reservation.');
     } catch (error) {
@@ -143,6 +146,7 @@ async function runCandidate(options: {
         failed: true,
         repairRequired: true,
         notes: error instanceof Error ? error.message.slice(0, 4_000) : 'The benchmark request failed.',
+        comparisonOnly: options.comparisonOnly === true,
       });
     }
   }
@@ -181,4 +185,50 @@ export async function runMeasuredBenchmark(options: {
   await runCandidate({ ...options, candidate: fallback, catalogModel: fallbackModel, perRunCap: afterFree.profile.perRunModelCap });
   const completed = await options.transport.config(options.workerId, options.profileId);
   return completed.policy;
+}
+
+function configuredCandidate(kind: 'configured-primary' | 'configured-test', modelId: string): BenchmarkCandidate {
+  return {
+    candidateId: kind,
+    providerModelId: modelId,
+    label: kind === 'configured-primary' ? 'Configured primary model' : 'Configured comparison model',
+    candidateKind: kind,
+    catalogMetadata: {},
+  };
+}
+
+/** Compare the two explicitly configured models using identical sanitized tasks. */
+export async function runConfiguredModelComparison(options: {
+  workerId: string;
+  profileId: string;
+  transport: SignedBenchmarkTransport;
+  openRouter: OpenRouterClient;
+  modelConfig: OpenRouterModelConfig;
+}) {
+  const initial = await options.transport.config(options.workerId, options.profileId);
+  const models = await options.openRouter.listModels();
+  const candidates = [
+    configuredCandidate('configured-primary', options.modelConfig.primaryModel),
+    configuredCandidate('configured-test', options.modelConfig.testModel),
+  ];
+  const catalogModels = candidates.map((candidate) => {
+    const catalogModel = models.find((model) => model.id === candidate.providerModelId);
+    if (!catalogModel || catalogModel.availability !== 'available') {
+      throw new Error('A configured comparison model is unavailable in the current OpenRouter catalog.');
+    }
+    return { candidate, catalogModel };
+  });
+
+  await options.transport.candidates(options.workerId, options.profileId, candidates);
+  for (const { candidate, catalogModel } of catalogModels) {
+    await runCandidate({
+      ...options,
+      candidate,
+      catalogModel,
+      perRunCap: initial.profile.perRunModelCap,
+      comparisonOnly: true,
+    });
+  }
+
+  return { comparedModels: candidates.length, comparedTasks: candidates.length * MODEL_EVALUATION_TASKS.length };
 }

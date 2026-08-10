@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { getOpenRouterModelConfig } from '@/lib/openrouter-config';
 import { DEEPSEEK_V4_FLASH_FALLBACK, freeCandidatesCompleted, selectModelRoutingPolicy, summarizeModelEvaluation, type ModelCandidate, type ModelEvaluationRecord, type ModelEvaluationTaskId } from '@/lib/model-evaluation';
 import { localDateForTimezone } from '@/lib/prospecting';
 import { consumeWorkerNonce, isSignedWorkerFailure, verifySignedWorkerRequest } from '@/lib/private-worker-auth';
@@ -22,6 +23,7 @@ const schema = z.object({
   repairRequired: z.boolean(),
   notes: z.string().trim().max(4_000).default(''),
   providerUsage: z.record(z.string(), z.unknown()).default({}),
+  comparisonOnly: z.boolean().default(false),
 }).strict();
 
 function recordFromRow(row: Record<string, unknown>): ModelEvaluationRecord {
@@ -39,10 +41,20 @@ export async function POST(request: Request) {
   if (replay) return replay;
 
   const admin = getSupabaseAdmin();
-  const { data: profile } = await admin.from('growth_profiles').select('id, owner_id, timezone, emergency_stop, model_route').eq('id', parsed.data.profileId).maybeSingle();
-  if (!profile || profile.emergency_stop || profile.model_route !== 'evaluation-required') return NextResponse.json({ error: 'Benchmarking is unavailable after model selection or an emergency stop.' }, { status: 409 });
+  const { data: profile } = await admin.from('growth_profiles').select('id, owner_id, timezone, emergency_stop, model_route, selected_model_id').eq('id', parsed.data.profileId).maybeSingle();
+  if (!profile || profile.emergency_stop) return NextResponse.json({ error: 'Benchmarking is unavailable for this profile.' }, { status: 409 });
   const { data: candidate } = await admin.from('model_benchmark_candidates').select('*').eq('profile_id', profile.id).eq('candidate_id', parsed.data.candidateId).eq('provider_model_id', parsed.data.providerModelId).eq('is_active', true).maybeSingle();
   if (!candidate) return NextResponse.json({ error: 'The benchmark model was not catalog-persisted for this profile.' }, { status: 409 });
+  const comparisonCandidate = candidate.candidate_kind === 'configured-primary' || candidate.candidate_kind === 'configured-test';
+  if (parsed.data.comparisonOnly !== comparisonCandidate) return NextResponse.json({ error: 'The benchmark route does not match the registered candidate.' }, { status: 409 });
+  if (comparisonCandidate) {
+    let configured: ReturnType<typeof getOpenRouterModelConfig>;
+    try { configured = getOpenRouterModelConfig(); } catch { return NextResponse.json({ error: 'Configured model comparison is unavailable.' }, { status: 503 }); }
+    const expectedModel = candidate.candidate_kind === 'configured-primary' ? configured.primaryModel : configured.testModel;
+    if (parsed.data.providerModelId !== expectedModel) return NextResponse.json({ error: 'The comparison model does not match the private model configuration.' }, { status: 409 });
+  } else if (profile.model_route !== 'evaluation-required') {
+    return NextResponse.json({ error: 'Benchmarking is unavailable after model selection or an emergency stop.' }, { status: 409 });
+  }
 
   const { data: reconciliation, error: reconciliationError } = await admin.rpc('reconcile_private_model_usage', {
     target_reservation_key: parsed.data.reservationKey,
@@ -89,6 +101,9 @@ export async function POST(request: Request) {
   if (recordError || !record) return NextResponse.json({ error: 'Benchmark evidence could not be recorded.' }, { status: 500 });
 
   const nextRecords = [...existingRecords.filter((entry) => !(entry.candidateId === parsed.data.candidateId && entry.taskId === parsed.data.taskId && entry.evaluatedOn === evaluatedOn)), recordFromRow(record as Record<string, unknown>)];
+  if (comparisonCandidate) {
+    return NextResponse.json({ record, comparisonOnly: true, primaryRoute: profile.model_route });
+  }
   const fallback = candidates.find((item) => item.kind === 'deepseek-fallback') || DEEPSEEK_V4_FLASH_FALLBACK;
   const policy = selectModelRoutingPolicy(nextRecords, freeCandidates, fallback);
   const modelUpdate = policy.status === 'evaluation-required'

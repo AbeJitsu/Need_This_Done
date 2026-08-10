@@ -33,7 +33,7 @@ export type ModelEvaluationTaskId = (typeof MODEL_EVALUATION_TASK_IDS)[number];
 export type ModelCandidate = {
   id: string;
   label: string;
-  kind: 'free' | 'deepseek-fallback';
+  kind: 'free' | 'deepseek-fallback' | 'configured-primary' | 'configured-test';
   providerModelId: string;
   catalogMetadata?: Record<string, unknown>;
 };

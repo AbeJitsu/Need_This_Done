@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { getOpenRouterModelConfig } from '@/lib/openrouter-config';
 import { DEEPSEEK_V4_FLASH_FALLBACK, freeCandidatesCompleted, summarizeModelEvaluation, type ModelCandidate, type ModelEvaluationRecord, type ModelEvaluationTaskId } from '@/lib/model-evaluation';
 import { consumeWorkerNonce, isSignedWorkerFailure, verifySignedWorkerRequest } from '@/lib/private-worker-auth';
 
@@ -10,7 +11,7 @@ const candidateSchema = z.object({
   candidateId: z.string().trim().min(1).max(240),
   providerModelId: z.string().trim().min(1).max(240),
   label: z.string().trim().min(1).max(300),
-  candidateKind: z.enum(['free', 'deepseek-fallback']),
+  candidateKind: z.enum(['free', 'deepseek-fallback', 'configured-primary', 'configured-test']),
   catalogMetadata: z.record(z.string(), z.unknown()),
 }).strict();
 const schema = z.object({ workerId: z.string().trim().min(1).max(160), profileId: z.string().uuid(), candidates: z.array(candidateSchema).min(1).max(3) }).strict();
@@ -35,14 +36,31 @@ export async function POST(request: Request) {
   if (replay) return replay;
 
   const kinds = new Set(parsed.data.candidates.map((candidate) => candidate.candidateKind));
-  if (kinds.size !== 1) return NextResponse.json({ error: 'Register free candidates and the fallback in separate requests.' }, { status: 400 });
+  const isConfiguredComparison = parsed.data.candidates.length === 2
+    && kinds.size === 2
+    && parsed.data.candidates.every((candidate) => candidate.candidateKind === 'configured-primary' || candidate.candidateKind === 'configured-test');
+  if (!isConfiguredComparison && kinds.size !== 1) return NextResponse.json({ error: 'Register free candidates and the fallback in separate requests.' }, { status: 400 });
   const kind = parsed.data.candidates[0].candidateKind;
   const uniqueModels = new Set(parsed.data.candidates.map((candidate) => candidate.providerModelId));
   if (uniqueModels.size !== parsed.data.candidates.length) return NextResponse.json({ error: 'Benchmark candidates must have unique model IDs.' }, { status: 400 });
 
   const admin = getSupabaseAdmin();
   const { data: profile } = await admin.from('growth_profiles').select('id, owner_id, emergency_stop, model_route').eq('id', parsed.data.profileId).maybeSingle();
-  if (!profile || profile.emergency_stop || profile.model_route !== 'evaluation-required') return NextResponse.json({ error: 'Candidate selection is unavailable after model selection or an emergency stop.' }, { status: 409 });
+  if (!profile || profile.emergency_stop) return NextResponse.json({ error: 'Candidate selection is unavailable for this profile.' }, { status: 409 });
+
+  if (isConfiguredComparison) {
+    let configured: ReturnType<typeof getOpenRouterModelConfig>;
+    try { configured = getOpenRouterModelConfig(); } catch { return NextResponse.json({ error: 'Configured model comparison is unavailable.' }, { status: 503 }); }
+    const expected = new Map([
+      ['configured-primary', configured.primaryModel],
+      ['configured-test', configured.testModel],
+    ] as const);
+    if (parsed.data.candidates.some((candidate) => candidate.candidateId !== candidate.candidateKind || candidate.providerModelId !== expected.get(candidate.candidateKind as 'configured-primary' | 'configured-test'))) {
+      return NextResponse.json({ error: 'Comparison candidates do not match the private model configuration.' }, { status: 409 });
+    }
+  } else if (profile.model_route !== 'evaluation-required') {
+    return NextResponse.json({ error: 'Candidate selection is unavailable after model selection or an emergency stop.' }, { status: 409 });
+  }
 
   if (kind === 'deepseek-fallback') {
     const candidate = parsed.data.candidates[0];
@@ -58,7 +76,7 @@ export async function POST(request: Request) {
     const eligible = freeCandidatesCompleted(records, freeCandidates)
       && freeCandidates.every((free) => !summarizeModelEvaluation(records, free.id).clearsThreshold);
     if (!eligible) return NextResponse.json({ error: 'The pinned fallback is unavailable until every free candidate finishes and misses the threshold.' }, { status: 409 });
-  } else {
+  } else if (kind === 'free') {
     await admin.from('model_benchmark_candidates').update({ is_active: false }).eq('profile_id', profile.id).eq('candidate_kind', 'free');
   }
 
