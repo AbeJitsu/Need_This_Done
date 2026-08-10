@@ -3,6 +3,7 @@ import 'server-only';
 import { OpenRouterClient } from '@/lib/openrouter-core';
 
 export * from '@/lib/openrouter-core';
+export { getOpenRouterModelConfig, loadOpenRouterModelConfig } from '@/lib/openrouter-config';
 
 /** Server-only construction keeps OPENROUTER_API_KEY out of browser bundles. */
 export function createServerOpenRouterClient() {

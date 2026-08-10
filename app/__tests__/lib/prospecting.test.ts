@@ -28,6 +28,9 @@ describe('prospecting safety helpers', () => {
     expect(privateResearchModelAllowed({ emergencyStop: false, modelRoute: 'evaluation-required', selectedModelId: null })).toBe(false);
     expect(privateResearchModelAllowed({ emergencyStop: true, modelRoute: 'selected-free', selectedModelId: 'catalog/pinned' })).toBe(false);
     expect(privateResearchModelAllowed({ emergencyStop: false, modelRoute: 'selected-free', selectedModelId: 'catalog/pinned' })).toBe(true);
+    expect(privateResearchModelAllowed({ emergencyStop: false, modelRoute: 'selected-primary', selectedModelId: 'provider/pinned-2026' })).toBe(true);
+    expect(privateResearchModelAllowed({ emergencyStop: false, modelRoute: 'selected-primary', selectedModelId: 'provider/latest' })).toBe(false);
+    expect(privateResearchModelAllowed({ emergencyStop: false, modelRoute: 'unexpected-route', selectedModelId: 'provider/pinned-2026' })).toBe(false);
   });
 
   it('keeps real prospecting delivery disabled unless an explicit provider is selected', async () => {

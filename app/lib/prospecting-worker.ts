@@ -1,5 +1,6 @@
 import type { AgentTask } from '@/lib/prospecting-worker-types';
 import { OpenRouterClient, estimateOpenRouterRequestCost } from '@/lib/openrouter-core';
+import { isMovingOpenRouterModelAlias } from '@/lib/openrouter-model-config';
 import { createProspectResearchPrompt, parseProspectDossierBatch, prospectDossierResponseJsonSchema, type ProspectDossierBatch } from '@/lib/prospect-dossier';
 import { createWorkerSignature } from '@/lib/prospecting';
 
@@ -86,10 +87,13 @@ function acceptedTarget(task: AgentTask) {
   return Number.isInteger(configured) && configured >= 1 && configured <= 2 ? configured : 2;
 }
 
+export const PRIVATE_RESEARCH_MODEL_ROUTES = ['selected-primary', 'selected-free', 'selected-deepseek-fallback'] as const;
+
 export function privateResearchModelAllowed(profile: Pick<PrivateResearchProfile, 'emergencyStop' | 'modelRoute' | 'selectedModelId'>) {
   return !profile.emergencyStop
-    && profile.modelRoute !== 'evaluation-required'
-    && Boolean(profile.selectedModelId?.trim());
+    && PRIVATE_RESEARCH_MODEL_ROUTES.includes(profile.modelRoute as (typeof PRIVATE_RESEARCH_MODEL_ROUTES)[number])
+    && Boolean(profile.selectedModelId?.trim())
+    && !isMovingOpenRouterModelAlias(profile.selectedModelId || '');
 }
 
 /**
@@ -239,6 +243,10 @@ export class SignedPrivateResearchWorkerTransport implements PrivateResearchWork
 
   async report(result: WorkerResearchResult) {
     await this.post('/api/prospecting/worker/result', result as unknown as Record<string, unknown>);
+  }
+
+  async pinPrimary(workerId: string, profileId: string, modelId: string) {
+    await this.post('/api/prospecting/worker/model/pin-primary', { workerId, profileId, modelId });
   }
 
   async schedule(workerId: string) {
