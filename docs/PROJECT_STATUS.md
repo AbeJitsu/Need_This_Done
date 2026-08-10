@@ -18,7 +18,7 @@ The final command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIE
 - Authenticated browser workflows: retained smoke 45 passed with one intentional mobile exclusion for a desktop-only navigation assertion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2.
 - Mac bridge: build and 5/5 offline tests passed. The assembly used no provider credentials and made no external action.
 
-**OpenRouter boundary:** No OpenRouter API key or OAuth profile has been configured, and no OpenRouter request was used in this proof. The root `.env.local` points to `.env.local.profile`; `app/.env.local` points to the root active profile. If a local OpenRouter key is later approved, store it only in `.env.local.profile`, never in `app/.env.local`, an example file, or the cloud profile. The private worker intentionally requires a separate chmod-600 file passed with `--env-file`.
+**OpenRouter boundary:** An OpenRouter API key is now stored only in `.env.local.profile`; no OAuth profile, worker activation, model request, or model selection has occurred. The root `.env.local` points to `.env.local.profile`; `app/.env.local` points to the root active profile. The free model route is `deepseek/deepseek-v4-flash:free`; the system still requires the catalog/evaluation gate before selecting it for live prospecting work. The private worker intentionally requires a separate chmod-600 file passed with `--env-file`.
 
 **Remaining blockers and recorded exceptions:**
 

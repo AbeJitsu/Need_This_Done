@@ -55,7 +55,7 @@ No live worker model is selected by default. The pending evaluation protocol use
 
 - Poolside Laguna S 2.1 Free;
 - two current eligible free candidates, resolved and pinned from the catalog at evaluation time; and
-- pinned `deepseek/deepseek-v4-flash` only as a fallback.
+- pinned `deepseek/deepseek-v4-flash:free` only as a fallback.
 
 The code enforces a $0.25 daily evaluation ceiling and a $0.10 per-run ceiling. All three free candidates must complete the fixed task set before any default is selected. DeepSeek can be selected only if every free candidate completed the set and none cleared the shared threshold. Recording a result does not activate a provider or permit external action.
 

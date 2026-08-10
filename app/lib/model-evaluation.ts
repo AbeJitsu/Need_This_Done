@@ -38,12 +38,12 @@ export type ModelCandidate = {
   catalogMetadata?: Record<string, unknown>;
 };
 
-/** This is intentionally a pinned fallback, not a moving "latest" alias. */
+/** This is intentionally a pinned free fallback, not a moving "latest" alias. */
 export const DEEPSEEK_V4_FLASH_FALLBACK: ModelCandidate = {
-  id: 'deepseek-v4-flash',
-  label: 'DeepSeek V4 Flash (pinned fallback)',
+  id: 'deepseek-v4-flash-free',
+  label: 'DeepSeek V4 Flash (free fallback)',
   kind: 'deepseek-fallback',
-  providerModelId: 'deepseek/deepseek-v4-flash',
+  providerModelId: 'deepseek/deepseek-v4-flash:free',
 };
 
 export const MODEL_QUALITY_THRESHOLD = 0.8;

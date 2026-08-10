@@ -21,10 +21,11 @@ the operator can see how the final artifact was produced.
 
 - The Mac mini initiates outbound HTTPS requests to Vercel and loopback
   WebSocket/RPC requests to OpenClaw. OpenClaw is never publicly exposed.
-- No OpenRouter API key or OAuth profile is currently configured. If a worker
-  is later approved, its provider credential and OpenClaw gateway credential
-  remain only on the Mac mini/OpenClaw host. They are never stored in Supabase
-  or sent to the browser.
+- An OpenRouter API key is stored only in the local environment profile; no
+  OAuth profile or worker activation is configured. If a worker is later
+  approved, its provider credential and OpenClaw gateway credential remain only
+  on the Mac mini/OpenClaw host. They are never stored in Supabase or sent to
+  the browser.
 - Agents may research public sources and prepare drafts or media. They cannot
   publish content, send email, spend money, or change connected accounts.
 - Generated media is private Supabase Storage content and previews use

@@ -13,7 +13,7 @@ This checklist separates software installed on the Mac from accounts, billing, O
 | Hermes | Hermes Agent `0.19.1`; config schema 33; Chromium/browser tools; 71 bundled skills; two NeedThisDone/Codex workflow skills imported; `model.openai_runtime=codex_app_server`; separate ChatGPT/Codex OAuth session. | Read-only Hermes-to-Codex execution passed. No coding-edit proof, gateway, messaging platform, or scheduled job is running. |
 | OpenClaw | OpenClaw `2026.7.1-2` CLI. | No onboarding, provider, workspace, channel, gateway daemon, host execution, or production access. |
 | Stripe | Stripe CLI `1.45.0`; application SDK and guarded `/contact` fallback already exist. | No CLI account login, selected offer, sandbox checkout, Payment Link/invoice, webhook, or production key. |
-| OpenRouter | No API key or OAuth profile is currently configured; no provider usage is part of the local proof. | Account/key setup, model allowlist, and agent connections remain unapproved and untested. |
+| OpenRouter | Local API key is stored only in `.env.local.profile`; no OAuth profile or provider usage is part of the local proof. | Worker activation, model allowlist, and agent connections remain unapproved and untested. |
 
 Installed does not mean trusted, connected, running, or production-ready.
 
@@ -27,12 +27,15 @@ Installed does not mean trusted, connected, running, or production-ready.
 
 ### 2. Set up OpenRouter with a hard cost boundary
 
-OpenRouter has not been configured for this project. Do not perform this setup
-as part of the provider-free local release-candidate gate. If it is separately
-approved later, the local Next app reads the active root profile: `.env.local`
-links to `.env.local.profile`, and `app/.env.local` follows that link. Store
-the key only in `.env.local.profile`; a Mac worker must use its own chmod-600
-private file passed with `--env-file` rather than sharing the app profile.
+The local API key is now stored in the active root profile, but OpenRouter has
+not been activated for worker use. Do not run model work as part of the
+provider-free local release-candidate gate. If activation is separately
+approved, the local Next app reads the active root profile: `.env.local` links
+to `.env.local.profile`, and `app/.env.local` follows that link. A Mac worker
+must use its own chmod-600 private file passed with `--env-file` rather than
+sharing the app profile. Use the free route `deepseek/deepseek-v4-flash:free`,
+not the paid dated slug, unless a later decision explicitly changes the cost
+boundary.
 
 Use [OpenRouter settings](https://openrouter.ai/settings/keys) to:
 
