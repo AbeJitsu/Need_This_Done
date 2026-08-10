@@ -88,7 +88,11 @@ The browser receives neither provider secrets nor agent credentials. Application
 
 ## Model evaluation strategy
 
-Do not assume DeepSeek V4 Flash 0731 is automatically the best model or that its dated slug is free. Do not assume explicit routing is always better than OpenRouter Auto. Evaluate candidates against fixed, sanitized tasks before selecting any production default.
+Do not assume any configured model is automatically the best model or that a
+dated slug is free. The exact primary and comparison IDs live only in the
+private environment; the application rejects moving aliases and evaluates the
+two configured candidates against fixed, sanitized tasks before the primary is
+explicitly pinned.
 
 The OpenRouter model catalog exposes model IDs, canonical slugs, context lengths, modalities, pricing, supported parameters, and sorting metadata. The catalog should be queried at evaluation time rather than copied into permanent configuration. The Auto Router response identifies the model selected, and its request cost is the selected model's normal cost. See the [model catalog](https://openrouter.ai/docs/api/api-reference/models/get-models) and [Auto Router documentation](https://openrouter.ai/docs/guides/routing/routers/auto-router).
 
@@ -98,9 +102,9 @@ The following is a discovery snapshot observed on 2026-08-08, not a set of pinne
 
 | Candidate | Catalog ID observed | Context | Catalog capabilities or cost signal | Role in evaluation |
 | --- | --- | ---: | --- | --- |
-| DeepSeek V4 Flash 0731 | `deepseek/deepseek-v4-flash-0731` | 1,048,576 | Paid model; current page lists prompt `$0.08/M` and completion `$0.252/M`; tools/structured-output support must be rechecked from the live catalog | Paid comparison only; not the free local pilot |
-| DeepSeek V4 Flash free route | `deepseek/deepseek-v4-flash:free` | 1,000,000 | Free route; current catalog page lists free pricing; capabilities and availability must be rechecked before benchmarking | Free fallback candidate after the evaluation gate |
-| DeepSeek V4 Flash latest alias | `~deepseek/deepseek-v4-flash-latest` | 1,048,576 | Redirects to the latest V4 Flash family member | Compare alias stability with the dated slug; never assume the alias is identical forever |
+| Configured primary | Private environment only | Re-fetch from the live catalog | Exact ID, availability, capabilities, and pricing are validated before an explicit pin | Database-pinned live worker route |
+| Configured comparison | Private environment only | Re-fetch from the live catalog | Runs the same sanitized task set as the primary | Comparison evidence only; never replaces the primary |
+| Catalog-resolved free fallback | Live catalog only | Re-fetch from the live catalog | Capabilities and availability must be rechecked before benchmarking | Legacy evaluation fallback only |
 | OpenRouter Auto | `openrouter/auto` | 2,000,000 router metadata | Catalog pricing is not a direct model price; selected model is billed normally; tools listed | Required routing candidate; current docs mark it deprecated, so test alongside `openrouter/auto-beta` |
 | OpenRouter Auto Beta | `openrouter/auto-beta` | 2,000,000 router metadata | Task-aware routing; supports allowed/excluded models and cost tiers | Current routing candidate for new experiments; log the selected model on every trial |
 | Qwen Qwen3.7 Flash | `qwen/qwen3.7-flash` | 1,000,000 | Multimodal text/image/video input; tools listed; low catalog prompt/completion price | Browser, research, website-audit, and cheap-worker candidate |

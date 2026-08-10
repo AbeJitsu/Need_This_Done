@@ -11,18 +11,18 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 **Finish-line decision:** **Local release candidate proven.** The repository and disposable local Supabase boundary are proven. Hosted migration, production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
 
-The final command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, reset only local Supabase, replayed migrations `001`–`086`, restored the sanitized seed, and passed:
+The final command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, reset only local Supabase, replayed migrations `001`–`087`, restored the sanitized seed, and passed:
 
-- Code: lint with zero warnings, TypeScript, 205/205 required unit tests with zero skips, 50/50 accessibility checks, and the 49-page production build.
+- Code: lint with zero warnings, TypeScript, 209/209 required unit tests with zero skips, 50/50 accessibility checks, and the 49-page production build.
 - Database: no schema errors from local lint; schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, prospecting RLS 2/2, and consultation integration 1/1.
 - Authenticated browser workflows: retained smoke 45 passed with one intentional mobile exclusion for a desktop-only navigation assertion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2.
 - Mac bridge: build and 5/5 offline tests passed. The assembly used no provider credentials and made no external action.
 
-**OpenRouter boundary:** An OpenRouter API key is now stored only in `.env.local.profile`; no OAuth profile, worker activation, model request, or model selection has occurred. The root `.env.local` points to `.env.local.profile`; `app/.env.local` points to the root active profile. The free model route is `deepseek/deepseek-v4-flash:free`; the system still requires the catalog/evaluation gate before selecting it for live prospecting work. The private worker intentionally requires a separate chmod-600 file passed with `--env-file`.
+**OpenRouter boundary:** The API key and two exact model IDs are stored only as private environment variables; no OAuth profile, worker activation, model request, or model selection has occurred. The root `.env.local` points to `.env.local.profile`; `app/.env.local` points to the root active profile. The server rejects missing or moving model IDs, the worker requires the same values in a separate chmod-600 `--env-file`, and the primary remains unpinned until the explicit approval-gated command is used.
 
 **Remaining blockers and recorded exceptions:**
 
-- Hosted migration parity is not complete: the read-only hosted history ends at `072`, while local repository migrations `073`–`086` are pending. No hosted write was made.
+- Hosted migration parity is not complete: the read-only hosted history ends at `072`, while local repository migrations `073`–`087` are pending. No hosted write was made.
 - `npm audit` reports 16 findings overall and 11 in the production dependency tree; production promotion is blocked pending owner-approved upgrades or an explicitly time-boxed exception. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The installed Supabase CLI is `2.65.5` while `2.113.0` is available. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The Playwright auto-start development-server path has a Tailwind parsing issue under the current local environment marker; the reproducible final gate uses the production-server mode above. Owner: frontend QA. Review/removal date: 2026-08-16.
@@ -30,7 +30,7 @@ The final command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIE
 
 **Operational boundaries:** Payments remain on the `/contact` fallback with no configured catalog links; real sender delivery requires an explicit provider mode and separate key; bridge requests remain path-bound HMAC/nonce authenticated; worker claims, approvals, idempotency, media caps, and fail-closed RLS were tested locally; no model, payment, sender, calendar, deployment, publish, spend, account, or external-message action was enabled.
 
-**Rollback:** No hosted rollback is required because no hosted state changed. Local verification is reproducible with the disposable reset gate. Revert the focused commits if needed; preserve migration history, evidence, and media records rather than deleting them. Any future hosted application of `073`–`086` requires a separate backup, dry run, approval, and forward rollback plan.
+**Rollback:** No hosted rollback is required because no hosted state changed. Local verification is reproducible with the disposable reset gate. Revert the focused commits if needed; preserve migration history, evidence, and media records rather than deleting them. Any future hosted application of `073`–`087` requires a separate backup, dry run, approval, and forward rollback plan.
 
 ## Current state map
 
@@ -45,7 +45,7 @@ approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> old hosted state remains recoverable
 
 local Supabase
-  -> additive migrations applied through 086; local lint/RLS/assembly proof passed
+  -> additive migrations applied through 087; local lint/RLS/assembly proof passed
   -> retained schema, provisioning, RLS, completion, outcome, prospecting, cockpit, and auth proof passed
 ```
 
@@ -75,7 +75,7 @@ There is no current `dev` application-to-cloud cutover. The future cutover is ba
 
 **Rollback:** Revert the focused implementation commits. For any database that receives `079`–`083`, revert callers first and use a separately reviewed forward migration; preserve prospect, suppression, outreach, sender-event, pilot, outcome, priority, action, and reflection history rather than deleting it as a rollback shortcut.
 
-**Blockers:** There is no known repository-code blocker to the local cockpit or approved-send proofs. The next product slice is the deterministic local worker for discovery, drafting, retries, and follow-ups; after that, selecting/configuring one approved outbound sender and registering its signed delivery/reply webhook remain provider-gated work. Production promotion is still paused: hosted migrations `073`–`086`, hosted role/isolation proof, the controlled Google sign-in check, sender approval, webhook verification, dependency remediation, and deployment review remain external release work. Stripe and Calendar are required only before making their respective public claims. The production dependency audit reports 11 findings; major-framework remediation or a narrow owner-approved exposure exception is required before production promotion. Authenticated client collaboration has route/unit coverage but still needs its own real database/browser release proof before that broader customer-facing claim is promoted.
+**Blockers:** There is no known repository-code blocker to the local cockpit or approved-send proofs. The deterministic local worker now has an approval-gated primary pin path, a comparison-only benchmark path, and database-authoritative model execution; selecting/configuring one approved outbound sender and registering its signed delivery/reply webhook remain provider-gated work. Production promotion is still paused: hosted migrations `073`–`087`, hosted role/isolation proof, the controlled Google sign-in check, sender approval, webhook verification, dependency remediation, and deployment review remain external release work. Stripe and Calendar are required only before making their respective public claims. The production dependency audit reports 11 findings; major-framework remediation or a narrow owner-approved exposure exception is required before production promotion. Authenticated client collaboration has route/unit coverage but still needs its own real database/browser release proof before that broader customer-facing claim is promoted.
 
 **Provider decision:** An explicit provider-neutral sender action is implemented with deterministic fake mode and a separately keyed Resend adapter. No real outbound provider is approved or configured, and the transactional Resend key cannot activate prospecting. The internal proof remains manual: no subscription, Customer Portal, payment catalog, automatic Calendar action, agent daemon, or real outbound message is required. Existing guarded fallbacks remain truthful until separately tested provider paths are approved.
 

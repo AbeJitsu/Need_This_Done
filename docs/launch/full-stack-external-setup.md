@@ -31,11 +31,11 @@ The local API key is now stored in the active root profile, but OpenRouter has
 not been activated for worker use. Do not run model work as part of the
 provider-free local release-candidate gate. If activation is separately
 approved, the local Next app reads the active root profile: `.env.local` links
-to `.env.local.profile`, and `app/.env.local` follows that link. A Mac worker
-must use its own chmod-600 private file passed with `--env-file` rather than
-sharing the app profile. Use the free route `deepseek/deepseek-v4-flash:free`,
-not the paid dated slug, unless a later decision explicitly changes the cost
-boundary.
+to `.env.local.profile`, and `app/.env.local` follows that link. Keep the
+primary and comparison model IDs there as private variables. A Mac worker must
+use its own chmod-600 private file passed with `--env-file` rather than sharing
+the app profile. The worker validates both IDs and uses only the
+database-pinned primary for real research.
 
 Use [OpenRouter settings](https://openrouter.ai/settings/keys) to:
 

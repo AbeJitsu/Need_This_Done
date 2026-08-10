@@ -51,13 +51,12 @@ Provider boundaries are deliberately inactive unless separately approved. There 
 
 ## Model-evaluation boundary
 
-No live worker model is selected by default. The pending evaluation protocol uses sanitized fixed tasks to record quality, tool use, latency, cost, failures, and repair rate for:
+No live worker model is selected by default. The pending evaluation protocol uses sanitized fixed tasks to record quality, tool use, latency, cost, failures, and repair rate for the two exact model IDs supplied through the private `OPENROUTER_PRIMARY_MODEL` and `OPENROUTER_TEST_MODEL` variables:
 
-- Poolside Laguna S 2.1 Free;
-- two current eligible free candidates, resolved and pinned from the catalog at evaluation time; and
-- pinned `deepseek/deepseek-v4-flash:free` only as a fallback.
+- the configured primary candidate; and
+- the configured comparison candidate.
 
-The code enforces a $0.25 daily evaluation ceiling and a $0.10 per-run ceiling. All three free candidates must complete the fixed task set before any default is selected. DeepSeek can be selected only if every free candidate completed the set and none cleared the shared threshold. Recording a result does not activate a provider or permit external action.
+The code enforces a $0.25 daily evaluation ceiling and a $0.10 per-run ceiling. The comparison runner never changes the primary route. A separate approval-gated worker command is required to pin the configured primary into the database, and real research uses that database-pinned ID.
 
 ## Local development and verification
 

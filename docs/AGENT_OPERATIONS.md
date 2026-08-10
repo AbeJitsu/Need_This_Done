@@ -42,10 +42,12 @@ the operator can see how the final artifact was produced.
 There is one active local profile, not two independent app environments: the
 root `.env.local` links to `.env.local.profile`, and `app/.env.local` links to
 the root active profile. If OpenRouter is later approved for local app work,
-store `OPENROUTER_API_KEY` only in the root `.env.local.profile`; never copy it
-to `app/.env.local`, an example file, or `.env.cloud.profile`. The private
-worker script intentionally requires a separate regular chmod-600 file passed
-with `--env-file`, kept outside the repository.
+store `OPENROUTER_API_KEY`, `OPENROUTER_PRIMARY_MODEL`, and
+`OPENROUTER_TEST_MODEL` only in the root `.env.local.profile`; never copy them
+to `app/.env.local`, a browser variable, an example file, or
+`.env.cloud.profile`. The private worker script intentionally requires the
+same three values in a separate regular chmod-600 file passed with
+`--env-file`, kept outside the repository.
 
 ## Initial team
 
@@ -74,11 +76,12 @@ perform the privileged database and Storage operations.
 
 Before enabling a real worker:
 
-1. Apply and rehearse migration 086 locally.
+1. Apply and rehearse migration 087 locally.
 2. Set OPENCLAW_BRIDGE_SECRET only on Vercel and the Mac mini.
 3. If worker activation is approved, configure the Mac mini with the Vercel
-   URL, operator owner UUID, worker ID, OpenClaw loopback URL/token, and the
-   separately stored OpenRouter credential.
+   URL, operator owner UUID, worker ID, OpenClaw loopback URL/token, the
+   separately stored OpenRouter credential, and the same private primary/test
+   model variables used by the app profile.
 4. Pair or authorize the pinned OpenClaw Gateway protocol version and run the
    loopback smoke test.
 5. Install the launchd supervisor only after signed heartbeat, lease, artifact,

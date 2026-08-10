@@ -187,6 +187,7 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
       'workflow_runs_idempotency_key_key',
       'workflow_runs_source_type_source_id_key',
       'operator_daily_reflections_owner_id_reflection_date_key',
+      'growth_profiles_selected_model_check',
     ];
     const constraints = await getPool().query<{ conname: string }>(
       `select conname from pg_constraint where conname = any($1::text[]) order by conname`,
@@ -270,6 +271,7 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
       ['public.reserve_private_model_usage(uuid,uuid,text,uuid,text,text,numeric)', true, false, false],
       ['public.reconcile_private_model_usage(uuid,numeric,jsonb)', true, false, false],
       ['public.record_private_prospect_dossier(uuid,text,text,jsonb)', true, false, false],
+      ['public.pin_private_primary_model(uuid,text,text,text)', true, false, false],
       ['public.promote_prospect_dossier(uuid)', true, true, false],
     ] as const;
 

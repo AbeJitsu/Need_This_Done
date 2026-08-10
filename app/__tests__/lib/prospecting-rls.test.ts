@@ -44,6 +44,7 @@ localDescribe.sequential('prospecting approval and suppression boundary', () => 
     const pool = getPool();
     await pool.query(`delete from public.sender_events where provider_event_id = 'provider-event-082'`);
     await pool.query(`delete from public.suppression_records where normalized_address = 'jordan@example.com'`);
+    await pool.query(`delete from public.worker_callback_nonces where nonce = 'private-worker-replay-085'`);
     await pool.query(`insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at, confirmation_token, raw_app_meta_data, raw_user_meta_data) values ($1, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'prospecting-operator@example.test', '', now(), now(), now(), '', '{}', '{}') on conflict (id) do nothing`, [operatorId]);
     await pool.query(`insert into public.user_roles (user_id, role) values ($1, 'admin') on conflict (user_id) do update set role = 'admin'`, [operatorId]);
     await pool.query(`insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at, confirmation_token, raw_app_meta_data, raw_user_meta_data) values ($1, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'prospecting-research-operator@example.test', '', now(), now(), now(), '', '{}', '{}') on conflict (id) do nothing`, [researchOwnerId]);
@@ -79,17 +80,20 @@ localDescribe.sequential('prospecting approval and suppression boundary', () => 
   });
 
   it('keeps dossier storage, budget reservations, replay nonces, and sender promotion on separate boundaries', async () => {
-    await asOperator(`insert into public.growth_profiles (id, owner_id, target_market, geography, offer, sender_name, sender_email, model_route, selected_model_id, selected_model_rationale) values ($1, $2, 'service businesses', 'New York', 'a focused audit', null, null, 'selected-free', 'catalog/pinned-free', 'Local measured benchmark selected this exact catalog ID.')`, [researchProfileId, researchOwnerId]);
+    await asOperator(`insert into public.growth_profiles (id, owner_id, target_market, geography, offer, sender_name, sender_email) values ($1, $2, 'service businesses', 'New York', 'a focused audit', null, null)`, [researchProfileId, researchOwnerId]);
+    await expect(asOperator(`select public.pin_private_primary_model($1, 'browser-worker', 'provider/primary-2026', 'browser must not pin')`, [researchProfileId])).rejects.toThrow();
+    const pinned = await asPrivateWorker<{ result: { model_route: string; selected_model_id: string } }>(`select public.pin_private_primary_model($1, 'mac-mini-test', 'provider/primary-2026', 'Explicitly approved test primary.') as result`, [researchProfileId]);
+    expect(pinned[0].result).toMatchObject({ model_route: 'selected-primary', selected_model_id: 'provider/primary-2026' });
     await asOperator(`insert into public.agent_tasks (id, profile_id, task_type, input, idempotency_key) values ($1, $2, 'discover_prospects', '{"targetAcceptedDossiers":2}'::jsonb, $3)`, [researchTaskId, researchProfileId, '60000000-0000-4000-0000-000000000085']);
 
     await expect(asOperator(`select public.claim_private_prospecting_task('browser-worker', 300)`)).rejects.toThrow();
     const claimed = await asPrivateWorker<{ task: { id: string; status: string } }>(`select public.claim_private_prospecting_task('mac-mini-test', 300) as task`);
     expect(claimed[0].task).toMatchObject({ id: researchTaskId, status: 'leased' });
 
-    const firstReservation = await asPrivateWorker<{ reservation: { status: string } }>(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'catalog/pinned-free', 0.10) as reservation`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000085']);
+    const firstReservation = await asPrivateWorker<{ reservation: { status: string } }>(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'provider/primary-2026', 0.10) as reservation`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000085']);
     expect(firstReservation[0].reservation.status).toBe('reserved');
-    await asPrivateWorker(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'catalog/pinned-free', 0.10)`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000086']);
-    await expect(asPrivateWorker(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'catalog/pinned-free', 0.06)`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000087'])).rejects.toThrow('daily_model_budget_exceeded');
+    await asPrivateWorker(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'provider/primary-2026', 0.10)`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000086']);
+    await expect(asPrivateWorker(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'provider/primary-2026', 0.06)`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000087'])).rejects.toThrow('daily_model_budget_exceeded');
 
     const dossier = {
       companyName: 'Citation-backed Studio',
@@ -101,9 +105,9 @@ localDescribe.sequential('prospecting approval and suppression boundary', () => 
       contactPath: { type: 'email', value: 'Public business email', email: 'research-prospect@example.test' },
       suggestedOutreach: { subject: 'A focused conversion-path idea', body: 'This remains a human-reviewed draft.' },
     };
-    const stored = await asPrivateWorker<{ result: { duplicate: boolean; id: string } }>(`select public.record_private_prospect_dossier($1, 'mac-mini-test', 'catalog/pinned-free', $2::jsonb) as result`, [researchTaskId, JSON.stringify(dossier)]);
+    const stored = await asPrivateWorker<{ result: { duplicate: boolean; id: string } }>(`select public.record_private_prospect_dossier($1, 'mac-mini-test', 'provider/primary-2026', $2::jsonb) as result`, [researchTaskId, JSON.stringify(dossier)]);
     expect(stored[0].result.duplicate).toBe(false);
-    const duplicate = await asPrivateWorker<{ result: { duplicate: boolean } }>(`select public.record_private_prospect_dossier($1, 'mac-mini-test', 'catalog/pinned-free', $2::jsonb) as result`, [researchTaskId, JSON.stringify(dossier)]);
+    const duplicate = await asPrivateWorker<{ result: { duplicate: boolean } }>(`select public.record_private_prospect_dossier($1, 'mac-mini-test', 'provider/primary-2026', $2::jsonb) as result`, [researchTaskId, JSON.stringify(dossier)]);
     expect(duplicate[0].result.duplicate).toBe(true);
 
     await expect(asOperator(`select public.promote_prospect_dossier($1)`, [stored[0].result.id])).rejects.toThrow('dossier_promotion_not_allowed');
@@ -111,6 +115,6 @@ localDescribe.sequential('prospecting approval and suppression boundary', () => 
     await expect(asPrivateWorker(`insert into public.worker_callback_nonces (nonce) values ('private-worker-replay-085')`)).rejects.toThrow();
 
     await asOperator(`update public.growth_profiles set emergency_stop = true where id = $1`, [researchProfileId]);
-    await expect(asPrivateWorker(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'catalog/pinned-free', 0.01)`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000088'])).rejects.toThrow('research_not_operational');
+    await expect(asPrivateWorker(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'provider/primary-2026', 0.01)`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000088'])).rejects.toThrow('research_not_operational');
   });
 });
