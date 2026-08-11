@@ -6,6 +6,8 @@ export type ClaimedTask = {
   id: string;
   owner_id: string;
   run_id: string;
+  plan_id?: string | null;
+  growth_profile_id?: string | null;
   task_key: string;
   agent_role: string;
   agent_provider: string;
@@ -19,6 +21,13 @@ export type ClaimedTask = {
   leased_by: string | null;
   lease_expires_at: string | null;
   progress: number;
+  approved_plan_snapshot?: JsonObject | null;
+};
+
+export type ProspectingPayload = {
+  dossiers: unknown[];
+  providerCitations: Array<{ url: string; title: string; excerpt: string }>;
+  shortfallReason?: string;
 };
 
 export type UploadGrant = {
@@ -187,6 +196,18 @@ export class BridgeApiClient {
     });
   }
 
+  reserveModelUsage(input: {
+    taskId: string;
+    reservationKey: string;
+    reservedCost: number;
+  }) {
+    return this.post<{ reservation: JsonObject }>('/api/agent-bridge/reserve-model', {
+      ownerId: this.ownerId,
+      workerId: this.workerId,
+      ...input,
+    });
+  }
+
   uploadUrl(input: {
     taskId: string;
     artifactType: 'thumbnail' | 'video' | 'audio' | 'subtitles' | 'other';
@@ -208,6 +229,9 @@ export class BridgeApiClient {
     artifacts?: CompletionArtifact[];
     reservationKey?: string;
     actualCost?: number;
+    modelReservationKey?: string;
+    modelActualCost?: number;
+    prospecting?: ProspectingPayload;
     provider?: string;
     providerUsage?: JsonObject;
   }) {

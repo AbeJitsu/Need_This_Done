@@ -1,16 +1,19 @@
 # NeedThisDone agent bridge
 
 This is the Mac-side worker for the private agent operations boundary. It
-polls the signed NeedThisDone bridge endpoints, claims one leased task at a
-time, runs that task through a loopback-only OpenClaw Gateway connection, and
-returns evidence and artifacts to the authenticated dashboard.
+polls the signed NeedThisDone bridge endpoints, claims only tasks created from
+an approved planner snapshot, runs that task through a loopback-only OpenClaw
+Gateway connection, and returns evidence and artifacts to the authenticated
+dashboard.
 
 The bridge does not contain a Supabase service-role key. It sends only signed
 HTTPS requests to `BRIDGE_API_URL`; the OpenClaw Gateway URL must be loopback.
-The runner sets `deliver: false` and `bestEffortDeliver: false`, and rejects
-task types outside the dashboard contract. Publishing, sending, spending, and
-account changes remain outside this worker's contract and require a separate
-reviewed capability.
+The runner reserves approved-plan model usage before execution, sets
+`deliver: false` and `bestEffortDeliver: false`, and rejects task types outside
+the dashboard contract. Publishing, sending, spending, account changes, and
+arbitrary delivery remain outside this worker's contract. A research result
+enters prospecting only when OpenClaw explicitly returns the strict
+`prospecting` payload; ordinary artifacts never become prospects.
 
 ## Local setup
 
@@ -37,6 +40,18 @@ Optional settings are `OPENCLAW_GATEWAY_URL` (default
 `./bridge-artifacts`), `BRIDGE_POLL_INTERVAL_MS` (default `5000`),
 `OPENCLAW_REQUEST_TIMEOUT_MS` (default `30000`), `BRIDGE_VERSION`, and
 `BRIDGE_CAPABILITIES` as a comma-separated list.
+
+Keep the bridge env file private and separate from the OpenClaw provider
+profile. The provider profile contains the private OpenRouter credential and
+approved model configuration for the Gateway process; it is not read or
+stored by this bridge. Vercel separately stores `OPENROUTER_API_KEY`, its
+server-side configuration, and `OPENCLAW_BRIDGE_SECRET`.
+
+launchd supervises two processes on the Mac mini: the loopback-only OpenClaw
+Gateway and this bridge. Stop both before changing a worker identity or
+provider profile. `PROSPECTING_WORKER_SECRET`,
+`PROSPECTING_WORKER_BASE_URL`, and `PROSPECTING_WORKER_ID` belong to the
+legacy direct-worker rollback path and must not run against the same queue.
 
 Start the worker only after the server-side agent-operations migration and
 signed endpoint checks have been rehearsed:

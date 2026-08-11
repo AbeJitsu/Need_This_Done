@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ task: null, reason: 'worker_not_available' });
   }
 
-  const { data: task, error } = await admin.rpc('claim_agent_orchestration_task', {
+  const { data: task, error } = await admin.rpc('claim_openclaw_agent_orchestration_task', {
     target_owner_id: parsed.data.ownerId,
     target_worker: parsed.data.workerId,
     target_lease_seconds: parsed.data.leaseSeconds,

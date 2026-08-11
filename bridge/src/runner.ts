@@ -6,6 +6,7 @@ import type {
   ClaimedTask,
   CompletionArtifact,
   JsonObject,
+  ProspectingPayload,
 } from './bridge-client.js';
 import { OpenClawGatewayClient } from './openclaw-gateway.js';
 
@@ -100,6 +101,21 @@ function outputFromResult(result: unknown): JsonObject {
   return { summary: textFromValue(result) || 'Gateway result was larger than the dashboard output limit.' };
 }
 
+function prospectingFromResult(result: unknown): ProspectingPayload | undefined {
+  const candidate = asRecord(asRecord(result).prospecting);
+  const dossiers = candidate.dossiers;
+  const providerCitations = candidate.providerCitations;
+  if (!Array.isArray(dossiers) || !Array.isArray(providerCitations)) return undefined;
+  return {
+    dossiers,
+    providerCitations: providerCitations.filter((citation): citation is { url: string; title: string; excerpt: string } => {
+      const item = asRecord(citation);
+      return typeof item.url === 'string' && typeof item.title === 'string' && typeof item.excerpt === 'string';
+    }),
+    ...(typeof candidate.shortfallReason === 'string' ? { shortfallReason: candidate.shortfallReason } : {}),
+  };
+}
+
 function artifactTypeForTask(task: ClaimedTask) {
   if (task.task_type === 'research_public_web') return 'research_dossier';
   if (task.task_type === 'draft_outreach') return 'email_draft';
@@ -139,6 +155,8 @@ function metadataForArtifact(raw: RawArtifact, task: ClaimedTask): JsonObject {
     ...asRecord(raw.metadata),
     provenance: {
       taskId: task.id,
+      planId: task.plan_id || null,
+      growthProfileId: task.growth_profile_id || null,
       agentRole: task.agent_role,
       provider: task.agent_provider,
       model: task.model_id,
@@ -201,6 +219,7 @@ export class AgentBridgeRunner {
 
   private async execute(task: ClaimedTask) {
     let reservationKey: string | undefined;
+    let modelReservationKey: string | undefined;
     let providerStarted = false;
     let gatewayResult: unknown = null;
     await this.safeHeartbeat('online', null, task.id);
@@ -227,6 +246,26 @@ export class AgentBridgeRunner {
         await this.api.event(task.id, 'progress', { message: 'The full media ceiling is reserved before generation.', reservationKey }, 12);
       }
 
+      if (task.plan_id) {
+        const modelReservationCost = typeof task.input.modelReservationUsd === 'number'
+          ? task.input.modelReservationUsd
+          : 0;
+        if (!Number.isFinite(modelReservationCost) || modelReservationCost < 0 || modelReservationCost > 100) {
+          throw new Error('Approved OpenClaw task has no valid model usage reservation amount.');
+        }
+        const reserveModel = (this.api as BridgeApiClient & {
+          reserveModelUsage?: (input: { taskId: string; reservationKey: string; reservedCost: number }) => Promise<unknown>;
+        }).reserveModelUsage;
+        if (!reserveModel) throw new Error('The bridge client does not support approved-plan model usage reservations.');
+        modelReservationKey = crypto.randomUUID();
+        await reserveModel.call(this.api, {
+          taskId: task.id,
+          reservationKey: modelReservationKey,
+          reservedCost: modelReservationCost,
+        });
+        await this.api.event(task.id, 'progress', { message: 'The approved OpenClaw model usage is reserved before execution.', modelReservationKey }, 18);
+      }
+
       providerStarted = true;
       gatewayResult = await this.gateway.runTask(task);
       await this.api.event(task.id, 'progress', { message: 'Gateway work returned; validating artifacts and usage.' }, 82);
@@ -235,12 +274,18 @@ export class AgentBridgeRunner {
       if (task.task_type === 'produce_daily_content' && actualCost === null) {
         throw new Error('Provider usage was not reported; daily media completion is failed closed.');
       }
+      if (modelReservationKey && actualCost === null) {
+        throw new Error('OpenClaw provider usage was not reported; model completion is failed closed.');
+      }
       await this.api.complete({
         taskId: task.id,
         status: 'succeeded',
         output: outputFromResult(gatewayResult),
         artifacts,
         ...(reservationKey ? { reservationKey, actualCost: actualCost as number } : {}),
+        ...(modelReservationKey ? { modelReservationKey, modelActualCost: actualCost as number } : {}),
+        ...(task.task_type === 'research_public_web' && prospectingFromResult(gatewayResult)
+          ? { prospecting: prospectingFromResult(gatewayResult) } : {}),
         provider: task.agent_provider,
         providerUsage: usageFromResult(gatewayResult),
       });
@@ -249,7 +294,10 @@ export class AgentBridgeRunner {
     } catch (error) {
       const errorText = safeError(error);
       const actualCost = reservationKey && providerStarted ? actualCostFromResult(gatewayResult) : reservationKey ? 0 : null;
-      if (reservationKey && actualCost === null) {
+      const modelActualCost = modelReservationKey && providerStarted ? actualCostFromResult(gatewayResult) : modelReservationKey ? 0 : null;
+      const mediaCostUnknown = Boolean(reservationKey && actualCost === null);
+      const modelCostUnknown = Boolean(modelReservationKey && modelActualCost === null);
+      if (mediaCostUnknown || modelCostUnknown) {
         await this.safeEvent(task.id, { message: errorText, completion: 'held_for_cost_reconciliation' }, 85);
         await this.safeHeartbeat('degraded', errorText, task.id);
         return { status: 'held' as const, taskId: task.id, error: errorText };
@@ -260,6 +308,7 @@ export class AgentBridgeRunner {
           status: 'failed',
           error: errorText,
           ...(reservationKey ? { reservationKey, actualCost: actualCost as number } : {}),
+          ...(modelReservationKey ? { modelReservationKey, modelActualCost: modelActualCost as number } : {}),
           provider: task.agent_provider,
           providerUsage: usageFromResult(gatewayResult),
         });
@@ -273,8 +322,16 @@ export class AgentBridgeRunner {
   }
 
   private async prepareArtifacts(task: ClaimedTask, result: unknown): Promise<CompletionArtifact[]> {
-    const rawArtifacts = asRawArtifacts(result);
-    const artifacts: RawArtifact[] = rawArtifacts.length ? rawArtifacts : (() => {
+      const rawArtifacts = asRawArtifacts(result);
+      const artifacts: RawArtifact[] = rawArtifacts.length ? rawArtifacts : (() => {
+      const prospecting = prospectingFromResult(result);
+      if (prospecting) {
+        return [{
+          artifactType: 'research_dossier',
+          title: `${task.task_key} prospecting dossier result`,
+          contentText: JSON.stringify(prospecting),
+        }];
+      }
       const text = textFromValue(result);
       if (!text) return [];
       const fallback: RawArtifact = {

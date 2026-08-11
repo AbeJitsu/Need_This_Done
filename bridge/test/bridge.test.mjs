@@ -220,6 +220,32 @@ test('AgentBridgeRunner reports progress, persists text evidence, and rejects un
   assert.match(calls.completions.at(-1).error, /not allowed/);
 });
 
+test('AgentBridgeRunner reserves and reconciles model usage for an approved OpenClaw task', async () => {
+  const calls = { reservations: [], completions: [] };
+  const api = {
+    heartbeat: async () => {},
+    schedule: async () => ({ tasks: [], queued: 1 }),
+    claim: async () => task({
+      plan_id: '00000000-0000-4000-8000-000000000004',
+      growth_profile_id: '00000000-0000-4000-8000-000000000005',
+      agent_provider: 'openclaw',
+      model_id: 'provider/pinned-model',
+      input: { question: 'Find bounded public evidence.', modelReservationUsd: 0.02 },
+    }),
+    event: async () => {},
+    reserveModelUsage: async (value) => calls.reservations.push(value),
+    complete: async (value) => calls.completions.push(value),
+  };
+  const gateway = { runTask: async () => ({ text: 'Evidence returned by the fake Gateway.', actualCost: 0.01, usage: { cost: 0.01 } }), close() {} };
+  const runner = new AgentBridgeRunner({ api, gateway, artifactRoot: await mkdtemp(join(tmpdir(), 'needthisdone-bridge-plan-')), capabilities: ['research_public_web'] });
+  const result = await runner.runOnce();
+  assert.equal(result.status, 'succeeded');
+  assert.equal(calls.reservations.length, 1);
+  assert.equal(calls.reservations[0].reservedCost, 0.02);
+  assert.equal(calls.completions[0].modelActualCost, 0.01);
+  assert.equal(calls.completions[0].status, 'succeeded');
+});
+
 test('AgentBridgeRunner refuses symlinked artifact files outside its root', async () => {
   const root = await mkdtemp(join(tmpdir(), 'needthisdone-bridge-root-'));
   const outside = await mkdtemp(join(tmpdir(), 'needthisdone-bridge-outside-'));

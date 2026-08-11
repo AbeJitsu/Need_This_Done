@@ -35,6 +35,8 @@ export async function POST(request: Request) {
     .from('agent_orchestration_tasks')
     .select('id, run_id, task_key, agent_role, agent_provider, model_id, capabilities, status, progress, created_at')
     .eq('owner_id', parsed.data.ownerId)
+    .eq('agent_provider', 'openclaw')
+    .not('plan_id', 'is', null)
     .eq('status', 'queued')
     .order('created_at', { ascending: true })
     .limit(parsed.data.limit);
