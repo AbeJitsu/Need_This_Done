@@ -4,12 +4,12 @@ This is the canonical numbered control document for promoting the reviewed `dev`
 release candidate to hosted production. Provider runbooks and setup notes point
 to these item numbers; they do not define a second activation order.
 
-**Last reviewed:** 2026-08-11  
-**Technical launch decision:** **NOT GO**  
-**Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete  
+**Last reviewed:** 2026-08-11
+**Technical launch decision:** **NOT GO**
+**Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
 **Current release candidate (runtime verified):** `2cbcb38` (`dev`)
-**Hosted Supabase history:** through `072`  
-**Local verification history:** through `092`  
+**Hosted Supabase history:** through `072`
+**Local verification history:** through `092`
 **Immediate application rollback reference:** `8b8d429` (`production`)
 
 ## How to use this checklist
