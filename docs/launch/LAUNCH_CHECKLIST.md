@@ -56,7 +56,7 @@ Status values:
 - **Owner:** Release owner
 - **Prerequisites:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
 - **Live procedure:** Push the exact reviewed SHA to `origin/dev`; verify the remote ref resolves to the same SHA with `git ls-remote origin refs/heads/dev`.
-- **Evidence:** On 2026-08-11, `git push origin dev` fast-forwarded `origin/dev` from `7d40e00` to `e86af8e`. The worktree was clean, `production` remained an ancestor, and no production or hosted service changed.
+- **Evidence:** On 2026-08-11, `git push origin dev` fast-forwarded `origin/dev` from `7d40e00` to `e86af8e`; the later evidence-only synchronization advanced it to `4f1dac4`. The worktree was clean, `production` remained an ancestor, and no production or hosted service changed.
 - **Approval:** Recorded — the requested branch publish was approved for item 2 only; production promotion and all hosted/provider actions remain separate approvals.
 - **Rollback:** Do not force-push. If the branch must be corrected, publish a reviewed replacement commit and record both SHAs; preserve the prior remote ref in the evidence.
 
