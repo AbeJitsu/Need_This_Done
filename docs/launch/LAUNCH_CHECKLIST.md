@@ -7,7 +7,7 @@ to these item numbers; they do not define a second activation order.
 **Last reviewed:** 2026-08-11  
 **Technical launch decision:** **NOT GO**  
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete  
-**Current release candidate:** `00098b2` (`dev`)  
+**Current release candidate:** `2cbcb38` (`dev`)  
 **Hosted Supabase history:** through `072`  
 **Local verification history:** through `092`  
 **Immediate application rollback reference:** `8b8d429` (`production`)
@@ -42,13 +42,13 @@ Status values:
 
 ## Launch items
 
-### 1. Freeze the release candidate — `IN_PROGRESS`
+### 1. Freeze the release candidate — `PASSED`
 
 - **Owner:** Engineering owner
 - **Prerequisites:** Clean worktree; exact release SHA recorded; no unresolved required check, or a documented owner-approved exception.
 - **Live procedure:** Confirm the reviewed `dev` SHA. Run `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, `cd bridge && npm test`, and `git diff --check`. Freeze code changes until cutover completes.
-- **Evidence:** Baseline evidence is recorded in [RELEASE_EVIDENCE.md](../RELEASE_EVIDENCE.md) and [PROJECT_STATUS.md](../PROJECT_STATUS.md) for `00098b2`, including local migrations `001`–`092`, code/database/browser gates, and bridge tests. Append the final SHA and current run output here before cutover.
-- **Approval:** Required — engineering owner confirms the exact SHA is the release candidate.
+- **Evidence:** On 2026-08-11, commit `2cbcb38` passed `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`: local migrations `001`–`092`, schema lint, 214/214 required unit tests, 50/50 accessibility checks, the 49-page production build, schema manifest 7/7, security 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, consultation integration 1/1, retained browser 45 passed with one intentional mobile exclusion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2. `cd bridge && npm test` passed 6/6 and `git diff --check` passed. An unqualified preview-mode invocation was not counted; the documented production-server command is the passing release gate.
+- **Approval:** Evidence complete. Release owner must record the freeze/sign-off before item 2 publishes the branch; no code changes are permitted after this release candidate is approved.
 - **Rollback:** Unfreeze only through an approved replacement candidate. Keep `8b8d429` untouched as the immediate application rollback reference.
 
 ### 2. Push the reviewed `dev` branch — `PENDING_APPROVAL`
@@ -267,4 +267,3 @@ Status values:
 - [Full-stack external setup](full-stack-external-setup.md) — provider and Mac setup notes mapped to checklist items.
 - [Google Calendar readiness](google-calendar-readiness.md) — Calendar-specific readiness and rollback details mapped to item 19.
 - [Hosted payments readiness](hosted-payments-readiness.md) — payment-specific readiness and rollback details mapped to item 20.
-

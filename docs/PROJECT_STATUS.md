@@ -8,11 +8,11 @@
 
 This is the implementation ledger. Update it in the same commit as every completed or materially changed implementation slice. It records only current execution state, validation, commits, rollback, and blockers.
 
-## Current local release-candidate gate — 2026-08-10
+## Current local release-candidate gate — 2026-08-11
 
 **Finish-line decision:** **Local release candidate proven; technical cloud launch is the active critical path.** The repository and disposable local Supabase boundary are proven. The reviewed `dev` branch replaces the old production application after the launch checklist passes. Hosted migrations `073`–`092`, production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
 
-The final command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, reset only local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed:
+The final command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on current candidate `2cbcb38`. It reset only local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed:
 
 - Code: lint with zero warnings, TypeScript, 214/214 required unit tests with zero skips, 50/50 accessibility checks, and the 49-page production build.
 - Database: no schema errors from local lint; schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, and consultation integration 1/1.
