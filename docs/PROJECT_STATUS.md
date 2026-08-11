@@ -40,7 +40,7 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 ```text
 production/origin/production 8b8d429          -> old hosted production product and application rollback reference
 local dev                    current `dev`   -> reviewed replacement candidate; exact SHA is maintained in the launch checklist
-origin/dev                   4f1dac4          -> reviewed `dev` candidate and evidence synchronized; production remains unchanged
+origin/dev                   reviewed `dev`   -> candidate and evidence synchronized; verify the exact SHA again before production cutover
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> hosted history through 072
