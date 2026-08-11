@@ -8,6 +8,8 @@ const retainedTables = [
   'agent_artifact_versions',
   'agent_artifacts',
   'agent_orchestration_tasks',
+  'agent_plan_events',
+  'agent_plans',
   'agent_run_commands',
   'agent_run_events',
   'agent_runs',
@@ -31,6 +33,7 @@ const retainedTables = [
   'model_benchmark_candidates',
   'model_evaluation_records',
   'model_usage_ledger',
+  'openclaw_model_usage_reservations',
   'operator_cockpit_actions',
   'operator_daily_reflections',
   'operator_weekly_priorities',
@@ -41,6 +44,7 @@ const retainedTables = [
   'prospect_dossiers',
   'prospect_outcomes',
   'prospect_sources',
+  'prospecting_artifact_provenance',
   'prospects',
   'sender_events',
   'site_reports',
@@ -79,6 +83,10 @@ const requiredPolicies = [
     ['suppression_records', 'admins read suppression', 'SELECT'],
     ['agent_tasks', 'admins read agent tasks', 'SELECT'],
     ['sender_events', 'admins read sender events', 'SELECT'],
+    ['agent_plans', 'operators own agent plans', 'SELECT'],
+    ['agent_plan_events', 'operators read agent plan events', 'SELECT'],
+    ['openclaw_model_usage_reservations', 'operators read OpenClaw usage', 'SELECT'],
+    ['prospecting_artifact_provenance', 'operators read prospecting provenance', 'SELECT'],
 ] as const;
 
 localDescribe.sequential('retained Supabase schema manifest', () => {
@@ -188,6 +196,10 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
       'workflow_runs_source_type_source_id_key',
       'operator_daily_reflections_owner_id_reflection_date_key',
       'growth_profiles_selected_model_check',
+      'agent_plans_owner_id_idempotency_key_key',
+      'agent_plans_run_id_key',
+      'agent_plans_openclaw_safety_flags_present_check',
+      'openclaw_model_usage_reservations_reservation_key_key',
     ];
     const constraints = await getPool().query<{ conname: string }>(
       `select conname from pg_constraint where conname = any($1::text[]) order by conname`,
@@ -243,6 +255,7 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
       'prospects_updated_at',
       'update_agent_artifacts_updated_at',
       'update_agent_orchestration_tasks_updated_at',
+      'update_agent_plans_updated_at',
       'update_agent_runs_updated_at',
       'update_brand_profiles_updated_at',
       'update_content_schedules_updated_at',
@@ -273,6 +286,16 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
       ['public.record_private_prospect_dossier(uuid,text,text,jsonb)', true, false, false],
       ['public.pin_private_primary_model(uuid,text,text,text)', true, false, false],
       ['public.promote_prospect_dossier(uuid)', true, true, false],
+      ['public.create_agent_plan(text,text,jsonb,jsonb,jsonb,jsonb,uuid,text,text,text,integer,integer,integer,numeric,jsonb,jsonb,uuid)', true, true, false],
+      ['public.update_agent_plan(uuid,text,jsonb,jsonb,jsonb,jsonb,jsonb,uuid)', true, true, false],
+      ['public.reject_agent_plan(uuid,uuid,text)', true, true, false],
+      ['public.approve_agent_plan(uuid,uuid,text)', true, true, false],
+      ['public.dispatch_agent_plan(uuid,uuid)', true, true, false],
+      ['public.reserve_openclaw_model_usage(uuid,uuid,uuid,uuid,text,uuid,numeric)', true, false, false],
+      ['public.reconcile_openclaw_model_usage(uuid,numeric,jsonb)', true, false, false],
+      ['public.record_openclaw_prospecting_result(uuid,text,text,uuid,uuid,jsonb)', true, false, false],
+      ['public.complete_openclaw_orchestration_task(uuid,text,text,jsonb,text,jsonb,uuid,jsonb)', true, false, false],
+      ['public.claim_openclaw_agent_orchestration_task(uuid,text,integer)', true, false, false],
     ] as const;
 
     for (const [signature, serviceRole, authenticated, anon] of rpcChecks) {
