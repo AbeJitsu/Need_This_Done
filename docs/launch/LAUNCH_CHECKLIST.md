@@ -51,13 +51,13 @@ Status values:
 - **Approval:** Evidence complete. Release owner must record the freeze/sign-off before item 2 publishes the branch; no code changes are permitted after this release candidate is approved.
 - **Rollback:** Unfreeze only through an approved replacement candidate. Keep `8b8d429` untouched as the immediate application rollback reference.
 
-### 2. Push the reviewed `dev` branch — `PENDING_APPROVAL`
+### 2. Push the reviewed `dev` branch — `PASSED`
 
 - **Owner:** Release owner
 - **Prerequisites:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
 - **Live procedure:** Push the exact reviewed SHA to `origin/dev`; verify the remote ref resolves to the same SHA with `git ls-remote origin refs/heads/dev`.
-- **Evidence:** Record the push result, remote SHA, timestamp, actor, and link to the reviewed commit or CI run.
-- **Approval:** Required — release owner authorizes publishing the reviewed branch.
+- **Evidence:** On 2026-08-11, `git push origin dev` fast-forwarded `origin/dev` from `7d40e00` to `e86af8e`. The worktree was clean, `production` remained an ancestor, and no production or hosted service changed.
+- **Approval:** Recorded — the requested branch publish was approved for item 2 only; production promotion and all hosted/provider actions remain separate approvals.
 - **Rollback:** Do not force-push. If the branch must be corrected, publish a reviewed replacement commit and record both SHAs; preserve the prior remote ref in the evidence.
 
 ### 3. Back up hosted Supabase — `PENDING_APPROVAL`
