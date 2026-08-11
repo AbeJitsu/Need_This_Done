@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Activity, Check, CircleAlert, ExternalLink, FileCheck2, Loader2, Pause, Play, RotateCcw, ShieldAlert, Square, Video } from 'lucide-react';
+import AgentPlannerPanel from '@/components/AgentPlannerPanel';
 
 type Task = {
   id: string;
@@ -276,6 +277,7 @@ export default function AgentOperationsDashboard({ previewMode = false }: { prev
         {!loading && error?.includes('not configured') && <p className="mt-6 text-sm text-[#50675e]">Apply the agent-operations migration to activate this command center.</p>}
         {!loading && !error?.includes('not configured') && data && (
           <>
+            <AgentPlannerPanel previewMode={previewMode} />
             <section className="mt-8 grid gap-3 sm:grid-cols-3" aria-label="Agent operation summary">
               <Summary label="Active runs" value={data.counts.activeRuns} />
               <Summary label="Tasks in motion" value={pendingTasks} />
