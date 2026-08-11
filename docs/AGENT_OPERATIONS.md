@@ -1,91 +1,169 @@
 # NeedThisDone Agent Operations
 
-## Product goal
+## System boundary
 
-The private /dashboard is a useful browser-accessible operations tool for
-running supervised work from any authenticated browser. It is not a public
-client dashboard and it is not a replacement for OpenClaw's local control UI.
+The private `/dashboard` is the operator command center. The application LLM
+plans and edits; OpenClaw executes an already approved plan on the Mac mini.
+Neither AI layer is the source of truth.
 
-An operator can start a run, see each agent's dependencies and progress, review
-the resulting research, outreach drafts, scripts, media, subtitles, and review
-notes, then approve, reject, edit, regenerate, pause, resume, retry, cancel, or
-emergency-stop the work.
+```text
+Human request
+  -> authenticated NeedThisDone planner
+  -> rewritten instruction, ordered steps, constraints, cost estimate
+  -> human review and approval
+  -> Vercel dispatch RPC
+  -> frozen agent_run and agent_orchestration_tasks rows
+  -> signed Mac-mini bridge
+  -> loopback-only OpenClaw Gateway
+  -> signed progress, usage, artifacts, and completion callbacks
+  -> Supabase records and private Storage
+  -> authenticated dashboard and prospecting review queue
+```
 
-The orchestration model is provider-agnostic. A run may combine OpenClaw
-coordination, OpenRouter research or media generation, another approved LLM,
-an on-host/local model, and a human reviewer. Each task records its role,
-provider, model identifier, capabilities, inputs, outputs, and dependencies so
-the operator can see how the final artifact was produced.
+Supabase owns plans, approval events, frozen snapshots, runs, tasks, leases,
+model usage, artifacts, provenance, prospects, dossiers, outreach status, and
+suppression records. OpenClaw owns only transient execution context on the Mac
+mini. The browser never connects to OpenClaw or the Mac mini.
 
-## Safety and operating boundary
+## Planner lifecycle
 
-- The Mac mini initiates outbound HTTPS requests to Vercel and loopback
-  WebSocket/RPC requests to OpenClaw. OpenClaw is never publicly exposed.
-- An OpenRouter API key is stored only in the local environment profile; no
-  OAuth profile or worker activation is configured. If a worker is later
-  approved, its provider credential and OpenClaw gateway credential remain only
-  on the Mac mini/OpenClaw host. They are never stored in Supabase or sent to
-  the browser.
-- Agents may research public sources and prepare drafts or media. They cannot
-  publish content, send email, spend money, or change connected accounts.
-- Generated media is private Supabase Storage content and previews use
-  short-lived authenticated signed URLs.
-- The daily media ceiling is $0.99. An unknown, missing, or unreservable cost
-  fails closed. Reservations happen before provider work and reconciliation
-  records the actual cost afterward.
-- Daily content defaults to one 7–15 second, 9:16 MP4 package per local day,
-  with a 10-second default, thumbnail, script/storyboard, caption, and
-  SRT/VTT subtitles. Voiceover is optional. Publishing is never automatic.
+`POST /api/agent-plans` accepts a plain-language operator request and a target
+growth profile. The server reads the profile's database-pinned model, calls
+OpenRouter with the private server credential, validates the structured result,
+adds the mandatory forbidden actions, and stores a `draft`. It does not create
+a run or dispatch work.
 
-## Environment-file boundary
+The authenticated dashboard can edit or reject a draft with
+`PATCH /api/agent-plans/:id`, approve it with
+`POST /api/agent-plans/:id/approve`, and dispatch it with
+`POST /api/agent-plans/:id/dispatch`. Dispatch fails closed unless the plan is
+approved. Approval stores an immutable snapshot. Dispatch copies that snapshot
+to the run and every task, links the task to the growth profile, and sets every
+task's provider to `openclaw` with the pinned model ID.
 
-There is one active local profile, not two independent app environments: the
-root `.env.local` links to `.env.local.profile`, and `app/.env.local` links to
-the root active profile. If OpenRouter is later approved for local app work,
-store `OPENROUTER_API_KEY`, `OPENROUTER_PRIMARY_MODEL`, and
-`OPENROUTER_TEST_MODEL` only in the root `.env.local.profile`; never copy them
-to `app/.env.local`, a browser variable, an example file, or
-`.env.cloud.profile`. The private worker script intentionally requires the
-same three values in a separate regular chmod-600 file passed with
-`--env-file`, kept outside the repository.
+The planner allowlist covers public research, drafting, review, and media
+preparation. Every persisted plan explicitly forbids external messages,
+publishing, spending, connected-account changes, and external delivery. The
+OpenClaw instruction and Gateway request both set `deliver: false` and
+`bestEffortDeliver: false`.
 
-## Initial team
+The comparison model is evidence-only. It is not selected by the browser, is
+not used for dispatch, and is not copied into a client bundle. Provider keys
+and environment model configuration remain server/host private.
 
-1. Coordinator — decomposes the request and records the plan.
-2. Public-web researcher — gathers source-backed public evidence.
-3. Outreach writer — turns accepted evidence into a draft; it cannot send.
-4. Daily content producer — creates the script, media, composition, and
-   subtitle package through the approved provider task.
-5. Reviewer — checks artifacts and returns them to the operator approval queue.
+## OpenClaw Mac-mini runtime
 
-The task records are deliberately extensible: adding a new provider or local
-agent means registering its provider/model/capability metadata and bridge
-adapter, not changing the browser's approval contract.
+The Mac mini runs two separately supervised launchd processes:
 
-## Bridge contract
+```text
+launchd
+  |- OpenClaw Gateway: loopback-only ws://127.0.0.1:18789
+  `- NeedThisDone bridge: signed HTTPS polling to Vercel
+```
 
-The TypeScript bridge polls signed Vercel endpoints, claims leased tasks,
-connects to local OpenClaw through the pinned Gateway WebSocket protocol,
-reports progress, and submits artifacts. Every request has a timestamp,
-nonce, path-bound HMAC signature, lease check, and replay check.
+The Gateway process owns the private OpenRouter provider profile and approved
+runtime model configuration. The bridge process owns only the Vercel transport,
+worker identity, loopback Gateway token, and a private artifact staging folder.
+The bridge never receives a Supabase service-role key.
 
-The bridge does not receive a Supabase service-role key. Vercel's signed routes
-perform the privileged database and Storage operations.
+Active bridge environment:
 
-## Deployment prerequisites
+```text
+BRIDGE_API_URL=https://<vercel-app>
+OPENCLAW_BRIDGE_SECRET=<same value as Vercel>
+BRIDGE_OWNER_ID=<operator UUID>
+BRIDGE_WORKER_ID=mac-mini-01
+OPENCLAW_GATEWAY_TOKEN=<loopback Gateway token>
+OPENCLAW_GATEWAY_URL=ws://127.0.0.1:18789       # optional, loopback only
+BRIDGE_ARTIFACT_ROOT=<private local folder>     # optional
+BRIDGE_POLL_INTERVAL_MS=5000                    # optional
+OPENCLAW_REQUEST_TIMEOUT_MS=30000               # optional
+BRIDGE_VERSION=<bridge version>                 # optional
+BRIDGE_CAPABILITIES=<comma-separated allowlist> # optional
+```
 
-Before enabling a real worker:
+Keep these files separate and chmod 600:
 
-1. Apply and rehearse migration 087 locally.
-2. Set OPENCLAW_BRIDGE_SECRET only on Vercel and the Mac mini.
-3. If worker activation is approved, configure the Mac mini with the Vercel
-   URL, operator owner UUID, worker ID, OpenClaw loopback URL/token, the
-   separately stored OpenRouter credential, and the same private primary/test
-   model variables used by the app profile.
-4. Pair or authorize the pinned OpenClaw Gateway protocol version and run the
-   loopback smoke test.
-5. Install the launchd supervisor only after signed heartbeat, lease, artifact,
-   and emergency-stop checks pass.
+- bridge env file: the variables above;
+- OpenClaw provider profile: private OpenRouter credential and approved model
+  configuration, read only by the Gateway process;
+- Vercel env: `OPENROUTER_API_KEY`, approved server model configuration, and
+  `OPENCLAW_BRIDGE_SECRET`.
 
-The browser dashboard is the canonical interaction surface; OpenClaw's local
-Control UI remains an operational diagnostic surface.
+`PROSPECTING_WORKER_SECRET`, `PROSPECTING_WORKER_BASE_URL`, and
+`PROSPECTING_WORKER_ID` are legacy direct-worker variables. The direct worker
+and its routes remain available for rollback and comparison, but they must not
+run against the same queue as the OpenClaw bridge. They are not part of the
+active Mac-mini setup contract.
+
+## Bridge safety contract
+
+The bridge polls only the approved-plan claim function. It cannot claim an
+unplanned or unapproved orchestration task. Every request has a timestamp,
+nonce, path-bound HMAC signature, worker identity, and lease check.
+
+Before an approved-plan task calls the Gateway, the bridge reserves the plan's
+model budget. Completion must report provider usage and actual cost. Unknown
+costs, expired leases, reservation mismatches, overage, or callback failures
+fail closed. Repeated completion callbacks return the already recorded terminal
+task rather than creating another artifact.
+
+The initial OpenClaw capabilities are research, drafting, review, coordination,
+and media preparation. The bridge rejects task types for sending, publishing,
+spending, account changes, or arbitrary delivery. The Gateway is loopback-only
+and receives the frozen plan, task model, `deliver: false`, and
+`bestEffortDeliver: false` on every task request.
+
+Files are staged locally, uploaded only through a server-issued private Storage
+upload URL, and exposed to the authenticated frontend only through short-lived
+signed preview URLs. Videos, thumbnails, audio, and subtitles remain private
+Storage objects; dossiers, citations, drafts, usage, and status remain
+structured Supabase records.
+
+## Prospecting adapter
+
+An OpenClaw research artifact is not automatically a prospect or an outreach
+message. Only an explicit `prospecting` result on an approved, linked
+`research_public_web` task enters the adapter. The server and database require
+public HTTPS citations, evidence claims linked to those citations, an exact
+pinned model ID, worker/task/run linkage, and usage provenance.
+
+Validated results enter `prospect_dossiers` with `pending_review` status and
+remain subject to duplicate and suppression checks. Suggested outreach remains
+a draft. A human must use the existing dossier promotion and outreach approval
+functions before any sender path can act. A task that attempts to send or
+publish directly is rejected.
+
+## Operating controls
+
+- Use the browser dashboard as the canonical approval and dispatch surface.
+- Pause, cancel, retry, or emergency-stop a run from the dashboard; the bridge
+  observes the durable state and lease boundary.
+- Stop both launchd jobs before changing the Gateway profile, bridge binary, or
+  worker identity.
+- Disable the bridge secret and mark the worker stopped for an emergency stop.
+- Reconcile abandoned leases after a Mac or network outage before retrying.
+- Do not run the legacy prospecting worker while the OpenClaw bridge is active
+  for the same operator/profile.
+
+## Verification gates
+
+Before real activation, prove locally and record evidence for:
+
+1. fake-model planner output, malformed output, pinned-model selection, and
+   no-dispatch draft behavior;
+2. edit, rejection, approval, dispatch enforcement, snapshot immutability, and
+   idempotent retries;
+3. approved-plan-only bridge claims, signed callbacks, expired leases,
+   duplicate callbacks, emergency stop, provider failure, and offline recovery;
+4. model reservation/reconciliation and fail-closed overage;
+5. a fake local Gateway run with a harmless public research task;
+6. strict citation validation and a result in the prospecting review queue;
+7. private Storage upload and signed frontend preview;
+8. a negative test proving an unapproved message cannot be sent.
+
+Only after those local gates pass should the owner separately approve hosted
+migrations, Vercel credentials, Mac credentials, launchd installation, and one
+harmless Mac-mini research task. No autonomous outreach, production publish,
+spend, account change, hosted migration, or external message is part of this
+implementation.

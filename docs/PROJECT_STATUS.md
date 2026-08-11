@@ -7,22 +7,24 @@
 
 This is the implementation ledger. Update it in the same commit as every completed or materially changed implementation slice. It records only current execution state, validation, commits, rollback, and blockers.
 
-## Current local release-candidate gate — 2026-08-09
+## Current local release-candidate gate — 2026-08-10
 
 **Finish-line decision:** **Local release candidate proven.** The repository and disposable local Supabase boundary are proven. Hosted migration, production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
 
-The final command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, reset only local Supabase, replayed migrations `001`–`087`, restored the sanitized seed, and passed:
+The final command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, reset only local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed:
 
-- Code: lint with zero warnings, TypeScript, 209/209 required unit tests with zero skips, 50/50 accessibility checks, and the 49-page production build.
-- Database: no schema errors from local lint; schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, prospecting RLS 2/2, and consultation integration 1/1.
+- Code: lint with zero warnings, TypeScript, 214/214 required unit tests with zero skips, 50/50 accessibility checks, and the 49-page production build.
+- Database: no schema errors from local lint; schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, and consultation integration 1/1.
 - Authenticated browser workflows: retained smoke 45 passed with one intentional mobile exclusion for a desktop-only navigation assertion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2.
-- Mac bridge: build and 5/5 offline tests passed. The assembly used no provider credentials and made no external action.
+- Mac bridge: build and 6/6 offline tests passed. The assembly used no provider credentials and made no external action.
+
+The planner/OpenClaw slice is applied only to the disposable local database through migration `092`. Its proof is now part of the canonical `npm run verify:database` gate: 5/5 planner unit tests, 2/2 planner/OpenClaw RLS tests, 7/7 retained-schema checks, and 6/6 bridge offline tests. The single local database command selects the local profile, lints the schema, and runs every local Supabase security/lifecycle suite.
 
 **OpenRouter boundary:** The API key and two exact model IDs are stored only as private environment variables; no OAuth profile, worker activation, model request, or model selection has occurred. The root `.env.local` points to `.env.local.profile`; `app/.env.local` points to the root active profile. The server rejects missing or moving model IDs, the worker requires the same values in a separate chmod-600 `--env-file`, and the primary remains unpinned until the explicit approval-gated command is used.
 
 **Remaining blockers and recorded exceptions:**
 
-- Hosted migration parity is not complete: the read-only hosted history ends at `072`, while local repository migrations `073`–`087` are pending. No hosted write was made.
+- Hosted migration parity is not complete: the read-only hosted history ends at `072`, while local repository migrations `073`–`092` are pending. No hosted write was made.
 - `npm audit` reports 16 findings overall and 11 in the production dependency tree; production promotion is blocked pending owner-approved upgrades or an explicitly time-boxed exception. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The installed Supabase CLI is `2.65.5` while `2.113.0` is available. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The Playwright auto-start development-server path has a Tailwind parsing issue under the current local environment marker; the reproducible final gate uses the production-server mode above. Owner: frontend QA. Review/removal date: 2026-08-16.
@@ -30,7 +32,7 @@ The final command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIE
 
 **Operational boundaries:** Payments remain on the `/contact` fallback with no configured catalog links; real sender delivery requires an explicit provider mode and separate key; bridge requests remain path-bound HMAC/nonce authenticated; worker claims, approvals, idempotency, media caps, and fail-closed RLS were tested locally; no model, payment, sender, calendar, deployment, publish, spend, account, or external-message action was enabled.
 
-**Rollback:** No hosted rollback is required because no hosted state changed. Local verification is reproducible with the disposable reset gate. Revert the focused commits if needed; preserve migration history, evidence, and media records rather than deleting them. Any future hosted application of `073`–`087` requires a separate backup, dry run, approval, and forward rollback plan.
+**Rollback:** No hosted rollback is required because no hosted state changed. Local verification is reproducible with the disposable reset gate. Revert the focused commits if needed; preserve migration history, evidence, and media records rather than deleting them. Any future hosted application of `073`–`092` requires a separate backup, dry run, approval, and forward rollback plan.
 
 ## Current state map
 
@@ -41,13 +43,21 @@ origin/dev                   eae47ce          -> prior reviewed dev candidate
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> hosted history through 072
-  -> 073-086 are repository-only and unapplied there
+  -> 073-092 are repository-only and unapplied there
   -> old hosted state remains recoverable
 
 local Supabase
-  -> additive migrations applied through 087; local lint/RLS/assembly proof passed
-  -> retained schema, provisioning, RLS, completion, outcome, prospecting, cockpit, and auth proof passed
+  -> additive migrations applied through 092; focused planner/OpenClaw proof passed
+  -> retained schema, provisioning, RLS, completion, outcome, prospecting, cockpit, auth, plan approval, and provenance proof passed
 ```
+
+## App planner and OpenClaw execution slice — 2026-08-10
+
+Migrations `088`–`092` add draft-only app plans, immutable approval snapshots, OpenClaw task linkage, model-usage reservations, citation-backed prospecting provenance, and a service-role-only OpenClaw claim boundary. The authenticated dashboard now creates drafts through the server-only OpenRouter planner, supports edit/reject/approve/dispatch controls, and never dispatches automatically. The Mac bridge claims only approved OpenClaw tasks, keeps Gateway delivery disabled, reconciles provider usage, uploads private artifacts through server-issued grants, and leaves outreach pending human review.
+
+The local proof uses a fake completion client, a fake Gateway, real local Supabase RLS, idempotent plan lifecycle calls, the OpenClaw claim RPC, frozen run/task snapshots, strict HTTPS citation validation, provenance linkage, and authenticated direct-write denial. No hosted migration, provider call, launchd installation, real Mac task, external message, publication, spend, account change, or deployment occurred.
+
+Rollback is additive: keep the legacy direct prospecting worker available for comparison, stop one queue before starting the other, and use a reviewed forward migration if hosted activation is later approved. Do not run both workers against the same queue.
 
 There is no current `dev` application-to-cloud cutover. The future cutover is backup → reviewed migrations → hosted parity checks → deploy the proven `dev` commit → post-cutover verification. Until that sequence is approved and completed, `production` remains the old rollback/reference system.
 
@@ -71,11 +81,11 @@ There is no current `dev` application-to-cloud cutover. The future cutover is ba
 
 **Current implementation:** Migrations `079`–`081` add atomic project-to-pilot provisioning, project/customer linkage, authenticated work authorship, timezone-aware queue dates, idempotent approved-work completion with required manual evidence, and idempotent operational/financial outcomes. Migration `082` adds growth profiles, public-source prospects, evidence, suppression, outreach drafts, agent task leases/events, sender delivery events, outcomes, and additive RLS/RPC contracts. Migration `083` adds owner-scoped weekly priorities, suggested cockpit actions, and daily reflections. `/dashboard` is now the primary daily cockpit: it shows the mission, growth profile, three weekly big rocks, three next actions, waiting/reply/follow-up signals, and an evening reflection, while `/employee` and `/prospecting` remain detailed secondary views. The cockpit derives durable suggestions from existing work items, outreach messages, replies, follow-up dates, and outcomes; action and priority state survives reload. Its authenticated browser contract creates three priorities, completes and defers actions, reloads durable state, and saves a reflection. The sender action still executes only an approved record through an explicit deterministic fake or separately keyed Resend adapter; no real external message is sent by local proof.
 
-**Before review:** Run `npm run verify:assembly:fresh` and `git diff --check`. Database changes additionally require a fresh local reset, database lint, and focused real-RLS suites. Security claims require real authenticated sessions; no application bypass exists. Record any unavailable integration check below with an owner and removal date.
+**Before review:** Run `npm run verify:assembly:fresh` and `git diff --check`. Database changes additionally require a fresh local reset when needed, followed by `npm run verify:database`; that one command runs schema lint and the focused real-RLS suites. Security claims require real authenticated sessions; no application bypass exists. Record any unavailable integration check below with an owner and removal date.
 
 **Rollback:** Revert the focused implementation commits. For any database that receives `079`–`083`, revert callers first and use a separately reviewed forward migration; preserve prospect, suppression, outreach, sender-event, pilot, outcome, priority, action, and reflection history rather than deleting it as a rollback shortcut.
 
-**Blockers:** There is no known repository-code blocker to the local cockpit or approved-send proofs. The deterministic local worker now has an approval-gated primary pin path, a comparison-only benchmark path, and database-authoritative model execution; selecting/configuring one approved outbound sender and registering its signed delivery/reply webhook remain provider-gated work. Production promotion is still paused: hosted migrations `073`–`087`, hosted role/isolation proof, the controlled Google sign-in check, sender approval, webhook verification, dependency remediation, and deployment review remain external release work. Stripe and Calendar are required only before making their respective public claims. The production dependency audit reports 11 findings; major-framework remediation or a narrow owner-approved exposure exception is required before production promotion. Authenticated client collaboration has route/unit coverage but still needs its own real database/browser release proof before that broader customer-facing claim is promoted.
+**Blockers:** There is no known repository-code blocker to the local cockpit or approved-send proofs. The deterministic local worker now has an approval-gated primary pin path, a comparison-only benchmark path, and database-authoritative model execution; selecting/configuring one approved outbound sender and registering its signed delivery/reply webhook remain provider-gated work. Production promotion is still paused: hosted migrations `073`–`092`, hosted role/isolation proof, the controlled Google sign-in check, Mac launchd/OpenClaw proof, sender approval, webhook verification, dependency remediation, and deployment review remain external release work. Stripe and Calendar are required only before making their respective public claims. The production dependency audit reports 11 findings; major-framework remediation or a narrow owner-approved exposure exception is required before production promotion. Authenticated client collaboration has route/unit coverage but still needs its own real database/browser release proof before that broader customer-facing claim is promoted.
 
 **Provider decision:** An explicit provider-neutral sender action is implemented with deterministic fake mode and a separately keyed Resend adapter. No real outbound provider is approved or configured, and the transactional Resend key cannot activate prospecting. The internal proof remains manual: no subscription, Customer Portal, payment catalog, automatic Calendar action, agent daemon, or real outbound message is required. Existing guarded fallbacks remain truthful until separately tested provider paths are approved.
 
@@ -85,6 +95,7 @@ There is no current `dev` application-to-cloud cutover. The future cutover is ba
 
 | Date | Slice | Commit | Result | Rollback |
 | --- | --- | --- | --- | --- |
+| 2026-08-10 | App planner and OpenClaw supervised execution boundary | This working slice | Added migrations `088`–`092`, server-only planner routes, authenticated dashboard review controls, OpenClaw-only claim enforcement, model usage reservations, strict prospecting provenance, private artifact linkage, and a fake-model/fake-Gateway proof. The canonical local database gate now includes schema lint and planner/OpenClaw RLS coverage; the fresh assembly passed through `092`, and 6/6 bridge tests passed. Hosted migrations, provider credentials, launchd activation, real Mac execution, and external actions remain unenabled. | Revert the focused planner, adapter, bridge, test, and documentation changes; if hosted later receives these migrations, preserve plan, approval, usage, artifact, prospect, and provenance history with a reviewed forward migration. |
 | 2026-08-09 | Public frontend polish follow-up | `6aa6963`, `371a7a6`, `ba5aaf6`, `c28ef16` | Paired the Services and How It Works heroes with visible choice/process previews, aligned FAQ to the cream/forest system, removed its responsive overlap and mobile hydration mismatch, and added 8 public browser contracts. Lint, TypeScript, 43/44 public desktop/mobile browser checks, 50 accessibility checks, and the 49-page production build passed; no external state changed. | Revert these focused public frontend and browser-contract commits; preserve the bridge and route/data history. |
 | 2026-08-09 | Mac OpenClaw agent bridge foundation | This commit | Added a runnable Node 22+ bridge entrypoint, path-bound signed API client, loopback-only Gateway client, leased-task runner, private artifact upload boundary, daily media reservation/reconciliation guard, and five offline bridge tests. `npm ci && npm test` passed; migration `086`, provider credentials, worker supervision, hosted deployment, and external actions remain unenabled. | Revert this focused bridge, test, README, and documentation commit; no database or external rollback is required. |
 | 2026-08-09 | Insights and contact reading flow | This commit | Refreshed the Insights hub, retained article routes, cards, reading content, and CTAs into the cream/forest public system; updated the Contact hero and intake shell; and gave the Targeted Fix context a dedicated URL/problem/result layout with a clear scope note. Lint, TypeScript, unit, accessibility, diff, and 23/24 public desktop/mobile browser checks passed; no external state changed. | Revert this focused Insights, Contact, test, and documentation commit. |

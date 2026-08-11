@@ -11,7 +11,7 @@ This checklist separates software installed on the Mac from accounts, billing, O
 | Node.js | Homebrew Node `24.18.1` is the active runtime. | Nothing. Node 25 remains installed but unlinked. |
 | Codex | `codex-cli 0.145.0`; existing ChatGPT OAuth file is present. | Direct Codex CLI remains available; Hermes has separately authenticated and passed a read-only runtime proof. |
 | Hermes | Hermes Agent `0.19.1`; config schema 33; Chromium/browser tools; 71 bundled skills; two NeedThisDone/Codex workflow skills imported; `model.openai_runtime=codex_app_server`; separate ChatGPT/Codex OAuth session. | Read-only Hermes-to-Codex execution passed. No coding-edit proof, gateway, messaging platform, or scheduled job is running. |
-| OpenClaw | OpenClaw `2026.7.1-2` CLI. | No onboarding, provider, workspace, channel, gateway daemon, host execution, or production access. |
+| OpenClaw | OpenClaw `2026.7.1-2` CLI; NeedThisDone now has a loopback Gateway client and signed approved-plan bridge. | No onboarding, provider, workspace, channel, Gateway daemon, host execution, or production access. Local adapter proof is complete; host activation remains separately approved. |
 | Stripe | Stripe CLI `1.45.0`; application SDK and guarded `/contact` fallback already exist. | No CLI account login, selected offer, sandbox checkout, Payment Link/invoice, webhook, or production key. |
 | OpenRouter | Local API key is stored only in `.env.local.profile`; no OAuth profile or provider usage is part of the local proof. | Worker activation, model allowlist, and agent connections remain unapproved and untested. |
 
@@ -62,16 +62,16 @@ Exit proof: each agent completes one harmless prompt, reports the intended model
 
 Official references: [Hermes Codex runtime](https://hermes-agent.nousresearch.com/docs/user-guide/features/codex-app-server-runtime) and [Hermes documentation](https://hermes-agent.nousresearch.com/docs/).
 
-### 4. Onboard OpenClaw in cautious mode
+### 4. Onboard OpenClaw in cautious mode (only after the local adapter gate)
 
 1. Choose the Mac mini as the initial local host; bind the gateway to loopback only.
 2. Select OpenRouter as the model provider after its limits are configured.
 3. Begin with no email, messaging, browser profile, or production application credentials.
 4. Set execution to a cautious/approval-required policy with deny as the fallback. Never select YOLO/full unattended host execution.
 5. Do not install/start the background daemon until the policy is reviewed.
-6. Add one non-destructive research workflow only after a local foreground test.
+6. Add one non-destructive research workflow only after the local foreground test and the NeedThisDone plan approval/dispatch checks.
 
-Exit proof: `openclaw doctor`, loopback binding, approval denial, emergency stop, and one harmless research task all pass before daemon installation.
+Exit proof: `openclaw doctor`, loopback binding, approval denial, emergency stop, signed bridge callbacks, and one harmless dashboard-dispatched research task all pass before daemon installation. The browser must never connect directly to OpenClaw.
 
 Official references: [OpenClaw installation](https://docs.openclaw.ai/install/), [OpenRouter integration](https://docs.openclaw.ai/openrouter), and [execution approvals](https://docs.openclaw.ai/tools/exec-approvals).
 

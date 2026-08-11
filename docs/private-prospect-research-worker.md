@@ -1,12 +1,17 @@
-# Private prospect research worker
+# Legacy private prospect research worker
+
+This document describes the rollback/comparison worker. The normal Mac-mini
+path is now the approved-plan OpenClaw bridge described in
+[Agent Operations](AGENT_OPERATIONS.md). Do not run this worker against the
+same queue while the OpenClaw bridge is active.
 
 The research runner is intentionally Mac-mini-only. It prepares two public-web, citation-backed dossiers per configured profile and never sends, submits a contact form, activates a sender, or calls the sender route.
 
 ## What changes and what does not
 
-The worker can claim a signed daily research task, reserve model budget, use OpenRouter web search, and report a validated dossier. It cannot approve a draft or send it. A human must promote a dossier with a valid public recipient into the existing outreach review flow, approve it, and explicitly use the sender action.
+The worker can claim a signed legacy daily research task, reserve model budget, use OpenRouter web search, and report a validated dossier. It cannot approve a draft or send it. A human must promote a dossier with a valid public recipient into the existing outreach review flow, approve it, and explicitly use the sender action.
 
-The database migration is additive and local until separately reviewed. No hosted migration, sender activation, benchmark, scheduler installation, or external delivery is part of normal setup.
+The legacy database and routes remain additive and local until separately reviewed. No hosted migration, sender activation, benchmark, scheduler installation, or external delivery is part of normal setup.
 
 ## Private Mac-mini environment
 

@@ -27,14 +27,14 @@ Before proposing anything new, inspect the current repository and local proof. T
 
 | Component | What exists now | Responsibility now | Recommendation |
 | --- | --- | --- | --- |
-| Supabase | Postgres, Auth, RLS, Storage, and migrations through local `083` | Durable source of truth for users, roles, projects, customer boundaries, approvals, work, outreach, cockpit state, outcomes, and idempotency records | **Keep as-is as the source of truth; expand only for a demonstrated workflow need.** Hosted migrations `073`–`083` still require separate review. |
+| Supabase | Postgres, Auth, RLS, Storage, and additive migrations through local `092` | Durable source of truth for users, roles, projects, plans, approvals, runs, tasks, usage, artifacts, provenance, outreach, cockpit state, and outcomes | **Keep as-is as the source of truth; expand only for a demonstrated workflow need.** Hosted activation remains a separate approval gate. |
 | Redis | Node Redis client plus optional `REDIS_URL` integration | Short-lived cache, rate limiting, request deduplication, and transient counters; the provider-free proof deliberately runs with Redis disabled | **Keep as optional transient support.** Add locks or active-job state only when a measured worker need exists. Never move durable business state into Redis. |
 | Qdrant | No package, configuration, deployment, client, route, or call site found | None | **Do not add now.** There is no current Qdrant integration to preserve or connect. Reconsider only if a measured retrieval scale, latency, or isolation problem cannot reasonably be handled by the existing source of truth. |
 | Historical pgvector/search | Early migrations created `page_embeddings` and `match_page_embeddings`; migration `077` retired the table, function, callers, and content/search surface | Historical schema lineage only; no active application retrieval feature | **Keep the migration history for auditability; keep the runtime feature retired.** Reintroduce retrieval only through a new Phase 0 review with retention, tenant isolation, deletion, and cost evidence. |
 | Codex + GitHub | Active reviewed engineering workflow | Implement, test, review, and preserve application changes | **Keep as the engineering system.** Coding changes remain in this boundary. |
-| OpenClaw | Local CLI exists; no production provider, daemon, channel, or authenticated application adapter | Intended operations system for approved long-running browser, schedule, and external-tool work | **Keep as a deferred operations boundary.** Prove one narrow authenticated adapter before treating it as a product dependency. |
+| OpenClaw | Loopback Gateway client, signed approved-plan bridge, private artifact uploads, model reservations, and explicit prospecting adapter are implemented; host activation is not approved | Execution runtime for dashboard-approved research, drafting, review, and media preparation | **Use as the Mac-mini execution runtime after the local supervised proof.** Keep the Gateway loopback-only and the browser disconnected. |
 | Hermes | Mentioned in older planning; no current product adapter or gateway is required by the retained app | No current product responsibility | **Remove from the primary architecture and defer.** Reconsider only when a distinct orchestration problem, owner, boundary, and measured benefit are proven. |
-| OpenRouter | Provider boundary and optional environment variables; no model call is part of the provider-free assembly | Candidate routing layer for evaluated non-coding work | **Keep as an evaluation boundary, not a default.** Resolve model IDs, pricing, context, capabilities, and routing metadata from the live catalog. |
+| OpenRouter | Server-only planner client and private Gateway provider profile; exact models remain database/environment controlled | App-side planning plus the approved host provider lane | **Keep the comparison model comparison-only.** The planner uses the target profile's database-pinned primary and fails closed without pricing metadata. |
 
 The preferred separation is:
 
@@ -54,7 +54,11 @@ Codex + GitHub
   reviewed software engineering
 
 OpenClaw
-  approved operations execution, only through narrow authenticated adapters
+  approved operations execution on the Mac mini, only through the signed
+  planner/task adapter and loopback Gateway
+
+NeedThisDone planner
+  server-only OpenRouter planning; drafts and edits only; never dispatches
 ```
 
 The rule is simple: durable facts and decisions belong in Supabase; Redis may accelerate or coordinate temporary work; an agent or model never becomes the source of truth.
@@ -74,25 +78,29 @@ NeedThisDone on Next.js/Vercel
      +----------------------> Redis: optional transient support
      |                              cache, rate limits, deduplication
      |
-     +----------------------> OpenClaw: deferred operations adapter
-                                    approved browsing, schedules, tools
+     +----------------------> app-side planner: server-only OpenRouter call
+     |                              draft rewrite, steps, constraints, cost
+     |
+     +----------------------> signed Mac-mini bridge
+                                    approved frozen plan
+                                      -> loopback OpenClaw Gateway
 
 Codex + GitHub ---------------> reviewed application changes
 
-OpenRouter -------------------> evaluated model candidates only
+OpenRouter -------------------> planner primary and private Gateway provider lane
 Hermes -----------------------> deferred; not a product dependency
 Qdrant -----------------------> no integration
 ```
 
-The browser receives neither provider secrets nor agent credentials. Application routes authenticate the user, enforce Supabase RLS, and write durable decisions before any future adapter can act. External email, publishing, spending, customer-system changes, and destructive actions remain human-approved. A future adapter must carry a bounded task, authenticated actor, and idempotency key, then record a verified result in Supabase.
+The browser receives neither provider secrets nor agent credentials. Application routes authenticate the user, enforce Supabase RLS, and write durable plan approval before the bridge can claim a task. External email, publishing, spending, customer-system changes, and destructive actions remain human-approved. The bridge carries a bounded frozen task, worker identity, lease, reservation, and idempotency boundary, then records a verified result in Supabase.
 
 ## Model evaluation strategy
 
 Do not assume any configured model is automatically the best model or that a
-dated slug is free. The exact primary and comparison IDs live only in the
-private environment; the application rejects moving aliases and evaluates the
-two configured candidates against fixed, sanitized tasks before the primary is
-explicitly pinned.
+dated slug is free. The exact primary and comparison IDs remain private, and
+the application rejects moving aliases. A growth profile must explicitly pin
+the primary model in the database before the app planner can call it. The
+comparison model remains comparison-only.
 
 The OpenRouter model catalog exposes model IDs, canonical slugs, context lengths, modalities, pricing, supported parameters, and sorting metadata. The catalog should be queried at evaluation time rather than copied into permanent configuration. The Auto Router response identifies the model selected, and its request cost is the selected model's normal cost. See the [model catalog](https://openrouter.ai/docs/api/api-reference/models/get-models) and [Auto Router documentation](https://openrouter.ai/docs/guides/routing/routers/auto-router).
 
@@ -139,23 +147,25 @@ For every eventual recommendation, record why the model won, why the nearest alt
 5. Review failures and repairs by category. A cheaper model that needs repeated repair may be more expensive and less safe than a stronger model.
 6. Select a default only after the evidence is reviewed, budgets are enforced, and a rollback/fallback route is documented. Re-run the suite when a model slug, provider, prompt, tool adapter, or task distribution changes.
 
-No model call, OpenRouter key, OpenClaw action, or hosted provider configuration is required for the current local assembly. This section defines the gate for future work.
+The local assembly now includes a fake-model planner boundary and a fake
+Gateway bridge proof. Real provider credentials, hosted activation, and a Mac
+launchd installation remain separate gates.
 
 ## Delivery and safety rules
 
 - Keep Supabase RLS and server-side authorization as the application security boundary.
 - Keep durable workflow state, approvals, outcomes, idempotency keys, and audit history in Supabase.
 - Treat Redis failure as a degraded transient-support condition where safe; never make it the only copy of a business decision.
-- Keep OpenClaw disconnected until one narrow adapter proves authentication, callback verification, timeout behavior, emergency stop, and idempotent retry.
+- Keep OpenClaw host activation behind the narrow adapter proof: authentication, callback verification, timeout behavior, emergency stop, usage reconciliation, and idempotent retry.
 - Keep Codex responsible for software changes, tests, reviews, and commits.
 - Do not add Hermes, Qdrant, another queue, or another vector store without a new problem statement and Phase 0 approval.
 - Keep real sender, payment, calendar, model, and deployment claims behind their separate provider gates.
 
 ## Explicitly deferred
 
-- Hosted Supabase migrations `073`–`083` and production parity review.
+- Hosted Supabase migrations `088`–`092` and production parity review.
 - A real outbound sender and signed delivery/reply webhook.
-- OpenClaw authentication, operations adapter, daemon, and production access.
+- OpenClaw Gateway credentials, launchd installation, and production access.
 - Any Hermes-based orchestration layer unless a distinct need is demonstrated.
 - Qdrant or any new vector database.
 - Active semantic retrieval and long-term vector memory.

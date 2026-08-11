@@ -29,25 +29,23 @@ The public navigation is **Website Improvement · AI Operator · How It Works ·
 
 `/dashboard`, `/employee`, `/prospecting`, and `/admin/*` are private operational surfaces. Clients do not operate the dashboard. The operator may prepare research, drafts, and internal queues, but a human must approve every external message, publication, system change, or spend.
 
-Production outreach additionally requires the scoped worker boundary, public-evidence sourcing, suppression/unsubscribe handling, verified sender events, and a human-approved send. No public route reaches the Mac mini worker.
+Production outreach additionally requires the scoped worker boundary, public-evidence sourcing, suppression/unsubscribe handling, verified sender events, and a human-approved send. The app-side planner is draft-only; the signed Mac-mini bridge can execute only an approved frozen plan through loopback OpenClaw. No public route reaches the Mac mini worker.
 
 ## Architecture
 
 ```text
-Public site and private operator UI
-                |
-             Next.js
-                |
-     +----------+----------+
-     |                     |
-Supabase              Redis (optional)
-durable truth         transient cache, rate-limit,
-auth, RLS, records    deduplication, coordination
+Human -> Next.js planner -> approval -> Vercel task queue
+                                      |
+                              signed Mac-mini bridge
+                                      |
+                              loopback OpenClaw
+                                      |
+                        Supabase records + private Storage
 ```
 
 Supabase is the durable source of truth for projects, reports, private work, approvals, outcomes, suppression, and model-evaluation records. Redis is transient only. Qdrant and any replacement database are not part of this product.
 
-Provider boundaries are deliberately inactive unless separately approved. There is no implied deployment, hosted migration, Stripe checkout, model-provider activation, real sender, or client portal in this repository change.
+OpenRouter is server/host private: the planner uses the target profile's database-pinned primary, while the comparison model remains comparison-only. OpenClaw is the supervised Mac-mini execution runtime, but host credentials, launchd activation, hosted migration, real sender, publication, spend, account changes, and client portal remain separately approved gates.
 
 ## Model-evaluation boundary
 
@@ -76,10 +74,11 @@ npm run test:a11y
 npm run build
 npm run test:retained-smoke
 npm run verify:code
+npm run verify:database
 npm run verify:assembly
 ```
 
-`verify:assembly:fresh` resets only the disposable local Supabase database. It is not a hosted-migration command. Keep the environment on `local` before database checks; authenticated/RLS tests require a running local Supabase stack.
+`verify:database` is the single local database gate: it selects the local profile, runs local schema lint, and runs every retained security, RLS, planner/OpenClaw, prospecting, and consultation persistence check. Authenticated/RLS tests require a running local Supabase stack. `verify:assembly:fresh` remains the full release gate and resets only the disposable local Supabase database; neither command targets hosted Supabase.
 
 ## Hosted and provider release boundary
 

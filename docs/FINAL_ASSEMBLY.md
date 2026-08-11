@@ -16,7 +16,7 @@ For release evidence, rebuild the disposable local database first:
 npm run verify:assembly:fresh
 ```
 
-The `:fresh` command erases only local Supabase development rows, rebuilds migrations `001`–`083`, and restores the sanitized seed. It never selects the cloud profile.
+The `:fresh` command erases only local Supabase development rows, rebuilds migrations `001`–`092`, and restores the sanitized seed. It never selects the cloud profile.
 
 ## What the gate proves
 
@@ -24,7 +24,7 @@ The command removes optional provider credentials from its process, disables pro
 
 1. Local Supabase health and schema lint.
 2. Lint, TypeScript, required unit tests, accessibility tests, and production build.
-3. Exact 29-table retained manifest, database security, RLS/lifecycle, and consultation persistence checks.
+3. The one-command `verify:database` gate: local schema lint, exact retained manifest, database security, RLS/lifecycle, planner/OpenClaw approval/provenance, and consultation persistence checks.
 4. Real Supabase sessions for anonymous, owner, manager, viewer, and cross-customer behavior.
 5. Project → pilot provisioning → queue authoring → approval → manual completion evidence → outcome → historical reload.
 6. Prospecting profile, public-evidence discovery, per-message approval, dashboard send through deterministic fake mode, no-pre-approval-send, and idempotent sender-event behavior.
@@ -37,7 +37,7 @@ The authenticated lifecycle test also fails if any external provider credential 
 
 ## Latest recorded proof
 
-On 2026-08-08, the fresh assembly rebuilt migrations `001`–`083` and restored the sanitized seed. It passed without unexplained warnings: 192 required unit tests with 1 isolated opt-in skip, 48 accessibility checks, the production build, 32 database/security checks, 18 public desktop/mobile browser checks, 4 real-session authorization/lifecycle checks, 1 prospecting lifecycle check, 1 daily-cockpit lifecycle check, and 2 employee-workspace checks. The cockpit check created three weekly priorities, completed, deferred, and reopened generated actions, reloaded durable state, and recorded an evening reflection. The prospecting check configured a profile, discovered public evidence, rejected pre-approval send, approved the message, sent it through the deterministic fake sender, replayed the send idempotently, and replayed a bounce event while verifying suppression. The process contained no Stripe, Google, Resend, OpenAI, OpenRouter, or Calendar credential and made no Redis connection.
+On 2026-08-10, the fresh assembly rebuilt migrations `001`–`092` and restored the sanitized seed. It passed without unexplained warnings: 214/214 required unit tests, 50 accessibility checks, the production build, the one-command local database gate (schema lint, 7 schema-manifest checks, 14 security checks, 10 AI-employee RLS checks, 3 agent-operations RLS checks, 2 planner/OpenClaw RLS checks, 2 prospecting RLS checks, and 1 consultation integration check), 45 retained browser checks with one intentional mobile exclusion, 4 real-session authorization/lifecycle checks, 1 prospecting lifecycle check, 1 daily-cockpit lifecycle check, and 2 employee-workspace checks. The bridge separately passed its build and 6/6 offline tests. The process contained no Stripe, Google, Resend, OpenAI, OpenRouter, or Calendar credential and made no Redis connection.
 
 ## Provider-free behavior
 

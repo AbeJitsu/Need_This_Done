@@ -39,7 +39,7 @@ Do not edit `app/.env.local`; it must stay linked to the root active environment
 
 ## Database safety
 
-`npm run verify:database` is local-only by design. It selects `ENV_TARGET=local` before running the database checks against disposable local Supabase. For a fresh database, run `supabase db reset` first, then verify that the local schema is present before running the suite. Hosted checks require separate, explicitly named commands and a review of their target before they run. Never point a reset, migration, or destructive test at the hosted project.
+`npm run verify:database` is the one-command local database gate. It selects `ENV_TARGET=local`, runs local schema lint, and runs all retained security, RLS, planner/OpenClaw, prospecting, and consultation persistence checks against disposable local Supabase. For a fresh database, run `supabase db reset --local` first, then run the gate. Hosted checks require separate, explicitly named commands and a review of their target before they run. Never point a reset, migration, or destructive test at the hosted project.
 
 ## Recovery
 
