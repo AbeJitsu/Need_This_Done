@@ -1,5 +1,7 @@
 # NeedThisDone Agent Operations
 
+The cloud cutover and production activation order is controlled by the [canonical launch checklist](launch/LAUNCH_CHECKLIST.md). This document supplies the agent boundary and local proof for checklist items 10–16 and 21; it does not authorize hosted migration, deployment, provider activation, daemon installation, or external delivery.
+
 ## System boundary
 
 The private `/dashboard` is the operator command center. The application LLM
@@ -162,8 +164,10 @@ Before real activation, prove locally and record evidence for:
 7. private Storage upload and signed frontend preview;
 8. a negative test proving an unapproved message cannot be sent.
 
-Only after those local gates pass should the owner separately approve hosted
-migrations, Vercel credentials, Mac credentials, launchd installation, and one
-harmless Mac-mini research task. No autonomous outreach, production publish,
+Only after those local gates pass should the owner separately approve launch
+checklist items 3–5 (hosted backup and migrations), 7–10 (deployment, secrets,
+authorization, and model activation), 12–15 (Mac onboarding, launchd, safety
+negatives, and one harmless task), 16–18 (provenance and sender canaries), and
+21 (reliability and rollback). No autonomous outreach, production publish,
 spend, account change, hosted migration, or external message is part of this
-implementation.
+local proof.

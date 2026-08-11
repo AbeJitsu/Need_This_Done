@@ -4,12 +4,13 @@
 **Active branch:** `dev`
 **Canonical product architecture and milestone plan:** [ROADMAP.md](../ROADMAP.md)
 **Current release claims and validation:** [RELEASE_EVIDENCE.md](RELEASE_EVIDENCE.md)
+**Canonical cloud promotion and production launch control:** [launch checklist](launch/LAUNCH_CHECKLIST.md)
 
 This is the implementation ledger. Update it in the same commit as every completed or materially changed implementation slice. It records only current execution state, validation, commits, rollback, and blockers.
 
 ## Current local release-candidate gate — 2026-08-10
 
-**Finish-line decision:** **Local release candidate proven.** The repository and disposable local Supabase boundary are proven. Hosted migration, production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
+**Finish-line decision:** **Local release candidate proven; technical cloud launch is the active critical path.** The repository and disposable local Supabase boundary are proven. The reviewed `dev` branch replaces the old production application after the launch checklist passes. Hosted migrations `073`–`092`, production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
 
 The final command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, reset only local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed:
 
@@ -37,9 +38,9 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 ## Current state map
 
 ```text
-production/origin/production 8b8d429          -> old hosted production product
-local dev                    caceac5 + docs                    -> outreach foundation proven locally
-origin/dev                   eae47ce          -> prior reviewed dev candidate
+production/origin/production 8b8d429          -> old hosted production product and application rollback reference
+local dev                    current `dev`   -> reviewed replacement candidate; exact SHA is maintained in the launch checklist
+origin/dev                   7d40e00          -> prior remote dev candidate; pending reviewed push
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> hosted history through 072
@@ -59,7 +60,9 @@ The local proof uses a fake completion client, a fake Gateway, real local Supaba
 
 Rollback is additive: keep the legacy direct prospecting worker available for comparison, stop one queue before starting the other, and use a reviewed forward migration if hosted activation is later approved. Do not run both workers against the same queue.
 
-There is no current `dev` application-to-cloud cutover. The future cutover is backup → reviewed migrations → hosted parity checks → deploy the proven `dev` commit → post-cutover verification. Until that sequence is approved and completed, `production` remains the old rollback/reference system.
+Cloud promotion is the active `dev` application-to-cloud cutover. The required sequence is [launch checklist](launch/LAUNCH_CHECKLIST.md) items 1–22: freeze and verify the exact `dev` commit, push it, back up hosted Supabase, review and apply migrations `073`–`092`, prove hosted parity, fast-forward production, configure and verify Vercel, run hosted authorization/provider/Mac checks, then complete reliability and rollback proof. Until that sequence is approved and completed, `production` remains the old application rollback reference at `8b8d429`.
+
+Technical launch and paid business proof are separate. Checklist items 23 and 24 remain incomplete until one paid Website Improvement engagement and one paid Managed AI Operator pilot with four human-led weekly briefs are actually delivered.
 
 ## Current public-site progression slice — 2026-08-09
 

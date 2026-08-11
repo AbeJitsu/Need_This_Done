@@ -2,7 +2,7 @@
 
 This checklist separates software installed on the Mac from accounts, billing, OAuth consent, secrets, production permissions, and business choices that require Abe in a browser or provider dashboard.
 
-> This entire checklist is outside the repository-only internal-pilot finish line. None of these account or machine actions blocks the manual local pilot.
+> Cloud promotion is now the active critical path. The [canonical launch checklist](LAUNCH_CHECKLIST.md) owns the numbered activation order; this runbook provides provider-specific procedures for items 3–5, 8, 10, 12–15, 17, 18, and 20. These actions remain separately approved from one another. None of them is proven by the provider-free local pilot.
 
 ## Current local foundation
 
@@ -108,28 +108,15 @@ provider-specific restricted credential
 - OpenRouter keys route models only; they do not authorize Supabase, Stripe, email, or deployment access.
 - Stripe live mode, hosted Supabase writes, Vercel deployment, messaging channels, and background daemons each remain separate approvals.
 
-## Recommended activation order
+## Launch checklist mapping
 
-```text
-Context7 key revoked
-        |
-        v
-OpenRouter account + hard limit
-        |
-        v
-Hermes -> Codex read-only proof (complete)
-        |
-        v
-OpenClaw foreground + deny/approval proof
-        |
-        v
-Stripe test offer and checkout proof
-        |
-        v
-NeedThisDone authenticated adapters
-        |
-        v
-Only then: reviewed daemons and production permissions
-```
+- Hosted backup, migration dry run, migration approval, and hosted parity: items 3–6.
+- Vercel secret/deployment boundary and hosted authorization: items 7–9.
+- OpenRouter limits, model evaluation, and primary pin: item 10.
+- OpenClaw cautious onboarding, launchd supervision, safety negatives, and one harmless task: items 12–15.
+- Artifact/prospect provenance: item 16.
+- Transactional and prospecting sender canaries: items 17–18.
+- Stripe test/live canary and minimal payment references: item 20.
+- Failure injection, emergency stop, and application rollback: item 21.
 
-This provider setup runs alongside—but does not replace—the Supabase migration and production-cutover gate.
+Hermes remains a local operator tool and is not a separate production activation gate. The old production commit `8b8d429` remains the application rollback reference; hosted database rollback is forward-only.

@@ -1,10 +1,10 @@
 # Release Evidence
 
-This matrix defines what NeedThisDone may claim and the proof required before production promotion. A passing mock proves application branching, not database security or a third-party service.
+This matrix defines what NeedThisDone may claim and the proof required before production promotion. A passing mock proves application branching, not database security or a third-party service. The canonical numbered control record is the [production launch checklist](launch/LAUNCH_CHECKLIST.md); this file is its evidence ledger.
 
 ## Current local release-candidate gate — 2026-08-10
 
-**Decision:** **Local release candidate proven.** This does not authorize hosted migration, production promotion, provider activation, payment, deployment, or legal publication.
+**Decision:** **Local release candidate proven; technical cloud launch remains open.** Cloud promotion is the active critical path. This local proof does not authorize hosted migration, production promotion, provider activation, payment, deployment, or legal publication. The reviewed `dev` branch replaces the old production application only after the launch checklist passes; `8b8d429` remains the application rollback reference.
 
 `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh` reset only disposable local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed lint with zero warnings, TypeScript, 214/214 required unit tests with zero skips, 50/50 accessibility checks, the 49-page production build, local schema lint with no errors, schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, consultation integration 1/1, retained smoke 45 passed with one intentional mobile exclusion for a desktop-only navigation assertion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2. The separately run bridge build and 6/6 offline bridge tests also passed. No provider credential or hosted state was used.
 
@@ -12,9 +12,9 @@ The planner/OpenClaw proof is included in the canonical `npm run verify:database
 
 **Provider and secret boundary:** An OpenRouter API key and two exact model IDs are stored only as private environment variables; no OAuth profile, worker activation, model request, or model selection has occurred. The active local environment is one profile, with root `.env.local` linked to `.env.local.profile` and `app/.env.local` linked to the root active profile. The server validates the IDs, the comparison runner cannot change the primary route, and a future Mac worker must use the same private values in its own chmod-600 `--env-file` outside the repository. The assembly clears provider credentials and model configuration and uses no payment, sender, calendar, deployment, publish, spend, account, or external-message action.
 
-**Release blockers and exceptions:** Hosted history is through `072`; local migrations `073`–`092` remain repository-only, and no hosted write occurred. Hosted parity, Mac launchd proof, and a harmless real Gateway task are still required before activation. `npm audit` reports 16 findings overall and 11 production-tree findings, so production promotion is blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.113.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
+**Release blockers and exceptions:** Hosted history is through `072`; local migrations `073`–`092` remain repository-only, and no hosted write occurred. Launch checklist items 2–22 still require hosted backup, migration approval, parity, deployment, provider, Mac, live canary, reliability, rollback, and owner evidence. `npm audit` reports 16 findings overall and 11 production-tree findings, so production promotion is blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.113.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
 
-**Rollback:** No hosted rollback is needed because no hosted state changed. Repeat the disposable local reset/assembly gate to reproduce the evidence. Revert focused local commits if necessary; preserve migration history, approval evidence, and media records. Treat any future hosted application of `073`–`092` as a separate backup, dry-run, approval, and forward-rollback gate.
+**Rollback:** No hosted rollback is needed because no hosted state changed. Repeat the disposable local reset/assembly gate to reproduce the evidence. Revert focused local commits if necessary; preserve migration history, approval evidence, and media records. Treat any future hosted application of `073`–`092` as launch checklist items 3–6: separate backup, dry run, approval, parity, and forward-rollback evidence. Use `8b8d429` only as the application rollback reference.
 
 ## Paid-proof gate history — 2026-08-08
 
@@ -60,6 +60,8 @@ Latest current-slice verification (2026-08-08): `npm run verify:assembly` passed
 5. A warning or skipped required check is a failed release unless its owner, reason, scope, and removal date are recorded in `docs/PROJECT_STATUS.md`.
 6. No generated local/hosted schema diff may be applied without classifying every statement against the retained product boundary.
 7. `npm run verify:assembly:fresh` is the final local delivery gate. It may reset only the local Supabase database and must run with optional external-provider credentials absent.
+
+The local gate is checklist item 1 evidence, not technical production launch. Items 2–22 must be completed in the [canonical launch checklist](launch/LAUNCH_CHECKLIST.md) before the hosted application is called live. Items 23 and 24 are separate paid-business proof gates.
 
 The retained-schema manifest is mandatory within `npm run verify:database`. After local migration `092`, it asserts the current retained
 RLS tables, including the growth profile, prospect, outreach, suppression, worker-task, sender-event,

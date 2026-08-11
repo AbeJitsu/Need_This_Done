@@ -11,6 +11,12 @@ Prove the two managed offers with real paid delivery while preserving the existi
 
 Neither offer is a redesign, integration, multi-page build, client dashboard, autonomous agent, or automatic recurring purchase.
 
+## Active cloud launch critical path
+
+Cloud promotion is the active critical path after the local release candidate. The reviewed `dev` branch is the replacement for the old production application. Hosted Supabase must receive and pass migrations `073`–`092` before the new application is live; old production commit `8b8d429` is the application rollback reference only. Execute the numbered [production launch checklist](docs/launch/LAUNCH_CHECKLIST.md) in order, with backup, migration, deployment, secret provisioning, and live provider actions as separate approvals.
+
+Technical launch is a separate gate from business proof: checklist items 1–22 cover the hosted product, providers, Mac runtime, reliability, and rollback; item 23 requires one paid $500 Website Improvement engagement; item 24 requires one paid 30-day Managed AI Operator pilot with four human-led weekly briefs.
+
 ## Work sequence
 
 | Priority | Status | Work | Exit condition |

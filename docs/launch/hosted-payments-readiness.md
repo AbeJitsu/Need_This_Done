@@ -1,10 +1,12 @@
 # Stripe readiness
 
+The Stripe canary is checklist item 20 in the [canonical launch checklist](LAUNCH_CHECKLIST.md). Cloud promotion is the active critical path, but payment credentials, payment references, signed webhooks, and the owner-controlled canary remain separately approved. The paid business gates are separate checklist items 23 and 24.
+
 ## Current truth
 
 Stripe is a planned provider boundary, not a live payment product yet.
 
-Hosted payment setup is outside the repository-only internal-pilot finish line and does not block manual pilot operation.
+Hosted payment setup is not part of the provider-free local finish line and does not block manual pilot operation. It does block claiming that the hosted payment path is production-ready.
 
 - The Stripe SDK dependency remains installed for future server-side work.
 - The repository-owned catalog currently contains two proposal-based offers with no fixed price and no Payment Link.

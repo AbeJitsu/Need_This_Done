@@ -1,6 +1,6 @@
 # Google API and Calendar readiness
 
-> Live Calendar setup is outside the repository-only internal-pilot finish line. Scheduling may remain manual during the pilot.
+> Live Calendar setup is checklist item 19 in the [canonical launch checklist](LAUNCH_CHECKLIST.md). Cloud promotion is the active critical path, but Calendar credentials, hosted migration `073`, OAuth, event canaries, and cleanup remain separately approved. Scheduling may remain manual during the pilot.
 
 ## What we have
 
@@ -27,6 +27,7 @@ The Calendar integration currently includes:
 - No controlled live Google Calendar API check has been completed.
 - No retained consultation caller creates, updates, or cancels a Calendar event.
 - Event idempotency and a durable `calendar_event_id`/retry record are not implemented.
+- The consultation caller and durable event-idempotency reference must be implemented before checklist item 19 can pass.
 - The hosted `073` encryption migration remains pending, and the server-only `CALENDAR_TOKEN_ENCRYPTION_KEY` is not provisioned.
 - A controlled hosted OAuth callback has not yet proved production cookie, redirect, and provider configuration behavior.
 

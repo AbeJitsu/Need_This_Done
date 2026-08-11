@@ -2,6 +2,8 @@
 
 The retained NeedThisDone internal pilot must be provable with repository code and local infrastructure only. Stripe, Google, Resend, OpenAI, OpenRouter, Hermes, and OpenClaw credentials are not prerequisites.
 
+Cloud promotion is now the active critical path after this provider-free local gate. The reviewed `dev` branch is the replacement for old production, hosted migrations `073`–`092` are required before the new application is live, and `8b8d429` remains the application rollback reference. Track the hosted cutover and provider canaries in the [canonical launch checklist](launch/LAUNCH_CHECKLIST.md), not in a separate activation order.
+
 ## One-command proof
 
 From `app/`, with Docker and local Supabase running:
@@ -49,4 +51,4 @@ On 2026-08-10, the fresh assembly rebuilt migrations `001`–`092` and restored 
 
 ## Delivery boundary
 
-A passing provider-free assembly means the repository is ready for Abe and Andrea to run the manual internal pilot. It does not prove hosted migration parity, deployment, live email, Google Calendar, Stripe payment, or autonomous agent execution. Those claims keep their own release gates in [RELEASE_EVIDENCE.md](RELEASE_EVIDENCE.md).
+A passing provider-free assembly is checklist item 1 evidence and means the repository is ready for Abe and Andrea to run the manual internal pilot. It does not prove hosted migration parity, deployment, live email, Google Calendar, Stripe payment, or autonomous agent execution. Those claims keep their own release gates in [RELEASE_EVIDENCE.md](RELEASE_EVIDENCE.md) and items 2–22 of the [launch checklist](launch/LAUNCH_CHECKLIST.md). Technical launch is separate from paid business proof in items 23 and 24.
