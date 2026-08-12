@@ -56,7 +56,7 @@ Status values:
 - **Owner:** Release owner
 - **Prerequisites:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
 - **Live procedure:** Push the exact reviewed SHA to `origin/dev`; verify the remote ref resolves to the same SHA with `git ls-remote origin refs/heads/dev`.
-- **Evidence:** On 2026-08-12, read-only remote verification resolved local `dev` and `origin/dev` to `0c8c283`. The reviewed runtime candidate `2cbcb38` is an ancestor of that ref, and `8b8d429` remains the production rollback reference and an ancestor of the candidate. The worktree was clean, `git diff --check` passed, and the post-candidate commits were documentation/evidence synchronization only; no production or hosted service changed.
+- **Evidence:** On 2026-08-12, read-only remote verification resolved local `dev`, `origin/dev`, and `git ls-remote origin refs/heads/dev` to `4745e34be2fe602531929b35f15c3040fb50663e`. The reviewed runtime candidate `2cbcb38` is an ancestor of that ref, and `8b8d429` remains the production rollback reference and an ancestor of the candidate. The worktree was clean, `git diff --check` passed, and the post-candidate commits were documentation/evidence synchronization only; no production or hosted service changed.
 - **Approval:** Recorded — the requested branch publish was approved for item 2 only; production promotion and all hosted/provider actions remain separate approvals.
 - **Rollback:** Do not force-push. If the branch must be corrected, publish a reviewed replacement commit and record both SHAs; preserve the prior remote ref in the evidence.
 
@@ -74,8 +74,8 @@ Status values:
 - **Owner:** Database migration reviewer
 - **Prerequisites:** Items 1–3 passed; cloud profile points to the intended Supabase project; backup checksums are recorded.
 - **Live procedure:** Review migrations `073`–`092` and run the linked hosted dry run. Classify every statement affecting tables, policies, functions, triggers, constraints, indexes, grants, buckets, and data. Compare the result with the retained local contract and stop on unexplained drift.
-- **Evidence:** Retain the dry-run transcript, migration list, statement classification, drift decision, schema/object inventory, and reviewer notes. Do not print credentials.
-- **Approval:** Required — migration reviewer and database owner approve the exact `073`–`092` change set.
+- **Evidence:** The read-only dry run completed successfully on 2026-08-12 and listed exactly `073`–`092`. The transcript, migration fingerprint, statement classification, drift decision, hosted schema/Storage inventory, and remaining review decisions are in [Step 4 evidence](step-4-migration-dry-run-2026-08-12.md). No credentials were printed and no hosted state changed.
+- **Approval:** Read-only dry-run authorization was recorded from the requesting owner on 2026-08-12. Migration reviewer and database owner approval of the exact `073`–`092` change set—especially destructive `076`–`078`, bucket normalization in `074`, and hosted data normalization in `084`—is still required.
 - **Rollback:** No hosted change has occurred. Repair or replace the migration plan and rerun the dry run; never reset the hosted project.
 
 ### 5. Apply migrations `073`–`092` to hosted Supabase — `PENDING_APPROVAL`

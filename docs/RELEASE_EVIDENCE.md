@@ -22,7 +22,11 @@ The planner/OpenClaw proof is included in the canonical `npm run verify:database
 
 The backup for hosted project `oxhjtmozsdstbokwtnwa` is retained outside the repository at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry`. The SQL snapshot was preserved without overwrite. The mode-`700` directory contains mode-`600` artifacts, and `SHA256SUMS-FINAL.txt` verifies all eight final artifacts. Storage metadata records one private `project-attachments` bucket and 217 object metadata records; pagination completed and object contents were not downloaded. The read-only hosted migration-history query returned 68 rows with latest version `072`.
 
-Independent readability, permissions, symlink, checksum, JSON/JSONL, duplicate-name, and no-object-content checks passed. The established read-only local recovery preflight also passed without resetting, restoring, querying, or migrating any database. The next gate is the separately approved hosted migration dry run for `073`–`092`.
+Independent readability, permissions, symlink, checksum, JSON/JSONL, duplicate-name, and no-object-content checks passed. The established read-only local recovery preflight also passed without resetting, restoring, querying, or migrating any database. The read-only hosted migration dry run for `073`–`092` is now recorded in the [Step 4 evidence record](launch/step-4-migration-dry-run-2026-08-12.md). The next gate is migration-reviewer and database-owner approval of the exact change set; no hosted write has been authorized.
+
+## Hosted migration dry-run gate — 2026-08-12
+
+The linked `supabase db push --dry-run` completed successfully against project `oxhjtmozsdstbokwtnwa` and listed exactly migrations `073`–`092`. The detailed record classifies schema, data, Storage, routine, policy, trigger, constraint, index, and grant effects, and records the known drift decisions. The gate remains `PENDING_APPROVAL`: migrations `076`–`078` are destructive retirement cleanup, `074` normalizes the existing bucket MIME allowlist, and `084` mutates existing growth-profile rows. No hosted migration, data, Storage object, provider, secret, or deployment state changed.
 
 ## Paid-proof gate history — 2026-08-08
 
