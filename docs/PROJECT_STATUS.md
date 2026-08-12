@@ -25,7 +25,7 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 
 **Remaining blockers and recorded exceptions:**
 
-- Hosted migration parity is not complete: the read-only hosted history ends at `072`, while local repository migrations `073`–`092` are pending. No hosted write was made.
+- Hosted migration parity is not complete: the read-only hosted history ends at `072`, while local repository migrations `073`–`092` are pending. Launch checklist item 3 backup evidence is complete; items 4–22 remain separate hosted release gates. No hosted write was made.
 - `npm audit` reports 16 findings overall and 11 in the production dependency tree; production promotion is blocked pending owner-approved upgrades or an explicitly time-boxed exception. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The installed Supabase CLI is `2.65.5` while `2.113.0` is available. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The Playwright auto-start development-server path has a Tailwind parsing issue under the current local environment marker; the reproducible final gate uses the production-server mode above. Owner: frontend QA. Review/removal date: 2026-08-16.
@@ -34,6 +34,14 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 **Operational boundaries:** Payments remain on the `/contact` fallback with no configured catalog links; real sender delivery requires an explicit provider mode and separate key; bridge requests remain path-bound HMAC/nonce authenticated; worker claims, approvals, idempotency, media caps, and fail-closed RLS were tested locally; no model, payment, sender, calendar, deployment, publish, spend, account, or external-message action was enabled.
 
 **Rollback:** No hosted rollback is required because no hosted state changed. Local verification is reproducible with the disposable reset gate. Revert the focused commits if needed; preserve migration history, evidence, and media records rather than deleting them. Any future hosted application of `073`–`092` requires a separate backup, dry run, approval, and forward rollback plan.
+
+## Hosted backup gate — 2026-08-12
+
+Launch checklist item 3 passed for hosted Supabase project `oxhjtmozsdstbokwtnwa`. The protected backup is outside the repository at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry`; the retained SQL snapshot was not overwritten. The directory is mode `700`, its backup artifacts are mode `600`, and the final SHA-256 manifest verifies eight artifacts.
+
+The Storage metadata capture found one private `project-attachments` bucket and 217 object metadata records. Pagination completed, object contents were not downloaded, and the JSON/JSONL inventory passed shape, duplicate-name, permission, symlink, checksum, and no-content checks. A read-only hosted migration-history query returned 68 rows, latest `072`. The established read-only local recovery preflight passed, and the new snapshot independently passed readability, permissions, checksum, and inventory validation. No hosted migration, deployment, provider activation, secret change, or other hosted write occurred.
+
+The next release gate is item 4, the hosted migration dry run, and it requires a separate migration review and approval. Preserve the backup as the recovery reference; do not delete or overwrite it during retries.
 
 ## Current state map
 
@@ -98,6 +106,7 @@ Technical launch and paid business proof are separate. Checklist items 23 and 24
 
 | Date | Slice | Commit | Result | Rollback |
 | --- | --- | --- | --- | --- |
+| 2026-08-12 | Hosted Step 3 recovery backup | This working slice | Captured the protected hosted SQL, Storage metadata/object inventory, and read-only hosted migration history through `072`; verified permissions, checksums, readability, JSON/JSONL shape, and that object contents were not downloaded. No hosted state changed. | Preserve `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry`; future migration work remains separately approved and forward-only. |
 | 2026-08-11 | Cloud launch control and reviewed `dev` publish | `4f1dac4` | Added the canonical 24-item launch checklist, aligned all launch/status runbooks to the active cloud critical path, revalidated the provider-free local release gate through migration `092`, and fast-forwarded `origin/dev` to the reviewed candidate plus synchronized evidence. Hosted Supabase, `production`, Vercel, providers, and live canaries remain unchanged. | Keep `8b8d429` as the application rollback reference; correct the remote branch with a reviewed replacement commit, never a force-push. |
 | 2026-08-10 | App planner and OpenClaw supervised execution boundary | This working slice | Added migrations `088`–`092`, server-only planner routes, authenticated dashboard review controls, OpenClaw-only claim enforcement, model usage reservations, strict prospecting provenance, private artifact linkage, and a fake-model/fake-Gateway proof. The canonical local database gate now includes schema lint and planner/OpenClaw RLS coverage; the fresh assembly passed through `092`, and 6/6 bridge tests passed. Hosted migrations, provider credentials, launchd activation, real Mac execution, and external actions remain unenabled. | Revert the focused planner, adapter, bridge, test, and documentation changes; if hosted later receives these migrations, preserve plan, approval, usage, artifact, prospect, and provenance history with a reviewed forward migration. |
 | 2026-08-09 | Public frontend polish follow-up | `6aa6963`, `371a7a6`, `ba5aaf6`, `c28ef16` | Paired the Services and How It Works heroes with visible choice/process previews, aligned FAQ to the cream/forest system, removed its responsive overlap and mobile hydration mismatch, and added 8 public browser contracts. Lint, TypeScript, 43/44 public desktop/mobile browser checks, 50 accessibility checks, and the 49-page production build passed; no external state changed. | Revert these focused public frontend and browser-contract commits; preserve the bridge and route/data history. |

@@ -4,7 +4,7 @@ This is the canonical numbered control document for promoting the reviewed `dev`
 release candidate to hosted production. Provider runbooks and setup notes point
 to these item numbers; they do not define a second activation order.
 
-**Last reviewed:** 2026-08-11
+**Last reviewed:** 2026-08-12
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
 **Current release candidate (runtime verified):** `2cbcb38` (`dev`)
@@ -56,17 +56,17 @@ Status values:
 - **Owner:** Release owner
 - **Prerequisites:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
 - **Live procedure:** Push the exact reviewed SHA to `origin/dev`; verify the remote ref resolves to the same SHA with `git ls-remote origin refs/heads/dev`.
-- **Evidence:** On 2026-08-11, `git push origin dev` fast-forwarded `origin/dev` from `7d40e00` to `e86af8e`; the later evidence-only synchronization advanced it to `4f1dac4`. The worktree was clean, `production` remained an ancestor, and no production or hosted service changed.
+- **Evidence:** On 2026-08-12, read-only remote verification resolved local `dev` and `origin/dev` to `0c8c283`. The reviewed runtime candidate `2cbcb38` is an ancestor of that ref, and `8b8d429` remains the production rollback reference and an ancestor of the candidate. The worktree was clean, `git diff --check` passed, and the post-candidate commits were documentation/evidence synchronization only; no production or hosted service changed.
 - **Approval:** Recorded — the requested branch publish was approved for item 2 only; production promotion and all hosted/provider actions remain separate approvals.
 - **Rollback:** Do not force-push. If the branch must be corrected, publish a reviewed replacement commit and record both SHAs; preserve the prior remote ref in the evidence.
 
-### 3. Back up hosted Supabase — `PENDING_APPROVAL`
+### 3. Back up hosted Supabase — `PASSED`
 
 - **Owner:** Database owner
 - **Prerequisites:** Item 1 passed; intended hosted project confirmed; secure backup destination and recovery operator available.
 - **Live procedure:** Capture hosted schema, data, roles/grants, Storage bucket metadata/object inventory, and checksums. Verify the files are readable and rehearse the recovery instructions without changing hosted state.
-- **Evidence:** Store the backup location outside the repository, SHA-256 checksums, file modes/retention, readability result, recovery runbook, and the old hosted-state reference in the secure release record.
-- **Approval:** Required — database owner explicitly approves the backup scope and retention location before any hosted migration.
+- **Evidence:** On 2026-08-12, the hosted project `oxhjtmozsdstbokwtnwa` was captured into `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry` without overwriting the retained SQL snapshot. `schema.sql`, `data.sql`, and `roles.sql` are readable and non-empty; the directory is mode `700`, backup files are mode `600`, and `SHA256SUMS-FINAL.txt` verifies all eight final artifacts. Storage metadata contains one private `project-attachments` bucket and 217 object metadata records; pagination completed and object contents were not downloaded. The read-only hosted migration-history query returned 68 rows with latest version `072`. JSON/JSONL shape, duplicate-name, permissions, symlink, checksum, and no-object-content validations passed. The existing read-only local recovery preflight also passed against the established restricted historical snapshot; no hosted state was changed.
+- **Approval:** Recorded — the requesting owner explicitly authorized completion of Step 3 on 2026-08-12. This approval covers backup capture and verification only; it does not approve migrations, deployments, provider activation, secrets, or any hosted write.
 - **Rollback:** Preserve the backup as the recovery reference. Do not delete or overwrite the old snapshot during a retry.
 
 ### 4. Run the hosted migration dry run — `PENDING_APPROVAL`
