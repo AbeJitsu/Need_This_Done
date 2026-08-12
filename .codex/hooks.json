@@ -1,0 +1,30 @@
+{
+  "description": "NeedThisDone repository lifecycle context",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/.claude/hooks/session-start.sh\"",
+            "timeout": 5,
+            "statusMessage": "Loading repository status"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/.claude/hooks/pre-compact.sh\"",
+            "timeout": 5,
+            "statusMessage": "Saving work state"
+          }
+        ]
+      }
+    ]
+  }
+}

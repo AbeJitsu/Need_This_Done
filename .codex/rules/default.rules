@@ -1,0 +1,78 @@
+# Destructive operations remain forbidden for this repository.
+
+prefix_rule(
+    pattern = ["git", "push", "--force"],
+    decision = "forbidden",
+    justification = "Force-pushes are prohibited; publish a reviewed replacement commit instead.",
+    match = ["git push --force origin dev"],
+)
+
+prefix_rule(
+    pattern = ["git", "push", "--force-with-lease"],
+    decision = "forbidden",
+    justification = "Force-pushes are prohibited; publish a reviewed replacement commit instead.",
+    match = ["git push --force-with-lease origin dev"],
+)
+
+prefix_rule(
+    pattern = ["git", "reset", "--hard"],
+    decision = "forbidden",
+    justification = "Hard resets can erase user work; preserve changes and use a reviewed replacement.",
+    match = ["git reset --hard HEAD"],
+)
+
+prefix_rule(
+    pattern = ["git", "rebase"],
+    decision = "forbidden",
+    justification = "Rebase is disabled for this release workflow; preserve published history.",
+    match = ["git rebase dev"],
+)
+
+prefix_rule(
+    pattern = ["git", "branch", ["-d", "-D"]],
+    decision = "forbidden",
+    justification = "Branch deletion is disabled; preserve release and rollback references.",
+    match = ["git branch -d old-branch", "git branch -D old-branch"],
+)
+
+prefix_rule(
+    pattern = ["rm", "-rf", "/"],
+    decision = "forbidden",
+    justification = "Recursive deletion of the filesystem root is prohibited.",
+    match = ["rm -rf /"],
+)
+
+prefix_rule(
+    pattern = ["rm", "-rf", "~"],
+    decision = "forbidden",
+    justification = "Recursive deletion of the home directory is prohibited.",
+    match = ["rm -rf ~"],
+)
+
+prefix_rule(
+    pattern = ["rm", "-rf", "."],
+    decision = "forbidden",
+    justification = "Recursive deletion of the working directory is prohibited.",
+    match = ["rm -rf ."],
+)
+
+prefix_rule(
+    pattern = ["sudo"],
+    decision = "forbidden",
+    justification = "Do not escalate to root; use an explicitly approved, scoped alternative.",
+    match = ["sudo -n true"],
+)
+
+prefix_rule(
+    pattern = ["supabase", "db", "reset", "--linked"],
+    decision = "forbidden",
+    justification = "Hosted Supabase must never be reset; use the reviewed forward migration path.",
+    match = ["supabase db reset --linked"],
+)
+
+prefix_rule(
+    pattern = ["supabase", "db", "push"],
+    decision = "prompt",
+    justification = "Hosted migration is a separate release gate and requires explicit approval.",
+    match = ["supabase db push"],
+)
