@@ -18,7 +18,7 @@ const schema = z.object({
   qualityScore: z.number().finite().min(0).max(1),
   toolUseScore: z.number().finite().min(0).max(1),
   latencyMs: z.number().int().nonnegative().max(120_000),
-  costUsd: z.number().finite().nonnegative().max(10),
+  costUsd: z.number().finite().nonnegative(),
   failed: z.boolean(),
   repairRequired: z.boolean(),
   notes: z.string().trim().max(4_000).default(''),
@@ -62,10 +62,6 @@ export async function POST(request: Request) {
     target_provider_usage: parsed.data.providerUsage,
   });
   if (reconciliationError || !reconciliation) return NextResponse.json({ error: 'Benchmark usage could not be reconciled.' }, { status: 409 });
-  if ((reconciliation as { status?: string }).status === 'overage' || parsed.data.costUsd > 0.10) {
-    return NextResponse.json({ recorded: false, overage: true, error: 'OpenRouter reported a cost above the reservation; benchmarking stopped.' });
-  }
-
   const [candidateResult, recordResult] = await Promise.all([
     admin.from('model_benchmark_candidates').select('*').eq('profile_id', profile.id).eq('is_active', true),
     admin.from('model_evaluation_records').select('*').eq('owner_id', profile.owner_id),
@@ -111,5 +107,5 @@ export async function POST(request: Request) {
     : { model_route: policy.status, selected_model_id: policy.defaultModel, selected_model_rationale: policy.rationale, model_selected_at: new Date().toISOString() };
   const { error: profileError } = await admin.from('growth_profiles').update(modelUpdate).eq('id', profile.id);
   if (profileError) return NextResponse.json({ error: 'The benchmark was recorded but the model route could not be pinned.' }, { status: 503 });
-  return NextResponse.json({ record, policy, overage: false });
+  return NextResponse.json({ record, policy });
 }

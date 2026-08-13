@@ -4,9 +4,6 @@
  * benchmark runs; this module only evaluates durable measurements.
  */
 
-export const MODEL_EVALUATION_DAILY_CAP_USD = 0.25;
-export const MODEL_EVALUATION_PER_RUN_CAP_USD = 0.1;
-
 export const MODEL_EVALUATION_TASK_IDS = [
   'classify-public-evidence',
   'draft-approved-message',
@@ -96,7 +93,7 @@ export function isModelEvaluationRecord(value: ModelEvaluationRecord) {
     && Number.isFinite(value.qualityScore) && value.qualityScore >= 0 && value.qualityScore <= 1
     && Number.isFinite(value.toolUseScore) && value.toolUseScore >= 0 && value.toolUseScore <= 1
     && Number.isFinite(value.latencyMs) && value.latencyMs >= 0
-    && Number.isFinite(value.costUsd) && value.costUsd >= 0 && value.costUsd <= MODEL_EVALUATION_PER_RUN_CAP_USD
+    && Number.isFinite(value.costUsd) && value.costUsd >= 0
     && /^\d{4}-\d{2}-\d{2}$/.test(value.evaluatedOn);
 }
 
@@ -147,18 +144,6 @@ export function summarizeModelEvaluation(records: ModelEvaluationRecord[], candi
       && failureRate <= MODEL_FAILURE_RATE_MAX
       && repairRate <= MODEL_REPAIR_RATE_MAX,
   };
-}
-
-export function evaluationSpendForDay(records: ModelEvaluationRecord[], date: string) {
-  return records
-    .filter((record) => record.evaluatedOn === date && isModelEvaluationRecord(record))
-    .reduce((total, record) => total + record.costUsd, 0);
-}
-
-/** Kept for pure tests. Runtime reservations are enforced by the shared DB ledger. */
-export function canRecordModelEvaluation(records: ModelEvaluationRecord[], record: ModelEvaluationRecord) {
-  return isModelEvaluationRecord(record)
-    && evaluationSpendForDay(records, record.evaluatedOn) + record.costUsd <= MODEL_EVALUATION_DAILY_CAP_USD;
 }
 
 export function freeCandidatesCompleted(records: ModelEvaluationRecord[], freeCandidates: readonly ModelCandidate[]) {

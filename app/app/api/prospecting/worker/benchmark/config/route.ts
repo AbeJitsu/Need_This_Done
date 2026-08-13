@@ -27,7 +27,7 @@ export async function POST(request: Request) {
   if (replay) return replay;
 
   const admin = getSupabaseAdmin();
-  const { data: profile } = await admin.from('growth_profiles').select('id, owner_id, timezone, emergency_stop, model_route, selected_model_id, per_run_model_cap, daily_model_cap').eq('id', parsed.data.profileId).maybeSingle();
+  const { data: profile } = await admin.from('growth_profiles').select('id, owner_id, timezone, emergency_stop, model_route, selected_model_id').eq('id', parsed.data.profileId).maybeSingle();
   if (!profile || profile.emergency_stop) return NextResponse.json({ error: 'The profile is unavailable or stopped.' }, { status: 409 });
   const [candidateResult, recordResult] = await Promise.all([
     admin.from('model_benchmark_candidates').select('*').eq('profile_id', profile.id).eq('is_active', true).order('discovered_at'),
@@ -40,5 +40,5 @@ export async function POST(request: Request) {
     candidates.filter((candidate) => candidate.kind === 'free'),
     candidates.find((candidate) => candidate.kind === 'deepseek-fallback') || DEEPSEEK_V4_FLASH_FALLBACK,
   );
-  return NextResponse.json({ profile: { id: profile.id, timezone: profile.timezone, modelRoute: profile.model_route, selectedModelId: profile.selected_model_id, perRunModelCap: Number(profile.per_run_model_cap), dailyModelCap: Number(profile.daily_model_cap) }, candidates: candidateResult.data || [], policy });
+  return NextResponse.json({ profile: { id: profile.id, timezone: profile.timezone, modelRoute: profile.model_route, selectedModelId: profile.selected_model_id }, candidates: candidateResult.data || [], policy });
 }

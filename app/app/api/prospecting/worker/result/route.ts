@@ -16,7 +16,7 @@ const schema = z.object({
   modelName: z.string().trim().max(240).optional(),
   promptTokens: z.number().int().nonnegative().optional(),
   completionTokens: z.number().int().nonnegative().optional(),
-  cost: z.number().finite().nonnegative().max(10).optional(),
+  cost: z.number().finite().nonnegative().optional(),
   reservationKey: z.string().uuid().optional(),
   providerUsage: z.record(z.string(), z.unknown()).optional(),
 }).strict();
@@ -51,7 +51,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'The worker did not use the selected pinned model.' }, { status: 409 });
   }
 
-  let reconciled: { status?: string; actual_cost?: number } | null = null;
   if (parsed.data.reservationKey) {
     if (parsed.data.cost === undefined) return NextResponse.json({ error: 'A reserved provider call must report its actual or reserved cost.' }, { status: 400 });
     const { data, error } = await admin.rpc('reconcile_private_model_usage', {
@@ -60,16 +59,12 @@ export async function POST(request: Request) {
       target_provider_usage: parsed.data.providerUsage || {},
     });
     if (error || !data) return NextResponse.json({ error: 'Model usage could not be reconciled.' }, { status: 409 });
-    reconciled = data as { status?: string; actual_cost?: number };
   }
 
   let output: Record<string, unknown> | null = null;
   let finalStatus: 'succeeded' | 'failed' = parsed.data.status;
   let finalError = parsed.data.error || null;
-  if (reconciled?.status === 'overage') {
-    finalStatus = 'failed';
-    finalError = 'OpenRouter reported a cost above the reserved cap; further worker calls are stopped.';
-  } else if (parsed.data.status === 'succeeded') {
+  if (parsed.data.status === 'succeeded') {
     if (!parsed.data.output || !parsed.data.modelName || !parsed.data.reservationKey) {
       return NextResponse.json({ error: 'A successful research result requires a reservation, model ID, dossier batch, and citations.' }, { status: 400 });
     }
@@ -116,5 +111,5 @@ export async function POST(request: Request) {
   }).eq('id', task.id).eq('status', 'leased').select('*').maybeSingle();
   if (updateError || !updated) return NextResponse.json({ error: 'Task result could not be recorded.' }, { status: 500 });
   await admin.from('agent_task_events').insert({ task_id: task.id, event_type: finalStatus, payload: output || { error: finalError || null } });
-  return NextResponse.json({ task: updated, overage: reconciled?.status === 'overage' });
+  return NextResponse.json({ task: updated });
 }

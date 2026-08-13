@@ -6,7 +6,7 @@ import { OpenRouterClient, estimateOpenRouterRequestCost, resolveBenchmarkCandid
 type FetchLike = typeof fetch;
 
 type BenchmarkConfig = {
-  profile: { id: string; timezone: string; modelRoute: string; selectedModelId: string | null; perRunModelCap: number; dailyModelCap: number };
+  profile: { id: string; timezone: string; modelRoute: string; selectedModelId: string | null };
   candidates: Array<{ candidate_id: string; provider_model_id: string; candidate_kind: 'free' | 'deepseek-fallback' | 'configured-primary' | 'configured-test' }>;
   policy: { status: string; defaultModel: string | null; rationale: string };
 };
@@ -70,7 +70,7 @@ export class SignedBenchmarkTransport {
   }
 
   result(workerId: string, profileId: string, result: Record<string, unknown>) {
-    return this.post<{ policy?: { status: string; defaultModel: string | null }; overage?: boolean }>('/api/prospecting/worker/benchmark/result', { workerId, profileId, ...result });
+    return this.post<{ policy?: { status: string; defaultModel: string | null } }>('/api/prospecting/worker/benchmark/result', { workerId, profileId, ...result });
   }
 }
 
@@ -95,13 +95,9 @@ async function runCandidate(options: {
   catalogModel: OpenRouterModel;
   transport: SignedBenchmarkTransport;
   openRouter: OpenRouterClient;
-  perRunCap: number;
   comparisonOnly?: boolean;
 }) {
-  const estimate = estimateOpenRouterRequestCost(options.catalogModel, { maxPromptTokens: 1_000, maxCompletionTokens: 350, maxWebSearchCalls: 0 });
-  if (estimate === null || estimate > options.perRunCap || estimate > 0.10) {
-    throw new Error(`${options.candidate.providerModelId} cannot be benchmarked within the per-request cap.`);
-  }
+  const estimate = estimateOpenRouterRequestCost(options.catalogModel, { maxPromptTokens: 1_000, maxCompletionTokens: 350, maxWebSearchCalls: 0 }) ?? 0;
   for (const task of MODEL_EVALUATION_TASKS) {
     const reservationKey = crypto.randomUUID();
     const reserved = await options.transport.reserve(options.workerId, options.profileId, options.candidate.providerModelId, reservationKey, estimate);
@@ -117,7 +113,7 @@ async function runCandidate(options: {
         responseSchema: benchmarkResponseSchema,
       });
       const valid = parseStructuredAnswer(completion.content);
-      const result = await options.transport.result(options.workerId, options.profileId, {
+      await options.transport.result(options.workerId, options.profileId, {
         reservationKey,
         candidateId: options.candidate.candidateId,
         providerModelId: options.candidate.providerModelId,
@@ -132,7 +128,6 @@ async function runCandidate(options: {
         providerUsage: completion.usage.raw,
         comparisonOnly: options.comparisonOnly === true,
       });
-      if (result.overage) throw new Error('OpenRouter reported a benchmark cost over the reservation.');
     } catch (error) {
       await options.transport.result(options.workerId, options.profileId, {
         reservationKey,
@@ -168,7 +163,7 @@ export async function runMeasuredBenchmark(options: {
   for (const candidate of freeCandidates) {
     const catalogModel = models.find((model) => model.id === candidate.providerModelId);
     if (!catalogModel) throw new Error(`Catalog candidate ${candidate.providerModelId} disappeared before its benchmark.`);
-    await runCandidate({ ...options, candidate, catalogModel, perRunCap: initial.profile.perRunModelCap });
+    await runCandidate({ ...options, candidate, catalogModel });
   }
 
   const afterFree = await options.transport.config(options.workerId, options.profileId);
@@ -182,7 +177,7 @@ export async function runMeasuredBenchmark(options: {
   // This registration is the server-enforced order gate. It rejects when any
   // free task is unfinished or a free candidate clears the threshold.
   await options.transport.candidates(options.workerId, options.profileId, [fallback]);
-  await runCandidate({ ...options, candidate: fallback, catalogModel: fallbackModel, perRunCap: afterFree.profile.perRunModelCap });
+  await runCandidate({ ...options, candidate: fallback, catalogModel: fallbackModel });
   const completed = await options.transport.config(options.workerId, options.profileId);
   return completed.policy;
 }
@@ -205,7 +200,6 @@ export async function runConfiguredModelComparison(options: {
   openRouter: OpenRouterClient;
   modelConfig: OpenRouterModelConfig;
 }) {
-  const initial = await options.transport.config(options.workerId, options.profileId);
   const models = await options.openRouter.listModels();
   const candidates = [
     configuredCandidate('configured-primary', options.modelConfig.primaryModel),
@@ -225,7 +219,6 @@ export async function runConfiguredModelComparison(options: {
       ...options,
       candidate,
       catalogModel,
-      perRunCap: initial.profile.perRunModelCap,
       comparisonOnly: true,
     });
   }

@@ -10,10 +10,10 @@ const schema = z.object({
   workerId: z.string().trim().min(1).max(160),
   modelId: z.string().trim().min(1).max(240),
   reservationKey: z.string().uuid(),
-  reservedCost: z.number().finite().min(0).max(0.10),
+  reservedCost: z.number().finite().min(0),
 }).strict();
 
-/** Reserve before an OpenRouter call; the database serializes the daily cap. */
+/** Record the expected provider usage before an OpenRouter call. */
 export async function POST(request: Request) {
   const signed = await verifySignedWorkerRequest(request, '/api/prospecting/worker/reserve');
   if (isSignedWorkerFailure(signed)) return signed;
@@ -36,6 +36,6 @@ export async function POST(request: Request) {
     target_model_id: parsed.data.modelId,
     target_reserved_cost: parsed.data.reservedCost,
   });
-  if (error) return NextResponse.json({ error: 'The shared model budget cannot reserve this request.' }, { status: 409 });
+  if (error) return NextResponse.json({ error: 'The model usage record could not be created for this request.' }, { status: 409 });
   return NextResponse.json({ reservation });
 }

@@ -22,8 +22,6 @@ create table public.growth_profiles (
   follow_up_days integer[] not null default '{3,7}' check (array_length(follow_up_days, 1) is null or array_length(follow_up_days, 1) <= 6),
   model_route text not null default 'openrouter/free',
   fallback_model text not null default '',
-  per_run_model_cap numeric(8,4) not null default 0.10 check (per_run_model_cap >= 0 and per_run_model_cap <= 0.10),
-  daily_model_cap numeric(8,4) not null default 1.00 check (daily_model_cap >= 0 and daily_model_cap <= 1.00),
   emergency_stop boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),

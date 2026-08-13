@@ -46,7 +46,7 @@ const schema = z.object({
   reservationKey: z.string().uuid().optional(),
   actualCost: z.number().finite().nonnegative().max(20).optional(),
   modelReservationKey: z.string().uuid().optional(),
-  modelActualCost: z.number().finite().nonnegative().max(100).optional(),
+  modelActualCost: z.number().finite().nonnegative().optional(),
   prospecting: prospectingSchema.optional(),
   provider: z.string().trim().max(160).optional(),
   providerUsage: z.record(z.string(), z.unknown()).default({}),
@@ -162,7 +162,6 @@ export async function POST(request: Request) {
     overage = (reconciled.data as { status?: string }).status === 'overage';
   }
 
-  let modelOverage = false;
   if (parsed.data.modelReservationKey) {
     const reservation = await admin
       .from('openclaw_model_usage_reservations')
@@ -184,14 +183,11 @@ export async function POST(request: Request) {
     if (reconciled.error || !reconciled.data) {
       return NextResponse.json({ error: 'OpenClaw model usage could not be reconciled.' }, { status: 409 });
     }
-    modelOverage = (reconciled.data as { status?: string }).status === 'overage';
   }
 
-  const finalStatus = overage || modelOverage ? 'failed' : parsed.data.status;
+  const finalStatus = overage ? 'failed' : parsed.data.status;
   const finalError = overage
     ? 'The reported media cost exceeded the $0.99 daily ceiling; the task was failed closed.'
-    : modelOverage
-      ? 'The reported OpenClaw model cost exceeded its approved reservation or daily cap; the task was failed closed.'
     : parsed.data.error;
   const completionArgs = {
     target_task_id: parsed.data.taskId,
@@ -199,7 +195,7 @@ export async function POST(request: Request) {
     target_status: finalStatus,
     target_output: parsed.data.output || null,
     target_error: finalError || null,
-    target_artifacts: overage || modelOverage ? [] : parsed.data.artifacts,
+    target_artifacts: overage ? [] : parsed.data.artifacts,
   };
   const completion = prospecting
     ? await admin.rpc('complete_openclaw_orchestration_task', {
@@ -214,5 +210,5 @@ export async function POST(request: Request) {
       error: error?.code === '22023' ? 'Agent completion failed validation or the task lease expired.' : 'Agent completion could not be recorded.',
     }, { status: error?.code === '22023' ? 409 : 503 });
   }
-  return NextResponse.json({ ...data as Record<string, unknown>, overage: overage || modelOverage });
+  return NextResponse.json({ ...data as Record<string, unknown>, overage });
 }

@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   const taskRow = task as { profile_id: string };
   const { data: profile, error: profileError } = await admin
     .from('growth_profiles')
-    .select('id, target_market, geography, business_size, pain_signals, exclusion_rules, offer, timezone, emergency_stop, model_route, selected_model_id, per_run_model_cap, daily_model_cap')
+    .select('id, target_market, geography, business_size, pain_signals, exclusion_rules, offer, timezone, emergency_stop, model_route, selected_model_id')
     .eq('id', taskRow.profile_id)
     .single();
   if (profileError || !profile) return NextResponse.json({ error: 'Private worker profile is not available.' }, { status: 503 });
@@ -54,8 +54,6 @@ export async function POST(request: Request) {
       emergencyStop: profile.emergency_stop,
       modelRoute: profile.model_route,
       selectedModelId: profile.selected_model_id,
-      perRunModelCap: Number(profile.per_run_model_cap),
-      dailyModelCap: Number(profile.daily_model_cap),
     },
   });
 }

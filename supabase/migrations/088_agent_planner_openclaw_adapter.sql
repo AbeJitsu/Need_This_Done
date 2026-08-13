@@ -26,7 +26,7 @@ create table public.agent_plans (
   estimated_prompt_tokens integer not null check (estimated_prompt_tokens between 0 and 100000),
   estimated_completion_tokens integer not null check (estimated_completion_tokens between 0 and 100000),
   estimated_web_search_calls integer not null default 0 check (estimated_web_search_calls between 0 and 100),
-  estimated_cost_usd numeric(10,6) not null check (estimated_cost_usd >= 0 and estimated_cost_usd <= 100),
+  estimated_cost_usd numeric not null check (estimated_cost_usd >= 0),
   planner_usage jsonb not null default '{}'::jsonb check (jsonb_typeof(planner_usage) = 'object'),
   openclaw_instruction jsonb not null check (jsonb_typeof(openclaw_instruction) = 'object'),
   status text not null default 'draft'
@@ -85,10 +85,10 @@ create table public.openclaw_model_usage_reservations (
   reservation_key uuid not null unique,
   provider text not null default 'openrouter',
   model_id text not null check (length(trim(model_id)) between 3 and 240),
-  reserved_cost numeric(10,6) not null check (reserved_cost >= 0 and reserved_cost <= 100),
-  actual_cost numeric(10,6) check (actual_cost is null or actual_cost >= 0),
+  reserved_cost numeric not null check (reserved_cost >= 0),
+  actual_cost numeric check (actual_cost is null or actual_cost >= 0),
   status text not null default 'reserved'
-    check (status in ('reserved', 'reconciled', 'released', 'overage')),
+    check (status in ('reserved', 'reconciled', 'released')),
   local_usage_date date not null,
   provider_usage jsonb not null default '{}'::jsonb check (jsonb_typeof(provider_usage) = 'object'),
   created_at timestamptz not null default now(),
@@ -301,7 +301,6 @@ begin
     or target_estimated_web_search_calls not between 0 and 100
     or target_estimated_cost is null
     or target_estimated_cost < 0
-    or target_estimated_cost > 100
     or jsonb_typeof(coalesce(target_planner_usage, '{}'::jsonb)) <> 'object' then
     raise exception 'invalid_agent_plan' using errcode = '22023';
   end if;
@@ -698,12 +697,11 @@ declare
   profile public.growth_profiles;
   existing public.openclaw_model_usage_reservations;
   usage_day date;
-  booked numeric(12,6);
 begin
   if not public.private_worker_access()
     or target_owner_id is null or target_plan_id is null or target_run_id is null or target_task_id is null
     or nullif(trim(target_worker), '') is null or target_reservation_key is null
-    or target_reserved_cost is null or target_reserved_cost < 0 or target_reserved_cost > 100 then
+    or target_reserved_cost is null or target_reserved_cost < 0 then
     raise exception 'invalid_openclaw_usage_reservation' using errcode = '22023';
   end if;
 
@@ -730,15 +728,6 @@ begin
   end if;
 
   usage_day := (now() at time zone profile.timezone)::date;
-  perform pg_advisory_xact_lock(hashtext(target_owner_id::text || ':openclaw:' || usage_day::text));
-  select coalesce(sum(coalesce(actual_cost, reserved_cost)), 0)::numeric(12,6) into booked
-  from public.openclaw_model_usage_reservations
-  where owner_id = target_owner_id and local_usage_date = usage_day
-    and status in ('reserved', 'reconciled', 'overage');
-  if booked + target_reserved_cost > profile.daily_model_cap then
-    raise exception 'daily_model_budget_exceeded' using errcode = '22023';
-  end if;
-
   insert into public.openclaw_model_usage_reservations (
     owner_id, growth_profile_id, plan_id, run_id, task_id, worker_id,
     reservation_key, model_id, reserved_cost, local_usage_date
@@ -760,9 +749,6 @@ returns jsonb language plpgsql security definer set search_path = public
 as $$
 declare
   usage_row public.openclaw_model_usage_reservations;
-  profile public.growth_profiles;
-  other_booked numeric(12,6);
-  next_status text;
 begin
   if not public.private_worker_access()
     or target_reservation_key is null or target_actual_cost is null or target_actual_cost < 0
@@ -773,19 +759,9 @@ begin
   where reservation_key = target_reservation_key for update;
   if not found then raise exception 'openclaw_reservation_not_found' using errcode = 'P0002'; end if;
   if usage_row.status <> 'reserved' then return to_jsonb(usage_row); end if;
-  select * into profile from public.growth_profiles where id = usage_row.growth_profile_id;
-  select coalesce(sum(coalesce(actual_cost, reserved_cost)), 0)::numeric(12,6) into other_booked
-  from public.openclaw_model_usage_reservations
-  where owner_id = usage_row.owner_id and local_usage_date = usage_row.local_usage_date
-    and status in ('reserved', 'reconciled', 'overage') and id <> usage_row.id;
-  next_status := case
-    when target_actual_cost > usage_row.reserved_cost
-      or other_booked + target_actual_cost > coalesce(profile.daily_model_cap, 0) then 'overage'
-    else 'reconciled'
-  end;
   update public.openclaw_model_usage_reservations set
     actual_cost = target_actual_cost, provider_usage = coalesce(target_provider_usage, '{}'::jsonb),
-    status = next_status, reconciled_at = now()
+    status = 'reconciled', reconciled_at = now()
   where id = usage_row.id returning * into usage_row;
   return to_jsonb(usage_row);
 end;

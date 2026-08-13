@@ -53,7 +53,7 @@ const plannerStepSchema = z.object({
   agentRole: z.enum(PLANNER_AGENT_ROLES),
   capabilities: z.array(z.string().trim().min(1).max(80)).max(12),
   expectedArtifacts: z.array(z.string().trim().min(1).max(160)).max(12),
-  estimatedCostUsd: z.number().finite().nonnegative().max(100),
+  estimatedCostUsd: z.number().finite().nonnegative(),
 }).strict();
 
 export const plannerOutputSchema = z.object({
@@ -66,7 +66,7 @@ export const plannerOutputSchema = z.object({
     promptTokens: z.number().int().nonnegative().max(100_000),
     completionTokens: z.number().int().nonnegative().max(100_000),
     webSearchCalls: z.number().int().nonnegative().max(100),
-    estimatedCostUsd: z.number().finite().nonnegative().max(100),
+    estimatedCostUsd: z.number().finite().nonnegative(),
   }).strict(),
 }).strict();
 

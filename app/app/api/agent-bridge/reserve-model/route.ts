@@ -14,7 +14,7 @@ const schema = z.object({
   workerId: z.string().trim().min(1).max(160),
   taskId: z.string().uuid(),
   reservationKey: z.string().uuid(),
-  reservedCost: z.number().finite().nonnegative().max(100),
+  reservedCost: z.number().finite().nonnegative(),
 }).strict();
 
 export async function POST(request: Request) {

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AlertCircle, Check, CircleDollarSign, FileText, Loader2, Mail, ShieldAlert, ShieldCheck, Users, X } from 'lucide-react';
 import type { GrowthProfile, OutreachMessage, ProspectDossier, ProspectingQueue } from '@/lib/prospecting-types';
-import { MODEL_EVALUATION_DAILY_CAP_USD } from '@/lib/model-evaluation';
 
 type Tab = 'morning' | 'midday' | 'evening';
 const blank = { name: 'NeedThisDone growth profile', targetMarket: '', geography: '', businessSize: '', painSignals: '', exclusionRules: '', offer: '', senderName: '', senderEmail: '', dailyProspectCap: 10, dailySendCap: 10, workingHoursStart: '09:00', workingHoursEnd: '17:00', timezone: 'America/New_York', followUpDays: '3,7', emergencyStop: false };
@@ -138,7 +137,7 @@ function Empty({ title, description, icon }: { title: string; description: strin
 
 function Policy({ profile }: { profile: GrowthProfile }) {
   const selected = profile.selected_model_id;
-  return <section className="mt-7 grid gap-4 rounded-3xl border border-[#183229]/15 bg-white p-5 lg:grid-cols-[1fr_auto]"><div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Read-only model policy</p><p className="mt-2 font-bold">{selected ? selected : 'Evaluation required — no model work can run'}</p><p className="mt-1 text-sm leading-6 text-[#50675e]">{profile.selected_model_rationale || `The shared model ceiling is $${MODEL_EVALUATION_DAILY_CAP_USD.toFixed(2)} daily. A Mac-mini benchmark must pin a catalog model before research can run.`}</p></div><div className={`rounded-2xl px-4 py-3 text-sm font-bold ${profile.emergency_stop ? 'bg-red-100 text-red-800' : selected ? 'bg-emerald-50 text-emerald-900' : 'bg-[#f7f4ed]'}`}>{profile.emergency_stop ? 'Stopped' : selected ? 'Pinned' : 'Evaluation required'}</div></section>;
+  return <section className="mt-7 grid gap-4 rounded-3xl border border-[#183229]/15 bg-white p-5 lg:grid-cols-[1fr_auto]"><div><p className="text-xs font-bold uppercase tracking-widest text-[#126b4e]">Read-only model policy</p><p className="mt-2 font-bold">{selected ? selected : 'Evaluation required — no model work can run'}</p><p className="mt-1 text-sm leading-6 text-[#50675e]">{profile.selected_model_rationale || 'OpenRouter enforces provider spend limits; this screen records measured usage and model-selection evidence. A Mac-mini benchmark must pin a catalog model before research can run.'}</p></div><div className={`rounded-2xl px-4 py-3 text-sm font-bold ${profile.emergency_stop ? 'bg-red-100 text-red-800' : selected ? 'bg-emerald-50 text-emerald-900' : 'bg-[#f7f4ed]'}`}>{profile.emergency_stop ? 'Stopped' : selected ? 'Pinned' : 'Evaluation required'}</div></section>;
 }
 
 function Stats({ queue }: { queue: ProspectingQueue }) {

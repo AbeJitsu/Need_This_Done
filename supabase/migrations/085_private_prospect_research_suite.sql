@@ -9,7 +9,7 @@
 -- operator's proposed draft. Provider credentials never enter this schema.
 --
 -- Verification: local RLS tests exercise the private worker functions,
--- reservation cap, duplicate handling, and sender isolation. Roll back by
+-- provider-usage reconciliation, duplicate handling, and sender isolation. Roll back by
 -- disabling the worker and leaving the added records read-only; do not drop
 -- tables until retained records have been reviewed separately.
 
@@ -57,9 +57,9 @@ create table public.model_usage_ledger (
   reservation_key uuid not null unique,
   usage_kind text not null check (usage_kind in ('benchmark', 'research')),
   model_id text not null,
-  reserved_cost numeric(8,4) not null check (reserved_cost >= 0 and reserved_cost <= 0.10),
-  actual_cost numeric(8,4) check (actual_cost >= 0),
-  status text not null default 'reserved' check (status in ('reserved', 'reconciled', 'released', 'overage')),
+  reserved_cost numeric not null check (reserved_cost >= 0),
+  actual_cost numeric check (actual_cost >= 0),
+  status text not null default 'reserved' check (status in ('reserved', 'reconciled', 'released')),
   local_usage_date date not null,
   provider_usage jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
@@ -228,15 +228,14 @@ declare
   task public.agent_tasks;
   existing public.model_usage_ledger;
   usage_day date;
-  booked numeric(12,4);
 begin
   if not public.private_worker_access()
     or target_reservation_key is null
     or nullif(trim(target_worker), '') is null
     or target_usage_kind not in ('benchmark', 'research')
     or nullif(trim(target_model_id), '') is null
-    or target_reserved_cost < 0
-    or target_reserved_cost > 0.10 then
+    or target_reserved_cost is null
+    or target_reserved_cost < 0 then
     raise exception 'invalid_private_usage_reservation' using errcode = '22023';
   end if;
 
@@ -278,18 +277,6 @@ begin
   end if;
 
   usage_day := (now() at time zone profile.timezone)::date;
-  perform pg_advisory_xact_lock(hashtext(target_profile_id::text || ':' || usage_day::text));
-  select coalesce(sum(coalesce(actual_cost, reserved_cost)), 0)::numeric(12,4)
-    into booked
-    from public.model_usage_ledger
-    where profile_id = target_profile_id
-      and local_usage_date = usage_day
-      and status in ('reserved', 'reconciled', 'overage');
-
-  if booked + target_reserved_cost > profile.daily_model_cap then
-    raise exception 'daily_model_budget_exceeded' using errcode = '22023';
-  end if;
-
   insert into public.model_usage_ledger (
     profile_id, task_id, reservation_key, usage_kind, model_id, reserved_cost, local_usage_date
   ) values (
@@ -324,7 +311,7 @@ begin
   update public.model_usage_ledger
     set actual_cost = target_actual_cost,
       provider_usage = coalesce(target_provider_usage, '{}'::jsonb),
-      status = case when target_actual_cost > reserved_cost then 'overage' else 'reconciled' end,
+      status = 'reconciled',
       reconciled_at = now()
     where id = usage_row.id
     returning * into usage_row;

@@ -40,8 +40,6 @@ export type PrivateResearchProfile = {
   emergencyStop: boolean;
   modelRoute: string;
   selectedModelId: string | null;
-  perRunModelCap: number;
-  dailyModelCap: number;
 };
 
 export type ClaimedResearchTask = { task: AgentTask; profile: PrivateResearchProfile };
@@ -132,10 +130,7 @@ export class MacMiniProspectingWorker {
         maxPromptTokens: 6_000,
         maxCompletionTokens: 1_500,
         maxWebSearchCalls: 1,
-      });
-      if (estimatedCost === null || estimatedCost > profile.perRunModelCap || estimatedCost > 0.10) {
-        throw new Error('The bounded research request cannot be reserved within the per-request model cap.');
-      }
+      }) ?? 0;
 
       const reservationKey = crypto.randomUUID();
       reservation = await this.transport.reserve({
@@ -187,8 +182,8 @@ export class MacMiniProspectingWorker {
         status: 'failed',
         error: error instanceof Error ? error.message : 'Private research worker failed.',
         reservationKey: reservation?.reservationKey,
-        // If a provider error omits usage, reconcile the full reservation so a
-        // retry cannot silently spend beyond the daily cap.
+        // If a provider error omits usage, reconcile the reservation so the
+        // provider call remains visible in the usage ledger.
         cost: reservation?.reservedCost,
       });
     }
