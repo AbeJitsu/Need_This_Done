@@ -31,7 +31,7 @@ describe('configured model comparison', () => {
       const url = String(input);
       if (url.endsWith('/benchmark/config')) {
         return new Response(JSON.stringify({
-          profile: { id: 'profile-1', timezone: 'UTC', modelRoute: 'selected-primary', selectedModelId: primaryModel, perRunModelCap: 0.10, dailyModelCap: 0.25 },
+          profile: { id: 'profile-1', timezone: 'UTC', modelRoute: 'selected-primary', selectedModelId: primaryModel },
           candidates: [],
           policy: { status: 'selected-primary', defaultModel: primaryModel, rationale: 'Pinned by explicit approval.' },
         }), { status: 200 });

@@ -79,7 +79,7 @@ localDescribe.sequential('prospecting approval and suppression boundary', () => 
     expect(suppression.rows).toEqual([{ normalized_address: 'jordan@example.com', reason: 'bounce' }]);
   });
 
-  it('keeps dossier storage, budget reservations, replay nonces, and sender promotion on separate boundaries', async () => {
+  it('keeps dossier storage, provider usage records, replay nonces, and sender promotion on separate boundaries', async () => {
     await asOperator(`insert into public.growth_profiles (id, owner_id, target_market, geography, offer, sender_name, sender_email) values ($1, $2, 'service businesses', 'New York', 'a focused audit', null, null)`, [researchProfileId, researchOwnerId]);
     await expect(asOperator(`select public.pin_private_primary_model($1, 'browser-worker', 'provider/primary-2026', 'browser must not pin')`, [researchProfileId])).rejects.toThrow();
     const pinned = await asPrivateWorker<{ result: { model_route: string; selected_model_id: string } }>(`select public.pin_private_primary_model($1, 'mac-mini-test', 'provider/primary-2026', 'Explicitly approved test primary.') as result`, [researchProfileId]);
@@ -93,7 +93,9 @@ localDescribe.sequential('prospecting approval and suppression boundary', () => 
     const firstReservation = await asPrivateWorker<{ reservation: { status: string } }>(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'provider/primary-2026', 0.10) as reservation`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000085']);
     expect(firstReservation[0].reservation.status).toBe('reserved');
     await asPrivateWorker(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'provider/primary-2026', 0.10)`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000086']);
-    await expect(asPrivateWorker(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'provider/primary-2026', 0.06)`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000087'])).rejects.toThrow('daily_model_budget_exceeded');
+    const thirdReservation = await asPrivateWorker<{ reservation: { status: string; reserved_cost: number } }>(`select public.reserve_private_model_usage($1, $2, 'mac-mini-test', $3, 'research', 'provider/primary-2026', 0.60) as reservation`, [researchProfileId, researchTaskId, '70000000-0000-4000-0000-000000000087']);
+    expect(thirdReservation[0].reservation.status).toBe('reserved');
+    expect(Number(thirdReservation[0].reservation.reserved_cost)).toBe(0.60);
 
     const dossier = {
       companyName: 'Citation-backed Studio',

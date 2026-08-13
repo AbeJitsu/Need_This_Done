@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  canRecordModelEvaluation,
   DEEPSEEK_V4_FLASH_FALLBACK,
+  isModelEvaluationRecord,
   MODEL_EVALUATION_TASK_IDS,
   MODEL_ROUTING_POLICY,
   selectModelRoutingPolicy,
@@ -56,9 +56,9 @@ describe('model evaluation policy', () => {
     expect(selectModelRoutingPolicy([...failedFree, ...recordsFor(DEEPSEEK_V4_FLASH_FALLBACK.id)], freeCandidates)).toMatchObject({ status: 'selected-deepseek-fallback', defaultModel: DEEPSEEK_V4_FLASH_FALLBACK.providerModelId });
   });
 
-  it('fails closed when model-evaluation observations would exceed the daily ceiling', () => {
-    const existing = recordsFor(freeCandidates[0].id, { costUsd: 0.1 }).slice(0, 2);
-    expect(canRecordModelEvaluation(existing, { ...existing[0], taskId: 'summarize-weekly-brief', costUsd: 0.05 })).toBe(true);
-    expect(canRecordModelEvaluation(existing, { ...existing[0], taskId: 'summarize-weekly-brief', costUsd: 0.1 })).toBe(false);
+  it('accepts finite provider-reported costs without a local dollar ceiling', () => {
+    const record = recordsFor(freeCandidates[0].id, { costUsd: 5_000 })[0];
+    expect(isModelEvaluationRecord(record)).toBe(true);
+    expect(isModelEvaluationRecord({ ...record, costUsd: -1 })).toBe(false);
   });
 });

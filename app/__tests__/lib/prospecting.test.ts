@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { InMemoryOutboundSender } from '@/lib/outbound-sender';
-import { createWorkerSignature, isPublicSourceUrl, modelBudgetAllowed, normalizeEmail, prospectDeduplicationKey, verifyWorkerSignature } from '@/lib/prospecting';
+import { createWorkerSignature, isPublicSourceUrl, normalizeEmail, prospectDeduplicationKey, verifyWorkerSignature } from '@/lib/prospecting';
 import { createProspectingSender, getProspectingSenderProvider } from '@/lib/prospecting-sender';
 import { ForegroundProspectingWorker, privateResearchModelAllowed } from '@/lib/prospecting-worker';
 
@@ -15,13 +15,6 @@ describe('prospecting safety helpers', () => {
     expect(isPublicSourceUrl('https://example.com/about')).toBe(true);
     expect(isPublicSourceUrl('http://example.com/about')).toBe(false);
     expect(isPublicSourceUrl('https://localhost/private')).toBe(false);
-  });
-
-  it('enforces both per-run and daily model budgets', () => {
-    expect(modelBudgetAllowed(0.15, 0.1)).toBe(true);
-    expect(modelBudgetAllowed(0.15, 0.11)).toBe(false);
-    expect(modelBudgetAllowed(0.2, 0.1)).toBe(false);
-    expect(modelBudgetAllowed(0, 0.1, 1, 0.1)).toBe(false);
   });
 
   it('refuses research while the profile remains evaluation-required', () => {

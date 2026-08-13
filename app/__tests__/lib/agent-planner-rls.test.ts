@@ -115,8 +115,8 @@ localDescribe.sequential('app planner and OpenClaw dispatch boundary', () => {
     await pool.query(`
       insert into public.growth_profiles (
         id, owner_id, target_market, geography, offer, sender_name, sender_email,
-        model_route, selected_model_id, selected_model_rationale, daily_model_cap
-      ) values ($1, $2, 'local service operators', 'New York', 'a focused growth review', 'Operator', 'operator@example.test', 'selected-primary', 'provider/pinned-model', 'local planner proof', 0.25)
+        model_route, selected_model_id, selected_model_rationale
+      ) values ($1, $2, 'local service operators', 'New York', 'a focused growth review', 'Operator', 'operator@example.test', 'selected-primary', 'provider/pinned-model', 'local planner proof')
     `, [profileId, operator]);
   });
 

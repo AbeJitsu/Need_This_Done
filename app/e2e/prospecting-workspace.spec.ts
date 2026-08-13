@@ -74,8 +74,6 @@ test('configures, reviews, sends, and suppresses an approved prospecting message
       followUpDays: [3, 7],
       modelRoute: 'evaluation-required',
       fallbackModel: '',
-      perRunModelCap: 0.1,
-      dailyModelCap: 0.25,
     }),
   });
   expect(profile.status).toBe(200);
