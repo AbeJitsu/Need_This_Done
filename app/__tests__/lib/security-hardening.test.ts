@@ -7,7 +7,7 @@
  * - Zero linter errors
  *
  * Prerequisites: Local Supabase running (`supabase start && supabase db reset`)
- * Run: cd app && npx vitest run ../supabase/tests/security-hardening.test.ts
+ * Run: cd app && npm run test:security
  */
 
 import { describe as vitestDescribe, test, expect, beforeAll, afterAll } from 'vitest';
@@ -194,12 +194,11 @@ describe('Retained policies avoid insecure metadata authorization', () => {
 // ============================================
 
 describe('Section 9: Always-True Policy Fixes', () => {
-  test('page_views INSERT requires page_slug IS NOT NULL', async () => {
-    const client = getAnonClient();
-    const { error } = await client.from('page_views').insert({
-      page_slug: null,
-    });
-    expect(error).not.toBeNull();
+  test('retired page_views relation is absent after the final cleanup gate', async () => {
+    const rows = await sql<{ relation: string | null }>(
+      `select to_regclass('public.page_views')::text as relation`,
+    );
+    expect(rows[0]?.relation ?? null).toBeNull();
   });
 
   test('projects INSERT requires name and email', async () => {

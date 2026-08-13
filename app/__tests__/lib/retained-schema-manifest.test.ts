@@ -55,6 +55,211 @@ const retainedTables = [
   'workflow_runs',
 ] as const;
 
+// These are the repository-retired public objects removed by the isolated
+// cleanup gate. Keep the list explicit so a missing object cannot make a
+// negative security assertion pass by accident.
+const retiredTables = [
+  'appointment_notification_log',
+  'appointment_reminders',
+  'appointment_requests',
+  'campaign_clicks',
+  'campaign_opens',
+  'campaign_recipients',
+  'email_campaigns',
+  'email_templates',
+  'loyalty_redemptions',
+  'loyalty_points',
+  'loyalty_points_config',
+  'referral_credit_usage',
+  'referral_transactions',
+  'customer_referrals',
+  'product_category_mappings',
+  'product_categories',
+  'product_waitlist',
+  'saved_addresses',
+  'waitlist_campaign_recipients',
+  'waitlist_campaigns',
+  'payment_attempts',
+  'webhook_events',
+  'page_content_history',
+  'enrollments',
+  'page_content',
+  'page_embeddings',
+  'page_views',
+  'pages',
+  'blog_posts',
+  'changelog_entries',
+  'media',
+  'review_reports',
+  'review_votes',
+  'template_reviews',
+  'template_purchases',
+  'product_similarities',
+  'product_interactions',
+  'coupon_usage',
+  'user_currency_preferences',
+  'exchange_rates',
+  'payments',
+  'cart_reminders',
+  'orders',
+  'quotes',
+  'reviews',
+  'marketplace_templates',
+  'template_categories',
+  'coupons',
+  'currencies',
+  'stripe_customers',
+  'subscriptions',
+  'demo_items',
+  'wizard_sessions',
+  'account_holder',
+  'api_key',
+  'application_method_buy_rules',
+  'application_method_target_rules',
+  'auth_identity',
+  'capture',
+  'cart',
+  'cart_address',
+  'cart_line_item',
+  'cart_line_item_adjustment',
+  'cart_line_item_tax_line',
+  'cart_payment_collection',
+  'cart_promotion',
+  'cart_shipping_method',
+  'cart_shipping_method_adjustment',
+  'cart_shipping_method_tax_line',
+  'credit_line',
+  'customer',
+  'customer_account_holder',
+  'customer_address',
+  'customer_group',
+  'customer_group_customer',
+  'fulfillment',
+  'fulfillment_address',
+  'fulfillment_item',
+  'fulfillment_label',
+  'fulfillment_provider',
+  'fulfillment_set',
+  'geo_zone',
+  'image',
+  'inventory_item',
+  'inventory_level',
+  'invite',
+  'link_module_migrations',
+  'location_fulfillment_provider',
+  'location_fulfillment_set',
+  'mikro_orm_migrations',
+  'notification',
+  'notification_provider',
+  'order',
+  'order_address',
+  'order_cart',
+  'order_change',
+  'order_change_action',
+  'order_claim',
+  'order_claim_item',
+  'order_claim_item_image',
+  'order_credit_line',
+  'order_exchange',
+  'order_exchange_item',
+  'order_fulfillment',
+  'order_item',
+  'order_line_item',
+  'order_line_item_adjustment',
+  'order_line_item_tax_line',
+  'order_payment_collection',
+  'order_promotion',
+  'order_shipping',
+  'order_shipping_method',
+  'order_shipping_method_adjustment',
+  'order_shipping_method_tax_line',
+  'order_summary',
+  'order_transaction',
+  'payment',
+  'payment_collection',
+  'payment_collection_payment_providers',
+  'payment_provider',
+  'payment_session',
+  'price',
+  'price_list',
+  'price_list_rule',
+  'price_preference',
+  'price_rule',
+  'price_set',
+  'product',
+  'product_category',
+  'product_category_product',
+  'product_collection',
+  'product_option',
+  'product_option_value',
+  'product_sales_channel',
+  'product_shipping_profile',
+  'product_tag',
+  'product_tags',
+  'product_type',
+  'product_variant',
+  'product_variant_inventory_item',
+  'product_variant_option',
+  'product_variant_price_set',
+  'product_variant_product_image',
+  'promotion',
+  'promotion_application_method',
+  'promotion_campaign',
+  'promotion_campaign_budget',
+  'promotion_campaign_budget_usage',
+  'promotion_promotion_rule',
+  'promotion_rule',
+  'promotion_rule_value',
+  'provider_identity',
+  'publishable_api_key_sales_channel',
+  'refund',
+  'refund_reason',
+  'region',
+  'region_country',
+  'region_payment_provider',
+  'reservation_item',
+  'return',
+  'return_fulfillment',
+  'return_item',
+  'return_reason',
+  'sales_channel',
+  'sales_channel_stock_location',
+  'script_migrations',
+  'service_zone',
+  'shipping_option',
+  'shipping_option_price_set',
+  'shipping_option_rule',
+  'shipping_option_type',
+  'shipping_profile',
+  'stock_location',
+  'stock_location_address',
+  'store',
+  'store_currency',
+  'store_locale',
+  'tax_provider',
+  'tax_rate',
+  'tax_rate_rule',
+  'tax_region',
+  'user',
+  'user_preference',
+  'user_rbac_role',
+  'view_configuration',
+  'workflow_execution',
+] as const;
+
+const retiredViews = [
+  'loyalty_points_balance',
+  'page_view_stats',
+  'cart_reminder_stats',
+  'featured_templates',
+  'popular_products',
+  'popular_templates',
+  'product_ratings',
+  'trending_products',
+] as const;
+
+const retiredBuckets = ['media-library', 'product-images'] as const;
+
 const requiredPolicies = [
   ['ai_employee_check_in_schedules', 'members read schedules', 'SELECT'],
   ['ai_employee_decisions', 'members read decisions', 'SELECT'],
@@ -106,6 +311,45 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
 
     expect(result.rows.map((row) => row.relname)).toEqual([...retainedTables]);
     expect(result.rows.every((row) => row.relrowsecurity)).toBe(true);
+  });
+
+  it('explicitly confirms retired public objects and buckets are absent', async () => {
+    const relations = await getPool().query<{ relname: string }>(
+      `select c.relname
+       from pg_class c
+       join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public'
+         and c.relname = any($1::text[])
+         and c.relkind in ('r', 'p', 'v', 'm', 'f')
+       order by c.relname`,
+      [[...retiredTables, ...retiredViews]],
+    );
+    expect(relations.rows).toEqual([]);
+
+    const medusaSchema = await getPool().query<{ exists: boolean }>(
+      `select to_regnamespace('medusa') is not null as exists`,
+    );
+    expect(medusaSchema.rows[0]?.exists).toBe(false);
+
+    const buckets = await getPool().query<{ id: string }>(
+      `select id from storage.buckets where id = any($1::text[]) order by id`,
+      [retiredBuckets],
+    );
+    expect(buckets.rows).toEqual([]);
+  });
+
+  it('explicitly confirms the retained public tables remain present', async () => {
+    const result = await getPool().query<{ relname: string }>(
+      `select c.relname
+       from pg_class c
+       join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'public'
+         and c.relkind = 'r'
+         and c.relname = any($1::text[])
+       order by c.relname`,
+      [retainedTables],
+    );
+    expect(result.rows.map((row) => row.relname)).toEqual([...retainedTables]);
   });
 
   it('preserves the critical retained columns and types', async () => {
@@ -314,7 +558,7 @@ localDescribe.sequential('retained Supabase schema manifest', () => {
            coalesce((select prosecdef from pg_proc where oid = to_regprocedure($1)), false) as security_definer`,
         [signature],
       );
-      expect(result.rows[0]).toEqual({
+      expect(result.rows[0], signature).toEqual({
         procedure_exists: true,
         service_role: serviceRole,
         authenticated,
