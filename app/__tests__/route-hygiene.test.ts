@@ -43,7 +43,7 @@ describe('public route hygiene', () => {
       expect(readFileSync(resolve(appRoot, `app/${page}/page.tsx`), 'utf8')).toContain('permanentRedirect');
     }
     expect(readFileSync(resolve(appRoot, 'components/report/ReportCTA.tsx'), 'utf8')).toContain('href="/contact?offer=website-improvement"');
-    const modelEvaluationMigration = readFileSync(resolve(repositoryRoot, 'supabase/migrations/084_bound_model_evaluation_budget.sql'), 'utf8');
+    const modelEvaluationMigration = readFileSync(resolve(repositoryRoot, 'supabase/migrations/081_bound_model_evaluation_budget.sql'), 'utf8');
     expect(modelEvaluationMigration).toContain('model_evaluation_records');
     expect(modelEvaluationMigration).not.toContain('daily_model_cap');
     expect(modelEvaluationMigration).not.toContain('per_run_model_cap');

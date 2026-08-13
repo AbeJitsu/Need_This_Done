@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "source_commit": "468a7d78ec7229975e115f6f13a1b73dc0a39336",
+  "expected_hosted_latest": "072",
+  "stages": [
+    {
+      "id": "calendar-token-security",
+      "gate": "separate",
+      "destructive": false,
+      "rationale": "Encrypt Calendar credentials and narrow function grants before any other hosted change.",
+      "migrations": ["073"]
+    },
+    {
+      "id": "storage-bucket-normalization",
+      "gate": "separate",
+      "destructive": false,
+      "rationale": "Normalize the retained private project-attachments bucket without moving or deleting objects.",
+      "migrations": ["074"]
+    },
+    {
+      "id": "additive-product-workflow",
+      "gate": "batch",
+      "destructive": false,
+      "rationale": "Apply additive outcome, pilot, queue, and completion-evidence changes while retired data remains intact.",
+      "migrations": ["075", "076", "077", "078", "079", "080"]
+    },
+    {
+      "id": "growth-profile-evaluation",
+      "gate": "separate",
+      "destructive": false,
+      "rationale": "Normalize growth-profile routing and add evaluation records; review the affected-row meaning separately.",
+      "migrations": ["081"]
+    },
+    {
+      "id": "research-agent-planner",
+      "gate": "batch",
+      "destructive": false,
+      "rationale": "Add private research, agent operations, configured-model, planner, and worker-boundary records without external activation.",
+      "migrations": ["082", "083", "084", "085", "086", "087", "088", "089"]
+    },
+    {
+      "id": "destructive-retirement",
+      "gate": "final-separate",
+      "destructive": true,
+      "rationale": "Retire legacy local, content/search/media, marketplace, commerce, and Medusa data only after a later retention decision.",
+      "migrations": ["090", "091", "092"]
+    }
+  ],
+  "migrations": [
+    {"new_version":"073","new_filename":"073_secure_google_calendar_tokens.sql","original_version":"073","original_filename":"073_secure_google_calendar_tokens.sql","original_sha256":"d8871e86bec0b2808f84c0d2e2404171053f5ea22210bcb84379c6e9c4fb5ff9","new_sha256":"d8871e86bec0b2808f84c0d2e2404171053f5ea22210bcb84379c6e9c4fb5ff9","stage":"calendar-token-security"},
+    {"new_version":"074","new_filename":"074_create_private_project_attachments_bucket.sql","original_version":"074","original_filename":"074_create_private_project_attachments_bucket.sql","original_sha256":"08f40d62f535adcef3cce308cd2aaee805c183e21eb3cd051f9d60bd6ede2c35","new_sha256":"08f40d62f535adcef3cce308cd2aaee805c183e21eb3cd051f9d60bd6ede2c35","stage":"storage-bucket-normalization"},
+    {"new_version":"075","new_filename":"075_add_financial_ai_employee_outcomes.sql","original_version":"075","original_filename":"075_add_financial_ai_employee_outcomes.sql","original_sha256":"be85004558e61648abd4cd6709fc9dfb77ba7cee0d5b19cc874a2bc268614a8d","new_sha256":"be85004558e61648abd4cd6709fc9dfb77ba7cee0d5b19cc874a2bc268614a8d","stage":"additive-product-workflow"},
+    {"new_version":"076","new_filename":"076_operable_internal_pilot.sql","original_version":"079","original_filename":"079_operable_internal_pilot.sql","original_sha256":"ea5859d62da186ef46389d4cd9f2779ea3561f566476b4a201ec59409c705147","new_sha256":"ea5859d62da186ef46389d4cd9f2779ea3561f566476b4a201ec59409c705147","stage":"additive-product-workflow"},
+    {"new_version":"077","new_filename":"077_fix_pilot_timezone_queue_author.sql","original_version":"080","original_filename":"080_fix_pilot_timezone_queue_author.sql","original_sha256":"eb9a3e80f3fbe90d91d31b517938078653828194fb8be2c7c1dd050853ed733a","new_sha256":"eb9a3e80f3fbe90d91d31b517938078653828194fb8be2c7c1dd050853ed733a","stage":"additive-product-workflow"},
+    {"new_version":"078","new_filename":"078_require_completion_evidence.sql","original_version":"081","original_filename":"081_require_completion_evidence.sql","original_sha256":"1f482dde762cf19d2649242551f63577c735d8083cc4ab06576866889c8067ae","new_sha256":"1f482dde762cf19d2649242551f63577c735d8083cc4ab06576866889c8067ae","stage":"additive-product-workflow"},
+    {"new_version":"079","new_filename":"079_prospecting_outreach.sql","original_version":"082","original_filename":"082_prospecting_outreach.sql","original_sha256":"aacf7027c00e68467b17a5b18179d689cdba2c18622cf95f1c27862f535bdba8","new_sha256":"aacf7027c00e68467b17a5b18179d689cdba2c18622cf95f1c27862f535bdba8","stage":"additive-product-workflow"},
+    {"new_version":"080","new_filename":"080_daily_cockpit.sql","original_version":"083","original_filename":"083_daily_cockpit.sql","original_sha256":"b8f62ca99c1b4bf8e335eef70842e181ebec9136579bc33c36906cf8dfc34bea","new_sha256":"b8f62ca99c1b4bf8e335eef70842e181ebec9136579bc33c36906cf8dfc34bea","stage":"additive-product-workflow"},
+    {"new_version":"081","new_filename":"081_bound_model_evaluation_budget.sql","original_version":"084","original_filename":"084_bound_model_evaluation_budget.sql","original_sha256":"3eddc921964b5369ded01271c80c891181b0498d96f22b0ac731b367117b2c72","new_sha256":"3eddc921964b5369ded01271c80c891181b0498d96f22b0ac731b367117b2c72","stage":"growth-profile-evaluation"},
+    {"new_version":"082","new_filename":"082_private_prospect_research_suite.sql","original_version":"085","original_filename":"085_private_prospect_research_suite.sql","original_sha256":"b0b99f1566ecf67a68d4545419934392bd96e976514424647d7ff4263633b138","new_sha256":"b0b99f1566ecf67a68d4545419934392bd96e976514424647d7ff4263633b138","stage":"research-agent-planner"},
+    {"new_version":"083","new_filename":"083_agent_operations_dashboard.sql","original_version":"086","original_filename":"086_agent_operations_dashboard.sql","original_sha256":"f2de035dbb81317ecbcec3c0189a150954c8e908f6f080adc5ba45aa1b74c080","new_sha256":"f2de035dbb81317ecbcec3c0189a150954c8e908f6f080adc5ba45aa1b74c080","stage":"research-agent-planner"},
+    {"new_version":"084","new_filename":"084_configured_openrouter_models.sql","original_version":"087","original_filename":"087_configured_openrouter_models.sql","original_sha256":"e900995b5414a7788e6030eb9a60608d24bffad64275bec54ac9e7ecf4d4a126","new_sha256":"e900995b5414a7788e6030eb9a60608d24bffad64275bec54ac9e7ecf4d4a126","stage":"research-agent-planner"},
+    {"new_version":"085","new_filename":"085_agent_planner_openclaw_adapter.sql","original_version":"088","original_filename":"088_agent_planner_openclaw_adapter.sql","original_sha256":"f3541c19148514f72ad65ddfc9e5a3070e1fb2b720c2fa848b94f1a80817f6da","new_sha256":"f3541c19148514f72ad65ddfc9e5a3070e1fb2b720c2fa848b94f1a80817f6da","stage":"research-agent-planner"},
+    {"new_version":"086","new_filename":"086_agent_planner_write_boundary.sql","original_version":"089","original_filename":"089_agent_planner_write_boundary.sql","original_sha256":"aa80b8113f95e75cc26ee57228cb82f710a5ed74db7aec7838648a96989f2ddd","new_sha256":"aa80b8113f95e75cc26ee57228cb82f710a5ed74db7aec7838648a96989f2ddd","stage":"research-agent-planner"},
+    {"new_version":"087","new_filename":"087_fix_agent_plan_dispatch_aggregate.sql","original_version":"090","original_filename":"090_fix_agent_plan_dispatch_aggregate.sql","original_sha256":"d61001eed927bbdd1b990d5fb5d6d27cd828bde41478c2390f5168bef6c71928","new_sha256":"d61001eed927bbdd1b990d5fb5d6d27cd828bde41478c2390f5168bef6c71928","stage":"research-agent-planner"},
+    {"new_version":"088","new_filename":"088_openclaw_claim_boundary.sql","original_version":"091","original_filename":"091_openclaw_claim_boundary.sql","original_sha256":"0e690e54d38365274c5767bc75206b559f645d5f8e7e3746a615fda7c823bbad","new_sha256":"0e690e54d38365274c5767bc75206b559f645d5f8e7e3746a615fda7c823bbad","stage":"research-agent-planner"},
+    {"new_version":"089","new_filename":"089_agent_plan_fail_closed_validation.sql","original_version":"092","original_filename":"092_agent_plan_fail_closed_validation.sql","original_sha256":"8920afeece692d56df4f28bfdfa1c7eca9e7f86d0235032dd7da46bd4253ffde","new_sha256":"8920afeece692d56df4f28bfdfa1c7eca9e7f86d0235032dd7da46bd4253ffde","stage":"research-agent-planner"},
+    {"new_version":"090","new_filename":"090_remove_local_only_legacy_schema.sql","original_version":"076","original_filename":"076_remove_local_only_legacy_schema.sql","original_sha256":"5281677e52a2770ca8e000cd533b16a5ca84cbbb65c3199426557653abde880b","new_sha256":"5281677e52a2770ca8e000cd533b16a5ca84cbbb65c3199426557653abde880b","stage":"destructive-retirement"},
+    {"new_version":"091","new_filename":"091_remove_content_and_search_schema.sql","original_version":"077","original_filename":"077_remove_content_and_search_schema.sql","original_sha256":"66ba4d17c6c8fef0e16400507ccb4af2568f8a833c5c5ceaa55b4c996cdb9e44","new_sha256":"66ba4d17c6c8fef0e16400507ccb4af2568f8a833c5c5ceaa55b4c996cdb9e44","stage":"destructive-retirement"},
+    {"new_version":"092","new_filename":"092_remove_marketplace_and_commerce_schema.sql","original_version":"078","original_filename":"078_remove_marketplace_and_commerce_schema.sql","original_sha256":"f7eb7f7c358bfb24dd452923e4f3b978024e380db735ce2404382c1bd9b82330","new_sha256":"f7eb7f7c358bfb24dd452923e4f3b978024e380db735ce2404382c1bd9b82330","stage":"destructive-retirement"}
+  ]
+}
