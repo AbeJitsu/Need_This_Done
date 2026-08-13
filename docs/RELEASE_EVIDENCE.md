@@ -24,9 +24,20 @@ The backup for hosted project `oxhjtmozsdstbokwtnwa` is retained outside the rep
 
 Independent readability, permissions, symlink, checksum, JSON/JSONL, duplicate-name, and no-object-content checks passed. The established read-only local recovery preflight also passed without resetting, restoring, querying, or migrating any database. The read-only hosted migration dry run for `073`–`092` is now recorded in the [Step 4 evidence record](launch/step-4-migration-dry-run-2026-08-12.md). The next gate is migration-reviewer and database-owner approval of the exact change set; no hosted write has been authorized.
 
-## Hosted migration dry-run gate — 2026-08-12
+## Hosted migration dry-run gate — 2026-08-13
 
-The linked `supabase db push --dry-run` completed successfully against project `oxhjtmozsdstbokwtnwa` and listed exactly migrations `073`–`092`. The detailed record classifies schema, data, Storage, routine, policy, trigger, constraint, index, and grant effects, and records the known drift decisions. The gate remains `PENDING_APPROVAL`: migrations `076`–`078` are destructive retirement cleanup, `074` normalizes the existing bucket MIME allowlist, and `084` mutates existing growth-profile rows. No hosted migration, data, Storage object, provider, secret, or deployment state changed.
+The original blanket `073`–`092` review has been replaced with six staged, batch-specific reviews. The exact old-to-new mapping and byte-preserved SHA-256 pairs are in [Step 4 evidence](launch/step-4-migration-dry-run-2026-08-12.md) and `docs/launch/hosted-migration-stages.json`:
+
+| Stage | New migrations | Original migrations | Gate |
+| --- | --- | --- | --- |
+| Calendar token security | `073` | `073` | Separate |
+| Storage bucket normalization | `074` | `074` | Separate |
+| Additive product/workflow | `075`–`080` | `075`, `079`–`083` | Batch |
+| Growth-profile evaluation | `081` | `084` | Separate |
+| Research/agent/planner | `082`–`089` | `085`–`092` | Batch |
+| Destructive retirement | `090`–`092` | `076`–`078` | Final separate gate |
+
+The first five stages do not delete retired data. The final stage is isolated and retains the original destructive SQL only; no deletion approval is implied. Step 4 remains `PENDING_APPROVAL` until every stage has both a technical migration-review sign-off and a hosted-data-impact sign-off. Step 5 remains a new, separate hosted-write approval for each stage; the previous blanket Step 4 authorization cannot authorize a hosted write. No hosted migration, data, Storage object, provider, secret, or deployment state changed during preparation.
 
 ## Paid-proof gate history — 2026-08-08
 
@@ -38,8 +49,8 @@ This historical section records the paid-proof position at that point. The curre
 | A Website Improvement is a $500 audit plus one contained fix, paid by manual $250/$250 invoices. | The request records the offer and scope; one real engagement is agreed, invoiced, delivered, and handed off. | The public promise and existing project-request path are implemented and locally verified. No invoice was issued and no client work is represented as delivered. | Local code boundary proven; paid proof not claimable. |
 | The Managed AI Operator is privately run for a proposal-based 30-day pilot with weekly client briefs. | Proposal, explicit approval boundary, four human-led weekly briefs, recorded outcomes, and a completed paid pilot. | The public site says clients do not operate the private dashboard; private routes remain protected and locally verified. No pilot proposal, client, or weekly brief is represented as complete. | Local code boundary proven; paid proof not claimable. |
 | Audit reports hand off to the Website Improvement intake. | Browser proof from a seeded report confirms the CTA has `offer=website-improvement`. | The 2026-08-08 public browser gate asserts the seeded report CTA and the adaptive offer handoff. | Proven locally. |
-| A model routing default is measured and safe. | Sanitized fixed-task records for the private primary and comparison model IDs; quality, tool use, latency, provider-reported cost, failures, and repair rate recorded in Supabase. | The worker is fail-closed at `evaluation-required` until the explicit primary pin command runs. Local migrations `084` and `087` plus their unit/RLS gates pass; comparison evidence is durable and cannot change the primary route. No provider has been called and no candidate has been selected. | Local implementation proven; routing selection not claimable. |
-| The model-evaluation migration is safe for hosted use. | Backup rehearsal, local reset/lint/RLS gate, hosted dry run, and separate explicit approval. | `084_bound_model_evaluation_budget.sql` records evaluation observations without a local model-spend ceiling and passed the local lint/RLS/assembly gate. | Hosted review, dry run, and approval required. |
+| A model routing default is measured and safe. | Sanitized fixed-task records for the private primary and comparison model IDs; quality, tool use, latency, provider-reported cost, failures, and repair rate recorded in Supabase. | The worker is fail-closed at `evaluation-required` until the explicit primary pin command runs. Local migrations `081` and `084` plus their unit/RLS gates pass; comparison evidence is durable and cannot change the primary route. No provider has been called and no candidate has been selected. | Local implementation proven; routing selection not claimable. |
+| The model-evaluation migration is safe for hosted use. | Backup rehearsal, local reset/lint/RLS gate, hosted dry run, and separate explicit approval. | `081_bound_model_evaluation_budget.sql` records evaluation observations without a local model-spend ceiling and passed the local lint/RLS/assembly gate. | Hosted review, dry run, and approval required. |
 
 The current paid-proof finish line remains two real outcomes: one paid, delivered Website Improvement and one paid AI-operator pilot with four weekly human-led briefs. Do not mark either complete from code or local test evidence.
 

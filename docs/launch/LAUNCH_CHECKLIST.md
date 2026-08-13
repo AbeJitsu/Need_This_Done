@@ -73,19 +73,19 @@ Status values:
 
 - **Owner:** Database migration reviewer
 - **Prerequisites:** Items 1–3 passed; cloud profile points to the intended Supabase project; backup checksums are recorded.
-- **Live procedure:** Review migrations `073`–`092` and run the linked hosted dry run. Classify every statement affecting tables, policies, functions, triggers, constraints, indexes, grants, buckets, and data. Compare the result with the retained local contract and stop on unexplained drift.
-- **Evidence:** The read-only dry run completed successfully on 2026-08-12 and, after the application-owned model dollar ceilings were removed, was rerun to list exactly `073`–`092`. The transcript, refreshed migration fingerprint, statement classification, drift decision, hosted schema/Storage inventory, and remaining review decisions are in [Step 4 evidence](step-4-migration-dry-run-2026-08-12.md). No credentials were printed and no hosted state changed.
-- **Approval:** Read-only dry-run authorization was recorded from the requesting owner on 2026-08-12. Migration reviewer and database owner approval of the exact `073`–`092` change set—especially destructive `076`–`078`, bucket normalization in `074`, and hosted data normalization in `084`—is still required.
-- **Rollback:** No hosted change has occurred. Repair or replace the migration plan and rerun the dry run; never reset the hosted project.
+- **Live procedure:** Review the staged map in [Step 4 evidence](step-4-migration-dry-run-2026-08-12.md), verify its old/new hashes, and run `node scripts/verify-hosted-migration-stage.mjs --stage <stage-id> --dry-run` once for each allowlisted stage. Each temporary migration worktree must contain only that stage, and each read-only dry run must confirm the hosted history remains exactly through `072`. Rehearse the cumulative stages against the protected backup before requesting approval.
+- **Evidence:** The staged mapping, dependency order, batch transcripts, backup checksum result, pre-cleanup `page_views` constraint proof, retained-object proof, and final retired-object proof are in [Step 4 evidence](step-4-migration-dry-run-2026-08-12.md). The machine-readable map is `docs/launch/hosted-migration-stages.json`; `node scripts/verify-hosted-migration-stages.mjs` verifies the one-to-one mapping and byte-preserved SQL. No credentials are printed and no hosted state changes during this preparation gate.
+- **Approval:** Read-only dry-run authorization was recorded from the requesting owner on 2026-08-12. Step 4 remains pending until every stage has both explicit sign-offs: (1) technical migration review and (2) hosted-data impact approval. The prior blanket “approve 4” record is not reusable for a hosted write; the final destructive stage `090`–`092` requires its own separate review and retention decision.
+- **Rollback:** No hosted change has occurred. Repair or replace the migration plan and rerun the affected stage; never reset the hosted project.
 
-### 5. Apply migrations `073`–`092` to hosted Supabase — `PENDING_APPROVAL`
+### 5. Apply each reviewed migration stage to hosted Supabase — `PENDING_APPROVAL`
 
 - **Owner:** Database owner
-- **Prerequisites:** Items 1–4 passed; explicit migration approval; current backup is readable; maintenance/monitoring window is declared.
-- **Live procedure:** Apply only the reviewed migrations to the intended hosted project. Record each result and the resulting hosted migration version. Never use hosted `supabase db reset`, broad generated diffs, or a destructive reverse migration.
-- **Evidence:** Record the command/result transcript without secrets, hosted migration history through `092`, error/log output, operator, timestamp, and final connection target.
-- **Approval:** Required — separate approval for the hosted write, after backup and dry-run approval.
-- **Rollback:** Hosted rollback is forward-only. Stop new application traffic if needed, preserve history/data, and use a separately reviewed forward fix; do not delete the migrations or reset the project.
+- **Prerequisites:** Items 1–4 passed; the exact stage has both Step 4 review sign-offs; current backup is readable; a maintenance/monitoring window and rollback owner are declared.
+- **Live procedure:** Apply only one approved stage at a time in this order: `073`, `074`, `075`–`080`, `081`, `082`–`089`, then the isolated final `090`–`092` cleanup. Stop on any error. Never combine the final destructive stage with an additive batch, use hosted `supabase db reset`, generate a broad diff, or run a destructive reverse migration.
+- **Evidence:** Record a separate command/result transcript for every stage without secrets, the hosted migration history after each stage, error/log output, operator, timestamp, target project, and the two approvals authorizing that specific hosted write. The first five stages must retain the protected legacy inventory; the final stage must record the separately approved retention decision.
+- **Approval:** Required — a new hosted-write approval is required for every stage. Approval of Step 4 permits review only; it does not authorize Step 5 or carry forward to another stage.
+- **Rollback:** Hosted rollback is forward-only. Stop new application traffic if needed, preserve history/data, and use a separately reviewed forward fix; do not delete migrations or reset the project. If a stage fails, do not continue to the next stage.
 
 ### 6. Prove hosted database parity — `BLOCKED`
 
