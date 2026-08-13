@@ -7,10 +7,11 @@ This is the detailed evidence record for [launch checklist item 4](LAUNCH_CHECKL
 - **Read-only procedure:** complete; supabase db push --dry-run exited successfully.
 - **Checklist status:** PENDING_APPROVAL; the migration reviewer and database owner have not approved the exact change set.
 - **Target:** hosted Supabase project oxhjtmozsdstbokwtnwa at https://oxhjtmozsdstbokwtnwa.supabase.co.
-- **Repository:** local dev, origin/dev, and the remote dev ref resolve to 4745e34be2fe602531929b35f15c3040fb50663e; runtime candidate 2cbcb38 remains an ancestor, and production remains 8b8d42966b430b53e991c39891525b0fee9d4c63.
+- **Repository:** local dev resolves to `74d3257`; origin/dev and the remote dev ref remain at `2dedb4b1cbac3a4a645a8ed8da6d2f74f15c0dce`; the reviewed migration content is committed in `b6844df`, and production remains `8b8d42966b430b53e991c39891525b0fee9d4c63`.
 - **Hosted history verification:** a read-only supabase migration list after the dry run still shows remote migrations through 072 and local-only migrations 073–092.
 - **Backup reference:** /Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry; its eight-artifact SHA-256 manifest passed again, with one private project-attachments bucket and 217 object metadata records. Object contents were not downloaded.
 - **Hosted change:** none. The dry run only inspected the linked project and listed migrations; no migration, row, bucket, provider, secret, or deployment write was attempted.
+- **Evidence refresh:** the read-only dry run was rerun after removing application-owned model dollar ceilings. It again selected exactly `073`–`092`; the local assembly and hosted migration history remained unchanged.
 
 The first sandboxed invocation could not resolve the Supabase API hostname. The same read-only command was rerun with approved network access and succeeded. No hosted state changed during either invocation.
 
@@ -60,7 +61,7 @@ Finished supabase db push.
 | 081 | Tightens completion-evidence validation and replaces the completion RPC. | Validation/security tightening; no external effect. |
 | 082 | Creates prospecting, outreach, suppression, task, event, nonce, sender, and outcome tables with indexes, RLS, policies, grants, and routines. | Additive approval-gated data boundary; provider side effects remain outside SQL. |
 | 083 | Creates weekly-priority, cockpit-action, and reflection tables with indexes, RLS, policies, grants, and update triggers. | Additive operator records; no external action. |
-| 084 | Updates existing growth_profiles to evaluation-required, clears fallback, caps daily model spend at $0.25, changes defaults/constraint, and creates evaluation records with RLS/grants. | Internal data mutation plus fail-closed model boundary. It does not call a model or provider; affected hosted-row count still needs owner review. |
+| 084 | Updates existing growth_profiles to evaluation-required, clears fallback, and creates provider-usage evaluation records with RLS/grants. It does not impose a local model-spend ceiling. | Internal data mutation plus fail-closed model-selection boundary. It does not call a model or provider; affected hosted-row count still needs owner review. |
 | 085 | Alters growth-profile model fields/constraints; creates benchmark candidates, usage ledger, and prospect dossiers with RLS/grants and service-role routines. | Additive research boundary; no provider activation or outbound message. |
 | 086 | Creates agent-operation tables, indexes, RLS/policies, triggers, routines, and grants; upserts private agent-media-private bucket and read policy. | Additive operational boundary. Current Storage inventory does not contain this bucket, so creation is expected; no media is sent or published. |
 | 087 | Tightens model-route/candidate constraints and replaces route, pin, claim, queue, usage, and dossier routines/grants. | Fail-closed model selection; no provider call or model pin occurs in SQL. |
@@ -95,13 +96,13 @@ f7eb7f7c358bfb24dd452923e4f3b978024e380db735ce2404382c1bd9b82330  078_remove_mar
 ea5859d62da186ef46389d4cd9f2779ea3561f566476b4a201ec59409c705147  079_operable_internal_pilot.sql
 eb9a3e80f3fbe90d91d31b517938078653828194fb8be2c7c1dd050853ed733a  080_fix_pilot_timezone_queue_author.sql
 1f482dde762cf19d2649242551f63577c735d8083cc4ab06576866889c8067ae  081_require_completion_evidence.sql
-27ed3d1c2198d7ffbf3fa84ba5f8fe0dacbf50887bab937cd806123829de2c6b  082_prospecting_outreach.sql
+aacf7027c00e68467b17a5b18179d689cdba2c18622cf95f1c27862f535bdba8  082_prospecting_outreach.sql
 b8f62ca99c1b4bf8e335eef70842e181ebec9136579bc33c36906cf8dfc34bea  083_daily_cockpit.sql
-78b1093ad68347b01258384b5183f09b5a757727756dee6378f15c8c1c455aa6  084_bound_model_evaluation_budget.sql
-c26bcd23b6326bde5ffad2c116a822672ba7b342e74b75cb25dddba21181e389  085_private_prospect_research_suite.sql
+3eddc921964b5369ded01271c80c891181b0498d96f22b0ac731b367117b2c72  084_bound_model_evaluation_budget.sql
+b0b99f1566ecf67a68d4545419934392bd96e976514424647d7ff4263633b138  085_private_prospect_research_suite.sql
 f2de035dbb81317ecbcec3c0189a150954c8e908f6f080adc5ba45aa1b74c080  086_agent_operations_dashboard.sql
-b5d5d8b8875b0ae2c50418aa0697c2429953390a2df431abed95a8bab60582f9  087_configured_openrouter_models.sql
-c9fc68358673d1d9daf32503addd135cc16d6c80e3b5ac0811d4d2ba0aabf26a  088_agent_planner_openclaw_adapter.sql
+e900995b5414a7788e6030eb9a60608d24bffad64275bec54ac9e7ecf4d4a126  087_configured_openrouter_models.sql
+f3541c19148514f72ad65ddfc9e5a3070e1fb2b720c2fa848b94f1a80817f6da  088_agent_planner_openclaw_adapter.sql
 aa80b8113f95e75cc26ee57228cb82f710a5ed74db7aec7838648a96989f2ddd  089_agent_planner_write_boundary.sql
 d61001eed927bbdd1b990d5fb5d6d27cd828bde41478c2390f5168bef6c71928  090_fix_agent_plan_dispatch_aggregate.sql
 0e690e54d38365274c5767bc75206b559f645d5f8e7e3746a615fda7c823bbad  091_openclaw_claim_boundary.sql

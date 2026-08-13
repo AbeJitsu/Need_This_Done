@@ -4,10 +4,10 @@ This is the canonical numbered control document for promoting the reviewed `dev`
 release candidate to hosted production. Provider runbooks and setup notes point
 to these item numbers; they do not define a second activation order.
 
-**Last reviewed:** 2026-08-12
+**Last reviewed:** 2026-08-13
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Current release candidate (runtime verified):** `2cbcb38` (`dev`)
+**Current release candidate (runtime verified):** `74d3257` (`dev`, local; origin/dev remains `2dedb4b`)
 **Hosted Supabase history:** through `072`
 **Local verification history:** through `092`
 **Immediate application rollback reference:** `8b8d429` (`production`)
@@ -47,17 +47,17 @@ Status values:
 - **Owner:** Engineering owner
 - **Prerequisites:** Clean worktree; exact release SHA recorded; no unresolved required check, or a documented owner-approved exception.
 - **Live procedure:** Confirm the reviewed `dev` SHA. Run `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, `cd bridge && npm test`, and `git diff --check`. Freeze code changes until cutover completes.
-- **Evidence:** On 2026-08-11, commit `2cbcb38` passed `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`: local migrations `001`–`092`, schema lint, 214/214 required unit tests, 50/50 accessibility checks, the 49-page production build, schema manifest 7/7, security 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, consultation integration 1/1, retained browser 45 passed with one intentional mobile exclusion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2. `cd bridge && npm test` passed 6/6 and `git diff --check` passed. An unqualified preview-mode invocation was not counted; the documented production-server command is the passing release gate.
-- **Approval:** Recorded — the requested local release work and item-2 `dev` publish were authorized. Hosted database, deployment, secret, provider, and live-canary approvals remain separate; no code changes are permitted after the release candidate is approved.
+- **Evidence:** On 2026-08-13, committed candidate `74d3257` passed `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`: local migrations `001`–`092`, schema lint, 213/213 required unit tests, 50/50 accessibility checks, the 49-page production build, schema manifest 7/7, security 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, consultation integration 1/1, retained browser 45 passed with one intentional mobile exclusion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2. `cd bridge && npm test` passed 6/6 and `git diff --check` passed. An unqualified preview-mode invocation was not counted; the documented production-server command is the passing release gate.
+- **Approval:** Recorded — the owner-authorized local model-spend change was committed and revalidated. Hosted database, deployment, secret, provider, and live-canary approvals remain separate; no hosted state changed.
 - **Rollback:** Unfreeze only through an approved replacement candidate. Keep `8b8d429` untouched as the immediate application rollback reference.
 
-### 2. Push the reviewed `dev` branch — `PASSED`
+### 2. Push the reviewed `dev` branch — `IN_PROGRESS`
 
 - **Owner:** Release owner
 - **Prerequisites:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
 - **Live procedure:** Push the exact reviewed SHA to `origin/dev`; verify the remote ref resolves to the same SHA with `git ls-remote origin refs/heads/dev`.
-- **Evidence:** On 2026-08-12, read-only remote verification resolved local `dev`, `origin/dev`, and `git ls-remote origin refs/heads/dev` to `4745e34be2fe602531929b35f15c3040fb50663e`. The reviewed runtime candidate `2cbcb38` is an ancestor of that ref, and `8b8d429` remains the production rollback reference and an ancestor of the candidate. The worktree was clean, `git diff --check` passed, and the post-candidate commits were documentation/evidence synchronization only; no production or hosted service changed.
-- **Approval:** Recorded — the requested branch publish was approved for item 2 only; production promotion and all hosted/provider actions remain separate approvals.
+- **Evidence:** Read-only verification resolves `origin/dev` and `git ls-remote origin refs/heads/dev` to `2dedb4b1cbac3a4a645a8ed8da6d2f74f15c0dce`. The current runtime-verified candidate `74d3257` is committed locally but has not been pushed; the remote remains at the previous candidate. No production or hosted service changed.
+- **Approval:** Required — release-owner approval is needed to push and reverify `74d3257`. The earlier branch-publish approval covered the previous candidate only; production promotion and all hosted/provider actions remain separate approvals.
 - **Rollback:** Do not force-push. If the branch must be corrected, publish a reviewed replacement commit and record both SHAs; preserve the prior remote ref in the evidence.
 
 ### 3. Back up hosted Supabase — `PASSED`
@@ -74,7 +74,7 @@ Status values:
 - **Owner:** Database migration reviewer
 - **Prerequisites:** Items 1–3 passed; cloud profile points to the intended Supabase project; backup checksums are recorded.
 - **Live procedure:** Review migrations `073`–`092` and run the linked hosted dry run. Classify every statement affecting tables, policies, functions, triggers, constraints, indexes, grants, buckets, and data. Compare the result with the retained local contract and stop on unexplained drift.
-- **Evidence:** The read-only dry run completed successfully on 2026-08-12 and listed exactly `073`–`092`. The transcript, migration fingerprint, statement classification, drift decision, hosted schema/Storage inventory, and remaining review decisions are in [Step 4 evidence](step-4-migration-dry-run-2026-08-12.md). No credentials were printed and no hosted state changed.
+- **Evidence:** The read-only dry run completed successfully on 2026-08-12 and, after the application-owned model dollar ceilings were removed, was rerun to list exactly `073`–`092`. The transcript, refreshed migration fingerprint, statement classification, drift decision, hosted schema/Storage inventory, and remaining review decisions are in [Step 4 evidence](step-4-migration-dry-run-2026-08-12.md). No credentials were printed and no hosted state changed.
 - **Approval:** Read-only dry-run authorization was recorded from the requesting owner on 2026-08-12. Migration reviewer and database owner approval of the exact `073`–`092` change set—especially destructive `076`–`078`, bucket normalization in `074`, and hosted data normalization in `084`—is still required.
 - **Rollback:** No hosted change has occurred. Repair or replace the migration plan and rerun the dry run; never reset the hosted project.
 
@@ -123,12 +123,12 @@ Status values:
 - **Approval:** Required — security owner signs the authorization matrix.
 - **Rollback:** Disable the affected route/feature or redeploy the prior application commit; keep hosted data and audit records for investigation.
 
-### 10. Activate OpenRouter under a hard cost boundary — `BLOCKED`
+### 10. Activate OpenRouter with provider-owned spend limits — `BLOCKED`
 
 - **Owner:** AI/provider owner
 - **Prerequisites:** Items 6–9 passed; restricted provider key, spend limit, alerting, retention/training settings, and exact current model IDs are reviewed.
-- **Live procedure:** Create the restricted key and alerts. Resolve the exact catalog model IDs. Run the sanitized fixed evaluation set and record quality, tool use, latency, cost, failures, and repair rate. Pin the approved primary model only after the threshold and cost caps pass.
-- **Evidence:** Retain provider settings, model IDs, evaluation rows/results, cap calculations, alerts, and the approved primary-pin record without exposing the key.
+- **Live procedure:** Create the restricted key and provider-side spend alerts/limits. Resolve the exact catalog model IDs. Run the sanitized fixed evaluation set and record quality, tool use, latency, provider-reported cost, failures, and repair rate. Pin the approved primary model only after the evaluation threshold passes.
+- **Evidence:** Retain provider settings, model IDs, evaluation rows/results, provider usage/cost records, alerts, and the approved primary-pin record without exposing the key.
 - **Approval:** Required — provider owner approves the key scope, limits, retention/training settings, evaluation result, and primary model.
 - **Rollback:** Revoke/rotate the provider key, restore `evaluation-required`, unpin the primary, stop workers, and preserve evaluation/usage records.
 
@@ -226,7 +226,7 @@ Status values:
 
 - **Owner:** Reliability owner
 - **Prerequisites:** Items 7–20 passed or have explicit exceptions; monitoring, emergency-stop operator, and application rollback deployment are available.
-- **Live procedure:** Test Mac restart, bridge restart, Gateway/provider failure, network outage, expired lease, duplicate callback, stale reservation, overage, offline recovery, and emergency stop. Verify new claims are blocked when stopped. Deploy and verify application rollback to `8b8d429`; preserve hosted migration history.
+- **Live procedure:** Test Mac restart, bridge restart, Gateway/provider failure, network outage, expired lease, duplicate callback, stale reservation, media overage, offline recovery, and emergency stop. Verify new claims are blocked when stopped. Deploy and verify application rollback to `8b8d429`; preserve hosted migration history.
 - **Evidence:** Retain fault-injection matrix, timestamps, alerts, lease/callback reconciliation, stop-state proof, rollback deployment identity, recovery result, and monitoring links.
 - **Approval:** Required — reliability and release owners approve the failure coverage and rollback result.
 - **Rollback:** Keep the old application commit available, use forward database fixes only, and leave emergency stop active until recovery is understood.

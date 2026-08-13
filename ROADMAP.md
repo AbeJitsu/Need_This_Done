@@ -23,7 +23,7 @@ Technical launch is a separate gate from business proof: checklist items 1–22 
 | --- | --- | --- | --- |
 | 1 | Local verification passed | Public dual-offer experience | Navigation, homepage, services, pricing, intake, audit handoff, work proof, legal/support pages, redirects, metadata, sitemap, and curated Insights accurately describe the two offers. |
 | 2 | Local verification passed | Route, accessibility, and browser coverage | Unit, accessibility, build, public-browser, private-access, and retained security/assembly gates pass without hiding stale routes. |
-| 3 | Pending measured evidence | Model-routing policy | Record fixed sanitized-task results for Poolside Laguna S 2.1 Free and two current eligible free candidates; compare quality, tool use, latency, cost, failures, and repair rate against pinned DeepSeek V4 Flash under the $0.25/day cap. Select no live default until the policy threshold is met. |
+| 3 | Pending measured evidence | Model-routing policy | Record fixed sanitized-task results for the configured and catalog-resolved candidates; compare quality, tool use, latency, cost, failures, and repair rate against the pinned fallback within the provider's configured OpenRouter limits. Select no live default until the policy threshold is met. |
 | 4 | Pending external sale | Paid Website Improvement | Confirm one contained scope, issue the two manual invoices, deliver the fix, and record the handoff/outcome. |
 | 5 | Pending external sale | Paid Managed AI Operator pilot | Agree proposal and approval boundary, operate for 30 days, provide four weekly briefs, and record outcomes. |
 
@@ -35,7 +35,7 @@ The live worker defaults to `evaluation-required`. The test set is deliberately 
 2. Draft an approved-boundary outreach message.
 3. Summarize sanitized activity notes into a client-ready weekly brief without inventing outcomes.
 
-The record for every task includes quality score, tool-use score, latency, cost, failure, and repair-needed flag. The shared threshold is quality ≥ 0.80, tool use ≥ 0.90, failure rate ≤ 0.10, and repair rate ≤ 0.20. A run cannot exceed $0.10 and a day cannot exceed $0.25. All three free candidates must complete the set before selection; DeepSeek is eligible only after none of the free candidates clears the threshold.
+The record for every task includes quality score, tool-use score, latency, provider-reported cost, failure, and repair-needed flag. The shared threshold is quality ≥ 0.80, tool use ≥ 0.90, failure rate ≤ 0.10, and repair rate ≤ 0.20. OpenRouter account and key limits govern model spend. All three free candidates must complete the set before selection; DeepSeek is eligible only after none of the free candidates clears the threshold.
 
 Catalog availability changes, so the two non-Poolside free candidates must be resolved and pinned from the then-current catalog before results are recorded. The evaluation-record API and pending migration store observations in Supabase; they make no provider call.
 

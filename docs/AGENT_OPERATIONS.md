@@ -104,11 +104,12 @@ The bridge polls only the approved-plan claim function. It cannot claim an
 unplanned or unapproved orchestration task. Every request has a timestamp,
 nonce, path-bound HMAC signature, worker identity, and lease check.
 
-Before an approved-plan task calls the Gateway, the bridge reserves the plan's
-model budget. Completion must report provider usage and actual cost. Unknown
-costs, expired leases, reservation mismatches, overage, or callback failures
-fail closed. Repeated completion callbacks return the already recorded terminal
-task rather than creating another artifact.
+Before an approved-plan task calls the Gateway, the bridge records the plan's
+expected model usage. Completion must report provider usage and actual cost.
+Expired leases, reservation mismatches, provider failures, or callback failures
+fail closed. OpenRouter account/key limits govern model spend; Supabase retains
+the expected and actual values for reconciliation. Repeated completion callbacks
+return the already recorded terminal task rather than creating another artifact.
 
 The initial OpenClaw capabilities are research, drafting, review, coordination,
 and media preparation. The bridge rejects task types for sending, publishing,
@@ -158,7 +159,7 @@ Before real activation, prove locally and record evidence for:
    idempotent retries;
 3. approved-plan-only bridge claims, signed callbacks, expired leases,
    duplicate callbacks, emergency stop, provider failure, and offline recovery;
-4. model reservation/reconciliation and fail-closed overage;
+4. model reservation/reconciliation and provider-usage recording;
 5. a fake local Gateway run with a harmless public research task;
 6. strict citation validation and a result in the prospecting review queue;
 7. private Storage upload and signed frontend preview;

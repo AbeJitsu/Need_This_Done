@@ -55,7 +55,7 @@ No live worker model is selected by default. The pending evaluation protocol use
 - the configured primary candidate; and
 - the configured comparison candidate.
 
-The code enforces a $0.25 daily evaluation ceiling and a $0.10 per-run ceiling. The comparison runner never changes the primary route. A separate approval-gated worker command is required to pin the configured primary into the database, and real research uses that database-pinned ID.
+OpenRouter account and key limits govern model spend; the application records provider-reported usage and cost for evaluation evidence. The comparison runner never changes the primary route. A separate approval-gated worker command is required to pin the configured primary into the database, and real research uses that database-pinned ID.
 
 ## Local development and verification
 

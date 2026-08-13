@@ -9,7 +9,7 @@ The research runner is intentionally Mac-mini-only. It prepares two public-web, 
 
 ## What changes and what does not
 
-The worker can claim a signed legacy daily research task, reserve model budget, use OpenRouter web search, and report a validated dossier. It cannot approve a draft or send it. A human must promote a dossier with a valid public recipient into the existing outreach review flow, approve it, and explicitly use the sender action.
+The worker can claim a signed legacy daily research task, record expected provider usage, use OpenRouter web search, and report a validated dossier. It cannot approve a draft or send it. A human must promote a dossier with a valid public recipient into the existing outreach review flow, approve it, and explicitly use the sender action.
 
 The legacy database and routes remain additive and local until separately reviewed. No hosted migration, sender activation, benchmark, scheduler installation, or external delivery is part of normal setup.
 
@@ -99,4 +99,4 @@ database-pinned primary route.
 4. Obtain explicit approval before installing a launchd job.
 5. Observe seven daily runs, including shortfalls and ledger entries, before calling the workflow operational.
 
-If an emergency stop is on, a model remains `evaluation-required`, a catalog price is unknown, a reservation would exceed $0.10 per request or $0.25 per local day, or the response lacks valid public citations, the worker stops and records the failure or shortfall instead of creating a prospect.
+If an emergency stop is on, a model remains `evaluation-required`, the provider rejects the request, or the response lacks valid public citations, the worker stops and records the failure or shortfall instead of creating a prospect. The worker records the provider-reported usage and cost; OpenRouter account/key limits govern spend.

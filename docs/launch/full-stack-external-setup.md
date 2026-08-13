@@ -25,7 +25,7 @@ Installed does not mean trusted, connected, running, or production-ready.
 - The plaintext export has already been removed from `~/.zshrc` without retaining a backup.
 - Do not create a replacement because Context7 is not part of the retained stack.
 
-### 2. Set up OpenRouter with a hard cost boundary
+### 2. Set up OpenRouter with provider-owned spend limits
 
 The local API key is now stored in the active root profile, but OpenRouter has
 not been activated for worker use. Do not run model work as part of the
@@ -40,7 +40,7 @@ database-pinned primary for real research.
 Use [OpenRouter settings](https://openrouter.ai/settings/keys) to:
 
 1. Sign in to the owner account and enable MFA if offered.
-2. Decide whether to start with free models only or add a small prepaid balance. Do not enable open-ended automatic spending for the pilot.
+2. Decide whether to start with free models only or add a small prepaid balance. Keep provider-side limits and alerts active for the pilot.
 3. Create one NeedThisDone-specific API key or OAuth profile—not a shared personal key.
 4. Set the smallest available credit/spend limit and alerts.
 5. Record an initial model allowlist. Start with one inexpensive general model and one fallback; do not enable every model.

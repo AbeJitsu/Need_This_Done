@@ -119,7 +119,7 @@ The following is a discovery snapshot observed on 2026-08-08, not a set of pinne
 | Google Gemini 3.6 Flash | `google/gemini-3.6-flash` | 1,048,576 | Multimodal input; tools, structured outputs, and web-search metadata listed | Website-audit, research, browser, and long-context candidate |
 | Anthropic Claude Opus 5 | `anthropic/claude-opus-5` | 1,000,000 | Multimodal input; tools and structured outputs; higher-cost quality candidate | Planner, long-context, audit, and writing comparison |
 
-Prices, slugs, aliases, availability, and capability flags are volatile. The table is a candidate inventory, not a recommendation. OpenRouter Auto can select a model outside an assumed budget unless the experiment applies an explicit allowed-model pattern and budget guard.
+Prices, slugs, aliases, availability, and capability flags are volatile. The table is a candidate inventory, not a recommendation. OpenRouter Auto can select different models, so production experiments should use provider-side spend limits and an explicit allowed-model pattern when a fixed model set is required.
 
 ### Categories and initial candidate pools
 
@@ -145,7 +145,7 @@ For every eventual recommendation, record why the model won, why the nearest alt
 3. Score task quality, factuality, schema compliance, tool-call validity, successful tool completion, safety-boundary adherence, latency, token cost, failure rate, retry count, and repair rate.
 4. For Auto, record the router slug, selected response model, provider, cost, and latency for every request. For explicit models, record the exact catalog ID and catalog snapshot.
 5. Review failures and repairs by category. A cheaper model that needs repeated repair may be more expensive and less safe than a stronger model.
-6. Select a default only after the evidence is reviewed, budgets are enforced, and a rollback/fallback route is documented. Re-run the suite when a model slug, provider, prompt, tool adapter, or task distribution changes.
+6. Select a default only after the evidence is reviewed, provider-side spend controls are verified, and a rollback/fallback route is documented. Re-run the suite when a model slug, provider, prompt, tool adapter, or task distribution changes.
 
 The local assembly now includes a fake-model planner boundary and a fake
 Gateway bridge proof. Real provider credentials, hosted activation, and a Mac
