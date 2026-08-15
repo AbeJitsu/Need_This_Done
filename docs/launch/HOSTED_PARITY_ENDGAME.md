@@ -42,6 +42,11 @@ The target after the first four stages is hosted history `089` and an additive
 schema match. The target after the separately approved retirement stage is
 hosted history `092` and exact local retained-schema parity.
 
+When the final migration stage is verified, the next action is immediately
+launch-checklist item 6: prove hosted database parity. Do not treat migration
+completion as production readiness and do not skip the hosted security,
+tenant-isolation, grant, Storage, planner, and worker-boundary checks.
+
 The stage gate is used in two modes:
 
 ```bash
