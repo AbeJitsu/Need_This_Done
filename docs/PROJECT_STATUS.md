@@ -8,11 +8,11 @@
 
 This is the implementation ledger. Update it in the same commit as every completed or materially changed implementation slice. It records only current execution state, validation, commits, rollback, and blockers.
 
-## Current local release-candidate gate — 2026-08-13
+## Current release-control and hosted-stage ledger — 2026-08-15
 
-**Finish-line decision:** **Local release candidate proven; technical cloud launch is the active critical path.** The repository and disposable local Supabase boundary are proven. The reviewed `dev` branch replaces the old production application after the launch checklist passes. Hosted migrations `073`–`092`, production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
+**Finish-line decision:** **Local release candidate proven; technical cloud launch is the active critical path.** The repository and disposable local Supabase boundary are proven. The reviewed `dev` branch replaces the old production application after the launch checklist passes. Hosted migration `073` is applied and verified; hosted migrations `074`–`092`, production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
 
-The final full assembly command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on committed candidate `74d3257`. The final pre-apply release-control SHA will be the exact reviewed commit that repairs the hosted-write gate and is recorded before Step 5; this hosted stage does not claim a new local assembly. The recorded assembly reset only local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed:
+The final full assembly command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on committed candidate `74d3257`. It remains the last full local assembly proof. The separate final pre-apply release-control SHA was `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`; this hosted stage does not claim a new local assembly. The recorded assembly reset only local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed:
 
 - Code: lint with zero warnings, TypeScript, 213/213 required unit tests with zero skips, 50/50 accessibility checks, and the 49-page production build.
 - Database: no schema errors from local lint; schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, and consultation integration 1/1.
@@ -25,7 +25,7 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 
 **Remaining blockers and recorded exceptions:**
 
-- Hosted migration parity is not complete: the read-only hosted history ends at `072`, while local repository migrations `073`–`092` are pending. Launch checklist items 1–4 are complete, with item 4 limited to deterministic review confirmation; items 5–22 remain separate hosted release gates. No hosted write was made.
+- Hosted migration parity is not complete: hosted history is now through `073`, while local repository migrations `074`–`092` remain pending and neither approved nor applied. Launch checklist items 1–4 are complete, item 5 is `IN_PROGRESS` after the successful `073` stage, and items 6–22 remain separate hosted release gates.
 - `npm audit` reports 16 findings overall and 11 in the production dependency tree; production promotion is blocked pending owner-approved upgrades or an explicitly time-boxed exception. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The installed Supabase CLI is `2.65.5` while `2.113.0` is available. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The Playwright auto-start development-server path has a Tailwind parsing issue under the current local environment marker; the reproducible final gate uses the production-server mode above. Owner: frontend QA. Review/removal date: 2026-08-16.
@@ -33,7 +33,7 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 
 **Operational boundaries:** Payments remain on the `/contact` fallback with no configured catalog links; real sender delivery requires an explicit provider mode and separate key; bridge requests remain path-bound HMAC/nonce authenticated; worker claims, approvals, idempotency, media caps, and fail-closed RLS were tested locally; no model, payment, sender, calendar, deployment, publish, spend, account, or external-message action was enabled.
 
-**Rollback:** No hosted rollback is required because no hosted state changed. Local verification is reproducible with the disposable reset gate. Revert the focused commits if needed; preserve migration history, evidence, and media records rather than deleting them. Any future hosted application of `073`–`092` requires a separate backup, dry run, approval, and forward rollback plan.
+**Rollback:** Hosted `073` completed successfully; no rollback was required. Local verification is reproducible with the disposable reset gate. Revert focused code commits if needed; preserve hosted migration history, evidence, and media records rather than deleting them. Any future hosted application of `074`–`092` requires a separate backup, dry run, approval, and forward-only repair plan.
 
 ## Hosted backup gate — 2026-08-12
 
@@ -47,17 +47,23 @@ The read-only item-4 hosted migration review is staged and recorded in the [Step
 
 The blanket migration review was replaced with six allowlisted stages: `073`, `074`, `075`–`080`, `081`, `082`–`089`, and the isolated final cleanup `090`–`092`. On 2026-08-13, `cd app && npm run verify:hosted-migration-step4` passed its technical and data-impact tests: the one-to-one mapping and SQL hashes were preserved; all six hosted calls were `--dry-run` only and confirmed hosted history before and after remained at 68 rows/latest `072`; the eight-artifact backup manifest passed; and the cumulative disposable-local rehearsal passed with five unchanged legacy-inventory assertions, the pre-cleanup `page_views` constraint, and the exact retired/retained object boundary after `092`. The command emitted `hosted_writes: 0`. Checklist item 4 is `PASSED` as review confirmation only; checklist item 5 remains a separate hosted-write approval for every stage, and the owner’s retention decision for `090`–`092` is recorded in the Step 4 evidence.
 
+## Hosted Step 5 — calendar-token-security (`073`) — 2026-08-15
+
+The dedicated [Step 5 evidence record](launch/step-5-calendar-token-apply-2026-08-15.md) records the only hosted write in this execution window. The fresh protected backup at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-15-pre-migration-073-000202` passed mode `700`/`600`, eight-artifact checksum, target, history, and Storage preflight: project `oxhjtmozsdstbokwtnwa`, one private `project-attachments` bucket, 217 metadata-only objects, and `68/072` history.
+
+The stage-only dry run selected exactly `073_secure_google_calendar_tokens.sql`. The approved operator/monitor was Abe Reyes, the maintenance window was 15 minutes in America/New_York, the forward-repair owner was the NeedThisDone database owner, and the release-control SHA was `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`. The helper applied exactly one migration and reported `hosted_writes: 1`, `69/073` history, and temporary-workdir cleanup. Read-only verification confirmed encrypted `bytea` columns, nullable legacy token columns, service-role-only execution for all three token functions, anonymous RPC denial (`401` for both read functions), zero Calendar-token rows, no `074+`, and unchanged Storage inventory. `074`–`092` remain neither approved nor applied. No provider, deployment, secret, Calendar API, publication, spend, or external-message action occurred.
+
 ## Current state map
 
 ```text
 production/origin/production 8b8d429          -> old hosted production product and application rollback reference
 local dev                    `74d3257`       -> last full local assembly proof; not the hosted-write approval SHA
-local dev                    `<gate-repair SHA>` -> final pre-apply release-control SHA, captured before Step 5
-origin/dev                   `<gate-repair SHA>` -> must match the final pre-apply release-control SHA after a normal push
+local dev                    `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b` -> final pre-apply release-control SHA
+origin/dev                   `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b` -> normal push and remote verification passed
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
-  -> hosted history through 072
-  -> 073-092 are repository-only and unapplied there
+  -> hosted history through 073
+  -> 074-092 are repository-only and unapplied there
   -> old hosted state remains recoverable
 
 local Supabase
@@ -115,6 +121,7 @@ Historical change-log rows below retain the migration filenames used before the 
 | --- | --- | --- | --- | --- |
 | 2026-08-13 | Provider-owned model spend policy | `b6844df`, `74d3257` | Removed application-owned daily/per-request model-dollar enforcement, retained provider-usage records and non-budget safety controls, aligned focused tests, and passed the fresh local assembly through `092`. No hosted or provider state changed. | Revert these two focused commits; preserve migration history and usage/evaluation records, and use a reviewed forward migration for any hosted correction. |
 | 2026-08-13 | Hosted Step 4 deterministic migration gate | This working slice | Added `npm run verify:hosted-migration-step4`; its technical and data-impact passes verified the mapping, six dry runs, 68-row/latest-`072` hosted history, eight-artifact backup checksum, five cumulative legacy-inventory checkpoints, and the exact post-`092` retired/retained boundary. The gate reports `hosted_writes: 0`; checklist item 4 is review confirmation only and item 5 remains pending. | Preserve the protected backup; if any later hosted stage fails, stop and use a separately reviewed forward repair. Never reset hosted Supabase or reverse migration history. |
+| 2026-08-15 | Hosted Step 5 calendar-token-security stage | `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b` plus separate evidence commit | Repaired the hosted apply gate to require and recheck an explicit release SHA, pushed and verified `dev`, captured a fresh protected backup, applied only `073`, and recorded `69/073` history, encrypted token columns, service-role-only grants, zero token rows, anonymous denial, and unchanged Storage inventory. `074`–`092` remain neither approved nor applied; no provider, deployment, secret, Calendar API, or external-message action occurred. | Preserve the `073` history/data and backup. Hosted rollback is forward-only; stop before `074` and use a separately reviewed forward repair if needed. |
 | 2026-08-12 | Hosted Step 3 recovery backup | This working slice | Captured the protected hosted SQL, Storage metadata/object inventory, and read-only hosted migration history through `072`; verified permissions, checksums, readability, JSON/JSONL shape, and that object contents were not downloaded. No hosted state changed. | Preserve `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry`; future migration work remains separately approved and forward-only. |
 | 2026-08-12 | Hosted Step 4 migration dry run | This working slice | Ran the linked hosted dry run in read-only mode, confirmed the exact `073`–`092` set, classified the effects, and recorded the known drift decisions. No hosted migration, data, Storage, provider, secret, or deployment state changed. | Preserve the Step 3 backup; run the deterministic Step 4 gate before any hosted write. |
 | 2026-08-12 | Project-local agent controls | This working slice | Added canonical `AGENTS.md` guidance aligned to the current README/roadmap, minimal Claude compatibility bridges, project-scoped Codex approval/sandbox defaults, lifecycle hooks, and command rules. Removed duplicated stale instruction content; destructive operations remain forbidden and hosted migration pushes approval-gated. | Review or revert the uncommitted instruction/config files as a group; no hosted rollback is required. |
