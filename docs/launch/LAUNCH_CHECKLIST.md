@@ -9,11 +9,13 @@ to these item numbers; they do not define a second activation order.
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
 **Last full local assembly proof:** `74d3257` (2026-08-13; local migrations through `092`)
 **Final pre-apply release-control SHA:** `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`
+**Latest hosted-stage control SHA:** `64b46f1d20ea67b37952bd11b8c4b775fa80a185` (stages `075`–`089`)
 **Post-write evidence:** [Step 5 `073` evidence](step-5-calendar-token-apply-2026-08-15.md), committed separately from the release-control SHA
-**Hosted Supabase history:** through `073`
+**Hosted Supabase history:** through `089`
 **Local verification history:** through `092`
 **Immediate application rollback reference:** `8b8d429` (`production`)
 **Active hosted parity endgame:** [hosted parity endgame](HOSTED_PARITY_ENDGAME.md)
+**Latest hosted parity evidence:** [Step 5 `074`–`089` evidence](step-5-hosted-parity-2026-08-15.md)
 
 ## How to use this checklist
 
@@ -59,7 +61,7 @@ Status values:
 - **Owner:** Release owner
 - **Prerequisites:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
 - **Live procedure:** Push the exact reviewed SHA to `origin/dev`; verify the remote ref resolves to the same SHA with `git ls-remote origin refs/heads/dev`.
-- **Evidence:** On 2026-08-15, local `HEAD`, `origin/dev`, and `git ls-remote origin refs/heads/dev` all resolved to `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b` after a normal non-force push. Production was untouched.
+- **Evidence:** On 2026-08-15, local `HEAD`, `origin/dev`, and `git ls-remote origin refs/heads/dev` resolved to the reviewed release-control SHA before the hosted stages; the subsequent stage-control commits were also pushed normally, with the latest hosted-stage SHA `64b46f1d20ea67b37952bd11b8c4b775fa80a185`. Production was untouched. The last full local assembly proof remains `74d3257`; the later gate/docs commits do not claim a new full assembly.
 - **Approval:** Recorded — release-owner approval covered publishing the reviewed gate-repair commit only. It did not authorize hosted migration, deployment, provider, secret, or live-action work.
 - **Rollback:** Do not force-push. If the branch must be corrected, publish a reviewed replacement commit and record both SHAs; preserve the prior remote ref in the evidence.
 
@@ -68,7 +70,7 @@ Status values:
 - **Owner:** Database owner
 - **Prerequisites:** Item 1 passed; intended hosted project confirmed; secure backup destination and recovery operator available.
 - **Live procedure:** Capture hosted schema, data, roles/grants, Storage bucket metadata/object inventory, and checksums. Verify the files are readable and rehearse the recovery instructions without changing hosted state.
-- **Evidence:** On 2026-08-12, the hosted project `oxhjtmozsdstbokwtnwa` was captured into `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry` without overwriting the retained SQL snapshot. The final independent pre-write capture used for Step 5 is `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-15-pre-migration-073-000202`; its `schema.sql`, `data.sql`, and `roles.sql` are readable and non-empty, the directory is mode `700`, all eight artifacts are mode `600`, and `SHA256SUMS-FINAL.txt` verifies the eight-artifact manifest. Storage metadata contains one private `project-attachments` bucket and 217 object metadata records; pagination completed and object contents were not downloaded. The fresh read-only hosted migration-history query returned 68 rows with latest version `072`. No hosted state changed during backup capture.
+- **Evidence:** The retained pre-`073` captures remain preserved. The later stage-specific backups for hosted parity are listed in the [Step 5 `074`–`089` evidence](step-5-hosted-parity-2026-08-15.md); each has mode-`700`/`600` protection, a passing eight-artifact checksum manifest, and the exact pre-stage history. The latest recovery point is hosted `85/089`, with one private `project-attachments` bucket containing 217 metadata-only objects and one private empty `agent-media-private` bucket. No object contents were downloaded.
 - **Approval:** Recorded — the requesting owner explicitly authorized completion of Step 3 on 2026-08-12. This approval covers backup capture and verification only; it does not approve migrations, deployments, provider activation, secrets, or any hosted write.
 - **Rollback:** Preserve the backup as the recovery reference. Do not delete or overwrite the old snapshot during a retry.
 
@@ -86,14 +88,14 @@ Status values:
 - **Owner:** Database owner
 - **Prerequisites:** Items 1–4 passed; the exact stage has a new stage-specific hosted-write approval; current backup is readable; a maintenance/monitoring window and rollback owner are declared. Before `090`–`092`, the owner’s separate retention decision must be reaffirmed for that hosted write.
 - **Live procedure:** Apply only one approved stage at a time in this order: `073`, `074`, `075`–`080`, `081`, `082`–`089`, then the isolated final `090`–`092` cleanup. Stop on any error. Never combine the final destructive stage with an additive batch, use hosted `supabase db reset`, generate a broad diff, or run a destructive reverse migration.
-- **Evidence:** The dedicated [Step 5 `073` evidence record](step-5-calendar-token-apply-2026-08-15.md) records the fresh backup, exact dry run, stage-specific approval, sanitized result with `hosted_writes: 1`, `69/073` history, schema/grant/row-count checks, unchanged Storage inventory, and the rollback boundary. A subsequent read-only parity audit confirmed that the hosted schema is still missing the additive objects from `079`–`089`; the exact next-stage sequence and exit criteria are in the [hosted parity endgame](HOSTED_PARITY_ENDGAME.md). `074+` remain neither approved nor applied.
-- **Approval:** Recorded for `073` only — Abe Reyes operated and monitors a 15-minute America/New_York window; the NeedThisDone database owner owns any forward repair. Step 4 review does not authorize another stage, and no approval carries forward to `074+`.
+- **Evidence:** The dedicated [Step 5 `073` evidence record](step-5-calendar-token-apply-2026-08-15.md) records the first write. The follow-on [Step 5 `074`–`089` evidence](step-5-hosted-parity-2026-08-15.md) records the four non-destructive stage writes, exact dry runs, fresh backups, `85/089` history, additive schema interfaces, private Storage buckets, zero Calendar-token rows, and unchanged project-attachment objects. `090`–`092` remain neither approved nor applied.
+- **Approval:** The current owner directive covers bringing hosted to the locally proven additive application surface through `089`; the helper enforced separate acknowledgements for `074`, `075`–`080`, `081`, and `082`–`089`. The `090`–`092` deletion scope requires an explicit separate retention approval and has not been inferred. The NeedThisDone database owner owns any forward repair.
 - **Rollback:** Hosted rollback is forward-only. Stop new application traffic if needed, preserve history/data, and use a separately reviewed forward fix; do not delete migrations or reset the project. If a stage fails, do not continue to the next stage.
 
 ### 6. Prove hosted database parity — `BLOCKED`
 
 - **Owner:** Database and security owners
-- **Prerequisites:** Item 5 passed; hosted application credentials and test identities are available; no customer data is used.
+- **Prerequisites:** Item 5 passed, including the separately approved `090`–`092` retirement decision or an owner-approved scope exception; hosted application credentials and test identities are available; no customer data is used.
 - **Live procedure:** Run hosted schema lint/manifest, RLS and tenant-isolation checks, function-grant checks, Storage privacy/size/MIME checks, planner approval/dispatch checks, provenance checks, and emergency-stop/lease/idempotency checks. Confirm Auth and Storage endpoints are the intended project.
 - **Evidence:** Retain the hosted test report, schema/object counts, policy/grant results, bucket metadata, endpoint identity, test fixture cleanup, and any approved exception.
 - **Approval:** Required — security owner accepts parity and tenant-isolation evidence.

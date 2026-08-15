@@ -10,7 +10,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Current release-control and hosted-stage ledger — 2026-08-15
 
-**Finish-line decision:** **Local release candidate proven; hosted parity is the active critical path.** The repository and disposable local Supabase boundary are proven, but that is a safety net rather than hosted proof. The reviewed `dev` branch replaces the old production application only after the hosted project matches the locally proven retained schema and the launch checklist passes. Hosted migration `073` is applied and verified; hosted migrations `074`–`092` remain pending in the staged sequence defined by the [hosted parity endgame](launch/HOSTED_PARITY_ENDGAME.md). Production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
+**Finish-line decision:** **Local release candidate proven; hosted parity is the active critical path.** The repository and disposable local Supabase boundary are proven, but that is a safety net rather than hosted proof. The reviewed `dev` branch replaces the old production application only after the hosted project matches the locally proven retained schema and the launch checklist passes. Hosted migrations `073`–`089` are applied and verified; hosted migrations `090`–`092` are pending a separate destructive-retirement decision. Production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
 
 The final full assembly command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on committed candidate `74d3257`. It remains the last full local assembly proof. The separate final pre-apply release-control SHA was `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`; this hosted stage does not claim a new local assembly. The recorded assembly reset only local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed:
 
@@ -25,7 +25,7 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 
 **Remaining blockers and recorded exceptions:**
 
-- Hosted migration parity is not complete: hosted history is now through `073`, while local repository migrations `074`–`092` remain pending. A read-only hosted schema audit found the tables introduced by `079`–`089` absent. The next work is the staged hosted sequence in [HOSTED_PARITY_ENDGAME.md](launch/HOSTED_PARITY_ENDGAME.md); `090`–`092` remain a separate destructive-retirement decision. Launch checklist items 1–4 are complete, item 5 is `IN_PROGRESS` after the successful `073` stage, and items 6–22 remain separate hosted release gates.
+- Hosted migration parity is not complete: hosted history is now through `089`, and the additive application surface matches the locally proven schema. The remaining `090`–`092` migrations would delete retained legacy/content/search/media, marketplace/commerce, and hosted Medusa objects; the latest `85/089` backup and read-only deletion inventory are recorded in [Step 5 hosted parity evidence](launch/step-5-hosted-parity-2026-08-15.md). Launch checklist items 1–4 are complete, item 5 is `IN_PROGRESS` pending that separate destructive decision, and items 6–22 remain separate hosted release gates.
 - `npm audit` reports 16 findings overall and 11 in the production dependency tree; production promotion is blocked pending owner-approved upgrades or an explicitly time-boxed exception. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The installed Supabase CLI is `2.65.5` while `2.113.0` is available. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The Playwright auto-start development-server path has a Tailwind parsing issue under the current local environment marker; the reproducible final gate uses the production-server mode above. Owner: frontend QA. Review/removal date: 2026-08-16.
@@ -55,7 +55,9 @@ The stage-only dry run selected exactly `073_secure_google_calendar_tokens.sql`.
 
 ## Hosted parity audit — 2026-08-15
 
-After `073`, a read-only hosted schema dump and service-role PostgREST interface audit confirmed the actual blocker: hosted contains the retained pre-`079` tables but returns `404` for the additive prospecting, cockpit, evaluation, research, agent-operations, planner, and OpenClaw tables required by current `dev`. A linked dry run selected exactly `074`–`092` and made no hosted write. This is recorded as a parity diagnosis, not as hosted migration evidence. The active target and stage order are maintained in [HOSTED_PARITY_ENDGAME.md](launch/HOSTED_PARITY_ENDGAME.md).
+After `073`, a read-only hosted schema dump and service-role PostgREST interface audit confirmed the actual blocker: hosted contained the retained pre-`079` tables but returned `404` for the additive prospecting, cockpit, evaluation, research, agent-operations, planner, and OpenClaw tables required by current `dev`. The staged writes then applied `074`, `075`–`080`, `081`, and `082`–`089`; hosted is now `85/089`, and those interfaces return `200`. The remaining `090`–`092` deletion inventory and backup are recorded in [Step 5 hosted parity evidence](launch/step-5-hosted-parity-2026-08-15.md). The active target and handoff to checklist item 6 are maintained in [HOSTED_PARITY_ENDGAME.md](launch/HOSTED_PARITY_ENDGAME.md).
+
+The follow-on stage record [step-5-hosted-parity-2026-08-15.md](launch/step-5-hosted-parity-2026-08-15.md) is the source for the four successful non-destructive hosted stage results, per-stage backup paths, exact stage selections, Storage checks, zero Calendar-token rows, and the explicit deletion boundary. Checklist item 6 starts only after item 5 is closed; it is not claimed by the additive schema checks alone.
 
 ## Current state map
 
@@ -66,9 +68,10 @@ local dev                    `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b` -> final
 origin/dev                   `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b` -> normal push and remote verification passed
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
-  -> hosted history through 073
-  -> 074-092 are repository-only and unapplied there
-  -> old hosted state remains recoverable
+  -> hosted history through 089
+  -> additive application schema matches the locally proven surface
+  -> 090-092 are pending separate destructive-retirement approval
+  -> latest protected recovery point is 85/089
 
 local Supabase
   -> additive migrations applied through 092; focused planner/OpenClaw proof passed

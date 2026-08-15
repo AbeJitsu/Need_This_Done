@@ -10,8 +10,8 @@ technical launch gate.
 | Boundary | State |
 | --- | --- |
 | Local Supabase | Proven through migration `092` by the last full assembly on `74d3257` |
-| Hosted Supabase `oxhjtmozsdstbokwtnwa` | `69` rows, latest `073` |
-| Hosted schema gap | `074`–`092` are not applied; the tables introduced by `079`–`089` are absent |
+| Hosted Supabase `oxhjtmozsdstbokwtnwa` | `85` rows, latest `089` |
+| Hosted schema gap | Additive application surface through `089` is present; `090`–`092` remain unapplied |
 | Application state | `dev` is the only active release branch; `production` remains the old rollback reference |
 | External activity | No deployment, provider activation, secret provisioning, Calendar API call, publication, spend, or external message is part of parity work |
 
@@ -27,20 +27,22 @@ Each stage gets its own fresh protected backup, exact dry run, stage-specific
 approval, write, history check, and evidence. Stop immediately on any failure;
 hosted rollback is forward-only.
 
-1. `074` — normalize the private `project-attachments` bucket.
+1. `074` — normalize the private `project-attachments` bucket. **Passed.**
 2. `075`–`080` — apply additive financial, pilot, queue, completion-evidence,
    prospecting, and daily-cockpit schema.
+   **Passed.**
 3. `081` — add model-evaluation records and the reviewed growth-profile change.
+   **Passed.**
 4. `082`–`089` — add private research, agent operations, configured-model,
-   planner, OpenClaw linkage, and fail-closed validation schema.
+   planner, OpenClaw linkage, and fail-closed validation schema. **Passed.**
 5. `090`–`092` — only after a separate retention/destructive approval; these
    remove retired legacy, content/search/media, marketplace, commerce, and
    hosted Medusa objects. They are not required to prove that the additive
    application surface exists.
 
-The target after the first four stages is hosted history `089` and an additive
-schema match. The target after the separately approved retirement stage is
-hosted history `092` and exact local retained-schema parity.
+The first four stages have reached hosted history `089` and an additive schema
+match. The target after the separately approved retirement stage is hosted
+history `092` and exact local retained-schema parity.
 
 When the final migration stage is verified, the next action is immediately
 launch-checklist item 6: prove hosted database parity. Do not treat migration
