@@ -7,7 +7,8 @@ to these item numbers; they do not define a second activation order.
 **Last reviewed:** 2026-08-14
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Current release candidate (release-control SHA):** `99026bf` (`dev`; `origin/dev` matches)
+**Last full local assembly proof:** `74d3257` (2026-08-13; local migrations through `092`)
+**Final pre-apply release-control SHA:** the exact SHA of the reviewed gate-repair commit, captured immediately before Step 5 and recorded in its evidence record
 **Hosted Supabase history:** through `072`
 **Local verification history:** through `092`
 **Immediate application rollback reference:** `8b8d429` (`production`)
@@ -47,17 +48,17 @@ Status values:
 - **Owner:** Engineering owner
 - **Prerequisites:** Clean worktree; exact release SHA recorded; no unresolved required check, or a documented owner-approved exception.
 - **Live procedure:** Confirm the reviewed `dev` SHA. Run `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, `cd bridge && npm test`, and `git diff --check`. Freeze code changes until cutover completes.
-- **Evidence:** On 2026-08-13, the recorded full assembly passed on candidate `74d3257`: local migrations `001`–`092`, schema lint, 213/213 required unit tests, 50/50 accessibility checks, the 49-page production build, schema manifest 7/7, security 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, consultation integration 1/1, retained browser 45 passed with one intentional mobile exclusion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2. `cd bridge && npm test` passed 6/6 and `git diff --check` passed. The current release-control SHA was reconciled to `99026bf047e0e4221eed12c33f6649306e7f5233` before this hosted stage; this step does not claim a new local assembly.
+- **Evidence:** On 2026-08-13, the recorded full assembly passed on candidate `74d3257`: local migrations `001`–`092`, schema lint, 213/213 required unit tests, 50/50 accessibility checks, the 49-page production build, schema manifest 7/7, security 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, consultation integration 1/1, retained browser 45 passed with one intentional mobile exclusion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2. `cd bridge && npm test` passed 6/6 and `git diff --check` passed. The final pre-apply release-control SHA is the later commit that repairs the hosted-write gate; this step does not claim a new local assembly.
 - **Approval:** Recorded — the owner-authorized local model-spend change was committed and revalidated. Hosted database, deployment, secret, provider, and live-canary approvals remain separate; no hosted state changed.
 - **Rollback:** Unfreeze only through an approved replacement candidate. Keep `8b8d429` untouched as the immediate application rollback reference.
 
-### 2. Push the reviewed `dev` branch — `PASSED`
+### 2. Push the reviewed `dev` branch — `IN_PROGRESS`
 
 - **Owner:** Release owner
 - **Prerequisites:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
 - **Live procedure:** Push the exact reviewed SHA to `origin/dev`; verify the remote ref resolves to the same SHA with `git ls-remote origin refs/heads/dev`.
-- **Evidence:** On 2026-08-14, read-only `git rev-parse HEAD`, `git rev-parse origin/dev`, and `git ls-remote origin refs/heads/dev` resolved to `99026bf047e0e4221eed12c33f6649306e7f5233`. The remote already matched the reviewed SHA, so no push was needed in this preflight; no force-push, production change, or hosted service change occurred.
-- **Approval:** Recorded — the exact remote ref was verified without a push. This item does not authorize hosted migration, deployment, provider, secret, or live-action work.
+- **Evidence:** The pre-repair local and remote refs matched `99026bf047e0e4221eed12c33f6649306e7f5233`. The gate-repair commit creates the final pre-apply release-control SHA; its push and post-push ref verification remain to be recorded before Step 5.
+- **Approval:** Required — release-owner approval covers publishing the reviewed gate-repair commit only. It does not authorize hosted migration, deployment, provider, secret, or live-action work.
 - **Rollback:** Do not force-push. If the branch must be corrected, publish a reviewed replacement commit and record both SHAs; preserve the prior remote ref in the evidence.
 
 ### 3. Back up hosted Supabase — `PASSED`

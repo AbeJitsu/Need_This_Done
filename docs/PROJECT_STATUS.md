@@ -12,7 +12,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 **Finish-line decision:** **Local release candidate proven; technical cloud launch is the active critical path.** The repository and disposable local Supabase boundary are proven. The reviewed `dev` branch replaces the old production application after the launch checklist passes. Hosted migrations `073`–`092`, production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
 
-The final full assembly command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on committed candidate `74d3257`. The current release-control SHA is `99026bf047e0e4221eed12c33f6649306e7f5233`; this hosted stage does not claim a new local assembly. The recorded assembly reset only local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed:
+The final full assembly command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on committed candidate `74d3257`. The final pre-apply release-control SHA will be the exact reviewed commit that repairs the hosted-write gate and is recorded before Step 5; this hosted stage does not claim a new local assembly. The recorded assembly reset only local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed:
 
 - Code: lint with zero warnings, TypeScript, 213/213 required unit tests with zero skips, 50/50 accessibility checks, and the 49-page production build.
 - Database: no schema errors from local lint; schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, and consultation integration 1/1.
@@ -51,8 +51,9 @@ The blanket migration review was replaced with six allowlisted stages: `073`, `0
 
 ```text
 production/origin/production 8b8d429          -> old hosted production product and application rollback reference
-local dev                    `99026bf`       -> current release-control candidate; exact SHA verified before this hosted stage
-origin/dev                   `99026bf`       -> remote ref matches the current release-control candidate; no force-push used
+local dev                    `74d3257`       -> last full local assembly proof; not the hosted-write approval SHA
+local dev                    `<gate-repair SHA>` -> final pre-apply release-control SHA, captured before Step 5
+origin/dev                   `<gate-repair SHA>` -> must match the final pre-apply release-control SHA after a normal push
 
 approved cloud Supabase oxhjtmozsdstbokwtnwa
   -> hosted history through 072

@@ -23,7 +23,6 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const expectedReleaseSha = '99026bf047e0e4221eed12c33f6649306e7f5233';
 const expectedBranch = 'dev';
 const expectedStage = 'calendar-token-security';
 const expectedMigration = '073_secure_google_calendar_tokens.sql';
@@ -114,6 +113,10 @@ function parseArguments() {
 }
 
 function verifyExecutionBoundary(cloudProfile) {
+  const approvedReleaseSha = process.env.NEEDTHISDONE_APPROVED_RELEASE_SHA;
+  if (!/^[0-9a-f]{40}$/.test(approvedReleaseSha || '')) {
+    fail('NEEDTHISDONE_APPROVED_RELEASE_SHA must be an explicit full 40-character commit SHA');
+  }
   if (process.env.ALLOW_HOSTED_STAGE_WRITE !== writeAcknowledgement) {
     fail(`missing exact ALLOW_HOSTED_STAGE_WRITE=${writeAcknowledgement} acknowledgement`);
   }
@@ -124,8 +127,20 @@ function verifyExecutionBoundary(cloudProfile) {
   const branch = spawnSync('git', ['branch', '--show-current'], { cwd: repositoryRoot, encoding: 'utf8' });
   if (branch.status !== 0 || branch.stdout.trim() !== expectedBranch) fail(`refusing hosted write outside ${expectedBranch}`);
   const head = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: repositoryRoot, encoding: 'utf8' });
-  if (head.status !== 0 || head.stdout.trim() !== expectedReleaseSha) {
-    fail(`release SHA must remain ${expectedReleaseSha} for this approved stage; hosted write was not attempted`);
+  if (head.status !== 0 || head.stdout.trim() !== approvedReleaseSha) {
+    fail(`HEAD ${head.stdout.trim() || 'unavailable'} does not match NEEDTHISDONE_APPROVED_RELEASE_SHA; hosted write was not attempted`);
+  }
+  return approvedReleaseSha;
+}
+
+function verifyFinalPreApplyRef(approvedReleaseSha) {
+  const branch = spawnSync('git', ['branch', '--show-current'], { cwd: repositoryRoot, encoding: 'utf8' });
+  if (branch.status !== 0 || branch.stdout.trim() !== expectedBranch) {
+    fail(`final pre-apply branch is not ${expectedBranch}; hosted write was not attempted`);
+  }
+  const head = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: repositoryRoot, encoding: 'utf8' });
+  if (head.status !== 0 || head.stdout.trim() !== approvedReleaseSha) {
+    fail(`final pre-apply HEAD ${head.stdout.trim() || 'unavailable'} does not match NEEDTHISDONE_APPROVED_RELEASE_SHA; hosted write was not attempted`);
   }
 }
 
@@ -278,7 +293,7 @@ const result = {
     endpoint: expectedEndpoint,
     environment: expectedEnvironment,
     branch: expectedBranch,
-    release_sha: expectedReleaseSha,
+    release_sha: null,
   },
   stage: expectedStage,
   selected_migration: expectedMigration,
@@ -299,7 +314,8 @@ let backup;
 try {
   parseArguments();
   const cloudProfile = readProfile(cloudProfilePath);
-  verifyExecutionBoundary(cloudProfile);
+  const approvedReleaseSha = verifyExecutionBoundary(cloudProfile);
+  result.target.release_sha = approvedReleaseSha;
   result.write_acknowledgement_verified = true;
   backup = verifyBackup(process.env.NEEDTHISDONE_HOSTED_BACKUP_DIR);
   result.backup = {
@@ -327,6 +343,7 @@ try {
   assertVersions('remote history after final dry run', afterDryRun.versions, backup.versions);
   result.transcript.history_after_dry_run = afterDryRun.transcript;
 
+  verifyFinalPreApplyRef(approvedReleaseSha);
   result.hosted_writes = 1;
   const applyOutput = runSupabase(
     ['db', 'push', '--linked', '--workdir', temporaryWorkdir, '--yes'],
