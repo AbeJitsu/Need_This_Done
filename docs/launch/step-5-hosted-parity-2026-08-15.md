@@ -75,3 +75,9 @@ turn deletion approval into an inferred approval.
 
 Until the owner explicitly approves the exact `090`–`092` deletion scope, Step
 5 remains `IN_PROGRESS` and hosted parity item 6 does not claim completion.
+
+The read-only destructive-stage dry run selected exactly
+`090_remove_local_only_legacy_schema.sql`,
+`091_remove_content_and_search_schema.sql`, and
+`092_remove_marketplace_and_commerce_schema.sql`; hosted history remained
+`85/089` before and after, and `hosted_writes` was `0`.
