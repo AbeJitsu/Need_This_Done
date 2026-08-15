@@ -44,6 +44,13 @@
       "destructive": true,
       "rationale": "Retire legacy local, content/search/media, marketplace, commerce, and Medusa data only after a later retention decision.",
       "migrations": ["090", "091", "092"]
+    },
+    {
+      "id": "storage-policy-repair",
+      "gate": "separate",
+      "destructive": false,
+      "rationale": "Remove out-of-band anonymous read and upload policies from the retained private project-attachments bucket.",
+      "migrations": ["093"]
     }
   ],
   "migrations": [
@@ -66,6 +73,7 @@
     {"new_version":"089","new_filename":"089_agent_plan_fail_closed_validation.sql","original_version":"092","original_filename":"092_agent_plan_fail_closed_validation.sql","original_sha256":"8920afeece692d56df4f28bfdfa1c7eca9e7f86d0235032dd7da46bd4253ffde","new_sha256":"8920afeece692d56df4f28bfdfa1c7eca9e7f86d0235032dd7da46bd4253ffde","stage":"research-agent-planner"},
     {"new_version":"090","new_filename":"090_remove_local_only_legacy_schema.sql","original_version":"076","original_filename":"076_remove_local_only_legacy_schema.sql","original_sha256":"5281677e52a2770ca8e000cd533b16a5ca84cbbb65c3199426557653abde880b","new_sha256":"5281677e52a2770ca8e000cd533b16a5ca84cbbb65c3199426557653abde880b","stage":"destructive-retirement"},
     {"new_version":"091","new_filename":"091_remove_content_and_search_schema.sql","original_version":"077","original_filename":"077_remove_content_and_search_schema.sql","original_sha256":"66ba4d17c6c8fef0e16400507ccb4af2568f8a833c5c5ceaa55b4c996cdb9e44","new_sha256":"66ba4d17c6c8fef0e16400507ccb4af2568f8a833c5c5ceaa55b4c996cdb9e44","stage":"destructive-retirement"},
-    {"new_version":"092","new_filename":"092_remove_marketplace_and_commerce_schema.sql","original_version":"078","original_filename":"078_remove_marketplace_and_commerce_schema.sql","original_sha256":"f7eb7f7c358bfb24dd452923e4f3b978024e380db735ce2404382c1bd9b82330","new_sha256":"f7eb7f7c358bfb24dd452923e4f3b978024e380db735ce2404382c1bd9b82330","stage":"destructive-retirement"}
+    {"new_version":"092","new_filename":"092_remove_marketplace_and_commerce_schema.sql","original_version":"078","original_filename":"078_remove_marketplace_and_commerce_schema.sql","original_sha256":"f7eb7f7c358bfb24dd452923e4f3b978024e380db735ce2404382c1bd9b82330","new_sha256":"f7eb7f7c358bfb24dd452923e4f3b978024e380db735ce2404382c1bd9b82330","stage":"destructive-retirement"},
+    {"new_version":"093","new_filename":"093_revoke_anonymous_project_attachments_policies.sql","original_version":"093","original_filename":"093_revoke_anonymous_project_attachments_policies.sql","original_sha256":"8adb00b7eefa0c625d341cacb7d062eb077d945b1cfd8728c0dda682765b9430","new_sha256":"8adb00b7eefa0c625d341cacb7d062eb077d945b1cfd8728c0dda682765b9430","stage":"storage-policy-repair","new_only":true}
   ]
 }

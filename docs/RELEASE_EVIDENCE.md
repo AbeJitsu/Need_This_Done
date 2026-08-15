@@ -4,32 +4,31 @@ This matrix defines what NeedThisDone may claim and the proof required before pr
 
 ## Current release-control and hosted-stage ledger — 2026-08-15
 
-**Decision:** **Local release candidate proven; technical cloud launch remains open.** Cloud promotion is the active critical path. This local proof does not authorize hosted migration, production promotion, provider activation, payment, deployment, or legal publication. The reviewed `dev` branch replaces the old production application only after the launch checklist passes; `8b8d429` remains the application rollback reference.
+**Decision:** **Local release candidate proven; the hosted Storage security repair is in progress.** Cloud promotion remains separate and is not authorized by this evidence. The reviewed `dev` branch replaces the old production application only after the launch checklist passes; `8b8d429` remains the application rollback reference.
 
-The committed candidate `74d3257` was validated on 2026-08-13 and remains the last full local assembly proof. The final pre-apply release-control SHA was `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`; the apply helper required that exact SHA and rechecked it immediately before the write. `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh` reset only disposable local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed lint with zero warnings, TypeScript, 213/213 required unit tests with zero skips, the 49-page production build, local schema lint with no errors, schema manifest 7/7, security hardening 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, consultation integration 1/1, retained smoke 45 passed with one intentional mobile exclusion for a desktop-only navigation assertion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2. The separately run bridge build and 6/6 offline bridge tests also passed. No provider credential or hosted state was used by that local assembly. An unqualified preview-mode invocation was not counted; the production-server command above is the supported final path.
+The reviewed `dev` SHA `3b23b129e791e2678afbcfa82f0a5c0e428ed8ed` passed `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, bridge build/tests 6/6, and whitespace validation on 2026-08-15. The fresh assembly reset only disposable local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed the documented code, database, browser, and workspace checks. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion. No provider credential or hosted state was used by that local assembly.
 
 The planner/OpenClaw proof is included in the canonical `npm run verify:database` gate. It proves draft-only planning, approval-before-dispatch, frozen snapshots, OpenClaw-only claiming, model reservations, strict HTTPS citation validation, provenance linkage, private artifact boundaries, and authenticated direct-write denial.
 
 **Provider and secret boundary:** An OpenRouter API key and two exact model IDs are stored only as private environment variables; no OAuth profile, worker activation, model request, or model selection has occurred. The active local environment is one profile, with root `.env.local` linked to `.env.local.profile` and `app/.env.local` linked to the root active profile. The server validates the IDs, the comparison runner cannot change the primary route, and a future Mac worker must use the same private values in its own chmod-600 `--env-file` outside the repository. The assembly clears provider credentials and model configuration and uses no payment, sender, calendar, deployment, publish, spend, account, or external-message action.
 
-**Release blockers and exceptions:** Hosted history is through `089`; the additive application surface now matches the locally proven schema. The destructive migrations `090`–`092` remain pending the separate decision recorded in [step-5-hosted-parity-2026-08-15.md](launch/step-5-hosted-parity-2026-08-15.md). The last full local assembly proof is `74d3257`; the hosted-stage gate/docs commits do not claim a new full assembly. Checklist items 1–4 are reconciled, item 5 is `IN_PROGRESS` pending the destructive boundary, and items 6–22 still require hosted parity, deployment, provider, Mac, live canary, reliability, rollback, and owner evidence. `npm audit` reports 16 findings overall and 11 production-tree findings, so production promotion is blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.114.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
+**Release blockers and exceptions:** Hosted history is `88/092`. The security repair migration `093` is tracked, locally proven, backed up, and dry-run proven; item 5 remains active until its hosted write. Item 6 remains blocked until the two anonymous `project-attachments` policies are removed and the full hosted parity fixture suite passes with cleanup. The pre-repair result is [hosted-parity-report-2026-08-15.json](launch/hosted-parity-report-2026-08-15.json), and the repair record is [step-5-storage-policy-repair-2026-08-15.md](launch/step-5-storage-policy-repair-2026-08-15.md). `npm audit` reports 16 findings overall and 11 production-tree findings, so production promotion is blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.114.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
 
-**Rollback:** Hosted `073` completed successfully; no rollback was needed. Preserve its history/data and use forward-only repair if a defect is discovered. Any future hosted application of `074`–`092` requires a new backup, stage-only dry run, explicit approval, parity, and forward-rollback evidence. Use `8b8d429` only as the application rollback reference.
+**Rollback:** Hosted `090`–`092` completed successfully; no rollback was needed. Preserve the history, backup, and evidence and use only a reviewed forward repair for the Storage policy defect. Use `8b8d429` only as the application rollback reference.
 
 ## Hosted parity endgame — 2026-08-15
 
-Local migration `092` is the proven target, not a claim that hosted has already
-reached it. Hosted is currently `85/089`; the additive path `074`, `075`–`080`,
-`081`, and `082`–`089` has passed its fresh-backup, exact-dry-run, apply, and
-read-only checks. `090`–`092` are isolated destructive-retirement migrations
-and require a separate retention decision; they must not be bundled into
-additive parity work. Hosted parity exits only after the repository migration
-sequence through `092`, the retained schema/RLS/grant/Storage/tenant checks,
-row and inventory checks, and security-owner acceptance are recorded. Only then
-does the production fast-forward become eligible for a separate deployment
-approval. See [HOSTED_PARITY_ENDGAME.md](launch/HOSTED_PARITY_ENDGAME.md) and
-the [Step 5 hosted parity evidence](launch/step-5-hosted-parity-2026-08-15.md)
-for the active sequence and failure boundary.
+Local migration `093` is now the security-repaired target; hosted remains at
+`88/092` until the separately approved repair stage is applied. The isolated
+destructive stage passed its fresh-backup, exact-dry-run, apply, and
+forward-only checks. The new `093` stage has passed local schema/security proof,
+fresh-backup validation, and exact dry run. Hosted tenant, planner, worker,
+provenance, emergency-stop, lease, and idempotency fixture evidence remains
+pending until the repair is applied. See
+[HOSTED_PARITY_ENDGAME.md](launch/HOSTED_PARITY_ENDGAME.md), the
+[destructive-retirement evidence](launch/step-5-destructive-retirement-2026-08-15.md),
+the [Storage-policy repair evidence](launch/step-5-storage-policy-repair-2026-08-15.md),
+and the [pre-repair parity report](launch/hosted-parity-report-2026-08-15.json).
 
 ## Hosted backup gate — 2026-08-12
 

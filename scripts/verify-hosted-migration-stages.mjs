@@ -36,13 +36,13 @@ if (manifest.schema_version !== 1) fail(`unsupported manifest schema ${manifest.
 if (!/^[0-9a-f]{40}$/.test(manifest.source_commit)) fail('source_commit must be a full commit SHA');
 if (manifest.expected_hosted_latest !== '072') fail('expected hosted history must remain at 072');
 
-const expectedVersions = Array.from({ length: 20 }, (_, index) => String(index + 73).padStart(3, '0'));
+const expectedVersions = Array.from({ length: 21 }, (_, index) => String(index + 73).padStart(3, '0'));
 const migrations = manifest.migrations;
 const stages = manifest.stages;
 if (!Array.isArray(migrations) || migrations.length !== expectedVersions.length) {
-  fail('the manifest must map exactly the 20 pending migration versions');
+  fail('the manifest must map exactly the 21 pending migration versions');
 }
-if (!Array.isArray(stages) || stages.length !== 6) fail('the manifest must define exactly six staged gates');
+if (!Array.isArray(stages) || stages.length !== 7) fail('the manifest must define exactly seven staged gates');
 
 const seenNewVersions = new Set();
 const seenOriginalVersions = new Set();
@@ -59,6 +59,7 @@ for (const migration of migrations) {
     original_sha256: originalSha,
     new_sha256: newSha,
     stage,
+    new_only: newOnly = false,
   } = migration;
 
   if (!expectedVersions.includes(newVersion)) fail(`unexpected new version ${newVersion}`);
@@ -91,25 +92,31 @@ for (const migration of migrations) {
   }
   if (sha256(current) !== newSha) fail(`new hash mismatch: ${newFilename}`);
 
-  const originalPath = `supabase/migrations/${originalFilename}`;
-  if (sha256(gitShow(manifest.source_commit, originalPath)) !== originalSha) {
-    fail(`original hash mismatch: ${originalFilename}`);
+  if (newOnly) {
+    if (newVersion !== '093' || originalVersion !== newVersion || originalFilename !== newFilename || originalSha !== newSha) {
+      fail(`new-only migration metadata is invalid: ${newFilename}`);
+    }
+  } else {
+    const originalPath = `supabase/migrations/${originalFilename}`;
+    if (sha256(gitShow(manifest.source_commit, originalPath)) !== originalSha) {
+      fail(`original hash mismatch: ${originalFilename}`);
+    }
+    if (originalSha !== newSha) fail(`SQL behavior changed during rename: ${originalFilename} -> ${newFilename}`);
   }
-  if (originalSha !== newSha) fail(`SQL behavior changed during rename: ${originalFilename} -> ${newFilename}`);
 
   if (!migrationsByStage.has(stage)) migrationsByStage.set(stage, []);
   migrationsByStage.get(stage).push(newVersion);
 }
 
 if (new Set(expectedVersions).size !== seenNewVersions.size || expectedVersions.some((version) => !seenNewVersions.has(version))) {
-  fail('new migration versions are not an exact one-to-one map for 073–092');
+  fail('new migration versions are not an exact one-to-one map for 073–093');
 }
 if (seenOriginalVersions.size !== expectedVersions.length || expectedVersions.some((version) => !seenOriginalVersions.has(version))) {
   fail('original migration versions are not an exact one-to-one map for 073–092');
 }
 
 const currentPendingFiles = readdirSync(migrationRoot)
-  .filter((filename) => /^(07[3-9]|08[0-9]|09[0-2])_.*\.sql$/.test(filename))
+  .filter((filename) => /^(07[3-9]|08[0-9]|09[0-3])_.*\.sql$/.test(filename))
   .sort();
 const mappedPendingFiles = migrations.map((migration) => migration.new_filename).sort();
 if (JSON.stringify(currentPendingFiles) !== JSON.stringify(mappedPendingFiles)) {
@@ -123,6 +130,7 @@ const expectedStages = [
   ['growth-profile-evaluation', ['081'], 'separate', false],
   ['research-agent-planner', ['082', '083', '084', '085', '086', '087', '088', '089'], 'batch', false],
   ['destructive-retirement', ['090', '091', '092'], 'final-separate', true],
+  ['storage-policy-repair', ['093'], 'separate', false],
 ];
 for (const [id, expectedStageVersions, gate, destructive] of expectedStages) {
   const stage = stages.find((candidate) => candidate.id === id);
@@ -137,7 +145,7 @@ for (const [id, expectedStageVersions, gate, destructive] of expectedStages) {
   }
 }
 
-console.log(`Hosted migration staging verified: ${migrations.length} one-to-one mappings, ${stages.length} gates, SQL hashes preserved.`);
+console.log(`Hosted migration staging verified: ${migrations.length} mappings, ${stages.length} gates, SQL hashes preserved and the new security repair is tracked.`);
 for (const stage of stages) {
   console.log(`${stage.id}: ${stage.migrations.join(', ')}${stage.destructive ? ' [destructive, final separate gate]' : ''}`);
 }

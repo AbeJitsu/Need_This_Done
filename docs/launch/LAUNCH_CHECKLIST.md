@@ -7,15 +7,16 @@ to these item numbers; they do not define a second activation order.
 **Last reviewed:** 2026-08-15
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Last full local assembly proof:** `74d3257` (2026-08-13; local migrations through `092`)
-**Final pre-apply release-control SHA:** `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`
-**Latest hosted-stage control SHA:** `64b46f1d20ea67b37952bd11b8c4b775fa80a185` (stages `075`–`089`)
-**Post-write evidence:** [Step 5 `073` evidence](step-5-calendar-token-apply-2026-08-15.md), committed separately from the release-control SHA
-**Hosted Supabase history:** through `089`
+**Current reviewed `dev` SHA:** `3b23b129e791e2678afbcfa82f0a5c0e428ed8ed`
+**Last full local assembly proof:** `3b23b129e791e2678afbcfa82f0a5c0e428ed8ed` (2026-08-15; local migrations through `092`)
+**Final pre-apply release-control SHA:** `3b23b129e791e2678afbcfa82f0a5c0e428ed8ed`
+**Latest hosted-stage control SHA:** repair candidate commit to be recorded after the `093` apply
+**Post-write evidence:** [Step 5 Storage policy repair](step-5-storage-policy-repair-2026-08-15.md)
+**Hosted Supabase history:** through `092`
 **Local verification history:** through `092`
 **Immediate application rollback reference:** `8b8d429` (`production`)
 **Active hosted parity endgame:** [hosted parity endgame](HOSTED_PARITY_ENDGAME.md)
-**Latest hosted parity evidence:** [Step 5 `074`–`089` evidence](step-5-hosted-parity-2026-08-15.md)
+**Latest hosted parity evidence:** [pre-repair hosted parity result](hosted-parity-report-2026-08-15.json) and [Storage policy repair stage](step-5-storage-policy-repair-2026-08-15.md)
 
 ## How to use this checklist
 
@@ -52,7 +53,7 @@ Status values:
 - **Owner:** Engineering owner
 - **Prerequisites:** Clean worktree; exact release SHA recorded; no unresolved required check, or a documented owner-approved exception.
 - **Live procedure:** Confirm the reviewed `dev` SHA. Run `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, `cd bridge && npm test`, and `git diff --check`. Freeze code changes until cutover completes.
-- **Evidence:** On 2026-08-13, the recorded full assembly passed on candidate `74d3257`: local migrations `001`–`092`, schema lint, 213/213 required unit tests, 50/50 accessibility checks, the 49-page production build, schema manifest 7/7, security 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, consultation integration 1/1, retained browser 45 passed with one intentional mobile exclusion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2. `cd bridge && npm test` passed 6/6 and `git diff --check` passed. The separate final pre-apply release-control SHA is `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`; this step does not claim a new local assembly.
+- **Evidence:** On 2026-08-15, the fresh assembly passed on `3b23b129e791e2678afbcfa82f0a5c0e428ed8ed`: local migrations `001`–`092`, schema lint, required unit/security/RLS suites, the production build, retained browser checks, real-session auth, prospecting, cockpit, and workspace checks. `cd bridge && npm test` passed 6/6 and `git diff --check` passed. The documented exceptions remain dependency advisories, the installed Supabase CLI version notice, and the Playwright startup-path exclusion.
 - **Approval:** Recorded — the owner-authorized local model-spend change and the focused hosted-write gate repair were committed and validated. Hosted database, deployment, secret, provider, and live-canary approvals remain separate.
 - **Rollback:** Unfreeze only through an approved replacement candidate. Keep `8b8d429` untouched as the immediate application rollback reference.
 
@@ -70,7 +71,7 @@ Status values:
 - **Owner:** Database owner
 - **Prerequisites:** Item 1 passed; intended hosted project confirmed; secure backup destination and recovery operator available.
 - **Live procedure:** Capture hosted schema, data, roles/grants, Storage bucket metadata/object inventory, and checksums. Verify the files are readable and rehearse the recovery instructions without changing hosted state.
-- **Evidence:** The retained pre-`073` captures remain preserved. The later stage-specific backups for hosted parity are listed in the [Step 5 `074`–`089` evidence](step-5-hosted-parity-2026-08-15.md); each has mode-`700`/`600` protection, a passing eight-artifact checksum manifest, and the exact pre-stage history. The latest recovery point is hosted `85/089`, with one private `project-attachments` bucket containing 217 metadata-only objects and one private empty `agent-media-private` bucket. No object contents were downloaded.
+- **Evidence:** The fresh destructive-stage recovery point is `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-15-pre-migration-089-to-090-fR5ohB`, protected mode `700` with artifacts mode `600`, pre-write history `85/089`, and checksum-manifest SHA-256 `a637cac73a1cdf63562e9c938be42d6baa4f481de5ddf46f67685c9243544995`. It contains 217 metadata-only project-attachment objects and an empty private agent-media bucket; no object contents were downloaded. Existing backups were not overwritten.
 - **Approval:** Recorded — the requesting owner explicitly authorized completion of Step 3 on 2026-08-12. This approval covers backup capture and verification only; it does not approve migrations, deployments, provider activation, secrets, or any hosted write.
 - **Rollback:** Preserve the backup as the recovery reference. Do not delete or overwrite the old snapshot during a retry.
 
@@ -87,9 +88,9 @@ Status values:
 
 - **Owner:** Database owner
 - **Prerequisites:** Items 1–4 passed; the exact stage has a new stage-specific hosted-write approval; current backup is readable; a maintenance/monitoring window and rollback owner are declared. Before `090`–`092`, the owner’s separate retention decision must be reaffirmed for that hosted write.
-- **Live procedure:** Apply only one approved stage at a time in this order: `073`, `074`, `075`–`080`, `081`, `082`–`089`, then the isolated final `090`–`092` cleanup. Stop on any error. Never combine the final destructive stage with an additive batch, use hosted `supabase db reset`, generate a broad diff, or run a destructive reverse migration.
-- **Evidence:** The dedicated [Step 5 `073` evidence record](step-5-calendar-token-apply-2026-08-15.md) records the first write. The follow-on [Step 5 `074`–`089` evidence](step-5-hosted-parity-2026-08-15.md) records the four non-destructive stage writes, exact dry runs, fresh backups, `85/089` history, additive schema interfaces, private Storage buckets, zero Calendar-token rows, and unchanged project-attachment objects. `090`–`092` remain neither approved nor applied.
-- **Approval:** The current owner directive covers bringing hosted to the locally proven additive application surface through `089`; the helper enforced separate acknowledgements for `074`, `075`–`080`, `081`, and `082`–`089`. The `090`–`092` deletion scope requires an explicit separate retention approval and has not been inferred. The NeedThisDone database owner owns any forward repair.
+- **Live procedure:** Apply only one approved stage at a time in this order: `073`, `074`, `075`–`080`, `081`, `082`–`089`, the isolated final `090`–`092` cleanup, then the separate `093` Storage policy repair. Stop on any error. Never combine stages, use hosted `supabase db reset`, generate a broad diff, or run a destructive reverse migration.
+- **Evidence:** The [destructive-retirement evidence record](step-5-destructive-retirement-2026-08-15.md) records the approved `090`–`092` write and `88/092` result. The [Storage policy repair record](step-5-storage-policy-repair-2026-08-15.md) records the fresh `88/092` backup, local repair checks, and an exact dry run selecting only `093_revoke_anonymous_project_attachments_policies.sql`; the hosted `093` write remains to be recorded.
+- **Approval:** The supplied retention directive approved `090`–`092`. The owner has now explicitly directed that the anonymous Storage security defect be fixed through a tracked forward migration; the separate `093` stage acknowledgement is required at apply time. Hosted rollback remains forward-only.
 - **Rollback:** Hosted rollback is forward-only. Stop new application traffic if needed, preserve history/data, and use a separately reviewed forward fix; do not delete migrations or reset the project. If a stage fails, do not continue to the next stage.
 
 ### 6. Prove hosted database parity — `BLOCKED`
@@ -97,8 +98,8 @@ Status values:
 - **Owner:** Database and security owners
 - **Prerequisites:** Item 5 passed, including the separately approved `090`–`092` retirement decision or an owner-approved scope exception; hosted application credentials and test identities are available; no customer data is used.
 - **Live procedure:** Run hosted schema lint/manifest, RLS and tenant-isolation checks, function-grant checks, Storage privacy/size/MIME checks, planner approval/dispatch checks, provenance checks, and emergency-stop/lease/idempotency checks. Confirm Auth and Storage endpoints are the intended project.
-- **Evidence:** Retain the hosted test report, schema/object counts, policy/grant results, bucket metadata, endpoint identity, test fixture cleanup, and any approved exception.
-- **Approval:** Required — security owner accepts parity and tenant-isolation evidence.
+- **Evidence:** The pre-repair verifier passed endpoint identity, exact hosted history (`88` rows/latest `092`), hosted lint, the retained manifest, RLS markers, function grants, bucket metadata, and object inventory, then stopped on the two anonymous Storage policies. The tracked `093` repair is now locally proven and its exact hosted dry run passes; item 6 remains blocked until `093` is applied and the full disposable fixture suite completes with cleanup. The pre-repair result is [hosted-parity-report-2026-08-15.json](hosted-parity-report-2026-08-15.json).
+- **Approval:** Required — Abe Reyes accepts the security repair scope and the final hosted parity evidence after anonymous read/list/upload denial, tenant isolation, planner/worker boundaries, emergency stop, lease/idempotency, provenance isolation, and fixture cleanup all pass. No independent security review is claimed.
 - **Rollback:** Keep hosted history intact. Disable new callers or use a forward repair while preserving audit and test records.
 
 ### 7. Fast-forward production to `dev` — `BLOCKED`

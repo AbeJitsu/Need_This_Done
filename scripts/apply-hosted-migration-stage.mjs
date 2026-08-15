@@ -37,6 +37,7 @@ const writeAcknowledgements = {
   'growth-profile-evaluation': 'I_UNDERSTAND_THIS_APPLIES_ONLY_081',
   'research-agent-planner': 'I_UNDERSTAND_THIS_APPLIES_ONLY_082_089',
   'destructive-retirement': 'I_UNDERSTAND_THIS_APPLIES_ONLY_090_092',
+  'storage-policy-repair': 'I_UNDERSTAND_THIS_APPLIES_ONLY_093_STORAGE_POLICY_REPAIR',
 };
 const destructiveApproval = 'I_UNDERSTAND_THIS_DELETES_RETIRED_HOSTED_DATA_090_092';
 const expectedBackupArtifacts = [

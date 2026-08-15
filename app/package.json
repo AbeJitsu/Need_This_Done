@@ -35,6 +35,7 @@
     "verify:migration-stages": "node ../scripts/verify-hosted-migration-stages.mjs",
     "verify:hosted-migration-step4": "node ../scripts/verify-hosted-migration-step4.mjs",
     "verify:hosted-migration-stage": "node ../scripts/verify-hosted-migration-stage.mjs",
+    "verify:hosted-parity": "node ../scripts/verify-hosted-parity.mjs",
     "review:hosted-migration-stage": "node ../scripts/apply-hosted-migration-stage.mjs",
     "apply:hosted-migration-stage": "node ../scripts/apply-hosted-migration-stage.mjs",
     "test:e2e": "playwright test",
