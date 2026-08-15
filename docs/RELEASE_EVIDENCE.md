@@ -24,7 +24,7 @@ reached it. Hosted is currently `69/073`. The required path is `074`, then
 stage dry run, approval, apply, and verification. `090`–`092` are isolated
 destructive-retirement migrations and require a separate retention decision;
 they must not be bundled into additive parity work. Hosted parity exits only
-after history `001`–`092`, the retained schema/RLS/grant/Storage/tenant checks,
+after the repository migration sequence through `092`, the retained schema/RLS/grant/Storage/tenant checks,
 row and inventory checks, and security-owner acceptance are recorded. Only then
 does the production fast-forward become eligible for a separate deployment
 approval. See [HOSTED_PARITY_ENDGAME.md](launch/HOSTED_PARITY_ENDGAME.md) for

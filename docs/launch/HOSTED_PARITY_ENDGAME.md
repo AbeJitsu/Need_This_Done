@@ -72,7 +72,9 @@ resets the hosted project.
 
 Hosted parity is complete only when all of the following are recorded:
 
-- hosted history is exactly `001`–`092`, with no `093+` rows;
+- hosted history exactly matches the repository migration sequence from `001`
+  through `092` (including its preserved numbering gaps), with no migration
+  above `092`;
 - the retained schema manifest, RLS/tenant-isolation checks, function grants,
   and Storage privacy/size/MIME checks pass against the hosted project;
 - hosted row counts and retained object inventory match the reviewed baseline,

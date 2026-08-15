@@ -197,8 +197,11 @@ function verifyFinalPreApplyRef(approvedReleaseSha) {
   if (gitOutput(['status', '--porcelain'])) fail('worktree became dirty before hosted apply; hosted write was not attempted');
 }
 
-function expectedVersionsThrough(version) {
-  return Array.from({ length: version }, (_, index) => String(index + 1).padStart(3, '0'));
+function repositoryVersionsThrough(version) {
+  return readdirSync(resolve(repositoryRoot, 'supabase/migrations'))
+    .filter((filename) => /^\d{3}_[a-z0-9_]+\.sql$/.test(filename) && Number(filename.slice(0, 3)) <= version)
+    .sort()
+    .map((filename) => filename.slice(0, 3));
 }
 
 function verifyBackup(backupRoot, expectedVersions) {
@@ -371,7 +374,7 @@ try {
   const { stageId, execute } = parseArguments();
   const manifest = readManifest();
   const stage = getStage(manifest, stageId);
-  const expectedBefore = expectedVersionsThrough(stage.firstVersion - 1);
+  const expectedBefore = repositoryVersionsThrough(stage.firstVersion - 1);
   const stageFiles = stage.migrations.map((migration) => migration.new_filename);
   result.stage = stage.id;
   result.selected_migrations = stageFiles;
