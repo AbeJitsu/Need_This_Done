@@ -4,10 +4,10 @@ This is the canonical numbered control document for promoting the reviewed `dev`
 release candidate to hosted production. Provider runbooks and setup notes point
 to these item numbers; they do not define a second activation order.
 
-**Last reviewed:** 2026-08-13
+**Last reviewed:** 2026-08-14
 **Technical launch decision:** **NOT GO**
 **Business launch decision:** **INCOMPLETE** until items 23 and 24 are complete
-**Current release candidate (runtime verified):** `74d3257` (`dev`, local; origin/dev remains `2dedb4b`)
+**Current release candidate (release-control SHA):** `99026bf` (`dev`; `origin/dev` matches)
 **Hosted Supabase history:** through `072`
 **Local verification history:** through `092`
 **Immediate application rollback reference:** `8b8d429` (`production`)
@@ -47,17 +47,17 @@ Status values:
 - **Owner:** Engineering owner
 - **Prerequisites:** Clean worktree; exact release SHA recorded; no unresolved required check, or a documented owner-approved exception.
 - **Live procedure:** Confirm the reviewed `dev` SHA. Run `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, `cd bridge && npm test`, and `git diff --check`. Freeze code changes until cutover completes.
-- **Evidence:** On 2026-08-13, committed candidate `74d3257` passed `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`: local migrations `001`–`092`, schema lint, 213/213 required unit tests, 50/50 accessibility checks, the 49-page production build, schema manifest 7/7, security 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, consultation integration 1/1, retained browser 45 passed with one intentional mobile exclusion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2. `cd bridge && npm test` passed 6/6 and `git diff --check` passed. An unqualified preview-mode invocation was not counted; the documented production-server command is the passing release gate.
+- **Evidence:** On 2026-08-13, the recorded full assembly passed on candidate `74d3257`: local migrations `001`–`092`, schema lint, 213/213 required unit tests, 50/50 accessibility checks, the 49-page production build, schema manifest 7/7, security 14/14, AI-employee RLS 10/10, agent-operations RLS 3/3, planner/OpenClaw RLS 2/2, prospecting RLS 2/2, consultation integration 1/1, retained browser 45 passed with one intentional mobile exclusion, real-session auth 4/4, prospecting 1/1, daily cockpit 1/1, and employee workspace 2/2. `cd bridge && npm test` passed 6/6 and `git diff --check` passed. The current release-control SHA was reconciled to `99026bf047e0e4221eed12c33f6649306e7f5233` before this hosted stage; this step does not claim a new local assembly.
 - **Approval:** Recorded — the owner-authorized local model-spend change was committed and revalidated. Hosted database, deployment, secret, provider, and live-canary approvals remain separate; no hosted state changed.
 - **Rollback:** Unfreeze only through an approved replacement candidate. Keep `8b8d429` untouched as the immediate application rollback reference.
 
-### 2. Push the reviewed `dev` branch — `IN_PROGRESS`
+### 2. Push the reviewed `dev` branch — `PASSED`
 
 - **Owner:** Release owner
 - **Prerequisites:** Item 1 passed; the remote target is the intended GitHub repository; branch protection and review state are known.
 - **Live procedure:** Push the exact reviewed SHA to `origin/dev`; verify the remote ref resolves to the same SHA with `git ls-remote origin refs/heads/dev`.
-- **Evidence:** Read-only verification resolves `origin/dev` and `git ls-remote origin refs/heads/dev` to `2dedb4b1cbac3a4a645a8ed8da6d2f74f15c0dce`. The current runtime-verified candidate `74d3257` is committed locally but has not been pushed; the remote remains at the previous candidate. No production or hosted service changed.
-- **Approval:** Required — release-owner approval is needed to push and reverify `74d3257`. The earlier branch-publish approval covered the previous candidate only; production promotion and all hosted/provider actions remain separate approvals.
+- **Evidence:** On 2026-08-14, read-only `git rev-parse HEAD`, `git rev-parse origin/dev`, and `git ls-remote origin refs/heads/dev` resolved to `99026bf047e0e4221eed12c33f6649306e7f5233`. The remote already matched the reviewed SHA, so no push was needed in this preflight; no force-push, production change, or hosted service change occurred.
+- **Approval:** Recorded — the exact remote ref was verified without a push. This item does not authorize hosted migration, deployment, provider, secret, or live-action work.
 - **Rollback:** Do not force-push. If the branch must be corrected, publish a reviewed replacement commit and record both SHAs; preserve the prior remote ref in the evidence.
 
 ### 3. Back up hosted Supabase — `PASSED`
@@ -65,7 +65,7 @@ Status values:
 - **Owner:** Database owner
 - **Prerequisites:** Item 1 passed; intended hosted project confirmed; secure backup destination and recovery operator available.
 - **Live procedure:** Capture hosted schema, data, roles/grants, Storage bucket metadata/object inventory, and checksums. Verify the files are readable and rehearse the recovery instructions without changing hosted state.
-- **Evidence:** On 2026-08-12, the hosted project `oxhjtmozsdstbokwtnwa` was captured into `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry` without overwriting the retained SQL snapshot. `schema.sql`, `data.sql`, and `roles.sql` are readable and non-empty; the directory is mode `700`, backup files are mode `600`, and `SHA256SUMS-FINAL.txt` verifies all eight final artifacts. Storage metadata contains one private `project-attachments` bucket and 217 object metadata records; pagination completed and object contents were not downloaded. The read-only hosted migration-history query returned 68 rows with latest version `072`. JSON/JSONL shape, duplicate-name, permissions, symlink, checksum, and no-object-content validations passed. The existing read-only local recovery preflight also passed against the established restricted historical snapshot; no hosted state was changed.
+- **Evidence:** On 2026-08-12, the hosted project `oxhjtmozsdstbokwtnwa` was captured into `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry` without overwriting the retained SQL snapshot. On 2026-08-14, a new independent pre-write capture was created at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-14-pre-migration-073-231215`; its `schema.sql`, `data.sql`, and `roles.sql` are readable and non-empty, the directory is mode `700`, all eight artifacts are mode `600`, and `SHA256SUMS-FINAL.txt` verifies the eight-artifact manifest. Storage metadata contains one private `project-attachments` bucket and 217 object metadata records; pagination completed and object contents were not downloaded. The fresh read-only hosted migration-history query returned 68 rows with latest version `072`, and its migration/Storage inventories match the prior recovery reference. No hosted state was changed.
 - **Approval:** Recorded — the requesting owner explicitly authorized completion of Step 3 on 2026-08-12. This approval covers backup capture and verification only; it does not approve migrations, deployments, provider activation, secrets, or any hosted write.
 - **Rollback:** Preserve the backup as the recovery reference. Do not delete or overwrite the old snapshot during a retry.
 
@@ -74,7 +74,7 @@ Status values:
 - **Owner:** Database migration/release owner
 - **Prerequisites:** Items 1–3 passed; cloud profile points to the intended Supabase project; backup checksums are recorded.
 - **Live procedure:** Run `cd app && npm run verify:hosted-migration-step4`. The gate runs the staged map verifier, invokes each allowlisted stage only with `--dry-run`, asserts 68 hosted-history rows/latest `072` before and after every check, verifies the protected eight-artifact checksum manifest, and executes the cumulative disposable-local rehearsal with explicit local-only reset acknowledgements. It must exit successfully before Step 4 passes.
-- **Evidence:** The combined command passed on 2026-08-13. Its technical pass verified the one-to-one mapping, unchanged SQL hashes, six stage selections, and unchanged hosted history. Its data-impact pass verified the protected backup, five unchanged legacy-inventory checkpoints covering legacy tables, embeddings, catalogs, carts, Medusa records, and retired buckets, the pre-cleanup `page_views` constraint, and exact retired/retained objects after `092`. The machine-readable map remains `docs/launch/hosted-migration-stages.json`; the gate emitted `hosted_writes: 0` and printed no credentials. Detailed evidence is in [Step 4 evidence](step-4-migration-dry-run-2026-08-12.md).
+- **Evidence:** The combined command passed on 2026-08-13. Its technical pass verified the one-to-one mapping, unchanged SQL hashes, six stage selections, and unchanged hosted history. Its data-impact pass verified the protected backup, five unchanged legacy-inventory checkpoints covering legacy tables, embeddings, catalogs, carts, Medusa records, and retired buckets, the pre-cleanup `page_views` constraint, and exact retired/retained objects after `092`. As a fresh stage-specific refresh on 2026-08-14, `NEEDTHISDONE_STAGED_BACKUP_DIR='/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-14-pre-migration-073-231215' node scripts/verify-hosted-migration-stage.mjs --stage calendar-token-security --dry-run` selected exactly `073_secure_google_calendar_tokens.sql` and confirmed 68 rows/latest `072` before and after. The machine-readable map remains `docs/launch/hosted-migration-stages.json`; all review commands emitted `hosted_writes: 0` and printed no credentials. Detailed evidence is in [Step 4 evidence](step-4-migration-dry-run-2026-08-12.md).
 - **Approval:** `PASSED` is review confirmation only. The gate does not authorize a hosted write. The owner’s retention decision is to preserve the protected backup and defer hosted deletion authorization for the explicit `090`–`092` retirement set until a separate Step 5 decision. Step 5 remains a separate hosted-write approval for each stage.
 - **Rollback:** No hosted change has occurred. Repair or replace the migration plan and rerun the affected stage; never reset the hosted project.
 
