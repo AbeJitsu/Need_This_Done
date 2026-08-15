@@ -10,7 +10,7 @@ This is the implementation ledger. Update it in the same commit as every complet
 
 ## Current release-control and hosted-stage ledger — 2026-08-15
 
-**Finish-line decision:** **Local release candidate proven; technical cloud launch is the active critical path.** The repository and disposable local Supabase boundary are proven. The reviewed `dev` branch replaces the old production application after the launch checklist passes. Hosted migration `073` is applied and verified; hosted migrations `074`–`092`, production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
+**Finish-line decision:** **Local release candidate proven; hosted parity is the active critical path.** The repository and disposable local Supabase boundary are proven, but that is a safety net rather than hosted proof. The reviewed `dev` branch replaces the old production application only after the hosted project matches the locally proven retained schema and the launch checklist passes. Hosted migration `073` is applied and verified; hosted migrations `074`–`092` remain pending in the staged sequence defined by the [hosted parity endgame](launch/HOSTED_PARITY_ENDGAME.md). Production promotion, provider activation, payment, deployment, and legal publication remain separate approval gates.
 
 The final full assembly command, `ASSEMBLY_PRODUCTION_SERVER=true NEXT_PUBLIC_DASHBOARD_PREVIEW=false npm run verify:assembly:fresh`, passed on committed candidate `74d3257`. It remains the last full local assembly proof. The separate final pre-apply release-control SHA was `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`; this hosted stage does not claim a new local assembly. The recorded assembly reset only local Supabase, replayed migrations `001`–`092`, restored the sanitized seed, and passed:
 
@@ -25,7 +25,7 @@ The planner/OpenClaw slice is applied only to the disposable local database thro
 
 **Remaining blockers and recorded exceptions:**
 
-- Hosted migration parity is not complete: hosted history is now through `073`, while local repository migrations `074`–`092` remain pending and neither approved nor applied. Launch checklist items 1–4 are complete, item 5 is `IN_PROGRESS` after the successful `073` stage, and items 6–22 remain separate hosted release gates.
+- Hosted migration parity is not complete: hosted history is now through `073`, while local repository migrations `074`–`092` remain pending. A read-only hosted schema audit found the tables introduced by `079`–`089` absent. The next work is the staged hosted sequence in [HOSTED_PARITY_ENDGAME.md](launch/HOSTED_PARITY_ENDGAME.md); `090`–`092` remain a separate destructive-retirement decision. Launch checklist items 1–4 are complete, item 5 is `IN_PROGRESS` after the successful `073` stage, and items 6–22 remain separate hosted release gates.
 - `npm audit` reports 16 findings overall and 11 in the production dependency tree; production promotion is blocked pending owner-approved upgrades or an explicitly time-boxed exception. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The installed Supabase CLI is `2.65.5` while `2.113.0` is available. Owner: NeedThisDone engineering owner. Review/removal date: 2026-08-16.
 - The Playwright auto-start development-server path has a Tailwind parsing issue under the current local environment marker; the reproducible final gate uses the production-server mode above. Owner: frontend QA. Review/removal date: 2026-08-16.
@@ -52,6 +52,10 @@ The blanket migration review was replaced with six allowlisted stages: `073`, `0
 The dedicated [Step 5 evidence record](launch/step-5-calendar-token-apply-2026-08-15.md) records the only hosted write in this execution window. The fresh protected backup at `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-15-pre-migration-073-000202` passed mode `700`/`600`, eight-artifact checksum, target, history, and Storage preflight: project `oxhjtmozsdstbokwtnwa`, one private `project-attachments` bucket, 217 metadata-only objects, and `68/072` history.
 
 The stage-only dry run selected exactly `073_secure_google_calendar_tokens.sql`. The approved operator/monitor was Abe Reyes, the maintenance window was 15 minutes in America/New_York, the forward-repair owner was the NeedThisDone database owner, and the release-control SHA was `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`. The helper applied exactly one migration and reported `hosted_writes: 1`, `69/073` history, and temporary-workdir cleanup. Read-only verification confirmed encrypted `bytea` columns, nullable legacy token columns, service-role-only execution for all three token functions, anonymous RPC denial (`401` for both read functions), zero Calendar-token rows, no `074+`, and unchanged Storage inventory. `074`–`092` remain neither approved nor applied. No provider, deployment, secret, Calendar API, publication, spend, or external-message action occurred.
+
+## Hosted parity audit — 2026-08-15
+
+After `073`, a read-only hosted schema dump and service-role PostgREST interface audit confirmed the actual blocker: hosted contains the retained pre-`079` tables but returns `404` for the additive prospecting, cockpit, evaluation, research, agent-operations, planner, and OpenClaw tables required by current `dev`. A linked dry run selected exactly `074`–`092` and made no hosted write. This is recorded as a parity diagnosis, not as hosted migration evidence. The active target and stage order are maintained in [HOSTED_PARITY_ENDGAME.md](launch/HOSTED_PARITY_ENDGAME.md).
 
 ## Current state map
 

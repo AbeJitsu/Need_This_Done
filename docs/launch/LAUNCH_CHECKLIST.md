@@ -13,6 +13,7 @@ to these item numbers; they do not define a second activation order.
 **Hosted Supabase history:** through `073`
 **Local verification history:** through `092`
 **Immediate application rollback reference:** `8b8d429` (`production`)
+**Active hosted parity endgame:** [hosted parity endgame](HOSTED_PARITY_ENDGAME.md)
 
 ## How to use this checklist
 
@@ -85,7 +86,7 @@ Status values:
 - **Owner:** Database owner
 - **Prerequisites:** Items 1–4 passed; the exact stage has a new stage-specific hosted-write approval; current backup is readable; a maintenance/monitoring window and rollback owner are declared. Before `090`–`092`, the owner’s separate retention decision must be reaffirmed for that hosted write.
 - **Live procedure:** Apply only one approved stage at a time in this order: `073`, `074`, `075`–`080`, `081`, `082`–`089`, then the isolated final `090`–`092` cleanup. Stop on any error. Never combine the final destructive stage with an additive batch, use hosted `supabase db reset`, generate a broad diff, or run a destructive reverse migration.
-- **Evidence:** The dedicated [Step 5 `073` evidence record](step-5-calendar-token-apply-2026-08-15.md) records the fresh backup, exact dry run, stage-specific approval, sanitized result with `hosted_writes: 1`, `69/073` history, schema/grant/row-count checks, unchanged Storage inventory, and the rollback boundary. `074+` were neither approved nor applied.
+- **Evidence:** The dedicated [Step 5 `073` evidence record](step-5-calendar-token-apply-2026-08-15.md) records the fresh backup, exact dry run, stage-specific approval, sanitized result with `hosted_writes: 1`, `69/073` history, schema/grant/row-count checks, unchanged Storage inventory, and the rollback boundary. A subsequent read-only parity audit confirmed that the hosted schema is still missing the additive objects from `079`–`089`; the exact next-stage sequence and exit criteria are in the [hosted parity endgame](HOSTED_PARITY_ENDGAME.md). `074+` remain neither approved nor applied.
 - **Approval:** Recorded for `073` only — Abe Reyes operated and monitors a 15-minute America/New_York window; the NeedThisDone database owner owns any forward repair. Step 4 review does not authorize another stage, and no approval carries forward to `074+`.
 - **Rollback:** Hosted rollback is forward-only. Stop new application traffic if needed, preserve history/data, and use a separately reviewed forward fix; do not delete migrations or reset the project. If a stage fails, do not continue to the next stage.
 

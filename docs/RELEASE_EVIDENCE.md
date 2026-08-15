@@ -12,9 +12,23 @@ The planner/OpenClaw proof is included in the canonical `npm run verify:database
 
 **Provider and secret boundary:** An OpenRouter API key and two exact model IDs are stored only as private environment variables; no OAuth profile, worker activation, model request, or model selection has occurred. The active local environment is one profile, with root `.env.local` linked to `.env.local.profile` and `app/.env.local` linked to the root active profile. The server validates the IDs, the comparison runner cannot change the primary route, and a future Mac worker must use the same private values in its own chmod-600 `--env-file` outside the repository. The assembly clears provider credentials and model configuration and uses no payment, sender, calendar, deployment, publish, spend, account, or external-message action.
 
-**Release blockers and exceptions:** Hosted history is through `073`; local migrations `074`–`092` remain repository-only and are neither approved nor applied. The last full local assembly proof is `74d3257`; the final pre-apply release-control SHA is `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`. Checklist items 1–4 are reconciled, item 5 is `IN_PROGRESS` for the completed `073` stage, and items 6–22 still require hosted parity, deployment, provider, Mac, live canary, reliability, rollback, and owner evidence. `npm audit` reports 16 findings overall and 11 production-tree findings, so production promotion is blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.114.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
+**Release blockers and exceptions:** Hosted history is through `073`; local migrations `074`–`092` remain repository-only and are pending the staged sequence in [HOSTED_PARITY_ENDGAME.md](launch/HOSTED_PARITY_ENDGAME.md). The read-only parity audit confirmed that hosted is missing the additive objects introduced by `079`–`089`; no hosted write beyond `073` has occurred. The last full local assembly proof is `74d3257`; the final pre-apply release-control SHA is `e022c013d9c98fcb08590ce762d3b7b8c8fadb9b`. Checklist items 1–4 are reconciled, item 5 is `IN_PROGRESS` for the completed `073` stage and the remaining hosted stages, and items 6–22 still require hosted parity, deployment, provider, Mac, live canary, reliability, rollback, and owner evidence. `npm audit` reports 16 findings overall and 11 production-tree findings, so production promotion is blocked pending owner-approved remediation or a time-boxed exception (NeedThisDone engineering owner; review/removal date 2026-08-16). The installed Supabase CLI is `2.65.5` versus `2.114.0` available (same owner and date). The Playwright development-server path has a local Tailwind parsing issue, so the final gate uses its reproducible production-server mode (frontend QA; review/removal date 2026-08-16). Legal copy still needs human/legal review before publication (human/legal reviewer; review by 2026-08-16 or before publication).
 
 **Rollback:** Hosted `073` completed successfully; no rollback was needed. Preserve its history/data and use forward-only repair if a defect is discovered. Any future hosted application of `074`–`092` requires a new backup, stage-only dry run, explicit approval, parity, and forward-rollback evidence. Use `8b8d429` only as the application rollback reference.
+
+## Hosted parity endgame — 2026-08-15
+
+Local migration `092` is the proven target, not a claim that hosted has already
+reached it. Hosted is currently `69/073`. The required path is `074`, then
+`075`–`080`, then `081`, then `082`–`089`, each with a fresh backup, exact
+stage dry run, approval, apply, and verification. `090`–`092` are isolated
+destructive-retirement migrations and require a separate retention decision;
+they must not be bundled into additive parity work. Hosted parity exits only
+after history `001`–`092`, the retained schema/RLS/grant/Storage/tenant checks,
+row and inventory checks, and security-owner acceptance are recorded. Only then
+does the production fast-forward become eligible for a separate deployment
+approval. See [HOSTED_PARITY_ENDGAME.md](launch/HOSTED_PARITY_ENDGAME.md) for
+the active sequence and failure boundary.
 
 ## Hosted backup gate — 2026-08-12
 

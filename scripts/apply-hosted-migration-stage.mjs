@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-// Approval-gated hosted migration application. The first implementation is
-// deliberately allowlisted to calendar-token-security/073 only. It builds a
-// temporary comparison workdir, proves the exact dry-run selection, applies
-// one migration, and immediately performs read-only history verification.
+// Approval-gated hosted migration application. Each invocation accepts exactly
+// one allowlisted stage from the repository's staged migration map. It builds a
+// temporary workdir containing the hosted baseline plus that stage, proves the
+// exact dry-run selection, and, only in --execute mode, applies once and verifies
+// the resulting history.
 
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
@@ -23,16 +24,21 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const manifestPath = resolve(repositoryRoot, 'docs/launch/hosted-migration-stages.json');
+const cloudProfilePath = resolve(repositoryRoot, '.env.cloud.profile');
 const expectedBranch = 'dev';
-const expectedStage = 'calendar-token-security';
-const expectedMigration = '073_secure_google_calendar_tokens.sql';
-const expectedVersion = '073';
 const expectedProjectRef = 'oxhjtmozsdstbokwtnwa';
 const expectedEndpoint = `https://${expectedProjectRef}.supabase.co`;
 const expectedEnvironment = 'cloud';
-const writeAcknowledgement = 'I_UNDERSTAND_THIS_APPLIES_ONLY_073';
-const expectedHostedRowsBefore = 68;
-const expectedHostedLatestBefore = '072';
+const writeAcknowledgements = {
+  'calendar-token-security': 'I_UNDERSTAND_THIS_APPLIES_ONLY_073',
+  'storage-bucket-normalization': 'I_UNDERSTAND_THIS_APPLIES_ONLY_074',
+  'additive-product-workflow': 'I_UNDERSTAND_THIS_APPLIES_ONLY_075_080',
+  'growth-profile-evaluation': 'I_UNDERSTAND_THIS_APPLIES_ONLY_081',
+  'research-agent-planner': 'I_UNDERSTAND_THIS_APPLIES_ONLY_082_089',
+  'destructive-retirement': 'I_UNDERSTAND_THIS_APPLIES_ONLY_090_092',
+};
+const destructiveApproval = 'I_UNDERSTAND_THIS_DELETES_RETIRED_HOSTED_DATA_090_092';
 const expectedBackupArtifacts = [
   'schema.sql',
   'data.sql',
@@ -43,10 +49,10 @@ const expectedBackupArtifacts = [
   'storage-objects-project-attachments.json',
   'hosted-migration-history.json',
 ];
-const retainedPriorBackup = resolve(
-  '/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry',
-);
-const cloudProfilePath = resolve(repositoryRoot, '.env.cloud.profile');
+const retainedPriorBackups = new Set([
+  resolve('/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry'),
+  resolve('/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-15-pre-migration-073-000202'),
+]);
 
 class ApplyFailure extends Error {}
 
@@ -73,6 +79,36 @@ function readProfile(profilePath) {
   return values;
 }
 
+function readManifest() {
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+  if (!Array.isArray(manifest.stages) || !Array.isArray(manifest.migrations)) {
+    fail('hosted migration manifest is malformed');
+  }
+  return manifest;
+}
+
+function getStage(manifest, stageId) {
+  const stage = manifest.stages.find((candidate) => candidate.id === stageId);
+  if (!stage || !Array.isArray(stage.migrations) || !stage.migrations.length) {
+    fail(`unknown or empty hosted migration stage ${stageId}`);
+  }
+  if (!writeAcknowledgements[stageId]) fail(`stage ${stageId} has no write acknowledgement mapping`);
+
+  const migrations = stage.migrations.map((version) => {
+    const migration = manifest.migrations.find((candidate) => candidate.new_version === version);
+    if (!migration) fail(`stage ${stageId} references unmapped migration ${version}`);
+    return migration;
+  });
+  const numericVersions = migrations.map((migration) => Number(migration.new_version));
+  if (numericVersions.some((version, index) => index > 0 && version !== numericVersions[index - 1] + 1)) {
+    fail(`stage ${stageId} migration versions are not contiguous`);
+  }
+  if (migrations.some((migration) => migration.stage !== stageId)) {
+    fail(`stage ${stageId} contains a migration mapped to another stage`);
+  }
+  return { ...stage, migrations, firstVersion: numericVersions[0], lastVersion: numericVersions.at(-1) };
+}
+
 function redact(value, environment = {}) {
   let result = value || '';
   for (const [key, secret] of Object.entries(environment)) {
@@ -85,69 +121,90 @@ function redact(value, environment = {}) {
     .replace(/(postgres(?:ql)?):\/\/[^\s\n]+/gi, '$1://[redacted]');
 }
 
+function gitOutput(args) {
+  const result = spawnSync('git', args, { cwd: repositoryRoot, encoding: 'utf8' });
+  if (result.status !== 0) fail(`git ${args.join(' ')} failed`);
+  return result.stdout.trim();
+}
+
 function parseArguments() {
   const args = process.argv.slice(2);
   let stage;
   let execute = false;
-
+  let dryRun = false;
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
     if (argument === '--stage') {
       if (stage !== undefined || !args[index + 1] || args[index + 1].startsWith('-')) {
-        fail('usage requires exactly one --stage calendar-token-security and --execute');
+        fail('usage requires exactly one --stage <stage-id> and --execute');
       }
       stage = args[index + 1];
       index += 1;
     } else if (argument === '--execute') {
       if (execute) fail('duplicate --execute is not permitted');
       execute = true;
+    } else if (argument === '--dry-run') {
+      if (dryRun) fail('duplicate --dry-run is not permitted');
+      dryRun = true;
     } else {
-      fail(`unsupported argument ${argument}; --include-all, --local, reset, rollback, and multi-stage arguments are refused`);
+      fail(`unsupported argument ${argument}; only --stage <stage-id> with --dry-run or --execute is permitted`);
     }
   }
-
-  if (stage !== expectedStage || !execute) {
-    fail('hosted application requires exactly --stage calendar-token-security --execute');
-  }
-  return { stage, execute };
+  if (!stage || execute === dryRun) fail('hosted stage command requires exactly one of --dry-run or --execute');
+  return { stageId: stage, execute };
 }
 
-function verifyExecutionBoundary(cloudProfile) {
+function verifyExecutionBoundary(cloudProfile, stage) {
   const approvedReleaseSha = process.env.NEEDTHISDONE_APPROVED_RELEASE_SHA;
   if (!/^[0-9a-f]{40}$/.test(approvedReleaseSha || '')) {
     fail('NEEDTHISDONE_APPROVED_RELEASE_SHA must be an explicit full 40-character commit SHA');
   }
-  if (process.env.ALLOW_HOSTED_STAGE_WRITE !== writeAcknowledgement) {
-    fail(`missing exact ALLOW_HOSTED_STAGE_WRITE=${writeAcknowledgement} acknowledgement`);
+  if (process.env.ALLOW_HOSTED_STAGE_WRITE !== writeAcknowledgements[stage.id]) {
+    fail(`missing exact ALLOW_HOSTED_STAGE_WRITE=${writeAcknowledgements[stage.id]} acknowledgement`);
+  }
+  if (stage.destructive && process.env.NEEDTHISDONE_DESTRUCTIVE_HOSTED_RETIREMENT_APPROVED !== destructiveApproval) {
+    fail(`destructive stage requires NEEDTHISDONE_DESTRUCTIVE_HOSTED_RETIREMENT_APPROVED=${destructiveApproval}`);
   }
   if (cloudProfile.ENV_TARGET !== expectedEnvironment) fail('cloud profile marker is not ENV_TARGET=cloud');
   if (cloudProfile.NEXT_PUBLIC_SUPABASE_URL !== expectedEndpoint) fail('cloud profile endpoint is not the approved hosted project');
   if (!cloudProfile.SUPABASE_ACCESS_TOKEN) fail('cloud profile is missing SUPABASE_ACCESS_TOKEN');
 
-  const branch = spawnSync('git', ['branch', '--show-current'], { cwd: repositoryRoot, encoding: 'utf8' });
-  if (branch.status !== 0 || branch.stdout.trim() !== expectedBranch) fail(`refusing hosted write outside ${expectedBranch}`);
-  const head = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: repositoryRoot, encoding: 'utf8' });
-  if (head.status !== 0 || head.stdout.trim() !== approvedReleaseSha) {
-    fail(`HEAD ${head.stdout.trim() || 'unavailable'} does not match NEEDTHISDONE_APPROVED_RELEASE_SHA; hosted write was not attempted`);
+  const branch = gitOutput(['branch', '--show-current']);
+  if (branch !== expectedBranch) fail(`refusing hosted write outside ${expectedBranch}`);
+  const head = gitOutput(['rev-parse', 'HEAD']);
+  if (head !== approvedReleaseSha) {
+    fail(`HEAD ${head || 'unavailable'} does not match NEEDTHISDONE_APPROVED_RELEASE_SHA; hosted write was not attempted`);
   }
+  const remoteHead = gitOutput(['rev-parse', 'refs/remotes/origin/dev']);
+  if (remoteHead !== approvedReleaseSha) {
+    fail(`origin/dev ${remoteHead || 'unavailable'} does not match NEEDTHISDONE_APPROVED_RELEASE_SHA; hosted write was not attempted`);
+  }
+  if (gitOutput(['status', '--porcelain'])) fail('worktree must be clean before a hosted write');
   return approvedReleaseSha;
 }
 
 function verifyFinalPreApplyRef(approvedReleaseSha) {
-  const branch = spawnSync('git', ['branch', '--show-current'], { cwd: repositoryRoot, encoding: 'utf8' });
-  if (branch.status !== 0 || branch.stdout.trim() !== expectedBranch) {
+  if (gitOutput(['branch', '--show-current']) !== expectedBranch) {
     fail(`final pre-apply branch is not ${expectedBranch}; hosted write was not attempted`);
   }
-  const head = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: repositoryRoot, encoding: 'utf8' });
-  if (head.status !== 0 || head.stdout.trim() !== approvedReleaseSha) {
-    fail(`final pre-apply HEAD ${head.stdout.trim() || 'unavailable'} does not match NEEDTHISDONE_APPROVED_RELEASE_SHA; hosted write was not attempted`);
+  const head = gitOutput(['rev-parse', 'HEAD']);
+  if (head !== approvedReleaseSha) {
+    fail(`final pre-apply HEAD ${head || 'unavailable'} does not match NEEDTHISDONE_APPROVED_RELEASE_SHA; hosted write was not attempted`);
   }
+  if (gitOutput(['rev-parse', 'refs/remotes/origin/dev']) !== approvedReleaseSha) {
+    fail('final pre-apply origin/dev does not match NEEDTHISDONE_APPROVED_RELEASE_SHA; hosted write was not attempted');
+  }
+  if (gitOutput(['status', '--porcelain'])) fail('worktree became dirty before hosted apply; hosted write was not attempted');
 }
 
-function verifyBackup(backupRoot) {
+function expectedVersionsThrough(version) {
+  return Array.from({ length: version }, (_, index) => String(index + 1).padStart(3, '0'));
+}
+
+function verifyBackup(backupRoot, expectedVersions) {
   if (!backupRoot) fail('NEEDTHISDONE_HOSTED_BACKUP_DIR must point to a fresh protected backup');
   const resolvedBackupRoot = resolve(backupRoot);
-  if (resolvedBackupRoot === retainedPriorBackup) fail('the retained pre-migration-072 backup cannot be reused for this stage');
+  if (retainedPriorBackups.has(resolvedBackupRoot)) fail('a previously used migration backup cannot be reused for this stage');
   if (!existsSync(resolvedBackupRoot) || lstatSync(resolvedBackupRoot).isSymbolicLink()) {
     fail(`fresh backup directory is missing or symlinked: ${resolvedBackupRoot}`);
   }
@@ -156,12 +213,12 @@ function verifyBackup(backupRoot) {
     fail(`fresh backup directory must be a mode-700 directory: ${resolvedBackupRoot}`);
   }
 
-  const manifestPath = join(resolvedBackupRoot, 'SHA256SUMS-FINAL.txt');
-  if (!existsSync(manifestPath) || lstatSync(manifestPath).isSymbolicLink()) fail('fresh backup checksum manifest is missing or symlinked');
-  const manifestStat = lstatSync(manifestPath);
+  const manifestPathForBackup = join(resolvedBackupRoot, 'SHA256SUMS-FINAL.txt');
+  if (!existsSync(manifestPathForBackup) || lstatSync(manifestPathForBackup).isSymbolicLink()) fail('fresh backup checksum manifest is missing or symlinked');
+  const manifestStat = lstatSync(manifestPathForBackup);
   if (!manifestStat.isFile() || (manifestStat.mode & 0o777) !== 0o600) fail('fresh backup checksum manifest must be a mode-600 file');
 
-  const lines = readFileSync(manifestPath, 'utf8').trim().split(/\r?\n/).filter(Boolean);
+  const lines = readFileSync(manifestPathForBackup, 'utf8').trim().split(/\r?\n/).filter(Boolean);
   if (lines.length !== expectedBackupArtifacts.length) fail(`fresh backup checksum manifest must contain exactly ${expectedBackupArtifacts.length} artifacts`);
   const seen = new Set();
   for (const line of lines) {
@@ -181,15 +238,11 @@ function verifyBackup(backupRoot) {
   const versions = history.migrations?.map((migration) => migration.version);
   if (
     history.project_ref !== expectedProjectRef
-    || history.row_count !== expectedHostedRowsBefore
-    || history.latest?.version !== expectedHostedLatestBefore
-    || !Array.isArray(versions)
-    || versions.length !== expectedHostedRowsBefore
-    || versions.at(-1) !== expectedHostedLatestBefore
+    || history.row_count !== expectedVersions.length
+    || JSON.stringify(versions) !== JSON.stringify(expectedVersions)
   ) {
-    fail(`fresh backup history must contain ${expectedHostedRowsBefore} rows/latest ${expectedHostedLatestBefore}`);
+    fail(`fresh backup history must contain ${expectedVersions.length} rows/latest ${expectedVersions.at(-1)}`);
   }
-
   return { path: resolvedBackupRoot, manifest: 'SHA256SUMS-FINAL.txt', versions };
 }
 
@@ -210,8 +263,8 @@ function runSupabase(args, environment, label) {
 function parseRemoteHistory(output) {
   const versions = [];
   for (const line of output.split(/\r?\n/)) {
-    const match = line.match(/^\s*(\d{3})\s*\|\s*(\d{3})?\s*\|/);
-    if (match?.[2]) versions.push(match[2]);
+    const match = line.match(/^\s*\d{3}\s*\|\s*(\d{3})?\s*\|/);
+    if (match?.[1]) versions.push(match[1]);
   }
   if (!versions.length) fail('could not parse hosted migration history from supabase migration list');
   return versions;
@@ -228,7 +281,7 @@ function assertVersions(label, actual, expected) {
   }
 }
 
-function buildTemporaryWorkdir(backupVersions) {
+function buildTemporaryWorkdir(backupVersions, stageMigrations) {
   const tempRoot = mkdtempSync(join(tmpdir(), 'needthisdone-hosted-apply-'));
   chmodSync(tempRoot, 0o700);
   try {
@@ -247,10 +300,10 @@ function buildTemporaryWorkdir(backupVersions) {
     const repositoryMigrations = readdirSync(resolve(repositoryRoot, 'supabase/migrations'))
       .filter((filename) => /^\d{3}_[a-z0-9_]+\.sql$/.test(filename))
       .sort();
-    const baselineFiles = repositoryMigrations.filter((filename) => Number(filename.slice(0, 3)) <= 72);
+    const baselineFiles = repositoryMigrations.filter((filename) => Number(filename.slice(0, 3)) <= Number(backupVersions.at(-1)));
     const baselineVersions = baselineFiles.map((filename) => filename.slice(0, 3));
     if (JSON.stringify(baselineVersions) !== JSON.stringify(backupVersions)) {
-      fail('repository migrations 001–072 do not match the fresh hosted history');
+      fail('repository migrations before the selected stage do not match the fresh hosted history');
     }
     for (const filename of baselineFiles) {
       const source = resolve(repositoryRoot, 'supabase/migrations', filename);
@@ -258,12 +311,15 @@ function buildTemporaryWorkdir(backupVersions) {
       cpSync(source, join(tempSupabase, 'migrations', filename));
     }
 
-    const migrationSource = resolve(repositoryRoot, 'supabase/migrations', expectedMigration);
-    if (!existsSync(migrationSource) || lstatSync(migrationSource).isSymbolicLink()) fail(`allowlisted migration is missing or symlinked: ${expectedMigration}`);
-    cpSync(migrationSource, join(tempSupabase, 'migrations', expectedMigration));
+    for (const migration of stageMigrations) {
+      const source = resolve(repositoryRoot, 'supabase/migrations', migration.new_filename);
+      if (!existsSync(source) || lstatSync(source).isSymbolicLink()) fail(`allowlisted migration is missing or symlinked: ${migration.new_filename}`);
+      cpSync(source, join(tempSupabase, 'migrations', migration.new_filename));
+    }
 
+    const allowedFiles = new Set([...baselineFiles, ...stageMigrations.map((migration) => migration.new_filename)]);
     const temporaryFiles = readdirSync(join(tempSupabase, 'migrations')).sort();
-    if (!temporaryFiles.includes(expectedMigration) || temporaryFiles.some((filename) => Number(filename.slice(0, 3)) > 73 && filename !== expectedMigration)) {
+    if (temporaryFiles.length !== allowedFiles.size || temporaryFiles.some((filename) => !allowedFiles.has(filename))) {
       fail('temporary workdir contains an unallowlisted migration');
     }
     return tempRoot;
@@ -273,10 +329,11 @@ function buildTemporaryWorkdir(backupVersions) {
   }
 }
 
-function parseDryRunSelection(output) {
+function parseDryRunSelection(output, expectedFiles) {
   const selected = [...output.matchAll(/[•*-]\s+([0-9]{3}_[a-z0-9_]+\.sql)\b/g)].map((match) => match[1]);
-  if (JSON.stringify(selected) !== JSON.stringify([expectedMigration])) {
-    fail(`final dry run selected an unexpected migration set: ${selected.join(', ') || 'none'}`);
+  const expected = [...expectedFiles].sort();
+  if (JSON.stringify(selected.sort()) !== JSON.stringify(expected)) {
+    fail(`final dry run selected an unexpected migration set: ${selected.join(', ') || 'none'}; expected ${expected.join(', ')}`);
   }
   return selected;
 }
@@ -286,7 +343,7 @@ function historySummary(versions) {
 }
 
 const result = {
-  schema_version: 1,
+  schema_version: 2,
   status: 'failed',
   target: {
     project_ref: expectedProjectRef,
@@ -295,8 +352,8 @@ const result = {
     branch: expectedBranch,
     release_sha: null,
   },
-  stage: expectedStage,
-  selected_migration: expectedMigration,
+  stage: null,
+  selected_migrations: [],
   timestamp_utc: new Date().toISOString(),
   before_history: null,
   after_history: null,
@@ -309,22 +366,36 @@ const result = {
 
 let temporaryWorkdir;
 let environment;
-let backup;
 
 try {
-  parseArguments();
+  const { stageId, execute } = parseArguments();
+  const manifest = readManifest();
+  const stage = getStage(manifest, stageId);
+  const expectedBefore = expectedVersionsThrough(stage.firstVersion - 1);
+  const stageFiles = stage.migrations.map((migration) => migration.new_filename);
+  result.stage = stage.id;
+  result.selected_migrations = stageFiles;
+
   const cloudProfile = readProfile(cloudProfilePath);
-  const approvedReleaseSha = verifyExecutionBoundary(cloudProfile);
-  result.target.release_sha = approvedReleaseSha;
-  result.write_acknowledgement_verified = true;
-  backup = verifyBackup(process.env.NEEDTHISDONE_HOSTED_BACKUP_DIR);
+  let approvedReleaseSha;
+  if (execute) {
+    approvedReleaseSha = verifyExecutionBoundary(cloudProfile, stage);
+    result.target.release_sha = approvedReleaseSha;
+    result.write_acknowledgement_verified = true;
+  } else {
+    if (cloudProfile.ENV_TARGET !== expectedEnvironment) fail('cloud profile marker is not ENV_TARGET=cloud');
+    if (cloudProfile.NEXT_PUBLIC_SUPABASE_URL !== expectedEndpoint) fail('cloud profile endpoint is not the approved hosted project');
+    if (!cloudProfile.SUPABASE_ACCESS_TOKEN) fail('cloud profile is missing SUPABASE_ACCESS_TOKEN');
+  }
+
+  const backup = verifyBackup(process.env.NEEDTHISDONE_HOSTED_BACKUP_DIR, expectedBefore);
   result.backup = {
     path: backup.path,
     checksum_manifest: backup.manifest,
     prewrite_history: historySummary(backup.versions),
   };
   environment = { ...process.env, ...cloudProfile };
-  temporaryWorkdir = buildTemporaryWorkdir(backup.versions);
+  temporaryWorkdir = buildTemporaryWorkdir(backup.versions, stage.migrations);
 
   const before = listRemoteHistory(temporaryWorkdir, environment);
   assertVersions('remote history before final dry run', before.versions, backup.versions);
@@ -337,29 +408,30 @@ try {
     'final hosted migration dry run',
   );
   result.transcript.final_dry_run = dryRun;
-  result.dry_run_selected = parseDryRunSelection(dryRun);
+  result.dry_run_selected = parseDryRunSelection(dryRun, stageFiles);
 
   const afterDryRun = listRemoteHistory(temporaryWorkdir, environment);
   assertVersions('remote history after final dry run', afterDryRun.versions, backup.versions);
   result.transcript.history_after_dry_run = afterDryRun.transcript;
 
-  verifyFinalPreApplyRef(approvedReleaseSha);
-  result.hosted_writes = 1;
-  const applyOutput = runSupabase(
-    ['db', 'push', '--linked', '--workdir', temporaryWorkdir, '--yes'],
-    environment,
-    'hosted migration apply',
-  );
-  result.transcript.apply = applyOutput;
+  if (execute) {
+    verifyFinalPreApplyRef(approvedReleaseSha);
+    result.hosted_writes = 1;
+    const applyOutput = runSupabase(
+      ['db', 'push', '--linked', '--workdir', temporaryWorkdir, '--yes'],
+      environment,
+      'hosted migration apply',
+    );
+    result.transcript.apply = applyOutput;
 
-  const after = listRemoteHistory(temporaryWorkdir, environment);
-  const expectedAfter = [...backup.versions, expectedVersion];
-  assertVersions('remote history after hosted apply', after.versions, expectedAfter);
-  if (after.versions.includes('074') || after.versions.some((version) => Number(version) > Number(expectedVersion))) {
-    fail('hosted history contains migration 074 or a later migration after the allowlisted apply');
+    const after = listRemoteHistory(temporaryWorkdir, environment);
+    const expectedAfter = [...backup.versions, ...stage.migrations.map((migration) => migration.new_version)];
+    assertVersions('remote history after hosted apply', after.versions, expectedAfter);
+    result.after_history = historySummary(after.versions);
+    result.transcript.history_after_apply = after.transcript;
+  } else {
+    result.after_history = historySummary(afterDryRun.versions);
   }
-  result.after_history = historySummary(after.versions);
-  result.transcript.history_after_apply = after.transcript;
   result.status = 'passed';
 } catch (error) {
   result.error = redact(error instanceof Error ? error.message : String(error), environment || process.env);
