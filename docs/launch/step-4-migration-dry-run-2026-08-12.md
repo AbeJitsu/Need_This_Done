@@ -5,12 +5,33 @@ This is the detailed evidence record for [launch checklist item 4](LAUNCH_CHECKL
 ## Outcome
 
 - **Preparation result:** complete for all six staged dry runs and the cumulative disposable-backup rehearsal.
-- **Checklist status:** `PENDING_APPROVAL`; every stage still needs two human sign-offs before Step 4 can pass.
+- **Checklist status:** `PASSED`; the combined deterministic gate passed both required tests.
 - **Hosted target:** Supabase project `oxhjtmozsdstbokwtnwa` at `https://oxhjtmozsdstbokwtnwa.supabase.co`.
 - **Hosted history:** every before/after read-only check returned 68 rows with latest migration `072`.
 - **Protected backup:** `/Users/abiezerreyes/Documents/NeedThisDone Backups/2026-08-11-pre-migration-072-url-retry`; its eight-artifact `SHA256SUMS-FINAL.txt` manifest passed again. The capture contains one private `project-attachments` bucket and 217 object metadata records; object contents were not downloaded.
 - **Repository:** the staged worktree contains migrations `073`–`092` in the new order. The machine-readable map and hash verifier passed: 20 unique new versions, 20 unique original versions, and byte-identical SQL for every mapping.
 - **Hosted change:** none. No migration, row, Storage object, provider, secret, deployment, or branch write occurred.
+
+## Deterministic Step 4 gate
+
+The review blocker is replaced by one rerunnable command:
+
+```text
+cd app && npm run verify:hosted-migration-step4
+```
+
+The command exited successfully on 2026-08-13 and emitted a machine-readable summary with `hosted_writes: 0`, `hosted_write_authorized: false`, and Step 5 `PENDING_APPROVAL`.
+
+| Pass | Result | Assertions |
+| --- | --- | --- |
+| Technical pass | `PASSED` | Mapping verifier passed for all 20 byte-preserved migrations; all six allowlisted stages ran with `--dry-run`; every hosted check remained at 68 rows/latest `072` before and after. |
+| Data-impact pass | `PASSED` | `SHA256SUMS-FINAL.txt` verified eight protected-backup artifacts; cumulative local rehearsal passed with five unchanged legacy-inventory assertions; pre-cleanup `page_views` constraint and retained objects were present; retired objects were absent and retained objects present after `092`. |
+
+The gate refuses command-line arguments and does not expose a hosted write mode. Step 4 `PASSED` is review confirmation only. It does not authorize Step 5 or carry approval to another stage.
+
+### Owner retention decision for `090`–`092`
+
+The owner’s retention decision for this review is to preserve the protected backup and defer hosted deletion authorization for the explicit `090`–`092` retirement set until a separate Step 5 decision. The automated data-impact pass proves exactly what those migrations remove and what remains; it does not decide whether hosted deletion is desirable. No hosted deletion, migration, or other write is authorized by this Step 4 result.
 
 The three first-stage attempts completed before a transient CLI login-role/IPv6 connection error appeared. Carrying the linked Supabase metadata into the temporary worktree and retrying resolved it; all six final stage runs passed. The transient connection messages are not migration findings.
 
@@ -86,7 +107,7 @@ No command used `supabase db push` without `--dry-run`. The final cleanup run pr
 | `075`–`080` | Adds financial outcome fields, pilot/work-item authorship and completion, prospecting/outreach/cockpit records, constraints, RLS, and RPCs. | Batch additive review; legacy content, embeddings, catalogs, carts, and Medusa records remain. |
 | `081` | Updates existing `growth_profiles` rows to `evaluation-required`/empty fallback where needed and creates evaluation records. | Separate data-impact review; current backup has no `growth_profiles`, so the update is expected to affect zero rows, but approval must confirm that meaning. |
 | `082`–`089` | Adds research, model-usage, agent-operation, planner, provenance, OpenClaw claim, and fail-closed validation boundaries. | Batch additive review; no provider activation, worker claim, message, publication, or spend. |
-| `090`–`092` | Drops retired policies/functions/views/tables, explicitly deletes `media-library` and `product-images` Storage rows/objects, and removes the explicit hosted Medusa schema/table list with `RESTRICT`. | Final separate retention/deletion review only. No deletion approval is recorded. |
+| `090`–`092` | Drops retired policies/functions/views/tables, explicitly deletes `media-library` and `product-images` Storage rows/objects, and removes the explicit hosted Medusa schema/table list with `RESTRICT`. | Final separate retention/deletion review remains required before any hosted write. The owner’s current decision is to preserve the backup and defer deletion authorization. |
 
 ## Proof-gap repairs and local backup rehearsal
 
@@ -97,21 +118,10 @@ No command used `supabase db push` without `--dry-run`. The final cleanup run pr
 - The rehearsal applies only an explicit `072` ACL normalization for `record_ai_employee_decision` and `ai_employee_decisions` after restoring into platform-managed local roles. It does not replay `072`’s non-idempotent policy creation; the hosted backup already represents history through `072`.
 - The rehearsal trap reset only the disposable local database to the current sanitized migration state after completion. The protected backup remained unchanged and checksum-valid.
 
-## Required dual-pass approvals
+## Review boundary and next decision
 
-These are intentionally blank. Technical preparation is complete, but Step 4 cannot pass without both independent human reviews for every row.
-
-| Stage | Technical migration review | Hosted-data impact approval | Hosted write status |
-| --- | --- | --- | --- |
-| Calendar token security (`073`) | Outstanding — migration reviewer/date | Outstanding — database/data owner/date | Not authorized |
-| Storage bucket normalization (`074`) | Outstanding — migration reviewer/date | Outstanding — Storage/data owner/date | Not authorized |
-| Additive product/workflow (`075`–`080`) | Outstanding — migration reviewer/date | Outstanding — database/data owner/date | Not authorized |
-| Growth-profile evaluation (`081`) | Outstanding — migration reviewer/date | Outstanding — database/data owner/date | Not authorized |
-| Research/agent/planner (`082`–`089`) | Outstanding — migration reviewer/date | Outstanding — database/data owner/date | Not authorized |
-| Destructive retirement (`090`–`092`) | Outstanding — migration reviewer/date | Outstanding — retention/database owner/date | Not authorized |
-
-The requesting owner’s 2026-08-12 authorization covered read-only dry-run preparation only. It does not approve any hosted write and is not reused for Step 5.
+The requesting owner’s 2026-08-12 authorization covered read-only dry-run preparation only. The deterministic gate now records the technical and data-impact review confirmation; it does not approve any hosted write and is not reused for Step 5. The next action is a fresh read-only backup/history preflight followed by a separate hosted-write approval for stage `073` only.
 
 ## Rollback and next decision
 
-No hosted rollback is needed because no hosted state changed. Preserve the backup and migration history. If a reviewer disputes a stage, repair or replace that stage and rerun its isolated dry run and cumulative rehearsal. After any future hosted stage is applied, rollback remains forward-only: stop on failure, preserve history/data, and use a separately reviewed forward migration. Do not reset hosted Supabase, delete migration history, or run a destructive reverse migration.
+No hosted rollback is needed because no hosted state changed. Preserve the backup and migration history. If the gate fails, Step 4 returns to pending and no hosted write occurs. After any future hosted stage is applied, rollback remains forward-only: stop on failure, preserve history/data, and use a separately reviewed forward migration. Do not reset hosted Supabase, delete migration history, or run a destructive reverse migration.

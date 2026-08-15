@@ -33,6 +33,7 @@
     "verify:assembly:fresh": "bash ../scripts/verify-local-assembly.sh --fresh",
     "test:all": "npm run verify:assembly",
     "verify:migration-stages": "node ../scripts/verify-hosted-migration-stages.mjs",
+    "verify:hosted-migration-step4": "node ../scripts/verify-hosted-migration-step4.mjs",
     "verify:hosted-migration-stage": "node ../scripts/verify-hosted-migration-stage.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
