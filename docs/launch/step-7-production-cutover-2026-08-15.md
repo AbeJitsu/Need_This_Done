@@ -27,12 +27,13 @@ confirmed both `dev` and `production` at that SHA.
 
 Vercel project: `vision2virtual/app`
 
-- Deployment ID: `dpl_6vVRn4Jbnsx7hHneBPgqudLVQNcd`
-- Deployment URL: https://app-o89oppzob-vision2virtual.vercel.app
+- Initial manual deployment ID: `dpl_6vVRn4Jbnsx7hHneBPgqudLVQNcd`
+- Final branch-triggered deployment ID: `dpl_6Jh1KMSZsqAPUB9fkkhpP8Bt3DSB`
+- Final deployment URL: https://app-bvxn361zh-vision2virtual.vercel.app
 - Production aliases: https://needthisdone.com and https://www.needthisdone.com
 - Target: production
 - Status: `READY`
-- Created: `2026-08-16T01:55:13Z`
+- Final deployment created: `2026-08-16T02:01:29Z`
 - Build: Next.js `14.2.35`, 49 static pages generated, serverless functions created successfully
 
 The first deployment attempt stopped before deployment because the installed
@@ -48,6 +49,10 @@ Vercel CLI `59.1.3`.
 - Anonymous `POST /api/agent-plans` returned `401`.
 - Anonymous `POST /api/agent-bridge/claim` returned `401`.
 - No external recipient or provider action was used for verification.
+
+The final branch-triggered deployment owns the production aliases after the
+remote `production` branch was aligned with `dev`. The application tree was
+unchanged between the manual and branch-triggered deployments.
 
 Vercel's inspection command generated a temporary deployment-protection bypass
 token to inspect the protected deployment. The token was not printed, saved,

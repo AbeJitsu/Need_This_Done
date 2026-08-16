@@ -77,8 +77,8 @@ independent security review is claimed.
 
 Step 7 fast-forwarded remote `production` from `8b8d429` to
 `3a227bc8ffeb3100be5454de6f3668b23d8b5dc8`, matching `dev` at the time of
-deployment. The linked Vercel project created deployment
-`dpl_6vVRn4Jbnsx7hHneBPgqudLVQNcd`, marked it `READY`, and aliased it to
+deployment. The linked Vercel project created final deployment
+`dpl_6Jh1KMSZsqAPUB9fkkhpP8Bt3DSB`, marked it `READY`, and aliased it to
 `https://needthisdone.com`. The production health endpoint returned healthy
 with Redis and Supabase up; public routes returned `200`; anonymous planner
 and worker requests returned `401`. The detailed record is

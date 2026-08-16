@@ -33,8 +33,8 @@ and the [final parity report](launch/hosted-parity-report-2026-08-15.json).
 
 Step 7 fast-forwarded remote `production` from `8b8d429` to
 `3a227bc8ffeb3100be5454de6f3668b23d8b5dc8` and deployed that application
-commit to the linked Vercel project. Deployment
-`dpl_6vVRn4Jbnsx7hHneBPgqudLVQNcd` reached `READY` and was aliased to
+commit to the linked Vercel project. Final branch-triggered deployment
+`dpl_6Jh1KMSZsqAPUB9fkkhpP8Bt3DSB` reached `READY` and was aliased to
 `https://needthisdone.com`. The health endpoint reported the app, Redis, and
 Supabase up; public routes returned `200`; anonymous planner and worker POSTs
 returned `401`. The full record is in
