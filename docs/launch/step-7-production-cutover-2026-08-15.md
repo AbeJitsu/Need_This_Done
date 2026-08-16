@@ -57,6 +57,11 @@ The final branch-triggered deployment owns the production aliases after the
 remote `production` branch was aligned with `dev`. The application tree was
 unchanged between the manual and branch-triggered deployments.
 
+The Vercel CLI's background update check emitted a local `EPERM` warning while
+trying to write its user cache. The deployment, inspection, build, and live
+checks all completed successfully; no production setting was affected. Owner:
+engineering. Removal date: 2026-08-16.
+
 Vercel's inspection command generated a temporary deployment-protection bypass
 token to inspect the protected deployment. The token was not printed, saved,
 or added to the repository.
